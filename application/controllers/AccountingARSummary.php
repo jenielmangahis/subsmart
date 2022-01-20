@@ -202,4 +202,30 @@ class AccountingARSummary extends MY_Controller
         $currInfo = $this->db->get('accounting_ar_summary_info')->row();
         echo json_encode(['data' => $currInfo]);
     }
+
+    public function apiRunReport()
+    {
+        header('content-type: application/json');
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['success' => false]);
+            return;
+        }
+
+        $payload = json_decode(file_get_contents('php://input'), true);
+        echo json_encode(['data' => $payload]);
+    }
+
+    public function apiRunReportCustomize()
+    {
+        header('content-type: application/json');
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['success' => false]);
+            return;
+        }
+
+        $payload = json_decode(file_get_contents('php://input'), true);
+        echo json_encode(['data' => $payload]);
+    }
 }

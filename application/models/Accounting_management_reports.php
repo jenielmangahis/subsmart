@@ -35,6 +35,22 @@ class Accounting_management_reports extends MY_Model
         $query = $this->db->query($sql);
         return $query->result();
     }
+    public function get_report_pages_by_maagement_report_id($management_report_id)
+    {
+        $sql="SELECT *
+        FROM accounting_management_reports_reports_pages 
+        WHERE management_report_id = ".$management_report_id;
+        $query = $this->db->query($sql);
+        return $query->result();
+    }
+    public function get_reports_by_management_report_id($management_report_id)
+    {
+        $sql="SELECT *
+        FROM accounting_management_reports_reports_pages 
+        WHERE management_report_id = ".$management_report_id;
+        $query = $this->db->query($sql);
+        return $query->result();
+    }
     public function update_management_report($data,$id)
     {
         $this->db->where('id', $id);
@@ -63,5 +79,25 @@ class Accounting_management_reports extends MY_Model
     public function delete_preliminary_page($id)
     {
         $this->db->delete('accounting_management_reports_preliminary_pages', array('id' => $id));
+    }
+
+    public function delete_report_page($management_report_id, $report_id)
+    {
+        $this->db->delete('accounting_management_reports_reports_pages', array('id' => $report_id, 'management_report_id' => $management_report_id));
+    }
+    public function update_reports($data,$id)
+    {
+        $this->db->where('id', $id);
+        $this->db->update('accounting_management_reports_reports_pages', $data);
+        if ($this->db->affected_rows() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    public function insert_report($data)
+    {
+        $this->db->insert('accounting_management_reports_reports_pages', $data);
+        $insert_id = $this->db->insert_id();
     }
 }

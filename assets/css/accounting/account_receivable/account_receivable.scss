@@ -544,3 +544,21 @@ $colorError: #d52b1e;
     align-items: center;
   }
 }
+
+.buttonSubmit {
+  display: grid;
+  grid-template-columns: auto auto;
+  align-items: center;
+  gap: 5px;
+
+  & .spinner-border {
+    margin: 0 !important;
+    display: none;
+  }
+
+  &--isLoading {
+    & .spinner-border {
+      display: block;
+    }
+  }
+}

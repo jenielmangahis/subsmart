@@ -933,6 +933,7 @@ class Accounting extends MY_Controller
         $management_report_id = $this->input->post("management_report_id");
         $management_report=$this->accounting_management_reports->get_management_reports_by_id($management_report_id);
         $preliminary_pages=$this->accounting_management_reports->get_management_reports_preliminary_pages_by_id($management_report_id);
+        $reports=$this->accounting_management_reports->get_reports_by_management_report_id($management_report_id);
 
         $data = new stdClass();
         $data->	created_by = $management_report->created_by;
@@ -957,6 +958,7 @@ class Accounting extends MY_Controller
         $data->date_updated = $management_report->date_updated;
         $data->updated_by = $management_report->updated_by;
         $data->preliminary_pages_ctr = count($preliminary_pages);
+        $data->reports_ctr = count($reports);
         
         echo json_encode($data);
     }
@@ -1003,41 +1005,150 @@ class Accounting extends MY_Controller
         );
         $this->accounting_management_reports->update_management_report($data,$management_report_id);
 
-        $preliminary_content = $this->input->post("prelimenary_page_content");
-        $include_this_page = $this->input->post("include_this_page");
-        $preliminary_page_title = $this->input->post("preliminary_page_title");
-        $preliminary_page_ids = $this->input->post("preliminary_page_ids");
 
-        for($i = 0; $i < count($preliminary_content);$i++){
-            $id=$preliminary_page_ids[$i];
-            $includded =0;
-            if($include_this_page[$i] == "on"){
-                $includded =1;
+
+        $deleted_report_pages=explode(",",$this->input->post("deleted_reports_pages"));
+        $deleted_preliminary_pages=explode(",",$this->input->post("deleted_preliminary_pages"));
+        
+        for($i=0;$i<count($deleted_report_pages);$i++){
+            $report_id =  $deleted_report_pages[$i];
+            if($report_id!=""){
+                $this->accounting_management_reports->delete_report_page($management_report_id, $report_id);
             }
-            $data = array(
-                "management_report_id"=>$management_report_id,
-                "include_this_page"=>$includded,
-                "page_title"=>$preliminary_page_title[$i],
-                "page_content"=>$preliminary_content[$i],
-                "date_updated"=>date("Y-m-d h:i:s"),
-            );
-            $success=$this->accounting_management_reports->update_preliminary_page($data,$id);
-            if(!$success){
-                $data["date_created"]=date("Y-m-d h:i:s");
-                $this->accounting_management_reports->insert_preliminary_page($data);
+        }
+        for($i=0;$i<count($deleted_preliminary_pages);$i++){
+            $preliminary_id =  $deleted_preliminary_pages[$i];
+            if($preliminary_id!=""){
+                $this->accounting_management_reports->delete_preliminary_page( $preliminary_id);
             }
         }
 
+
+        $preliminary_content = $this->input->post("prelimenary_page_content");
+        $include_this_page = $this->input->post("input_include_this_page");
+        $preliminary_page_title = $this->input->post("preliminary_page_title");
+        $preliminary_page_ids = $this->input->post("preliminary_page_ids");
+            for($i = 0; $i < count($preliminary_content);$i++){
+                $id=$preliminary_page_ids[$i];
+                
+                $data = array(
+                    "management_report_id"=>$management_report_id,
+                    "include_this_page"=>$include_this_page[$i],
+                    "page_title"=>$preliminary_page_title[$i],
+                    "page_content"=>$preliminary_content[$i],
+                    "date_updated"=>date("Y-m-d h:i:s"),
+                );
+                $success=$this->accounting_management_reports->update_preliminary_page($data,$id);
+                if(!$success){
+                    $data["date_created"]=date("Y-m-d h:i:s");
+                    $this->accounting_management_reports->insert_preliminary_page($data);
+                }
+            }
+        
+        $report_type = $this->input->post("report_type");
+        $report_title = $this->input->post("report_title");
+        $report_period = $this->input->post("report_period");
+        $report_compare_prev_year = $this->input->post("input_report_compare_prev_year");
+        $report_compare_prev_period = $this->input->post("input_report_compare_prev_period");
+        $management_report_report_ids = $this->input->post("management_report_report_ids");
+        if($report_type != ""){
+            for($i =0; $i < count($report_type);$i++ ){
+                $report_id=$management_report_report_ids[$i];
+                
+                $data=array(
+                    "management_report_id"=>$management_report_id,
+                    "report_page_type"=>$report_type[$i],
+                    "report_page_title"=>$report_title[$i],
+                    "report_page_period"=>$report_period[$i],
+                    "report_page_compare_prev_year"=>$report_compare_prev_year[$i],
+                    "report_page_compare_prev_period"=>$report_compare_prev_period[$i],
+                    "date_updated"=>date("Y-m-d h:i:s"),
+                );
+                $success=$this->accounting_management_reports->update_reports($data,$report_id);
+                if(!$success){
+                    $data["date_created"]=date("Y-m-d h:i:s");
+                    $this->accounting_management_reports->insert_report($data);
+                }
+            }
+        }else{
+            $this->accounting_management_reports->delete_reports_by_management_report_id($management_report_id);
+        }
+
+        $this->create_cover_page_pdf_template();
+        $data = new stdClass();
+        $data->result = "success";
+        echo json_encode($data);
+    }
+
+    
+    public function create_cover_page_pdf_template()
+    {
+        $management_report_id = $this->input->post("management_report_id");
+        $management_report = $this->accounting_management_reports->get_management_reports_by_id($management_report_id);
+        $this->page_data["management_report"]=$management_report;
+        $filename = "management_report_cover_page".$management_report_id.".pdf";
+        $this->load->library('pdf');
+        $this->pdf->save_pdf('accounting/reports/management_reports/cover_page_template', $this->page_data, $filename, "P");
+        // echo json_encode("success");
+
+
+
+
+
+            
+        // $invoice_id = $this->input->post("invoice_id");
+        // $customer_id = $this->input->post("customer_id");
+        // $customer_info = $this->accounting_customers_model->get_customer_by_id($customer_id);
+        // $user_info = $this->users_model->getUserById(logged("id"));
+
+        // $invoice = get_invoice_by_id($invoice_id);
+        // $user = get_user_by_id(logged('id'));
+        // $this->page_data['invoice'] = $invoice;
+        // $this->page_data['user'] = $user;
+        // // $this->page_data['items'] = $user;
+        // $this->page_data['items'] = $this->invoice_model->getItemsInv($invoice_id);
+        // $this->page_data['users'] = $this->invoice_model->getInvoiceCustomer($invoice_id);
+
+        // if (!empty($invoice)) {
+        //     foreach ($invoice as $key => $value) {
+        //         if (is_serialized($value)) {
+        //             $invoice->{$key} = unserialize($value);
+        //         }
+        //     }
+        //     $this->page_data['invoice'] = $invoice;
+        //     $this->page_data['user'] = $user;
+        // }
+        // $img = explode("/", parse_url((companyProfileImage(logged('company_id'))) ? companyProfileImage(logged('company_id')) : $url->assets)['path']);
+        // $this->page_data['profile'] = $img[2] . "/" . $img[3] . "/" . $img[4];
+        // $filename = "nSmarTrac_invoice_".$invoice_id.".pdf";
+        // $this->load->library('pdf');
+        // $this->pdf->save_pdf('accounting/reports/management_reports/cover_page_template', $this->page_data, $filename, "P");
+
+        // $data = new stdClass();
+        // $data->business_name = $customer_info->business_name;
+        // $data->business_email = $customer_info->business_email;
+        // $data->acs_email = $customer_info->acs_email;
+        // $data->firstname = $customer_info->first_name;
+        // $data->lastname = $customer_info->last_name;
+        // $data->user_email = $user_info->email;
+        // $data->filelocation = base_url("assets/pdf/".$filename."") ;
+        // echo json_encode($data);
+    }
+
+    public function managenent_report_delete_preliminary_page()
+    {
+        $preliminary_page_id = $this->input->post("preliminary_page_id");
+        $this->accounting_management_reports->delete_preliminary_page($preliminary_page_id);
 
         $data = new stdClass();
         $data->result = "success";
         echo json_encode($data);
     }
-    public function managenent_report_delete_preliminary_page()
+    public function managenent_report_delete_report_page()
     {
-        $preliminary_page = $this->input->post("preliminary_page_id");
-        $this->accounting_management_reports->delete_preliminary_page($preliminary_page);
-
+        $management_report_id = $this->input->post("management_report_id");
+        $report_id = $this->input->post("report_id");
+        $this->accounting_management_reports->delete_report_page($management_report_id,$report_id);
         $data = new stdClass();
         $data->result = "success";
         echo json_encode($data);
@@ -1045,13 +1156,12 @@ class Accounting extends MY_Controller
 
     public function management_report_add_prelim_page_html()
     {
-        
         if($this->input->post("count") == 0){
             $this->page_data['data_count'] = $this->input->post("data_count");
+            $this->page_data['prelim_pages']=null;
         }else{
             $this->page_data['prelim_pages'] = $this->accounting_management_reports->get_management_reports_preliminary_pages_by_id( $this->input->post("management_report_id"));
         }
-
 
         $new_page =$this->load->view('accounting/reports/management_reports/preliminary_pages', $this->page_data, true);
         $data = new stdClass();
@@ -1060,7 +1170,12 @@ class Accounting extends MY_Controller
     }
     public function management_report_add_new_report_section_html()
     {
-        $this->page_data['data_count'] = $this->input->post("data_count");
+        if($this->input->post("count") == 0){
+            $this->page_data['data_count'] = $this->input->post("data_count");
+            $this->page_data['report_pages']=null;
+        }else{
+            $this->page_data['report_pages'] = $this->accounting_management_reports->get_report_pages_by_maagement_report_id($this->input->post("management_report_id"));
+        }
         $new_report =$this->load->view('accounting/reports/management_reports/new_report_secitons', $this->page_data, true);
         $data = new stdClass();
         $data->new_report = $new_report;

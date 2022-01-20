@@ -2826,50 +2826,58 @@
                                                         <td><?php if ($report->created_by == 0) {
                                                             echo "nSmarTrac";
                                                         } else {
-                                                            echo $report->first_name." ".strtoupper(substr($report->last_name, -1)).".";
+                                                            $user_details = $this->users_model->getUser($report->created_by);
+                                                            if($user_details != null){
+                                                                $lname=$user_details->LName;
+                                                                echo $user_details->FName." ".strtoupper($lname[0]).".";
+                                                            }
                                                         } ?>
                                                         </td>
                                                         <td>
 
                                                         <?php
                                                         if ($report->updated_by > 0) {
-                                                            $customer_details = $this->accounting_customers_model->get_customer_by_id($report->updated_by);
-                                                                echo $customer_details->first_name." ".$customer_details->last_name;
+                                                            $user_details = $this->users_model->getUser($report->updated_by);
+                                                            if($user_details != null){
+                                                                $lname=$user_details->LName;
+                                                                echo $user_details->FName." ".strtoupper($lname[0]).".";
+                                                            }
+                                                                
                                                         }?>
                                                         </td>
                                                         <td>
                                                             <select class="form-control " name="filter_date">
-                                                                <option>All Dates</option>
-                                                                <option>Custom</option>
-                                                                <option>Today </option>
-                                                                <option>This Week </option>
-                                                                <option>This Week-to-date </option>
-                                                                <option>This Month </option>
-                                                                <option>This Month-to-date </option>
-                                                                <option>This Quarter </option>
-                                                                <option>This Quarter-to-date </option>
-                                                                <option>This Year </option>
-                                                                <option>This Year-to-date </option>
-                                                                <option>This Year-to-last-month </option>
-                                                                <option>Yesterday </option>
-                                                                <option>Recent </option>
-                                                                <option>Last Week </option>
-                                                                <option>Last Week-to-date </option>
-                                                                <option>Last Month </option>
-                                                                <option>Last Month-to-date </option>
-                                                                <option>Last Quarter </option>
-                                                                <option>Last Quarter-to-date </option>
-                                                                <option>Last Year </option>
-                                                                <option>Last Year-to-date </option>
-                                                                <option>Since 30 Days Ago </option>
-                                                                <option>Since 60 Days Ago </option>
-                                                                <option>Since 90 Days Ago </option>
-                                                                <option>Since 365 Days Ago </option>
-                                                                <option>Next Week </option>
-                                                                <option>Next 4 Weeks </option>
-                                                                <option>Next Month </option>
-                                                                <option>Next Quarter </option>
-                                                                <option>Next Year </option>
+                                                                <option <?php if($report->report_period=="All Dates"){echo "selected";}?>>All Dates</option>
+                                                                <option <?php if($report->report_period=="Custom"){echo "selected";}?>>Custom</option>
+                                                                <option <?php if($report->report_period=="Today"){echo "selected";}?>>Today </option>
+                                                                <option <?php if($report->report_period=="This Week"){echo "selected";}?>>This Week </option>
+                                                                <option <?php if($report->report_period=="This Week-to-date"){echo "selected";}?>>This Week-to-date </option>
+                                                                <option <?php if($report->report_period=="This Month"){echo "selected";}?>>This Month </option>
+                                                                <option <?php if($report->report_period=="This Month-to-date"){echo "selected";}?>>This Month-to-date </option>
+                                                                <option <?php if($report->report_period=="This Quarter"){echo "selected";}?>>This Quarter </option>
+                                                                <option <?php if($report->report_period=="This Quarter-to-date"){echo "selected";}?>>This Quarter-to-date </option>
+                                                                <option <?php if($report->report_period=="This Year"){echo "selected";}?>>This Year </option>
+                                                                <option <?php if($report->report_period=="This Year-to-date"){echo "selected";}?>>This Year-to-date </option>
+                                                                <option <?php if($report->report_period=="This Year-to-last-month"){echo "selected";}?>>This Year-to-last-month </option>
+                                                                <option <?php if($report->report_period=="Yesterday"){echo "selected";}?>>Yesterday </option>
+                                                                <option <?php if($report->report_period=="Recent"){echo "selected";}?>>Recent </option>
+                                                                <option <?php if($report->report_period=="Last Week"){echo "selected";}?>>Last Week </option>
+                                                                <option <?php if($report->report_period=="Last Week-to-date"){echo "selected";}?>>Last Week-to-date </option>
+                                                                <option <?php if($report->report_period=="Last Month"){echo "selected";}?>>Last Month </option>
+                                                                <option <?php if($report->report_period=="Last Month-to-date"){echo "selected";}?>>Last Month-to-date </option>
+                                                                <option <?php if($report->report_period=="Last Quarter"){echo "selected";}?>>Last Quarter </option>
+                                                                <option <?php if($report->report_period=="Last Quarter-to-date"){echo "selected";}?>>Last Quarter-to-date </option>
+                                                                <option <?php if($report->report_period=="Last Year"){echo "selected";}?>>Last Year </option>
+                                                                <option <?php if($report->report_period=="Last Year-to-date"){echo "selected";}?>>Last Year-to-date </option>
+                                                                <option <?php if($report->report_period=="Since 30 Days Ago"){echo "selected";}?>>Since 30 Days Ago </option>
+                                                                <option <?php if($report->report_period=="Since 60 Days Ago"){echo "selected";}?>>Since 60 Days Ago </option>
+                                                                <option <?php if($report->report_period=="Since 90 Days Ago"){echo "selected";}?>>Since 90 Days Ago </option>
+                                                                <option <?php if($report->report_period=="Since 365 Days Ago"){echo "selected";}?>>Since 365 Days Ago </option>
+                                                                <option <?php if($report->report_period=="Next Week"){echo "selected";}?>>Next Week </option>
+                                                                <option <?php if($report->report_period=="Next 4 Weeks"){echo "selected";}?>>Next 4 Weeks </option>
+                                                                <option <?php if($report->report_period=="Next Month"){echo "selected";}?>>Next Month </option>
+                                                                <option <?php if($report->report_period=="Next Quarter"){echo "selected";}?>>Next Quarter </option>
+                                                                <option <?php if($report->report_period=="Next Year"){echo "selected";}?>>Next Year </option>
                                                             </select>
                                                         </td>
                                                         <td>
@@ -3116,7 +3124,8 @@
                                                                     <li><a
                                                                             href="<?php echo base_url() . 'reports/main/report/profit-loss' ?>"><span
                                                                                 class="fa fa-angle-right fa-margin-right"></span>
-                                                                            Profit and Loss</a></li>
+                                                                            
+                                                                            </a></li>
                                                                     <li><a
                                                                             href="<?php echo base_url() . 'reports/main/report/work-order-by-employee' ?>"><span
                                                                                 class="fa fa-angle-right fa-margin-right"></span>

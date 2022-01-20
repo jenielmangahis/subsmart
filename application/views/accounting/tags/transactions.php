@@ -57,6 +57,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 	#myTabContent .action-bar ul li .dropdown-menu a {
 		font-size: 14px;
 	}
+    #transactions-table .badge {
+        padding: .25em .4em;
+        line-height: 1;
+        font-weight: 600;
+    }
 </style>
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">
@@ -168,13 +173,15 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                                 <div class="col-md-4">
                                                                     <div class="form-group">
                                                                         <label for="by-contact">By Contact</label>
-                                                                        <select id="by-contact" class="form-control"></select>
+                                                                        <select id="by-contact" class="form-control">
+                                                                            <option value=""></option>
+                                                                        </select>
                                                                     </div>
                                                                 </div>
                                                             </div>
 
                                                             <div class="btn-group d-block">
-                                                                <a href="#" class="btn-main" onclick="resetfilters()">Reset Filters</a>
+                                                                <a href="#" class="btn-main" id="reset-filters">Reset Filters</a>
                                                                 <a href="#" id="apply-btn" class="btn-main apply-btn" onclick="applybtn()">Apply</a>
                                                             </div>
                                                         </div>
@@ -223,7 +230,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                             </div>
 
                                                             <div class="btn-group d-block">
-                                                                <a href="#" class="btn-main" onclick="resettags()">Reset</a>
+                                                                <a href="#" class="btn-main" id="reset-tags">Reset</a>
                                                                 <a href="#" id="apply-btn" class="btn-main apply-btn m-auto" onclick="applybtn()">Apply</a>
                                                             </div>
                                                         </div>

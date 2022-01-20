@@ -287,6 +287,7 @@ $route['accounting/tags/add-tag']['POST'] = "accounting_controllers/tags/add_tag
 $route['accounting/tags/delete-tags']['POST'] = "accounting_controllers/tags/delete_tags";
 $route['accounting/tags/transactions'] = "accounting_controllers/tags/transactions";
 $route['accounting/tags/load-transactions']['post'] = "accounting_controllers/tags/load_transactions";
+$route['accounting/tags/print-transactions']['post'] = "accounting_controllers/tags/print_transactions";
 
 // Modals
 $route['accounting/get-other-modals/(:any)'] = "accounting_modals/index/$1";
@@ -417,6 +418,7 @@ $route['management-report/company-overview/add-new-report-section'] = 'accountin
 $route['management-report/get-management-report'] = 'accounting/get_management_report';
 $route['management-report/update'] = 'accounting/update_management_report';
 $route['management-report/preliminary-page/delete'] = 'accounting/managenent_report_delete_preliminary_page';
+$route['management-report/delete-report-page'] = 'accounting/managenent_report_delete_report_page';
 
 
 // Accounting products and services

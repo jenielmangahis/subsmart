@@ -225,10 +225,10 @@ div#management_reports_modal .the-modal-body .the-header .form-group.report-peri
 }
 
 #management_reports_modal .the-content {
-    height: calc(100% - 225px);
+    /* height: calc(100% - 225px);
     background: #F4F5F8;
     overflow: scroll;
-    overflow-x: hidden;
+    overflow-x: hidden; */
 }
 
 #management_reports_modal .the-content .report-pages {
@@ -503,4 +503,17 @@ div#management_reports_modal .the-modal-body .the-header .form-group.report-peri
 
 #management_reports_modal #cover-page-section .page-styles-img .cover-style .style-icon.icon-4 {
     background-position: 0 -794px;
+}
+
+#management_reports_modal .right-content .content {
+    width: 90%;
+}
+
+#management_reports_modal .right-content {
+    position: fixed;
+    width: 83%;
+    height: calc(100% - 260px);
+    overflow: scroll;
+    overflow-x: hidden;
+    overflow-y: scroll;
 }

@@ -151,15 +151,17 @@ window.addEventListener("DOMContentLoaded", async () => {
 
   const $runReport = $("#runReport");
   const $arForm = $(".accountReceivable__form");
-  $runReport.on("click", () => {
+  $runReport.on("click", async () => {
     const $dataTypes = $arForm.find("[data-type]");
+    const payload = {};
+
     for (let index = 0; index < $dataTypes.length; index++) {
       const $dataType = $($dataTypes[index]);
       const $parentError = $dataType.closest(".inputErrorWrapper");
-      const value = $dataType.val();
+      const name = $dataType.data("type");
 
       if (
-        ($dataType.prop("required") && isEmpty(value)) ||
+        ($dataType.prop("required") && isEmpty($dataType.val())) ||
         $dataType.hasClass("inputError")
       ) {
         $dataType.addClass("inputError");
@@ -168,9 +170,24 @@ window.addEventListener("DOMContentLoaded", async () => {
         return;
       }
 
+      if ($dataType.is(":checkbox") || $dataType.is(":radio")) {
+        payload[name] = $dataType.is(":checked");
+      } else {
+        payload[name] = $dataType.val();
+      }
+
       $dataType.removeClass("inputError");
       $parentError.removeClass("inputErrorWrapper--active");
     }
+
+    $runReport.addClass("buttonSubmit--isLoading");
+    $runReport.prop("disabled", true);
+
+    const response = await api.runReport(payload);
+    console.log(response.data);
+
+    $runReport.removeClass("buttonSubmit--isLoading");
+    $runReport.prop("disabled", false);
   });
 
   $("[name=nonZeroActiveOnlyRows], [name=nonZeroActiveOnlyColumns]") //
@@ -308,7 +325,8 @@ window.addEventListener("DOMContentLoaded", async () => {
       $customizeReport.removeClass("customizeReport--show");
       $customizeReport.find(".collapse").collapse("hide");
     });
-  $customizeReport.find(".btn-primary").on("click", () => {
+  const $customizeReportBtn = $customizeReport.find(".btn-primary");
+  $customizeReportBtn.on("click", async () => {
     const $dataTypes = $customizeReport.find("[data-type]");
     const payload = {};
 
@@ -336,8 +354,14 @@ window.addEventListener("DOMContentLoaded", async () => {
       }
     }
 
-    console.clear();
-    console.log(payload);
+    $customizeReportBtn.addClass("buttonSubmit--isLoading");
+    $customizeReportBtn.prop("disabled", true);
+
+    const response = await api.runReportCustomize(payload);
+    console.log(response.data);
+
+    $customizeReportBtn.removeClass("buttonSubmit--isLoading");
+    $customizeReportBtn.prop("disabled", false);
   });
 });
 

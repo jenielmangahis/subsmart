@@ -34,7 +34,7 @@
                                                                             echo $vendor->display_name;
                                                                         break;
                                                                         case 'customer' :
-                                                                            $customer = $this->accounting_customers_model->get_customer_by_id($expense->payee_id);
+                                                                            $customer = $this->accounting_customers_model->get_by_id($expense->payee_id);
                                                                             echo $customer->first_name . ' ' . $customer->last_name;
                                                                         break;
                                                                         case 'employee' :
