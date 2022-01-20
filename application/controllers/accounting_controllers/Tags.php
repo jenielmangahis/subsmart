@@ -392,7 +392,7 @@ class Tags extends MY_Controller {
             'draw' => $post['draw'],
             'recordsTotal' => count($data),
             'recordsFiltered' => count($data),
-            'data' => array_slice($data, 0, 50)
+            'data' => array_slice($data, $start, $limit)
         ];
 
         echo json_encode($result);
@@ -792,5 +792,111 @@ class Tags extends MY_Controller {
         }
 
         return $category;
+    }
+
+    public function print_transactions()
+    {
+        $post = $this->input->post();
+        $order = $post['order'];
+        $columnName = $post['column'];
+
+        $tags = [];
+        if(!is_null($post['grouped'])) {
+            foreach($post['grouped'] as $tagId) {
+                $tags[] = $tagId;
+            }
+        }
+
+        if(!is_null($post['ungrouped'])) {
+            foreach($post['ungrouped'] as $tagId) {
+                $tags[] = $tagId;
+            }
+        }
+
+        $filter = [
+            'company_id' => logged('company_id'),
+            'untagged' => $post['untagged'],
+            'tags' => $tags,
+            'type' => $post['type'],
+            'money-in' => $post['money_in'],
+            'money-out' => $post['money_out']
+        ];
+
+        if($date !== 'all') {
+            $filter['from'] = $post['from'] === '' ? null : date("Y-m-d", strtotime($post['from']));
+            $filter['to'] = $post['to'] === '' ? null : date("Y-m-d", strtotime($post['to']));
+        }
+
+        if($contact !== '') {
+            $cont = explode('-', $contact);
+            $filter['contact_type'] = $cont[0];
+            $filter['contact_id'] = $cont[1];
+        }
+        
+        $data = $this->get_transactions($filter);
+
+        usort($data, function($a, $b) use ($order, $columnName) {
+            switch($columnName) {
+                case 'date' :
+                    if($order === 'asc') {
+                        return strtotime($a['date']) > strtotime($b['date']);
+                    } else {
+                        return strtotime($a['date']) < strtotime($b['date']);
+                    }
+                break;
+                default :
+                    if($order === 'asc') {
+                        return strcmp($a[$columnName], $b[$columnName]);
+                    } else {
+                        return strcmp($b[$columnName], $a[$columnName]);
+                    }
+                break;
+            }
+        });
+
+        $tableHtml = "<h3 style='text-align: center;'>Transactions by tag</h3>";
+        $tableHtml .= "<table width='100%'>";
+        $tableHtml .= "<thead>";
+        $tableHtml .= "<tr style='text-align: left;'>";
+        $tableHtml .= "<th style='border-bottom: 2px solid #BFBFBF'>Date</th>";
+        $tableHtml .= "<th style='border-bottom: 2px solid #BFBFBF'>From/To</th>";
+        $tableHtml .= "<th style='border-bottom: 2px solid #BFBFBF'>Category</th>";
+        $tableHtml .= "<th style='border-bottom: 2px solid #BFBFBF'>Memo</th>";
+        $tableHtml .= "<th style='border-bottom: 2px solid #BFBFBF'>Type</th>";
+        $tableHtml .= "<th style='border-bottom: 2px solid #BFBFBF'>Amount</th>";
+        $tableHtml .= "<th style='border-bottom: 2px solid #BFBFBF'>Tags</th>";
+        $tableHtml .= "</tr>";
+        $tableHtml .= "</thead>";
+        $tableHtml .= "<tbody>";
+        foreach($data as $transaction) {
+            $amount = '$'.$transaction['amount'];
+            $amount = str_replace('$-', '-$', $amount);
+
+            $tagCol = '<ul>';
+            foreach($transaction['tags'] as $tag) {
+                $name = $tag->name;
+                if($tag->group_name !== null) {
+                    $name = "$tag->group_name: $name";
+                }
+
+                $tagCol .= "<li>$name</li>";
+            }
+            $tagCol .= '</ul>';
+
+            $tableHtml .= "<tr>";
+            $tableHtml .= "<td style='border-bottom: 1px dotted #D5CDB5'>".$transaction['date']."</td>";
+            $tableHtml .= "<td style='border-bottom: 1px dotted #D5CDB5'>".$transaction['from_to']."</td>";
+            $tableHtml .= "<td style='border-bottom: 1px dotted #D5CDB5'>".$transaction['category']."</td>";
+            $tableHtml .= "<td style='border-bottom: 1px dotted #D5CDB5'>".$transaction['memo']."</td>";
+            $tableHtml .= "<td style='border-bottom: 1px dotted #D5CDB5'>".$transaction['type']."</td>";
+            $tableHtml .= "<td style='border-bottom: 1px dotted #D5CDB5'>".$amount."</td>";
+            $tableHtml .= "<td style='border-bottom: 1px dotted #D5CDB5'>".$tagCol."</td>";
+            $tableHtml .= "</tr>";
+        }
+
+        $tableHtml .= "</tbody>";
+        $tableHtml .= "</table>";
+
+        echo $tableHtml;
     }
 }

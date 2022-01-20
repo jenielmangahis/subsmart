@@ -208,7 +208,8 @@ $('#type').on('change', function() {
     var column = $(this).parent().parent().parent().parent();
     switch($(this).val()) {
         case 'all' :
-            column.next().remove();
+            $('#money-in').parent().parent().parent().parent().remove();
+            $('#money-out').parent().parent().parent().parent().remove();
         break;
         case 'money-in' :
             var options = `<option value="all" selected>All money in</option>
@@ -413,6 +414,75 @@ $('#transactions-table').DataTable({
 		pagingType: 'full_numbers'
 	},
 	columns: columns
+});
+
+$('#reset-filters').on('click', function(e) {
+    e.preventDefault();
+
+    $('#type').val('all').trigger('change');
+    $('#date').val('last-365-days').trigger('change');
+    $('#by-contact').val('').trigger('change');
+});
+
+$('#reset-tags').on('click', function(e) {
+    e.preventDefault();
+
+    $('#untagged').prop('checked', false);
+    $('#tags-filter-dropdown select').each(function() {
+        $(this).val([]).change();
+    });
+});
+
+$('#print-table').on('click', function(e) {
+    e.preventDefault();
+
+    var data = new FormData();
+
+    data.set('type', $('#type').val());
+    data.set('money_in', $('#money-in').val());
+    data.set('money_out', $('#money-out').val());
+    data.set('date', $('#date').val());
+    data.set('from', $('#from-date').val());
+    data.set('to', $('#to-date').val());
+    data.set('contact', $('#by-contact').val());
+    data.set('untagged', $('#untagged').prop('checked') ? 1 : 0);
+
+    var ungrouped = $('#ungrouped').select2('val');
+    for(i = 0; i < ungrouped.length; i++) {
+        if(ungrouped[i] !== 'all') {
+            data.append('ungrouped[]', ungrouped[i]);
+        }
+    }
+
+    var tableOrder = $('#transactions-table').DataTable().order();
+    data.set('column', columns[tableOrder[0][0]].name);
+    data.set('order', tableOrder[0][1]);
+
+    $('#tags-filter-dropdown select:not(#ungrouped)').each(function() {
+        var selected = $(this).select2('val');
+        
+        for(i = 0; i < selected.length; i++) {
+            if(selected[i].includes('all') === false) {
+                data.append('grouped[]', selected[i]);
+            }
+        }
+    });
+
+    $.ajax({
+        url: '/accounting/tags/print-transactions',
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function(result) {
+            let pdfWindow = window.open("");
+            pdfWindow.document.write(result);
+            $(pdfWindow.document).find('body').css('padding', '0');
+            $(pdfWindow.document).find('body').css('margin', '0');
+            $(pdfWindow.document).find('iframe').css('border', '0');
+            pdfWindow.print();
+        }
+    });
 });
 
 function applybtn() {
