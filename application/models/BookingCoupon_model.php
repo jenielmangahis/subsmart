@@ -29,13 +29,22 @@ class BookingCoupon_model extends MY_Model
 
     public function getById($id)
     {
-        $user_id = logged('id');
-
         $this->db->select('*');
         $this->db->from($this->table);
 
-        $this->db->where('user_id', $user_id);
         $this->db->where('id', $id);
+
+        $query = $this->db->get()->row();
+        return $query;
+    }
+
+    public function getByIdAndCompanyId($id, $company_id)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+
+        $this->db->where('id', $id);
+        $this->db->where('company_id', $company_id);
 
         $query = $this->db->get()->row();
         return $query;
@@ -82,6 +91,10 @@ class BookingCoupon_model extends MY_Model
         $this->db->delete($this->table, array('user_id' => $user_id, 'id' => $id));
     }
 
+    public function deleteCouponByIdAndCompanyId($id, $company_id){
+        $this->db->delete($this->table, array('company_id' => $company_id, 'id' => $id));
+    }
+
     public function getAllActive($filters=array())
     {
         $id = logged('id');
@@ -91,21 +104,19 @@ class BookingCoupon_model extends MY_Model
         $this->db->select('*');
         $this->db->from($this->table);
 
-        if ( !empty($filters) ) {
+        /*if ( !empty($filters) ) {
             if ( !empty($filters['search']) ) {
                 $this->db->like('name', $filters['search'], 'both');
             }
+        }*/
+
+        if( !empty($filter) ){
+            foreach( $filters as $filter ){
+                $this->db->where($filter['field'], $filter['value']);
+            }
         }
 
-        if( $role_id == 1 || $role_id == 2 ){
-            $this->db->where('status', $this->status_active);
-        }else{
-            $this->db->where('company_id', $company_id);
-            $this->db->where('status', $this->status_active);
-        }
-        //$this->db->where('user_id', $id);
-        //$this->db->where('status', $this->status_active);
-
+        $this->db->where('status', $this->status_active);
         $this->db->order_by('id', 'DESC');
 
         $query = $this->db->get();
@@ -119,44 +130,58 @@ class BookingCoupon_model extends MY_Model
         $this->db->select('*');
         $this->db->from($this->table);
 
-        if ( !empty($filters) ) {
+        /*if ( !empty($filters) ) {
             if ( !empty($filters['search']) ) {
                 $this->db->like('name', $filters['search'], 'both');
             }
+        }*/
+
+        if( !empty($filter) ){
+            foreach( $filters as $filter ){
+                $this->db->where($filter['field'], $filter['value']);
+            }
         }
 
-        $this->db->where('user_id', $id);
         $this->db->where('status', $this->status_closed);
-
         $this->db->order_by('id', 'DESC');
 
         $query = $this->db->get();
         return $query->result();
     }
 
-    public function totalActive()
+    public function totalActive( $filters = array() )
     {
         $id = logged('id');
 
         $this->db->select('*');
         $this->db->from($this->table);
 
-        $this->db->where($this->table . '.user_id', $id);
-        $this->db->where($this->table . '.status', $this->status_active);
+        if( !empty($filter) ){
+            foreach( $filters as $filter ){
+                $this->db->where($filter['field'], $filter['value']);
+            }
+        }
+        
+        $this->db->where('status', $this->status_active);
 
         $num_rows = $this->db->count_all_results();
         return $num_rows;
     }
 
-    public function totalClosed()
+    public function totalClosed( $filters = array() )
     {
         $id = logged('id');
 
         $this->db->select('*');
         $this->db->from($this->table);
 
-        $this->db->where($this->table . '.user_id', $id);
-        $this->db->where($this->table . '.status', $this->status_closed);
+        if( !empty($filter) ){
+            foreach( $filters as $filter ){
+                $this->db->where($filter['field'], $filter['value']);
+            }
+        }
+
+        $this->db->where('status', $this->status_closed);
 
         $num_rows = $this->db->count_all_results();
         return $num_rows;

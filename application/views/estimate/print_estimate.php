@@ -417,7 +417,13 @@ span.sc-item {
                             </tr>
                             <tr>
                               <td colspan="5" style="text-align: right;"><p>Markup</p></td>
-                              <td colspan="2" style="text-align: right;"><p>$ <?= number_format($estimate->markup_amount, 2); ?></p></td>
+                              <?php 
+                                $markup_amount = 0;
+                                if( $estimate->markup_amount > 0 ){
+                                  $markup_amount = $estimate->markup_amount;
+                                }
+                              ?>
+                              <td colspan="2" style="text-align: right;"><p>$ <?= number_format($markup_amount, 2); ?></p></td>
                             </tr>
                             <tr>
                               <td colspan="5" style="text-align: right;"><b>TOTAL AMOUNT</b></td>

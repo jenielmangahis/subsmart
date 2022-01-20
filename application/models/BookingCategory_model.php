@@ -37,7 +37,20 @@ class BookingCategory_model extends MY_Model
 
         $num_rows = $this->db->count_all_results();
         return $num_rows;
-    }    
+    }  
+
+    public function countTotalByCompanyId($company_id)
+    {
+        $id = logged('id');
+
+        $this->db->select('*');
+        $this->db->from($this->table);
+
+        $this->db->where('company_id', $company_id);
+
+        $num_rows = $this->db->count_all_results();
+        return $num_rows;
+    }       
 
     public function deleteCategory($id){
         $user_id = logged('id');
@@ -57,16 +70,22 @@ class BookingCategory_model extends MY_Model
         return $query->result();
     }   
 
-    public function getAllCategories()
+    public function getAllCategories( $filters = array() )
     {
         $this->db->select('*');
         $this->db->from($this->table);
+
+        if( $filters ){
+            foreach( $filters as $filter ){
+                $this->db->where($filter['field'], $filter['value']);
+            } 
+        }
+
         $this->db->order_by('id', 'DESC');
 
         $query = $this->db->get();
         return $query->result();
     }
-
 }
 
 /* End of file BookingCoupon_modal.php */

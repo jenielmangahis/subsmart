@@ -1,40 +1,22 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
-<style>
-.p-20 {
-  padding-top: 25px !important;
-  padding-bottom: 25px !important;
-  padding-right: 5px !important;
-  padding-left: 39px !important;
-  margin-top: 55px !important;
-}
-.row-category, .row-category a{
-    background-color: #32243d;
-    color: #ffffff;
-}
-</style>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/upgrades'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
-        <div class="container-fluid p-20">
-            <div class="row">
-                <div class="col">
-                  <h3 class="page-title mt-0">Online Booking</h3>
-                </div>
-                <div class="col-auto">
-                    <div class="h1-spacer">
-                        <button type="button" class="btn btn-primary btn-md" data-toggle="modal" data-target="#modalAddCategory"><i class="fa fa-plus"></i> Add Category</button>
-                        <button type="button" class="btn btn-primary btn-md" data-toggle="modal" data-target="#modalAddServiceItem"><i class="fa fa-plus"></i> Add Service/Item</button>
+        <div class="container-fluid">
+            <div class="page-title-box">
+                <div class="row align-items-center">
+                    <div class="col-sm-6">
+                        <h1 class="page-title">Online Booking</h1>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item active">Manage your online booking</li>
+                        </ol>
                     </div>
                 </div>
             </div>
-            <div class="pl-3 pr-3 mt-2 row" style="position: relative;top: 7px;">
-              <div class="col mb-4 left alert alert-warning mt-0 mb-0">
-                  <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Set the products or services with prices users can book.</span>
-              </div>
-            </div>
+
             <!-- end row -->
             <div class="row">
                 <div class="col-xl-12">
@@ -54,27 +36,38 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                         <div class="ajax-alert-container"></div>
 
+                        <div class="row dashboard-container-1">
+                            <div class="col-md-8"><strong>Set the products or services with prices users can book.</strong></div>
+                            <div class="col-md-4 text-right">
+                                <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#modalAddCategory">Add Category
+                                </button>
+                                <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#modalAddServiceItem">
+                                Add Service/Item
+                                </button>
+                            </div>
+                        </div>       
+
                         <div class="row dashboard-container-2"> 
 
                             <table class="table">
                               <thead>
                                 <tr>
-                                  <th width="60%" scope="col"><b>Categories & Products</b></th>
-                                  <th width="20%" scope="col"><b>Visible</b></th>
-                                  <th width="20%" scope="col"><b>Actions</b></th>
+                                  <th width="60%" scope="col">Categories & Products</th>
+                                  <th width="20%" scope="col">Visible</th>
+                                  <th width="20%" scope="col">Actions</th>
                                 </tr>
                               </thead>
                               <tbody>
 
                                 <?php foreach( $category as $cat ){ ?>
-                                    <tr class="row-category">
+                                    <tr>
                                       <td colspan="2" width="80%"><strong>Category Name:</strong> <?php echo $cat->name; ?></td>
                                       <td width="20%" style="">
                                             <a style="margin-right: 15px;" class="category-edit" data-category-edit-modal="open" data-id="<?php echo $cat->id; ?>" href="javascript:void(0);">
-                                                <span class="fa fa-edit"></span> Edit
+                                                <span class="fa fa-edit"></span> edit
                                             </a>
                                             <a class="category-delete" data-category-delete-modal="open" data-id="<?php echo $cat->id; ?>" href="javascript:void(0);" data-name="<?php echo $cat->name; ?>">
-                                                <span class="fa fa-trash"></span> Delete
+                                                <span class="fa fa-trash"></span>
                                             </a>
                                         </td>
                                     </tr>
@@ -104,16 +97,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         }
                                                         
                                                     ?>
-                                                    <div style="margin-left: 30px;" class="service-items row">
-                                                        <div class="col-2">
-                                                            <img class="service-item-img" style="height: 80px; width: 80px;" src="<?php echo $service_item_thumb_img; ?>" alt="..." class="img-thumbnail">
-                                                        </div>
-                                                        <div class="col-5">
-                                                            <div class="service-item-cnt">
-                                                                <div><?= $sitem->name; ?></div>
-                                                                <div>Price: $<?= $sitem->price; ?>/<?= $sitem->price_unit; ?></div>
-                                                                <div><?= $sitem->description; ?></div>
-                                                            </div>
+                                                    <div style="margin-left: 30px;" class="service-items">
+                                                        <img class="service-item-img" style="height: 80px; width: 80px;" src="<?php echo $service_item_thumb_img; ?>" alt="..." class="img-thumbnail">
+                                                        <div class="service-item-cnt">
+                                                            <div><?= $sitem->name; ?></div>
+                                                            <div>Price: $<?= $sitem->price; ?>/<?= $sitem->price_unit; ?></div>
+                                                            <div><?= $sitem->description; ?></div>
                                                         </div>
                                                     </div>
                                                 </td>
@@ -127,11 +116,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     </div>
                                                 </td>
                                                 <td width="20%" style="">
-                                                    <a style="margin-right: 15px;" class="btnservice-item-edit" data-category-edit-modal="open" data-id="<?php echo $sitem->id; ?>" href="javascript:void(0);">
-                                                        <span class="fa fa-edit"></span> Edit
+                                                    <a style="margin-right: 15px;" class="service-item-edit" data-category-edit-modal="open" data-id="<?php echo $sitem->id; ?>" href="javascript:void(0);">
+                                                        <span class="fa fa-edit"></span> edit
                                                     </a>
                                                     <a class="service-item-delete" data-id="<?php echo $sitem->id; ?>" href="javascript:void(0);" data-name="<?php echo $sitem->name; ?>">
-                                                        <span class="fa fa-trash"></span> Delete
+                                                        <span class="fa fa-trash"></span>
                                                     </a>                                                    
                                                 </td>
                                             </tr> 
@@ -141,8 +130,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <?php } ?>
 
                               </tbody>
-                            </table>  
-                        </div>                                  
+                            </table>                                                                                
+
+                        </div>
+                        <hr />
+                        <div style="text-align: right;"><a href="<?php echo base_url('more/addon/booking/time') ?>" class="btn btn-success"> Continue >> </a></div>                                  
                     </div>
                     <!-- end card -->
                 </div>
