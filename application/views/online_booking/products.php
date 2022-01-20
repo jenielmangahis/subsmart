@@ -104,15 +104,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         }
                                                         
                                                     ?>
-                                                    <div style="margin-left: 30px;" class="service-items row">
+                                                    <div class="service-items row">
                                                         <div class="col-2">
-                                                            <img class="service-item-img" style="height: 80px; width: 80px;" src="<?php echo $service_item_thumb_img; ?>" alt="..." class="img-thumbnail">
+                                                            <img class="service-item-img" style="width: 100%;margin-top: 24px;" src="<?php echo $service_item_thumb_img; ?>" alt="..." class="img-thumbnail">
                                                         </div>
-                                                        <div class="col-5">
+                                                        <div class="col-9">
                                                             <div class="service-item-cnt">
-                                                                <div><?= $sitem->name; ?></div>
-                                                                <div>Price: $<?= $sitem->price; ?>/<?= $sitem->price_unit; ?></div>
-                                                                <div><?= $sitem->description; ?></div>
+                                                                <div><b><?= $sitem->name; ?></b></div>                                                                
+                                                                <div class="font-italic mb-0 small" style="color: #6c757d!important;font-size:17px; margin-top: 10px; margin-bottom:10px !important;"><?= $sitem->description; ?></div>
+                                                                <div><b>Price: $<?= $sitem->price; ?>/<?= $sitem->price_unit; ?></b></div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -127,7 +127,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     </div>
                                                 </td>
                                                 <td width="20%" style="">
-                                                    <a style="margin-right: 15px;" class="btnservice-item-edit" data-category-edit-modal="open" data-id="<?php echo $sitem->id; ?>" href="javascript:void(0);">
+                                                    <a style="margin-right: 15px;" class="service-item-edit" data-category-edit-modal="open" data-id="<?php echo $sitem->id; ?>" href="javascript:void(0);">
                                                         <span class="fa fa-edit"></span> Edit
                                                     </a>
                                                     <a class="service-item-delete" data-id="<?php echo $sitem->id; ?>" href="javascript:void(0);" data-name="<?php echo $sitem->name; ?>">

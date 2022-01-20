@@ -28,8 +28,8 @@ class Booking extends MY_Controller {
 
 	public function index() {
 		$user = $this->session->userdata('logged');
-    	$eid = hashids_encrypt($user['id'], '', 15);
-    	$cid = logged('company_id');
+		$cid  = logged('company_id');
+    	$eid  = hashids_encrypt($cid, '', 15);    	
 
 		$total_category = $this->BookingCategory_model->countTotalByCompanyId($cid);
 		$total_products = $this->BookingServiceItem_model->countTotalByCompanyId($cid);
@@ -161,6 +161,7 @@ class Booking extends MY_Controller {
 
         	foreach ($post_data as $key => $value) {
 	        	$data = array(
+	        		'company_id' => logged('company_id'),
 	        		'user_id' => $user['id'],
 	        		'field_name' => $value['field_name'],
 	        		'label' => $value['label'],
@@ -224,6 +225,7 @@ class Booking extends MY_Controller {
 			$setting = array(
 				'page_title' => $bookingSetting->page_title,
 				'page_intro' => $bookingSetting->page_introduction,
+				'page_instructions' => $bookingSetting->page_instruction,
 				'product_list_mode' => $bookingSetting->product_listing_mode,
 				'time_slot_bookings' => $bookingSetting->appointment_per_time_slot,
 				'cart_total_min' => $bookingSetting->minimum_price_for_entier_booking,
@@ -246,6 +248,7 @@ class Booking extends MY_Controller {
 			$setting = array(
 				'page_title' => '',
 				'page_intro' => '',
+				'page_instructions' => '',
 				'product_list_mode' => 'grid',
 				'time_slot_bookings' => 0,
 				'cart_total_min' => 1,
@@ -817,8 +820,8 @@ class Booking extends MY_Controller {
 
     public function inquiries()
     {
-    	$user      = $this->session->userdata('logged');
-    	$inquiries = $this->BookingInquiry_model->findAllByUserId($user['id']);
+    	$cid = logged('company_id');
+    	$inquiries = $this->BookingInquiry_model->findAllByCompanyId($cid);
 
     	$this->page_data['inquiries'] = $inquiries;
 		$this->load->view('online_booking/inquiries', $this->page_data);
