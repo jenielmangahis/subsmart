@@ -519,6 +519,7 @@ class Tags extends MY_Controller {
             }
 
             $data[] = [
+                'id' => $ccCredit->id,
                 'date' => date("m/d/Y", strtotime($ccCredit->payment_date)),
                 'from_to' => $payeeName,
                 'category' => $this->category_col('Credit Card Credit', $ccCredit->id),
@@ -547,6 +548,7 @@ class Tags extends MY_Controller {
             }
 
             $data[] = [
+                'id' => $vCredit->id,
                 'date' => date("m/d/Y", strtotime($vCredit->payment_date)),
                 'from_to' => $this->vendors_model->get_vendor_by_id($vCredit->vendor_id)->display_name,
                 'category' => $this->category_col('Vendor Credit', $vCredit->id),
@@ -624,6 +626,7 @@ class Tags extends MY_Controller {
             }
 
             $data[] = [
+                'id' => $deposit->id,
                 'date' => date("m/d/Y", strtotime($deposit->date)),
                 'from_to' => $from,
                 'category' => $category,
@@ -667,6 +670,7 @@ class Tags extends MY_Controller {
             }
 
             $data[] = [
+                'id' => $expense->id,
                 'date' => date("m/d/Y", strtotime($expense->payment_date)),
                 'from_to' => $payeeName,
                 'category' => $this->category_col('Expense', $expense->id),
@@ -695,6 +699,7 @@ class Tags extends MY_Controller {
             }
 
             $data[] = [
+                'id' => $bill->id,
                 'date' => date("m/d/Y", strtotime($bill->bill_date)),
                 'from_to' => $this->vendors_model->get_vendor_by_id($bill->vendor_id)->display_name,
                 'category' => $this->category_col('Bill', $bill->id),
@@ -738,6 +743,7 @@ class Tags extends MY_Controller {
             }
 
             $data[] = [
+                'id' => $check->id,
                 'date' => date("m/d/Y", strtotime($check->payment_date)),
                 'from_to' => $payeeName,
                 'category' => $this->category_col('Check', $check->id),
@@ -766,6 +772,7 @@ class Tags extends MY_Controller {
             }
 
             $data[] = [
+                'id' => $purchaseOrder->id,
                 'date' => date("m/d/Y", strtotime($purchaseOrder->purchase_order_date)),
                 'from_to' => $this->vendors_model->get_vendor_by_id($purchaseOrder->vendor_id)->display_name,
                 'category' => $this->category_col('Purchase Order', $purchaseOrder->id),

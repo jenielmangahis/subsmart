@@ -517,3 +517,13 @@ div#management_reports_modal .the-modal-body .the-header .form-group.report-peri
     overflow-x: hidden;
     overflow-y: scroll;
 }
+
+#management_reports_modal #cover-page-section .cover_page_template_view,
+#management_reports_modal #cover-page-section .cover_page_template_view iframe {
+    width: 100%;
+    height: 100%;
+}
+
+#management_reports_modal #cover-page-section .cover_page_template_view iframe {
+    border: solid 1px #CCCCCC;
+}

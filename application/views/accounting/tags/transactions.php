@@ -62,6 +62,17 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         line-height: 1;
         font-weight: 600;
     }
+    .actions-row .btn {
+        border: 2px solid #fff !important;
+        background-color: transparent !important;
+    }
+    .actions-row .btn:hover {
+        background-color: rgba(244, 245, 248, 0.25) !important;
+    }
+    .actions-row button.close {
+        color: #fff;
+        opacity: 1;
+    }
 </style>
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">
@@ -112,7 +123,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                         <?php endif; ?>
                         <div class="tab-content" id="myTabContent">
                             <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1">
-                                <div class="row my-3">
+                                <div class="row my-3 filters-row">
                                     <div class="col-md-6 pb-3">
                                         <div class="row">
                                             <div class="col-1">
@@ -247,6 +258,23 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                         </div>
                                     </div>
                                 </div>
+                                <div class="row my-3 actions-row hide">
+                                    <div class="col">
+                                        <div id="actions-alert" class="alert text-white bg-dark fade show" role="alert">
+                                            <strong><span></span> selected</strong>
+                                            <div class="dropdown d-inline-block">
+                                                <button style="padding:6px 30px" type="button" class="btn btn-dark" data-toggle="dropdown"><span>Update tags</span>&nbsp;&nbsp;<span class="fa fa-caret-down"></span></button>
+                                                <ul class="dropdown-menu dropdown-menu-right">
+                                                    <li><a href="#" class="dropdown-item" id="add-tag">Add tags</a></li>
+                                                    <li><a href="#" class="dropdown-item">Remove tags</a></li>
+                                                </ul>
+                                            </div>
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
                                 <table id="transactions-table" class="table table-bordered table-hover" style="width:100%">
                                     <thead>
                                         <tr>
@@ -283,7 +311,37 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     </div>
 </div>
 
-<div class="append-modal"></div>
+<div class="append-modal">
+    <!--    Modal for creating rules-->
+    <div class="modal-right-side">
+        <div class="modal right fade" id="add-tag-modal" tabindex="" role="dialog" aria-labelledby="add-tag-label">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title" id="add-tag-label" >Add tags</h3>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    </div>
+                    <!-- <form id="create-tag-form"> -->
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for=""><span id="selected-transaction-count">0</span> transaction selected</label>
+                        </div>
+                        <div class="form-group">
+                            <label for="tags-to-add">Tags</label>
+                            <select id="tags-to-add" class="form-control" multiple="multiple" name="tags[]"></select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default float-right" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-success float-right">Apply</button>
+                    </div>
+                    <!-- </form> -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--    end of modal-->
+</div>
 
 <!-- page wrapper end -->
 <?php include viewPath('includes/footer_accounting');

@@ -934,7 +934,7 @@ class Accounting extends MY_Controller
         $management_report=$this->accounting_management_reports->get_management_reports_by_id($management_report_id);
         $preliminary_pages=$this->accounting_management_reports->get_management_reports_preliminary_pages_by_id($management_report_id);
         $reports=$this->accounting_management_reports->get_reports_by_management_report_id($management_report_id);
-
+        $filename = "management_report_cover_page".$management_report_id.".pdf";
         $data = new stdClass();
         $data->	created_by = $management_report->created_by;
         $data->template_name = $management_report->template_name;
@@ -959,7 +959,7 @@ class Accounting extends MY_Controller
         $data->updated_by = $management_report->updated_by;
         $data->preliminary_pages_ctr = count($preliminary_pages);
         $data->reports_ctr = count($reports);
-        
+        $data->file_location = base_url("assets/pdf/".$filename);
         echo json_encode($data);
     }
     public function update_management_report()
@@ -1079,62 +1079,7 @@ class Accounting extends MY_Controller
         $data->result = "success";
         echo json_encode($data);
     }
-
     
-    public function create_cover_page_pdf_template()
-    {
-        $management_report_id = $this->input->post("management_report_id");
-        $management_report = $this->accounting_management_reports->get_management_reports_by_id($management_report_id);
-        $this->page_data["management_report"]=$management_report;
-        $filename = "management_report_cover_page".$management_report_id.".pdf";
-        $this->load->library('pdf');
-        $this->pdf->save_pdf('accounting/reports/management_reports/cover_page_template', $this->page_data, $filename, "P");
-        // echo json_encode("success");
-
-
-
-
-
-            
-        // $invoice_id = $this->input->post("invoice_id");
-        // $customer_id = $this->input->post("customer_id");
-        // $customer_info = $this->accounting_customers_model->get_customer_by_id($customer_id);
-        // $user_info = $this->users_model->getUserById(logged("id"));
-
-        // $invoice = get_invoice_by_id($invoice_id);
-        // $user = get_user_by_id(logged('id'));
-        // $this->page_data['invoice'] = $invoice;
-        // $this->page_data['user'] = $user;
-        // // $this->page_data['items'] = $user;
-        // $this->page_data['items'] = $this->invoice_model->getItemsInv($invoice_id);
-        // $this->page_data['users'] = $this->invoice_model->getInvoiceCustomer($invoice_id);
-
-        // if (!empty($invoice)) {
-        //     foreach ($invoice as $key => $value) {
-        //         if (is_serialized($value)) {
-        //             $invoice->{$key} = unserialize($value);
-        //         }
-        //     }
-        //     $this->page_data['invoice'] = $invoice;
-        //     $this->page_data['user'] = $user;
-        // }
-        // $img = explode("/", parse_url((companyProfileImage(logged('company_id'))) ? companyProfileImage(logged('company_id')) : $url->assets)['path']);
-        // $this->page_data['profile'] = $img[2] . "/" . $img[3] . "/" . $img[4];
-        // $filename = "nSmarTrac_invoice_".$invoice_id.".pdf";
-        // $this->load->library('pdf');
-        // $this->pdf->save_pdf('accounting/reports/management_reports/cover_page_template', $this->page_data, $filename, "P");
-
-        // $data = new stdClass();
-        // $data->business_name = $customer_info->business_name;
-        // $data->business_email = $customer_info->business_email;
-        // $data->acs_email = $customer_info->acs_email;
-        // $data->firstname = $customer_info->first_name;
-        // $data->lastname = $customer_info->last_name;
-        // $data->user_email = $user_info->email;
-        // $data->filelocation = base_url("assets/pdf/".$filename."") ;
-        // echo json_encode($data);
-    }
-
     public function managenent_report_delete_preliminary_page()
     {
         $preliminary_page_id = $this->input->post("preliminary_page_id");
@@ -1179,6 +1124,36 @@ class Accounting extends MY_Controller
         $new_report =$this->load->view('accounting/reports/management_reports/new_report_secitons', $this->page_data, true);
         $data = new stdClass();
         $data->new_report = $new_report;
+        echo json_encode($data);
+    }
+    public function create_cover_page_pdf_template()
+    {
+        $management_report_id = $this->input->post("management_report_id");
+        $management_report = $this->accounting_management_reports->get_management_reports_by_id($management_report_id);
+        $this->page_data["management_report"]=$management_report;
+        $this->page_data["cover_page_cover_title"]=$this->input->post("cover_page_cover_title");
+        $this->page_data["cover_page_subtitle"]=$this->input->post("cover_page_subtitle");
+        $this->page_data["cover_page_report_period"]=$this->input->post("cover_page_report_period");
+        $this->page_data["cover_page_prepared_by"]=$this->input->post("cover_page_prepared_by");
+        $this->page_data["cover_page_prepared_date"]=$this->input->post("cover_page_prepared_date");
+        $this->page_data["cover_page_disclaimer"]=$this->input->post("cover_page_disclaimer");
+        $this->page_data["cover_style"]=$this->input->post("cover_style");
+        $this->page_data["show_logo"]=$this->input->post("show-logo");
+        $filename = "management_report_cover_page".$management_report_id.".pdf";
+        $this->load->library('pdf');
+        if($this->input->post("cover_style") == 1 || $this->input->post("cover_style") == 2){
+            $template_src='accounting/reports/management_reports/cover_page_template';
+        }elseif($this->input->post("cover_style") == 3){
+            $template_src='accounting/reports/management_reports/cover_page_template_3';
+        }else{
+            $template_src='accounting/reports/management_reports/cover_page_template_4';
+        }
+        
+
+        $this->pdf->save_pdf($template_src, $this->page_data, $filename, "P");
+        $data = new stdClass();
+        $data->result="success";
+        $data->file_location = base_url("assets/pdf/".$filename);
         echo json_encode($data);
     }
 

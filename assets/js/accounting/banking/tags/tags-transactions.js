@@ -6,6 +6,15 @@ $('#tags-filter-dropdown select').each(function() {
     $(this).select2();
 });
 
+$('#add-tag-modal #tags-to-add').select2({
+    placeholder: 'Start typing to add a tag',
+    allowClear: true,
+    ajax: {
+        url: '/accounting/get-job-tags',
+        dataType: 'json'
+    }
+});
+
 $('#filter-dropdown select').each(function() {
     if($(this).attr('id') !== 'by-contact') {
         $(this).select2({
@@ -323,8 +332,8 @@ const columns = [
             $(td).html(`
             <div class="d-flex justify-content-center">
                 <div class="checkbox checkbox-sec m-0">
-                    <input type="checkbox" value="${rowData.id}" id="account-${rowData.id}">
-                    <label for="account-${rowData.id}" class="p-0" style="width: 24px; height: 24px"></label>
+                    <input type="checkbox" value="${rowData.id}" id="${rowData.type.toLowerCase().replace(' ', '-')}-${rowData.id}">
+                    <label for="${rowData.type.toLowerCase().replace(' ', '-')}-${rowData.id}" class="p-0" style="width: 24px; height: 24px"></label>
                 </div>
             </div>
             `);
@@ -483,6 +492,40 @@ $('#print-table').on('click', function(e) {
             pdfWindow.print();
         }
     });
+});
+
+$('#select-all-transactions').on('change', function() {
+    $('#transactions-table tbody input[type="checkbox"]').prop('checked', $(this).prop('checked'));
+});
+
+$(document).on('change', '#transactions-table tbody input[type="checkbox"]', function() {
+    var checked = $('#transactions-table tbody input[type="checkbox"]:checked').length;
+    var rows = $('#transactions-table tbody tr').length;
+
+    $('#select-all-transactions').prop('checked', checked === rows);
+
+    $('.actions-row .alert strong span').html(checked);
+    $('#add-tag-modal #selected-transaction-count').html(checked);
+    if(checked > 0) {
+        $('.actions-row').removeClass('hide');
+        $('.filters-row').addClass('hide');
+    } else {
+        $('.actions-row').addClass('hide');
+        $('.filters-row').removeClass('hide');
+    }
+});
+
+$('#actions-alert').on('closed.bs.alert', function() {
+    $('#transactions-table input[type="checkbox"]').prop('checked', false);
+
+    $('.actions-row').addClass('hide');
+    $('.filters-row').removeClass('hide');
+});
+
+$('#add-tag').on('click', function(e) {
+    e.preventDefault();
+
+    $('#add-tag-modal').modal('show');
 });
 
 function applybtn() {

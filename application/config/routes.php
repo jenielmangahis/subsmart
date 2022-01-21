@@ -419,6 +419,7 @@ $route['management-report/get-management-report'] = 'accounting/get_management_r
 $route['management-report/update'] = 'accounting/update_management_report';
 $route['management-report/preliminary-page/delete'] = 'accounting/managenent_report_delete_preliminary_page';
 $route['management-report/delete-report-page'] = 'accounting/managenent_report_delete_report_page';
+$route['management-report/cover-page/changed'] = 'accounting/create_cover_page_pdf_template';
 
 
 // Accounting products and services
