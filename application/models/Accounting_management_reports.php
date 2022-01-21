@@ -100,4 +100,8 @@ class Accounting_management_reports extends MY_Model
         $this->db->insert('accounting_management_reports_reports_pages', $data);
         $insert_id = $this->db->insert_id();
     }
+    public function delete_reports_by_management_report_id($management_report_id)
+    {
+        $this->db->delete('accounting_management_reports_reports_pages', array('management_report_id' => $management_report_id));
+    }
 }

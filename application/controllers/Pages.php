@@ -666,16 +666,8 @@ class Pages extends MYF_Controller {
     public function external_booking_page( $eid )
     {    	
     	$this->load->model('BookingCategory_model');
-		$this->load->model('BookingForms_model');
 		$this->load->model('BookingServiceItem_model');
-		$this->load->model('BookingCoupon_model');
 		$this->load->model('BookingSetting_model');
-        $this->load->model('BookingTimeSlot_model');
-        $this->load->model('Users_model');
-        $this->load->model('BookingScheduleAssignedUser_model');
-        $this->load->model('BookingInquiry_model');
-        $this->load->model('BookingInfo_model');
-        $this->load->model('BookingWorkOrder_model');
         
     	$this->load->helper(array('form', 'url', 'hashids_helper'));
     	$cid = hashids_decrypt($eid, '', 15);
@@ -683,6 +675,7 @@ class Pages extends MYF_Controller {
     	$filter[] = ['field' => 'company_id', 'value' => $cid];
 		$categories       = $this->BookingCategory_model->getAllCategories($filter);
 		$booking_settings = $this->BookingSetting_model->findByCompanyId($cid);
+		$bussinessProfile = $this->business_model->getByCompanyId($cid);
 
 		$uri_segment_method_name = $this->uri->segment(2);
 		$products = array();
@@ -709,17 +702,295 @@ class Pages extends MYF_Controller {
 		}
 
 		$cart_items = $this->session->userdata('cartItems');
+		$coupon     = $this->session->userdata('coupon');
 		$cart_data  = $this->BookingServiceItem_model->getUserCartSummary($cart_items);
 
 		$this->page_data['uri_segment_method_name'] = $uri_segment_method_name;
 		$this->page_data['booking_settings'] = $booking_settings;
 		$this->page_data['search_query'] = $search_query;
 		$this->page_data['cart_data']    = $cart_data;
+		$this->page_data['bussinessProfile'] = $bussinessProfile;
+		$this->page_data['coupon'] = $coupon;
 		$this->page_data['userProfile']  = $userProfile;
 		$this->page_data['products']     = $products;
 		$this->page_data['eid'] = $eid;
 
 		$this->load->view('online_booking/' . $view, $this->page_data);
+    }
+
+    public function ajax_update_booking_cart()
+    {
+    	$post       = $this->input->post();
+    	$cart_items = $this->session->userdata('cartItems');
+    	$key        = $post['pid'];
+    	if( !empty($cart_items) ){
+    		if( isset($cart_items['products'][$key]) ){
+    			$new_qty = $post['qty'] + $cart_items['products'][$key];
+    			$cart_items['products'][$key] = $new_qty;
+    		}else{
+    			$cart_items['products'][$key] = $post['qty'];
+    		}
+    	}else{
+    		$cart_items['products'][$key] = $post['qty'];
+    	}
+
+    	$this->session->set_userdata('cartItems',$cart_items);
+
+    	$this->session->set_flashdata('message', 'Cart was successfully updated');
+        $this->session->set_flashdata('alert_class', 'alert-success');
+    }
+
+    public function ajax_update_cart_coupon()
+    {
+    	$this->load->model('BookingCoupon_model');
+    	$this->load->helper(array('hashids_helper'));  
+
+    	$is_success = 0;
+    	$post       = $this->input->post();
+    	$coupon_code = $post['coupon_code'];
+    	if( $coupon_code ) {
+    		$cid = hashids_decrypt($post['eid'], '', 15);
+	    	$coupon_exist = $this->BookingCoupon_model->isCompanyCouponCodeExists($coupon_code, $cid);
+	    	if($coupon_exist){
+	    		$coupon = $this->BookingCoupon_model->getByCouponCode($coupon_code);
+
+	                $coupon_details = array(
+						'coupon_name' => $coupon->coupon_name,
+						'coupon_amount' => $coupon->discount_from_total,
+						'coupon_code' => $coupon->coupon_code,
+						'type' => $coupon->discount_from_total_type,
+						'id' => $coupon->id,
+					);
+
+	    		$cart_items['coupon'] = $coupon_details;
+	    		$this->session->set_userdata('coupon',$cart_items);
+
+	    		$is_success = 1;
+	    	}
+    	}
+
+    	$json_data = ['is_success' => $is_success];
+    	echo json_encode($json_data);
+    }
+
+    public function ajax_delete_coupon()
+    {
+    	unset($_SESSION['coupon']);
+    }
+
+    public function external_front_schedule($eid)
+	{
+		$this->load->model('BookingServiceItem_model');
+		$this->load->model('BookingSetting_model');
+        $this->load->model('Users_model');
+
+		$this->load->helper(array('hashids_helper'));  
+
+		$cid = hashids_decrypt($eid, '', 15);
+
+		$bussinessProfile = $this->business_model->getByCompanyId($cid);
+		$booking_settings = $this->BookingSetting_model->findByCompanyId($cid);
+
+		$coupon = $this->session->userdata('coupon');
+		$cart_items = $this->session->userdata('cartItems');
+		$cart_data  = $this->BookingServiceItem_model->getUserCartSummary($cart_items);
+		$uri_segment_method_name = $this->uri->segment(2);
+
+		$is_cont_to_booking_form = false;
+		if(!empty($cart_items['schedule_data'])) {
+			$is_cont_to_booking_form = true;
+		}
+
+		$this->page_data['is_cont_to_booking_form'] = $is_cont_to_booking_form;
+		$this->page_data['uri_segment_method_name'] = $uri_segment_method_name;
+		$this->page_data['booking_settings'] = $booking_settings;
+		$this->page_data['week_start_date'] = date("Y-m-d");
+		$this->page_data['cart_data']    = $cart_data;
+		$this->page_data['coupon']    = $coupon;
+		$this->page_data['bussinessProfile']  = $bussinessProfile;
+		$this->page_data['eid'] = $eid;
+
+		$this->load->view('online_booking/front_schedule', $this->page_data);
+	}
+
+	public function ajax_load_week_schedule()
+    {
+    	$this->load->model('BookingTimeSlot_model');
+    	$this->load->helper(array('hashids_helper'));  
+
+    	$post = $this->input->post();
+    	$cid  = hashids_decrypt($post['eid'], '', 15);
+    	$start_date = $post['week_start_date'];
+    	$end_date   = date("Y-m-d", strtotime($start_date . " +7 days"));
+
+    	$start      = new \DateTime($start_date);
+        $end        = new \DateTime($end_date);
+        $interval   = \DateInterval::createFromDateString('1 day');
+        $period     = new \DatePeriod($start, $interval, $end);
+
+		$cart_items = $this->session->userdata('cartItems');
+
+        $schedules = $this->BookingTimeSlot_model->findAllByCompanyId($cid);
+
+        $week_schedules = array();
+
+        foreach ($period as $dt) {
+            $date = $dt->format("Y-m-d");
+            $week_schedules[$date] = array();
+
+            foreach( $schedules as $s ){
+            	$day = $dt->format("D");
+            	$days = unserialize($s->days);
+            	if( in_array($day, $days) ){
+            		$week_schedules[$date][] = ['id' => $s->id, 'time_start' => $s->time_start, 'time_end' => $s->time_end];
+            	}
+            }
+        }
+
+        $prev_date = date("Y-m-d", strtotime($start_date . " -7 days"));
+        $next_date = date("Y-m-d", strtotime($start_date . " +7 days"));
+
+        $selected_sched = array();
+        if(!empty($cart_items['schedule_data'])) {
+        	$selected_sched = $cart_items['schedule_data'];
+        }
+
+        $this->page_data['selected_sched'] = $selected_sched;
+        $this->page_data['eid'] = $post['eid'];
+        $this->page_data['prev_date'] = $prev_date;
+        $this->page_data['next_date'] = $next_date;
+        $this->page_data['week_schedules'] = $week_schedules;
+		$this->load->view('online_booking/ajax_load_week_schedule', $this->page_data);
+    }
+
+    public function ajax_user_set_schedule()
+    {
+    	$post = $this->input->post();
+    	$cart_items = $this->session->userdata('cartItems');
+    	$cart_items['schedule_data'] = $post;
+
+    	$this->session->set_userdata('cartItems',$cart_items);
+    }
+
+    public function front_booking_form($eid)
+	{
+		$this->load->model('BookingSetting_model');
+		$this->load->model('BookingForms_model');
+		$this->load->model('BookingServiceItem_model');
+
+		$this->load->helper(array('hashids_helper'));  
+
+		$cid = hashids_decrypt($eid, '', 15);
+		$bussinessProfile = $this->business_model->getByCompanyId($cid);
+		$booking_settings = $this->BookingSetting_model->findByCompanyId($cid);
+		$forms 			  = $this->BookingForms_model->getAllByCompanyId($cid);
+
+		$coupon = $this->session->userdata('coupon');
+		$cart_items = $this->session->userdata('cartItems');
+		$cart_data  = $this->BookingServiceItem_model->getUserCartSummary($cart_items);
+		$uri_segment_method_name = $this->uri->segment(2);
+
+		$this->page_data['forms'] = $forms;
+		$this->page_data['uri_segment_method_name'] = $uri_segment_method_name;
+		$this->page_data['booking_settings'] = $booking_settings;
+		$this->page_data['cart_data']        = $cart_data;
+		$this->page_data['coupon']           = $coupon;
+		$this->page_data['booking_schedule'] = $cart_items['schedule_data'];
+		$this->page_data['bussinessProfile'] = $bussinessProfile;
+		$this->page_data['eid'] = $eid;
+
+		$this->load->view('online_booking/front_booking_form', $this->page_data);
+	}
+
+	public function save_product_booking()
+    {
+    	$this->load->model('BookingInfo_model');
+    	$this->load->model('BookingServiceItem_model');
+    	$this->load->model('BookingWorkOrder_model');
+
+    	$this->load->helper(array('hashids_helper'));  
+
+    	$coupon_id     = null;
+    	$custom_fields = array();
+    	$post    = $this->input->post();
+    	$cid     = hashids_decrypt($post['eid'], '', 15);
+    	$cart_items = $this->session->userdata('cartItems');
+    	$coupon     = $this->session->userdata('coupon');
+
+    	$in_array = array(
+			'full_name', 'contact_number','email',
+			'address','message','preferred_time_to_contact',
+			'how_did_you_hear_about_us','eid'
+		);
+
+    	foreach($post as $p_key => $p) {
+			if (!in_array($p_key, $in_array)) {
+			    $custom_fields[$p_key] = $p;
+			}
+    	}
+
+    	if(isset($coupon)) {
+    		$coupon_id = $coupon['coupon']['id'];
+    	}
+
+    	$bussinessProfile = $this->business_model->getByCompanyId($cid);
+
+    	if( $bussinessProfile ){
+    		$data_booking_info = [
+	    		'company_id' => $cid,
+	    		'name' => $post['full_name'],
+	    		'phone' => $post['contact_number'],
+	    		'email' => $post['email'],
+	    		'address' => $post['address'],
+	    		'message' => $post['message'],
+	    		'preferred_time_to_contact' => $post['preferred_time_to_contact'],
+	    		'how_did_you_hear_about_us' => $post['how_did_you_hear_about_us'],
+	    		'form_data' => serialize($custom_fields),
+	    		'status' => 1,
+	    		'date_created' => date("Y-m-d H:i:s")
+	    	];
+
+	    	$booking_info_id = $this->BookingInfo_model->save($data_booking_info);
+
+	    	if( $booking_info_id > 0 ){
+	    		$cart_items = $this->session->userdata('cartItems');
+				$cart_data  = $this->BookingServiceItem_model->getUserCartSummary($cart_items);
+				foreach( $cart_items['products'] as $pid =>  $qty ){
+					$data_booking_work_orders = [
+						'booking_info_id' => $booking_info_id,
+						'service_item_id' => $pid,
+						'quantity_ordered' => $qty,
+						'coupon_id' => $coupon_id,
+						'schedule_date' => $cart_items['schedule_data']['date'],
+						'schedule_time_from' => $cart_items['schedule_data']['time_start'],
+						'schedule_time_to' => $cart_items['schedule_data']['time_end'],
+						'date_created' => date("Y-m-d H:i:s")
+					];
+
+					$this->BookingWorkOrder_model->create($data_booking_work_orders);
+				}
+
+				$this->session->set_flashdata('message', 'Your product booking has been saved.');
+        		$this->session->set_flashdata('alert_class', 'alert-info');
+
+        		$this->session->unset_userdata('cartItems');
+    			$this->session->unset_userdata('coupon');
+
+    			redirect('booking/products/'.$post['eid']);
+
+	    	}else{
+	    		$this->session->set_flashdata('message', 'Canot save data. Please try again later.');
+        		$this->session->set_flashdata('alert_class', 'alert-danger');
+
+        		redirect('booking/product_booking_form/'.$post['eid']);
+	    	}
+
+    	}else{
+    		$this->session->set_flashdata('message', 'Merchant not found');
+        	$this->session->set_flashdata('alert_class', 'alert-danger');
+
+        	redirect('booking/product_booking_form/'.$post['eid']);
+    	}
     }
 
 }

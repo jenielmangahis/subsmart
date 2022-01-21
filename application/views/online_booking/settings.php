@@ -1,20 +1,33 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
+<style>
+.p-20 {
+  padding-top: 25px !important;
+  padding-bottom: 25px !important;
+  padding-right: 5px !important;
+  padding-left: 39px !important;
+  margin-top: 55px !important;
+}
+.row-category, .row-category a{
+    background-color: #32243d;
+    color: #ffffff;
+}
+</style>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/upgrades'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
-        <div class="container-fluid">
-            <div class="page-title-box">
-                <div class="row-fluid align-items-center">
-                    <div class="col-sm-6">
-                        <h1 class="page-title">Online Booking</h1>
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item active">Manage your online booking</li>
-                        </ol>
-                    </div>
+        <div class="container-fluid p-20">
+            <div class="row">
+                <div class="col">
+                  <h3 class="page-title mt-0">Online Booking</h3>
                 </div>
+            </div>
+            <div class="pl-3 pr-3 mt-2 row" style="position: relative;top: 7px;">
+              <div class="col mb-4 left alert alert-warning mt-0 mb-0">
+                  <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Manage your online booking settings.</span>
+              </div>
             </div>
             <!-- end row -->
             <?php include viewPath('flash'); ?>
@@ -29,10 +42,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                         <div class="row-fluid dashboard-container-2 pr-4">
                             <form name="" data-form="form" style="width:100%;">
-                                <div class="validation-error hide"></div>
-
-                                <div class="row-fluid">
-                                    <div class="col-sm-12 pt-21">
+                                <div class="row">
+                                    <div class="col-6">
                                         <div class="form-group">
                                             <label>Page Title</label>
                                             <div class="help help-block">
@@ -45,13 +56,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <div class="help help-block">
                                                 Optionally, input a text with some help or instructions, that will appear below title.
                                             </div>
-                                            <textarea name="page_intro" cols="40" rows="10" class="form-control ft-instruction"><?php echo $setting['page_intro']; ?></textarea>
+                                            <textarea name="page_intro" cols="40" rows="10" class="form-control ft-instruction ckeditor"><?php echo $setting['page_instructions']; ?></textarea>
                                         </div>
-                                    </div>
-                                </div>
-                                <br class="clear"/>
-                                <div class="row-fluid">
-                                    <div class="col-sm-12 form-cs-group">
                                         <div class="form-group">
                                             <label>Products listing mode</label>
                                             <div class="help help-block">How the products shoulds be listed on widget page, like a grid of boxes or a list.</div>
@@ -65,13 +71,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-sm-12 form-cs-group">
+                                    <div class="col-6">
                                         <div class="form-group p-relative-bottom-36">
                                             <label>Appointments per time slot</label>
                                             <div class="help help-block">How many appointments can be made for same time slot and date.</div>
                                             <div class="row">
                                                 <div class="col-sm-12">
-                                                    <select name="time_slot_bookings" class="form-control">
+                                                    <select name="time_slot_bookings" class="form-control" style="width:50%;">
                                                         <option <?php echo($setting['time_slot_bookings'] == '0' ? 'selected="selected"' : ''); ?> value="0" selected="selected">Any number</option>
                                                         <option <?php echo($setting['time_slot_bookings'] == '1' ? 'selected="selected"' : ''); ?> value="1">Only 1</option>
                                                         <option <?php echo($setting['time_slot_bookings'] == '2' ? 'selected="selected"' : ''); ?> value="2">Only 2</option>
@@ -87,86 +93,75 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
-
-                                <div class="row-fluid">
-                                    <div class="col-sm-12 form-cs-group">
                                         <div class="form-group">
                                             <label>Minimum price for entire booking</label>
                                             <div class="help help-block">
                                                 Customers have to book products with total value over this minimum price.<br>
                                                 Set 0 for no minimum.
                                             </div>
-                                            <div class="row">
-                                                <div class="col-sm-12">
-                                                    <div class="input-group">
-                                                        <div class="input-group-addon input-dollar">$</div>
-                                                        <input type="text" name="cart_total_min" value="<?php echo $setting['cart_total_min']; ?>"  class="form-control" id="cart_total_min"  autocomplete="off" />
-                                                    </div>
-                                                </div>
+                                            <div class="input-group mb-3" style="width: 50%;">
+                                              <div class="input-group-prepend">
+                                                <span class="input-group-text" id="basic-addon1">$</span>
+                                              </div>
+                                              <input type="number" min="0" name="cart_total_min" value="<?php echo $setting['cart_total_min']; ?>"  class="form-control" id="cart_total_min"  autocomplete="off" />
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="col-sm-12">
-                                        <div>
+                                        <div class="form-group">
                                             <label>Minimum price alert</label>
                                             <div class="help help-block">
                                                 A notification text displayed to customer if min price is not met.<br>
                                                 The tag {{amount}} will be replaced with min price value.
                                             </div>
-                                            <input type="text" name="cart_total_min_alert" value="Minimum booking amount is <?php echo $setting['cart_total_min']; ?>"  class="form-control" />
-                                        </div>
-                                    </div>
-                                </div>
-                                <br class="clear-both"/>
-                                <div>
-                                    <label>Notifications</label>
-                                    <div class="help help-block">Select how you want to be notified on a new booking.</div>
-                                    <div class="checkbox checkbox-sec margin-right">
-                                        <input type="checkbox" name="notify_email" value="1" <?php echo $setting['notify_email'] == 1 ? 'checked="checked"' : ''; ?>  id="notify_email" />
-                                        <label for="notify_email"> Email</label>
-                                    </div>
-                                    <div class="checkbox checkbox-sec">
-                                        <input type="checkbox" name="notify_push" value="1" <?php echo $setting['notify_push'] == 1 ? 'checked="checked"' : ''; ?> id="notify_push" />
-                                        <label for="notify_push"> App Notification</label>
-                                    </div>
-                                </div>
-
-                                <hr class="card-hr">
-
-                                <div class="row-fluid">
-                                    <div class="col-sm-12">
-                                        <label>Don't accept booking during blocked time</label>
-                                        <div class="help help-block">Customers should not be able to book your services during blocked time.</div>
-                                        <div class="row">
-                                            <div class="col-sm-24">
-                                                <div class="checkbox checkbox-sec margin-right ml-cs-20">
-                                                    <input type="checkbox" name="event_blocked_check" value="1" <?php echo $setting['event_blocked_check'] == 1 ? 'checked="checked"' : ''; ?>  id="event_blocked_check" />
-                                                    <label for="event_blocked_check"><span>Don't accept booking during blocked time</span></label>
-                                                </div>
+                                            <div class="input-group mb-3" style="width: 50%;">
+                                              <div class="input-group-prepend">
+                                                <span class="input-group-text" id="basic-addon1">Minimum booking amount is</span>
+                                              </div>
+                                              <input type="number" min="0" name="cart_total_min_alert" value="<?php echo $setting['cart_total_min']; ?>"  class="form-control" />
                                             </div>
+                                            
                                         </div>
-                                    </div>
-                                    <div class="col-sm-12">
-                                        <label>Don't accept booking if it overlaps with a calendar event</label>
-                                        <div class="help help-block">Customers should not be able to book your services if another event exists in calendar.</div>
-                                        <div class="row">
-                                            <div class="col-sm-24">
-                                                <div class="checkbox checkbox-sec margin-right ml-cs-20">
-                                                    <input type="checkbox" name="event_all_check" value="1" <?php echo $setting['event_all_check'] == 1 ? 'checked="checked"' : ''; ?>  id="event_all_check" />
-                                                    <label for="event_all_check"><span>Don't accept booking if it overlaps with a calendar event</span></label>
-                                                </div>
+                                        <div class="form-group">
+                                            <label>Notifications</label>
+                                            <div class="help help-block">Select how you want to be notified on a new booking.</div>
+                                            <div class="checkbox checkbox-sec margin-right">
+                                                <input type="checkbox" name="notify_email" value="1" <?php echo $setting['notify_email'] == 1 ? 'checked="checked"' : ''; ?>  id="notify_email" />
+                                                <label for="notify_email"> Email</label>
+                                            </div>
+                                            <div class="checkbox checkbox-sec">
+                                                <input type="checkbox" name="notify_push" value="1" <?php echo $setting['notify_push'] == 1 ? 'checked="checked"' : ''; ?> id="notify_push" />
+                                                <label for="notify_push"> App Notification</label>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <br class="clear-both"/>
-                                <hr class="card-hr">
-
-                                <div class="row-fluid">
-                                    <div class="col-sm-12">
-                                        <div>
+                                <hr />
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <label>Don't accept booking during blocked time</label>
+                                            <div class="help help-block">Customers should not be able to book your services during blocked time.</div>
+                                            <div class="row">
+                                                <div class="col-sm-24">
+                                                    <div class="checkbox checkbox-sec margin-right ml-cs-20">
+                                                        <input type="checkbox" name="event_blocked_check" value="1" <?php echo $setting['event_blocked_check'] == 1 ? 'checked="checked"' : ''; ?>  id="event_blocked_check" />
+                                                        <label for="event_blocked_check"><span>Don't accept booking during blocked time</span></label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Don't accept booking if it overlaps with a calendar event</label>
+                                            <div class="help help-block">Customers should not be able to book your services if another event exists in calendar.</div>
+                                            <div class="row">
+                                                <div class="col-sm-24">
+                                                    <div class="checkbox checkbox-sec margin-right ml-cs-20">
+                                                        <input type="checkbox" name="event_all_check" value="1" <?php echo $setting['event_all_check'] == 1 ? 'checked="checked"' : ''; ?>  id="event_all_check" />
+                                                        <label for="event_all_check"><span>Don't accept booking if it overlaps with a calendar event</span></label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
                                             <label>Auto-Schedule a Work Order</label>
                                             <div class="help help-block">
                                                 When a booking is made automatically schedule a Work Order.
@@ -183,7 +178,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             }
                                         ?>
 
-                                        <div class="margin-top-ter <?php echo $hide; ?>" id="convert_lead_to_work_order_employees">
+                                        <div class="form-group">
                                             <label>Assign To</label>
                                             <ul class="employees clearfix pl-2">
                                                 <?php foreach($employees as $e){ ?>
@@ -203,13 +198,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             </ul>
                                         </div>
                                     </div>
-                                </div>
-                                <br class="clear-both"/>
-                                <hr class="card-hr">
 
-                                <div class="row-fluid">
-                                    <div class="col-sm-12">
-                                        <div>
+                                    <div class="col-6">
+                                        <div class="form-group">
                                             <label>Google Analytics Tracking Id</label>
                                             <div class="help help-block">
                                                 The unique id set on your Google tracking code. e.g. UA-12345678-1
@@ -220,26 +211,19 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="col-sm-12">
-                                        <label>Website URL</label>
-                                        <div class="help help-block">
-                                            Your website URL where the widget is placed.
+                                        <div class="form-group">
+                                            <label>Website URL</label>
+                                            <div class="help help-block">
+                                                Your website URL where the widget is placed.
+                                            </div>
+                                            <input type="text" name="google_analytics_origin" value="<?php echo $setting['google_analytics_origin']; ?>"  class="form-control" autocomplete="off" />
                                         </div>
-                                        <input type="text" name="google_analytics_origin" value="<?php echo $setting['google_analytics_origin']; ?>"  class="form-control" autocomplete="off" />
-                                    </div>
-                                </div>
-                                <br class="clear-both"/>
-                                <hr class="card-hr">
-
-                                <div class="row-fluid" style="display: block;">
-                                    <div class="col-sm-12">
                                         <div class="form-group">
                                             <label>Widget status</label>
                                             <div class="help help-block">Switch the booking widget off while you are on vacation.</div>
                                             <div class="row">
                                                 <div class="col-sm-12">
-                                                    <select name="status" class="form-control">
+                                                    <select name="status" class="form-control" style="width:50%;">
                                                         <option value="1" <?php echo ($setting['status'] == '1' ? 'selected="selected"' : ''); ?>>Active</option>
                                                         <option value="2" <?php echo ($setting['status'] == '2' ? 'selected="selected"' : ''); ?>>Inactive</option>
                                                     </select>
@@ -248,15 +232,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         </div>
                                     </div>
                                 </div>
-                                <br class="clear-both"/>
-                                <hr class="margin-top margin-bottom">
+
                                 <div class="row-fluid margin-top">
                                     <div class="col-sm-12">
                                         <button type="button" class="btn btn-primary btn-update-setting">Save</button>
-                                        <span class="alert-inline-text margin-left hide">Saved</span>
-                                    </div>
-                                    <div class="col-sm-12 text-right">
-                                        <button class="btn btn-primary mr-4" data-form="submit" data-on-click-label="Saving...">Continue &raquo;</button>
                                     </div>
                                 </div>
                             </form>

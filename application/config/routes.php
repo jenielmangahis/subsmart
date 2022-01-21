@@ -419,6 +419,7 @@ $route['management-report/get-management-report'] = 'accounting/get_management_r
 $route['management-report/update'] = 'accounting/update_management_report';
 $route['management-report/preliminary-page/delete'] = 'accounting/managenent_report_delete_preliminary_page';
 $route['management-report/delete-report-page'] = 'accounting/managenent_report_delete_report_page';
+$route['management-report/cover-page/changed'] = 'accounting/create_cover_page_pdf_template';
 
 
 // Accounting products and services
@@ -634,16 +635,16 @@ $route['booking/_inquiry_edit_details'] = 'booking/ajax_inquiry_edit_details';
 $route['booking/update_inquiry_details'] = 'booking/update_inquiry_details';
 //$route['booking/products'] = 'booking/front_items';
 //$route['booking/products/(:any)'] = 'booking/front_items/$1';
-$route['booking/products_schedule/(:any)'] = 'booking/front_schedule/$1';
+//$route['booking/products_schedule/(:any)'] = 'booking/front_schedule/$1'; //Moved to pages controller to remove auth function
 $route['booking/_product_details'] = 'booking/ajax_get_product_details';
-$route['booking/_add_cart_item'] = 'booking/ajax_update_cart_item';
-$route['booking/_add_cart_coupon'] = 'booking/ajax_update_cart_coupon';
+//$route['booking/_add_cart_item'] = 'booking/ajax_update_cart_item'; //Moved to pages controller to remove auth function
+//$route['booking/_add_cart_coupon'] = 'booking/ajax_update_cart_coupon'; //Moved to pages controller to remove auth function
 $route['booking/_delete_cart_item'] = 'booking/ajax_delete_cart_item';
-$route['booking/_load_week_schedule'] = 'booking/ajax_load_week_schedule';
-$route['booking/_set_booking_schedule'] = 'booking/ajax_user_set_schedule';
-$route['booking/product_booking_form/(:any)'] = 'booking/front_booking_form/$1';
-$route['booking/save_booking_inquiry'] = 'booking/save_product_booking';
-$route['booking/_delete_coupon'] = 'booking/ajax_delete_coupon';
+//$route['booking/_load_week_schedule'] = 'booking/ajax_load_week_schedule'; //Moved to pages controller to remove auth function
+//$route['booking/_set_booking_schedule'] = 'booking/ajax_user_set_schedule'; //Moved to pages controller to remove auth function
+//$route['booking/product_booking_form/(:any)'] = 'booking/front_booking_form/$1'; //Moved to pages controller to remove auth function
+//$route['booking/save_booking_inquiry'] = 'booking/save_product_booking'; //Moved to pages controller to remove auth function
+//$route['booking/_delete_coupon'] = 'booking/ajax_delete_coupon'; //Moved to pages controller to remove auth function
 
 $route['nsmart_plans/index'] = 'Nsmart_Plans/index';
 $route['nsmart_plans/add_new_plan'] = 'Nsmart_Plans/add_new_plan';
@@ -1134,3 +1135,11 @@ $route['contact/_support_send_email'] = 'Contact/ajax_support_send_email';
 
 //Front company booking page
 $route['booking/products/(:any)'] = 'Pages/external_booking_page/$1';
+$route['booking/_add_cart_item'] = 'Pages/ajax_update_booking_cart';
+$route['booking/_add_cart_coupon'] = 'Pages/ajax_update_cart_coupon';
+$route['booking/_delete_coupon'] = 'Pages/ajax_delete_coupon';
+$route['booking/products_schedule/(:any)'] = 'Pages/external_front_schedule/$1';
+$route['booking/_load_week_schedule'] = 'Pages/ajax_load_week_schedule';
+$route['booking/_set_booking_schedule'] = 'Pages/ajax_user_set_schedule';
+$route['booking/product_booking_form/(:any)'] = 'Pages/front_booking_form/$1';
+$route['booking/save_booking_inquiry'] = 'Pages/save_product_booking';

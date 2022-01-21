@@ -72,12 +72,8 @@ class BookingCoupon_model extends MY_Model
 
     public function getByCouponCode($coupon_code)
     {
-        $user_id   = logged('id');
-
         $this->db->select('*');
         $this->db->from($this->table);
-
-        $this->db->where('user_id', $user_id);
         $this->db->where('coupon_code', $coupon_code);
         $this->db->where('status', 1);
         
@@ -193,6 +189,26 @@ class BookingCoupon_model extends MY_Model
 
     public function isClosed(){
         return $this->status_closed;
+    }
+
+    public function isCompanyCouponCodeExists($coupon_code, $company_id)
+    {
+        $is_exists = false;
+        $user_id   = logged('id');
+
+        $this->db->select('*');
+        $this->db->from($this->table);
+
+        $this->db->where('company_id', $company_id);
+        $this->db->where('coupon_code', $coupon_code);
+        $this->db->where('status', $this->status_active);
+
+        $query = $this->db->get()->row();
+        if( $query ){
+            $is_exists = true;
+        }
+
+        return $is_exists;
     }
 }
 

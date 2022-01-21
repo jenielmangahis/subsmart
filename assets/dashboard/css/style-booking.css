@@ -267,7 +267,7 @@ li {
     color: #858585;
     background-color: #eaeaea;
 }
-button.btn.btn-green.btn-sm {
+.btn.btn-green.btn-sm {
     background: #45a73c;
     padding: 12px 20px;
     color: #fff;
@@ -394,7 +394,7 @@ button.btn.btn-green.btn-sm {
     padding-top: 10px;
 }
 .widget-cart {
-    max-height: 395px;
+    max-height: 500px;
     overflow-y: auto;
     margin-right: -10px;
     padding-right: 30px;

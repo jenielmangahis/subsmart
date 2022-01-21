@@ -220,7 +220,9 @@
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-
+                                        <div class="cover_page_template_view">
+                                            <iframe src="" title="Cover page template view"></iframe>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
