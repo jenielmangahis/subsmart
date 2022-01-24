@@ -73,6 +73,13 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         color: #fff;
         opacity: 1;
     }
+    .append-modal div.modal.right .modal-dialog {
+        max-width: 500px !important;
+    }
+    #remove-tags-modal #remove:disabled:hover {
+        background-color: #218838;
+        border-color: #1e7e34;
+    }
 </style>
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">
@@ -217,8 +224,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                                 <?php foreach($groups as $group) : ?>
                                                                 <div class="col-12">
                                                                     <div class="form-group" >
-                                                                        <label for="group-<?=$group['id']?>"><?=$group['name']?></label>
-                                                                        <select id="group-<?=$group['id']?>" class="form-control" multiple="multiple">
+                                                                        <label for="tag-group-<?=$group['id']?>"><?=$group['name']?></label>
+                                                                        <select id="tag-group-<?=$group['id']?>" class="form-control" multiple="multiple">
                                                                             <option value="all-<?=$group['name']?>-tags">All <?=$group['name']?> tags</option>
                                                                             <?php foreach($group['tags'] as $tag) : ?>
                                                                             <option value="<?=$tag->id?>"><?=$tag->name?></option>
@@ -227,6 +234,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                                     </div>
                                                                 </div>
                                                                 <?php endforeach; ?>
+                                                                <?php if(count($ungrouped) > 0) : ?>
                                                                 <div class="col-12">
                                                                     <div class="form-group">
                                                                         <label for="ungrouped">Ungrouped</label>
@@ -238,6 +246,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                                         </select>
                                                                     </div>
                                                                 </div>
+                                                                <?php endif; ?>
                                                             </div>
 
                                                             <div class="btn-group d-block">
@@ -266,7 +275,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                 <button style="padding:6px 30px" type="button" class="btn btn-dark" data-toggle="dropdown"><span>Update tags</span>&nbsp;&nbsp;<span class="fa fa-caret-down"></span></button>
                                                 <ul class="dropdown-menu dropdown-menu-right">
                                                     <li><a href="#" class="dropdown-item" id="add-tag">Add tags</a></li>
-                                                    <li><a href="#" class="dropdown-item">Remove tags</a></li>
+                                                    <li><a href="#" class="dropdown-item" id="remove-tags">Remove tags</a></li>
                                                 </ul>
                                             </div>
                                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -312,13 +321,13 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 </div>
 
 <div class="append-modal">
-    <!--    Modal for creating rules-->
+    <!-- Modal for adding tags -->
     <div class="modal-right-side">
         <div class="modal right fade" id="add-tag-modal" tabindex="" role="dialog" aria-labelledby="add-tag-label">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h3 class="modal-title" id="add-tag-label" >Add tags</h3>
+                        <h3 class="modal-title" class="add-tag-label" >Add tags</h3>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     </div>
                     <!-- <form id="create-tag-form"> -->
@@ -333,14 +342,55 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default float-right" data-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-success float-right">Apply</button>
+                        <button type="button" id="apply-tags" class="btn btn-success float-right">Apply</button>
                     </div>
                     <!-- </form> -->
                 </div>
             </div>
         </div>
     </div>
-    <!--    end of modal-->
+    <!-- end of modal -->
+
+    <!-- Modal for removing tags -->
+    <div class="modal-right-side">
+        <div class="modal right fade" id="remove-tags-modal" tabindex="" role="dialog" aria-labelledby="add-tag-label">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title" id="add-tag-label" >Add tags</h3>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    </div>
+                    <!-- <form id="create-tag-form"> -->
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for=""><span class="selected-transaction-count">0</span> transaction selected</label>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="search-tag" class="form-control">
+                        </div>
+
+                        <table id="remove-tags-table" class="table table-bordered table-hover" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        TAGS TO REMOVE
+                                        <span class="float-right">0 selected</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default float-right" data-dismiss="modal">Cancel</button>
+                        <button type="button" id="remove" class="btn btn-success float-right" disabled>Remove</button>
+                    </div>
+                    <!-- </form> -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end of modal -->
 </div>
 
 <!-- page wrapper end -->

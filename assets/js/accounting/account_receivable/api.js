@@ -89,7 +89,12 @@ export async function runReportCustomize(payload) {
     },
   });
 
-  await sleep(3);
+  return response.json();
+}
+
+export async function getReportCustomizeFormValues() {
+  const endpoint = `${prefixURL}/AccountingARSummary/apiGetReportCustomize`;
+  const response = await fetch(endpoint);
   return response.json();
 }
 

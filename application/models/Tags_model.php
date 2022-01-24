@@ -551,4 +551,33 @@ class Tags_model extends MY_Model
 
         return $return;
     }
+
+    public function get_tag_by_ids_and_group_id($tags = [0, ""], $groupId)
+    {
+        $this->db->where_in('id', $tags);
+        $this->db->where('status', 1);
+        if(is_null($groupId)) {
+            $this->db->where('group_tag_id', null);
+            $this->db->or_where_in('id', $tags);
+            $this->db->where('status', 1);
+            $this->db->where('group_tag_id', 0);
+            $this->db->or_where_in('id', $tags);
+            $this->db->where('status', 1);
+            $this->db->where('group_tag_id', "");
+        } else {
+            $this->db->where('group_tag_id', $groupId);
+        }
+        $query = $this->db->get('job_tags');
+
+        return $query->result();
+    }
+
+    public function unlink_multiple_transaction_tags($transactionType, $transactionId, $tags)
+    {
+        $this->db->where('transaction_type', $transactionType);
+        $this->db->where('transaction_id', $transactionId);
+        $this->db->where_in('tag_id', $tags);
+        $delete = $this->db->delete('accounting_transaction_tags');
+        return $delete ? true : false;
+    }
 }

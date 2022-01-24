@@ -332,7 +332,7 @@ const columns = [
             $(td).html(`
             <div class="d-flex justify-content-center">
                 <div class="checkbox checkbox-sec m-0">
-                    <input type="checkbox" value="${rowData.id}" id="${rowData.type.toLowerCase().replace(' ', '-')}-${rowData.id}">
+                    <input type="checkbox" value="${rowData.type.toLowerCase().replace(' ', '_')}-${rowData.id}" id="${rowData.type.toLowerCase().replace(' ', '-')}-${rowData.id}">
                     <label for="${rowData.type.toLowerCase().replace(' ', '-')}-${rowData.id}" class="p-0" style="width: 24px; height: 24px"></label>
                 </div>
             </div>
@@ -495,7 +495,7 @@ $('#print-table').on('click', function(e) {
 });
 
 $('#select-all-transactions').on('change', function() {
-    $('#transactions-table tbody input[type="checkbox"]').prop('checked', $(this).prop('checked'));
+    $('#transactions-table tbody input[type="checkbox"]').prop('checked', $(this).prop('checked')).trigger('change');
 });
 
 $(document).on('change', '#transactions-table tbody input[type="checkbox"]', function() {
@@ -505,7 +505,8 @@ $(document).on('change', '#transactions-table tbody input[type="checkbox"]', fun
     $('#select-all-transactions').prop('checked', checked === rows);
 
     $('.actions-row .alert strong span').html(checked);
-    $('#add-tag-modal #selected-transaction-count').html(checked);
+    $('#add-tag-modal .selected-transaction-count').html(checked);
+    $('#remove-tags-modal .selected-transaction-count').html(checked);
     if(checked > 0) {
         $('.actions-row').removeClass('hide');
         $('.filters-row').addClass('hide');
@@ -522,10 +523,202 @@ $('#actions-alert').on('closed.bs.alert', function() {
     $('.filters-row').removeClass('hide');
 });
 
+var selected = [];
 $('#add-tag').on('click', function(e) {
     e.preventDefault();
 
+    selected = [];
+    $('#transactions-table tbody input[type="checkbox"]:checked').each(function() {
+        selected.push($(this).val());
+    });
+
     $('#add-tag-modal').modal('show');
+});
+
+$('#add-tag-modal #apply-tags').on('click', function(e) {
+    e.preventDefault();
+
+    var tags = $('#add-tag-modal #tags-to-add').val();
+    var data = new FormData();
+
+    for(i = 0; i < selected.length; i++) {
+        data.append('transactions[]', selected[i]);
+    }
+
+    for(c = 0; c < tags.length; c++) {
+        data.append('tags[]', tags[c]);
+    }
+
+    $.ajax({
+        url: '/accounting/tags/transactions/add-tags',
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function(result) {
+            $('#add-tag-modal').modal('hide');
+            $('#add-tag-modal #tags-to-add').val([]).change();
+            $('#transactions-table input').prop('checked', false);
+            $('#transactions-table').DataTable().ajax.reload(null, true);
+            $('.actions-row').addClass('hide');
+            $('.filters-row').removeClass('hide');
+        }
+    });
+});
+
+$('#remove-tags').on('click', function(e) {
+    e.preventDefault();
+
+    selected = [];
+    $('#transactions-table tbody input[type="checkbox"]:checked').each(function() {
+        selected.push($(this).val());
+    });
+
+    initialize_remove_tags_table();
+    $('#remove-tags-modal').modal('show');
+});
+
+function initialize_remove_tags_table() {
+    if($.fn.DataTable.isDataTable('#remove-tags-table')) {
+        $('#remove-tags-table').DataTable().clear();
+        $('#remove-tags-table').DataTable().destroy();
+    }
+
+    $('#remove-tags-table').DataTable({
+        autoWidth: false,
+        searching: false,
+        processing: true,
+        serverSide: true,
+        lengthChange: false,
+        pageLength: 50,
+        info: false,
+        ordering: false,
+        ajax: {
+            url: '/accounting/tags/transactions/load-tags-to-remove',
+            dataType: 'json',
+            contentType: 'application/json',
+            type: 'POST',
+            data: function(d) {
+                d.search = $('#remove-tags-modal #search-tag').val();
+                var transactions = [];
+                for(i = 0; i < selected.length; i++) {
+                    transactions.push(selected[i]);
+                }
+                d.transactions = transactions;
+
+                return JSON.stringify(d);
+            },
+            pagingType: 'full_numbers'
+        },
+        columns: [
+            {
+                orderable: false,
+                data: 'name',
+                name: 'name',
+                fnCreatedCell: function(td, cellData, rowData, row, col) {
+                    var id = `${rowData.type}-${rowData.id}`;
+
+                    $(td).html(`
+                    <div class="checkbox checkbox-sec my-2">
+                        <input type="checkbox" id="${id}">
+                        <label for="${id}">${cellData}</label>
+                    </div>
+                    `);
+
+                    $(td).addClass(rowData.type);
+
+                    if(rowData.type.includes('tag')) {
+                        $(td).addClass('d-flex');
+                        $(td).addClass('justify-content-between');
+                        $(td).addClass('align-items-center');
+                        $(td).addClass('pl-5');
+
+                        $(td).append(`<span>${rowData.count} transactions</span>`);
+                    }
+                }
+            },
+        ]
+    });
+}
+
+$(document).on('change', '#remove-tags-modal #remove-tags-table input[type="checkbox"]', function() {
+    var el = $(this);
+    var row = $(this).parent().parent().parent();
+    var index = row.index();
+    var rowData = $('#remove-tags-table').DataTable().row(row).data();
+
+    if(rowData.type === 'group' || rowData.type === 'ungrouped-group') {
+        for(i = index + 2; i <= $('#remove-tags-table tbody tr').length; i++) {
+            var r = $(`#remove-tags-table tbody tr:nth-child(${i})`);
+            var rData = $('#remove-tags-table').DataTable().row(r).data();
+
+            if(rData.type === 'group-tag' || rData.type === 'ungrouped-tag') {
+                r.find('input[type="checkbox"]').prop('checked', el.prop('checked')).change();
+            } else {
+                break;
+            }
+        }
+    } else {
+        var text = $('#remove-tags-modal #remove-tags-table thead tr th span').html();
+        var textSplit = text.split(' ');
+
+        if(el.prop('checked')) {
+            var total = parseInt(textSplit[0]) + 1;
+        } else {
+            var total = parseInt(textSplit[0]) - 1;
+        }
+
+        $('#remove-tags-modal #remove').prop('disabled', total < 1);
+        $('#remove-tags-modal #remove-tags-table thead tr th span').html(total+' selected');
+    }
+});
+
+$(document).on('keyup', '#remove-tags-modal #search-tag', function() {
+    $('#remove-tags-table').DataTable().ajax.reload(null, true);
+});
+
+$(document).on('click', '#remove-tags-modal button#remove', function(e) {
+    e.preventDefault();
+
+    var data = new FormData();
+
+    for(i = 0; i < selected.length; i++) {
+        data.append('transactions[]', selected[i]);
+    }
+
+    if($('#remove-tags-modal #remove-tags-table tbody tr input[type="checkbox"]:checked').length > 0) {
+        $('#remove-tags-modal #remove-tags-table tbody tr input[type="checkbox"]:checked').each(function() {
+            var row = $(this).parent().parent().parent();
+            var rowData = $('#remove-tags-table').DataTable().row(row).data();
+            if(rowData.type === 'group-tag' || rowData.type === 'ungrouped-tag') {
+                data.append('tags[]', rowData.id);
+            }
+        });
+    
+        $.ajax({
+            url: '/accounting/tags/transactions/remove-tags',
+            data: data,
+            type: 'post',
+            processData: false,
+            contentType: false,
+            success: function(result) {
+                $('#remove-tags-modal').modal('hide');
+                $('#transactions-table input').prop('checked', false);
+                $('#transactions-table').DataTable().ajax.reload(null, true);
+                $('.actions-row').addClass('hide');
+                $('.filters-row').removeClass('hide');
+            }
+        });
+    } else {
+        Swal.fire({
+            text: "Please selected at least 1 tag to remove.",
+            icon: 'error',
+            showCloseButton: true,
+            confirmButtonColor: '#2ca01c',
+            confirmButtonText: 'OK',
+            timer: 2000
+        })
+    }
 });
 
 function applybtn() {

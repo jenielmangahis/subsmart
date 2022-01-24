@@ -906,4 +906,220 @@ class Tags extends MY_Controller {
 
         echo $tableHtml;
     }
+
+    public function add_tags()
+    {
+        $post = $this->input->post();
+        $transactions = $post['transactions'];
+        $tags = $post['tags'];
+
+        foreach($transactions as $transaction) {
+            $transaction = explode('-', $transaction);
+            switch($transaction[0]) {
+                case 'deposit' :
+                    $transactionType = 'Deposit';
+                break;
+                case 'expense' :
+                    $transactionType = 'Expense';
+                break;
+                case 'check' :
+                    $transactionType = 'Check';
+                break;
+                case 'bill' :
+                    $transactionType = 'Bill';
+                break;
+                case 'purchase_order' :
+                    $transactionType = 'Purchase Order';
+                break;
+                case 'vendor_credit' :
+                    $transactionType = 'Vendor Credit';
+                break;
+                case 'cc_credit' :
+                    $transactionType = 'CC Credit';
+                break;
+            }
+
+            $tranTags = $this->tags_model->get_transaction_tags($transactionType, $transaction[1]);
+
+            foreach($tranTags as $key => $tag) {
+                if(!isset($tags[$key])) {
+                    $this->tags_model->unlink_tag(['transaction_type' => $transactionType, 'tag_id' => $tag->id, 'transaction_id' => $transaction[1]]);
+                }
+            }
+
+            $order = 1;
+            foreach($tags as $tagId) {
+                $linkTagData = [
+                    'transaction_type' => $transactionType,
+                    'transaction_id' => $transaction[1],
+                    'tag_id' => $tagId,
+                    'order_no' => $order
+                ];
+
+                if($tranTags[$key] === null) {
+                    $linkTagId = $this->tags_model->link_tag($linkTagData);
+                } else {
+                    $linkTagId = $this->tags_model->update_link($linkTagData);
+                }
+
+                $order++;
+            }
+        }
+    }
+
+    public function load_tags_to_remove()
+    {
+        $post = json_decode(file_get_contents('php://input'), true);
+        $search = $post['search'];
+
+        $transactions = $post['transactions'];
+        $groups = $this->tags_model->getGroup();
+        $ungrouped = $this->tags_model->get_ungrouped();
+
+        $existingTags = [];
+        foreach($transactions as $transaction) {
+            $transaction = explode("-", $transaction);
+            switch($transaction[0]) {
+                case 'deposit' :
+                    $transactionType = 'Deposit';
+                break;
+                case 'expense' :
+                    $transactionType = 'Expense';
+                break;
+                case 'check' :
+                    $transactionType = 'Check';
+                break;
+                case 'bill' :
+                    $transactionType = 'Bill';
+                break;
+                case 'purchase_order' :
+                    $transactionType = 'Purchase Order';
+                break;
+                case 'vendor_credit' :
+                    $transactionType = 'Vendor Credit';
+                break;
+                case 'cc_credit' :
+                    $transactionType = 'CC Credit';
+                break;
+            }
+
+            $tranTags = $this->tags_model->get_transaction_tags($transactionType, $transaction[1]);
+            foreach($tranTags as $tag) {
+                $existingTags[] = $tag->id;
+            }
+        }
+
+        $data = [];
+        foreach($groups as $group) {
+            $tagsExisted = $this->tags_model->get_tag_by_ids_and_group_id($existingTags, $group['id']);
+
+            $found = [];
+            foreach($tagsExisted as $groupTag) {
+                if($search !== '') {
+                    if(stripos($groupTag->name, $search) !== false) {
+                        $found[] = $groupTag;
+                    }
+                } else {
+                    $found[] = $groupTag;
+                }
+            }
+
+            if(count($found) > 0) {
+                $data[] = [
+                    'id' => $group['id'],
+                    'type' => 'group',
+                    'name' => $group['name']
+                ];
+
+                foreach($found as $gTag) {
+                    $count = array_filter($existingTags, function($v, $k) use ($gTag, $search) {
+                        return $gTag->id === $v;
+                    }, ARRAY_FILTER_USE_BOTH);
+
+                    $data[] = [
+                        'id' => $gTag->id,
+                        'type' => 'group-tag',
+                        'name' => $gTag->name,
+                        'count' => count($count)
+                    ];
+                }
+            }
+        }
+
+        $ungroupedExists = $this->tags_model->get_tag_by_ids_and_group_id($existingTags, null);
+        $foundUngrouped = [];
+        foreach($ungroupedExists as $ungrouped) {
+            if($search !== '') {
+                if(stripos($ungrouped->name, $search) !== false) {
+                    $foundUngrouped[] = $ungrouped;
+                }
+            } else {
+                $foundUngrouped[] = $ungrouped;
+            }
+        }
+
+        if(count($foundUngrouped) > 0) {
+            $data[] = [
+                'id' => 'ungrouped',
+                'type' => 'ungrouped-group',
+                'name' => 'Ungrouped',
+            ];
+
+            foreach($foundUngrouped as $ugTag) {
+                $count = array_filter($existingTags, function($v, $k) use ($ugTag) {
+                    return $ugTag->id === $v;
+                }, ARRAY_FILTER_USE_BOTH);
+
+                $data[] = [
+                    'id' => $ugTag->id,
+                    'type' => 'ungrouped-tag',
+                    'name' => $ugTag->name,
+                    'count' => count($count)
+                ];
+            }
+        }
+
+        $result = [
+            'draw' => $post['draw'],
+            'recordsTotal' => count($data),
+            'recordsFiltered' => count($data),
+            'data' => array_slice($data, $post['start'], $post['length'])
+        ];
+
+        echo json_encode($result);
+    }
+
+    public function remove_tags()
+    {
+        $post = $this->input->post();
+
+        foreach($post['transactions'] as $transaction) {
+            $transaction = explode("-", $transaction);
+            switch($transaction[0]) {
+                case 'deposit' :
+                    $transactionType = 'Deposit';
+                break;
+                case 'expense' :
+                    $transactionType = 'Expense';
+                break;
+                case 'check' :
+                    $transactionType = 'Check';
+                break;
+                case 'bill' :
+                    $transactionType = 'Bill';
+                break;
+                case 'purchase_order' :
+                    $transactionType = 'Purchase Order';
+                break;
+                case 'vendor_credit' :
+                    $transactionType = 'Vendor Credit';
+                break;
+                case 'cc_credit' :
+                    $transactionType = 'CC Credit';
+                break;
+            }
+
+            $unlinkTags = $this->tags_model->unlink_multiple_transaction_tags($transactionType, $transaction[1], $post['tags']);
+        }
+    }
 }

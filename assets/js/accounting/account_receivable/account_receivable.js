@@ -191,10 +191,14 @@ window.addEventListener("DOMContentLoaded", async () => {
   });
 
   $("[name=nonZeroActiveOnlyRows], [name=nonZeroActiveOnlyColumns]") //
-    .on("change", function () {
-      const $button = $("[data-type=show_non_zero_or_active_only]");
-      const $rowChecked = $("[name=nonZeroActiveOnlyRows]:checked");
-      const $colChecked = $("[name=nonZeroActiveOnlyColumns]:checked");
+    .on("change", function (event) {
+      const $target = $(event.target);
+      const $parent = $target.closest(".customDropdown");
+      const $button = $parent.find("button");
+      const $rowChecked = $parent.find("[name=nonZeroActiveOnlyRows]:checked");
+      const $colChecked = $parent.find(
+        "[name=nonZeroActiveOnlyColumns]:checked"
+      );
 
       const rowValue = $rowChecked.val();
       const colValue = $colChecked.val();
@@ -319,6 +323,7 @@ window.addEventListener("DOMContentLoaded", async () => {
   $("[data-action=customize_toggle]").on("click", () => {
     $customizeReport.addClass("customizeReport--show");
     $customizeReport.find(".collapse").first().collapse("show");
+    $(".popover").popover("hide");
   });
   $("[data-action=customize_hide], .customizeReport__backdrop") //
     .on("click", () => {
@@ -339,18 +344,12 @@ window.addEventListener("DOMContentLoaded", async () => {
 
     for (let index = 0; index < $dataTypes.length; index++) {
       const $dataType = $($dataTypes[index]);
-      const $group = $dataType.closest("[data-type-group]");
       const name = $dataType.data("type");
-      const group = $group.data("type-group");
-
-      if (!payload[group]) {
-        payload[group] = {};
-      }
 
       if ($dataType.is(":checkbox") || $dataType.is(":radio")) {
-        payload[group][name] = $dataType.is(":checked");
+        payload[name] = $dataType.is(":checked");
       } else {
-        payload[group][name] = $dataType.val();
+        payload[name] = $dataType.val();
       }
     }
 
@@ -358,12 +357,69 @@ window.addEventListener("DOMContentLoaded", async () => {
     $customizeReportBtn.prop("disabled", true);
 
     const response = await api.runReportCustomize(payload);
-    console.log(response.data);
+    setupReportFormValue($(".accountReceivable__form"), response.data);
 
     $customizeReportBtn.removeClass("buttonSubmit--isLoading");
     $customizeReportBtn.prop("disabled", false);
   });
+  api.getReportCustomizeFormValues().then(({ data }) => {
+    setupReportFormValue($customizeReport, data);
+    setupReportFormValue($(".accountReceivable__form"), data);
+  });
+
+  const $saveCustomizationBtn = $("[data-action=save_customization]");
+  const $saveCustomizationForm = $("#saveCustomizationForm");
+  const saveCustomizationForm = $saveCustomizationForm.html();
+  $saveCustomizationForm.remove();
+  $saveCustomizationBtn.popover({
+    html: true,
+    sanitize: false,
+    placement: "bottom",
+    content: saveCustomizationForm,
+  });
 });
+
+function setupReportFormValue($form, data) {
+  const $dataTypes = $form.find("[data-type]");
+  for (let index = 0; index < $dataTypes.length; index++) {
+    const $dataType = $($dataTypes[index]);
+    const key = $dataType.data("type");
+    const value = data[key];
+
+    if ($dataType.is(":checkbox")) {
+      $dataType.prop("checked", Boolean(Number(value)));
+      continue;
+    }
+
+    if ($dataType.is(":radio")) {
+      if ($dataType.attr("name") === "aging_method") {
+        $form
+          .find(`[type=radio][value=${data.aging_method}]`)
+          .prop("checked", true);
+        continue;
+      }
+    }
+
+    if (key === "show_nonzero_or_active_only") {
+      const [row, column] = value.split("/");
+      const $parent = $dataType.closest(".customDropdown");
+
+      const $row = $parent.find(`[value=${row}]`);
+      const $column = $parent.find(`[value=${column}]`);
+      $row.prop("checked", true);
+      $column.prop("checked", true);
+
+      const rowValueCapitalized = capitalize(row.split("_").join(" "));
+      const colValueCapitalized = capitalize(column.split("_").join(" "));
+      const $button = $parent.find("button");
+      $button.text(`${rowValueCapitalized}/${colValueCapitalized}`);
+      $button.val(`${row}/${column}`);
+    }
+
+    $dataType.val(value);
+    $dataType.get(0).value = value;
+  }
+}
 
 function isEmpty(value) {
   return (

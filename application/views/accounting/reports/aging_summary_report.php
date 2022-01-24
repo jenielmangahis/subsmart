@@ -68,7 +68,7 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                                     </div>
                                     <div class="accountReceivable__reportPeriodAsOf reportPeriodParent__hide">as of</div>
                                     <div class="form-group reportPeriodParent__hide">
-                                        <input type="date" class="form-control" data-type="report_period_date">
+                                        <input type="date" class="form-control" data-type="report_period_value">
                                     </div>
                                 </div>
                             </div>
@@ -86,7 +86,7 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                                         >Show non-zero or active only</div>
                                         <div class="form-group">
                                             <div class="customDropdown">
-                                                <button class="customDropdown__btn" type="button" data-type="show_non_zero_or_active_only" value="active_rows/active_columns">
+                                                <button class="customDropdown__btn" type="button" data-type="show_nonzero_or_active_only" value="active_rows/active_columns">
                                                     <span>Active rows/active columns</span>
                                                     <i class="fa fa-angle-down"></i>
                                                 </button>
@@ -141,11 +141,11 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                                         <div class="accountReceivable__formTitle">Aging method</div>
                                         <div class="accountReceivable__agingMethodInner">
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="agingMethod" id="agingMethodCurrent" value="current" data-type="aging_method_current" checked>
+                                                <input class="form-check-input" type="radio" name="aging_method" id="agingMethodCurrent" value="current" data-type="aging_method_current" checked>
                                                 <label class="form-check-label" for="agingMethodCurrent">Current</label>
                                             </div>
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="agingMethod" id="agingMethodReportDate" value="report_date" data-type="aging_method_report_date">
+                                                <input class="form-check-input" type="radio" name="aging_method" id="agingMethodReportDate" value="report_date" data-type="aging_method_report_date">
                                                 <label class="form-check-label" for="agingMethodReportDate">Report Date</label>
                                             </div>
                                         </div>
@@ -174,7 +174,7 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                         </div>
                         <div class="ml-auto">
                             <button type="button" class="btn btn-ghost" data-action="customize_toggle">Customize</button>
-                            <button type="button" class="btn btn-primary">Save customization</button>
+                            <button type="button" class="btn btn-primary" data-action="save_customization">Save customization</button>
                         </div>
                     </div>
                 </form>
@@ -397,7 +397,7 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                                 </div>
                                 <div class="reportPeriodParent__hide">as of</div>
                                 <div class="form-group reportPeriodParent__hide">
-                                    <input type="date" class="form-control" data-type="report_period_date">
+                                    <input type="date" class="form-control" data-type="report_period_value">
                                 </div>
                             </div>
                         </div>
@@ -427,7 +427,7 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                                     </select>
                                 </div>
                                 <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" id="negativeNumbers" value="show_in_red" data-type="show_in_red">
+                                    <input type="checkbox" class="form-check-input" id="negativeNumbers" value="show_in_red" data-type="negative_numbers_show_in_red">
                                     <label class="form-check-label" for="negativeNumbers">Show in red</label>
                                 </div>
                             </div>
@@ -443,7 +443,7 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                         <div class="form-group">
                             <label class="title">Show non-zero or active only</label>
                             <div class="customDropdown">
-                                <button class="customDropdown__btn" type="button" data-type="show_non_zero_or_active_only" value="active_rows/active_columns">
+                                <button class="customDropdown__btn" type="button" data-type="show_nonzero_or_active_only" value="active_rows/active_columns">
                                     <span>Active rows/active columns</span>
                                     <i class="fa fa-angle-down"></i>
                                 </button>
@@ -506,11 +506,11 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                                 <div class="mb-2">
                                     <div><label class="title">Aging method</label></div>
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="customizeAgingMethod" id="customizeAgingMethod1" value="current" data-type="current">
+                                        <input class="form-check-input" type="radio" name="aging_method" id="customizeAgingMethod1" value="current" data-type="current">
                                         <label class="form-check-label" for="customizeAgingMethod1">Current</label>
                                     </div>
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="customizeAgingMethod" id="customizeAgingMethod2" value="report_date" data-type="report_date" checked>
+                                        <input class="form-check-input" type="radio" name="aging_method" id="customizeAgingMethod2" value="report_date" data-type="report_date" checked>
                                         <label class="form-check-label" for="customizeAgingMethod2">Report date</label>
                                     </div>
                                 </div>
@@ -538,10 +538,10 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                     <div class="customizeReport__panel collapse" id="customizeFilter">
                         <div class="customizeReport__customizeFilterInner">
                             <div class="form-check">
-                                <input type="checkbox" class="form-check-input" id="customizeFilterCustomer" data-type="customer">
+                                <input type="checkbox" class="form-check-input" id="customizeFilterCustomer" data-type="filter_customer">
                                 <label class="form-check-label" for="customizeFilterCustomer">Customer</label>
                             </div>
-                            <select class="form-control" data-type="selected_customer">
+                            <select class="form-control" data-type="filter_customer_selected">
                                 <option>Customer 1</option>
                                 <option>Customer 2</option>
                                 <option>Customer 3</option>
@@ -567,7 +567,7 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                                     <label class="form-check-label" for="customizeCompanyName">Company name</label>
                                 </div>
                                 <div class="form-group">
-                                    <input type="text" class="form-control" data-type="company_name_text">
+                                    <input type="text" class="form-control" data-type="company_name_value">
                                 </div>
                             </div>
                             <div class="customizeReport__headerFooterGrid customizeReport__headerFooterItem">
@@ -576,8 +576,12 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                                     <label class="form-check-label" for="customizeReportTitle">Report title</label>
                                 </div>
                                 <div class="form-group">
-                                    <input type="text" class="form-control" data-type="report_title_text">
+                                    <input type="text" class="form-control" data-type="report_title_value">
                                 </div>
+                            </div>
+                            <div class="form-check customizeReport__headerFooterItem">
+                                <input type="checkbox" class="form-check-input" id="customizeReportPeriod" data-type="header_report_period">
+                                <label class="form-check-label" for="customizeReportPeriod">Report period</label>
                             </div>
                         </div>
                         <div class="mb-3">
@@ -595,18 +599,18 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                             <div><label class="title">Alignment</label></div>
                             <div class="form-group customizeReport__headerFooterAlignment">
                                 <label for="customizeAlignmentHeader">Header</label>
-                                <select class="form-control" id="customizeAlignmentHeader" data-target="alignment_header">
-                                    <option>Left</option>
-                                    <option>Center</option>
-                                    <option>Right</option>
+                                <select class="form-control" id="customizeAlignmentHeader" data-type="header">
+                                    <option value="left">Left</option>
+                                    <option value="center">Center</option>
+                                    <option value="right">Right</option>
                                 </select>
                             </div>
                             <div class="form-group customizeReport__headerFooterAlignment">
                                 <label for="customizeAlignmentFooter">Footer</label>
-                                <select class="form-control" id="customizeAlignmentFooter" data-target="alignment_footer">
-                                    <option>Left</option>
-                                    <option>Center</option>
-                                    <option>Right</option>
+                                <select class="form-control" id="customizeAlignmentFooter" data-type="footer">
+                                    <option value="left">Left</option>
+                                    <option value="center">Center</option>
+                                    <option value="right">Right</option>
                                 </select>
                             </div>
                         </div>
@@ -623,6 +627,42 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
             </div>
         </div>
         <div class="customizeReport__backdrop"></div>
+    </div>
+
+
+    <div id="saveCustomizationForm" class="d-none">
+        <form>
+            <div class="form-group">
+                <label for="reportname">Custom report name</label>
+                <input class="form-control" id="reportname">
+            </div>
+            <div class="form-group">
+                <label for="reportgroup">Add this report to a group</label>
+                <select class="form-control" id="reportgroup">
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
+                </select>
+                <a href="">Add new group</a>
+            </div>
+            <div class="form-group">
+                <label for="reportsharewith">Share with</label>
+                <select class="form-control" id="reportsharewith">
+                    <option value="all">All</option>
+                    <option value="none">None</option>
+                </select>
+            </div>
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="reportsharewithcommunity">
+                <label class="form-check-label" for="reportsharewithcommunity">Share reports with community</label>
+            </div>
+            <small>* You share only your customized report structure and not your financial data.</small>
+            <div class="d-flex justify-content-end pt-1 pb-1">
+                <button type="button" class="btn btn-primary" style="max-height:37px;display: flex;align-items: center;padding: 0 16px;">Save</button>
+            </div>
+        </form>
     </div>
 
 	<?php include viewPath('includes/sidebars/accounting/accounting');?>

@@ -226,6 +226,52 @@ class AccountingARSummary extends MY_Controller
         }
 
         $payload = json_decode(file_get_contents('php://input'), true);
-        echo json_encode(['data' => $payload]);
+
+        $this->db->where('user_id', logged('id'));
+        $form = $this->db->get('accounting_ar_summary_form')->row();
+
+        $input = [
+            'user_id' => logged('id'),
+            'report_period' => $payload['report_period'],
+            'report_period_value' => $payload['report_period_value'],
+            'divide_by_1000' => $payload['divide_by_1000'],
+            'without_cents' => $payload['without_cents'],
+            'except_zero_amount' => $payload['except_zero_amount'],
+            'negative_numbers' => $payload['negative_numbers'],
+            'negative_numbers_show_in_red' => $payload['negative_numbers_show_in_red'],
+            'show_nonzero_or_active_only' => $payload['show_nonzero_or_active_only'],
+            'aging_method' => $payload['current'] ? 'current' : 'report_date',
+            'number_of_periods' => $payload['number_of_periods'],
+            'days_per_aging_period' => $payload['days_per_aging_period'],
+            'filter_customer' => $payload['filter_customer'],
+            'show_logo' => $payload['show_logo'],
+            'company_name' => $payload['company_name'],
+            'company_name_value' => $payload['company_name_value'],
+            'report_title' => $payload['report_title'],
+            'report_title_value' => $payload['report_title_value'],
+            'header_report_period' => $payload['header_report_period'],
+            'date_prepared' => $payload['date_prepared'],
+            'time_prepared' => $payload['time_prepared'],
+            'header' => $payload['header'],
+            'footer' => $payload['footer'],
+        ];
+
+        if ($form) {
+            $this->db->where('id', $form->id);
+            $this->db->update('accounting_ar_summary_form', $input);
+        } else {
+            $this->db->insert('accounting_ar_summary_form', $input);
+        }
+
+        $this->db->where('user_id', logged('id'));
+        $form = $this->db->get('accounting_ar_summary_form')->row();
+        echo json_encode(['data' => $form]);
+    }
+
+    public function apiGetReportCustomize()
+    {
+        $this->db->where('user_id', logged('id'));
+        $form = $this->db->get('accounting_ar_summary_form')->row();
+        echo json_encode(['data' => $form]);
     }
 }
