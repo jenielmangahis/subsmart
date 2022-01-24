@@ -362,7 +362,8 @@ $colorError: #d52b1e;
   }
 }
 
-[data-type="show_non_zero_or_active_only"] {
+[data-type="show_non_zero_or_active_only"],
+[data-type="show_nonzero_or_active_only"] {
   overflow: hidden;
   white-space: nowrap;
   display: block;

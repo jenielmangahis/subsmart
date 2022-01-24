@@ -4925,30 +4925,31 @@ const computeTotalHours = () => {
 }
 
 const loadTagsDataTable = () => {
-        $('#tags-table').DataTable({
-                    autoWidth: false,
-                    searching: false,
-                    processing: true,
-                    serverSide: true,
-                    lengthChange: false,
-                    ordering: false,
-                    info: false,
-                    ajax: {
-                        url: 'load-job-tags/',
-                        dataType: 'json',
-                        contentType: 'application/json',
-                        type: 'POST',
-                        data: function(d) {
-                            d.columns[0].search.value = $('input#search-tag').val();
-                            return JSON.stringify(d);
-                        },
-                        pagingType: 'full_numbers',
-                    },
-                    columns: [{
-                                data: 'tag_name',
-                                name: 'tag_name',
-                                fnCreatedCell: function(td, cellData, rowData, row, col) {
-                                        $(td).html(`<span>${rowData.tag_name} ${rowData.type === 'group' ? `(${rowData.tags.length})` : ''}</span><a href="#" class="float-right text-info edit" data-group-tag="${rowData.group_tag_id}" data-type="${rowData.type}" data-id="${rowData.id}" data-name="${rowData.tag_name}">Edit</a>`);
+    $('#tags-table').DataTable({
+        autoWidth: false,
+        searching: false,
+        processing: true,
+        serverSide: true,
+        lengthChange: false,
+        ordering: false,
+        info: false,
+        ajax: {
+            url: '/accounting/load-job-tags/',
+            dataType: 'json',
+            contentType: 'application/json',
+            type: 'POST',
+            data: function(d) {
+                d.columns[0].search.value = $('input#search-tag').val();
+                return JSON.stringify(d);
+            },
+            pagingType: 'full_numbers',
+        },
+        columns: [
+            {
+                data: 'tag_name',
+                name: 'tag_name',
+                fnCreatedCell: function(td, cellData, rowData, row, col) {
+                    $(td).html(`<span>${rowData.tag_name} ${rowData.type === 'group' ? `(${rowData.tags.length})` : ''}</span><a href="#" class="float-right text-info edit" data-group-tag="${rowData.group_tag_id}" data-type="${rowData.type}" data-id="${rowData.id}" data-name="${rowData.tag_name}">Edit</a>`);
 
                     if(rowData.type === 'group') {
                         $(td).prepend(`<a class="mr-3 cursor-pointer" data-toggle="collapse" data-target="#child-${row}"><i class="fa fa-chevron-down"></i></a>`);
