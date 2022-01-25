@@ -40,6 +40,10 @@
     <!-- <link rel="stylesheet" href="<?php //echo $url->assets?>bootstrap/css/bootstrap.min.css"> -->
     <?php echo put_header_assets(); ?>
 
+    <script>  
+        var base_url = "<?php echo base_url(); ?>";
+    </script>
+
 </head>
 
 <body>

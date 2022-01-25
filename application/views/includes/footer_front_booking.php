@@ -18,28 +18,17 @@
 <script src="<?php echo $url->assets ?>dashboard/js/waves.min.js"></script>
 
 <script src="<?php echo $url->assets ?>dashboard/js/app.js"></script>
-<script src="//cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
-
-<script src="<?php echo $url->assets ?>plugins/datatables.net/export/dataTables.buttons.min.js"></script>
-<script src="<?php echo $url->assets ?>plugins/datatables.net/export/buttons.bootstrap.min.js"></script>
-<script src="<?php echo $url->assets ?>plugins/datatables.net/export/jszip.min.js"></script>
-<script src="<?php echo $url->assets ?>plugins/datatables.net/export/pdfmake.min.js"></script>
-<script src="<?php echo $url->assets ?>plugins/datatables.net/export/vfs_fonts.js"></script>
-<script src="<?php echo $url->assets ?>plugins/datatables.net/export/buttons.html5.min.js"></script>
 <!-- Validate  -->
 <script src="<?php echo $url->assets ?>plugins/switchery/switchery.min.js"></script>
 <script src="<?php echo $url->assets ?>plugins/jquery.validate.min.js"></script>
 <script src="<?php echo $url->assets ?>plugins/select2/dist/js/select2.full.min.js"></script>
 <script src="<?php echo $url->assets ?>plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
 <script src="<?php echo $url->assets ?>plugins/jquery-timepicker/jquery.timepicker.min.js"></script>
-<!-- <script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script> -->
-<script src="<?php echo $url->assets ?>plugins/bootstrap-treeview/bootstrap-treeview.js"></script>
+<!-- Sweet Alert -->
+<script src="<?php echo $url->assets;?>plugins/sweetalert/sweetalert2@10.js">
 
 <!-- dynamic assets goes  -->
 <?php echo put_footer_assets(); ?>
-
-<script src="<?php echo $url->assets ?>signature_pad-master/js/signature_pad.js"></script>
 
 <script type="text/javascript">
 	window.base_url = <?php echo json_encode(base_url()); ?>;

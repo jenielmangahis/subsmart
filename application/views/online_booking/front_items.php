@@ -1,99 +1,117 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-<?php include viewPath('includes/header'); ?>
-<div>
+<?php include viewPath('includes/header_front_booking'); ?>
+<style>
+.booking-category-name{
+  background-color: #32243d;
+  color: #ffffff;
+  font-size: 16px;
+  padding: 10px;
+  margin: 0px;
+}
+.service-item-img{
+  width: 100%;
+}
+.service-item-name{
+  font-size: 27px;
+  font-weight: bold;  
+}
+.service-item-price {
+    font-size: 17px;
+    font-weight: bold;
+}
+.service-item-name, .service-item-description, .price-container{
+  display: block;
+}
+.service-item-description{
+  font-size: 15px;
+}
+.service-item-price{
+  float: left;
+}
+.btn-booking-add-to-cart{
+  float: right;
+}
+.tbl-booking-products{
+  /*border-collapse:separate;
+  border-spacing:0 8px;*/
+}
+.product-container{
+  margin-top: 20px;
+  overflow: auto;
+  max-height: 600px;
+}
+</style>
     <!-- page wrapper start -->
-    <div class="col-xl-8 left">
+    <div class="col-xl-9 left">
         <div class="container-fluid">
             <div class="page-title-box">
                 <div class="row align-items-center">
                     <div class="col-sm-6">
-                        <h1 class="page-title-v2">Online Booking</h1>
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item active">Manage your online booking</li>
-                        </ol>
+                        <h1 class="page-title-v2"><?php echo $booking_settings ? $booking_settings->page_title : 'Online Booking'; ?></h1>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-              <div class="col-xl-12">
-                <?php echo form_open_multipart('booking/products/'.$eid, [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
-                <div class="col-9 right-menu">
-                  <div class="col-4 left pr-0 ml-4">
-                    <input type="text" class="form-control-search left" value="<?php echo $search_query; ?>" name="search" placeholder="Search...">
-                  </div>
-                  <div class="col-1 left pl-1">
-                    <button type="submit" class="search-booking-btn"><span class="fa fa-search"></span></button>
-                  </div>
-                  <div class="col-3 left pl-0 pr-0 pos-rlt-cs left-20">
-                    <a class="view-grid" href="<?php echo base_url('booking/products/'.$eid.'?style=grid') ?>"><span class="fa fa-th fa-margin-right"></span> Grid view</a>
-                  </div>
-                  <div class="col-3 left pl-0 pr-0 pos-rlt-cs">
-                    <a class="view-grid active" href="<?php echo base_url('booking/products/'.$eid) ?>"><span class="fa fa-list-ul fa-margin-right"></span> List view</a>
+                <div class="pl-3 pr-3 mt-2 row" style="position: relative;top: 7px;">
+                  <div class="col mb-4 left alert alert-warning mt-0 mb-0">
+                      <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;"><?php echo $booking_settings->page_instruction; ?></span>
                   </div>
                 </div>
-                <?php echo form_close(); ?>
-              </div>
             </div>
+            <?php echo form_open_multipart('booking/products/'.$eid, [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+            <div class="row" style="margin-bottom: 15px;">
+              <div class="col-xl-12" style="text-align:right;">                
+                 <a class="view-grid btn btn-sm btn-primary" href="<?php echo base_url('booking/products/'.$eid.'?style=grid') ?>" style="margin-right: 10px;"><span class="fa fa-th fa-margin-right"></span> Grid view</a>
+                 <a class="view-grid active btn btn-sm btn-primary" href="<?php echo base_url('booking/products/'.$eid) ?>"><span class="fa fa-list-ul fa-margin-right"></span> List view</a>
+                </div>                
+              </div>              
+            </div>
+            <?php echo form_close(); ?>
             <!-- end row -->
             <div class="row">
                 <?php include viewPath('flash'); ?>
-                <div class="col-xl-12">
-                  <ul class="category-list">   
-                     <?php foreach($products as $key => $value){ ?>                  
-                      <li class="category-li">
-                        <div class="category__name"><?php echo $value['category']->name; ?></div>
-                        <ul class="product-list">
-                          <?php foreach( $value['products'] as $p ){ ?>
-                            <li class="product-li">
-                              <div class="product" data-product-id="<?php echo $p->id; ?>">
-                                 <div class="product__img__cnt" data-product-id="<?php echo $p->id; ?>">
-                                    <div class="product__img__hover" style="display: none;"><span>Quick Look</span></div>
-                                    <?php 
-                                      $service_item_thumb = $p->image;
-                                      if(file_exists('uploads/' . $service_item_thumb) == FALSE || $service_item_thumb == null) {
-                                          
-                                          $service_item_thumb_img = base_url('/assets/dashboard/images/online-booking.png');
-                                          if(file_exists('uploads/service_item/' . $service_item_thumb) == FALSE || $service_item_thumb == null) {
-                                              $service_item_thumb_img = base_url('/assets/dashboard/images/online-booking.png');
-                                          } else {
-                                              $service_item_thumb_img = base_url('uploads/service_item/'.$service_item_thumb);
-                                          }
+                <div class="col-xl-12 product-container">
+                    <?php foreach($products as $p){ ?>
+                      <h3 class="booking-category-name"><?php echo $p['category']->name; ?></h3>
+                      <table class="table tbl-booking-products">
+                      <?php foreach($p['products'] as $item){ ?>
+                        <tr style="background-color:#ffffff;" class="row-padding">
+                          <td style="width:25%; vertical-align: top;">
+                            <?php                      
+                                $service_item_thumb = $item->image;
+                                if(file_exists('uploads/' . $service_item_thumb) == FALSE || $service_item_thumb == null) {
+                                    
+                                    $service_item_thumb_img = base_url('/assets/dashboard/images/online-booking.png');
+                                    if(file_exists('uploads/service_item/' . $service_item_thumb) == FALSE || $service_item_thumb == null) {
+                                        $service_item_thumb_img = base_url('/assets/dashboard/images/online-booking.png');
+                                    } else {
+                                        $service_item_thumb_img = base_url('uploads/service_item/'.$service_item_thumb);
+                                    }
 
 
-                                      } else {
-                                          $service_item_thumb_img = base_url('uploads/'.$service_item_thumb);
-                                      }
-                                    ?>
-                                    <img class="product__img" src="<?php echo $service_item_thumb_img; ?>">
-                                 </div>
-                                 <div class="product__cnt">
-                                    <div class="product__name" style="height: 25px;"><?php echo $p->name; ?></div>
-                                    <div class="product__description">
-                                       <p><?php echo $p->description; ?></p>
-                                    </div>
-                                    <div class="product__price__cnt clearfix">
-                                       <div class="product__price">$<?php echo number_format($p->price, 2); ?><span class="product__price__unit">/<?php echo $p->price_unit; ?></span></div>
-                                       <div class="product__actions">
-                                          <div class="product__qty-box">
-                                             <button class="btn qty_minus product__qty-btn" data-id="<?php echo $p->id; ?>" type="button"><span class="fa fa-minus"></span></button>
-                                             <input class="form-control-qty product__qty" id="qty-input-<?php echo $p->id; ?>" type="text" name="qty[<?php echo $p->id; ?>]" value="1">
-                                             <button class="btn qty_plus product__qty-btn"  data-id="<?php echo $p->id; ?>" type="button"><span class="fa fa-plus"></span></button>
-                                          </div>
-                                          <button class="btn btn-green btn-sm btn-add-cart" data-id="<?php echo $p->id; ?>">Add to Cart</button>
-                                       </div>
-                                    </div>
-                                 </div>
-                                 <div class="product__view">
-                                    <a href="#" data-product-modal="open" data-product-id="<?php echo $p->id; ?>">view more</a>
-                                 </div>
-                              </div>
-                           </li>
-                          <?php } ?>                           
-                        </ul>
-                     </li>
-                     <?php } ?>
-                  </ul>
+                                } else {
+                                    $service_item_thumb_img = base_url('uploads/'.$service_item_thumb);
+                                }
+                            ?>
+                            <img class="service-item-img" src="<?php echo $service_item_thumb_img; ?>">
+                          </td>
+                          <td>
+                            <span class="service-item-name"><?php echo $item->name; ?></span>
+                            <p class="service-item-description font-italic text-muted mb-0 small"><?php echo $item->description; ?></p>
+                            <hr />
+                            <div class="price-container">
+                              <span class="service-item-price">$<?php echo number_format($item->price,2) . '/' . $item->price_unit; ?></span> 
+                              <div class="product__qty-box sdv-qty" style="float:right;">
+                                <button class="btn qty_minus product__qty-btn" data-id="<?php echo $item->id; ?>" type="button"><span class="fa fa-minus"></span></button>
+                                <input class="form-control-qty product__qty" id="qty-input-<?php echo $item->id; ?>" type="text" name="qty[<?php echo $item->id; ?>]" value="1">
+                                <button class="btn qty_plus product__qty-btn"  data-id="<?php echo $item->id; ?>" type="button"><span class="fa fa-plus"></span></button>
+                                <a class="btn btn-sm btn-primary btn-add-cart" data-id="<?php echo $item->id; ?>" href="javascript:void(0);">Add to cart</a>
+                              </div>                           
+                            </div>
+                          </td>
+                        </tr>
+                      <?php } ?>
+                      </table>
+                    <?php } ?>                    
                 </div>
             </div>
             <!-- end row -->
@@ -102,14 +120,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     </div>
     <?php include viewPath('includes/sidebars/front_items_cart'); ?>    
     <!-- page wrapper end -->
-</div>
 <?php include viewPath('includes/booking_front_modals'); ?>    
 
 <?php include viewPath('includes/footer_front_booking'); ?>
 
 <script>  
-  var base_url = "<?php echo base_url(); ?>";
-
   function continue_cart(){    
       var eid = "<?php echo $eid; ?>";
       window.location.href = base_url + "booking/products_schedule/"+eid;
