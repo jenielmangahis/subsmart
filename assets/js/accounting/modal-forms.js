@@ -4686,6 +4686,90 @@ $(function() {
             $(this).parent().parent().parent().parent().parent().remove();
         }
     });
+
+    $(document).on('click', '#modal-container form #expenseModal #copy-expense', function(e) {
+        e.preventDefault();
+
+        $('#modal-container form#modal-form').attr('onsubmit', 'submitModalForm(event, this)');
+        $('#modal-container form#modal-form').removeAttr('data-href');
+        $('#modal-container form#modal-form .modal-body .row.payee-details').next().prepend(`<div class="col-md-12">
+            <div class="alert alert-info alert-dismissible mb-4" role="alert">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <h6 class="mt-0">This is a copy</h6>
+                <span>This is a copy of an expense. Revise as needed and save the expense.</span>
+            </div>
+        </div>`);
+    });
+
+    $(document).on('click', '#modal-container form #checkModal #copy-check', function(e) {
+        e.preventDefault();
+
+        $('#modal-container form#modal-form').attr('onsubmit', 'submitModalForm(event, this)');
+        $('#modal-container form#modal-form').removeAttr('data-href');
+        $('#modal-container form#modal-form .modal-body .row.payee-details').next().prepend(`<div class="col-md-12">
+            <div class="alert alert-info alert-dismissible mb-4" role="alert">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <h6 class="mt-0">This is a copy</h6>
+                <span>This is a copy of a check. Revise as needed and save the check.</span>
+            </div>
+        </div>`);
+    });
+
+    $(document).on('click', '#modal-container form #billModal #copy-bill', function(e) {
+        e.preventDefault();
+
+        $('#modal-container form#modal-form').attr('onsubmit', 'submitModalForm(event, this)');
+        $('#modal-container form#modal-form').removeAttr('data-href');
+        $('#modal-container form#modal-form .modal-body .row.payee-details').next().prepend(`<div class="col-md-12">
+            <div class="alert alert-info alert-dismissible my-4" role="alert">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <h6 class="mt-0">This is a copy</h6>
+                <span>This is a copy of a bill. Revise as needed and save the bill.</span>
+            </div>
+        </div>`);
+    });
+
+    $(document).on('click', '#modal-container form #purchaseOrderModal #copy-purchase-order', function(e) {
+        e.preventDefault();
+
+        $('#modal-container form#modal-form').attr('onsubmit', 'submitModalForm(event, this)');
+        $('#modal-container form#modal-form').removeAttr('data-href');
+        $('#modal-container form#modal-form .modal-body .row.payee-details').next().prepend(`<div class="col-md-12">
+            <div class="alert alert-info alert-dismissible mb-4" role="alert">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <h6 class="mt-0">This is a copy</h6>
+                <span>This is a copy of a purchase order. Revise as needed and save the purchase order.</span>
+            </div>
+        </div>`);
+    });
+
+    $(document).on('click', '#modal-container form #vendorCreditModal #copy-vendor-credit', function(e) {
+        e.preventDefault();
+
+        $('#modal-container form#modal-form').attr('onsubmit', 'submitModalForm(event, this)');
+        $('#modal-container form#modal-form').removeAttr('data-href');
+        $('#modal-container form#modal-form .modal-body .row.payee-details').next().prepend(`<div class="col-md-12">
+            <div class="alert alert-info alert-dismissible mb-4" role="alert">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <h6 class="mt-0">This is a copy</h6>
+                <span>This is a copy of a vendor credit. Revise as needed and save the vendor credit.</span>
+            </div>
+        </div>`);
+    });
+
+    $(document).on('click', '#modal-container form #creditCardCreditModal #copy-cc-credit', function(e) {
+        e.preventDefault();
+
+        $('#modal-container form#modal-form').attr('onsubmit', 'submitModalForm(event, this)');
+        $('#modal-container form#modal-form').removeAttr('data-href');
+        $('#modal-container form#modal-form .modal-body .row.payee-details').next().prepend(`<div class="col-md-12">
+            <div class="alert alert-info alert-dismissible mb-4" role="alert">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <h6 class="mt-0">This is a copy</h6>
+                <span>This is a copy of a credit card credit. Revise as needed and save the credit card credit.</span>
+            </div>
+        </div>`);
+    });
 });
 
 const convertToDecimal = (el) => {

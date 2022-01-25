@@ -634,33 +634,38 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
         <form>
             <div class="form-group">
                 <label for="reportname">Custom report name</label>
-                <input class="form-control" id="reportname">
+                <input class="form-control" id="reportname" data-type="name">
             </div>
             <div class="form-group">
                 <label for="reportgroup">Add this report to a group</label>
-                <select class="form-control" id="reportgroup">
+                <select class="form-control" id="reportgroup" data-type="group">
                     <option>1</option>
                     <option>2</option>
                     <option>3</option>
                     <option>4</option>
                     <option>5</option>
                 </select>
-                <a href="">Add new group</a>
+                <a href="" class="d-none">Add new group</a>
             </div>
             <div class="form-group">
                 <label for="reportsharewith">Share with</label>
-                <select class="form-control" id="reportsharewith">
+                <select class="form-control" id="reportsharewith" data-type="share_with">
                     <option value="all">All</option>
                     <option value="none">None</option>
                 </select>
             </div>
             <div class="form-check">
-                <input type="checkbox" class="form-check-input" id="reportsharewithcommunity">
+                <input type="checkbox" class="form-check-input" id="reportsharewithcommunity" data-type="share_with_community">
                 <label class="form-check-label" for="reportsharewithcommunity">Share reports with community</label>
             </div>
             <small>* You share only your customized report structure and not your financial data.</small>
             <div class="d-flex justify-content-end pt-1 pb-1">
-                <button type="button" class="btn btn-primary" style="max-height:37px;display: flex;align-items: center;padding: 0 16px;">Save</button>
+                <button type="button" class="btn btn-primary buttonSubmit" style="max-height:37px;display: flex;align-items: center;padding: 0 16px;" data-action="submit_customization">
+                    <div class="spinner-border spinner-border-sm" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                    Save
+                </button>
             </div>
         </form>
     </div>

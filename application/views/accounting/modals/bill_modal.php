@@ -131,10 +131,10 @@
                                     <div class="row">
                                         <?php if($is_copy) : ?>
                                         <div class="col-md-12">
-                                            <div class="alert alert-info alert-dismissible mb-4" role="alert">
+                                            <div class="alert alert-info alert-dismissible my-4" role="alert">
                                                 <button type="button" class="close" data-dismiss="alert">&times;</button>
                                                 <h6 class="mt-0">This is a copy</h6>
-                                                <span>This is a copy of an expense. Revise as needed and save the expense.</span>
+                                                <span>This is a copy of a bill. Revise as needed and save the bill.</span>
                                             </div>
                                         </div>
                                         <?php endif; ?>
@@ -493,8 +493,28 @@
                         <div class="col-md-4">
                             <button type="button" class="btn btn-secondary btn-rounded border" data-dismiss="modal">Close</button>
                         </div>
-                        <div class="col-md-4 d-flex">
+                        <div class="col-md-4 <?=!isset($bill) ? 'd-flex' : ''?>">
+                            <?php if(!isset($bill)) : ?>
                             <a href="#" class="text-white m-auto" onclick="makeRecurring('bill')">Make Recurring</a>
+                            <?php else : ?>
+                            <div class="row h-100">
+                                <div class="col-md-12 d-flex align-items-center justify-content-center">
+                                    <span><a href="#" class="text-white" onclick="makeRecurring('bill')">Make Recurring</a></span>
+                                    <span class="mx-3 divider"></span>
+                                    <span>
+                                        <div class="dropup">
+                                            <a href="javascript:void(0);" class="text-white" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
+                                            <div class="dropdown-menu">
+                                                <a class="dropdown-item" href="#" id="copy-bill">Copy</a>
+                                                <a class="dropdown-item" href="#">Delete</a>
+                                                <a class="dropdown-item" href="#">Transaction journal</a>
+                                                <a class="dropdown-item" href="#">Audit history</a>
+                                            </div>
+                                        </div>
+                                    </span>
+                                </div>
+                            </div>
+                            <?php endif; ?>
                         </div>
                         <div class="col-md-4">
                             <!-- Split dropup button -->

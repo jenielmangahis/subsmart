@@ -674,6 +674,7 @@ $(document).on('change', '#remove-tags-modal #remove-tags-table input[type="chec
 });
 
 $(document).on('keyup', '#remove-tags-modal #search-tag', function() {
+    $('#remove-tags-modal #remove-tags-table thead tr th span').html('0 selected');
     $('#remove-tags-table').DataTable().ajax.reload(null, true);
 });
 
@@ -719,6 +720,73 @@ $(document).on('click', '#remove-tags-modal button#remove', function(e) {
             timer: 2000
         })
     }
+});
+
+$(document).on('click', '#transactions-table tbody tr td:not(:first-child)', function() {
+    var row = $(this).parent();
+    var data = $('#transactions-table').DataTable().row(row).data();
+    var type = data.type.replace(' ', '-').toLowerCase();
+
+    $.get(`/accounting/view-transaction/${type}/${data.id}`, function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        switch(type) {
+            case 'expense' :
+                initModalFields('expenseModal', data);
+
+                $('#expenseModal #payee').trigger('change');
+
+                $('#expenseModal').modal('show');
+            break;
+            case 'check' :
+                initModalFields('checkModal', data);
+
+                $('#checkModal #payee').trigger('change');
+        
+                $('#checkModal').modal('show');
+            break;
+            case 'bill' :
+                initModalFields('billModal', data);
+
+                $('#billModal').modal('show');
+            break;
+            case 'cc-credit' :
+                initModalFields('creditCardCreditModal', data);
+
+                $('#creditCardCreditModal').modal('show');
+            break;
+            case 'vendor-credit' :
+                initModalFields('vendorCreditModal', data);
+
+                $('#vendorCreditModal').modal('show');
+            break;
+            case 'deposit' :
+                rowCount = 8;
+                rowInputs = $('#depositModal table tbody tr:first-child()').html();
+                blankRow = $('#depositModal table tbody tr:last-child()').html();
+
+                $('#depositModal table.clickable tbody tr:first-child()').remove();
+                $('#depositModal table tbody tr:last-child()').remove();
+
+                initModalFields('depositModal', data);
+
+                $('#depositModal').modal('show');
+            break;
+            case 'purchase-order' :
+                initModalFields('purchaseOrderModal', data);
+
+                $('#purchaseOrderModal').modal('show');
+            break;
+        }
+    });
 });
 
 function applybtn() {

@@ -1,7 +1,7 @@
 div#management_reports_modal {
     display: none;
     background-color: #F4F5F8;
-    position: absolute;
+    position: fixed;
     z-index: 1000;
     width: 100%;
     top: 0;
@@ -512,7 +512,7 @@ div#management_reports_modal .the-modal-body .the-header .form-group.report-peri
 #management_reports_modal .right-content {
     position: fixed;
     width: 83%;
-    height: calc(100% - 260px);
+    height: calc(100% - 225px);
     overflow: scroll;
     overflow-x: hidden;
     overflow-y: scroll;
@@ -526,4 +526,78 @@ div#management_reports_modal .the-modal-body .the-header .form-group.report-peri
 
 #management_reports_modal #cover-page-section .cover_page_template_view iframe {
     border: solid 1px #CCCCCC;
+}
+
+#management_reports_viewer_modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    background: #000000a6;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+}
+
+#management_reports_viewer_modal .body {
+    background: #ffffff;
+    width: 90%;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 30px;
+    font-size: 12px;
+    border-radius: 10px;
+}
+
+#management_reports_viewer_modal .body .iframe {
+    width: 100%;
+    height: 65vh;
+}
+
+#management_reports_viewer_modal .body .iframe iframe {
+    width: 100%;
+    height: 100%;
+}
+
+#management_reports_viewer_modal .body .header .title {
+    font-size: 20px;
+}
+
+#management_reports_viewer_modal .body .content .text-label {
+    padding: 10px 0;
+}
+
+#management_reports_viewer_modal .modal-footer>:not(:last-child) {
+    margin-right: 0.25rem;
+}
+
+#management_reports_viewer_modal .content {
+    padding: 10px 0;
+}
+
+#management_reports_viewer_modal .cancel-button {
+    background-color: transparent;
+    background: transparent;
+    font-size: 13px;
+    color: #393A3D;
+    border: solid 2px #515659;
+    padding: 5px 25px;
+    height: auto;
+    border-radius: 15px;
+    font-weight: 700;
+    position: absolute;
+    left: 2rem;
+}
+
+#management_reports_viewer_modal .print-button {
+    background-color: #2CA01C;
+    font-size: 13px;
+    color: #fff;
+    border: solid 2px #2CA01C;
+    padding: 5px 25px;
+    height: auto;
+    border-radius: 15px;
+    font-weight: 700;
 }

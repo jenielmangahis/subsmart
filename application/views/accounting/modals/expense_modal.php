@@ -411,8 +411,29 @@
                         <div class="col-md-4">
                             <button type="button" class="btn btn-secondary btn-rounded border" data-dismiss="modal">Close</button>
                         </div>
-                        <div class="col-md-4 d-flex">
+                        <div class="col-md-4 <?=!isset($expense) ? 'd-flex' : ''?>">
+                            <?php if(!isset($expense)) : ?>
                             <a href="#" class="text-white m-auto" onclick="makeRecurring('expense')">Make Recurring</a>
+                            <?php else : ?>
+                            <div class="row h-100">
+                                <div class="col-md-12 d-flex align-items-center justify-content-center">
+                                    <span><a href="#" class="text-white" onclick="makeRecurring('expense')">Make Recurring</a></span>
+                                    <span class="mx-3 divider"></span>
+                                    <span>
+                                        <div class="dropup">
+                                            <a href="javascript:void(0);" class="text-white" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
+                                            <div class="dropdown-menu">
+                                                <a class="dropdown-item" href="#" id="copy-expense">Copy</a>
+                                                <a class="dropdown-item" href="#">Void</a>
+                                                <a class="dropdown-item" href="#">Delete</a>
+                                                <a class="dropdown-item" href="#">Transaction journal</a>
+                                                <a class="dropdown-item" href="#">Audit history</a>
+                                            </div>
+                                        </div>
+                                    </span>
+                                </div>
+                            </div>
+                            <?php endif; ?>
                         </div>
                         <div class="col-md-4">
                             <!-- Split dropup button -->
