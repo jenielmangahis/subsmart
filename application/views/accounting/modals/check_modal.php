@@ -109,7 +109,7 @@
                                             <div class="alert alert-info alert-dismissible mb-4" role="alert">
                                                 <button type="button" class="close" data-dismiss="alert">&times;</button>
                                                 <h6 class="mt-0">This is a copy</h6>
-                                                <span>This is a copy of an expense. Revise as needed and save the expense.</span>
+                                                <span>This is a copy of a check. Revise as needed and save the check.</span>
                                             </div>
                                         </div>
                                         <?php endif; ?>
@@ -437,7 +437,13 @@
                                         <div class="dropup">
                                             <a href="#" class="text-white" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
                                             <div class="dropdown-menu dropdown-menu-align-right">
-                                                <a class="dropdown-item" href="#">Void</a>
+                                                <a class="dropdown-item" href="#" id="<?=isset($check) ? 'copy-check' : 'void-check'?>"><?=isset($check) ? 'Copy' : 'Void'?></a>
+                                                <?php if(isset($check)) : ?>
+                                                <a class="dropdown-item" href="#" id="void-check">Void</a>
+                                                <a class="dropdown-item" href="#">Delete</a>
+                                                <a class="dropdown-item" href="#">Transaction journal</a>
+                                                <a class="dropdown-item" href="#">Audit history</a>
+                                                <?php endif; ?>
                                             </div>
                                         </div>
                                     </span>

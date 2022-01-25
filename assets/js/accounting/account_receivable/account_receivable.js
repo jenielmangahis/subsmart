@@ -377,6 +377,37 @@ window.addEventListener("DOMContentLoaded", async () => {
     placement: "bottom",
     content: saveCustomizationForm,
   });
+
+  $(document).on(
+    "click",
+    "[data-action=submit_customization]",
+    async (event) => {
+      const $target = $(event.target);
+      const $form = $target.closest("form");
+      const $dataTypes = $form.find("[data-type]");
+      const payload = {};
+
+      for (let index = 0; index < $dataTypes.length; index++) {
+        const $dataType = $($dataTypes[index]);
+        const name = $dataType.data("type");
+
+        if ($dataType.is(":checkbox") || $dataType.is(":radio")) {
+          payload[name] = $dataType.is(":checked");
+        } else {
+          payload[name] = $dataType.val();
+        }
+      }
+
+      $target.addClass("buttonSubmit--isLoading");
+      $target.prop("disabled", true);
+
+      const response = await api.saveCustomizationPopoverForm(payload);
+      console.log(response);
+
+      $target.removeClass("buttonSubmit--isLoading");
+      $target.prop("disabled", false);
+    }
+  );
 });
 
 function setupReportFormValue($form, data) {

@@ -1074,7 +1074,7 @@ class Accounting extends MY_Controller
             $this->accounting_management_reports->delete_reports_by_management_report_id($management_report_id);
         }
 
-        $this->create_cover_page_pdf_template();
+        // $this->create_cover_page_pdf_template();
         $data = new stdClass();
         $data->result = "success";
         echo json_encode($data);
@@ -1155,6 +1155,26 @@ class Accounting extends MY_Controller
         $data->result="success";
         $data->file_location = base_url("assets/pdf/".$filename);
         echo json_encode($data);
+    }
+    public function management_report_generate_pdf($management_report_id)
+    {
+        // $management_report_id = $this->input->post("management_report_id");
+        $management_report = $this->accounting_management_reports->get_management_reports_by_id($management_report_id);
+        $this->page_data["management_report"]=$management_report;
+        $this->page_data["primary_pages"]=$this->accounting_management_reports->get_management_reports_preliminary_pages_by_id($management_report_id);
+        $this->page_data["report_pages"]=$this->accounting_management_reports->get_report_pages_by_maagement_report_id($management_report_id);
+        if($management_report->cover_style == 1 || $management_report->cover_style == 2){
+            $template_src='accounting/reports/management_reports/template_1_2';
+        }elseif($management_report->cover_style == 3){
+            $template_src='accounting/reports/management_reports/template_3';
+        }else{
+            $template_src='accounting/reports/management_reports/template_4';
+        }
+
+        $filename = "management_report_".$management_report_id.".pdf";
+
+        $this->load->library("pdf");
+        $this->pdf->save_pdf($template_src, $this->page_data, $filename, "P");
     }
 
     public function aging_summary_report()
@@ -9534,6 +9554,7 @@ class Accounting extends MY_Controller
             'customer_address_state' => $customer_info->acs_city . " " . $customer_info->acs_state . " " . $customer_info->acs_zip_code . " ",
         );
         $file_name = "receive_payment_pdf_" . $receive_payment_id . ".pdf";
+        $this->load->library('pdf');
         $this->pdf->save_pdf("accounting/customer_includes/html_email_print", $data, "receive_payment_pdf_" . $receive_payment_id . ".pdf", "P");
         return $file_name;
     }
@@ -11267,6 +11288,7 @@ class Accounting extends MY_Controller
             $html_pdf = "accounting/customer_includes/public_view/shared_invoice_link_pdf";
             $orientation = "P";
         }
+        $this->load->library('pdf');
         $this->pdf->save_pdf($html_pdf, $pdf_data, $pdf_file_name, $orientation);
     }
 

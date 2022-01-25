@@ -341,3 +341,11 @@ function cover_page_changed() {
         },
     });
 }
+$(document).on('click', '#manage_reports_table .view-management_report', function(event) {
+    event.preventDefault();
+    $("#management_reports_viewer_modal").fadeIn();
+});
+$(document).on('click', '#management_reports_viewer_modal .cancel-button', function(event) {
+    event.preventDefault();
+    $("#management_reports_viewer_modal").fadeOut();
+});

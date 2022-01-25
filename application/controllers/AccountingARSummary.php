@@ -274,4 +274,17 @@ class AccountingARSummary extends MY_Controller
         $form = $this->db->get('accounting_ar_summary_form')->row();
         echo json_encode(['data' => $form]);
     }
+
+    public function apiSaveCustomizationPopoverForm()
+    {
+        header('content-type: application/json');
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['success' => false]);
+            return;
+        }
+
+        $payload = json_decode(file_get_contents('php://input'), true);
+        echo json_encode(['data' => $payload]);
+    }
 }

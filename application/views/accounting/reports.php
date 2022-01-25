@@ -2882,7 +2882,7 @@
                                                         </td>
                                                         <td>
                                                             <div class="dropdown dropdown-btn">
-                                                                <a href="">View</a>
+                                                                <a href="#" class="view-management_report" dta-id="<?=$report->id?>">View</a>
                                                                 <a type="button" id="dropdown-button-icon"
                                                                     data-toggle="dropdown" aria-expanded="true">
                                                                     <span class="btn-label"><i
@@ -3640,6 +3640,7 @@
 <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
 </div>
 <?php include viewPath('accounting/reports/management_reports/management_reports_modal'); ?>
+<?php include viewPath('accounting/reports/management_reports/management_reports_viewer_modal'); ?>
 <?php include viewPath('includes/footer_accounting'); ?>
 
 

@@ -98,6 +98,20 @@ export async function getReportCustomizeFormValues() {
   return response.json();
 }
 
+export async function saveCustomizationPopoverForm(payload) {
+  const endpoint = `${prefixURL}/AccountingARSummary/apiSaveCustomizationPopoverForm`;
+  const response = await fetch(endpoint, {
+    method: "post",
+    body: JSON.stringify(payload),
+    headers: {
+      accept: "application/json",
+      "content-type": "application/json",
+    },
+  });
+
+  return response.json();
+}
+
 function sleep(time) {
   return new Promise((resolve) => setTimeout(resolve, time * 1000));
 }
