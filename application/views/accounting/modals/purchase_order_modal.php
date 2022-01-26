@@ -429,7 +429,7 @@
                                             <a href="javascript:void(0);" class="text-white" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
                                             <div class="dropdown-menu">
                                                 <a class="dropdown-item" href="#" id="copy-purchase-order">Copy</a>
-                                                <a class="dropdown-item" href="#">Delete</a>
+                                                <a class="dropdown-item" href="#" id="delete-purchase-order">Delete</a>
                                                 <a class="dropdown-item" href="#">Audit history</a>
                                             </div>
                                         </div>

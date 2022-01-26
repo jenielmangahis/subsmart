@@ -2882,7 +2882,7 @@
                                                         </td>
                                                         <td>
                                                             <div class="dropdown dropdown-btn">
-                                                                <a href="#" class="view-management_report" dta-id="<?=$report->id?>">View</a>
+                                                                <a href="#" class="view-management_report" data-id="<?=$report->id?>">View</a>
                                                                 <a type="button" id="dropdown-button-icon"
                                                                     data-toggle="dropdown" aria-expanded="true">
                                                                     <span class="btn-label"><i
