@@ -580,4 +580,12 @@ class Tags_model extends MY_Model
         $delete = $this->db->delete('accounting_transaction_tags');
         return $delete ? true : false;
     }
+
+    public function remove_transaction_tags($transactionType, $transactionId)
+    {
+        $this->db->where('transaction_type', $transactionType);
+        $this->db->where('transaction_id', $transactionId);
+        $delete = $this->db->delete('accounting_transaction_tags');
+        return $delete ? true : false;
+    }
 }

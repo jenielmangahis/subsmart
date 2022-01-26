@@ -405,8 +405,8 @@
                                             <a href="javascript:void(0);" class="text-white" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
                                             <div class="dropdown-menu">
                                                 <a class="dropdown-item" href="#" id="copy-cc-credit">Copy</a>
-                                                <a class="dropdown-item" href="#">Void</a>
-                                                <a class="dropdown-item" href="#">Delete</a>
+                                                <a class="dropdown-item" href="#" id="void-cc-credit">Void</a>
+                                                <a class="dropdown-item" href="#" id="delete-cc-credit">Delete</a>
                                                 <a class="dropdown-item" href="#">Transaction journal</a>
                                                 <a class="dropdown-item" href="#">Audit history</a>
                                             </div>

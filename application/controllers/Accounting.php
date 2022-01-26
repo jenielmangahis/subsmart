@@ -1075,6 +1075,8 @@ class Accounting extends MY_Controller
         }
 
         // $this->create_cover_page_pdf_template();
+        $this->management_report_generate_pdf($management_report_id);
+
         $data = new stdClass();
         $data->result = "success";
         echo json_encode($data);
@@ -1164,17 +1166,18 @@ class Accounting extends MY_Controller
         $this->page_data["primary_pages"]=$this->accounting_management_reports->get_management_reports_preliminary_pages_by_id($management_report_id);
         $this->page_data["report_pages"]=$this->accounting_management_reports->get_report_pages_by_maagement_report_id($management_report_id);
         if($management_report->cover_style == 1 || $management_report->cover_style == 2){
-            $template_src='accounting/reports/management_reports/template_1_2';
+            $template_src='accounting/reports/management_reports/management_report_1_2';
         }elseif($management_report->cover_style == 3){
-            $template_src='accounting/reports/management_reports/template_3';
+            $template_src='accounting/reports/management_reports/management_report_3';
         }else{
-            $template_src='accounting/reports/management_reports/template_4';
+            $template_src='accounting/reports/management_reports/management_report_4';
         }
 
         $filename = "management_report_".$management_report_id.".pdf";
 
         $this->load->library("pdf");
         $this->pdf->save_pdf($template_src, $this->page_data, $filename, "P");
+
     }
 
     public function aging_summary_report()

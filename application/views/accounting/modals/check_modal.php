@@ -440,7 +440,7 @@
                                                 <a class="dropdown-item" href="#" id="<?=isset($check) ? 'copy-check' : 'void-check'?>"><?=isset($check) ? 'Copy' : 'Void'?></a>
                                                 <?php if(isset($check)) : ?>
                                                 <a class="dropdown-item" href="#" id="void-check">Void</a>
-                                                <a class="dropdown-item" href="#">Delete</a>
+                                                <a class="dropdown-item" href="#" id="delete-check">Delete</a>
                                                 <a class="dropdown-item" href="#">Transaction journal</a>
                                                 <a class="dropdown-item" href="#">Audit history</a>
                                                 <?php endif; ?>

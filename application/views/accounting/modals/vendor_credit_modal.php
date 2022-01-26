@@ -386,7 +386,7 @@
                                             <a href="javascript:void(0);" class="text-white" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
                                             <div class="dropdown-menu">
                                                 <a class="dropdown-item" href="#" id="copy-vendor-credit">Copy</a>
-                                                <a class="dropdown-item" href="#">Delete</a>
+                                                <a class="dropdown-item" href="#" id="delete-vendor-credit">Delete</a>
                                                 <a class="dropdown-item" href="#">Transaction journal</a>
                                                 <a class="dropdown-item" href="#">Audit history</a>
                                             </div>
