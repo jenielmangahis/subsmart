@@ -711,7 +711,6 @@ class Pages extends MYF_Controller {
 		$this->page_data['cart_data']    = $cart_data;
 		$this->page_data['bussinessProfile'] = $bussinessProfile;
 		$this->page_data['coupon'] = $coupon;
-		$this->page_data['userProfile']  = $userProfile;
 		$this->page_data['products']     = $products;
 		$this->page_data['eid'] = $eid;
 
@@ -969,6 +968,29 @@ class Pages extends MYF_Controller {
 
 					$this->BookingWorkOrder_model->create($data_booking_work_orders);
 				}
+
+				//Send email notification
+				$bussinessProfile = $this->business_model->getByCompanyId($cid);
+				$subject = 'nSmartrac : Online Booking';
+				$body = "Someone made an online booking. Below are the details.";
+				$body .= "<table>";
+					$body .= "<tr><td>Name :".$post['full_name']."</td></tr>";
+					$body .= "<tr><td>Phone :".$post['contact_number']."</td></tr>";
+					$body .= "<tr><td>Email :".$post['email']."</td></tr>";
+					$body .= "<tr><td>Message :".$post['message']."</td></tr>";
+					$body .= "<tr><td>Preferred time to contact :".$post['preferred_time_to_contact']."</td></tr>";
+				$body .= "</table>";
+
+				$data = [
+	                'to' => $bussinessProfile->business_email, 
+	                'subject' => $subject, 
+	                'body' => $body,
+	                'cc' => '',
+	                'bcc' => '',
+	                'attachment' => ''
+	            ];
+
+	            $isSent = sendEmail($data);
 
 				$this->session->set_flashdata('message', 'Your product booking has been saved.');
         		$this->session->set_flashdata('alert_class', 'alert-info');

@@ -29,7 +29,8 @@ class Taskhub extends MY_Controller {
 
 	public function index(){
 		$this->hasAccessModule(6); 
-		$this->page_data['tasks'] = getTasks();
+		$cid = logged('company_id');
+		$this->page_data['tasks'] = $this->taskhub_model->getAllByCompanyId($cid);
 		$this->page_data['status_selection'] = $this->taskhub_status_model->get();
 
 		$this->load->view('workcalender/taskhub/list', $this->page_data);
@@ -170,7 +171,7 @@ class Taskhub extends MY_Controller {
 					'created_by' => $uid,
 					'date_created' => date('Y-m-d h:i:s'),
 					'estimated_date_complete' => $this->input->post('estimated_date_complete'),
-					'status_id' => 1,
+					'status_id' => $this->input->post('status'),
 					'company_id' => $company_id
 				);
 

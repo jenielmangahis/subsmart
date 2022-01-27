@@ -54,6 +54,22 @@ class BookingInquiry_model extends MY_Model
         $query = $this->db->get();
         return $query->result();
     }
+
+    public function findAllByCompanyIdAndStatus($company_id, $status)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+
+        $this->db->where('company_id', $company_id);
+        $this->db->where('status', $company_id);
+        $this->db->order_by("id", "desc");
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function deleteByIdAndCompanyId($id, $company_id){
+        $this->db->delete($this->table, array('company_id' => $company_id, 'id' => $id));
+    }
 } 
 
 /* End of file BookingSetting_model.php */
