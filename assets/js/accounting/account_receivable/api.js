@@ -74,7 +74,6 @@ export async function runReport(payload) {
     },
   });
 
-  await sleep(3);
   return response.json();
 }
 

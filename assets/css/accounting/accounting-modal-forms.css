@@ -1,4 +1,8 @@
-#modal-form .modal table {
+#modal-form .modal .modal-header .dropdown-header {
+    font-size: 1.25rem !important;
+}
+
+#modal-form .modal .modal-body table {
     background: #f4f5f8;
 }
 

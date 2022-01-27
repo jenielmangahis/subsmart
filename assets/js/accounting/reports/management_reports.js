@@ -344,6 +344,8 @@ function cover_page_changed() {
 $(document).on('click', '#manage_reports_table .view-management_report', function(event) {
     event.preventDefault();
     $("#management_reports_viewer_modal").fadeIn();
+    $("#management_reports_viewer_modal .body .iframe").html("");
+    $("#management_reports_viewer_modal .body .iframe").html('<iframe src="' + baseURL + 'assets/pdf/management_report_' + $(this).attr("data-id") + '.pdf' + '" frameborder="0" class="pdf_viewer"></iframe>');
 });
 $(document).on('click', '#management_reports_viewer_modal .cancel-button', function(event) {
     event.preventDefault();

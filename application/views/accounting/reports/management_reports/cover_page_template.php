@@ -38,7 +38,6 @@ if($cover_style == 1){
     }
     .body .logo{
         width: 25%;
-        margin-top: 10px;
     }
     .body .logo img{
         width: 100%;

@@ -10,7 +10,24 @@
             <!-- Modal content-->
             <div class="modal-content" style="height: 100%;">
                 <div class="modal-header" style="background: #f4f5f8;border-bottom: 0">
-                    <h4 class="modal-title"><a href="#"><i class="fa fa-history fa-lg" style="margin-right: 10px"></i></a>Vendor Credit <span><?=isset($vendorCredit) ? "#$vendorCredit->ref_no" : ''?></span></h4>
+                    <div class="row w-100">
+                        <div class="col-6 d-flex align-items-center">
+                            <div class="dropup mr-1">
+                                <a href="javascript:void(0);" class="h4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fa fa-history fa-lg"></i>
+                                </a>
+                                <div class="dropdown-menu" style="width: 500px">
+                                    <h5 class="dropdown-header">Recent Vendor Credits</h5>
+                                    <table class="table table-borderless table-hover cursor-pointer" id="recent-vendor-credits">
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <h4 class="modal-title">
+                                Vendor Credit <span><?=isset($vendorCredit) ? "#$vendorCredit->ref_no" : ''?></span>
+                            </h4>
+                        </div>
+                    </div>
                     <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
                 </div>
                 <div class="modal-body">
@@ -386,7 +403,7 @@
                                             <a href="javascript:void(0);" class="text-white" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
                                             <div class="dropdown-menu">
                                                 <a class="dropdown-item" href="#" id="copy-vendor-credit">Copy</a>
-                                                <a class="dropdown-item" href="#">Delete</a>
+                                                <a class="dropdown-item" href="#" id="delete-vendor-credit">Delete</a>
                                                 <a class="dropdown-item" href="#">Transaction journal</a>
                                                 <a class="dropdown-item" href="#">Audit history</a>
                                             </div>

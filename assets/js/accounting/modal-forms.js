@@ -4701,6 +4701,30 @@ $(function() {
         </div>`);
     });
 
+    $(document).on('click', '#modal-container form #expenseModal #delete-expense', function(e) {
+        e.preventDefault();
+
+        var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
+
+        $.ajax({
+            url: `/accounting/vendors/delete-transaction/expense/${split[1]}`,
+            type: 'DELETE',
+            success: function(result) {
+                location.reload();
+            }
+        });
+    });
+
+    $(document).on('click', '#modal-container form #expenseModal #void-expense', function(e) {
+        e.preventDefault();
+
+        var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
+
+        $.get('/accounting/vendors/void-transaction/expense/'+split[1], function(res) {
+            location.reload();
+        });
+    });
+
     $(document).on('click', '#modal-container form #checkModal #copy-check', function(e) {
         e.preventDefault();
 
@@ -4713,6 +4737,30 @@ $(function() {
                 <span>This is a copy of a check. Revise as needed and save the check.</span>
             </div>
         </div>`);
+    });
+
+    $(document).on('click', '#modal-container form #checkModal #delete-check', function(e) {
+        e.preventDefault();
+
+        var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
+
+        $.ajax({
+            url: `/accounting/vendors/delete-transaction/check/${split[1]}`,
+            type: 'DELETE',
+            success: function(result) {
+                location.reload();
+            }
+        });
+    });
+
+    $(document).on('click', '#modal-container form #checkModal #void-check', function(e) {
+        e.preventDefault();
+
+        var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
+
+        $.get('/accounting/vendors/void-transaction/check/'+split[1], function(res) {
+            location.reload();
+        });
     });
 
     $(document).on('click', '#modal-container form #billModal #copy-bill', function(e) {
@@ -4729,6 +4777,20 @@ $(function() {
         </div>`);
     });
 
+    $(document).on('click', '#modal-container form #billModal #delete-bill', function(e) {
+        e.preventDefault();
+
+        var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
+
+        $.ajax({
+            url: `/accounting/vendors/delete-transaction/bill/${split[1]}`,
+            type: 'DELETE',
+            success: function(result) {
+                location.reload();
+            }
+        });
+    });
+
     $(document).on('click', '#modal-container form #purchaseOrderModal #copy-purchase-order', function(e) {
         e.preventDefault();
 
@@ -4741,6 +4803,20 @@ $(function() {
                 <span>This is a copy of a purchase order. Revise as needed and save the purchase order.</span>
             </div>
         </div>`);
+    });
+
+    $(document).on('click', '#modal-container form #purchaseOrderModal #delete-purchase-order', function(e) {
+        e.preventDefault();
+
+        var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
+
+        $.ajax({
+            url: `/accounting/vendors/delete-transaction/purchase-order/${split[1]}`,
+            type: 'DELETE',
+            success: function(result) {
+                location.reload();
+            }
+        });
     });
 
     $(document).on('click', '#modal-container form #vendorCreditModal #copy-vendor-credit', function(e) {
@@ -4757,6 +4833,20 @@ $(function() {
         </div>`);
     });
 
+    $(document).on('click', '#modal-container form #vendorCreditModal #delete-vendor-credit', function(e) {
+        e.preventDefault();
+
+        var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
+
+        $.ajax({
+            url: `/accounting/vendors/delete-transaction/vendor-credit/${split[1]}`,
+            type: 'DELETE',
+            success: function(result) {
+                location.reload();
+            }
+        });
+    });
+
     $(document).on('click', '#modal-container form #creditCardCreditModal #copy-cc-credit', function(e) {
         e.preventDefault();
 
@@ -4769,6 +4859,79 @@ $(function() {
                 <span>This is a copy of a credit card credit. Revise as needed and save the credit card credit.</span>
             </div>
         </div>`);
+    });
+
+    $(document).on('click', '#modal-container form #creditCardCreditModal #delete-cc-credit', function(e) {
+        e.preventDefault();
+
+        var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
+
+        $.ajax({
+            url: `/accounting/vendors/delete-transaction/cc-credit/${split[1]}`,
+            type: 'DELETE',
+            success: function(result) {
+                location.reload();
+            }
+        });
+    });
+
+    $(document).on('click', '#modal-container form #creditCardCreditModal #void-cc-credit', function(e) {
+        e.preventDefault();
+
+        var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
+
+        $.get('/accounting/vendors/void-transaction/cc-credit/'+split[1], function(res) {
+            location.reload();
+        });
+    });
+
+    $(document).on('show.bs.dropdown', '#modal-container #modal-form .modal .modal-header .dropup', function() {
+        var tableId = $(this).find('table').attr('id');
+        if($.fn.DataTable.isDataTable(`#${tableId}`)) {
+            $(`#${tableId}`).DataTable().clear();
+            $(`#${tableId}`).DataTable().destroy();
+        }
+
+        $(`#${tableId}`).DataTable({
+            autoWidth: false,
+            searching: false,
+            processing: true,
+            serverSide: true,
+            lengthChange: false,
+            pageLength: 10,
+            info: false,
+            ordering: false,
+            paging: false,
+            ajax: {
+                url: '/accounting/load-recent-transactions',
+                dataType: 'json',
+                contentType: 'application/json',
+                type: 'POST',
+                data: function(d) {
+                    d.transaction_type = tableId.replace('recent-', '');
+                    return JSON.stringify(d);
+                },
+                pagingType: 'full_numbers'
+            },
+            columns: [
+                {
+                    data: 'type',
+                    name: 'type'
+                },
+                {
+                    data: 'date',
+                    name: 'date'
+                },
+                {
+                    data: 'amount',
+                    name: 'amount'
+                },
+                {
+                    data: 'payee',
+                    name: 'payee'
+                }
+            ]
+        });
     });
 });
 

@@ -10703,4 +10703,234 @@ class Accounting_modals extends MY_Controller
 
         echo json_encode(['data' => $attachmentId, 'success' => $attach ? true : false]);
     }
+
+    public function load_recent_transactions()
+    {
+        $post = json_decode(file_get_contents('php://input'), true);
+        $start = 0;
+        $length = 10;
+        $data = [];
+
+        switch($post['transaction_type']) {
+            case 'expenses' :
+                $transactions = $this->expenses_model->get_company_expense_transactions(['company_id' => logged('company_id')]);
+                usort($transactions, function($a, $b) {
+                    return strtotime($b->created_at) > strtotime($a->created_at);
+                });
+
+                foreach($transactions as $expense) {
+                    switch ($expense->payee_type) {
+                        case 'vendor':
+                            $payee = $this->vendors_model->get_vendor_by_id($expense->payee_id);
+                            $payeeName = $payee->display_name;
+                        break;
+                        case 'customer':
+                            $payee = $this->accounting_customers_model->get_by_id($expense->payee_id);
+                            $payeeName = $payee->first_name . ' ' . $payee->last_name;
+                        break;
+                        case 'employee':
+                            $payee = $this->users_model->getUser($expense->payee_id);
+                            $payeeName = $payee->FName . ' ' . $payee->LName;
+                        break;
+                    }
+
+                    $amount = '$'.$expense->total_amount;
+                    if(count($data) < 10) {
+                        $data[] = [
+                            'type' => 'Expense',
+                            'date' => date("m/d/Y", strtotime($expense->payment_date)),
+                            'amount' => str_replace('$-', '-$', $amount),
+                            'payee' => $payeeName
+                        ];
+                    }
+                }
+            break;
+            case 'checks' :
+                $transactions = $this->expenses_model->get_company_check_transactions(['company_id' => logged('company_id')]);
+                usort($transactions, function($a, $b) {
+                    return strtotime($b->created_at) > strtotime($a->created_at);
+                });
+
+                foreach($transactions as $check) {
+                    switch ($check->payee_type) {
+                        case 'vendor':
+                            $payee = $this->vendors_model->get_vendor_by_id($check->payee_id);
+                            $payeeName = $payee->display_name;
+                        break;
+                        case 'customer':
+                            $payee = $this->accounting_customers_model->get_by_id($check->payee_id);
+                            $payeeName = $payee->first_name . ' ' . $payee->last_name;
+                        break;
+                        case 'employee':
+                            $payee = $this->users_model->getUser($check->payee_id);
+                            $payeeName = $payee->FName . ' ' . $payee->LName;
+                        break;
+                    }
+
+                    $amount = '$'.$check->total_amount;
+                    if(count($data) < 10) {
+                        $data[] = [
+                            'type' => !in_array($check->check_no, ['', null, '0']) ? 'Check No.'.$check->check_no : 'Check',
+                            'date' => date("m/d/Y", strtotime($check->payment_date)),
+                            'amount' => str_replace('$-', '-$', $amount),
+                            'payee' => $payeeName
+                        ];
+                    }
+                }
+            break;
+            case 'bills' :
+                $transactions = $this->expenses_model->get_company_bill_transactions(['company_id' => logged('company_id')]);
+                usort($transactions, function($a, $b) {
+                    return strtotime($b->created_at) > strtotime($a->created_at);
+                });
+
+                foreach($transactions as $bill) {
+                    $payee = $this->vendors_model->get_vendor_by_id($bill->vendor_id);
+                    $payeeName = $payee->display_name;
+
+                    $amount = '$'.$bill->total_amount;
+                    if(count($data) < 10) {
+                        $data[] = [
+                            'type' => !in_array($bill->bill_no, ['', null, '0']) ? 'Bill No.'.$bill->bill_no : 'Bill',
+                            'date' => date("m/d/Y", strtotime($bill->bill_date)),
+                            'amount' => str_replace('$-', '-$', $amount),
+                            'payee' => $payeeName
+                        ];
+                    }
+                }
+            break;
+            case 'purchase-orders' :
+                $transactions = $this->expenses_model->get_company_purch_order_transactions(['company_id' => logged('company_id')]);
+                usort($transactions, function($a, $b) {
+                    return strtotime($b->created_at) > strtotime($a->created_at);
+                });
+
+                foreach($transactions as $purchaseOrder) {
+                    $payee = $this->vendors_model->get_vendor_by_id($purchaseOrder->vendor_id);
+                    $payeeName = $payee->display_name;
+
+                    $amount = '$'.$purchaseOrder->total_amount;
+                    if(count($data) < 10) {
+                        $data[] = [
+                            'type' => !in_array($purchaseOrder->purchase_order_no, ['', null, '0']) ? 'Purchase Order No.'.$purchaseOrder->purchase_order_no : 'Purchase Order',
+                            'date' => date("m/d/Y", strtotime($purchaseOrder->purchase_order_date)),
+                            'amount' => str_replace('$-', '-$', $amount),
+                            'payee' => $payeeName
+                        ];
+                    }
+                }
+            break;
+            case 'vendor-credits' :
+                $transactions = $this->expenses_model->get_company_vendor_credit_transactions(['company_id' => logged('company_id')]);
+                usort($transactions, function($a, $b) {
+                    return strtotime($b->created_at) > strtotime($a->created_at);
+                });
+
+                foreach($transactions as $vCredit) {
+                    $payee = $this->vendors_model->get_vendor_by_id($vCredit->vendor_id);
+                    $payeeName = $payee->display_name;
+
+                    $amount = '$'.$vCredit->total_amount;
+                    if(count($data) < 10) {
+                        $data[] = [
+                            'type' => !in_array($vCredit->ref_no, ['', null, '0']) ? 'Vendor Credit No.'.$vCredit->ref_no : 'Vendor Credit',
+                            'date' => date("m/d/Y", strtotime($vCredit->payment_date)),
+                            'amount' => str_replace('$-', '-$', $amount),
+                            'payee' => $payeeName
+                        ];
+                    }
+                }
+            break;
+            case 'cc-credits' :
+                $transactions = $this->expenses_model->get_company_cc_credit_transactions(['company_id' => logged('company_id')]);
+                usort($transactions, function($a, $b) {
+                    return strtotime($b->created_at) > strtotime($a->created_at);
+                });
+
+                foreach($transactions as $ccCredit) {
+                    switch ($ccCredit->payee_type) {
+                        case 'vendor':
+                            $payee = $this->vendors_model->get_vendor_by_id($ccCredit->payee_id);
+                            $payeeName = $payee->display_name;
+                        break;
+                        case 'customer':
+                            $payee = $this->accounting_customers_model->get_by_id($ccCredit->payee_id);
+                            $payeeName = $payee->first_name . ' ' . $payee->last_name;
+                        break;
+                        case 'employee':
+                            $payee = $this->users_model->getUser($ccCredit->payee_id);
+                            $payeeName = $payee->FName . ' ' . $payee->LName;
+                        break;
+                    }
+
+                    $amount = '$'.$ccCredit->total_amount;
+                    if(count($data) < 10) {
+                        $data[] = [
+                            'type' => !in_array($ccCredit->ref_no, ['', null, '0']) ? 'Credit Card Credit No.'.$ccCredit->ref_no : 'Credit Card Credit',
+                            'date' => date("m/d/Y", strtotime($ccCredit->payment_date)),
+                            'amount' => str_replace('$-', '-$', $amount),
+                            'payee' => $payeeName
+                        ];
+                    }
+                }
+            break;
+            case 'deposits' :
+                $transactions = $this->expenses_model->get_company_deposits(['company_id' => logged('company_id')]);
+                usort($transactions, function($a, $b) {
+                    return strtotime($b->created_at) > strtotime($a->created_at);
+                });
+
+                foreach($transactions as $deposit) {
+                    $amount = '$'.$deposit->total_amount;
+
+                    $funds = $this->accounting_bank_deposit_model->getFunds($deposit->id);
+                    $flag = true;
+
+                    foreach($funds as $fund) {
+                        if($fund->received_from_key !== $funds[0]->received_from_key && $fund->received_from_id !== $funds[0]->received_from_id) {
+                            $flag = false;
+                            break;
+                        }
+                    }
+
+                    if($flag) {
+                        switch($funds[0]->received_from_key) {
+                            case 'vendor':
+                                $payee = $this->vendors_model->get_vendor_by_id($funds[0]->received_from_id);
+                                $payeeName = $payee->display_name;
+                            break;
+                            case 'customer':
+                                $payee = $this->accounting_customers_model->get_by_id($funds[0]->received_from_id);
+                                $payeeName = $payee->first_name . ' ' . $payee->last_name;
+                            break;
+                            case 'employee':
+                                $payee = $this->users_model->getUser($funds[0]->received_from_id);
+                                $payeeName = $payee->FName . ' ' . $payee->LName;
+                            break;
+                        }
+                    } else {
+                        $payeeName = '';
+                    }
+
+                    if(count($data) < 10) {
+                        $data[] = [
+                            'type' => 'Deposit',
+                            'date' => date("m/d/Y", strtotime($deposit->date)),
+                            'amount' => str_replace('$-', '-$', $amount),
+                            'payee' => $payeeName
+                        ];
+                    }
+                }
+            break;
+        }
+
+        $result = [
+            'draw' => $post['draw'],
+            'recordsTotal' => count($transactions),
+            'recordsFiltered' => count($data),
+            'data' => $data
+        ];
+
+        echo json_encode($result);
+    }
 }

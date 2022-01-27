@@ -276,20 +276,7 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                     </div>
                 </div>
 
-                <table class="table table-hover reportsTable" id="reportsTable">
-                    <thead class="reportsTable__header">
-                        <tr>
-                            <th></th>
-                            <th>CURRENT</th>
-                            <th>1 - 30</th>
-                            <th>31 - 60</th>
-                            <th>61 - 90</th>
-                            <th>91 AND OVER</th>
-                            <th>TOTAL</th>
-                        </tr>
-                    </thead>
-                </table>
-
+                <table class="table table-hover reportsTable" id="reportsTable"></table>
                 <div class="accountReceivableTable__footer">
                     <?php echo date('l, F d, Y h:i A e'); ?>
                 </div>
