@@ -10,7 +10,7 @@
             <!-- Modal content-->
             <div class="modal-content" style="height: 100%;">
                 <div class="modal-header" style="background: #f4f5f8;border-bottom: 0">
-                    <div class="row">
+                    <div class="row w-100">
                         <div class="col-6 d-flex align-items-center">
                             <div class="dropup mr-1">
                                 <a href="javascript:void(0);" class="h4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -18,15 +18,8 @@
                                 </a>
                                 <div class="dropdown-menu" style="width: 500px">
                                     <h5 class="dropdown-header">Recent Expenses</h5>
-                                    <table class="table table-borderless table-hover">
-                                        <tbody>
-                                            <tr>
-                                                <td>Expense</td>
-                                                <td>01/25/2022</td>
-                                                <td>$0.00</td>
-                                                <td>Test payee</td>
-                                            </tr>
-                                        </tbody>
+                                    <table class="table table-borderless table-hover cursor-pointer" id="recent-expenses">
+                                        <tbody></tbody>
                                     </table>
                                 </div>
                             </div>

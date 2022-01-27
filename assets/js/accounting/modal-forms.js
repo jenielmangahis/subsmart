@@ -4884,6 +4884,55 @@ $(function() {
             location.reload();
         });
     });
+
+    $(document).on('show.bs.dropdown', '#modal-container #modal-form .modal .modal-header .dropup', function() {
+        var tableId = $(this).find('table').attr('id');
+        if($.fn.DataTable.isDataTable(`#${tableId}`)) {
+            $(`#${tableId}`).DataTable().clear();
+            $(`#${tableId}`).DataTable().destroy();
+        }
+
+        $(`#${tableId}`).DataTable({
+            autoWidth: false,
+            searching: false,
+            processing: true,
+            serverSide: true,
+            lengthChange: false,
+            pageLength: 10,
+            info: false,
+            ordering: false,
+            paging: false,
+            ajax: {
+                url: '/accounting/load-recent-transactions',
+                dataType: 'json',
+                contentType: 'application/json',
+                type: 'POST',
+                data: function(d) {
+                    d.transaction_type = tableId.replace('recent-', '');
+                    return JSON.stringify(d);
+                },
+                pagingType: 'full_numbers'
+            },
+            columns: [
+                {
+                    data: 'type',
+                    name: 'type'
+                },
+                {
+                    data: 'date',
+                    name: 'date'
+                },
+                {
+                    data: 'amount',
+                    name: 'amount'
+                },
+                {
+                    data: 'payee',
+                    name: 'payee'
+                }
+            ]
+        });
+    });
 });
 
 const convertToDecimal = (el) => {
