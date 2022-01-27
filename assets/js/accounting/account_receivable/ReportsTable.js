@@ -13,35 +13,24 @@ export class ReportsTable {
     this.api = await import("./api.js");
   }
 
-  get columns() {
-    return {
-      name: (_, __, row) => {
-        return row.name;
-      },
-      current: (_, __, row) => {
-        return row.current;
-      },
-      ["1to30"]: (_, __, row) => {
-        return row["1to30"];
-      },
-      ["31to60"]: (_, __, row) => {
-        return row["31to60"];
-      },
-      ["61to90"]: (_, __, row) => {
-        return row["61to90"];
-      },
-      ["91andOver"]: (_, __, row) => {
-        return row["91andOver"];
-      },
-      total: (_, __, row) => {
-        return row.total;
-      },
-    };
-  }
-
   async init() {
+    const { data } = await this.api.getReports();
+    const columns = Object.keys(data[0]).reduce((carry, key) => {
+      if (key === "customer_id") return carry;
+      return [
+        ...carry,
+        {
+          data: key,
+          sortable: false,
+          title: formatHeader(key),
+          ...(key !== "name" && { className: "text-right" }),
+        },
+      ];
+    }, []);
+
     const table = this.$table.DataTable({
-      ajax: `${window.prefixURL}/AccountingARSummary/apiGetReports`,
+      data,
+      columns,
       filter: false,
       searching: false,
       bInfo: false,
@@ -75,50 +64,13 @@ export class ReportsTable {
         processing:
           '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Loading...</span>',
       },
-      columns: [
-        {
-          sortable: false,
-          render: this.columns.name,
-        },
-        {
-          sortable: false,
-          render: this.columns.current,
-          className: "text-right",
-        },
-        {
-          sortable: false,
-          render: this.columns["1to30"],
-          className: "text-right",
-        },
-        {
-          sortable: false,
-          render: this.columns["31to60"],
-          className: "text-right",
-        },
-        {
-          sortable: false,
-          render: this.columns["61to90"],
-          className: "text-right",
-        },
-        {
-          sortable: false,
-          render: this.columns["91andOver"],
-          className: "text-right",
-        },
-        {
-          sortable: false,
-          render: this.columns.total,
-          className: "text-right",
-        },
-      ],
     });
 
     table.buttons(".hidden").nodes().css("display", "none");
 
     this.$orderRadios.on("change", (event) => {
       const { value } = event.target;
-      const columnKeys = Object.keys(this.columns);
-      const totalIndex = columnKeys.findIndex((key) => key === "total");
+      const totalIndex = columns.findIndex((column) => column.data === "total");
 
       if (value === "default") {
         table.order([0, "asc"]);
@@ -137,4 +89,21 @@ export class ReportsTable {
       }
     });
   }
+}
+
+function formatHeader(string) {
+  const stringLower = string.toLowerCase();
+  if (stringLower === "total") {
+    return string.toUpperCase();
+  }
+
+  if (stringLower.endsWith("andover")) {
+    return stringLower.replace("andover", " and over").toUpperCase();
+  }
+
+  if (/\dto\d/.test(string)) {
+    return string.replace("to", " - ");
+  }
+
+  return string.toUpperCase();
 }

@@ -1,5 +1,5 @@
-
 <?php 
+defined('BASEPATH') or exit('No direct script access allowed');
 if($cover_style == 3){
     $header_bg_color="#027DA9";
 }else{
@@ -7,6 +7,15 @@ if($cover_style == 3){
 }
 
 ?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+  
 <style>
     .management-report-cover-page{
         width: 100%;
@@ -68,58 +77,62 @@ if($cover_style == 3){
     }  
     
 </style>
-<div class="management-report-cover-page cover-type-3">
-    <div class="header">
-        <div class="title"></div>
-        <div class="company-name">
-        </div>
-        <div class="end-period">
-        </div>
-    </div>
-    <div class="body">
-        <div class="logo">
-            <?php
-                if($show_logo == "on"){
-                    ?><center><img src="<?=base_url("uploads/users/business_profile/1/Nsmart_logo.png")?>" alt=""></center><?php
-                }
-            ?>
-        </div>   
-        <div class="text-details" style="width: 100%;">
-            <div class="title"><?=$cover_page_cover_title?></div>
+</head>
+<body> 
+    <div class="management-report-cover-page cover-type-3">
+        <div class="header">
+            <div class="title"></div>
             <div class="company-name">
-                <?php 
-                $subtitles=explode("{",$cover_page_subtitle);
-                $echo_text="";
-                for($i=0;$i<count($subtitles);$i++){
-                    if("{".strtolower($subtitles[$i]) == "{company name}"){
-                        $echo_text.=" ". $management_report->business_name;
-                    }else{
-                        $echo_text.=" ".$subtitles[$i];
-                    }
-                }
-                echo $echo_text;
-                
-                ?>
             </div>
             <div class="end-period">
-                <?php 
-                $end_period=explode("{",$cover_page_report_period);
-                    $echo_text="";
-                for($i=0;$i<count($end_period);$i++){
-                    if("{".strtolower($end_period[$i]) == "{report end date}"){
-                        $echo_text.=" ".date("F d, Y",strtotime($management_report->report_end_period));
-                    }else{
-                        $echo_text.=" ".$end_period[$i];
-                    }
-                }
-                echo $echo_text;
-                ?>   
             </div>
-            <div class="prepared-on">
-                <label for="">Prepared on</label>
-                <div class="the-date"><?=$cover_page_prepared_date?></div>
-            </div> 
         </div>
+        <div class="body">
+            <div class="logo">
+                <?php
+                    if($show_logo == "on"){
+                        ?><center><img src="<?=base_url("uploads/users/business_profile/1/Nsmart_logo.png")?>" alt=""></center><?php
+                    }
+                ?>
+            </div>   
+            <div class="text-details" style="width: 100%;">
+                <div class="title"><?=$cover_page_cover_title?></div>
+                <div class="company-name">
+                    <?php 
+                    $subtitles=explode("{",$cover_page_subtitle);
+                    $echo_text="";
+                    for($i=0;$i<count($subtitles);$i++){
+                        if("{".strtolower($subtitles[$i]) == "{company name}"){
+                            $echo_text.=" ". $management_report->business_name;
+                        }else{
+                            $echo_text.=" ".$subtitles[$i];
+                        }
+                    }
+                    echo $echo_text;
+                    
+                    ?>
+                </div>
+                <div class="end-period">
+                    <?php 
+                    $end_period=explode("{",$cover_page_report_period);
+                        $echo_text="";
+                    for($i=0;$i<count($end_period);$i++){
+                        if("{".strtolower($end_period[$i]) == "{report end date}"){
+                            $echo_text.=" ".date("F d, Y",strtotime($management_report->report_end_period));
+                        }else{
+                            $echo_text.=" ".$end_period[$i];
+                        }
+                    }
+                    echo $echo_text;
+                    ?>   
+                </div>
+                <div class="prepared-on">
+                    <label for="">Prepared on</label>
+                    <div class="the-date"><?=$cover_page_prepared_date?></div>
+                </div> 
+            </div>
+        </div>
+        <div class="footer"><?=$cover_page_disclaimer?></div>
     </div>
-    <div class="footer"><?=$cover_page_disclaimer?></div>
-</div>
+</body>
+</html>

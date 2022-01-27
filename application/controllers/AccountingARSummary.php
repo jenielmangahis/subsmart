@@ -1,5 +1,16 @@
 <?php
+
 defined('BASEPATH') or exit('No direct script access allowed');
+
+class ReportParams
+{
+    public function __construct(array $config)
+    {
+        $this->reportPeriodDate = $config['report_period_value'];
+        $this->daysPerAging = (int) $config['days_per_aging_period'];
+        $this->numberOfPeriods = (int) $config['number_of_periods'];
+    }
+}
 
 class AccountingARSummary extends MY_Controller
 {
@@ -10,63 +21,118 @@ class AccountingARSummary extends MY_Controller
         echo json_encode(['data' => $this->getReports()]);
     }
 
-    private function getReports()
+    private function getReports(ReportParams $params = null)
     {
-        $this->load->model('accounting_invoices_model');
-        $customers = $this->accounting_invoices_model->getCustomersInv();
+        if (is_null($params)) {
+            $this->db->where('user_id', logged('id'));
+            $form = $this->db->get('accounting_ar_summary_form')->row_array();
 
-        $retval = [];
-        foreach ($customers as $customer) {
-            $dateNow = date('Y-m-d');
-            $dueDate = date('Y-m-d', strtotime($customer->due_date));
-            // $interval = $dateNow->diff($dueDate);
-            // $diff = abs(strtotime($dateNow) - strtotime($dueDate));
-            // $datediff = abs($dateNow - $dueDate);
-            // $datediff = abs($dateNow - $dueDate);
+            if ($form) {
+                $params = new ReportParams($form);
+            } else {
+                $firstDayOfYear = new \DateTime(date('Y') . '-01-01');
+                $params = new ReportParams([
+                    'report_period_value' => $firstDayOfYear->format('Y-m-d'),
+                    'days_per_aging_period' => 30,
+                    'number_of_periods' => 4,
+                ]);
+            }
+        }
 
-            // $no_of_days =  floor($datediff / (60 * 60 * 24));
-            // $diff=date_diff($dateNow,$dueDate);
+        $reportPeriodDate = $params->reportPeriodDate;
+        $daysPerAging = $params->daysPerAging;
+        $numberOfPeriods = $params->numberOfPeriods;
 
-            $diff = abs($dateNow - $dueDate);
+        $reportPeriod = new DateTimeImmutable($reportPeriodDate);
+        $companyId = logged('company_id');
 
-            // To get the year divide the resultant date into
-            // total seconds in a year (365*60*60*24)
-            $years = floor($diff / (365 * 60 * 60 * 24));
+        $query = <<<SQL
+            SELECT
+                invoices.due_date,
+                invoices.total_due,
+                invoices.customer_id,
+                CONCAT(acs_profile.first_name, ' ', acs_profile.last_name) AS customer_name
+            FROM invoices LEFT JOIN acs_profile ON acs_profile.prof_id = invoices.customer_id
+            WHERE invoices.customer_id != 0 AND acs_profile.company_id = {$companyId};
+        SQL;
 
-            // To get the month, subtract it with years and
-            // divide the resultant date into
-            // total seconds in a month (30*60*60*24)
-            $months = floor(($diff - $years * 365 * 60 * 60 * 24)
-                / (30 * 60 * 60 * 24));
+        $query = $this->db->query($query);
+        $invoices = $query->result();
 
-            // To get the day, subtract it with years and
-            // months and divide the resultant date into
-            // total seconds in a days (60*60*24)
-            $days = floor(($diff - $years * 365 * 60 * 60 * 24 -
-                $months * 30 * 60 * 60 * 24) / (60 * 60 * 24));
+        $invoices = array_map(function ($invoice) {
+            $invoice->customer_id = (int) $invoice->customer_id;
+            $invoice->total_due = (float) $invoice->total_due;
+            return $invoice;
+        }, $invoices);
 
-            array_push($retval, [
-                'name' => $customer->first_name . ' ' . $customer->last_name,
-                'current' => number_format($customer->grand_total, 2),
-                '1to30' => $days,
-                '31to60' => '',
-                '61to90' => '',
-                '91andOver' => '$0.00',
-                'total' => number_format($customer->grand_total, 2),
+        $periods = [];
+        for ($i = 1; $i <= $numberOfPeriods; $i++) {
+            $isLastLoop = $i === $numberOfPeriods;
+            $isFirstLoop = $i === 1;
+
+            $id = $isFirstLoop ? $i . 'to' . ($i * $daysPerAging) : (($i * $daysPerAging) - $daysPerAging) + 1 . 'to' . $i * $daysPerAging;
+            if ($isLastLoop) {
+                $id = (($i * $daysPerAging) - $daysPerAging) + 1 . 'andOver';
+            }
+
+            array_push($periods, [
+                'id' => $id,
+
+                // if not the first period, get the last period's end date then add 1 day
+                'start' => $isFirstLoop ? $reportPeriod : $periods[count($periods) - 1]['end']->modify('1 day'),
+
+                // if this is the last period, set end as the last possible date
+                // @see https://stackoverflow.com/a/25305918/8062659.
+                'end' => $isLastLoop ? new DateTime('99999/12/31') : $reportPeriod->modify(($daysPerAging * $i) . ' day'),
             ]);
         }
 
-        array_push($retval, [
-            'name' => 'Total',
-            'current' => '$0.00',
-            '1to30' => '$0.00',
-            '31to60' => '$0.00',
-            '61to90' => '$0.00',
-            '91andOver' => '$0.00',
-            'total' => '$0.00',
-        ]);
+        $records = [];
+        foreach ($invoices as $invoice) {
+            $dueDate = new DateTime($invoice->due_date);
+            $recordIndex = array_search($invoice->customer_id, array_column($records, 'customer_id'));
+            $isExists = $recordIndex !== false;
 
-        return $retval;
+            $record = [
+                'customer_id' => $invoice->customer_id,
+                'name' => $invoice->customer_name,
+            ];
+            if ($isExists) {
+                $record = $records[$recordIndex];
+            }
+
+            foreach ($periods as $period) {
+                if (!array_key_exists($period['id'], $record)) {
+                    $record[$period['id']] = 0;
+                }
+
+                if ($dueDate >= $period['start'] && $dueDate <= $period['end']) {
+                    $record[$period['id']] = $record[$period['id']] + (float) $invoice->total_due;
+                }
+            }
+
+            if ($isExists) {
+                $records[$recordIndex] = $record;
+            } else {
+                $records[] = $record;
+            }
+        }
+
+        $periodIds = array_map(function ($period) {return $period['id'];}, $periods);
+        return array_map(function ($record) use ($periodIds) {
+            $total = 0;
+            foreach ($record as $key => $data) {
+                if (!in_array($key, $periodIds)) {
+                    continue;
+                }
+
+                $total += $data;
+                $record[$key] = number_format($data, 2);
+            }
+
+            $record['total'] = number_format($total, 2);
+            return $record;
+        }, $records);
     }
 
     public function apiExportExcel()
@@ -213,7 +279,8 @@ class AccountingARSummary extends MY_Controller
         }
 
         $payload = json_decode(file_get_contents('php://input'), true);
-        echo json_encode(['data' => $payload]);
+        $params = new ReportParams($payload);
+        echo json_encode(['data' => $this->getReports($params)]);
     }
 
     public function apiRunReportCustomize()

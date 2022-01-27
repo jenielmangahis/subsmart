@@ -446,7 +446,7 @@ class Expenses extends MY_Controller
                         'id' => $purchOrder->id,
                         'date' => date("m/d/Y", strtotime($purchOrder->purchase_order_date)),
                         'type' => 'Purchase Order',
-                        'number' => $purchOrder->purchase_order_number,
+                        'number' => $purchOrder->purchase_order_no,
                         'payee' => $payee->display_name,
                         'method' => '',
                         'source' => '',
