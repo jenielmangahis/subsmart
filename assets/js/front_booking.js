@@ -54,19 +54,29 @@ $(document).ready(function() {
              type: "POST",
              url: url,
              data: {pid:pid,qty:qty},
+             dataType: "json",
              success: function(o)
              {
-                Swal.fire({
-                    text: 'Your cart was successfully updated',
-                    icon: 'success',
-                    showCancelButton: false,
-                    confirmButtonColor: '#32243d',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Ok'
-                }).then((result) => {
-                    $(this).html('Add to cart');
-                    location.reload();
-                });                
+                $('.btn-add-cart').html('Add to cart');
+
+                if( o.is_success == 1 ){
+                    Swal.fire({
+                        text: 'Your cart was successfully updated',
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonColor: '#32243d',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Ok'
+                    }).then((result) => {                        
+                        location.reload();
+                    });                
+                }else{
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: o.msg
+                    });
+                }                
              }
           });
       }, 1000);
@@ -104,7 +114,7 @@ $(document).ready(function() {
                 }else{
                   Swal.fire({
                     icon: 'error',
-                    title: 'Invalid coupon code',
+                    title: 'Coupon Error',                    
                     text: o.msg
                   });
                 }

@@ -1357,9 +1357,11 @@ class Booking extends MY_Controller {
 		$cid  = logged('company_id'); 
         $post = $this->input->post();
         $inquiry = $this->BookingInquiry_model->findByIdAndCompanyId($id, $cid);
-
-        $this->page_data['inquiry'] = $inquiry;
+        $bookingItems   = $this->BookingWorkOrder_model->getByBookingInfoId($id);
+        
+        $this->page_data['inquiry']    = $inquiry;
         $this->page_data['inquiry_id'] = $id;
+        $this->page_data['bookingItems'] = $bookingItems;
         $this->load->view('online_booking/ajax_view_inquiry', $this->page_data);
     }
 

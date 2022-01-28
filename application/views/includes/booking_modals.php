@@ -441,21 +441,6 @@
   <?php echo form_close(); ?>
 </div>
 
-<!-- Modal View Inquiry --> 
-<div class="modal fade" id="modalViewInquiry" tabindex="-1" role="dialog" aria-labelledby="modalViewInquiryTitle" aria-hidden="true">
-   <div class="modal-dialog modal-lg" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-list"></i> Inquiry</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body inquiry-body"></div>
-      </div>
-    </div>
-</div>
-
 <!-- Modal Change Status Inquiry --> 
 <div class="modal fade" id="modalViewChangeStatus" tabindex="-1" role="dialog" aria-labelledby="modalViewChangeStatus" aria-hidden="true">
    <?php echo form_open_multipart('booking/update_inquiry_status', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
@@ -485,7 +470,7 @@
    <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-flag-o"></i> Update Status</h5>
+          <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-pencil"></i> Edit Inquiry</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -493,11 +478,52 @@
         <div class="modal-body">
           <div class="inquiry-edit-info-body"></div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <div class="modal-footer">          
           <button type="submit" class="btn btn-primary">Update</button>
+          <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
         </div>        
       </div>
     </div>
     <?php echo form_close(); ?>
+</div>
+
+<!-- Modal Delete Inquiry -->
+<div class="modal fade bd-example-modal-sm" id="modalDeleteInquiry" tabindex="-1" role="dialog" aria-labelledby="modalAddCouponTitle" aria-hidden="true">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-trash"></i> Delete Inquiry</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <?php echo form_open_multipart('booking/delete_inquiry', ['class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+      <?php echo form_input(array('name' => 'iid', 'type' => 'hidden', 'value' => '', 'id' => 'iid'));?>
+      <div class="modal-body">        
+          <p>Delete selected inquiry?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+        <button type="submit" class="btn btn-danger">Yes</button>
+      </div>
+      <?php echo form_close(); ?>
+    </div>
+  </div>
+</div>
+
+<!-- Modal View Inquiry --> 
+<div class="modal fade" id="modalViewInquiry" tabindex="-1" role="dialog" aria-labelledby="modalViewEditInquiryInfoTitle" aria-hidden="true">
+   <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-eye"></i> View Inquiry</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="view-inquiry-body"></div>
+        </div>
+      </div>
+    </div>
 </div>

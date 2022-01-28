@@ -19,17 +19,21 @@
             <div style="font-size: 18px; margin-bottom: 15px;">
 
                 <?php 
+                  $discounted_amount = 0;
                   if(isset($coupon)) {
                     
                     if(isset($coupon['coupon']['type'])){ 
                       if($coupon['coupon']['type'] == 1) {
-                        $new_total_amount =  ($coupon['coupon']['coupon_amount'] / 100) * $cart_data['total_amount'];
+                        $new_total_amount  = ($coupon['coupon']['coupon_amount'] / 100) * $cart_data['total_amount'];                        
                       }else {
                         $new_total_amount =  $cart_data['total_amount'] - $coupon['coupon']['coupon_amount'];
                       } 
                     }else {
                         $new_total_amount =  $cart_data['total_amount'] - $coupon['coupon']['coupon_amount'];
                     }
+
+                    $discounted_amount = $cart_data['total_amount'] - $new_total_amount;
+
                   }else{
                     $new_total_amount =  $cart_data['total_amount'] ;
                   }  
@@ -63,7 +67,7 @@
                       <div class="text-ter" style="margin-bottom: 3px; padding-right: 20px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><?php echo "Coupon code: ". $coupon['coupon']['coupon_code'] ; ?></div>
                       <?php if(isset($coupon['coupon']['type'])){
                                 if($coupon['coupon']['type'] == 1) { ?>
-                                <div><?php echo $coupon['coupon']['coupon_amount'] . "% off" ; ?></div>
+                                <div><?php echo $coupon['coupon']['coupon_amount'] . "% off" ; ?> / less <?php echo number_format($discounted_amount, 2); ?></div>
                           <?php } else { ?>
                                  <div><?php echo "$". number_format($coupon['coupon']['coupon_amount'],2). " off" ; ?></div>
                           <?php } ?>
