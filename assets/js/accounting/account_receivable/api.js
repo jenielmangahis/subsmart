@@ -43,12 +43,6 @@ export async function sendEmail(payload) {
   return response.json();
 }
 
-export async function getTableInfo() {
-  const endpoint = `${prefixURL}/AccountingARSummary/apiGetTableInfo`;
-  const response = await fetch(endpoint);
-  return response.json();
-}
-
 export async function saveTableInfo(payload) {
   const endpoint = `${prefixURL}/AccountingARSummary/apiSaveTableInfo`;
   const response = await fetch(endpoint, {

@@ -38,7 +38,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     padding: 0;
     white-space: nowrap;
 }
-.bg-info, .bg-info>a {
+.bg-danger, .bg-info, .bg-info>a {
     color: #fff!important;
 }
 .small-box {
@@ -61,7 +61,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     text-decoration: none;
     z-index: 10;
 }
-.bg-info, .bg-info>a, .bg-success, .bg-success>a  {
+.bg-info, .bg-info>a, .bg-success, .bg-success>a, .bg-warning, .bg-warning>a  {
     color: #fff!important;
 }
 .small-box .icon {
@@ -151,6 +151,21 @@ small-box .icon>i.fa, .small-box .icon>i.fab, .small-box .icon>i.fad, .small-box
                                     <i class="fa fa-list"></i>
                                   </div>
                                   <a href="<?php echo base_url('/more/addon/booking/time'); ?>" class="small-box-footer">More info <i class="fa fa-arrow-right"></i></a>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3 col-6">
+                                <!-- small box -->
+                                <div class="small-box bg-warning">
+                                  <div class="inner">
+                                    <h3><?= sprintf("%02d", $total_new_inquiry); ?></h3>
+
+                                    <p>Total New Inquiry</p>
+                                  </div>
+                                  <div class="icon">
+                                    <i class="fa fa-list"></i>
+                                  </div>
+                                  <a href="<?php echo base_url('/more/addon/inquiries'); ?>" class="small-box-footer">More info <i class="fa fa-arrow-right"></i></a>
                                 </div>
                             </div>
                         </div>

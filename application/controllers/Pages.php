@@ -711,7 +711,6 @@ class Pages extends MYF_Controller {
 		$this->page_data['cart_data']    = $cart_data;
 		$this->page_data['bussinessProfile'] = $bussinessProfile;
 		$this->page_data['coupon'] = $coupon;
-		$this->page_data['userProfile']  = $userProfile;
 		$this->page_data['products']     = $products;
 		$this->page_data['eid'] = $eid;
 
@@ -720,24 +719,36 @@ class Pages extends MYF_Controller {
 
     public function ajax_update_booking_cart()
     {
+    	$is_success = 0;
+    	$msg = '';
+
     	$post       = $this->input->post();
     	$cart_items = $this->session->userdata('cartItems');
     	$key        = $post['pid'];
-    	if( !empty($cart_items) ){
-    		if( isset($cart_items['products'][$key]) ){
-    			$new_qty = $post['qty'] + $cart_items['products'][$key];
-    			$cart_items['products'][$key] = $new_qty;
-    		}else{
-    			$cart_items['products'][$key] = $post['qty'];
-    		}
+    	if( $post['qty'] > 0 ){
+    		if( !empty($cart_items) ){
+	    		if( isset($cart_items['products'][$key]) ){
+	    			$new_qty = $post['qty'] + $cart_items['products'][$key];
+	    			$cart_items['products'][$key] = $new_qty;
+	    		}else{
+	    			$cart_items['products'][$key] = $post['qty'];
+	    		}
+	    	}else{
+	    		$cart_items['products'][$key] = $post['qty'];
+	    	}
+
+	    	$this->session->set_userdata('cartItems',$cart_items);
+
+	    	$is_success = 1;
     	}else{
-    		$cart_items['products'][$key] = $post['qty'];
+    		$msg = 'Cannot accept quantity less than 1';
     	}
+    	
+    	$json_data = ['is_success' => $is_success, 'msg' => $msg];
+    	echo json_encode($json_data);
 
-    	$this->session->set_userdata('cartItems',$cart_items);
-
-    	$this->session->set_flashdata('message', 'Cart was successfully updated');
-        $this->session->set_flashdata('alert_class', 'alert-success');
+    	/*$this->session->set_flashdata('message', 'Cart was successfully updated');
+        $this->session->set_flashdata('alert_class', 'alert-success');*/
     }
 
     public function ajax_update_cart_coupon()
@@ -746,6 +757,9 @@ class Pages extends MYF_Controller {
     	$this->load->helper(array('hashids_helper'));  
 
     	$is_success = 0;
+    	$is_coupon_valid = 0;
+    	$msg = '';
+
     	$post       = $this->input->post();
     	$coupon_code = $post['coupon_code'];
     	if( $coupon_code ) {
@@ -753,23 +767,42 @@ class Pages extends MYF_Controller {
 	    	$coupon_exist = $this->BookingCoupon_model->isCompanyCouponCodeExists($coupon_code, $cid);
 	    	if($coupon_exist){
 	    		$coupon = $this->BookingCoupon_model->getByCouponCode($coupon_code);
+	    		$date_today = date("Y-m-d");
+	    		if( $coupon->status == 1 ){
+	    			if( $date_today <= $coupon->date_valid_to ){
+	    				if( $coupon->used_per_coupon > 0 ){
+	    					$is_coupon_valid = 1;
+	    				}else{
+	    					$msg = 'Coupon code already reached max usage';
+	    				}		    			
+		    		}else{
+		    			$msg = 'Coupon code already expired';
+		    		}
+	    		}else{
+	    			$msg = 'Coupon code already expired';
+	    		}
+	    	}else{
+	    		$msg = 'Invalid coupon code';
+	    	}
 
-	                $coupon_details = array(
-						'coupon_name' => $coupon->coupon_name,
-						'coupon_amount' => $coupon->discount_from_total,
-						'coupon_code' => $coupon->coupon_code,
-						'type' => $coupon->discount_from_total_type,
-						'id' => $coupon->id,
-					);
+
+	    	if( $is_coupon_valid ){
+	    		$coupon_details = array(
+					'coupon_name' => $coupon->coupon_name,
+					'coupon_amount' => $coupon->discount_from_total,
+					'coupon_code' => $coupon->coupon_code,
+					'type' => $coupon->discount_from_total_type,
+					'id' => $coupon->id,
+				);
 
 	    		$cart_items['coupon'] = $coupon_details;
 	    		$this->session->set_userdata('coupon',$cart_items);
 
 	    		$is_success = 1;
-	    	}
+	    	}	    	
     	}
 
-    	$json_data = ['is_success' => $is_success];
+    	$json_data = ['is_success' => $is_success, 'msg' => $msg];
     	echo json_encode($json_data);
     }
 
@@ -907,6 +940,7 @@ class Pages extends MYF_Controller {
     	$this->load->model('BookingInfo_model');
     	$this->load->model('BookingServiceItem_model');
     	$this->load->model('BookingWorkOrder_model');
+    	$this->load->model('BookingCoupon_model');
 
     	$this->load->helper(array('hashids_helper'));  
 
@@ -929,15 +963,34 @@ class Pages extends MYF_Controller {
 			}
     	}
 
-    	if(isset($coupon)) {
-    		$coupon_id = $coupon['coupon']['id'];
-    	}
-
     	$bussinessProfile = $this->business_model->getByCompanyId($cid);
 
     	if( $bussinessProfile ){
+    		$cart_items = $this->session->userdata('cartItems');
+			$cart_data  = $this->BookingServiceItem_model->getUserCartSummary($cart_items);
+
+			$discounted_amount = 0;
+			$coupon_id = 0;
+			$bookingCoupon = array();
+
+	    	if(isset($coupon)) {
+	    		$bookingCoupon = $this->BookingCoupon_model->getByIdAndCompanyId($coupon['coupon']['id'], $cid);
+	    		if( $bookingCoupon ){
+	    			$coupon_id = $bookingCoupon->id;
+	    			if( $bookingCoupon->discount_from_total_type == 1 ){
+	    				$discounted_amount = ($bookingCoupon->discount_from_total * 100) - $cart_data['total_amount'];
+	    			}else{
+	    				$discounted_amount = $bookingCoupon->discount_from_total;
+	    			}
+	    		}
+	    	}
+
+			$subtotal_amount = $cart_data['total_amount'];
+			$total_amount    = $cart_data['total_amount'] - $discounted_amount;
+
     		$data_booking_info = [
 	    		'company_id' => $cid,
+	    		'coupon_id' => $coupon_id,
 	    		'name' => $post['full_name'],
 	    		'phone' => $post['contact_number'],
 	    		'email' => $post['email'],
@@ -945,21 +998,31 @@ class Pages extends MYF_Controller {
 	    		'message' => $post['message'],
 	    		'preferred_time_to_contact' => $post['preferred_time_to_contact'],
 	    		'how_did_you_hear_about_us' => $post['how_did_you_hear_about_us'],
+	    		'schedule_date' => $cart_items['schedule_data']['date'],
+	    		'schedule_time_from' => $cart_items['schedule_data']['time_start'],
+	    		'schedule_time_to' => $cart_items['schedule_data']['time_end'],
 	    		'form_data' => serialize($custom_fields),
+	    		'subtotal_amount' => $subtotal_amount,
+	    		'discounted_amount' => $discounted_amount,
+	    		'total_amount' => $total_amount,
 	    		'status' => 1,
 	    		'date_created' => date("Y-m-d H:i:s")
 	    	];
 
 	    	$booking_info_id = $this->BookingInfo_model->save($data_booking_info);
 
-	    	if( $booking_info_id > 0 ){
-	    		$cart_items = $this->session->userdata('cartItems');
-				$cart_data  = $this->BookingServiceItem_model->getUserCartSummary($cart_items);
+	    	if( $booking_info_id > 0 ){	    		
 				foreach( $cart_items['products'] as $pid =>  $qty ){
+					$item = $this->BookingServiceItem_model->getById($pid);
+					$total_amount = $item->price * $qty;
 					$data_booking_work_orders = [
 						'booking_info_id' => $booking_info_id,
 						'service_item_id' => $pid,
 						'quantity_ordered' => $qty,
+						'item_price' => $item->price,
+						'item_unit' => $item->price_unit,
+						'total_amout' => $total_amount,
+						'total_discount' => 0,
 						'coupon_id' => $coupon_id,
 						'schedule_date' => $cart_items['schedule_data']['date'],
 						'schedule_time_from' => $cart_items['schedule_data']['time_start'],
@@ -969,6 +1032,46 @@ class Pages extends MYF_Controller {
 
 					$this->BookingWorkOrder_model->create($data_booking_work_orders);
 				}
+
+				//Update coupon
+				if( $bookingCoupon ){
+					$status = $bookingCoupon->status;
+					$total_usage = $bookingCoupon->used_per_coupon - 1;
+					if( $total_usage <= 0 ){
+						$status = 0;
+					}	
+
+					$coupon_data = [
+						'status' => $status,
+						'used_per_coupon' => $total_usage
+					];
+
+					$this->BookingCoupon_model->update($bookingCoupon->id, $coupon_data);
+				}
+				
+
+				//Send email notification
+				$bussinessProfile = $this->business_model->getByCompanyId($cid);
+				$subject = 'nSmartrac : Online Booking';
+				$body = "Someone made an online booking. Below are the details.";
+				$body .= "<table>";
+					$body .= "<tr><td>Name :".$post['full_name']."</td></tr>";
+					$body .= "<tr><td>Phone :".$post['contact_number']."</td></tr>";
+					$body .= "<tr><td>Email :".$post['email']."</td></tr>";
+					$body .= "<tr><td>Message :".$post['message']."</td></tr>";
+					$body .= "<tr><td>Preferred time to contact :".$post['preferred_time_to_contact']."</td></tr>";
+				$body .= "</table>";
+
+				$data = [
+	                'to' => $bussinessProfile->business_email, 
+	                'subject' => $subject, 
+	                'body' => $body,
+	                'cc' => '',
+	                'bcc' => '',
+	                'attachment' => ''
+	            ];
+
+	            $isSent = sendEmail($data);
 
 				$this->session->set_flashdata('message', 'Your product booking has been saved.');
         		$this->session->set_flashdata('alert_class', 'alert-info');

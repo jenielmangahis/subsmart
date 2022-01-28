@@ -30,4 +30,12 @@ class Accounting_pay_down_credit_card_model extends MY_Model {
 		$query = $this->db->get($this->table);
 		return $query->row();
 	}
+
+	public function get_company_cc_payments($filters = [])
+	{
+		$this->db->where('company_id', $filters['company_id']);
+		$this->db->where('status !=', 0);
+		$query = $this->db->get($this->table);
+		return $query->result();
+	}
 }

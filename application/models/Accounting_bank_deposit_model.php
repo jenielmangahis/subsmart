@@ -65,4 +65,12 @@ class Accounting_bank_deposit_model extends MY_Model {
         $this->db->insert('accounting_bank_deposit_funds', $data);
 	    return $this->db->insert_id();
 	}
+
+	public function get_company_deposits($filters = [])
+    {
+        $this->db->where('company_id', $filters['company_id']);
+        $this->db->where('status !=', 0);
+        $query = $this->db->get($this->table);
+        return $query->result();
+    }
 }

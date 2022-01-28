@@ -70,6 +70,21 @@ class BookingInfo_model extends MY_Model
         return  $last_id;
     }
 
+    public function countTotalNewByCompanyId($company_id)
+    {
+        $id = logged('id');
+
+        $this->db->select('*');
+        $this->db->from($this->table);
+
+        $this->db->where('company_id', $company_id);
+        $this->db->where('status', 1);
+        $this->db->order_by('date_created', 'DESC');
+
+        $num_rows = $this->db->count_all_results();
+        return $num_rows;
+    }  
+
 }
 
 /* End of file BookingCoupon_model.php */

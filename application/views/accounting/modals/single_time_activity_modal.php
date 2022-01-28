@@ -38,7 +38,24 @@
                 <!-- Modal content-->
                 <div class="modal-content" style="height: 100%;">
                     <div class="modal-header" style="background: #f4f5f8;border-bottom: 0">
-                        <h4 class="modal-title">Time Activity</h4>
+                        <div class="row w-100">
+                            <div class="col-6 d-flex align-items-center">
+                                <div class="dropup mr-1">
+                                    <a href="javascript:void(0);" class="h4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fa fa-history fa-lg"></i>
+                                    </a>
+                                    <div class="dropdown-menu" style="width: 500px">
+                                        <h5 class="dropdown-header">Recent Time Activities</h5>
+                                        <table class="table table-borderless table-hover cursor-pointer" id="recent-time-activities">
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <h4 class="modal-title">
+                                    Time Activity
+                                </h4>
+                            </div>
+                        </div>
                         <div class="float-right">
                             <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
                             <button type="button" id="time-activity-settings-button"><i class="fa fa-cog fa-lg"></i></button>

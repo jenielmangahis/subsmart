@@ -37,4 +37,12 @@ class Accounting_transfer_funds_model extends MY_Model {
 			return false;
 		}
 	}
+
+	public function get_company_transfers($filters = [])
+    {
+        $this->db->where('company_id', $filters['company_id']);
+        $this->db->where('status !=', 0);
+        $query = $this->db->get($this->table);
+        return $query->result();
+    }
 }

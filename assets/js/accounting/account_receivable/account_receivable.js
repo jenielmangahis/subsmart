@@ -2,7 +2,8 @@ window.addEventListener("DOMContentLoaded", async () => {
   const { ReportsTable } = await import("./ReportsTable.js");
   const api = await import("./api.js");
 
-  new ReportsTable($("#reportsTable"));
+  const $table = $("#reportsTable");
+  new ReportsTable($table);
 
   const $customDropdown = $(".customDropdown__btn");
   $customDropdown.on("click", (event) => {
@@ -102,12 +103,6 @@ window.addEventListener("DOMContentLoaded", async () => {
     $tableHeader.addClass("accountReceivableTable__header--edit");
   });
 
-  const { data: tableInfo } = await api.getTableInfo();
-  $tableTitle.text(tableInfo.title);
-  $tableSubtitle.text(tableInfo.subtitle);
-  $tableTitleInput.val(tableInfo.title);
-  $tableSubtitleInput.val(tableInfo.subtitle);
-
   document.addEventListener("click", async (event) => {
     if (!$(event.target).closest(".customDropdown").length) {
       $(".customDropdown").removeClass("open");
@@ -125,10 +120,13 @@ window.addEventListener("DOMContentLoaded", async () => {
       $tableTitle.text(title);
       $tableSubtitle.text(subtitle);
 
-      api.saveTableInfo({
-        title,
-        subtitle,
-      });
+      const payload = {
+        company_name_value: title,
+        report_title_value: subtitle,
+      };
+
+      setupTableTitles(payload);
+      api.saveTableInfo(payload);
     }
   });
 
@@ -184,7 +182,9 @@ window.addEventListener("DOMContentLoaded", async () => {
     $runReport.prop("disabled", true);
 
     const response = await api.runReport(payload);
-    console.log(response.data);
+    new ReportsTable($table, response.data);
+    setupTableTitles(response.form);
+    setupReportFormValue($customizeReport, response.form);
 
     $runReport.removeClass("buttonSubmit--isLoading");
     $runReport.prop("disabled", false);
@@ -357,14 +357,20 @@ window.addEventListener("DOMContentLoaded", async () => {
     $customizeReportBtn.prop("disabled", true);
 
     const response = await api.runReportCustomize(payload);
-    setupReportFormValue($(".accountReceivable__form"), response.data);
+    new ReportsTable($table, response.data);
+    setupReportFormValue($(".accountReceivable__form"), response.form);
+    setupTableTitles(response.form);
 
     $customizeReportBtn.removeClass("buttonSubmit--isLoading");
     $customizeReportBtn.prop("disabled", false);
+
+    $customizeReport.removeClass("customizeReport--show");
+    $customizeReport.find(".collapse").collapse("hide");
   });
   api.getReportCustomizeFormValues().then(({ data }) => {
     setupReportFormValue($customizeReport, data);
     setupReportFormValue($(".accountReceivable__form"), data);
+    setupTableTitles(data);
   });
 
   const $saveCustomizationBtn = $("[data-action=save_customization]");
@@ -449,6 +455,49 @@ function setupReportFormValue($form, data) {
 
     $dataType.val(value);
     $dataType.get(0).value = value;
+  }
+}
+
+function setupTableTitles(data) {
+  let {
+    company_name_value,
+    report_title_value,
+    company_name,
+    report_title,
+    header_report_period,
+    report_period_value,
+  } = data;
+  company_name = Number(company_name);
+  report_title = Number(report_title);
+  header_report_period = Number(header_report_period);
+
+  const $tableHeader = $(".accountReceivableTable__header");
+  const $tableTitle = $tableHeader.find("[data-type=title]");
+  const $tableSubtitle = $tableHeader.find("[data-type=subtitle]");
+  const $tableTitleInput = $tableHeader.find("[data-type=title-input]");
+  const $tableSubtitleInput = $tableHeader.find("[data-type=subtitle-input]");
+
+  // table
+  $tableTitle.text(company_name_value);
+  $tableSubtitle.text(report_title_value);
+  $tableTitleInput.val(company_name_value);
+  $tableSubtitleInput.val(report_title_value);
+
+  if (!isNaN(company_name)) {
+    $tableTitle.css({ display: company_name ? "block" : "none" });
+    $tableTitleInput.css({ display: company_name ? "block" : "none" });
+  }
+
+  if (!isNaN(report_title)) {
+    $tableSubtitle.css({ display: report_title ? "block" : "none" });
+    $tableSubtitleInput.css({ display: report_title ? "block" : "none" });
+  }
+
+  const $reportPeriod = $tableHeader.find("[data-type=header_report_period]");
+  const reportPeriod = moment(report_period_value).format("MMMM DD, YYYY");
+  $reportPeriod.text(`As of ${reportPeriod}`);
+  if (!isNaN(header_report_period)) {
+    $reportPeriod.css({ display: header_report_period ? "block" : "none" });
   }
 }
 

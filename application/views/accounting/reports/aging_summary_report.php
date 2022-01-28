@@ -257,14 +257,14 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
 
                 <div class="accountReceivableTable__header">
                     <div class="accountReceivableTable__headerInner">
-                        <div>
+                        <div class="d-flex">
                             <span class="accountReceivableTable__companyName" data-type="title">---</span>
                             <button class="accountReceivableTable__btn accountReceivableTable__btn--header" data-action="edit_header">
                                 <i class="material-icons">edit</i>
                             </button>
                         </div>
                         <div class="accountReceivableTable__tableName" data-type="subtitle">--</div>
-                        <div>As of <?php echo date('F d, Y'); ?></div>
+                        <div data-type="header_report_period" style="display: none;"></div>
                     </div>
 
                     <div class="accountReceivableTable__headerInnerEdit">
@@ -272,7 +272,6 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                             <input type="text" class="accountReceivableTable__companyName" data-type="title-input" />
                         </div>
                         <input type="text" class="accountReceivableTable__tableName" data-type="subtitle-input" />
-                        <div>As of <?php echo date('F d, Y'); ?></div>
                     </div>
                 </div>
 

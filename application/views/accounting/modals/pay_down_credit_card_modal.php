@@ -10,7 +10,24 @@
             <!-- Modal content-->
             <div class="modal-content" style="height: 100%;">
                 <div class="modal-header" style="background: #f4f5f8;border-bottom: 0">
-                    <h4 class="modal-title">Pay down credit card</h4>
+                    <div class="row w-100">
+                        <div class="col-6 d-flex align-items-center">
+                            <div class="dropup mr-1">
+                                <a href="javascript:void(0);" class="h4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fa fa-history fa-lg"></i>
+                                </a>
+                                <div class="dropdown-menu" style="width: 500px">
+                                    <h5 class="dropdown-header">Recent Transactions</h5>
+                                    <table class="table table-borderless table-hover cursor-pointer" id="recent-cc-payments">
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <h4 class="modal-title">
+                                Pay down credit card
+                            </h4>
+                        </div>
+                    </div>
                     <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
                 </div>
                 <div class="modal-body">
@@ -123,7 +140,17 @@
                             <button type="button" class="btn btn-secondary btn-rounded border" data-dismiss="modal">Close</button>
                         </div>
                         <div class="col-md-4 d-flex">
-
+                            <?php if(isset($ccPayment)) : ?>
+                            <div class="dropup m-auto">
+                                <a href="javascript:void(0);" class="text-white" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="#" id="void-credit-card-payment">Void</a>
+                                    <a class="dropdown-item" href="#" id="delete-credit-card-payment">Delete</a>
+                                    <a class="dropdown-item" href="#">Transaction journal</a>
+                                    <a class="dropdown-item" href="#">Audit history</a>
+                                </div>
+                            </div>
+                            <?php endif; ?>
                         </div>
                         <div class="col-md-4">
                             <!-- Split dropup button -->

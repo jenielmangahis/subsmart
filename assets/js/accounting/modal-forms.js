@@ -4707,7 +4707,7 @@ $(function() {
         var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
 
         $.ajax({
-            url: `/accounting/vendors/delete-transaction/expense/${split[1]}`,
+            url: `/accounting/delete-transaction/expense/${split[1]}`,
             type: 'DELETE',
             success: function(result) {
                 location.reload();
@@ -4720,7 +4720,7 @@ $(function() {
 
         var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
 
-        $.get('/accounting/vendors/void-transaction/expense/'+split[1], function(res) {
+        $.get('/accounting/void-transaction/expense/'+split[1], function(res) {
             location.reload();
         });
     });
@@ -4745,7 +4745,7 @@ $(function() {
         var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
 
         $.ajax({
-            url: `/accounting/vendors/delete-transaction/check/${split[1]}`,
+            url: `/accounting/delete-transaction/check/${split[1]}`,
             type: 'DELETE',
             success: function(result) {
                 location.reload();
@@ -4758,7 +4758,7 @@ $(function() {
 
         var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
 
-        $.get('/accounting/vendors/void-transaction/check/'+split[1], function(res) {
+        $.get('/accounting/void-transaction/check/'+split[1], function(res) {
             location.reload();
         });
     });
@@ -4783,7 +4783,7 @@ $(function() {
         var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
 
         $.ajax({
-            url: `/accounting/vendors/delete-transaction/bill/${split[1]}`,
+            url: `/accounting/delete-transaction/bill/${split[1]}`,
             type: 'DELETE',
             success: function(result) {
                 location.reload();
@@ -4811,7 +4811,7 @@ $(function() {
         var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
 
         $.ajax({
-            url: `/accounting/vendors/delete-transaction/purchase-order/${split[1]}`,
+            url: `/accounting/delete-transaction/purchase-order/${split[1]}`,
             type: 'DELETE',
             success: function(result) {
                 location.reload();
@@ -4839,7 +4839,7 @@ $(function() {
         var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
 
         $.ajax({
-            url: `/accounting/vendors/delete-transaction/vendor-credit/${split[1]}`,
+            url: `/accounting/delete-transaction/vendor-credit/${split[1]}`,
             type: 'DELETE',
             success: function(result) {
                 location.reload();
@@ -4867,7 +4867,7 @@ $(function() {
         var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
 
         $.ajax({
-            url: `/accounting/vendors/delete-transaction/cc-credit/${split[1]}`,
+            url: `/accounting/delete-transaction/cc-credit/${split[1]}`,
             type: 'DELETE',
             success: function(result) {
                 location.reload();
@@ -4880,7 +4880,31 @@ $(function() {
 
         var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
 
-        $.get('/accounting/vendors/void-transaction/cc-credit/'+split[1], function(res) {
+        $.get('/accounting/void-transaction/cc-credit/'+split[1], function(res) {
+            location.reload();
+        });
+    });
+
+    $(document).on('click', '#modal-container form #payDownCreditModal #delete-credit-card-payment', function(e) {
+        e.preventDefault();
+
+        var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
+
+        $.ajax({
+            url: `/accounting/delete-transaction/credit-card-payment/${split[1]}`,
+            type: 'DELETE',
+            success: function(result) {
+                location.reload();
+            }
+        });
+    });
+
+    $(document).on('click', '#modal-container form #payDownCreditModal #void-credit-card-payment', function(e) {
+        e.preventDefault();
+
+        var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
+
+        $.get('/accounting/void-transaction/credit-card-payment/'+split[1], function(res) {
             location.reload();
         });
     });
@@ -4927,8 +4951,8 @@ $(function() {
                     name: 'amount'
                 },
                 {
-                    data: 'payee',
-                    name: 'payee'
+                    data: 'name',
+                    name: 'name'
                 }
             ]
         });

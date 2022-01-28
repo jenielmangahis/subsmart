@@ -47,4 +47,12 @@ class Accounting_single_time_activity_model extends MY_Model {
         
         return $query->row();
     }
+
+    public function get_company_time_activities($filters = [])
+    {
+        $this->db->where('company_id', $filters['company_id']);
+        $this->db->where('status !=', 0);
+        $query = $this->db->get($this->table);
+        return $query->result();
+    }
 }

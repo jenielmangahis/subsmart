@@ -34,11 +34,13 @@ class Booking extends MY_Controller {
 		$total_category = $this->BookingCategory_model->countTotalByCompanyId($cid);
 		$total_products = $this->BookingServiceItem_model->countTotalByCompanyId($cid);
 		$total_timeslots = $this->BookingTimeSlot_model->countTotalByCompanyId($cid);
+		$total_new_inquiry = $this->BookingInfo_model->countTotalNewByCompanyId($cid);
 
 		$this->page_data['eid']   = $eid;
 		$this->page_data['total_category']  = $total_category;
 		$this->page_data['total_products']  = $total_products;
 		$this->page_data['total_timeslots'] = $total_timeslots;
+		$this->page_data['total_new_inquiry'] = $total_new_inquiry;
 		$this->page_data['users'] = $this->users_model->getUser(logged('id'));
 		$this->load->view('online_booking/index', $this->page_data);
 	}
@@ -891,9 +893,10 @@ class Booking extends MY_Controller {
 
     public function ajax_inquiry_edit_details()
     {
-		$id = post('iid');
+		$id   = post('iid');
+		$cid  = logged('company_id'); 
         $post = $this->input->post();
-        $inquiry = $this->BookingInquiry_model->findById($id);
+        $inquiry = $this->BookingInquiry_model->findByIdAndCompanyId($id, $cid);
 
         $this->page_data['inquiry'] = $inquiry;
         $this->page_data['inquiry_id'] = $id;
@@ -1332,6 +1335,34 @@ class Booking extends MY_Controller {
     	$this->session->unset_userdata('cartItems');
     	$this->session->unset_userdata('coupon');
         redirect('booking/products/'.$post['eid']);
+    }
+
+    public function delete_inquiry()
+    {
+    	$cid = logged('company_id');
+    	$iid = post('iid');
+    	$id  = $this->BookingInquiry_model->deleteByIdAndCompanyId($iid, $cid);
+
+		$this->activity_model->add("Online Inquiry #$iid Deleted by User:".logged('name'));
+
+		$this->session->set_flashdata('message', 'Online Inquiry has been Deleted Successfully');
+		$this->session->set_flashdata('alert_class', 'alert-success');
+
+		redirect('more/addon/inquiries');
+    }
+
+    public function ajax_view_inquiry()
+    {
+		$id   = post('iid');
+		$cid  = logged('company_id'); 
+        $post = $this->input->post();
+        $inquiry = $this->BookingInquiry_model->findByIdAndCompanyId($id, $cid);
+        $bookingItems   = $this->BookingWorkOrder_model->getByBookingInfoId($id);
+        
+        $this->page_data['inquiry']    = $inquiry;
+        $this->page_data['inquiry_id'] = $id;
+        $this->page_data['bookingItems'] = $bookingItems;
+        $this->load->view('online_booking/ajax_view_inquiry', $this->page_data);
     }
 
 }

@@ -1,8 +1,9 @@
 export class ReportsTable {
-  constructor($table) {
+  constructor($table, data = null) {
     this.$table = $($table);
     this.$orderRadios = $("[name=sortTable]");
     this.$rowDensityCheckbox = $("#tableCompact");
+    this.data = data;
 
     this.loadDeps().then(() => {
       this.init();
@@ -14,7 +15,47 @@ export class ReportsTable {
   }
 
   async init() {
-    const { data } = await this.api.getReports();
+    if ($.fn.DataTable.isDataTable(this.$table)) {
+      this.$table.DataTable().destroy();
+      this.$table.empty("");
+    }
+
+    let data = this.data;
+    if (!this.data) {
+      const response = await this.api.getReports();
+      data = response.data;
+    }
+
+    const { data: config } = await this.api.getReportCustomizeFormValues();
+    const withoutCents = Number(config.without_cents);
+    const divideBy1000 = Number(config.divide_by_1000);
+    const exceptZeroAmount = Number(config.except_zero_amount);
+
+    data = data.map((record) => {
+      Object.keys(record).forEach((key) => {
+        const keyLower = key.toLowerCase();
+        // prettier-ignore
+        if (!/\dto\d/.test(key) && keyLower !== "total" && !keyLower.endsWith("andover")) {
+          return;
+        }
+
+        let value = Number(record[key]);
+
+        if (exceptZeroAmount && value === 0) {
+          record[key] = "";
+          return;
+        }
+
+        value = value.toFixed(withoutCents ? 0 : 2);
+        value = divideBy1000 ? value / 1000 : value;
+        record[key] = value;
+      });
+
+      return record;
+    });
+
+    console.log(data);
+
     const columns = Object.keys(data[0]).reduce((carry, key) => {
       if (key === "customer_id") return carry;
       return [
@@ -22,7 +63,7 @@ export class ReportsTable {
         {
           data: key,
           sortable: false,
-          title: formatHeader(key),
+          title: key === "name" ? "" : formatHeader(key),
           ...(key !== "name" && { className: "text-right" }),
         },
       ];
@@ -37,6 +78,7 @@ export class ReportsTable {
       paging: false,
       processing: true,
       dom: "Bfrtip",
+      bDestroy: true,
       buttons: [
         {
           extend: "print",

@@ -8,14 +8,27 @@ class Taskhub_model extends MY_Model {
 		$this->table_key = 'task_id';
 	}
         
-        public function getTask($company_id)
-        {
-            $this->db->join('tasks_participants','tasks.task_id = tasks_participants.task_id', 'left');
-            $this->db->join('users','users.id = tasks_participants.user_id', 'left');
-            $this->db->join('tasks_status','tasks.status_id = tasks_status.status_id','right');
-            $this->db->where('tasks.company_id', $company_id);
-            $this->db->order_by('priority','DESC');
-            return $this->db->get('tasks')->result();
-        }
+    public function getTask($company_id)
+    {
+        $this->db->join('tasks_participants','tasks.task_id = tasks_participants.task_id', 'left');
+        $this->db->join('users','users.id = tasks_participants.user_id', 'left');
+        $this->db->join('tasks_status','tasks.status_id = tasks_status.status_id','right');
+        $this->db->where('tasks.company_id', $company_id);
+        $this->db->order_by('priority','DESC');
+        return $this->db->get('tasks')->result();
+    }
+
+    public function getAllByCompanyId($company_id)
+    {
+        $id = $user_id;
+        $this->db->select('tasks.*, tasks_status.status_text, tasks_status.status_color');
+        $this->db->join('tasks_status','tasks.status_id = tasks_status.status_id','left');
+        $this->db->from($this->table);
+
+        $this->db->where('tasks.company_id', $company_id);
+        $this->db->order_by('tasks.date_created','DESC');
+        $query = $this->db->get();
+        return $query->result();
+    }
         
 }
