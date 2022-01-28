@@ -848,14 +848,6 @@ class Expenses_model extends MY_Model
         return $query->result();
     }
 
-    public function get_company_deposits($filters = [])
-    {
-        $this->db->where('company_id', $filters['company_id']);
-        $this->db->where('status !=', 0);
-        $query = $this->db->get('accounting_bank_deposit');
-        return $query->result();
-    }
-
     public function get_company_bill_payment_items($filters = [])
     {
         $this->db->where('company_id', $filters['company_id']);

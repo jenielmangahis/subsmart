@@ -64,4 +64,12 @@ class Accounting_inventory_qty_adjustments_model extends MY_Model {
 
 		return $delete;
 	}
+
+	public function get_company_quantity_adjustments($filters = [])
+	{
+		$this->db->where('company_id', $filters['company_id']);
+		$this->db->where('status !=', 0);
+		$query = $this->db->get($this->table);
+		return $query->result();
+	}
 }

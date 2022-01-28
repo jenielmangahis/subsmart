@@ -68,4 +68,12 @@ class Accounting_journal_entries_model extends MY_Model {
 		$update = $this->db->update('accounting_journal_entry_items', $data);
 		return $update ? true : false;
 	}
+
+	public function get_company_journal_entries($filters = [])
+	{
+		$this->db->where('company_id', $filters['company_id']);
+		$this->db->where('status !=', 0);
+		$query = $this->db->get($this->table);
+		return $query->result();
+	}
 }

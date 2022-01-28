@@ -127,10 +127,10 @@ class AccountingARSummary extends MY_Controller
                 }
 
                 $total += $data;
-                $record[$key] = number_format($data, 2);
+                $record[$key] = $data;
             }
 
-            $record['total'] = number_format($total, 2);
+            $record['total'] = $total;
             return $record;
         }, $records);
     }
@@ -218,29 +218,6 @@ class AccountingARSummary extends MY_Controller
         echo json_encode(['data' => $payload]);
     }
 
-    public function apiGetTableInfo()
-    {
-        $this->db->where('company_id', logged('id'));
-        $this->db->select('id');
-        $currInfo = $this->db->get('accounting_ar_summary_info')->row();
-
-        if (is_null($currInfo)) {
-            $this->db->where('id', logged('id'));
-            $client = $this->db->get('clients')->row();
-            $this->db->insert('accounting_ar_summary_info', [
-                'company_id' => $client->id,
-                'title' => $client->business_name,
-                'subtitle' => 'A/R Aging Summary',
-            ]);
-        }
-
-        $this->db->where('company_id', logged('id'));
-        $currInfo = $this->db->get('accounting_ar_summary_info')->row();
-
-        header('content-type: application/json');
-        echo json_encode(['data' => $currInfo]);
-    }
-
     public function apiSaveTableInfo()
     {
         header('content-type: application/json');
@@ -252,20 +229,11 @@ class AccountingARSummary extends MY_Controller
 
         $payload = json_decode(file_get_contents('php://input'), true);
 
-        $this->db->where('company_id', logged('id'));
-        $this->db->select('id');
-        $currInfo = $this->db->get('accounting_ar_summary_info')->row();
+        $this->db->where('user_id', logged('id'));
+        $this->db->update('accounting_ar_summary_form', $payload);
 
-        if (is_null($currInfo)) {
-            $payload['company_id'] = logged('id');
-            $this->db->insert('accounting_ar_summary_info', $payload);
-        } else {
-            $this->db->where('id', $currInfo->id);
-            $this->db->update('accounting_ar_summary_info', $payload);
-        }
-
-        $this->db->where('company_id', logged('id'));
-        $currInfo = $this->db->get('accounting_ar_summary_info')->row();
+        $this->db->where('user_id', logged('id'));
+        $currInfo = $this->db->get('accounting_ar_summary_form')->row();
         echo json_encode(['data' => $currInfo]);
     }
 
@@ -280,7 +248,20 @@ class AccountingARSummary extends MY_Controller
 
         $payload = json_decode(file_get_contents('php://input'), true);
         $params = new ReportParams($payload);
-        echo json_encode(['data' => $this->getReports($params)]);
+
+        $this->db->where('user_id', logged('id'));
+        $this->db->update('accounting_ar_summary_form', [
+            'report_period' => $payload['report_period'],
+            'report_period_value' => $payload['report_period_value'],
+            'show_nonzero_or_active_only' => $payload['show_nonzero_or_active_only'],
+            'number_of_periods' => $payload['number_of_periods'],
+            'days_per_aging_period' => $payload['days_per_aging_period'],
+            'aging_method' => $payload['aging_method_current'] ? 'current' : 'report_date',
+        ]);
+
+        $this->db->where('user_id', logged('id'));
+        $form = $this->db->get('accounting_ar_summary_form')->row();
+        echo json_encode(['data' => $this->getReports($params), 'form' => $form]);
     }
 
     public function apiRunReportCustomize()
@@ -331,8 +312,10 @@ class AccountingARSummary extends MY_Controller
         }
 
         $this->db->where('user_id', logged('id'));
-        $form = $this->db->get('accounting_ar_summary_form')->row();
-        echo json_encode(['data' => $form]);
+        $form = $this->db->get('accounting_ar_summary_form')->row_array();
+
+        $params = new ReportParams($form);
+        echo json_encode(['data' => $this->getReports($params), 'form' => $form]);
     }
 
     public function apiGetReportCustomize()
