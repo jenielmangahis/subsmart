@@ -426,6 +426,8 @@ $route['management-report/update'] = 'accounting/update_management_report';
 $route['management-report/preliminary-page/delete'] = 'accounting/managenent_report_delete_preliminary_page';
 $route['management-report/delete-report-page'] = 'accounting/managenent_report_delete_report_page';
 $route['management-report/cover-page/changed'] = 'accounting/create_cover_page_pdf_template';
+$route['management-report/send'] = 'accounting/management_report_send_email';
+$route['management-report/export/pdf'] = 'accounting/management_report_generate_pdf';
 
 
 // Accounting products and services
@@ -473,7 +475,6 @@ $route['accounting/chart-of-accounts/view-register/(:any)'] = 'accounting_contro
 $route['accounting/chart-of-accounts/(:any)/load-registers']['post'] = 'accounting_controllers/chart_of_accounts/load_registers/$1';
 $route['accounting/chart-of-accounts/view-register/(:any)/print-transactions']['post'] = 'accounting_controllers/chart_of_accounts/print_transactions/$1';
 $route['accounting/chart-of-accounts/view-register/(:any)/export-table']['post'] = 'accounting_controllers/chart_of_accounts/export_transactions/$1';
-$route['accounting/chart-of-accounts/delete-transaction/(:any)/(:any)']['DELETE'] = 'accounting_controllers/chart_of_accounts/delete_transaction/$1/$2';
 $route['accounting/chart-of-accounts/(:any)/save-transaction/(:any)']['post'] = 'accounting_controllers/chart_of_accounts/save_transaction/$1/$2';
 $route['accounting/chart-of-accounts/add-attachment']['post'] = 'accounting_controllers/chart_of_accounts/add_attachment';
 $route['accounting/chart-of-accounts/inactive-batch']['post'] = 'accounting_controllers/chart_of_accounts/inactive_batch';

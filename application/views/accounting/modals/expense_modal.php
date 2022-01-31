@@ -12,7 +12,7 @@
                 <div class="modal-header" style="background: #f4f5f8;border-bottom: 0">
                     <div class="row w-100">
                         <div class="col-6 d-flex align-items-center">
-                            <div class="dropup mr-1">
+                            <div class="dropdown mr-1">
                                 <a href="javascript:void(0);" class="h4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <i class="fa fa-history fa-lg"></i>
                                 </a>
@@ -210,19 +210,29 @@
                                                                         <td><input type="number" name="category_amount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01"></td>
                                                                         <td>
                                                                             <div class="d-flex align-items-center justify-content-center">
-                                                                                <input type="checkbox" name="category_billable[]" class="form-check" value="1">
+                                                                                <div class="checkbox checkbox-sec m-0">
+                                                                                    <input id="category-billable-1" type="checkbox" name="category_billable[]" class="form-check" value="1">
+                                                                                    <label for="category-billable-1" class="p-0" style="width: 24px; height: 24px"></label>
+                                                                                </div>
                                                                             </div>
                                                                         </td>
                                                                         <td><input type="number" name="category_markup[]" class="form-control" onchange="convertToDecimal(this)"></td>
                                                                         <td>
                                                                             <div class="d-flex align-items-center justify-content-center">
-                                                                                <input type="checkbox" name="category_tax[]" class="form-check" value="1">
+                                                                                <div class="checkbox checkbox-sec m-0">
+                                                                                    <input id="category-tax-1" type="checkbox" name="category_tax[]" class="form-check" value="1">
+                                                                                    <label for="category-tax-1" class="p-0" style="width: 24px; height: 24px"></label>
+                                                                                </div>
                                                                             </div>
                                                                         </td>
                                                                         <td>
                                                                             <select name="category_customer[]" class="form-control"></select>
                                                                         </td>
-                                                                        <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
+                                                                        <td>
+                                                                            <div class="d-flex align-items-center justify-content-center">
+                                                                                <a href="#" class="deleteRow"><i class="fa fa-trash"></i></a>
+                                                                            </div>
+                                                                        </td>
                                                                     </tr>
                                                                     <?php $count = 1; ?>
                                                                     <?php if(isset($categories) && count($categories) > 0) : ?>
@@ -247,13 +257,19 @@
                                                                         <td><input type="number" name="category_amount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="<?=number_format(floatval($category->amount), 2, '.', ',')?>"></td>
                                                                         <td>
                                                                             <div class="d-flex align-items-center justify-content-center">
-                                                                                <input type="checkbox" name="category_billable[]" class="form-check" value="1" <?=$category->billable === "1" ? 'checked' : ''?>>
+                                                                                <div class="checkbox checkbox-sec m-0">
+                                                                                    <input id="category-billable-<?=$count?>" type="checkbox" name="category_billable[]" class="form-check" value="1" <?=$category->billable === "1" ? 'checked' : ''?>>
+                                                                                    <label for="category-billable-<?=$count?>" class="p-0" style="width: 24px; height: 24px"></label>
+                                                                                </div>
                                                                             </div>
                                                                         </td>
                                                                         <td><input type="number" name="category_markup[]" class="form-control" onchange="convertToDecimal(this)" value="<?=number_format(floatval($category->markup_percentage), 2, '.', ',')?>"></td>
                                                                         <td>
                                                                             <div class="d-flex align-items-center justify-content-center">
-                                                                                <input type="checkbox" name="category_tax[]" class="form-check" value="1" <?=$category->tax === "1" ? 'checked' : ''?>>
+                                                                                <div class="checkbox checkbox-sec m-0">
+                                                                                    <input id="category-tax-<?=$count?>" type="checkbox" name="category_tax[]" class="form-check" value="1" <?=$category->tax === "1" ? 'checked' : ''?>>
+                                                                                    <label for="category-tax-<?=$count?>" class="p-0" style="width: 24px; height: 24px"></label>
+                                                                                </div>
                                                                             </div>
                                                                         </td>
                                                                         <td>
@@ -264,7 +280,11 @@
                                                                                 </option>
                                                                             </select>
                                                                         </td>
-                                                                        <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
+                                                                        <td>
+                                                                            <div class="d-flex align-items-center justify-content-center">
+                                                                                <a href="#" class="deleteRow"><i class="fa fa-trash"></i></a>
+                                                                            </div>
+                                                                        </td>
                                                                     </tr>
                                                                     <?php $count++; endforeach; ?>
                                                                     <?php endif; ?>
@@ -280,7 +300,11 @@
                                                                         <td></td>
                                                                         <td></td>
                                                                         <td></td>
-                                                                        <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
+                                                                        <td>
+                                                                            <div class="d-flex align-items-center justify-content-center">
+                                                                                <a href="#" class="deleteRow"><i class="fa fa-trash"></i></a>
+                                                                            </div>
+                                                                        </td>
                                                                     </tr>
                                                                     <?php $count++; } while ($count <= 2) ?>
                                                                     <tr>
@@ -294,7 +318,11 @@
                                                                         <td></td>
                                                                         <td></td>
                                                                         <td></td>
-                                                                        <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
+                                                                        <td>
+                                                                            <div class="d-flex align-items-center justify-content-center">
+                                                                                <a href="#" class="deleteRow"><i class="fa fa-trash"></i></a>
+                                                                            </div>
+                                                                        </td>
                                                                     </tr>
                                                                 </tbody>
                                                             </table>
@@ -357,7 +385,11 @@
                                                                                         ?>
                                                                                     </span>
                                                                                 </td>
-                                                                                <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
+                                                                                <td>
+                                                                                    <div class="d-flex align-items-center justify-content-center">
+                                                                                        <a href="#" class="deleteRow"><i class="fa fa-trash"></i></a>
+                                                                                    </div>
+                                                                                </td>
                                                                             </tr>
                                                                         <?php endforeach; ?>
                                                                     <?php endif; ?>

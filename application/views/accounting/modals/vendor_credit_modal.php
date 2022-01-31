@@ -12,7 +12,7 @@
                 <div class="modal-header" style="background: #f4f5f8;border-bottom: 0">
                     <div class="row w-100">
                         <div class="col-6 d-flex align-items-center">
-                            <div class="dropup mr-1">
+                            <div class="dropdown mr-1">
                                 <a href="javascript:void(0);" class="h4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <i class="fa fa-history fa-lg"></i>
                                 </a>

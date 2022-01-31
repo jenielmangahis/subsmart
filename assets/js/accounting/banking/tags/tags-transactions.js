@@ -725,6 +725,7 @@ $(document).on('click', '#remove-tags-modal button#remove', function(e) {
 $(document).on('click', '#transactions-table tbody tr td:not(:first-child)', function() {
     var row = $(this).parent();
     var data = $('#transactions-table').DataTable().row(row).data();
+    data.type = data.type === 'Credit card expense' ? 'expense' : data.type;
     var type = data.type.replace(' ', '-').toLowerCase();
 
     $.get(`/accounting/view-transaction/${type}/${data.id}`, function(res) {

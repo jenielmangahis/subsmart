@@ -12,7 +12,7 @@
                 <div class="modal-header" style="background: #f4f5f8;border-bottom: 0">
                     <div class="row w-100">
                         <div class="col-6 d-flex align-items-center">
-                            <div class="dropup mr-1">
+                            <div class="dropdown mr-1">
                                 <a href="javascript:void(0);" class="h4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <i class="fa fa-history fa-lg"></i>
                                 </a>
@@ -129,8 +129,28 @@
                         <div class="col-md-4">
                             <button type="button" class="btn btn-secondary btn-rounded border" data-dismiss="modal">Close</button>
                         </div>
-                        <div class="col-md-4 d-flex">
+                        <div class="col-md-4 <?=!isset($transfer) ? 'd-flex' : ''?>">
+                            <?php if(!isset($transfer)) : ?>
                             <a href="#" class="text-white m-auto" onclick="makeRecurring('transfer')">Make Recurring</a>
+                            <?php else : ?>
+                            <div class="row h-100">
+                                <div class="col-md-12 d-flex align-items-center justify-content-center">
+                                    <span><a href="#" class="text-white" onclick="makeRecurring('transfer')">Make Recurring</a></span>
+                                    <span class="mx-3 divider"></span>
+                                    <span>
+                                        <div class="dropup">
+                                            <a href="javascript:void(0);" class="text-white" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
+                                            <div class="dropdown-menu">
+                                                <a class="dropdown-item" href="#" id="void-transfer">Void</a>
+                                                <a class="dropdown-item" href="#" id="delete-transfer">Delete</a>
+                                                <a class="dropdown-item" href="#">Transaction journal</a>
+                                                <a class="dropdown-item" href="#">Audit history</a>
+                                            </div>
+                                        </div>
+                                    </span>
+                                </div>
+                            </div>
+                            <?php endif; ?>
                         </div>
                         <div class="col-md-4">
                             <!-- Split dropup button -->
