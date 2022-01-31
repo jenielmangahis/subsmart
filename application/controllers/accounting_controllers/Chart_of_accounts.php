@@ -3175,24 +3175,36 @@ class Chart_of_accounts extends MY_Controller {
 
             $data = [];
             foreach($registers as $register) {
+                $disPayKey = $paymentKey.'_disabled';
+                $disDepKey = $depKey.'_disabled';
+
                 $data[] = [
+                    'id' => $register['id'],
                     'date' => $register['date'],
                     'ref_no_type' => $register['ref_no'],
+                    'ref_no_disabled' => $register['ref_no_disabled'],
+                    'payee_type' => $register['payee_type'],
+                    'payee_id' => $register['payee_id'],
                     'payee_account' => $register['payee'],
+                    'payee_disabled' => $register['payee_disabled'],
                     'memo' => $register['memo'],
                     $paymentKey => $register[$paymentKey],
                     $depKey => $register[$depKey],
+                    $disPayKey => $register[$paymentKey],
+                    $disDepKey => $register[$disDepKey],
                     'reconcile_banking_status' => $register['reconcile_status'],
                     'attachments' => $register['atttachments'],
                     'tax' => $register['tax'],
                     'balance' => $register['balance'],
-                    'type' => ''
                 ];
 
                 $data[] = [
+                    'id' => $register['id'],
                     'date' => '',
                     'ref_no_type' => $register['type'],
+                    'account_id' => $register['account_id'],
                     'payee_account' => $register['account'],
+                    'account_disabled' => $register['account_disabled'],
                     'memo' => '',
                     $paymentKey => '',
                     $depKey => '',
@@ -3200,7 +3212,6 @@ class Chart_of_accounts extends MY_Controller {
                     'attachments' => '',
                     'tax' => '',
                     'balance' => '',
-                    'type' => ''
                 ];
             }
         }
@@ -3364,25 +3375,6 @@ class Chart_of_accounts extends MY_Controller {
 
         $data = $this->get_transactions($accountId, $post, $sort);
 
-        // header("Content-Description: File Transfer"); 
-        // header("Content-Disposition: attachment; filename=Register.csv"); 
-        // header("Content-Type: application/csv;");
-        // $file = fopen('php://output', 'w');
-        // $topHeader = [
-        //     $account->name,
-        //     '',
-        //     '',
-        //     '',
-        //     '',
-        //     '',
-        //     '',
-        //     '',
-        //     '',
-        //     '',
-        //     '',
-        //     'Ending Balance:',
-        //     $balance
-        // ];
         $writer = new XLSXWriter();
         $topHeader = [
             "$account->name · Ending Balance: $balance"
@@ -3468,8 +3460,6 @@ class Chart_of_accounts extends MY_Controller {
 
         $writer->markMergedCell('Sheet1', 0, 0, 0, count($header) - 1);
         $writer->writeSheetRow('Sheet1', $header, ['font-style' => 'bold', 'border' => 'bottom', 'halign' => 'center', 'valign' => 'center']);
-        // fputcsv($file, $topHeader);
-        // fputcsv($file, $header);
 
         foreach($data as $register) {
             $entry = [
@@ -3527,715 +3517,12 @@ class Chart_of_accounts extends MY_Controller {
             }
 
             $writer->writeSheetRow('Sheet1', $entry);
-            // fputcsv($file, $entry);
         }
 
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename="Register.xlsx"');
         header('Cache-Control: max-age=0');
         $writer->writeToStdOut();
-        // fclose($file); 
-        // exit; 
-    }
-
-    public function delete_transaction($transactionType, $transactionId)
-    {
-        switch ($transactionType) {
-            case 'expense':
-                $delete = $this->delete_expense($transactionId);
-            break;
-            case 'check':
-                $delete = $this->delete_check($transactionId);
-            break;
-            case 'journal' :
-                $delete = $this->delete_journal_entry($transactionId);
-            break;
-            case 'bill':
-                $delete = $this->delete_bill($transactionId);
-            break;
-            case 'cc-credit' :
-                $delete = $this->delete_cc_credit($transactionId);
-            break;
-            case 'vendor-credit':
-                $delete = $this->delete_vendor_credit($transactionId);
-            break;
-            case 'bill-payment':
-                $delete = $this->delete_bill_payment($transactionId);
-            break;
-            case 'transfer' :
-                $delete = $this->delete_transfer($transactionId);
-            break;
-            case 'deposit' :
-                $delete = $this->delete_deposit($transactionId);
-            break;
-            case 'inventory-qty-adjust' :
-                $delete = $this->delete_qty_adjustment($transactionId);
-            break;
-            case 'credit-card-pmt':
-                $delete = $this->delete_cc_payment($transactionId);
-            break;
-        }
-
-        if ($delete) {
-            $this->session->set_flashdata("success", "Transaction successfully deleted!");
-        } else {
-            $this->session->set_flashdata("error", "Unexpected error occured!");
-        }
-    }
-
-    private function delete_expense($expenseId)
-    {
-        $expense = $this->vendors_model->get_expense_by_id($expenseId, logged('company_id'));
-
-        $paymentAcc = $this->chart_of_accounts_model->getById($expense->payment_account_id);
-        $paymentAccType = $this->account_model->getById($paymentAcc->account_id);
-
-        if($paymentAccType->account_name === 'Credit Card') {
-            $newBalance = floatval($paymentAcc->balance) - floatval($expense->total_amount);
-        } else {
-            $newBalance = floatval($paymentAcc->balance) + floatval($expense->total_amount);
-        }
-        $newBalance = number_format($newBalance, 2, '.', ',');
-
-        $paymentAccData = [
-            'id' => $paymentAcc->id,
-            'company_id' => logged('company_id'),
-            'balance' => $newBalance
-        ];
-
-        $this->chart_of_accounts_model->updateBalance($paymentAccData);
-
-        $categories = $this->expenses_model->get_transaction_categories($expenseId, 'Expense');
-        $items = $this->expenses_model->get_transaction_items($expenseId, 'Expense');
-
-        if (count($categories) > 0) {
-            foreach ($categories as $category) {
-                $expenseAcc = $this->chart_of_accounts_model->getById($category->expense_account_id);
-                $expenseAccType = $this->account_model->getById($expenseAcc->account_id);
-
-                if ($expenseAccType->account_name === 'Credit Card') {
-                    $newBalance = floatval($expenseAcc->balance) + floatval($category->amount);
-                } else {
-                    $newBalance = floatval($expenseAcc->balance) - floatval($category->amount);
-                }
-                $newBalance = number_format($newBalance, 2, '.', ',');
-
-                $expenseAccData = [
-                    'id' => $expenseAcc->id,
-                    'company_id' => logged('company_id'),
-                    'balance' => $newBalance
-                ];
-
-                $this->chart_of_accounts_model->updateBalance($expenseAccData);
-            }
-        }
-
-        if (count($items) > 0) {
-            foreach ($items as $item) {
-                $location = $this->items_model->getItemLocation($item->location_id, $item->item_id);
-
-                $newQty = intval($location->qty) - intval($item->quantity);
-
-                $this->items_model->updateLocationQty($item->location_id, $item->item_id, $newQty);
-
-                $itemAccDetails = $this->items_model->getItemAccountingDetails($item->item_id);
-
-                if ($itemAccDetails) {
-                    $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
-                    $newBalance = floatval($invAssetAcc->balance) - floatval($item->total);
-                    $newBalance = number_format($newBalance, 2, '.', ',');
-
-                    $invAssetAccData = [
-                        'id' => $invAssetAcc->id,
-                        'company_id' => logged('company_id'),
-                        'balance' => $newBalance
-                    ];
-
-                    $this->chart_of_accounts_model->updateBalance($invAssetAccData);
-                }
-            }
-        }
-
-        $this->accounting_attachments_model->unlink_attachments('Expense', $expenseId);
-
-        $update = $this->vendors_model->update_expense($expenseId, ['status' => 0]);
-
-        return $update;
-    }
-
-    private function delete_check($checkId)
-    {
-        $check = $this->vendors_model->get_check_by_id($checkId, logged('company_id'));
-
-        $paymentAcc = $this->chart_of_accounts_model->getById($check->bank_account_id);
-        $newBalance = floatval($paymentAcc->balance) + floatval($check->total_amount);
-        $newBalance = number_format($newBalance, 2, '.', ',');
-
-        $paymentAccData = [
-            'id' => $paymentAcc->id,
-            'company_id' => logged('company_id'),
-            'balance' => $newBalance
-        ];
-
-        $this->chart_of_accounts_model->updateBalance($paymentAccData);
-
-        $categories = $this->expenses_model->get_transaction_categories($checkId, 'Check');
-        $items = $this->expenses_model->get_transaction_items($checkId, 'Check');
-
-        if (count($categories) > 0) {
-            foreach ($categories as $category) {
-                $expenseAcc = $this->chart_of_accounts_model->getById($category->expense_account_id);
-                $expenseAccType = $this->account_model->getById($expenseAcc->account_id);
-                if ($expenseAccType->account_name === 'Credit Card') {
-                    $newBalance = floatval($expenseAcc->balance) + floatval($category->amount);
-                } else {
-                    $newBalance = floatval($expenseAcc->balance) - floatval($category->amount);
-                }
-                $newBalance = number_format($newBalance, 2, '.', ',');
-
-                $expenseAccData = [
-                    'id' => $expenseAcc->id,
-                    'company_id' => logged('company_id'),
-                    'balance' => $newBalance
-                ];
-
-                $this->chart_of_accounts_model->updateBalance($expenseAccData);
-            }
-        }
-
-        if (count($items) > 0) {
-            foreach ($items as $item) {
-                $location = $this->items_model->getItemLocation($item->location_id, $item->item_id);
-
-                $newQty = intval($location->qty) - intval($item->quantity);
-
-                $this->items_model->updateLocationQty($item->location_id, $item->item_id, $newQty);
-
-                $itemAccDetails = $this->items_model->getItemAccountingDetails($item->item_id);
-
-                if ($itemAccDetails) {
-                    $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
-                    $newBalance = floatval($invAssetAcc->balance) - floatval($item->total);
-                    $newBalance = number_format($newBalance, 2, '.', ',');
-
-                    $invAssetAccData = [
-                        'id' => $invAssetAcc->id,
-                        'company_id' => logged('company_id'),
-                        'balance' => $newBalance
-                    ];
-
-                    $this->chart_of_accounts_model->updateBalance($invAssetAccData);
-                }
-            }
-        }
-
-        $this->accounting_attachments_model->unlink_attachments('Check', $checkId);
-
-        $update = $this->vendors_model->update_check($checkId, ['status' => 0]);
-
-        return $update;
-    }
-
-    private function delete_bill($billId)
-    {
-        $categories = $this->expenses_model->get_transaction_categories($billId, 'Bill');
-        $items = $this->expenses_model->get_transaction_items($billId, 'Bill');
-
-        if (count($categories) > 0) {
-            foreach ($categories as $category) {
-                $expenseAcc = $this->chart_of_accounts_model->getById($category->expense_account_id);
-                $expenseAccType = $this->account_model->getById($expenseAcc->account_id);
-                if($expenseAccType->account_name === 'Credit Card') {
-                    $newBalance = floatval($expenseAcc->balance) + floatval($category->amount);
-                } else {
-                    $newBalance = floatval($expenseAcc->balance) - floatval($category->amount);
-                }
-                $newBalance = number_format($newBalance, 2, '.', ',');
-
-                $expenseAccData = [
-                    'id' => $expenseAcc->id,
-                    'company_id' => logged('company_id'),
-                    'balance' => $newBalance
-                ];
-
-                $this->chart_of_accounts_model->updateBalance($expenseAccData);
-            }
-        }
-
-        if (count($items) > 0) {
-            foreach ($items as $item) {
-                $location = $this->items_model->getItemLocation($item->location_id, $item->item_id);
-
-                $newQty = intval($location->qty) - intval($item->quantity);
-
-                $this->items_model->updateLocationQty($item->location_id, $item->item_id, $newQty);
-
-                $itemAccDetails = $this->items_model->getItemAccountingDetails($item->item_id);
-
-                if ($itemAccDetails) {
-                    $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
-                    $newBalance = floatval($invAssetAcc->balance) - floatval($item->total);
-                    $newBalance = number_format($newBalance, 2, '.', ',');
-
-                    $invAssetAccData = [
-                        'id' => $invAssetAcc->id,
-                        'company_id' => logged('company_id'),
-                        'balance' => $newBalance
-                    ];
-
-                    $this->chart_of_accounts_model->updateBalance($invAssetAccData);
-                }
-            }
-        }
-
-        $this->accounting_attachments_model->unlink_attachments('Bill', $billId);
-
-        $update = $this->vendors_model->update_bill($billId, ['status' => 0]);
-
-        return $update;
-    }
-
-    private function delete_purchase_order($purchaseOrderId)
-    {
-        $items = $this->expenses_model->get_transaction_items($purchaseOrderId, 'Purchase Order');
-
-        if (count($items) > 0) {
-            foreach ($items as $item) {
-                $itemAccDetails = $this->items_model->getItemAccountingDetails($item->item_id);
-
-                $newQtyPO = intval($itemAccDetails->qty_po) + intval($item->quantity);
-
-                $this->items_model->updateItemAccountingDetails(['qty_po' => $newQtyPO], $item->item_id);
-            }
-        }
-
-        $this->accounting_attachments_model->unlink_attachments('Purchase Order', $purchaseOrderId);
-
-        $update = $this->vendors_model->update_purchase_order($purchaseOrderId, ['status' => 0]);
-
-        return $update;
-    }
-
-    private function delete_vendor_credit($vendorCreditId)
-    {
-        $vendorCredit = $this->vendors_model->get_vendor_credit_by_id($vendorCreditId, logged('company_id'));
-        $vendor = $this->vendors_model->get_vendor_by_id($vendorCredit->vendor_id);
-
-        if ($vendor->vendor_credits === null & $vendor->vendor_credits === "") {
-            $vendorCredits = floatval($vendorCredit->total_amount);
-        } else {
-            $vendorCredits = floatval($vendor->vendor_credits) - floatval($vendorCredit->total_amount);
-        }
-
-        $vendorData = [
-            'vendor_credits' => number_format($vendorCredits, 2, '.', ',')
-        ];
-
-        $this->vendors_model->updateVendor($vendor->id, $vendorData);
-
-        $categories = $this->expenses_model->get_transaction_categories($vendorCreditId, 'Vendor Credit');
-        $items = $this->expenses_model->get_transaction_items($vendorCreditId, 'Vendor Credit');
-
-        if (count($categories) > 0) {
-            foreach ($categories as $category) {
-                $expenseAcc = $this->chart_of_accounts_model->getById($category->expense_account_id);
-                $expenseAccType = $this->account_model->getById($expenseAcc->account_id);
-                if ($expenseAccType->account_name === 'Credit Card') {
-                    $newBalance = floatval($expenseAcc->balance) - floatval($category->amount);
-                } else {
-                    $newBalance = floatval($expenseAcc->balance) + floatval($category->amount);
-                }
-                $newBalance = number_format($newBalance, 2, '.', ',');
-
-                $expenseAccData = [
-                    'id' => $expenseAcc->id,
-                    'company_id' => logged('company_id'),
-                    'balance' => $newBalance
-                ];
-
-                $this->chart_of_accounts_model->updateBalance($expenseAccData);
-            }
-        }
-
-        if (count($items) > 0) {
-            foreach ($items as $item) {
-                $location = $this->items_model->getItemLocation($item->location_id, $item->item_id);
-
-                $newQty = intval($location->qty) + intval($item->quantity);
-
-                $this->items_model->updateLocationQty($item->location_id, $item->item_id, $newQty);
-
-                $itemAccDetails = $this->items_model->getItemAccountingDetails($item->item_id);
-
-                if ($itemAccDetails) {
-                    $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
-
-                    $subtract = floatval($item->total) - floatval($item->quantity);
-                    $newBalance = floatval($invAssetAcc->balance) + floatval($item->total);
-                    $newBalance = $newBalance - $subtract;
-
-                    $invAssetAccData = [
-                        'id' => $invAssetAcc->id,
-                        'company_id' => logged('company_id'),
-                        'balance' => number_format($newBalance, 2, '.', ',')
-                    ];
-
-                    $this->chart_of_accounts_model->updateBalance($invAssetAccData);
-                }
-            }
-        }
-
-        $this->accounting_attachments_model->unlink_attachments('Vendor Credit', $vendorCreditId);
-
-        $update = $this->vendors_model->update_vendor_credit($vendorCreditId, ['status' => 0]);
-
-        return $update;
-    }
-
-    private function delete_cc_payment($ccPaymentId)
-    {
-        $ccPayment = $this->vendors_model->get_credit_card_payment_by_id($ccPaymentId);
-
-        $creditAcc = $this->chart_of_accounts_model->getById($ccPayment->credit_card_id);
-
-        $creditAccBal = floatval($creditAcc->balance) + floatval($ccPayment->amount);
-        $creditAccBal = number_format($creditAccBal, 2, '.', ',');
-
-        $this->chart_of_accounts_model->updateBalance(['id' => $creditAcc->id, 'company_id' => logged('company_id'), 'balance' => $creditAccBal]);
-
-        $bankAcc = $this->chart_of_accounts_model->getById($ccPayment->bank_account_id);
-
-        $bankAccBal = floatval($bankAcc->balance) + floatval($ccPayment->amount);
-        $bankAccBal = number_format($bankAccBal, 2, '.', ',');
-
-        $this->chart_of_accounts_model->updateBalance(['id' => $bankAcc->id, 'company_id' => logged('company_id'), 'balance' => $bankAccBal]);
-
-        $this->accounting_attachments_model->unlink_attachments('CC Payment', $ccPaymentId);
-
-        $update = $this->vendors_model->update_credit_card_payment($ccPaymentId, ['status' => 0]);
-
-        return $update;
-    }
-
-    private function delete_bill_payment($billPaymentId)
-    {
-        $billPayment = $this->vendors_model->get_bill_payment_by_id($billPaymentId);
-
-        $billPaymentData = [
-            'vendor_credits_applied' => null,
-            'status' => 0
-        ];
-
-        $update = $this->vendors_model->update_bill_payment($billPaymentId, $billPaymentData);
-
-        if ($update) {
-            $this->accounting_attachments_model->unlink_attachments('Bill Payment', $billPaymentId);
-
-            $vCredits = !is_null($billPayment->vendor_credits_applied) ? json_decode($billPayment->vendor_credits_applied, true) : null;
-            if (!is_null($vCredits)) {
-                foreach ($vCredits as $vCreditId => $amount) {
-                    $vCredit = $this->vendors_model->get_vendor_credit_by_id($vCreditId, logged('company_id'));
-                    $vCreditData = [
-                        'status' => 1,
-                        'remaining_balance' => floatval($vCredit->remaining_balance) + floatval($amount),
-                        'updated_at' => date("Y-m-d H:i:s")
-                    ];
-
-                    $this->vendors_model->update_vendor_credit($vCredit->id, $vCreditData);
-
-                    $vendorData = [
-                        'vendor_credits' => floatval($payee->vendor_credits) + $amount
-                    ];
-
-                    $this->vendors_model->updateVendor($billPayment->payee_id, $vendorData);
-                }
-            }
-
-            $paymentItems = $this->vendors_model->get_bill_payment_items($billPaymentId);
-            foreach ($paymentItems as $paymentItem) {
-                $bill = $this->expenses_model->get_bill_data($paymentItem->bill_id);
-
-                $billData = [
-                    'remaining_balance' => floatval($bill->remaining_balance) + floatval($paymentItem->total_amount),
-                    'status' => 1,
-                    'updated_at' => date("Y-m-d H:i:s")
-                ];
-
-                $this->expenses_model->update_bill_data($bill->id, $billData);
-            }
-    
-            $paymentAcc = $this->chart_of_accounts_model->getById($billPayment->payment_account_id);
-            $paymentAccType = $this->account_model->getById($paymentAcc->account_id);
-    
-            if ($paymentAccType->account_name === 'Credit Card') {
-                $newBalance = floatval($paymentAcc->balance) - floatval($paymentTotal);
-            } else {
-                $newBalance = floatval($paymentAcc->balance) + floatval($paymentTotal);
-            }
-    
-            $newBalance = number_format($newBalance, 2, '.', ',');
-    
-            $paymentAccData = [
-                'id' => $paymentAcc->id,
-                'company_id' => logged('company_id'),
-                'balance' => $newBalance
-            ];
-
-            $this->chart_of_accounts_model->updateBalance($paymentAccData);
-
-            $this->vendors_model->delete_bill_payment_items($billPaymentId);
-        }
-
-        return $update;
-    }
-
-    private function delete_cc_credit($ccCreditId)
-    {
-        $ccCredit = $this->vendors_model->get_credit_card_credit_by_id($ccCreditId, logged('company_id'));
-        $creditAcc = $this->chart_of_accounts_model->getById($ccCredit->bank_credit_account_id);
-
-        $newBalance = floatval($creditAcc->balance) + floatval($ccCredit->total_amount);
-        $newBalance = number_format($newBalance, 2, '.', ',');
-
-        $this->chart_of_accounts_model->updateBalance(['id' => $creditAcc->id, 'company_id' => logged('company_id'), 'balance' => $newBalance]);
-
-        $categories = $this->expenses_model->get_transaction_categories($ccCreditId, 'Credit Card Credit');
-        $items = $this->expenses_model->get_transaction_items($ccCreditId, 'Credit Card Credit');
-
-        if (count($categories) > 0) {
-            foreach ($categories as $category) {
-                $expenseAcc = $this->chart_of_accounts_model->getById($category->expense_account_id);
-                $expenseAccType = $this->account_model->getById($expenseAcc->account_id);
-                if ($expenseAccType->account_name === 'Credit Card') {
-                    $newBalance = floatval($expenseAcc->balance) - floatval($category->amount);
-                } else {
-                    $newBalance = floatval($expenseAcc->balance) + floatval($category->amount);
-                }
-                $newBalance = number_format($newBalance, 2, '.', ',');
-
-                $expenseAccData = [
-                    'id' => $expenseAcc->id,
-                    'company_id' => logged('company_id'),
-                    'balance' => $newBalance
-                ];
-
-                $this->chart_of_accounts_model->updateBalance($expenseAccData);
-            }
-        }
-
-        if (count($items) > 0) {
-            foreach ($items as $item) {
-                $location = $this->items_model->getItemLocation($item->location_id, $item->item_id);
-
-                $newQty = intval($location->qty) + intval($item->quantity);
-
-                $this->items_model->updateLocationQty($item->location_id, $item->item_id, $newQty);
-
-                $itemAccDetails = $this->items_model->getItemAccountingDetails($item->item_id);
-
-                if ($itemAccDetails) {
-                    $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
-
-                    $subtract = floatval($item->total) - floatval($item->quantity);
-                    $newBalance = floatval($invAssetAcc->balance) + floatval($item->total);
-                    $newBalance = $newBalance - $subtract;
-
-                    $invAssetAccData = [
-                        'id' => $invAssetAcc->id,
-                        'company_id' => logged('company_id'),
-                        'balance' => number_format($newBalance, 2, '.', ',')
-                    ];
-
-                    $this->chart_of_accounts_model->updateBalance($invAssetAccData);
-                }
-            }
-        }
-
-        $this->accounting_attachments_model->unlink_attachments('CC Credit', $ccCreditId);
-
-        $update = $this->vendors_model->update_credit_card_credit($ccCreditId, ['status' => 0]);
-
-        return $update;
-    }
-
-    private function delete_journal_entry($journalEntryId)
-    {
-        $journalEntry = $this->accounting_journal_entries_model->getById($journalEntryId, logged('company_id'));
-        $entries = $this->accounting_journal_entries_model->getEntries($journalEntryId);
-
-        $journalEntryData = [
-            'status' => 0
-        ];
-
-        $update = $this->accounting_journal_entries_model->update($journalEntry->id, $journalEntryData);
-
-        if($update) {
-            $this->accounting_attachments_model->unlink_attachments('Journal', $journalEntryId);
-
-            foreach($entries as $entry) {
-                $account = $this->chart_of_accounts_model->getById($entry->account_id);
-
-                if($account->account_id !== "7") {
-                    $newBalance = floatval($account->balance) + floatval($entry->credit);
-                    $newBalance = $newBalance - floatval($entry->debit);
-                } else {
-                    $newBalance = floatval($account->balance) - floatval($entry->credit);
-                    $newBalance = $newBalance + floatval($entry->debit);
-                }
-    
-                $newBalance = number_format($newBalance, 2, '.', ',');
-    
-                $accountData = [
-                    'id' => $account->id,
-                    'company_id' => logged('company_id'),
-                    'balance' => $newBalance
-                ];
-    
-                $this->chart_of_accounts_model->updateBalance($accountData);
-            }
-        }
-
-        return $update;
-    }
-
-    private function delete_transfer($transferId)
-    {
-        $transfer = $this->accounting_transfer_funds_model->getById($transferId, logged('company_id'));
-
-        $update = $this->accounting_transfer_funds_model->update($transfer->id, ['status' => 0]);
-
-        if($update) {
-            $this->accounting_attachments_model->unlink_attachments('Transfer', $transferId);
-
-            $transferFromAcc = $this->chart_of_accounts_model->getById($transfer->transfer_from_account_id);
-            $transferToAcc = $this->chart_of_accounts_model->getById($transfer->transfer_to_account_id);
-
-            $transferFromBal = $transferFromAcc->account_id !== "7" ? floatval($transferFromAcc->balance) + floatval($transfer->transfer_amount) : floatval($transferFromAcc->balance) - floatval($transfer->transfer_amount);
-            $transferToBal = $transferToAcc->account_id !== "7" ? floatval($transferToAcc->balance) - floatval($transfer->transfer_amount) : floatval($transferToAcc->balance) + floatval($transfer->transfer_amount);
-
-            $transferFromBal = number_format($transferFromBal, 2, '.', ',');
-            $transferToBal = number_format($transferToBal, 2, '.', ',');
-
-            $transferFromAccData = [
-                'id' => $transferFromAcc->id,
-                'company_id' => logged('company_id'),
-                'balance' => $transferFromBal
-            ];
-            $transferToAccData = [
-                'id' => $transferToAcc->id,
-                'company_id' => logged('company_id'),
-                'balance' => $transferToBal
-            ];
-
-            $this->chart_of_accounts_model->updateBalance($transferFromAccData);
-            $this->chart_of_accounts_model->updateBalance($transferToAccData);
-        }
-
-        return $update;
-    }
-
-    private function delete_deposit($depositId)
-    {
-        $deposit = $this->accounting_bank_deposit_model->getById($depositId, logged('company_id'));
-        $funds = $this->accounting_bank_deposit_model->getFunds($deposit->id);
-
-        $update = $this->accounting_bank_deposit_model->update($deposit->id, ['status' => 0]);
-
-        if($update) {
-            $this->accounting_attachments_model->unlink_attachments('Deposit', $depositId);
-
-            foreach($funds as $fund) {
-                $account = $this->chart_of_accounts_model->getById($fund->received_from_account_id);
-
-                $accountBalance = $account->account_id !== "7" ? floatval($account->balance) + floatval($fund->amount) : floatval($account->balance) - floatval($fund->amount);
-                $accountBalance = number_format($accountBalance, 2, '.', ',');
-                $accountData = [
-                    'id' => $account->id,
-                    'company_id' => logged('company_id'),
-                    'balance' => $accountBalance
-                ];
-                $withdraw = $this->chart_of_accounts_model->updateBalance($accountData);
-            }
-
-            $depositToAcc = $this->chart_of_accounts_model->getById($deposit->account_id);
-            $depositData = [
-                'id' => $depositToAcc->id,
-                'company_id' => logged('company_id'),
-                'balance' => floatval($depositToAcc->balance) - floatval($deposit->total_amount)
-            ];
-            $deposit = $this->chart_of_accounts_model->updateBalance($depositData);
-
-            if ($deposit->cash_back_amount !== "" && $deposit->cash_back_amount !== null && $deposit->cash_back_amount !== "0") {
-                $cashBackAccount = $this->chart_of_accounts_model->getById($deposit->cash_back_account);
-                $cashBackData = [
-                    'id' => $cashBackAccount->id,
-                    'company_id' => logged('company_id'),
-                    'balance' => $cashBackAccount->account_id !== "7" ? floatval($cashBackAccount->balance) - floatval($deposit->cash_back_amount) : floatval($cashBackAccount->balance) + floatval($deposit->cash_back_amount)
-                ];
-
-                $cashBack = $this->chart_of_accounts_model->updateBalance($cashBackData);
-            }
-        }
-
-        return $update;
-    }
-
-    private function delete_qty_adjustment($adjustmentId)
-    {
-        $adjustment = $this->accounting_inventory_qty_adjustments_model->get_by_id($adjustmentId);
-        $adjustedProds = $this->accounting_inventory_qty_adjustments_model->get_adjusted_products($adjustment->id);
-
-        $update = $this->accounting_inventory_qty_adjustments_model->update($adjustment->id, ['status' => 0]);
-
-        if($update) {
-            $locationData = [];
-            foreach($adjustedProds as $adjustedProd) {
-                $itemAccDetails = $this->items_model->getItemAccountingDetails($adjustedProd->product_id);
-                $startingValAdj = $this->starting_value_model->get_by_item_id($adjustedProd->product_id);
-                $item = $this->items_model->getItemById($adjustedProd->product_id)[0];
-
-                if(!is_null($startingValAdj)) {
-                    $amount = floatval($adjustedProd->change_in_quantity) * floatval($startingValAdj->initial_cost);
-                } else {
-                    $amount = floatval($adjustedProd->change_in_quantity) *  floatval($item->cost);
-                }
-
-                $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
-                $newBalance = floatval($invAssetAcc->balance) - $amount;
-                $newBalance = number_format($newBalance, 2, '.', ',');
-
-                $invAssetAccData = [
-                    'id' => $invAssetAcc->id,
-                    'company_id' => logged('company_id'),
-                    'balance' => $newBalance
-                ];
-
-                $this->chart_of_accounts_model->updateBalance($invAssetAccData);
-
-                $location = $this->items_model->getItemLocation($adjustedProd->location_id, $adjustedProd->product_id);
-                $qty = intval($location->qty) - intval($adjustedProd->change_in_quantity);
-                $locationData[] = [
-                    'id' => $adjustedProd->location_id,
-                    'qty' => $qty
-                ];
-            }
-
-            $adjustQuantity = $this->items_model->updateBatchLocations($locationData);
-
-            $adjustmentAcc = $this->chart_of_accounts_model->getById($adjustment->inventory_adjustment_account_id);
-            $newBalance = floatval($adjustmentAcc->balance) + floatval($adjustment->total_amount);
-            $newBalance = number_format($newBalance, 2, '.', ',');
-
-            $adjustmentAccData = [
-                'id' => $adjustmentAcc->id,
-                'company_id' => logged('company_id'),
-                'balance' => $newBalance
-            ];
-
-            $this->chart_of_accounts_model->updateBalance($adjustmentAccData);
-        }
-
-        return $update;
     }
 
     public function save_transaction($accountId, $transactionId)
@@ -4275,6 +3562,9 @@ class Chart_of_accounts extends MY_Controller {
                 $return = $this->save_check($accountId, $transactionId, $post);
             break;
             case 'Expense' :
+                $return = $this->save_expense($accountId, $transactionId, $post);
+            break;
+            case 'CC Expense' :
                 $return = $this->save_expense($accountId, $transactionId, $post);
             break;
         }
@@ -4372,6 +3662,23 @@ class Chart_of_accounts extends MY_Controller {
         $update = $this->accounting_transfer_funds_model->update($transferId, $transferData);
 
         if ($update) {
+            $attachments = $this->accounting_attachments_model->get_attachments('Transfer', $transferId);
+            if (isset($data['attachments']) && is_array($data['attachments'])) {
+                $order = count($attachments) + 1;
+                foreach ($data['attachments'] as $attachmentId) {
+                    $linkAttachmentData = [
+                        'type' => 'Transfer',
+                        'attachment_id' => $attachmentId,
+                        'linked_id' => $transferId,
+                        'order_no' => $order
+                    ];
+
+                    $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
+
+                    $order++;
+                }
+            }
+
             // REVERT OLD
             $oldTransferFrom = $this->chart_of_accounts_model->getById($transfer->transfer_from_account_id);
             $oldTransferTo = $this->chart_of_accounts_model->getById($transfer->transfer_to_account_id);
@@ -4451,6 +3758,23 @@ class Chart_of_accounts extends MY_Controller {
         $payee = explode('-', $data['payee']);
 
         if ($update) {
+            $attachments = $this->accounting_attachments_model->get_attachments('Journal', $journalId);
+            if (isset($data['attachments']) && is_array($data['attachments'])) {
+                $order = count($attachments) + 1;
+                foreach ($data['attachments'] as $attachmentId) {
+                    $linkAttachmentData = [
+                        'type' => 'Journal',
+                        'attachment_id' => $attachmentId,
+                        'linked_id' => $journalId,
+                        'order_no' => $order
+                    ];
+
+                    $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
+
+                    $order++;
+                }
+            }
+
             $journal = $this->accounting_journal_entries_model->getById($journalId, logged('company_id'));
 
             $entries = $this->accounting_journal_entries_model->getEntries($journalId);
@@ -4542,7 +3866,7 @@ class Chart_of_accounts extends MY_Controller {
             // NEW ATTACHMENTS
             $attachments = $this->accounting_attachments_model->get_attachments('Deposit', $depositId);
             if (isset($data['attachments']) && is_array($data['attachments'])) {
-                $order = count($attachments);
+                $order = count($attachments) + 1;
                 foreach ($data['attachments'] as $attachmentId) {
                     $linkAttachmentData = [
                         'type' => 'Deposit',
@@ -4648,7 +3972,7 @@ class Chart_of_accounts extends MY_Controller {
             // NEW ATTACHMENTS
             $attachments = $this->accounting_attachments_model->get_attachments('Expense', $expenseId);
             if (isset($data['attachments']) && is_array($data['attachments'])) {
-                $order = count($attachments);
+                $order = count($attachments) + 1;
                 foreach ($data['attachments'] as $attachmentId) {
                     $linkAttachmentData = [
                         'type' => 'Expense',
@@ -4794,7 +4118,7 @@ class Chart_of_accounts extends MY_Controller {
             // NEW ATTACHMENTS
             $attachments = $this->accounting_attachments_model->get_attachments('Check', $checkId);
             if (isset($data['attachments']) && is_array($data['attachments'])) {
-                $order = count($attachments);
+                $order = count($attachments) + 1;
                 foreach ($data['attachments'] as $attachmentId) {
                     $linkAttachmentData = [
                         'type' => 'Check',
@@ -4933,7 +4257,7 @@ class Chart_of_accounts extends MY_Controller {
             // NEW ATTACHMENTS
             $attachments = $this->accounting_attachments_model->get_attachments('Bill', $billId);
             if (isset($data['attachments']) && is_array($data['attachments'])) {
-                $order = count($attachments);
+                $order = count($attachments) + 1;
                 foreach ($data['attachments'] as $attachmentId) {
                     $linkAttachmentData = [
                         'type' => 'Bill',
@@ -5023,7 +4347,7 @@ class Chart_of_accounts extends MY_Controller {
             // NEW ATTACHMENTS
             $attachments = $this->accounting_attachments_model->get_attachments('Vendor Credit', $vCreditId);
             if (isset($data['attachments']) && is_array($data['attachments'])) {
-                $order = count($attachments);
+                $order = count($attachments) + 1;
                 foreach ($data['attachments'] as $attachmentId) {
                     $linkAttachmentData = [
                         'type' => 'Vendor Credit',
@@ -5108,14 +4432,14 @@ class Chart_of_accounts extends MY_Controller {
 
         if($update) {
             // NEW ATTACHMENTS
-            $attachments = $this->accounting_attachments_model->get_attachments('Vendor Credit', $vCreditId);
+            $attachments = $this->accounting_attachments_model->get_attachments('CC Credit', $ccCreditId);
             if (isset($data['attachments']) && is_array($data['attachments'])) {
-                $order = count($attachments);
+                $order = count($attachments) + 1;
                 foreach ($data['attachments'] as $attachmentId) {
                     $linkAttachmentData = [
-                        'type' => 'Vendor Credit',
+                        'type' => 'CC Credit',
                         'attachment_id' => $attachmentId,
-                        'linked_id' => $vCreditId,
+                        'linked_id' => $ccCreditId,
                         'order_no' => $order
                     ];
 
@@ -5250,7 +4574,7 @@ class Chart_of_accounts extends MY_Controller {
             // NEW ATTACHMENTS
             $attachments = $this->accounting_attachments_model->get_attachments('Bill Payment', $billPaymentId);
             if (isset($data['attachments']) && is_array($data['attachments'])) {
-                $order = count($attachments);
+                $order = count($attachments) + 1;
                 foreach ($data['attachments'] as $attachmentId) {
                     $linkAttachmentData = [
                         'type' => 'Bill Payment',

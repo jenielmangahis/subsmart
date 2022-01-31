@@ -12,7 +12,7 @@
                 <div class="modal-header" style="background: #f4f5f8;border-bottom: 0">
                     <div class="row w-100">
                         <div class="col-6 d-flex align-items-center">
-                            <div class="dropup mr-1">
+                            <div class="dropdown mr-1">
                                 <a href="javascript:void(0);" class="h4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <i class="fa fa-history fa-lg"></i>
                                 </a>
@@ -303,6 +303,19 @@
                                     <span><a href="#" onclick="viewPrint(1, 'deposit-summary')" class="text-white">Print deposit summary</a></span>
                                     <span class="mx-3 divider"></span>
                                     <span><a href="#" onclick="makeRecurring('bank_deposit')" class="text-white">Make recurring</a></span>
+                                    <?php if(isset($deposit)) : ?>
+                                    <span class="mx-3 divider"></span>
+                                    <span>
+                                        <div class="dropup">
+                                            <a href="javascript:void(0);" class="text-white" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
+                                            <div class="dropdown-menu">
+                                                <a class="dropdown-item" href="#" id="delete-deposit">Delete</a>
+                                                <a class="dropdown-item" href="#">Transaction journal</a>
+                                                <a class="dropdown-item" href="#">Audit history</a>
+                                            </div>
+                                        </div>
+                                    </span>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                         </div>

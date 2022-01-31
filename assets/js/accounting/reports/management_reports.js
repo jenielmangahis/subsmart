@@ -1,4 +1,5 @@
 $(document).on("click", function(event) {
+
     if ($(event.target).closest("#management_reports_modal .modal-footer-check .middle-links .print-preview-option").length === 0) {
         $("#management_reports_modal .pint-pries-option-section").hide();
     }
@@ -8,6 +9,10 @@ $(document).on("click", function(event) {
     if ($(event.target).closest("#management_reports_modal #cover-page-section .page-styles-img .cover-style").length === 0) {
         $("#management_reports_modal #cover-page-section .page-styles-img .cover-style .styles-option-section").hide();
     }
+    if ($(event.target).closest("#advance_field_modal .body .form-group .options-section").length === 0) {
+        $("#advance_field_modal .body .form-group .options-section .options").hide();
+    }
+
 });
 $(document).on('click', 'div#management_reports_modal .the-modal-body .the-header .icons div.close-modal', function() {
     $("#management_reports_modal").fadeOut();
@@ -63,6 +68,7 @@ $(document).on("click", "#management_reports_modal #reports .report-section .rep
     var deleted = report_id + "," + $("#management_reports_modal input[name='deleted_reports_pages']").val();
     $("#management_reports_modal input[name='deleted_reports_pages']").val(deleted);
     $(this).parents(".report-section").remove();
+    update_table_contents_sample_page_div();
 });
 
 $(document).on("click", "#management_reports_modal #reports .add-report-btn", function(event) {
@@ -140,6 +146,7 @@ $(document).on("click", "#management_reports_modal #preliminary-page .delete-pag
     var deleted = preliminary_page_id + "," + $("#management_reports_modal input[name='deleted_preliminary_pages']").val();
     $("#management_reports_modal input[name='deleted_preliminary_pages']").val(deleted);
     $(this).parents(".page").remove();
+    update_table_contents_sample_page_div();
 });
 
 
@@ -168,6 +175,7 @@ function company_overview_add_preliminary_page(count = 0) {
             } else {
                 $("#management_reports_modal #preliminary-page .pages .page:last-child textarea").ckeditor();
             }
+            update_table_contents_sample_page_div();
         },
     });
 }
@@ -240,6 +248,15 @@ $(document).on('click', 'table#manage_reports_table ul.report_options li.edit', 
                 add_report_page();
             } else {
                 add_report_page(data.reports_ctr);
+            }
+
+            $('#advance_field_modal input[name="af_company_name"]').val(data.af_company_name);
+            $('#advance_field_modal input[name="af_header"]').val(data.af_header);
+            $('#advance_field_modal input[name="af_footer"]').val(data.af_footer);
+            if (data.af_only_zero == 1) {
+                $('#advance_field_modal input[name="af_only_zero"]').prop("checked", true);
+            } else {
+                $('#advance_field_modal input[name="af_only_zero"]').prop("checked", false);
             }
         },
     });
@@ -315,13 +332,35 @@ $(document).on('change', '#management_reports_modal input[name="table_of_content
     $("#management_reports_modal #table-of-contents .page-content .page-content-preview .content-title").html($(this).val());
 });
 
+$(document).on('change', '#management_reports_modal input[name="preliminary_page_title[]"]', function(event) {
+    update_table_contents_sample_page_div();
+});
+
+$(document).on('change', '#management_reports_modal input[name="include_this_page[]"]', function(event) {
+    update_table_contents_sample_page_div();
+});
+
 function update_table_contents_sample_page_div() {
     $("#management_reports_modal #table-of-contents .page-content .page-content-preview .norms").html("");
     var htmls_ = "";
+    $("#management_reports_modal input[name='include_this_page[]']")
+        .map(function() {
+            if ($(this).is(":checked")) {
+                var page_title = $(this).parents(".page").children(".form-group").children("input").val();
+                if (page_title != "") {
+                    htmls_ += '<div class="norm">' + page_title + '</div>';
+                }
+            }
+        });
     $("#management_reports_modal input[name='report_title[]']")
         .map(function() {
             htmls_ += '<div class="norm">' + $(this).val() + '</div>';
         });
+
+    if ($("#management_reports_modal input[name='end_notes_include_this_page']").is(":checked") && $("#management_reports_modal input[name='end_notes_page_title']").val() != "") {
+        htmls_ += '<div class="norm">' + $("#management_reports_modal input[name='end_notes_page_title']").val() + '</div>';
+    }
+
     $("#management_reports_modal #table-of-contents .page-content .page-content-preview .norms").html(htmls_);
 }
 $(document).on('change', '#management_reports_modal #cover-page-section input', function(event) {
@@ -345,9 +384,187 @@ $(document).on('click', '#manage_reports_table .view-management_report', functio
     event.preventDefault();
     $("#management_reports_viewer_modal").fadeIn();
     $("#management_reports_viewer_modal .body .iframe").html("");
-    $("#management_reports_viewer_modal .body .iframe").html('<iframe src="' + baseURL + 'assets/pdf/management_report_' + $(this).attr("data-id") + '.pdf' + '" frameborder="0" class="pdf_viewer"></iframe>');
+    var management_report_id = $(this).attr("data-id")
+    $.ajax({
+        url: baseURL + "management-report/export/pdf",
+        type: "POST",
+        dataType: "json",
+        data: {
+            management_report_id: management_report_id
+        },
+        success: function(data) {
+            $("#management_reports_viewer_modal .body .iframe").html('<iframe src="' + data.file_location + '" frameborder="0" class="pdf_viewer"></iframe>');
+            $("#loader-modal").hide();
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+            Swal.fire({
+                showConfirmButton: false,
+                timer: 2000,
+                title: "Error",
+                html: "Please try again later.",
+                icon: "error",
+            });
+            $("#loader-modal").hide();
+        },
+    });
+
 });
 $(document).on('click', '#management_reports_viewer_modal .cancel-button', function(event) {
     event.preventDefault();
     $("#management_reports_viewer_modal").fadeOut();
+});
+
+
+
+$(document).on('click', '#advance_field_modal .body .form-group .options-section .label', function(event) {
+    event.preventDefault();
+    $("#advance_field_modal .body .form-group .options-section .options").hide();
+    $(this).parents(".options-section").children('.options').show();
+});
+$(document).on('click', '#advance_field_modal .cancel-button', function(event) {
+    $("#advance_field_modal").hide();
+    var default_af_form = $("#advance_field_modal").html();
+    $("#advance_field_modal").html("");
+    $("#advance_field_modal").html(default_af_form);
+});
+$(document).on('click', '#advance_field_modal .body .close-btn', function(event) {
+    $("#advance_field_modal").hide();
+    var default_af_form = $("#advance_field_modal").html();
+    $("#advance_field_modal").html("");
+    $("#advance_field_modal").html(default_af_form);
+});
+
+$(document).on('click', '#management_reports_modal .middle-links a', function(event) {
+    $("#advance_field_modal").fadeIn();
+});
+$(document).on('click', '#advance_field_modal .print-button', function(event) {
+    $("#advance_field_modal").fadeOut();
+});
+
+$(document).on('click', '#advance_field_modal .body .form-group .options-section .options .option', function(event) {
+    $(this).parents(".form-group").children('input').val($(this).parents(".form-group").children('input').val() + " " + $(this).html());
+    $("#advance_field_modal .body .form-group .options-section .options").hide();
+});
+
+$(document).on('click', '#manage_reports_table tbody li a.send-email', function(event) {
+    $($(this).attr("data-target")).fadeIn();
+    $("#management_reports_email_modal input[name='filename']").val($(this).attr("data-company") + "_" + $(this).attr("data-report"));
+    $("#management_reports_email_modal input[name='management_report_id']").val($(this).attr("data-id"));
+});
+
+$(document).on('click', '#management_reports_email_modal .cancel-button', function(event) {
+    $("#management_reports_email_modal").fadeOut();
+});
+$(document).on('click', '#management_reports_email_modal .body .btn-close-modal', function(event) {
+    $("#management_reports_email_modal").fadeOut();
+});
+$(document).on("click", "#management_reports_email_modal .save-button", function(event) {
+    var empty_flds = 0;
+    $("#management_reports_email_modal form  .required").each(function() {
+        if (!$.trim($(this).val())) {
+            empty_flds++;
+        }
+    });
+
+    if (empty_flds == 0) {
+        event.preventDefault();
+
+        Swal.fire({
+            title: "Send?",
+            html: "Are you sure you want to send this?",
+            showCancelButton: true,
+            imageUrl: baseURL + "assets/img/accounting/customers/message.png",
+            cancelButtonColor: "#d33",
+            confirmButtonColor: "#2ca01c",
+            confirmButtonText: "Yes",
+            cancelButtonText: "No",
+        }).then((result) => {
+            if (result.value) {
+                $("#loader-modal").show();
+                $.ajax({
+                    url: baseURL + "management-report/send",
+                    type: "POST",
+                    dataType: "json",
+                    data: $("#management_reports_email_modal form").serialize(),
+                    success: function(data) {
+                        if (data.result == "success") {
+                            Swal.fire({
+                                showConfirmButton: false,
+                                timer: 2000,
+                                title: "Success",
+                                html: "Email has been sent!",
+                                icon: "success",
+                            });
+                        } else {
+                            Swal.fire({
+                                showConfirmButton: false,
+                                timer: 2000,
+                                title: "Error",
+                                html: "Unable to send the reminder.<br>" + data.error,
+                                icon: "error",
+                            });
+                        }
+                        $("#loader-modal").hide();
+                    },
+                    error: function(XMLHttpRequest, textStatus, errorThrown) {
+                        Swal.fire({
+                            showConfirmButton: false,
+                            timer: 2000,
+                            title: "Unsent",
+                            html: "Please try again later. <br>",
+                            icon: "error",
+                        });
+                        $("#loader-modal").hide();
+                    },
+                });
+            }
+        });
+    }
+});
+
+$(document).on("click", "#manage_reports_table tbody li a.export-pdf", function(event) {
+    var management_report_id = $(this).attr("data-id");
+    var company_name = $(this).attr("data-company");
+    var template_name = $(this).attr("data-report");
+    $.ajax({
+        url: baseURL + "management-report/export/pdf",
+        type: "POST",
+        dataType: "json",
+        data: {
+            management_report_id: management_report_id
+        },
+        success: function(data) {
+            fetch(data.file_location)
+                .then(resp => resp.blob())
+                .then(blob => {
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.style.display = 'none';
+                    a.href = url;
+                    // the filename you want
+                    a.download = company_name + "_" + template_name + ".pdf";
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                })
+                .catch(() => Swal.fire({
+                    showConfirmButton: false,
+                    timer: 2000,
+                    title: "Error",
+                    html: "Please try again later.",
+                    icon: "error",
+                }));
+            $("#loader-modal").hide();
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+            Swal.fire({
+                showConfirmButton: false,
+                timer: 2000,
+                title: "Error",
+                html: "Please try again later.",
+                icon: "error",
+            });
+            $("#loader-modal").hide();
+        },
+    });
 });

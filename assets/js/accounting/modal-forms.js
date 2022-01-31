@@ -400,7 +400,7 @@ $(function() {
                 `);
             }
 
-            if ($('div#modal-container table:not(#category-details-table, #item-details-table)').length > 0) {
+            if ($('div#modal-container .modal-body table:not(#category-details-table, #item-details-table)').length > 0) {
                 rowInputs = $('div#modal-container table tbody tr:first-child()').html();
                 if(modal_element === '#journalEntryModal' || modal_element === '#depositModal') {
                     blankRow = $('div#modal-container table tbody tr:last-child()').html();
@@ -419,11 +419,11 @@ $(function() {
 
             if (vendorModals.includes(modal_element)) {
                 rowCount = 2;
-                catDetailsInputs = $(`${modal_element} table#category-details-table tbody tr:first-child()`).html();
-                catDetailsBlank = $(`${modal_element} table#category-details-table tbody tr:last-child()`).html();
+                catDetailsInputs = $(`${modal_element} .modal-body table#category-details-table tbody tr:first-child()`).html();
+                catDetailsBlank = $(`${modal_element} .modal-body table#category-details-table tbody tr:last-child()`).html();
 
-                $(`${modal_element} table#category-details-table tbody tr:first-child()`).remove();
-                $(`${modal_element} table#category-details-table tbody tr:last-child()`).remove();
+                $(`${modal_element} .modal-body table#category-details-table tbody tr:first-child()`).remove();
+                $(`${modal_element} .modal-body table#category-details-table tbody tr:last-child()`).remove();
             }
 
             if (modal_element === '#printChecksModal') {
@@ -645,7 +645,7 @@ $(function() {
         }
     });
 
-    $(document).on('click', `div#modal-container .full-screen-modal table.clickable:not(#category-details-table,#item-details-table) tbody tr`, function() {
+    $(document).on('click', `div#modal-container .full-screen-modal .modal-body table.clickable:not(#category-details-table,#item-details-table) tbody tr`, function() {
         if ($(this).find('input').length < 1) {
             var rowNum = $(this).children().next().html();
 
@@ -693,17 +693,21 @@ $(function() {
         }
     });
 
-    $(document).on('click', 'div#modal-container table#category-details-table tbody tr', function() {
+    $(document).on('click', 'div#modal-container .modal-body table#category-details-table tbody tr', function() {
         if ($(this).find('input').length < 1) {
             var rowNum = $(this).children().next().html();
 
             $(this).html(catDetailsInputs);
             $(this).children('td:nth-child(2)').html(rowNum);
 
-            if ($('#modal-container #category-details-table thead tr th').length === 12) {
-                $(`<td></td>`).insertBefore($('#modal-container .modal table#category-details-table tbody tr:last-child td:last-child'));
+            if ($('#modal-container .modal-body #category-details-table thead tr th').length === 12) {
+                $(`<td></td>`).insertBefore($('#modal-container .modal .modal-body table#category-details-table tbody tr:last-child td:last-child'));
             }
 
+            $(this).find('#category-billable-1').next().attr('for', `category-billable-${rowNum}`);
+            $(this).find('#category-billable-1').attr('id', `category-billable-${rowNum}`);
+            $(this).find('#category-tax-1').next().attr('for', `category-tax-${rowNum}`);
+            $(this).find('#category-tax-1').attr('id', `category-tax-${rowNum}`);
             $(this).find('select').each(function() {
                 var type = $(this).attr('id');
                 if (type === undefined) {
@@ -746,7 +750,7 @@ $(function() {
         }
     });
 
-    $(document).on('click', 'div#modal-container table.clickable:not(#category-details-table,#item-details-table) tbody tr td a.deleteRow', function() {
+    $(document).on('click', 'div#modal-container .modal-body table.clickable:not(#category-details-table,#item-details-table) tbody tr td a.deleteRow', function() {
         $(this).parent().parent().remove();
         if ($('div#modal-container table tbody tr').length < rowCount) {
             $('div#modal-container table tbody').append(`<tr>${blankRow}</tr>`);
@@ -764,8 +768,8 @@ $(function() {
         }
     });
 
-    $(document).on('click', '#modal-container #category-details-table tbody tr td a.deleteRow', function() {
-        $(this).parent().parent().remove();
+    $(document).on('click', '#modal-container .modal-body #category-details-table tbody tr td a.deleteRow', function() {
+        $(this).parent().parent().parent().remove();
 
         if ($('#category-details-table tbody tr').length < rowCount) {
             $('#category-details-table tbody').append(`<tr>${catDetailsBlank}</tr>`);
@@ -785,7 +789,7 @@ $(function() {
     });
 
     $(document).on('click', '#modal-container #item-details-table tbody tr td a.deleteRow', function() {
-        $(this).parent().parent().remove();
+        $(this).parent().parent().parent().remove();
 
         computeTransactionTotal();
     });
@@ -1659,11 +1663,11 @@ $(function() {
         }
     });
 
-    $(document).on('change', '#modal-container table#category-details-table input[name="category_amount[]"]', function() {
+    $(document).on('change', '#modal-container .modal-body table#category-details-table input[name="category_amount[]"]', function() {
         computeTransactionTotal();
     });
 
-    $(document).on('change', '#modal-container table#category-details-table input[name="category_billable[]"]', function() {
+    $(document).on('change', '#modal-container .modal-body table#category-details-table input[name="category_billable[]"]', function() {
         if ($(this).prop('checked')) {
             $(this).parent().parent().parent().find('select[name="category_customer[]"]').prop('required', true);
         } else {
@@ -1671,7 +1675,7 @@ $(function() {
         }
     });
 
-    $(document).on('change', '#modal-container table#category-details-table input[name="category_tax[]"]', function() {
+    $(document).on('change', '#modal-container .modal-body table#category-details-table input[name="category_tax[]"]', function() {
         $(this).parent().parent().parent().find('input[name="category_billable[]"]').prop('checked', true).trigger('change');
     });
 
@@ -4687,6 +4691,44 @@ $(function() {
         }
     });
 
+    $(document).on('click', '#modal-container form #depositModal #delete-deposit', function(e) {
+        e.preventDefault();
+
+        var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
+
+        $.ajax({
+            url: `/accounting/delete-transaction/deposit/${split[1]}`,
+            type: 'DELETE',
+            success: function(result) {
+                location.reload();
+            }
+        });
+    });
+    
+    $(document).on('click', '#modal-container form #transferModal #delete-transfer', function(e) {
+        e.preventDefault();
+
+        var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
+
+        $.ajax({
+            url: `/accounting/delete-transaction/transfer/${split[1]}`,
+            type: 'DELETE',
+            success: function(result) {
+                location.reload();
+            }
+        });
+    });
+
+    $(document).on('click', '#modal-container form #transferModal #void-transfer', function(e) {
+        e.preventDefault();
+
+        var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
+
+        $.get('/accounting/void-transaction/transfer/'+split[1], function(res) {
+            location.reload();
+        });
+    });
+
     $(document).on('click', '#modal-container form #expenseModal #copy-expense', function(e) {
         e.preventDefault();
 
@@ -4909,7 +4951,7 @@ $(function() {
         });
     });
 
-    $(document).on('show.bs.dropdown', '#modal-container #modal-form .modal .modal-header .dropup', function() {
+    $(document).on('show.bs.dropdown', '#modal-container #modal-form .modal .modal-header .dropdown', function() {
         var tableId = $(this).find('table').attr('id');
         if($.fn.DataTable.isDataTable(`#${tableId}`)) {
             $(`#${tableId}`).DataTable().clear();
@@ -4954,7 +4996,10 @@ $(function() {
                     data: 'name',
                     name: 'name'
                 }
-            ]
+            ],
+            fnCreatedRow: function(row, data, dataIndex) {
+                $(row).attr('onclick', 'viewTransaction(this)');
+            }
         });
     });
 });
@@ -6485,6 +6530,27 @@ const initModalFields = (modalName, data = {}) => {
 
         $(`#${modalName} table#category-details-table tbody tr:first-child()`).remove();
         $(`#${modalName} table#category-details-table tbody tr:last-child()`).remove();
+    } else {
+        if($(`#${modalName} tbody table`).length > 0) {
+            rowInputs = $(`div#modal-container #${modalName} table tbody tr:first-child()`).html();
+            $(`div#modal-container #${modalName} table tbody tr:first-child()`).remove();
+            $(`div#modal-container #${modalName} table tbody tr:last-child()`).remove();
+    
+            switch(modalName) {
+                case 'depositModal' :
+                    rowCount = 2;
+                break;
+                case 'journalEntryModal' :
+                    rowCount = 8;
+                break;
+                case 'inventoryModal' :
+                    rowCount = 2;
+                break;
+                case 'weeklyTimesheetModal' :
+                    rowCount = 3;
+                break;
+            }
+        }
     }
 
     if($(`#${modalName} select`).length > 0) { //
@@ -7236,4 +7302,99 @@ const resetCreditsFilter = () => {
     $('#billPaymentModal #vcredit-to').val('');
 
     applyCreditsFilter();
+}
+
+const viewTransaction = (el) => {
+    $('#modal-container #modal-form .modal').modal('hide');
+    $('.modal-backdrop:last-child').remove();
+
+    var table = $(el).parent().parent();
+    var data = table.DataTable().row($(el)).data();
+    var type = table.attr('id').replace('recent-', '').slice(0, -1).toLowerCase();
+    if(type === 'journal-entrie') {
+        type = 'journal';
+    }
+    data.type = table.attr('id').replace('recent-', '').slice(0, -1).charAt(0).toUpperCase();
+    data.type += table.attr('id').replace('recent-', '').slice(0, -1).slice(1);
+    data.type = data.type.replace('-', ' ');
+
+    if(data.type === 'Journal entrie') {
+        data.type = 'Journal';
+    } else if(data.type === 'Cc payment') {
+        data.type = 'CC Payment';
+    }
+
+    $.get(`/accounting/view-transaction/${type}/${data.id}`, function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        switch(type) {
+            case 'expense' :
+                initModalFields('expenseModal', data);
+
+                $('#expenseModal #payee').trigger('change');
+
+                $('#expenseModal').modal('show');
+            break;
+            case 'check' :
+                initModalFields('checkModal', data);
+
+                $('#checkModal #payee').trigger('change');
+        
+                $('#checkModal').modal('show');
+            break;
+            case 'bill' :
+                initModalFields('billModal', data);
+
+                $('#billModal').modal('show');
+            break;
+            case 'cc-credit' :
+                initModalFields('creditCardCreditModal', data);
+
+                $('#creditCardCreditModal').modal('show');
+            break;
+            case 'vendor-credit' :
+                initModalFields('vendorCreditModal', data);
+
+                $('#vendorCreditModal').modal('show');
+            break;
+            case 'deposit' :
+                initModalFields('depositModal', data);
+
+                $('#depositModal').modal('show');
+            break;
+            case 'purchase-order' :
+                initModalFields('purchaseOrderModal', data);
+
+                $('#purchaseOrderModal').modal('show');
+            break;
+            case 'transfer' :
+                initModalFields('transferModal', data);
+
+                $('#transferModal').modal('show');
+            break;
+            case 'journal-entry' :
+                initModalFields('journalEntryModal', data);
+
+                $('#journalEntryModal').modal('show');
+            break;
+            case 'qty-adjustment' :
+                initModalFields('inventoryModal', data);
+
+                $('#inventoryModal').modal('show');
+            break;
+            case 'cc-payment' :
+                initModalFields('payDownCreditModal', data);
+
+                $('#payDownCreditModal').modal('show');
+            break;
+        }
+    });
 }

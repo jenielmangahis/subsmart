@@ -3357,7 +3357,9 @@ class Timesheet extends MY_Controller
                 if ($delete_these_shift_dates_on_db != "") {
                     $delete_these_shift_dates_on_db .= " or ";
                 }
-                $delete_these_shift_dates_on_db .= "(shift_date ='" . $shift_date . "' AND user_id =" . $delete_shift_dates_user_ids[$i] . ")";
+                if($delete_shift_dates_user_ids[$i] != ""){
+                    $delete_these_shift_dates_on_db .= "(shift_date ='" . $shift_date . "' AND user_id =" . $delete_shift_dates_user_ids[$i] . ")";
+                }
             }
             $this->timesheet_model->delete_shift_schedule($delete_these_shift_dates_on_db);
         }

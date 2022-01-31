@@ -209,43 +209,96 @@ class Tags_model extends MY_Model
         }
         $transactionsWithTags = $this->get_tagged_ids('Expense');
 
-        $this->db->select('*');
+        $this->db->select('accounting_expense.*');
         $this->db->from('accounting_expense');
-        $this->db->where('company_id', $filters['company_id']);
+        $this->db->where('accounting_expense.company_id', $filters['company_id']);
         $this->db->where('accounting_expense.status', 1);
+        $this->db->where('accounting_chart_of_accounts.account_id !=', $filters['not_acc_type']);
         if(isset($filters['from']) && !is_null($filters['from'])) {
-            $this->db->where('payment_date >=', $filters['from']);
+            $this->db->where('accounting_expense.payment_date >=', $filters['from']);
         }
         if(isset($filters['to']) && !is_null($filters['to'])) {
-            $this->db->where('payment_date <=', $filters['to']);
+            $this->db->where('accounting_expense.payment_date <=', $filters['to']);
         }
         if(!is_null($filters['contact_id'])) {
-            $this->db->where('payee_type', $filters['contact_type']);
-            $this->db->where('payee_id', $filters['contact_id']);
+            $this->db->where('accounting_expense.payee_type', $filters['contact_type']);
+            $this->db->where('accounting_expense.payee_id', $filters['contact_id']);
         }
         if(intval($filters['untagged']) === 1) {
-            $this->db->where_not_in('id', $transactionsWithTags);
+            $this->db->where_not_in('accounting_expense.id', $transactionsWithTags);
         } else {
-            $this->db->where_in('id', $transactionsWithTags);
+            $this->db->where_in('accounting_expense.id', $transactionsWithTags);
         }
         if(count($filters['tags']) > 0) {
             if(intval($filters['untagged']) === 1) {
-                $this->db->or_where_in('id', $taggedIds);
-                $this->db->where('company_id', $filters['company_id']);
+                $this->db->or_where_in('accounting_expense.id', $taggedIds);
+                $this->db->where('accounting_expense.company_id', $filters['company_id']);
                 if(isset($filters['from']) && !is_null($filters['from'])) {
-                    $this->db->where('payment_date >=', $filters['from']);
+                    $this->db->where('accounting_expense.payment_date >=', $filters['from']);
                 }
                 if(isset($filters['to']) && !is_null($filters['to'])) {
-                    $this->db->where('payment_date <=', $filters['to']);
+                    $this->db->where('accounting_expense.payment_date <=', $filters['to']);
                 }
                 if(!is_null($filters['contact_id'])) {
-                    $this->db->where('payee_type', $filters['contact_type']);
-                    $this->db->where('payee_id', $filters['contact_id']);
+                    $this->db->where('accounting_expense.payee_type', $filters['contact_type']);
+                    $this->db->where('accounting_expense.payee_id', $filters['contact_id']);
                 }
             } else {
-                $this->db->where_in('id', $taggedIds);
+                $this->db->where_in('accounting_expense.id', $taggedIds);
             }
         }
+        $this->db->join('accounting_chart_of_accounts', 'accounting_chart_of_accounts.id = accounting_expense.payment_account_id');
+        $this->db->group_by('accounting_expense.id');
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function get_cc_expenses($filters = [])
+    {
+        if(count($filters['tags']) > 0) {
+            $taggedIds = $this->get_ids_with_tags($filters['tags'], 'Expense');
+        }
+        $transactionsWithTags = $this->get_tagged_ids('Expense');
+
+        $this->db->select('accounting_expense.*');
+        $this->db->from('accounting_expense');
+        $this->db->where('accounting_expense.company_id', $filters['company_id']);
+        $this->db->where('accounting_expense.status', 1);
+        $this->db->where('accounting_chart_of_accounts.account_id', $filters['acc_type']);
+        if(isset($filters['from']) && !is_null($filters['from'])) {
+            $this->db->where('accounting_expense.payment_date >=', $filters['from']);
+        }
+        if(isset($filters['to']) && !is_null($filters['to'])) {
+            $this->db->where('accounting_expense.payment_date <=', $filters['to']);
+        }
+        if(!is_null($filters['contact_id'])) {
+            $this->db->where('accounting_expense.payee_type', $filters['contact_type']);
+            $this->db->where('accounting_expense.payee_id', $filters['contact_id']);
+        }
+        if(intval($filters['untagged']) === 1) {
+            $this->db->where_not_in('accounting_expense.id', $transactionsWithTags);
+        } else {
+            $this->db->where_in('accounting_expense.id', $transactionsWithTags);
+        }
+        if(count($filters['tags']) > 0) {
+            if(intval($filters['untagged']) === 1) {
+                $this->db->or_where_in('accounting_expense.id', $taggedIds);
+                $this->db->where('accounting_expense.company_id', $filters['company_id']);
+                if(isset($filters['from']) && !is_null($filters['from'])) {
+                    $this->db->where('accounting_expense.payment_date >=', $filters['from']);
+                }
+                if(isset($filters['to']) && !is_null($filters['to'])) {
+                    $this->db->where('accounting_expense.payment_date <=', $filters['to']);
+                }
+                if(!is_null($filters['contact_id'])) {
+                    $this->db->where('accounting_expense.payee_type', $filters['contact_type']);
+                    $this->db->where('accounting_expense.payee_id', $filters['contact_id']);
+                }
+            } else {
+                $this->db->where_in('accounting_expense.id', $taggedIds);
+            }
+        }
+        $this->db->join('accounting_chart_of_accounts', 'accounting_chart_of_accounts.id = accounting_expense.payment_account_id');
         $this->db->group_by('accounting_expense.id');
         $query = $this->db->get();
         return $query->result();

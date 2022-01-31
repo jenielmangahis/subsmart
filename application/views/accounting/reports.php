@@ -2821,8 +2821,7 @@
                                                     foreach ($management_reports as $report) {
                                                         ?>
                                                     <tr>
-                                                        <td><?=$report->template_name?>
-                                                        </td>
+                                                        <td><?=$report->template_name?></td>
                                                         <td><?php if ($report->created_by == 0) {
                                                             echo "nSmarTrac";
                                                         } else {
@@ -2898,14 +2897,12 @@
                                                                         </a>
                                                                     </li>
                                                                     <li>
-                                                                        <a href="javascript:void(0)"
-                                                                            class="create-estimate-btn"
-                                                                            data-toggle="modal" data-target="#">
+                                                                        <a href="javascript:void(0)" class="send-email" data-target="#management_reports_email_modal"  data-id="<?=$report->id?>" data-report="<?=$report->template_name?>" data-company="<?=$company_details->business_name?>">
                                                                             Send
                                                                         </a>
                                                                     </li>
                                                                     <li>
-                                                                        <a href="javascript:void(0)" class="">
+                                                                        <a href="javascript:void(0)" class="export-pdf" data-id="<?=$report->id?>" data-report="<?=$report->template_name?>" data-company="<?=$company_details->business_name?>">
                                                                             Export as PDF
                                                                         </a>
                                                                     </li>
@@ -3641,6 +3638,7 @@
 </div>
 <?php include viewPath('accounting/reports/management_reports/management_reports_modal'); ?>
 <?php include viewPath('accounting/reports/management_reports/management_reports_viewer_modal'); ?>
+<?php include viewPath('accounting/reports/management_reports/management_reports_email_modal'); ?>
 <?php include viewPath('includes/footer_accounting'); ?>
 
 

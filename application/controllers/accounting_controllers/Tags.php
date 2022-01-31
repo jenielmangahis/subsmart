@@ -13,6 +13,8 @@ class Tags extends MY_Controller {
         $this->load->model('vendors_model');
         $this->load->model('accounting_bank_deposit_model');
         $this->load->model('expenses_model');
+        $this->load->model('chart_of_accounts_model');
+        $this->load->model('account_model');
 
         add_css(array(
             "assets/css/accounting/banking.css?v='rand()'",
@@ -409,6 +411,7 @@ class Tags extends MY_Controller {
                 $data = $this->get_expenses($data, $filter);
                 $data = $this->get_bills($data, $filter);
                 $data = $this->get_checks($data, $filter);
+                $data = $this->get_cc_expenses($data, $filter);
                 $data = $this->get_purchase_orders($data, $filter);
             break;
             case 'money-in' :
@@ -450,7 +453,9 @@ class Tags extends MY_Controller {
                         $data = $this->get_expenses($data, $filter);
                         $data = $this->get_bills($data, $filter);
                         $data = $this->get_checks($data, $filter);
+                        $data = $this->get_cc_expenses($data, $filter);
                         $data = $this->get_purchase_orders($data, $filter);
+                        $data = $this->get_vendor_credits($data, $filter);
                     break;
                     case 'expense' :
                         $data = $this->get_expenses($data, $filter);
@@ -471,7 +476,7 @@ class Tags extends MY_Controller {
                         $data = $this->get_checks($data, $filter);
                     break;
                     case 'cc-expense' :
-
+                        $data = $this->get_cc_expenses($data, $filter);
                     break;
                     case 'purchase-order' :
                         $data = $this->get_purchase_orders($data, $filter);
@@ -642,6 +647,13 @@ class Tags extends MY_Controller {
 
     private function get_expenses($data = [], $filter)
     {
+        $accountTypes = $this->account_model->getAccounts();
+        foreach($accountTypes as $type) {
+            if($type->account_name === 'Credit Card') {
+                $filter['not_acc_type'] = $type->id;
+            }
+        }
+
         $expenses = $this->tags_model->get_expenses($filter);
 
         foreach($expenses as $expense) {
@@ -750,6 +762,57 @@ class Tags extends MY_Controller {
                 'memo' => $check->memo,
                 'type' => 'Check',
                 'amount' => $check->total_amount,
+                'tags' => $tags
+            ];
+        }
+
+        return $data;
+    }
+
+    private function get_cc_expenses($data = [], $filter)
+    {
+        $accountTypes = $this->account_model->getAccounts();
+        foreach($accountTypes as $type) {
+            if($type->account_name === 'Credit Card') {
+                $filter['acc_type'] = $type->id;
+            }
+        }
+
+        $ccExpenses = $this->tags_model->get_cc_expenses($filter);
+
+        foreach($ccExpenses as $ccExpense) {
+            switch ($ccExpense->payee_type) {
+                case 'vendor':
+                    $payee = $this->vendors_model->get_vendor_by_id($ccExpense->payee_id);
+                    $payeeName = $payee->display_name;
+                break;
+                case 'customer':
+                    $payee = $this->accounting_customers_model->get_by_id($ccExpense->payee_id);
+                    $payeeName = $payee->first_name . ' ' . $payee->last_name;
+                break;
+                case 'employee':
+                    $payee = $this->users_model->getUser($ccExpense->payee_id);
+                    $payeeName = $payee->FName . ' ' . $payee->LName;
+                break;
+            }
+
+            $tags = $this->tags_model->get_transaction_tags('Expense', $ccExpense->id);
+
+            foreach($tags as $key => $tag) {
+                if($tag->group_tag_id !== "0" && $tag->group_tag_id !== "" && !is_null($tag->group_tag_id)) {
+                    $group = $this->tags_model->getGroupById($tag->group_tag_id);
+                    $tags[$key]->group_name = $group->name;
+                }
+            }
+
+            $data[] = [
+                'id' => $ccExpense->id,
+                'date' => date("m/d/Y", strtotime($ccExpense->payment_date)),
+                'from_to' => $payeeName,
+                'category' => $this->category_col('Expense', $ccExpense->id),
+                'memo' => $ccExpense->memo,
+                'type' => 'Credit card expense',
+                'amount' => $ccExpense->total_amount,
                 'tags' => $tags
             ];
         }
