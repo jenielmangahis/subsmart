@@ -32,7 +32,11 @@
         </div>
     </div>
 
+    <?php if(!isset($timeActivity)) : ?>
     <form onsubmit="submitModalForm(event, this)" id="modal-form">
+    <?php else : ?>
+    <form onsubmit="updateTransaction(event, this)" id="modal-form" data-href="/accounting/update-transaction/time-activity/<?=$timeActivity->id?>">
+    <?php endif; ?>
         <div id="singleTimeModal" class="modal fade modal-fluid" role="dialog">
             <div class="modal-dialog">
                 <!-- Modal content-->
@@ -56,10 +60,8 @@
                                 </h4>
                             </div>
                         </div>
-                        <div class="float-right">
-                            <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
-                            <button type="button" id="time-activity-settings-button"><i class="fa fa-cog fa-lg"></i></button>
-                        </div>
+                        <button type="button" id="time-activity-settings-button"><i class="fa fa-cog fa-lg"></i></button>
+                        <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
                     </div>
                     <div class="modal-body">
                         <div class="row">
@@ -70,7 +72,7 @@
                                             <div class="col-md-5 offset-md-4">
                                                 <div class="checkbox checkbox-sec">
                                                     <input type="checkbox" name="start_end_time" id="startEndTime"
-                                                        value="1" class="form-check-input"
+                                                        value="1" class="form-check-input" <?=isset($timeActivity) && !is_null($timeActivity->start_time) ? 'checked' : ''?>
                                                         onchange="showHiddenFields(this)">
                                                     <label for="startEndTime">Enter Start and End Time</label>
                                                 </div>
@@ -83,47 +85,46 @@
                                                     <label for="date">Date</label>
                                                     <input type="text" class="form-control w-50 date" name="date"
                                                         id="date"
-                                                        value="<?php echo date('m/d/Y') ?>" />
+                                                        value="<?=!isset($timeActivity) ? date('m/d/Y') : date('m/d/Y', strtotime($timeActivity->date))?>" />
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="name">Name</label>
                                                     <select name="name" id="person_tracking" class="form-control" required>
-                                                        <option value="" disabled selected>Whose time are you tracking?</option>
+                                                        <option value="" disabled <?=!isset($timeActivity) ? 'selected' : ''?>>Whose time are you tracking?</option>
+                                                        <?php if(isset($timeActivity)) : ?>
+                                                        <option value="<?=$timeActivity->name_key.'-'.$timeActivity->name_id?>" selected><?=$timeActivity->name?></option>
+                                                        <?php endif; ?>
                                                     </select>
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="customer">Customer</label>
                                                     <select name="customer" id="customer" class="form-control" required>
-                                                        <option value="" disabled selected>Choose a customer</option>
+                                                        <option value="" disabled <?=!isset($timeActivity) ? 'selected' : ''?>>Choose a customer</option>
+                                                        <?php if(isset($timeActivity)) : ?>
+                                                        <option value="<?=$timeActivity->customer_id?>" selected><?=$timeActivity->customer?></option>
+                                                        <?php endif; ?>
                                                     </select>
                                                 </div>
                                                 <div class="form-group <?=$timesheetSettings->service === "0" ? 'hide' : ''?>">
                                                     <label for="service">Service</label>
                                                     <select name="service" id="service" class="form-control" required>
-                                                        <option value="" disabled selected>Choose the service worked on
-                                                        </option>
-                                                        <?php foreach ($dropdown['services'] as $service) : ?>
-                                                        <option
-                                                            value="<?=$service->id?>">
-                                                            <?=$service->title?>
-                                                        </option>
-                                                        <?php endforeach; ?>
+                                                        <option value="" disabled <?=!isset($timeActivity) ? 'selected' : ''?>>Choose the service worked on</option>
+                                                        <?php if(isset($timeActivity)) : ?>
+                                                        <option value="<?=$timeActivity->service_id?>" selected><?=$timeActivity->service?></option>
+                                                        <?php endif; ?>
                                                     </select>
                                                 </div>
                                                 <?php if($timesheetSettings->billable === "1") : ?>
                                                 <div class="form-check form-check-inline">
                                                     <div class="checkbox checkbox-sec margin-right">
-                                                        <input class="form-check-input" type="checkbox" name="billable"
-                                                            id="billable" value="1" onchange="showHiddenFields(this)">
+                                                        <input class="form-check-input" type="checkbox" name="billable" id="billable" value="1" onchange="showHiddenFields(this)" <?=isset($timeActivity) && $timeActivity->billable === "1" ? 'checked' : ''?>>
                                                         <label class="form-check-label" for="billable">Billable(/hr)</label>
                                                     </div>
-                                                    <input type="number" name="hourly_rate" id="hourlyRate"
-                                                        class="w-25 form-control hide">
+                                                    <input type="number" name="hourly_rate" id="hourlyRate" class="w-25 form-control <?=isset($timeActivity) && $timeActivity->billable === "1" ? '' : 'hide'?>" value="<?=isset($timeActivity) && $timeActivity->billable === "1" ? floatval($timeActivity->hourly_rate) : ''?>">
                                                 </div>
-                                                <div class="form-check hide">
+                                                <div class="form-check <?=isset($timeActivity) && $timeActivity->billable === "1" ? '' : 'hide'?>">
                                                     <div class="checkbox checkbox-sec">
-                                                        <input type="checkbox" name="taxable" id="taxable"
-                                                            class="form-check-input" value="1">
+                                                        <input type="checkbox" name="taxable" id="taxable" class="form-check-input" value="1" <?=isset($timeActivity) && $timeActivity->taxable === "1" ? 'checked' : ''?>>
                                                         <label for="taxable" class="form-check-label">Taxable</label>
                                                     </div>
                                                 </div>
@@ -136,10 +137,7 @@
                                                     <select name="start_time" id="startTime" class="form-control">
                                                         <option disabled selected>&nbsp;</option>
                                                         <?php foreach ($dropdown['times'] as $time) :?>
-                                                        <option
-                                                            value="<?php echo $time['value']; ?>">
-                                                            <?php echo $time['display']; ?>
-                                                        </option>
+                                                        <option value="<?=$time['value']?>" <?=isset($timeActivity) && substr($timeActivity->start_time, 0, -3) === $time['value'] ? 'selected' : ''?>><?=$time['display']?></option>
                                                         <?php endforeach; ?>
                                                     </select>
                                                 </div>
@@ -148,23 +146,24 @@
                                                     <select name="end_time" id="endTime" class="form-control">
                                                         <option disabled selected>&nbsp;</option>
                                                         <?php foreach ($dropdown['times'] as $time) :?>
-                                                        <option
-                                                            value="<?php echo $time['value']; ?>">
-                                                            <?php echo $time['display']; ?>
-                                                        </option>
+                                                        <option value="<?=$time['value']?>" <?=isset($timeActivity) && substr($timeActivity->end_time, 0, -3) === $time['value'] ? 'selected' : ''?>><?=$time['display']?></option>
                                                         <?php endforeach; ?>
                                                     </select>
                                                 </div>
                                                 <div class="form-group w-50">
                                                     <label for="time">Time</label>
-                                                    <input type="text" name="time" id="time" class="form-control"
-                                                        placeholder="hh:mm" required>
+                                                    <input type="text" name="time" id="time" class="form-control" placeholder="hh:mm" required value="<?=isset($timeActivity) && $timeActivity->start_time !== null ? substr($timeActivity->break_duration, 0, -3) : substr($timeActivity->time, 0, -3)?>">
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="description">Description</label>
-                                                    <textarea name="description" id="description"
-                                                        class="form-control h-auto"></textarea>
+                                                    <textarea name="description" id="description" class="form-control h-auto"><?=$timeActivity->description?></textarea>
                                                 </div>
+                                                <?php if(isset($timeActivity)) : ?>
+                                                <div class="form-group" id="summary">
+                                                    <label for="summary">Summary</label>
+                                                    <p><?=$totalTime?></p>
+                                                </div>
+                                                <?php endif; ?>
                                             </div>
                                         </div>
                                     </div>
@@ -178,8 +177,10 @@
                                 <button type="button" class="btn btn-secondary btn-rounded border"
                                     data-dismiss="modal">Cancel</button>
                             </div>
-                            <div class="col-md-4">
-
+                            <div class="col-md-4 d-flex">
+                                <?php if(isset($timeActivity)) : ?>
+                                <a href="#" class="text-white m-auto" id="delete-time-activity">Delete</a>
+                                <?php endif; ?>
                             </div>
                             <div class="col-md-4">
                                 <!-- Split dropup button -->

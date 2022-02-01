@@ -137,7 +137,11 @@
                                                                 </td>
                                                                 <td><input type="text" name="reference_no[]" class="form-control"></td>
                                                                 <td><input type="number" name="amount[]" class="form-control text-right" step=".01" onchange="updateBankDepositTotal(this)" required></td>
-                                                                <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
+                                                                <td>
+                                                                    <div class="d-flex align-items-center justify-content-center">
+                                                                        <a href="#" class="deleteRow"><i class="fa fa-trash"></i></a>
+                                                                    </div>
+                                                                </td>
                                                             </tr>
                                                             <?php $count = 1; ?>
                                                             <?php if(isset($funds) && count($funds) > 0) : $fundsAmount = 0.00;?>
@@ -163,7 +167,11 @@
                                                                         </td>
                                                                         <td><input type="text" name="reference_no[]" class="form-control" value="<?=$fund->ref_no?>"></td>
                                                                         <td><input type="number" name="amount[]" value="<?=number_format(floatval($fund->amount), 2, '.', ',')?>" class="form-control text-right" step=".01" onchange="updateBankDepositTotal(this)" required></td>
-                                                                        <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
+                                                                        <td>
+                                                                            <div class="d-flex align-items-center justify-content-center">
+                                                                                <a href="#" class="deleteRow"><i class="fa fa-trash"></i></a>
+                                                                            </div>
+                                                                        </td>
                                                                     </tr>
                                                                     <?php $count++; ?>
                                                                 <?php endforeach; ?>
@@ -178,7 +186,11 @@
                                                                     <td></td>
                                                                     <td></td>
                                                                     <td></td>
-                                                                    <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
+                                                                    <td>
+                                                                        <div class="d-flex align-items-center justify-content-center">
+                                                                            <a href="#" class="deleteRow"><i class="fa fa-trash"></i></a>
+                                                                        </div>
+                                                                    </td>
                                                                 </tr>
                                                             <?php $count++; } while ($count <= 2) ?>
                                                             <tr>
@@ -190,7 +202,11 @@
                                                                 <td></td>
                                                                 <td></td>
                                                                 <td></td>
-                                                                <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
+                                                                <td>
+                                                                    <div class="d-flex align-items-center justify-content-center">
+                                                                        <a href="#" class="deleteRow"><i class="fa fa-trash"></i></a>
+                                                                    </div>
+                                                                </td>
                                                             </tr>
                                                         </tbody>
                                                     </table>

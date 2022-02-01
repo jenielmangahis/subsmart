@@ -131,7 +131,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                 </div>
                                             </div>
                                             <div class="btn-group float-right mr-2">
-                                                <button type="button"
+                                                <button type="button" id="print-checks" 
                                                     class="btn btn-transparent d-flex align-items-center justify-content-center">
                                                     Print checks
                                                 </button>

@@ -395,7 +395,7 @@ function getItemCredit_k(obj) {
     },
   });
 }
-over_tax = parseFloat(tax_tot).toFixed(2);
+// over_tax = parseFloat(tax_tot).toFixed(2);
 // alert(over_tax);
 
 function setitemCredit(obj, title, price, discount, itemid) {

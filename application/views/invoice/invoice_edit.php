@@ -750,7 +750,7 @@ input:checked + .slider:before {
                                 <div class="col-md-12">
                                     <h5>Terms &amp; Conditions</h5>
                                     <span class="help help-sm help-block">Mention your company's T&amp;C that will appear on the invoice.</span>
-                                    <textarea name="terms_and_conditions" cols="40" rows="2" class="form-control"><?php echo $invoice->terms_and_conditions; ?></textarea>
+                                    <textarea name="terms_and_conditions" cols="40" rows="2" class="form-control ckeditor editor1_tc"><?php echo $invoice->terms_and_conditions; ?></textarea>
                                 </div>
                             </div>
                             </div>

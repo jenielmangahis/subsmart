@@ -224,7 +224,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <td>
                                             <a href="<?php echo base_url('customer/view/' . $workorder->customer_id) ?>">
                                                 <?php //echo get_customer_by_id($workorder->customer_id)->contact_name 
-                                                echo $workorder->first_name . ' ' .  $workorder->middle_name . ' ' . $workorder->last_name;
+                                                if(empty($workorder->first_name)){
+                                                    echo $workorder->contact_name;
+                                                }else{
+
+                                                    echo $workorder->first_name . ' ' .  $workorder->middle_name . ' ' . $workorder->last_name;
+                                                }
                                                 ?>
                                             </a>
                                             <div>Scheduled on: 30 Mar 2020, 2:00 pm to 4:00 pm</div>

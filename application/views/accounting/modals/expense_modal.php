@@ -210,19 +210,13 @@
                                                                         <td><input type="number" name="category_amount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01"></td>
                                                                         <td>
                                                                             <div class="d-flex align-items-center justify-content-center">
-                                                                                <div class="checkbox checkbox-sec m-0">
-                                                                                    <input id="category-billable-1" type="checkbox" name="category_billable[]" class="form-check" value="1">
-                                                                                    <label for="category-billable-1" class="p-0" style="width: 24px; height: 24px"></label>
-                                                                                </div>
+                                                                                <input type="checkbox" name="category_billable[]" class="form-check" value="1">
                                                                             </div>
                                                                         </td>
                                                                         <td><input type="number" name="category_markup[]" class="form-control" onchange="convertToDecimal(this)"></td>
                                                                         <td>
                                                                             <div class="d-flex align-items-center justify-content-center">
-                                                                                <div class="checkbox checkbox-sec m-0">
-                                                                                    <input id="category-tax-1" type="checkbox" name="category_tax[]" class="form-check" value="1">
-                                                                                    <label for="category-tax-1" class="p-0" style="width: 24px; height: 24px"></label>
-                                                                                </div>
+                                                                                <input type="checkbox" name="category_tax[]" class="form-check" value="1">
                                                                             </div>
                                                                         </td>
                                                                         <td>
@@ -257,19 +251,13 @@
                                                                         <td><input type="number" name="category_amount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="<?=number_format(floatval($category->amount), 2, '.', ',')?>"></td>
                                                                         <td>
                                                                             <div class="d-flex align-items-center justify-content-center">
-                                                                                <div class="checkbox checkbox-sec m-0">
-                                                                                    <input id="category-billable-<?=$count?>" type="checkbox" name="category_billable[]" class="form-check" value="1" <?=$category->billable === "1" ? 'checked' : ''?>>
-                                                                                    <label for="category-billable-<?=$count?>" class="p-0" style="width: 24px; height: 24px"></label>
-                                                                                </div>
+                                                                                <input type="checkbox" name="category_billable[]" class="form-check" value="1" <?=$category->billable === "1" ? 'checked' : ''?>>
                                                                             </div>
                                                                         </td>
                                                                         <td><input type="number" name="category_markup[]" class="form-control" onchange="convertToDecimal(this)" value="<?=number_format(floatval($category->markup_percentage), 2, '.', ',')?>"></td>
                                                                         <td>
                                                                             <div class="d-flex align-items-center justify-content-center">
-                                                                                <div class="checkbox checkbox-sec m-0">
-                                                                                    <input id="category-tax-<?=$count?>" type="checkbox" name="category_tax[]" class="form-check" value="1" <?=$category->tax === "1" ? 'checked' : ''?>>
-                                                                                    <label for="category-tax-<?=$count?>" class="p-0" style="width: 24px; height: 24px"></label>
-                                                                                </div>
+                                                                                <input type="checkbox" name="category_tax[]" class="form-check" value="1" <?=$category->tax === "1" ? 'checked' : ''?>>
                                                                             </div>
                                                                         </td>
                                                                         <td>

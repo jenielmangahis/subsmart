@@ -826,6 +826,12 @@ $('a#pay-bills').on('click', function(e) {
     $('#new-popup #accounting_vendors .ajax-pay_bills_modal').trigger('click');
 });
 
+$('#print-checks').on('click', function(e) {
+    e.preventDefault();
+
+    $('#new-popup #accounting_vendors .ajax-print_checks_modal').trigger('click');
+});
+
 $('.action-bar .dropdown-menu .show-more-button').on('click', function(e) {
 	e.preventDefault();
 
@@ -1019,6 +1025,9 @@ $(document).on('click', '#transactions-table tbody tr td:not(:first-child, :last
             case 'Bill Payment (Credit Card)' :
                 viewBillPayment(data);
             break;
+            case 'Transfer' :
+                viewTransfer(data);
+            break;
         }
     }
 });
@@ -1204,6 +1213,26 @@ function viewBillPayment(data) {
         $('#billPaymentModal #payee').trigger('change');
 
         $('#billPaymentModal').modal('show');
+    });
+}
+
+function viewTransfer(data) {
+    $.get('/accounting/view-transaction/transfer/'+data.id, function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        $('#transferModal #transfer_from_account, #transferModal #transfer_to_account').trigger('change');
+
+        initModalFields('transferModal', data);
+
+        $('#transferModal').modal('show');
     });
 }
 

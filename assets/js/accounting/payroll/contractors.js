@@ -10,7 +10,7 @@ $('input#search').on('keyup', function() {
     table.ajax.reload();
 });
 
-$(document).on('click', '#contractors-table tbody tr :not(button)', function() {
+$(document).on('click', '#contractors-table tbody tr td:not(:last-child)', function() {
     var data = table.row(this).data();
 
     window.location.href = `/accounting/contractors/view/${data.id}`;
@@ -63,7 +63,7 @@ var table = $('#contractors-table').DataTable({
             fnCreatedCell: function(td, cellData, rowData, row, col) {
                 $(td).html(`
                 <div class="btn-group float-right">
-                    <button class="btn d-flex align-items-center justify-content-center text-info">
+                    <button class="btn d-flex align-items-center justify-content-center text-info write-check">
                         Write check
                     </button>
 
@@ -72,12 +72,84 @@ var table = $('#contractors-table').DataTable({
                     </button>
 
                     <div class="dropdown-menu" aria-labelledby="statusDropdownButton">
-                        <a class="dropdown-item" href="#">Create expense</a>
-                        <a class="dropdown-item" href="#">Create bill</a>
+                        <a class="dropdown-item create-expense" href="#">Create expense</a>
+                        <a class="dropdown-item create-bill" href="#">Create bill</a>
                     </div>
                 </div>
                 `);
             }
         }
     ]
+});
+
+$(document).on('click', '#contractors-table .write-check', function(e) {
+    e.preventDefault();
+    var row = $(this).parent().parent().parent();
+    var rowData = $('#contractors-table').DataTable().row(row).data();
+
+    $.get('/accounting/get-other-modals/check_modal', function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        $('#checkModal #payee').append(`<option value="vendor-${rowData.id}">${rowData.name}</option>`);
+
+        initModalFields('checkModal');
+
+        $('#checkModal').modal('show');
+    });
+});
+
+$(document).on('click', '#contractors-table .create-expense', function(e) {
+    e.preventDefault();
+    var row = $(this).parent().parent().parent().parent();
+    var rowData = $('#contractors-table').DataTable().row(row).data();
+
+    $.get('/accounting/get-other-modals/expense_modal', function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        $('#expenseModal #payee').append(`<option value="vendor-${rowData.id}">${rowData.name}</option>`);
+
+        initModalFields('expenseModal');
+
+        $('#expenseModal').modal('show');
+    });
+});
+
+$(document).on('click', '#contractors-table .create-bill', function(e) {
+    e.preventDefault();
+    var row = $(this).parent().parent().parent().parent();
+    var rowData = $('#contractors-table').DataTable().row(row).data();
+
+    $.get('/accounting/get-other-modals/bill_modal', function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        $('#billModal #vendor').append(`<option value="${rowData.id}">${rowData.name}</option>`);
+
+        initModalFields('billModal');
+
+        $('#billModal').modal('show');
+    });
 });

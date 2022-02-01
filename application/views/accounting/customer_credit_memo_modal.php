@@ -91,16 +91,15 @@
                                             <td width="150px"><input type="number" class="form-control quantitycm" name="quantity[]"
                                                        data-counter="0" id="quantity_0" value="1"></td>
                                             <td width="150px"><input type="number" class="form-control pricecm" name="price[]"
-                                                       data-counter="0" id="price_0" min="0" value="0"></td>
+                                                       data-counter="0" id="pricecm_0" min="0" value="0"></td>
                                             <td width="150px"><input type="number" class="form-control discountcm" name="discount[]"
                                                        data-counter="0" id="discount_0" min="0" value="0" ></td>
-                                            <td width="150px"><input type="text" class="form-control tax_change" name="tax[]"
-                                                       data-counter="0" id="tax1_0" min="0" value="0">
-                                                       <!-- <span id="span_tax_0">0.0</span> -->
+                                            <td width="150px"><input type="text" class="form-control tax_changecm" name="tax[]"
+                                                       data-counter="0" id="taxcm1_0" min="0" value="0">
                                                        </td>
                                             <td width="150px"><input type="hidden" class="form-control " name="total[]"
-                                                       data-counter="0" id="item_total_0" min="0" value="0">
-                                                       $<span id="span_total_0">0.00</span></td>
+                                                       data-counter="0" id="item_totalcm_0" min="0" value="0">
+                                                       $<span id="span_totalcm_0">0.00</span></td>
                                         </tr>
                                 </tr>
                                 </tbody>
@@ -325,7 +324,7 @@
       </div>
     </div>
     <!--end of modal-->
-    <script>
+<script>
   function totalfunc(){
     var inputs = document.getElementsByName('amount[]');
     // alert(inputs);
@@ -420,7 +419,7 @@ function getItemscm(obj) {
     },
   });
 }
-over_tax = parseFloat(tax_tot).toFixed(2);
+// over_tax = parseFloat(tax_tot).toFixed(2);
 // alert(over_tax);
 
 function setitemCM(obj, title, price, discount, itemid) {

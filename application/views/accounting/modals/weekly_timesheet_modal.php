@@ -207,7 +207,11 @@
                                                                     <td class="friday_field"><input type="text" name="friday_hours[]" class="form-control day-input"></td>
                                                                     <td class="saturday_field"><input type="text" name="saturday_hours[]" class="form-control day-input"></td>
                                                                     <td class="total-cell"></td>
-                                                                    <td><a href="#" class="deleteRow h4"><i class="fa fa-trash"></i></a></td>
+                                                                    <td>
+                                                                        <div class="d-flex align-items-center justify-content-center">
+                                                                            <a href="#" class="deleteRow"><i class="fa fa-trash"></i></a>
+                                                                        </div>
+                                                                    </td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td>2</td>
@@ -247,7 +251,11 @@
                                                                     <td class="friday_field"><input type="text" name="friday_hours[]" class="form-control day-input"></td>
                                                                     <td class="saturday_field"><input type="text" name="saturday_hours[]" class="form-control day-input"></td>
                                                                     <td class="total-cell"></td>
-                                                                    <td><a href="#" class="deleteRow h4"><i class="fa fa-trash"></i></a></td>
+                                                                    <td>
+                                                                        <div class="d-flex align-items-center justify-content-center">
+                                                                            <a href="#" class="deleteRow"><i class="fa fa-trash"></i></a>
+                                                                        </div>
+                                                                    </td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td>3</td>
@@ -287,7 +295,11 @@
                                                                     <td class="friday_field"><input type="text" name="friday_hours[]" class="form-control day-input"></td>
                                                                     <td class="saturday_field"><input type="text" name="saturday_hours[]" class="form-control day-input"></td>
                                                                     <td class="total-cell"></td>
-                                                                    <td><a href="#" class="deleteRow h4"><i class="fa fa-trash"></i></a></td>
+                                                                    <td>
+                                                                        <div class="d-flex align-items-center justify-content-center">
+                                                                            <a href="#" class="deleteRow"><i class="fa fa-trash"></i></a>
+                                                                        </div>
+                                                                    </td>
                                                                 </tr>
                                                             </tbody>
                                                             <tfoot>

@@ -51,7 +51,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="transferFromBalance">Balance</label>
-                                                <h3></h3>
+                                                <h3><?=str_replace('$-', '-$', number_format(floatval($transfer->transfer_from->balance), 2, '.', ','))?></h3>
                                             </div>
                                         </div>
                                     </div>
@@ -71,7 +71,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="transferToBalance">Balance</label>
-                                                <h3></h3>
+                                                <h3><?=str_replace('$-', '-$', number_format(floatval($transfer->transfer_to->balance), 2, '.', ','))?></h3>
                                             </div>
                                         </div>
                                     </div>

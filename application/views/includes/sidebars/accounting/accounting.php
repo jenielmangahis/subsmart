@@ -87,7 +87,7 @@
                         href="<?= base_url('accounting/receipts') ?>">Receipts</a>
                 </li>
                 <li> <a
-                        href="<?= base_url('accounting/rules') ?>">Tags</a>
+                        href="<?= base_url('accounting/tags') ?>">Tags</a>
                 </li>
             </ul>
         </li>

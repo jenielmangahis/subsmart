@@ -7562,6 +7562,12 @@ class Accounting_modals extends MY_Controller
             case 'cc-payment':
                 $this->view_cc_payment($transactionId);
             break;
+            case 'qty-adjustment' :
+                $this->view_qty_adjustment($transactionId);
+            break;
+            case 'time-activity' :
+                $this->view_time_activity($transactionId);
+            break;
         }
     }
 
@@ -7849,6 +7855,64 @@ class Accounting_modals extends MY_Controller
         $this->page_data['items'] = $items;
 
         $this->load->view("accounting/modals/purchase_order_modal", $this->page_data);
+    }
+
+    private function view_time_activity($timeActivityId)
+    {
+        $timeActivity = $this->accounting_single_time_activity_model->get_by_id($timeActivityId);
+
+        switch($timeActivity->name_key) {
+            case 'employee' :
+                $employee = $this->users_model->getUser($timeActivity->name_id);
+                $timeActivity->name = $employee->FName . ' ' . $employee->LName;
+            break;
+            case 'vendor' :
+                $vendor = $this->vendors_model->get_vendor_by_id($timeActivity->name_id);
+                $timeActivity->name = $vendor->display_name;
+            break;
+        }
+
+        if($timeActivity->time === null) {
+            $startTime = strtotime($timeActivity->start_time);
+            $endTime = strtotime($timeActivity->end_time);
+            $break = strtotime($timeActivity->break_duration);
+            $duration = date("H:i:s", (($endTime - $startTime) - $break));
+        } else {
+            $duration = date("H:i:s", strtotime($timeActivity->time));
+        }
+        $hms = explode(":", $duration);
+        $totalTime = $hms[0].' hours';
+        $totalTime .= $hms[1] !== '00' ? ' '.$hms[1].' minute' : '';
+
+        $customer = $this->accounting_customers_model->get_by_id($timeActivity->customer_id);
+        $timeActivity->customer = $customer->first_name . ' ' . $customer->last_name;
+        $timeActivity->service = $this->items_model->getItemById($timeActivity->service_id)[0]->title;
+
+        $time = '00:00';
+        $endTime = '23:45';
+        
+        $times = [
+            [
+                'value' => $time,
+                'display' => date('h:i A', strtotime($time))
+            ]
+        ];
+
+        for ($i = 0; $time != $endTime; $i++) {
+            $time = date('H:i', strtotime($time . '+ 15 minutes'));
+
+            $times[] = [
+                'value' => $time,
+                'display' => date('h:i A', strtotime($time))
+            ];
+        }
+
+        $this->page_data['totalTime'] = $totalTime;
+        $this->page_data['dropdown']['times'] = $times;
+        $this->page_data['timeActivity'] = $timeActivity;
+        $this->page_data['timesheetSettings'] = $this->accounting_timesheet_settings_model->get_by_company_id(logged('company_id'));
+
+        $this->load->view("accounting/modals/single_time_activity_modal", $this->page_data);
     }
 
     public function load_bills_payed($billPaymentId)
@@ -10725,6 +10789,9 @@ class Accounting_modals extends MY_Controller
                 });
 
                 foreach($transactions as $expense) {
+                    $paymentAcc = $this->chart_of_accounts_model->getById($expense->payment_account_id);
+                    $paymentAccType = $this->account_model->getById($paymentAcc->account_id);
+
                     switch ($expense->payee_type) {
                         case 'vendor':
                             $payee = $this->vendors_model->get_vendor_by_id($expense->payee_id);
@@ -10740,11 +10807,11 @@ class Accounting_modals extends MY_Controller
                         break;
                     }
 
-                    $amount = '$'.$expense->total_amount;
+                    $amount = '$'.number_format(floatval($expense->total_amount), 2, '.', ',');
                     if(count($data) < 10) {
                         $data[] = [
                             'id' => $expense->id,
-                            'type' => 'Expense',
+                            'type' => $paymentAccType->account_name !== 'Credit Card' ? 'Expense' : 'Credit Card Expense',
                             'date' => date("m/d/Y", strtotime($expense->payment_date)),
                             'amount' => str_replace('$-', '-$', $amount),
                             'name' => $payeeName
@@ -10774,7 +10841,7 @@ class Accounting_modals extends MY_Controller
                         break;
                     }
 
-                    $amount = '$'.$check->total_amount;
+                    $amount = '$'.number_format(floatval($check->total_amount), 2, '.', ',');
                     if(count($data) < 10) {
                         $data[] = [
                             'id' => $check->id,
@@ -10796,7 +10863,7 @@ class Accounting_modals extends MY_Controller
                     $payee = $this->vendors_model->get_vendor_by_id($bill->vendor_id);
                     $payeeName = $payee->display_name;
 
-                    $amount = '$'.$bill->total_amount;
+                    $amount = '$'.number_format(floatval($bill->total_amount), 2, '.', ',');
                     if(count($data) < 10) {
                         $data[] = [
                             'id' => $bill->id,
@@ -10818,7 +10885,7 @@ class Accounting_modals extends MY_Controller
                     $payee = $this->vendors_model->get_vendor_by_id($purchaseOrder->vendor_id);
                     $payeeName = $payee->display_name;
 
-                    $amount = '$'.$purchaseOrder->total_amount;
+                    $amount = '$'.number_format(floatval($purchaseOrder->total_amount), 2, '.', ',');
                     if(count($data) < 10) {
                         $data[] = [
                             'id' => $purchaseOrder->id,
@@ -10840,7 +10907,7 @@ class Accounting_modals extends MY_Controller
                     $payee = $this->vendors_model->get_vendor_by_id($vCredit->vendor_id);
                     $payeeName = $payee->display_name;
 
-                    $amount = '$'.$vCredit->total_amount;
+                    $amount = '$'.number_format(floatval($vCredit->total_amount), 2, '.', ',');
                     if(count($data) < 10) {
                         $data[] = [
                             'id' => $vCredit->id,
@@ -10874,7 +10941,7 @@ class Accounting_modals extends MY_Controller
                         break;
                     }
 
-                    $amount = '$'.$ccCredit->total_amount;
+                    $amount = '$'.number_format(floatval($ccCredit->total_amount), 2, '.', ',');
                     if(count($data) < 10) {
                         $data[] = [
                             'id' => $ccCredit->id,
@@ -10893,7 +10960,7 @@ class Accounting_modals extends MY_Controller
                 });
 
                 foreach($transactions as $deposit) {
-                    $amount = '$'.$deposit->total_amount;
+                    $amount = '$'.number_format(floatval($deposit->total_amount), 2, '.', ',');
 
                     $funds = $this->accounting_bank_deposit_model->getFunds($deposit->id);
                     $flag = true;
@@ -10942,7 +11009,7 @@ class Accounting_modals extends MY_Controller
                 });
 
                 foreach($transactions as $transfer) {
-                    $amount = '$'.$transfer->transfer_amount;
+                    $amount = '$'.number_format(floatval($transfer->transfer_amount), 2, '.', ',');
 
                     if(count($data) < 10) {
                         $data[] = [
@@ -11006,7 +11073,7 @@ class Accounting_modals extends MY_Controller
                 });
 
                 foreach($transactions as $payment) {
-                    $amount = '$'.$payment->amount;
+                    $amount = '$'.number_format(floatval($payment->amount), 2, '.', ',');
                     $payee = $this->vendors_model->get_vendor_by_id($payment->payee_id);
                     $payeeName = $payee->display_name;
 
@@ -11041,7 +11108,7 @@ class Accounting_modals extends MY_Controller
                         $totalTime = ($hms[0] + ($hms[1]/60) + ($hms[2]/3600));
 
                         $amount = floatval($activity->hourly_rate) * $totalTime;
-                        $amount = '$'.$amount;
+                        $amount = '$'.number_format(floatval($amount), 2, '.', ',');
 
                         $customer = $this->accounting_customers_model->get_by_id($activity->customer_id);
                         $name = $customer->first_name . ' ' . $customer->last_name;
@@ -11111,6 +11178,9 @@ class Accounting_modals extends MY_Controller
             break;
             case 'credit-card-pmt':
                 $delete = $this->delete_cc_payment($transactionId);
+            break;
+            case 'time-activity' :
+                $delete = $this->delete_time_activity($transactionId);
             break;
         }
 
@@ -11783,6 +11853,15 @@ class Accounting_modals extends MY_Controller
         return $update;
     }
 
+    public function delete_time_activity($activityId)
+    {
+        $activityId = $this->accounting_single_time_activity_model->get_by_id($activityId);
+
+        $update = $this->accounting_single_time_activity_model->update($activity->id, ['status' => 0]);
+
+        return $update;
+    }
+
     public function void_transaction($transactionType, $transactionId)
     {
         switch ($transactionType) {
@@ -12106,5 +12185,49 @@ class Accounting_modals extends MY_Controller
                 $this->vendors_model->update_transaction_category_details($item->id, $itemDetails);
             }
         }
+    }
+
+    private function void_transfer($transferId)
+    {
+        $transfer = $this->accounting_transfer_funds_model->getById($transferId, logged('company_id'));
+
+        $transferData = [
+            'transfer_amount' => 0.00,
+            'transfer_memo' => 'Voided',
+            'status' => 4,
+        ];
+
+        $void = $this->accounting_transfer_funds_model->update($transfer->id, $transferData);
+
+        if($void) {
+            $transferFromAcc = $this->chart_of_accounts_model->getById($transfer->transfer_from_account_id);
+            $transferToAcc = $this->chart_of_accounts_model->getById($transfer->transfer_to_account_id);
+
+            $transferFromBal = $transferFromAcc->account_id !== "7" ? floatval($transferFromAcc->balance) + floatval($transfer->transfer_amount) : floatval($transferFromAcc->balance) - floatval($transfer->transfer_amount);
+            $transferToBal = $transferToAcc->account_id !== "7" ? floatval($transferToAcc->balance) - floatval($transfer->transfer_amount) : floatval($transferToAcc->balance) + floatval($transfer->transfer_amount);
+
+            $transferFromBal = number_format($transferFromBal, 2, '.', ',');
+            $transferToBal = number_format($transferToBal, 2, '.', ',');
+
+            $transferFromAccData = [
+                'id' => $transferFromAcc->id,
+                'company_id' => logged('company_id'),
+                'balance' => $transferFromBal
+            ];
+            $transferToAccData = [
+                'id' => $transferToAcc->id,
+                'company_id' => logged('company_id'),
+                'balance' => $transferToBal
+            ];
+
+            $this->chart_of_accounts_model->updateBalance($transferFromAccData);
+            $this->chart_of_accounts_model->updateBalance($transferToAccData);
+        }
+
+        return [
+            'data' => $transferId,
+            'success' => $void ? true : false,
+            'message' => $void ? 'Transaction successfully voided!' : 'Unexpected error occurred.'
+        ];
     }
 }

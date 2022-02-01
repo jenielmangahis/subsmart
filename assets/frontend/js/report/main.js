@@ -17,7 +17,7 @@ var options = {
   urlReportPreview: base_url + "reports/preview",
   //updates
   urlFilterReportsExpenseByCategory: base_url + "reports/expenseByCategory",
-  urlfilterReportsExpenseByCategoryMonth: base_url + "reports/expenseByCategoryMonth",
+  urlfilterReportsExpenseByCategoryMonth: base_url + "reports/expenseByCategory",
   urlFilterInvoiceByDate: base_url + "reports/invoiceByDate",
   urlfilterWorkOrderByEmployee: base_url + "reports/workOrderByEmployee",
   urlfilterWorkOrderByStatus: base_url + "reports/workOrderByStatus",
@@ -317,9 +317,10 @@ function filterReportsExpenseByCategoryMonth(startDate, endDate) {
     type: "GET",
     data: { startDate: startDate, endDate: endDate },
     success: function (response) {
-      var obj = JSON.parse(response);
-      $("#tableToListReport tbody").empty();
-      obj.forEach(expenseMonthAppend);
+      // var obj = JSON.parse(response);
+      // $("#tableToListReport tbody").empty();
+      // obj.forEach(expenseAppend);
+      alert('test');
     },
   });
 }

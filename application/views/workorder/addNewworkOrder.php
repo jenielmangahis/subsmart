@@ -910,7 +910,7 @@ border: none;
                                         <tr style="color:blue;font-weight:bold;font-size:16px;">
                                             <td><b>Grand Total ($)</b></td>
                                             <td></td>
-                                            <td><b><span id="grand_total">0.00</span>
+                                            <td style="text-align:right;"><b><span id="grand_total">0.00</span>
                                                 <input type="hidden" name="grand_total" id="grand_total_input" value='0'></b></td>
                                         </tr>
                                     </table>
