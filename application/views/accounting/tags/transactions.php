@@ -353,11 +353,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
     <!-- Modal for removing tags -->
     <div class="modal-right-side">
-        <div class="modal right fade" id="remove-tags-modal" tabindex="" role="dialog" aria-labelledby="add-tag-label">
+        <div class="modal right fade" id="remove-tags-modal" tabindex="" role="dialog" aria-labelledby="remove-tag-label">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h3 class="modal-title" id="add-tag-label" >Add tags</h3>
+                        <h3 class="modal-title" id="remove-tag-label" >Remove tags</h3>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     </div>
                     <!-- <form id="create-tag-form"> -->
@@ -366,7 +366,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                             <label for=""><span class="selected-transaction-count">0</span> transaction selected</label>
                         </div>
                         <div class="form-group">
-                            <input type="text" id="search-tag" class="form-control">
+                            <input type="text" id="search-tag" class="form-control" placeholder="Search tags">
                         </div>
 
                         <table id="remove-tags-table" class="table table-bordered table-hover" style="width:100%">

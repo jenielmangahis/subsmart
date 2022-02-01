@@ -730,6 +730,10 @@ var table = $('#employees-table').DataTable({
                 if($('#chk-pay-rate').prop('checked') === false) {
                     $(td).addClass('hide');
                 }
+
+                if($('#privacy').prop('checked')) {
+                    $(td).html(`<i class="fa fa-lock"></i>`);
+                }
             }
         },
         {

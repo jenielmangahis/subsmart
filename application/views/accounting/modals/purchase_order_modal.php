@@ -208,7 +208,11 @@
                                                                             </div>
                                                                         </td>
                                                                         <?php endif; ?>
-                                                                        <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
+                                                                        <td>
+                                                                            <div class="d-flex align-items-center justify-content-center">
+                                                                                <a href="#" class="deleteRow"><i class="fa fa-trash"></i></a>
+                                                                            </div>
+                                                                        </td>
                                                                     </tr>
                                                                     <?php $count = 1; ?>
                                                                     <?php if(isset($categories) && count($categories) > 0) : ?>
@@ -247,7 +251,11 @@
                                                                             </div>
                                                                         </td>
                                                                         <?php endif; ?>
-                                                                        <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
+                                                                        <td>
+                                                                            <div class="d-flex align-items-center justify-content-center">
+                                                                                <a href="#" class="deleteRow"><i class="fa fa-trash"></i></a>
+                                                                            </div>
+                                                                        </td>
                                                                     </tr>
                                                                     <?php $count++; endforeach; ?>
                                                                     <?php endif; ?>
@@ -264,7 +272,11 @@
                                                                         <td></td>
                                                                         <td></td>
                                                                         <?php endif; ?>
-                                                                        <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
+                                                                        <td>
+                                                                            <div class="d-flex align-items-center justify-content-center">
+                                                                                <a href="#" class="deleteRow"><i class="fa fa-trash"></i></a>
+                                                                            </div>
+                                                                        </td>
                                                                     </tr>
                                                                     <?php $count++; } while ($count <= 2) ?>
                                                                     <tr>
@@ -279,7 +291,11 @@
                                                                         <td></td>
                                                                         <td></td>
                                                                         <?php endif; ?>
-                                                                        <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
+                                                                        <td>
+                                                                            <div class="d-flex align-items-center justify-content-center">
+                                                                                <a href="#" class="deleteRow"><i class="fa fa-trash"></i></a>
+                                                                            </div>
+                                                                        </td>
                                                                     </tr>
                                                                 </tbody>
                                                             </table>
@@ -354,7 +370,11 @@
                                                                                     </div>
                                                                                 </td>
                                                                                 <?php endif; ?>
-                                                                                <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
+                                                                                <td>
+                                                                                    <div class="d-flex align-items-center justify-content-center">
+                                                                                        <a href="#" class="deleteRow"><i class="fa fa-trash"></i></a>
+                                                                                    </div>
+                                                                                </td>
                                                                             </tr>
                                                                         <?php endforeach; ?>
                                                                     <?php endif; ?>

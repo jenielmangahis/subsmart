@@ -565,15 +565,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
                                                     <!-- <div class="show_mobile_view" style="color:green;"><span>Product</span></div> -->
                                                 </td>
-                                                <td width="10%"><input type="number"
+                                                <!-- <td width="10%"><input type="number"
                                                         class="form-control quantity_inv2 mobile_qty" name="quantity[]"
                                                         data-counter="0" id="quantity_0" value="1"></td>
                                                 <td width="10%"><input type="number"
                                                         class="form-control price price_inv hidden_mobile_view" name="price[]"
                                                         data-counter="0" id="price_0" min="0" value="0"> 
-                                                        <!-- <input type="hidden" class="priceqty" id="priceqty_0"> -->
+                                                        <input type="hidden" class="priceqty" id="priceqty_0">
                                                     <div class="show_mobile_view"><span class="price">0</span>
-                                                        <!-- <input type="hidden" class="form-control price" name="price[]" data-counter="0" id="priceM_0" min="0" value="0"> -->
                                                     </div><input id="priceqty_0" value="0" type="hidden"
                                                         name="price_qty[]"
                                                         class="form-control hidden_mobile_view price_qty">
@@ -584,14 +583,32 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 <td width="10%" class="hidden_mobile_view"><input type="text"
                                                         class="form-control tax_change" name="tax[]" data-counter="0"
                                                         id="tax1_0" min="0" value="0">
-                                                    <!-- <span id="span_tax_0">0.0</span> -->
                                                 </td>
                                                 <td width="10%" class="hidden_mobile_view"><input type="hidden"
                                                         class="form-control " name="total[]" data-counter="0"
                                                         id="item_total_0" min="0" value="0">
                                                     $<span id="span_total_0">0.00</span></td>
                                                 <td><a href="#" class="remove btn btn-sm btn-success" id="0"><i
-                                                            class="fa fa-trash" aria-hidden="true"></i></a></td>
+                                                            class="fa fa-trash" aria-hidden="true"></i></a></td> -->
+
+                                                <td width="10%"><input type="number" class="form-control quantity mobile_qty" name="quantity[]"
+                                                           data-counter="0" id="quantity_0" value="1"></td>
+                                                <td width="10%"><input type="number" class="form-control price hidden_mobile_view" name="price[]"
+                                                           data-counter="0" id="price_0" min="0" value="0"> <input type="hidden" class="priceqty" id="priceqty_0"> 
+                                                           <div class="show_mobile_view"><span class="price">0</span>
+                                                           <!-- <input type="hidden" class="form-control price" name="price[]" data-counter="0" id="priceM_0" min="0" value="0"> -->
+                                                           </div><input id="priceM_qty0" value=""  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view price_qty"></td>
+                                                <td width="10%" class="hidden_mobile_view"><input type="number" class="form-control discount" name="discount[]"
+                                                           data-counter="0" id="discount_0" min="0" value="0"  readonly></td>
+                                                <td width="10%" class="hidden_mobile_view"><input type="text" class="form-control tax_change" name="tax[]"
+                                                           data-counter="0" id="tax1_0" min="0" value="0">
+                                                           <!-- <span id="span_tax_0">0.0</span> -->
+                                                           </td>
+                                                <td width="10%" class="hidden_mobile_view"><input type="hidden" class="form-control " name="total[]"
+                                                           data-counter="0" id="item_total_0" min="0" value="0">
+                                                           $<span id="span_total_0">0.00</span></td>
+                                                <td><a href="#" class="remove btn btn-sm btn-success" id="0"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
+                                                            
                                             </tr>
                                         </tbody>
                                     </table>

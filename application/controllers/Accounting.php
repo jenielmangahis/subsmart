@@ -93,7 +93,7 @@ class Accounting extends MY_Controller
                 // array("Banking", 	array('Link Bank','Rules','Receipts','Tags')),
                 array("Cash Flow", array()),
                 array("Expenses", array('Expenses', 'Vendors')),
-                array("Sales", array('Overview', 'All Sales', 'Estimates', 'Customers', 'Deposits', 'Work Order', 'Invoice', 'Jobs')),
+                array("Sales", array('Overview', 'All Sales', 'Estimates', 'Customers', 'Deposits', 'Work Order', 'Invoice', 'Jobs', 'Products and services')),
                 array("Payroll", array('Overview', 'Employees', 'Contractors', "Workers' Comp", 'Benifits')),
                 array("Reports", array()),
                 array("Taxes", array("Sales Tax", "Payroll Tax")),
@@ -106,7 +106,7 @@ class Accounting extends MY_Controller
                 // array("",	array('/accounting/link_bank','/accounting/rules','/accounting/receipts','/accounting/tags')),
                 array('/accounting/cashflowplanner', array()),
                 array("", array('/accounting/expenses', '/accounting/vendors')),
-                array("", array('/accounting/sales-overview', '/accounting/all-sales', '/accounting/newEstimateList', '/accounting/customers', '/accounting/deposits', '/accounting/listworkOrder', '/accounting/invoices', '/accounting/jobs')),
+                array("", array('/accounting/sales-overview', '/accounting/all-sales', '/accounting/newEstimateList', '/accounting/customers', '/accounting/deposits', '/accounting/listworkOrder', '/accounting/invoices', '/accounting/jobs', '/accounting/products-and-services')),
                 array("", array('/accounting/payroll-overview', '/accounting/employees', '/accounting/contractors', '/accounting/workers-comp', '#')),
                 array('/accounting/reports', array()),
                 array("", array('/accounting/salesTax', '/accounting/payrollTax')),
@@ -1174,7 +1174,7 @@ class Accounting extends MY_Controller
         $data->file_location = base_url("assets/pdf/" . $filename);
         echo json_encode($data);
     }
-    public function management_report_generate_pdf($management_report_id="")
+    public function management_report_generate_pdf($management_report_id = "")
     {
         $action = "save";
         if ($management_report_id  == "") {
@@ -1207,6 +1207,37 @@ class Accounting extends MY_Controller
             echo json_encode($data);
         }
     }
+
+    public function management_report_generate_docx()
+    {
+        $management_report_id=1;
+        $management_report = $this->accounting_management_reports->get_management_reports_by_id($management_report_id);
+        $this->page_data["management_report"] = $management_report;
+        $this->page_data["primary_pages"] = $this->accounting_management_reports->get_management_reports_preliminary_pages_by_id($management_report_id);
+        $this->page_data["report_pages"] = $this->accounting_management_reports->get_report_pages_by_maagement_report_id($management_report_id);
+        $html = $this->load->view('accounting/reports/management_reports/new_report_secitons', $this->page_data, true);
+
+        $phpWord = new \PhpOffice\PhpWord\PhpWord();
+        $section = $phpWord->addSection();
+        
+        \PhpOffice\PhpWord\Shared\Html::addHtml($section, "<h1 style='font-size:100px;'>Yes</h1> <p>12445</p>");
+        $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
+        $filename = "LouWorld.docx";
+        $objWriter->save($filename);
+        header('Content-Description: File Transfer');
+		header('Content-Type: application/octet-stream');
+		header('Content-Disposition: attachment; filename='.$filename);
+		header('Content-Transfer-Encoding: binary');
+		header('Expires: 0');
+		header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+		header('Pragma: public');
+		header('Content-Length: ' . filesize($filename));
+		flush();
+		readfile($filename);
+		unlink($filename); // deletes the temporary file
+		exit;
+    }
+
     public function management_report_send_email()
     {
         $management_report_id = $this->input->post("management_report_id");

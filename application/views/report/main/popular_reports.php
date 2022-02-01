@@ -462,10 +462,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <table id="tableToListReport" class="table table-hover table-to-list">
                                     <thead>
                                         <tr>
-                                            <th class="text-left">Customer</th>
-                                            <th class="text-left">Category</th>
-                                            <th class="text-right">Due Date</th>
-                                            <th class="text-right">Status</th>
+                                            <th></th>
+                                            <th>Category</th>
+                                            <th class="text-right">Vendor</th>
+                                            <th class="text-right">Payment Date</th>
+                                            <th class="text-right">Payment Method</th>
+                                            <th class="text-right">Ref. No.</th>
                                             <th class="text-right">Total</th>
                                         </tr>
                                     </thead>

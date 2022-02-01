@@ -1218,7 +1218,7 @@ Alarm Direct, Inc</textarea>
             },
         });
     }
-    over_tax = parseFloat(tax_tot).toFixed(2);
+    // over_tax = parseFloat(tax_tot).toFixed(2);
     // alert(over_tax);
 
 

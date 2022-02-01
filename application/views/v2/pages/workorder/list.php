@@ -171,8 +171,21 @@
                                     <td class="fw-bold nsm-text-primary"><?php echo $workorder->work_order_number ?></td>
                                     <td><?php echo date('M d, Y', strtotime($workorder->date_created)) ?></td>
                                     <td>
-                                        <a href="<?php echo base_url('customer/view/' . $workorder->customer_id) ?>" class="nsm-link"><?php echo $workorder->first_name . ' ' .  $workorder->middle_name . ' ' . $workorder->last_name; ?></a>
-                                        <label class="d-block">Scheduled on: 30 Mar 2020, 2:00 pm to 4:00 pm</label>
+                                        <a href="<?php echo base_url('customer/view/' . $workorder->customer_id) ?>" class="nsm-link">
+                                        <?php 
+                                            //echo $workorder->first_name . ' ' .  $workorder->middle_name . ' ' . $workorder->last_name; 
+                                            if(empty($workorder->first_name)){
+                                                echo $workorder->contact_name;
+                                            }else{
+
+                                                echo $workorder->first_name . ' ' .  $workorder->middle_name . ' ' . $workorder->last_name;
+                                            }
+                                        ?></a>
+                                        <label class="d-block">Issued on: 
+                                            <?php //echo date_format($workorder->first_name, 'd M Y H:i:s') 
+                                                echo date("d M Y H:i:s", strtotime($workorder->date_issued));
+                                            ?>
+                                        </label>
                                     </td>
                                     <td><?php echo get_user_by_id($workorder->employee_id)->FName . ' ' . get_user_by_id($workorder->employee_id)->LName ?></td>
                                     <td><span class="nsm-badge <?= $prio_badge ?>"><?php echo $workorder->priority; ?></span></td>

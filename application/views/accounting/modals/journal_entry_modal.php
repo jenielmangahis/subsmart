@@ -78,7 +78,11 @@
                                                                 <td>
                                                                     <select name="names[]" class="form-control"></select>
                                                                 </td>
-                                                                <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
+                                                                <td>
+                                                                    <div class="d-flex align-items-center justify-content-center">
+                                                                        <a href="#" class="deleteRow"><i class="fa fa-trash"></i></a>
+                                                                    </div>
+                                                                </td>
                                                             </tr>
                                                             <?php $count = 1; ?>
                                                             <?php if(isset($entries) && count($entries) > 0) : ?>
@@ -101,7 +105,11 @@
                                                                                 <?php endif; ?>
                                                                             </select>
                                                                         </td>
-                                                                        <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
+                                                                        <td>
+                                                                            <div class="d-flex align-items-center justify-content-center">
+                                                                                <a href="#" class="deleteRow"><i class="fa fa-trash"></i></a>
+                                                                            </div>
+                                                                        </td>
                                                                     </tr>
                                                                     <?php $count++; ?>
                                                                 <?php endforeach; ?>
@@ -115,7 +123,11 @@
                                                                     <td></td>
                                                                     <td></td>
                                                                     <td></td>
-                                                                    <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
+                                                                    <td>
+                                                                        <div class="d-flex align-items-center justify-content-center">
+                                                                            <a href="#" class="deleteRow"><i class="fa fa-trash"></i></a>
+                                                                        </div>
+                                                                    </td>
                                                                 </tr>
                                                             <?php $count++; } while ($count <= 8) ?>
                                                             <tr>
@@ -126,7 +138,11 @@
                                                                 <td></td>
                                                                 <td></td>
                                                                 <td></td>
-                                                                <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
+                                                                <td>
+                                                                    <div class="d-flex align-items-center justify-content-center">
+                                                                        <a href="#" class="deleteRow"><i class="fa fa-trash"></i></a>
+                                                                    </div>
+                                                                </td>
                                                             </tr>
                                                         </tbody>
                                                         <tfoot>
@@ -187,8 +203,30 @@
                         <div class="col-md-4">
                             <button type="button" class="btn btn-secondary btn-rounded border" data-dismiss="modal">Close</button>
                         </div>
-                        <div class="col-md-4 d-flex">
+                        <div class="col-md-4 <?=!isset($journal_entry) ? 'd-flex' : ''?>">
+                            <?php if(!isset($journal_entry)) : ?>
                             <a href="#" class="text-white m-auto" onclick="makeRecurring('journal_entry')">Make Recurring</a>
+                            <?php else : ?>
+                            <div class="row h-100">
+                                <div class="col-md-12 d-flex align-items-center justify-content-center">
+                                    <span><a href="#" class="text-white">Reverse</a></span>
+                                    <span class="mx-3 divider"></span>
+                                    <span><a href="#" class="text-white" onclick="makeRecurring('journal_entry')">Make Recurring</a></span>
+                                    <span class="mx-3 divider"></span>
+                                    <span>
+                                        <div class="dropup">
+                                            <a href="javascript:void(0);" class="text-white" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
+                                            <div class="dropdown-menu">
+                                                <a class="dropdown-item" href="#" id="copy-journal-entry">Copy</a>
+                                                <a class="dropdown-item" href="#" id="delete-journal-entry">Delete</a>
+                                                <a class="dropdown-item" href="#">Transaction journal</a>
+                                                <a class="dropdown-item" href="#">Audit history</a>
+                                            </div>
+                                        </div>
+                                    </span>
+                                </div>
+                            </div>
+                            <?php endif; ?>
                         </div>
                         <div class="col-md-4">
                             <!-- Split dropup button -->

@@ -99,25 +99,25 @@ function getItemsOption2(obj) {
   });
 }
 
-function setitem(obj, title, price, discount, itemid) {
-  // alert('here');
-  // var total = price * 1;
-  jQuery(obj).parent().parent().find(".getItems").val(title);
-  jQuery(obj).parent().parent().find(".getItems_hidden").text(title);
-  jQuery(obj).parent().parent().parent().find(".price").val(price);
-  jQuery(obj).parent().parent().parent().find(".priceqty").val(price);
-  jQuery(obj).parent().parent().parent().find(".price").text(price);
-  jQuery(obj).parent().parent().parent().find(".discount").val(discount);
-  jQuery(obj).parent().parent().parent().find(".itemid").val(itemid);
-  var counter = jQuery(obj)
-    .parent()
-    .parent()
-    .parent()
-    .find(".price")
-    .data("counter");
-  jQuery(obj).parent().empty();
-  calculation(counter);
-}
+// function setitem(obj, title, price, discount, itemid) {
+//   // alert('here');
+//   // var total = price * 1;
+//   jQuery(obj).parent().parent().find(".getItems").val(title);
+//   jQuery(obj).parent().parent().find(".getItems_hidden").text(title);
+//   jQuery(obj).parent().parent().parent().find(".price").val(price);
+//   jQuery(obj).parent().parent().parent().find(".priceqty").val(price);
+//   jQuery(obj).parent().parent().parent().find(".price").text(price);
+//   jQuery(obj).parent().parent().parent().find(".discount").val(discount);
+//   jQuery(obj).parent().parent().parent().find(".itemid").val(itemid);
+//   var counter = jQuery(obj)
+//     .parent()
+//     .parent()
+//     .parent()
+//     .find(".price")
+//     .data("counter");
+//   jQuery(obj).parent().empty();
+//   calculation(counter);
+// }
 
 function setitem2(obj, title, price, discount, itemid) {
   jQuery(obj).parent().parent().find(".getItems2").val(title);
@@ -182,20 +182,23 @@ $(document).on("focusout", ".markup_input", function () {
 });
 
 $(document).on("focusout", ".adjustment_input", function () {
+  // alert($(this).val());
   var counter = $(this).data("counter");
   // calculation(counter);
   var subtotal = $('#item_total').val();
   var taxes = $('#total_tax_input').val();
   var adjustment = $(this).val();
-  if( adjustment <= 0 ){
-    adjustment = 0;
-  }
+  // if( adjustment <= 0 ){
+  //   adjustment = 0;
+  // }
   var grand = parseFloat(subtotal) + parseFloat(taxes);  
   var new_grand = parseFloat(grand) + parseFloat(adjustment);
 
+  // alert(adjustment);
+
   $('#grand_total_input').val(new_grand.toFixed(2));
   $('#grand_total').text(new_grand.toFixed(2));
-  $('#adjustmentText').text(adjustment.toFixed(2));
+  $('#adjustmentText').text(adjustment);
   $("#payment_amount").val(new_grand.toFixed(2));
 
 });
@@ -1489,14 +1492,18 @@ function getItems(obj) {
   });
 }
 function setitem(obj, title, price, discount, itemid) {
-  // alert('here dri');
+  // alert(price);
   jQuery(obj).parent().parent().find(".getItems").val(title);
   jQuery(obj).parent().parent().find(".getItems_hidden").text(title);
   jQuery(obj).parent().parent().parent().find(".price").val(price);
   jQuery(obj).parent().parent().parent().find(".priceqty").val(price);
-  jQuery(obj).parent().parent().parent().find(".price").text(price);
+  // jQuery(obj).parent().parent().parent().find(".price").text(price);
   jQuery(obj).parent().parent().parent().find(".discount").val(discount);
   jQuery(obj).parent().parent().parent().find(".itemid").val(itemid);
+
+  // var test = $('.pirce').val();
+  // alert('testing ' + test);
+
   var counter = jQuery(obj)
     .parent()
     .parent()
@@ -1506,6 +1513,26 @@ function setitem(obj, title, price, discount, itemid) {
   jQuery(obj).parent().empty();
   calculation(counter);
 }
+
+// function setitem(obj, title, price, discount, itemid) {
+//   // alert('here');
+//   // var total = price * 1;
+//   jQuery(obj).parent().parent().find(".getItems").val(title);
+//   jQuery(obj).parent().parent().find(".getItems_hidden").text(title);
+//   jQuery(obj).parent().parent().parent().find(".price").val(price);
+//   jQuery(obj).parent().parent().parent().find(".priceqty").val(price);
+//   jQuery(obj).parent().parent().parent().find(".price").text(price);
+//   jQuery(obj).parent().parent().parent().find(".discount").val(discount);
+//   jQuery(obj).parent().parent().parent().find(".itemid").val(itemid);
+//   var counter = jQuery(obj)
+//     .parent()
+//     .parent()
+//     .parent()
+//     .find(".price")
+//     .data("counter");
+//   jQuery(obj).parent().empty();
+//   calculation(counter);
+// }
 
 function getItemsPackage(obj) {
   var sk = jQuery(obj).val();
@@ -1971,7 +1998,7 @@ function calculation(counter) {
     parseFloat(discount)
   ).toFixed(2);
 
-  // alert( 'yeah' + total);
+  // alert( 'yeah ' + price);
 
   $("#span_total_" + counter).text(total);
   $("#tax_1_" + counter).text(tax1);
@@ -3068,7 +3095,7 @@ $("#smoothed1am").signaturePad({
 });
 $("#company_representative_approval_signature1aM").on("click touchstart",
   function () {
-    alert('yeah');
+    // alert('yeah');
     var canvas = document.getElementById(
       "signM"
     );    

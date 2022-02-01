@@ -27,7 +27,6 @@ class Accounting_bank_deposit_model extends MY_Model {
 			$this->db->where('company_id', $companyId);
 		}
 		$this->db->where('id', $id);
-		$this->db->where('status', 1);
 
 		$query = $this->db->get($this->table);
 		return $query->row();

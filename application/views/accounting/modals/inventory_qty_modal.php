@@ -99,7 +99,11 @@
                                                                         <td></td>
                                                                         <td><input type="number" name="new_qty[]" class="form-control text-right" required></td>
                                                                         <td><input type="number" name="change_in_qty[]" class="form-control text-right" required></td>
-                                                                        <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
+                                                                        <td>
+                                                                            <div class="d-flex align-items-center justify-content-center">
+                                                                                <a href="#" class="deleteRow"><i class="fa fa-trash"></i></a>
+                                                                            </div>
+                                                                        </td>
                                                                     </tr>
                                                                     <tr>
                                                                         <td></td>
@@ -110,7 +114,11 @@
                                                                         <td></td>
                                                                         <td></td>
                                                                         <td></td>
-                                                                        <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
+                                                                        <td>
+                                                                            <div class="d-flex align-items-center justify-content-center">
+                                                                                <a href="#" class="deleteRow"><i class="fa fa-trash"></i></a>
+                                                                            </div>
+                                                                        </td>
                                                                     </tr>
                                                                 </tbody>
                                                             </table>
@@ -145,7 +153,7 @@
                                                                     <th width="10%">CHANGE IN QTY</th>
                                                                     <th></th>
                                                                 </thead>
-                                                                <tbody class="cursor-pointer">
+                                                                <tbody>
                                                                     <?php $count = 1; ?>
                                                                     <?php foreach($adjustedProds as $adjustedProd) : ?>
                                                                     <tr>
@@ -166,11 +174,22 @@
                                                                         <td>
                                                                             <input type="number" name="adjusted_change_in_qty[]" class="form-control text-right" value="<?=$adjustedProd->change_in_quantity?>" required>
                                                                         </td>
-                                                                        <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
+                                                                        <td>
+                                                                            <div class="d-flex align-items-center justify-content-center">
+                                                                                <a href="#" class="deleteRow"><i class="fa fa-trash"></i></a>
+                                                                            </div>
+                                                                        </td>
                                                                     </tr>
                                                                     <?php $count++; endforeach; ?>
                                                                 </tbody>
                                                             </table>
+                                                        </div>
+                                                        <div class="table-footer">
+                                                            <div class="row">
+                                                                <div class="col-md-6">
+                                                                    <button type="button" class="btn btn-outline-secondary border" data-target="#previous-adjustments-table" onclick="clearTableLines(event)">Clear all lines</button>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>

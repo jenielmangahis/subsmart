@@ -109,7 +109,7 @@ $('.datepicker').datepicker({
 });
 
 $('.notes-container').on('click', function() {
-    $('.edit-vendor:first-child').trigger('click');
+    $($('.edit-vendor')[0]).trigger('click');
 });
 
 const noAjax = [

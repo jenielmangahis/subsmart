@@ -31,6 +31,29 @@ class Invoice_model extends MY_Model
         return true;
     }
 
+    public function add_invoice_details($data)
+    {
+        $vendor = $this->db->insert('invoices_items', $data);
+	    $insert_id = $this->db->insert_id();
+		return  $insert_id;
+    }
+
+    public function getname($id)
+    {
+        $this->db->select('*');
+		$this->db->from('users');
+		$this->db->where('id', $id);
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    public function save_notification($data)
+    {
+        $vendor = $this->db->insert('user_notification', $data);
+	    $insert = $this->db->insert_id();
+		return  $insert;
+    }
+
     public function update_invoice_data($data)
     {
         extract($data);
@@ -92,6 +115,7 @@ class Invoice_model extends MY_Model
     {
         $this->db->select('*');
         $this->db->from($this->table);
+        $this->db->order_by('id', 'DESC');
         $this->db->where('company_id', $comp_id);
         $this->db->where('is_recurring', $type);
 
@@ -111,6 +135,7 @@ class Invoice_model extends MY_Model
 
         $this->db->select('*');
         $this->db->from($this->table);
+        $this->db->order_by('id', 'DESC');
 
         if (!$uid) {
             $this->db->where('user_id', $user_id);
@@ -124,7 +149,6 @@ class Invoice_model extends MY_Model
             }
         }
 
-        $this->db->order_by('id', 'DESC');
 
         $query = $this->db->get();
         return $query->result();
@@ -329,6 +353,7 @@ class Invoice_model extends MY_Model
 
         $this->db->from('invoices');
         $this->db->join('acs_profile', 'invoices.customer_id = acs_profile.prof_id');
+        $this->db->order_by('id', 'DESC');
 
         // $this->db->select('*');
         // $this->db->from($this->table);
@@ -632,6 +657,7 @@ class Invoice_model extends MY_Model
         $this->db->select('*');
         $this->db->from($this->table);
         $this->db->where('is_recurring', $type);
+        $this->db->order_by('id', 'DESC');
 
         if (!empty($filters)) {
             if (isset($filters['status'])) {

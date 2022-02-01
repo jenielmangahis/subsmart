@@ -146,7 +146,7 @@ $(function() {
         }
     });
 
-    $(document).on('change', 'table#payroll-table tbody tr td:nth-child(4) input[name="reg_pay_hours[]"], table#payroll-table tbody tr td:nth-child(5) input', function() {
+    $(document).on('change', '#payrollModal table#payroll-table tbody tr td:nth-child(4) input[name="reg_pay_hours[]"], #payrollModal table#payroll-table tbody tr td:nth-child(5) input:not([name="memo[]"])', function() {
         payrollRowTotal($(this));
         payrollTotal();
     });
@@ -645,7 +645,7 @@ $(function() {
         }
     });
 
-    $(document).on('click', `div#modal-container .full-screen-modal .modal-body table.clickable:not(#category-details-table,#item-details-table) tbody tr`, function() {
+    $(document).on('click', `div#modal-container .full-screen-modal .modal-body table.clickable:not(#category-details-table,#item-details-table,#previous-adjustments-table) tbody tr`, function() {
         if ($(this).find('input').length < 1) {
             var rowNum = $(this).children().next().html();
 
@@ -751,14 +751,15 @@ $(function() {
     });
 
     $(document).on('click', 'div#modal-container .modal-body table.clickable:not(#category-details-table,#item-details-table) tbody tr td a.deleteRow', function() {
-        $(this).parent().parent().remove();
-        if ($('div#modal-container table tbody tr').length < rowCount) {
-            $('div#modal-container table tbody').append(`<tr>${blankRow}</tr>`);
+        var parentTable = $(this).parent().parent().parent().parent().parent();
+        $(this).parent().parent().parent().remove();
+        if (parentTable.find('tbody tr').length < rowCount) {
+            parentTable.find('tbody').append(`<tr>${blankRow}</tr>`);
         }
 
         var num = 1;
 
-        $('div#modal-container table tbody tr').each(function() {
+        parentTable.find('tbody tr').each(function() {
             $(this).children('td:nth-child(2)').html(num);
             num++;
         });
@@ -766,6 +767,20 @@ $(function() {
         if (modalName === '#depositModal') {
             updateBankDepositTotal();
         }
+    });
+
+    $(document).on('click', 'div#modal-container .modal-body table#previous-adjustments-table tbody tr td a.deleteRow', function() {
+        $(this).parent().parent().remove();
+        if ($('div#modal-container .modal-body table#previous-adjustments-table tbody tr').length < rowCount) {
+            parentTable.find('tbody').append(`<tr>${blankRow}</tr>`);
+        }
+
+        var num = 1;
+
+        $('div#modal-container .modal-body table#previous-adjustments-table tbody tr').each(function() {
+            $(this).children('td:first-child').html(num);
+            num++;
+        });
     });
 
     $(document).on('click', '#modal-container .modal-body #category-details-table tbody tr td a.deleteRow', function() {
@@ -875,7 +890,7 @@ $(function() {
     });
 
     $(document).on('click', 'div#modal-container table#timesheet-table tbody tr td a.deleteRow', function() {
-        $(this).parent().parent().remove();
+        $(this).parent().parent().parent().remove();
         if ($('div#modal-container table tbody tr').length < rowCount) {
             $('div#modal-container table tbody').append(`<tr>${rowInputs}</tr>`)
         }
@@ -4729,6 +4744,34 @@ $(function() {
         });
     });
 
+    $(document).on('click', '#modal-container form #journalEntryModal #copy-journal-entry', function(e) {
+        e.preventDefault();
+
+        $('#modal-container form#modal-form').attr('onsubmit', 'submitModalForm(event, this)');
+        $('#modal-container form#modal-form').removeAttr('data-href');
+        $('#modal-container form#modal-form .modal-body .row.journal-entry-details').prepend(`<div class="col-md-12">
+            <div class="alert alert-info alert-dismissible mb-4" role="alert">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <h6 class="mt-0">This is a copy</h6>
+                <span>This is a copy of an expense. Revise as needed and save the expense.</span>
+            </div>
+        </div>`);
+    });
+
+    $(document).on('click', '#modal-container form #journalEntryModal #delete-journal-entry', function(e) {
+        e.preventDefault();
+
+        var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
+
+        $.ajax({
+            url: `/accounting/delete-transaction/journal/${split[1]}`,
+            type: 'DELETE',
+            success: function(result) {
+                location.reload();
+            }
+        });
+    });
+
     $(document).on('click', '#modal-container form #expenseModal #copy-expense', function(e) {
         e.preventDefault();
 
@@ -4951,6 +4994,20 @@ $(function() {
         });
     });
 
+    $(document).on('click', '#modal-container form #singleTimeModal #delete-time-activity', function(e) {
+        e.preventDefault();
+
+        var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
+
+        $.ajax({
+            url: `/accounting/delete-transaction/time-activity/${split[1]}`,
+            type: 'DELETE',
+            success: function(result) {
+                location.reload();
+            }
+        });
+    });
+
     $(document).on('show.bs.dropdown', '#modal-container #modal-form .modal .modal-header .dropdown', function() {
         var tableId = $(this).find('table').attr('id');
         if($.fn.DataTable.isDataTable(`#${tableId}`)) {
@@ -4999,6 +5056,9 @@ $(function() {
             ],
             fnCreatedRow: function(row, data, dataIndex) {
                 $(row).attr('onclick', 'viewTransaction(this)');
+            },
+            language: {
+                emptyTable: `Once you enter some ${tableId.replace('recent-', '').replace('-', ' ')}, they'll appear here.`
             }
         });
     });
@@ -5058,7 +5118,7 @@ const payrollTotal = () => {
     var commission = 0.00;
 
     $('div#payrollModal table#payroll-table tbody tr').each(function() {
-        var empTotalHours = $(this).children('td:nth-child(4)').children('input[name="reg_pay_hours[]"]').val();
+        var empTotalHours = $(this).find('input[name="reg_pay_hours[]"]').val();
         if (empTotalHours !== "" && empTotalHours !== undefined) {
             empTotalHours = parseFloat(empTotalHours);
         } else {
@@ -5455,24 +5515,28 @@ const clearTableLines = (e) => {
         $('#modal-container .modal #vendor').trigger('change');
     }
 
-    $(`table${table} tbody tr`).each(function(index, value) {
-        var count = $(this).find('td:nth-child(2)').html();
-        if(index < rowCount) {
-            if(table !== '#category-details-table' && table !== '#item-details-table') {
-                $(this).html(blankRow);
-            } else {
-                if(table === '#category-details-table') {
-                    $(this).html(catDetailsBlank);
+    if(table !== '#previous-adjustments-table') {
+        $(`table${table} tbody tr`).each(function(index, value) {
+            var count = $(this).find('td:nth-child(2)').html();
+            if(index < rowCount) {
+                if(table !== '#category-details-table' && table !== '#item-details-table') {
+                    $(this).html(blankRow);
                 } else {
-                    $(this).html(itemDetailsBlank);
+                    if(table === '#category-details-table') {
+                        $(this).html(catDetailsBlank);
+                    } else {
+                        $(this).html(itemDetailsBlank);
+                    }
                 }
+                $(this).find('td:nth-child(2)').html(count);
             }
-            $(this).find('td:nth-child(2)').html(count);
-        }
-        if(index >= rowCount) {
-            $(this).remove();
-        }
-    });
+            if(index >= rowCount) {
+                $(this).remove();
+            }
+        });
+    } else {
+        $(`${table} tbody`).html('');
+    }
 }
 
 const showApplyButton = () => {
@@ -6531,10 +6595,13 @@ const initModalFields = (modalName, data = {}) => {
         $(`#${modalName} table#category-details-table tbody tr:first-child()`).remove();
         $(`#${modalName} table#category-details-table tbody tr:last-child()`).remove();
     } else {
-        if($(`#${modalName} tbody table`).length > 0) {
-            rowInputs = $(`div#modal-container #${modalName} table tbody tr:first-child()`).html();
-            $(`div#modal-container #${modalName} table tbody tr:first-child()`).remove();
-            $(`div#modal-container #${modalName} table tbody tr:last-child()`).remove();
+        if($(`#${modalName} .modal-body table`).length > 0) {
+            if(modalName !== 'inventoryModal') {
+                rowInputs = $(`div#modal-container #${modalName} .modal-body table tbody tr:first-child()`).html();
+                blankRow = $(`div#modal-container #${modalName} .modal-body table tbody tr:last-child()`).html();
+                $(`div#modal-container #${modalName} .modal-body table tbody tr:first-child()`).remove();
+                $(`div#modal-container #${modalName} .modal-body table tbody tr:last-child()`).remove();
+            }
     
             switch(modalName) {
                 case 'depositModal' :
@@ -7313,6 +7380,8 @@ const viewTransaction = (el) => {
     var type = table.attr('id').replace('recent-', '').slice(0, -1).toLowerCase();
     if(type === 'journal-entrie') {
         type = 'journal';
+    } else if(type === 'time-activitie') {
+        type = 'time-activity';
     }
     data.type = table.attr('id').replace('recent-', '').slice(0, -1).charAt(0).toUpperCase();
     data.type += table.attr('id').replace('recent-', '').slice(0, -1).slice(1);
@@ -7322,6 +7391,8 @@ const viewTransaction = (el) => {
         data.type = 'Journal';
     } else if(data.type === 'Cc payment') {
         data.type = 'CC Payment';
+    } else if(data.type === 'Time activitie') {
+        data.type === 'Time activity';
     }
 
     $.get(`/accounting/view-transaction/${type}/${data.id}`, function(res) {
@@ -7380,12 +7451,19 @@ const viewTransaction = (el) => {
 
                 $('#transferModal').modal('show');
             break;
-            case 'journal-entry' :
+            case 'journal' :
                 initModalFields('journalEntryModal', data);
 
                 $('#journalEntryModal').modal('show');
             break;
             case 'qty-adjustment' :
+                rowInputs = $('#inventoryModal table#inventory-adjustments-table tbody tr:first-child()').html();
+                blankRow = $('#inventoryModal table#inventory-adjustments-table tbody tr:nth-child(2)').html();
+                rowCount = $('#inventoryModal table#inventory-adjustments-table tbody tr').length;
+
+                $('#inventoryModal table#inventory-adjustments-table tbody tr:first-child()').html(blankRow);
+                $('#inventoryModal table#inventory-adjustments-table tbody tr:first-child() td:nth-child(2)').html(1);
+
                 initModalFields('inventoryModal', data);
 
                 $('#inventoryModal').modal('show');
@@ -7394,6 +7472,11 @@ const viewTransaction = (el) => {
                 initModalFields('payDownCreditModal', data);
 
                 $('#payDownCreditModal').modal('show');
+            break;
+            case 'time-activity' :
+                initModalFields('singleTimeModal', data);
+
+                $('#singleTimeModal').modal('show');
             break;
         }
     });

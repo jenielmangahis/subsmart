@@ -298,7 +298,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <div class="col-sm-6">
                                     <h5>Terms &amp; Conditions</h5>
                                     <span class="help help-sm help-block">Mention your company's T&amp;C that will appear on the invoice.</span>
-                                    <textarea name="terms" cols="40" rows="2" class="form-control"></textarea>
+                                    <textarea name="terms" cols="40" rows="2" class="form-control ckeditor editor1_tc"></textarea>
                                 </div>
                             </div>
 
