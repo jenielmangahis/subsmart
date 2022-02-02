@@ -26,7 +26,7 @@ window.addEventListener("DOMContentLoaded", async () => {
   const $exportPDF = $("[data-action=export_pdf]");
   $exportPDF.on("click", async (event) => {
     event.preventDefault();
-    $("#reportsTable_wrapper .buttons-pdf").click();
+    $("#reportsTable_wrapper .buttons-print").click();
   });
 
   const $printBtn = $("[data-action=print]");
@@ -125,8 +125,10 @@ window.addEventListener("DOMContentLoaded", async () => {
         report_title_value: subtitle,
       };
 
-      setupTableTitles(payload);
-      api.saveTableInfo(payload);
+      api.saveTableInfo(payload).then(({ data }) => {
+        setupTableTitles(data);
+        setupReportFormValue($customizeReport, data);
+      });
     }
   });
 

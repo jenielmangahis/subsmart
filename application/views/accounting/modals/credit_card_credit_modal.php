@@ -456,14 +456,14 @@
                         <div class="col-md-4">
                             <!-- Split dropup button -->
                             <div class="btn-group dropup float-right">
-                                <button type="button" class="btn btn-success" id="save-and-new">
+                                <button type="button" class="btn btn-success" onclick="saveAndNewForm(event)">
                                     Save and new
                                 </button>
                                 <button type="button" class="btn btn-success dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <span class="sr-only">Toggle Dropdown</span>
                                 </button>
                                 <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="#" id="save-and-close">Save and close</a>
+                                    <a class="dropdown-item" href="#" onclick="saveAndCloseForm(event)">Save and close</a>
                                 </div>
                             </div>
                         </div>
