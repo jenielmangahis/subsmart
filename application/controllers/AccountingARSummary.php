@@ -119,7 +119,7 @@ class AccountingARSummary extends MY_Controller
         }
 
         $periodIds = array_map(function ($period) {return $period['id'];}, $periods);
-        return array_map(function ($record) use ($periodIds) {
+        $records = array_map(function ($record) use ($periodIds) {
             $total = 0;
             foreach ($record as $key => $data) {
                 if (!in_array($key, $periodIds)) {
@@ -133,6 +133,25 @@ class AccountingARSummary extends MY_Controller
             $record['total'] = $total;
             return $record;
         }, $records);
+
+        if (count($records) === 0) {
+            return $records;
+        }
+
+        $first = $records[0];
+        $totalRecord = ['customer_id' => 0, 'name' => 'Total'];
+        $recordKeys = array_keys($first);
+        foreach ($recordKeys as $key) {
+            if (in_array($key, ['customer_id', 'name'])) {
+                continue;
+            }
+
+            $totalRecord[$key] = array_sum(array_column($records, $key));
+        }
+
+        array_push($records, $totalRecord);
+        return $records;
+
     }
 
     public function apiExportExcel()
@@ -212,10 +231,129 @@ class AccountingARSummary extends MY_Controller
         $mail->Subject = $payload['subject'];
         $mail->MsgHTML($message);
         $mail->addAddress($payload['to']);
+
+        $storePath = FCPATH . 'uploads/arpdfs/';
+        if (!file_exists($storePath)) {
+            mkdir($storePath, 0777, true);
+        }
+
+        include APPPATH . 'libraries/tcpdf_min/tcpdf_import.php';
+
+        $this->db->where('user_id', logged('id'));
+        $form = $this->db->get('accounting_ar_summary_form')->row_array();
+        $reports = $this->getReports(new ReportParams($form));
+        $tableHTML = $this->generatePDFTable($reports);
+
+        $companyName = $form['company_name'] == '1' ? $form['company_name_value'] : '';
+        $reportTitle = $form['report_title'] == '1' ? $form['report_title_value'] : '';
+
+        $table = <<<EOD
+        <style>
+            *,
+            td {
+                font-family: -webkit-pictograph;
+            }
+
+            table {
+                width: 100%;
+            }
+
+            .header {
+                text-align: center;
+                margin-bottom: 1rem;
+            }
+
+            td {
+                padding: 8px;
+                border-bottom: 1px solid #ebebeb;
+            }
+
+            th {
+                font-weight: 600;
+            }
+
+            .text-right {
+                text-align: right;
+            }
+        </style>
+        <body class="dt-print-view">
+            <div class="header">
+                <h1 style="margin:0;">{$companyName}</h1>
+                <h3 style="margin:0;">{$reportTitle}</h3>
+            </div>
+            {$tableHTML}
+        </body>
+        EOD;
+
+        $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+        $pdf->AddPage();
+        $pdf->writeHTML($table, true, false, false, false, '');
+        $fileName = md5(uniqid($your_user_login, true));
+        $filePath = rtrim($storePath, '/') . "/{$fileName}.pdf";
+        $pdf->Output($filePath, 'F');
+
+        $mail->AddAttachment($filePath, $payload['file_name'] . '.pdf');
         $mail->send();
         $mail->ClearAllRecipients();
 
+        if (file_exists($filePath)) {
+            unlink($filePath);
+        }
+
         echo json_encode(['data' => $payload]);
+    }
+
+    public function generatePDFTable(array $reports)
+    {
+        $headers = array_keys($reports[0]);
+        $headers = array_filter($headers, function ($header) {
+            return $header !== 'customer_id';
+        });
+        $headers = array_values($headers);
+
+        $headerHTMLs = array_map(function ($header) {
+            if ($header === 'name') {
+                return "<th style=\"padding:8px;\">$header</th>";
+            }
+
+            return "<th style=\"padding:8px;text-align:right;\">$header</th>";
+        }, $headers);
+        $headerHTMLs = implode('', $headerHTMLs);
+
+        $tableDataHTMLs = [];
+        foreach ($reports as $report) {
+            $tds = [];
+            foreach ($headers as $header) {
+                $value = $report[$header];
+                if ($header === 'name') {
+                    array_push($tds, "<td style=\"padding:8px;\">{$value}</td>");
+                    continue;
+                }
+
+                array_push($tds, "<td style=\"padding:8px;text-align:right;\">{$value}</td>");
+            }
+
+            array_push($tableDataHTMLs, '<tr>' . implode('', $tds) . '</tr>');
+        }
+        $tableDataHTMLs = implode('', $tableDataHTMLs);
+
+        $table = <<<EOD
+            <table style="width:100%;">
+                <thead>
+                    <tr>
+                        %header%
+                    </tr>
+                </thead>
+                <tbody>
+                    %bodyInner%
+                </tbody>
+            </table>
+        EOD;
+
+        return strtr($table, [
+            '%header%' => $headerHTMLs,
+            '%bodyInner%' => $tableDataHTMLs,
+        ]);
     }
 
     public function apiSaveTableInfo()
