@@ -54,8 +54,6 @@ export class ReportsTable {
       return record;
     });
 
-    console.log(data);
-
     const columns = Object.keys(data[0]).reduce((carry, key) => {
       if (key === "customer_id") return carry;
       return [
@@ -70,7 +68,7 @@ export class ReportsTable {
     }, []);
 
     const table = this.$table.DataTable({
-      data,
+      data: data.slice(0, data.length - 1),
       columns,
       filter: false,
       searching: false,
@@ -108,6 +106,23 @@ export class ReportsTable {
       },
     });
 
+    const totalTdHTMLs = [];
+    const lastData = data.at(-1);
+    Object.keys(lastData).forEach((key) => {
+      if (key === "customer_id") return;
+
+      if (key === "name") {
+        totalTdHTMLs.push(
+          `<td style="padding:8px 10px;">${lastData[key]}</td>`
+        );
+      } else {
+        totalTdHTMLs.push(
+          `<td class="text-right" style="padding:8px 10px;">${lastData[key]}</td>`
+        );
+      }
+    });
+
+    this.$table.append(`<tfoot><tr>${totalTdHTMLs.join("")}</tr></tfoot>`);
     table.buttons(".hidden").nodes().css("display", "none");
 
     this.$orderRadios.on("change", (event) => {

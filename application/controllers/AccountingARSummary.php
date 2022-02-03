@@ -460,6 +460,45 @@ class AccountingARSummary extends MY_Controller
     {
         $this->db->where('user_id', logged('id'));
         $form = $this->db->get('accounting_ar_summary_form')->row();
+
+        if (is_null($form)) {
+            $date = new \DateTime(date('Y') . '-01-01');
+
+            $this->db->where('id', logged('company_id'));
+            $company = $this->db->get('clients')->row();
+
+            $input = [
+                'user_id' => logged('id'),
+                'report_period' => 'custom',
+                'report_period_value' => $date->format('Y-m-d'),
+                'divide_by_1000' => 0,
+                'without_cents' => 0,
+                'except_zero_amount' => 0,
+                'negative_numbers' => '-100',
+                'negative_numbers_show_in_red' => 0,
+                'show_nonzero_or_active_only' => 'active_rows/active_columns',
+                'aging_method' => 'current',
+                'number_of_periods' => 4,
+                'days_per_aging_period' => 30,
+                'filter_customer' => 0,
+                'show_logo' => 0,
+                'company_name' => 1,
+                'company_name_value' => $company->business_name,
+                'report_title' => 1,
+                'report_title_value' => 'A/R Aging Summary',
+                'header_report_period' => 1,
+                'date_prepared' => 1,
+                'time_prepared' => 1,
+                'header' => 'center',
+                'footer' => 'center',
+            ];
+            $this->db->insert('accounting_ar_summary_form', $input);
+
+            $this->db->where('user_id', logged('id'));
+            $form = $this->db->get('accounting_ar_summary_form')->row();
+        }
+
+        header('content-type: application/json');
         echo json_encode(['data' => $form]);
     }
 

@@ -456,7 +456,7 @@
                         <div class="col-md-4">
                             <div class="row h-100">
                                 <div class="col-md-12 d-flex align-items-center justify-content-center">
-                                    <span><a href="#" class="text-white">Print</a></span>
+                                    <span><a href="#" class="text-white" id="<?=!isset($purchaseOrder) ? 'save-and-print' : 'print-purchase-order'?>">Print</a></span>
                                     <span class="mx-3 divider"></span>
                                     <span><a href="#" onclick="makeRecurring('purchase_order')" class="text-white">Make recurring</a></span>
                                     <?php if(isset($purchaseOrder)) : ?>
