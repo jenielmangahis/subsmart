@@ -2908,8 +2908,7 @@
                                                                     </li>
                                                                     <li>
                                                                         <a href="javascript:void(0)"
-                                                                            class="create-charge-btn"
-                                                                            data-toggle="modal" data-target="#">
+                                                                            class="export-docx" data-id="<?=$report->id?>">
                                                                             Export as DOCX
                                                                         </a>
                                                                     </li>

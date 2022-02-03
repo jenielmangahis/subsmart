@@ -10,6 +10,35 @@ if ($management_report->cover_style == 1) {
     $header_bg_color = "#1F497D";
 }
 
+if($action=="preview"){
+
+}else{
+    $cover_leter=$management_report->cover_title;
+
+    if (strtolower($management_report->cover_subtitle) == "{company name}") {
+        $cover_subtitle=$management_report->business_name;
+    } else {
+        $cover_subtitle=$management_report->cover_subtitle;
+    }
+    $end_period = explode("{", $management_report->cover_report_period);
+        $echo_text = "";
+        for ($i = 0; $i < count($end_period); $i++) {
+            if ("{" . strtolower($end_period[$i]) == "{report end date}") {
+                $echo_text .= " " . date("F d, Y", strtotime($management_report->report_end_period));
+            } else {
+                $echo_text .= " " . $end_period[$i];
+            }
+        }
+    $end_period_text=$echo_text;
+    if ($management_report->cover_show_logo == 1) {
+        $logo_html=' <img src="<?= base_url("uploads/users/business_profile/1/Nsmart_logo.png") ?>" alt="">';
+                                                                                            }else{
+                                                                                                $logo_html="";
+                                                                                            }
+    $cover_prepared_date=$management_report->cover_prepared_date;
+    $cover_disclaimer=$management_report->cover_disclaimer;
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">

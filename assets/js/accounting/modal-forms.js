@@ -3262,6 +3262,21 @@ $(function() {
         });
     });
 
+    $(document).on('click', '#purchaseOrderModal .modal-footer #save-and-print', function(e) {
+        e.preventDefault();
+
+        submitType = 'save-and-print';
+
+        $(this).attr('id', 'print-purchase-order');
+        $('#modal-container form#modal-form').submit();
+    });
+
+    $(document).on('click', '#purchaseOrderModal .modal-footer #print-purchase-order', function(e) {
+        e.preventDefault();
+
+        printPurchaseOrder();
+    });
+
     $(document).on('click', '#modal-container #modal-form .modal .modal-footer #save', function(e) {
         e.preventDefault();
 
@@ -4983,6 +4998,20 @@ $(function() {
             }
         });
     });
+
+    $(document).on('click', '#viewPrintPurchaseOrderModal #print-pdf', function(e) {
+        e.preventDefault();
+
+        let pdfWindow = window.open("");
+        pdfWindow.document.write(`<iframe width="100%" height="100%" src="${$('#viewPrintPurchaseOrderModal iframe').attr('src')}"></iframe>`);
+        $(pdfWindow.document).find('body').css('padding', '0');
+        $(pdfWindow.document).find('body').css('margin', '0');
+        $(pdfWindow.document).find('iframe').css('border', '0');
+    });
+
+    $(document).on('hidden.bs.modal', '#viewPrintPurchaseOrderModal', function() {
+        $(this).parent().remove();
+    });
 });
 
 const convertToDecimal = (el) => {
@@ -5644,17 +5673,65 @@ const submitModalForm = (event, el) => {
             toast(res.success, res.message);
 
             if(res.success === true) {
+                switch($(el).children().attr('id')) {
+                    case 'expenseModal' :
+                        var type = 'expense';
+                    break;
+                    case 'checkModal' :
+                        var type = 'check';
+                    break;
+                    case 'billModal' :
+                        var type = 'bill';
+                    break;
+                    case 'purchaseOrderModal' :
+                        var type = 'purchase-order';
+                    break;
+                    case 'vendorCreditModal' :
+                        var type = 'vendor-credit';
+                    break;
+                    case 'creditCardCreditModal' :
+                        var type = 'credit-card-credit';
+                    break;
+                    // case 'singleTimeModal' :
+                    //     var type = 'time-activity';
+                    // break;
+                    // case 'weeklyTimesheetModal' :
+                    //     var type = 'weekly-timesheet';
+                    // break;
+                    case 'journalEntryModal' :
+                        var type = 'journal';
+                    break;
+                    case 'inventoryModal' :
+                        var type = 'inventory-qty-adjust';
+                    break;
+                    case 'payDownCreditModal' :
+                        var type = 'credit-card-payment';
+                    break;
+                }
+
                 if(submitType === 'save-and-close') {
                     $(el).children().modal('hide');
                 }
 
                 if(submitType === 'save' && modalId !== '#payBillsModal') {
-                    if($('#modal-container .modal .modal-body .card-body').find('input[name="transaction_id"]').length === 0) {
-                        $('#modal-container .modal .modal-body .card-body').children('.row:first-child').prepend(`<input type="hidden" name="transaction_id" id="transaction_id" value="${res.data}">`);
-                    }
+                    $('#modal-container #modal-form').attr('data-href', `/accounting/update-transaction/${type}/${res.data}`);
+                    $('#modal-container #modal-form').attr('onsubmit', 'updateTransaction(event, this)');
                 }
 
+                if(submitType === 'save-and-print' && modalId === '#purchaseOrderModal') {
+                    $('#modal-container #modal-form').attr('data-href', `/accounting/update-transaction/${type}/${res.data}`);
+                    $('#modal-container #modal-form').attr('onsubmit', 'updateTransaction(event, this)');
+                    printPurchaseOrder();
+                }
+
+                // if(submitType === 'save-and-send' && modalId === '#purchaseOrderModal') {
+                //     $('#modal-container #modal-form').attr('data-href', `/accounting/update-transaction/${type}/${res.data}`);
+                //     $('#modal-container #modal-form').attr('onsubmit', 'updateTransaction(event, this)');
+                // }
+
                 if(submitType === 'save-and-print' && modalId === '#weeklyTimesheetModal') {
+                    $('#modal-container #modal-form').attr('data-href', `/accounting/update-transaction/${type}/${res.data}`);
+                    $('#modal-container #modal-form').attr('onsubmit', 'updateTransaction(event, this)');
                     printTimesheet(res.data);
                 }
 
@@ -7555,4 +7632,14 @@ const clearForm = () => {
             }
         });
     }
+}
+
+const printPurchaseOrder = () => {
+    var id = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/purchase-order/', '');
+
+    $.get(`/accounting/print-purchase-order-modal/${id}`, function(result) {
+        $('div#modal-container').append(result);
+
+        $('#viewPrintPurchaseOrderModal').modal('show');
+    });
 }
