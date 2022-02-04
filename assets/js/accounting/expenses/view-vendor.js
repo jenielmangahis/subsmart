@@ -1159,6 +1159,7 @@ $(document).on('click', '#transactions-table .view-edit-expense', function() {
             `);
         }
 
+        modalName = '#expenseModal';
         initModalFields('expenseModal', data);
 
         $('#expenseModal').modal('show');
@@ -1180,6 +1181,7 @@ $(document).on('click', '#transactions-table .view-edit-check', function() {
             `);
         }
 
+        modalName = '#checkModal';
         initModalFields('checkModal', data);
 
         $('#checkModal').modal('show');
@@ -1201,6 +1203,7 @@ $(document).on('click', '#transactions-table .view-edit-bill', function() {
             `);
         }
 
+        modalName = '#billModal';
         initModalFields('billModal', data);
 
         $('#billModal').modal('show');
@@ -1222,6 +1225,7 @@ $(document).on('click', '#transactions-table .view-edit-purch-order', function()
             `);
         }
 
+        modalName = '#purchaseOrderModal';
         initModalFields('purchaseOrderModal', data);
 
         $('#purchaseOrderModal').modal('show');
@@ -1243,6 +1247,7 @@ $(document).on('click', '#transactions-table .view-edit-vendor-credit', function
             `);
         }
 
+        modalName = '#vendorCreditModal';
         initModalFields('vendorCreditModal', data);
 
         $('#vendorCreditModal').modal('show');
@@ -1264,6 +1269,7 @@ $(document).on('click', '#transactions-table .view-edit-cc-payment', function() 
             `);
         }
 
+        modalName = '#payDownCreditModal';
         initModalFields('payDownCreditModal', data);
 
         $('#payDownCreditModal').modal('show');
@@ -1282,6 +1288,7 @@ function viewCreditCardCredit(data) {
             `);
         }
 
+        modalName = '#creditCardCreditModal';
         initModalFields('creditCardCreditModal', data);
 
         $('#creditCardCreditModal').modal('show');
@@ -1302,6 +1309,7 @@ function viewBillPayment(data) {
 
         $('#billPaymentModal #vendor').trigger('change');
 
+        modalName = '#billPaymentModal';
         initModalFields('billPaymentModal', data);
 
         initBillsTable(data);
@@ -1340,8 +1348,9 @@ $(document).on('click', '#transactions-table .copy-expense', function(e) {
             `);
         }
 
-        $('#expenseModal').parent().attr('onsubmit', 'submitModalForm(event, this)');
+        $('#expenseModal').parent().attr('onsubmit', 'submitModalForm(event, this)').removeAttr('data-href');
 
+        modalName = '#expenseModal';
         initModalFields('expenseModal', data);
 
         $('#expenseModal').modal('show');
@@ -1368,8 +1377,9 @@ $(document).on('click', '#transactions-table .copy-check', function(e) {
             `);
         }
 
-        $('#checkModal').parent().attr('onsubmit', 'submitModalForm(event, this)');
+        $('#checkModal').parent().attr('onsubmit', 'submitModalForm(event, this)').removeAttr('data-href');
 
+        modalName = '#checkModal';
         initModalFields('checkModal', data);
 
         $('#checkModal').modal('show');
@@ -1396,8 +1406,9 @@ $(document).on('click', '#transactions-table .copy-bill', function(e) {
             `);
         }
 
-        $('#billModal').parent().attr('onsubmit', 'submitModalForm(event, this)');
+        $('#billModal').parent().attr('onsubmit', 'submitModalForm(event, this)').removeAttr('data-href');
 
+        modalName = '#billModal';
         initModalFields('billModal', data);
 
         $('#billModal').modal('show');
@@ -1424,8 +1435,9 @@ $(document).on('click', '#transactions-table .copy-purchase-order', function(e) 
             `);
         }
 
-        $('#purchaseOrderModal').parent().attr('onsubmit', 'submitModalForm(event, this)');
+        $('#purchaseOrderModal').parent().attr('onsubmit', 'submitModalForm(event, this)').removeAttr('data-href');
 
+        modalName = '#purchaseOrderModal';
         initModalFields('purchaseOrderModal', data);
 
         $('#purchaseOrderModal').modal('show');
@@ -1452,8 +1464,9 @@ $(document).on('click', '#transactions-table .copy-vendor-credit', function(e) {
             `);
         }
 
-        $('#vendorCreditModal').parent().attr('onsubmit', 'submitModalForm(event, this)');
+        $('#vendorCreditModal').parent().attr('onsubmit', 'submitModalForm(event, this)').removeAttr('data-href');
 
+        modalName = '#vendorCreditModal';
         initModalFields('vendorCreditModal', data);
 
         $('#vendorCreditModal').modal('show');
@@ -1480,8 +1493,9 @@ $(document).on('click', '#transactions-table .copy-to-bill', function(e) {
             `);
         }
 
-        $('#billModal').parent().attr('onsubmit', 'submitModalForm(event, this)');
+        $('#billModal').parent().attr('onsubmit', 'submitModalForm(event, this)').removeAttr('data-href');
 
+        modalName = '#billModal';
         initModalFields('billModal', data);
 
         $('#billModal').modal('show');

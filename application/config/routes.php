@@ -361,6 +361,8 @@ $route['accounting/delete-transaction/(:any)/(:any)']['DELETE'] = 'accounting_mo
 $route['accounting/void-transaction/(:any)/(:any)'] = 'accounting_modals/void_transaction/$1/$2';
 $route['accounting/print-purchase-order-modal/(:any)'] = 'accounting_modals/print_purchase_order_modal/$1';
 $route['accounting/download-purchase-order-pdf/(:any)'] = 'accounting_modals/download_purchase_order/$1';
+$route['accounting/send-purchase-order-email-modal/(:any)'] = 'accounting_modals/po_send_email_modal/$1';
+$route['accounting/send-purchase-order-email/(:any)']['post'] = 'accounting_modals/send_purchase_order_email/$1';
 
 $route['accounting/lists'] = 'accounting/lists';
 
@@ -431,6 +433,7 @@ $route['management-report/cover-page/changed'] = 'accounting/create_cover_page_p
 $route['management-report/send'] = 'accounting/management_report_send_email';
 $route['management-report/export/pdf'] = 'accounting/management_report_generate_pdf';
 $route['management-report/export/docx'] = 'accounting/management_report_generate_docx';
+$route['management-report/generate/preview'] = 'accounting/management_report_generate_pdf';
 
 
 // Accounting products and services
@@ -1116,6 +1119,10 @@ $route['on-my-way-to-job'] = 'Job/update_jobs_status';
 
 //Inventory
 $route['inventory/export_list'] = 'inventory/inventory_export';
+
+//Inventory Fees
+$route['inventory/fees/edit/(:num)'] = 'inventory/edit_fee/$1';
+$route['inventory/fees/update'] = 'inventory/update_fees';
 
 //Sales Overview
 $route['sales-overview/income-overtime'] = 'AccountingSales/get_income_overtime';

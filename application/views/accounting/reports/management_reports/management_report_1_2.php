@@ -10,33 +10,109 @@ if ($management_report->cover_style == 1) {
     $header_bg_color = "#1F497D";
 }
 
-if($action=="preview"){
-
-}else{
-    $cover_leter=$management_report->cover_title;
+if ($action == "preview") {
+    var_dump($posts);
+    if($this->input->post("template_report_period")){
+        $report_end_date = date("December 31, Y");
+    }
+    $cover_leter = $this->input->post("cover_page_cover_title");
+    if (strtolower($this->input->post("cover_page_subtitle")) == "{company name}") {
+        $cover_subtitle = $management_report->business_name;
+    } else {
+        $cover_subtitle = $management_report->cover_subtitle;
+    }
+    $end_period = explode("{", $this->input->post("cover_page_report_period"));
+    $echo_text = "";
+    for ($i = 0; $i < count($end_period); $i++) {
+        if ("{" . strtolower($end_period[$i]) == "{report end date}") {
+            $echo_text .= " " . date("F d, Y", strtotime($report_end_date));
+        } else {
+            $echo_text .= " " . $end_period[$i];
+        }
+    }
+} else {
+    $cover_leter = $management_report->cover_title;
 
     if (strtolower($management_report->cover_subtitle) == "{company name}") {
-        $cover_subtitle=$management_report->business_name;
+        $cover_subtitle = $management_report->business_name;
     } else {
-        $cover_subtitle=$management_report->cover_subtitle;
+        $cover_subtitle = $management_report->cover_subtitle;
     }
     $end_period = explode("{", $management_report->cover_report_period);
-        $echo_text = "";
-        for ($i = 0; $i < count($end_period); $i++) {
-            if ("{" . strtolower($end_period[$i]) == "{report end date}") {
-                $echo_text .= " " . date("F d, Y", strtotime($management_report->report_end_period));
-            } else {
-                $echo_text .= " " . $end_period[$i];
-            }
+    $echo_text = "";
+    for ($i = 0; $i < count($end_period); $i++) {
+        if ("{" . strtolower($end_period[$i]) == "{report end date}") {
+            $echo_text .= " " . date("F d, Y", strtotime($management_report->report_end_period));
+        } else {
+            $echo_text .= " " . $end_period[$i];
         }
-    $end_period_text=$echo_text;
+    }
+    $end_period_text = $echo_text;
     if ($management_report->cover_show_logo == 1) {
-        $logo_html=' <img src="<?= base_url("uploads/users/business_profile/1/Nsmart_logo.png") ?>" alt="">';
-                                                                                            }else{
-                                                                                                $logo_html="";
-                                                                                            }
-    $cover_prepared_date=$management_report->cover_prepared_date;
-    $cover_disclaimer=$management_report->cover_disclaimer;
+        $logo_html = ' <img src="<?= base_url("uploads/users/business_profile/1/Nsmart_logo.png") ?>" alt="">';
+    } else {
+        $logo_html = "";
+    }
+    $cover_prepared_date = $management_report->cover_prepared_date;
+    $cover_disclaimer = $management_report->cover_disclaimer;
+    $table_include_table_of_contents = $management_report->table_include_table_of_contents;
+    $table_page_title = $management_report->table_page_title;
+    $ctr = 2;
+    $text_left = "";
+    $text_right = "";
+    foreach ($primary_pages as $page) {
+        if ($page->include_this_page == 1 && $page->page_title != "") {
+            $text_left .= "<div style='padding:10px 0;'>" . $page->page_title . " </div>";
+            $text_right .= "<div style='padding:10px 0;'>" . $ctr . "</div>";
+            $ctr++;
+        }
+    }
+
+    foreach ($report_pages as $report) {
+        $text_left .= "<div style='padding:10px 0;'>" . $report->report_page_title . " </div>";
+        $text_right .= "<div style='padding:10px 0;'>" . $ctr . "</div>";
+        $ctr++;
+    }
+
+    if ($management_report->endnotes_include_page == 1) {
+        $text_left .= "<div style='padding:10px 0;'>" . $management_report->endnote_page_title . " </div>";
+        $text_right .= "<div style='padding:10px 0;'>" . $ctr . "</div>";
+        $ctr++;
+    }
+    $report_title_left = "<div style='width:50%;float:left;'>" . $text_left . "</div>";
+    $report_title_right = "<div style='width:50%;float:right;text-align:right;'>" . $text_right . "</div>";
+    $preliminary_pages_html = "";
+    foreach ($primary_pages as $page) {
+        if ($page->include_this_page == 1 && $page->page_title != "") {
+            $preliminary_pages_html .= '<div class="preliminary-pages" style="page-break-after: always;">
+                <h1 class="page-title">$page->page_title</h1>
+                <hr>
+                <div class="peliminary-data">
+                    $page->page_content 
+                </div>
+            </div>';
+        }
+    }
+    $report_pages_html = "";
+    foreach ($report_pages as $report) {
+        $report_pages_html .= '<div class="report-pages" style="page-break-after: always;">
+                <h1 class="page-title">$report->report_page_title</h1>
+                <hr>
+                <div class="reports-data">
+
+                </div>
+            </div>';
+    }
+    $end_note_pages_html = "";
+    if ($management_report->endnotes_include_page == 1) {
+        $end_note_pages_html .= '<div class="end-note-pages">
+                <h1 class="page-title">$management_report->endnote_page_title</h1>
+                <hr>
+                <div class="reports-data">
+                    $management_report->endnote_page_content 
+                </div>
+            </div>';
+    }
 }
 
 ?>

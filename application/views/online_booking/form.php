@@ -1,20 +1,33 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
+<style>
+.row-header{
+    background-color: #32243d;
+    color: #ffffff;
+}
+.p-20 {
+  padding-top: 25px !important;
+  padding-bottom: 25px !important;
+  padding-right: 5px !important;
+  padding-left: 39px !important;
+  margin-top: 55px !important;
+}
+</style>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/upgrades'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
-        <div class="container-fluid">
-            <div class="page-title-box">
-                <div class="row align-items-center">
-                    <div class="col-sm-6">
-                        <h1 class="page-title">Online Booking</h1>
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item active">Manage your online booking</li>
-                        </ol>
-                    </div>
+        <div class="container-fluid p-20">
+            <div class="row">
+                <div class="col">
+                  <h3 class="page-title mt-0">Online Booking</h3>
                 </div>
+            </div>
+            <div class="pl-3 pr-3 mt-2 row" style="position: relative;top: 7px;">
+              <div class="col mb-4 left alert alert-warning mt-0 mb-0">
+                  <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Customize the way the form looks and get notifications on new booking inquiries.</span>
+              </div>
             </div>
             <!-- end row -->
             <div class="row">
@@ -36,24 +49,24 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="row">
                             <div class="col-md-6">
                                 <form name="booking_component" id="booking_component" action="<?php echo base_url()."booking/save_form"; ?>" method="post">
-                                    <div class="row dashboard-container-1">
-                                        <div class="col-md-12" style="margin-bottom: 20px;">
-                                            <strong>Customize the way the form looks and get notifications on new booking inquiries.</strong>
-                                        </div>
+                                    <div class="row dashboard-container-1">                                        
                                         <div class="col-md-12">
                                             <strong>Customize Form Fields</strong>
                                             <br />
                                             Select the fields that will be part of the form and required ones.
+                                            <a style="padding-left: 9px; float: right;" id="" href="javascript:void(0);" data-toggle="modal" data-target="#modalAddFormField">
+                                                <span class="fa fa-plus-square fa-margin-right add-form-field-row"></span> Add Form Field
+                                            </a>
                                         </div>
 
                                         <div class="col-md-12" style="margin-top: 20px;">
                                             <table class="table tbl-custom-fields">
                                               <thead>
-                                                <tr>
+                                                <tr class="row-header">
                                                   <th width="40%" scope="col"><strong>Field</strong></th>
                                                   <th width="20%" scope="col"><strong>Visible</strong></th>
                                                   <th width="20%" scope="col"><strong>Required</strong></th>
-                                                  <th width="20%" scope="col"><strong>-</strong></th>
+                                                  <th width="20%" scope="col"></th>
                                                 </tr>
                                               </thead>
                                               <tbody>
@@ -91,9 +104,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                     <label for="is_required_<?php echo $default_form_field; ?>"></label>
                                                                 </div>
                                                             </td>
-                                                            <td>
-                                                                &nbsp;                                                   
-                                                            </td>
+                                                            <td></td>
                                                         </tr>
                                                     <?php } ?> 
 
@@ -157,9 +168,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                   } ?>
                                               </tbody>
                                             </table>   
-
+                                            <button class="btn btn-primary">Save</button>
                                             <div class="field-name-container" id="field-name-container" style="display: none;">
-
                                                 <div class="form-group" id="">
                                                     <label>Field Name</label> <span class="help">(e.g. Do you have pets)</span>
                                                     <input type="text" name="field_name" value="" class="form-control" autocomplete="off">
@@ -171,10 +181,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                             </div>
 
-                                            <!-- <a style="padding-left: 9px;" id="add-form-field-row" data-time-slot="btn-add" href="javascript:void(0);"><span class="fa fa-plus-square fa-margin-right add-form-field-row"></span> Add Form Field</a> -->
-                                            <a style="padding-left: 9px;" id="" href="javascript:void(0);" data-toggle="modal" data-target="#modalAddFormField">
-                                                <span class="fa fa-plus-square fa-margin-right add-form-field-row"></span> Add Form Field
-                                            </a>      
+                                            <!-- <a style="padding-left: 9px;" id="add-form-field-row" data-time-slot="btn-add" href="javascript:void(0);"><span class="fa fa-plus-square fa-margin-right add-form-field-row"></span> Add Form Field</a> -->                                                  
                                             <span class="form-message-saving"></span>
                                         </div>
                                     </div>                                 
@@ -186,8 +193,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <div class="col-md-12">
 
                                         <div style="padding: 40px; border: 0px solid rgb(221, 221, 221); background: rgb(242, 242, 242) none repeat scroll 0% 0%;">
-                                            <div class="weight-medium margin-bottom">Preview Form</div> 
-                                            <div style="background: rgb(255, 255, 255) none repeat scroll 0% 0%; padding: 30px;">
+                                            <h3 style="background-color: #32243d; color:#ffffff; padding: 10px;font-size: 17px;margin-bottom: 0px;">Form Preview</h3> 
+                                            <div style="background: #cccccc none repeat scroll 0% 0%; padding: 30px;">
                                                 <div id="app" class="markate-widget-contact" style="color: rgb(34, 34, 34); font-size: 16px; font-family: &quot;roboto&quot;, Arial, Helvetica, sans-serif;">
                                                     <form name="widget-contact" method="post">
                                                         <div class="form-fileds-container">
@@ -244,12 +251,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 
                             </div>
                         </div> 
-                        <hr />
-                        <div>
-                            <button class="btn btn-success">Save</button>
-                            <a style="float: right;" href="<?php echo base_url('more/addon/booking/coupons') ?>" class="btn btn-success"> Continue >> </a>
-                        </div>
-
                     </div>
                     <!-- end card -->
                 </div>

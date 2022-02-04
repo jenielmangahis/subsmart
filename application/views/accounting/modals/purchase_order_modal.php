@@ -178,6 +178,10 @@
                                                                     <th>DESCRIPTION</th>
                                                                     <th width="10%">AMOUNT</th>
                                                                     <th width="15%">CUSTOMER</th>
+                                                                    <?php if(isset($purchaseOrder) && !$is_copy) : ?>
+                                                                    <th width="10%">RECEIVED</th>
+                                                                    <th width="3%">CLOSED</th>
+                                                                    <?php endif; ?>
                                                                     <th></th>
                                                                 </thead>
                                                                 <tbody class="cursor-pointer">

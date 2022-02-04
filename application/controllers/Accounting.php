@@ -1186,6 +1186,7 @@ class Accounting extends MY_Controller
         $this->page_data["management_report"] = $management_report;
         $this->page_data["primary_pages"] = $this->accounting_management_reports->get_management_reports_preliminary_pages_by_id($management_report_id);
         $this->page_data["report_pages"] = $this->accounting_management_reports->get_report_pages_by_maagement_report_id($management_report_id);
+        $this->page_data["action"] = "preview";
         if ($management_report->cover_style == 1 || $management_report->cover_style == 2) {
             $template_src = 'accounting/reports/management_reports/management_report_1_2';
         } elseif ($management_report->cover_style == 3) {

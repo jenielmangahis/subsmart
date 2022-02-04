@@ -48,6 +48,8 @@
                 $is_active_online_booking = "active";
             }elseif($this->uri->uri_string() == 'more/addon/booking/preview') {
                 $is_active_online_booking = "active";
+            }elseif($this->uri->uri_string() == 'more/addon/inquiries') {
+                $is_active_online_booking = "active";
             }
         ?>
         <li class="submenus <?= $is_active_online_booking; ?>"><a href="<?php echo base_url('more/addon/booking') ?>" title="Online Booking" style="color: #fff;">

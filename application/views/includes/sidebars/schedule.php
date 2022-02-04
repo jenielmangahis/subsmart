@@ -1,3 +1,4 @@
+<?php $module = 'calendar'; ?>
 <style type="text/css">
     div[role="wrapper"] .navbar-side .nav-header {
         background-color: #32243d;

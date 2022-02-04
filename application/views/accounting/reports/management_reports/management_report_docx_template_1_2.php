@@ -2,7 +2,7 @@
 defined('BASEPATH') or exit('No direct script access allowed');?>
 <div class="management-report-cover-page" style="page-break-after: always;position:relative;">
     <div class="header">
-        <div class="title">Lou Pinton</div>
+        <div class="title">Lou Pinton </div>
         <div class="company-name">
             <?php
             if (strtolower($management_report->cover_subtitle) == "{company name}") {

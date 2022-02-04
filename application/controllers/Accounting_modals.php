@@ -12231,11 +12231,10 @@ class Accounting_modals extends MY_Controller
         ];
     }
 
-    public function print_purchase_order_modal($purchaseOrderId)
+    private function generate_purchase_order_pdf($purchaseOrderId, $fileName = 'print.pdf')
     {
         $this->load->library('pdf');
         $view = "accounting/modals/print_action/print_transactions";
-        $fileName = 'print.pdf';
 
         $data = [];
 
@@ -12293,7 +12292,7 @@ class Accounting_modals extends MY_Controller
         }
 
         usort($tableItems, function ($a, $b) {
-                return strcmp($a['activity'], $b['activity']);
+            return strcmp($a['activity'], $b['activity']);
         });
 
         $data[] = [
@@ -12306,6 +12305,13 @@ class Accounting_modals extends MY_Controller
 
         $this->pdf->save_pdf($view, ['data' => $data], $fileName, 'portrait');
 
+        return $fileName;
+    }
+
+    public function print_purchase_order_modal($purchaseOrderId)
+    {
+        $fileName = $this->generate_purchase_order_pdf($purchaseOrderId);
+        
         $pdf = base64_encode(file_get_contents(base_url("/assets/pdf/$fileName")));
         if (file_exists(getcwd()."/assets/pdf/$fileName")) {
             unlink(getcwd()."/assets/pdf/$fileName");
@@ -12318,78 +12324,8 @@ class Accounting_modals extends MY_Controller
 
     public function download_purchase_order($purchaseOrderId)
     {
-        $this->load->library('pdf');
-        $view = "accounting/modals/print_action/print_transactions";
-        $fileName = 'print.pdf';
-
-        $data = [];
-
         $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($purchaseOrderId, logged('company_id'));
-        $items = $this->expenses_model->get_transaction_items($purchaseOrderId, 'Purchase Order');
-        $categories = $this->expenses_model->get_transaction_categories($purchaseOrderId, 'Purchase Order');
-
-        $payee = $this->vendors_model->get_vendor_by_id($purchaseOrder->vendor_id);
-        $payeeName = $payee->title !== null && $payee->title !== "" ? $payee->title : "";
-        $payeeName .= $payee->f_name !== null && $payee->f_name !== "" ? " $payee->f_name" : "";
-        $payeeName .= $payee->m_name !== null && $payee->m_name !== "" ? " $payee->m_name" : "";
-        $payeeName .= $payee->l_name !== null && $payee->l_name !== "" ? " $payee->l_name" : "";
-        $payeeName .= $payee->suffix !== null && $payee->suffix !== "" ? " $payee->suffix" : "";
-
-        $payeeName = $payeeName === "" ? $payee->display_name : $payeeName;
-
-        $tableItems = [];
-
-        foreach ($items as $item) {
-            $itemDetails = $this->items_model->getItemById($item->item_id)[0];
-
-            if ($transactionType === 'expense') {
-                $tableItems[] = [
-                    'name' => $itemDetails->title,
-                    'description' => '',
-                    'amount' => number_format(floatval($item->total), 2, '.', ',')
-                ];
-            } else {
-                $tableItems[] = [
-                    'activity' => $itemDetails->title,
-                    'qty' => $item->quantity,
-                    'rate' => number_format(floatval($item->rate), 2, '.', ','),
-                    'amount' => number_format(floatval($item->total), 2, '.', ','),
-                ];
-            }
-        }
-
-        foreach ($categories as $category) {
-            $categoryAcc = $this->chart_of_accounts_model->getById($category->expense_account_id);
-
-            if ($transactionType === 'expense') {
-                $tableItems[] = [
-                    'name' => $categoryAcc->name,
-                    'description' => $category->description,
-                    'amount' => number_format(floatval($category->amount), 2, '.', ',')
-                ];
-            } else {
-                $tableItems[] = [
-                    'activity' => $categoryAcc->name,
-                    'qty' => '',
-                    'rate' => number_format(floatval(1), 2, '.', ','),
-                    'amount' => number_format(floatval($category->amount), 2, '.', ','),
-                ];
-            }
-        }
-
-        usort($tableItems, function ($a, $b) {
-                return strcmp($a['activity'], $b['activity']);
-        });
-
-        $data[] = [
-            'type' => 'purchase-order',
-            'payee' => $payee,
-            'payeeName' => $payeeName,
-            'transaction' => $purchaseOrder,
-            'table_items' => $tableItems
-        ];
-
-        $this->pdf->save_pdf($view, ['data' => $data], $fileName, 'portrait');
+        $fileName = $this->generate_purchase_order_pdf($purchaseOrderId);
 
         $fullPath = base_url("/assets/pdf/$fileName");
         if ($fd = fopen ($fullPath, "r")) {
@@ -12404,5 +12340,57 @@ class Accounting_modals extends MY_Controller
             fclose ($fd);
             exit;
         }
+    }
+
+    public function po_send_email_modal($purchaseOrderId)
+    {
+        $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($purchaseOrderId, logged('company_id'));
+        $vendor = $this->vendors_model->get_vendor_by_id($purchaseOrder->vendor_id);
+
+        $vendorName = $vendor->title !== null && $vendor->title !== "" ? $vendor->title : "";
+        $vendorName .= $vendor->f_name !== null && $vendor->f_name !== "" ? " $vendor->f_name" : "";
+        $vendorName .= $vendor->m_name !== null && $vendor->m_name !== "" ? " $vendor->m_name" : "";
+        $vendorName .= $vendor->l_name !== null && $vendor->l_name !== "" ? " $vendor->l_name" : "";
+        $vendorName .= $vendor->suffix !== null && $vendor->suffix !== "" ? " $vendor->suffix" : "";
+        $vendorName = $vendorName === "" ? $vendor->display_name : $vendorName;
+
+        $fileName = $this->generate_purchase_order_pdf($purchaseOrderId);
+        $pdf = base64_encode(file_get_contents(base_url("/assets/pdf/$fileName")));
+
+        $this->page_data['pdf'] = $pdf;
+        $this->page_data['purchaseOrder'] = $purchaseOrder;
+        $this->page_data['vendor'] = $vendor;
+        $this->page_data['company'] = $this->business_model->getById($purchaseOrder->company_id);
+        $this->page_data['vendorName'] = $vendorName;
+        $this->load->view('accounting/modals/send_email_modal', $this->page_data);
+    }
+
+    public function send_purchase_order_email($purchaseOrderId)
+    {
+        $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($purchaseOrderId, logged('company_id'));
+        $company = $this->business_model->getById($purchaseOrder->company_id);
+        $fileName = "Purchase_Order_".$purchaseOrder->purchase_order_no."_from_".str_replace(' ', '_', $company->business_name).".pdf";
+        $this->generate_purchase_order_pdf($purchaseOrderId, $fileName);
+
+        $data = $this->input->post();
+
+        $this->email->clear(true);
+        $this->email->from($company->business_email);
+        $this->email->to($purchaseOrder->email);
+        $this->email->subject($data['subject']);
+        $this->email->message($data['body']);
+        $this->email->attach(base_url("/assets/pdf/$fileName"));
+
+        $sent = $this->email->send();
+
+        unlink(getcwd()."/assets/pdf/$fileName");
+
+        $return = [
+            'data' => $purchaseOrderId,
+            'success' => $sent,
+            'message' => $sent ? "Email sent to $purchaseOrder->email" : "Email sending failed"
+        ];
+
+        echo json_encode($return);
     }
 }
