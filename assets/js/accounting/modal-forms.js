@@ -3271,6 +3271,14 @@ $(function() {
         $('#modal-container form#modal-form').submit();
     });
 
+    $(document).on('click', '#purchaseOrderModal .modal-footer #save-and-send', function(e) {
+        e.preventDefault();
+
+        submitType = 'save-and-send';
+
+        $('#modal-container form#modal-form').submit();
+    });
+
     $(document).on('click', '#purchaseOrderModal .modal-footer #print-purchase-order', function(e) {
         e.preventDefault();
 
@@ -5012,6 +5020,69 @@ $(function() {
     $(document).on('hidden.bs.modal', '#viewPrintPurchaseOrderModal', function() {
         $(this).parent().remove();
     });
+
+    $(document).on('click', '#sendEmailModal #print-pdf', function(e) {
+        e.preventDefault();
+
+        var src = $('#sendEmailModal iframe').attr('src');
+
+        let pdfWindow = window.open("");
+        pdfWindow.document.write(`<iframe width="100%" height="100%" src="${src}"></iframe>`);
+        $(pdfWindow.document).find('body').css('padding', '0');
+        $(pdfWindow.document).find('body').css('margin', '0');
+        $(pdfWindow.document).find('iframe').css('border', '0');
+    });
+
+    $(document).on('click', '#sendEmailModal #send-and-close', function(e) {
+        e.preventDefault();
+
+        submitType = 'send-and-close';
+
+        $('#sendEmailModal #send-email-form').submit();
+    });
+
+    $(document).on('click', '#sendEmailModal #send-and-new', function(e) {
+        e.preventDefault();
+
+        submitType = 'send-and-new';
+
+        $('#sendEmailModal #send-email-form').submit();
+    })
+
+    $(document).on('submit', '#sendEmailModal #send-email-form', function(e) {
+        e.preventDefault();
+
+        var data = new FormData(this);
+
+        $.ajax({
+            url: $(this).attr('action'),
+            data: data,
+            type: 'post',
+            processData: false,
+            contentType: false,
+            success: function(result) {
+                var res = JSON.parse(result);
+                if(res.success === true) {
+                    $('#sendEmailModal').modal('hide');
+
+                    switch(submitType) {
+                        case 'send-and-close' :
+                            $('#purchaseOrderModal').modal('hide');
+                        break;
+                        case 'send-and-new' :
+                            clearForm();
+                        break;
+                    }
+
+                    toast(res.success, res.message);
+                }
+            }
+        });
+    });
+
+    $(document).on('hidden.bs.modal', '#sendEmailModal', function() {
+        $(this).parent().remove();
+    });
 });
 
 const convertToDecimal = (el) => {
@@ -5724,10 +5795,12 @@ const submitModalForm = (event, el) => {
                     printPurchaseOrder();
                 }
 
-                // if(submitType === 'save-and-send' && modalId === '#purchaseOrderModal') {
-                //     $('#modal-container #modal-form').attr('data-href', `/accounting/update-transaction/${type}/${res.data}`);
-                //     $('#modal-container #modal-form').attr('onsubmit', 'updateTransaction(event, this)');
-                // }
+                if(submitType === 'save-and-send' && modalId === '#purchaseOrderModal') {
+                    $('#modal-container #modal-form').attr('data-href', `/accounting/update-transaction/${type}/${res.data}`);
+                    $('#modal-container #modal-form').attr('onsubmit', 'updateTransaction(event, this)');
+
+                    sendPurchaseOrder(res.data);
+                }
 
                 if(submitType === 'save-and-print' && modalId === '#weeklyTimesheetModal') {
                     $('#modal-container #modal-form').attr('data-href', `/accounting/update-transaction/${type}/${res.data}`);
@@ -6523,6 +6596,10 @@ const updateTransaction = (event, el) => {
                     printTimesheet(res.data);
                 }
 
+                if(submitType === 'save-and-send' && modalId === '#purchaseOrderModal') {
+                    sendPurchaseOrder(res.data);
+                }
+
                 submitType = '';
                 $('#transactions-table').DataTable().ajax.reload();
             }
@@ -6628,7 +6705,7 @@ const initModalFields = (modalName, data = {}) => {
         $(`#${modalName} select`).each(function() {
             var type = $(this).attr('id');
             if (type === undefined) {
-                type = $(this).attr('name').replaceAll('[]', '').replaceAll('_', '-');
+                type = $(this).attr('name').replaceAll('[]', '').replaceAll('_', '-').replace('category-', '');
             } else {
                 type = type.replaceAll('_', '-');
 
@@ -7510,6 +7587,7 @@ const clearForm = () => {
 
     today = mm + '/' + dd + '/' + yyyy;
 
+    $(modalName).parent().attr('onsubmit', 'submitModalForm(event, this)').removeAttr('data-href');
     $(modalName).find('.modal-body #tags').val(null).trigger('change');
     $(modalName).find('.modal-body select').each(function() {
         if(!$(this).attr('id').includes('account') && $(this).find('option').length > 1) {
@@ -7641,5 +7719,13 @@ const printPurchaseOrder = () => {
         $('div#modal-container').append(result);
 
         $('#viewPrintPurchaseOrderModal').modal('show');
+    });
+}
+
+const sendPurchaseOrder = (purchaseOrderId) => {
+    $.get(`/accounting/send-purchase-order-email-modal/${purchaseOrderId}`, function(result) {
+        $('div#modal-container').append(result);
+
+        $('#sendEmailModal').modal('show');
     });
 }

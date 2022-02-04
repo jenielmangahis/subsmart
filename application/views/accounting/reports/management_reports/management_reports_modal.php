@@ -4,6 +4,7 @@
         <input type="text" name="cover_style" style="display: none;">
         <input type="text" name="deleted_reports_pages" style="display: none;">
         <input type="text" name="deleted_preliminary_pages" style="display: none;">
+        <input type="text" name="action" style="display: none;">
         <div class="the-modal-body">
             <div class="the-header">
                 <div class="row">

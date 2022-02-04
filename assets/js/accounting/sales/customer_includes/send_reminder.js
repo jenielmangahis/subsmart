@@ -38,7 +38,7 @@ function get_info_customer_reminder(customer_id, data_action_from = "", data_inv
                 $invoice_number = data_invoice_number;
             }
             $("#send-reminder-modal .form-group input[name='subject']").val(`Reminder: Invoice [` + $invoice_number + `] from ` + data.business_name);
-            $("#send-reminder-modal .monal-body .modal-title p .invoice-count").html(data.invoice_count);
+            $("#send-reminder-modal .monal-body .modal-title p .invoice-count").html(1);
             var message = `Dear ` + data.name + `,
 
 Just a reminder that we have not received a payment for this invoice yet. Let us know if you have questions.

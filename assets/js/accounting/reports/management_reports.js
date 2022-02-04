@@ -210,8 +210,11 @@ $(document).on('click', 'table#manage_reports_table ul.report_options li.edit', 
             $('#management_reports_modal input[name="cover_page_disclaimer"]').val(data.cover_disclaimer);
             $('#management_reports_modal input[name="table_of_contents_page_title"]').val(data.table_page_title);
             $('#management_reports_modal input[name="end_notes_page_title"]').val(data.endnote_page_title);
-            $('#management_reports_modal input[name="end_notes_page_content"]').val(data.endnote_page_content);
+            $('#management_reports_modal #end-notes .page-content-field').html();
+            $('#management_reports_modal #end-notes .page-content-field').html('<textarea class="form-control ckeditor" name="end_notes_page_content" id="end_notes_page_content" cols="40" rows="20">' + data.endnote_page_content + "</textarea>");
+            $("#management_reports_modal #end-notes .page .page-content-field textarea").ckeditor();
             $('#management_reports_modal input[name="management_report_id"]').val(management_report_id);
+
             if (data.cover_show_logo == "0") {
                 $('#management_reports_modal input[name="show-logo"]').prop("checked", false);
             } else {
@@ -434,9 +437,15 @@ $(document).on('click', '#advance_field_modal .body .close-btn', function(event)
     $("#advance_field_modal").html(default_af_form);
 });
 
-$(document).on('click', '#management_reports_modal .middle-links a', function(event) {
+$(document).on('click', '#management_reports_modal .middle-links.end a', function(event) {
     $("#advance_field_modal").fadeIn();
 });
+
+$(document).on('click', '#management_reports_modal .middle-links.end a', function(event) {
+    $("#advance_field_modal").fadeIn();
+});
+
+
 $(document).on('click', '#advance_field_modal .print-button', function(event) {
     $("#advance_field_modal").fadeOut();
 });
@@ -526,6 +535,7 @@ $(document).on("click", "#manage_reports_table tbody li a.export-pdf", function(
     var management_report_id = $(this).attr("data-id");
     var company_name = $(this).attr("data-company");
     var template_name = $(this).attr("data-report");
+    $("body").css("cursor", "wait");
     $.ajax({
         url: baseURL + "management-report/export/pdf",
         type: "POST",
@@ -554,7 +564,62 @@ $(document).on("click", "#manage_reports_table tbody li a.export-pdf", function(
                     html: "Please try again later.",
                     icon: "error",
                 }));
+            $("body").css("cursor", "auto");
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+            Swal.fire({
+                showConfirmButton: false,
+                timer: 2000,
+                title: "Error",
+                html: "Please try again later.",
+                icon: "error",
+            });
             $("#loader-modal").hide();
+        },
+    });
+});
+
+
+$(document).on("click", "#manage_reports_table tbody li a.export-docx", function(event) {
+    var management_report_id = $(this).attr("data-id");
+    $("body").css("cursor", "wait");
+    $.ajax({
+        url: baseURL + "management-report/export/docx",
+        type: "POST",
+        dataType: "json",
+        data: {
+            management_report_id: management_report_id
+        },
+        success: function(data) {
+            $("body").css("cursor", "auto");
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+            Swal.fire({
+                showConfirmButton: false,
+                timer: 2000,
+                title: "Error",
+                html: "Please try again later.",
+                icon: "error",
+            });
+            $("#loader-modal").hide();
+        },
+    });
+});
+
+$(document).on('click', '#management_reports_modal .middle-links a.print-preview-option', function(event) {
+    event.preventDefault();
+    $("body").css("cursor", "wait");
+    $("#management_reports_viewer_modal").fadeIn();
+    $("#management_reports_viewer_modal .body .iframe").html("");
+    $("#management_reports_modal form input[name='action']").val("preview");
+    $.ajax({
+        url: baseURL + "management-report/generate/preview",
+        type: "POST",
+        dataType: "json",
+        data: $("#management_reports_modal form").serialize(),
+        success: function(data) {
+            $("#management_reports_viewer_modal .body .iframe").html('<iframe src="' + data.file_location + '" frameborder="0" class="pdf_viewer"></iframe>');
+            $("body").css("cursor", "auto");
         },
         error: function(XMLHttpRequest, textStatus, errorThrown) {
             Swal.fire({
