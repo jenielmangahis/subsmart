@@ -16,6 +16,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 .hide{
     display: none;
 }
+.tbl-coupons .badge{
+    display: block;
+    width: 100%;
+}
 </style>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/upgrades'); ?>
@@ -53,7 +57,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </ul>
                         </div>
                         <?php include viewPath('flash'); ?>
-                        <table class="table table-hover" data-id="coupons">
+                        <table class="table table-hover tbl-coupons" data-id="coupons">
                             <thead>
                                 <tr class="row-header">
                                     <th style="width:60%;">Coupon</th>
@@ -79,7 +83,19 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <td><?php echo $c->discount_from_total . " " . $discount_type; ?></td>
                                         <td>
                                             <?php if( $c->status == 1 ){ ?>
-                                                <span class="badge badge-primary" style="background-color:#007bff; padding:10px;font-size: 14px;">Active</span>
+                                                <?php 
+                                                    $date = date("Y-m-d");
+                                                    $is_expired = 0;
+                                                    if( $date > $c->date_valid_to ){
+                                                        $is_expired = 1;
+                                                    }
+                                                ?>
+                                                <?php if( $is_expired == 1 ){ ?>    
+                                                    <span class="badge badge-warning" style="background-color:#ec4561; padding:10px;font-size: 14px;">Expired</span>
+                                                <?php }else{ ?>
+                                                    <span class="badge badge-primary" style="background-color:#007bff; padding:10px;font-size: 14px;">Active</span>
+                                                <?php } ?>
+                                                
                                             <?php }else{ ?>
                                                 <span class="badge badge-danger" style="background-color: #ec4561; padding: 10px;font-size: 14px;">Closed</span>
                                             <?php } ?>
@@ -163,7 +179,5 @@ $(function(){
         $("#cid").val(cid);
         $("#modalDeleteCoupon").modal('show');
     });
-
-
 });
 </script>

@@ -35,7 +35,7 @@ var base_url = "<?php echo base_url(); ?>";
 $(function(){
 	function load_week_schedule(week_start_date, eid){
       var url = base_url + '/booking/_load_week_schedule';
-      var msg = '<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" style="display:inline;" /> Loading schedule...</div>';
+      var msg = '<span class="spinner-border spinner-border-sm m-0"></span> Loading schedule';
 
       $(".schedule-container").html(msg);
 

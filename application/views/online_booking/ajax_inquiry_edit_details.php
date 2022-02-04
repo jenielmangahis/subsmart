@@ -1,5 +1,4 @@
 <input type="hidden" name="inquiry_id" id="inquiry_id" value="<?php echo $inquiry_id; ?>">
-<h2>Basic Info</h2>
 <div class="row">
             <div class="col-md-6">
  
@@ -27,19 +26,6 @@
                         <option <?php echo $inquiry->status == 4 ? 'selected="selected"' : ''; ?> value="4">Assigned</option>
                         <option <?php echo $inquiry->status == 5 ? 'selected="selected"' : ''; ?> value="5">Closed</option>
                     </select>
-                </div>                 
-
-            </div>
-            <div class="col-md-6">   
-
-                <div class="form-group">
-                    <label>Address</label>
-                    <textarea name="address" id="address" cols="40" rows="5" class="form-control"><?php echo $inquiry->address; ?></textarea>
-                </div> 
-
-                <div class="form-group">
-                    <label>Message</label>
-                    <textarea name="message" id="message" cols="40" rows="5" class="form-control"><?php echo $inquiry->message; ?></textarea>
                 </div>  
 
                 <div class="form-group">
@@ -58,5 +44,17 @@
                     </select>
                 </div>                  
 
+            </div>
+            <div class="col-md-6">   
+
+                <div class="form-group">
+                    <label>Address</label>
+                    <textarea name="address" id="address" cols="40" rows="8" class="form-control"><?php echo $inquiry->address; ?></textarea>
+                </div> 
+
+                <div class="form-group">
+                    <label>Message</label>
+                    <textarea name="message" id="message" cols="40" rows="8" class="form-control"><?php echo $inquiry->message; ?></textarea>
+                </div>  
             </div>              
         </div>

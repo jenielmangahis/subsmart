@@ -23,7 +23,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 .ui-timepicker-pm, .ui-timepicker-am{
     background-color: #32243d;
     color: #ffffff;
-    padding: 5px;
+    padding: 10px;
 }
 .ui-timepicker-selected{
     background-color: #45a73c !important;
@@ -31,6 +31,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 .ui-timepicker-list{
     max-height: 300px;
     overflow: auto;
+    width: 112px;
 }
 .modal-time-slot-msg{
     font-size: 17px;
