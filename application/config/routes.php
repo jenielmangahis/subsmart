@@ -359,6 +359,8 @@ $route['accounting/attach/(:any)/(:any)']['post'] = 'accounting_modals/attach/$1
 $route['accounting/load-recent-transactions']['post'] = 'accounting_modals/load_recent_transactions';
 $route['accounting/delete-transaction/(:any)/(:any)']['DELETE'] = 'accounting_modals/delete_transaction/$1/$2';
 $route['accounting/void-transaction/(:any)/(:any)'] = 'accounting_modals/void_transaction/$1/$2';
+$route['accounting/print-purchase-order-modal/(:any)'] = 'accounting_modals/print_purchase_order_modal/$1';
+$route['accounting/download-purchase-order-pdf/(:any)'] = 'accounting_modals/download_purchase_order/$1';
 
 $route['accounting/lists'] = 'accounting/lists';
 
@@ -428,6 +430,7 @@ $route['management-report/delete-report-page'] = 'accounting/managenent_report_d
 $route['management-report/cover-page/changed'] = 'accounting/create_cover_page_pdf_template';
 $route['management-report/send'] = 'accounting/management_report_send_email';
 $route['management-report/export/pdf'] = 'accounting/management_report_generate_pdf';
+$route['management-report/export/docx'] = 'accounting/management_report_generate_docx';
 
 
 // Accounting products and services

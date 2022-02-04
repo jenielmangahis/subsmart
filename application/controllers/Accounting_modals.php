@@ -12230,4 +12230,179 @@ class Accounting_modals extends MY_Controller
             'message' => $void ? 'Transaction successfully voided!' : 'Unexpected error occurred.'
         ];
     }
+
+    public function print_purchase_order_modal($purchaseOrderId)
+    {
+        $this->load->library('pdf');
+        $view = "accounting/modals/print_action/print_transactions";
+        $fileName = 'print.pdf';
+
+        $data = [];
+
+        $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($purchaseOrderId, logged('company_id'));
+        $items = $this->expenses_model->get_transaction_items($purchaseOrderId, 'Purchase Order');
+        $categories = $this->expenses_model->get_transaction_categories($purchaseOrderId, 'Purchase Order');
+
+        $payee = $this->vendors_model->get_vendor_by_id($purchaseOrder->vendor_id);
+        $payeeName = $payee->title !== null && $payee->title !== "" ? $payee->title : "";
+        $payeeName .= $payee->f_name !== null && $payee->f_name !== "" ? " $payee->f_name" : "";
+        $payeeName .= $payee->m_name !== null && $payee->m_name !== "" ? " $payee->m_name" : "";
+        $payeeName .= $payee->l_name !== null && $payee->l_name !== "" ? " $payee->l_name" : "";
+        $payeeName .= $payee->suffix !== null && $payee->suffix !== "" ? " $payee->suffix" : "";
+
+        $payeeName = $payeeName === "" ? $payee->display_name : $payeeName;
+
+        $tableItems = [];
+
+        foreach ($items as $item) {
+            $itemDetails = $this->items_model->getItemById($item->item_id)[0];
+
+            if ($transactionType === 'expense') {
+                $tableItems[] = [
+                    'name' => $itemDetails->title,
+                    'description' => '',
+                    'amount' => number_format(floatval($item->total), 2, '.', ',')
+                ];
+            } else {
+                $tableItems[] = [
+                    'activity' => $itemDetails->title,
+                    'qty' => $item->quantity,
+                    'rate' => number_format(floatval($item->rate), 2, '.', ','),
+                    'amount' => number_format(floatval($item->total), 2, '.', ','),
+                ];
+            }
+        }
+
+        foreach ($categories as $category) {
+            $categoryAcc = $this->chart_of_accounts_model->getById($category->expense_account_id);
+
+            if ($transactionType === 'expense') {
+                $tableItems[] = [
+                    'name' => $categoryAcc->name,
+                    'description' => $category->description,
+                    'amount' => number_format(floatval($category->amount), 2, '.', ',')
+                ];
+            } else {
+                $tableItems[] = [
+                    'activity' => $categoryAcc->name,
+                    'qty' => '',
+                    'rate' => number_format(floatval(1), 2, '.', ','),
+                    'amount' => number_format(floatval($category->amount), 2, '.', ','),
+                ];
+            }
+        }
+
+        usort($tableItems, function ($a, $b) {
+                return strcmp($a['activity'], $b['activity']);
+        });
+
+        $data[] = [
+            'type' => 'purchase-order',
+            'payee' => $payee,
+            'payeeName' => $payeeName,
+            'transaction' => $purchaseOrder,
+            'table_items' => $tableItems
+        ];
+
+        $this->pdf->save_pdf($view, ['data' => $data], $fileName, 'portrait');
+
+        $pdf = base64_encode(file_get_contents(base_url("/assets/pdf/$fileName")));
+        if (file_exists(getcwd()."/assets/pdf/$fileName")) {
+            unlink(getcwd()."/assets/pdf/$fileName");
+        }
+
+        $this->page_data['purchaseOrderId'] = $purchaseOrderId;
+        $this->page_data['pdf'] = $pdf;
+        $this->load->view('accounting/modals/view_print_purchase_order', $this->page_data);
+    }
+
+    public function download_purchase_order($purchaseOrderId)
+    {
+        $this->load->library('pdf');
+        $view = "accounting/modals/print_action/print_transactions";
+        $fileName = 'print.pdf';
+
+        $data = [];
+
+        $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($purchaseOrderId, logged('company_id'));
+        $items = $this->expenses_model->get_transaction_items($purchaseOrderId, 'Purchase Order');
+        $categories = $this->expenses_model->get_transaction_categories($purchaseOrderId, 'Purchase Order');
+
+        $payee = $this->vendors_model->get_vendor_by_id($purchaseOrder->vendor_id);
+        $payeeName = $payee->title !== null && $payee->title !== "" ? $payee->title : "";
+        $payeeName .= $payee->f_name !== null && $payee->f_name !== "" ? " $payee->f_name" : "";
+        $payeeName .= $payee->m_name !== null && $payee->m_name !== "" ? " $payee->m_name" : "";
+        $payeeName .= $payee->l_name !== null && $payee->l_name !== "" ? " $payee->l_name" : "";
+        $payeeName .= $payee->suffix !== null && $payee->suffix !== "" ? " $payee->suffix" : "";
+
+        $payeeName = $payeeName === "" ? $payee->display_name : $payeeName;
+
+        $tableItems = [];
+
+        foreach ($items as $item) {
+            $itemDetails = $this->items_model->getItemById($item->item_id)[0];
+
+            if ($transactionType === 'expense') {
+                $tableItems[] = [
+                    'name' => $itemDetails->title,
+                    'description' => '',
+                    'amount' => number_format(floatval($item->total), 2, '.', ',')
+                ];
+            } else {
+                $tableItems[] = [
+                    'activity' => $itemDetails->title,
+                    'qty' => $item->quantity,
+                    'rate' => number_format(floatval($item->rate), 2, '.', ','),
+                    'amount' => number_format(floatval($item->total), 2, '.', ','),
+                ];
+            }
+        }
+
+        foreach ($categories as $category) {
+            $categoryAcc = $this->chart_of_accounts_model->getById($category->expense_account_id);
+
+            if ($transactionType === 'expense') {
+                $tableItems[] = [
+                    'name' => $categoryAcc->name,
+                    'description' => $category->description,
+                    'amount' => number_format(floatval($category->amount), 2, '.', ',')
+                ];
+            } else {
+                $tableItems[] = [
+                    'activity' => $categoryAcc->name,
+                    'qty' => '',
+                    'rate' => number_format(floatval(1), 2, '.', ','),
+                    'amount' => number_format(floatval($category->amount), 2, '.', ','),
+                ];
+            }
+        }
+
+        usort($tableItems, function ($a, $b) {
+                return strcmp($a['activity'], $b['activity']);
+        });
+
+        $data[] = [
+            'type' => 'purchase-order',
+            'payee' => $payee,
+            'payeeName' => $payeeName,
+            'transaction' => $purchaseOrder,
+            'table_items' => $tableItems
+        ];
+
+        $this->pdf->save_pdf($view, ['data' => $data], $fileName, 'portrait');
+
+        $fullPath = base_url("/assets/pdf/$fileName");
+        if ($fd = fopen ($fullPath, "r")) {
+            $fsize = filesize($fullPath);
+            header("Content-type: application/pdf"); // add here more headers for diff.     extensions
+            header("Content-Disposition: attachment; filename=\"Download $purchaseOrder->purchase_order_no.pdf\"");
+            header("Content-length: $fsize");
+            header("Cache-control: private"); //use this to open files directly
+            readfile($fullPath);
+
+            unlink(getcwd()."/assets/pdf/$fileName");
+            fclose ($fd);
+            exit;
+        }
+    }
 }

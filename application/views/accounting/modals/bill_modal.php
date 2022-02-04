@@ -563,8 +563,8 @@
                                     <span class="sr-only">Toggle Dropdown</span>
                                 </button>
                                 <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="#" id="save-and-close">Save and close</a>
-                                    <a class="dropdown-item" href="#" id="save-and-new">Save and new</a>
+                                    <a class="dropdown-item" href="#" onclick="saveAndCloseForm(event)">Save and close</a>
+                                    <a class="dropdown-item" href="#" onclick="saveAndNewForm(event)">Save and new</a>
                                 </div>
                             </div>
 

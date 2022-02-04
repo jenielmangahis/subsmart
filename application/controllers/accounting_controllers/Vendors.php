@@ -1651,7 +1651,7 @@ class Vendors extends MY_Controller
                 ];
             } else {
                 $tableItems[] = [
-                    'activity' => '',
+                    'activity' => $categoryAcc->name,
                     'qty' => '',
                     'rate' => number_format(floatval(1), 2, '.', ','),
                     'amount' => number_format(floatval($category->amount), 2, '.', ','),

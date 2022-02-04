@@ -3262,90 +3262,26 @@ $(function() {
         });
     });
 
-    $(document).on('click', '#modal-container #modal-form .modal .modal-footer #save-and-close', function(e) {
+    $(document).on('click', '#purchaseOrderModal .modal-footer #save-and-print', function(e) {
         e.preventDefault();
 
-        submitType = $(this).attr('id');
+        submitType = 'save-and-print';
 
+        $(this).attr('id', 'print-purchase-order');
         $('#modal-container form#modal-form').submit();
     });
 
-    $(document).on('click', '#modal-container #modal-form .modal .modal-footer #save-and-new', function(e) {
+    $(document).on('click', '#purchaseOrderModal .modal-footer #print-purchase-order', function(e) {
         e.preventDefault();
-        var today = new Date();
-        var dd = String(today.getDate()).padStart(2, '0');
-        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-        var yyyy = today.getFullYear();
 
-        today = mm + '/' + dd + '/' + yyyy;
-
-        submitType = $(this).attr('id');
-        $('#modal-container form#modal-form').submit();
-
-        $('#modal-container .modal select').each(function() {
-            $($(this).find('option')[0]).prop('selected', true);
-            $(this).trigger('change');
-        });
-        $('#modal-container .modal #tags').val(null).trigger('change');
-        $('#modal-container .modal input:not([type="checkbox"],.date,[type="number"],.day-input)').val('').trigger('change');
-        $('#modal-container .modal input.date').val(today);
-        $('#modal-container .modal:not(#time-activity-settings) input[type="checkbox"]').each(function() {
-            $(this).prop('checked', false).trigger('change');
-        });
-        $('#modal-container .modal input[type="hidden"]').remove();
-        $('#modal-container .modal textarea').html('');
-        $('#modal-container .modal textarea').val('');
-        $('#modal-container .modal .dropzone .dz-preview').remove();
-        $('#modal-container .modal #item-details-table tbody tr').remove();
-        $('#modal-container .modal .transaction-total-amount').html('$0.00');
-
-        modalAttachmentId = [];
-        modalAttachedFiles = [];
-        $('#modal-container .modal .dropzone .dz-message').show();
-
-        if ($('#modal-container .modal a#linked-transaction').length > 0) {
-            unlinkTransaction();
-            $('#modal-container .modal #payee').trigger('change');
-            $('#modal-container .modal #vendor').trigger('change');
-        }
-
-        if ($('#modal-container .modal').attr('id') === 'weeklyTimesheetModal') {
-            $('#modal-container #weeklyTimesheetModal #timesheet-table tbody tr').remove();
-
-            var count = 1;
-            do {
-                $('#modal-container #weeklyTimesheetModal #timesheet-table tbody').append(`<tr>${rowInputs}</tr>`);
-                $('#modal-container #weeklyTimesheetModal #timesheet-table tbody tr:last-child() td:first-child()').html(count);
-                $('#modal-container #weeklyTimesheetModal #timesheet-table tbody tr:last-child() select').select2();
-                count++;
-            } while ($('#modal-container #weeklyTimesheetModal #timesheet-table tbody tr').length < rowCount)
-        } else {
-            $(`#modal-container .modal table tbody tr`).each(function(index, value) {
-                var table = $(this).parent().parent().attr('id');
-                var count = $(this).find('td:nth-child(2)').html();
-                if (index < rowCount) {
-                    if (table !== 'category-details-table' && table !== 'item-details-table' && table !== 'timesheet-table') {
-                        $(this).html(blankRow);
-                    } else {
-                        if (table === 'category-details-table') {
-                            $(this).html(catDetailsBlank);
-                        } else {
-                            $(this).html(itemDetailsBlank);
-                        }
-                    }
-                    $(this).find('td:nth-child(2)').html(count);
-                }
-                if (index >= rowCount) {
-                    $(this).remove();
-                }
-            });
-        }
+        printPurchaseOrder();
     });
 
     $(document).on('click', '#modal-container #modal-form .modal .modal-footer #save', function(e) {
         e.preventDefault();
 
         submitType = $(this).attr('id');
+
         $('#modal-container form#modal-form').submit();
     });
 
@@ -5062,6 +4998,20 @@ $(function() {
             }
         });
     });
+
+    $(document).on('click', '#viewPrintPurchaseOrderModal #print-pdf', function(e) {
+        e.preventDefault();
+
+        let pdfWindow = window.open("");
+        pdfWindow.document.write(`<iframe width="100%" height="100%" src="${$('#viewPrintPurchaseOrderModal iframe').attr('src')}"></iframe>`);
+        $(pdfWindow.document).find('body').css('padding', '0');
+        $(pdfWindow.document).find('body').css('margin', '0');
+        $(pdfWindow.document).find('iframe').css('border', '0');
+    });
+
+    $(document).on('hidden.bs.modal', '#viewPrintPurchaseOrderModal', function() {
+        $(this).parent().remove();
+    });
 });
 
 const convertToDecimal = (el) => {
@@ -5476,10 +5426,12 @@ const computeBankDepositeTotal = () => {
     }
 
     var totalDepositAmount = (parseFloat(otherFundsTotal) - parseFloat(cashBackAmount)).toFixed(2);
+    totalDepositAmount = `$${totalDepositAmount}`;
+    otherFundsTotal = `$${parseFloat(otherFundsTotal).toFixed(2)}`;
 
-    $('div#depositModal span.other-funds-total').html(`$${parseFloat(otherFundsTotal).toFixed(2)}`);
-    $('div#depositModal h2.total-deposit-amount').html(`$${totalDepositAmount}`);
-    $('div#depositModal span.total-cash-back').html(`$${totalDepositAmount}`);
+    $('div#depositModal span.other-funds-total').html(otherFundsTotal.replace('$-', '-$'));
+    $('div#depositModal h2.total-deposit-amount').html(totalDepositAmount.replace('$-', '-$'));
+    $('div#depositModal span.total-cash-back').html(totalDepositAmount.replace('$-', '-$'));
 }
 
 const addTableLines = (e) => {
@@ -5721,18 +5673,70 @@ const submitModalForm = (event, el) => {
             toast(res.success, res.message);
 
             if(res.success === true) {
+                switch($(el).children().attr('id')) {
+                    case 'expenseModal' :
+                        var type = 'expense';
+                    break;
+                    case 'checkModal' :
+                        var type = 'check';
+                    break;
+                    case 'billModal' :
+                        var type = 'bill';
+                    break;
+                    case 'purchaseOrderModal' :
+                        var type = 'purchase-order';
+                    break;
+                    case 'vendorCreditModal' :
+                        var type = 'vendor-credit';
+                    break;
+                    case 'creditCardCreditModal' :
+                        var type = 'credit-card-credit';
+                    break;
+                    // case 'singleTimeModal' :
+                    //     var type = 'time-activity';
+                    // break;
+                    // case 'weeklyTimesheetModal' :
+                    //     var type = 'weekly-timesheet';
+                    // break;
+                    case 'journalEntryModal' :
+                        var type = 'journal';
+                    break;
+                    case 'inventoryModal' :
+                        var type = 'inventory-qty-adjust';
+                    break;
+                    case 'payDownCreditModal' :
+                        var type = 'credit-card-payment';
+                    break;
+                }
+
                 if(submitType === 'save-and-close') {
                     $(el).children().modal('hide');
                 }
 
                 if(submitType === 'save' && modalId !== '#payBillsModal') {
-                    if($('#modal-container .modal .modal-body .card-body').find('input[name="transaction_id"]').length === 0) {
-                        $('#modal-container .modal .modal-body .card-body').children('.row:first-child').prepend(`<input type="hidden" name="transaction_id" id="transaction_id" value="${res.data}">`);
-                    }
+                    $('#modal-container #modal-form').attr('data-href', `/accounting/update-transaction/${type}/${res.data}`);
+                    $('#modal-container #modal-form').attr('onsubmit', 'updateTransaction(event, this)');
                 }
 
+                if(submitType === 'save-and-print' && modalId === '#purchaseOrderModal') {
+                    $('#modal-container #modal-form').attr('data-href', `/accounting/update-transaction/${type}/${res.data}`);
+                    $('#modal-container #modal-form').attr('onsubmit', 'updateTransaction(event, this)');
+                    printPurchaseOrder();
+                }
+
+                // if(submitType === 'save-and-send' && modalId === '#purchaseOrderModal') {
+                //     $('#modal-container #modal-form').attr('data-href', `/accounting/update-transaction/${type}/${res.data}`);
+                //     $('#modal-container #modal-form').attr('onsubmit', 'updateTransaction(event, this)');
+                // }
+
                 if(submitType === 'save-and-print' && modalId === '#weeklyTimesheetModal') {
+                    $('#modal-container #modal-form').attr('data-href', `/accounting/update-transaction/${type}/${res.data}`);
+                    $('#modal-container #modal-form').attr('onsubmit', 'updateTransaction(event, this)');
                     printTimesheet(res.data);
+                }
+
+                if(submitType === 'save-and-new') {
+                    clearForm();
                 }
             }
 
@@ -7479,5 +7483,163 @@ const viewTransaction = (el) => {
                 $('#singleTimeModal').modal('show');
             break;
         }
+    });
+}
+
+const saveAndCloseForm = (e) => {
+    e.preventDefault();
+
+    submitType = 'save-and-close';
+
+    $(modalName).parent().submit();
+}
+
+const saveAndNewForm = (e) => {
+    e.preventDefault();
+
+    submitType = 'save-and-new';
+
+    $(modalName).parent().submit();
+}
+
+const clearForm = () => {
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+
+    today = mm + '/' + dd + '/' + yyyy;
+
+    $(modalName).find('.modal-body #tags').val(null).trigger('change');
+    $(modalName).find('.modal-body select').each(function() {
+        if(!$(this).attr('id').includes('account') && $(this).find('option').length > 1) {
+            if($(this).attr('id') === 'weekDates') {
+                $(this).find('option').each(function() {
+                    var value = $(this).attr('value');
+                    var valueSplit = value.split('-');
+
+                    var current = new Date();
+                    var startDate = new Date(valueSplit[0]);
+                    var endDate = new Date(valueSplit[1]);
+
+                    if(current.getTime() >= startDate.getTime() && current.getTime() <= endDate.getTime()) {
+                        $(this).prop('selected', true);
+                    }
+                });
+            } else {
+                $(this).find('option:first-child').prop('selected', true);
+            }
+            $(this).trigger('change');
+        } else {
+            $(this).val('').trigger('change');
+        }
+    });
+    $(modalName).find('.modal-body input:not([type="checkbox"],.date,[type="number"],.day-input)').val('').trigger('change');
+    $(modalName).find('.modal-body input.date').val(today);
+    if(modalName !== '#time-activity-settings') {
+        $(modalName).find('.modal-body input[type="checkbox"]:not(.show-field)').each(function() {
+            $(this).prop('checked', false).trigger('change');
+        });
+    }
+    $(modalName).find('.modal-body input[type="hidden"]').remove();
+    $(modalName).find('.modal-body textarea').html('');
+    $(modalName).find('.modal-body textarea').val('');
+    $(modalName).find('.modal-body .dropzone .dz-preview').remove();
+    $(modalName).find('.modal-body #item-details-table tbody tr').remove();
+    $(modalName).find('.modal-body div.form-group#summary').remove();
+    $(modalName).find('.modal-body .transaction-total-amount').html('$0.00');
+    $(modalName).find('.modal-body #account-balance').html('$0.00');
+    $(modalName).find('.modal-body .total-deposit-amount').html('$0.00');
+
+    modalAttachmentId = [];
+    modalAttachedFiles = [];
+    $(modalName).find('.modal-body .dropzone .dz-message').show();
+
+    if($(modalName).find('.modal-body a#linked-transaction').length > 0) {
+        unlinkTransaction();
+    }
+
+    if(modalName === '#weeklyTimesheetModal') {
+        $(modalName).find('.modal-body #timesheet-table tbody tr').remove();
+
+        var count = 1;
+        do {
+            $(modalName).find('#timesheet-table tbody').append(`<tr>${rowInputs}</tr>`);
+            $(modalName).find('#timesheet-table tbody tr:last-child() td:first-child()').html(count);
+            $(modalName).find('#timesheet-table tbody tr:last-child() td:first-child() select').each(function() {
+                var type = $(this).attr('id');
+                if (type === undefined) {
+                    type = $(this).attr('name').replaceAll('[]', '').replaceAll('_', '-');
+                } else {
+                    type = type.replaceAll('_', '-');
+
+                    if (type.includes('transfer')) {
+                        type = 'transfer-account';
+                    }
+                }
+
+                if (dropdownFields.includes(type)) {
+                    $(this).select2({
+                        ajax: {
+                            url: '/accounting/get-dropdown-choices',
+                            dataType: 'json',
+                            data: function(params) {
+                                var query = {
+                                    search: params.term,
+                                    type: 'public',
+                                    field: type,
+                                    modal: modalName.replaceAll('#', '')
+                                }
+
+                                // Query parameters will be ?search=[term]&type=public&field=[type]
+                                return query;
+                            }
+                        },
+                        templateResult: formatResult,
+                        templateSelection: optionSelect
+                    });
+                } else {
+                    var options = $(this).find('option');
+                    if (options.length > 10) {
+                        $(this).select2();
+                    } else {
+                        $(this).select2({
+                            minimumResultsForSearch: -1
+                        });
+                    }
+                }
+            });
+            count++;
+        } while ($(modalName).find('.modal-body #timesheet-table tbody tr').length < rowCount)
+    } else {
+        $(modalName).find('.modal-body table tbody tr').each(function(index, value) {
+            var table = $(this).parent().parent().attr('id');
+            var count = $(this).find('td:nth-child(2)').html();
+
+            if (index < rowCount) {
+                if (table !== 'category-details-table' && table !== 'item-details-table' && table !== 'timesheet-table') {
+                    $(this).html(blankRow);
+                } else {
+                    if (table === 'category-details-table') {
+                        $(this).html(catDetailsBlank);
+                    }
+                }
+                $(this).find('td:nth-child(2)').html(count);
+            }
+
+            if (index >= rowCount) {
+                $(this).remove();
+            }
+        });
+    }
+}
+
+const printPurchaseOrder = () => {
+    var id = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/purchase-order/', '');
+
+    $.get(`/accounting/print-purchase-order-modal/${id}`, function(result) {
+        $('div#modal-container').append(result);
+
+        $('#viewPrintPurchaseOrderModal').modal('show');
     });
 }

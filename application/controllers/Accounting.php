@@ -1215,12 +1215,12 @@ class Accounting extends MY_Controller
         $this->page_data["management_report"] = $management_report;
         $this->page_data["primary_pages"] = $this->accounting_management_reports->get_management_reports_preliminary_pages_by_id($management_report_id);
         $this->page_data["report_pages"] = $this->accounting_management_reports->get_report_pages_by_maagement_report_id($management_report_id);
-        $html = $this->load->view('accounting/reports/management_reports/new_report_secitons', $this->page_data, true);
+        $html = $this->load->view('accounting/reports/management_reports/management_report_docx_template_1_2', $this->page_data, true);
 
         $phpWord = new \PhpOffice\PhpWord\PhpWord();
         $section = $phpWord->addSection();
-        
-        \PhpOffice\PhpWord\Shared\Html::addHtml($section, "<h1 style='font-size:100px;'>Yes</h1> <p>12445</p>");
+        // var_dump($html);
+        \PhpOffice\PhpWord\Shared\Html::addHtml($section, $html);
         $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
         $filename = "LouWorld.docx";
         $objWriter->save($filename);
@@ -1332,6 +1332,14 @@ class Accounting extends MY_Controller
 
     public function balance_sheet()
     {
+        add_css([
+            'assets/css/accounting/balance_sheet/balance_sheet.css'
+        ]);
+
+        add_footer_js([
+            'assets/js/accounting/balance_sheet/balance_sheet.js',
+        ]);
+
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['customers'] = $this->accounting_invoices_model->getCustomers();
         $this->page_data['page_title'] = "Balance Sheet Report";
@@ -5818,6 +5826,7 @@ class Accounting extends MY_Controller
             'customer_address_state' => '',
             'items' => $refund_receipt_items,
         );
+        $this->load->library("pdf");
         if ($action == "download_print_refund_receipt") {
             $this->pdf->load_view("accounting/customer_includes/refund_receipt/refund_receipt_to_pdf", $data, $file_name, "P");
         } elseif ($action == "print_refund_receipt") {
@@ -8596,6 +8605,7 @@ class Accounting extends MY_Controller
 
             $html_pdf = "accounting/customer_includes/customer_single_modal/invoice_packaging_pdf";
             $orientation = "P";
+            $this->load->library("pdf");
             $this->pdf->save_pdf($html_pdf, $pdf_data, $pdf_file_name, $orientation);
 
 
@@ -9729,6 +9739,7 @@ class Accounting extends MY_Controller
             'customer_address_state' => '',
             'items' => $sales_receipt_items,
         );
+        $this->load->library("pdf");
         if ($action == "download_print_sales_receipt") {
             $this->pdf->load_view("accounting/customer_includes/sales_receipt/sales_receipt_to_pdf", $data, $file_name, "P");
         } elseif ($action == "download_print_packaging_slip") {
@@ -10271,7 +10282,7 @@ class Accounting extends MY_Controller
                     );
                 }
             }
-
+            $this->load->library("pdf");
             $this->pdf->save_pdf("accounting/customer_includes/create_statement/statement_pdf", $data, $file_name, "P");
         }
     }
@@ -11511,6 +11522,7 @@ class Accounting extends MY_Controller
 
         $html_pdf = "accounting/customer_includes/customer_single_modal/invoice_packaging_pdf";
         $orientation = "P";
+        $this->load->library("pdf");
         $this->pdf->save_pdf($html_pdf, $pdf_data, $pdf_file_name, $orientation);
 
         $data = new stdClass();
@@ -11588,6 +11600,7 @@ class Accounting extends MY_Controller
 
         $html_pdf = "accounting/customer_includes/public_view/shared_invoice_link_pdf";
         $orientation = "P";
+        $this->load->library("pdf");
         $this->pdf->save_pdf($html_pdf, $pdf_data, $pdf_file_name, $orientation);
 
         $data = new stdClass();
@@ -11666,6 +11679,7 @@ class Accounting extends MY_Controller
 
         $html_pdf = "accounting/customer_includes/public_view/shared_invoice_link_pdf";
         $orientation = "P";
+        $this->load->library("pdf");
         $this->pdf->save_pdf($html_pdf, $pdf_data, $pdf_file_name, $orientation);
 
         $subject = $customer_info->business_name . " || Transactions";
@@ -11781,6 +11795,7 @@ class Accounting extends MY_Controller
 
             $html_pdf = "accounting/customer_includes/public_view/shared_invoice_link_pdf";
             $orientation = "P";
+            $this->load->library("pdf");
             $this->pdf->save_pdf($html_pdf, $pdf_data, $pdf_file_name, $orientation);
 
             $subject = $customer_info->business_name . " || Transactions";

@@ -456,7 +456,7 @@
                         <div class="col-md-4">
                             <div class="row h-100">
                                 <div class="col-md-12 d-flex align-items-center justify-content-center">
-                                    <span><a href="#" class="text-white">Print</a></span>
+                                    <span><a href="#" class="text-white" id="<?=!isset($purchaseOrder) ? 'save-and-print' : 'print-purchase-order'?>">Print</a></span>
                                     <span class="mx-3 divider"></span>
                                     <span><a href="#" onclick="makeRecurring('purchase_order')" class="text-white">Make recurring</a></span>
                                     <?php if(isset($purchaseOrder)) : ?>
@@ -485,8 +485,8 @@
                                     <span class="sr-only">Toggle Dropdown</span>
                                 </button>
                                 <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="#" id="save-and-new">Save and new</a>
-                                    <a class="dropdown-item" href="#" id="save-and-close">Save and close</a>
+                                    <a class="dropdown-item" href="#" onclick="saveAndNewForm(event)">Save and new</a>
+                                    <a class="dropdown-item" href="#" onclick="saveAndCloseForm(event)">Save and close</a>
                                 </div>
                             </div>
 
