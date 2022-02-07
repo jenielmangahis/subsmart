@@ -9,6 +9,7 @@ $(document).on("click", function(event) {
 
 $(document).on("click", "#customer-single-modal .the-body .dropdown-menu li a.send-reminder-btn", function() {
     get_info_customer_reminder($(this).attr("data-customer-id"), $(this).attr("data-action-from"), $(this).attr("data-invoice-number"));
+
 });
 
 $(document).on("click", ".customer-full-page-btn", function(event) {
@@ -1373,6 +1374,7 @@ $(document).on("click", "#customer-single-modal .seaction-above-table ul.by-batc
     }
 });
 $(document).on("click", "#customer-single-modal .seaction-above-table ul.by-batch-btn li.send-reminder-btn", function(event) {
+    var open_inv = 0;
     if (!$(this).hasClass("disabled")) {
         var invoice_numbers = "";
         var customer_id = $("#customer-single-modal input[name='customer_id']").val();
@@ -1380,6 +1382,7 @@ $(document).on("click", "#customer-single-modal .seaction-above-table ul.by-batc
             if ($(this).is(":checked")) {
                 if ($(this).attr("data-row-status") == "Overdue" || $(this).attr("data-row-status") == "Open") {
                     invoice_numbers += ($(this).attr("data-invoice-number")) + ", ";
+                    open_inv++;
                 }
             }
         });
@@ -1409,6 +1412,7 @@ Thanks for your business!
 
                 $("#send-reminder-modal .form-group textarea").html(message);
                 $("#send-reminder-modal").addClass("show");
+                $("#send-reminder-modal .modal-title .normal .invoice-count").html(open_inv);
             },
             error: function(XMLHttpRequest, textStatus, errorThrown) {
                 $("body").css({ 'cursor': 'default' });

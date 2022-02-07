@@ -545,6 +545,18 @@ $colorError: #d52b1e;
     gap: 1rem;
     align-items: center;
   }
+
+  #customizeRowCols {
+    & .customizeRowCols__grid {
+      display: grid;
+      grid-template-columns: 180px 1fr;
+      gap: 1rem;
+    }
+
+    & .form-group {
+      margin-bottom: 0 !important;
+    }
+  }
 }
 
 .buttonSubmit {

@@ -50,4 +50,46 @@ class Accounting_weekly_timesheet_model extends MY_Model {
 
 		return $query->row();
 	}
+
+	public function add_timesheet_activity($data = [])
+	{
+		$this->db->insert('accounting_weekly_time_activities', $data);
+		return $this->db->insert_id();
+	}
+
+	public function get_timesheet_activities($data)
+	{
+		$this->db->where('name_key', $data['name_key']);
+		$this->db->where('name_id', $data['name_id']);
+		$this->db->where('date >=', $data['start_date']);
+		$this->db->where('date <=', $data['end_date']);
+		$this->db->where('status', 1);
+		$query = $this->db->get('accounting_single_time_activity');
+
+		return $query->result();
+	}
+
+	public function get_timesheet($data)
+	{
+		if(isset($data['name_type'])) {
+			$this->db->where('name_type', $data['name_type']);
+		}
+
+		if(isset($data['name_id'])) {
+			$this->db->where('name_id', $data['name_id']);
+		}
+
+		if(isset($data['week_start_date'])) {
+			$this->db->where('week_start_date', $data['week_start_date']);
+		}
+
+		if(isset($data['week_end_date'])) {
+			$this->db->where('week_end_date', $data['week_end_date']);
+		}
+
+		$this->db->where('status', 1);
+		$query = $this->db->get($this->table);
+
+		return $query->row();
+	}
 }

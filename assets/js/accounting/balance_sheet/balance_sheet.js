@@ -35,6 +35,34 @@ window.addEventListener("DOMContentLoaded", async () => {
       $(".customDropdown").removeClass("open");
     }
   });
+
+  const $customizeReport = $(".customizeReport");
+  $("[data-action=customize_toggle]").on("click", () => {
+    $customizeReport.addClass("customizeReport--show");
+    $customizeReport.find(".collapse").first().collapse("show");
+    $(".popover").popover("hide");
+  });
+  $("[data-action=customize_hide], .customizeReport__backdrop") //
+    .on("click", () => {
+      $customizeReport.removeClass("customizeReport--show");
+      $customizeReport.find(".collapse").collapse("hide");
+    });
+
+  const $saveCustomizationBtn = $("[data-action=save_customization]");
+  const $saveCustomizationForm = $("#saveCustomizationForm");
+  const saveCustomizationForm = $saveCustomizationForm.html();
+  $saveCustomizationForm.remove();
+  $saveCustomizationBtn.popover({
+    html: true,
+    sanitize: false,
+    placement: "bottom",
+    content: saveCustomizationForm,
+  });
+
+  $editTitleBtn = $("[data-action=editTitle]");
+  $editTitleBtn.on("click", () => {
+    $("#editTitleModal").modal("show");
+  });
 });
 
 function capitalize(string) {

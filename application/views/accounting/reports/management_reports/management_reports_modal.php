@@ -4,6 +4,7 @@
         <input type="text" name="cover_style" style="display: none;">
         <input type="text" name="deleted_reports_pages" style="display: none;">
         <input type="text" name="deleted_preliminary_pages" style="display: none;">
+        <input type="text" name="action" style="display: none;">
         <div class="the-modal-body">
             <div class="the-header">
                 <div class="row">
@@ -348,7 +349,7 @@
                         <div class="option">2. {Company name}</div>
                         <div class="coresponding">
                             <div class="form-group">
-                                <input type="text" class="form-control " name="af_company_name" placeholder="Company name">
+                                <input type="text" class="form-control " name="af_company_name" placeholder="Company name" value="<?=$company_details->business_name?>">
                             </div>
                         </div>
                     </div>

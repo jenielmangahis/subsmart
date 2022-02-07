@@ -1182,17 +1182,32 @@ class Accounting extends MY_Controller
             $action = "download";
         }
         // $management_report_id = $this->input->post("management_report_id");
-        $management_report = $this->accounting_management_reports->get_management_reports_by_id($management_report_id);
-        $this->page_data["management_report"] = $management_report;
-        $this->page_data["primary_pages"] = $this->accounting_management_reports->get_management_reports_preliminary_pages_by_id($management_report_id);
-        $this->page_data["report_pages"] = $this->accounting_management_reports->get_report_pages_by_maagement_report_id($management_report_id);
-        if ($management_report->cover_style == 1 || $management_report->cover_style == 2) {
-            $template_src = 'accounting/reports/management_reports/management_report_1_2';
-        } elseif ($management_report->cover_style == 3) {
-            $template_src = 'accounting/reports/management_reports/management_report_3';
-        } else {
-            $template_src = 'accounting/reports/management_reports/management_report_4';
+       
+        if($this->input->post("action") != "preview"){
+            $management_report = $this->accounting_management_reports->get_management_reports_by_id($management_report_id);
+            $this->page_data["management_report"] = $management_report;
+            $this->page_data["primary_pages"] = $this->accounting_management_reports->get_management_reports_preliminary_pages_by_id($management_report_id);
+            $this->page_data["report_pages"] = $this->accounting_management_reports->get_report_pages_by_maagement_report_id($management_report_id);
+            if ($management_report->cover_style == 1 || $management_report->cover_style == 2) {
+                $template_src = 'accounting/reports/management_reports/management_report_1_2';
+            } elseif ($management_report->cover_style == 3) {
+                $template_src = 'accounting/reports/management_reports/management_report_3';
+            } else {
+                $template_src = 'accounting/reports/management_reports/management_report_4';
+            }
+        }else{
+            if ($this->input->post("cover_style") == 1 || $this->input->post("cover_style") == 2) {
+                $template_src = 'accounting/reports/management_reports/management_report_1_2';
+            } elseif ($this->input->post("cover_style") == 3) {
+                $template_src = 'accounting/reports/management_reports/management_report_3';
+            } else {
+                $template_src = 'accounting/reports/management_reports/management_report_4';
+            }
         }
+        
+        $this->page_data["action"] = $this->input->post("action");
+
+        
 
         $filename = "management_report_" . $management_report_id . ".pdf";
 

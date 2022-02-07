@@ -1404,56 +1404,61 @@ class Accounting_modals extends MY_Controller
             $timesheetSettings = $this->accounting_timesheet_settings_model->get_by_company_id(logged('company_id'));
             $name = explode('-', $data['name']);
 
-            if (!isset($data['transaction_id']) || is_null($data['transaction_id'])) {
-                $timeActData = [
+            $timeActData = [
+                'company_id' => logged('company_id'),
+                'date' => date('Y-m-d', strtotime($data['date'])),
+                'name_key' => $name[0],
+                'name_id' => $name[1],
+                'customer_id' => $data['customer'],
+                'service_id' => $timesheetSettings->service === "1" ? $data['service'] : null,
+                'billable' => $timesheetSettings->billable === "1" && isset($data['billable']) ? 1 : 0,
+                'hourly_rate' => $timesheetSettings->billable === "1" && isset($data['billable']) ? $data['hourly_rate'] : null,
+                'taxable' => $timesheetSettings->billable === "1" && isset($data['billable']) && isset($data['taxable']) ? 1 : 0,
+                'start_time' => isset($data['start_end_time']) ? $data['start_time'] : null,
+                'end_time' => isset($data['start_end_time']) ? $data['end_time'] : null,
+                'break_duration' => isset($data['start_end_time']) ? $data['time'] : null,
+                'time' => isset($data['start_end_time']) ? null : $data['time'],
+                'description' => $data['description'],
+                'status' => 1
+            ];
+
+            $activityId = $this->accounting_single_time_activity_model->create($timeActData);
+            
+            $date = date('Y-m-d', strtotime($data['date']));
+            $dateTime = new DateTime($date);
+            $weekNo = $dateTime->format('W');
+
+            $newDate = new DateTime();
+            $firstDay = $newDate->setISODate($dateTime->format("Y"), $weekNo, 0);
+            $firstDayString = $firstDay->format('Y-m-d');
+            $lastDay = $newDate->setISODate($dateTime->format("Y"), $weekNo, 6);
+            $lastDayString = $lastDay->format('Y-m-d');
+
+            $timesheetData = [
+                'name_type' => $name[0],
+                'name_id' => $name[1],
+                'week_start_date' => $firstDayString,
+                'week_end_date' => $lastDayString
+            ];
+
+            $timesheet = $this->accounting_weekly_timesheet_model->get_timesheet($timesheetData);
+
+            if(is_null($timesheet)) {
+                $timesheetRecord = [
                     'company_id' => logged('company_id'),
-                    'date' => date('Y-m-d', strtotime($data['date'])),
-                    'name_key' => $name[0],
+                    'name_type' => $name[0],
                     'name_id' => $name[1],
-                    'customer_id' => $data['customer'],
-                    'service_id' => $timesheetSettings->service === "1" ? $data['service'] : null,
-                    'billable' => $timesheetSettings->billable === "1" && isset($data['billable']) ? 1 : 0,
-                    'hourly_rate' => $timesheetSettings->billable === "1" && isset($data['billable']) ? $data['hourly_rate'] : null,
-                    'taxable' => $timesheetSettings->billable === "1" && isset($data['billable']) && isset($data['taxable']) ? 1 : 0,
-                    'start_time' => isset($data['start_end_time']) ? $data['start_time'] : null,
-                    'end_time' => isset($data['start_end_time']) ? $data['end_time'] : null,
-                    'break_duration' => isset($data['start_end_time']) ? $data['time'] : null,
-                    'time' => isset($data['start_end_time']) ? null : $data['time'],
-                    'description' => $data['description'],
+                    'week_start_date' => date("Y-m-d", strtotime($firstDayString)),
+                    'week_end_date' => date("Y-m-d", strtotime($lastDayString)),
                     'status' => 1
                 ];
     
-                $activityId = $this->accounting_single_time_activity_model->create($timeActData);
-
-                $successMessage = 'Recorded Successfully!';
-            } else {
-                $timeActData = [
-                    'date' => date('Y-m-d', strtotime($data['date'])),
-                    'name_key' => $name[0],
-                    'name_id' => $name[1],
-                    'customer_id' => $data['customer'],
-                    'service_id' => $data['service'],
-                    'billable' => (isset($data['billable'])) ? 1 : 0,
-                    'hourly_rate' => (isset($data['billable'])) ? $data['hourly_rate'] : null,
-                    'taxable' => (isset($data['billable']) && isset($data['taxable'])) ? 1 : 0,
-                    'start_time' => (isset($data['start_end_time'])) ? $data['start_time'] : null,
-                    'end_time' => (isset($data['start_end_time'])) ? $data['end_time'] : null,
-                    'time' => $data['time'],
-                    'description' => $data['description']
-                ];
-
-                $update = $this->accounting_single_time_activity_model->update($data['transaction_id'], $timeActData);
-
-                if ($update) {
-                    $activityId = $data['transaction_id'];
-                }
-
-                $successMessage = 'Update successful!';
+                $timeSheetRecordId = $this->accounting_weekly_timesheet_model->create($timesheetRecord);
             }
             
             $return['data'] = $activityId;
             $return['success'] = $activityId ? true : false;
-            $return['message'] = $activityId ? $successMessage : 'An unexpected error occured!';
+            $return['message'] = $activityId ? 'Recorded Successfully!' : 'An unexpected error occured!';
         }
 
         return $return;
@@ -2132,100 +2137,57 @@ class Accounting_modals extends MY_Controller
             $weekEndDate = strtotime($weekDate[1]);
             $timesheetSettings = $this->accounting_timesheet_settings_model->get_by_company_id(logged('company_id'));
 
-            $timeActivityIds = [];
-            $row = 1;
-            foreach ($data['customer'] as $key => $value) {
-                if ($value !== '') {
-                    $count = 0;
-                    foreach (json_decode($data['hours'][$key], true) as $day => $hours) {
-                        if ($hours !== "") {
-                            $timeActData = [
-                                'company_id' => logged('company_id'),
-                                'date' => date('Y-m-d', strtotime($weekDate[0]." +$count days")),
-                                'name_key' => $name[0],
-                                'name_id' => $name[1],
-                                'customer_id' => $data['customer'][$key],
-                                'service_id' => $timesheetSettings->service === "1" ? $data['service'][$key] : null,
-                                'billable' => $timesheetSettings->billable === "1" ? $data['billable'][$key] : 0,
-                                'hourly_rate' => $timesheetSettings->billable === "1" ? $data['hourly_rate'][$key] : null,
-                                'taxable' => $timesheetSettings->billable === "1" ? $data['taxable'][$key] : 0,
-                                'time' => $hours,
-                                'description' => $data['description'][$key],
-                                'status' => 1,
-                                'created_at' => date('Y-m-d h:i:s'),
-                                'updated_at' => date('Y-m-d h:i:s')
-                            ];
+            $timesheetRecord = [
+                'company_id' => logged('company_id'),
+                'name_type' => $name[0],
+                'name_id' => $name[1],
+                'week_start_date' => date("Y-m-d", $weekStartDate),
+                'week_end_date' => date("Y-m-d", $weekEndDate),
+                // 'time_activity_ids' => json_encode($timeActivityIds),
+                'status' => 1,
+                'created_at' => date("Y-m-d H:i:s"),
+                'updated_at' => date("Y-m-d H:i:s"),
+            ];
 
-                            $timeActivityIds[$row][] = $this->accounting_single_time_activity_model->create($timeActData);
+            $timeSheetRecordId = $this->accounting_weekly_timesheet_model->create($timesheetRecord);
+
+            if ($timeSheetRecordId > 0) {
+                $row = 1;
+                foreach ($data['customer'] as $key => $value) {
+                    if ($value !== '') {
+                        $count = 0;
+                        foreach (json_decode($data['hours'][$key], true) as $day => $hours) {
+                            if ($hours !== "" && $hours !== "00:00") {
+                                $timeActData = [
+                                    'company_id' => logged('company_id'),
+                                    'date' => date('Y-m-d', strtotime($weekDate[0]." +$count days")),
+                                    'name_key' => $name[0],
+                                    'name_id' => $name[1],
+                                    'customer_id' => $data['customer'][$key],
+                                    'service_id' => $timesheetSettings->service === "1" ? $data['service'][$key] : null,
+                                    'billable' => $timesheetSettings->billable === "1" ? $data['billable'][$key] : 0,
+                                    'hourly_rate' => $timesheetSettings->billable === "1" ? $data['hourly_rate'][$key] : null,
+                                    'taxable' => $timesheetSettings->billable === "1" ? $data['taxable'][$key] : 0,
+                                    'time' => $hours,
+                                    'description' => $data['description'][$key],
+                                    'status' => 1,
+                                    'created_at' => date('Y-m-d h:i:s'),
+                                    'updated_at' => date('Y-m-d h:i:s')
+                                ];
+    
+                                $timeActivityId = $this->accounting_single_time_activity_model->create($timeActData);
+                            }
+    
+                            $count++;
                         }
-
-                        $count++;
-                    }
-
-                    $row++;
-                }
-            }
-
-            if (count($timeActivityIds) > 0) {
-                if (!isset($data['transaction_id']) || is_null($data['transaction_id'])) {
-                    $timesheetRecord = [
-                        'company_id' => logged('company_id'),
-                        'name_type' => $name[0],
-                        'name_id' => $name[1],
-                        'week_start_date' => date("Y-m-d", $weekStartDate),
-                        'week_end_date' => date("Y-m-d", $weekEndDate),
-                        'time_activity_ids' => json_encode($timeActivityIds),
-                        'status' => 1,
-                        'created_at' => date("Y-m-d H:i:s"),
-                        'updated_at' => date("Y-m-d H:i:s"),
-                    ];
     
-                    $timeSheetRecordId = $this->accounting_weekly_timesheet_model->create($timesheetRecord);
-
-                    if (!$timeSheetRecordId) {
-                        $delete = $this->accounting_single_time_activity_model->delete_multiple_by_id($timeActivityIds);
+                        $row++;
                     }
-    
-                    $successMessage = 'Entry successful!';
-                } else {
-                    $timeSheet = $this->accounting_weekly_timesheet_model->get_by_id($data['transaction_id']);
-                    $activityIds = [];
-                    foreach (json_decode($timeSheet->time_activity_ids, true) as $row => $ids) {
-                        foreach ($ids as $id) {
-                            $activityIds[] = $id;
-                        }
-                    }
-                    $delete = $this->accounting_single_time_activity_model->delete_multiple_by_id($activityIds);
-    
-                    if ($delete) {
-                        $timesheetRecord = [
-                            'name_type' => $name[0],
-                            'name_id' => $name[1],
-                            'week_start_date' => date("Y-m-d", $weekStartDate),
-                            'week_end_date' => date("Y-m-d", $weekEndDate),
-                            'time_activity_ids' => json_encode($timeActivityIds),
-                            'updated_at' => date("Y-m-d H:i:s"),
-                        ];
-
-                        $update = $this->accounting_weekly_timesheet_model->update($data['transaction_id'], $timesheetRecord);
-
-                        if ($update) {
-                            $timeSheetRecordId = $timeSheet->id;
-                        } else {
-                            $delete = $this->accounting_single_time_activity_model->delete_multiple_by_id($timeActivityIds);
-                        }
-                    }
-    
-                    $successMessage = 'Update successful!';
                 }
 
                 $return['data'] = $timeSheetRecordId;
                 $return['success'] = $timeSheetRecordId ? true : false;
                 $return['message'] = $timeSheetRecordId ? 'Entry Successful!' : 'An unexpected error occured!';
-            } else {
-                $return['data'] = null;
-                $return['success'] = false;
-                $return['message'] = 'Saving failed.';
             }
         }
 
@@ -5645,13 +5607,48 @@ class Accounting_modals extends MY_Controller
     public function get_last_timesheet($nameType, $nameId)
     {
         $lastTimesheet = $this->accounting_weekly_timesheet_model->get_last_timesheet($nameType, $nameId);
-        
+
         $return = [];
         if ($lastTimesheet) {
             $timeActivities = [];
-            foreach (json_decode($lastTimesheet->time_activity_ids, true) as $row => $timeActs) {
-                foreach ($timeActs as $timeAct) {
-                    $timeActivities[$row][] = $this->accounting_single_time_activity_model->get_by_id($timeAct);
+            $activityData = [
+                'name_key' => $nameType,
+                'name_id' => $nameId,
+                'start_date' => date("Y-m-d", strtotime($lastTimesheet->week_start_date)),
+                'end_date' => date("Y-m-d", strtotime($lastTimesheet->week_end_date))
+            ];
+            $activities = $this->accounting_weekly_timesheet_model->get_timesheet_activities($activityData);
+            foreach($activities as $activity) {
+                $customer = $this->accounting_customers_model->get_by_id($activity->customer_id);
+                $activity->customer_name = $customer->first_name . ' ' . $customer->last_name;
+                $service = $this->items_model->getItemById($activity->service_id)[0];
+                $activity->service_name = $service->title;
+
+                if($activity->time === null) {
+                    $startTime = strtotime($activity->start_time);
+                    $endTime = strtotime($activity->end_time);
+                    $break = strtotime($activity->break_duration);
+                    $duration = date("H:i:s", (($endTime - $startTime) - $break));
+                } else {
+                    $duration = date("H:i:s", strtotime($activity->time));
+                }
+                $hms = explode(":", $duration);
+                $totalTime = $hms[0].':'.$hms[1];
+
+                $day = strtolower(date("l", strtotime($activity->date)));
+
+                $activity->hours = [
+                    $day => $totalTime
+                ];
+
+                $find = array_filter($timeActivities, function($v, $k) use ($activity) {
+                    return $activity->customer_id === $v->customer_id && $activity->service_id === $v->service_id && $activity->billable === $v->billable && $activity->hourly_rate === $v->hourly_rate && $activity->taxable === $v->taxable;
+                }, ARRAY_FILTER_USE_BOTH);
+
+                if(count($find) < 1) {
+                    $timeActivities[] = $activity;
+                } else {
+                    $timeActivities[array_key_first($find)]->hours[$day] = $totalTime;
                 }
             }
 
@@ -8156,6 +8153,12 @@ class Accounting_modals extends MY_Controller
             break;
             case 'inventory-starting-value' :
                 $return = $this->update_starting_value_adjustment($transactionId, $data);
+            break;
+            case 'weekly-timesheet' :
+                $return = $this->update_weekly_timesheet($transactionId, $data);
+            break;
+            case 'time-activity' : 
+                $return = $this->update_time_activity($transactionId, $data);
             break;
         }
 
@@ -10708,6 +10711,65 @@ class Accounting_modals extends MY_Controller
         return $return;
     }
 
+    // private function update_weekly_timesheet($timeSheetId, $data)
+    // {
+    //     $timeSheet = $this->accounting_weekly_timesheet_model->get_by_id($data['transaction_id']);
+    //     $activityIds = [];
+    //     foreach (json_decode($timeSheet->time_activity_ids, true) as $row => $ids) {
+    //         foreach ($ids as $id) {
+    //             $activityIds[] = $id;
+    //         }
+    //     }
+    //     $delete = $this->accounting_single_time_activity_model->delete_multiple_by_id($activityIds);
+
+    //     if ($delete) {
+    //         $timesheetRecord = [
+    //             'name_type' => $name[0],
+    //             'name_id' => $name[1],
+    //             'week_start_date' => date("Y-m-d", $weekStartDate),
+    //             'week_end_date' => date("Y-m-d", $weekEndDate),
+    //             // 'time_activity_ids' => json_encode($timeActivityIds),
+    //             'updated_at' => date("Y-m-d H:i:s"),
+    //         ];
+
+    //         $update = $this->accounting_weekly_timesheet_model->update($data['transaction_id'], $timesheetRecord);
+
+    //         if ($update) {
+    //             $timeSheetRecordId = $timeSheet->id;
+    //         } else {
+    //             $delete = $this->accounting_single_time_activity_model->delete_multiple_by_id($timeActivityIds);
+    //         }
+    //     }
+
+    //     $successMessage = 'Update successful!';
+    // }
+
+    // public function update_time_activity($activityid, $data)
+    // {
+    //     $timeActData = [
+    //         'date' => date('Y-m-d', strtotime($data['date'])),
+    //         'name_key' => $name[0],
+    //         'name_id' => $name[1],
+    //         'customer_id' => $data['customer'],
+    //         'service_id' => $data['service'],
+    //         'billable' => (isset($data['billable'])) ? 1 : 0,
+    //         'hourly_rate' => (isset($data['billable'])) ? $data['hourly_rate'] : null,
+    //         'taxable' => (isset($data['billable']) && isset($data['taxable'])) ? 1 : 0,
+    //         'start_time' => (isset($data['start_end_time'])) ? $data['start_time'] : null,
+    //         'end_time' => (isset($data['start_end_time'])) ? $data['end_time'] : null,
+    //         'time' => $data['time'],
+    //         'description' => $data['description']
+    //     ];
+
+    //     $update = $this->accounting_single_time_activity_model->update($data['transaction_id'], $timeActData);
+
+    //     if ($update) {
+    //         $activityId = $data['transaction_id'];
+    //     }
+
+    //     $successMessage = 'Update successful!';
+    // }
+
     public function get_attachment_file_path($attachmentId)
     {
         $attachment = $this->accounting_attachments_model->getById($attachmentId);
@@ -12231,11 +12293,10 @@ class Accounting_modals extends MY_Controller
         ];
     }
 
-    public function print_purchase_order_modal($purchaseOrderId)
+    private function generate_purchase_order_pdf($purchaseOrderId, $fileName = 'print.pdf')
     {
         $this->load->library('pdf');
         $view = "accounting/modals/print_action/print_transactions";
-        $fileName = 'print.pdf';
 
         $data = [];
 
@@ -12293,7 +12354,7 @@ class Accounting_modals extends MY_Controller
         }
 
         usort($tableItems, function ($a, $b) {
-                return strcmp($a['activity'], $b['activity']);
+            return strcmp($a['activity'], $b['activity']);
         });
 
         $data[] = [
@@ -12306,6 +12367,13 @@ class Accounting_modals extends MY_Controller
 
         $this->pdf->save_pdf($view, ['data' => $data], $fileName, 'portrait');
 
+        return $fileName;
+    }
+
+    public function print_purchase_order_modal($purchaseOrderId)
+    {
+        $fileName = $this->generate_purchase_order_pdf($purchaseOrderId);
+        
         $pdf = base64_encode(file_get_contents(base_url("/assets/pdf/$fileName")));
         if (file_exists(getcwd()."/assets/pdf/$fileName")) {
             unlink(getcwd()."/assets/pdf/$fileName");
@@ -12318,78 +12386,8 @@ class Accounting_modals extends MY_Controller
 
     public function download_purchase_order($purchaseOrderId)
     {
-        $this->load->library('pdf');
-        $view = "accounting/modals/print_action/print_transactions";
-        $fileName = 'print.pdf';
-
-        $data = [];
-
         $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($purchaseOrderId, logged('company_id'));
-        $items = $this->expenses_model->get_transaction_items($purchaseOrderId, 'Purchase Order');
-        $categories = $this->expenses_model->get_transaction_categories($purchaseOrderId, 'Purchase Order');
-
-        $payee = $this->vendors_model->get_vendor_by_id($purchaseOrder->vendor_id);
-        $payeeName = $payee->title !== null && $payee->title !== "" ? $payee->title : "";
-        $payeeName .= $payee->f_name !== null && $payee->f_name !== "" ? " $payee->f_name" : "";
-        $payeeName .= $payee->m_name !== null && $payee->m_name !== "" ? " $payee->m_name" : "";
-        $payeeName .= $payee->l_name !== null && $payee->l_name !== "" ? " $payee->l_name" : "";
-        $payeeName .= $payee->suffix !== null && $payee->suffix !== "" ? " $payee->suffix" : "";
-
-        $payeeName = $payeeName === "" ? $payee->display_name : $payeeName;
-
-        $tableItems = [];
-
-        foreach ($items as $item) {
-            $itemDetails = $this->items_model->getItemById($item->item_id)[0];
-
-            if ($transactionType === 'expense') {
-                $tableItems[] = [
-                    'name' => $itemDetails->title,
-                    'description' => '',
-                    'amount' => number_format(floatval($item->total), 2, '.', ',')
-                ];
-            } else {
-                $tableItems[] = [
-                    'activity' => $itemDetails->title,
-                    'qty' => $item->quantity,
-                    'rate' => number_format(floatval($item->rate), 2, '.', ','),
-                    'amount' => number_format(floatval($item->total), 2, '.', ','),
-                ];
-            }
-        }
-
-        foreach ($categories as $category) {
-            $categoryAcc = $this->chart_of_accounts_model->getById($category->expense_account_id);
-
-            if ($transactionType === 'expense') {
-                $tableItems[] = [
-                    'name' => $categoryAcc->name,
-                    'description' => $category->description,
-                    'amount' => number_format(floatval($category->amount), 2, '.', ',')
-                ];
-            } else {
-                $tableItems[] = [
-                    'activity' => $categoryAcc->name,
-                    'qty' => '',
-                    'rate' => number_format(floatval(1), 2, '.', ','),
-                    'amount' => number_format(floatval($category->amount), 2, '.', ','),
-                ];
-            }
-        }
-
-        usort($tableItems, function ($a, $b) {
-                return strcmp($a['activity'], $b['activity']);
-        });
-
-        $data[] = [
-            'type' => 'purchase-order',
-            'payee' => $payee,
-            'payeeName' => $payeeName,
-            'transaction' => $purchaseOrder,
-            'table_items' => $tableItems
-        ];
-
-        $this->pdf->save_pdf($view, ['data' => $data], $fileName, 'portrait');
+        $fileName = $this->generate_purchase_order_pdf($purchaseOrderId);
 
         $fullPath = base_url("/assets/pdf/$fileName");
         if ($fd = fopen ($fullPath, "r")) {
@@ -12404,5 +12402,110 @@ class Accounting_modals extends MY_Controller
             fclose ($fd);
             exit;
         }
+    }
+
+    public function po_send_email_modal($purchaseOrderId)
+    {
+        $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($purchaseOrderId, logged('company_id'));
+        $vendor = $this->vendors_model->get_vendor_by_id($purchaseOrder->vendor_id);
+
+        $vendorName = $vendor->title !== null && $vendor->title !== "" ? $vendor->title : "";
+        $vendorName .= $vendor->f_name !== null && $vendor->f_name !== "" ? " $vendor->f_name" : "";
+        $vendorName .= $vendor->m_name !== null && $vendor->m_name !== "" ? " $vendor->m_name" : "";
+        $vendorName .= $vendor->l_name !== null && $vendor->l_name !== "" ? " $vendor->l_name" : "";
+        $vendorName .= $vendor->suffix !== null && $vendor->suffix !== "" ? " $vendor->suffix" : "";
+        $vendorName = $vendorName === "" ? $vendor->display_name : $vendorName;
+
+        $fileName = $this->generate_purchase_order_pdf($purchaseOrderId);
+        $pdf = base64_encode(file_get_contents(base_url("/assets/pdf/$fileName")));
+
+        $this->page_data['pdf'] = $pdf;
+        $this->page_data['purchaseOrder'] = $purchaseOrder;
+        $this->page_data['vendor'] = $vendor;
+        $this->page_data['company'] = $this->business_model->getById($purchaseOrder->company_id);
+        $this->page_data['vendorName'] = $vendorName;
+        $this->load->view('accounting/modals/send_email_modal', $this->page_data);
+    }
+
+    public function send_purchase_order_email($purchaseOrderId)
+    {
+        $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($purchaseOrderId, logged('company_id'));
+        $company = $this->business_model->getById($purchaseOrder->company_id);
+        $fileName = "Purchase_Order_".$purchaseOrder->purchase_order_no."_from_".str_replace(' ', '_', $company->business_name).".pdf";
+        $this->generate_purchase_order_pdf($purchaseOrderId, $fileName);
+
+        $data = $this->input->post();
+
+        $this->email->clear(true);
+        $this->email->from($company->business_email);
+        $this->email->to($purchaseOrder->email);
+        $this->email->subject($data['subject']);
+        $this->email->message($data['body']);
+        $this->email->attach(base_url("/assets/pdf/$fileName"));
+
+        $sent = $this->email->send();
+
+        unlink(getcwd()."/assets/pdf/$fileName");
+
+        $return = [
+            'data' => $purchaseOrderId,
+            'success' => $sent,
+            'message' => $sent ? "Email sent to $purchaseOrder->email" : "Email sending failed"
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function get_timesheet_activities()
+    {
+        $post = $this->input->post();
+
+        $name = explode('-', $post['person_tracking']);
+        $dates = explode('-', $post['date_range']);
+
+        $activityData = [
+            'name_key' => $name[0],
+            'name_id' => $name[1],
+            'start_date' => date("Y-m-d", strtotime($dates[0])),
+            'end_date' => date("Y-m-d", strtotime($dates[1]))
+        ];
+        $activities = $this->accounting_weekly_timesheet_model->get_timesheet_activities($activityData);
+
+        $timeActivities = [];
+        foreach($activities as $activity) {
+            $customer = $this->accounting_customers_model->get_by_id($activity->customer_id);
+            $activity->customer_name = $customer->first_name . ' ' . $customer->last_name;
+            $service = $this->items_model->getItemById($activity->service_id)[0];
+            $activity->service_name = $service->title;
+
+            if($activity->time === null) {
+                $startTime = strtotime($activity->start_time);
+                $endTime = strtotime($activity->end_time);
+                $break = strtotime($activity->break_duration);
+                $duration = date("H:i:s", (($endTime - $startTime) - $break));
+            } else {
+                $duration = date("H:i:s", strtotime($activity->time));
+            }
+            $hms = explode(":", $duration);
+            $totalTime = $hms[0].':'.$hms[1];
+
+            $day = strtolower(date("l", strtotime($activity->date)));
+
+            $activity->hours = [
+                $day => $totalTime
+            ];
+
+            $find = array_filter($timeActivities, function($v, $k) use ($activity) {
+                return $activity->customer_id === $v->customer_id && $activity->service_id === $v->service_id && $activity->billable === $v->billable && $activity->hourly_rate === $v->hourly_rate && $activity->taxable === $v->taxable;
+            }, ARRAY_FILTER_USE_BOTH);
+
+            if(count($find) < 1) {
+                $timeActivities[] = $activity;
+            } else {
+                $timeActivities[array_key_first($find)]->hours[$day] = $totalTime;
+            }
+        }
+
+        echo json_encode($timeActivities);
     }
 }
