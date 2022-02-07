@@ -304,6 +304,9 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                         <button class="balanceSheetTable__btn">
                             Add notes
                         </button>
+                        <button class="balanceSheetTable__btn" data-action="editTitle">
+                            Edit titles
+                        </button>
                     </div>
                     <div class="balanceSheetTable__actions">
                         <button class="balanceSheetTable__btn" data-toggle="modal" data-target="#emailReportModal">
@@ -369,6 +372,405 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                 <div class="balanceSheetTable__footer">
                     <?php echo date('l, F d, Y h:i A e'); ?>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="customizeReportWrapper">
+        <div class="customizeReport">
+            <div class="customizeReport__body">
+                <div class="customizeReport__header">
+                    <div class="customizeReport__title">Customize report</div>
+                    <button class="customizeReport__close" data-action="customize_hide">
+                        <i class="fa fa-times"></i>
+                    </button>
+                </div>
+                <div data-type-group="general">
+                    <button class="customizeReport__toggle" type="button" data-toggle="collapse" data-target="#customizeGeneral" aria-expanded="false" aria-controls="customizeGeneral">
+                        <i class="fa fa-caret-right"></i>
+                        General
+                    </button>
+                    <div class="customizeReport__panel collapse" id="customizeGeneral">
+                        <div class="customizeReport__reportPeriod reportPeriodParent">
+                            <label class="title">Report period</label>
+                            <div>
+                                <div class="form-group" style="margin-bottom: 1rem !important;">
+                                    <select class="form-control" data-type="report_period">
+                                        <option value="all_dates">All Dates</option>
+                                        <option value="custom">Custom</option>
+                                        <option value="today">Today</option>
+                                        <option value="this_week">This Week</option>
+                                        <option value="this_week_to_date">This Week-to-date</option>
+                                        <option value="this_month">This Month</option>
+                                        <option value="this_month_to_date">This Month-to-date</option>
+                                        <option value="this_quarter">This Quarter</option>
+                                        <option value="this_quarter_to_date">This Quarter-to-date</option>
+                                        <option value="this_year">This Year</option>
+                                        <option value="this_year_to_date">This Year-to-date</option>
+                                        <option value="this_year_to_last_month">This Year-to-last-month</option>
+                                        <option value="yesterday">Yesterday</option>
+                                        <option value="recent">Recent</option>
+                                        <option value="last_week">Last Week</option>
+                                        <option value="last_week_to_date">Last Week-to-date</option>
+                                        <option value="last_month">Last Month</option>
+                                        <option value="last_month_to_date">Last Month-to-date</option>
+                                        <option value="last_quarter">Last Quarter</option>
+                                        <option value="last_quarter_to_date">Last Quarter-to-date</option>
+                                        <option value="last_year">Last Year</option>
+                                        <option value="last_year_to_date">Last Year-to-date</option>
+                                        <option value="since_30_days_ago">Since 30 Days Ago</option>
+                                        <option value="since_60_days_ago">Since 60 Days Ago</option>
+                                        <option value="since_90_days_ago">Since 90 Days Ago</option>
+                                        <option value="since_365_days_ago">Since 365 Days Ago</option>
+                                        <option value="next_week">Next Week</option>
+                                        <option value="next_4_week">Next 4 Weeks</option>
+                                        <option value="next_month">Next Month</option>
+                                        <option value="next_quarter">Next Quarter</option>
+                                        <option value="next_year">Next Year</option>
+                                    </select>
+                                </div>
+                                <div class="customizeReport__reportPeriodInner">
+                                    <div class="form-group reportPeriodParent__hide">
+                                        <input type="date" class="form-control" data-type="report_period_value">
+                                    </div>
+                                    <div class="reportPeriodParent__hide">to</div>
+                                    <div class="form-group reportPeriodParent__hide">
+                                        <input type="date" class="form-control" data-type="report_period_value">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <div><label class="title">Aging method</label></div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="aging_method" id="customizeAgingMethod1" value="cash" data-type="cash">
+                                <label class="form-check-label" for="customizeAgingMethod1">Cash</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="aging_method" id="customizeAgingMethod2" value="accrual" data-type="accrual">
+                                <label class="form-check-label" for="customizeAgingMethod2">Accural</label>
+                            </div>
+                        </div>
+                        <div class="d-flex">
+                            <div class="customizeReport__numberFormat">
+                                <label class="title">Number format</label>
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="numberFormat1" value="divide_by_1000" data-type="divide_by_1000">
+                                    <label class="form-check-label" for="numberFormat1">Divide by 1000</label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="numberFormat2" value="without_cents" data-type="without_cents">
+                                    <label class="form-check-label" for="numberFormat2">Without cents</label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="numberFormat3" value="except_zero_amount" data-type="except_zero_amount">
+                                    <label class="form-check-label" for="numberFormat3">Except zero amount</label>
+                                </div>
+                            </div>
+                            <div class="customizeReport__negativeNumbers">
+                                <label class="title">Negative numbers</label>
+                                <div class="form-group mb-2">
+                                    <select class="form-control" data-type="negative_numbers">
+                                        <option value="-100">-100</option>
+                                        <option value="100">(100)</option>
+                                        <option value="100-">100-</option>
+                                    </select>
+                                </div>
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="negativeNumbers" value="show_in_red" data-type="negative_numbers_show_in_red">
+                                    <label class="form-check-label" for="negativeNumbers">Show in red</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div data-type-group="row_columns">
+                    <button class="customizeReport__toggle" type="button" data-toggle="collapse" data-target="#customizeRowCols" aria-expanded="false" aria-controls="customizeRowCols">
+                        <i class="fa fa-caret-right"></i>
+                        Rows/columns
+                    </button>
+                    <div class="customizeReport__panel collapse" id="customizeRowCols">
+                        <div class="customizeRowCols__grid">
+                            <div class="form-group">
+                                <label class="title">Columns</label>
+                                <select class="form-control" data-type="report_period">
+                                    <option value="total_only">Total Only</option>
+                                    <option value="days">Days</option>
+                                    <option value="weeks">Weeks</option>
+                                    <option value="months">Months</option>
+                                    <option value="quarters">Quarters</option>
+                                    <option value="years">Years</option>
+                                    <option value="customers">Customers</option>
+                                    <option value="vendors">Vendors</option>
+                                    <option value="products_or_services">Products/Services</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="title">Show non-zero or active only</label>
+                                <div class="customDropdown">
+                                    <button class="customDropdown__btn" type="button" data-type="show_nonzero_or_active_only" value="active_rows/active_columns">
+                                        <span>Active rows/active columns</span>
+                                        <i class="fa fa-angle-down"></i>
+                                    </button>
+                                    <div class="customDropdown__options">
+                                        <div class="customDropdown__group">
+                                            <div class="customDropdown__title">Show rows</div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="nonZeroActiveOnlyRows" id="customizeNonZeroActiveOnlyRows1" value="active_rows" checked>
+                                                <label class="form-check-label" for="customizeNonZeroActiveOnlyRows1">
+                                                    Active
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="nonZeroActiveOnlyRows" id="customizeNonZeroActiveOnlyRows2" value="all_rows">
+                                                <label class="form-check-label" for="customizeNonZeroActiveOnlyRows2">
+                                                    All
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="nonZeroActiveOnlyRows" id="customizeNonZeroActiveOnlyRows3" value="non-zero_rows">
+                                                <label class="form-check-label" for="customizeNonZeroActiveOnlyRows3">
+                                                    Non-zero
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="customDropdown__group">
+                                            <div class="customDropdown__title">Show columns</div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="nonZeroActiveOnlyColumns" id="customizeNonZeroActiveOnlyColumns1" value="active_columns" checked>
+                                                <label class="form-check-label" for="customizeNonZeroActiveOnlyColumns1">
+                                                    Active
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="nonZeroActiveOnlyColumns" id="customizeNonZeroActiveOnlyColumns2" value="all_columns">
+                                                <label class="form-check-label" for="customizeNonZeroActiveOnlyColumns2">
+                                                    All
+                                                </label>
+                                            </div>
+                                            <div class="form-check disabled">
+                                                <input class="form-check-input" type="radio" name="nonZeroActiveOnlyColumns" id="customizeNonZeroActiveOnlyColumns3" value="non-zero_columns">
+                                                <label class="form-check-label" for="customizeNonZeroActiveOnlyColumns3">
+                                                    Non-zero
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div data-type-group="filter">
+                    <button class="customizeReport__toggle" type="button" data-toggle="collapse" data-target="#customizeFilter" aria-expanded="false" aria-controls="customizeFilter">
+                        <i class="fa fa-caret-right"></i>
+                        Filter
+                    </button>
+                    <div class="customizeReport__panel collapse" id="customizeFilter">
+                        <div class="customizeReport__customizeFilterInner mb-2">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="customizeFilterCustomer" data-type="filter_customer">
+                                <label class="form-check-label" for="customizeFilterCustomer">Customer</label>
+                            </div>
+                            <select class="form-control" data-type="filter_customer_selected">
+                                <option>Customer 1</option>
+                                <option>Customer 2</option>
+                                <option>Customer 3</option>
+                            </select>
+                        </div>
+                        <div class="customizeReport__customizeFilterInner mb-2">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="customizeFilterVendor" data-type="filter_vender">
+                                <label class="form-check-label" for="customizeFilterVendor">Vendor</label>
+                            </div>
+                            <select class="form-control" data-type="filter_vendor_selected">
+                                <option>Vendor 1</option>
+                                <option>Vendor 2</option>
+                                <option>Vendor 3</option>
+                            </select>
+                        </div>
+                        <div class="customizeReport__customizeFilterInner mb-2">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="customizeFilterProductService" data-type="filter_customer">
+                                <label class="form-check-label" for="customizeFilterProductService">Product/Service</label>
+                            </div>
+                            <select class="form-control" data-type="filter_customer_selected">
+                                <option>Product/Service 1</option>
+                                <option>Product/Service 2</option>
+                                <option>Product/Service 3</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div data-type-group="header_footer">
+                    <button class="customizeReport__toggle" type="button" data-toggle="collapse" data-target="#customizeHeaderFooter" aria-expanded="false" aria-controls="customizeHeaderFooter">
+                        <i class="fa fa-caret-right"></i>
+                        Header/Footer
+                    </button>
+                    <div class="customizeReport__panel collapse" id="customizeHeaderFooter">
+                        <div class="mb-3">
+                            <div><label class="title">Header</label></div>
+                            <div class="form-check customizeReport__headerFooterItem">
+                                <input type="checkbox" class="form-check-input" id="customizeShowLogo" data-type="show_logo">
+                                <label class="form-check-label" for="customizeShowLogo">Show logo</label>
+                            </div>
+                            <div class="customizeReport__headerFooterGrid customizeReport__headerFooterItem">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="customizeCompanyName" data-type="company_name">
+                                    <label class="form-check-label" for="customizeCompanyName">Company name</label>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" data-type="company_name_value">
+                                </div>
+                            </div>
+                            <div class="customizeReport__headerFooterGrid customizeReport__headerFooterItem">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="customizeReportTitle" data-type="report_title">
+                                    <label class="form-check-label" for="customizeReportTitle">Report title</label>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" data-type="report_title_value">
+                                </div>
+                            </div>
+                            <div class="form-check customizeReport__headerFooterItem">
+                                <input type="checkbox" class="form-check-input" id="customizeReportPeriod" data-type="header_report_period">
+                                <label class="form-check-label" for="customizeReportPeriod">Report period</label>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div><label class="title">Footer</label></div>
+                            <div class="form-check customizeReport__headerFooterItem">
+                                <input type="checkbox" class="form-check-input" id="customizeDatePrepared" data-type="date_prepared">
+                                <label class="form-check-label" for="customizeDatePrepared">Date prepared</label>
+                            </div>
+                            <div class="form-check customizeReport__headerFooterItem">
+                                <input type="checkbox" class="form-check-input" id="customizeTimePrepared" data-type="time_prepared">
+                                <label class="form-check-label" for="customizeTimePrepared">Time prepared</label>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div><label class="title">Alignment</label></div>
+                            <div class="form-group customizeReport__headerFooterAlignment">
+                                <label for="customizeAlignmentHeader">Header</label>
+                                <select class="form-control" id="customizeAlignmentHeader" data-type="header">
+                                    <option value="left">Left</option>
+                                    <option value="center">Center</option>
+                                    <option value="right">Right</option>
+                                </select>
+                            </div>
+                            <div class="form-group customizeReport__headerFooterAlignment">
+                                <label for="customizeAlignmentFooter">Footer</label>
+                                <select class="form-control" id="customizeAlignmentFooter" data-type="footer">
+                                    <option value="left">Left</option>
+                                    <option value="center">Center</option>
+                                    <option value="right">Right</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="customizeReport__footer">
+                <button type="button" class="btn btn-primary buttonSubmit" id="customizeRunReport">
+                    <div class="spinner-border spinner-border-sm" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                    Run report
+                </button>
+            </div>
+        </div>
+        <div class="customizeReport__backdrop"></div>
+    </div>
+
+    <div id="saveCustomizationForm" class="d-none">
+        <form>
+            <div class="form-group">
+                <label for="reportname">Custom report name</label>
+                <input class="form-control" id="reportname" data-type="name">
+            </div>
+            <div class="form-group">
+                <label for="reportgroup">Add this report to a group</label>
+                <select class="form-control" id="reportgroup" data-type="group">
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
+                </select>
+                <a href="" class="d-none">Add new group</a>
+            </div>
+            <div class="form-group">
+                <label for="reportsharewith">Share with</label>
+                <select class="form-control" id="reportsharewith" data-type="share_with">
+                    <option value="all">All</option>
+                    <option value="none">None</option>
+                </select>
+            </div>
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="reportsharewithcommunity" data-type="share_with_community">
+                <label class="form-check-label" for="reportsharewithcommunity">Share reports with community</label>
+            </div>
+            <small>* You share only your customized report structure and not your financial data.</small>
+            <div class="d-flex justify-content-end pt-1 pb-1">
+                <button type="button" class="btn btn-primary buttonSubmit" style="max-height:37px;display: flex;align-items: center;padding: 0 16px;" data-action="submit_customization">
+                    <div class="spinner-border spinner-border-sm" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                    Save
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <div class="modal fade" tabindex="-1" role="dialog" id="editTitleModal">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit section titles</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" style="max-height:500px;overflow-x:auto;">
+                <p>Replaces the default titles used in all balance sheet reports for this company.</p>
+
+                <?php
+                    $inputs = [
+                        'Assets', 
+                        'Current assets', 
+                        'Bank accounts', 
+                        'Accounts receivable', 
+                        'Other current assets', 
+                        'Fixed assets', 
+                        'Other assets', 
+                        'Liabilities and equity', 
+                        'Liabilities', 
+                        'Current liabilities', 
+                        'Accounts payable', 
+                        'Credit cards', 
+                        'Other current liabilities', 
+                        'Long term liabilities', 
+                        'Equity', 
+                        'Retained earnings', 
+                        'Net income'
+                    ];
+                ?>
+
+                <form>
+                    <?php foreach ($inputs as $key => $input): ?>
+                        <div class="form-group row align-items-center">
+                            <label for="modalInput<?=$key;?>" class="col-6 col-form-label"><?=$input;?></label>
+                            <div class="col-6">
+                                <input type="text" class="form-control" id="modalInput<?=$key;?>" placeholder="<?=$input;?>">
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            </div>
             </div>
         </div>
     </div>

@@ -349,7 +349,7 @@
                         <div class="option">2. {Company name}</div>
                         <div class="coresponding">
                             <div class="form-group">
-                                <input type="text" class="form-control " name="af_company_name" placeholder="Company name">
+                                <input type="text" class="form-control " name="af_company_name" placeholder="Company name" value="<?=$company_details->business_name?>">
                             </div>
                         </div>
                     </div>
