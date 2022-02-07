@@ -1121,6 +1121,19 @@ $route['inventory/export_list'] = 'inventory/inventory_export';
 $route['inventory/fees/edit/(:num)'] = 'inventory/edit_fee/$1';
 $route['inventory/fees/update'] = 'inventory/update_fees';
 
+//Inventory Vendor
+$route['inventory/vendor/add'] = 'inventory/add_vendor';
+$route['inventory/_create_vendor'] = 'inventory/ajax_create_vendor';
+$route['inventory/vendor/edit/(:num)'] = 'inventory/edit_vendor/$1';
+$route['inventory/_update_vendor'] = 'inventory/ajax_update_vendor';
+$route['inventory/vendor/delete'] = 'inventory/ajax_delete_vendor';
+
+//Item Category
+$route['inventory/_create_item_category'] = 'inventory/ajax_create_item_category';
+$route['inventory/item_groups/edit/(:num)'] = 'inventory/edit_item_category/$1';
+$route['inventory/_update_item_category'] = 'inventory/ajax_update_item_category';
+$route['inventory/item_groups/delete'] = 'inventory/ajax_delete_item_category';
+
 //Sales Overview
 $route['sales-overview/income-overtime'] = 'AccountingSales/get_income_overtime';
 
