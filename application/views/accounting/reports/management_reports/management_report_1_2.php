@@ -4,73 +4,108 @@ if ($management_report->cover_style == 1) {
     $header_bg_color = "#1F497D";
 } elseif ($management_report->cover_style == 2) {
     $header_bg_color = "#404040";
-} elseif ($management_report->cover_style == 3) {
-    $header_bg_color = "#1F497D";
-} else {
-    $header_bg_color = "#1F497D";
 }
 
-if ($action == "preview") {
-    if($this->input->post("template_report_period") == "All Dates"){
-        $report_end_date = date("Y-m-d");
-    }elseif($this->input->post("template_report_period")=="Today"){
-        $report_end_date = date("Y-m-d");
-    }elseif($this->input->post("template_report_period")=="This Week "){
-        $report_end_date = date("Y-m-d", strtotime('sunday this week'));
-    }elseif($this->input->post("template_report_period")=="This Week-to-date"){
-        $report_end_date = date("Y-m-d");
-    }elseif($this->input->post("template_report_period")=="This Month-to-date"){
-        $report_end_date = date("Y-m-d");
-    }elseif($this->input->post("template_report_period")=="This Quarter"){
-        $report_end_date = "December 31, ".date("Y");
-    }elseif($this->input->post("template_report_period")=="This Quarter-to-date"){
-        $report_end_date = "December 31, ".date("Y");
-    }elseif($this->input->post("template_report_period")=="This Year"){
-        $report_end_date = "December 31, ".date("Y");
-    }elseif($this->input->post("template_report_period")=="This Year-to-date"){
-        $report_end_date = "December 31, ".date("Y");
-    }elseif($this->input->post("template_report_period")=="This Year-to-last-month"){
-        $report_end_date = "December 31, ".date("Y");
-    }elseif($this->input->post("template_report_period")=="Yesterday"){
-        $report_end_date = "December 31, ".date("Y");
-    }elseif($this->input->post("template_report_period")=="Recent"){
-        $report_end_date = "December 31, ".date("Y");
-    }elseif($this->input->post("template_report_period")=="Last Week"){
-        $report_end_date = "December 31, ".date("Y");
-    }elseif($this->input->post("template_report_period")=="Last Week-to-date"){
-        $report_end_date = "December 31, ".date("Y");
-    }elseif($this->input->post("template_report_period")=="Last Month"){
-        $report_end_date = "December 31, ".date("Y");
-    }elseif($this->input->post("template_report_period")=="Last Month-to-date "){
-        $report_end_date = "December 31, ".date("Y");
-    }elseif($this->input->post("template_report_period")=="Last Quarter"){
-        $report_end_date = "December 31, ".date("Y");
-    }elseif($this->input->post("template_report_period")=="Last Quarter-to-date"){
-        $report_end_date = "December 31, ".date("Y");
-    }elseif($this->input->post("template_report_period")=="Last Year"){
-        $report_end_date = "December 31, ".date("Y");
-    }elseif($this->input->post("template_report_period")=="Last Year-to-date"){
-        $report_end_date = "December 31, ".date("Y");
-    }elseif($this->input->post("template_report_period")=="Since 30 Days Ago"){
-        $report_end_date = "December 31, ".date("Y");
-    }elseif($this->input->post("template_report_period")=="Since 60 Days Ago"){
-        $report_end_date = "December 31, ".date("Y");
-    }elseif($this->input->post("template_report_period")=="Since 90 Days Ago"){
-        $report_end_date = "December 31, ".date("Y");
-    }elseif($this->input->post("template_report_period")=="Since 365 Days Ago"){
-        $report_end_date = "December 31, ".date("Y");
-    }elseif($this->input->post("template_report_period")=="Next Week"){
-        $report_end_date = "December 31, ".date("Y");
-    }elseif($this->input->post("template_report_period")=="Next 4 Weeks"){
-        $report_end_date = "December 31, ".date("Y");
-    }elseif($this->input->post("template_report_period")=="Next Month"){
-        $report_end_date = "December 31, ".date("Y");
-    }elseif($this->input->post("template_report_period")=="Next Quarter"){
-        $report_end_date = "December 31, ".date("Y");
-    }elseif($this->input->post("template_report_period")=="Next Year"){
-        $report_end_date = "December 31, ".date("Y");
+$this_quesrter = ceil(date("n", strtotime("1995-11-13")) / 3);
+if($this->input->post("template_report_period") == "All Dates"){
+    $report_end_date = date("Y-m-d");
+}elseif($this->input->post("template_report_period")=="Today"){
+    $report_end_date = date("Y-m-d");
+}elseif($this->input->post("template_report_period")=="This Week "){
+    $report_end_date = date("Y-m-d", strtotime('sunday this week'));
+}elseif($this->input->post("template_report_period")=="This Week-to-date"){
+    $report_end_date = date("Y-m-d");
+}elseif ($this->input->post("template_report_period") == "This Month") {
+    $report_end_date = date("Y-m-t");
+}elseif($this->input->post("template_report_period")=="This Month-to-date"){
+    $report_end_date = date("Y-m-d");
+}elseif($this->input->post("template_report_period")=="This Quarter"){
+    if($this_quesrter == 1){
+        $report_end_date = date("Y-m-t", strtotime(date("Y-03-t")));
+    }elseif($this_quesrter == 2){
+        $report_end_date = date("Y-m-t", strtotime(date("Y-06-t")));
+    }elseif($this_quesrter == 3){
+        $report_end_date = date("Y-m-t", strtotime(date("Y-09-t")));
+    }elseif($this_quesrter == 4){
+        $report_end_date = date("Y-m-t", strtotime(date("Y-12-t")));
     }
-    var_dump($report_end_date);
+}elseif($this->input->post("template_report_period")=="This Quarter-to-date"){
+    $report_end_date = date("Y-m-d");
+}elseif($this->input->post("template_report_period")=="This Year"){
+    $report_end_date = date("Y-12-31");
+}elseif($this->input->post("template_report_period")=="This Year-to-date"){
+    $report_end_date = date("Y-m-d");
+}elseif($this->input->post("template_report_period")=="This Year-to-last-month"){
+    $report_end_date = date("Y-m-d", strtotime("last day of previous month"));
+}elseif($this->input->post("template_report_period")=="Yesterday"){
+    $report_end_date = date('Y-m-d',strtotime("-1 days"));
+}elseif($this->input->post("template_report_period")=="Recent"){
+    $report_end_date = date("Y-m-d");
+}elseif($this->input->post("template_report_period")=="Last Week"){
+    $report_end_date = date('Y-m-d',strtotime('last Sunday'));
+}elseif($this->input->post("template_report_period")=="Last Week-to-date"){
+    $report_end_date = date("Y-m-d");
+}elseif($this->input->post("template_report_period")=="Last Month"){
+    $report_end_date = date("Y-m-d", strtotime("last day of previous month"));
+}elseif($this->input->post("template_report_period")=="Last Month-to-date "){
+    $report_end_date = date("Y-m-d");
+}elseif($this->input->post("template_report_period")=="Last Quarter"){
+    $last_quarter=$this_quesrter-1;
+    if($last_quarter == 0){
+        $last_quarter = 4;
+    }
+    if($last_quarter == 1){
+        $report_end_date = date("Y-m-t", strtotime(date("Y-03-t")));
+    }elseif($last_quarter == 2){
+        $report_end_date = date("Y-m-t", strtotime(date("Y-06-t")));
+    }elseif($last_quarter == 3){
+        $report_end_date = date("Y-m-t", strtotime(date("Y-09-t")));
+    }elseif($last_quarter == 4){
+        $report_end_date = date("Y-m-t", strtotime(date("Y-12-t")));
+    }
+}elseif($this->input->post("template_report_period")=="Last Quarter-to-date"){
+    $report_end_date = date("Y-m-d");
+}elseif($this->input->post("template_report_period")=="Last Year"){
+    $report_end_date = (date("Y")-1)."-12-31" ;
+}elseif($this->input->post("template_report_period")=="Last Year-to-date"){
+    $report_end_date = date("Y-m-d");
+}elseif($this->input->post("template_report_period")=="Since 30 Days Ago"){
+    $report_end_date = date("Y-m-d");
+}elseif($this->input->post("template_report_period")=="Since 60 Days Ago"){
+    $report_end_date = date("Y-m-d");
+}elseif($this->input->post("template_report_period")=="Since 90 Days Ago"){
+    $report_end_date = date("Y-m-d");
+}elseif($this->input->post("template_report_period")=="Since 365 Days Ago"){
+    $report_end_date = date("Y-m-d");
+}elseif($this->input->post("template_report_period")=="Next Week"){
+    $report_end_date = date('Y-m-d',strtotime('next Monday'));
+}elseif($this->input->post("template_report_period")=="Next 4 Weeks"){
+    $report_end_date = date("Y-m-d",('+3 weeks'));
+}elseif($this->input->post("template_report_period")=="Next Month"){
+    $report_end_date = date('Y-m-t',strtotime('first day of +1 month'));
+}elseif($this->input->post("template_report_period")=="Next Quarter"){
+    $next_quarter=$this_quesrter+1;
+    if($next_quarter > 4){
+        $next_quarter = 1;
+    }
+    if($next_quarter == 1){
+        $report_end_date = date("Y-m-t", strtotime(date("Y-03-t")));
+    }elseif($next_quarter == 2){
+        $report_end_date = date("Y-m-t", strtotime(date("Y-06-t")));
+    }elseif($next_quarter == 3){
+        $report_end_date = date("Y-m-t", strtotime(date("Y-09-t")));
+    }elseif($next_quarter == 4){
+        $report_end_date = date("Y-m-t", strtotime(date("Y-12-t")));
+    }
+}elseif($this->input->post("template_report_period")=="Next Year"){
+    $report_end_date = (date("Y")+1)."-12-31";
+}
+if ($action == "preview") {
+    if ($this->input->post("cover_style")  == 1) {
+        $header_bg_color = "#1F497D";
+    } elseif ($this->input->post("cover_style") == 2) {
+        $header_bg_color = "#404040";
+    }
     $cover_title = $this->input->post("cover_page_cover_title");
     if (strtolower($this->input->post("cover_page_subtitle")) == "{company name}") {
         $cover_subtitle = $this->input->post("af_company_name");
@@ -170,7 +205,7 @@ if ($action == "preview") {
     $echo_text = "";
     for ($i = 0; $i < count($end_period); $i++) {
         if ("{" . strtolower($end_period[$i]) == "{report end date}") {
-            $echo_text .= " " . date("F d, Y", strtotime($management_report->report_end_period));
+            $echo_text .= " " . date("F d, Y", strtotime($report_end_date));
         } else {
             $echo_text .= " " . $end_period[$i];
         }

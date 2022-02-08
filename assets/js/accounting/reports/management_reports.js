@@ -387,13 +387,15 @@ $(document).on('click', '#manage_reports_table .view-management_report', functio
     event.preventDefault();
     $("#management_reports_viewer_modal").fadeIn();
     $("#management_reports_viewer_modal .body .iframe").html("");
-    var management_report_id = $(this).attr("data-id")
+    var management_report_id = $(this).attr("data-id");
+    var report_period = $(this).parents("tr").children("td").children('select[name="filter_date"]').val();
     $.ajax({
         url: baseURL + "management-report/export/pdf",
         type: "POST",
         dataType: "json",
         data: {
-            management_report_id: management_report_id
+            management_report_id: management_report_id,
+            template_report_period: report_period
         },
         success: function(data) {
             $("#management_reports_viewer_modal .body .iframe").html('<iframe src="' + data.file_location + '" frameborder="0" class="pdf_viewer"></iframe>');

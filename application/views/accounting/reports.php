@@ -2906,7 +2906,7 @@
                                                                             Export as PDF
                                                                         </a>
                                                                     </li>
-                                                                    <li>
+                                                                    <li style="display: none;">
                                                                         <a href="javascript:void(0)"
                                                                             class="export-docx" data-id="<?=$report->id?>">
                                                                             Export as DOCX
