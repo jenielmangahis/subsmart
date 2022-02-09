@@ -51,12 +51,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         </div>
                                         <table class="table table-hover table-bordered table-striped" style="width:100%;" id="customFeesItemsTable">
                                             <thead>
-                                            <tr>
-                                                <th class="text-center"><input type="checkbox" style="transform: scale(1.5); height: 20px;" id="inventoryFeesCheckAll" value=""></th>
+                                            <tr style="background-color:#D3D3D3 !important;">
+                                                <th class="text-center" style="width:5%;">
+                                                    <input type="checkbox" style="transform: scale(1.5); height: 20px;" id="inventoryFeesCheckAll" value="">
+                                                </th>
                                                 <th scope="col"><strong>Item</strong></th>
                                                 <th scope="col"><strong>Cost</strong></th>
                                                 <th scope="col"><strong>Billing Type</strong></th>
-                                                <th scope="col" class="text-center"><strong>Actions</strong></th>
+                                                <th scope="col" class="text-center" style="width: 10%;"><strong>Actions</strong></th>
                                             </tr>
                                             </thead>
                                             <tbody>
@@ -73,7 +75,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                                     <span class="btn-label">Manage <i class="fa fa-caret-down fa-sm" style="margin-left:10px;"></i></span></span>
                                                                 </button>
                                                                 <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
-                                                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0)" class="editItemBtn"  data-id="<?php echo $item[3]; ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a></li>
+                                                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="<?= base_url('inventory/fees/edit/'.$item[3]) ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a></li>
                                                                     <li role="separator" class="divider"></li>
                                                                     <li role="presentation">
                                                                         <a href="javascript:void(0)" id="<?= $item[3]; ?>" role="menuitem" tabindex="-1" class="delete_fee">
@@ -85,7 +87,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                         </td>
                                                     </tr>
                                                 <?php else : ?>
-                                                    <tr style="background-color:#D3D3D3;">
+                                                    <tr style="background-color:#32243d;color:#ffffff;">
                                                         <td>&nbsp;</td>
                                                         <td colspan="3"><b><?php echo $item[0]; ?></b></td>
                                                         <td style="display: none"></td>
@@ -143,7 +145,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
         Swal.fire({
             title: 'Continue to remove this Fee?',
             text: "",
-            icon: 'warning',
+            icon: 'question',
             showCancelButton: true,
             confirmButtonColor: '#32243d',
             cancelButtonColor: '#d33',
@@ -153,7 +155,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             if (result.value) {
                 $.ajax({
                     type: "POST",
-                    url: "/inventory/delete",
+                    url: base_url + "/inventory/delete",
                     data: { id: ID}, // serializes the form's elements.
                     success: function(data) {
                         if (data === "1") {
