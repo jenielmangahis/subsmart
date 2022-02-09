@@ -120,7 +120,7 @@
                                                         <input class="form-check-input" type="checkbox" name="billable" id="billable" value="1" onchange="showHiddenFields(this)" <?=isset($timeActivity) && $timeActivity->billable === "1" ? 'checked' : ''?>>
                                                         <label class="form-check-label" for="billable">Billable(/hr)</label>
                                                     </div>
-                                                    <input type="number" name="hourly_rate" id="hourlyRate" class="w-25 form-control <?=isset($timeActivity) && $timeActivity->billable === "1" ? '' : 'hide'?>" value="<?=isset($timeActivity) && $timeActivity->billable === "1" ? floatval($timeActivity->hourly_rate) : ''?>">
+                                                    <input type="number" name="hourly_rate" id="hourlyRate" step=".01" class="w-25 form-control <?=isset($timeActivity) && $timeActivity->billable === "1" ? '' : 'hide'?>" value="<?=isset($timeActivity) && $timeActivity->billable === "1" ? floatval($timeActivity->hourly_rate) : ''?>">
                                                 </div>
                                                 <div class="form-check <?=isset($timeActivity) && $timeActivity->billable === "1" ? '' : 'hide'?>">
                                                     <div class="checkbox checkbox-sec">
@@ -132,7 +132,7 @@
                                             </div>
 
                                             <div class="col-md-5">
-                                                <div class="form-group w-50 hide">
+                                                <div class="form-group w-50 <?=isset($timeActivity) && $timeActivity->start_time !== "" && !is_null($timeActivity->start_time) ? '' : 'hide'?>">
                                                     <label for="startTime">Start time</label>
                                                     <select name="start_time" id="startTime" class="form-control">
                                                         <option disabled selected>&nbsp;</option>
@@ -141,7 +141,7 @@
                                                         <?php endforeach; ?>
                                                     </select>
                                                 </div>
-                                                <div class="form-group w-50 hide">
+                                                <div class="form-group w-50 <?=isset($timeActivity) && $timeActivity->start_time !== "" && !is_null($timeActivity->start_time) ? '' : 'hide'?>">
                                                     <label for="endTime">End Time</label>
                                                     <select name="end_time" id="endTime" class="form-control">
                                                         <option disabled selected>&nbsp;</option>
@@ -151,8 +151,8 @@
                                                     </select>
                                                 </div>
                                                 <div class="form-group w-50">
-                                                    <label for="time">Time</label>
-                                                    <input type="text" name="time" id="time" class="form-control" placeholder="hh:mm" required value="<?=isset($timeActivity) && $timeActivity->start_time !== null ? substr($timeActivity->break_duration, 0, -3) : substr($timeActivity->time, 0, -3)?>">
+                                                    <label for="time"><?=isset($timeActivity) && $timeActivity->start_time !== "" && !is_null($timeActivity->start_time) ? 'Break' : 'Time'?></label>
+                                                    <input type="text" name="time" id="time" class="form-control" placeholder="hh:mm" required value="<?=isset($timeActivity) && !is_null($timeActivity->start_time) ? substr($timeActivity->break_duration, 0, -3) : substr($timeActivity->time, 0, -3)?>">
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="description">Description</label>

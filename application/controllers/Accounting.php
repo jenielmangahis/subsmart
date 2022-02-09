@@ -1182,8 +1182,8 @@ class Accounting extends MY_Controller
             $action = "download";
         }
         // $management_report_id = $this->input->post("management_report_id");
-       
-        if($this->input->post("action") != "preview"){
+
+        if ($this->input->post("action") != "preview") {
             $management_report = $this->accounting_management_reports->get_management_reports_by_id($management_report_id);
             $this->page_data["management_report"] = $management_report;
             $this->page_data["primary_pages"] = $this->accounting_management_reports->get_management_reports_preliminary_pages_by_id($management_report_id);
@@ -1195,7 +1195,7 @@ class Accounting extends MY_Controller
             } else {
                 $template_src = 'accounting/reports/management_reports/management_report_4';
             }
-        }else{
+        } else {
             if ($this->input->post("cover_style") == 1 || $this->input->post("cover_style") == 2) {
                 $template_src = 'accounting/reports/management_reports/management_report_1_2';
             } elseif ($this->input->post("cover_style") == 3) {
@@ -1204,10 +1204,10 @@ class Accounting extends MY_Controller
                 $template_src = 'accounting/reports/management_reports/management_report_4';
             }
         }
-        
+
         $this->page_data["action"] = $this->input->post("action");
 
-        
+
 
         $filename = "management_report_" . $management_report_id . ".pdf";
 
@@ -1225,7 +1225,7 @@ class Accounting extends MY_Controller
 
     public function management_report_generate_docx()
     {
-        $management_report_id=1;
+        $management_report_id = 1;
         $management_report = $this->accounting_management_reports->get_management_reports_by_id($management_report_id);
         $this->page_data["management_report"] = $management_report;
         $this->page_data["primary_pages"] = $this->accounting_management_reports->get_management_reports_preliminary_pages_by_id($management_report_id);
@@ -1240,17 +1240,17 @@ class Accounting extends MY_Controller
         $filename = "LouWorld.docx";
         $objWriter->save($filename);
         header('Content-Description: File Transfer');
-		header('Content-Type: application/octet-stream');
-		header('Content-Disposition: attachment; filename='.$filename);
-		header('Content-Transfer-Encoding: binary');
-		header('Expires: 0');
-		header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-		header('Pragma: public');
-		header('Content-Length: ' . filesize($filename));
-		flush();
-		readfile($filename);
-		unlink($filename); // deletes the temporary file
-		exit;
+        header('Content-Type: application/octet-stream');
+        header('Content-Disposition: attachment; filename=' . $filename);
+        header('Content-Transfer-Encoding: binary');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+        header('Pragma: public');
+        header('Content-Length: ' . filesize($filename));
+        flush();
+        readfile($filename);
+        unlink($filename); // deletes the temporary file
+        exit;
     }
 
     public function management_report_send_email()
@@ -11156,18 +11156,8 @@ class Accounting extends MY_Controller
 
     public function tester()
     {
-        $data_dates = "[";
-        $date = date("Y-01-01");
-        for ($i = 1; $i < 500; $i++) {
-            if ($date <= date('Y-m-d', strtotime('12/31/' . date("Y")))) {
-                $data_dates .= date("M d", strtotime($date)) . ",";
-                $date = date("Y-m-d", strtotime("+ 1 day", strtotime($date)));
-            } else {
-                // $i=0;
-            }
-        }
-        $data_dates .= "]";
-        var_dump($data_dates);
+        echo ceil(date("n", strtotime("1995-11-13")) / 3);
+
     }
     public function update_customer_notes()
     {

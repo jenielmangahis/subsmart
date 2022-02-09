@@ -92,4 +92,14 @@ class Accounting_weekly_timesheet_model extends MY_Model {
 
 		return $query->row();
 	}
+
+	public function delete_timesheet($timesheetData = [])
+	{
+		$this->db->where('name_type', $timesheetData['name_key']);
+		$this->db->where('name_id', $timesheetData['name_id']);
+		$this->db->where('week_start_date', $timesheetData['start_date']);
+		$this->db->where('week_end_date', $timesheetData['end_date']);
+		$update = $this->db->update($this->table, ['status' => 0]);
+		return $update ? true : false;
+	}
 }

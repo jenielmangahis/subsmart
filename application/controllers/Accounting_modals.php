@@ -116,10 +116,6 @@ class Accounting_modals extends MY_Controller
                 break;
                 case 'weekly_timesheet_modal':
                     $this->page_data['timesheetSettings'] = $this->accounting_timesheet_settings_model->get_by_company_id(logged('company_id'));
-                    $this->page_data['dropdown']['employees'] = $this->users_model->getCompanyUsers(logged('company_id'));
-                    $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
-                    $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
-                    $this->page_data['dropdown']['services'] = $this->items_model->getItemsWithFilter(['type' => ['service', 'Service'], 'status' => [1]]);
 
                     $date = date('m/d/Y');
                     $yearLater = date('m/d/Y', strtotime($date . ' -1 year'));
@@ -1404,6 +1400,17 @@ class Accounting_modals extends MY_Controller
             $timesheetSettings = $this->accounting_timesheet_settings_model->get_by_company_id(logged('company_id'));
             $name = explode('-', $data['name']);
 
+            if(isset($data['start_end_time'])) {
+                $startTime = strtotime($data['start_time']);
+                $endTime = strtotime($data['end_time']);
+                $break = strtotime($data['time'] === '' ? "00:00" : $data['time']);
+                $duration = date("H:i:s", (($endTime - $startTime) - $break));
+            } else {
+                $duration = date("H:i:s", strtotime($data['time']));
+            }
+            $hms = explode(":", $duration);
+            $totalTime = $hms[0].":".$hms[1].":".$hms[2];
+
             $timeActData = [
                 'company_id' => logged('company_id'),
                 'date' => date('Y-m-d', strtotime($data['date'])),
@@ -1417,7 +1424,7 @@ class Accounting_modals extends MY_Controller
                 'start_time' => isset($data['start_end_time']) ? $data['start_time'] : null,
                 'end_time' => isset($data['start_end_time']) ? $data['end_time'] : null,
                 'break_duration' => isset($data['start_end_time']) ? $data['time'] : null,
-                'time' => isset($data['start_end_time']) ? null : $data['time'],
+                'time' => $totalTime,
                 'description' => $data['description'],
                 'status' => 1
             ];
@@ -2163,16 +2170,14 @@ class Accounting_modals extends MY_Controller
                                     'date' => date('Y-m-d', strtotime($weekDate[0]." +$count days")),
                                     'name_key' => $name[0],
                                     'name_id' => $name[1],
-                                    'customer_id' => $data['customer'][$key],
+                                    'customer_id' => $value,
                                     'service_id' => $timesheetSettings->service === "1" ? $data['service'][$key] : null,
                                     'billable' => $timesheetSettings->billable === "1" ? $data['billable'][$key] : 0,
                                     'hourly_rate' => $timesheetSettings->billable === "1" ? $data['hourly_rate'][$key] : null,
                                     'taxable' => $timesheetSettings->billable === "1" ? $data['taxable'][$key] : 0,
                                     'time' => $hours,
                                     'description' => $data['description'][$key],
-                                    'status' => 1,
-                                    'created_at' => date('Y-m-d h:i:s'),
-                                    'updated_at' => date('Y-m-d h:i:s')
+                                    'status' => 1
                                 ];
     
                                 $timeActivityId = $this->accounting_single_time_activity_model->create($timeActData);
@@ -5624,16 +5629,7 @@ class Accounting_modals extends MY_Controller
                 $service = $this->items_model->getItemById($activity->service_id)[0];
                 $activity->service_name = $service->title;
 
-                if($activity->time === null) {
-                    $startTime = strtotime($activity->start_time);
-                    $endTime = strtotime($activity->end_time);
-                    $break = strtotime($activity->break_duration);
-                    $duration = date("H:i:s", (($endTime - $startTime) - $break));
-                } else {
-                    $duration = date("H:i:s", strtotime($activity->time));
-                }
-                $hms = explode(":", $duration);
-                $totalTime = $hms[0].':'.$hms[1];
+                $totalTime = substr($activity->time, 0, -3);
 
                 $day = strtolower(date("l", strtotime($activity->date)));
 
@@ -7872,7 +7868,7 @@ class Accounting_modals extends MY_Controller
         if($timeActivity->time === null) {
             $startTime = strtotime($timeActivity->start_time);
             $endTime = strtotime($timeActivity->end_time);
-            $break = strtotime($timeActivity->break_duration);
+            $break = strtotime($timeActivity->break_duration === '' ? "00:00" : $timeActivity->break_duration);
             $duration = date("H:i:s", (($endTime - $startTime) - $break));
         } else {
             $duration = date("H:i:s", strtotime($timeActivity->time));
@@ -10711,64 +10707,110 @@ class Accounting_modals extends MY_Controller
         return $return;
     }
 
-    // private function update_weekly_timesheet($timeSheetId, $data)
-    // {
-    //     $timeSheet = $this->accounting_weekly_timesheet_model->get_by_id($data['transaction_id']);
-    //     $activityIds = [];
-    //     foreach (json_decode($timeSheet->time_activity_ids, true) as $row => $ids) {
-    //         foreach ($ids as $id) {
-    //             $activityIds[] = $id;
-    //         }
-    //     }
-    //     $delete = $this->accounting_single_time_activity_model->delete_multiple_by_id($activityIds);
+    private function update_weekly_timesheet($timeSheetId, $data)
+    {
+        $name = explode('-', $data['person_tracking']);
+        $weekDate = explode('-', $data['week_dates']);
+        $weekStartDate = strtotime($weekDate[0]);
+        $weekEndDate = strtotime($weekDate[1]);
+        $timesheetSettings = $this->accounting_timesheet_settings_model->get_by_company_id(logged('company_id'));
 
-    //     if ($delete) {
-    //         $timesheetRecord = [
-    //             'name_type' => $name[0],
-    //             'name_id' => $name[1],
-    //             'week_start_date' => date("Y-m-d", $weekStartDate),
-    //             'week_end_date' => date("Y-m-d", $weekEndDate),
-    //             // 'time_activity_ids' => json_encode($timeActivityIds),
-    //             'updated_at' => date("Y-m-d H:i:s"),
-    //         ];
+        $timeSheet = $this->accounting_weekly_timesheet_model->get_by_id($timeSheetId);
+        $update = $this->accounting_weekly_timesheet_model->update($timeSheetId, ['status' => 1]);
 
-    //         $update = $this->accounting_weekly_timesheet_model->update($data['transaction_id'], $timesheetRecord);
+        $timeActivityData = [
+            'name_key' => $timeSheet->name_type,
+            'name_id' => $timeSheet->name_id,
+            'start_date' => date("Y-m-d", strtotime($timeSheet->week_start_date)),
+            'end_date' => date("Y-m-d", strtotime($timeSheet->week_end_date))
+        ];
+        $timeActivities = $this->accounting_weekly_timesheet_model->get_timesheet_activities($timeActivityData);
+        $ids = array_map(function($activity) {
+            return $activity->id;
+        }, $timeActivities);
 
-    //         if ($update) {
-    //             $timeSheetRecordId = $timeSheet->id;
-    //         } else {
-    //             $delete = $this->accounting_single_time_activity_model->delete_multiple_by_id($timeActivityIds);
-    //         }
-    //     }
+        if($update) {
+            $delete = $this->accounting_single_time_activity_model->delete_multiple_by_id($ids);
+            $row = 1;
+            foreach ($data['customer'] as $key => $value) {
+                $count = 0;
+                if ($value !== '') {
+                    foreach (json_decode($data['hours'][$key], true) as $day => $hours) {
+                        if ($hours !== "" && $hours !== "00:00") {
+                            $timeActData = [
+                                'company_id' => logged('company_id'),
+                                'date' => date('Y-m-d', strtotime($weekDate[0]." +$count days")),
+                                'name_key' => $name[0],
+                                'name_id' => $name[1],
+                                'customer_id' => $value,
+                                'service_id' => $timesheetSettings->service === "1" ? $data['service'][$key] : null,
+                                'billable' => $timesheetSettings->billable === "1" ? $data['billable'][$key] : 0,
+                                'hourly_rate' => $timesheetSettings->billable === "1" ? $data['hourly_rate'][$key] : null,
+                                'taxable' => $timesheetSettings->billable === "1" ? $data['taxable'][$key] : 0,
+                                'time' => $hours,
+                                'description' => $data['description'][$key],
+                                'status' => 1
+                            ];
 
-    //     $successMessage = 'Update successful!';
-    // }
+                            $timeActivityId = $this->accounting_single_time_activity_model->create($timeActData);
+                        }
 
-    // public function update_time_activity($activityid, $data)
-    // {
-    //     $timeActData = [
-    //         'date' => date('Y-m-d', strtotime($data['date'])),
-    //         'name_key' => $name[0],
-    //         'name_id' => $name[1],
-    //         'customer_id' => $data['customer'],
-    //         'service_id' => $data['service'],
-    //         'billable' => (isset($data['billable'])) ? 1 : 0,
-    //         'hourly_rate' => (isset($data['billable'])) ? $data['hourly_rate'] : null,
-    //         'taxable' => (isset($data['billable']) && isset($data['taxable'])) ? 1 : 0,
-    //         'start_time' => (isset($data['start_end_time'])) ? $data['start_time'] : null,
-    //         'end_time' => (isset($data['start_end_time'])) ? $data['end_time'] : null,
-    //         'time' => $data['time'],
-    //         'description' => $data['description']
-    //     ];
+                        $count++;
+                    }
 
-    //     $update = $this->accounting_single_time_activity_model->update($data['transaction_id'], $timeActData);
+                    $row++;
+                }
+            }
+        }
 
-    //     if ($update) {
-    //         $activityId = $data['transaction_id'];
-    //     }
+        $return['data'] = $timeSheetId;
+        $return['success'] = $update ? true : false;
+        $return['message'] = $update ? 'Update Successful!' : 'An unexpected error occured';
 
-    //     $successMessage = 'Update successful!';
-    // }
+        return $return;
+    }
+
+    public function update_time_activity($activityid, $data)
+    {
+        $timesheetSettings = $this->accounting_timesheet_settings_model->get_by_company_id(logged('company_id'));
+        $name = explode('-', $data['name']);
+
+        if(isset($data['start_end_time'])) {
+            $startTime = strtotime($data['start_time']);
+            $endTime = strtotime($data['end_time']);
+            $break = strtotime($data['time'] === '' ? "00:00" : $data['time']);
+            $duration = date("H:i:s", (($endTime - $startTime) - $break));
+        } else {
+            $duration = date("H:i:s", strtotime($data['time']));
+        }
+        $hms = explode(":", $duration);
+        $totalTime = $hms[0].":".$hms[1].":".$hms[2];
+
+        $timeActData = [
+            'company_id' => logged('company_id'),
+            'date' => date('Y-m-d', strtotime($data['date'])),
+            'name_key' => $name[0],
+            'name_id' => $name[1],
+            'customer_id' => $data['customer'],
+            'service_id' => $timesheetSettings->service === "1" ? $data['service'] : null,
+            'billable' => $timesheetSettings->billable === "1" && isset($data['billable']) ? 1 : 0,
+            'hourly_rate' => $timesheetSettings->billable === "1" && isset($data['billable']) ? $data['hourly_rate'] : null,
+            'taxable' => $timesheetSettings->billable === "1" && isset($data['billable']) && isset($data['taxable']) ? 1 : 0,
+            'start_time' => isset($data['start_end_time']) ? $data['start_time'] : null,
+            'end_time' => isset($data['start_end_time']) ? $data['end_time'] : null,
+            'break_duration' => isset($data['start_end_time']) ? $data['time'] : null,
+            'time' => $totalTime,
+            'description' => $data['description'],
+        ];
+
+        $update = $this->accounting_single_time_activity_model->update($activityid, $timeActData);
+
+        $return['data'] = $activityid;
+        $return['success'] = $update ? true : false;
+        $return['message'] = $update ? 'Update Successful!' : 'An unexpected error occured';
+
+        return $return;
+    }
 
     public function get_attachment_file_path($attachmentId)
     {
@@ -11158,15 +11200,7 @@ class Accounting_modals extends MY_Controller
 
                 foreach($transactions as $activity) {
                     if($activity->billable === "1") {
-                        if($activity->time === null) {
-                            $startTime = strtotime($activity->start_time);
-                            $endTime = strtotime($activity->end_time);
-                            $break = strtotime($activity->break_duration);
-                            $duration = date("H:i:s", (($endTime - $startTime) - $break));
-                        } else {
-                            $duration = date("H:i:s", strtotime($activity->time));
-                        }
-                        $hms = explode(":", $duration);
+                        $hms = explode(":", $activity->time);
                         $totalTime = ($hms[0] + ($hms[1]/60) + ($hms[2]/3600));
 
                         $amount = floatval($activity->hourly_rate) * $totalTime;
@@ -11917,9 +11951,34 @@ class Accounting_modals extends MY_Controller
 
     public function delete_time_activity($activityId)
     {
-        $activityId = $this->accounting_single_time_activity_model->get_by_id($activityId);
+        $activity = $this->accounting_single_time_activity_model->get_by_id($activityId);
 
         $update = $this->accounting_single_time_activity_model->update($activity->id, ['status' => 0]);
+
+        if($update) {
+            $date = date('Y-m-d', strtotime($activity->date));
+            $dateTime = new DateTime($date);
+            $weekNo = $dateTime->format('W');
+
+            $newDate = new DateTime();
+            $firstDay = $newDate->setISODate($dateTime->format("Y"), $weekNo, 0);
+            $firstDayString = $firstDay->format('Y-m-d');
+            $lastDay = $newDate->setISODate($dateTime->format("Y"), $weekNo, 6);
+            $lastDayString = $lastDay->format('Y-m-d');
+
+            $activityData = [
+                'name_key' => $activity->name_key,
+                'name_id' => $activity->name_id,
+                'start_date' => $firstDayString,
+                'end_date' => $lastDayString
+            ];
+
+            $activities = $this->accounting_weekly_timesheet_model->get_timesheet_activities($activityData);
+
+            if(count($activities) < 1) {
+                $this->accounting_weekly_timesheet_model->delete_timesheet($activityData);
+            }
+        }
 
         return $update;
     }
@@ -12463,6 +12522,15 @@ class Accounting_modals extends MY_Controller
         $name = explode('-', $post['person_tracking']);
         $dates = explode('-', $post['date_range']);
 
+        $timesheetData = [
+            'name_type' => $name[0],
+            'name_id' => $name[1],
+            'week_start_date' => date("Y-m-d", strtotime($dates[0])),
+            'week_end_date' => date("Y-m-d", strtotime($dates[1]))
+        ];
+
+        $timesheet = $this->accounting_weekly_timesheet_model->get_timesheet($timesheetData);
+
         $activityData = [
             'name_key' => $name[0],
             'name_id' => $name[1],
@@ -12478,16 +12546,7 @@ class Accounting_modals extends MY_Controller
             $service = $this->items_model->getItemById($activity->service_id)[0];
             $activity->service_name = $service->title;
 
-            if($activity->time === null) {
-                $startTime = strtotime($activity->start_time);
-                $endTime = strtotime($activity->end_time);
-                $break = strtotime($activity->break_duration);
-                $duration = date("H:i:s", (($endTime - $startTime) - $break));
-            } else {
-                $duration = date("H:i:s", strtotime($activity->time));
-            }
-            $hms = explode(":", $duration);
-            $totalTime = $hms[0].':'.$hms[1];
+            $totalTime = substr($activity->time, 0, -3);
 
             $day = strtolower(date("l", strtotime($activity->date)));
 
@@ -12506,6 +12565,9 @@ class Accounting_modals extends MY_Controller
             }
         }
 
-        echo json_encode($timeActivities);
+        echo json_encode([
+            'timesheet' => $timesheet,
+            'activities' => $timeActivities
+        ]);
     }
 }
