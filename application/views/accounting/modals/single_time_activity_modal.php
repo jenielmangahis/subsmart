@@ -120,7 +120,7 @@
                                                         <input class="form-check-input" type="checkbox" name="billable" id="billable" value="1" onchange="showHiddenFields(this)" <?=isset($timeActivity) && $timeActivity->billable === "1" ? 'checked' : ''?>>
                                                         <label class="form-check-label" for="billable">Billable(/hr)</label>
                                                     </div>
-                                                    <input type="number" name="hourly_rate" id="hourlyRate" class="w-25 form-control <?=isset($timeActivity) && $timeActivity->billable === "1" ? '' : 'hide'?>" value="<?=isset($timeActivity) && $timeActivity->billable === "1" ? floatval($timeActivity->hourly_rate) : ''?>">
+                                                    <input type="number" name="hourly_rate" id="hourlyRate" step=".01" class="w-25 form-control <?=isset($timeActivity) && $timeActivity->billable === "1" ? '' : 'hide'?>" value="<?=isset($timeActivity) && $timeActivity->billable === "1" ? floatval($timeActivity->hourly_rate) : ''?>">
                                                 </div>
                                                 <div class="form-check <?=isset($timeActivity) && $timeActivity->billable === "1" ? '' : 'hide'?>">
                                                     <div class="checkbox checkbox-sec">

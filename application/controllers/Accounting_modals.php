@@ -11951,9 +11951,34 @@ class Accounting_modals extends MY_Controller
 
     public function delete_time_activity($activityId)
     {
-        $activityId = $this->accounting_single_time_activity_model->get_by_id($activityId);
+        $activity = $this->accounting_single_time_activity_model->get_by_id($activityId);
 
         $update = $this->accounting_single_time_activity_model->update($activity->id, ['status' => 0]);
+
+        if($update) {
+            $date = date('Y-m-d', strtotime($activity->date));
+            $dateTime = new DateTime($date);
+            $weekNo = $dateTime->format('W');
+
+            $newDate = new DateTime();
+            $firstDay = $newDate->setISODate($dateTime->format("Y"), $weekNo, 0);
+            $firstDayString = $firstDay->format('Y-m-d');
+            $lastDay = $newDate->setISODate($dateTime->format("Y"), $weekNo, 6);
+            $lastDayString = $lastDay->format('Y-m-d');
+
+            $activityData = [
+                'name_key' => $activity->name_key,
+                'name_id' => $activity->name_id,
+                'start_date' => $firstDayString,
+                'end_date' => $lastDayString
+            ];
+
+            $activities = $this->accounting_weekly_timesheet_model->get_timesheet_activities($activityData);
+
+            if(count($activities) < 1) {
+                $this->accounting_weekly_timesheet_model->delete_timesheet($activityData);
+            }
+        }
 
         return $update;
     }
