@@ -106,6 +106,29 @@ class Affiliate_model extends MY_Model {
         return false;
     }
 
+    public function getAllByCompany($company_id, $search = array(), $condition = array())
+    {
+
+        $this->db->select('*');
+        $this->db->from($this->table);
+
+        if( !empty($condition) ){            
+            foreach( $condition as $value ){                
+                $this->db->where($value['field'], $value['value']);
+            }
+        }
+
+        if( !empty($search) ){
+            foreach( $search as $value ){
+                $this->db->or_like($value['field'], $value['value'], 'before');
+            }
+        }
+        
+        $this->db->order_by('id', 'DESC');
+        $query = $this->db->get();
+        return $query->result();
+    }
+
 }
 
 /* End of file Activity_model.php */

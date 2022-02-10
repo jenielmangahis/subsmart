@@ -1161,14 +1161,11 @@ $(function() {
 
             if ($('form#modal-form div.modal div.modal-body select#recurringInterval, form#update-recurring-form div.modal div.modal-body select#recurringInterval').length === 0) {
                 if ($('form#modal-form, form#update-recurring-form').children('.modal').attr('id') === 'depositModal') {
-                    $('<div class="row recurring-interval-container"></div>').insertAfter($('div.modal div.modal-body div.recurring-bank-account'));
-                    $('div.modal div.modal-body div.recurring-interval-container').html(recurrInterval);
+                    $(`<div class="row recurring-interval-container">${recurrInterval}</div>`).insertAfter($('div#depositModal div.modal-body div.bank-account-details'));
                 } else if(vendorModals.includes(`#${modalId}`)) {
-                    $('<div class="row recurring-interval-container"></div>').insertAfter($('div.modal div.modal-body div.recurring-payee-details'));
-                    $('div.modal div.modal-body div.recurring-interval-container').html(recurrInterval);
+                    $(`<div class="row recurring-interval-container">${recurrInterval}</div>`).insertAfter($(`div#${modalId} div.modal-body div.payee-details`));
                 } else {
-                    $('<div class="row recurring-interval-container"></div>').insertAfter($('div.modal div.modal-body div.recurring-details'));
-                    $('div.modal div.modal-body div.recurring-interval-container').html(recurrInterval);
+                    $(`<div class="row recurring-interval-container">${recurrInterval}</div>`).insertAfter($('div.modal div.modal-body div.recurring-details'));
                 }
 
                 $(`div.modal input.date`).datepicker({
@@ -1196,14 +1193,11 @@ $(function() {
 
             if ($('form#modal-form div.modal div.modal-body select#recurringInterval, form#update-recurring-form div.modal div.modal-body select#recurringInterval').length === 0) {
                 if ($('form#modal-form, form#update-recurring-form').children('.modal').attr('id') === 'depositModal') {
-                    $('<div class="row recurring-interval-container"></div>').insertAfter($('div.modal div.modal-body div.recurring-bank-account'));
-                    $('div.modal div.modal-body div.recurring-interval-container').html(recurrInterval);
+                    $(`<div class="row recurring-interval-container">${recurrInterval}</div>`).insertAfter($('div#depositModal div.modal-body div.bank-account-details'));
                 } else if(vendorModals.includes(`#${modalId}`)) {
-                    $('<div class="row recurring-interval-container"></div>').insertAfter($('div.modal div.modal-body div.recurring-payee-details'));
-                    $('div.modal div.modal-body div.recurring-interval-container').html(recurrInterval);
+                    $(`<div class="row recurring-interval-container">${recurrInterval}</div>`).insertAfter($(`div#${modalId} div.modal-body div.payee-details`));
                 } else {
-                    $('<div class="row recurring-interval-container"></div>').insertAfter($('div.modal div.modal-body div.recurring-details'));
-                    $('div.modal div.modal-body div.recurring-interval-container').html(recurrInterval);
+                    $(`<div class="row recurring-interval-container">${recurrInterval}</div>`).insertAfter($('div.modal div.modal-body div.recurring-details'));
                 }
 
                 $(`div.modal input.date`).datepicker({
@@ -4777,6 +4771,18 @@ $(function() {
         });
     });
 
+    $(document).on('click', '#modal-container form #checkModal #print-check', function(e) {
+        e.preventDefault();
+
+        $('#modal-container form #checkModal #print_later').prop('checked', true).trigger('change');
+
+        submitType = 'save-and-close';
+
+        $('#modal-container form#modal-form').submit();
+
+        $('#new-popup #accounting_vendors .ajax-print_checks_modal').trigger('click');
+    });
+
     $(document).on('click', '#modal-container form #billModal #copy-bill', function(e) {
         e.preventDefault();
 
@@ -5924,9 +5930,6 @@ const submitModalForm = (event, el) => {
                     case 'singleTimeModal' :
                         var type = 'time-activity';
                     break;
-                    // case 'weeklyTimesheetModal' :
-                    //     var type = 'weekly-timesheet';
-                    // break;
                     case 'journalEntryModal' :
                         var type = 'journal';
                     break;
@@ -5938,7 +5941,7 @@ const submitModalForm = (event, el) => {
                     break;
                 }
 
-                if(submitType === 'save-and-close') {
+                if(submitType === 'save-and-close' || submitType === 'save-and-void') {
                     $(el).children().modal('hide');
                 }
 
@@ -6209,109 +6212,235 @@ const showHiddenFields = (el) => {
 
 const makeRecurring = (modalName) => {
     var modalId = '';
-    $.get("/accounting/get-recurring-form-fields/"+modalName, function(res) {
-        switch(modalName) {
-            case 'bank_deposit' :
-                modalId = 'depositModal';
-                $(`div#${modalId} div.modal-body div.row.bank-account-details`).remove();
-            break;
-            case 'transfer' :
-                modalId = 'transferModal';
-                $(`div#${modalId} div.modal-body #date`).parent().parent().remove();
-            break;
-            case 'journal_entry' :
-                modalId = 'journalEntryModal';
-                $(`div#${modalId} div.modal-body div.row.journal-entry-details`).remove();
-            break;
-            case 'expense' :
-                modalId = 'expenseModal';
-                $(`div#${modalId} div.modal-body div.row.payee-details`).remove();
-                $(`div#${modalId} div.modal-body #payment_date`).parent().parent().parent().remove();
-                $(`div#${modalId} div.modal-body #ref_no`).parent().remove();
-            break;
-            case 'check' :
-                modalId = 'checkModal';
-                $(`div#${modalId} div.modal-body div.row.payee-details`).remove();
-                $(`div#${modalId} div.modal-body #payment_date`).parent().parent().remove();
-            break;
-            case 'bill' :
-                modalId = 'billModal';
-                $(`div#${modalId} div.modal-body div.row.payee-details`).remove();
-                $(`div#${modalId} div.modal-body #bill_date`).parent().parent().remove();
-                $(`div#${modalId} div.modal-body #due_date`).parent().parent().remove();
-                $(`div#${modalId} div.modal-body #bill_no`).parent().remove();
-            break;
-            case 'purchase_order' :
-                modalId = 'purchaseOrderModal';
-                $(`div#${modalId} div.modal-body div.row.payee-details`).remove();
-                $(`div#${modalId} div.modal-body #purchase_order_date`).parent().parent().remove();
-            break;
-            case 'vendor_credit' :
-                modalId = 'vendorCreditModal';
-                $(`div#${modalId} div.modal-body div.row.payee-details`).remove();
-                $(`div#${modalId} div.modal-body #payment_date`).parent().parent().remove();
-                $(`div#${modalId} div.modal-body #ref_no`).parent().remove();
-            break;
-            case 'credit_card_credit' :
-                modalId = 'creditCardCreditModal';
-                $(`div#${modalId} div.modal-body div.row.payee-details`).remove();
-                $(`div#${modalId} div.modal-body #payment_date`).parent().parent().remove();
-                $(`div#${modalId} div.modal-body #ref_no`).parent().remove();
-            break;
+    $(`#${modalId}`).parent().attr('onsubmit', 'submitModalForm(event, this)').removeAttr('data-href');
+    $(`#${modalId} .transactions-container`).parent().remove();
+    $(`#${modalId} .close-transactions-container`).parent().remove();
+
+    var templateFields = `<div class="row recurring-details">
+        <div class="col-md-12">
+            <h3>Recurring Bank Deposit</h3>
+            <div class="form-row">
+                <div class="col-md-3 form-group">
+                    <label for="templateName">Template name</label>
+                    <input type="text" class="form-control" id="templateName" name="template_name">
+                </div>
+                <div class="col-md-2 form-group">
+                    <label for="recurringType">Type</label>
+                    <select class="form-control" id="recurringType" name="recurring_type">
+                        <option value="scheduled">Scheduled</option>
+                        <option value="reminder">Reminder</option>
+                        <option value="unscheduled">Unscheduled</option>
+                    </select>
+                </div>
+                <div class="col-md-4 form-group">
+                    <div class="row m-0 h-100 d-flex">
+                        <div class="align-self-end d-flex align-items-center">
+                            <span>Create &nbsp;</span>
+                            <input type="number" name="days_in_advance" id="dayInAdvance" class="form-control" style="width: 20%">
+                            <span>&nbsp; days in advance</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>`;
+
+    var date = new Date();
+    var month = date.getMonth();
+    var year = date.getFullYear();
+    var totalDays = new Date(year, month+1, 0).getDate();
+    var ends = ['th','st','nd','rd','th','th','th','th','th','th'];
+    var options = "";
+    for(i = 1; i <= totalDays; i++) {
+        if ((i %100) >= 11 && (i%100) <= 13) {
+            var abbreviation = i+'th';
+        } else {
+            var abbreviation = i+ends[i % 10];
         }
 
-        if($(`div#${modalId} input#templateName`).length === 0) {
-            $(`div#${modalId} div.modal-body .card-body`).prepend(res);
-        }
-        $(`div#${modalId} div.modal-footer div.row.w-100 div:nth-child(2)`).html('');
-        $(`div#${modalId} div.modal-footer div.row.w-100 div:last-child()`).html('<button class="btn btn-success float-right" type="submit">Save template</button>');
+        options += `<option value="${i}">${abbreviation}</>`;
+    }
+    options += '<option value="last">Last</option>';
 
-        recurrInterval = $(`div#${modalId} div.modal-body div.recurring-interval-container`).html();
-        recurringDays = $(`div#${modalId} div.modal-body select[name="recurring_day"]`).html();
-        monthlyRecurrFields = $(`div#${modalId} div.modal-body div.recurring-interval-container div div.form-row div.form-group:nth-child(2) div.form-row`).html();
+    var intervalFields = `<div class="row recurring-interval-container">
+        <div class="col-md-12">
+            <div class="form-row">
+                <div class="col-md-2 form-group">
+                    <label>Interval</label>
+                    <select class="form-control" name="recurring_interval" id="recurringInterval">
+                        <option value="daily">Daily</option>
+                        <option value="weekly">Weekly</option>
+                        <option value="monthly" selected="">Monthly</option>
+                        <option value="yearly">Yearly</option>
+                    </select>
+                </div>
+                <div class="col-md-4 form-group d-flex align-items-end">
+                    <div class="form-row w-100">
+                        <div class="align-items-center col-md-1 d-flex" style="max-width: 4%">on</div>
+                        <div class="col">
+                            <select name="recurring_week" class="form-control">
+                                <option value="day">day</option>
+                                <option value="first">first</option>
+                                <option value="second">second</option>
+                                <option value="third">third</option>
+                                <option value="fourth">fourth</option>
+                                <option value="last">last</option>
+                            </select>
+                        </div>
+                        <div class="col">
+                            <select class="form-control" name="recurring_day">
+                            ${options}
+                            </select>
+                        </div>
+                        <div class="align-items-center col-md-1 d-flex">of every</div>
+                        <div class="col">
+                            <input type="number" value="1" class="form-control" name="recurr_every">
+                        </div>
+                        <div class="align-items-center col d-flex">month(s)</div>
+                    </div>
+                </div>
+                <div class="col-md-2 form-group">
+                    <label for="startDate">Start date</label>
+                    <input type="text" class="form-control date" name="start_date" id="startDate"/>
+                </div>
+                <div class="col-md-1 form-group">
+                    <label for="endType">End</label>
+                    <select name="end_type" class="form-control" id="endType">
+                        <option value="none">None</option>
+                        <option value="by">By</option>
+                        <option value="after">After</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>`;
+    switch(modalName) {
+        case 'bank_deposit' :
+            modalId = 'depositModal';
+            $(templateFields).insertBefore($(`#${modalId} div.modal-body div.row.bank-account-details`));
+            $(intervalFields).insertAfter($(`#${modalId} div.modal-body div.row.bank-account-details`));
+            // $(`div#${modalId} div.modal-body div.row.bank-account-details`).remove();
+        break;
+        case 'transfer' :
+            modalId = 'transferModal';
+            $(`div#${modalId} div.modal-body .card-body`).prepend(intervalFields);
+            $(`div#${modalId} div.modal-body .card-body`).prepend(templateFields);
+            $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Transfer');
+            $(`div#${modalId} div.modal-body #date`).parent().parent().remove();
+        break;
+        case 'journal_entry' :
+            modalId = 'journalEntryModal';
+            $(`div#${modalId} div.modal-body div.row.journal-entry-details`).remove();
+            $(`div#${modalId} div.modal-body .card-body`).prepend(intervalFields);
+            $(`div#${modalId} div.modal-body .card-body`).prepend(templateFields);
+            $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Journal Entry');
+        break;
+        case 'expense' :
+            modalId = 'expenseModal';
+            $(templateFields).insertBefore($(`#${modalId} div.modal-body div.row.payee-details`));
+            $(intervalFields).insertAfter($(`#${modalId} div.modal-body div.row.payee-details`));
+            $(`div#${modalId} div.modal-body div.row.payee-details`).children('.col-md-4').remove();
+            $(`div#${modalId} div.modal-body #payment_date`).parent().parent().parent().remove();
+            $(`div#${modalId} div.modal-body #ref_no`).parent().remove();
+            $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Expense');
+        break;
+        case 'check' :
+            modalId = 'checkModal';
+            $(templateFields).insertBefore($(`#${modalId} div.modal-body div.row.payee-details`));
+            $(intervalFields).insertAfter($(`#${modalId} div.modal-body div.row.payee-details`));
+            $(`div#${modalId} div.modal-body div.row.payee-details`).children('.col-md-4').remove();
+            $(`div#${modalId} div.modal-body #payment_date`).parent().parent().remove();
+            $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Check');
+        break;
+        case 'bill' :
+            modalId = 'billModal';
+            $(templateFields).insertBefore($(`#${modalId} div.modal-body div.row.payee-details`));
+            $(intervalFields).insertAfter($(`#${modalId} div.modal-body div.row.payee-details`));
+            $(`div#${modalId} div.modal-body div.row.payee-details`).children('.col-md-4').remove();
+            $(`div#${modalId} div.modal-body #bill_date`).parent().parent().remove();
+            $(`div#${modalId} div.modal-body #due_date`).parent().parent().remove();
+            $(`div#${modalId} div.modal-body #bill_no`).parent().remove();
+            $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Bill');
+        break;
+        case 'purchase_order' :
+            modalId = 'purchaseOrderModal';
+            $(templateFields).insertBefore($(`#${modalId} div.modal-body div.row.payee-details`));
+            $(intervalFields).insertAfter($(`#${modalId} div.modal-body div.row.payee-details`));
+            $(`div#${modalId} div.modal-body div.row.payee-details`).children('.col-md-4').remove();
+            $(`div#${modalId} div.modal-body #purchase_order_date`).parent().parent().remove();
+            $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Purchase Order');
+        break;
+        case 'vendor_credit' :
+            modalId = 'vendorCreditModal';
+            $(templateFields).insertBefore($(`#${modalId} div.modal-body div.row.payee-details`));
+            $(intervalFields).insertAfter($(`#${modalId} div.modal-body div.row.payee-details`));
+            $(`div#${modalId} div.modal-body div.row.payee-details`).children('.col-md-4').remove();
+            $(`div#${modalId} div.modal-body #payment_date`).parent().parent().remove();
+            $(`div#${modalId} div.modal-body #ref_no`).parent().remove();
+            $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Vendor Credit');
+        break;
+        case 'credit_card_credit' :
+            modalId = 'creditCardCreditModal';
+            $(templateFields).insertBefore($(`#${modalId} div.modal-body div.row.payee-details`));
+            $(intervalFields).insertAfter($(`#${modalId} div.modal-body div.row.payee-details`));
+            $(`div#${modalId} div.modal-body div.row.payee-details`).children('.col-md-4').remove();
+            $(`div#${modalId} div.modal-body #payment_date`).parent().parent().remove();
+            $(`div#${modalId} div.modal-body #ref_no`).parent().remove();
+            $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Credit Card Credit');
+        break;
+    }
 
-        $(`div#${modalId} input.date`).datepicker({
-            uiLibrary: 'bootstrap'
-        });
+    // if($(`div#${modalId} input#templateName`).length === 0) {
+    //     $(`div#${modalId} div.modal-body .card-body`).prepend(res);
+    // }
+    $(`div#${modalId} div.modal-footer div.row.w-100 div:nth-child(2)`).html('');
+    $(`div#${modalId} div.modal-footer div.row.w-100 div:last-child()`).html('<button class="btn btn-success float-right" type="submit">Save template</button>');
 
-        $(`div#${modalId} select:not(.select2-hidden-accessible)`).each(function() {
-            var type = $(this).attr('id');
-            if (type === undefined) {
-                type = $(this).attr('name').replaceAll('[]', '').replaceAll('_', '-');
-            } else {
-                type = type.replaceAll('_', '-');
+    recurrInterval = $(`div#${modalId} div.modal-body div.recurring-interval-container`).html();
+    recurringDays = $(`div#${modalId} div.modal-body select[name="recurring_day"]`).html();
+    monthlyRecurrFields = $(`div#${modalId} div.modal-body div.recurring-interval-container div div.form-row div.form-group:nth-child(2) div.form-row`).html();
 
-                if (type.includes('transfer')) {
-                    type = 'transfer-account';
-                }
+    $(`div#${modalId} input.date`).datepicker({
+        uiLibrary: 'bootstrap'
+    });
+
+    $(`div#${modalId} select:not(.select2-hidden-accessible)`).each(function() {
+        var type = $(this).attr('id');
+        if (type === undefined) {
+            type = $(this).attr('name').replaceAll('[]', '').replaceAll('_', '-');
+        } else {
+            type = type.replaceAll('_', '-');
+
+            if (type.includes('transfer')) {
+                type = 'transfer-account';
             }
+        }
 
-            if (dropdownFields.includes(type)) {
-                $(this).select2({
-                    ajax: {
-                        url: '/accounting/get-dropdown-choices',
-                        dataType: 'json',
-                        data: function(params) {
-                            var query = {
-                                search: params.term,
-                                type: 'public',
-                                field: type,
-                                modal: modalId
-                            }
-
-                            // Query parameters will be ?search=[term]&type=public&field=[type]
-                            return query;
+        if (dropdownFields.includes(type)) {
+            $(this).select2({
+                ajax: {
+                    url: '/accounting/get-dropdown-choices',
+                    dataType: 'json',
+                    data: function(params) {
+                        var query = {
+                            search: params.term,
+                            type: 'public',
+                            field: type,
+                            modal: modalId
                         }
-                    },
-                    templateResult: formatResult,
-                    templateSelection: optionSelect
-                });
-            } else {
-                $(this).select2({
-                    minimumResultsForSearch: -1
-                });
-            }
-        });
+
+                        // Query parameters will be ?search=[term]&type=public&field=[type]
+                        return query;
+                    }
+                },
+                templateResult: formatResult,
+                templateSelection: optionSelect
+            });
+        } else {
+            $(this).select2({
+                minimumResultsForSearch: -1
+            });
+        }
     });
 }
 
@@ -7732,6 +7861,25 @@ const saveAndNewForm = (e) => {
     submitType = 'save-and-new';
 
     $(modalName).parent().submit();
+}
+
+const saveAndVoid = (e) => {
+    submitType = 'save-and-void';
+
+    Swal.fire({
+        title: 'Are you sure you want to void this?',
+        icon: 'warning',
+        showCloseButton: false,
+        confirmButtonColor: '#2ca01c',
+        confirmButtonText: 'Yes',
+        showCancelButton: true,
+        cancelButtonText: 'No',
+        cancelButtonColor: '#d33'
+    }).then((result) => {
+        if(result.isConfirmed) {
+            $('#modal-container form#modal-form').submit();
+        }
+    });
 }
 
 const clearForm = () => {

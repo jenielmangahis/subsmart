@@ -36,52 +36,31 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <div class="row">
                             <div class="col-md-12">
                                 <form id="fees_form">
-                                    <div class="row ">
-                                        <div class="col-md-6">
-                                            <div class="row form_line">
-                                                <div class="col-md-4">
-                                                    <label for="title">Fee Name</label>                                            
-                                                </div>
-                                                <div class="col-md-8">
-                                                    <input type="text" class="form-control " name="title" id="title" required/>
-                                                </div>
-                                            </div>
-                                            <div class="row form_line">
-                                                <div class="col-md-4">
-                                                    <label for="description">Description</label>                                            
-                                                </div>
-                                                <div class="col-md-8">
-                                                    <input type="text" class="form-control " name="description" id="description"/>
-                                                </div>
-                                            </div>
-                                            <div class="row form_line">
-                                                <div class="col-md-4">
-                                                    <label for="price">Price</label>
-                                                </div>
-                                                <div class="col-md-8">
-                                                    <input type="number" step="any" class="form-control" name="price" id="price" required/>
-                                                </div>
-                                            </div>
-                                            <div class="row form_line">
-                                                <div class="col-md-4">
-                                                    <label for="frequency">Frequency</label>
-                                                </div>
-                                                <div class="col-md-8">
-                                                    <select class="form-control" name="frequency" id="frequency">
-                                                        <option value="One Time" selected>One Time</option>
-                                                        <option value="Daily">Daily</option>
-                                                        <option value="Monthly">Monthly</option>
-                                                        <option value="Yearly">Yearly</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <br><br>
-                                            <div class="d-md-block">
-                                                <input type="hidden" name="type" value="fees"/>                                        
-                                                <button type="submit" class="btn btn-flat btn-primary">Save</button>
-                                                <a class="btn btn-primary" href="<?php echo base_url('inventory/fees'); ?>">Cancel</a>
-                                            </div>
-                                        </div>
+                                    <div class="form-group">
+                                        <label>Name</label> <span class="form-required">*</span>
+                                        <input type="text" class="form-control" value="" name="title" id="title" required/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Description</label> <span class="form-required">*</span>
+                                        <input type="text" class="form-control" value="" name="description" id="description"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Price</label> <span class="form-required">*</span>
+                                        <input type="number" step="any" class="form-control" value="" name="price" id="price" required/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Frequency</label> <span class="form-required">*</span>
+                                        <select class="form-control" name="frequency" id="frequency">
+                                            <option value="One Time" selected>One Time</option>
+                                            <option value="Daily">Daily</option>
+                                            <option value="Monthly">Monthly</option>
+                                            <option value="Yearly">Yearly</option>
+                                        </select>
+                                    </div>
+                                    <div class="d-md-block">
+                                        <input type="hidden" name="type" value="fees"/>                                        
+                                        <button type="submit" class="btn btn-flat btn-primary">Save</button>
+                                        <a class="btn btn-primary" href="<?php echo base_url('inventory/fees'); ?>">Back to list</a>
                                     </div>
                                 </form>
                             </div>

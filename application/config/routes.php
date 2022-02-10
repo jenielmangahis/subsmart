@@ -307,7 +307,6 @@ $route['accounting/edit-group-tag-form'] = 'accounting_modals/edit_group_tag_for
 $route['accounting/get-payroll-form/(:any)'] = 'accounting_modals/get_payroll_form/$1';
 $route['accounting/generate-payroll']['post'] = 'accounting_modals/generate_payroll';
 $route['accounting/get-customers']['post'] = 'accounting_modals/get_statement_customers';
-$route['accounting/get-recurring-form-fields/(:any)'] = 'accounting_modals/get_recurring_modal_fields/$1';
 $route['accounting/get-item-details/(:any)'] = 'accounting_modals/getItemDetails/$1';
 $route['accounting/load-bills']['post'] = 'accounting_modals/load_bills';
 $route['accounting/get-items-list-modal'] = 'accounting_modals/item_list_modal';
@@ -1124,6 +1123,19 @@ $route['inventory/export_list'] = 'inventory/inventory_export';
 //Inventory Fees
 $route['inventory/fees/edit/(:num)'] = 'inventory/edit_fee/$1';
 $route['inventory/fees/update'] = 'inventory/update_fees';
+
+//Inventory Vendor
+$route['inventory/vendor/add'] = 'inventory/add_vendor';
+$route['inventory/_create_vendor'] = 'inventory/ajax_create_vendor';
+$route['inventory/vendor/edit/(:num)'] = 'inventory/edit_vendor/$1';
+$route['inventory/_update_vendor'] = 'inventory/ajax_update_vendor';
+$route['inventory/vendor/delete'] = 'inventory/ajax_delete_vendor';
+
+//Item Category
+$route['inventory/_create_item_category'] = 'inventory/ajax_create_item_category';
+$route['inventory/item_groups/edit/(:num)'] = 'inventory/edit_item_category/$1';
+$route['inventory/_update_item_category'] = 'inventory/ajax_update_item_category';
+$route['inventory/item_groups/delete'] = 'inventory/ajax_delete_item_category';
 
 //Sales Overview
 $route['sales-overview/income-overtime'] = 'AccountingSales/get_income_overtime';

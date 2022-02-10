@@ -461,7 +461,7 @@
                         <div class="col-md-4">
                             <div class="row h-100">
                                 <div class="col-md-12 d-flex align-items-center justify-content-center">
-                                    <span><a href="#" class="text-white">Print check</a></span>
+                                    <span><a href="#" class="text-white" id="print-check">Print check</a></span>
                                     <span class="mx-3 divider"></span>
                                     <span><a href="#" class="text-white">Order checks</a></span>
                                     <span class="mx-3 divider"></span>
@@ -471,9 +471,11 @@
                                         <div class="dropup">
                                             <a href="#" class="text-white" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
                                             <div class="dropdown-menu dropdown-menu-align-right">
-                                                <a class="dropdown-item" href="#" id="<?=isset($check) ? 'copy-check' : 'void-check'?>"><?=isset($check) ? 'Copy' : 'Void'?></a>
+                                                <a class="dropdown-item" href="#" <?=isset($check) ? '' : 'onclick="saveAndVoid(event)"' ?> id="<?=isset($check) ? 'copy-check' : 'save-and-void'?>"><?=isset($check) ? 'Copy' : 'Void'?></a>
                                                 <?php if(isset($check)) : ?>
+                                                <?php if($check->status !== "4") : ?>
                                                 <a class="dropdown-item" href="#" id="void-check">Void</a>
+                                                <?php endif; ?>
                                                 <a class="dropdown-item" href="#" id="delete-check">Delete</a>
                                                 <a class="dropdown-item" href="#">Transaction journal</a>
                                                 <a class="dropdown-item" href="#">Audit history</a>

@@ -272,30 +272,6 @@ class Accounting_modals extends MY_Controller
         }
     }
 
-    public function get_recurring_modal_fields($modal)
-    {
-        if ($modal) {
-            $totalDays = date('t');
-
-            $recurringDays = [];
-            $ends = array('th','st','nd','rd','th','th','th','th','th','th');
-            for ($i = 1; $i <= (int)$totalDays; $i++) {
-                if (($i %100) >= 11 && ($i%100) <= 13) {
-                    $abbreviation = $i. 'th';
-                } else {
-                    $abbreviation = $i. $ends[$i % 10];
-                }
-
-                $recurringDays[$i] = $abbreviation;
-            }
-            $recurringDays['last'] = 'Last';
-
-            $this->page_data['recurringDays'] = $recurringDays;
-
-            $this->load->view("accounting/modals/recurring_fields/recurring_".$modal."_fields", $this->page_data);
-        }
-    }
-
     public function load_job_tags()
     {
         $postData = json_decode(file_get_contents('php://input'), true);
@@ -3021,11 +2997,11 @@ class Accounting_modals extends MY_Controller
                 'to_print' => $data['print_later'],
                 'permit_no' => $data['permit_number'] === "" ? null : $data['permit_number'],
                 // 'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
-                'memo' => $data['memo'],
-                'total_amount' => $data['total_amount'],
+                'memo' => $data['save_method'] !== 'save-and-void' ? $data['memo'] : 'Voided',
+                'total_amount' => $data['save_method'] !== 'save-and-void' ? $data['total_amount'] : 0.00,
                 'linked_purchase_order_id' => !is_null($linkedTransaction) ? $linkedTransaction[1] : null,
                 'recurring' => isset($data['template_name']) ? 1 : null,
-                'status' => 1
+                'status' => $data['save_method'] !== 'save-and-void' ? 1 : 4
             ];
 
             $checkId = $this->expenses_model->addCheck($checkData);
@@ -3218,7 +3194,7 @@ class Accounting_modals extends MY_Controller
                             'linked_transaction_id' => $data['category_linked'][$index] ? $linkedTransaction[1] : null
                         ];
 
-                        if(!isset($data['template_name'])) {
+                        if(!isset($data['template_name']) && $data['save_method'] !== 'save-and-void') {
                             $expenseAcc = $this->chart_of_accounts_model->getById($value);
                             $expenseAccType = $this->account_model->getById($expenseAcc->account_id);
 
@@ -3259,7 +3235,7 @@ class Accounting_modals extends MY_Controller
                             'linked_transaction_id' => $data['item_linked'][$index] ? $linkedTransaction[1] : null
                         ];
 
-                        if(!isset($data['template_name'])) {
+                        if(!isset($data['template_name']) && $data['save_method'] !== 'save-and-void') {
                             $location = $this->items_model->getItemLocation($data['location'][$index], $value);
 
                             $newQty = intval($location->qty) + intval($data['quantity'][$index]);
@@ -12029,7 +12005,6 @@ class Accounting_modals extends MY_Controller
             'memo' => 'Voided',
             'status' => 4,
             'total_amount' => 0.00,
-            'updated_at' => date("Y-m-d H:i:s")
         ];
 
         $void = $this->vendors_model->update_expense($expenseId, $data);
@@ -12065,8 +12040,7 @@ class Accounting_modals extends MY_Controller
         $data = [
             'memo' => 'Voided',
             'status' => 4,
-            'total_amount' => 0.00,
-            'updated_at' => date("Y-m-d H:i:s")
+            'total_amount' => 0.00
         ];
 
         $void = $this->vendors_model->update_check($checkId, $data);
@@ -12097,7 +12071,6 @@ class Accounting_modals extends MY_Controller
             'memo' => 'Voided',
             'status' => 4,
             'amount' => 0.00,
-            'updated_at' => date("Y-m-d H:i:s")
         ];
 
         $void = $this->vendors_model->update_credit_card_credit($ccCreditId, $data);
@@ -12136,7 +12109,6 @@ class Accounting_modals extends MY_Controller
             'memo' => 'Voided',
             'status' => 4,
             'amount' => 0.00,
-            'updated_at' => date("Y-m-d H:i:s")
         ];
 
         $void = $this->vendors_model->update_credit_card_payment($ccPaymentId, $data);
@@ -12156,7 +12128,6 @@ class Accounting_modals extends MY_Controller
             'total_amount' => 0.00,
             'memo' => 'Voided',
             'status' => 4,
-            'updated_at' => date("Y-m-d H:i:s")
         ];
 
         $paymentAcc = $this->chart_of_accounts_model->getById($billPayment->payment_account_id);
