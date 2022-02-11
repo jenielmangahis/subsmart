@@ -69,6 +69,7 @@ class Accounting_bank_deposit_model extends MY_Model {
     {
         $this->db->where('company_id', $filters['company_id']);
         $this->db->where('status !=', 0);
+		$this->db->where('recurring', null);
         $query = $this->db->get($this->table);
         return $query->result();
     }

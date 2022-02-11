@@ -4943,7 +4943,7 @@ $(function() {
         });
     });
 
-    $(document).on('show.bs.dropdown', '#modal-container #modal-form .modal .modal-header .dropdown', function() {
+    $(document).on('show.bs.dropdown', '#modal-container .modal .modal-header .dropdown', function() {
         var tableId = $(this).find('table').attr('id');
         if($.fn.DataTable.isDataTable(`#${tableId}`)) {
             $(`#${tableId}`).DataTable().clear();
@@ -6212,9 +6212,6 @@ const showHiddenFields = (el) => {
 
 const makeRecurring = (modalName) => {
     var modalId = '';
-    $(`#${modalId}`).parent().attr('onsubmit', 'submitModalForm(event, this)').removeAttr('data-href');
-    $(`#${modalId} .transactions-container`).parent().remove();
-    $(`#${modalId} .close-transactions-container`).parent().remove();
 
     var templateFields = `<div class="row recurring-details">
         <div class="col-md-12">
@@ -6389,6 +6386,10 @@ const makeRecurring = (modalName) => {
             $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Credit Card Credit');
         break;
     }
+
+    $(`#${modalId}`).parent().attr('onsubmit', 'submitModalForm(event, this)').removeAttr('data-href');
+    $(`#${modalId} .transactions-container`).parent().remove();
+    $(`#${modalId} .close-transactions-container`).parent().remove();
 
     // if($(`div#${modalId} input#templateName`).length === 0) {
     //     $(`div#${modalId} div.modal-body .card-body`).prepend(res);
