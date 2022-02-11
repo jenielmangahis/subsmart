@@ -2593,6 +2593,7 @@ class Accounting_modals extends MY_Controller
 
         if (isset($data['expense_account'])) {
             $this->form_validation->set_rules('expense_account[]', 'Expense name', 'required');
+            $this->form_validation->set_rules('category_amount[]', 'Category amount', 'required');
         }
 
         if (isset($data['item'])) {
@@ -2933,6 +2934,7 @@ class Accounting_modals extends MY_Controller
 
         if (isset($data['expense_account'])) {
             $this->form_validation->set_rules('expense_account[]', 'Expense name', 'required');
+            $this->form_validation->set_rules('category_amount[]', 'Category amount', 'required');
         }
 
         if (isset($data['item'])) {
@@ -3279,6 +3281,7 @@ class Accounting_modals extends MY_Controller
 
         if (isset($data['expense_account'])) {
             $this->form_validation->set_rules('expense_account[]', 'Expense name', 'required');
+            $this->form_validation->set_rules('category_amount[]', 'Category amount', 'required');
         }
 
         if (isset($data['item'])) {
@@ -3932,6 +3935,7 @@ class Accounting_modals extends MY_Controller
 
         if (isset($data['expense_account'])) {
             $this->form_validation->set_rules('expense_account[]', 'Expense name', 'required');
+            $this->form_validation->set_rules('category_amount[]', 'Category amount', 'required');
         }
 
         if (isset($data['item'])) {
@@ -4253,6 +4257,7 @@ class Accounting_modals extends MY_Controller
 
         if (isset($data['expense_account'])) {
             $this->form_validation->set_rules('expense_account[]', 'Expense name', 'required');
+            $this->form_validation->set_rules('category_amount[]', 'Category amount', 'required');
         }
 
         if (isset($data['item'])) {
@@ -4529,6 +4534,7 @@ class Accounting_modals extends MY_Controller
 
         if (isset($data['expense_account'])) {
             $this->form_validation->set_rules('expense_account[]', 'Expense name', 'required');
+            $this->form_validation->set_rules('category_amount[]', 'Category amount', 'required');
         }
 
         if (isset($data['item'])) {
@@ -8148,9 +8154,7 @@ class Accounting_modals extends MY_Controller
             'payment_date' => date("Y-m-d", strtotime($data['payment_date'])),
             'payment_method_id' => $data['payment_method'],
             'ref_no' => $data['ref_no'],
-            // 'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
             'memo' => $data['memo'],
-            // 'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
             'total_amount' => $data['total_amount']
         ];
 
@@ -9879,13 +9883,11 @@ class Accounting_modals extends MY_Controller
                 'company_id' => logged('company_id'),
                 'account_id' => $data['bank_account'],
                 'date' => isset($data['template_name']) ? null : date('Y-m-d', strtotime($data['date'])),
-                // 'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
                 'total_amount' => number_format($totalAmount, 2, '.', ','),
                 'cash_back_account_id' => floatval($data['cash_back_amount']) > 0.00 ? $data['cash_back_account'] : null,
                 'cash_back_memo' => $data['cash_back_memo'],
                 'cash_back_amount' => $data['cash_back_amount'],
                 'memo' => $data['memo'],
-                // 'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
                 'recurring' => isset($data['template_name']) ? 1 : null,
             ];
 
@@ -10118,7 +10120,6 @@ class Accounting_modals extends MY_Controller
                 'transfer_amount' => $data['transfer_amount'],
                 'transfer_date' => isset($data['date']) ? date('Y-m-d', strtotime($data['date'])) : null,
                 'transfer_memo' => $data['memo'],
-                // 'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
                 'recurring' => isset($data['template_name']) ? 1 : null,
             ];
 
@@ -10285,7 +10286,6 @@ class Accounting_modals extends MY_Controller
                 'journal_no' => (!isset($data['template_name'])) ? $data['journal_no'] : null,
                 'journal_date' => (!isset($data['template_name'])) ? date('Y-m-d', strtotime($data['journal_date'])) : null,
                 'memo' => $data['memo'],
-                // 'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
                 'recurring' => isset($data['template_name']) ? 1 : null
             ];
 

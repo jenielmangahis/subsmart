@@ -685,6 +685,7 @@ class Expenses_model extends MY_Model
             $this->db->where('payee_type', $filters['payee']['type']);
             $this->db->where('payee_id', $filters['payee']['id']);
         }
+        $this->db->where('recurring', null);
         $query = $this->db->get('accounting_expense');
         return $query->result();
     }
@@ -692,6 +693,7 @@ class Expenses_model extends MY_Model
     public function get_company_bill_transactions($filters = [])
     {
         $this->db->where('company_id', $filters['company_id']);
+        $this->db->where('recurring', null);
 
         if(isset($filters['start-date']) && isset($filters['end-date'])) {
             $this->db->where('bill_date >=', $filters['start-date']);
@@ -726,6 +728,7 @@ class Expenses_model extends MY_Model
     {
         $this->db->where('company_id', $filters['company_id']);
         $this->db->where('status !=', 0);
+        $this->db->where('recurring', null);
 
         if(isset($filters['start-date'])) {
             $this->db->where('payment_date >=', $filters['start-date']);
@@ -752,6 +755,7 @@ class Expenses_model extends MY_Model
     public function get_company_purch_order_transactions($filters = [])
     {
         $this->db->where('company_id', $filters['company_id']);
+        $this->db->where('recurring', null);
 
         if(isset($filters['start-date']) && isset($filters['end-date'])) {
             $this->db->where('purchase_order_date >=', $filters['start-date']);
@@ -782,6 +786,7 @@ class Expenses_model extends MY_Model
     {
         $this->db->where('company_id', $filters['company_id']);
         $this->db->where('status !=', 0);
+        $this->db->where('recurring', null);
 
         if(isset($filters['start-date']) && isset($filters['end-date'])) {
             $this->db->where('payment_date >=', $filters['start-date']);
@@ -800,6 +805,7 @@ class Expenses_model extends MY_Model
     {
         $this->db->where('company_id', $filters['company_id']);
         $this->db->where('status !=', 0);
+        $this->db->where('recurring', null);
 
         if(isset($filters['payee'])) {
             $this->db->where('payee_type', $filters['payee']['type']);

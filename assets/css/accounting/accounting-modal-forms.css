@@ -1,12 +1,12 @@
-#modal-form .modal .modal-header .dropdown-header {
+#modal-container .modal .modal-header .dropdown-header {
     font-size: 1.25rem !important;
 }
 
-#modal-form .modal .modal-body table {
+#modal-container .modal .modal-body table {
     background: #f4f5f8;
 }
 
-#modal-form .modal .attachments-container span.select2.select2-container, #existing-attachments-modal .attachments-container span.select2.select2-container {
+#modal-container .modal .attachments-container span.select2.select2-container, #existing-attachments-modal .attachments-container span.select2.select2-container {
     width: 50% !important;
 }
 

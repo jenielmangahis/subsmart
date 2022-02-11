@@ -243,6 +243,7 @@ class Recurring_transactions extends MY_Controller {
                             'template_name' => $item['template_name'],
                             'recurring_type' => ucfirst($item['recurring_type']),
                             'txn_type' => ucwords($item['txn_type']),
+                            'txn_id' => $item['txn_id'],
                             'recurring_interval' => $interval,
                             'previous_date' => $previous,
                             'next_date' => $next,
@@ -256,6 +257,7 @@ class Recurring_transactions extends MY_Controller {
                         'template_name' => $item['template_name'],
                         'recurring_type' => ucfirst($item['recurring_type']),
                         'txn_type' => ucwords($item['txn_type']),
+                        'txn_id' => $item['txn_id'],
                         'recurring_interval' => $interval,
                         'previous_date' => $previous,
                         'next_date' => $next,
@@ -382,6 +384,91 @@ class Recurring_transactions extends MY_Controller {
                 $this->form_validation->set_rules('transfer_to', 'Transfer To Account', 'required|differs[transfer_from]');
                 $this->form_validation->set_rules('transfer_amount', 'Amount', 'required');
             break;
+            case 'expense' :
+                $this->form_validation->set_rules('expense_payment_account', 'Payment account', 'required');
+
+                if (isset($data['expense_account'])) {
+                    $this->form_validation->set_rules('expense_account[]', 'Expense name', 'required');
+                    $this->form_validation->set_rules('category_amount[]', 'Category amount', 'required');
+                }
+        
+                if (isset($data['item'])) {
+                    $this->form_validation->set_rules('item[]', 'Item', 'required');
+                    $this->form_validation->set_rules('quantity[]', 'Item quantity', 'required');
+                    $this->form_validation->set_rules('item_amount[]', 'Item quantity', 'required');
+                }
+            break;
+            case 'check' :
+                $this->form_validation->set_rules('bank_account', 'Bank account', 'required');
+
+                if (isset($data['expense_account'])) {
+                    $this->form_validation->set_rules('expense_account[]', 'Expense name', 'required');
+                    $this->form_validation->set_rules('category_amount[]', 'Category amount', 'required');
+                }
+        
+                if (isset($data['item'])) {
+                    $this->form_validation->set_rules('item[]', 'Item', 'required');
+                    $this->form_validation->set_rules('quantity[]', 'Item quantity', 'required');
+                    $this->form_validation->set_rules('item_amount[]', 'Item quantity', 'required');
+                }
+            break;
+            case 'bill' :
+                $this->form_validation->set_rules('vendor_id', 'Vendor', 'required');
+
+                if (isset($data['expense_account'])) {
+                    $this->form_validation->set_rules('expense_account[]', 'Expense name', 'required');
+                    $this->form_validation->set_rules('category_amount[]', 'Category amount', 'required');
+                }
+        
+                if (isset($data['item'])) {
+                    $this->form_validation->set_rules('item[]', 'Item', 'required');
+                    $this->form_validation->set_rules('quantity[]', 'Item quantity', 'required');
+                    $this->form_validation->set_rules('item_amount[]', 'Item quantity', 'required');
+                }
+            break;
+            case 'purchase-order' :
+                $this->form_validation->set_rules('vendor_id', 'Vendor', 'required');
+                $this->form_validation->set_rules('email', 'Email', 'required');
+        
+                if (isset($data['expense_account'])) {
+                    $this->form_validation->set_rules('expense_account[]', 'Expense name', 'required');
+                    $this->form_validation->set_rules('category_amount[]', 'Category amount', 'required');
+                }
+        
+                if (isset($data['item'])) {
+                    $this->form_validation->set_rules('item[]', 'Item', 'required');
+                    $this->form_validation->set_rules('quantity[]', 'Item quantity', 'required');
+                    $this->form_validation->set_rules('item_amount[]', 'Item quantity', 'required');
+                }
+            break;
+            case 'vendor-credit' :
+                $this->form_validation->set_rules('vendor_id', 'Vendor', 'required');
+
+                if (isset($data['expense_account'])) {
+                    $this->form_validation->set_rules('expense_account[]', 'Expense name', 'required');
+                    $this->form_validation->set_rules('category_amount[]', 'Category amount', 'required');
+                }
+        
+                if (isset($data['item'])) {
+                    $this->form_validation->set_rules('item[]', 'Item', 'required');
+                    $this->form_validation->set_rules('quantity[]', 'Item quantity', 'required');
+                    $this->form_validation->set_rules('item_amount[]', 'Item quantity', 'required');
+                }
+            break;
+            case 'credit-card-credit' :
+                $this->form_validation->set_rules('bank_credit_account', 'Bank/Credit account', 'required');
+
+                if (isset($data['expense_account'])) {
+                    $this->form_validation->set_rules('expense_account[]', 'Expense name', 'required');
+                    $this->form_validation->set_rules('category_amount[]', 'Category amount', 'required');
+                }
+        
+                if (isset($data['item'])) {
+                    $this->form_validation->set_rules('item[]', 'Item', 'required');
+                    $this->form_validation->set_rules('quantity[]', 'Item quantity', 'required');
+                    $this->form_validation->set_rules('item_amount[]', 'Item quantity', 'required');
+                }
+            break;
         }
 
         $this->form_validation->set_rules('template_name', 'Template Name', 'required');
@@ -444,6 +531,69 @@ class Recurring_transactions extends MY_Controller {
                 }
             }
 
+            $recurringData = $this->accounting_recurring_transactions_model->getRecurringTransaction($id);
+
+            if($data['recurring_type'] !== 'unscheduled') {
+                $currentDate = date("m/d/Y", strtotime($recurringData->previous_date));
+                $startDate = !is_null($recurringData->previous_date) ? $currentDate : date("m/d/Y", strtotime($data['start_date']));
+                $every = $data['recurr_every'];
+
+                switch($data['recurring_interval']) {
+                    case 'daily' :
+                        $next = $startDate;
+                    break;
+                    case 'weekly' :
+                        $days = [
+                            'sunday',
+                            'monday',
+                            'tuesday',
+                            'wednesday',
+                            'thursday',
+                            'friday',
+                            'saturday'
+                        ];
+
+                        $day = $data['recurring_day'];
+                        $dayNum = array_search($day, $days);
+                        $next = $startDate;
+
+                        if(intval(date("w", strtotime($next))) !== $dayNum) {
+                            do {
+                                $next = date("m/d/Y", strtotime("$next +1 day"));
+                            } while(intval(date("w", strtotime($next))) !== $dayNum);
+                        }
+                    break;
+                    case 'monthly' :
+                        if($data['recurring_week'] === 'day') {
+                            $day = $data['recurring_day'] === 'last' ? 't' : $data['recurring_day'];
+                            $next = date("m/$day/Y", strtotime($startDate));
+
+                            if(strtotime(date("m/d/Y")) > strtotime($next)) {
+                                $next = date("m/$day/Y", strtotime("$next +$every months"));
+                            }
+                        } else {
+                            $week = $data['recurring_week'];
+                            $day = $data['recurring_day'];
+                            $next = date("m/d/Y", strtotime("$week $day ".date("Y-m", strtotime($startDate))));
+
+                            if(strtotime(date("m/d/Y")) > strtotime($next)) {
+                                $next = date("m/d/Y", strtotime("$week $day ".date("Y-m", strtotime("$startDate +$every months"))));
+                            }
+                        }
+                    break;
+                    case 'yearly' :
+                        $month = $data['recurring_month'];
+                        $day = $data['recurring_day'];
+                        $previous = date("$month/$day/Y", strtotime($startDate));
+                        $next = date("$month/$day/Y", strtotime($startDate));
+
+                        if(strtotime(date("m/d/Y")) > strtotime($next)) {
+                            $next = date("$month/$day/Y", strtotime("$next +1 year"));
+                        }
+                    break;
+                }
+            }
+
             $recurringData = [
                 'template_name' => $data['template_name'],
                 'recurring_type' => $data['recurring_type'],
@@ -455,9 +605,9 @@ class Recurring_transactions extends MY_Controller {
                 'recurr_every' => $data['recurring_interval'] !== 'yearly' ? $data['recurr_every'] : null,
                 'start_date' => $data['recurring_type'] !== 'unscheduled' ? $data['start_date'] !== "" ? date('Y-m-d', strtotime($data['start_date'])) : null : null,
                 'end_type' => $data['end_type'],
-                'end_date' => $data['end_type'] === 'by' ? $data['end_date'] !== "" ? date('Y-m-d', strtotime($data['end_date'])) : null : null,
-                'max_occurences' => $data['end_type'] === 'after' ? $data['max_occurence'] : null,
-                'updated_at' => date('Y-m-d h:i:s')
+                'end_date' => $data['end_type'] === 'by' ? date('Y-m-d', strtotime($data['end_date'])) : null,
+                'max_occurrences' => $data['end_type'] === 'after' ? $data['max_occurrence'] : null,
+                'next_date' => date("Y-m-d", strtotime($next))
             ];
 
             $recurringUpdate = $this->accounting_recurring_transactions_model->updateRecurringTransaction($id, $recurringData);
@@ -467,99 +617,31 @@ class Recurring_transactions extends MY_Controller {
 
                 switch($type) {
                     case 'deposit' :
-                        $this->load->model('accounting_bank_deposit_model');
-                        $bankAccount = explode('-', $data['bank_account']);
-                        $cashBackTarget = explode('-', $data['cash_back_target']);
-
-                        $totalAmount = array_sum(array_map(function($item) {
-                            return floatval($item);
-                        }, $data['amount']));
-
-                        $totalAmount = $totalAmount - floatval($data['cash_back_amount']);
-
-                        $depositData = [
-                            'account_key' => $bankAccount[0],
-                            'account_id' => $bankAccount[1],
-                            'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
-                            'total_amount' => number_format($totalAmount, 2, '.', ','),
-                            'cash_back_account_key' => $cashBackTarget[0],
-                            'cash_back_account_id' => $cashBackTarget[1],
-                            'cash_back_memo' => $data['cash_back_memo'],
-                            'cash_back_amount' => $data['cash_back_amount'],
-                            'memo' => $data['memo'],
-                            'updated_at' => date('Y-m-d h:i:s')
-                        ];
-
-                        $transactionUpdate = $this->accounting_bank_deposit_model->update($recurringData->txn_id, $depositData);
-
-                        $deleteFunds = $this->accounting_bank_deposit_model->deleteFunds($recurringData->txn_id);
-
-                        $fundsData = [];
-                        foreach($data['account'] as $key => $value) {
-                            $account = explode('-', $value);
-                            $receivedFrom = explode('-', $data['received_from'][$key]);
-
-                            $fundsData[] =[
-                                'bank_deposit_id' => $recurringData->txn_id,
-                                'received_from_key' => $receivedFrom[0],
-                                'received_from_id' => $receivedFrom[1],
-                                'received_from_account_key' => $account[0],
-                                'received_from_account_id' => $account[1],
-                                'description' => $data['description'][$key],
-                                'payment_method' => $data['payment_method'][$key],
-                                'ref_no' => $data['reference_no'][$key],
-                                'amount' => $data['amount'][$key],
-                            ];
-                        }
-
-                        $fundsId = $this->accounting_bank_deposit_model->insertFunds($fundsData);
+                        $transactionUpdate = $this->update_deposit($data, $recurringData);
                     break;
                     case 'transfer' :
-                        $this->load->model('accounting_transfer_funds_model');
-                        $transferFrom = explode('-', $data['transfer_from']);
-                        $transferTo = explode('-', $data['transfer_to']);
-
-                        $transferData = [
-                            'transfer_from_account_key' => $transferFrom[0],
-                            'transfer_from_account_id' => $transferFrom[1],
-                            'transfer_to_account_key' => $transferTo[0],
-                            'transfer_to_account_id' => $transferTo[1],
-                            'transfer_amount' => $data['transfer_amount'],
-                            'transfer_memo' => $data['memo'],
-                            'updated_at' => date('Y-m-d h:i:s')
-                        ];
-
-                        $transactionUpdate = $this->accounting_transfer_funds_model->update($recurringData->txn_id, $transferData);
+                        $transactionUpdate = $this->update_transfer($data, $recurringData);
                     break;
-                    case 'journal_entry' :
-                        $this->load->model('accounting_journal_entries_model');
-                        $entryData = [
-                            'memo' => $data['memo'],
-                            'updated_at' => date('Y-m-d h:i:s')
-                        ];
+                    case 'journal-entry' :
+                        $transactionUpdate = $this->update_journal($data, $recurringData);
+                    break;
+                    case 'expense' :
 
-                        $transactionUpdate = $this->accounting_journal_entries_model->update($recurringData->txn_id, $entryData);
+                    break;
+                    case 'check' :
 
-                        $deleteEntries = $this->accounting_journal_entries_model->deleteEntries($recurringData->txn_id);
+                    break;
+                    case 'bill' :
 
-                        $entryItems = [];
-                        foreach ($data['accounts'] as $key => $value) {
-                            $name = explode('-', $data['names'][$key]);
-                            $account = explode('-', $value);
-            
-                            $entryItems[] = [
-                                'journal_entry_id' => $recurringData->txn_id,
-                                'account_key' => $account[0],
-                                'account_id' => $account[1],
-                                'debit' => $data['debits'][$key],
-                                'credit' => $data['credits'][$key],
-                                'description' => $data['descriptions'][$key],
-                                'name_key' => $name[0],
-                                'name_id' => $name[1]
-                            ];
-                        }
+                    break;
+                    case 'purchase-order' :
 
-                        $entryItemsId = $this->accounting_journal_entries_model->insertEntryItems($entryItems);
+                    break;
+                    case 'vendor-credit' :
+
+                    break;
+                    case 'credit-card-credit' :
+
                     break;
                 }
             }
@@ -569,6 +651,265 @@ class Recurring_transactions extends MY_Controller {
         }
 
         echo json_encode($return);
+    }
+
+    private function update_deposit($data, $recurringData)
+    {
+        $this->load->model('accounting_bank_deposit_model');
+        $bankAccount = explode('-', $data['bank_account']);
+        $cashBackTarget = explode('-', $data['cash_back_target']);
+
+        $totalAmount = array_sum(array_map(function($item) {
+            return floatval($item);
+        }, $data['amount']));
+
+        $totalAmount = $totalAmount - floatval($data['cash_back_amount']);
+
+        $depositData = [
+            'account_key' => $bankAccount[0],
+            'account_id' => $bankAccount[1],
+            'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
+            'total_amount' => number_format($totalAmount, 2, '.', ','),
+            'cash_back_account_key' => $cashBackTarget[0],
+            'cash_back_account_id' => $cashBackTarget[1],
+            'cash_back_memo' => $data['cash_back_memo'],
+            'cash_back_amount' => $data['cash_back_amount'],
+            'memo' => $data['memo'],
+            'updated_at' => date('Y-m-d h:i:s')
+        ];
+
+        $transactionUpdate = $this->accounting_bank_deposit_model->update($recurringData->txn_id, $depositData);
+
+        if($transactionUpdate) {
+            $attachments = $this->accounting_attachments_model->get_attachments('Deposit', $recurringData->txn_id);
+            $tags = $this->tags_model->get_transaction_tags('Deposit', $recurringData->txn_id);
+
+            if(count($tags) > 0) {
+                foreach($tags as $key => $tag) {
+                    if(!isset($data['tags']) || !isset($data['tags'][$key])) {
+                        $this->tags_model->unlink_tag(['transaction_type' => 'Deposit', 'tag_id' => $tag->id, 'transaction_id' => $recurringData->txn_id]);
+                    }
+                }
+            }
+
+            if(isset($data['tags']) && is_array($data['tags'])) {
+                $order = 1;
+                foreach($data['tags'] as $key => $tagId) {
+                    $linkTagData = [
+                        'transaction_type' => 'Deposit',
+                        'transaction_id' => $recurringData->txn_id,
+                        'tag_id' => $tagId,
+                        'order_no' => $order
+                    ];
+
+                    if($tags[$key] === null) {
+                        $linkTagId = $this->tags_model->link_tag($linkTagData);
+                    } else {
+                        $updateOrder = $this->tags_model->update_link($linkTagData);
+                    }
+
+                    $order++;
+                }
+            }
+
+            if(count($attachments) > 0) {
+                foreach($attachments as $attachment) {
+                    if(!isset($data['attachments']) || !in_array($attachment->id, $data['attachments'])) {
+                        $attachmentLink = $this->accounting_attachments_model->get_attachment_link(['type' => 'Deposit', 'attachment_id' => $attachment->id, 'linked_id' => $recurringData->txn_id]);
+                        $this->accounting_attachments_model->unlink_attachment($attachmentLink->id);
+                    }
+                }
+            }
+
+            // NEW
+            if (isset($data['attachments']) && is_array($data['attachments'])) {
+                $order = 1;
+                foreach ($data['attachments'] as $attachmentId) {
+                    $link = array_filter($attachments, function($v, $k) use ($attachmentId) {
+                        return $v->id === $attachmentId;
+                    }, ARRAY_FILTER_USE_BOTH);
+
+                    if(count($link) > 0) {
+                        $attachmentData = [
+                            'type' => 'Deposit',
+                            'attachment_id' => $attachmentId,
+                            'linked_id' => $recurringData->txn_id,
+                            'order_no' => $order
+                        ];
+
+                        $updateOrder = $this->accounting_attachments_model->update_order($attachmentData);
+                    } else {
+                        $linkAttachmentData = [
+                            'type' => 'Deposit',
+                            'attachment_id' => $attachmentId,
+                            'linked_id' => $recurringData->txn_id,
+                            'order_no' => $order
+                        ];
+    
+                        $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
+                    }
+
+                    $order++;
+                }
+            }
+
+            $this->accounting_bank_deposit_model->deleteFunds($recurringData->txn_id);
+
+            $fundsData = [];
+            foreach ($data['funds_account'] as $key => $value) {
+                $receivedFrom = explode('-', $data['received_from'][$key]);
+
+                $fundsData = [
+                    'bank_deposit_id' => $recurringData->txn_id,
+                    'received_from_key' => $receivedFrom[0],
+                    'received_from_id' => $receivedFrom[1],
+                    'received_from_account_id' => $value,
+                    'description' => $data['description'][$key],
+                    'payment_method' => $data['payment_method'][$key],
+                    'ref_no' => $data['reference_no'][$key],
+                    'amount' => $data['amount'][$key]
+                ];
+
+                $this->accounting_bank_deposit_model->insert_fund($fundsData);
+            }
+        }
+
+        return $transactionUpdate;
+    }
+
+    private function update_transfer($data, $recurringData)
+    {
+        $this->load->model('accounting_transfer_funds_model');
+
+        $transferData = [
+            'transfer_from_account_id' => $data['transfer_from_account'],
+            'transfer_to_account_id' => $data['transfer_to_account'],
+            'transfer_amount' => $data['transfer_amount'],
+            'transfer_memo' => $data['memo'],
+        ];
+
+        $transactionUpdate = $this->accounting_transfer_funds_model->update($recurringData->txn_id, $transferData);
+
+        if($transactionUpdate) {
+            $attachments = $this->accounting_attachments_model->get_attachments('Transfer', $recurringData->txn_id);
+
+            if(count($attachments) > 0) {
+                foreach($attachments as $attachment) {
+                    if(!isset($data['attachments']) || !in_array($attachment->id, $data['attachments'])) {
+                        $attachmentLink = $this->accounting_attachments_model->get_attachment_link(['type' => 'Transfer', 'attachment_id' => $attachment->id, 'linked_id' => $recurringData->txn_id]);
+                        $this->accounting_attachments_model->unlink_attachment($attachmentLink->id);
+                    }
+                }
+            }
+
+            if (isset($data['attachments']) && is_array($data['attachments'])) {
+                $order = 1;
+                foreach ($data['attachments'] as $attachmentId) {
+                    $link = array_filter($attachments, function($v, $k) use ($attachmentId) {
+                        return $v->id === $attachmentId;
+                    }, ARRAY_FILTER_USE_BOTH);
+
+                    if(count($link) > 0) {
+                        $attachmentData = [
+                            'type' => 'Transfer',
+                            'attachment_id' => $attachmentId,
+                            'linked_id' => $recurringData->txn_id,
+                            'order_no' => $order
+                        ];
+
+                        $updateOrder = $this->accounting_attachments_model->update_order($attachmentData);
+                    } else {
+                        $linkAttachmentData = [
+                            'type' => 'Transfer',
+                            'attachment_id' => $attachmentId,
+                            'linked_id' => $recurringData->txn_id,
+                            'order_no' => $order
+                        ];
+    
+                        $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
+                    }
+
+                    $order++;
+                }
+            }
+        }
+        
+        return $transactionUpdate;
+    }
+
+    private function update_journal($data, $recurringData)
+    {
+        $this->load->model('accounting_journal_entries_model');
+        $entryData = [
+            'memo' => $data['memo']
+        ];
+
+        $transactionUpdate = $this->accounting_journal_entries_model->update($recurringData->txn_id, $entryData);
+
+        if($transactionUpdate) {
+            $attachments = $this->accounting_attachments_model->get_attachments('Journal', $recurringData->txn_id);
+
+            if(count($attachments) > 0) {
+                foreach($attachments as $attachment) {
+                    if(!isset($data['attachments']) || !in_array($attachment->id, $data['attachments'])) {
+                        $attachmentLink = $this->accounting_attachments_model->get_attachment_link(['type' => 'Journal', 'attachment_id' => $attachment->id, 'linked_id' => $recurringData->txn_id]);
+                        $this->accounting_attachments_model->unlink_attachment($attachmentLink->id);
+                    }
+                }
+            }
+
+            $deleteEntries = $this->accounting_journal_entries_model->deleteEntries($recurringData->txn_id);
+
+            if (isset($data['attachments']) && is_array($data['attachments'])) {
+                $order = 1;
+                foreach ($data['attachments'] as $attachmentId) {
+                    $link = array_filter($attachments, function($v, $k) use ($attachmentId) {
+                        return $v->id === $attachmentId;
+                    }, ARRAY_FILTER_USE_BOTH);
+
+                    if(count($link) > 0) {
+                        $attachmentData = [
+                            'type' => 'Journal',
+                            'attachment_id' => $attachmentId,
+                            'linked_id' => $recurringData->txn_id,
+                            'order_no' => $order
+                        ];
+
+                        $updateOrder = $this->accounting_attachments_model->update_order($attachmentData);
+                    } else {
+                        $linkAttachmentData = [
+                            'type' => 'Journal',
+                            'attachment_id' => $attachmentId,
+                            'linked_id' => $recurringData->txn_id,
+                            'order_no' => $order
+                        ];
+    
+                        $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
+                    }
+
+                    $order++;
+                }
+            }
+
+            $entryItems = [];
+            foreach ($data['accounts'] as $key => $value) {
+                $name = explode('-', $data['names'][$key]);
+
+                $entryItems[] = [
+                    'journal_entry_id' => $recurringData->txn_id,
+                    'account_id' => $value,
+                    'debit' => $data['debits'][$key],
+                    'credit' => $data['credits'][$key],
+                    'description' => $data['descriptions'][$key],
+                    'name_key' => $name[0],
+                    'name_id' => $name[1]
+                ];
+            }
+
+            $entryItemsId = $this->accounting_journal_entries_model->insertEntryItems($entryItems);
+        }
+
+        return $transactionUpdate;
     }
 
     public function print()
