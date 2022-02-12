@@ -463,8 +463,6 @@
                                 <div class="col-md-12 d-flex align-items-center justify-content-center">
                                     <span><a href="#" class="text-white" id="print-check">Print check</a></span>
                                     <span class="mx-3 divider"></span>
-                                    <span><a href="#" class="text-white">Order checks</a></span>
-                                    <span class="mx-3 divider"></span>
                                     <span><a href="#" class="text-white m-auto" onclick="makeRecurring('check')">Make Recurring</a></span>
                                     <span class="mx-3 divider"></span>
                                     <span>
