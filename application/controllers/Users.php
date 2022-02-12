@@ -1701,7 +1701,7 @@ class Users extends MY_Controller {
 		$comp_id = logged('company_id');
 
 		$profiledata = $this->business_model->getByCompanyId($comp_id);
-		$image_name  = '';
+		$image_name  = $profiledata->business_cover_photo;
 		if (!empty($_FILES['cover_photo']['name'])){			
 			$target_dir = "./uploads/company_cover_photo/$comp_id/";
 			
@@ -1717,7 +1717,7 @@ class Users extends MY_Controller {
 			move_uploaded_file($tmp_name, "./uploads/company_cover_photo/$comp_id/$name");
 			$image_name = $name;
 			
-			$this->business_model->update($profiledata->id, ['work_images' => serialize($workImages)]);
+			//$this->business_model->update($profiledata->id, ['work_images' => serialize($workImages)]);
 
 		}
 
