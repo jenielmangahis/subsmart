@@ -54,7 +54,7 @@
                                                 <div class="col-md-4">
                                                     <div class="form-group">
                                                         <label for="date">Date</label>
-                                                        <input type="text" class="form-control date" name="date" id="date" value="<?=!isset($deposit) ? date('m/d/Y') : date('m/d/Y', strtotime($deposit->date))?>"/>
+                                                        <input type="text" class="form-control date" name="date" id="date" value="<?=!isset($deposit) ? date('m/d/Y') : ($deposit->date !== "" && !is_null($deposit->date) ? date("m/d/Y", strtotime($deposit->date)) : "")?>"/>
                                                     </div>
                                                 </div>
                                             </div>
@@ -74,6 +74,14 @@
                                         </div>
                                     </div>
                                     <div class="row">
+                                        <?php if($is_copy) : ?>
+                                        <div class="col-md-12">
+                                            <div class="alert alert-info alert-dismissible mb-4" role="alert">
+                                                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                                <h6 class="mt-0">This is a copy</h6>
+                                            </div>
+                                        </div>
+                                        <?php endif; ?>
                                         <div class="col-md-8">
                                             <div class="form-group">
                                                 <div id="label">

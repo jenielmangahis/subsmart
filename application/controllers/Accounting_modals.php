@@ -7622,7 +7622,7 @@ class Accounting_modals extends MY_Controller
         $this->page_data['tags'] = $this->tags_model->get_transaction_tags('Bill', $billId);
         $this->page_data['bill_payments'] = $billPayments;
         $this->page_data['total_payment'] = number_format(floatval($totalPayment), 2, '.', ',');
-        $this->page_data['due_date'] = date("m/d/Y", strtotime($bill->due_date));
+        $this->page_data['due_date'] = $bill->due_date !== "" && !is_null($bill->due_date) ? date("m/d/Y", strtotime($bill->due_date)) : "";
         $this->page_data['bill'] = $bill;
         $this->page_data['categories'] = $categories;
         $this->page_data['items'] = $items;
@@ -7726,7 +7726,7 @@ class Accounting_modals extends MY_Controller
         }
 
         $this->page_data['journal_no'] = $journalEntry->journal_no;
-        $this->page_data['journal_date'] = date("m/d/Y", strtotime($journalEntry->journal_date));
+        $this->page_data['journal_date'] = $journalEntry->journal_date !== "" && !is_null($journalEntry->journal_date) ? date("m/d/Y", strtotime($journalEntry->journal_date)) : "";
         $this->page_data['entries'] = $entries;
         $this->page_data['journal_entry'] = $journalEntry;
 
@@ -8153,7 +8153,8 @@ class Accounting_modals extends MY_Controller
             'payment_account_id' => $data['expense_payment_account'],
             'payment_date' => date("Y-m-d", strtotime($data['payment_date'])),
             'payment_method_id' => $data['payment_method'],
-            'ref_no' => $data['ref_no'],
+            'ref_no' => $data['ref_no'] === "" ? null : $data['ref_no'],
+            'permit_no' => $data['permit_number'] === "" ? null : $data['permit_number'],
             'memo' => $data['memo'],
             'total_amount' => $data['total_amount']
         ];
@@ -8306,10 +8307,9 @@ class Accounting_modals extends MY_Controller
             'mailing_address' => nl2br($data['mailing_address']),
             'payment_date' => date("Y-m-d", strtotime($data['payment_date'])),
             'check_no' => isset($data['print_later']) ? null : $data['check_no'] === '' ? null : $data['check_no'],
+            'permit_no' => $data['permit_number'] === "" ? null : $data['permit_number'],
             'to_print' => $data['print_later'],
-            // 'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
             'memo' => $data['memo'],
-            // 'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
             'total_amount' => $data['total_amount']
         ];
 
@@ -8479,9 +8479,8 @@ class Accounting_modals extends MY_Controller
             'bill_date' => date("Y-m-d", strtotime($data['bill_date'])),
             'due_date' => date("Y-m-d", strtotime($data['due_date'])),
             'bill_no' => $data['bill_no'] !== "" ? $data['bill_no'] : null,
-            // 'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
+            'permit_no' => $data['permit_number'] !== "" ? $data['permit_number'] : null,
             'memo' => $data['memo'],
-            // 'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
             'remaining_balance' => $data['total_amount'],
             'total_amount' => $data['total_amount']
         ];
@@ -8578,16 +8577,15 @@ class Accounting_modals extends MY_Controller
         $purchOrder = [
             'vendor_id' => $data['vendor_id'],
             'email' => $data['email'],
+            'ref_no' => $data['ref_no'] === "" ? null : $data['ref_no'],
             'permit_no' => $data['permit_number'] === "" ? null : $data['permit_number'],
             'mailing_address' => nl2br($data['mailing_address']),
             'customer_id' => $data['customer'],
             'shipping_address' => nl2br($data['shipping_address']),
             'purchase_order_date' => date("Y-m-d", strtotime($data['purchase_order_date'])),
             'ship_via' => $data['ship_via'],
-            // 'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
             'message_to_vendor' => $data['message_to_vendor'],
             'memo' => $data['memo'],
-            // 'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
             'total_amount' => $data['total_amount']
         ];
 
@@ -8683,10 +8681,9 @@ class Accounting_modals extends MY_Controller
             'vendor_id' => $data['vendor_id'],
             'mailing_address' => $data['mailing_address'],
             'payment_date' => date("Y-m-d", strtotime($data['payment_date'])),
-            'ref_no' => $data['ref_no'],
-            // 'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
+            'ref_no' => $data['ref_no'] === "" ? null : $data['ref_no'],
+            'permit_no' => $data['permit_number'] === "" ? null : $data['permit_number'],
             'memo' => $data['memo'],
-            // 'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
             'total_amount' => $data['total_amount']
         ];
 
@@ -8829,9 +8826,7 @@ class Accounting_modals extends MY_Controller
             'bank_credit_account_id' => $data['bank_credit_account'],
             'payment_date' => date("Y-m-d", strtotime($data['payment_date'])),
             'ref_no' => $data['ref_no'] === "" ? null : $data['ref_no'],
-            // 'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
             'memo' => $data['memo'],
-            // 'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
             'total_amount' => $data['total_amount']
         ];
 
@@ -12540,5 +12535,257 @@ class Accounting_modals extends MY_Controller
             'timesheet' => $timesheet,
             'activities' => $timeActivities
         ]);
+    }
+
+    public function copy_transaction($transactionType, $transactionId)
+    {
+        switch($transactionType) {
+            case 'deposit' :
+                $deposit = $this->accounting_bank_deposit_model->getById($transactionId, logged('company_id'));
+                $account = $this->chart_of_accounts_model->getById($deposit->account_id);
+                $balance = '$'.number_format(floatval($account->balance), 2, '.', ',');
+                $balance = str_replace('$-', '-$', $balance);
+                $cashBackAccount = $this->chart_of_accounts_model->getById($deposit->cash_back_account_id);
+                $funds = $this->accounting_bank_deposit_model->getFunds($deposit->id);
+
+                foreach($funds as $key => $fund) {
+                    $funds[$key]->account = $this->chart_of_accounts_model->getById($fund->received_from_account_id);
+
+                    switch($fund->received_from_key) {
+                        case 'customer' :
+                            $customer = $this->accounting_customers_model->get_by_id($fund->received_from_id);
+                            $funds[$key]->name = $customer->first_name . ' ' . $customer->last_name;
+                        break;
+                        case 'vendor' :
+                            $vendor = $this->vendors_model->get_vendor_by_id($fund->received_from_id);
+                            $funds[$key]->name = $vendor->display_name;
+                        break;
+                        case 'employee' :
+                            $employee = $this->users_model->getUser($fund->received_from_id);
+                            $funds[$key]->name = $employee->FName . ' ' . $employee->LName;
+                        break;
+                    }
+
+                    $funds[$key]->payment = $this->accounting_payment_methods_model->getById($fund->payment_method);
+                }
+
+                $this->page_data['tags'] = $this->tags_model->get_transaction_tags('Deposit', $transactionId);
+                $this->page_data['deposit'] = $deposit;
+                $this->page_data['funds'] = $funds;
+                $this->page_data['account'] = $account;
+                $this->page_data['balance'] = $balance;
+                $this->page_data['cash_back_account'] = $cashBackAccount;
+                $this->page_data['is_copy'] = true;
+
+                $view = 'bank_deposit_modal';
+            break;
+            case 'transfer' :
+                $transfer = $this->accounting_transfer_funds_model->getById($transactionId, logged('company_id'));
+                $transfer->transfer_from = $this->chart_of_accounts_model->getById($transfer->transfer_from_account_id);
+                $transfer->transfer_to = $this->chart_of_accounts_model->getById($transfer->transfer_to_account_id);
+        
+                $this->page_data['transfer'] = $transfer;
+                $this->page_data['is_copy'] = true;
+
+                $view = 'transfer_modal';
+            break;
+            case 'journal' :
+                $journalEntry = $this->accounting_journal_entries_model->getById($transactionId, logged('company_id'));
+                $entries = $this->accounting_journal_entries_model->getEntries($journalEntry->id);
+
+                foreach($entries as $key => $entry) {
+                    $entries[$key]->account = $this->chart_of_accounts_model->getById($entry->account_id);
+
+                    switch($entry->name_key) {
+                        case 'customer' :
+                            $customer = $this->accounting_customers_model->get_by_id($entry->name_id);
+                            $entries[$key]->name = $customer->first_name . ' ' . $customer->last_name;
+                        break;
+                        case 'vendor' :
+                            $vendor = $this->vendors_model->get_vendor_by_id($entry->name_id);
+                            $entries[$key]->name = $vendor->display_name;
+                        break;
+                        case 'employee' :
+                            $employee = $this->users_model->getUser($entry->name_id);
+                            $entries[$key]->name = $employee->FName . ' ' . $employee->LName;
+                        break;
+                    }
+                }
+
+                $this->page_data['journal_no'] = $journalEntry->journal_no;
+                $this->page_data['journal_date'] = $journalEntry->journal_date !== "" && !is_null($journalEntry->journal_date) ? date("m/d/Y", strtotime($journalEntry->journal_date)) : "";
+                $this->page_data['entries'] = $entries;
+                $this->page_data['journal_entry'] = $journalEntry;
+                $this->page_data['is_copy'] = true;
+
+                $view = 'journal_entry_modal';
+            break;
+            case 'expense' :
+                $expense = $this->vendors_model->get_expense_by_id($transactionId, logged('company_id'));
+                $paymentAccs = [];
+                $paymentAccsType = $this->account_model->getAccTypeByName(['Bank', 'Credit Card', 'Other Current Assets']);
+
+                foreach ($paymentAccsType as $accType) {
+                    $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
+
+                    if (count($accounts) > 0) {
+                        foreach ($accounts as $account) {
+                            $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
+
+                            $account->childAccs = $childAccs;
+
+                            $paymentAccs[$accType->account_name][] = $account;
+
+                            if ($account->id === $expense->payment_account_id) {
+                                $selectedBalance = $account->balance;
+                            }
+
+                            foreach ($childAccs as $childAcc) {
+                                if ($childAcc->id === $expense->payment_account_id) {
+                                    $selectedBalance = $childAcc->balance;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if (strpos($selectedBalance, '-') !== false) {
+                    $balance = str_replace('-', '', $selectedBalance);
+                    $selectedBalance = '-$'.number_format($balance, 2, '.', ',');
+                } else {
+                    $selectedBalance = '$'.number_format($selectedBalance, 2, '.', ',');
+                }
+
+                $categories = $this->expenses_model->get_transaction_categories($transactionId, 'Expense');
+                $items = $this->expenses_model->get_transaction_items($transactionId, 'Expense');
+
+                $this->page_data['tags'] = $this->tags_model->get_transaction_tags('Expense', $transactionId);
+                $this->page_data['expense'] = $expense;
+                $this->page_data['categories'] = $categories;
+                $this->page_data['items'] = $items;
+                $this->page_data['balance'] = $selectedBalance;
+                $this->page_data['is_copy'] = true;
+
+                $view = 'expense_modal';
+            break;
+            case 'check' :
+                $check = $this->vendors_model->get_check_by_id($transactionId, logged('company_id'));
+                $bankAccsType = $this->account_model->getAccTypeByName('Bank');
+
+                $bankAccs = [];
+                $accounts = $this->chart_of_accounts_model->getByAccountType($bankAccsType->id, null, logged('company_id'));
+                if (count($accounts) > 0) {
+                    foreach ($accounts as $account) {
+                        $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
+
+                        $account->childAccs = $childAccs;
+
+                        $bankAccs[] = $account;
+
+                        if ($account->id === $check->bank_account_id) {
+                            $selectedBalance = $account->balance;
+                        }
+
+                        foreach ($childAccs as $childAcc) {
+                            if ($childAcc->id === $check->bank_account_id) {
+                                $selectedBalance = $childAcc->balance;
+                            }
+                        }
+                    }
+                }
+
+                if (strpos($selectedBalance, '-') !== false) {
+                    $balance = str_replace('-', '', $selectedBalance);
+                    $selectedBalance = '-$'.number_format($balance, 2, '.', ',');
+                } else {
+                    $selectedBalance = '$'.number_format($selectedBalance, 2, '.', ',');
+                }
+
+                $categories = $this->expenses_model->get_transaction_categories($transactionId, 'Check');
+                $items = $this->expenses_model->get_transaction_items($transactionId, 'Check');
+
+                $this->page_data['tags'] = $this->tags_model->get_transaction_tags('Check', $transactionId);
+                $this->page_data['check'] = $check;
+                $this->page_data['categories'] = $categories;
+                $this->page_data['items'] = $items;
+                $this->page_data['balance'] = $selectedBalance;
+                $this->page_data['is_copy'] = true;
+
+                $view = 'check_modal';
+            break;
+            case 'bill' :
+                $bill = $this->vendors_model->get_bill_by_id($transactionId, logged('company_id'));
+                $terms = $this->accounting_terms_model->getActiveCompanyTerms(logged('company_id'));
+        
+                $selectedTerm = $terms[0];
+        
+                $categories = $this->expenses_model->get_transaction_categories($transactionId, 'Bill');
+                $items = $this->expenses_model->get_transaction_items($transactionId, 'Bill');
+        
+                $this->page_data['tags'] = $this->tags_model->get_transaction_tags('Bill', $transactionId);
+                $this->page_data['due_date'] = date("m/d/Y", strtotime($bill->due_date));
+                $this->page_data['bill'] = $bill;
+                $this->page_data['categories'] = $categories;
+                $this->page_data['items'] = $items;
+                $this->page_data['is_copy'] = true;
+
+                $view = 'bill_modal';
+            break;
+            case 'purchase-order' :
+                $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($transactionId, logged('company_id'));
+
+                $categories = $this->expenses_model->get_transaction_categories($transactionId, 'Purchase Order');
+                $items = $this->expenses_model->get_transaction_items($transactionId, 'Purchase Order');
+
+                $this->page_data['tags'] = $this->tags_model->get_transaction_tags('Purchase Order', $transactionId);
+                $this->page_data['purchaseOrder'] = $purchaseOrder;
+                $this->page_data['categories'] = $categories;
+                $this->page_data['items'] = $items;
+                $this->page_data['is_copy'] = true;
+
+                $view = 'purchase_order_modal';
+            break;
+            case 'vendor-credit' :
+                $vendorCredit = $this->vendors_model->get_vendor_credit_by_id($transactionId, logged('company_id'));
+
+                $categories = $this->expenses_model->get_transaction_categories($transactionId, 'Vendor Credit');
+                $items = $this->expenses_model->get_transaction_items($transactionId, 'Vendor Credit');
+
+                $this->page_data['tags'] = $this->tags_model->get_transaction_tags('Vendor Credit', $transactionId);
+                $this->page_data['vendorCredit'] = $vendorCredit;
+                $this->page_data['categories'] = $categories;
+                $this->page_data['items'] = $items;
+                $this->page_data['is_copy'] = true;
+
+                $view = 'vendor_credit_modal';
+            break;
+            case 'cc-credit' :
+                $ccCredit = $this->vendors_model->get_credit_card_credit_by_id($transactionId, logged('company_id'));
+
+                $creditCard = $this->chart_of_accounts_model->getById($ccCredit->bank_credit_account_id);
+
+                $selectedBalance = $creditCard->balance;
+                if (strpos($selectedBalance, '-') !== false) {
+                    $balance = str_replace('-', '', $selectedBalance);
+                    $selectedBalance = '-$'.number_format(floatval($balance), 2, '.', ',');
+                } else {
+                    $selectedBalance = '$'.number_format(floatval($selectedBalance), 2, '.', ',');
+                }
+
+                $categories = $this->expenses_model->get_transaction_categories($transactionId, 'Credit Card Credit');
+                $items = $this->expenses_model->get_transaction_items($transactionId, 'Credit Card Credit');
+
+                $this->page_data['tags'] = $this->tags_model->get_transaction_tags('CC Credit', $transactionId);
+                $this->page_data['ccCredit'] = $ccCredit;
+                $this->page_data['categories'] = $categories;
+                $this->page_data['items'] = $items;
+                $this->page_data['balance'] = $selectedBalance;
+                $this->page_data['is_copy'] = true;
+
+                $view = 'credit_card_credit_modal';
+            break;
+        }
+
+        $this->load->view("accounting/modals/$view", $this->page_data);
     }
 }

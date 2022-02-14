@@ -90,7 +90,7 @@
                                         <div class="col-md-2">
                                             <div class="form-group">
                                                 <label for="payment_date">Payment date</label>
-                                                <input type="text" name="payment_date" id="payment_date" class="form-control date" value="<?=isset($vendorCredit) ? date("m/d/Y", strtotime($vendorCredit->payment_date)) : date("m/d/Y")?>" required>
+                                                <input type="text" name="payment_date" id="payment_date" class="form-control date" value="<?=isset($vendorCredit) ? ($vendorCredit->payment_date !== "" && !is_null($vendorCredit->payment_date) ? date("m/d/Y", strtotime($vendorCredit->payment_date)) : "") : date("m/d/Y")?>" required>
                                             </div>
                                         </div>
                                         <div class="col-md-2"></div>

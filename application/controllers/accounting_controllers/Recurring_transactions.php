@@ -14,6 +14,9 @@ class Recurring_transactions extends MY_Controller {
         $this->load->model('accounting_bank_deposit_model');
         $this->load->model('accounting_transfer_funds_model');
         $this->load->model('accounting_journal_entries_model');
+        $this->load->model('expenses_model');
+        $this->load->model('accounting_attachments_model');
+        $this->load->model('tags_model');
 
         add_css(array(
             "assets/css/accounting/banking.css?v='rand()'",
@@ -190,13 +193,16 @@ class Recurring_transactions extends MY_Controller {
                     case 'deposit' :
                         $deposit = $this->accounting_bank_deposit_model->getById($item['txn_id'], logged('company_id'));
                         $total = number_format($deposit->total_amount, 2, '.', ',');
+                        $payeeName = '';
                     break;
                     case 'transfer' :
                         $transfer = $this->accounting_transfer_funds_model->getById($item['txn_id'], logged('company_id'));
                         $total = number_format($transfer->transfer_amount, 2, '.', ',');
+                        $payeeName = '';
                     break;
                     case 'journal entry' :
                         $total = '0.00';
+                        $payeeName = '';
                     break;
                 }
 
@@ -626,22 +632,22 @@ class Recurring_transactions extends MY_Controller {
                         $transactionUpdate = $this->update_journal($data, $recurringData);
                     break;
                     case 'expense' :
-
+                        $transactionUpdate = $this->update_expense($data, $recurringData);
                     break;
                     case 'check' :
-
+                        $transactionUpdate = $this->update_check($data, $recurringData);
                     break;
                     case 'bill' :
-
+                        $transactionUpdate = $this->update_bill($data, $recurringData);
                     break;
                     case 'purchase-order' :
-
+                        $transactionUpdate = $this->update_purchase_order($data, $recurringData);
                     break;
                     case 'vendor-credit' :
-
+                        $transactionUpdate = $this->update_vendor_credit($data, $recurringData);
                     break;
                     case 'credit-card-credit' :
-
+                        $transactionUpdate = $this->update_credit_card_credit($data, $recurringData);
                     break;
                 }
             }
@@ -910,6 +916,653 @@ class Recurring_transactions extends MY_Controller {
         }
 
         return $transactionUpdate;
+    }
+
+    private function update_expense($data, $recurringData)
+    {
+        $payee = explode('-', $data['payee']);
+        $expenseData = [
+            'payee_type' => $payee[0],
+            'payee_id' => $payee[1],
+            'payment_account_id' => $data['expense_payment_account'],
+            'payment_method_id' => $data['payment_method'],
+            'permit_no' => $data['permit_number'] === "" ? null : $data['permit_number'],
+            'memo' => $data['memo'],
+            'total_amount' => $data['total_amount']
+        ];
+
+        $transactionUpdate = $this->vendors_model->update_expense($recurringData->txn_id, $expenseData);
+
+        if ($transactionUpdate) {
+            $attachments = $this->accounting_attachments_model->get_attachments('Expense', $recurringData->txn_id);
+            $tags = $this->tags_model->get_transaction_tags('Expense', $recurringData->txn_id);
+
+            if(count($tags) > 0) {
+                foreach($tags as $key => $tag) {
+                    if(!isset($data['tags']) || !isset($data['tags'][$key])) {
+                        $this->tags_model->unlink_tag(['transaction_type' => 'Expense', 'tag_id' => $tag->id, 'transaction_id' => $recurringData->txn_id]);
+                    }
+                }
+            }
+
+            if(isset($data['tags']) && is_array($data['tags'])) {
+                $order = 1;
+                foreach($data['tags'] as $key => $tagId) {
+                    $linkTagData = [
+                        'transaction_type' => 'Expense',
+                        'transaction_id' => $recurringData->txn_id,
+                        'tag_id' => $tagId,
+                        'order_no' => $order
+                    ];
+
+                    if($tags[$key] === null) {
+                        $linkTagId = $this->tags_model->link_tag($linkTagData);
+                    } else {
+                        $updateOrder = $this->tags_model->update_link($linkTagData);
+                    }
+
+                    $order++;
+                }
+            }
+
+            if(count($attachments) > 0) {
+                foreach($attachments as $attachment) {
+                    if(!isset($data['attachments']) || !in_array($attachment->id, $data['attachments'])) {
+                        $attachmentLink = $this->accounting_attachments_model->get_attachment_link(['type' => 'Expense', 'attachment_id' => $attachment->id, 'linked_id' => $recurringData->txn_id]);
+                        $this->accounting_attachments_model->unlink_attachment($attachmentLink->id);
+                    }
+                }
+            }
+
+            if (isset($data['attachments']) && is_array($data['attachments'])) {
+                $order = 1;
+                foreach ($data['attachments'] as $attachmentId) {
+                    $link = array_filter($attachments, function($v, $k) use ($attachmentId) {
+                        return $v->id === $attachmentId;
+                    }, ARRAY_FILTER_USE_BOTH);
+
+                    if(count($link) > 0) {
+                        $attachmentData = [
+                            'type' => 'Expense',
+                            'attachment_id' => $attachmentId,
+                            'linked_id' => $recurringData->txn_id,
+                            'order_no' => $order
+                        ];
+
+                        $updateOrder = $this->accounting_attachments_model->update_order($attachmentData);
+                    } else {
+                        $linkAttachmentData = [
+                            'type' => 'Expense',
+                            'attachment_id' => $attachmentId,
+                            'linked_id' => $recurringData->txn_id,
+                            'order_no' => $order
+                        ];
+    
+                        $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
+                    }
+
+                    $order++;
+                }
+            }
+
+            $this->update_categories('Expense', $recurringData->txn_id, $data);
+            $this->update_items('Expense', $recurringData->txn_id, $data);
+        }
+
+        return $transactionUpdate;
+    }
+
+    private function update_check($data, $recurringData)
+    {
+        $payee = explode('-', $data['payee']);
+
+        $checkData = [
+            'payee_type' => $payee[0],
+            'payee_id' => $payee[1],
+            'bank_account_id' => $data['bank_account'],
+            'mailing_address' => nl2br($data['mailing_address']),
+            'payment_date' => date("Y-m-d", strtotime($data['payment_date'])),
+            'check_no' => isset($data['print_later']) ? null : $data['check_no'] === '' ? null : $data['check_no'],
+            'to_print' => $data['print_later'],
+            'permit_no' => $data['permit_number'] === "" ? null : $data['permit_number'],
+            'memo' => $data['memo'],
+            'total_amount' => $data['total_amount']
+        ];
+
+        $transactionUpdate = $this->vendors_model->update_check($recurringData->txn_id, $checkData);
+
+        if ($transactionUpdate) {
+            $attachments = $this->accounting_attachments_model->get_attachments('Check', $recurringData->txn_id);
+            $tags = $this->tags_model->get_transaction_tags('Check', $recurringData->txn_id);
+
+            if(count($tags) > 0) {
+                foreach($tags as $key => $tag) {
+                    if(!isset($data['tags']) || !isset($data['tags'][$key])) {
+                        $this->tags_model->unlink_tag(['transaction_type' => 'Check', 'tag_id' => $tag->id, 'transaction_id' => $recurringData->txn_id]);
+                    }
+                }
+            }
+
+            if(isset($data['tags']) && is_array($data['tags'])) {
+                $order = 1;
+                foreach($data['tags'] as $key => $tagId) {
+                    $linkTagData = [
+                        'transaction_type' => 'Check',
+                        'transaction_id' => $recurringData->txn_id,
+                        'tag_id' => $tagId,
+                        'order_no' => $order
+                    ];
+
+                    if($tags[$key] === null) {
+                        $linkTagId = $this->tags_model->link_tag($linkTagData);
+                    } else {
+                        $updateOrder = $this->tags_model->update_link($linkTagData);
+                    }
+
+                    $order++;
+                }
+            }
+
+            if(count($attachments) > 0) {
+                foreach($attachments as $attachment) {
+                    if(!isset($data['attachments']) || !in_array($attachment->id, $data['attachments'])) {
+                        $attachmentLink = $this->accounting_attachments_model->get_attachment_link(['type' => 'Check', 'attachment_id' => $attachment->id, 'linked_id' => $recurringData->txn_id]);
+                        $this->accounting_attachments_model->unlink_attachment($attachmentLink->id);
+                    }
+                }
+            }
+
+            if (isset($data['attachments']) && is_array($data['attachments'])) {
+                $order = 1;
+                foreach ($data['attachments'] as $attachmentId) {
+                    $link = array_filter($attachments, function($v, $k) use ($attachmentId) {
+                        return $v->id === $attachmentId;
+                    }, ARRAY_FILTER_USE_BOTH);
+
+                    if(count($link) > 0) {
+                        $attachmentData = [
+                            'type' => 'Check',
+                            'attachment_id' => $attachmentId,
+                            'linked_id' => $recurringData->txn_id,
+                            'order_no' => $order
+                        ];
+
+                        $updateOrder = $this->accounting_attachments_model->update_order($attachmentData);
+                    } else {
+                        $linkAttachmentData = [
+                            'type' => 'Check',
+                            'attachment_id' => $attachmentId,
+                            'linked_id' => $recurringData->txn_id,
+                            'order_no' => $order
+                        ];
+    
+                        $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
+                    }
+
+                    $order++;
+                }
+            }
+
+            $this->update_categories('Check', $recurringData->txn_id, $data);
+            $this->update_items('Check', $recurringData->txn_id, $data);
+        }
+
+        return $transactionUpdate;
+    }
+
+    private function update_bill($data, $recurringData)
+    {
+        $billData = [
+            'vendor_id' => $data['vendor_id'],
+            'mailing_address' => $data['mailing_address'],
+            'term_id' => $data['term_id'],
+            'permit_no' => $data['permit_number'] === "" ? null : $data['permit_number'],
+            'memo' => $data['memo'],
+            'remaining_balance' => $data['total_amount'],
+            'total_amount' => $data['total_amount']
+        ];
+
+        $transactionUpdate = $this->vendors_model->update_bill($recurringData->txn_id, $billData);
+
+        if ($transactionUpdate) {
+            $attachments = $this->accounting_attachments_model->get_attachments('Bill', $recurringData->txn_id);
+            $tags = $this->tags_model->get_transaction_tags('Bill', $recurringData->txn_id);
+
+            if(count($tags) > 0) {
+                foreach($tags as $key => $tag) {
+                    if(!isset($data['tags']) || !isset($data['tags'][$key])) {
+                        $this->tags_model->unlink_tag(['transaction_type' => 'Bill', 'tag_id' => $tag->id, 'transaction_id' => $recurringData->txn_id]);
+                    }
+                }
+            }
+
+            if(isset($data['tags']) && is_array($data['tags'])) {
+                $order = 1;
+                foreach($data['tags'] as $key => $tagId) {
+                    $linkTagData = [
+                        'transaction_type' => 'Bill',
+                        'transaction_id' => $recurringData->txn_id,
+                        'tag_id' => $tagId,
+                        'order_no' => $order
+                    ];
+
+                    if($tags[$key] === null) {
+                        $linkTagId = $this->tags_model->link_tag($linkTagData);
+                    } else {
+                        $updateOrder = $this->tags_model->update_link($linkTagData);
+                    }
+
+                    $order++;
+                }
+            }
+
+            if(count($attachments) > 0) {
+                foreach($attachments as $attachment) {
+                    if(!isset($data['attachments']) || !in_array($attachment->id, $data['attachments'])) {
+                        $attachmentLink = $this->accounting_attachments_model->get_attachment_link(['type' => 'Bill', 'attachment_id' => $attachment->id, 'linked_id' => $recurringData->txn_id]);
+                        $this->accounting_attachments_model->unlink_attachment($attachmentLink->id);
+                    }
+                }
+            }
+
+            if (isset($data['attachments']) && is_array($data['attachments'])) {
+                $order = 1;
+                foreach ($data['attachments'] as $attachmentId) {
+                    $link = array_filter($attachments, function($v, $k) use ($attachmentId) {
+                        return $v->id === $attachmentId;
+                    }, ARRAY_FILTER_USE_BOTH);
+
+                    if(count($link) > 0) {
+                        $attachmentData = [
+                            'type' => 'Bill',
+                            'attachment_id' => $attachmentId,
+                            'linked_id' => $recurringData->txn_id,
+                            'order_no' => $order
+                        ];
+
+                        $updateOrder = $this->accounting_attachments_model->update_order($attachmentData);
+                    } else {
+                        $linkAttachmentData = [
+                            'type' => 'Bill',
+                            'attachment_id' => $attachmentId,
+                            'linked_id' => $recurringData->txn_id,
+                            'order_no' => $order
+                        ];
+    
+                        $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
+                    }
+
+                    $order++;
+                }
+            }
+
+            $this->update_categories('Bill', $recurringData->txn_id, $data);
+            $this->update_items('Bill', $recurringData->txn_id, $data);
+        }
+
+        return $transactionUpdate;
+    }
+
+    private function update_purchase_order($data, $recurringData)
+    {
+        $purchOrder = [
+            'vendor_id' => $data['vendor_id'],
+            'email' => $data['email'],
+            'permit_no' => $data['permit_number'] === "" ? null : $data['permit_number'],
+            'mailing_address' => nl2br($data['mailing_address']),
+            'customer_id' => $data['customer'],
+            'shipping_address' => nl2br($data['shipping_address']),
+            'ship_via' => $data['ship_via'],
+            'message_to_vendor' => $data['message_to_vendor'],
+            'memo' => $data['memo'],
+            'total_amount' => $data['total_amount']
+        ];
+
+        $transactionUpdate = $this->vendors_model->update_purchase_order($recurringData->txn_id, $purchOrder);
+
+        if ($transactionUpdate) {
+            $attachments = $this->accounting_attachments_model->get_attachments('Purchase Order', $recurringData->txn_id);
+            $tags = $this->tags_model->get_transaction_tags('Purchase Order', $recurringData->txn_id);
+
+            if(count($tags) > 0) {
+                foreach($tags as $key => $tag) {
+                    if(!isset($data['tags']) || !isset($data['tags'][$key])) {
+                        $this->tags_model->unlink_tag(['transaction_type' => 'Purchase Order', 'tag_id' => $tag->id, 'transaction_id' => $recurringData->txn_id]);
+                    }
+                }
+            }
+
+            if(isset($data['tags']) && is_array($data['tags'])) {
+                $order = 1;
+                foreach($data['tags'] as $key => $tagId) {
+                    $linkTagData = [
+                        'transaction_type' => 'Purchase Order',
+                        'transaction_id' => $recurringData->txn_id,
+                        'tag_id' => $tagId,
+                        'order_no' => $order
+                    ];
+
+                    if($tags[$key] === null) {
+                        $linkTagId = $this->tags_model->link_tag($linkTagData);
+                    } else {
+                        $updateOrder = $this->tags_model->update_link($linkTagData);
+                    }
+
+                    $order++;
+                }
+            }
+
+            if(count($attachments) > 0) {
+                foreach($attachments as $attachment) {
+                    if(!isset($data['attachments']) || !in_array($attachment->id, $data['attachments'])) {
+                        $attachmentLink = $this->accounting_attachments_model->get_attachment_link(['type' => 'Purchase Order', 'attachment_id' => $attachment->id, 'linked_id' => $recurringData->txn_id]);
+                        $this->accounting_attachments_model->unlink_attachment($attachmentLink->id);
+                    }
+                }
+            }
+
+            if (isset($data['attachments']) && is_array($data['attachments'])) {
+                $order = 1;
+                foreach ($data['attachments'] as $attachmentId) {
+                    $link = array_filter($attachments, function($v, $k) use ($attachmentId) {
+                        return $v->id === $attachmentId;
+                    }, ARRAY_FILTER_USE_BOTH);
+
+                    if(count($link) > 0) {
+                        $attachmentData = [
+                            'type' => 'Purchase Order',
+                            'attachment_id' => $attachmentId,
+                            'linked_id' => $recurringData->txn_id,
+                            'order_no' => $order
+                        ];
+
+                        $updateOrder = $this->accounting_attachments_model->update_order($attachmentData);
+                    } else {
+                        $linkAttachmentData = [
+                            'type' => 'Purchase Order',
+                            'attachment_id' => $attachmentId,
+                            'linked_id' => $recurringData->txn_id,
+                            'order_no' => $order
+                        ];
+    
+                        $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
+                    }
+
+                    $order++;
+                }
+            }
+
+            $this->update_categories('Purchase Order', $recurringData->txn_id, $data);
+            $this->update_items('Purchase Order', $recurringData->txn_id, $data);
+        }
+
+        return $transactionUpdate;
+    }
+
+    private function update_vendor_credit($data, $recurringData)
+    {
+        $vCredit = [
+            'vendor_id' => $data['vendor_id'],
+            'mailing_address' => $data['mailing_address'],
+            'permit_no' => $data['permit_number'] === "" ? null : $data['permit_number'],
+            'memo' => $data['memo'],
+            'total_amount' => $data['total_amount']
+        ];
+
+        $transactionUpdate = $this->vendors_model->update_vendor_credit($recurringData->txn_id, $vCredit);
+
+        if ($transactionUpdate) {
+            $attachments = $this->accounting_attachments_model->get_attachments('Vendor Credit', $recurringData->txn_id);
+            $tags = $this->tags_model->get_transaction_tags('Vendor Credit', $recurringData->txn_id);
+
+            if(count($tags) > 0) {
+                foreach($tags as $key => $tag) {
+                    if(!isset($data['tags']) || !isset($data['tags'][$key])) {
+                        $this->tags_model->unlink_tag(['transaction_type' => 'Vendor Credit', 'tag_id' => $tag->id, 'transaction_id' => $recurringData->txn_id]);
+                    }
+                }
+            }
+
+            if(isset($data['tags']) && is_array($data['tags'])) {
+                $order = 1;
+                foreach($data['tags'] as $key => $tagId) {
+                    $linkTagData = [
+                        'transaction_type' => 'Vendor Credit',
+                        'transaction_id' => $recurringData->txn_id,
+                        'tag_id' => $tagId,
+                        'order_no' => $order
+                    ];
+
+                    if($tags[$key] === null) {
+                        $linkTagId = $this->tags_model->link_tag($linkTagData);
+                    } else {
+                        $updateOrder = $this->tags_model->update_link($linkTagData);
+                    }
+
+                    $order++;
+                }
+            }
+
+            if(count($attachments) > 0) {
+                foreach($attachments as $attachment) {
+                    if(!isset($data['attachments']) || !in_array($attachment->id, $data['attachments'])) {
+                        $attachmentLink = $this->accounting_attachments_model->get_attachment_link(['type' => 'Vendor Credit', 'attachment_id' => $attachment->id, 'linked_id' => $recurringData->txn_id]);
+                        $this->accounting_attachments_model->unlink_attachment($attachmentLink->id);
+                    }
+                }
+            }
+
+            if (isset($data['attachments']) && is_array($data['attachments'])) {
+                $order = 1;
+                foreach ($data['attachments'] as $attachmentId) {
+                    $link = array_filter($attachments, function($v, $k) use ($attachmentId) {
+                        return $v->id === $attachmentId;
+                    }, ARRAY_FILTER_USE_BOTH);
+
+                    if(count($link) > 0) {
+                        $attachmentData = [
+                            'type' => 'Vendor Credit',
+                            'attachment_id' => $attachmentId,
+                            'linked_id' => $recurringData->txn_id,
+                            'order_no' => $order
+                        ];
+
+                        $updateOrder = $this->accounting_attachments_model->update_order($attachmentData);
+                    } else {
+                        $linkAttachmentData = [
+                            'type' => 'Vendor Credit',
+                            'attachment_id' => $attachmentId,
+                            'linked_id' => $recurringData->txn_id,
+                            'order_no' => $order
+                        ];
+    
+                        $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
+                    }
+
+                    $order++;
+                }
+            }
+
+            $this->update_categories('Vendor Credit', $recurringData->txn_id, $data);
+            $this->update_items('Vendor Credit', $recurringData->txn_id, $data);
+        }
+
+        return $transactionUpdate;
+    }
+
+    private function update_credit_card_credit($data, $recurringData)
+    {
+        $payee = explode('-', $data['payee']);
+
+        $creditData = [
+            'payee_type' => $payee[0],
+            'payee_id' => $payee[1],
+            'bank_credit_account_id' => $data['bank_credit_account'],
+            'permit_no' => $data['permit_number'] === "" ? null : $data['permit_number'],
+            'memo' => $data['memo'],
+            'total_amount' => $data['total_amount']
+        ];
+
+        $transactionUpdate = $this->vendors_model->update_credit_card_credit($recurringData->txn_id, $creditData);
+
+        if ($transactionUpdate) {
+            $attachments = $this->accounting_attachments_model->get_attachments('CC Credit', $recurringData->txn_id);
+            $tags = $this->tags_model->get_transaction_tags('CC Credit', $recurringData->txn_id);
+
+            if(count($tags) > 0) {
+                foreach($tags as $key => $tag) {
+                    if(!isset($data['tags']) || !isset($data['tags'][$key])) {
+                        $this->tags_model->unlink_tag(['transaction_type' => 'CC Credit', 'tag_id' => $tag->id, 'transaction_id' => $recurringData->txn_id]);
+                    }
+                }
+            }
+
+            if(isset($data['tags']) && is_array($data['tags'])) {
+                $order = 1;
+                foreach($data['tags'] as $key => $tagId) {
+                    $linkTagData = [
+                        'transaction_type' => 'CC Credit',
+                        'transaction_id' => $recurringData->txn_id,
+                        'tag_id' => $tagId,
+                        'order_no' => $order
+                    ];
+
+                    if($tags[$key] === null) {
+                        $linkTagId = $this->tags_model->link_tag($linkTagData);
+                    } else {
+                        $updateOrder = $this->tags_model->update_link($linkTagData);
+                    }
+
+                    $order++;
+                }
+            }
+
+            if(count($attachments) > 0) {
+                foreach($attachments as $attachment) {
+                    if(!isset($data['attachments']) || !in_array($attachment->id, $data['attachments'])) {
+                        $attachmentLink = $this->accounting_attachments_model->get_attachment_link(['type' => 'CC Credit', 'attachment_id' => $attachment->id, 'linked_id' => $recurringData->txn_id]);
+                        $this->accounting_attachments_model->unlink_attachment($attachmentLink->id);
+                    }
+                }
+            }
+
+            if (isset($data['attachments']) && is_array($data['attachments'])) {
+                $order = 1;
+                foreach ($data['attachments'] as $attachmentId) {
+                    $link = array_filter($attachments, function($v, $k) use ($attachmentId) {
+                        return $v->id === $attachmentId;
+                    }, ARRAY_FILTER_USE_BOTH);
+
+                    if(count($link) > 0) {
+                        $attachmentData = [
+                            'type' => 'CC Credit',
+                            'attachment_id' => $attachmentId,
+                            'linked_id' => $recurringData->txn_id,
+                            'order_no' => $order
+                        ];
+
+                        $updateOrder = $this->accounting_attachments_model->update_order($attachmentData);
+                    } else {
+                        $linkAttachmentData = [
+                            'type' => 'CC Credit',
+                            'attachment_id' => $attachmentId,
+                            'linked_id' => $recurringData->txn_id,
+                            'order_no' => $order
+                        ];
+    
+                        $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
+                    }
+
+                    $order++;
+                }
+            }
+
+            $this->update_categories('Credit Card Credit', $recurringData->txn_id, $data);
+            $this->update_items('Credit Card Credit', $recurringData->txn_id, $data);
+        }
+
+        return $transactionUpdate;
+    }
+
+    private function update_categories($transactionType, $transactionId, $data)
+    {
+        $categories = $this->expenses_model->get_transaction_categories($transactionId, $transactionType);
+
+        if ($data['expense_account'] !== null) {
+            foreach ($data['expense_account'] as $index => $value) {
+                $categoryDetails = [
+                    'expense_account_id' => $value,
+                    'category' => $data['category'][$index],
+                    'description' => $data['description'][$index],
+                    'amount' => $data['category_amount'][$index],
+                    'billable' => $data['category_billable'][$index],
+                    'markup_percentage' => $data['category_markup'][$index],
+                    'tax' => $data['category_tax'][$index],
+                    'customer_id' => $data['category_customer'][$index],
+                ];
+
+                if (!is_null($categories[$index])) {
+                    $this->vendors_model->update_transaction_category_details($categories[$index]->id, $categoryDetails);
+                } else {
+                    $categoryDetails['transaction_type'] = $transactionType;
+                    $categoryDetails['transaction_id'] = $transactionId;
+
+                    $details = [
+                        $categoryDetails
+                    ];
+
+                    $this->expenses_model->insert_vendor_transaction_categories($details);
+                }
+            }
+        }
+
+        if (count($categories) > 0) {
+            foreach ($categories as $index => $category) {
+                if ($data['expense_account'] === null || $data['expense_account'][$index] === null) {
+                    $this->vendors_model->delete_transaction_category($category->id, $transactionType);
+                }
+            }
+        }
+    }
+
+    private function update_items($transactionType, $transactionId, $data)
+    {
+        $items = $this->expenses_model->get_transaction_items($transactionId, $transactionType);
+
+        if ($data['item'] !== null) {
+            foreach ($data['item'] as $index => $value) {
+                $itemDetails = [
+                    'item_id' => $value,
+                    'location_id' => $data['location'][$index],
+                    'quantity' => $data['quantity'][$index],
+                    'rate' => $data['item_amount'][$index],
+                    'discount' => $data['discount'][$index],
+                    'tax' => $data['item_tax'][$index],
+                    'total' => $data['item_total'][$index]
+                ];
+
+                if (!is_null($items[$index])) {
+                    $this->vendors_model->update_transaction_item($items[$index]->id, $itemDetails);
+                } else {
+                    $itemDetails['transaction_type'] = $transactionType;
+                    $itemDetails['transaction_id'] = $transactionId;
+
+                    $details = [
+                        $itemDetails
+                    ];
+
+                    $this->expenses_model->insert_vendor_transaction_items($details);
+                }
+            }
+        }
+
+        if (count($items) > 0) {
+            foreach ($items as $index => $item) {
+                if ($data['item'] === null || $data['item'][$index] === null) {
+                    $this->vendors_model->delete_transaction_item($item->id, $transactionType);
+                }
+            }
+        }
     }
 
     public function print()

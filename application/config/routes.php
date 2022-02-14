@@ -363,6 +363,7 @@ $route['accounting/download-purchase-order-pdf/(:any)'] = 'accounting_modals/dow
 $route['accounting/send-purchase-order-email-modal/(:any)'] = 'accounting_modals/po_send_email_modal/$1';
 $route['accounting/send-purchase-order-email/(:any)']['post'] = 'accounting_modals/send_purchase_order_email/$1';
 $route['accounting/get-timesheet-activities']['post'] = 'accounting_modals/get_timesheet_activities';
+$route['accounting/copy-transaction/(:any)/(:any)'] = 'accounting_modals/copy_transaction/$1/$2';
 
 $route['accounting/lists'] = 'accounting/lists';
 

@@ -121,7 +121,7 @@
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="payment_date">Payment date</label>
-                                                <input type="text" name="payment_date" id="payment_date" class="form-control date" value="<?=isset($expense) ? date("m/d/Y", strtotime($expense->payment_date)) : date("m/d/Y")?>" required>
+                                                <input type="text" name="payment_date" id="payment_date" class="form-control date" value="<?=isset($expense) ? ($expense->payment_date !== "" && !is_null($expense->payment_date) ? date("m/d/Y", strtotime($expense->payment_date)) : "") : date("m/d/Y")?>" required>
                                             </div>
                                         </div>
                                         <div class="col-md-3">

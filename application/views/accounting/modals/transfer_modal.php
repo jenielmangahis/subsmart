@@ -37,6 +37,14 @@
                             <div class="card p-0 m-0" style="min-height: 100%">
                                 <div class="card-body" style="padding-bottom: 1.25rem">
                                     <div class="row">
+                                        <?php if($is_copy) : ?>
+                                        <div class="col-md-12">
+                                            <div class="alert alert-info alert-dismissible mb-4" role="alert">
+                                                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                                <h6 class="mt-0">This is a copy</h6>
+                                            </div>
+                                        </div>
+                                        <?php endif; ?>
                                         <div class="col-md-6">
                                             <div class="form-group w-50">
                                                 <label for="transfer_from_account">Transfer Funds From</label>
@@ -51,7 +59,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="transferFromBalance">Balance</label>
-                                                <h3><?=str_replace('$-', '-$', number_format(floatval($transfer->transfer_from->balance), 2, '.', ','))?></h3>
+                                                <h3><?=str_replace('$-', '-$', '$'.number_format(floatval($transfer->transfer_from->balance), 2, '.', ','))?></h3>
                                             </div>
                                         </div>
                                     </div>
@@ -71,7 +79,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="transferToBalance">Balance</label>
-                                                <h3><?=str_replace('$-', '-$', number_format(floatval($transfer->transfer_to->balance), 2, '.', ','))?></h3>
+                                                <h3><?=str_replace('$-', '-$', '$'.number_format(floatval($transfer->transfer_to->balance), 2, '.', ','))?></h3>
                                             </div>
                                         </div>
                                     </div>
@@ -87,7 +95,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group w-50">
                                                 <label for="date">Date</label>
-                                                <input type="text" class="form-control date" name="date" id="date" value="<?=!isset($transfer) ? date('m/d/Y') : date('m/d/Y', strtotime($transfer->transfer_date))?>"/>
+                                                <input type="text" class="form-control date" name="date" id="date" value="<?=!isset($transfer) ? date('m/d/Y') : ($transfer->transfer_date !== "" && !is_null($transfer->transfer_date) ? date("m/d/Y", strtotime($transfer->transfer_date)) : "")?>"/>
                                             </div>
                                         </div>
                                     </div>

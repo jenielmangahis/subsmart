@@ -176,7 +176,7 @@
                                         <div class="col-md-2">
                                             <div class="form-group">
                                                 <label for="bill_date">Bill date</label>
-                                                <input type="text" name="bill_date" id="bill_date" class="form-control date" value="<?=isset($bill) ? date("m/d/Y", strtotime($bill->bill_date)) : date("m/d/Y")?>" required>
+                                                <input type="text" name="bill_date" id="bill_date" class="form-control date" value="<?=isset($bill) ? ($bill->bill_date !== "" && !is_null($bill->bill_date) ? date("m/d/Y", strtotime($bill->bill_date)) : "") : date("m/d/Y")?>" required>
                                             </div>
                                         </div>
                                         <div class="col-md-2">

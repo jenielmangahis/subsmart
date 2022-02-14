@@ -24,7 +24,7 @@
                                 </div>
                             </div>
                             <h4 class="modal-title">
-                                Purchase Order <?=isset($purchaseOrder) ? "#$purchaseOrder->purchase_order_no" : ""?>
+                                Purchase Order <span><?=isset($purchaseOrder) ? "#$purchaseOrder->purchase_order_no" : ""?></span>
                             </h4>
                         </div>
                     </div>
@@ -123,7 +123,7 @@
                                         <div class="col-md-2">
                                             <div class="form-group">
                                                 <label for="purchase_order_date">Purchase order date</label>
-                                                <input type="text" name="purchase_order_date" id="purchase_order_date" class="form-control date" value="<?=isset($purchaseOrder) ? date("m/d/Y", strtotime($purchaseOrder->purchase_order_date)) : date("m/d/Y")?>">
+                                                <input type="text" name="purchase_order_date" id="purchase_order_date" class="form-control date" value="<?=isset($purchaseOrder) ? ($purchaseOrder->purchase_order_date !== "" && !is_null($purchaseOrder->purchase_order_date) ? date("m/d/Y", strtotime($purchaseOrder->purchase_order_date)) : "") : date("m/d/Y")?>">
                                             </div>
                                             <div class="form-group">
                                                 <label for="ship_via">Ship via</label>
