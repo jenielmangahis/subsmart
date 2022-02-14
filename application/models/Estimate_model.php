@@ -377,6 +377,7 @@ class Estimate_model extends MY_Model
     {
 
         $this->db->select('estimates.id, estimates.estimate_number, estimates.job_name, estimates.estimate_eqpt_cost, estimates.user_id, estimates.estimate_date, estimates.customer_id, estimates.company_id, estimates.status');
+        $this->db->join('acs_profile', "estimates.customer_id = acs_profile.prof_id", 'left');
 
 //        $this->db->select("*");
         $this->db->from($this->table);
@@ -392,10 +393,10 @@ class Estimate_model extends MY_Model
                 $this->db->where('estimates.status', $filters['status']);
                 //$this->db->where('status', array_search($filters['status'], array_map('strtolower', $items)));
 
-            } elseif (isset($filters['search'])) {
-
-                $this->db->join('customers', "customers.id = estimates.customer_id");
-                $this->db->like('customers.contact_name', $filters['search']);
+            } elseif (isset($filters['search'])) { 
+                $this->db->or_like('acs_profile.first_name', trim($filters['search']));
+                $this->db->or_like('acs_profile.last_name', trim($filters['search']));
+                $this->db->or_like('estimates.estimate_number', trim($filters['search']));
             } elseif (isset($filters['order'])) {
 
                 switch ($filters['order']) {
@@ -404,8 +405,8 @@ class Estimate_model extends MY_Model
                         $this->db->order_by('created_at', 'DESC');
                         break;
 
-                    case 'added-asc':
-                        $this->db->order_by('created_at');
+                    case 'added-asc':                    
+                        $this->db->order_by('created_at', 'ASC');
                         break;
 
                     case 'date-accepted-desc':
@@ -415,11 +416,27 @@ class Estimate_model extends MY_Model
                     case 'date-accepted-asc':
                         $this->db->order_by("(CASE status WHEN '" . ESTIMATE_STATUS_ACCEPTED . "' THEN 1 ELSE 0 END), date_issued ASC");
                         break;
+
+                    case 'number-asc':
+                        $this->db->order_by('estimate_number', 'ASC');
+                        break;
+
+                    case 'number-desc':
+                        $this->db->order_by('estimate_number', 'DESC');
+                        break;
+
+                    case 'amount-asc':
+                        $this->db->order_by('grand_total', 'ASC');
+                        break;
+
+                    case 'amount-desc':
+                        $this->db->order_by('grand_total', 'DESC');
+                        break;
                 }
             }
         }
         //
-        if( $role_id > 2 ){
+        if( $role_id > 2 ){            
             $this->db->where('estimates.company_id', $company_id);
         }
 
@@ -434,10 +451,8 @@ class Estimate_model extends MY_Model
         $results = $query->result();
         $estimate_costs = array();
 
-        if (!empty($filters['order'])) {
-
-            if (($filters['order'] === 'amount-asc') || ($filters['order'] === 'amount-desc')) {
-
+        if (!empty($filters['order'])) {            
+            if (($filters['order'] === 'amount-asc') || ($filters['order'] === 'amount-desc')) {                
                 //
                 foreach ($results as $result) {
 

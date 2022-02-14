@@ -136,7 +136,7 @@
                                         <div class="col-md-2">
                                             <div class="form-group">
                                                 <label for="payment_date">Payment date</label>
-                                                <input type="text" name="payment_date" id="payment_date" class="form-control date" value="<?=isset($check) ? date("m/d/Y", strtotime($check->payment_date)) : date("m/d/Y")?>" required>
+                                                <input type="text" name="payment_date" id="payment_date" class="form-control date" value="<?=isset($check) ? ($check->payment_date !== "" && !is_null($check->payment_date) ? date("m/d/Y", strtotime($check->payment_date)) : "") : date("m/d/Y")?>" required>
                                             </div>
                                         </div>
                                         <div class="col-md-2"></div>

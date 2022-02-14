@@ -111,7 +111,7 @@
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="payment_date">Payment date</label>
-                                                <input type="text" name="payment_date" id="payment_date" class="form-control date" value="<?=isset($ccCredit) ? date("m/d/Y", strtotime($ccCredit->payment_date)) : date("m/d/Y")?>" required>
+                                                <input type="text" name="payment_date" id="payment_date" class="form-control date" value="<?=isset($ccCredit) ? ($ccCredit->payment_date !== "" && !is_null($ccCredit->payment_date) ? date("m/d/Y", strtotime($ccCredit->payment_date)) : "") : date("m/d/Y")?>" required>
                                             </div>
                                         </div>
                                         <div class="col-md-3"></div>

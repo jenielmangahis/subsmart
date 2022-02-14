@@ -363,6 +363,7 @@ $route['accounting/download-purchase-order-pdf/(:any)'] = 'accounting_modals/dow
 $route['accounting/send-purchase-order-email-modal/(:any)'] = 'accounting_modals/po_send_email_modal/$1';
 $route['accounting/send-purchase-order-email/(:any)']['post'] = 'accounting_modals/send_purchase_order_email/$1';
 $route['accounting/get-timesheet-activities']['post'] = 'accounting_modals/get_timesheet_activities';
+$route['accounting/copy-transaction/(:any)/(:any)'] = 'accounting_modals/copy_transaction/$1/$2';
 
 $route['accounting/lists'] = 'accounting/lists';
 
@@ -696,6 +697,7 @@ $route['before-after/save-before-after'] = 'before_after/saveBeforeAfter';
 $route['before-after/update-before-after'] = 'before_after/updateBeforeAfter';
 $route['before-after/edit/(:num)'] = 'before_after/edit/$1';
 $route['before-after/delete/(:num)'] = 'before_after/delete/$1';
+$route['before-after/delete_image'] = 'before_after/delete_image';
 
 //wizard
 $route['wizard/show_app'] = 'wizard/show_app';

@@ -28,7 +28,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             </div>
                             <div class="pl-3 pr-3 mt-0 row">
                                 <div class="col mb-4 left alert alert-warning mt-0 mb-2">
-                                <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;"></span>
+                                <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Manage your item categories</span>
                                 </div>
                             </div>
                             <div class="row">
@@ -53,9 +53,15 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                             <span class="btn-label">Manage <i class="fa fa-caret-down fa-sm" style="margin-left:10px;"></i></span></span>
                                                         </button>
                                                         <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
-                                                            <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0)" class="editItemBtn"  data-id="<?= $item->id; ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a></li>
+                                                            <li role="presentation">
+                                                                <a role="menuitem" href="<?php echo url('inventory/item_groups/edit/'.$item->item_categories_id); ?>">
+                                                                    <span class="fa fa-pencil-square-o icon"></span> Edit
+                                                                </a>
+                                                            </li>
                                                             <li role="separator" class="divider"></li>
-                                                            <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo base_url('inventory/delete?id='.$item->id); ?>" class="deleteJobCurrentForm"><span class="fa fa-trash-o icon"></span> Delete</a></li>
+                                                            <li role="presentation">
+                                                                <a role="menuitem" data-id="<?php echo $item->item_categories_id; ?>" href="javascript:void(0);" class="delete-item-category"><span class="fa fa-trash-o icon"></span> Delete</a>
+                                                            </li>
                                                         </ul>
                                                     </div>
                                                 </td>
@@ -76,5 +82,53 @@ defined('BASEPATH') or exit('No direct script access allowed');
     <!-- page wrapper end -->
 <?php include viewPath('includes/footer'); ?>
 <script>
-    $("#item_groups_table").DataTable({});
+    $(function(){
+        $("#item_groups_table").DataTable({});
+        $(".delete-item-category").on("click", function(event) {
+            var ID = $(this).attr('data-id');
+            // alert(ID);
+            Swal.fire({
+                title: 'Are your sure you want to delete selected item category?',
+                text: "",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#32243d',
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No',
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        type: "POST",
+                        dataType:"json",
+                        url: base_url + "/inventory/item_groups/delete",
+                        data: { id: ID}, // serializes the form's elements.
+                        success: function(data) {
+                            if (data.is_success == 1) {
+                                Swal.fire({
+                                  title: 'Great!',
+                                  text: 'Item category was successfully deleted.',
+                                  icon: 'success',
+                                  showCancelButton: false,
+                                  confirmButtonColor: '#32243d',
+                                  cancelButtonColor: '#d33',
+                                  confirmButtonText: 'Ok'
+                                }).then((result) => {
+                                  location.href = base_url + "/inventory/item_groups";
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error!',
+                                    confirmButtonColor: '#32243d',
+                                    html: 'Cannot find data'
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+        });
+    });
+    
 </script>

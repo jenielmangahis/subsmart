@@ -8506,7 +8506,6 @@ class Accounting extends MY_Controller
         $mail->isSMTP();
         $mail->getSMTPInstance()->Timelimit = 5;
         $mail->Host = $server;
-        $mail->SMTPDebug = 0;
         $mail->SMTPAuth = true;
         $mail->Username = $username;
         $mail->Password = $password;
@@ -8537,6 +8536,11 @@ class Accounting extends MY_Controller
             $data->error = 'Mailer Error: ' . $mail->ErrorInfo;
             $data->status = "error";
         }
+        // if (!$mail->Send()) {
+        //     echo 'Message could not be sent.';
+        //     echo 'Mailer Error: ' . $mail->ErrorInfo;
+        //     exit;
+        // }
 
         echo json_encode($data);
     }

@@ -639,9 +639,9 @@ $(function() {
     $(document).on('keyup', 'div#journalEntryModal input#journalNo', function() {
         if ($(this).val() !== "") {
             var val = $(this).val();
-            $('div#journalEntryModal h4.modal-title').html(`Journal Entry #${val}`);
+            $('div#journalEntryModal h4.modal-title span').html(`#${val}`);
         } else {
-            $('div#journalEntryModal h4.modal-title').html('Journal Entry');
+            $('div#journalEntryModal h4.modal-title span').html('');
         }
     });
 
@@ -5165,6 +5165,14 @@ $(function() {
             }
         });
     });
+
+    $(document).on('click', '#modal-container #modal-form .modal .modal-footer #save-template', function(e) {
+        e.preventDefault();
+
+        submitType = 'save-and-close';
+
+        $('#modal-form').submit();
+    });
 });
 
 const convertToDecimal = (el) => {
@@ -6316,7 +6324,7 @@ const makeRecurring = (modalName) => {
             modalId = 'depositModal';
             $(templateFields).insertBefore($(`#${modalId} div.modal-body div.row.bank-account-details`));
             $(intervalFields).insertAfter($(`#${modalId} div.modal-body div.row.bank-account-details`));
-            // $(`div#${modalId} div.modal-body div.row.bank-account-details`).remove();
+            $(`#${modalId} .bank-account-details #date`).parent().parent().parent().remove();
         break;
         case 'transfer' :
             modalId = 'transferModal';
@@ -6331,6 +6339,7 @@ const makeRecurring = (modalName) => {
             $(`div#${modalId} div.modal-body .card-body`).prepend(intervalFields);
             $(`div#${modalId} div.modal-body .card-body`).prepend(templateFields);
             $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Journal Entry');
+            $(`#${modalId} div.modal-header .modal-title span`).html('');
         break;
         case 'expense' :
             modalId = 'expenseModal';
@@ -6395,7 +6404,7 @@ const makeRecurring = (modalName) => {
     //     $(`div#${modalId} div.modal-body .card-body`).prepend(res);
     // }
     $(`div#${modalId} div.modal-footer div.row.w-100 div:nth-child(2)`).html('');
-    $(`div#${modalId} div.modal-footer div.row.w-100 div:last-child()`).html('<button class="btn btn-success float-right" type="submit">Save template</button>');
+    $(`div#${modalId} div.modal-footer div.row.w-100 div:last-child()`).html('<button class="btn btn-success float-right" id="save-template">Save template</button>');
 
     recurrInterval = $(`div#${modalId} div.modal-body div.recurring-interval-container`).html();
     recurringDays = $(`div#${modalId} div.modal-body select[name="recurring_day"]`).html();

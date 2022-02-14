@@ -134,7 +134,8 @@ class Inventory extends MY_Controller
         } else {
 
             if( $role_id == 1 || $role_id == 2 ){
-                $arg = array('type'=>ucfirst($type), 'is_active'=>1);
+                //$arg = array('type'=>ucfirst($type), 'is_active'=>1);
+                $arg = array('company_id'=>$comp_id, 'type'=>ucfirst($type), 'is_active'=>1);
             }else{
                 $arg = array('company_id'=>$comp_id, 'type'=>ucfirst($type), 'is_active'=>1);
             }
@@ -154,7 +155,6 @@ class Inventory extends MY_Controller
     {
         $comp_id = logged('company_id');
 
-        // get color settings
         $get_items_categories = array(
             'where' => array('company_id' => $comp_id),
             'table' => 'item_categories',
@@ -325,6 +325,28 @@ class Inventory extends MY_Controller
         }
     }
 
+    public function ajax_create_item_category()
+    {
+        $this->load->model('Vendor_model');
+
+        $post = $this->input->post();
+        $cid  = logged('company_id');
+
+        $data = array(
+            'company_id' => $cid,
+            'name' => $this->input->post('category_name'),
+            'description' => $this->input->post('category_description'),
+            'parent_id' => $cid
+        );
+
+        $this->db->insert($this->items_model->table_categories, $data);
+
+        $json_data = ['is_success' => 1];
+
+        echo json_encode($json_data);
+
+    }
+
     public function  save_new_item()
     {
         $input = $this->input->post();
@@ -364,13 +386,18 @@ class Inventory extends MY_Controller
 
     public function delete()
     {
-        $id = $_POST['id'];
-        $$company_id =  logged('company_id');
+        $post = $this->input->post();
+        $id   = $post['id'];
+        $company_id =  logged('company_id');
         $remove_item = array(
             'where' => array('id' =>$id, 'company_id' => $company_id),
             'table' => 'items'
         );
         if ($this->general->delete_($remove_item)) {
+
+            $this->session->set_flashdata('alert-type', 'success');
+            $this->session->set_flashdata('alert', 'Record was successfully deleted');
+
             echo '1';
         }
     }
@@ -779,6 +806,215 @@ class Inventory extends MY_Controller
         header('Content-Disposition: attachment; filename="' . $filename . '";');
 
         fpassthru($f);
+    }
+
+    public function edit_fee( $id  ){
+        $cid = logged('company_id');
+        $item = $this->items_model->getCompanyItemById($cid, $id);
+        $this->page_data['item'] = $item;
+        $this->load->view('inventory/fees_edit', $this->page_data);
+    }
+
+    public function update_fees(){
+        $post = $this->input->post();
+        $cid  = logged('company_id');
+        $item = $this->items_model->getCompanyItemById($cid, $post['fid']);
+
+        if( $item ){
+            $data = [
+                'title' => $post['title'],
+                'description' => $post['description'],
+                'price' => $post['price'],
+                'frequency' => $post['frequency']
+            ];
+
+            $this->items_model->update($data, array("id" => $item->id, 'company_id' => $cid));
+
+            $this->session->set_flashdata('alert-type', 'success');
+            $this->session->set_flashdata('alert', 'Record was successfully udpated');
+        }else{
+            $this->session->set_flashdata('message', 'Record not found.');
+            $this->session->set_flashdata('alert_class', 'alert-danger');            
+        }
+
+        redirect('inventory/fees');
+    }
+
+    public function add_vendor()
+    {
+        $this->load->view('inventory/vendor_add', $this->page_data);
+    }
+
+    public function ajax_create_vendor()
+    {
+        $this->load->model('Vendor_model');
+
+        $post = $this->input->post();
+        $cid  = logged('company_id');
+
+        $data = [
+            'company_id' => $cid,
+            'vendor_name' => $post['vendor_name'],
+            'status' => 0,
+            'business_URL' => $post['vendor_website'],
+            'email' => $post['vendor_email'],
+            'mobile' => $post['vendor_mobile'],
+            'phone' => $post['vendor_phone'],
+            'street_address' => $post['vendor_address'],
+            'suite_unit' => $post['vendor_suite_unit'],
+            'city' => $post['vendor_city'],
+            'postal_code' => $post['vendor_postal_code'],
+            'state' => $post['vendor_state']
+        ];
+
+        $this->Vendor_model->create($data);
+
+        $json_data = ['is_success' => 1];
+
+        echo json_encode($json_data);
+
+    }
+
+    public function edit_vendor( $id )
+    {
+        $this->load->model('Vendor_model');
+
+        $cid  = logged('company_id');
+        $vendor = $this->Vendor_model->getByIdAndCompanyId($id, $cid);
+        if( $vendor ){
+            $this->page_data['vendor'] = $vendor;
+            $this->load->view('inventory/vendor_edit', $this->page_data);
+        }else{
+            
+            $this->session->set_flashdata('message', 'Record not found.');
+            $this->session->set_flashdata('alert_class', 'alert-danger');   
+
+            redirect('inventory/vendors');
+        }
+    }
+
+    public function edit_item_category( $id )
+    {
+        $this->load->model('ItemCategory_model');
+
+        $cid  = logged('company_id');
+        $itemCategory = $this->ItemCategory_model->getByIdAndCompanyId($id, $cid);
+        if( $itemCategory ){
+            $this->page_data['itemCategory'] = $itemCategory;
+            $this->load->view('inventory/item_groups_edit', $this->page_data);
+        }else{
+            
+            $this->session->set_flashdata('message', 'Record not found.');
+            $this->session->set_flashdata('alert_class', 'alert-danger');   
+
+            redirect('inventory/item_groups');
+        }
+    }
+
+    public function ajax_update_vendor()
+    {
+        $this->load->model('Vendor_model');
+
+        $is_success = 0;
+
+        $post = $this->input->post();
+        $cid  = logged('company_id');
+
+        $vendor = $this->Vendor_model->getByIdAndCompanyId($post['vid'], $cid);
+        if( $vendor ){
+            $data = [
+                'vendor_name' => $post['vendor_name'],
+                'business_URL' => $post['vendor_website'],
+                'email' => $post['vendor_email'],
+                'mobile' => $post['vendor_mobile'],
+                'phone' => $post['vendor_phone'],
+                'street_address' => $post['vendor_address'],
+                'suite_unit' => $post['vendor_suite_unit'],
+                'city' => $post['vendor_city'],
+                'postal_code' => $post['vendor_postal_code'],
+                'state' => $post['vendor_state']
+            ];
+
+            $this->Vendor_model->updateVendor($post['vid'],$data);
+
+            $is_success = 1;
+        }
+
+        $json_data = ['is_success' => $is_success];
+
+        echo json_encode($json_data);
+
+    }
+
+    public function ajax_update_item_category()
+    {
+        $this->load->model('ItemCategory_model');
+
+        $is_success = 0;
+
+        $post = $this->input->post();
+        $cid  = logged('company_id');
+
+        $itemCategory = $this->ItemCategory_model->getByIdAndCompanyId($post['icid'], $cid);
+        if( $itemCategory ){
+            $data = [
+                'name' => $post['category_name'],
+                'description' => $post['category_description']
+            ];
+
+            $this->ItemCategory_model->updateItemCategory($post['icid'],$data);
+
+            $is_success = 1;
+        }
+
+        $json_data = ['is_success' => $is_success];
+
+        echo json_encode($json_data);
+
+    }
+
+    public function ajax_delete_vendor()
+    {
+        $this->load->model('Vendor_model');
+
+        $is_success = 0;
+
+        $post = $this->input->post();
+        $cid  = logged('company_id');
+
+        $vendor = $this->Vendor_model->getByIdAndCompanyId($post['id'], $cid);
+        if( $vendor ){
+            
+            $this->Vendor_model->deleteByVendorId($post['id']);
+
+            $is_success = 1;
+        }
+
+        $json_data = ['is_success' => $is_success];
+
+        echo json_encode($json_data);
+    }
+
+    public function ajax_delete_item_category()
+    {
+        $this->load->model('ItemCategory_model');
+
+        $is_success = 0;
+
+        $post = $this->input->post();
+        $cid  = logged('company_id');
+
+        $itemCategory = $this->ItemCategory_model->getByIdAndCompanyId($post['id'], $cid);
+        if( $itemCategory ){
+            
+            $this->ItemCategory_model->deleteByItemCategoryId($post['id']);
+
+            $is_success = 1;
+        }
+
+        $json_data = ['is_success' => $is_success];
+
+        echo json_encode($json_data);
     }
 }
 /* End of file items.php */
