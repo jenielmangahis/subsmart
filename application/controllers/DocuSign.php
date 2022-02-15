@@ -1749,6 +1749,10 @@ SQL;
         $results = $this->db->query($query, [logged('id'), $currUserEmail])->result();
         $docfileIds = array_map(function ($result) {return $result->docfile_id;}, $results);
 
+        if (empty($docfileIds)) {
+            return [];
+        }
+
         $this->db->where_in('id', $docfileIds);
         $this->db->order_by('id', 'DESC');
         return $this->db->get('user_docfile')->result();

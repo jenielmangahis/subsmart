@@ -1509,6 +1509,7 @@ class Accounting_modals extends MY_Controller
                 'journal_no' => (!isset($data['template_name'])) ? $data['journal_no'] : null,
                 'journal_date' => (!isset($data['template_name'])) ? date('Y-m-d', strtotime($data['journal_date'])) : null,
                 'memo' => $data['memo'],
+                'recurring' => isset($data['template_name']) ? 1 : null,
                 'created_by' => logged('id'),
                 'status' => 1
             ];
@@ -1730,7 +1731,6 @@ class Accounting_modals extends MY_Controller
                 'company_id' => logged('company_id'),
                 'account_id' => $data['bank_account'],
                 'date' => isset($data['template_name']) ? null : date('Y-m-d', strtotime($data['date'])),
-                // 'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
                 'total_amount' => number_format($totalAmount, 2, '.', ','),
                 'cash_back_account_id' => $data['cash_back_account'],
                 'cash_back_memo' => $data['cash_back_memo'],
@@ -4594,7 +4594,6 @@ class Accounting_modals extends MY_Controller
                 'payment_date' => !isset($data['template_name']) ? date("Y-m-d", strtotime($data['payment_date'])) : null,
                 'ref_no' => $data['ref_no'] === "" ? null : $data['ref_no'],
                 'permit_no' => $data['permit_number'] === "" ? null : $data['permit_number'],
-                // 'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
                 'memo' => $data['memo'],
                 'total_amount' => $data['total_amount'],
                 'recurring' => isset($data['template_name']) ? 1 : null,

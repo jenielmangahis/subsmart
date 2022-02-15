@@ -335,6 +335,14 @@ class Chart_of_accounts_model extends MY_Model {
 		return $query->result();
 	}
 
+	public function get_receive_payment_registers($accountId)
+	{
+		$this->db->where('deposit_to', $accountId);
+		$this->db->where('status !=', 0);
+		$query = $this->db->get('accounting_receive_payment');
+		return $query->result();
+	}
+
 	public function get_journal_entry_registers($accountId)
 	{
 		$this->db->select('accounting_journal_entry_items.*');
@@ -476,6 +484,14 @@ class Chart_of_accounts_model extends MY_Model {
 		$this->db->where('accounting_bank_deposit.recurring', null);
 		$this->db->join('accounting_bank_deposit', 'accounting_bank_deposit.id = accounting_bank_deposit_funds.bank_deposit_id');
 		$query = $this->db->get();
+		return $query->result();
+	}
+
+	public function get_sales_receipt_registers($accountId)
+	{
+		$this->db->where('deposit_to', $accountId);
+		$this->db->where('status !=', 0);
+		$query= $this->db->get('accounting_sales_receipt');
 		return $query->result();
 	}
 

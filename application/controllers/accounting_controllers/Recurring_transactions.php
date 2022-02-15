@@ -95,8 +95,7 @@ class Recurring_transactions extends MY_Controller {
         $limit = $post['length'];
 
         $where = [
-            'company_id' => getLoggedCompanyID(),
-            'status' => 1
+            'company_id' => getLoggedCompanyID()
         ];
 
         if($post['type'] !== "all") {
@@ -193,7 +192,34 @@ class Recurring_transactions extends MY_Controller {
                     case 'deposit' :
                         $deposit = $this->accounting_bank_deposit_model->getById($item['txn_id'], logged('company_id'));
                         $total = number_format($deposit->total_amount, 2, '.', ',');
-                        $payeeName = '';
+                        $funds = $this->accounting_bank_deposit_model->getFunds($deposit->id);
+                        $flag = true;
+
+                        foreach($funds as $fund) {
+                            if($fund->received_from_key !== $funds[0]->received_from_key && $fund->received_from_id !== $funds[0]->received_from_id) {
+                                $flag = false;
+                                break;
+                            }
+                        }
+
+                        if($flag) {
+                            switch($funds[0]->received_from_key) {
+                                case 'vendor':
+                                    $payee = $this->vendors_model->get_vendor_by_id($funds[0]->received_from_id);
+                                    $payeeName = $payee->display_name;
+                                break;
+                                case 'customer':
+                                    $payee = $this->accounting_customers_model->get_by_id($funds[0]->received_from_id);
+                                    $payeeName = $payee->first_name . ' ' . $payee->last_name;
+                                break;
+                                case 'employee':
+                                    $payee = $this->users_model->getUser($funds[0]->received_from_id);
+                                    $payeeName = $payee->FName . ' ' . $payee->LName;
+                                break;
+                            }
+                        } else {
+                            $payeeName = '';
+                        }
                     break;
                     case 'transfer' :
                         $transfer = $this->accounting_transfer_funds_model->getById($item['txn_id'], logged('company_id'));
@@ -252,9 +278,10 @@ class Recurring_transactions extends MY_Controller {
                             'txn_id' => $item['txn_id'],
                             'recurring_interval' => $interval,
                             'previous_date' => $previous,
-                            'next_date' => $next,
+                            'next_date' => $item['status'] === "2" ? "Paused" : $next,
                             'customer_vendor' => $payeeName,
-                            'amount' => $total
+                            'amount' => $total,
+                            'status' => $item['status']
                         ];
                     }
                 } else {
@@ -266,9 +293,10 @@ class Recurring_transactions extends MY_Controller {
                         'txn_id' => $item['txn_id'],
                         'recurring_interval' => $interval,
                         'previous_date' => $previous,
-                        'next_date' => $next,
+                        'next_date' => $item['status'] === "2" ? "Paused" : $next,
                         'customer_vendor' => $payeeName,
-                        'amount' => $total
+                        'amount' => $total,
+                        'status' => $item['status']
                     ];
                 }
             }
@@ -1775,5 +1803,137 @@ class Recurring_transactions extends MY_Controller {
         $tableHtml .= "</table>";
 
         echo $tableHtml;
+    }
+
+    public function skip_next_date($id)
+    {
+        $transaction = $this->accounting_recurring_transactions_model->getRecurringTransaction($id);
+
+        $currentOccurrence = intval($transaction->current_occurrence) + 1;
+        $every = $transaction->recurr_every;
+        $nextDate = date("m/d/Y", strtotime($transaction->next_date));
+        switch($transaction->recurring_interval) {
+            case 'daily' :
+                $nextDate = date("Y-m-d", strtotime("$nextDate +$every days"));
+            break;
+            case 'weekly' :
+                $nextDate = date("Y-m-d", strtotime("$nextDate +$every weeks"));
+            break;
+            case 'monthly' :
+                if($transaction->recurring_week === 'day') {
+                    $day = $transaction->recurring_day === 'last' ? 't' : $transaction->recurring_day;
+                    $nextDate = date("Y-m-$day", strtotime("$nextDate +$every months"));
+                } else {
+                    $week = $transaction->recurring_week;
+                    $day = $transaction->recurring_day;
+                    $nextDate = date("Y-m-d", strtotime("$week $day ".date("Y-m", strtotime("$nextDate +$every months"))));
+                }
+            break;
+            case 'yearly' :
+                $month = $transaction->recurring_month;
+                $day = $transaction->recurring_day;
+
+                $nextDate = date("Y-$month-$day", strtotime("$nextDate +1 year"));
+            break;
+        }
+
+        if($transaction->end_type === 'after') {
+            if($currentOccurrence === intval($transaction->max_occurrences)) {
+                $nextDate = null;
+            }
+        } else {
+            if($transaction->end_type !== 'none') {
+                if(strtotime($nextDate) > strtotime($transaction->end_date)) {
+                    $nextDate = null;
+                }
+            }
+        }
+
+        $recurringData = [
+            'previous_date' => $transaction->next_date,
+            'next_date' => $nextDate,
+            'current_occurrence' => $currentOccurrence
+        ];
+
+        $update = $this->accounting_recurring_transactions_model->updateRecurringTransaction($transaction->id, $recurringData);
+
+        echo json_encode([
+            'success' => $update ? true : false
+        ]);
+    }
+
+    public function pause($id)
+    {
+        $transaction = $this->accounting_recurring_transactions_model->getRecurringTransaction($id);
+
+        $recurringData = [
+            'status' => 2
+        ];
+
+        $update = $this->accounting_recurring_transactions_model->updateRecurringTransaction($transaction->id, $recurringData);
+
+        echo json_encode([
+            'success' => $update ? true : false
+        ]);
+    }
+
+    public function resume($id)
+    {
+        $transaction = $this->accounting_recurring_transactions_model->getRecurringTransaction($id);
+        $nextDate = $transaction->next_date;
+
+        if(strtotime(date("Y-m-d")) >= strtotime($nextDate)) {
+            $every = $transaction->recurr_every;
+
+            for($i = 0; strtotime(date("Y-m-d")) >= strtotime($nextDate); $i++) {
+                switch($transaction->recurring_interval) {
+                    case 'daily' :
+                        $nextDate = date("Y-m-d", strtotime("$nextDate +$every days"));
+                    break;
+                    case 'weekly' :
+                        $nextDate = date("Y-m-d", strtotime("$nextDate +$every weeks"));
+                    break;
+                    case 'monthly' :
+                        if($transaction->recurring_week === 'day') {
+                            $day = $transaction->recurring_day === 'last' ? 't' : $transaction->recurring_day;
+                            $nextDate = date("Y-m-$day", strtotime("$nextDate +$every months"));
+                        } else {
+                            $week = $transaction->recurring_week;
+                            $day = $transaction->recurring_day;
+                            $nextDate = date("Y-m-d", strtotime("$week $day ".date("Y-m", strtotime("$nextDate +$every months"))));
+                        }
+                    break;
+                    case 'yearly' :
+                        $month = $transaction->recurring_month;
+                        $day = $transaction->recurring_day;
+    
+                        $nextDate = date("Y-$month-$day", strtotime("$nextDate +1 year"));
+                    break;
+                }
+            }
+
+            if($transaction->end_type === 'after') {
+                if($currentOccurrence === intval($transaction->max_occurrences)) {
+                    $nextDate = null;
+                }
+            } else {
+                if($transaction->end_type !== 'none') {
+                    if(strtotime($nextDate) > strtotime($transaction->end_date)) {
+                        $nextDate = null;
+                    }
+                }
+            }
+        }
+
+        $recurringData = [
+            'next_date' => $nextDate,
+            'status' => 1
+        ];
+
+        $update = $this->accounting_recurring_transactions_model->updateRecurringTransaction($transaction->id, $recurringData);
+
+        echo json_encode([
+            'success' => $update ? true : false
+        ]);
     }
 }
