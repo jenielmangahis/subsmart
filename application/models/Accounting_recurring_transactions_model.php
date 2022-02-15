@@ -18,7 +18,11 @@ class Accounting_recurring_transactions_model extends MY_Model
 
     public function getCompanyRecurringTransactions($where, $columnName, $order)
     {
-        return $this->db->where($where)->order_by($columnName, $order)->get($this->table)->result_array();
+        $this->db->where($where);
+        $this->db->where('status !=', 0);
+        $this->db->order_by($columnName, $order);
+        $query = $this->db->get($this->table);
+        return $query->result_array();
     }
 
     public function delete($id)

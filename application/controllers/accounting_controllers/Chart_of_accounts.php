@@ -682,6 +682,7 @@ class Chart_of_accounts extends MY_Controller {
             $paymentAccType = $this->account_model->getById($paymentAcc->account_id);
 
             $account = $this->account_col($expense->id, 'Expense');
+            $attachments = $this->accounting_attachments_model->get_attachments('Expense', $expense->id);
 
             if($paymentAccType->account_name === 'Credit Card') {
                 $transaction = [
@@ -701,7 +702,7 @@ class Chart_of_accounts extends MY_Controller {
                     'memo' => $expense->memo,
                     'reconcile_status' => '',
                     'banking_status' => '',
-                    'attachments' => !is_null($expense->attachments) ? count(json_decode($expense->attachments, true)) : '',
+                    'attachments' => count($attachments) > 0 ? count($attachments) : '',
                     'tax' => '',
                     'balance' => '',
                     'date_created' => date("m/d/Y H:i:s", strtotime($expense->created_at))
@@ -762,6 +763,8 @@ class Chart_of_accounts extends MY_Controller {
                 break;
             }
 
+            $attachments = $this->accounting_attachments_model->get_attachments('Expense', $expense->id);
+
             if($paymentAccType->account_name === 'Credit Card') {
                 $transaction = [
                     'id' => $expense->id,
@@ -781,7 +784,7 @@ class Chart_of_accounts extends MY_Controller {
                     'memo' => $expenseCategory->description,
                     'reconcile_status' => '',
                     'banking_status' => '',
-                    'attachments' => !is_null($expense->attachments) ? count(json_decode($expense->attachments, true)) : '',
+                    'attachments' => count($attachments) > 0 ? count($attachments) : '',
                     'tax' => '',
                     'balance' => '',
                     'date_created' => date("m/d/Y H:i:s", strtotime($expenseCategory->created_at))
@@ -842,6 +845,8 @@ class Chart_of_accounts extends MY_Controller {
                 break;
             }
 
+            $attachments = $this->accounting_attachments_model->get_attachments('Expense', $expense->id);
+
             if($paymentAccType->account_name === 'Credit Card') {
                 $transaction = [
                     'id' => $expense->id,
@@ -861,7 +866,7 @@ class Chart_of_accounts extends MY_Controller {
                     'memo' => $expenseItem->description,
                     'reconcile_status' => '',
                     'banking_status' => '',
-                    'attachments' => !is_null($expense->attachments) ? count(json_decode($expense->attachments, true)) : '',
+                    'attachments' => count($attachments) > 0 ? count($attachments) : '',
                     'tax' => '',
                     'balance' => '',
                     'date_created' => date("m/d/Y H:i:s", strtotime($expenseItem->created_at))
@@ -932,6 +937,7 @@ class Chart_of_accounts extends MY_Controller {
             }
 
             $account = $this->account_col($check->id, 'Check');
+            $attachments = $this->accounting_attachments_model->get_attachments('Check', $check->id);
 
             $transaction = [
                 'id' => $check->id,
@@ -950,7 +956,7 @@ class Chart_of_accounts extends MY_Controller {
                 'memo' => $check->memo,
                 'reconcile_status' => '',
                 'banking_status' => '',
-                'attachments' => !is_null($check->attachments) ? count(json_decode($check->attachments, true)) : '',
+                'attachments' => count($attachments) > 0 ? count($attachments) : '',
                 'tax' => '',
                 'balance' => '',
                 'date_created' => date("m/d/Y H:i:s", strtotime($check->created_at))
@@ -1001,6 +1007,8 @@ class Chart_of_accounts extends MY_Controller {
                 break;
             }
 
+            $attachments = $this->accounting_attachments_model->get_attachments('Check', $check->id);
+
             $transaction = [
                 'id' => $check->id,
                 'child_id' => $checkCategory->id,
@@ -1018,7 +1026,7 @@ class Chart_of_accounts extends MY_Controller {
                 'memo' => $checkCategory->description,
                 'reconcile_status' => '',
                 'banking_status' => '',
-                'attachments' => !is_null($check->attachments) ? count(json_decode($check->attachments, true)) : '',
+                'attachments' => count($attachments) > 0 ? count($attachments) : '',
                 'tax' => '',
                 'balance' => '',
                 'date_created' => date("m/d/Y H:i:s", strtotime($checkCategory->created_at))
@@ -1076,6 +1084,8 @@ class Chart_of_accounts extends MY_Controller {
                 break;
             }
 
+            $attachments = $this->accounting_attachments_model->get_attachments('Check', $check->id);
+
             $transaction = [
                 'id' => $check->id,
                 'child_id' => $checkItem->id,
@@ -1093,7 +1103,7 @@ class Chart_of_accounts extends MY_Controller {
                 'memo' => $checkItem->description,
                 'reconcile_status' => '',
                 'banking_status' => '',
-                'attachments' => !is_null($check->attachments) ? count(json_decode($check->attachments, true)) : '',
+                'attachments' => count($attachments) > 0 ? count($attachments) : '',
                 'tax' => '',
                 'balance' => '',
                 'date_created' => date("m/d/Y H:i:s", strtotime($checkItem->created_at))
@@ -1121,6 +1131,82 @@ class Chart_of_accounts extends MY_Controller {
                 default :
                     $transaction['payment'] = '';
                     $transaction['deposit'] = number_format(floatval($checkItem->total), 2, '.', ',');
+                    $transaction['payment_disabled'] = true;
+                    $transaction['deposit_disabled'] = $count > 1;
+                break;
+            }
+
+            $data[] = $transaction;
+        }
+
+        return $data;
+    }
+
+    private function receive_payment_registers($accountId, $data)
+    {
+        $account = $this->chart_of_accounts_model->getById($accountId);
+        $accountType = $this->account_model->getById($account->account_id);
+
+        if(stripos($accountType->account_name, 'Asset') !== false) {
+            $accType = 'Asset';
+        } else if(stripos($accountType->account_name, 'Liabilities') !== false) {
+            $accType = 'Liability';
+        } else {
+            $accType = $accountType->account_name;
+        }
+        $payments = $this->chart_of_accounts_model->get_receive_payment_registers($accountId);
+
+        foreach($payments as $payment) {
+            $payee = $this->accounting_customers_model->get_by_id($payment->customer_id);
+            $payeeName = $payee->first_name . ' ' . $payee->last_name;
+
+            $attachments = $this->accounting_attachments_model->get_attachments('Receive Payment', $payment->id);
+
+            $transaction = [
+                'id' => $payment->id,
+                'date' => date("m/d/Y", strtotime($payment->payment_date)),
+                'ref_no' => $payment->ref_no,
+                'ref_no_disabled' => false,
+                'type' => 'Payment',
+                'payee_type' => 'customer',
+                'payee_id' => $payment->customer_id,
+                'payee' => $payeeName,
+                'payee_disabled' => true,
+                'account_id' => '',
+                'account' => 'Accounts Receivable',
+                'account_disabled' => true,
+                'account_field' => '',
+                'memo' => $payment->memo,
+                'reconcile_status' => '',
+                'banking_status' => '',
+                'attachments' => count($attachments) > 0 ? count($attachments) : '',
+                'tax' => '',
+                'balance' => '',
+                'date_created' => date("m/d/Y H:i:s", strtotime($payment->date_created))
+            ];
+
+            switch($accType) {
+                case 'Credit Card' :
+                    $transaction['charge'] = '';
+                    $transaction['payment'] = number_format(floatval($payment->amount), 2, '.', ',');
+                    $transaction['charge_disabled'] = true;
+                    $transaction['payment_disabled'] = $count > 1;
+                break;
+                case 'Asset' :
+                    $transaction['increase'] = number_format(floatval($payment->amount), 2, '.', ',');
+                    $transaction['decrease'] = '';
+                    $transaction['increase_disabled'] = $count > 1;
+                    $transaction['decrease_disabled'] = true;
+                break;
+                case 'Liability' :
+                    $transaction['increase'] = number_format(floatval($payment->amount), 2, '.', ',');
+                    $transaction['decrease'] = '';
+                    $transaction['increase_disabled'] = $count > 1;
+                    $transaction['decrease_disabled'] = true;
+                break;
+                default :
+                    $transaction['payment'] = '';
+                    $transaction['deposit'] = number_format(floatval($payment->amount), 2, '.', ',');
                     $transaction['payment_disabled'] = true;
                     $transaction['deposit_disabled'] = $count > 1;
                 break;
@@ -1165,6 +1251,8 @@ class Chart_of_accounts extends MY_Controller {
                 break;
             }
 
+            $attachments = $this->accounting_attachments_model->get_attachments('Journal', $journalEntry->id);
+
             $transaction = [
                 'id' => $journalEntry->id,
                 'child_id' => $journalEntryItem->id,
@@ -1181,7 +1269,7 @@ class Chart_of_accounts extends MY_Controller {
                 'memo' => $journalEntryItem->description,
                 'reconcile_status' => '',
                 'banking_status' => '',
-                'attachments' => '',
+                'attachments' => count($attachments) > 0 ? count($attachments) : '',
                 'tax' => '',
                 'balance' => '',
                 'date_created' => date("m/d/Y H:i:s", strtotime($journalEntry->created_at))
@@ -1242,6 +1330,8 @@ class Chart_of_accounts extends MY_Controller {
             $items = $this->expenses_model->get_transaction_items($bill->id, 'Bill');
             $count = count($categories) + count($items);
 
+            $attachments = $this->accounting_attachments_model->get_attachments('Bill', $bill->id);
+
             $transaction = [
                 'id' => $bill->id,
                 'child_id' => $billCategory->id,
@@ -1259,7 +1349,7 @@ class Chart_of_accounts extends MY_Controller {
                 'memo' => $billCategory->description,
                 'reconcile_status' => '',
                 'banking_status' => '',
-                'attachments' => !is_null($bill->attachments) ? count(json_decode($bill->attachments, true)) : '',
+                'attachments' => count($attachments) > 0 ? count($attachments) : '',
                 'tax' => '',
                 'balance' => '',
                 'date_created' => date("m/d/Y H:i:s", strtotime($billCategory->created_at))
@@ -1304,6 +1394,8 @@ class Chart_of_accounts extends MY_Controller {
             $items = $this->expenses_model->get_transaction_items($bill->id, 'Bill');
             $count = count($categories) + count($items);
 
+            $attachments = $this->accounting_attachments_model->get_attachments('Bill', $bill->id);
+
             $transaction = [
                 'id' => $bill->id,
                 'child_id' => $billItem->id,
@@ -1321,7 +1413,7 @@ class Chart_of_accounts extends MY_Controller {
                 'memo' => $billItem->description,
                 'reconcile_status' => '',
                 'banking_status' => '',
-                'attachments' => !is_null($bill->attachments) ? count(json_decode($bill->attachments, true)) : '',
+                'attachments' => count($attachments) > 0 ? count($attachments) : '',
                 'tax' => '',
                 'balance' => '',
                 'date_created' => date("m/d/Y H:i:s", strtotime($billItem->created_at))
@@ -1392,7 +1484,9 @@ class Chart_of_accounts extends MY_Controller {
 
             $account = $this->account_col($ccCredit->id, 'Credit Card Credit');
 
-            $data[] = [
+            $attachments = $this->accounting_attachments_model->get_attachments('CC Credit', $ccCredit->id);
+
+            $transaction = [
                 'id' => $ccCredit->id,
                 'date' => date("m/d/Y", strtotime($ccCredit->payment_date)),
                 'ref_no' => $ccCredit->ref_no === null ? '' : $ccCredit->ref_no,
@@ -1405,17 +1499,43 @@ class Chart_of_accounts extends MY_Controller {
                 'account_id' => $account['id'],
                 'account' => $account['name'],
                 'account_disabled' => $account['disabled'],
-                'account_field' => $account['field_name'],
                 'memo' => $ccCredit->memo,
-                'payment' => number_format(floatval($ccCredit->total_amount), 2, '.', ','),
-                'charge' => '',
                 'reconcile_status' => '',
                 'banking_status' => '',
-                'attachments' => !is_null($ccCredit->attachments) ? count(json_decode($ccCredit->attachments, true)) : '',
+                'attachments' => count($attachments) > 0 ? count($attachments) : '',
                 'tax' => '',
                 'balance' => '',
                 'date_created' => date("m/d/Y H:i:s", strtotime($ccCredit->created_at))
             ];
+
+            switch($accType) {
+                case 'Credit Card' :
+                    $transaction['charge'] = number_format(floatval($ccCredit->total_amount), 2, '.', ',');
+                    $transaction['payment'] = '';
+                    $transaction['charge_disabled'] = $count > 1;
+                    $transaction['payment_disabled'] = true;
+                break;
+                case 'Asset' :
+                    $transaction['increase'] = number_format(floatval($ccCredit->total_amount), 2, '.', ',');
+                    $transaction['decrease'] = '';
+                    $transaction['increase_disabled'] = $count > 1;
+                    $transaction['decrease_disabled'] = true;
+                break;
+                case 'Liability' :
+                    $transaction['increase'] = number_format(floatval($ccCredit->total_amount), 2, '.', ',');
+                    $transaction['decrease'] = '';
+                    $transaction['increase_disabled'] = $count > 1;
+                    $transaction['decrease_disabled'] = true;
+                break;
+                default :
+                    $transaction['payment'] = number_format(floatval($ccCredit->total_amount), 2, '.', ',');
+                    $transaction['deposit'] = '';
+                    $transaction['payment_disabled'] = $count > 1;
+                    $transaction['deposit_disabled'] = true;
+                break;
+            }
+
+            $data[] = $transaction;
         }
 
         $ccCreditCategories = $this->chart_of_accounts_model->get_vendor_transaction_category_registers($accountId, 'Credit Card Credit');
@@ -1441,6 +1561,8 @@ class Chart_of_accounts extends MY_Controller {
                 break;
             }
 
+            $attachments = $this->accounting_attachments_model->get_attachments('CC Credit', $ccCredit->id);
+
             $transaction = [
                 'id' => $ccCredit->id,
                 'child_id' => $ccCreditCategory->id,
@@ -1458,7 +1580,7 @@ class Chart_of_accounts extends MY_Controller {
                 'memo' => $ccCreditCategory->description,
                 'reconcile_status' => '',
                 'banking_status' => '',
-                'attachments' => !is_null($ccCredit->attachments) ? count(json_decode($ccCredit->attachments, true)) : '',
+                'attachments' => count($attachments) > 0 ? count($attachments) : '',
                 'tax' => '',
                 'balance' => '',
                 'date_created' => date("m/d/Y H:i:s", strtotime($ccCreditCategory->created_at))
@@ -1516,6 +1638,8 @@ class Chart_of_accounts extends MY_Controller {
                 break;
             }
 
+            $attachments = $this->accounting_attachments_model->get_attachments('CC Credit', $ccCredit->id);
+
             $transaction = [
                 'id' => $ccCredit->id,
                 'child_id' => $ccCreditItem->id,
@@ -1533,7 +1657,7 @@ class Chart_of_accounts extends MY_Controller {
                 'memo' => $ccCreditItem->description,
                 'reconcile_status' => '',
                 'banking_status' => '',
-                'attachments' => !is_null($ccCredit->attachments) ? count(json_decode($ccCredit->attachments, true)) : '',
+                'attachments' => count($attachments) > 0 ? count($attachments) : '',
                 'tax' => '',
                 'balance' => '',
                 'date_created' => date("m/d/Y H:i:s", strtotime($ccCreditItem->created_at))
@@ -1594,6 +1718,8 @@ class Chart_of_accounts extends MY_Controller {
             $items = $this->expenses_model->get_transaction_items($vCredit->id, 'Vendor Credit');
             $count = count($categories) + count($items);
 
+            $attachments = $this->accounting_attachments_model->get_attachments('Vendor Credit', $vCredit->id);
+
             $transaction = [
                 'id' => $vCredit->id,
                 'child_id' => $vCreditCategory->id,
@@ -1611,7 +1737,7 @@ class Chart_of_accounts extends MY_Controller {
                 'memo' => $vCreditCategory->description,
                 'reconcile_status' => '',
                 'banking_status' => '',
-                'attachments' => !is_null($vCredit->attachments) ? count(json_decode($vCredit->attachments, true)) : '',
+                'attachments' => count($attachments) > 0 ? count($attachments) : '',
                 'tax' => '',
                 'balance' => '',
                 'date_created' => date("m/d/Y H:i:s", strtotime($vCreditCategory->created_at))
@@ -1656,6 +1782,8 @@ class Chart_of_accounts extends MY_Controller {
             $items = $this->expenses_model->get_transaction_items($vCredit->id, 'Vendor Credit');
             $count = count($categories) + count($items);
 
+            $attachments = $this->accounting_attachments_model->get_attachments('Vendor Credit', $vCredit->id);
+
             $transaction = [
                 'id' => $vCredit->id,
                 'child_id' => $vCreditItem->id,
@@ -1673,7 +1801,7 @@ class Chart_of_accounts extends MY_Controller {
                 'memo' => $vCreditItem->description,
                 'reconcile_status' => '',
                 'banking_status' => '',
-                'attachments' => !is_null($vCredit->attachments) ? count(json_decode($vCredit->attachments, true)) : '',
+                'attachments' => count($attachments) > 0 ? count($attachments) : '',
                 'tax' => '',
                 'balance' => '',
                 'date_created' => date("m/d/Y H:i:s", strtotime($vCreditItem->created_at))
@@ -1817,6 +1945,8 @@ class Chart_of_accounts extends MY_Controller {
                 $accountFieldName = 'funds-account';
                 $accountDisabled = false;
             }
+            $attachments = $this->accounting_attachments_model->get_attachments('Deposit', $deposit->id);
+
             $transaction = [
                 'id' => $deposit->id,
                 'date' => date("m/d/Y", strtotime($deposit->date)),
@@ -1834,7 +1964,7 @@ class Chart_of_accounts extends MY_Controller {
                 'memo' => $deposit->memo,
                 'reconcile_status' => '',
                 'banking_status' => '',
-                'attachments' => !is_null($deposit->attachments) ? count(json_decode($deposit->attachments, true)) : '',
+                'attachments' => count($attachments) > 0 ? count($attachments) : '',
                 'tax' => '',
                 'balance' => '',
                 'date_created' => date("m/d/Y H:i:s", strtotime($deposit->created_at))
@@ -1884,6 +2014,8 @@ class Chart_of_accounts extends MY_Controller {
             $dep = $this->accounting_bank_deposit_model->getById($depFund->bank_deposit_id, logged('company_id'));
             $depFunds = $this->accounting_bank_deposit_model->getFunds($dep->id);
 
+            $attachments = $this->accounting_attachments_model->get_attachments('Deposit', $dep->id);
+
             $transaction = [
                 'id' => $dep->id,
                 'child_id' => $depFund->id,
@@ -1902,7 +2034,7 @@ class Chart_of_accounts extends MY_Controller {
                 'memo' => $dep->memo,
                 'reconcile_status' => '',
                 'banking_status' => '',
-                'attachments' => !is_null($dep->attachments) ? count(json_decode($dep->attachments, true)) : '',
+                'attachments' => count($attachments) > 0 ? count($attachments) : '',
                 'tax' => '',
                 'balance' => '',
                 'date_created' => date("m/d/Y H:i:s", strtotime($depFund->created_at))
@@ -1978,6 +2110,8 @@ class Chart_of_accounts extends MY_Controller {
             $paymentAccountType = $this->account_model->getById($paymentAcc->account_id);
             $detailType = $this->account_detail_model->getById($paymentAcc->acc_detail_id);
 
+            $attachments = $this->accounting_attachments_model->get_attachments('Expense', $expense->id);
+
             $account = $this->account_col($expense->id, 'Expense');
 
             if($paymentAccountType->account_name === 'Bank' && $detailType->acc_detail_name === 'Cash on hand') {
@@ -1998,7 +2132,7 @@ class Chart_of_accounts extends MY_Controller {
                     'memo' => $expense->memo,
                     'reconcile_status' => '',
                     'banking_status' => '',
-                    'attachments' => !is_null($expense->attachments) ? count(json_decode($expense->attachments, true)) : '',
+                    'attachments' => count($attachments) > 0 ? count($attachments) : '',
                     'tax' => '',
                     'balance' => '',
                     'date_created' => date("m/d/Y H:i:s", strtotime($expense->created_at))
@@ -2061,6 +2195,8 @@ class Chart_of_accounts extends MY_Controller {
                 break;
             }
 
+            $attachments = $this->accounting_attachments_model->get_attachments('Expense', $expense->id);
+
             if($accountType->account_name === 'Bank' && $detailType->acc_detail_name === 'Cash on hand') {
                 $transaction = [
                     'id' => $expense->id,
@@ -2080,7 +2216,7 @@ class Chart_of_accounts extends MY_Controller {
                     'memo' => $expenseCategory->description,
                     'reconcile_status' => '',
                     'banking_status' => '',
-                    'attachments' => !is_null($expense->attachments) ? count(json_decode($expense->attachments, true)) : '',
+                    'attachments' => count($attachments) > 0 ? count($attachments) : '',
                     'tax' => '',
                     'balance' => '',
                     'date_created' => date("m/d/Y H:i:s", strtotime($expenseCategory->created_at))
@@ -2142,6 +2278,8 @@ class Chart_of_accounts extends MY_Controller {
                 break;
             }
 
+            $attachments = $this->accounting_attachments_model->get_attachments('Expense', $expense->id);
+
             if($accountType->account_name === 'Bank' && $detailType->acc_detail_name === 'Cash on hand') {
                 $transaction = [
                     'id' => $expense->id,
@@ -2161,7 +2299,7 @@ class Chart_of_accounts extends MY_Controller {
                     'memo' => $expenseItem->description,
                     'reconcile_status' => '',
                     'banking_status' => '',
-                    'attachments' => !is_null($expense->attachments) ? count(json_decode($expense->attachments, true)) : '',
+                    'attachments' => count($attachments) > 0 ? count($attachments) : '',
                     'tax' => '',
                     'balance' => '',
                     'date_created' => date("m/d/Y H:i:s", strtotime($expenseCategory->created_at))
@@ -2196,6 +2334,83 @@ class Chart_of_accounts extends MY_Controller {
 
                 $data[] = $transaction;
             }
+        }
+
+        return $data;
+    }
+
+    private function sales_receipt_registers($accountId, $data = [])
+    {
+        $account = $this->chart_of_accounts_model->getById($accountId);
+        $accountType = $this->account_model->getById($account->account_id);
+
+        if(stripos($accountType->account_name, 'Asset') !== false) {
+            $accType = 'Asset';
+        } else if(stripos($accountType->account_name, 'Liabilities') !== false) {
+            $accType = 'Liability';
+        } else {
+            $accType = $accountType->account_name;
+        }
+
+        $salesReceipts = $this->chart_of_accounts_model->get_sales_receipt_registers($accountId);
+
+        foreach($salesReceipts as $salesReceipt) {
+            $payee = $this->accounting_customers_model->get_by_id($salesReceipt->customer_id);
+            $payeeName = $payee->first_name . ' ' . $payee->last_name;
+
+            $attachments = $this->accounting_attachments_model->get_attachments('Sales Receipt', $salesReceipt->id);
+
+            $transaction = [
+                'id' => $salesReceipt->id,
+                'date' => date("m/d/Y", strtotime($salesReceipt->sales_receipt_date)),
+                'ref_no' => $salesReceipt->ref_number,
+                'ref_no_disabled' => false,
+                'type' => 'Sales Receipt',
+                'payee_type' => 'customer',
+                'payee_id' => $salesReceipt->customer_id,
+                'payee' => $payeeName,
+                'payee_disabled' => false,
+                'account_id' => '',
+                'account' => '',
+                'account_disabled' => true,
+                'account_field' => '',
+                'memo' => $salesReceipt->message,
+                'reconcile_status' => '',
+                'banking_status' => '',
+                'attachments' => count($attachments) > 0 ? count($attachments) : '',
+                'tax' => '',
+                'balance' => '',
+                'date_created' => date("m/d/Y H:i:s", strtotime($salesReceipt->date_created))
+            ];
+
+            switch($accType) {
+                case 'Credit Card' :
+                    $transaction['charge'] = '';
+                    $transaction['payment'] = number_format(floatval($salesReceipt->amount), 2, '.', ',');
+                    $transaction['charge_disabled'] = true;
+                    $transaction['payment_disabled'] = $count > 1;
+                break;
+                case 'Asset' :
+                    $transaction['increase'] = number_format(floatval($salesReceipt->amount), 2, '.', ',');
+                    $transaction['decrease'] = '';
+                    $transaction['increase_disabled'] = $count > 1;
+                    $transaction['decrease_disabled'] = true;
+                break;
+                case 'Liability' :
+                    $transaction['increase'] = number_format(floatval($salesReceipt->amount), 2, '.', ',');
+                    $transaction['decrease'] = '';
+                    $transaction['increase_disabled'] = $count > 1;
+                    $transaction['decrease_disabled'] = true;
+                break;
+                default :
+                    $transaction['payment'] = '';
+                    $transaction['deposit'] = number_format(floatval($salesReceipt->amount), 2, '.', ',');
+                    $transaction['payment_disabled'] = true;
+                    $transaction['deposit_disabled'] = $count > 1;
+                break;
+            }
+
+            $data[] = $transaction;
         }
 
         return $data;
@@ -2368,6 +2583,8 @@ class Chart_of_accounts extends MY_Controller {
             $paymentAcc = $this->chart_of_accounts_model->getById($expense->payment_account_id);
             $paymentAccType = $this->account_model->getById($paymentAcc->account_id);
 
+            $attachments = $this->accounting_attachments_model->get_attachments('Expense', $expense->id);
+
             $account = $this->account_col($expense->id, 'Expense');
 
             if($paymentAccType->account_name !== 'Credit Card') {
@@ -2388,7 +2605,7 @@ class Chart_of_accounts extends MY_Controller {
                     'memo' => $expense->memo,
                     'reconcile_status' => '',
                     'banking_status' => '',
-                    'attachments' => !is_null($expense->attachments) ? count(json_decode($expense->attachments, true)) : '',
+                    'attachments' => count($attachments) > 0 ? count($attachments) : '',
                     'tax' => '',
                     'balance' => '',
                     'date_created' => date("m/d/Y H:i:s", strtotime($expense->created_at))
@@ -2450,6 +2667,8 @@ class Chart_of_accounts extends MY_Controller {
                 break;
             }
 
+            $attachments = $this->accounting_attachments_model->get_attachments('Expense', $expense->id);
+
             if($paymentAccType->account_name !== 'Credit Card') {
                 $transaction = [
                     'id' => $expense->id,
@@ -2469,7 +2688,7 @@ class Chart_of_accounts extends MY_Controller {
                     'memo' => $expenseCategory->description,
                     'reconcile_status' => '',
                     'banking_status' => '',
-                    'attachments' => !is_null($expense->attachments) ? count(json_decode($expense->attachments, true)) : '',
+                    'attachments' => count($attachments) > 0 ? count($attachments) : '',
                     'tax' => '',
                     'balance' => '',
                     'date_created' => date("m/d/Y H:i:s", strtotime($expenseCategory->created_at))
@@ -2530,6 +2749,8 @@ class Chart_of_accounts extends MY_Controller {
                 break;
             }
 
+            $attachments = $this->accounting_attachments_model->get_attachments('Expense', $expense->id);
+
             if($paymentAccType->account_name !== 'Credit Card') {
                 $transaction = [
                     'id' => $expense->id,
@@ -2549,7 +2770,7 @@ class Chart_of_accounts extends MY_Controller {
                     'memo' => $expenseItem->description,
                     'reconcile_status' => '',
                     'banking_status' => '',
-                    'attachments' => !is_null($expense->attachments) ? count(json_decode($expense->attachments, true)) : '',
+                    'attachments' => count($attachments) > 0 ? count($attachments) : '',
                     'tax' => '',
                     'balance' => '',
                     'date_created' => date("m/d/Y H:i:s", strtotime($expenseCategory->created_at))
@@ -2807,6 +3028,8 @@ class Chart_of_accounts extends MY_Controller {
             $account = $this->chart_of_accounts_model->getById($billPayment->payment_account_id);
             $accountType = $this->account_model->getById($account->account_id);
 
+            $attachments = $this->accounting_attachments_model->get_attachments('Bill Payment', $billPayment->id);
+
             if($creditCard === true && $accountType->account_name === 'Credit Card' || $creditCard === false) {
                 $transaction = [
                     'id' => $billPayment->id,
@@ -2826,7 +3049,7 @@ class Chart_of_accounts extends MY_Controller {
                     'deposit' => '',
                     'reconcile_status' => '',
                     'banking_status' => '',
-                    'attachments' => !is_null($billPayment->attachments) ? count(json_decode($billPayment->attachments, true)) : '',
+                    'attachments' => count($attachments) > 0 ? count($attachments) : '',
                     'tax' => '',
                     'balance' => '',
                     'date_created' => date("m/d/Y H:i:s", strtotime($billPayment->created_at))
@@ -2910,71 +3133,78 @@ class Chart_of_accounts extends MY_Controller {
         $accountType = $this->account_model->getById($account->account_id);
         $data = [];
 
-        if(stripos($accountType->account_name, 'A/R') !== false || stripos($accountType->account_name, 'A/P') !== false) {
-
-        } else {
-            switch($post['transaction_type']) {
-                case 'cc-expense' :
-                    $data = $this->cc_expense_registers($accountId, $data);
-                break;
-                case 'check' :
-                    $data = $this->check_registers($accountId, $data);
-                break;
-                case 'journal-entry' :
-                    $data = $this->journal_registers($accountId, $data);
-                break;
-                case 'bill' :
-                    $data = $this->bill_registers($accountId, $data);
-                break;
-                case 'cc-credit' :
-                    $data = $this->cc_credit_registers($accountId, $data);
-                break;
-                case 'vendor-credit' :
-                    $data = $this->vendor_credit_registers($accountId, $data);
-                break;
-                case 'bill-payment' :
-                    $data = $this->bill_payment_registers($accountId, $data);
-                break;
-                case 'cc-bill-payment' :
-                    $data = $this->bill_payment_registers($accountId, $data, true);
-                break;
-                case 'transfer' :
-                    $data = $this->transfer_registers($accountId, $data);
-                break;
-                case 'deposit' :
-                    $data = $this->deposit_registers($accountId, $data);
-                break;
-                case 'cash-expense' :
-                    $data = $this->cash_expense_registers($accountId, $data);
-                break;
-                case 'inv-qty-adjustment' :
-                    $data = $this->quantity_adjustment_registers($accountId, $data);
-                break;
-                case 'expense' :
-                    $data = $this->expense_registers($accountId, $data);
-                break;
-                case 'inv-starting-value' :
-                    $data = $this->item_starting_value_registers($accountId, $data);
-                break;
-                case 'cc-payment' :
-                    $data = $this->credit_card_payment_registers($accountId, $data);
-                break;
-                default : 
-                    $data = $this->cc_expense_registers($accountId, $data);
-                    $data = $this->check_registers($accountId, $data);
-                    $data = $this->journal_registers($accountId, $data);
-                    $data = $this->bill_registers($accountId, $data);
-                    $data = $this->cc_credit_registers($accountId, $data);
-                    $data = $this->vendor_credit_registers($accountId, $data);
-                    $data = $this->bill_payment_registers($accountId, $data);
-                    $data = $this->transfer_registers($accountId, $data);
-                    $data = $this->deposit_registers($accountId, $data);
-                    $data = $this->quantity_adjustment_registers($accountId, $data);
-                    $data = $this->expense_registers($accountId, $data);
-                    $data = $this->item_starting_value_registers($accountId, $data);
-                    $data = $this->credit_card_payment_registers($accountId, $data);
-                break;
-            }
+        switch($post['transaction_type']) {
+            case 'cc-expense' :
+                $data = $this->cc_expense_registers($accountId, $data);
+            break;
+            case 'check' :
+                $data = $this->check_registers($accountId, $data);
+            break;
+            case 'invoice' :
+                
+            break;
+            case 'receive-payment' :
+                $data = $this->receive_payment_registers($accountId, $data);
+            break;
+            case 'journal-entry' :
+                $data = $this->journal_registers($accountId, $data);
+            break;
+            case 'bill' :
+                $data = $this->bill_registers($accountId, $data);
+            break;
+            case 'cc-credit' :
+                $data = $this->cc_credit_registers($accountId, $data);
+            break;
+            case 'vendor-credit' :
+                $data = $this->vendor_credit_registers($accountId, $data);
+            break;
+            case 'bill-payment' :
+                $data = $this->bill_payment_registers($accountId, $data);
+            break;
+            case 'cc-bill-payment' :
+                $data = $this->bill_payment_registers($accountId, $data, true);
+            break;
+            case 'transfer' :
+                $data = $this->transfer_registers($accountId, $data);
+            break;
+            case 'deposit' :
+                $data = $this->deposit_registers($accountId, $data);
+            break;
+            case 'cash-expense' :
+                $data = $this->cash_expense_registers($accountId, $data);
+            break;
+            case 'sales-receipt' :
+                $data = $this->sales_receipt_registers($accountId, $data);
+            break;
+            case 'inv-qty-adjustment' :
+                $data = $this->quantity_adjustment_registers($accountId, $data);
+            break;
+            case 'expense' :
+                $data = $this->expense_registers($accountId, $data);
+            break;
+            case 'inv-starting-value' :
+                $data = $this->item_starting_value_registers($accountId, $data);
+            break;
+            case 'cc-payment' :
+                $data = $this->credit_card_payment_registers($accountId, $data);
+            break;
+            default : 
+                $data = $this->cc_expense_registers($accountId, $data);
+                $data = $this->check_registers($accountId, $data);
+                $data = $this->receive_payment_registers($accountId, $data);
+                $data = $this->journal_registers($accountId, $data);
+                $data = $this->bill_registers($accountId, $data);
+                $data = $this->cc_credit_registers($accountId, $data);
+                $data = $this->vendor_credit_registers($accountId, $data);
+                $data = $this->bill_payment_registers($accountId, $data);
+                $data = $this->transfer_registers($accountId, $data);
+                $data = $this->deposit_registers($accountId, $data);
+                $data = $this->sales_receipt_registers($accountId, $data);
+                $data = $this->quantity_adjustment_registers($accountId, $data);
+                $data = $this->expense_registers($accountId, $data);
+                $data = $this->item_starting_value_registers($accountId, $data);
+                $data = $this->credit_card_payment_registers($accountId, $data);
+            break;
         }
 
         if(stripos($accountType->account_name, 'Asset') !== false || stripos($accountType->account_name, 'Liabilities') !== false) {

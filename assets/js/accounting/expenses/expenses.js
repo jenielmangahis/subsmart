@@ -1420,7 +1420,7 @@ $(document).on('click', '#transactions-table .copy-expense', function(e) {
     var row = $(this).parent().parent().parent().parent();
     var data = $('#transactions-table').DataTable().row(row).data();
 
-    $.get('/accounting/vendors/copy-expense/'+data.id, function(res) {
+    $.get('/accounting/copy-transaction/expense/'+data.id, function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
         } else {
@@ -1446,7 +1446,7 @@ $(document).on('click', '#transactions-table .copy-check', function(e) {
     var row = $(this).parent().parent().parent().parent();
     var data = $('#transactions-table').DataTable().row(row).data();
 
-    $.get('/accounting/vendors/copy-check/'+data.id, function(res) {
+    $.get('/accounting/copy-transaction/check/'+data.id, function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
         } else {
@@ -1472,7 +1472,7 @@ $(document).on('click', '#transactions-table .copy-bill', function(e) {
     var row = $(this).parent().parent().parent().parent();
     var data = $('#transactions-table').DataTable().row(row).data();
 
-    $.get('/accounting/vendors/copy-bill/'+data.id, function(res) {
+    $.get('/accounting/copy-transaction/bill/'+data.id, function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
         } else {
@@ -1501,7 +1501,7 @@ $(document).on('click', '#transactions-table .copy-purchase-order', function(e) 
     transactionType = transactionType.replaceAll(' ', '-');
     transactionType = transactionType.toLowerCase();
 
-    $.get('/accounting/vendors/copy-purchase-order/'+data.id, function(res) {
+    $.get('/accounting/copy-transaction/purchase-order/'+data.id, function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
         } else {
@@ -1530,7 +1530,7 @@ $(document).on('click', '#transactions-table .copy-vendor-credit', function(e) {
     transactionType = transactionType.replaceAll(' ', '-');
     transactionType = transactionType.toLowerCase();
 
-    $.get('/accounting/vendors/copy-vendor-credit/'+data.id, function(res) {
+    $.get('/accounting/copy-transaction/vendor-credit/'+data.id, function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
         } else {

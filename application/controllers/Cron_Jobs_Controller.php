@@ -1000,13 +1000,13 @@ class Cron_Jobs_Controller extends CI_Controller
         $this->load->model('chart_of_accounts_model');
         $deposit = $this->accounting_bank_deposit_model->getById($depositId);
         $attachments = $this->accounting_attachments_model->get_attachments('Deposit', $depositId);
+        $tags = $this->tags_model->get_transaction_tags('Deposit', $depositId);
         $funds = $this->accounting_bank_deposit_model->getFunds($depositId);
 
         $insertData = [
             'company_id' => $deposit->company_id,
             'account_id' => $deposit->account_id,
             'date' => date("Y-m-d"),
-            'tags' => $deposit->tags,
             'total_amount' => $deposit->total_amount,
             'cash_back_account_id' => $deposit->cash_back_account_id,
             'cash_back_memo' => $deposit->cash_back_memo,
@@ -1018,6 +1018,22 @@ class Cron_Jobs_Controller extends CI_Controller
         $newDeposit = $this->accounting_bank_deposit_model->create($insertData);
 
         if($newDeposit) {
+            if(count($tags) > 0) {
+                $order = 1;
+                foreach($tags as $tag) {
+                    $linkTagData = [
+                        'transaction_type' => 'Deposit',
+                        'transaction_id' => $newDeposit,
+                        'tag_id' => $tag->id,
+                        'order_no' => $order
+                    ];
+
+                    $linkTagId = $this->tags_model->link_tag($linkTagData);
+
+                    $order++;
+                }
+            }
+
             if (count($attachments) > 0) {
                 $order = 1;
                 foreach ($attachments as $attachment) {
@@ -1230,6 +1246,7 @@ class Cron_Jobs_Controller extends CI_Controller
         $this->load->model('expenses_model');
         $expense = $this->vendors_model->get_expense_by_id($expenseId);
         $attachments = $this->accounting_attachments_model->get_attachments('Expense', $expenseId);
+        $tags = $this->tags_model->get_transaction_tags('Expense', $expenseId);
         $categories = $this->expenses_model->get_transaction_categories($expenseId, 'Expense');
         $items = $this->expenses_model->get_transaction_items($expenseId, 'Expense');
 
@@ -1242,7 +1259,6 @@ class Cron_Jobs_Controller extends CI_Controller
             'payment_method_id' => $expense->payment_method_id,
             'ref_no' => $expense->ref_no,
             'permit_no' => $expense->permit_no,
-            'tags' => $expense->tags,
             'memo' => $expense->memo,
             'total_amount' => $expense->total_amount,
             'linked_purchase_order_id' => $expense->linked_purchase_order_id,
@@ -1252,6 +1268,22 @@ class Cron_Jobs_Controller extends CI_Controller
         $newExpense = $this->expenses_model->addExpense($expenseData);
 
         if($newExpense) {
+            if(count($tags) > 0) {
+                $order = 1;
+                foreach($tags as $tag) {
+                    $linkTagData = [
+                        'transaction_type' => 'Expense',
+                        'transaction_id' => $newExpense,
+                        'tag_id' => $tag->id,
+                        'order_no' => $order
+                    ];
+
+                    $linkTagId = $this->tags_model->link_tag($linkTagData);
+
+                    $order++;
+                }
+            }
+
             if (count($attachments) > 0) {
                 $order = 1;
                 foreach ($attachments as $attachment) {
@@ -1309,6 +1341,7 @@ class Cron_Jobs_Controller extends CI_Controller
         $this->load->model('accounting_assigned_checks_model');
         $check = $this->vendors_model->get_check_by_id($checkId);
         $attachments = $this->accounting_attachments_model->get_attachments('Check', $checkId);
+        $tags = $this->tags_model->get_transaction_tags('Check', $checkId);
         $categories = $this->expenses_model->get_transaction_categories($checkId, 'Check');
         $items = $this->expenses_model->get_transaction_items($checkId, 'Check');
 
@@ -1333,6 +1366,22 @@ class Cron_Jobs_Controller extends CI_Controller
         $newCheck = $this->expenses_model->addCheck($checkData);
 
         if($newCheck) {
+            if(count($tags) > 0) {
+                $order = 1;
+                foreach($tags as $tag) {
+                    $linkTagData = [
+                        'transaction_type' => 'Check',
+                        'transaction_id' => $newCheck,
+                        'tag_id' => $tag->id,
+                        'order_no' => $order
+                    ];
+
+                    $linkTagId = $this->tags_model->link_tag($linkTagData);
+
+                    $order++;
+                }
+            }
+
             if (count($attachments) > 0) {
                 $order = 1;
                 foreach ($attachments as $attachment) {
@@ -1393,6 +1442,7 @@ class Cron_Jobs_Controller extends CI_Controller
         $bill = $this->vendors_model->get_bill_by_id($billId);
         $lastBill = $this->vendors_model->get_company_last_bill($bill->company_id);
         $attachments = $this->accounting_attachments_model->get_attachments('Bill', $billId);
+        $tags = $this->tags_model->get_transaction_tags('Bill', $billId);
         $categories = $this->expenses_model->get_transaction_categories($billId, 'Bill');
         $items = $this->expenses_model->get_transaction_items($billId, 'Bill');
 
@@ -1415,6 +1465,22 @@ class Cron_Jobs_Controller extends CI_Controller
         $newBill = $this->expenses_model->addBill($billData);
 
         if($newBill) {
+            if(count($tags) > 0) {
+                $order = 1;
+                foreach($tags as $tag) {
+                    $linkTagData = [
+                        'transaction_type' => 'Bill',
+                        'transaction_id' => $newBill,
+                        'tag_id' => $tag->id,
+                        'order_no' => $order
+                    ];
+
+                    $linkTagId = $this->tags_model->link_tag($linkTagData);
+
+                    $order++;
+                }
+            }
+
             if (count($attachments) > 0) {
                 $order = 1;
                 foreach ($attachments as $attachment) {
@@ -1451,6 +1517,7 @@ class Cron_Jobs_Controller extends CI_Controller
         $this->load->model('expenses_model');
         $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($purchaseOrderId);
         $attachments = $this->accounting_attachments_model->get_attachments('Purchase Order', $purchaseOrderId);
+        $tags = $this->tags_model->get_transaction_tags('Purchase Order', $purchaseOrderId);
         $categories = $this->expenses_model->get_transaction_categories($purchaseOrderId, 'Purchase Order');
         $items = $this->expenses_model->get_transaction_items($purchaseOrderId, 'Purchase Order');
 
@@ -1478,6 +1545,22 @@ class Cron_Jobs_Controller extends CI_Controller
         $newPurchaseOrder = $this->expenses_model->add_purchase_order($purchaseOrderData);
 
         if($newPurchaseOrder) {
+            if(count($tags) > 0) {
+                $order = 1;
+                foreach($tags as $tag) {
+                    $linkTagData = [
+                        'transaction_type' => 'Purchase Order',
+                        'transaction_id' => $newPurchaseOrder,
+                        'tag_id' => $tag->id,
+                        'order_no' => $order
+                    ];
+
+                    $linkTagId = $this->tags_model->link_tag($linkTagData);
+
+                    $order++;
+                }
+            }
+
             if (count($attachments) > 0) {
                 $order = 1;
                 foreach ($attachments as $attachment) {
@@ -1514,6 +1597,7 @@ class Cron_Jobs_Controller extends CI_Controller
         $this->load->model('expenses_model');
         $vCredit = $this->vendors_model->get_vendor_credit_by_id($vCreditId);
         $attachments = $this->accounting_attachments_model->get_attachments('Vendor Credit', $vCreditId);
+        $tags = $this->tags_model->get_transaction_tags('Vendor Credit', $vCreditId);
         $categories = $this->expenses_model->get_transaction_categories($vCreditId, 'Vendor Credit');
         $items = $this->expenses_model->get_transaction_items($vCreditId, 'Vendor Credit');
 
@@ -1534,6 +1618,22 @@ class Cron_Jobs_Controller extends CI_Controller
         $newvCredit = $this->expenses_model->add_vendor_credit($vCreditData);
 
         if($newvCredit) {
+            if(count($tags) > 0) {
+                $order = 1;
+                foreach($tags as $tag) {
+                    $linkTagData = [
+                        'transaction_type' => 'Vendor Credit',
+                        'transaction_id' => $newvCredit,
+                        'tag_id' => $tag->id,
+                        'order_no' => $order
+                    ];
+
+                    $linkTagId = $this->tags_model->link_tag($linkTagData);
+
+                    $order++;
+                }
+            }
+
             if (count($attachments) > 0) {
                 $order = 1;
                 foreach ($attachments as $attachment) {
@@ -1584,6 +1684,7 @@ class Cron_Jobs_Controller extends CI_Controller
         $this->load->model('expenses_model');
         $ccCredit = $this->vendors_model->get_credit_card_credit_by_id($ccCreditId);
         $attachments = $this->accounting_attachments_model->get_attachments('Credit Card Credit', $ccCreditId);
+        $tags = $this->tags_model->get_transaction_tags('CC Credit', $ccCreditId);
         $categories = $this->expenses_model->get_transaction_categories($ccCreditId, 'Credit Card Credit');
         $items = $this->expenses_model->get_transaction_items($ccCreditId, 'Credit Card Credit');
 
@@ -1610,6 +1711,22 @@ class Cron_Jobs_Controller extends CI_Controller
             $newBalance = number_format($newBalance, 2, '.', ',');
 
             $this->chart_of_accounts_model->updateBalance(['id' => $creditAcc->id, 'company_id' => $creditAcc->company_id, 'balance' => $newBalance]);
+
+            if(count($tags) > 0) {
+                $order = 1;
+                foreach($tags as $tag) {
+                    $linkTagData = [
+                        'transaction_type' => 'CC Credit',
+                        'transaction_id' => $newCredit,
+                        'tag_id' => $tag->id,
+                        'order_no' => $order
+                    ];
+
+                    $linkTagId = $this->tags_model->link_tag($linkTagData);
+
+                    $order++;
+                }
+            }
 
             if (count($attachments) > 0) {
                 $order = 1;

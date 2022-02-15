@@ -397,6 +397,9 @@ $route['accounting/recurring-transactions/delete/(:any)']['DELETE'] = "accountin
 $route['accounting/recurring-transactions/get-details/(:any)'] = "accounting_controllers/recurring_transactions/get/$1";
 $route['accounting/recurring-transactions/update/(:any)/(:any)']['post'] = "accounting_controllers/recurring_transactions/update/$1/$2";
 $route['accounting/recurring-transactions/print-recurring-transactions']['post'] = "accounting_controllers/recurring_transactions/print";
+$route['accounting/recurring-transactions/skip-next-date/(:any)'] = "accounting_controllers/recurring_transactions/skip_next_date/$1";
+$route['accounting/recurring-transactions/pause/(:any)'] = "accounting_controllers/recurring_transactions/pause/$1";
+$route['accounting/recurring-transactions/resume/(:any)'] = "accounting_controllers/recurring_transactions/resume/$1";
 
 // Accounting payment terms
 $route['accounting/terms'] = "accounting_controllers/payment_terms/index";
@@ -551,11 +554,6 @@ $route['accounting/vendors/update-attachments/(:any)']['post'] = 'accounting_con
 $route['accounting/vendors/remove-attachment/(:any)']['post'] = 'accounting_controllers/vendors/remove_attachment/$1';
 $route['accounting/vendors/(:any)/load-transactions']['post'] = 'accounting_controllers/vendors/load_transactions/$1';
 $route['accounting/vendors/update-transaction-category']['post'] = 'accounting_controllers/vendors/update_transaction_category';
-$route['accounting/vendors/copy-expense/(:any)'] = 'accounting_controllers/vendors/copy_expense/$1';
-$route['accounting/vendors/copy-check/(:any)'] = 'accounting_controllers/vendors/copy_check/$1';
-$route['accounting/vendors/copy-bill/(:any)'] = 'accounting_controllers/vendors/copy_bill/$1';
-$route['accounting/vendors/copy-purchase-order/(:any)'] = 'accounting_controllers/vendors/copy_purchase_order/$1';
-$route['accounting/vendors/copy-vendor-credit/(:any)'] = 'accounting_controllers/vendors/copy_vendor_credit/$1';
 $route['accounting/vendors/copy-to-bill/(:any)'] = 'accounting_controllers/vendors/copy_to_bill/$1';
 $route['accounting/vendors/(:any)/categorize-transactions/(:any)']['post'] = 'accounting_controllers/vendors/categorize_transactions/$1/$2';
 $route['accounting/vendors/print-transaction/(:any)/(:any)'] = 'accounting_controllers/vendors/print_transaction/$1/$2';

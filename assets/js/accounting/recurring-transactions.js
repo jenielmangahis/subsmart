@@ -133,22 +133,40 @@ const columns = [
         orderable: false,
         searchable: false,
         fnCreatedCell: function(td, cellData, rowData, row, col) {
-            $(td).html(`
-            <div class="btn-group float-right">
-                <a href="#" class="edit-recurring btn text-primary d-flex align-items-center justify-content-center">Edit</a>
+            if(rowData.status === "2") {
+                $(td).html(`
+                <div class="btn-group float-right">
+                    <a href="#" class="edit-recurring btn text-primary d-flex align-items-center justify-content-center">Edit</a>
 
-                <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <span class="sr-only">Toggle Dropdown</span>
-                </button>
-                <div class="dropdown-menu">
-                    <a class="dropdown-item use-transaction" href="#">Use</a>
-                    <a class="dropdown-item duplicate-transaction" href="#">Duplicate</a>
-                    <a class="dropdown-item pause-recurring" href="#">Pause</a>
-                    <a class="dropdown-item skip-next-date" href="#">Skip next date</a>
-                    <a class="dropdown-item delete-recurring" href="#">Delete</a>
+                    <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item use-transaction" href="#">Use</a>
+                        <a class="dropdown-item duplicate-transaction" href="#">Duplicate</a>
+                        <a class="dropdown-item resume-recurring" href="#">Resume</a>
+                        <a class="dropdown-item delete-recurring" href="#">Delete</a>
+                    </div>
                 </div>
-            </div>
-            `);
+                `);
+            } else {
+                $(td).html(`
+                <div class="btn-group float-right">
+                    <a href="#" class="edit-recurring btn text-primary d-flex align-items-center justify-content-center">Edit</a>
+
+                    <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item use-transaction" href="#">Use</a>
+                        <a class="dropdown-item duplicate-transaction" href="#">Duplicate</a>
+                        <a class="dropdown-item pause-recurring" href="#">Pause</a>
+                        <a class="dropdown-item skip-next-date" href="#">Skip next date</a>
+                        <a class="dropdown-item delete-recurring" href="#">Delete</a>
+                    </div>
+                </div>
+                `);
+            }
         }
     }
 ];
@@ -274,7 +292,10 @@ $(document).on('click', '#recurring_transactions .edit-recurring', function(e) {
         break;
     }
 
-    rowData.type = transactionType;
+    var transactionData = {
+        id: rowData.txn_id,
+        type: transactionType
+    };
 
     $.get(`/accounting/view-transaction/${transactionType}/${rowData.txn_id}`, function(res) {
         if ($('div#modal-container').length > 0) {
@@ -287,7 +308,7 @@ $(document).on('click', '#recurring_transactions .edit-recurring', function(e) {
             `);
         }
 
-        initModalFields(modalName, rowData);
+        initModalFields(modalName, transactionData);
 
         makeRecurring(modal);
 
@@ -380,7 +401,10 @@ $(document).on('click', '#recurring_transactions .use-transaction', function(e) 
         break;
     }
 
-    rowData.type = transactionType;
+    var transactionData = {
+        id: rowData.txn_id,
+        type: transactionType
+    };
 
     $.get(`/accounting/view-transaction/${transactionType}/${rowData.txn_id}`, function(res) {
         if ($('div#modal-container').length > 0) {
@@ -393,7 +417,7 @@ $(document).on('click', '#recurring_transactions .use-transaction', function(e) 
             `);
         }
 
-        initModalFields(modalName, rowData);
+        initModalFields(modalName, transactionData);
 
         $('#billModal .payee-details .transaction-total-amount').parent().next().remove();
         $(`#${modalName} .modal-footer .row .col-md-4:nth-child(2)`).html(centerFooter);
@@ -464,7 +488,10 @@ $(document).on('click', '#recurring_transactions .duplicate-transaction', functi
         break;
     }
 
-    rowData.type = transactionType;
+    var transactionData = {
+        id: rowData.txn_id,
+        type: transactionType
+    };
 
     $.get(`/accounting/copy-transaction/${transactionType}/${rowData.txn_id}`, function(res) {
         if ($('div#modal-container').length > 0) {
@@ -477,7 +504,7 @@ $(document).on('click', '#recurring_transactions .duplicate-transaction', functi
             `);
         }
 
-        initModalFields(modalName, rowData);
+        initModalFields(modalName, transactionData);
 
         makeRecurring(modal);
 
@@ -486,6 +513,87 @@ $(document).on('click', '#recurring_transactions .duplicate-transaction', functi
         $(`#${modalName}`).parent().attr('onsubmit', 'submitModalForm(event, this)').removeAttr('data-href');
 
         $(`#${modalName}`).modal('show');
+    });
+});
+
+$(document).on('click', '#recurring_transactions .skip-next-date', function(e) {
+    e.preventDefault();
+    var row = $(this).parent().parent().parent().parent();
+    var rowData = table.row(row).data();
+
+    Swal.fire({
+        title: 'Skip Next Date?',
+        html: `Are you sure you want to skip the next occurrence on ${rowData.next_date} for this recurring transaction?`,
+        showCloseButton: false,
+        confirmButtonColor: '#2ca01c',
+        confirmButtonText: 'Skip next date',
+        showCancelButton: true,
+        cancelButtonText: 'Cancel',
+        cancelButtonColor: '#d33'
+    }).then((result) => {
+        if(result.isConfirmed) {
+            $.get(`/accounting/recurring-transactions/skip-next-date/${rowData.id}`, function(res) {
+                var result = JSON.parse(res);
+
+                if(result.success) {
+                    table.ajax.reload(null, true);
+                }
+            });
+        }
+    });
+});
+
+$(document).on('click', '#recurring_transactions .pause-recurring', function(e) {
+    e.preventDefault();
+    var row = $(this).parent().parent().parent().parent();
+    var rowData = table.row(row).data();
+
+    Swal.fire({
+        title: 'Pause Recurring Transaction',
+        html: `Are you sure you want to pause this recurring transaction?`,
+        showCloseButton: false,
+        confirmButtonColor: '#2ca01c',
+        confirmButtonText: 'Pause',
+        showCancelButton: true,
+        cancelButtonText: 'Cancel',
+        cancelButtonColor: '#d33'
+    }).then((result) => {
+        if(result.isConfirmed) {
+            $.get(`/accounting/recurring-transactions/pause/${rowData.id}`, function(res) {
+                var result = JSON.parse(res);
+
+                if(result.success) {
+                    table.ajax.reload(null, true);
+                }
+            });
+        }
+    });
+});
+
+$(document).on('click', '#recurring_transactions .resume-recurring', function(e) {
+    e.preventDefault();
+    var row = $(this).parent().parent().parent().parent();
+    var rowData = table.row(row).data();
+
+    Swal.fire({
+        title: 'Resume Recurring Transaction',
+        html: `Are you sure you want to resume this recurring transaction?`,
+        showCloseButton: false,
+        confirmButtonColor: '#2ca01c',
+        confirmButtonText: 'Resume',
+        showCancelButton: true,
+        cancelButtonText: 'Cancel',
+        cancelButtonColor: '#d33'
+    }).then((result) => {
+        if(result.isConfirmed) {
+            $.get(`/accounting/recurring-transactions/resume/${rowData.id}`, function(res) {
+                var result = JSON.parse(res);
+
+                if(result.success) {
+                    table.ajax.reload(null, true);
+                }
+            });
+        }
     });
 });
 
