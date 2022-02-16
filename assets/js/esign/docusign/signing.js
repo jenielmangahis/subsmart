@@ -483,6 +483,8 @@ function Signing(hash) {
         $input.attr("readonly", false);
         $spinner.addClass("d-none");
 
+        if (!$input.attr("data-name")) return;
+
         const name = $input.attr("data-name").toLowerCase();
         const key = $input.attr("data-key");
         const $sameFields = $(`input[data-name='${name}' i]:not([data-key='${key}'])`); // prettier-ignore

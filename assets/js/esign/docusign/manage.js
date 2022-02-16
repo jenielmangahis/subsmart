@@ -1,4 +1,5 @@
 const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
+const PDFJS = pdfjsLib;
 
 const columns = {
   name: function (_, _, row) {
@@ -384,7 +385,12 @@ $(document).ready(function () {
 
   const views = [...$navItems].map((item) => {
     const navItemLink = $(item).find("a").attr("href");
-    const urlParams = new URLSearchParams(new URL(navItemLink).search);
+    let urlParams = null;
+    try {
+      urlParams = new URLSearchParams(new URL(navItemLink).search);
+    } catch (error) {
+      return null;
+    }
     if (!urlParams.has("view")) return null;
     return urlParams.get("view").toLowerCase();
   });
@@ -476,6 +482,7 @@ $(document).ready(function () {
 
     try {
       document = await PDFJS.getDocument({ url: documentUrl });
+      document = await document.promise;
     } catch (error) {
       alert(error);
       return;
@@ -597,13 +604,16 @@ $(document).ready(function () {
     $modalBody = $docModal.find(".modal-body");
     $modalBody.empty();
 
-    const document = await PDFJS.getDocument({ url: documentUrl });
+    let document = await PDFJS.getDocument({ url: documentUrl });
+    document = await document.promise;
+
     for (index = 1; index <= document.numPages; index++) {
       const canvas = window.document.createElement("canvas");
       $modalBody.append(canvas);
 
       const documentPage = await document.getPage(index);
-      const viewport = documentPage.getViewport(1);
+      const viewport = documentPage.getViewport({ scale: 1 });
+
       canvas.height = viewport.height;
       canvas.width = viewport.width;
 

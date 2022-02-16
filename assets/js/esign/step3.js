@@ -6,7 +6,6 @@ function createElementFromHTML(htmlString) {
 }
 
 function Step3() {
-  console.clear();
   const PDFJS = pdfjsLib;
 
   let fields = [];
