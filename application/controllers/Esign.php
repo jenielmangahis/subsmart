@@ -854,6 +854,7 @@ SQL;
 
         ['document_sequence' => $sequence] = $this->input->post();
         ['sequence' => $sequence] = json_decode($sequence, true);
+		$sequence = is_array($sequence) ? $sequence : [];
 
         $this->db->where('docfile_id', $insertedId);
         $documents = $this->db->get('user_docfile_documents')->result_array();

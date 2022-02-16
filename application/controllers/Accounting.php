@@ -132,6 +132,8 @@ class Accounting extends MY_Controller
         $this->page_data['statements'] = $this->accounting_statements_model->getAllComp(logged('company_id'));
         $this->page_data['rpayments'] = $this->accounting_receive_payment_model->getReceivePaymentsByComp(logged('company_id'));
         $this->page_data['checks'] = $this->vendors_model->get_check_by_comp(logged('company_id'));
+        $this->page_data['payment_methods'] = $this->accounting_receive_payment_model->get_payment_methods(logged('company_id'));
+        $this->page_data['deposits_to'] = $this->accounting_receive_payment_model->get_deposits_to(logged('company_id'));
 
         $this->page_data['invoicesItems'] = $this->invoice_model->getInvoicesItems(logged('company_id'));
     }
