@@ -146,6 +146,64 @@ class Cron_Payment extends MY_Controller {
         //echo "Done";
     }
 
+    public function deactivate_unpaid_nsmart_subscription(){
+        include APPPATH . 'libraries/Converge/src/Converge.php';
+        $this->load->model('Clients_model');
+        $this->load->model('NsmartPlan_model');
+        $this->load->model('General_model', 'general');
+        $this->load->model('CardsFile_model');
+        $this->load->model('Business_model');
+        $this->load->model('CompanySubscriptionPayments_model');
+        $this->load->model('SubscriberNsmartUpgrade_model');
+
+        ini_set('max_execution_time', 0);
+
+        $converge = new \wwwroth\Converge\Converge([
+            'merchant_id' => CONVERGE_MERCHANTID,
+            'user_id' => CONVERGE_MERCHANTUSERID,
+            'pin' => CONVERGE_MERCHANTPIN,
+            'demo' => false,
+        ]);
+
+        $date = date("Y-m-d");
+        $get_subscription = array(
+            'where' => array(
+                'id <>' => 1,
+                'next_billing_date <' => $date,
+                'is_auto_renew' => 0,
+                'is_plan_active' => 1
+            ),
+            'table' => 'clients',
+            'select' => 'clients.*',
+            'limit' => 50
+        );
+        $clients = $this->general->get_data_with_param($get_subscription, true);
+        $total_deactivated = 0;
+        foreach( $clients as $client ){            
+            $data = ['is_plan_active' => 0];
+            $this->Clients_model->update($client->id, $data);
+            $total_deactivated++;
+        }
+
+        //Send email notification
+        $subject = 'nSmarTrac: Cron Daily Deactivated Accounts';
+        $to      = 'bryann.revina03@gmail.com';
+        $body    = "Today's Total deactivated account is " . $total_deactivated;
+
+            $data = [
+                'to' => $to, 
+                'subject' => $subject, 
+                'body' => $body,
+                'cc' => '',
+                'bcc' => '',
+                'attachment' => ''
+            ];
+
+            $isSent = sendEmail($data);
+
+        exit;
+    }
+
     //For checking recurring payments with error - need to set in cron once a day checking
     public function company_recurring_nsmart_subscription_with_payment_errors(){
         include APPPATH . 'libraries/Converge/src/Converge.php';

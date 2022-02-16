@@ -143,8 +143,8 @@ define('MAIL_PORT', 465);
 define('MAIL_PASSWORD', 'Lol123lol!@#');*/
 // define('MAIL_USERNAME', 'websender@nsmartrac.com');
 // define('MAIL_PASSWORD', 'hUp%c_^D2KZ@W^4@OL');
-define('MAIL_USERNAME', 'websender@nsmartrac.com');
-define('MAIL_PASSWORD', 'hUp%c_^D2KZ@W^4@OL');
+define('MAIL_USERNAME', 'websndr@nsmartrac.com');
+define('MAIL_PASSWORD', ')d_2=Gm[xpSZ');
 define('MAIL_FROM', 'noreply@nsmartrac.com');
 
 define('REGISTRATION_MONTHS_DISCOUNTED', 3);
