@@ -25,6 +25,14 @@ class Chart_of_accounts extends MY_Controller {
         $this->load->model('accounting_payment_methods_model');
         $this->load->model('accounting_pay_down_credit_card_model');
         $this->load->model('accounting_attachments_model');
+        $this->load->model('AcsProfile_model');
+        $this->load->model('invoice_model');
+        $this->load->model('workorder_model');
+        $this->load->model('estimate_model');
+        $this->load->model('accounting_receive_payment_model');
+        $this->load->model('accounting_sales_receipt_model');
+        $this->load->model('accounting_credit_memo_model');
+        $this->load->model('accounting_statements_model');
 
         add_css(array(
             "assets/css/accounting/banking.css?v=".rand(),
@@ -81,7 +89,27 @@ class Chart_of_accounts extends MY_Controller {
                 // array('#',  array()),
                 array("", array('/accounting/chart-of-accounts', '/accounting/reconcile')),
             );
-        $this->page_data['menu_icon'] = array("fa-credit-card","fa-money","fa-dollar","fa-bar-chart","fa-minus-circle","fa-file","fa-calculator");
+        $this->page_data['menu_icon'] = array("fa-credit-card", "fa-money", "fa-dollar", "fa-bar-chart", "fa-minus-circle", "fa-file", "fa-calculator");
+        $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId(logged('company_id'));
+        $this->page_data['invoices'] = $this->invoice_model->getAllData(logged('company_id'));
+        $this->page_data['clients'] = $this->invoice_model->getclientsData(logged('company_id'));
+        $this->page_data['invoices_sales'] = $this->invoice_model->getAllDataSales(logged('company_id'));
+        $this->page_data['OpenInvoices'] = $this->invoice_model->getAllOpenInvoices(logged('company_id'));
+        $this->page_data['InvOverdue'] = $this->invoice_model->InvOverdue(logged('company_id'));
+        $this->page_data['getAllInvPaid'] = $this->invoice_model->getAllInvPaid(logged('company_id'));
+        $this->page_data['items'] = $this->items_model->getItemlist();
+        $this->page_data['packages'] = $this->workorder_model->getPackagelist(logged('company_id'));
+        $this->page_data['estimates'] = $this->estimate_model->getAllByCompanynDraft(logged('company_id'));
+        $this->page_data['sales_receipts'] = $this->accounting_sales_receipt_model->getAllByCompany(logged('company_id'));
+        $this->page_data['credit_memo'] = $this->accounting_credit_memo_model->getAllByCompany(logged('company_id'));
+        $this->page_data['employees'] = $this->users_model->getCompanyUsers(logged('company_id'));
+        $this->page_data['statements'] = $this->accounting_statements_model->getAllComp(logged('company_id'));
+        $this->page_data['rpayments'] = $this->accounting_receive_payment_model->getReceivePaymentsByComp(logged('company_id'));
+        $this->page_data['checks'] = $this->vendors_model->get_check_by_comp(logged('company_id'));
+        $this->page_data['payment_methods'] = $this->accounting_receive_payment_model->get_payment_methods(logged('company_id'));
+        $this->page_data['deposits_to'] = $this->accounting_receive_payment_model->get_deposits_to(logged('company_id'));
+
+        $this->page_data['invoicesItems'] = $this->invoice_model->getInvoicesItems(logged('company_id'));
     }
 
     public function index()
@@ -2416,6 +2444,161 @@ class Chart_of_accounts extends MY_Controller {
         return $data;
     }
 
+    private function credit_memo_registers($accountId, $data = [])
+    {
+        $account = $this->chart_of_accounts_model->getById($accountId);
+        $accountType = $this->account_model->getById($account->account_id);
+
+        if(stripos($accountType->account_name, 'Asset') !== false) {
+            $accType = 'Asset';
+        } else if(stripos($accountType->account_name, 'Liabilities') !== false) {
+            $accType = 'Liability';
+        } else {
+            $accType = $accountType->account_name;
+        }
+
+        $creditMemoItems = $this->chart_of_accounts_model->get_credit_memo_registers($accountId);
+
+        foreach($creditMemoItems as $item) {
+            $creditMemo = $this->accounting_credit_memo_model->getCreditMemoDetails($item->type_id);
+            $payee = $this->accounting_customers_model->get_by_id($creditMemo->customer_id);
+            $payeeName = $payee->first_name . ' ' . $payee->last_name;
+
+            $attachments = $this->accounting_attachments_model->get_attachments('Credit Memo', $creditMemo->id);
+
+            $transaction = [
+                'id' => $creditMemo->id,
+                'child_id' => $item->id,
+                'date' => date("m/d/Y", strtotime($creditMemo->credit_memo_date)),
+                'ref_no' => '',
+                'ref_no_disabled' => true,
+                'type' => 'Credit Memo',
+                'payee_type' => 'customer',
+                'payee_id' => $creditMemo->customer_id,
+                'payee' => $payeeName,
+                'payee_disabled' => true,
+                'account_id' => '',
+                'account' => 'Accounts Receivable',
+                'account_disabled' => true,
+                'account_field' => '',
+                'memo' => $item->description,
+                'reconcile_status' => '',
+                'banking_status' => '',
+                'attachments' => count($attachments) > 0 ? count($attachments) : '',
+                'tax' => '',
+                'balance' => '',
+                'date_created' => date("m/d/Y H:i:s", strtotime($item->created_at))
+            ];
+
+            switch($accType) {
+                case 'Credit Card' :
+                    $transaction['charge'] = '';
+                    $transaction['payment'] = number_format(floatval($item->total), 2, '.', ',');
+                    $transaction['charge_disabled'] = true;
+                    $transaction['payment_disabled'] = $count > 1;
+                break;
+                case 'Asset' :
+                    $transaction['increase'] = number_format(floatval($item->total), 2, '.', ',');
+                    $transaction['decrease'] = '';
+                    $transaction['increase_disabled'] = $count > 1;
+                    $transaction['decrease_disabled'] = true;
+                break;
+                case 'Liability' :
+                    $transaction['increase'] = number_format(floatval($item->total), 2, '.', ',');
+                    $transaction['decrease'] = '';
+                    $transaction['increase_disabled'] = $count > 1;
+                    $transaction['decrease_disabled'] = true;
+                break;
+                default :
+                    $transaction['payment'] = '';
+                    $transaction['deposit'] = number_format(floatval($item->total), 2, '.', ',');
+                    $transaction['payment_disabled'] = true;
+                    $transaction['deposit_disabled'] = $count > 1;
+                break;
+            }
+
+            $data[] = $transaction;
+        }
+
+        return $data;
+    }
+
+    private function refund_registers($accountId, $data = [])
+    {
+        $account = $this->chart_of_accounts_model->getById($accountId);
+        $accountType = $this->account_model->getById($account->account_id);
+
+        if(stripos($accountType->account_name, 'Asset') !== false) {
+            $accType = 'Asset';
+        } else if(stripos($accountType->account_name, 'Liabilities') !== false) {
+            $accType = 'Liability';
+        } else {
+            $accType = $accountType->account_name;
+        }
+
+        $refundReceipts = $this->chart_of_accounts_model->get_refund_from_registers($accountId);
+
+        foreach($refundReceipts as $refundReceipt) {
+            $payee = $this->accounting_customers_model->get_by_id($refundReceipt->customer_id);
+            $payeeName = $payee->first_name . ' ' . $payee->last_name;
+
+            $attachments = $this->accounting_attachments_model->get_attachments('Refund Receipt', $refundReceipt->id);
+
+            $transaction = [
+                'id' => $refundReceipt->id,
+                'date' => date("m/d/Y", strtotime($refundReceipt->refund_receipt_date)),
+                'ref_no' => '',
+                'ref_no_disabled' => true,
+                'type' => 'Refund',
+                'payee_type' => 'customer',
+                'payee_id' => $refundReceipt->customer_id,
+                'payee' => $payeeName,
+                'payee_disabled' => false,
+                'account_id' => $refundReceipt->refund_form,
+                'account' => $this->chart_of_accounts_model->getName($refundReceipt->refund_form),
+                'account_disabled' => true,
+                'memo' => $refundReceipt->message_statement,
+                'reconcile_status' => '',
+                'banking_status' => '',
+                'attachments' => '',
+                'tax' => '',
+                'balance' => '',
+                'date_created' => date("m/d/Y H:i:s", strtotime($refundReceipt->date_created))
+            ];
+
+            switch($accType) {
+                case 'Credit Card' :
+                    $transaction['charge'] = '';
+                    $transaction['payment'] = number_format(floatval($refundReceipt->total_amount), 2, '.', ',');
+                    $transaction['charge_disabled'] = true;
+                    $transaction['payment_disabled'] = true;
+                break;
+                case 'Asset' :
+                    $transaction['increase'] = number_format(floatval($refundReceipt->total_amount), 2, '.', ',');
+                    $transaction['decrease'] = '';
+                    $transaction['increase_disabled'] = true;
+                    $transaction['decrease_disabled'] = true;
+                break;
+                case 'Liability' :
+                    $transaction['increase'] = number_format(floatval($refundReceipt->total_amount), 2, '.', ',');
+                    $transaction['decrease'] = '';
+                    $transaction['increase_disabled'] = true;
+                    $transaction['decrease_disabled'] = true;
+                break;
+                default :
+                    $transaction['payment'] = '';
+                    $transaction['deposit'] = number_format(floatval($refundReceipt->total_amount), 2, '.', ',');
+                    $transaction['payment_disabled'] = true;
+                    $transaction['deposit_disabled'] = true;
+                break;
+            }
+
+            $data[] = $transaction;
+        }
+
+        return $data;
+    }
+
     private function quantity_adjustment_registers($accountId, $data = [])
     {
         $account = $this->chart_of_accounts_model->getById($accountId);
@@ -3176,6 +3359,12 @@ class Chart_of_accounts extends MY_Controller {
             case 'sales-receipt' :
                 $data = $this->sales_receipt_registers($accountId, $data);
             break;
+            case 'credit-memo' :
+                $data = $this->credit_memo_registers($accountId, $data);
+            break;
+            case 'refund' :
+                $data = $this->refund_registers($accountId, $data);
+            break;
             case 'inv-qty-adjustment' :
                 $data = $this->quantity_adjustment_registers($accountId, $data);
             break;
@@ -3200,6 +3389,7 @@ class Chart_of_accounts extends MY_Controller {
                 $data = $this->transfer_registers($accountId, $data);
                 $data = $this->deposit_registers($accountId, $data);
                 $data = $this->sales_receipt_registers($accountId, $data);
+                $data = $this->credit_memo_registers($accountId, $data);
                 $data = $this->quantity_adjustment_registers($accountId, $data);
                 $data = $this->expense_registers($accountId, $data);
                 $data = $this->item_starting_value_registers($accountId, $data);
