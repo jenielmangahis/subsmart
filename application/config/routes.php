@@ -1106,6 +1106,11 @@ $route['send-sms/clockin-clockout'] = 'Cron_Marketing/clockin_clockout_sms';
 //Cron Send Email
 $route['cron_mail/send_mail'] = 'Cron_Mail/send_mail';
 
+//Cron Payment
+$route['cron_payment/deactivate_unpaid_nsmart_subscription'] = 'Cron_Payment/deactivate_unpaid_nsmart_subscription';
+$route['cron_payment/company_recurring_nsmart_subscription_with_payment_errors'] = 'Cron_Payment/company_recurring_nsmart_subscription_with_payment_errors';
+$route['cron_payment/company_recurring_nsmart_subscription'] = 'Cron_Payment/company_recurring_nsmart_subscription';
+
 //Customer
 $route['customer/subscriptions'] = 'Customer/customer_subscriptions';
 $route['customer/_load_active_subscriptions'] = 'Customer/ajax_load_active_subscriptions';

@@ -1,4 +1,5 @@
 function Step1(params = {}) {
+  const PDFJS = pdfjsLib;
   const validFileExtensions = ["pdf"];
 
   const $form = $("#form");
@@ -80,15 +81,17 @@ function Step1(params = {}) {
 
     await sleep(1000);
 
-    const document = await PDFJS.getDocument({ url: documentUrl });
+    let document = await PDFJS.getDocument({ url: documentUrl });
+    document = await document.promise;
     const documentPage = await document.getPage(1);
 
     $docTitle.text(file.name);
     $docModalTitle.text(file.name);
     $docPageCount.text(`${document.numPages} page`);
 
-    const scaleRequired = $canvas.width / documentPage.getViewport(1).width;
-    const viewport = documentPage.getViewport(scaleRequired);
+    const scaleRequired =
+      $canvas.width / documentPage.getViewport({ scale: 1 }).width;
+    const viewport = documentPage.getViewport({ scale: scaleRequired });
     const canvasContext = {
       viewport,
       canvasContext: context,
@@ -119,13 +122,15 @@ function Step1(params = {}) {
     $modalBody = $docModal.find(".modal-body");
     $modalBody.empty();
 
-    const document = await PDFJS.getDocument({ url: documentUrl });
+    let document = await PDFJS.getDocument({ url: documentUrl });
+    document = await document.promise;
+
     for (index = 1; index <= document.numPages; index++) {
       const canvas = window.document.createElement("canvas");
       $modalBody.append(canvas);
 
       const documentPage = await document.getPage(index);
-      const viewport = documentPage.getViewport(1);
+      const viewport = documentPage.getViewport({ scale: 1 });
       canvas.height = viewport.height;
       canvas.width = viewport.width;
 

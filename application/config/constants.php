@@ -135,18 +135,12 @@ define('RINGCENTRAL_PASSWORD', 'Ringmybell2021');
 define('RINGCENTRAL_FROM', '+18503081341');
 define('RINGCENTRAL_EXT', '101');*/
 
-
 //PHPMAILER
 define('MAIL_SERVER', 'mail.nsmartrac.com');
 define('MAIL_PORT', 465);
-/*define('MAIL_USERNAME', 'webmaster@nsmartrac.com');
-define('MAIL_PASSWORD', 'Lol123lol!@#');*/
-// define('MAIL_USERNAME', 'websender@nsmartrac.com');
-// define('MAIL_PASSWORD', 'hUp%c_^D2KZ@W^4@OL');
 define('MAIL_USERNAME', 'websndr@nsmartrac.com');
-define('MAIL_PASSWORD', '/ )d_2=Gm[xpSZ');
+define('MAIL_PASSWORD', ')d_2=Gm[xpSZ');
 define('MAIL_FROM', 'noreply@nsmartrac.com');
-
 define('REGISTRATION_MONTHS_DISCOUNTED', 3);
 
 //TRAC360
