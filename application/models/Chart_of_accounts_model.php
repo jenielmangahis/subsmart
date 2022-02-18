@@ -335,6 +335,16 @@ class Chart_of_accounts_model extends MY_Model {
 		return $query->result();
 	}
 
+	public function get_invoice_item_registers($accountId)
+	{
+		$this->db->select('invoices_items.*');
+		$this->db->where('items_accounting_details.income_account_id', $accountId);
+		$this->db->join('invoices', 'invoices.id = invoices_items.invoice_id');
+		$this->db->join('items_accounting_details', 'items_accounting_details.item_id = invoices_items.items_id');
+		$query = $this->db->get('invoices_items');
+		return $query->result();
+	}
+
 	public function get_receive_payment_registers($accountId)
 	{
 		$this->db->where('deposit_to', $accountId);
@@ -503,7 +513,7 @@ class Chart_of_accounts_model extends MY_Model {
 		$this->db->where('item_details.type', 'Credit Memo');
 		$this->db->join('accounting_credit_memo', 'accounting_credit_memo.id = item_details.type_id');
 		$this->db->join('items_accounting_details', 'items_accounting_details.item_id = item_details.item');
-		$query= $this->db->get('item_details');
+		$query = $this->db->get('item_details');
 		return $query->result();
 	}
 
@@ -512,6 +522,18 @@ class Chart_of_accounts_model extends MY_Model {
 		$this->db->where('refund_form', $accountId);
 		$this->db->where('status !=', 0);
 		$query = $this->db->get('accounting_refund_receipt');
+		return $query->result();
+	}
+
+	public function get_refund_item_registers($accountId)
+	{
+		$this->db->select('item_details.*');
+		$this->db->where('items_accounting_details.income_account_id', $accountId);
+		$this->db->where('accounting_refund_receipt.status !=', 0);
+		$this->db->where('item_details.type', 'Refund Receipt');
+		$this->db->join('accounting_refund_receipt', 'accounting_refund_receipt.id = item_details.type_id');
+		$this->db->join('items_accounting_details', 'items_accounting_details.item_id = item_details.item');
+		$query = $this->db->get('item_details');
 		return $query->result();
 	}
 

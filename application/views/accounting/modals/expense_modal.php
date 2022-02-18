@@ -67,7 +67,7 @@
                                                 </div>
                                                 <div class="col-md-4">
                                                     <div class="form-group">
-                                                        <label for="payment_account">Payment account</label>
+                                                        <label for="expense_payment_account">Payment account</label>
                                                         <select name="expense_payment_account" id="expense_payment_account" class="form-control" required>
                                                             <?php if(isset($expense)) : ?>
                                                                 <option value="<?=$expense->payment_account_id?>"><?=$this->chart_of_accounts_model->getName($expense->payment_account_id)?></option>

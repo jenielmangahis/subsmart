@@ -382,7 +382,7 @@ $(function() {
         checkbox.prop('checked', flag);
     });
 
-    $(document).on('click', 'ul#accounting_order li a[data-toggle="modal"], ul#accounting_employees li a, ul#accounting_vendors li a', function(e) {
+    $(document).on('click', 'ul#accounting_order li a[data-toggle="modal"], ul#accounting_employees li a, ul#accounting_vendors li a, ul#accounting_customers li a', function(e) {
         e.preventDefault();
         var target = e.currentTarget.dataset;
         var view = target.view
