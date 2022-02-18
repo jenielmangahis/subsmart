@@ -33,6 +33,7 @@ class Chart_of_accounts extends MY_Controller {
         $this->load->model('accounting_sales_receipt_model');
         $this->load->model('accounting_credit_memo_model');
         $this->load->model('accounting_statements_model');
+        $this->load->model('accounting_refund_receipt_model');
 
         add_css(array(
             "assets/css/accounting/banking.css?v=".rand(),
@@ -1161,6 +1162,85 @@ class Chart_of_accounts extends MY_Controller {
                     $transaction['deposit'] = number_format(floatval($checkItem->total), 2, '.', ',');
                     $transaction['payment_disabled'] = true;
                     $transaction['deposit_disabled'] = $count > 1;
+                break;
+            }
+
+            $data[] = $transaction;
+        }
+
+        return $data;
+    }
+
+    private function invoice_registers($accountId, $data)
+    {
+        $account = $this->chart_of_accounts_model->getById($accountId);
+        $accountType = $this->account_model->getById($account->account_id);
+
+        if(stripos($accountType->account_name, 'Asset') !== false) {
+            $accType = 'Asset';
+        } else if(stripos($accountType->account_name, 'Liabilities') !== false) {
+            $accType = 'Liability';
+        } else {
+            $accType = $accountType->account_name;
+        }
+
+        $invoiceItems = $this->chart_of_accounts_model->get_invoice_item_registers($accountId);
+
+        foreach($invoiceItems as $item) {
+            $invoice = $this->invoice_model->getinvoice($item->invoice_id);
+            $payee = $this->accounting_customers_model->get_by_id($invoice->customer_id);
+            $payeeName = $payee->first_name . ' ' . $payee->last_name;
+
+            $attachments = $this->accounting_attachments_model->get_attachments('Invoice', $invoice->id);
+
+            $transaction = [
+                'id' => $invoice->id,
+                'child_id' => $item->id,
+                'date' => date("m/d/Y", strtotime($invoice->date_issued)),
+                'ref_no' => '',
+                'ref_no_disabled' => true,
+                'type' => 'Invoice',
+                'payee_type' => 'customer',
+                'payee_id' => $invoice->customer_id,
+                'payee' => $payeeName,
+                'payee_disabled' => true,
+                'account_id' => '',
+                'account' => 'Accounts Receivable',
+                'account_disabled' => true,
+                'account_field' => '',
+                'memo' => $item->description,
+                'reconcile_status' => '',
+                'banking_status' => '',
+                'attachments' => count($attachments) > 0 ? count($attachments) : '',
+                'tax' => '',
+                'balance' => '',
+                'date_created' => date("m/d/Y H:i:s", strtotime($invoice->date_created))
+            ];
+
+            switch($accType) {
+                case 'Credit Card' :
+                    $transaction['charge'] = number_format(floatval($item->total), 2, '.', ',');
+                    $transaction['payment'] = '';
+                    $transaction['charge_disabled'] = true;
+                    $transaction['payment_disabled'] = true;
+                break;
+                case 'Asset' :
+                    $transaction['increase'] = '';
+                    $transaction['decrease'] = number_format(floatval($item->total), 2, '.', ',');
+                    $transaction['increase_disabled'] = true;
+                    $transaction['decrease_disabled'] = true;
+                break;
+                case 'Liability' :
+                    $transaction['increase'] = '';
+                    $transaction['decrease'] = number_format(floatval($item->total), 2, '.', ',');
+                    $transaction['increase_disabled'] = true;
+                    $transaction['decrease_disabled'] = true;
+                break;
+                default :
+                    $transaction['payment'] = number_format(floatval($item->total), 2, '.', ',');
+                    $transaction['deposit'] = '';
+                    $transaction['payment_disabled'] = true;
+                    $transaction['deposit_disabled'] = true;
                 break;
             }
 
@@ -2460,7 +2540,7 @@ class Chart_of_accounts extends MY_Controller {
         $creditMemoItems = $this->chart_of_accounts_model->get_credit_memo_registers($accountId);
 
         foreach($creditMemoItems as $item) {
-            $creditMemo = $this->accounting_credit_memo_model->getCreditMemoDetails($item->type_id);
+            $creditMemo = $this->accounting_credit_memo_model->getCreditMemoDetails($item->type_id)[0];
             $payee = $this->accounting_customers_model->get_by_id($creditMemo->customer_id);
             $payeeName = $payee->first_name . ' ' . $payee->last_name;
 
@@ -2568,28 +2648,91 @@ class Chart_of_accounts extends MY_Controller {
 
             switch($accType) {
                 case 'Credit Card' :
-                    $transaction['charge'] = '';
-                    $transaction['payment'] = number_format(floatval($refundReceipt->total_amount), 2, '.', ',');
+                    $transaction['charge'] = number_format(floatval($refundReceipt->total_amount), 2, '.', ',');
+                    $transaction['payment'] = '';
                     $transaction['charge_disabled'] = true;
                     $transaction['payment_disabled'] = true;
                 break;
                 case 'Asset' :
-                    $transaction['increase'] = number_format(floatval($refundReceipt->total_amount), 2, '.', ',');
-                    $transaction['decrease'] = '';
+                    $transaction['increase'] = '';
+                    $transaction['decrease'] = number_format(floatval($refundReceipt->total_amount), 2, '.', ',');
                     $transaction['increase_disabled'] = true;
                     $transaction['decrease_disabled'] = true;
                 break;
                 case 'Liability' :
-                    $transaction['increase'] = number_format(floatval($refundReceipt->total_amount), 2, '.', ',');
-                    $transaction['decrease'] = '';
+                    $transaction['increase'] = '';
+                    $transaction['decrease'] = number_format(floatval($refundReceipt->total_amount), 2, '.', ',');
                     $transaction['increase_disabled'] = true;
                     $transaction['decrease_disabled'] = true;
                 break;
                 default :
-                    $transaction['payment'] = '';
-                    $transaction['deposit'] = number_format(floatval($refundReceipt->total_amount), 2, '.', ',');
+                    $transaction['payment'] = number_format(floatval($refundReceipt->total_amount), 2, '.', ',');
+                    $transaction['deposit'] = '';
                     $transaction['payment_disabled'] = true;
                     $transaction['deposit_disabled'] = true;
+                break;
+            }
+
+            $data[] = $transaction;
+        }
+
+        $refundReceiptItems = $this->chart_of_accounts_model->get_refund_item_registers($accountId);
+
+        foreach($refundReceiptItems as $item) {
+            $refundReceipt = $this->accounting_refund_receipt_model->getRefundReceiptDetails($item->type_id)[0];
+            $payee = $this->accounting_customers_model->get_by_id($refundReceipt->customer_id);
+            $payeeName = $payee->first_name . ' ' . $payee->last_name;
+
+            $attachments = $this->accounting_attachments_model->get_attachments('Refund Receipt', $refundReceipt->id);
+
+            $transaction = [
+                'id' => $refundReceipt->id,
+                'child_id' => $item->id,
+                'date' => date("m/d/Y", strtotime($refundReceipt->refund_receipt_date)),
+                'ref_no' => '',
+                'ref_no_disabled' => true,
+                'type' => 'Refund',
+                'payee_type' => 'customer',
+                'payee_id' => $refundReceipt->customer_id,
+                'payee' => $payeeName,
+                'payee_disabled' => true,
+                'account_id' => $refundReceipt->refund_form,
+                'account' => $this->chart_of_accounts_model->getById($refundReceipt->refund_form),
+                'account_disabled' => true,
+                'account_field' => '',
+                'memo' => $item->description,
+                'reconcile_status' => '',
+                'banking_status' => '',
+                'attachments' => count($attachments) > 0 ? count($attachments) : '',
+                'tax' => '',
+                'balance' => '',
+                'date_created' => date("m/d/Y H:i:s", strtotime($item->created_at))
+            ];
+
+            switch($accType) {
+                case 'Credit Card' :
+                    $transaction['charge'] = '';
+                    $transaction['payment'] = number_format(floatval($item->total), 2, '.', ',');
+                    $transaction['charge_disabled'] = true;
+                    $transaction['payment_disabled'] = $count > 1;
+                break;
+                case 'Asset' :
+                    $transaction['increase'] = number_format(floatval($item->total), 2, '.', ',');
+                    $transaction['decrease'] = '';
+                    $transaction['increase_disabled'] = $count > 1;
+                    $transaction['decrease_disabled'] = true;
+                break;
+                case 'Liability' :
+                    $transaction['increase'] = number_format(floatval($item->total), 2, '.', ',');
+                    $transaction['decrease'] = '';
+                    $transaction['increase_disabled'] = $count > 1;
+                    $transaction['decrease_disabled'] = true;
+                break;
+                default :
+                    $transaction['payment'] = '';
+                    $transaction['deposit'] = number_format(floatval($item->total), 2, '.', ',');
+                    $transaction['payment_disabled'] = true;
+                    $transaction['deposit_disabled'] = $count > 1;
                 break;
             }
 
@@ -3324,7 +3467,7 @@ class Chart_of_accounts extends MY_Controller {
                 $data = $this->check_registers($accountId, $data);
             break;
             case 'invoice' :
-                
+                $data = $this->invoice_registers($accountId, $data);
             break;
             case 'receive-payment' :
                 $data = $this->receive_payment_registers($accountId, $data);
@@ -3380,6 +3523,7 @@ class Chart_of_accounts extends MY_Controller {
             default : 
                 $data = $this->cc_expense_registers($accountId, $data);
                 $data = $this->check_registers($accountId, $data);
+                $data = $this->invoice_registers($accountId, $data);
                 $data = $this->receive_payment_registers($accountId, $data);
                 $data = $this->journal_registers($accountId, $data);
                 $data = $this->bill_registers($accountId, $data);
