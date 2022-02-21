@@ -1,5 +1,6 @@
 function Step1() {
   jQuery.noConflict();
+  const PDFJS = pdfjsLib;
 
   const validFileExtensions = ["pdf"];
   const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
@@ -25,6 +26,7 @@ function Step1() {
 
     try {
       document = await PDFJS.getDocument({ url: documentUrl });
+      document = await document.promise;
     } catch (error) {
       alert(error);
       return;
@@ -100,8 +102,9 @@ function Step1() {
     $docModalTitle.text(file.name);
     $docPageCount.text(`${document.numPages} page`);
 
-    const scaleRequired = $canvas.width / documentPage.getViewport(1).width;
-    const viewport = documentPage.getViewport(scaleRequired);
+    const scaleRequired =
+      $canvas.width / documentPage.getViewport({ scale: 1 }).width;
+    const viewport = documentPage.getViewport({ scale: scaleRequired });
     const canvasContext = {
       viewport,
       canvasContext: context,
@@ -168,14 +171,16 @@ function Step1() {
     if (files && files.length) {
       for (let index = 0; index < eventFiles.length; index++) {
         const file = eventFiles[index];
-        if (files.find(f => f.file.name === file.name)) {
+        if (files.find((f) => f.file.name === file.name)) {
           alert(`File name already exists: ${file.name}`);
           return;
         }
       }
     }
 
-    const promises = [...eventFiles].map((file) => createFilePreview(event, file));
+    const promises = [...eventFiles].map((file) =>
+      createFilePreview(event, file)
+    );
     await Promise.all(promises);
     $(".esignBuilder__submit").removeAttr("disabled");
   }
@@ -194,7 +199,7 @@ function Step1() {
 
     const $items = $(".esignBuilder__docPreview");
     let documentSequence = $items.map((_, item) => {
-      const file = files.find(f => f.id == $(item).attr("data-id"));
+      const file = files.find((f) => f.id == $(item).attr("data-id"));
       return file === undefined ? null : file.file.name;
     });
 
@@ -234,7 +239,7 @@ function Step1() {
       $modalBody.append(canvas);
 
       const documentPage = await document.getPage(index);
-      const viewport = documentPage.getViewport(1);
+      const viewport = documentPage.getViewport({ scale: 1 });
       canvas.height = viewport.height;
       canvas.width = viewport.width;
 

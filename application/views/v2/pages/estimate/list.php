@@ -53,7 +53,7 @@
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end select-filter">
                                 <li><a class="dropdown-item" href="<?php echo base_url('estimate') ?>?order=added-asc">Newest first</a></li>
-                                <li><a class="dropdown-item" href="<?php echo base_url('estimate') ?>?order=added-asc">Oldest first</a></li>
+                                <li><a class="dropdown-item" href="<?php echo base_url('estimate') ?>?order=added-desc">Oldest first</a></li>
                                 <li><a class="dropdown-item" href="<?php echo base_url('estimate') ?>?order=date-accepted-desc">Accepted: newest</a></li>
                                 <li><a class="dropdown-item" href="<?php echo base_url('estimate') ?>?order=date-accepted-asc">Accepted: oldest</a></li>
                                 <li><a class="dropdown-item" href="<?php echo base_url('estimate') ?>?order=number-asc">Number: Asc</a></li>
@@ -160,11 +160,11 @@
                                         $total2 = $estimate->bundle1_total + $estimate->bundle2_total;
 
                                         if ($estimate->estimate_type == 'Option') {
-                                            echo '$ ' . $total1;
+                                            echo '$ ' . floatval($total1);
                                         } elseif ($estimate->estimate_type == 'Bundle') {
-                                            echo '$ ' . $total2;
+                                            echo '$ ' . floatval($total2);
                                         } else {
-                                            echo '$ ' . $estimate->grand_total;
+                                            echo '$ ' . floatval($estimate->grand_total);
                                         }
 
                                         ?>

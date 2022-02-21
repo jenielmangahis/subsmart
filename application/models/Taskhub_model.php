@@ -30,5 +30,30 @@ class Taskhub_model extends MY_Model {
         $query = $this->db->get();
         return $query->result();
     }
+
+    public function getCompanyTasksWithFilter($company_id, $keyword, $status_id , $date_range = array())
+    {
+        $this->db->select('tasks.*, DATE_FORMAT(tasks.estimated_date_complete,\'%b %d, %Y\') as estimated_date_complete_formatted, DATE_FORMAT(tasks.date_created,\'%b %d, %Y\') as date_created_formatted, tasks_status.status_text, tasks_status.status_color');
+        //$this->db->join('tasks_participants','tasks.task_id = tasks_participants.task_id', 'left');
+        //$this->db->join('users','users.id = tasks_participants.user_id', 'left');
+        $this->db->join('tasks_status','tasks.status_id = tasks_status.status_id','right');
+        $this->db->where('tasks.company_id', $company_id);
+
+        if( $status_id > 0 ){
+            $this->db->where('tasks.status_id', $status_id);            
+        }
+
+        if( !empty($date_range) ){
+            $this->db->where('tasks.date_created >=', $date_range['from']);         
+            $this->db->where('tasks.date_created <=', $date_range['to']);         
+        }
+
+        if ( $keyword != '' ) {
+            $this->db->like('tasks.subject', $keyword, 'both');
+        }
+
+        $this->db->order_by('priority','DESC');
+        return $this->db->get('tasks')->result();
+    }
         
 }

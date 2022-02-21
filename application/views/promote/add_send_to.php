@@ -172,10 +172,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <?php foreach($customerGroups as $cg){ ?>
                                             <li>
                                                 <?php
-                                                    $is_checked - ''; 
+                                                    $is_checked = ''; 
                                                     if($selectedExcludes){
                                                         if( array_key_exists($cg->id, $selectedExcludes) ){
-                                                            $is_checked - 'checked="checked"'; 
+                                                            $is_checked = 'checked="checked"';
+                                                            echo $cg->id;
                                                         }
                                                     }
                                                 ?>
@@ -215,10 +216,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     <td>
                                                         <div class="checkbox checkbox-sm">
                                                             <?php
-                                                                $is_checked - ''; 
+                                                                $is_checked = ''; 
                                                                 if($selectedCustomer){
                                                                     if( array_key_exists($c->prof_id, $selectedCustomer) ){
-                                                                        $is_checked - 'checked="checked"'; 
+                                                                        $is_checked = 'checked="checked"'; 
                                                                     }
                                                                 }
                                                             ?>
@@ -253,10 +254,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <?php foreach($customerGroups as $cg){ ?>
                                             <li>
                                                 <?php
-                                                    $is_checked - ''; 
+                                                    $is_checked = ''; 
                                                     if($selectedGroups){
                                                         if( array_key_exists($cg->id, $selectedGroups) ){
-                                                            $is_checked - 'checked="checked"'; 
+                                                            $is_checked = 'checked="checked"'; 
                                                         }
                                                     }
                                                 ?>

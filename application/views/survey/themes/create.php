@@ -40,6 +40,9 @@
         height: 350pt;
         object-fit: cover;
     }
+    .theme-image{
+        /*margin: 0 50%;*/
+    }
 </style>
 
 

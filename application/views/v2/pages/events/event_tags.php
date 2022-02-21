@@ -108,7 +108,7 @@
         $(document).on( "click", ".delete-item", function( event ) {
             var ID = $(this).data("id");
             Swal.fire({
-                title: 'Continue to REMOVE tag?',
+                title: 'Delete selected event tag?',
                 text: "",
                 icon: 'warning',
                 showCancelButton: true,

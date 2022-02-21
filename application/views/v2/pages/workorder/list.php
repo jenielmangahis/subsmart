@@ -70,17 +70,19 @@
                         </div>
                         <div class="dropdown d-inline-block">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
-                                <span>Filter by All</span> <i class='bx bx-fw bx-chevron-down'></i>
+                                <span>
+                                Filter by <?= ucwords($tab_status); ?>
+                                </span> <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end select-filter">
                                 <li><a class="dropdown-item" href="<?php echo base_url('workorder') ?>">All</a></li>
-                                <li><a class="dropdown-item" href="<?php echo base_url('workorder') ?>">New</a></li>
-                                <li><a class="dropdown-item" href="<?php echo base_url('workorder') ?>">Scheduled</a></li>
-                                <li><a class="dropdown-item" href="<?php echo base_url('workorder') ?>">Started</a></li>
-                                <li><a class="dropdown-item" href="<?php echo base_url('workorder') ?>">Paused</a></li>
-                                <li><a class="dropdown-item" href="<?php echo base_url('workorder') ?>">Invoiced</a></li>
-                                <li><a class="dropdown-item" href="<?php echo base_url('workorder') ?>">Withdrawn</a></li>
-                                <li><a class="dropdown-item" href="<?php echo base_url('workorder') ?>">Closed</a></li>
+                                <li><a class="dropdown-item" href="<?php echo base_url('workorder?status=new') ?>">New</a></li>
+                                <li><a class="dropdown-item" href="<?php echo base_url('workorder?status=scheduled') ?>">Scheduled</a></li>
+                                <li><a class="dropdown-item" href="<?php echo base_url('workorder?status=started') ?>">Started</a></li>
+                                <li><a class="dropdown-item" href="<?php echo base_url('workorder?status=paused') ?>">Paused</a></li>
+                                <li><a class="dropdown-item" href="<?php echo base_url('workorder?status=invoiced') ?>">Invoiced</a></li>
+                                <li><a class="dropdown-item" href="<?php echo base_url('workorder?status=withdrawn') ?>">Withdrawn</a></li>
+                                <li><a class="dropdown-item" href="<?php echo base_url('workorder?status=closed') ?>">Closed</a></li>
                             </ul>
                         </div>
                         <div class="nsm-page-buttons page-button-container">

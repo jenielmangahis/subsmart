@@ -151,7 +151,7 @@ ul.deal-stats.clearfix li span {
          <div class="side-title bold">About <?= $company->business_name; ?></div>
          <br/>
          <div class="business">
-            <img class="business-img" src="<?= getCompanyCoverPhoto($dealsSteals->company_id); ?>">
+            <img class="business-img" src="<?php echo (businessProfileImage($dealsSteals->company_id)) ? businessProfileImage($dealsSteals->company_id) : $url->assets ?>">
          </div>
          <br/>
          <ul class="business-info">

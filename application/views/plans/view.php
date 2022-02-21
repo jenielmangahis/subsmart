@@ -97,8 +97,13 @@
 													<!-- <td><input type="text" class="form-control" name="location[]" value="<?php echo $row['location'] ?>"></td> -->
 													<td><input readonly="" disabled="" type="number" class="form-control price" name="price[]" data-counter="<?=$i?>" id="price_<?=$i?>" min="0" value="<?php echo $row['price'] ?>"></td>
 													<td><input readonly="" disabled="" type="number" class="form-control discount" name="discount[]" data-counter="<?=$i?>" id="discount_<?=$i?>" min="0" value="<?php echo $row['discount'] ?>" readonly></td>
-													<td><span id="span_tax_<?=$i?>">0.00 (7.5%)</span></td>
-													<td><span id="span_total_<?=$i?>">0.00</span></td>
+													<td><span id="span_tax_<?=$i?>"><?php echo number_format($row['tax'], 2); ?></span></td>
+													<td>
+														<?php 
+															$total = ($row['quantity'] * $row['price'] + $row['tax']) - $row['discount'];
+														?>
+														<span id="span_total_<?=$i?>"><?php echo number_format($total, 2); ?></span>
+													</td>
 												</tr>											
 												<?php 
 												$i++;

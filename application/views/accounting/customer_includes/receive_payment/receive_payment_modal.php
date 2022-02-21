@@ -93,7 +93,12 @@
                                         <select class="form-control required" id="payment_method" name="payment_method"
                                             required>
                                             <option value="" disabled selected>Choose a payment method</option>
-                                            <option value="Cash">Cash</option>
+                                            <?php 
+                                            foreach($payment_methods as $option){
+                                                echo '<option value="'.$option->name.'">'.$option->name.'</option>';
+                                            }
+                                            ?>
+                                            <!-- <option value="Cash">Cash</option>
                                             <option value="Check">Check</option>
                                             <option value="Credit Card">Credit Card</option>
                                             <option value="Debit Card">Debit Card</option>
@@ -107,7 +112,7 @@
                                             <option value="e-Transfer">e-Transfer</option>
                                             <option value="Other Credit Card Professor">Other Credit Card Professor
                                             </option>
-                                            <option value="Other Payment Type">Other Payment Type</option>
+                                            <option value="Other Payment Type">Other Payment Type</option> -->
                                         </select>
                                     </div>
                                 </div>
@@ -121,10 +126,12 @@
                                     <div class="form-group" style="margin-bottom: 5px!important;">
                                         <div class="label">Deposit to</div><select class="form-control required"
                                             name="deposite_to" required>
-                                            <option value=""></option>
-                                            <option value="Cash on Hand">Cash on hand</option>
-                                            <option value="Cash">Cash</option>
-                                            <option value="Credit">Credit</option>
+                                            <option value="" disabled selected></option>
+                                            <?php 
+                                            foreach($deposits_to as $option){
+                                                echo '<option value="'.$option->id.'">'.$option->name.'</option>';
+                                            }
+                                            ?>
                                         </select>
                                     </div>
                                 </div>
