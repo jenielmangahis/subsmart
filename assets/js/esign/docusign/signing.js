@@ -601,6 +601,8 @@ function Signing(hash) {
 
       const canvas = $page.find("canvas").get(0);
       const context = canvas.getContext("2d");
+
+      await sleep(1);
       renderField({ fields: currentFields, recipient, context, $page });
 
       co_recipients.forEach((coRecipient) => {
@@ -1117,4 +1119,8 @@ function pxToEm(px, element) {
   var baseFontSize = parseFloat(getComputedStyle(temporaryElement).fontSize);
   temporaryElement.parentNode.removeChild(temporaryElement);
   return px / baseFontSize;
+}
+
+function sleep(seconds) {
+  return new Promise((resolve) => setTimeout(resolve, seconds * 1000));
 }
