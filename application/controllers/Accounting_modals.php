@@ -6069,6 +6069,14 @@ class Accounting_modals extends MY_Controller
                 $return = $this->get_customer_choices($return, $search, 'contact');
                 $return = $this->get_vendor_choices($return, $search, 'contact');
             break;
+            case 'deposit-to-account' :
+                $accountTypes = [
+                    'Bank',
+                    'Other Current Assets'
+                ];
+
+                $return = $this->get_account_choices($return, $search, $accountTypes);
+            break;
         }
 
         if ($search !== null && $search !== '') {
@@ -12786,5 +12794,76 @@ class Accounting_modals extends MY_Controller
         }
 
         $this->load->view("accounting/modals/$view", $this->page_data);
+    }
+
+    public function load_customer_invoices($customerId)
+    {
+        $post = json_decode(file_get_contents('php://input'), true);
+        $search = $post['columns'][0]['search']['value'];
+        $start = $post['start'];
+        $limit = $post['length'];
+
+        $filters = [
+            'from_date' => date("Y-m-d", strtotime($post['from_date'])),
+            'to_date' => date("Y-m-d", strtotime($post['to_date'])),
+            'overdue' => $post['overdue'],
+            'customer_id' => $customerId
+        ];
+
+        $invoices = $this->accounting_invoices_model->get_customer_invoices_to_pay($filters);
+
+        $data = [];
+        foreach($invoices as $invoice) {
+            $invoiceNum = str_replace('INV-', '', $invoice->invoice_number);
+            $description = "<a href='/invoice/genview/$invoice->id' class='text-info'>Invoice #$invoiceNum</a> (".date("m/d/Y", strtotime($invoice->date_issued)).")";
+
+            if($search !== "") {
+                if(stripos($invoiceNum, $search) !== false) {
+                    $data[] = [
+                        'id' => $invoice->id,
+                        'description' => $description,
+                        'due_date' => date("m/d/Y", strtotime($invoice->due_date)),
+                        'original_amount' => number_format(floatval($invoice->grand_total), 2, '.', ','),
+                        'open_balance' => number_format(floatval($invoice->balance), 2, '.', ',')
+                    ];
+                }
+            } else {
+                $data[] = [
+                    'id' => $invoice->id,
+                    'description' => $description,
+                    'due_date' => date("m/d/Y", strtotime($invoice->due_date)),
+                    'original_amount' => number_format(floatval($invoice->grand_total), 2, '.', ','),
+                    'open_balance' => number_format(floatval($invoice->balance), 2, '.', ',')
+                ];
+            }
+        }
+
+        $result = [
+            'draw' => $post['draw'],
+            'recordsTotal' => count($invoices),
+            'recordsFiltered' => count($data),
+            'data' => array_slice($data, $start, $limit)
+        ];
+
+        echo json_encode($result);
+    }
+
+    public function find_customer_by_invoice_no()
+    {
+        $invoiceNo = $this->input->post('invoice_no');
+
+        $customer = $this->accounting_invoices_model->get_customer_by_invoice_number('INV-'.$invoiceNo);
+
+        if(!is_null($customer)) {
+            $customerName = $customer->first_name . ' ' . $customer->last_name;
+        }
+
+        $result = [
+            'success' => !is_null($customer),
+            'customer_id' => !is_null($customer) ? $customer->prof_id : null,
+            'customer_name' => !is_null($customer) ? $customerName : null
+        ];
+
+        echo json_encode($result);
     }
 }

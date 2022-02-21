@@ -127,26 +127,15 @@
                     <div class="new-listing">
                         <h4>CUSTOMERS</h4>
 
-                        <ul>
-                            <!-- <li><a href="#" class="ajax-modal_invoice" data-toggle="modal" data-target="#addinvoiceModal">Invoice</a></li> -->
-                            <li><a
-                                    href="<?php echo base_url('accounting/addnewInvoice') ?>">Invoice</a>
-                            </li>
-                            <li><a href="#" class="customer_receive_payment_btn" data-toggle="modal"
-                                    data-target="">Receive payment</a></li>
-                            <!-- <li><a href="#" class="ajax-" data-toggle="modal" data-target="#addestimateModal">Estimate</a></li> -->
-                            <li><a href="#" class="ajax-" data-toggle="modal" data-target="#newJobModal">Estimate</a>
-                            </li>
-                            <li><a href="#" class="btnAdd" data-toggle="modal" data-target="#addcreditmemoModal">Credit
-                                    memo</a></li>
-                            <li><a href="#" class="ajax-" data-toggle="modal" data-target="#addsalesreceiptModal">Sales
-                                    receipt</a></li>
-                            <li><a href="#" class="ajax-" data-toggle="modal"
-                                    data-target="#add_refund_receipt_Modal">Refund receipt</a></li>
-                            <li><a href="#" class="ajax-" data-toggle="modal"
-                                    data-target="#delayed_credit_modal">Delayed credit</a></li>
-                            <li><a href="#" class="ajax-" data-toggle="modal" data-target="#create_charge_modal">Delayed
-                                    charge</a></li>
+                        <ul id="accounting_customers">
+                            <li><a href="<?php echo base_url('accounting/addnewInvoice') ?>">Invoice</a>
+                            <li><a href="#" class="ajax-modal" data-view="receive_payment_modal" data-toggle="modal" data-target="#receivePaymentModal">Receive Payment</a></li>
+                            <li><a href="#" data-toggle="modal" data-target="#newJobModal">Estimate</a></li>
+                            <li><a href="#" class="ajax-modal" data-view="credit_memo_modal" data-toggle="modal" data-target="#creditMemoModal">Credit memo</a></li>
+                            <li><a href="#" class="ajax-modal" data-view="sales_receipt_modal" data-toggle="modal" data-target="#salesReceiptModal">Sales receipt</a></li>
+                            <li><a href="#" class="ajax-modal" data-view="refund_receipt_modal" data-toggle="modal" data-target="#refundReceiptModal">Refund receipt</a></li>
+                            <li><a href="#" class="ajax-modal" data-view="delayed_credit_modal" data-toggle="modal" data-target="#delayedCreditModal">Delayed credit</a></li>
+                            <li><a href="#" class="ajax-modal" data-view="delayed_charge_modal" data-toggle="modal" data-target="#delayedChargeModal">Delayed charge</a></li>
                         </ul>
                     </div>
                 </div>
@@ -155,22 +144,14 @@
                         <h4>Vendors</h4>
 
                         <ul id="accounting_vendors">
-                            <li><a href="#" class="ajax-expense_modal" data-view="expense_modal" data-toggle="modal"
-                                    data-target="#expenseModal">Expense</a></li>
-                            <li><a href="#" class="ajax-check_modal" data-view="check_modal" data-toggle="modal"
-                                    data-target="#checkModal">Check</a></li>
-                            <li><a href="#" class="ajax-bill_modal" data-view="bill_modal" data-toggle="modal"
-                                    data-target="#billModal">Bill</a></li>
-                            <li><a href="#" class="ajax-pay_bills_modal" data-view="pay_bills_modal" data-toggle="modal"
-                                    data-target="#payBillsModal">Pay bills</a></li>
-                            <li><a href="#" class="ajax-purchase_order_modal" data-view="purchase_order_modal"
-                                    data-toggle="modal" data-target="#purchaseOrderModal">Purchase order</a></li>
-                            <li><a href="#" class="ajax-vendor_credit_modal" data-view="vendor_credit_modal"
-                                    data-toggle="modal" data-target="#vendorCreditModal">Vendor credit</a></li>
-                            <li><a href="#" class="ajax-credit_card_credit_modal" data-view="credit_card_credit_modal"
-                                    data-toggle="modal" data-target="#creditCardCreditModal">Credit card credit</a></li>
-                            <li><a href="#" class="ajax-print_checks_modal" data-view="print_checks_modal"
-                                    data-toggle="modal" data-target="#printChecksModal">Print checks</a></li>
+                            <li><a href="#" class="ajax-modal" data-view="expense_modal" data-toggle="modal" data-target="#expenseModal">Expense</a></li>
+                            <li><a href="#" class="ajax-modal" data-view="check_modal" data-toggle="modal" data-target="#checkModal">Check</a></li>
+                            <li><a href="#" class="ajax-modal" data-view="bill_modal" data-toggle="modal" data-target="#billModal">Bill</a></li>
+                            <li><a href="#" class="ajax-modal" data-view="pay_bills_modal" data-toggle="modal" data-target="#payBillsModal">Pay bills</a></li>
+                            <li><a href="#" class="ajax-modal" data-view="purchase_order_modal" data-toggle="modal" data-target="#purchaseOrderModal">Purchase order</a></li>
+                            <li><a href="#" class="ajax-modal" data-view="vendor_credit_modal" data-toggle="modal" data-target="#vendorCreditModal">Vendor credit</a></li>
+                            <li><a href="#" class="ajax-modal" data-view="credit_card_credit_modal" data-toggle="modal" data-target="#creditCardCreditModal">Credit card credit</a></li>
+                            <li><a href="#" class="ajax-modal" data-view="print_checks_modal" data-toggle="modal" data-target="#printChecksModal">Print checks</a></li>
                         </ul>
                     </div>
                 </div>
@@ -179,17 +160,9 @@
                         <h4>Employees</h4>
 
                         <ul id="accounting_employees">
-                            <li><a href="#" class="ajax-payroll_modal" data-view="payroll_modal" data-toggle="modal"
-                                    data-target="#payrollModal">Payroll</a></li>
-                            <li><a href="#" class="ajax-single_time_activity_modal"
-                                    data-view="single_time_activity_modal" data-toggle="modal"
-                                    data-target="#singleTimeModal">Single time activity</a></li>
-                            <!-- <li><a href="javascript:void(0)" class="time-activity-btn" data-toggle="modal"
-                                    data-target="#time_activity_modal">
-                                    Single time activity
-                                </a></li> -->
-                            <li><a href="#" class="ajax-weekly_timesheet_modal" data-view="weekly_timesheet_modal"
-                                    data-toggle="modal" data-target="#weeklyTimesheetModal">Weekly timesheet</a></li>
+                            <li><a href="#" class="ajax-modal" data-view="payroll_modal" data-toggle="modal" data-target="#payrollModal">Payroll</a></li>
+                            <li><a href="#" class="ajax-modal" data-view="single_time_activity_modal" data-toggle="modal" data-target="#singleTimeModal">Single time activity</a></li>
+                            <li><a href="#" class="ajax-modal" data-view="weekly_timesheet_modal" data-toggle="modal" data-target="#weeklyTimesheetModal">Weekly timesheet</a></li>
                         </ul>
                     </div>
                 </div>
@@ -198,22 +171,13 @@
                         <h4>Other</h4>
 
                         <ul id="accounting_order">
-                            <li><a href="#" class="ajax-bank_deposit_modal" data-view="bank_deposit_modal"
-                                    data-toggle="modal" data-target="#depositModal">Bank deposit</a></li>
-                            <li><a href="#" class="ajax-transfer_modal" data-view="transfer_modal" data-toggle="modal"
-                                    data-target="#transferModal">Transfer</a></li>
-                            <li><a href="#" class="ajax-journal_entry_modal" data-view="journal_entry_modal"
-                                    data-toggle="modal" data-target="#journalEntryModal">Journal entry</a></li>
-                            <li><a href="#" class="ajax-statement_modal" data-view="statement_modal" data-toggle="modal"
-                                    data-target="#statementModal">Statement</a></li>
-                            <li><a href="#" class="ajax-inventory_qty_modal" data-view="inventory_qty_modal"
-                                    data-toggle="modal" data-target="#inventoryModal">Inventory qty adjustment</a></li>
-                            <li><a href="#" class="ajax-pay_down_credit_card_modal"
-                                    data-view="pay_down_credit_card_modal" data-toggle="modal"
-                                    data-target="#payDownCreditModal">Pay down credit card</a></li>
-                            <li><a
-                                    href="<?php echo base_url('accounting/apply-for-capital') ?>">Apply
-                                    for Capital</a></li>
+                            <li><a href="#" class="ajax-modal" data-view="bank_deposit_modal" data-toggle="modal" data-target="#depositModal">Bank deposit</a></li>
+                            <li><a href="#" class="ajax-modal" data-view="transfer_modal" data-toggle="modal" data-target="#transferModal">Transfer</a></li>
+                            <li><a href="#" class="ajax-modal" data-view="journal_entry_modal" data-toggle="modal" data-target="#journalEntryModal">Journal entry</a></li>
+                            <li><a href="#" class="ajax-modal" data-view="statement_modal" data-toggle="modal" data-target="#statementModal">Statement</a></li>
+                            <li><a href="#" class="ajax-modal" data-view="inventory_qty_modal" data-toggle="modal" data-target="#inventoryModal">Inventory qty adjustment</a></li>
+                            <li><a href="#" class="ajax-modal" data-view="pay_down_credit_card_modal" data-toggle="modal" data-target="#payDownCreditModal">Pay down credit card</a></li>
+                            <li><a href="<?php echo base_url('accounting/apply-for-capital') ?>">Apply for Capital</a></li>
                         </ul>
                     </div>
                 </div>

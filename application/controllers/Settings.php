@@ -335,6 +335,8 @@ class Settings extends MY_Controller {
     {
 		$this->page_data['page']->title = 'Tax Rates';
         $this->page_data['page']->parent = 'Sales';
+        
+        $company_id = logged('company_id');
 
         $this->load->model('TaxRates_model');
         $this->load->model('Users_model');
@@ -342,7 +344,7 @@ class Settings extends MY_Controller {
         $user = $this->session->userdata('logged');
         $user = $this->Users_model->getUser($user['id']);
 
-        $taxRates = $this->TaxRates_model->getAllByCompanyId($user->company_id);
+        $taxRates = $this->TaxRates_model->getAllByCompanyId($company_id);
 
         $this->page_data['taxRates'] = $taxRates;
         $this->page_data['page']->menu = 'tax_rates';
@@ -357,18 +359,21 @@ class Settings extends MY_Controller {
         $user = $this->session->userdata('logged');
         $user = $this->Users_model->getUser($user['id']);
         $post = $this->input->post();
+        $comp_id = logged('company_id');
+
+        // dd($post);
 
         if( !empty($post) ){
-            if( $user ){
-                $is_default = 0;
-                if( $post['is_default'] ){
+            // if( $user ){
+            //     $is_default = 0;
+            //     if( $post['is_default'] ){
                     $is_default = 1;
-                }
+                // }
                 $data = [
                     'name' => $post['tax_name'],
                     'rate' => $post['tax_rate'],
                     'is_default' => $is_default,
-                    'company_id' => $user->company_id
+                    'company_id' => $comp_id
                 ];
 
                 $taxRates = $this->TaxRates_model->create($data);
@@ -376,10 +381,10 @@ class Settings extends MY_Controller {
                 $this->session->set_flashdata('message', 'Add tax rate was successful');
                 $this->session->set_flashdata('alert_class', 'alert-success');
 
-            }else{
-                $this->session->set_flashdata('message', 'Cannot find user');
-                $this->session->set_flashdata('alert_class', 'alert-danger');
-            }
+            // }else{
+            //     $this->session->set_flashdata('message', 'Cannot find user');
+            //     $this->session->set_flashdata('alert_class', 'alert-danger');
+            // }
 
         }else{
             $this->session->set_flashdata('message', 'Post value is empty');

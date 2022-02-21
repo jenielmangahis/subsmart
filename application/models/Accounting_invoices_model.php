@@ -459,4 +459,44 @@ class Accounting_invoices_model extends MY_Model
         $query = $this->db->query($sql);
         return $query->row();
     }
+
+    public function get_customer_invoices_to_pay($filters = [])
+    {
+        if(isset($filters['customer_id'])) {
+            $this->db->where('customer_id', $filters['customer_id']);
+        }
+
+        if(isset($filters['from_date'])) {
+            $this->db->where('date_issued >=', $filters['from_date']);
+        }
+
+        if(isset($filters['to_date'])) {
+            $this->db->where('date_issued <=', $filters['to_date']);
+        }
+
+        if($filters['overdue'] === 1) {
+            $this->db->where_not_in('status', ['Draft', 'Submitted', 'Approved', 'Declined', 'Paid']);
+            $this->db->where('due_date <', date('Y-m-d'));
+        } else {
+            $this->db->where_not_in('status', ['Draft', 'Submitted', 'Approved', 'Paid']);
+        }
+
+        $this->db->where('voided', null);
+
+        $this->db->order_by('date_issued', 'desc');
+
+        $query = $this->db->get('invoices');
+        return $query->result();
+    }
+
+    public function get_customer_by_invoice_number($invoiceNo)
+    {
+        $companyId = logged('company_id');
+        $this->db->select('acs_profile.*');
+        $this->db->where('invoices.company_id', $companyId);
+        $this->db->where('invoices.invoice_number', $invoiceNo);
+        $this->db->join('invoices', 'invoices.customer_id = acs_profile.prof_id');
+        $query = $this->db->get('acs_profile');
+        return $query->row();
+    }
 }

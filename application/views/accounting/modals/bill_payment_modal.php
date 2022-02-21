@@ -38,7 +38,7 @@
                                         </div>
                                         <div class="col-md-4">
                                             <h6 class="text-right">AMOUNT PAID</h6>
-                                            <h2 class="text-right">$<span class="payment-total-amount"><?=number_format($bill->remaining_balance, 2, '.', ',')?></span></h2>
+                                            <h2 class="text-right"><span class="payment-total-amount"><?=number_format(str_replace('$-', '-$', '$'.$bill->remaining_balance), 2, '.', ',')?></span></h2>
                                         </div>
                                         <div class="col-md-2">
                                             <div class="form-group">
@@ -264,11 +264,11 @@
                                                 <tbody>
                                                     <tr>
                                                         <td class="border-0">Amount to Apply</td>
-                                                        <td class="border-0">$<span class="amount-to-apply"><?=number_format($bill->remaining_balance, 2, '.', ',')?></span></td>
+                                                        <td class="border-0"><span class="amount-to-apply"><?=number_format(str_replace('$-', '-$', '$'.$bill->remaining_balance), 2, '.', ',')?></span></td>
                                                     </tr>
                                                     <tr>
                                                         <td class="border-0">Amount to Credit</td>
-                                                        <td class="border-0">$<span class="amount-to-credit">0.00</span></td>
+                                                        <td class="border-0"><span class="amount-to-credit">$0.00</span></td>
                                                     </tr>
                                                     <tr>
                                                         <td class="border-0"></td>

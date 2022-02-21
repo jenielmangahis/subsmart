@@ -364,6 +364,8 @@ $route['accounting/send-purchase-order-email-modal/(:any)'] = 'accounting_modals
 $route['accounting/send-purchase-order-email/(:any)']['post'] = 'accounting_modals/send_purchase_order_email/$1';
 $route['accounting/get-timesheet-activities']['post'] = 'accounting_modals/get_timesheet_activities';
 $route['accounting/copy-transaction/(:any)/(:any)'] = 'accounting_modals/copy_transaction/$1/$2';
+$route['accounting/load-customer-invoices/(:any)']['post'] = 'accounting_modals/load_customer_invoices/$1';
+$route['accounting/find-customer-by-invoice-no']['post'] = 'accounting_modals/find_customer_by_invoice_no';
 
 $route['accounting/lists'] = 'accounting/lists';
 

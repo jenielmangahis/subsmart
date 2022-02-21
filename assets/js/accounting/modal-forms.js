@@ -62,7 +62,8 @@ const dropdownFields = [
     'inv-asset-account',
     'income-account',
     'item-expense-account',
-    'sales-tax-category'
+    'sales-tax-category',
+    'deposit-to-account'
 ];
 const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
 
@@ -382,7 +383,7 @@ $(function() {
         checkbox.prop('checked', flag);
     });
 
-    $(document).on('click', 'ul#accounting_order li a[data-toggle="modal"], ul#accounting_employees li a, ul#accounting_vendors li a', function(e) {
+    $(document).on('click', '#new-popup ul li a.ajax-modal', function(e) {
         e.preventDefault();
         var target = e.currentTarget.dataset;
         var view = target.view
@@ -399,6 +400,8 @@ $(function() {
                     </div>
                 `);
             }
+
+            $(`${modal_element} [data-toggle="popover"]`).popover();
 
             if ($('div#modal-container .modal-body table:not(#category-details-table, #item-details-table)').length > 0) {
                 rowInputs = $('div#modal-container table tbody tr:first-child()').html();
@@ -548,6 +551,10 @@ $(function() {
                 loadBills();
             }
 
+            // if(modal_element === '#receivePaymentModal') {
+
+            // }
+
             $(modal_element).modal('show');
             $(document).off('shown', modal_element);
         });
@@ -630,7 +637,7 @@ $(function() {
             if (!$.fn.dataTable.isDataTable('#tags-table')) {
                 loadTagsDataTable();
             } else {
-                $('#tags-table').DataTable().ajax.reload();
+                $('#tags-table').DataTable().ajax.reload(null, true);
             }
             $(modal_element).modal('show');
         });
@@ -810,7 +817,7 @@ $(function() {
     });
 
     $(document).on('keyup', '#search-tag', function() {
-        $('#tags-table').DataTable().ajax.reload();
+        $('#tags-table').DataTable().ajax.reload(null, true);
     });
 
     $(document).on('click', 'div#tags-modal table#tags-table tbody tr td a.edit', function(e) {
@@ -2660,13 +2667,13 @@ $(function() {
     });
 
     $(document).on('change', '#billPaymentModal #bills_table_rows', function() {
-        $('#billPaymentModal #bills-table').DataTable().ajax.reload();
+        $('#billPaymentModal #bills-table').DataTable().ajax.reload(null, true);
     });
 
     $(document).on('click', '#billPaymentModal #apply-btn', function(e) {
         e.preventDefault();
 
-        $('#billPaymentModal #bills-table').DataTable().ajax.reload();
+        $('#billPaymentModal #bills-table').DataTable().ajax.reload(null, true);
     });
 
     $(document).on('click', '#billPaymentModal #reset-btn', function(e) {
@@ -2689,7 +2696,7 @@ $(function() {
             $('#billPaymentModal #bills-to').val(dateString).trigger('change');
         });
 
-        $('#billPaymentModal #bills-table').DataTable().ajax.reload();
+        $('#billPaymentModal #bills-table').DataTable().ajax.reload(null, true);
     });
 
     $(document).on('click', '#billPaymentModal #bills-table tbody a', function(e) {
@@ -2839,13 +2846,13 @@ $(function() {
     });
 
     $(document).on('change', '#billPaymentModal #vcredits_table_rows', function() {
-        $('#billPaymentModal #vendor-credits-table').DataTable().ajax.reload();
+        $('#billPaymentModal #vendor-credits-table').DataTable().ajax.reload(null, true);
     });
 
     $(document).on('click', '#billPaymentModal #vcredits-apply-btn', function(e) {
         e.preventDefault();
 
-        $('#billPaymentModal #vendor-credits-table').DataTable().ajax.reload();
+        $('#billPaymentModal #vendor-credits-table').DataTable().ajax.reload(null, true);
     });
 
     $(document).on('click', '#billPaymentModal #vcredits-reset-btn', function(e) {
@@ -2853,7 +2860,7 @@ $(function() {
 
         $('#billPaymentModal #vcredit-from').val('').trigger('change');
         $('#billPaymentModal #vcredit-to').val('').trigger('change');
-        $('#billPaymentModal #vendor-credits-table').DataTable().ajax.reload();
+        $('#billPaymentModal #vendor-credits-table').DataTable().ajax.reload(null, true);
     });
 
     $(document).on('change', '#billPaymentModal #vendor-credits-table tbody input[type="checkbox"]', function() {
@@ -2949,7 +2956,9 @@ $(function() {
             }
         });
 
-        $('#billPaymentModal span.amount-to-apply').html(parseFloat(billPayment).toFixed(2));
+        billPayment = '$'+parseFloat(billPayment).toFixed(2);
+
+        $('#billPaymentModal span.amount-to-apply').html(billPayment.replace('$-', '-$'));
 
         var creditPayment = 0.00;
         $('#billPaymentModal #vendor-credits-table tbody tr').each(function() {
@@ -2958,12 +2967,18 @@ $(function() {
             }
         });
 
-        $('#billPaymentModal span.amount-to-credit').html(parseFloat(creditPayment).toFixed(2));
+        creditPayment = '$'+parseFloat(creditPayment).toFixed(2);
+
+        $('#billPaymentModal span.amount-to-credit').html(creditPayment.replace('$-', '-$'));
+
+        billPayment = parseFloat(billPayment.replace('$', ''));
+        creditPayment = parseFloat(creditPayment.replace('$', ''));
 
         var amountPaid = parseFloat(billPayment - creditPayment).toFixed(2);
 
         $('#billPaymentModal #bill-payment-amount').val(amountPaid);
-        $('#billPaymentModal .payment-total-amount').html(amountPaid);
+        amountPaid = '$'+amountPaid;
+        $('#billPaymentModal .payment-total-amount').html(amountPaid.replace('$-', '-$'));
     });
 
     $(document).on('click', '#billPaymentModal #clear-payment', function(e) {
@@ -5173,6 +5188,140 @@ $(function() {
 
         $('#modal-form').submit();
     });
+
+    $(document).on('keyup', '#receivePaymentModal #invoice-no', function(e) {
+        $('#receivePaymentModal #invoice-no').removeClass('border-danger');
+    });
+
+    $(document).on('keyup', '#receivePaymentModal #search-invoice-no', function() {
+        $('#receivePaymentModal #invoices-table').DataTable().ajax.reload(null, true);
+    });
+
+    $(document).on('change', '#receivePaymentModal #invoices_table_rows', function() {
+        $('#receivePaymentModal #invoices-table').DataTable().ajax.reload(null, true);
+    });
+
+    $(document).on('change', '#receivePaymentModal #invoices-table thead #select-all-invoices', function() {
+        $('#receivePaymentModal #invoices-table tbody input[type="checkbox"]').prop('checked', $(this).prop('checked'));
+    });
+
+    $(document).on('change', '#receivePaymentModal #invoices-table tbody input[type="checkbox"]', function() {
+        if($(this).prop('checked')) {
+            var row = $(this).parent().parent().parent().parent();
+            var rowData = $('#receivePaymentModal #invoices-table').DataTable().row(row).data();
+
+            $(row).find('input[name="payment[]"]').val(rowData.open_balance);
+        } else {
+            $(row).find('input[name="payment[]"]').val('');
+        }
+
+        var checked = $('#receivePaymentModal #invoices-table tbody input[type="checkbox"]:checked').length;
+        var all = $('#receivePaymentModal #invoices-table tbody input[type="checkbox"]').length;
+
+        $('#receivePaymentModal #invoices-table thead #select-all-invoices').prop('checked', checked === all);
+    });
+
+    $(document).on('change', '#receivePaymentModal #invoices-table tbody input[name="payment[]"]', function() {
+        if($(this).val() !== '' && $(this).val() !== "0.00") {
+            $(this).parent().parent().find('input[type="checkbox"]').prop('checked', true);
+        }
+
+        var amountToApply = 0.00;
+        $('#receivePaymentModal #invoices-table tbody input[name="payment[]"]').each(function() {
+            if($(this).val() !== '') {
+                amountToApply = parseFloat(amountToApply) + parseFloat($(this).val());
+            }
+        });
+
+        amountToApply = '$'+parseFloat(amountToApply).toFixed(2);
+
+        $('#receivePaymentModal span.amount-to-apply').html(amountToApply.replace('$-', '-$'));
+        $('#receivePaymentModal #received-amount').val(amountToApply.replace('$', ''));
+    });
+
+    $(document).on('change', '#modal-container #modal-form #receivePaymentModal #customer', function(e) {
+        var id = $(this).val();
+
+        $('#receivePaymentModal .display-with-customer').removeClass('hide');
+
+        if($.fn.DataTable.isDataTable(`#receivePaymentModal #invoices-table`)) {
+            $('#receivePaymentModal #invoices-table').DataTable().clear();
+            $('#receivePaymentModal #invoices-table').DataTable().destroy();
+        }
+        $('#receivePaymentModal #invoices-table').DataTable({
+            autoWidth: false,
+            searching: false,
+            processing: true,
+            serverSide: true,
+            lengthChange: false,
+            ordering: false,
+            info: false,
+            ajax: {
+                url: `/accounting/load-customer-invoices/${id}`,
+                dataType: 'json',
+                contentType: 'application/json',
+                type: 'POST',
+                data: function(d) {
+                    d.columns[0].search.value = $('#receivePaymentModal #search-invoice-no').val();
+                    d.from_date = $('#receivePaymentModal #invoices-from').val();
+                    d.to_date = $('#receivePaymentModal #invoices-to').val();
+                    d.overdue = $('#receivePaymentModal #overdue_invoices_only').prop('checked') ? 1 : 0;
+                    d.length = $('#receivePaymentModal #invoices_table_rows').val()
+                    return JSON.stringify(d);
+                },
+                pagingType: 'full_numbers',
+            },
+            columns: [
+                {
+                    data: null,
+                    name: 'checkbox',
+                    fnCreatedCell: function(td, cellData, rowData, row, col) {
+                        $(td).html(`<div class="d-flex justify-content-center">
+                            <div class="checkbox checkbox-sec m-0">
+                                <input type="checkbox" id="invoice-${rowData.id}" value="${rowData.id}">
+                                <label for="invoice-${rowData.id}" class="p-0" style="width: 24px; height: 24px"></label>
+                            </div>
+                        </div>`);
+                    }
+                },
+                {
+                    data: 'description',
+                    name: 'description',
+                    fnCreatedCell: function(td, cellData, rowData, row, col) {
+                        $(td).html(cellData);
+                    }
+                },
+                {
+                    data: 'due_date',
+                    name: 'due_date',
+                    fnCreatedCell: function(td, cellData, rowData, row, col) {
+                        $(td).html(cellData);
+                    }
+                },
+                {
+                    data: 'original_amount',
+                    name: 'original_amount',
+                    fnCreatedCell: function(td, cellData, rowData, row, col) {
+                        $(td).html(cellData);
+                    }
+                },
+                {
+                    data: 'open_balance',
+                    name: 'open_balance',
+                    fnCreatedCell: function(td, cellData, rowData, row, col) {
+                        $(td).html(cellData);
+                    }
+                },
+                {
+                    data: null,
+                    name: 'payment',
+                    fnCreatedCell: function(td, cellData, rowData, row, col) {
+                        $(td).html(`<input type="number" onchange="convertToDecimal(this)" step=".01" class="form-control text-right" name="payment[]">`);
+                    }
+                }
+            ]
+        });
+    });
 });
 
 const convertToDecimal = (el) => {
@@ -6693,7 +6842,7 @@ const resetbillsfilter = () => {
 }
 
 const applybillsfilter = () => {
-    $('#payBillsModal table#bills-table').DataTable().ajax.reload();
+    $('#payBillsModal table#bills-table').DataTable().ajax.reload(null, true);
 }
 
 const computeBillsPaymentTotal = () => {
@@ -6895,7 +7044,7 @@ const updateTransaction = (event, el) => {
                 }
 
                 submitType = '';
-                $('#transactions-table').DataTable().ajax.reload();
+                $('#transactions-table').DataTable().ajax.reload(null, true);
             }
 
             toast(res.success, res.message);
@@ -6947,8 +7096,8 @@ const unlinkTransaction = () =>  {
             // $('#billPaymentModal #bills-table tbody tr').remove();
             // $('#billPaymentModal #vendor-credits-table tbody tr').remove();
             $('#billPaymentModal .payment-total-amount').html('0.00');
-            $('#billPaymentModal #bills-table').DataTable().ajax.reload();
-            $('#billPaymentModal #vendor-credits-table').DataTable().ajax.reload();
+            $('#billPaymentModal #bills-table').DataTable().ajax.reload(null, true);
+            $('#billPaymentModal #vendor-credits-table').DataTable().ajax.reload(null, true);
         }
     }
 }
@@ -8041,4 +8190,55 @@ const sendPurchaseOrder = (purchaseOrderId) => {
 
         $('#sendEmailModal').modal('show');
     });
+}
+
+const findCustByInvoiceNo = () => {
+    var invoiceNo = $('#receivePaymentModal #invoice-no').val();
+    var data = new FormData();
+    data.set('invoice_no', invoiceNo);
+
+    $.ajax({
+        url: '/accounting/find-customer-by-invoice-no',
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function(result) {
+            var res = JSON.parse(result);
+
+            if(res.success) {
+                $('#receivePaymentModal #customer').append(`<option value="${res.customer_id}" selected>${res.customer_name}</option>`).trigger('change');
+            } else {
+                $('#receivePaymentModal #invoice-no').addClass('border-danger');
+            }
+        }
+    });
+}
+
+const cancelFindByInvoice = () => {
+    $('#receivePaymentModal #invoice-no').val('');
+
+    $("body").trigger("click");
+}
+
+const applyInvoicesFilter = (e) => {
+    e.preventDefault();
+
+    $('#receivePaymentModal #invoices-table').DataTable().ajax.reload(null, true);
+}
+
+const resetInvoicesFilter = (e) => {
+    e.preventDefault();
+
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+
+    today = mm + '/' + dd + '/' + yyyy;
+
+    $('#receivePaymentModal #invoices-from').val(today);
+    $('#receivePaymentModal #invoices-to').val(today);
+    $('#receivePaymentModal #overdue_invoices_only').prop('checked', false);
+    $('#receivePaymentModal #invoices-table').DataTable().ajax.reload(null, true);
 }
