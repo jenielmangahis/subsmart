@@ -453,7 +453,7 @@ class DocuSign extends MYF_Controller
 
         $nextRecipient = null;
         foreach ($recipients as $recipient) {
-            if ($recipient['id'] > $recipientId) {
+            if ($recipient['id'] > $recipientId && $recipient['role'] !== 'Receives a copy') {
                 $nextRecipient = $recipient;
                 break;
             }
@@ -522,9 +522,14 @@ class DocuSign extends MYF_Controller
 
             if (!$isSent) {
                 $errors[$recipient['id']] = $mail->ErrorInfo;
+            } else if ($recipient['role'] === 'Receives a copy') {
+                $this->db->where('id', $recipient['id']);
+                $this->db->update('user_docfile_recipients', ['completed_at' => date('Y-m-d H:i:s')]);
             }
         }
 
+        $this->db->where('id', $envelope['id']);
+        $this->db->update('user_docfile', ['status' => 'Completed']);
         return ['errors' => $errors];
     }
 
