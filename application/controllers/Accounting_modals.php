@@ -47,6 +47,8 @@ class Accounting_modals extends MY_Controller
         $this->load->model('accounting_timesheet_settings_model');
         $this->load->model('TaxRates_model');
         $this->load->model('item_starting_value_adj_model', 'starting_value_model');
+        $this->load->model('accounting_receive_payment_model');
+        $this->load->model('payment_records_model');
         $this->load->library('form_validation');
     }
 
@@ -1074,6 +1076,9 @@ class Accounting_modals extends MY_Controller
                 break;
                 case 'billPaymentModal':
                     $this->result = $this->bill_payment($data);
+                break;
+                case 'receivePaymentModal' :
+                    $this->result = $this->receive_payment($data);
                 break;
             }
         } catch (\Exception $e) {
@@ -4926,6 +4931,124 @@ class Accounting_modals extends MY_Controller
             $return['data'] = $billPaymentId;
             $return['success'] = $billPaymentId ? true : false;
             $return['message'] = $billPaymentId ? 'Entry Successful!' : 'An unexpected error occured!';
+        }
+
+        return $return;
+    }
+
+    private function receive_payment($data)
+    {
+        $this->form_validation->set_rules('customer', 'Customer', 'required');
+        $this->form_validation->set_rules('invoice[]', 'Payment amount', 'required');
+        $this->form_validation->set_rules('payment[]', 'Payment amount', 'required');
+
+        if ($this->form_validation->run() === false) {
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = 'Error';
+        } else {
+            $paymentData = [
+                'company_id' => logged('company_id'),
+                'customer_id' => $data['customer'],
+                'payment_date' => date("Y-m-d", strtotime($data['payment_date'])),
+                'payment_method' => $data['payment_method'],
+                'ref_no' => $data['ref_no'],
+                'deposit_to' => $data['deposit_to_account'],
+                'amount' => $data['received_amount'],
+                'memo' => $data['memo'],
+                'status' => 1
+            ];
+
+            $paymentId = $this->accounting_receive_payment_model->createReceivePayment($paymentData);
+
+            if($paymentId) {
+                $depositToAcc = $this->chart_of_accounts_model->getById($data['deposit_to_account']);
+                $depositToAccType = $this->account_model->getById($depositToAcc->account_id);
+
+                if ($depositToAccType->account_name === 'Credit Card') {
+                    $newBalance = floatval($depositToAcc->balance) - floatval($data['received_amount']);
+                } else {
+                    $newBalance = floatval($depositToAcc->balance) + floatval($data['received_amount']);
+                }
+
+                $newBalance = number_format($newBalance, 2, '.', ',');
+
+                $depositToAccData = [
+                    'id' => $depositToAcc->id,
+                    'company_id' => logged('company_id'),
+                    'balance' => $newBalance
+                ];
+
+                $this->chart_of_accounts_model->updateBalance($depositToAccData);
+
+                if (isset($data['attachments']) && is_array($data['attachments'])) {
+                    $order = 1;
+                    foreach ($data['attachments'] as $attachmentId) {
+                        $linkAttachmentData = [
+                            'type' => 'Payment',
+                            'attachment_id' => $attachmentId,
+                            'linked_id' => $paymentId,
+                            'order_no' => $order
+                        ];
+
+                        $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
+
+                        $order++;
+                    }
+                }
+
+                $paymentInvoices = [];
+                foreach($data['invoice'] as $key => $invoiceId) {
+                    $paymentInvoices[] = [
+                        'receive_payment_id' => $paymentId,
+                        'invoice_id' => $invoiceId,
+                        'payment_amount' => number_format(floatval($data['payment'][$key]), 2, '.', ',')
+                    ];
+
+                    $invoice = $this->accounting_invoices_model->get_invoice_by_invoice_id($invoiceId);
+                    $paymentRecords = $this->accounting_invoices_model->get_invoice_payment_records($invoice->invoice_number);
+
+                    $paymentAmounts = array_column($paymentRecords, 'invoice_amount');
+                    $totalPayment = array_sum($paymentAmounts);
+
+                    $balance = floatval($invoice->grand_total) - floatval($totalPayment);
+                    $balance -= floatval($data['payment'][$key]);
+
+                    if($balance === 0) {
+                        $status = 'Paid';
+                    } else {
+                        if(floatval($invoice->grand_total) > $balance) {
+                            $status = 'Partially Paid';
+                        }
+                    }
+
+                    $invoiceData = [
+                        'balance' => $balance,
+                        'status' => isset($status) ? $status : $invoice->status
+                    ];
+                    $this->accounting_invoices_model->updateInvoices($invoiceId, $invoiceData);
+
+                    $this->payment_records_model->create([
+                        'user_id' => logged('id'),
+                        'company_id' => logged('company_id'),
+                        'customer_id' => $data['customer'],
+                        'invoice_amount' => number_format(floatval($data['payment'][$key]), 2, '.', ','),
+                        'invoice_tip' => 0.00,
+                        'payment_date' => date("Y-m-d", strtotime($data['payment_date'])),
+                        'payment_method' => $data['payment_method'],
+                        'invoice_number' => $invoice->invoice_number,
+                        'reference_number' => '',
+                        'notes' => ''
+                    ]);
+                }
+
+                $this->accounting_receive_payment_model->add_payment_invoices($paymentInvoices);
+            }
+
+            $return = [];
+            $return['data'] = $paymentId;
+            $return['success'] = $paymentId ? true : false;
+            $return['message'] = $paymentId ? 'Entry Successful!' : 'An unexpected error occured!';
         }
 
         return $return;
@@ -12817,6 +12940,13 @@ class Accounting_modals extends MY_Controller
             $invoiceNum = str_replace('INV-', '', $invoice->invoice_number);
             $description = "<a href='/invoice/genview/$invoice->id' class='text-info'>Invoice #$invoiceNum</a> (".date("m/d/Y", strtotime($invoice->date_issued)).")";
 
+            $paymentRecords = $this->accounting_invoices_model->get_invoice_payment_records($invoice->invoice_number);
+
+            $paymentAmounts = array_column($paymentRecords, 'invoice_amount');
+            $totalPayment = array_sum($paymentAmounts);
+
+            $balance = floatval($invoice->grand_total) - floatval($totalPayment);
+
             if($search !== "") {
                 if(stripos($invoiceNum, $search) !== false) {
                     $data[] = [
@@ -12824,7 +12954,7 @@ class Accounting_modals extends MY_Controller
                         'description' => $description,
                         'due_date' => date("m/d/Y", strtotime($invoice->due_date)),
                         'original_amount' => number_format(floatval($invoice->grand_total), 2, '.', ','),
-                        'open_balance' => number_format(floatval($invoice->balance), 2, '.', ',')
+                        'open_balance' => number_format(floatval($balance), 2, '.', ',')
                     ];
                 }
             } else {
@@ -12833,7 +12963,7 @@ class Accounting_modals extends MY_Controller
                     'description' => $description,
                     'due_date' => date("m/d/Y", strtotime($invoice->due_date)),
                     'original_amount' => number_format(floatval($invoice->grand_total), 2, '.', ','),
-                    'open_balance' => number_format(floatval($invoice->balance), 2, '.', ',')
+                    'open_balance' => number_format(floatval($balance), 2, '.', ',')
                 ];
             }
         }

@@ -204,4 +204,22 @@ class Accounting_receive_payment_model extends MY_Model
         $query = $this->db->query($sql);
         return $query->row();
     }
+    public function get_payment_methods($company_id)
+    {
+        $sql = "SELECT * FROM accounting_payment_methods WHERE company_id = " . $company_id . " and status = 1 ORDER BY id ASC";
+        $query = $this->db->query($sql);
+        return $query->result();
+    }
+    public function get_deposits_to($company_id)
+    {
+        $sql = "SELECT * FROM accounting_chart_of_accounts WHERE company_id = " . $company_id . " and active = 1 ORDER BY id ASC";
+        $query = $this->db->query($sql);
+        return $query->result();
+    }
+    public function add_payment_invoices($paymentInvoices)
+    {
+        $this->db->insert_batch('accounting_receive_payment_invoices', $paymentInvoices);
+		return $this->db->insert_id();
+    }
+
 }

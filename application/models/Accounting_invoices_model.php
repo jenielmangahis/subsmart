@@ -499,4 +499,12 @@ class Accounting_invoices_model extends MY_Model
         $query = $this->db->get('acs_profile');
         return $query->row();
     }
+
+    public function get_invoice_payment_records($invoiceNo)
+    {
+        $this->db->where('company_id', logged('company_id'));
+        $this->db->where('invoice_number', $invoiceNo);
+        $query = $this->db->get('payment_records');
+        return $query->result();
+    }
 }

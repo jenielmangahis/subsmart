@@ -440,6 +440,7 @@ $route['management-report/send'] = 'accounting/management_report_send_email';
 $route['management-report/export/pdf'] = 'accounting/management_report_generate_pdf';
 $route['management-report/export/docx'] = 'accounting/management_report_generate_docx';
 $route['management-report/generate/preview'] = 'accounting/management_report_generate_pdf';
+$route['import/customer'] = 'accounting/import_customers';
 
 
 // Accounting products and services
