@@ -662,6 +662,7 @@ class Accounting extends MY_Controller
             "assets/css/accounting/accounting_includes/create_invoice.css",
             "assets/css/accounting/accounting_includes/customer_types.css",
             "assets/css/accounting/accounting_includes/customer_single_modal.css",
+            "assets/css/accounting/accounting_includes/new_customer.css",
         ));
         add_footer_js(array(
             "assets/js/accounting/sales/customers.js",
@@ -673,7 +674,9 @@ class Accounting extends MY_Controller
             "assets/js/accounting/sales/customer_includes/customer_types.js",
             "assets/js/accounting/sales/customer_includes/export_table.js",
             "assets/js/accounting/sales/customer_includes/customer_single_modal.js",
-            'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js'
+            "assets/js/accounting/sales/customer_includes/new_customer.js",
+            'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js',
+            'https://unpkg.com/dropzone@5/dist/min/dropzone.min.js'
         ));
 
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
@@ -698,7 +701,10 @@ class Accounting extends MY_Controller
 
         $this->load->view('accounting/customers', $this->page_data);
     }
-
+    public function import_customers()
+    {
+        
+    }
     public function deposits()
     {
         $company_id = getLoggedCompanyID();

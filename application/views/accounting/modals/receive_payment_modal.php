@@ -53,18 +53,16 @@
                                                         </select>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-4 d-flex align-items-center">
-                                                    <div>
-                                                        <div class="dropdown">
-                                                            <button class="btn btn-transparent w-100" type="button" id="findByInvoice" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Find by invoice no.</button>
-                                                            <div class="dropdown-menu p-3" style="width: 150%" aria-labelledby="findByInvoice">
-                                                                <div class="form-group">
-                                                                    <label for="invoice-no">Invoice no.</label>
-                                                                    <input type="text" class="form-control" id="invoice-no">
-                                                                </div>
-                                                                <button class="btn-transparent float-left w-25" type="button" onclick="cancelFindByInvoice()">Cancel</button>
-                                                                <button class="btn-transparent float-right w-25" type="button" onclick="findCustByInvoiceNo()">Find</button>
+                                                <div class="col-md-2 d-flex align-items-center">
+                                                    <div class="dropdown w-100">
+                                                        <button class="btn btn-transparent w-100" type="button" id="findByInvoice" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Find by invoice no.</button>
+                                                        <div class="dropdown-menu p-3" style="width: 150%" aria-labelledby="findByInvoice">
+                                                            <div class="form-group">
+                                                                <label for="invoice-no">Invoice no.</label>
+                                                                <input type="text" class="form-control" id="invoice-no">
                                                             </div>
+                                                            <button class="btn-transparent float-left w-25" type="button" onclick="cancelFindByInvoice()">Cancel</button>
+                                                            <button class="btn-transparent float-right w-25" type="button" onclick="findCustByInvoiceNo()">Find</button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -120,7 +118,7 @@
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label for="received-amount">Amount received</label>
-                                                        <input type="number" name="received_amount" class="form-control text-right" id="received-amount" value="0.00" onchange="convertToDecimal(this)">
+                                                        <input type="number" name="received_amount" step=".01" class="form-control text-right" id="received-amount" value="0.00" onchange="convertToDecimal(this)">
                                                     </div>
                                                 </div>
                                             </div>

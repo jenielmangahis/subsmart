@@ -227,6 +227,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <?php include viewPath('accounting/customer_includes/customer_type/customer_types_modal'); ?>
 <?php include viewPath('accounting/customer_includes/create_statement/create_statement_modal'); ?>
 <?php include viewPath('accounting/customer_includes/time_activity/time_activity'); ?>
+<?php include viewPath('accounting/customer_includes/new_customer/import_customers_modal'); ?>
 
 <link href="https://nightly.datatables.net/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
 <script>

@@ -11,25 +11,25 @@ defined('BASEPATH') or exit('No direct script access allowed');
             <div class="row custom__border">
                 <div class="col-xl-12">
                     <div class="card">
+                        <div class="row margin-bottom-ter mb-2 align-items-center">
+                          <div class="col-auto vault__header">
+                              <h3 class="page-title mb-0 vault__title">Add Photos</h3>
+                          </div>                          
+                        </div>
+                        <div class="pl-3 pr-3 mt-0 row">
+                            <div class="col mb-4 left alert alert-warning mt-0 mb-2">
+                                <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">
+                                    Upload your before and after photos. 
+                                </span>
+                            </div>
+                        </div>
+
                         <div class="card-body">
                         <?php if (empty($photos)) : ?>
                             <?php echo form_open_multipart('before-after/save-before-after', ['class' => 'form-validate require-validation', 'id' => 'item_categories_form', 'autocomplete' => 'off']); ?>
                         <?php else :?>
                             <?php echo form_open('before-after/update-before-after', ['class' => 'form-validate require-validation', 'id' => 'item_categories_form', 'autocomplete' => 'off']); ?>
                         <?php endif;?>
-                            <h2 class="page-title text-left">Add Photos</h2>
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <div style="padding-top: 8px;">
-                                        <p>Upload your photos.</p>
-                                    </div>
-                                </div>
-                                <div class="col-sm-6 text-right">
-                                    <div class="btn-group" role="group" aria-label="...">
-                                        <button class="btn btn-primary" data-to-customer="send" data-on-click-label="Sending..."><span class="fa fa-envelope-o fa-margin-right"></span> Send to Customer</button>
-                                    </div>
-                                </div>
-                            </div>
                             <hr>
                             <div class="col-md-12 col-lg-12 col-xl-9">
                                 <div>
@@ -266,8 +266,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
                                     </div>
                                     <hr class="card-hr">
-                                    <button type="submit" class="btn btn-primary margin-right" id="saveBtnAddPhotos">Save</button>
-                                    <a class="a-ter" href="<?php echo base_url() . "vault/beforeafter"; ?>">cancel this</a>
+                                    <button type="submit" class="btn btn-primary" id="saveBtnAddPhotos">Save</button>                                    
+                                    <a class="btn btn-primary" href="<?php echo base_url() . "vault/beforeafter"; ?>">Cancel</a>
                                 </div>
                             </div>
                         </div>

@@ -92,7 +92,7 @@ label>input {
 												<!-- <th>LOCATION</th> -->
 												<th width="100px">COST</th>
 												<th width="100px">Discount</th>
-												<th>Tax(%)</th>
+												<th width="110px">Tax(%)</th>
 												<th>Total</th>
 											</tr>
 										</thead>
@@ -113,8 +113,10 @@ label>input {
 														<td><input type="text" class="form-control quantity" name="quantity[]" value="<?php echo $row['quantity'] ?>" data-counter="<?=$i?>" id="quantity_<?=$i?>"></td>
 														<!-- <td><input type="text" class="form-control" name="location[]" value="<?php echo $row['location'] ?>"></td> -->
 														<td><input readonly type="number" class="form-control price" name="price[]" data-counter="<?=$i?>" id="price_<?=$i?>" min="0" value="<?php echo $row['price'] ?>"></td>
-														<td><input type="number" class="form-control discount" name="discount[]" data-counter="<?=$i?>" id="discount_<?=$i?>" min="0" value="<?php echo $row['discount'] ?>" readonly></td>
-														<td><span id="span_tax_<?=$i?>">0.00 (7.5%)</span></td>
+														<td><input type="number" class="form-control discount" name="discount[]" data-counter="<?=$i?>" id="discount_<?=$i?>" min="0" value="<?php echo $row['discount'] ?>"></td>
+														<td>
+															<input type="text" data-itemid="<?=$i?>" class="form-control tax_change valid" name="tax[]" data-counter="<?=$i?>" id="tax1_<?=$i?>" readonly="" min="0" value="<?php echo $row['tax']; ?>" aria-invalid="false">
+														</td>
 														<td><span id="span_total_<?=$i?>">0.00</span></td>
 														<td>
 															<a href="javascript:void(0);" class="remove btn btn-sm btn-success" id="<?= $row['item_id']; ?>"><i class="fa fa-trash"></i></a>

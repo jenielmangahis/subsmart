@@ -51,7 +51,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 		                    	<div class="box-header with-border">
 		                            <h5 class="box-title"><?php echo $task->subject; ?>
 		                            	<span class="font-weight-lighter">&ensp;#<?php echo $task->task_id; ?></span>
-		                            	&ensp;<span class="font-weight-lighter border border-dark px-2 rounded" style='background-color: <?php echo $task->status_color; ?>'><?php echo $task->status_text; ?></span>
+		                            	&ensp;<span class="font-weight-lighter border border-dark px-2 rounded" style='color: #ffffff;background-color: <?php echo $task->status_color; ?>'><?php echo $task->status_text; ?></span>
 		                        	</h5>
 		                        </div>
 		                        <div class="box-body">

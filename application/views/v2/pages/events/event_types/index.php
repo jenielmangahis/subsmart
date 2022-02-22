@@ -24,7 +24,7 @@
                 <div class="row">
                     <div class="col-12 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="nsm-button primary" onclick="location.href='<?= base_url('events/add_new_event_tag'); ?>'">
+                            <button type="button" class="nsm-button primary" onclick="location.href='<?= base_url('event_types/add_new'); ?>'">
                                 <i class='bx bx-fw bx-book'></i> New Event Type
                             </button>
                         </div>
@@ -115,13 +115,15 @@
 
 
 <script type="text/javascript">
-    $(".nsm-table").nsmPagination();
-
     $(document).ready(function() {
+        var base_url = "<?php echo base_url(); ?>";
+        
+        $(".nsm-table").nsmPagination();
+
         $(document).on('click', '.delete-item', function() {
             var eid = $(this).data("id");
             Swal.fire({
-                title: 'Delete selected Event Type?',
+                title: 'Delete selected event type?',
                 text: "",
                 icon: 'warning',
                 showCancelButton: true,

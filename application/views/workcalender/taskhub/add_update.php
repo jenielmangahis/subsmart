@@ -52,7 +52,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
                                     <div class="col-md-6 form-group">
                                         <label for="notes">Notes</label>
-                                        <textarea class="form-control" name="notes" id="notes" autocomplete="off" style="height: 300px !important" placeholder="Enter your task updates notes"
+                                        <textarea class="form-control ckeditor" name="notes" id="notes" autocomplete="off" style="height: 300px !important" placeholder="Enter your task updates notes"
                                             required><?php echo set_value('notes'); ?></textarea>
                                     </div>
                                 </div>

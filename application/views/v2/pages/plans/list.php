@@ -81,10 +81,10 @@
                                             </a>
                                             <ul class="dropdown-menu dropdown-menu-end">
                                                 <li>
-                                                    <a class="dropdown-item" href="<?php echo url('plans/edit/'.$plan->id) ?>">View</a>
+                                                    <a class="dropdown-item" href="<?php echo url('plans/edit/'.$plan->id) ?>">Edit</a>
                                                 </li>
                                                 <li>
-                                                    <a class="dropdown-item" href="<?php echo url('plans/view/'.$plan->id) ?>">Edit</a>
+                                                    <a class="dropdown-item" href="<?php echo url('plans/view/'.$plan->id) ?>">View</a>
                                                 </li>
                                                 <li>
                                                     <a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?= $plan->id; ?>" data-name="<?= $plan->plan_name; ?>">Delete</a>
@@ -128,34 +128,32 @@
             let plan_id = $(this).attr("data-id");
 
             Swal.fire({
-                title: 'Delete Estimate',
-                text: "Are you sure you want to delete this Plan?",
+                text: "Are you sure you want to delete selected plan?",
                 icon: 'question',
                 confirmButtonText: 'Proceed',
                 showCancelButton: true,
                 cancelButtonText: "Cancel"
             }).then((result) => {
-                $.ajax({
-                    type: 'POST',
-                    url: "<?php echo base_url(); ?>plans/delete_plan_v2",
-                    data: {
-                        id: plan_id
-                    },
-                    success: function(result) {
-                        console.log(result);
-                        Swal.fire({
-                            title: 'Good job!',
-                            text: "Plan has been deleted successfully.",
-                            icon: 'success',
-                            showCancelButton: false,
-                            confirmButtonText: 'Okay'
-                        }).then((result) => {
-                            if (result.value) {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: 'POST',
+                        url: "<?php echo base_url(); ?>plans/delete_plan_v2",
+                        data: {
+                            id: plan_id
+                        },
+                        success: function(result) {
+                            Swal.fire({
+                                title: 'Good job!',
+                                text: "Plan has been deleted successfully.",
+                                icon: 'success',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            }).then((result) => {
                                 location.reload();
-                            }
-                        });
-                    },
-                });
+                            });
+                        },
+                    });
+                }                
             });
         });
     });
