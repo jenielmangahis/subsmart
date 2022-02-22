@@ -356,19 +356,26 @@ class Taskhub extends MY_Controller {
 			$keyword = $_POST['keyword'];
 		}
 
-		if(isset($_POST['statusid'])){
+		if(isset($_POST['status'])){
 			$status_id = $_POST['status'];
 		}
 
-		if(isset($_POST['fromdate'])){
-			$from_date = $_POST['fromdate'];
+		if($_POST['fromdate'] != ''){
+			$from_date = $_POST['fromdate'] . ' 00:00:00';
 		}
 
-		if(isset($_POST['todate'])){
-			$to_date = $_POST['todate'];
+		if($_POST['todate'] != ''){
+			$to_date = $_POST['todate'] . ' 23:59:59';
 		}
 
-		$result = getTasks(true, $keyword, $status_id, $from_date, $to_date);
+		$date_range = array();
+		if( $from_date != '' && $to_date != '' ){
+			$date_range = ['from' => $from_date, 'to' => $to_date];
+		}
+
+		$cid = logged('company_id');
+		$result = $this->taskhub_model->getCompanyTasksWithFilter($cid,$keyword, $status_id, $date_range);
+		//$result = getTasks(true, $keyword, $status_id, $from_date, $to_date);
 
 		echo json_encode($result);
 	}

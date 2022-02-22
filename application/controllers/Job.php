@@ -2362,6 +2362,28 @@ class Job extends MY_Controller
         print_r($post);
         exit;
     }
+
+    public function update_settings()
+    {
+        $cid  = logged('company_id');
+        $post = $this->input->post();
+        $settings = $this->jobs_model->getJobSettingsByCompanyId($cid);
+
+        $data = [
+            'company_id' => $cid,
+            'job_num_prefix' => $post['job_settings_prefix'],
+            'job_num_next' => $post['job_settings_next_number']
+        ];
+
+        if( $settings ){
+            $this->jobs_model->updateJobSettingsByCompanyId($cid, $data);
+        }else{
+            $this->general->add_($data, 'job_settings');
+        }
+
+        echo 1;
+        exit;
+    }
 }
 
 /* End of file Job.php */

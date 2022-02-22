@@ -1313,14 +1313,15 @@ if (!function_exists('getTasks')){
         $uid = logged('id');
 
         $sql = 'select '.
-
                'a.task_id, '.
                'a.subject, '.
                'a.date_created, '.
-               'DATE_FORMAT(a.date_created,"%b %d, %Y %h:%i:%s") as date_created_formatted, '.
-
+               //'DATE_FORMAT(a.estimated_date_complete,"%b %d, %Y %h:%i:%s") as estimated_date_complete_formatted, '.
+               //'DATE_FORMAT(a.date_created,"%b %d, %Y %h:%i:%s") as date_created_formatted, '.
+               'DATE_FORMAT(a.estimated_date_complete,"%b %d, %Y") as estimated_date_complete_formatted, '.
+               'DATE_FORMAT(a.date_created,"%b %d, %Y") as date_created_formatted, '.
+               'b.status_color, '.
                'b.status_text '.
-
                'from tasks a '.
                'left join tasks_status b on b.status_id = a.status_id '.
                'left join tasks_participants c on c.task_id = a.task_id '.
@@ -1509,13 +1510,12 @@ function get_user_by_id($user_id)
 function get_customer_by_id($customer_id, $key = '')
 {
     $CI =& get_instance();
-    $CI->load->model('Customer_model', 'customer');
-
-    if (!empty($key)) {
+    $CI->load->model('Customer_model', 'customer');    
+    if (!empty($key)) {        
         return $CI->customer->getCustomer($customer_id)->$key;
     }
-
-    return $CI->customer->getCustomer($customer_id);
+    $customer = $CI->customer->getCustomer($customer_id);
+    return $customer;
 }
 
 function get_users_by_id($user_id, $key = '')
