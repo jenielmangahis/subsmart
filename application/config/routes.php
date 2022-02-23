@@ -309,7 +309,8 @@ $route['accounting/generate-payroll']['post'] = 'accounting_modals/generate_payr
 $route['accounting/get-customers']['post'] = 'accounting_modals/get_statement_customers';
 $route['accounting/get-item-details/(:any)'] = 'accounting_modals/getItemDetails/$1';
 $route['accounting/load-bills']['post'] = 'accounting_modals/load_bills';
-$route['accounting/get-items-list-modal'] = 'accounting_modals/item_list_modal';
+$route['accounting/get-products-list-modal'] = 'accounting_modals/products_list_modal';
+$route['accounting/get-items-list-modal'] = 'accounting_modals/items_list_modal';
 $route['accounting/get-term-details/(:any)'] = 'accounting_modals/get_term_details/$1';
 $route['accounting/get-vendor-details/(:any)'] = 'accounting_modals/get_vendor_details/$1';
 $route['accounting/get-customer-details/(:any)'] = 'accounting_modals/get_customer_details/$1';
@@ -1020,6 +1021,7 @@ $route['job_checklists/_update_checklist_item'] = 'Job_Checklists/ajax_update_ch
 $route['job_checklists/update_checklist'] = 'Job_Checklists/update_checklist';
 $route['job_checklists/delete_checklist'] = 'Job_Checklists/delete_checklist';
 $route['job_checklists/_create_checklist'] = 'Job_Checklists/ajax_save_checklist';
+$route['job_checklists/_update_checklist'] = 'Job_Checklists/ajax_update_checklist';
 
 //Business Profile front
 $route['business/(:any)'] = 'Pages/front_company_business_profile/$1';

@@ -46,18 +46,18 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 Batch actions&nbsp;<i class="fa fa-angle-down fa-lg" style="margin-left:10px;"></i>
                                             </button>
                                             <ul class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(200px, 46px, 0px);">
-                                                <li><a href="#" class="dropdown-item deleteSelect">Delete selected</a></li>
+                                                <li><a href="#" class="dropdown-item servicesDeleteSelect">Delete selected</a></li>
                                             </ul>
                                         </div>
                                         <table class="table table-hover table-bordered table-striped" style="width:100%;" id="customServiceItemsTable">
                                             <thead>
-                                            <tr>
+                                            <tr style="background-color:#D3D3D3 !important;">
                                                 <th class="text-center"><input style="transform: scale(1.5); height: 20px;" type="checkbox" class="" id="inventoryServiceCheckAll" value=""></th>
                                                 <th scope="col"><strong>Item</strong></th>
                                                 <th scope="col"><strong>Cost</strong></th>
                                                 <th scope="col"><strong>Estimated Time</strong></th>
                                                 <th scope="col"><strong>Billing Type</strong></th>
-                                                <th scope="col" class="text-center"><strong>Actions</strong></th>
+                                                <th scope="col" class="text-center" style="width: 8%;"><strong>Actions</strong></th>
                                             </tr>
                                             </thead>
                                             <tbody>
@@ -90,7 +90,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                         </td>
                                                     </tr>
                                                 <?php else : ?>
-                                                    <tr style="background-color:#D3D3D3;">
+                                                    <tr style="background-color:#32243d;color:#ffffff;">
                                                         <td>&nbsp;</td>
                                                         <td colspan="4"><b><?php echo $item[0]; ?></b></td>
                                                         <td style="display: none"></td>
@@ -122,7 +122,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
         Swal.fire({
             title: 'Continue to remove this Service?',
             text: "",
-            icon: 'warning',
+            icon: 'question',
             showCancelButton: true,
             confirmButtonColor: '#32243d',
             cancelButtonColor: '#d33',
