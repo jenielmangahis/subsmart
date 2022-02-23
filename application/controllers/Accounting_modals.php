@@ -4235,7 +4235,7 @@ class Accounting_modals extends MY_Controller
         return $return;
     }
 
-    public function item_list_modal()
+    public function products_list_modal()
     {
         $items = $this->items_model->getItemsWithFilter(['type' => ['inventory', 'product', 'Inventory', 'Product'], 'status' => [1]]);
 
@@ -4243,6 +4243,26 @@ class Accounting_modals extends MY_Controller
             $accDetails = $this->items_model->getItemAccountingDetails($item->id);
             return $accDetails !== null;
         }, ARRAY_FILTER_USE_BOTH);
+
+        $this->page_data['items'] = $items;
+        $this->load->view('accounting/modals/products_list_modal', $this->page_data);
+    }
+
+    public function items_list_modal()
+    {
+        $filter = [
+            'status' => [
+                1
+            ],
+            'category' => [
+                null,
+                '',
+                '1',
+                '2',
+                '0'
+            ]
+        ];
+        $items = $this->items_model->getItemsWithFilter($filter);
 
         $this->page_data['items'] = $items;
         $this->load->view('accounting/modals/item_list_modal', $this->page_data);

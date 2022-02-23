@@ -76,29 +76,29 @@
                                     </div>
 
                                     <div class="row">
-                                        <div class="col-md-3">
+                                        <div class="col-md-2">
                                             <div class="form-group">
                                                 <label for="billing-address">Billing address</label>
                                                 <textarea name="billing_address" id="billing-address" class="form-control"></textarea>
                                             </div>
                                         </div>
-                                        <div class="col-md-3">
+                                        <div class="col-md-2">
                                             <div class="form-group">
                                                 <label for="credit_memo_date">Credit Memo Date</label>
-                                                <input type="text" name="credit_memo_date" id="credit_memo_date" class="form-control" <?=isset($creditMemo) ? "value='$creditMemo->credit_memo_date'" : ''?>>
+                                                <input type="text" name="credit_memo_date" id="credit_memo_date" class="form-control date" value="<?=isset($creditMemo) ? date("m/d/Y", strtotime($creditMemo->credit_memo_date)) : date("m/d/Y")?>">
                                             </div>
                                         </div>
                                     </div>
                                     
                                     <div class="row">
-                                        <div class="col-md-3"></div>
-                                        <div class="col-md-3">
+                                        <div class="col-md-2"></div>
+                                        <div class="col-md-2">
                                             <div class="form-group">
                                                 <label for="purchase-order-no">P.O. Number</label>
                                                 <input type="text" class="form-control" name="purchase_order_no" id="purchase-order-no">
                                             </div>
                                         </div>
-                                        <div class="col-md-3">
+                                        <div class="col-md-2">
                                             <div class="form-group">
                                                 <label for="sales-rep">Sales Rep</label>
                                                 <input type="text" name="sales_rep" id="sales-rep" class="form-control">
@@ -119,7 +119,7 @@
                                         <div class="col-md-12">
                                             <div class="credit-memo-item-table-container w-100">
                                                 <div class="credit-memo-item-table">
-                                                    <table class="table table-bordered table-hover" id="credit-memo-item-table">
+                                                    <table class="table table-bordered table-hover" id="item-table">
                                                         <thead>
                                                             <th width="20%">NAME</th>
                                                             <th>TYPE</th>
@@ -136,7 +136,7 @@
                                                 <div class="credit-memo-item-table-footer">
                                                     <div class="row">
                                                         <div class="col-md-6">
-                                                            <a class="link-modal-open" href="#" id="add_another_items" data-target="#item_list"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a>
+                                                            <a class="link-modal-open" href="#" id="add_item" data-target="#item_list"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a>
                                                         </div>
                                                     </div>
                                                 </div>
