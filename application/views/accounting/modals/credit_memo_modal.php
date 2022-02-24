@@ -35,7 +35,7 @@
                         <div class="col">
                             <div class="card p-0 m-0" style="min-height: 100%">
                                 <div class="card-body" style="padding-bottom: 1.25rem">
-                                    <div class="row">
+                                    <div class="row customer-details">
                                         <div class="col-md-8">
                                             <div class="row">
                                                 <div class="col-md-5">
@@ -58,8 +58,10 @@
                                                         <label for="email">Email</label>
                                                         <input type="email" name="email" id="email" class="form-control" placeholder="Email (Separate emails with a comma)">
                                                         <div class="form-check">
-                                                            <input type="checkbox" name="send-later" value="1" class="form-check-input" id="send-later">
-                                                            <label class="form-check-label" for="send-later">Send later</label>
+                                                            <div class="checkbox checkbox-sec">
+                                                                <input type="checkbox" name="send_later" value="1" class="form-check-input" id="send-later">
+                                                                <label class="form-check-label" for="send-later">Send later</label>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -70,40 +72,43 @@
                                                 AMOUNT TO REFUND
                                             </h6>
                                             <h2 class="text-right">
-                                                <span class="transaction-total-amount">$0.00</span>
+                                                <span class="transaction-grand-total">$0.00</span>
                                             </h2>
                                         </div>
                                     </div>
 
                                     <div class="row">
-                                        <div class="col-md-3">
+                                        <div class="col-md-2">
                                             <div class="form-group">
                                                 <label for="billing-address">Billing address</label>
                                                 <textarea name="billing_address" id="billing-address" class="form-control"></textarea>
                                             </div>
                                         </div>
-                                        <div class="col-md-3">
+                                        <div class="col-md-2">
                                             <div class="form-group">
                                                 <label for="credit_memo_date">Credit Memo Date</label>
-                                                <input type="text" name="credit_memo_date" id="credit_memo_date" class="form-control" <?=isset($creditMemo) ? "value='$creditMemo->credit_memo_date'" : ''?>>
+                                                <input type="text" name="credit_memo_date" id="credit_memo_date" class="form-control date" value="<?=isset($creditMemo) ? date("m/d/Y", strtotime($creditMemo->credit_memo_date)) : date("m/d/Y")?>">
                                             </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="row">
-                                        <div class="col-md-3"></div>
-                                        <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="purchase-order-no">P.O. Number</label>
                                                 <input type="text" class="form-control" name="purchase_order_no" id="purchase-order-no">
                                             </div>
                                         </div>
-                                        <div class="col-md-3">
-                                            <div class="form-group">
+                                        <div class="col-md-2 d-flex align-items-end">
+                                            <div class="form-group w-100">
                                                 <label for="sales-rep">Sales Rep</label>
                                                 <input type="text" name="sales_rep" id="sales-rep" class="form-control">
                                             </div>
                                         </div>
+                                        <div class="col-md-3 offset-md-3">
+                                            <div class="form-group">
+                                                <label for="location-of-sale">Location of sale</label>
+                                                <input type="text" name="location_of_sale" id="location-of-sale" class="form-control">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row">
                                         <div class="col-md-8">
                                             <div class="form-group">
                                                 <div id="label">
@@ -119,10 +124,11 @@
                                         <div class="col-md-12">
                                             <div class="credit-memo-item-table-container w-100">
                                                 <div class="credit-memo-item-table">
-                                                    <table class="table table-bordered table-hover" id="credit-memo-item-table">
+                                                    <table class="table table-bordered table-hover" id="item-table">
                                                         <thead>
                                                             <th width="20%">NAME</th>
                                                             <th>TYPE</th>
+                                                            <th>LOCATION</th>
                                                             <th width="10%">QUANTITY</th>
                                                             <th width="10%">PRICE</th>
                                                             <th width="10%">DISCOUNT</th>
@@ -136,7 +142,7 @@
                                                 <div class="credit-memo-item-table-footer">
                                                     <div class="row">
                                                         <div class="col-md-6">
-                                                            <a class="link-modal-open" href="#" id="add_another_items" data-target="#item_list"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a>
+                                                            <a class="link-modal-open" href="#" id="add_item" data-target="#item_list"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -147,19 +153,19 @@
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <div class="form-group">
-                                                        <label for="memo">Message displayed on credit memo</label>
-                                                        <textarea name="memo" id="memo" class="form-control"><?=isset($creditMemo) ? str_replace("<br />", "", $creditMemo->message_credit_memo) : ''?></textarea>
+                                                        <label for="message_credit_memo">Message displayed on credit memo</label>
+                                                        <textarea name="message_credit_memo" id="message_credit_memo" class="form-control"><?=isset($creditMemo) ? str_replace("<br />", "", $creditMemo->message_credit_memo) : ''?></textarea>
                                                     </div>
                                                     <div class="form-group">
-                                                        <label for="memo">Message displayed on statement</label>
-                                                        <textarea name="memo" id="memo" class="form-control"><?=isset($creditMemo) ? str_replace("<br />", "", $creditMemo->message_on_statement) : ''?></textarea>
+                                                        <label for="message_on_statement">Message displayed on statement</label>
+                                                        <textarea name="message_on_statement" id="message_on_statement" class="form-control"><?=isset($creditMemo) ? str_replace("<br />", "", $creditMemo->message_on_statement) : ''?></textarea>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-8">
                                                     <div class="attachments">
                                                         <label for="attachment" style="margin-right: 15px"><i class="fa fa-paperclip"></i>&nbsp;Attachment</label> 
                                                         <span>Maximum size: 20MB</span>
-                                                        <div id="expense-attachments" class="dropzone" style="border: 1px solid #e1e2e3;background: #ffffff;width: 100%;">
+                                                        <div id="credit-memo-attachments" class="dropzone" style="border: 1px solid #e1e2e3;background: #ffffff;width: 100%;">
                                                             <div class="dz-message" style="margin: 20px;border">
                                                                 <span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
                                                                 <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
@@ -178,25 +184,25 @@
                                                 <tbody>
                                                     <tr>
                                                         <td>Subtotal</td>
-                                                        <td class="w-25"><span class="credit-memo-subtotal">$0.00</span></td>
+                                                        <td class="w-25"><span class="transaction-subtotal">$0.00</span></td>
                                                     </tr>
                                                     <tr>
                                                         <td>Taxes</td>
-                                                        <td class="w-25"><span class="credit-memo-taxes">$0.00</span></td>
+                                                        <td class="w-25"><span class="transaction-taxes">$0.00</span></td>
                                                     </tr>
                                                     <tr>
                                                         <td class="d-flex align-items-center justify-content-end">
                                                             <input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control w-50 mr-2">
-                                                            <input type="number" name="adjustment_value" id="adjustment_input_cm" step=".01" class="form-control adjustment_input_cm_c w-25 mr-2">
+                                                            <input type="number" name="adjustment_value" id="adjustment_input_cm" step=".01" class="form-control adjustment_input_cm_c w-25 mr-2" onchange="convertToDecimal(this)">
                                                             <span class="fa fa-question-circle" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Optional it allows you to adjust the total amount Eg. +10 or -10." data-original-title="" title=""></span>
                                                         </td>
-                                                        <td class="w-25"><span class="adjustment-total-value">$0.00</span></td>
+                                                        <td class="w-25"><span class="transaction-adjustment">$0.00</span></td>
                                                     </tr>
                                                 </tbody>
                                                 <tfoot>
                                                     <tr>
                                                         <td>Grand Total ($)</td>
-                                                        <td class="w-25">$0.00</td>
+                                                        <td class="w-25"><span class="transaction-grand-total">$0.00</span></td>
                                                     </tr>
                                                 </tfoot>
                                             </table>
