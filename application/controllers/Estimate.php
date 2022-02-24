@@ -68,7 +68,7 @@ class Estimate extends MY_Controller
             if (!empty(get('search'))) {
                 $this->page_data['search'] = get('search');
                 $this->page_data['estimates'] = $this->estimate_model->filterBy(array('search' => get('search')), $company_id, $role);
-            } elseif (!empty(get('order'))) {
+            } elseif (!empty(get('order'))) {                
                 $this->page_data['search'] = get('search');
                 $this->page_data['estimates'] = $this->estimate_model->filterBy(array('order' => get('order')), $company_id, $role);
             } else {

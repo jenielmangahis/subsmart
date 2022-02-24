@@ -1150,11 +1150,41 @@ class Job extends MY_Controller
     public function add_tax_rate()
     {
         $input = $this->input->post();
+        $input['company_id'] =  logged('company_id');
         if ($this->general->add_($input, "tax_rates")) {
             echo "1";
         } else {
             echo "0";
         }
+    }
+
+    public function update_tax_rate()
+    {
+        $is_success = 0;
+        $msg = "";
+
+        $input = $this->input->post();
+
+        $get_tax_rate = array(
+            'where' => array(
+                'id' => $input['tid']
+            ),
+            'table' => 'tax_rates',
+            'select' => '*',
+        );
+        $taxRate = $this->general->get_data_with_param($get_tax_rate,false);
+        if( $taxRate ){
+            $data = ['name' => $input['tax_name'], 'rate' => $input['tax_rate'], 'is_default' => 0];
+            $this->general->update_with_key_field($data, $input['tid'], 'tax_rates','id');
+
+            $is_success = 1;
+
+        }else{
+            $msg = 'Cannot find data';
+        }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($json_data);
     }
 
     public function add_job_attachments()
@@ -1196,6 +1226,10 @@ class Job extends MY_Controller
         $this->page_data['job_settings'] = $this->general->get_data_with_param($get_job_settings,false);
 
         $get_job_tax = array(
+            'where' => array(
+                'company_id' => $comp_id                
+            ),
+            'or_where' => ['is_default' => 1],
             'table' => 'tax_rates',
             'select' => '*',
         );
