@@ -1,5 +1,6 @@
 const GET_OTHER_MODAL_URL = "/accounting/get-other-modals/";
 const vendorModals = ['#expenseModal', '#checkModal', '#billModal', '#vendorCreditModal', '#purchaseOrderModal', '#creditCardCreditModal'];
+const customerModals = ['#creditMemoModal', '#salesReceiptModal', '#refundReceiptModal', '#delayedCreditModal', '#delayedChargeModal'];
 var rowCount = 0;
 var rowInputs = '';
 var blankRow = '';
@@ -5401,10 +5402,19 @@ $(function() {
             var result = JSON.parse(res);
             var item = result.item;
             var type = item.type;
+            var locations = result.locations;
+            var locs = '';
+
+            if(item.type === 'product' || item.type === 'inventory') {
+                for (var i in locations) {
+                    locs += `<option value="${locations[i].id}">${locations[i].name}</option>`;
+                }
+            }
 
             var fields = `
                 <td>${item.title}<input type="hidden" name="item[]" value="${item.id}"></td>
                 <td>${type.charAt(0).toUpperCase() + type.slice(1)}</td>
+                <td><select name="location[]" class="form-control" required>${locs}</select></td>
                 <td><input type="number" name="quantity[]" class="form-control text-right" required value="0" min="0"></td>
                 <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${item.price}"></td>
                 <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="0.00"></td>
@@ -5418,6 +5428,10 @@ $(function() {
             `;
 
             $('#modal-container form#modal-form .modal #item-table tbody').append(`<tr>${fields}</tr>`);
+
+            $('#modal-container form#modal-form .modal #item-table tbody tr:last-child select').select2({
+                minimumResultsForSearch: -1
+            });
         });
     });
 
@@ -5433,7 +5447,45 @@ $(function() {
         var rowTotal = '$'+parseFloat(total).toFixed(2);
 
         $(this).parent().parent().find('.row-total').html(rowTotal.replace('$-', '-$'));
-    })
+
+        var subtotal = 0.00;
+        var taxes = 0.00;
+        $('#modal-container #modal-form .modal #item-table tbody tr').each(function() {
+            var itemAmount = $(this).parent().parent().find('input[name="item_amount[]"]').val();
+            var itemQty = $(this).parent().parent().find('input[name="quantity[]"]').val();
+            var itemDisc = $(this).parent().parent().find('input[name="discount[]"]').val();
+            var itemTax = $(this).parent().parent().find('input[name="item_tax[]"]').val();
+
+            var itemTotal = parseFloat(itemAmount) * parseFloat(itemQty);
+            var taxAmount = parseFloat(itemTax) * itemTotal / 100;
+            itemTotal -= parseFloat(itemDisc);
+
+            subtotal = parseFloat(subtotal) + parseFloat(itemTotal);
+            taxes = parseFloat(taxes) + parseFloat(taxAmount);
+        });
+
+
+        subtotal = '$'+parseFloat(subtotal).toFixed(2);
+        taxes = '$'+parseFloat(taxes).toFixed(2);
+
+        $('#modal-container #modal-form .modal span.transaction-subtotal').html(subtotal.replace('$-', '-$'));
+        $('#modal-container #modal-form .modal span.transaction-taxes').html(taxes.replace('$-', '-$'));
+        $('#modal-container #modal-form .modal #adjustment_input_cm').trigger('change');
+    });
+
+    $(document).on('change', '#modal-container #modal-form .modal #adjustment_input_cm', function() {
+        var value = $(this).val();
+        var subtotal = $('#modal-container #modal-form .modal span.transaction-subtotal').html().replace('$', '');
+        var taxes = $('#modal-container #modal-form .modal span.transaction-taxes').html().replace('$', '');
+
+        var grandTotal = parseFloat(subtotal) + parseFloat(taxes);
+        grandTotal -= parseFloat(value);
+        grandTotal = '$'+parseFloat(grandTotal).toFixed(2);
+        value = '$'+value;
+
+        $('#modal-container #modal-form .modal span.transaction-adjustment').html(value.replace('$-', '-$'));
+        $('#modal-container #modal-form .modal span.transaction-grand-total').html(grandTotal.replace('$-', '-$'));
+    });
 });
 
 const convertToDecimal = (el) => {
@@ -6154,6 +6206,16 @@ const submitModalForm = (event, el) => {
         break;
     }
 
+    if(customerModals.includes(modalId)) {
+        $(`${modalId} table#item-details-table tbody tr`).each(function() {
+            if(data.has('item_total[]')) {
+                data.append('item_total[]', $(this).find('span.row-total').html().replace('$', ''));
+            } else {
+                data.set('item_total[]', $(this).find('span.row-total').html().replace('$', ''));
+            }
+        });
+    }
+
     if(vendorModals.includes(modalId)) {
         var count = 0;
         var totalAmount = $(`${modalId} span.transaction-total-amount`).html().replace('$', '');
@@ -6683,15 +6745,22 @@ const makeRecurring = (modalName) => {
             $(`div#${modalId} div.modal-body #ref_no`).parent().remove();
             $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Credit Card Credit');
         break;
+        case 'credit_memo' :
+            modalId = 'creditMemoModal';
+            $(templateFields).insertBefore($(`#${modalId} div.modal-body div.row.customer-details`));
+            $(intervalFields).insertAfter($(`#${modalId} div.modal-body div.row.customer-details`));
+            $(`div#${modalId} div.modal-body div.row.customer-details`).children('.col-md-4').remove();
+            $(`div#${modalId} div.modal-body #credit_memo_date`).parent().parent().remove();
+            $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Credit Memo');
+            $(`#${modalId} div.modal-body #sales-rep`).parent().removeClass('w-100').parent().removeClass('d-flex').removeClass('align-items-end');
+            $(`#${modalId} div.modal-body #send-later`).parent().parent().remove();
+        break;
     }
 
     $(`#${modalId}`).parent().attr('onsubmit', 'submitModalForm(event, this)').removeAttr('data-href');
     $(`#${modalId} .transactions-container`).parent().remove();
     $(`#${modalId} .close-transactions-container`).parent().remove();
 
-    // if($(`div#${modalId} input#templateName`).length === 0) {
-    //     $(`div#${modalId} div.modal-body .card-body`).prepend(res);
-    // }
     $(`div#${modalId} div.modal-footer div.row.w-100 div:nth-child(2)`).html('');
     $(`div#${modalId} div.modal-footer div.row.w-100 div:last-child()`).html('<button class="btn btn-success float-right" id="save-template">Save template</button>');
 
