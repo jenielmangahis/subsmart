@@ -49,6 +49,7 @@ class Accounting_modals extends MY_Controller
         $this->load->model('item_starting_value_adj_model', 'starting_value_model');
         $this->load->model('accounting_receive_payment_model');
         $this->load->model('payment_records_model');
+        $this->load->model('accounting_credit_memo_model');
         $this->load->library('form_validation');
     }
 
@@ -1079,6 +1080,9 @@ class Accounting_modals extends MY_Controller
                 break;
                 case 'receivePaymentModal' :
                     $this->result = $this->receive_payment($data);
+                break;
+                case 'creditMemoModal' :
+                    $this->result = $this->credit_memo($data);
                 break;
             }
         } catch (\Exception $e) {
@@ -5069,6 +5073,150 @@ class Accounting_modals extends MY_Controller
             $return['data'] = $paymentId;
             $return['success'] = $paymentId ? true : false;
             $return['message'] = $paymentId ? 'Entry Successful!' : 'An unexpected error occured!';
+        }
+
+        return $return;
+    }
+
+    private function credit_memo($data)
+    {
+        $this->form_validation->set_rules('customer', 'Customer', 'required');
+        $this->form_validation->set_rules('item[]', 'Item', 'required');
+
+        if(isset($data['template_name'])) {
+            $this->form_validation->set_rules('template_name', 'Template Name', 'required');
+            $this->form_validation->set_rules('recurring_type', 'Recurring Type', 'required');
+
+            if ($data['recurring_type'] !== 'unscheduled') {
+                $this->form_validation->set_rules('recurring_interval', 'Recurring interval', 'required');
+
+                if ($data['recurring_interval'] !== 'daily') {
+                    if ($data['recurring_interval'] === 'monthly') {
+                        $this->form_validation->set_rules('recurring_week', 'Recurring week', 'required');
+                    } elseif ($data['recurring_interval'] === 'yearly') {
+                        $this->form_validation->set_rules('recurring_month', 'Recurring month', 'required');
+                    }
+
+                    $this->form_validation->set_rules('recurring_day', 'Recurring day', 'required');
+                }
+                if ($data['recurring_interval'] !== 'yearly') {
+                    $this->form_validation->set_rules('recurr_every', 'Recurring interval', 'required');
+                }
+                $this->form_validation->set_rules('end_type', 'Recurring end type', 'required');
+
+                if ($data['end_type'] === 'by') {
+                    $this->form_validation->set_rules('end_date', 'Recurring end date', 'required');
+                } elseif ($data['end_type'] === 'after') {
+                    $this->form_validation->set_rules('max_occurence', 'Recurring max occurence', 'required');
+                }
+            }
+        } else {
+            $this->form_validation->set_rules('credit_memo_date', 'Payment date', 'required');
+        }
+
+        $return = [];
+        if ($this->form_validation->run() === false) {
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = 'Error';
+        } elseif (!isset($data['expense_account']) && !isset($data['item'])) {
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = 'Please enter at least one line item.';
+        } else {
+            $creditMemoData = [
+                'company_id' => logged('company_id'),
+                'customer_id' => $data['customer'],
+                'email' => $data['email'],
+                'send_later' => !isset($data['template_name']) ? $data['send_later'] : null,
+                'credit_memo_date' => !isset($data['template_name']) ? date("Y-m-d", strtotime($data['credit_memo_date'])) : null,
+                'billing_address' => $data['billing_address'],
+                'location_of_sale' => $data['location_of_sale'],
+                'po_number' => $data['purchase_order_no'],
+                'sales_rep' => $data['sales_rep'],
+                'message_credit_memo' => $data['message_credit_memo'],
+                'message_on_statement' => $data['message_on_statement'],
+                'recurring' => isset($data['template_name']) ? 1 : 0,
+                'status' => 1
+            ];
+
+            $creditMemoId = $this->accounting_credit_memo_model->createCreditMemo($creditMemoData);
+
+            if($creditMemoId) {
+                if (isset($data['attachments']) && is_array($data['attachments'])) {
+                    $order = 1;
+                    foreach ($data['attachments'] as $attachmentId) {
+                        $linkAttachmentData = [
+                            'type' => 'Credit Memo',
+                            'attachment_id' => $attachmentId,
+                            'linked_id' => $creditMemoId,
+                            'order_no' => $order
+                        ];
+
+                        $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
+
+                        $order++;
+                    }
+                }
+
+                if(isset($data['tags']) && is_array($data['tags'])) {
+                    $order = 1;
+                    foreach($data['tags'] as $tagId) {
+                        $linkTagData = [
+                            'transaction_type' => 'Credit Memo',
+                            'transaction_id' => $creditMemoId,
+                            'tag_id' => $tagId,
+                            'order_no' => $order
+                        ];
+
+                        $linkTagId = $this->tags_model->link_tag($linkTagData);
+
+                        $order++;
+                    }
+                }
+
+                $items = [];
+                foreach($data['item'] as $key => $itemId) {
+                    $items[] = [
+                        'transaction_type' => 'Credit Memo',
+                        'transaction_id' => $creditMemoId,
+                        'item_id' => $itemId,
+                        'quantity' => $data['quantity'][$key],
+                        'price' => $data['item_amount'][$key],
+                        'discount' => $data['discount'][$key],
+                        'tax' => $data['item_tax'][$key],
+                        'total' => $data['item_total'][$key]
+                    ];
+
+                    if(!isset($data['template_name'])) {
+                        $location = $this->items_model->getItemLocation($data['location'][$index], $value);
+                        $newQty = intval($location->qty) + intval($data['quantity'][$index]);
+                        $this->items_model->updateLocationQty($data['location'][$index], $value, $newQty);
+    
+                        $itemAccDetails = $this->items_model->getItemAccountingDetails($value);
+    
+                        if ($itemAccDetails) {
+                            $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+                            $newBalance = floatval($invAssetAcc->balance) + floatval($data['item_amount'][$index]);
+                            $newBalance = number_format($newBalance, 2, '.', ',');
+    
+                            $invAssetAccData = [
+                                'id' => $invAssetAcc->id,
+                                'company_id' => logged('company_id'),
+                                'balance' => $newBalance
+                            ];
+    
+                            $this->chart_of_accounts_model->updateBalance($invAssetAccData);
+                        }
+                    }
+                }
+
+                $this->accounting_credit_memo_model->insert_transaction_items($items);
+            }
+    
+            $return['data'] = $creditMemoId;
+            $return['success'] = $creditMemoId ? true : false;
+            $return['message'] = $creditMemoId ? 'Entry Successful!' : 'An unexpected error occured!';
         }
 
         return $return;
