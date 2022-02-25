@@ -466,6 +466,17 @@ class Jobs_model extends MY_Model
         $this->db->where('company_id', $company_id);
         $this->db->update($this->table_job_settings, $data);
     }
+
+    public function getlastInsert($company_id){
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('company_id', $comp_id);
+        $this->db->order_by('id', 'DESC');
+        $this->db->limit(1);
+        
+        $result = $this->db->get();
+        return $result->result();
+    }
 }
 
 /* End of file JobType_model.php */

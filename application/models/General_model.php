@@ -48,6 +48,21 @@ class General_model extends MY_Model {
             }
         }
 
+        if(array_key_exists("or_where", $params)){
+            foreach($params['or_where'] as $key => $val){
+                if( $val != '' ){
+                    $this->db->or_where($key, $val);    
+                }else{
+                    if( $val == 0 ){
+                        $this->db->or_where($key, $val);  
+                    }else{
+                        $this->db->or_where($key); 
+                    }
+                }
+                
+            }
+        }
+
         if(array_key_exists("join",$params) && $params['join'] != NULL ){
             $this->db->join($params['join']['table'], $params['join']['statement'],$params['join']['join_as']);
         }

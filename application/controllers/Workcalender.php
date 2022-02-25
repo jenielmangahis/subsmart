@@ -2647,6 +2647,14 @@ class Workcalender extends MY_Controller
 
         echo json_encode($json_data);
     }
+
+    public function print_contact( $contact_id )
+    {
+        $user = $this->Users_model->getUser($contact_id);
+
+        $this->page_data['user'] = $user;
+        $this->load->view('workcalender/print_contact', $this->page_data);
+    }
 }
 
 

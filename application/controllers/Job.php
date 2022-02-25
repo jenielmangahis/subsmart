@@ -999,9 +999,14 @@ class Job extends MY_Controller
 
     public function get_customers()
     {
+        $comp_id = logged('company_id');
+
         $get_customer = array(
             'table' => 'acs_profile',
             'select' => 'prof_id,first_name,last_name,middle_name',
+            'where'  => array(
+                'company_id' => $company_id
+            ),
             'order' => array(
                 'order_by' => 'first_name',
                 'ordering' => 'ASC',
@@ -1223,6 +1228,22 @@ class Job extends MY_Controller
             'table' => 'job_settings',
             'select' => '*',
         );
+
+        $job_settings = $this->general->get_data_with_param($get_job_settings,false);
+        if( $job_settings ){
+            $prefix   = $job_settings->job_num_prefix;
+            $next_num = str_pad($job_settings->job_num_next, 5, '0', STR_PAD_LEFT);
+        }else{
+            $prefix   = 'JOB-';
+            $next_num = str_pad(1, 5, '0', STR_PAD_LEFT);
+            $lastId = $this->jobs_model->getlastInsert($comp_id);
+            if( $lastId ){
+                $next_num = str_pad($lastId->id, 5, '0', STR_PAD_LEFT);
+            }
+        }
+
+        $this->page_data['settings_prefix'] = $prefix;
+        $this->page_data['settings_next_num'] = $next_num;
         $this->page_data['job_settings'] = $this->general->get_data_with_param($get_job_settings,false);
 
         $get_job_tax = array(
@@ -1266,7 +1287,23 @@ class Job extends MY_Controller
             'select' => '*',
         );
         $job_settings = $this->general->get_data_with_param($get_job_settings);
-        $job_number = $job_settings[0]->job_num_prefix.'-000000'.$job_settings[0]->job_num_next;
+        if( $job_settings ){
+            $prefix   = $job_settings[0]->job_num_prefix;
+            $next_num = str_pad($job_settings[0]->job_num_next, 5, '0', STR_PAD_LEFT);            
+            //$job_number = $job_settings[0]->job_num_prefix.'-000000'.$job_settings[0]->job_num_next;
+        }else{
+            $prefix = 'JOB-';
+            $lastId = $this->jobs_model->getlastInsert($comp_id);
+            if( $lastId ){
+                $next_num = $lastId->id + 1;
+                $next_num = str_pad($next_num, 5, '0', STR_PAD_LEFT);
+            }else{
+                $next_num = str_pad(1, 5, '0', STR_PAD_LEFT);
+            }            
+        }
+
+        $job_number = $prefix . $next_num;
+        
 
         $jobs_data = array(
             'job_number' => $job_number,

@@ -185,34 +185,40 @@ class Job_Checklists extends MY_Controller
     public function ajax_save_checklist()
     {
         $is_success = 0;
+        $msg = '';
 
         $user = $this->session->userdata('logged');
         $post = $this->input->post();
         $company_id = logged('company_id');
 
-        $data = [
-            'company_id' => $company_id,
-            'checklist_name' => $post['checklist_name'],
-            'attach_to_job_id' => $post['attach_to_job_order'],
-            'date_created' => date("Y-m-d H:i:s"),
-            'date_modified' => date("Y-m-d H:i:s")
-        ];
+        if( !empty($post['checklistItems']) ){
+            $data = [
+                'company_id' => $company_id,
+                'checklist_name' => $post['checklist_name'],
+                'attach_to_job_id' => $post['attach_to_job_order'],
+                'date_created' => date("Y-m-d H:i:s"),
+                'date_modified' => date("Y-m-d H:i:s")
+            ];
 
-        $cid = $this->JobChecklist_model->create($data);
+            $cid = $this->JobChecklist_model->create($data);
 
-        if( isset($post['checklistItems']) ){
-            foreach( $post['checklistItems'] as $key => $item ){
-                $data = [
-                    'job_checklist_id' => $cid,
-                    'item_name' => $item
-                ];
+            if( isset($post['checklistItems']) ){
+                foreach( $post['checklistItems'] as $key => $item ){
+                    $data = [
+                        'job_checklist_id' => $cid,
+                        'item_name' => $item
+                    ];
 
-                $this->JobChecklistItem_model->create($data);
-            }    
+                    $this->JobChecklistItem_model->create($data);
+                }    
+            }
+
+            $is_success = 1;    
+        }else{
+            $msg = 'Please add checklist item';
         }
-
-        $is_success = 1;
-        $json_data  = ['is_success' => $is_success];
+        
+        $json_data  = ['is_success' => $is_success, 'msg' => $msg];
 
         echo json_encode($json_data);
     }
@@ -220,6 +226,7 @@ class Job_Checklists extends MY_Controller
     public function ajax_update_checklist()
     {
         $is_success = 0;
+        $msg = '';
 
         $user = $this->session->userdata('logged');
         $post = $this->input->post();
@@ -228,31 +235,35 @@ class Job_Checklists extends MY_Controller
         $checklist = $this->JobChecklist_model->getById($post['cid']);
         
         if( $checklist ){
-            $data = [
-                'checklist_name' => $post['checklist_name'],
-                'attach_to_job_id' => $post['attach_to_job_id'],
-                'date_modified' => date("m-d-Y H:i:s")
-            ];
+            if( !empty($post['checklistItems']) ){
+                $data = [
+                    'checklist_name' => $post['checklist_name'],
+                    'attach_to_job_id' => $post['attach_to_job_id'],
+                    'date_modified' => date("m-d-Y H:i:s")
+                ];
 
-            $this->JobChecklist_model->update($checklist->id, $data);
+                $this->JobChecklist_model->update($checklist->id, $data);
 
-            $this->JobChecklistItem_model->deleteAllByJobChecklistId($checklist->id);
+                $this->JobChecklistItem_model->deleteAllByJobChecklistId($checklist->id);
 
-            if( isset($post['checklistItems']) ){
-                foreach( $post['checklistItems'] as $key => $item ){
-                    $data = [
-                        'job_checklist_id' => $checklist->id,
-                        'item_name' => $item
-                    ];
+                if( isset($post['checklistItems']) ){
+                    foreach( $post['checklistItems'] as $key => $item ){
+                        $data = [
+                            'job_checklist_id' => $checklist->id,
+                            'item_name' => $item
+                        ];
 
-                    $this->JobChecklistItem_model->create($data);
-                }    
-            }
+                        $this->JobChecklistItem_model->create($data);
+                    }    
+                }
 
-            $is_success = 1;
+                $is_success = 1;
+            }else{
+                $msg = 'Please add checklist item';
+            }            
         }
         
-        $json_data  = ['is_success' => $is_success];
+        $json_data  = ['is_success' => $is_success, 'msg' => $msg];
 
         echo json_encode($json_data);
     }
