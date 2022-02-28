@@ -73,7 +73,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 						<span class="fa fa-caret-down"></span></button>
 					<ul class="dropdown-menu dropdown-menu-right submit-submenu" role="menu">
 						<li>
-							<button type="submit" data-submit-type="save-close" id="checkSaved" style="background: none;border: none; height: auto;font-size: 13px;padding: 10px;
+							<button type="submit"  id="import-customer" style="background: none;border: none; height: auto;font-size: 13px;padding: 10px;
                                                 ">Import Customers</button>
 						</li>
 					</ul>

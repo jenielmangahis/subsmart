@@ -79,4 +79,5 @@ class Account_model extends MY_Model {
 	    $insert_id = $this->db->insert_id();
 		return  $insert_id;
 	}
+	
 }

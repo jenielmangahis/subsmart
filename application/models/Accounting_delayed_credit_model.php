@@ -57,4 +57,13 @@ class Accounting_delayed_credit_model extends MY_Model
         $insert_id = $this->db->insert_id();
         return  $insert_id;
     }
+
+    public function get_company_delayed_credits($filters = [])
+    {
+        $this->db->where('company_id', $filters['company_id']);
+        $this->db->where('status !=', 0);
+		$this->db->where('recurring', null);
+        $query = $this->db->get($this->table);
+        return $query->result();
+    }
 }
