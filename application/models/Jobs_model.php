@@ -449,6 +449,34 @@ class Jobs_model extends MY_Model
 
         return $status;
     }
+
+    public function getJobSettingsByCompanyId($company_id)
+    {
+        $user_id = logged('id');
+
+        $this->db->select('*');
+        $this->db->from($this->table_job_settings);
+        $this->db->where('company_id', $company_id);
+
+        $query = $this->db->get()->row();
+        return $query;
+    }
+
+    public function updateJobSettingsByCompanyId($company_id, $data) {
+        $this->db->where('company_id', $company_id);
+        $this->db->update($this->table_job_settings, $data);
+    }
+
+    public function getlastInsert($company_id){
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('company_id', $comp_id);
+        $this->db->order_by('id', 'DESC');
+        $this->db->limit(1);
+        
+        $result = $this->db->get();
+        return $result->result();
+    }
 }
 
 /* End of file JobType_model.php */

@@ -203,5 +203,10 @@ class Accounting_customers_model extends MY_Model
     {
         $query = $this->db->query("SELECT * FROM accounting_statements WHERE customer_id = ".$customer_id);
         return $query->result();
-    }
+    }public function get_users_table_column_names()
+	{   
+        
+		$query= $this->db->query("SELECT * from customers");
+        return $query->list_fields();
+	}
 }

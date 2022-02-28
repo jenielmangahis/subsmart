@@ -60,4 +60,13 @@ class Accounting_credit_memo_model extends MY_Model {
 		$this->db->insert_batch('accounting_customer_transaction_items', $items);
 		return $this->db->insert_id();
 	}
+
+	public function get_company_credit_memos($filters = [])
+	{
+		$this->db->where('company_id', $filters['company_id']);
+		$this->db->where('status !=', 0);
+		$this->db->where('recurring', null);
+		$query = $this->db->get($this->table);
+        return $query->result();
+	}
 }

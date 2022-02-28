@@ -134,6 +134,18 @@ class Workorder extends MY_Controller
                 case 'number-desc':
                     $sort = ['field' => 'work_order_number', 'order' => 'desc'];
                     break;
+                case 'event-date-asc':
+                    $sort = ['field' => 'start_date', 'order' => 'asc'];
+                    break;
+                case 'event-date-desc':
+                    $sort = ['field' => 'start_date', 'order' => 'desc'];
+                    break;
+                case 'priority-asc':
+                    $sort = ['field' => 'priority', 'order' => 'asc'];
+                    break;
+                case 'priority-desc':
+                    $sort = ['field' => 'priority', 'order' => 'desc'];
+                    break;
                 default:
                     $sort = ['field' => 'id', 'order' => 'desc'];
                     break;
@@ -2559,8 +2571,16 @@ class Workorder extends MY_Controller
         if( $workorderSettings ){
             //Load company settings
             $prefix = $workorderSettings->work_order_num_prefix;
-            $order_num_next    = $workorderSettings->work_order_num_next;
+            $order_num_next    = str_pad($workorderSettings->work_order_num_next, 5, '0', STR_PAD_LEFT);
             $capture_signature = $workorderSettings->capture_customer_signature;
+        }else{
+            $lastInserted = $this->workorder_model->getlastInsert($company_id);
+            if( $lastInserted ){
+                $next_num = $lastInserted->id + 1;
+                $next_num = str_pad($next_num, 5, '0', STR_PAD_LEFT);
+            }else{
+                $next_num = str_pad(1, 5, '0', STR_PAD_LEFT);
+            }
         }
 
         $this->page_data['prefix'] = $prefix;
@@ -2959,7 +2979,7 @@ class Workorder extends MY_Controller
         echo json_encode($json_data);
     }
 
-    public function checklists(){
+    public function checklists(){        
 		$this->page_data['page']->title = 'Workorder Checklist';
 		$this->page_data['page']->parent = 'Sales';
 
@@ -2990,9 +3010,11 @@ class Workorder extends MY_Controller
         $user = $this->session->userdata('logged');
         $post = $this->input->post();
         $user_id = logged('id');
+        $company_id = logged('company_id');
 
         $data = [
-            'user_id' => $user_id,
+            'company_id' => $company_id,
+            'user_id' => $user_id,            
             'checklist_name' => $post['checklist_name'],
             'attach_to_work_order' => $post['attach_to_work_order'],
             // 'date_created' => date("Y-m-d H:i:s"),
@@ -3197,6 +3219,25 @@ class Workorder extends MY_Controller
             $checklistItems = $this->workorder_model->getchecklistHeaderItems($h->id);
             $checklists[] = ['header' => $h, 'items' => $checklistItems];
         }
+
+        //Settings
+        $this->load->model('WorkorderSettings_model');
+        $workorderSettings = $this->WorkorderSettings_model->getByCompanyId($company_id);
+        if( $workorderSettings ){
+            $prefix = $workorderSettings->work_order_num_prefix;
+            $next_num = $workorderSettings->work_order_num_next;
+        }else{
+            $prefix = 'WO-';
+            $lastInserted = $this->workorder_model->getlastInsert($company_id);
+            if( $lastInserted ){
+                $next_num = $lastInserted->id + 1;
+            }else{
+                $next_num = 1;
+            }
+        }
+
+        $this->page_data['prefix'] = $prefix;
+        $this->page_data['next_num'] = $next_num;
 
         // print_r($this->page_data['terms_conditions']);
         $this->page_data['fields'] = $this->workorder_model->getCustomByID();
@@ -3724,6 +3765,14 @@ class Workorder extends MY_Controller
                 );
     
                 $notification = $this->workorder_model->save_notification($notif);
+
+                //Updated workorder settings
+                $this->load->model('WorkorderSettings_model', 'WorkorderSettings');
+                $workorderSettings = $this->WorkorderSettings->getByCompanyId($company_id);
+                $new_next_num = intval($workorderSettings->work_order_num_next) + 1;
+
+                $data = ['work_order_num_next' => $new_next_num];
+                $this->WorkorderSettings->updateByCompanyId($company_id,$data);
 
 
             redirect('workorder');
@@ -5594,6 +5643,28 @@ class Workorder extends MY_Controller
             $this->page_data['terms_uses'] = $this->workorder_model->getTermsUseDefault();
         }
 
+        //Settings
+        $this->load->model('WorkorderSettings_model');
+        $workorderSettings = $this->WorkorderSettings_model->getByCompanyId($company_id);
+        if( $workorderSettings ){
+            $prefix = $workorderSettings->work_order_num_prefix;
+            $next_num = $workorderSettings->work_order_num_next;
+        }else{
+            $prefix = 'WO-';
+            $lastInserted = $this->workorder_model->getlastInsert($company_id);
+            if( $lastInserted ){
+                $next_num = $lastInserted->id + 1;
+            }else{
+                $next_num = 1;
+            }
+        }
+
+        $next_num = str_pad($next_num, 5, '0', STR_PAD_LEFT);
+
+        $this->page_data['prefix'] = $prefix;
+        $this->page_data['next_num'] = $next_num;
+
+
         // print_r($this->page_data['terms_conditions']);
         $this->page_data['fields'] = $this->workorder_model->getCustomByID();
         $this->page_data['headers'] = $this->workorder_model->getheaderByID();
@@ -6359,6 +6430,15 @@ class Workorder extends MY_Controller
             $notification = $this->workorder_model->save_notification($notif);
 
 
+            //Updated workorder settings
+            $this->load->model('WorkorderSettings_model', 'WorkorderSettings');
+            $workorderSettings = $this->WorkorderSettings->getByCompanyId($company_id);
+            $new_next_num = intval($workorderSettings->work_order_num_next) + 1;
+
+            $data = ['work_order_num_next' => $new_next_num];
+            $this->WorkorderSettings->updateByCompanyId($company_id,$data);
+
+
            redirect('workorder');
         }
         else{
@@ -6667,8 +6747,10 @@ class Workorder extends MY_Controller
         $user = $this->session->userdata('logged');
         $post = $this->input->post();
         $user_id = logged('id');
+        $company_id = logged('company_id'); 
 
         $data = [
+            'company_id' => $company_id,
             'user_id' => $user_id,
             'checklist_name' => $post['checklist_name'],
             'attach_to_work_order' => $post['attach_to_work_order'],
@@ -6776,6 +6858,29 @@ class Workorder extends MY_Controller
         }
 
         redirect('workorder/priority/');
+    }
+
+    public function ajax_delete_checklist()
+    {
+        $this->load->model('ChecklistItem_model');
+        $this->load->model('Checklist_model');
+
+        $is_success = 1;
+        $msg = '';
+
+        $post = $this->input->post();
+        $checklist = $this->Checklist_model->getById($post['cid']);
+        if( $checklist ){
+            $this->ChecklistItem_model->deleteAllByChecklistId($checklist->id);
+            $this->Checklist_model->deleteById($checklist->id);
+
+            $is_success = 1;
+        }else{
+            $msg = 'Cannot find data';
+        }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($json_data);
     }
 }
 

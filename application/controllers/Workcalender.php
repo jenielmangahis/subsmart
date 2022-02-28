@@ -316,16 +316,18 @@ class Workcalender extends MY_Controller
                 ));
                 $client->setApprovalPrompt('force');
                 $client->setAccessType('offline');
-
+                
                 //Request
                 $access_token = $client->getAccessToken();
-                $calendar     = new Google_Service_Calendar($client);
-                $data = $calendar->calendarList->listCalendarList();
+                if(!$client->isAccessTokenExpired()) {
+                    $calendar     = new Google_Service_Calendar($client);
+                    $data = $calendar->calendarList->listCalendarList();
 
-                $calendar_list = $data->getItems();
-                $email = $google_user_api->google_email;
-                $enabled_calendar = unserialize($google_user_api->enabled_calendars);
-                $enabled_mini_calendar = unserialize($google_user_api->enabled_mini_calendars);
+                    $calendar_list = $data->getItems();
+                    $email = $google_user_api->google_email;
+                    $enabled_calendar = unserialize($google_user_api->enabled_calendars);
+                    $enabled_mini_calendar = unserialize($google_user_api->enabled_mini_calendars);  
+                }                
             }
         }
 
@@ -972,105 +974,107 @@ class Workcalender extends MY_Controller
 
             //Request
             $access_token = $client->getAccessToken();
-            $calendar     = new Google_Service_Calendar($client);
-            $data = $calendar->calendarList->listCalendarList();
+            if(!$client->isAccessTokenExpired()) {
+                $calendar     = new Google_Service_Calendar($client);
+                $data = $calendar->calendarList->listCalendarList();
 
-            $calendar_list = $data->getItems();
-            $email = $google_user_api->google_email;
-            $enabled_mini_calendar = unserialize($google_user_api->enabled_calendars);
+                $calendar_list = $data->getItems();
+                $email = $google_user_api->google_email;
+                $enabled_mini_calendar = unserialize($google_user_api->enabled_calendars);
 
-            foreach ($calendar_list as $cl) {
-                if (in_array($cl['id'], $enabled_mini_calendar)) {
-                    //Display in events
-                    $optParams = array(
-                      'orderBy' => 'starttime',
-                      'singleEvents' => true,
-                      'timeMin' => $post['start'],
-                      'timeMax' => $post['end'],
-                    );
-                    $events = $calendar->events->listEvents($cl['id'], $optParams);
-                    $bgcolor = "#38a4f8";
-                    if ($cl->backgroundColor != '') {
-                        $bgcolor = $cl->backgroundColor;
-                    }
+                foreach ($calendar_list as $cl) {
+                    if (in_array($cl['id'], $enabled_mini_calendar)) {
+                        //Display in events
+                        $optParams = array(
+                          'orderBy' => 'starttime',
+                          'singleEvents' => true,
+                          'timeMin' => $post['start'],
+                          'timeMax' => $post['end'],
+                        );
+                        $events = $calendar->events->listEvents($cl['id'], $optParams);
+                        $bgcolor = "#38a4f8";
+                        if ($cl->backgroundColor != '') {
+                            $bgcolor = $cl->backgroundColor;
+                        }
 
-                    foreach ($events->items as $event) {
-                        $gevent = $this->event_model->getEventByGoogleEventId($event->id);
+                        foreach ($events->items as $event) {
+                            $gevent = $this->event_model->getEventByGoogleEventId($event->id);
 
-                        if (empty($gevent)) {
-                            $is_with_time = false;
+                            if (empty($gevent)) {
+                                $is_with_time = false;
 
-                            if ($event->start->timeZone != '') {
-                                $tz = new DateTimeZone($event->start->timeZone);
-                            } else {
-                                $tz = new DateTimeZone($user_timezone);
-                            }
-
-                            if ($event->start->dateTime != '') {
-                                $date = new DateTime($event->start->dateTime);
-                                $date->setTimezone($tz);
-
-                                $start_date = $date->format('Y-m-d');
-                                $custom_html_start_date = $date->format('g:i a');
-                                $starttime = $start_date . ' ' . $date->format('g:i a');
-                                $is_with_time = true;
-                            } else {
-                                $date = new DateTime($event->start->date);
-                                $date->setTimezone($tz);
-
-                                $start_date = $date->format('Y-m-d') . " 00:00";
-                                $starttime  = $start_date . ' ' . date("g:i A");
-                                $custom_html_start_date = $date->format('Y-m-d');
-                            }
-
-                            if ($event->end->dateTime != '') {
-                                $date = new DateTime($event->end->dateTime);
-                                $date->setTimezone($tz);
-                                //$end_date = $event->end->dateTime;
-                                $end_date = $date->format('Y-m-d');
-
-                                $custom_html_end_date = $date->format('g:i a');
-                                $start_time = $date->format('g:i a');
-                                $is_with_time = true;
-                            } else {
-                                $date = new DateTime($event->end->date);
-                                $date->setTimezone($tz);
-
-                                $end_date = $date->format('Y-m-d') . " 23:59";
-                                $custom_html_end_date = $date->format('Y-m-d');
-                            }
-
-                            if ($googleColor) {
-                                $bgcolor = $googleColor->color_code;
-                            }
-
-                            if ($event->summary != '') {
-                                if ($is_with_time) {
-                                    $custom_html = $custom_html_start_date . " - " . $custom_html_end_date . "<br /><small>Google Event</small><br /><small>" . $event->summary . "</small>";
+                                if ($event->start->timeZone != '') {
+                                    $tz = new DateTimeZone($event->start->timeZone);
                                 } else {
-                                    $custom_html = $event->summary . "<br /><small>Google Event</small><br />";
+                                    $tz = new DateTimeZone($user_timezone);
                                 }
-                                
 
-                                $resources_user_events[$inc]['googleCalendarLink'] = $event->htmlLink;
-                                $resources_user_events[$inc]['geventID'] = $event->id;
-                                $resources_user_events[$inc]['eventType'] = 'google_events';
-                                $resources_user_events[$inc]['resourceId'] = "user17";
-                                $resources_user_events[$inc]['calendarID'] = $cl['id'];
-                                $resources_user_events[$inc]['title'] = $event->summary;
-                                $resources_user_events[$inc]['customHtml'] = $custom_html;
-                                $resources_user_events[$inc]['description'] = $event->summary . "<br />" . "<i class='fa fa-calendar'></i> " . $start_date . " - " . $end_date;
-                                $resources_user_events[$inc]['start'] = $start_date;
-                                $resources_user_events[$inc]['end'] = $end_date;
-                                $resources_user_events[$inc]['starttime'] = strtotime($starttime);
-                                $resources_user_events[$inc]['backgroundColor'] = $bgcolor;
+                                if ($event->start->dateTime != '') {
+                                    $date = new DateTime($event->start->dateTime);
+                                    $date->setTimezone($tz);
 
-                                $inc++;
+                                    $start_date = $date->format('Y-m-d');
+                                    $custom_html_start_date = $date->format('g:i a');
+                                    $starttime = $start_date . ' ' . $date->format('g:i a');
+                                    $is_with_time = true;
+                                } else {
+                                    $date = new DateTime($event->start->date);
+                                    $date->setTimezone($tz);
+
+                                    $start_date = $date->format('Y-m-d') . " 00:00";
+                                    $starttime  = $start_date . ' ' . date("g:i A");
+                                    $custom_html_start_date = $date->format('Y-m-d');
+                                }
+
+                                if ($event->end->dateTime != '') {
+                                    $date = new DateTime($event->end->dateTime);
+                                    $date->setTimezone($tz);
+                                    //$end_date = $event->end->dateTime;
+                                    $end_date = $date->format('Y-m-d');
+
+                                    $custom_html_end_date = $date->format('g:i a');
+                                    $start_time = $date->format('g:i a');
+                                    $is_with_time = true;
+                                } else {
+                                    $date = new DateTime($event->end->date);
+                                    $date->setTimezone($tz);
+
+                                    $end_date = $date->format('Y-m-d') . " 23:59";
+                                    $custom_html_end_date = $date->format('Y-m-d');
+                                }
+
+                                if ($googleColor) {
+                                    $bgcolor = $googleColor->color_code;
+                                }
+
+                                if ($event->summary != '') {
+                                    if ($is_with_time) {
+                                        $custom_html = $custom_html_start_date . " - " . $custom_html_end_date . "<br /><small>Google Event</small><br /><small>" . $event->summary . "</small>";
+                                    } else {
+                                        $custom_html = $event->summary . "<br /><small>Google Event</small><br />";
+                                    }
+                                    
+
+                                    $resources_user_events[$inc]['googleCalendarLink'] = $event->htmlLink;
+                                    $resources_user_events[$inc]['geventID'] = $event->id;
+                                    $resources_user_events[$inc]['eventType'] = 'google_events';
+                                    $resources_user_events[$inc]['resourceId'] = "user17";
+                                    $resources_user_events[$inc]['calendarID'] = $cl['id'];
+                                    $resources_user_events[$inc]['title'] = $event->summary;
+                                    $resources_user_events[$inc]['customHtml'] = $custom_html;
+                                    $resources_user_events[$inc]['description'] = $event->summary . "<br />" . "<i class='fa fa-calendar'></i> " . $start_date . " - " . $end_date;
+                                    $resources_user_events[$inc]['start'] = $start_date;
+                                    $resources_user_events[$inc]['end'] = $end_date;
+                                    $resources_user_events[$inc]['starttime'] = strtotime($starttime);
+                                    $resources_user_events[$inc]['backgroundColor'] = $bgcolor;
+
+                                    $inc++;
+                                }
                             }
                         }
                     }
                 }
-            }
+            }            
         }
 
         /*echo "<pre>";
@@ -1563,77 +1567,79 @@ class Workcalender extends MY_Controller
 
             //Request
             $access_token = $client->getAccessToken();
-            $calendar     = new Google_Service_Calendar($client);
-            $data = $calendar->calendarList->listCalendarList();
+            if(!$client->isAccessTokenExpired()) {
+                $calendar     = new Google_Service_Calendar($client);
+                $data = $calendar->calendarList->listCalendarList();
 
-            $calendar_list = $data->getItems();
-            $email = $google_user_api->google_email;
+                $calendar_list = $data->getItems();
+                $email = $google_user_api->google_email;
 
-            $start_date = date("Y-m-d");
-            $end_date   = date("Y-m-d", strtotime("+5 days"));
+                $start_date = date("Y-m-d");
+                $end_date   = date("Y-m-d", strtotime("+5 days"));
 
-            $start_date = $start_date . 'T00:00:00+08:00';
-            $end_date   = $end_date . 'T00:00:00+08:00';
+                $start_date = $start_date . 'T00:00:00+08:00';
+                $end_date   = $end_date . 'T00:00:00+08:00';
 
-            $optParams = array(
-              'orderBy' => 'startTime',
-              'singleEvents' => true,
-              'timeMin' => $start_date,
-              'timeMax' => $end_date,
-            );
+                $optParams = array(
+                  'orderBy' => 'startTime',
+                  'singleEvents' => true,
+                  'timeMin' => $start_date,
+                  'timeMax' => $end_date,
+                );
 
-            foreach ($calendar_list as $cl) {
-                //Display in events
-                $events = $calendar->events->listEvents($cl['id'], $optParams);
-                $bgcolor = "#38a4f8";
-                if ($cl->backgroundColor != '') {
-                    $bgcolor = $cl->backgroundColor;
-                }
+                foreach ($calendar_list as $cl) {
+                    //Display in events
+                    $events = $calendar->events->listEvents($cl['id'], $optParams);
+                    $bgcolor = "#38a4f8";
+                    if ($cl->backgroundColor != '') {
+                        $bgcolor = $cl->backgroundColor;
+                    }
 
-                foreach ($events->items as $event) {
-                    $gevent = $this->event_model->getEventByGoogleEventId($event->id);
+                    foreach ($events->items as $event) {
+                        $gevent = $this->event_model->getEventByGoogleEventId($event->id);
 
-                    if (empty($gevent)) {
-                        if ($event->start->timeZone != '') {
-                            $tz = new DateTimeZone($event->start->timeZone);
-                        } else {
-                            $tz = new DateTimeZone($user_timezone);
-                        }
+                        if (empty($gevent)) {
+                            if ($event->start->timeZone != '') {
+                                $tz = new DateTimeZone($event->start->timeZone);
+                            } else {
+                                $tz = new DateTimeZone($user_timezone);
+                            }
 
-                        if ($event->start->dateTime != '') {
-                            $date = new DateTime($event->start->dateTime);
-                            $date->setTimezone($tz);
-                            $start_date = $date->format('Y-m-d g:i a');
-                        } else {
-                            $date = new DateTime($event->start->date);
-                            $date->setTimezone($tz);
-                            $start_date = $date->format('Y-m-d');
-                        }
+                            if ($event->start->dateTime != '') {
+                                $date = new DateTime($event->start->dateTime);
+                                $date->setTimezone($tz);
+                                $start_date = $date->format('Y-m-d g:i a');
+                            } else {
+                                $date = new DateTime($event->start->date);
+                                $date->setTimezone($tz);
+                                $start_date = $date->format('Y-m-d');
+                            }
 
-                        if ($event->end->dateTime != '') {
-                            $date = new DateTime($event->end->dateTime);
-                            $date->setTimezone($tz);
-                            $end_date = $date->format('Y-m-d g:i a');
-                        } else {
-                            $date = new DateTime($event->end->date);
-                            $date->setTimezone($tz);
-                            $end_date = $date->format('Y-m-d');
-                        }
+                            if ($event->end->dateTime != '') {
+                                $date = new DateTime($event->end->dateTime);
+                                $date->setTimezone($tz);
+                                $end_date = $date->format('Y-m-d g:i a');
+                            } else {
+                                $date = new DateTime($event->end->date);
+                                $date->setTimezone($tz);
+                                $end_date = $date->format('Y-m-d');
+                            }
 
-                        if ($event->summary != '') {
-                            $google_events[$inc]['geventID'] = $event->id;
-                            $google_events[$inc]['resourceId'] = "user17";
-                            $google_events[$inc]['title'] = $event->summary;
-                            $google_events[$inc]['description'] = $event->summary;
-                            $google_events[$inc]['start'] = $start_date;
-                            $google_events[$inc]['end'] = $end_date;
-                            $google_events[$inc]['color'] = $bgcolor;
+                            if ($event->summary != '') {
+                                $google_events[$inc]['geventID'] = $event->id;
+                                $google_events[$inc]['resourceId'] = "user17";
+                                $google_events[$inc]['title'] = $event->summary;
+                                $google_events[$inc]['description'] = $event->summary;
+                                $google_events[$inc]['start'] = $start_date;
+                                $google_events[$inc]['end'] = $end_date;
+                                $google_events[$inc]['color'] = $bgcolor;
 
-                            $inc++;
+                                $inc++;
+                            }
                         }
                     }
                 }
-            }
+            }            
         }
 
         $events = array();
@@ -2640,6 +2646,14 @@ class Workcalender extends MY_Controller
         $json_data = ['is_success' => $is_success, 'msg' => $msg];
 
         echo json_encode($json_data);
+    }
+
+    public function print_contact( $contact_id )
+    {
+        $user = $this->Users_model->getUser($contact_id);
+
+        $this->page_data['user'] = $user;
+        $this->load->view('workcalender/print_contact', $this->page_data);
     }
 }
 

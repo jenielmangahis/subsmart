@@ -999,9 +999,14 @@ class Job extends MY_Controller
 
     public function get_customers()
     {
+        $comp_id = logged('company_id');
+
         $get_customer = array(
             'table' => 'acs_profile',
             'select' => 'prof_id,first_name,last_name,middle_name',
+            'where'  => array(
+                'company_id' => $company_id
+            ),
             'order' => array(
                 'order_by' => 'first_name',
                 'ordering' => 'ASC',
@@ -1150,11 +1155,41 @@ class Job extends MY_Controller
     public function add_tax_rate()
     {
         $input = $this->input->post();
+        $input['company_id'] =  logged('company_id');
         if ($this->general->add_($input, "tax_rates")) {
             echo "1";
         } else {
             echo "0";
         }
+    }
+
+    public function update_tax_rate()
+    {
+        $is_success = 0;
+        $msg = "";
+
+        $input = $this->input->post();
+
+        $get_tax_rate = array(
+            'where' => array(
+                'id' => $input['tid']
+            ),
+            'table' => 'tax_rates',
+            'select' => '*',
+        );
+        $taxRate = $this->general->get_data_with_param($get_tax_rate,false);
+        if( $taxRate ){
+            $data = ['name' => $input['tax_name'], 'rate' => $input['tax_rate'], 'is_default' => 0];
+            $this->general->update_with_key_field($data, $input['tid'], 'tax_rates','id');
+
+            $is_success = 1;
+
+        }else{
+            $msg = 'Cannot find data';
+        }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($json_data);
     }
 
     public function add_job_attachments()
@@ -1193,9 +1228,29 @@ class Job extends MY_Controller
             'table' => 'job_settings',
             'select' => '*',
         );
+
+        $job_settings = $this->general->get_data_with_param($get_job_settings,false);
+        if( $job_settings ){
+            $prefix   = $job_settings->job_num_prefix;
+            $next_num = str_pad($job_settings->job_num_next, 5, '0', STR_PAD_LEFT);
+        }else{
+            $prefix   = 'JOB-';
+            $next_num = str_pad(1, 5, '0', STR_PAD_LEFT);
+            $lastId = $this->jobs_model->getlastInsert($comp_id);
+            if( $lastId ){
+                $next_num = str_pad($lastId->id, 5, '0', STR_PAD_LEFT);
+            }
+        }
+
+        $this->page_data['settings_prefix'] = $prefix;
+        $this->page_data['settings_next_num'] = $next_num;
         $this->page_data['job_settings'] = $this->general->get_data_with_param($get_job_settings,false);
 
         $get_job_tax = array(
+            'where' => array(
+                'company_id' => $comp_id                
+            ),
+            'or_where' => ['is_default' => 1],
             'table' => 'tax_rates',
             'select' => '*',
         );
@@ -1232,7 +1287,23 @@ class Job extends MY_Controller
             'select' => '*',
         );
         $job_settings = $this->general->get_data_with_param($get_job_settings);
-        $job_number = $job_settings[0]->job_num_prefix.'-000000'.$job_settings[0]->job_num_next;
+        if( $job_settings ){
+            $prefix   = $job_settings[0]->job_num_prefix;
+            $next_num = str_pad($job_settings[0]->job_num_next, 5, '0', STR_PAD_LEFT);            
+            //$job_number = $job_settings[0]->job_num_prefix.'-000000'.$job_settings[0]->job_num_next;
+        }else{
+            $prefix = 'JOB-';
+            $lastId = $this->jobs_model->getlastInsert($comp_id);
+            if( $lastId ){
+                $next_num = $lastId->id + 1;
+                $next_num = str_pad($next_num, 5, '0', STR_PAD_LEFT);
+            }else{
+                $next_num = str_pad(1, 5, '0', STR_PAD_LEFT);
+            }            
+        }
+
+        $job_number = $prefix . $next_num;
+        
 
         $jobs_data = array(
             'job_number' => $job_number,
@@ -2360,6 +2431,28 @@ class Job extends MY_Controller
 
         echo "<pre>";
         print_r($post);
+        exit;
+    }
+
+    public function update_settings()
+    {
+        $cid  = logged('company_id');
+        $post = $this->input->post();
+        $settings = $this->jobs_model->getJobSettingsByCompanyId($cid);
+
+        $data = [
+            'company_id' => $cid,
+            'job_num_prefix' => $post['job_settings_prefix'],
+            'job_num_next' => $post['job_settings_next_number']
+        ];
+
+        if( $settings ){
+            $this->jobs_model->updateJobSettingsByCompanyId($cid, $data);
+        }else{
+            $this->general->add_($data, 'job_settings');
+        }
+
+        echo 1;
         exit;
     }
 }

@@ -60,10 +60,10 @@
                                             </a>
                                             <ul class="dropdown-menu dropdown-menu-end">
                                                 <li>
-                                                    <a class="dropdown-item edit-item" href="<?php echo base_url('/workorder/edit_checklist/' . $checklist->id); ?>">Edit Checklist</a>
+                                                    <a class="dropdown-item edit-item" href="<?php echo base_url('/workorder/edit_checklist/' . $checklist->id); ?>">Edit</a>
                                                 </li>
                                                 <li>
-                                                    <a class="dropdown-item delete-item" href="<?php echo base_url('/workorder/edit_checklist/' . $checklist->id); ?>">Delete Checklist</a>
+                                                    <a class="dropdown-item delete-item" data-id="<?= $checklist->id; ?>" href="javascript:void(0);">Delete</a>
                                                 </li>
                                             </ul>
                                         </div>
@@ -95,6 +95,51 @@
 <script type="text/javascript">
     $(document).ready(function() {
         $(".nsm-table").nsmPagination();
+    });
+
+    $(document).on("click", ".delete-item", function(event) {
+        var ID = $(this).attr("data-id");
+
+        Swal.fire({
+            title: 'Continue to REMOVE this checklist?',
+            text: "",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'No',
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    type: "POST",
+                    url: "<?= base_url('workorder/_delete_checklist') ?>",
+                    dataType: "json",
+                    data: {cid: ID},
+                    success: function(data) {
+                        if (data.is_success === 1) {
+                            Swal.fire({
+                                title: 'Great!',
+                                text: "Checklist was successfully deleted!",
+                                icon: 'success',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            }).then((result) => {
+                                if (result.value) {
+                                    location.reload();
+                                }
+                            });
+                        } else {
+                            Swal.fire({
+                                title: 'Error',
+                                text: data.msg,
+                                icon: 'error',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            });
+                        }
+                    }
+                });
+            }
+        });
     });
 </script>
 <?php include viewPath('v2/includes/footer'); ?>

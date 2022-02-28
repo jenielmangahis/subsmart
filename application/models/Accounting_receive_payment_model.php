@@ -221,4 +221,19 @@ class Accounting_receive_payment_model extends MY_Model
         $this->db->insert_batch('accounting_receive_payment_invoices', $paymentInvoices);
 		return $this->db->insert_id();
     }
+
+    public function get_company_receive_payments($filters = [])
+    {
+        $this->db->where('company_id', $filters['company_id']);
+        $this->db->where('status !=', 0);
+        $query = $this->db->get($this->table);
+        return $query->result();
+    }
+
+    public function get_payment_invoices($paymentId)
+    {
+        $this->db->where('receive_payment_id', $paymentId);
+        $query = $this->db->get('accounting_receive_payment_invoices');
+        return $query->result();
+    }
 }

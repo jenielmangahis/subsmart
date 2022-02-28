@@ -50,6 +50,10 @@ class Accounting_modals extends MY_Controller
         $this->load->model('accounting_receive_payment_model');
         $this->load->model('payment_records_model');
         $this->load->model('accounting_credit_memo_model');
+        $this->load->model('accounting_sales_receipt_model');
+        $this->load->model('accounting_refund_receipt_model');
+        $this->load->model('accounting_delayed_credit_model');
+        $this->load->model('accounting_delayed_charge_model');
         $this->load->library('form_validation');
     }
 
@@ -1083,6 +1087,18 @@ class Accounting_modals extends MY_Controller
                 break;
                 case 'creditMemoModal' :
                     $this->result = $this->credit_memo($data);
+                break;
+                case 'salesReceiptModal' :
+                    $this->result = $this->sales_receipt($data);
+                break;
+                case 'refundReceiptModal' :
+                    $this->result = $this->refund_receipt($data);
+                break;
+                case 'delayedCreditModal' :
+                    $this->result = $this->delayed_credit($data);
+                break;
+                case 'delayedChargeModal' :
+                    $this->result = $this->delayed_charge($data);
                 break;
             }
         } catch (\Exception $e) {
@@ -2135,7 +2151,6 @@ class Accounting_modals extends MY_Controller
                 'name_id' => $name[1],
                 'week_start_date' => date("Y-m-d", $weekStartDate),
                 'week_end_date' => date("Y-m-d", $weekEndDate),
-                // 'time_activity_ids' => json_encode($timeActivityIds),
                 'status' => 1,
                 'created_at' => date("Y-m-d H:i:s"),
                 'updated_at' => date("Y-m-d H:i:s"),
@@ -2664,7 +2679,6 @@ class Accounting_modals extends MY_Controller
                 'payment_method_id' => $data['payment_method'],
                 'ref_no' => !isset($data['template_name']) || $data['ref_no'] === '' ? null : $data['ref_no'],
                 'permit_no' => $data['permit_number'] === "" ? null : $data['permit_number'],
-                // 'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
                 'memo' => $data['memo'],
                 'total_amount' => $data['total_amount'],
                 'linked_purchase_order_id' => !is_null($linkedTransaction) ? $linkedTransaction[1] : null,
@@ -3007,7 +3021,6 @@ class Accounting_modals extends MY_Controller
                 'check_no' => isset($data['print_later']) ? null : ($data['check_no'] === '' ? null : $data['check_no']),
                 'to_print' => $data['print_later'],
                 'permit_no' => $data['permit_number'] === "" ? null : $data['permit_number'],
-                // 'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
                 'memo' => $data['save_method'] !== 'save-and-void' ? $data['memo'] : 'Voided',
                 'total_amount' => $data['save_method'] !== 'save-and-void' ? $data['total_amount'] : 0.00,
                 'linked_purchase_order_id' => !is_null($linkedTransaction) ? $linkedTransaction[1] : null,
@@ -3352,7 +3365,6 @@ class Accounting_modals extends MY_Controller
                 'due_date' => !isset($data['template_name']) ? date("Y-m-d", strtotime($data['due_date'])) : null,
                 'bill_no' => !isset($data['template_name']) || $data['bill_no'] !== "" ? $data['bill_no'] : null,
                 'permit_no' => $data['permit_number'] === "" ? null : $data['permit_number'],
-                // 'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
                 'memo' => $data['memo'],
                 'remaining_balance' => $data['total_amount'],
                 'total_amount' => $data['total_amount'],
@@ -4002,7 +4014,6 @@ class Accounting_modals extends MY_Controller
                 'payment_date' => !isset($data['template_name']) ? date("Y-m-d", strtotime($data['payment_date'])) : null,
                 'ref_no' => $data['ref_no'] === '' ? null : $data['ref_no'],
                 'permit_no' => $data['permit_number'] === "" ? null : $data['permit_number'],
-                // 'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
                 'memo' => $data['memo'],
                 'total_amount' => $data['total_amount'],
                 'remaining_balance' => $data['total_amount'],
@@ -4350,7 +4361,6 @@ class Accounting_modals extends MY_Controller
                 'shipping_address' => nl2br($data['shipping_address']),
                 'purchase_order_date' => !isset($data['template_name']) ? date("Y-m-d", strtotime($data['purchase_order_date'])) : null,
                 'ship_via' => $data['ship_via'],
-                // 'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
                 'message_to_vendor' => $data['message_to_vendor'],
                 'memo' => $data['memo'],
                 'total_amount' => $data['total_amount'],
@@ -5080,7 +5090,6 @@ class Accounting_modals extends MY_Controller
 
     private function credit_memo($data)
     {
-        $this->form_validation->set_rules('customer', 'Customer', 'required');
         $this->form_validation->set_rules('item[]', 'Item', 'required');
 
         if(isset($data['template_name'])) {
@@ -5111,7 +5120,7 @@ class Accounting_modals extends MY_Controller
                 }
             }
         } else {
-            $this->form_validation->set_rules('credit_memo_date', 'Payment date', 'required');
+            $this->form_validation->set_rules('credit_memo_date', 'Credit memo date', 'required');
         }
 
         $return = [];
@@ -5119,7 +5128,7 @@ class Accounting_modals extends MY_Controller
             $return['data'] = null;
             $return['success'] = false;
             $return['message'] = 'Error';
-        } elseif (!isset($data['expense_account']) && !isset($data['item'])) {
+        } elseif (!isset($data['item'])) {
             $return['data'] = null;
             $return['success'] = false;
             $return['message'] = 'Please enter at least one line item.';
@@ -5136,7 +5145,10 @@ class Accounting_modals extends MY_Controller
                 'sales_rep' => $data['sales_rep'],
                 'message_credit_memo' => $data['message_credit_memo'],
                 'message_on_statement' => $data['message_on_statement'],
-                'recurring' => isset($data['template_name']) ? 1 : 0,
+                'adjustment_name' => $data['adjustment_name'],
+                'adjustment_value' => $data['adjustment_value'],
+                'total_amount' => $data['total_amount'],
+                'recurring' => isset($data['template_name']) ? 1 : null,
                 'status' => 1
             ];
 
@@ -5175,12 +5187,99 @@ class Accounting_modals extends MY_Controller
                     }
                 }
 
+                if(isset($data['template_name'])) {
+                    if($data['recurring_type'] !== 'unscheduled') {
+                        $currentDate = date("m/d/Y");
+                        $startDate = $data['start_date'] === '' ? $currentDate : date("m/d/Y", strtotime($data['start_date']));
+                        $every = $data['recurr_every'];
+
+                        switch($data['recurring_interval']) {
+                            case 'daily' :
+                                $next = $startDate;
+                            break;
+                            case 'weekly' :
+                                $days = [
+                                    'sunday',
+                                    'monday',
+                                    'tuesday',
+                                    'wednesday',
+                                    'thursday',
+                                    'friday',
+                                    'saturday'
+                                ];
+        
+                                $day = $data['recurring_day'];
+                                $dayNum = array_search($day, $days);
+                                $next = $startDate;
+        
+                                if(intval(date("w", strtotime($next))) !== $dayNum) {
+                                    do {
+                                        $next = date("m/d/Y", strtotime("$next +1 day"));
+                                    } while(intval(date("w", strtotime($next))) !== $dayNum);
+                                }
+                            break;
+                            case 'monthly' :
+                                if($data['recurring_week'] === 'day') {
+                                    $day = $data['recurring_day'] === 'last' ? 't' : $data['recurring_day'];
+                                    $next = date("m/$day/Y", strtotime($startDate));
+
+                                    if(strtotime($currentDate) > strtotime($next)) {
+                                        $next = date("m/$day/Y", strtotime("$next +$every months"));
+                                    }
+                                } else {
+                                    $week = $data['recurring_week'];
+                                    $day = $data['recurring_day'];
+                                    $next = date("m/d/Y", strtotime("$week $day ".date("Y-m", strtotime($startDate))));
+
+                                    if(strtotime($currentDate) > strtotime($next)) {
+                                        $next = date("m/d/Y", strtotime("$week $day ".date("Y-m", strtotime("$startDate +$every months"))));
+                                    }
+                                }
+                            break;
+                            case 'yearly' :
+                                $month = $data['recurring_month'];
+                                $day = $data['recurring_day'];
+                                $previous = date("$month/$day/Y", strtotime($startDate));
+                                $next = date("$month/$day/Y", strtotime($startDate));
+
+                                if(strtotime($currentDate) > strtotime($next)) {
+                                    $next = date("$month/$day/Y", strtotime("$next +1 year"));
+                                }
+                            break;
+                        }
+                    }
+
+                    $recurringData = [
+                        'company_id' => getLoggedCompanyID(),
+                        'template_name' => $data['template_name'],
+                        'recurring_type' => $data['recurring_type'],
+                        'days_in_advance' => $data['recurring_type'] !== 'unscheduled' ? $data['days_in_advance'] !== '' ? $data['days_in_advance'] : null : null,
+                        'txn_type' => 'credit memo',
+                        'txn_id' => $creditMemoId,
+                        'recurring_interval' => $data['recurring_interval'],
+                        'recurring_month' => $data['recurring_interval'] === 'yearly' ? $data['recurring_month'] : null,
+                        'recurring_week' => $data['recurring_interval'] === 'monthly' ? $data['recurring_week'] : null,
+                        'recurring_day' => $data['recurring_interval'] !== 'daily' ? $data['recurring_day'] : null,
+                        'recurr_every' => $data['recurring_interval'] !== 'yearly' ? $data['recurr_every'] : null,
+                        'start_date' => $data['recurring_type'] !== 'unscheduled' ? ($data['start_date'] !== '' ? date('Y-m-d', strtotime($data['start_date'])) : null) : null,
+                        'end_type' => $data['end_type'],
+                        'end_date' => $data['end_type'] === 'by' ? date('Y-m-d', strtotime($data['end_date'])) : null,
+                        'max_occurrences' => $data['end_type'] === 'after' ? $data['max_occurrence'] : null,
+                        'current_occurrence' => 0,
+                        'next_date' => date("Y-m-d", strtotime($next)),
+                        'status' => 1
+                    ];
+    
+                    $recurringId = $this->accounting_recurring_transactions_model->create($recurringData);
+                }
+
                 $items = [];
                 foreach($data['item'] as $key => $itemId) {
                     $items[] = [
                         'transaction_type' => 'Credit Memo',
                         'transaction_id' => $creditMemoId,
                         'item_id' => $itemId,
+                        'location_id' => $data['location'][$key],
                         'quantity' => $data['quantity'][$key],
                         'price' => $data['item_amount'][$key],
                         'discount' => $data['discount'][$key],
@@ -5189,24 +5288,41 @@ class Accounting_modals extends MY_Controller
                     ];
 
                     if(!isset($data['template_name'])) {
-                        $location = $this->items_model->getItemLocation($data['location'][$index], $value);
-                        $newQty = intval($location->qty) + intval($data['quantity'][$index]);
-                        $this->items_model->updateLocationQty($data['location'][$index], $value, $newQty);
-    
-                        $itemAccDetails = $this->items_model->getItemAccountingDetails($value);
+                        $item = $this->items_model->getItemById($itemId);
+                        $itemAccDetails = $this->items_model->getItemAccountingDetails($itemId);
     
                         if ($itemAccDetails) {
-                            $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
-                            $newBalance = floatval($invAssetAcc->balance) + floatval($data['item_amount'][$index]);
-                            $newBalance = number_format($newBalance, 2, '.', ',');
-    
-                            $invAssetAccData = [
-                                'id' => $invAssetAcc->id,
-                                'company_id' => logged('company_id'),
-                                'balance' => $newBalance
-                            ];
-    
-                            $this->chart_of_accounts_model->updateBalance($invAssetAccData);
+                            if($item->type === 'product' || $item->type === 'inventory') {
+                                $location = $this->items_model->getItemLocation($data['location'][$index], $itemId);
+                                $newQty = intval($location->qty) + intval($data['quantity'][$index]);
+                                $this->items_model->updateLocationQty($data['location'][$index], $itemId, $newQty);
+
+                                $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+                                $newBalance = floatval($invAssetAcc->balance) + floatval($data['item_amount'][$index]);
+                                $newBalance = number_format($newBalance, 2, '.', ',');
+
+                                $invAssetAccData = [
+                                    'id' => $invAssetAcc->id,
+                                    'company_id' => logged('company_id'),
+                                    'balance' => $newBalance
+                                ];
+        
+                                $this->chart_of_accounts_model->updateBalance($invAssetAccData);
+                            } else {
+                                if($item->type !== 'bundle' && $item->type !== 'Bundle') {
+                                    $incomeAcc = $this->chart_of_accounts_model->getById($itemAccDetails->income_account_id);
+                                    $newBalance = floatval($incomeAcc->balance) - floatval($data['item_amount'][$index]);
+                                    $newBalance = number_format($newBalance, 2, '.', ',');
+            
+                                    $incomeAccData = [
+                                        'id' => $incomeAcc->id,
+                                        'company_id' => logged('company_id'),
+                                        'balance' => $newBalance
+                                    ];
+            
+                                    $this->chart_of_accounts_model->updateBalance($incomeAccData);
+                                }
+                            }
                         }
                     }
                 }
@@ -5217,6 +5333,960 @@ class Accounting_modals extends MY_Controller
             $return['data'] = $creditMemoId;
             $return['success'] = $creditMemoId ? true : false;
             $return['message'] = $creditMemoId ? 'Entry Successful!' : 'An unexpected error occured!';
+        }
+
+        return $return;
+    }
+
+    private function sales_receipt($data)
+    {
+        $this->form_validation->set_rules('item[]', 'Item', 'required');
+
+        if(isset($data['template_name'])) {
+            $this->form_validation->set_rules('template_name', 'Template Name', 'required');
+            $this->form_validation->set_rules('recurring_type', 'Recurring Type', 'required');
+
+            if ($data['recurring_type'] !== 'unscheduled') {
+                $this->form_validation->set_rules('recurring_interval', 'Recurring interval', 'required');
+
+                if ($data['recurring_interval'] !== 'daily') {
+                    if ($data['recurring_interval'] === 'monthly') {
+                        $this->form_validation->set_rules('recurring_week', 'Recurring week', 'required');
+                    } elseif ($data['recurring_interval'] === 'yearly') {
+                        $this->form_validation->set_rules('recurring_month', 'Recurring month', 'required');
+                    }
+
+                    $this->form_validation->set_rules('recurring_day', 'Recurring day', 'required');
+                }
+                if ($data['recurring_interval'] !== 'yearly') {
+                    $this->form_validation->set_rules('recurr_every', 'Recurring interval', 'required');
+                }
+                $this->form_validation->set_rules('end_type', 'Recurring end type', 'required');
+
+                if ($data['end_type'] === 'by') {
+                    $this->form_validation->set_rules('end_date', 'Recurring end date', 'required');
+                } elseif ($data['end_type'] === 'after') {
+                    $this->form_validation->set_rules('max_occurence', 'Recurring max occurence', 'required');
+                }
+            }
+        } else {
+            $this->form_validation->set_rules('sales_receipt_date', 'Sales receipt date', 'required');
+        }
+
+        $return = [];
+        if ($this->form_validation->run() === false) {
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = 'Error';
+        } elseif (!isset($data['item'])) {
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = 'Please enter at least one line item.';
+        } else {
+            $salesReceiptData = [
+                'company_id' => logged('company_id'),
+                'customer_id' => $data['customer'],
+                'email' => $data['email'],
+                'send_later' => !isset($data['template_name']) ? $data['send_later'] : null,
+                'billing_address' => $data['billing_address'],
+                'sales_receipt_date' => !isset($data['template_name']) ? date("Y-m-d", strtotime($data['sales_receipt_date'])) : null,
+                'location_of_sale' => $data['location_of_sale'],
+                'po_number' => $data['purchase_order_no'],
+                'sales_rep' => $data['sales_rep'],
+                'payment_method' => $data['payment_method'],
+                'reference_no' => $data['ref_no'],
+                'deposit_to_account' => $data['deposit_to_account'],
+                'message_sales_receipt' => $data['message_sales_receipt'],
+                'message_on_statement' => $data['message_on_statement'],
+                'adjustment_name' => $data['adjustment_name'],
+                'adjustment_value' => $data['adjustment_value'],
+                'total_amount' => $data['total_amount'],
+                'recurring' => isset($data['template_name']) ? 1 : null,
+                'status' => 1
+            ];
+
+            $salesReceiptId = $this->accounting_sales_receipt_model->createSalesReceipts($salesReceiptData);
+
+            if($salesReceiptId) {
+                if (isset($data['attachments']) && is_array($data['attachments'])) {
+                    $order = 1;
+                    foreach ($data['attachments'] as $attachmentId) {
+                        $linkAttachmentData = [
+                            'type' => 'Sales Receipt',
+                            'attachment_id' => $attachmentId,
+                            'linked_id' => $salesReceiptId,
+                            'order_no' => $order
+                        ];
+
+                        $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
+
+                        $order++;
+                    }
+                }
+
+                if(isset($data['tags']) && is_array($data['tags'])) {
+                    $order = 1;
+                    foreach($data['tags'] as $tagId) {
+                        $linkTagData = [
+                            'transaction_type' => 'Sales Receipt',
+                            'transaction_id' => $salesReceiptId,
+                            'tag_id' => $tagId,
+                            'order_no' => $order
+                        ];
+
+                        $linkTagId = $this->tags_model->link_tag($linkTagData);
+
+                        $order++;
+                    }
+                }
+
+                if(isset($data['template_name'])) {
+                    if($data['recurring_type'] !== 'unscheduled') {
+                        $currentDate = date("m/d/Y");
+                        $startDate = $data['start_date'] === '' ? $currentDate : date("m/d/Y", strtotime($data['start_date']));
+                        $every = $data['recurr_every'];
+
+                        switch($data['recurring_interval']) {
+                            case 'daily' :
+                                $next = $startDate;
+                            break;
+                            case 'weekly' :
+                                $days = [
+                                    'sunday',
+                                    'monday',
+                                    'tuesday',
+                                    'wednesday',
+                                    'thursday',
+                                    'friday',
+                                    'saturday'
+                                ];
+        
+                                $day = $data['recurring_day'];
+                                $dayNum = array_search($day, $days);
+                                $next = $startDate;
+        
+                                if(intval(date("w", strtotime($next))) !== $dayNum) {
+                                    do {
+                                        $next = date("m/d/Y", strtotime("$next +1 day"));
+                                    } while(intval(date("w", strtotime($next))) !== $dayNum);
+                                }
+                            break;
+                            case 'monthly' :
+                                if($data['recurring_week'] === 'day') {
+                                    $day = $data['recurring_day'] === 'last' ? 't' : $data['recurring_day'];
+                                    $next = date("m/$day/Y", strtotime($startDate));
+
+                                    if(strtotime($currentDate) > strtotime($next)) {
+                                        $next = date("m/$day/Y", strtotime("$next +$every months"));
+                                    }
+                                } else {
+                                    $week = $data['recurring_week'];
+                                    $day = $data['recurring_day'];
+                                    $next = date("m/d/Y", strtotime("$week $day ".date("Y-m", strtotime($startDate))));
+
+                                    if(strtotime($currentDate) > strtotime($next)) {
+                                        $next = date("m/d/Y", strtotime("$week $day ".date("Y-m", strtotime("$startDate +$every months"))));
+                                    }
+                                }
+                            break;
+                            case 'yearly' :
+                                $month = $data['recurring_month'];
+                                $day = $data['recurring_day'];
+                                $previous = date("$month/$day/Y", strtotime($startDate));
+                                $next = date("$month/$day/Y", strtotime($startDate));
+
+                                if(strtotime($currentDate) > strtotime($next)) {
+                                    $next = date("$month/$day/Y", strtotime("$next +1 year"));
+                                }
+                            break;
+                        }
+                    }
+
+                    $recurringData = [
+                        'company_id' => getLoggedCompanyID(),
+                        'auto_send_emails' => $data['auto_send_emails'],
+                        'print_later' => $data['print_later'],
+                        'template_name' => $data['template_name'],
+                        'recurring_type' => $data['recurring_type'],
+                        'days_in_advance' => $data['recurring_type'] !== 'unscheduled' ? $data['days_in_advance'] !== '' ? $data['days_in_advance'] : null : null,
+                        'txn_type' => 'sales receipt',
+                        'txn_id' => $salesReceiptId,
+                        'recurring_interval' => $data['recurring_interval'],
+                        'recurring_month' => $data['recurring_interval'] === 'yearly' ? $data['recurring_month'] : null,
+                        'recurring_week' => $data['recurring_interval'] === 'monthly' ? $data['recurring_week'] : null,
+                        'recurring_day' => $data['recurring_interval'] !== 'daily' ? $data['recurring_day'] : null,
+                        'recurr_every' => $data['recurring_interval'] !== 'yearly' ? $data['recurr_every'] : null,
+                        'start_date' => $data['recurring_type'] !== 'unscheduled' ? ($data['start_date'] !== '' ? date('Y-m-d', strtotime($data['start_date'])) : null) : null,
+                        'end_type' => $data['end_type'],
+                        'end_date' => $data['end_type'] === 'by' ? date('Y-m-d', strtotime($data['end_date'])) : null,
+                        'max_occurrences' => $data['end_type'] === 'after' ? $data['max_occurrence'] : null,
+                        'current_occurrence' => 0,
+                        'next_date' => date("Y-m-d", strtotime($next)),
+                        'status' => 1
+                    ];
+    
+                    $recurringId = $this->accounting_recurring_transactions_model->create($recurringData);
+                } else {
+                    $depositAcc = $this->chart_of_accounts_model->getById($data['deposit_to_account']);
+                    $depositAccType = $this->account_model->getById($depositAcc->account_id);
+
+                    if ($depositAccType->account_name === 'Credit Card') {
+                        $newBalance = floatval($depositAcc->balance) - floatval($data['total_amount']);
+                    } else {
+                        $newBalance = floatval($depositAcc->balance) + floatval($data['total_amount']);
+                    }
+
+                    $newBalance = number_format($newBalance, 2, '.', ',');
+
+                    $depositAccData = [
+                        'id' => $depositAcc->id,
+                        'company_id' => logged('company_id'),
+                        'balance' => $newBalance
+                    ];
+
+                    $this->chart_of_accounts_model->updateBalance($depositAccData);
+                }
+
+                $items = [];
+                foreach($data['item'] as $key => $itemId) {
+                    $items[] = [
+                        'transaction_type' => 'Sales Receipt',
+                        'transaction_id' => $salesReceiptId,
+                        'item_id' => $itemId,
+                        'location_id' => $data['location'][$key],
+                        'quantity' => $data['quantity'][$key],
+                        'price' => $data['item_amount'][$key],
+                        'discount' => $data['discount'][$key],
+                        'tax' => $data['item_tax'][$key],
+                        'total' => $data['item_total'][$key]
+                    ];
+
+                    if(!isset($data['template_name'])) {
+                        $item = $this->items_model->getItemById($itemId)[0];
+                        $itemAccDetails = $this->items_model->getItemAccountingDetails($itemId);
+    
+                        if ($itemAccDetails) {
+                            if($item->type === 'product' || $item->type === 'inventory') {
+                                $location = $this->items_model->getItemLocation($data['location'][$index], $itemId);
+                                $newQty = intval($location->qty) - intval($data['quantity'][$index]);
+                                $this->items_model->updateLocationQty($data['location'][$index], $itemId, $newQty);
+
+                                $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+                                $newBalance = floatval($invAssetAcc->balance) - floatval($data['item_amount'][$index]);
+                                $newBalance = number_format($newBalance, 2, '.', ',');
+        
+                                $invAssetAccData = [
+                                    'id' => $invAssetAcc->id,
+                                    'company_id' => logged('company_id'),
+                                    'balance' => $newBalance
+                                ];
+        
+                                $this->chart_of_accounts_model->updateBalance($invAssetAccData);
+                            } else {
+                                if($item->type !== 'bundle' && $item->type !== 'Bundle') {
+                                    $incomeAcc = $this->chart_of_accounts_model->getById($itemAccDetails->income_account_id);
+                                    $newBalance = floatval($incomeAcc->balance) - floatval($data['item_amount'][$index]);
+                                    $newBalance = number_format($newBalance, 2, '.', ',');
+            
+                                    $incomeAccData = [
+                                        'id' => $incomeAcc->id,
+                                        'company_id' => logged('company_id'),
+                                        'balance' => $newBalance
+                                    ];
+            
+                                    $this->chart_of_accounts_model->updateBalance($incomeAccData);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                $this->accounting_credit_memo_model->insert_transaction_items($items);
+            }
+    
+            $return['data'] = $salesReceiptId;
+            $return['success'] = $salesReceiptId ? true : false;
+            $return['message'] = $salesReceiptId ? 'Entry Successful!' : 'An unexpected error occured!';
+        }
+
+        return $return;
+    }
+
+    private function refund_receipt($data)
+    {
+        $this->form_validation->set_rules('item[]', 'Item', 'required');
+
+        if(isset($data['template_name'])) {
+            $this->form_validation->set_rules('template_name', 'Template Name', 'required');
+            $this->form_validation->set_rules('recurring_type', 'Recurring Type', 'required');
+
+            if ($data['recurring_type'] !== 'unscheduled') {
+                $this->form_validation->set_rules('recurring_interval', 'Recurring interval', 'required');
+
+                if ($data['recurring_interval'] !== 'daily') {
+                    if ($data['recurring_interval'] === 'monthly') {
+                        $this->form_validation->set_rules('recurring_week', 'Recurring week', 'required');
+                    } elseif ($data['recurring_interval'] === 'yearly') {
+                        $this->form_validation->set_rules('recurring_month', 'Recurring month', 'required');
+                    }
+
+                    $this->form_validation->set_rules('recurring_day', 'Recurring day', 'required');
+                }
+                if ($data['recurring_interval'] !== 'yearly') {
+                    $this->form_validation->set_rules('recurr_every', 'Recurring interval', 'required');
+                }
+                $this->form_validation->set_rules('end_type', 'Recurring end type', 'required');
+
+                if ($data['end_type'] === 'by') {
+                    $this->form_validation->set_rules('end_date', 'Recurring end date', 'required');
+                } elseif ($data['end_type'] === 'after') {
+                    $this->form_validation->set_rules('max_occurence', 'Recurring max occurence', 'required');
+                }
+            }
+        } else {
+            $this->form_validation->set_rules('refund_receipt_date', 'Refund receipt date', 'required');
+        }
+
+        $return = [];
+        if ($this->form_validation->run() === false) {
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = 'Error';
+        } elseif (!isset($data['item'])) {
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = 'Please enter at least one line item.';
+        } else {
+            $refundReceiptData = [
+                'company_id' => logged('company_id'),
+                'customer_id' => $data['customer'],
+                'email' => $data['email'],
+                'billing_address' => $data['billing_address'],
+                'refund_receipt_date' => !isset($data['template_name']) ? date("Y-m-d", strtotime($data['refund_receipt_date'])) : null,
+                'location_of_sale' => $data['location_of_sale'],
+                'po_number' => $data['purchase_order_no'],
+                'sales_rep' => $data['sales_rep'],
+                'payment_method' => $data['payment_method'],
+                'refund_from_account' => $data['refund_from_account'],
+                'message_refund_receipt' => $data['message_refund_receipt'],
+                'message_on_statement' => $data['message_on_statement'],
+                'adjustment_name' => $data['adjustment_name'],
+                'adjustment_value' => $data['adjustment_value'],
+                'total_amount' => $data['total_amount'],
+                'recurring' => isset($data['template_name']) ? 1 : null,
+                'status' => 1
+            ];
+
+            $refundReceiptId = $this->accounting_refund_receipt_model->createRefundReceipts($refundReceiptData);
+
+            if($refundReceiptId) {
+                if (isset($data['attachments']) && is_array($data['attachments'])) {
+                    $order = 1;
+                    foreach ($data['attachments'] as $attachmentId) {
+                        $linkAttachmentData = [
+                            'type' => 'Refund Receipt',
+                            'attachment_id' => $attachmentId,
+                            'linked_id' => $refundReceiptId,
+                            'order_no' => $order
+                        ];
+
+                        $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
+
+                        $order++;
+                    }
+                }
+
+                if(isset($data['tags']) && is_array($data['tags'])) {
+                    $order = 1;
+                    foreach($data['tags'] as $tagId) {
+                        $linkTagData = [
+                            'transaction_type' => 'Refund Receipt',
+                            'transaction_id' => $refundReceiptId,
+                            'tag_id' => $tagId,
+                            'order_no' => $order
+                        ];
+
+                        $linkTagId = $this->tags_model->link_tag($linkTagData);
+
+                        $order++;
+                    }
+                }
+
+                if(isset($data['template_name'])) {
+                    if($data['recurring_type'] !== 'unscheduled') {
+                        $currentDate = date("m/d/Y");
+                        $startDate = $data['start_date'] === '' ? $currentDate : date("m/d/Y", strtotime($data['start_date']));
+                        $every = $data['recurr_every'];
+
+                        switch($data['recurring_interval']) {
+                            case 'daily' :
+                                $next = $startDate;
+                            break;
+                            case 'weekly' :
+                                $days = [
+                                    'sunday',
+                                    'monday',
+                                    'tuesday',
+                                    'wednesday',
+                                    'thursday',
+                                    'friday',
+                                    'saturday'
+                                ];
+        
+                                $day = $data['recurring_day'];
+                                $dayNum = array_search($day, $days);
+                                $next = $startDate;
+        
+                                if(intval(date("w", strtotime($next))) !== $dayNum) {
+                                    do {
+                                        $next = date("m/d/Y", strtotime("$next +1 day"));
+                                    } while(intval(date("w", strtotime($next))) !== $dayNum);
+                                }
+                            break;
+                            case 'monthly' :
+                                if($data['recurring_week'] === 'day') {
+                                    $day = $data['recurring_day'] === 'last' ? 't' : $data['recurring_day'];
+                                    $next = date("m/$day/Y", strtotime($startDate));
+
+                                    if(strtotime($currentDate) > strtotime($next)) {
+                                        $next = date("m/$day/Y", strtotime("$next +$every months"));
+                                    }
+                                } else {
+                                    $week = $data['recurring_week'];
+                                    $day = $data['recurring_day'];
+                                    $next = date("m/d/Y", strtotime("$week $day ".date("Y-m", strtotime($startDate))));
+
+                                    if(strtotime($currentDate) > strtotime($next)) {
+                                        $next = date("m/d/Y", strtotime("$week $day ".date("Y-m", strtotime("$startDate +$every months"))));
+                                    }
+                                }
+                            break;
+                            case 'yearly' :
+                                $month = $data['recurring_month'];
+                                $day = $data['recurring_day'];
+                                $previous = date("$month/$day/Y", strtotime($startDate));
+                                $next = date("$month/$day/Y", strtotime($startDate));
+
+                                if(strtotime($currentDate) > strtotime($next)) {
+                                    $next = date("$month/$day/Y", strtotime("$next +1 year"));
+                                }
+                            break;
+                        }
+                    }
+
+                    $recurringData = [
+                        'company_id' => getLoggedCompanyID(),
+                        'template_name' => $data['template_name'],
+                        'recurring_type' => $data['recurring_type'],
+                        'days_in_advance' => $data['recurring_type'] !== 'unscheduled' ? $data['days_in_advance'] !== '' ? $data['days_in_advance'] : null : null,
+                        'txn_type' => 'refund receipt',
+                        'txn_id' => $refundReceiptId,
+                        'recurring_interval' => $data['recurring_interval'],
+                        'recurring_month' => $data['recurring_interval'] === 'yearly' ? $data['recurring_month'] : null,
+                        'recurring_week' => $data['recurring_interval'] === 'monthly' ? $data['recurring_week'] : null,
+                        'recurring_day' => $data['recurring_interval'] !== 'daily' ? $data['recurring_day'] : null,
+                        'recurr_every' => $data['recurring_interval'] !== 'yearly' ? $data['recurr_every'] : null,
+                        'start_date' => $data['recurring_type'] !== 'unscheduled' ? ($data['start_date'] !== '' ? date('Y-m-d', strtotime($data['start_date'])) : null) : null,
+                        'end_type' => $data['end_type'],
+                        'end_date' => $data['end_type'] === 'by' ? date('Y-m-d', strtotime($data['end_date'])) : null,
+                        'max_occurrences' => $data['end_type'] === 'after' ? $data['max_occurrence'] : null,
+                        'current_occurrence' => 0,
+                        'next_date' => date("Y-m-d", strtotime($next)),
+                        'status' => 1
+                    ];
+    
+                    $recurringId = $this->accounting_recurring_transactions_model->create($recurringData);
+                } else {
+                    $refundAcc = $this->chart_of_accounts_model->getById($data['refund_from_account']);
+                    $refundAccType = $this->account_model->getById($refundAcc->account_id);
+
+                    if ($refundAccType->account_name === 'Credit Card') {
+                        $newBalance = floatval($refundAcc->balance) + floatval($data['total_amount']);
+                    } else {
+                        $newBalance = floatval($refundAcc->balance) - floatval($data['total_amount']);
+                    }
+
+                    $newBalance = number_format($newBalance, 2, '.', ',');
+
+                    $refundAccData = [
+                        'id' => $refundAcc->id,
+                        'company_id' => logged('company_id'),
+                        'balance' => $newBalance
+                    ];
+
+                    $this->chart_of_accounts_model->updateBalance($refundAccData);
+                }
+
+                $items = [];
+                foreach($data['item'] as $key => $itemId) {
+                    $items[] = [
+                        'transaction_type' => 'Refund Receipt',
+                        'transaction_id' => $refundReceiptId,
+                        'item_id' => $itemId,
+                        'location_id' => $data['location'][$key],
+                        'quantity' => $data['quantity'][$key],
+                        'price' => $data['item_amount'][$key],
+                        'discount' => $data['discount'][$key],
+                        'tax' => $data['item_tax'][$key],
+                        'total' => $data['item_total'][$key]
+                    ];
+
+                    if(!isset($data['template_name'])) {
+                        $item = $this->items_model->getItemById($itemId)[0];
+                        $itemAccDetails = $this->items_model->getItemAccountingDetails($itemId);
+    
+                        if ($itemAccDetails) {
+                            if($item->type === 'product' || $item->type === 'inventory') {
+                                $location = $this->items_model->getItemLocation($data['location'][$index], $itemId);
+                                $newQty = intval($location->qty) + intval($data['quantity'][$index]);
+                                $this->items_model->updateLocationQty($data['location'][$index], $itemId, $newQty);
+
+                                $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+                                $newBalance = floatval($invAssetAcc->balance) - floatval($data['item_amount'][$index]);
+                                $newBalance = number_format($newBalance, 2, '.', ',');
+        
+                                $invAssetAccData = [
+                                    'id' => $invAssetAcc->id,
+                                    'company_id' => logged('company_id'),
+                                    'balance' => $newBalance
+                                ];
+        
+                                $this->chart_of_accounts_model->updateBalance($invAssetAccData);
+                            } else {
+                                if($item->type !== 'bundle' && $item->type !== 'Bundle') {
+                                    $incomeAcc = $this->chart_of_accounts_model->getById($itemAccDetails->income_account_id);
+                                    $newBalance = floatval($incomeAcc->balance) + floatval($data['item_amount'][$index]);
+                                    $newBalance = number_format($newBalance, 2, '.', ',');
+            
+                                    $incomeAccData = [
+                                        'id' => $incomeAcc->id,
+                                        'company_id' => logged('company_id'),
+                                        'balance' => $newBalance
+                                    ];
+            
+                                    $this->chart_of_accounts_model->updateBalance($incomeAccData);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                $this->accounting_credit_memo_model->insert_transaction_items($items);
+            }
+    
+            $return['data'] = $refundReceiptId;
+            $return['success'] = $refundReceiptId ? true : false;
+            $return['message'] = $refundReceiptId ? 'Entry Successful!' : 'An unexpected error occured!';
+        }
+
+        return $return;
+    }
+
+    private function delayed_credit($data)
+    {
+        $this->form_validation->set_rules('item[]', 'Item', 'required');
+        $this->form_validation->set_rules('customer', 'Customer', 'required');
+
+        if(isset($data['template_name'])) {
+            $this->form_validation->set_rules('template_name', 'Template Name', 'required');
+            $this->form_validation->set_rules('recurring_type', 'Recurring Type', 'required');
+
+            if ($data['recurring_type'] !== 'unscheduled') {
+                $this->form_validation->set_rules('recurring_interval', 'Recurring interval', 'required');
+
+                if ($data['recurring_interval'] !== 'daily') {
+                    if ($data['recurring_interval'] === 'monthly') {
+                        $this->form_validation->set_rules('recurring_week', 'Recurring week', 'required');
+                    } elseif ($data['recurring_interval'] === 'yearly') {
+                        $this->form_validation->set_rules('recurring_month', 'Recurring month', 'required');
+                    }
+
+                    $this->form_validation->set_rules('recurring_day', 'Recurring day', 'required');
+                }
+                if ($data['recurring_interval'] !== 'yearly') {
+                    $this->form_validation->set_rules('recurr_every', 'Recurring interval', 'required');
+                }
+                $this->form_validation->set_rules('end_type', 'Recurring end type', 'required');
+
+                if ($data['end_type'] === 'by') {
+                    $this->form_validation->set_rules('end_date', 'Recurring end date', 'required');
+                } elseif ($data['end_type'] === 'after') {
+                    $this->form_validation->set_rules('max_occurence', 'Recurring max occurence', 'required');
+                }
+            }
+        } else {
+            $this->form_validation->set_rules('delayed_credit_date', 'Delayed credit date', 'required');
+        }
+
+        $return = [];
+        if ($this->form_validation->run() === false) {
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = 'Error';
+        } elseif (!isset($data['item'])) {
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = 'Please enter at least one line item.';
+        } else {
+            $delayedCreditData = [
+                'company_id' => logged('company_id'),
+                'customer_id' => $data['customer'],
+                'delayed_credit_date' => !isset($data['template_name']) ? date("Y-m-d", strtotime($data['delayed_credit_date'])) : null,
+                'memo' => $data['memo'],
+                'adjustment_name' => $data['adjustment_name'],
+                'adjustment_value' => $data['adjustment_value'],
+                'total_amount' => $data['total_amount'],
+                'recurring' => isset($data['template_name']) ? 1 : null,
+                'status' => 1
+            ];
+
+            $delayedCreditId = $this->accounting_delayed_credit_model->createDelayedCredit($delayedCreditData);
+
+            if($delayedCreditId) {
+                if (isset($data['attachments']) && is_array($data['attachments'])) {
+                    $order = 1;
+                    foreach ($data['attachments'] as $attachmentId) {
+                        $linkAttachmentData = [
+                            'type' => 'Delayed Credit',
+                            'attachment_id' => $attachmentId,
+                            'linked_id' => $delayedCreditId,
+                            'order_no' => $order
+                        ];
+
+                        $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
+
+                        $order++;
+                    }
+                }
+
+                if(isset($data['tags']) && is_array($data['tags'])) {
+                    $order = 1;
+                    foreach($data['tags'] as $tagId) {
+                        $linkTagData = [
+                            'transaction_type' => 'Delayed Credit',
+                            'transaction_id' => $delayedCreditId,
+                            'tag_id' => $tagId,
+                            'order_no' => $order
+                        ];
+
+                        $linkTagId = $this->tags_model->link_tag($linkTagData);
+
+                        $order++;
+                    }
+                }
+
+                if(isset($data['template_name'])) {
+                    if($data['recurring_type'] !== 'unscheduled') {
+                        $currentDate = date("m/d/Y");
+                        $startDate = $data['start_date'] === '' ? $currentDate : date("m/d/Y", strtotime($data['start_date']));
+                        $every = $data['recurr_every'];
+
+                        switch($data['recurring_interval']) {
+                            case 'daily' :
+                                $next = $startDate;
+                            break;
+                            case 'weekly' :
+                                $days = [
+                                    'sunday',
+                                    'monday',
+                                    'tuesday',
+                                    'wednesday',
+                                    'thursday',
+                                    'friday',
+                                    'saturday'
+                                ];
+        
+                                $day = $data['recurring_day'];
+                                $dayNum = array_search($day, $days);
+                                $next = $startDate;
+        
+                                if(intval(date("w", strtotime($next))) !== $dayNum) {
+                                    do {
+                                        $next = date("m/d/Y", strtotime("$next +1 day"));
+                                    } while(intval(date("w", strtotime($next))) !== $dayNum);
+                                }
+                            break;
+                            case 'monthly' :
+                                if($data['recurring_week'] === 'day') {
+                                    $day = $data['recurring_day'] === 'last' ? 't' : $data['recurring_day'];
+                                    $next = date("m/$day/Y", strtotime($startDate));
+
+                                    if(strtotime($currentDate) > strtotime($next)) {
+                                        $next = date("m/$day/Y", strtotime("$next +$every months"));
+                                    }
+                                } else {
+                                    $week = $data['recurring_week'];
+                                    $day = $data['recurring_day'];
+                                    $next = date("m/d/Y", strtotime("$week $day ".date("Y-m", strtotime($startDate))));
+
+                                    if(strtotime($currentDate) > strtotime($next)) {
+                                        $next = date("m/d/Y", strtotime("$week $day ".date("Y-m", strtotime("$startDate +$every months"))));
+                                    }
+                                }
+                            break;
+                            case 'yearly' :
+                                $month = $data['recurring_month'];
+                                $day = $data['recurring_day'];
+                                $previous = date("$month/$day/Y", strtotime($startDate));
+                                $next = date("$month/$day/Y", strtotime($startDate));
+
+                                if(strtotime($currentDate) > strtotime($next)) {
+                                    $next = date("$month/$day/Y", strtotime("$next +1 year"));
+                                }
+                            break;
+                        }
+                    }
+
+                    $recurringData = [
+                        'company_id' => getLoggedCompanyID(),
+                        'template_name' => $data['template_name'],
+                        'recurring_type' => $data['recurring_type'],
+                        'days_in_advance' => $data['recurring_type'] !== 'unscheduled' ? $data['days_in_advance'] !== '' ? $data['days_in_advance'] : null : null,
+                        'txn_type' => 'delayed credit',
+                        'txn_id' => $delayedCreditId,
+                        'recurring_interval' => $data['recurring_interval'],
+                        'recurring_month' => $data['recurring_interval'] === 'yearly' ? $data['recurring_month'] : null,
+                        'recurring_week' => $data['recurring_interval'] === 'monthly' ? $data['recurring_week'] : null,
+                        'recurring_day' => $data['recurring_interval'] !== 'daily' ? $data['recurring_day'] : null,
+                        'recurr_every' => $data['recurring_interval'] !== 'yearly' ? $data['recurr_every'] : null,
+                        'start_date' => $data['recurring_type'] !== 'unscheduled' ? ($data['start_date'] !== '' ? date('Y-m-d', strtotime($data['start_date'])) : null) : null,
+                        'end_type' => $data['end_type'],
+                        'end_date' => $data['end_type'] === 'by' ? date('Y-m-d', strtotime($data['end_date'])) : null,
+                        'max_occurrences' => $data['end_type'] === 'after' ? $data['max_occurrence'] : null,
+                        'current_occurrence' => 0,
+                        'next_date' => date("Y-m-d", strtotime($next)),
+                        'status' => 1
+                    ];
+    
+                    $recurringId = $this->accounting_recurring_transactions_model->create($recurringData);
+                }
+
+                $items = [];
+                foreach($data['item'] as $key => $itemId) {
+                    $items[] = [
+                        'transaction_type' => 'Delayed Credit',
+                        'transaction_id' => $delayedCreditId,
+                        'item_id' => $itemId,
+                        'location_id' => $data['location'][$key],
+                        'quantity' => $data['quantity'][$key],
+                        'price' => $data['item_amount'][$key],
+                        'discount' => $data['discount'][$key],
+                        'tax' => $data['item_tax'][$key],
+                        'total' => $data['item_total'][$key]
+                    ];
+                }
+
+                $this->accounting_credit_memo_model->insert_transaction_items($items);
+            }
+    
+            $return['data'] = $delayedCreditId;
+            $return['success'] = $delayedCreditId ? true : false;
+            $return['message'] = $delayedCreditId ? 'Entry Successful!' : 'An unexpected error occured!';
+        }
+
+        return $return;
+    }
+
+    private function delayed_charge($data)
+    {
+        $this->form_validation->set_rules('item[]', 'Item', 'required');
+        $this->form_validation->set_rules('customer', 'Customer', 'required');
+
+        if(isset($data['template_name'])) {
+            $this->form_validation->set_rules('template_name', 'Template Name', 'required');
+            $this->form_validation->set_rules('recurring_type', 'Recurring Type', 'required');
+
+            if ($data['recurring_type'] !== 'unscheduled') {
+                $this->form_validation->set_rules('recurring_interval', 'Recurring interval', 'required');
+
+                if ($data['recurring_interval'] !== 'daily') {
+                    if ($data['recurring_interval'] === 'monthly') {
+                        $this->form_validation->set_rules('recurring_week', 'Recurring week', 'required');
+                    } elseif ($data['recurring_interval'] === 'yearly') {
+                        $this->form_validation->set_rules('recurring_month', 'Recurring month', 'required');
+                    }
+
+                    $this->form_validation->set_rules('recurring_day', 'Recurring day', 'required');
+                }
+                if ($data['recurring_interval'] !== 'yearly') {
+                    $this->form_validation->set_rules('recurr_every', 'Recurring interval', 'required');
+                }
+                $this->form_validation->set_rules('end_type', 'Recurring end type', 'required');
+
+                if ($data['end_type'] === 'by') {
+                    $this->form_validation->set_rules('end_date', 'Recurring end date', 'required');
+                } elseif ($data['end_type'] === 'after') {
+                    $this->form_validation->set_rules('max_occurence', 'Recurring max occurence', 'required');
+                }
+            }
+        } else {
+            $this->form_validation->set_rules('delayed_charge_date', 'Delayed charge date', 'required');
+        }
+
+        $return = [];
+        if ($this->form_validation->run() === false) {
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = 'Error';
+        } elseif (!isset($data['item'])) {
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = 'Please enter at least one line item.';
+        } else {
+            $delayedChargeData = [
+                'company_id' => logged('company_id'),
+                'customer_id' => $data['customer'],
+                'delayed_charge_date' => !isset($data['template_name']) ? date("Y-m-d", strtotime($data['delayed_charge_date'])) : null,
+                'memo' => $data['memo'],
+                'adjustment_name' => $data['adjustment_name'],
+                'adjustment_value' => $data['adjustment_value'],
+                'total_amount' => $data['total_amount'],
+                'recurring' => isset($data['template_name']) ? 1 : null,
+                'status' => 1
+            ];
+
+            $delayedChargeId = $this->accounting_delayed_charge_model->createDelayedCharge($delayedChargeData);
+
+            if($delayedChargeId) {
+                if (isset($data['attachments']) && is_array($data['attachments'])) {
+                    $order = 1;
+                    foreach ($data['attachments'] as $attachmentId) {
+                        $linkAttachmentData = [
+                            'type' => 'Delayed Charge',
+                            'attachment_id' => $attachmentId,
+                            'linked_id' => $delayedChargeId,
+                            'order_no' => $order
+                        ];
+
+                        $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
+
+                        $order++;
+                    }
+                }
+
+                if(isset($data['tags']) && is_array($data['tags'])) {
+                    $order = 1;
+                    foreach($data['tags'] as $tagId) {
+                        $linkTagData = [
+                            'transaction_type' => 'Delayed Charge',
+                            'transaction_id' => $delayedChargeId,
+                            'tag_id' => $tagId,
+                            'order_no' => $order
+                        ];
+
+                        $linkTagId = $this->tags_model->link_tag($linkTagData);
+
+                        $order++;
+                    }
+                }
+
+                if(isset($data['template_name'])) {
+                    if($data['recurring_type'] !== 'unscheduled') {
+                        $currentDate = date("m/d/Y");
+                        $startDate = $data['start_date'] === '' ? $currentDate : date("m/d/Y", strtotime($data['start_date']));
+                        $every = $data['recurr_every'];
+
+                        switch($data['recurring_interval']) {
+                            case 'daily' :
+                                $next = $startDate;
+                            break;
+                            case 'weekly' :
+                                $days = [
+                                    'sunday',
+                                    'monday',
+                                    'tuesday',
+                                    'wednesday',
+                                    'thursday',
+                                    'friday',
+                                    'saturday'
+                                ];
+        
+                                $day = $data['recurring_day'];
+                                $dayNum = array_search($day, $days);
+                                $next = $startDate;
+        
+                                if(intval(date("w", strtotime($next))) !== $dayNum) {
+                                    do {
+                                        $next = date("m/d/Y", strtotime("$next +1 day"));
+                                    } while(intval(date("w", strtotime($next))) !== $dayNum);
+                                }
+                            break;
+                            case 'monthly' :
+                                if($data['recurring_week'] === 'day') {
+                                    $day = $data['recurring_day'] === 'last' ? 't' : $data['recurring_day'];
+                                    $next = date("m/$day/Y", strtotime($startDate));
+
+                                    if(strtotime($currentDate) > strtotime($next)) {
+                                        $next = date("m/$day/Y", strtotime("$next +$every months"));
+                                    }
+                                } else {
+                                    $week = $data['recurring_week'];
+                                    $day = $data['recurring_day'];
+                                    $next = date("m/d/Y", strtotime("$week $day ".date("Y-m", strtotime($startDate))));
+
+                                    if(strtotime($currentDate) > strtotime($next)) {
+                                        $next = date("m/d/Y", strtotime("$week $day ".date("Y-m", strtotime("$startDate +$every months"))));
+                                    }
+                                }
+                            break;
+                            case 'yearly' :
+                                $month = $data['recurring_month'];
+                                $day = $data['recurring_day'];
+                                $previous = date("$month/$day/Y", strtotime($startDate));
+                                $next = date("$month/$day/Y", strtotime($startDate));
+
+                                if(strtotime($currentDate) > strtotime($next)) {
+                                    $next = date("$month/$day/Y", strtotime("$next +1 year"));
+                                }
+                            break;
+                        }
+                    }
+
+                    $recurringData = [
+                        'company_id' => getLoggedCompanyID(),
+                        'template_name' => $data['template_name'],
+                        'recurring_type' => $data['recurring_type'],
+                        'days_in_advance' => $data['recurring_type'] !== 'unscheduled' ? $data['days_in_advance'] !== '' ? $data['days_in_advance'] : null : null,
+                        'txn_type' => 'delayed charge',
+                        'txn_id' => $delayedChargeId,
+                        'recurring_interval' => $data['recurring_interval'],
+                        'recurring_month' => $data['recurring_interval'] === 'yearly' ? $data['recurring_month'] : null,
+                        'recurring_week' => $data['recurring_interval'] === 'monthly' ? $data['recurring_week'] : null,
+                        'recurring_day' => $data['recurring_interval'] !== 'daily' ? $data['recurring_day'] : null,
+                        'recurr_every' => $data['recurring_interval'] !== 'yearly' ? $data['recurr_every'] : null,
+                        'start_date' => $data['recurring_type'] !== 'unscheduled' ? ($data['start_date'] !== '' ? date('Y-m-d', strtotime($data['start_date'])) : null) : null,
+                        'end_type' => $data['end_type'],
+                        'end_date' => $data['end_type'] === 'by' ? date('Y-m-d', strtotime($data['end_date'])) : null,
+                        'max_occurrences' => $data['end_type'] === 'after' ? $data['max_occurrence'] : null,
+                        'current_occurrence' => 0,
+                        'next_date' => date("Y-m-d", strtotime($next)),
+                        'status' => 1
+                    ];
+    
+                    $recurringId = $this->accounting_recurring_transactions_model->create($recurringData);
+                }
+
+                $items = [];
+                foreach($data['item'] as $key => $itemId) {
+                    $items[] = [
+                        'transaction_type' => 'Delayed Charge',
+                        'transaction_id' => $delayedChargeId,
+                        'item_id' => $itemId,
+                        'location_id' => $data['location'][$key],
+                        'quantity' => $data['quantity'][$key],
+                        'price' => $data['item_amount'][$key],
+                        'discount' => $data['discount'][$key],
+                        'tax' => $data['item_tax'][$key],
+                        'total' => $data['item_total'][$key]
+                    ];
+                }
+
+                $this->accounting_credit_memo_model->insert_transaction_items($items);
+            }
+    
+            $return['data'] = $delayedChargeId;
+            $return['success'] = $delayedChargeId ? true : false;
+            $return['message'] = $delayedChargeId ? 'Entry Successful!' : 'An unexpected error occured!';
         }
 
         return $return;
@@ -6368,6 +7438,14 @@ class Accounting_modals extends MY_Controller
 
                 $return = $this->get_account_choices($return, $search, $accountTypes);
             break;
+            case 'refund-from-account' :
+                $accountTypes = [
+                    'Bank',
+                    'Other Current Assets'
+                ];
+
+                $return = $this->get_account_choices($return, $search, $accountTypes);
+            break;
         }
 
         if ($search !== null && $search !== '') {
@@ -6454,8 +7532,7 @@ class Accounting_modals extends MY_Controller
         } else {
             if(!in_array($field, ['account-type', 'detail-type', 'parent-account', 'item']) &&
             $this->input->get('modal') !== 'printChecksModal' &&
-            $field !== 'sales-tax-category' &&
-            $field === 'expense-account' && !is_null($this->input->get('modal'))) {
+            $field !== 'sales-tax-category' && !is_null($this->input->get('modal'))) {
                 array_unshift($return['results'], ['id' => 'add-new', 'text' => '+ Add new']);
             }
         }
@@ -7785,6 +8862,9 @@ class Accounting_modals extends MY_Controller
             case 'cc-payment':
                 $attachments = $this->accounting_attachments_model->get_attachments('CC Payment', $linkedId);
             break;
+            case 'receive-payment' :
+                $attachments = $this->accounting_attachments_model->get_attachments('Payment', $linkedId);
+            break;
         }
 
         echo json_encode($attachments);
@@ -7840,6 +8920,9 @@ class Accounting_modals extends MY_Controller
             break;
             case 'time-activity' :
                 $this->view_time_activity($transactionId);
+            break;
+            case 'receive-payment' :
+                $this->view_receive_payment($transactionId);
             break;
         }
     }
@@ -8186,6 +9269,14 @@ class Accounting_modals extends MY_Controller
         $this->page_data['timesheetSettings'] = $this->accounting_timesheet_settings_model->get_by_company_id(logged('company_id'));
 
         $this->load->view("accounting/modals/single_time_activity_modal", $this->page_data);
+    }
+
+    private function view_receive_payment($paymentId)
+    {
+        $payment = $this->accounting_receive_payment_model->getReceivePaymentDetails($paymentId);
+
+        $this->page_data['payment'] = $payment;
+        $this->load->view("accounting/modals/receive_payment_modal", $this->page_data);
     }
 
     public function load_bills_payed($billPaymentId)
@@ -10022,7 +11113,6 @@ class Accounting_modals extends MY_Controller
                 'date' => date('Y-m-d', strtotime($data['payment_date'])),
                 'bank_account_id' => $data['bank_account'],
                 'memo' => $data['memo'],
-                // 'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
             ];
 
             $update = $this->accounting_pay_down_credit_card_model->update($paymentId, $updateData);
@@ -11487,6 +12577,138 @@ class Accounting_modals extends MY_Controller
                                 'name' => $name
                             ];
                         }
+                    }
+                }
+            break;
+            case 'receive-payments' :
+                $transactions = $this->accounting_receive_payment_model->get_company_receive_payments(['company_id' => logged('company_id')]);
+                usort($transactions, function($a, $b) {
+                    return strtotime($b->created_at) > strtotime($a->created_at);
+                });
+
+                foreach($transactions as $payment) {
+                    $amount = '$'.number_format(floatval($payment->amount), 2, '.', ',');
+                    $customer = $this->accounting_customers_model->get_by_id($payment->customer_id);
+                    $name = $customer->first_name . ' ' . $customer->last_name;
+
+                    if(count($data) < 10) {
+                        $data[] = [
+                            'id' => $payment->id,
+                            'type' => !in_array($payment->ref_no, ['', null, '0']) ? 'Payment No.'.$payment->ref_no : 'Payment',
+                            'date' => date("m/d/Y", strtotime($payment->payment_date)),
+                            'amount' => str_replace('$-', '-$', $amount),
+                            'name' => $name
+                        ];
+                    }
+                }
+            break;
+            case 'credit-memos' :
+                $transactions = $this->accounting_credit_memo_model->get_company_credit_memos(['company_id' => logged('company_id')]);
+                usort($transactions, function($a, $b) {
+                    return strtotime($b->created_at) > strtotime($a->created_at);
+                });
+
+                foreach($transactions as $credit) {
+                    $amount = '$'.number_format(floatval($credit->total_amount), 2, '.', ',');
+                    $customer = $this->accounting_customers_model->get_by_id($credit->customer_id);
+                    $name = $customer->first_name . ' ' . $customer->last_name;
+
+                    if(count($data) < 10) {
+                        $data[] = [
+                            'id' => $credit->id,
+                            'type' => !in_array($credit->ref_no, ['', null, '0']) ? 'Credit Memo No.'.$credit->ref_no : 'Credit Memo',
+                            'date' => date("m/d/Y", strtotime($credit->credit_memo_date)),
+                            'amount' => str_replace('$-', '-$', $amount),
+                            'name' => $name
+                        ];
+                    }
+                }
+            break;
+            case 'sales-receipts' :
+                $transactions = $this->accounting_sales_receipt_model->get_company_sales_receipts(['company_id' => logged('company_id')]);
+                usort($transactions, function($a, $b) {
+                    return strtotime($b->created_at) > strtotime($a->created_at);
+                });
+
+                foreach($transactions as $receipt) {
+                    $amount = '$'.number_format(floatval($receipt->total_amount), 2, '.', ',');
+                    $customer = $this->accounting_customers_model->get_by_id($receipt->customer_id);
+                    $name = $customer->first_name . ' ' . $customer->last_name;
+
+                    if(count($data) < 10) {
+                        $data[] = [
+                            'id' => $receipt->id,
+                            'type' => !in_array($receipt->ref_no, ['', null, '0']) ? 'Sales Receipt No.'.$receipt->ref_no : 'Sales Receipt',
+                            'date' => date("m/d/Y", strtotime($receipt->sales_receipt_date)),
+                            'amount' => str_replace('$-', '-$', $amount),
+                            'name' => $name
+                        ];
+                    }
+                }
+            break;
+            case 'refund-receipts' :
+                $transactions = $this->accounting_refund_receipt_model->get_company_refund_receipts(['company_id' => logged('company_id')]);
+                usort($transactions, function($a, $b) {
+                    return strtotime($b->created_at) > strtotime($a->created_at);
+                });
+
+                foreach($transactions as $receipt) {
+                    $amount = '$'.number_format(floatval($receipt->total_amount), 2, '.', ',');
+                    $customer = $this->accounting_customers_model->get_by_id($receipt->customer_id);
+                    $name = $customer->first_name . ' ' . $customer->last_name;
+
+                    if(count($data) < 10) {
+                        $data[] = [
+                            'id' => $receipt->id,
+                            'type' => !in_array($receipt->ref_no, ['', null, '0']) ? 'Refund Receipt No.'.$receipt->ref_no : 'Refund Receipt',
+                            'date' => date("m/d/Y", strtotime($receipt->refund_receipt_date)),
+                            'amount' => str_replace('$-', '-$', $amount),
+                            'name' => $name
+                        ];
+                    }
+                }
+            break;
+            case 'delayed-credits' :
+                $transactions = $this->accounting_delayed_credit_model->get_company_delayed_credits(['company_id' => logged('company_id')]);
+                usort($transactions, function($a, $b) {
+                    return strtotime($b->created_at) > strtotime($a->created_at);
+                });
+
+                foreach($transactions as $receipt) {
+                    $amount = '$'.number_format(floatval($receipt->total_amount), 2, '.', ',');
+                    $customer = $this->accounting_customers_model->get_by_id($receipt->customer_id);
+                    $name = $customer->first_name . ' ' . $customer->last_name;
+
+                    if(count($data) < 10) {
+                        $data[] = [
+                            'id' => $receipt->id,
+                            'type' => !in_array($receipt->ref_no, ['', null, '0']) ? 'Delayed Credit No.'.$receipt->ref_no : 'Delayed Credit',
+                            'date' => date("m/d/Y", strtotime($receipt->delayed_credit_date)),
+                            'amount' => str_replace('$-', '-$', $amount),
+                            'name' => $name
+                        ];
+                    }
+                }
+            break;
+            case 'delayed-charges' :
+                $transactions = $this->accounting_delayed_charge_model->get_company_delayed_charges(['company_id' => logged('company_id')]);
+                usort($transactions, function($a, $b) {
+                    return strtotime($b->created_at) > strtotime($a->created_at);
+                });
+
+                foreach($transactions as $receipt) {
+                    $amount = '$'.number_format(floatval($receipt->total_amount), 2, '.', ',');
+                    $customer = $this->accounting_customers_model->get_by_id($receipt->customer_id);
+                    $name = $customer->first_name . ' ' . $customer->last_name;
+
+                    if(count($data) < 10) {
+                        $data[] = [
+                            'id' => $receipt->id,
+                            'type' => !in_array($receipt->ref_no, ['', null, '0']) ? 'Delayed Charge No.'.$receipt->ref_no : 'Delayed Charge',
+                            'date' => date("m/d/Y", strtotime($receipt->delayed_charge_date)),
+                            'amount' => str_replace('$-', '-$', $amount),
+                            'name' => $name
+                        ];
                     }
                 }
             break;
@@ -13160,6 +14382,73 @@ class Accounting_modals extends MY_Controller
             'success' => !is_null($customer),
             'customer_id' => !is_null($customer) ? $customer->prof_id : null,
             'customer_name' => !is_null($customer) ? $customerName : null
+        ];
+
+        echo json_encode($result);
+    }
+
+    public function load_payment_invoices($paymentId)
+    {
+        $payment = $this->accounting_receive_payment_model->getReceivePaymentDetails($paymentId);
+        $post = json_decode(file_get_contents('php://input'), true);
+        $search = $post['columns'][0]['search']['value'];
+        $start = $post['start'];
+        $limit = $post['length'];
+
+        $filters = [
+            'from_date' => date("Y-m-d", strtotime($post['from_date'])),
+            'to_date' => date("Y-m-d", strtotime($post['to_date'])),
+            'overdue' => $post['overdue'],
+            'customer_id' => $paymentId
+        ];
+
+        $paymentInvoices = $this->accounting_receive_payment_model->get_payment_invoices($paymentId);
+        $invoices = $this->accounting_invoices_model->get_customer_invoices_to_pay($filters);
+
+        $data = [];
+        foreach($invoices as $invoice) {
+            $invoiceNum = str_replace('INV-', '', $invoice->invoice_number);
+            $description = "<a href='/invoice/genview/$invoice->id' class='text-info'>Invoice #$invoiceNum</a> (".date("m/d/Y", strtotime($invoice->date_issued)).")";
+
+            $paymentRecords = $this->accounting_invoices_model->get_invoice_payment_records($invoice->invoice_number);
+
+            $paymentAmounts = array_column($paymentRecords, 'invoice_amount');
+            $totalPayment = array_sum($paymentAmounts);
+
+            $balance = floatval($invoice->grand_total) - floatval($totalPayment);
+
+            $search = array_filter($paymentInvoices, function($v, $k) use ($invoice) {
+                return $v->id === $invoice->id;
+            }, ARRAY_FILTER_USE_BOTH);
+
+            if($search !== "") {
+                if(stripos($invoiceNum, $search) !== false) {
+                    $data[] = [
+                        'id' => $invoice->id,
+                        'description' => $description,
+                        'due_date' => date("m/d/Y", strtotime($invoice->due_date)),
+                        'original_amount' => number_format(floatval($invoice->grand_total), 2, '.', ','),
+                        'open_balance' => number_format(floatval($balance), 2, '.', ','),
+                        'checked' => count($search) > 0
+                    ];
+                }
+            } else {
+                $data[] = [
+                    'id' => $invoice->id,
+                    'description' => $description,
+                    'due_date' => date("m/d/Y", strtotime($invoice->due_date)),
+                    'original_amount' => number_format(floatval($invoice->grand_total), 2, '.', ','),
+                    'open_balance' => number_format(floatval($balance), 2, '.', ','),
+                    'checked' => count($search) > 0
+                ];
+            }
+        }
+
+        $result = [
+            'draw' => $post['draw'],
+            'recordsTotal' => count($invoices),
+            'recordsFiltered' => count($data),
+            'data' => array_slice($data, $start, $limit)
         ];
 
         echo json_encode($result);

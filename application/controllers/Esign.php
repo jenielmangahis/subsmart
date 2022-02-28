@@ -713,7 +713,7 @@ SQL;
 		}
 
 		foreach ($payload['recipients'] as $recipient) {
-			['id' => $id, 'name' => $name, 'email' => $email, 'color' => $color, 'role' => $role] = $recipient;
+			//['id' => $id, 'name' => $name, 'email' => $email, 'color' => $color, 'role' => $role] = $recipient;
 
 			$this->db->where('id', $id);
 			$this->db->where('docfile_id', $docId);
@@ -818,7 +818,7 @@ SQL;
             return;
         }
 
-		['subject' => $subject, 'message' => $message] = $this->input->post();
+		//['subject' => $subject, 'message' => $message] = $this->input->post();
 
 		$this->db->insert('user_docfile', [
 			'name' => $subject,
@@ -852,8 +852,8 @@ SQL;
 		$this->db->where('docfile_id', $insertedId);
         $record = $this->db->get('user_docfile_document_sequence')->row();
 
-        ['document_sequence' => $sequence] = $this->input->post();
-        ['sequence' => $sequence] = json_decode($sequence, true);
+        //['document_sequence' => $sequence] = $this->input->post();
+        //['sequence' => $sequence] = json_decode($sequence, true);
 		$sequence = is_array($sequence) ? $sequence : [];
 
         $this->db->where('docfile_id', $insertedId);

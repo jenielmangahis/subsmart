@@ -98,14 +98,20 @@ class Before_after extends MY_Controller
                 'max_width' => "1024"
             );
 
-            if($this->upload->do_upload("b1_img")) {
-                $draftlogo = array('upload_data' => $this->upload->data());
-                $b_image = $draftlogo['upload_data']['file_name'];
+            $b_image = $beforeAfter->before_image;
+            if (!empty($_FILES['b1_img']['name'])){        
+                if($this->upload->do_upload("b1_img")) {
+                    $draftlogo = array('upload_data' => $this->upload->data());
+                    $b_image = $draftlogo['upload_data']['file_name'];
+                }
             }
 
-            if($this->upload->do_upload("a1_img")) {
-                $draftlogo = array('upload_data' => $this->upload->data());
-                $a_image = $draftlogo['upload_data']['file_name'];
+            $a_image = $beforeAfter->after_image;
+            if (!empty($_FILES['a1_img']['name'])){        
+                if($this->upload->do_upload("a1_img")) {
+                    $draftlogo = array('upload_data' => $this->upload->data());
+                    $a_image = $draftlogo['upload_data']['file_name'];
+                }
             }
 
             $data = [
@@ -201,6 +207,16 @@ class Before_after extends MY_Controller
 
     public function delete($id) {
         $this->before_after_model->deleteBeforeAfter($id);
+
+        redirect('vault/beforeafter');
+    }
+
+    public function delete_image() {
+        $post = $this->input->post();
+        $this->before_after_model->deleteBeforeAfter($post['bai']);
+
+        $this->session->set_flashdata('alert-type', 'success');
+        $this->session->set_flashdata('alert', 'Before/After image was successfully deleted');
 
         redirect('vault/beforeafter');
     }

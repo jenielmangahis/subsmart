@@ -72,7 +72,7 @@
                               <small>Select from the options below to which this checklist will be automatically attached when you create a new Work Order.</small>
                               <br />
                               <select class="form-control" id="attach-to-work-order" name="attach_to_job_order" required="">
-                                <option value="0">- Select -</option>
+                                <option value="">- Select -</option>
                                 <?php foreach($checklistAttachType as $key => $value){ ?>
                                     <option value="<?= $key; ?>"><?= $value; ?></option>
                                 <?php } ?>

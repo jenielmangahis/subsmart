@@ -497,10 +497,10 @@ a.btn-gcustom i {
 .list-wait-list li:nth-child(odd) { background: #bdbdbd; }*/
 /**/
 .navbar-side{
-  z-index: 2000 !important;
+  z-index: 1000 !important;
 }
 .modal {
-  z-index: 2050 !important;
+  z-index: 1050 !important;
 }
 .fc-today-button:hover{
   background-color: #32243d !important;

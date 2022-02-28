@@ -367,6 +367,7 @@ $route['accounting/get-timesheet-activities']['post'] = 'accounting_modals/get_t
 $route['accounting/copy-transaction/(:any)/(:any)'] = 'accounting_modals/copy_transaction/$1/$2';
 $route['accounting/load-customer-invoices/(:any)']['post'] = 'accounting_modals/load_customer_invoices/$1';
 $route['accounting/find-customer-by-invoice-no']['post'] = 'accounting_modals/find_customer_by_invoice_no';
+$route['accounting/load-payment-invoices/(:any)']['post'] = 'accounting_modals/load_payment_invoices/$1';
 
 $route['accounting/lists'] = 'accounting/lists';
 
@@ -838,6 +839,7 @@ $route['workorder/_load_count_summary'] = 'Workorder/ajax_load_count_summary';
 $route['workorder/_delete_custom_field'] = 'Workorder/ajax_delete_custom_field';
 $route['workorder/_create_checklist'] = 'Workorder/ajax_save_checklist';
 $route['workorder/_update_checklist'] = 'Workorder/ajax_update_checklist';
+$route['workorder/_delete_checklist'] = 'Workorder/ajax_delete_checklist';
 
 //workstatus
 $route['workstatus/_create_workorder_type'] = 'Workstatus/ajax_save_workorder_type';

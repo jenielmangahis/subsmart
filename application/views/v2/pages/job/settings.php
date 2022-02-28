@@ -67,16 +67,21 @@
                                     <td><?= $rate->rate; ?> %</td>
                                     <td><?= date("m-d-Y h:i A",strtotime($rate->date_created)); ?></td>
                                     <td>
-                                        <div class="dropdown table-management">
-                                            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-                                                <i class='bx bx-fw bx-dots-vertical-rounded'></i>
-                                            </a>
-                                            <ul class="dropdown-menu dropdown-menu-end">
-                                                <li>
-                                                    <a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?= $rate->id; ?>">Delete</a>
-                                                </li>
-                                            </ul>
-                                        </div>
+                                        <?php if( $rate->is_default != 1 ){ ?>
+                                            <div class="dropdown table-management">
+                                                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                                    <i class='bx bx-fw bx-dots-vertical-rounded'></i>
+                                                </a>
+                                                <ul class="dropdown-menu dropdown-menu-end">
+                                                    <li>
+                                                        <a class="dropdown-item edit-item" href="javascript:void(0);" data-name="<?= $rate->name; ?>" data-percentage="<?= $rate->rate; ?>" data-id="<?= $rate->id; ?>">Edit</a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?= $rate->id; ?>">Delete</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        <?php } ?>                                        
                                     </td>
                                 </tr>
                             <?php
@@ -107,6 +112,18 @@
 <script type="text/javascript">
     $(document).ready(function() {
         $(".nsm-table").nsmPagination();
+
+        $(document).on("click", ".edit-item", function( event ){
+            var ID = $(this).attr("data-id");
+            var rateName = $(this).attr("data-name");
+            var ratePercentage = $(this).attr("data-percentage");
+
+            $("#edit-tax-name").val(rateName);
+            $("#edit-tax-rate").val(ratePercentage);
+            $("#edit-tid").val(ID);
+
+            $("#edit_tax_rate_modal").modal('show');
+        });
 
         $(document).on("click", ".delete-item", function( event ) {
             var ID = $(this).attr("data-id");
@@ -150,6 +167,51 @@
                 {
                     if(data === "1"){
                         sucess_add('Awesome!','Successfully Added!','taxRate');
+                        //window.location.reload();
+                    }else {
+                        console.log(data);
+                    }
+                }
+            });
+        });
+
+        $("#form_edit_tax").submit(function(e) {
+            e.preventDefault(); // avoid to execute the actual submit of the form.
+            var form = $(this);
+            //var url = form.attr('action');
+            $.ajax({
+                type: "POST",
+                url: "<?= base_url('/job/update_tax_rate') ?>",
+                data: form.serialize(), // serializes the form's elements.
+                dataType: 'json',
+                success: function(data)
+                {
+                    if(data.is_success == "1"){
+                        sucess_add('Awesome!','Tax Rate was successfully Updated!','');
+                    }else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            confirmButtonColor: '#32243d',
+                            html: data.msg
+                        });
+                    }
+                }
+            });
+        });
+
+        $("#form_update_job_settings").submit(function(e) {
+            e.preventDefault(); // avoid to execute the actual submit of the form.
+            var form = $(this);
+            //var url = form.attr('action');
+            $.ajax({
+                type: "POST",
+                url: "<?= base_url('/job/update_settings') ?>",
+                data: form.serialize(), // serializes the form's elements.
+                success: function(data)
+                {
+                    if(data === "1"){
+                        sucess_add('Awesome!','Job Settings was successfully Updated!','');
                         //window.location.reload();
                     }else {
                         console.log(data);

@@ -128,7 +128,7 @@ div.picture-container div.img img {
                         </div>
                         <div class="alert alert-warning mt-2 mb-4" role="alert">
                             <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">
-                              Add photos to spotlight features of your business or past projects pictures.  You can upload up to <b>25 images.</b>
+                              Add photos to spotlight features of your business or past projects pictures.
                             </span>
                         </div>
                         <?php include viewPath('flash'); ?>

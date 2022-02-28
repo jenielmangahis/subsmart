@@ -18,7 +18,7 @@
                                 </a>
                                 <div class="dropdown-menu" style="width: 500px">
                                     <h5 class="dropdown-header">Recent Received Payments</h5>
-                                    <table class="table table-borderless table-hover cursor-pointer" id="recent-received-payments">
+                                    <table class="table table-borderless table-hover cursor-pointer" id="recent-receive-payments">
                                         <tbody></tbody>
                                     </table>
                                 </div>
@@ -70,10 +70,20 @@
                                         </div>
                                         <div class="col-md-4">
                                             <h6 class="text-right">
-                                                AMOUNT
+                                                <?=!isset($payment) ? 'AMOUNT' : 'AMOUNT RECEIVED'?>
                                             </h6>
                                             <h2 class="text-right">
-                                                <span class="transaction-total-amount">$0.00</span>
+                                                <span class="transaction-total-amount">
+                                                    <?php if(isset($payment)) : ?>
+                                                    <?php
+                                                    $amount = '$'.number_format(floatval($payment->amount), 2, '.', ',');
+                                                    $amount = str_replace('$-', '-$', $amount);
+                                                    echo $amount;
+                                                    ?>
+                                                    <?php else : ?>
+                                                    $0.00
+                                                    <?php endif; ?>
+                                                </span>
                                             </h2>
                                         </div>
 
@@ -91,7 +101,7 @@
                                                 <label for="payment_method">Payment method</label>
                                                 <select name="payment_method" id="payment_method" class="form-control">
                                                     <?php if(isset($payment)) : ?>
-                                                        <option value="<?=$payment->payment_method_id?>"><?=$this->accounting_payment_methods_model->getById($payment->payment_method_id)->name?></option>
+                                                        <option value="<?=$payment->payment_method?>"><?=$this->accounting_payment_methods_model->getById($payment->payment_method)->name?></option>
                                                     <?php endif;?>
                                                 </select>
                                             </div>
@@ -99,7 +109,7 @@
                                         <div class="col-md-2">
                                             <div class="form-group">
                                                 <label for="ref_no">Ref no.</label>
-                                                <input type="text" name="ref_no" id="ref_no" class="form-control" <?=isset($payment) ? "value='$payment->ref_no'" : ''?>>
+                                                <input type="text" name="ref_no" id="ref_no" class="form-control" value="<?=isset($payment) ? $payment->ref_no : ''?>">
                                             </div>
                                         </div>
                                         <div class="col-md-3">
@@ -118,7 +128,7 @@
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label for="received-amount">Amount received</label>
-                                                        <input type="number" name="received_amount" step=".01" class="form-control text-right" id="received-amount" value="0.00" onchange="convertToDecimal(this)">
+                                                        <input type="number" name="received_amount" step=".01" class="form-control text-right" id="received-amount" value="<?=isset($payment) ? number_format(floatval($payment->amount), 2, '.', ',') : "0.00"?>" onchange="convertToDecimal(this)">
                                                     </div>
                                                 </div>
                                             </div>
@@ -126,7 +136,7 @@
                                     </div>
 
                                     <div class="row">
-                                        <div class="col-md-12 display-with-customer hide">
+                                        <div class="col-md-12 display-with-customer <?=!isset($payment) ? 'hide' : ''?>">
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <h4>Outstanding Transactions</h4>
@@ -229,7 +239,19 @@
                                                 <tbody>
                                                     <tr>
                                                         <td class="border-0">Amount to Apply</td>
-                                                        <td class="border-0"><span class="amount-to-apply">$0.00</span></td>
+                                                        <td class="border-0">
+                                                            <span class="amount-to-apply">
+                                                                <?php if(isset($payment)) : ?>
+                                                                <?php
+                                                                $amount = '$'.number_format(floatval($payment->amount), 2, '.', ',');
+                                                                $amount = str_replace('$-', '-$', $amount);
+                                                                echo $amount;
+                                                                ?>
+                                                                <?php else : ?>
+                                                                $0.00
+                                                                <?php endif; ?>
+                                                            </span>
+                                                        </td>
                                                     </tr>
                                                     <tr>
                                                         <td class="border-0">Amount to Credit</td>
@@ -247,7 +269,7 @@
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label for="memo">Memo</label>
-                                                        <textarea name="memo" id="memo" class="form-control"></textarea>
+                                                        <textarea name="memo" id="memo" class="form-control"><?=isset($payment) ? str_replace("<br />", "", $expense->memo) : ""?></textarea>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-8">
@@ -259,6 +281,9 @@
                                                                 <span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
                                                                 <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
                                                             </div>
+                                                        </div>
+                                                        <div class="d-flex justify-content-center align-items-center">
+                                                            <a href="#" id="show-existing-attachments" class="text-info">Show existing</a>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -276,8 +301,28 @@
                         <div class="col-md-4">
                             <button type="button" class="btn btn-secondary btn-rounded border" data-dismiss="modal">Close</button>
                         </div>
-                        <div class="col-md-4 d-flex">
+                        <div class="col-md-4 <?=!isset($payment) ? 'd-flex' : ''?>">
+                            <?php if(!isset($payment)) : ?>
                             <a href="#" class="text-white m-auto">Print</a>
+                            <?php else : ?>
+                            <div class="row h-100">
+                                <div class="col-md-12 d-flex align-items-center justify-content-center">
+                                    <span><a href="#" class="text-white">Print</a></span>
+                                    <span class="mx-3 divider"></span>
+                                    <span>
+                                        <div class="dropup">
+                                            <a href="javascript:void(0);" class="text-white" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
+                                            <div class="dropdown-menu">
+                                                <a class="dropdown-item" href="#" id="void-payment">Void</a>
+                                                <a class="dropdown-item" href="#" id="delete-payment">Delete</a>
+                                                <a class="dropdown-item" href="#">Transaction journal</a>
+                                                <a class="dropdown-item" href="#">Audit history</a>
+                                            </div>
+                                        </div>
+                                    </span>
+                                </div>
+                            </div>
+                            <?php endif; ?>
                         </div>
                         <div class="col-md-4">
                             <!-- Split dropup button -->

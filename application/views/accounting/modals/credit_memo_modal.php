@@ -191,6 +191,10 @@
                                                         <td class="w-25"><span class="transaction-taxes">$0.00</span></td>
                                                     </tr>
                                                     <tr>
+                                                        <td>Discounts</td>
+                                                        <td class="w-25"><span class="transaction-discounts">$0.00</span></td>
+                                                    </tr>
+                                                    <tr>
                                                         <td class="d-flex align-items-center justify-content-end">
                                                             <input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control w-50 mr-2">
                                                             <input type="number" name="adjustment_value" id="adjustment_input_cm" step=".01" class="form-control adjustment_input_cm_c w-25 mr-2" onchange="convertToDecimal(this)">

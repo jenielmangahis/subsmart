@@ -10,7 +10,8 @@ div#import-customers-modal {
 
 #import-customers-modal .modal-body {
     background: #ffffff;
-    width: 500px;
+    width: 900px !important;
+    height: 650px;
     position: fixed;
     top: 50%;
     left: 50%;
@@ -19,6 +20,8 @@ div#import-customers-modal {
     font-size: 12px;
     border-radius: 5px;
     position: relative;
+    overflow: scroll;
+    overflow-x: hidden;
 }
 
 #import-customers-modal .close-modal {
@@ -31,6 +34,10 @@ div#import-customers-modal {
     font-weight: 100;
 }
 
+#import-customers-modal .modal-body {
+    width: 100%;
+}
+
 #import-customers-modal .modal-body .panel-title {
     padding: 10px 0;
     font-size: 17px;
@@ -40,6 +47,7 @@ div#import-customers-modal {
 
 #import-customers-modal .modal-body .upload-button {
     text-align: center;
+    margin-top: 5px;
 }
 
 #import-customers-modal .modal-body .upload-button button {
@@ -56,7 +64,7 @@ div#import-customers-modal {
     background: #593976;
 }
 
-#import-customers-modal .modal-body .file-deop-label {
+#import-customers-modal .modal-body .file-drop-label {
     padding: 10px 0;
     color: #898989;
 }
@@ -73,7 +81,7 @@ div#import-customers-modal {
 }
 
 #import-customers-modal .modal-body div#import_customer {
-    padding: 50px 10px;
+    padding: 100px 10px;
     border: 2px dashed rgba(0, 0, 0, 0.3);
     background: transparent;
     color: #A19FA0;
@@ -81,4 +89,225 @@ div#import-customers-modal {
     letter-spacing: 3px;
     text-align: center;
     cursor: pointer;
+}
+
+#import-customers-modal .modal-body div#import_customer p {
+    padding-top: 13% !important;
+}
+
+#import-customers-modal .dz-success-mark,
+#import-customers-modal .dz-error-mark {
+    display: none;
+}
+
+#import-customers-modal a.dz-remove {
+    background: #811919b0;
+    color: #fff;
+    padding: 5px 20px;
+    margin-top: 10px;
+    border: none;
+    font-size: 12px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    transition: 0.3s;
+}
+
+#import-customers-modal a.dz-remove:hover {
+    background: #811919;
+}
+
+#import-customers-modal .dz-details {
+    margin-bottom: 20px;
+    padding: 20px 0;
+}
+
+#import-customers-modal .dz-filename {
+    width: 100%;
+    overflow: hidden;
+}
+
+#import-customers-modal .dz-image img {
+    max-width: 100px;
+}
+
+#import-customers-modal .dz-image {
+    display: inline-flex;
+}
+
+#import-customers-modal .dz-preview {
+    padding: 10px 0;
+}
+
+#import-customers-modal .dz-error-message {
+    padding-bottom: 20px;
+    color: #b4424c;
+    font-weight: 600;
+}
+
+
+/*modified*/
+
+#import-customers-modal h2 {
+    color: #6a4b86;
+}
+
+#import-customers-modal form fieldset {
+    background: white;
+    border: 0 none;
+    border-radius: 0.5rem;
+    box-sizing: border-box;
+    width: 100%;
+    margin: 0;
+    padding-bottom: 20px;
+    position: relative
+}
+
+#import-customers-modal.finish {
+    text-align: center
+}
+
+#import-customers-modal #form fieldset:not(:first-of-type) {
+    display: none
+}
+
+#import-customers-modal #form .previous-step,
+.next-step {
+    width: 100px;
+    font-weight: bold;
+    color: white;
+    border: 0 none;
+    border-radius: 0px;
+    cursor: pointer;
+    padding: 10px 5px;
+    margin: 10px 5px 10px 0px;
+    float: right
+}
+
+#import-customers-modal.form,
+#import-customers-modal.previous-step {
+    background: #616161;
+}
+
+#import-customers-modal.form,
+#import-customers-modal.next-step {
+    background: #6a4b86;
+}
+
+#import-customers-modal #form .previous-step:hover,
+#import-customers-modal #form .previous-step:focus {
+    background-color: #6a4b86
+}
+
+#import-customers-modal #form .next-step:hover,
+#import-customers-modal #form .next-step:focus {
+    background-color: #6a4b86
+}
+
+#import-customers-modal.text {
+    color: #6a4b86;
+    font-weight: normal
+}
+
+#import-customers-modal #progressbar {
+    margin-bottom: 30px;
+    overflow: hidden;
+    color: lightgrey;
+}
+
+#import-customers-modal .progress {
+    display: none !important;
+}
+
+#import-customers-modal #progressbar .active {
+    color: #6a4b86
+}
+
+#import-customers-modal #progressbar li {
+    list-style-type: none;
+    font-size: 15px;
+    width: 25%;
+    float: left;
+    position: relative;
+    font-weight: 400
+}
+
+#import-customers-modal strong {
+    padding-left: 43%;
+}
+
+#import-customers-modal #progressbar #step1:before {
+    content: "1"
+}
+
+#import-customers-modal #progressbar #step2:before {
+    content: "2"
+}
+
+#import-customers-modal #progressbar #step3:before {
+    content: "3"
+}
+
+#import-customers-modal #progressbar li:before {
+    width: 50px;
+    height: 50px;
+    line-height: 45px;
+    display: block;
+    font-size: 20px;
+    color: #ffffff;
+    background: lightgray;
+    border-radius: 50%;
+    margin: 0 auto 10px auto;
+    padding: auto;
+    padding-left: 19px;
+}
+
+#import-customers-modal #progressbar li:after {
+    content: '';
+    width: 100%;
+    height: 2px;
+    background: lightgray;
+    position: absolute;
+    left: 0;
+    top: 25px;
+    z-index: -1
+}
+
+#import-customers-modal #progressbar li:first-child:after {
+    width: 50%;
+    left: 50%;
+}
+
+#import-customers-modal #progressbar li:last-child:after {
+    width: 50%;
+}
+
+#import-customers-modal #progressbar li.active:before,
+#import-customers-modal #progressbar li.active:after {
+    background: #6a4b86
+}
+
+#import-customers-modal.progress {
+    height: 20px
+}
+
+#import-customers-modal.progress-bar {
+    background-color: #6a4b86
+}
+
+#import-customers-modal #progressbar {
+    margin-left: 25%;
+}
+
+#import-customers-modal #holder-step-2 .row #select {
+    padding: 8px;
+}
+
+#import-customers-modal #holder-step-2 .row #select2 {
+    padding: 6px;
+}
+
+#import-customers-modal #holder-step-2 .row select {
+    padding: 5px;
+    width: 300px;
+    font-size: 13px;
 }
