@@ -35,35 +35,29 @@
 
                         <fieldset id="holder-step-2">
 
-                            <!--1st Row-->
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <h2>Welcome To GFG Step 2</h2>
-                                </div>
-                            </div>
-                            <!--2nd Row-->
-
-                            <div class="row">
-                                <!--section 1-->
-                                <div class="col-md-12">
-                                    <div class="row">
-                                        <div class="col-md-6 text-center">
-                                            <h3>
-                                                CheckBoxes
-                                            </h3>
-                                        </div>
-                                        <div class="col-md-6 text-center">
-                                            <h3>
-                                                Select
-                                            </h3>
-                                        </div>
+                                <!--1st Row-->
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h2>Welcome To GFG Step 2</h2>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="container form-check">
+                                <!--2nd Row-->
+
                                 <div class="row">
+                                    <div class="col-md-6">
+                                        <h3>Checkbox</h3>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h3>Select</h3>
+                                    </div>
                                 </div>
+
+                            <div class="form-check">
+
                             </div>
+
+
+
                             <input type="button" name="next-step" class="next-step" value="Next Step" />
                             <input type="button" name="previous-step" class="previous-step" value="Previous Step" />
                         </fieldset>

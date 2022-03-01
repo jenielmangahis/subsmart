@@ -1,5 +1,6 @@
 window.document.addEventListener("DOMContentLoaded", async () => {
   window.api = await import("./api.js");
+  window.helpers = await import("./helpers.js");
 
   window.isEditing = window.location.pathname.endsWith("edit");
   const params = new Proxy(new URLSearchParams(window.location.search), {
@@ -17,6 +18,7 @@ window.document.addEventListener("DOMContentLoaded", async () => {
     initPlaceholders(),
     initCategories(),
     initAddCategoryForm(),
+    initAddPlaceholderForm(),
   ]).then(() => {
     initLetterForm(letter);
     document.querySelector(".wrapper").classList.remove("wrapper--loading");
@@ -24,15 +26,19 @@ window.document.addEventListener("DOMContentLoaded", async () => {
 });
 
 async function initPlaceholders() {
-  const { default: placeholders } = await import("./placeholders.js");
+  const { data: placeholders } = await window.api.getPlaceholders();
   placeholders.sort((a, b) => a.code.localeCompare(b.code));
+  placeholders.forEach(appendPlaceholderInList);
+}
+
+function appendPlaceholderInList(placeholder) {
   const $placeholderList = document.querySelector(".placeholders__list");
-  placeholders.forEach(({ code, description }) => {
-    const $item = htmlToElement(
-      `<li>${code} - <strong>${description}</strong></li>`
-    );
-    $placeholderList.appendChild($item);
-  });
+  const $item = window.helpers.htmlToElement(
+    `<li data-id=${placeholder.id}>
+      {${placeholder.code}} - <strong>${placeholder.description}</strong>
+    </li>`
+  );
+  $placeholderList.appendChild($item);
 }
 
 async function initCategories() {
@@ -43,7 +49,7 @@ async function initCategories() {
 
 function appendCategoryInSelect(category) {
   const $select = document.getElementById("category");
-  const $option = htmlToElement(
+  const $option = window.helpers.htmlToElement(
     `<option value="${category.id}">${category.name}</option>`
   );
   $select.appendChild($option);
@@ -111,7 +117,7 @@ async function editCategory(category) {
 }
 
 function initAddCategoryForm() {
-  const $form = document.getElementById("addModalForm");
+  const $form = document.getElementById("addCategoryForm");
   const $input = $form.querySelector("input");
   const $button = $form.querySelector("button");
 
@@ -129,6 +135,55 @@ function initAddCategoryForm() {
     appendCategoryInManageModal(data);
     $input.value = "";
     $input.focus();
+  });
+
+  $form.addEventListener("submit", (event) => {
+    event.preventDefault();
+  });
+}
+
+function initAddPlaceholderForm() {
+  const $modal = document.getElementById("createPlaceholderModal");
+  const $form = $modal.querySelector("#addPlaceholderForm");
+  const $inputs = [...$form.querySelectorAll("[data-name]")];
+  const $button = $form.querySelector("button");
+
+  $button.addEventListener("click", async () => {
+    const payload = {};
+    for (let index = 0; index < $inputs.length; index++) {
+      const $input = $inputs[index];
+      const name = $input.dataset.name;
+      const value = $input.value.trim();
+
+      if (!value.length) {
+        $input.focus();
+        return;
+      }
+
+      if (name === "code") {
+        const pattern = /^[a-zA-Z0-9_]+$/;
+        if (!pattern.test(value)) {
+          $input.focus();
+          return;
+        }
+      }
+
+      payload[name] = value;
+    }
+
+    const { data } = await submitBtn($button, () =>
+      window.api.createPlaceholder(payload)
+    );
+
+    appendPlaceholderInList(data);
+    $($modal).modal("hide");
+  });
+
+  $($modal).on("show.bs.modal", () => {
+    for (let index = 0; index < $inputs.length; index++) {
+      const $input = $inputs[index];
+      $input.value = "";
+    }
   });
 
   $form.addEventListener("submit", (event) => {
@@ -200,13 +255,6 @@ function initLetterForm(letter = null) {
     submitBtn($button, () => func(payload));
     window.location.href = `${window.api.prefixURL}/esigneditor/letters`;
   });
-}
-
-// https://stackoverflow.com/a/35385518/8062659
-function htmlToElement(html) {
-  const template = document.createElement("template");
-  template.innerHTML = html.trim();
-  return template.content.firstChild;
 }
 
 async function submitBtn($button, asyncCallback) {

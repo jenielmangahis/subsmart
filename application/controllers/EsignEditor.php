@@ -60,6 +60,24 @@ class EsignEditor extends MY_Controller
         $this->load->view('esign/esigneditor/create', $this->page_data);
     }
 
+    public function wizard()
+    {
+        $customerId = $this->input->get('customer_id', true);
+        if (is_null($this->getCustomer($customerId))) {
+            return show_404();
+        }
+
+        add_css([
+            'assets/css/esign/esign-editor/esign-editor.css',
+        ]);
+
+        add_footer_js([
+            'assets/js/esign/esigneditor/wizard.js',
+        ]);
+
+        $this->load->view('esign/esigneditor/wizard', $this->page_data);
+    }
+
     public function apiGetCategories()
     {
         $this->db->where('user_id', logged('id'));
@@ -211,5 +229,160 @@ SQL;
 
         $query = $this->db->query($query);
         return $query->row();
+    }
+
+    public function apiSeedPlaceholders()
+    {
+        $placeholders = [
+            [
+                'code' => 'company_logo',
+                'description' => 'Company logo',
+            ],
+            [
+                'code' => 'client_suffix',
+                'description' => 'Suffix of client',
+            ],
+            [
+                'code' => 'client_first_name',
+                'description' => 'First name of client',
+            ],
+            [
+                'code' => 'client_middle_name',
+                'description' => 'Middle name of client',
+            ],
+            [
+                'code' => 'client_last_name',
+                'description' => 'Last name of client',
+            ],
+            [
+                'code' => 'client_address',
+                'description' => 'Address of client',
+            ],
+            [
+                'code' => 'client_previous_address',
+                'description' => 'Previous address of client',
+            ],
+            [
+                'code' => 'bdate',
+                'description' => 'Birth date of client',
+            ],
+            [
+                'code' => 'ss_number',
+                'description' => 'Last 4 of SSN of client',
+            ],
+            [
+                'code' => 't_no',
+                'description' => 'Telephone number of client',
+            ],
+            [
+                'code' => 'curr_date',
+                'description' => 'Current date',
+            ],
+            [
+                'code' => 'client_signature',
+                'description' => "Client's signature",
+            ],
+            [
+                'code' => 'bureau_name',
+                'description' => 'Credit bureau name',
+            ],
+            [
+                'code' => 'bureau_address',
+                'description' => 'Credit bureau name and address',
+            ],
+            [
+                'code' => 'account_number',
+                'description' => 'Account number',
+            ],
+            [
+                'code' => 'dispute_item_and_explanation',
+                'description' => 'Dispute items and explanation',
+            ],
+            [
+                'code' => 'creditor_name',
+                'description' => 'Creditor/Furnisher name',
+            ],
+            [
+                'code' => 'creditor_address',
+                'description' => 'Creditor/Furnisher address',
+            ],
+            [
+                'code' => 'creditor_phone',
+                'description' => 'Creditor/Furnisher phone number',
+            ],
+            [
+                'code' => 'creditor_city',
+                'description' => 'Creditor/Furnisher city',
+            ],
+            [
+                'code' => 'creditor_state',
+                'description' => 'Creditor/Furnisher state',
+            ],
+            [
+                'code' => 'creditor_zip',
+                'description' => 'Creditor/Furnisher zip',
+            ],
+            [
+                'code' => 'report_number',
+                'description' => 'Report number',
+            ],
+        ];
+
+        $this->db->insert_batch('esign_editor_placeholders', $placeholders);
+    }
+
+    public function apiGetPlaceholders()
+    {
+        $this->db->where('user_id', logged('id'));
+        $this->db->or_group_start();
+        $this->db->where('user_id', null);
+        $this->db->where('company_id', null);
+        $this->db->group_end();
+        $placeholders = $this->db->get('esign_editor_placeholders')->result();
+
+        header('content-type: application/json');
+        echo json_encode(['data' => $placeholders]);
+    }
+
+    public function apiCreatePlaceholder()
+    {
+        header('content-type: application/json');
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['success' => false]);
+            return;
+        }
+
+        $payload = json_decode(file_get_contents('php://input'), true);
+        $this->db->insert('esign_editor_placeholders', array_merge(
+            $payload, [
+                'user_id' => logged('id'),
+                'company_id' => logged('company_id'),
+            ]
+        ));
+
+        $this->db->where('id', $this->db->insert_id());
+        $placeholder = $this->db->get('esign_editor_placeholders')->row();
+        echo json_encode(['data' => $placeholder]);
+    }
+
+    public function apiGetLetterByCategoryId($categoryId)
+    {
+        $this->db->where('category_id', $categoryId);
+        $categories = $this->db->get('esign_editor_letters')->result();
+
+        header('content-type: application/json');
+        echo json_encode(['data' => $categories]);
+    }
+
+    public function apiGetCustomer($id)
+    {
+        header('content-type: application/json');
+        echo json_encode(['data' => $this->getCustomer($id)]);
+    }
+
+    private function getCustomer($id)
+    {
+        $this->db->where('prof_id', $id);
+        return $this->db->get('acs_profile')->row();
     }
 }

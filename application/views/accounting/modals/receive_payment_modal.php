@@ -159,13 +159,13 @@
                                                                                     <div class="col-6">
                                                                                         <div class="form-group" style="margin: 0 !important">
                                                                                             <label for="invoices-from">Invoices from</label>
-                                                                                            <input type="text" name="invoices_from" id="invoices-from" class="form-control date" value="<?=date("m/d/Y")?>">
+                                                                                            <input type="text" name="invoices_from" id="invoices-from" class="form-control date" value="<?=!isset($payment) ? date("m/d/Y") : ''?>">
                                                                                         </div>
                                                                                     </div>
                                                                                     <div class="col-6">
                                                                                         <div class="form-group" style="margin: 0 !important">
                                                                                             <label for="invoices-to">To</label>
-                                                                                            <input type="text" name="invoices_to" id="invoices-to" class="form-control date" value="<?=date("m/d/Y")?>">
+                                                                                            <input type="text" name="invoices_to" id="invoices-to" class="form-control date" value="<?=!isset($payment) ? date("m/d/Y") : ''?>">
                                                                                         </div>
                                                                                     </div>
                                                                                 </div>

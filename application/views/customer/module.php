@@ -124,12 +124,62 @@
                                     </span>
                                 </div>
                             </div>
+                            <div class="row margin-bottom-ter align-items-center">
+                                <div  id="settings">
+                                    <div class="banking-tab-container">
+                                        <div class="rb-01">
+                                            <ul class="nav nav-tabs border-0">
+                                                <li class="nav-item">
+                                                    <a class="h6 mb-0 nav-link banking-sub-tab <?= $active_tab == 'salesArea' || $active_tab == '' ?   "active" : '';  ?>" data-toggle="tab" href="#salesArea">Dashboard</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="h6 mb-0 nav-link banking-sub-tab <?= $active_tab == 'leadSource' ?   "active" : '';  ?>" data-toggle="tab" href="#">Import/Audit</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="h6 mb-0 nav-link banking-sub-tab <?= $active_tab == 'leadTypes' ?   "active" : '';  ?>" data-toggle="tab" href="#">Tag Pending Report</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="h6 mb-0 nav-link banking-sub-tab" href="<?= base_url('esign/templateCreate') ?>">General Letters</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="h6 mb-0 nav-link banking-sub-tab" href="<?= base_url('esign/createTemplate') ?>">Send Letters</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="h6 mb-0 nav-link banking-sub-tab" href="<?= base_url('esign/templateLibrary') ?>">Letters & Status</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="h6 mb-0 nav-link banking-sub-tab <?= $active_tab == 'header' ?   "active" : '';  ?>" data-toggle="tab" href="#header">Dispute Items</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="h6 mb-0 nav-link banking-sub-tab <?= $active_tab == 'header' ?   "active" : '';  ?>" data-toggle="tab" href="#header">Educate</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="h6 mb-0 nav-link banking-sub-tab" href="<?= base_url('eSign/manage?view=inbox') ?>">Messages</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="h6 mb-0 nav-link banking-sub-tab" href="<?= base_url('credit_notes') ?>">Internal Notes</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="h6 mb-0 nav-link banking-sub-tab"  href="<?= base_url('invoice') ?>">Invoices</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="h6 mb-0 nav-link banking-sub-tab" href="<?= base_url('timesheet/notification') ?>">Activity</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="tab-content mt-4" >
+
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     <style>
                         .btn{
                             font-size: 12px !important;
                         }
                     </style>
+
                     <div class="tab-pane active standard-accordion" id="advance">
                         <div class="col-sm-12">
                                 <div class="col-sm-12">
@@ -197,6 +247,7 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 <?php include viewPath('customer/adv_cust/css_list'); ?>
+<?php include viewPath('customer/adv_cust/js_list'); ?>
 
 <style>
     #sortable { list-style-type: none; margin: 0; padding: 0; width: 450px; }

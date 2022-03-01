@@ -26,42 +26,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     }
 </style>
 <style>
-    .fdx-entity-container-button:hover {
-        border-color: #45a73c !important;
-        border:  2px;
-        border-style: solid;
-    }
-
     .fdx-entity-container {
         display: flex;
         flex: 1 1 auto;
         justify-content: center;
         max-width: 98%;
-    }
-    .fdx-provider-logo-wrapper-small {
-        width: 50px;
-        height: 50px;
-    }
-    .fdx-entity-container-button {
-        position: relative;
-        margin-bottom: 12px;
-        padding: 12px;
-        width: 500px;
-        height: 74px;
-        display: flex;
-        justify-content: space-around;
-        border-radius: 8px;
-        border: 1px solid #eaecee;
-        box-sizing: border-box;
-        box-shadow: 0px 1px 8px rgb(0 0 0 / 8%);
-        cursor: pointer;
-        background-color: transparent;
-    }
-    .fdx-provider-logo-container-small {
-        min-width: 48px;
-        min-height: 48px;
-        width: 48px;
-        height: 48px;
     }
     .fdx-recommended-entity-desc-container {
         height: 40px;
@@ -124,6 +93,19 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         justify-content: center;
         align-items: center;
     }
+    #overlay {
+        display: none;
+        background: rgba(255, 255, 255, 0.7);
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        top: 0;
+        z-index: 9998;
+        align-items: center;
+        justify-content: center;
+        margin: auto;
+    }
 </style>
 <?php
 add_css(array(
@@ -135,11 +117,13 @@ add_css(array(
     // 'assets/css/beforeafter.css',
 ));
 ?>
-
-
-
-
 <?php include viewPath('includes/header'); ?>
+
+<div id="overlay">
+    <div>
+        <img src="<?=base_url()?>assets/img/uploading.gif" class="" style="width: 80px;" alt="" />
+        <center><p id="overlay_message">Processing...</p></center></div>
+</div>
 <div class="wrapper" role="wrapper" style="">
     <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
     <!-- page wrapper start -->
@@ -283,7 +267,7 @@ add_css(array(
                                         <a class="nav-link active banking-sub-tab" data-toggle="tab" href="#forReview">For Review</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link banking-sub-tab" data-toggle="tab" href="#reviewed">Reviewed</a>
+                                        <a class="nav-link banking-sub-tab" data-toggle="tab" href="#reviewed">Categorized</a>
                                     </li>
                                     <li class="nav-item">
                                         <a class="nav-link banking-sub-tab" data-toggle="tab" href="#excluded">Excluded</a>
@@ -335,22 +319,22 @@ add_css(array(
                                                         </div>
                                                         <div class="col-md-12">
                                                             <div id="categorize">
-                                                                <form method="post" id="stripe_form" class="row">
+                                                                <form method="post" id="stripe_form" class="row add_categorized">
                                                                     <div class="col-md-3">
                                                                         <label for="">Vendor/Customer</label><br>
-                                                                        <select name="customer" id="" class="form_select vendor-customer">
+                                                                        <select name="vendor_id" id="" class="form_select vendor-customer">
                                                                             <option value=""></option>
                                                                         </select>
                                                                     </div>
                                                                     <div class="col-md-3">
-                                                                        <label for="">Category</label><br>
-                                                                        <select name="customer" id="" class="form_select category">
+                                                                        <label for="category_id">Category</label><br>
+                                                                        <select name="category_id" required class="form_select category">
                                                                             <option value=""></option>
                                                                         </select>
                                                                     </div>
                                                                     <div class="col-md-3">
                                                                         <label for="">Customer/project</label><br>
-                                                                        <select name="customer" id="" class="form_select customers">
+                                                                        <select name="customer_id" id="" class="form_select customers">
                                                                             <option value=""></option>
                                                                         </select>
                                                                     </div>
@@ -362,7 +346,7 @@ add_css(array(
 
                                                                     <div class="col-md-6">
                                                                         <label for="">Tags</label><br>
-                                                                        <select name="customer" id="" class="form_select tags_select">
+                                                                        <select name="tags" id="" class="form_select tags_select">
                                                                             <option value="0">None</option>
                                                                             <option value="PT5M">5 minutes before</option>
                                                                         </select>
@@ -370,25 +354,25 @@ add_css(array(
                                                                     <div class="col-md-6"></div>
                                                                     <div class="col-md-6">
                                                                         <label for="">Memo</label><br>
-                                                                        <input type="text" name="id" class="form-control" id="jobid" >
+                                                                        <input type="text" name="memo" class="form-control" id="jobid" >
                                                                         <br>
                                                                     </div>
                                                                     <div class="col-md-6"></div>
                                                                     <div class="col-md-12">
-                                                                        <strong>Bank Detail</strong> <small>Test Debit Card</small>
+                                                                        <strong>Bank Detail</strong> <small></small>
                                                                     </div>
                                                                     <br><br>
                                                                     <div class="col-md-12">
-                                                                        <a href="javascript:void;" id="add_field" style="color:#58bc4f;font-size: 14px;"><span class="fa fa-file"></span> Add Attachment</a>
-                                                                        &nbsp;&nbsp;&nbsp;
-                                                                        <a href="javascript:void;" id="add_field" style="color:#58bc4f;font-size: 14px;"><span class="fa fa-gavel"></span> Create Rule</a>
-                                                                        &nbsp;&nbsp;&nbsp;
-                                                                        <a href="javascript:void;" id="add_field" style="color:#58bc4f;font-size: 14px;"><span class="fa fa-remove"></span> Exclude</a>
-                                                                    </div>
-
-                                                                    <div class="col-md-12 modal-footer">
-                                                                        <button type="button" class="btn btn-default splitTransBtn">Split</button>
-                                                                        <button type="submit" class="btn btn-success " id="">Add</button>
+                                                                        <div class=" pull-left">
+                                                                            <a href="javascript:void;" id="add_field" style="color:#58bc4f;font-size: 14px;"><span class="fa fa-file"></span> Add Attachment</a>
+                                                                            &nbsp;&nbsp;&nbsp;
+                                                                            <a href="javascript:void;" id="add_field" style="color:#58bc4f;font-size: 14px;"><span class="fa fa-remove"></span> Exclude</a>
+                                                                        </div>
+                                                                        <div class=" pull-right">
+                                                                            <input type="hidden" name="transaction_id" value="<?= $payment->id ?>">
+                                                                            <button type="button" class="btn btn-default splitTransBtn">Split</button>
+                                                                            <button type="submit" class="btn btn-success ">Add</button>
+                                                                        </div>
                                                                     </div>
                                                                 </form>
                                                             </div>
@@ -472,7 +456,7 @@ add_css(array(
 
 </div>
 <?php include viewPath('includes/footer_accounting'); ?>
-
+<?php include viewPath('includes/accouting/footer'); ?>
 
 <div class="modal fade" id="split_transaction_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered  modal-lg" role="document">
@@ -494,7 +478,6 @@ add_css(array(
                         <select name="customer" id="" class="form_select vendor-customer">
                             <option value=""></option>
                         </select>
-
                     </div>
                 </div>
 
@@ -537,6 +520,94 @@ add_css(array(
                                         <span class="fa fa-trash remove_item" ></span>
                                     </td>
                                 </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-12">
+                        <button type="button" class="btn btn-default btn-sm" id="add_field"><span class="fa fa-plus"></span> Add Line</button>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="">Memo</label><br>
+                        <textarea name="message" cols="40" style="width: 100%;" rows="3" id="note_txt" class="input"></textarea>
+                    </div>
+                    <div class="col-md-12">
+                        <br>
+                        <a href="javascript:void;" id="add_field" style="color:#58bc4f;font-size: 14px;"><span class="fa fa-file"></span> Add Attachment</a>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary btn-sm">Apply and Accept</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="find_match_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered  modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Split Transaction</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <strong>Downloaded transaction</strong><br>
+                        <p >Beach</p>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="">Payee</label><br>
+                        <select name="customer" id="" class="form_select vendor-customer">
+                            <option value=""></option>
+                        </select>
+
+                    </div>
+                </div>
+
+                <div class="row">
+                    <br><br>
+                    <div class="col-md-12">
+                        <table id="split_transaction_table" class="table  table-striped table-bordered" style="width:100%">
+                            <thead>
+                            <tr>
+                                <th>Category</th>
+                                <th >Description</th>
+                                <th >Customer</th>
+                                <th>Billable</th>
+                                <th>Amount</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody id="split_transaction_items">
+                            <tr>
+                                <td>
+                                    <select name="customer" id="" class="form_select category">
+                                        <option value=""></option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="text" name="id" class="form-control" id="jobid" >
+                                </td>
+                                <td>
+                                    <select name="customer" id="" class="form_select customers">
+                                        <option value=""></option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="checkbox" name="method" class="" value="CC" id="is_billable">
+                                </td>
+                                <td>
+                                    <input type="number" name="id" class="form-control" id="jobid" >
+                                </td>
+                                <td>
+                                    <span class="fa fa-trash remove_item" ></span>
+                                </td>
+                            </tr>
                             </tbody>
                         </table>
                     </div>
@@ -805,7 +876,6 @@ add_css(array(
     </div>
 </div>
 
-
 <style>
     .accordion_content {
         display: none;
@@ -822,7 +892,7 @@ add_css(array(
         width: 16px;
         height: 16px;
         border: 2px solid #2ca01c;
-        transition: 0.2s all linear;
+        transition: 0.2s all linear;0
         margin-right: 5px;
         position: relative;
         top: 4px;
@@ -834,81 +904,38 @@ add_css(array(
     }
 
     .full-screen-modal .modal .modal-dialog {
-        width: 100%;
-        height: 100%;
+        width: 100% !important;
+        height: 100% !important;
         margin: auto !important;
     }
-
 </style>
 <script>
 
-    window.onload = function() { // same as window.addEventListener('load', (event) => {
-        $.ajax({
-            type: "GET",
-            url: "<?= base_url() ?>api/fetchVendors",
-            success: function(data) {
-                console.log(data);
-                var template_data = data.vendors;
-                var toAppend = '';
-                $.each(template_data,function(i,o){
-                    toAppend += '<option value='+o.vendor_id+'>'+o.vendor_name+'</option>';
-                });
-                $('.vendor-customer').append(toAppend);
-            }
-        });
-
-        $.ajax({
-            type: "GET",
-            url: "<?= base_url() ?>api/fetchCustomers",
-            success: function(data) {
-                console.log(data);
-                var template_data = data.customers;
-                var toAppendCust = '';
-                $.each(template_data,function(i,o){
-                    toAppendCust += '<option value='+o.prof_id+'>'+o.first_name + ' ' + o.last_name +'</option>';
-                });
-                $('.customers').append(toAppendCust);
-            }
-        });
-
-        $.ajax({
-            type: "GET",
-            url: "<?= base_url() ?>api/fetchCategories",
-            success: function(data) {
-                console.log(data);
-                var template_data = data.categories;
-                var toAppendCust = '';
-                $.each(template_data,function(i,o){
-                    toAppendCust += '<option value='+o.id+'>'+o.name+'</option>';
-                });
-                $('.category').append(toAppendCust);
-            }
-        });
-    };
-
-    $('.splitTransBtn').click(function(){
-        $('#split_transaction_modal').modal('show');
-    });
-
-
-    $(function(){
-        $(".vendor-customer").select2({
-            placeholder: "Select Payee"
-        });
-        $(".category").select2({
-            placeholder: "Select Category"
-        });
-        $(".customers").select2({
-            placeholder: "Sales Customer/project"
-        });
-        $(".tags_select").select2({
-            placeholder: "Select Tag"
-        });
-    });
-
-
     // DataTable JS
     $(document).ready(function() {
+
+        //  event handler for clicking ADD button
+        $(".add_categorized").submit(function(e) {
+            e.preventDefault(); // avoid to execute the actual submit of the form.
+            var form = $(this);
+            $.ajax({
+                type: "POST",
+                url:  "<?=base_url()?>accountingbanking/onUpdatePaymentCategory",
+                data: form.serialize(), // serializes the form's elements.
+                beforeSend: function() {
+                    $("#overlay_message").text('Updating Transaction...');
+                    document.getElementById('overlay').style.display = "flex";
+                },
+                success: function (data) {
+                    const {success, message} = data;
+                    if(success){
+                        nsmartrac_alert('Nice!',message,'success','reload');
+                    }
+                    document.getElementById('overlay').style.display = "none";
+                }
+            });
+        });
+
         $("body").delegate("#add_field", "click", function(){
             //$('#split_transaction_items').append($('#item').html());
             var tableBody = $('#split_transaction_table').find("tbody"),
@@ -956,13 +983,80 @@ add_css(array(
             "pageLength": 10,
             "order": [],
         });
-    } );
-    $(document).ready(function() {
+
         $('#reviewedTable').DataTable({
             "paging": false,
             "filter":false
         });
-    } );
+    });
+
+    window.onload = function() { // same as window.addEventListener('load', (event) => {
+        $.ajax({
+            type: "GET",
+            url: "<?= base_url() ?>api/fetchVendors",
+            success: function(data) {
+                console.log(data);
+                var template_data = data.vendors;
+                var toAppend = '';
+                $.each(template_data,function(i,o){
+                    toAppend += '<option value='+o.vendor_id+'>'+o.vendor_name+'</option>';
+                });
+                $('.vendor-customer').append(toAppend);
+            }
+        });
+
+        $.ajax({
+            type: "GET",
+            url: "<?= base_url() ?>api/fetchCustomers",
+            success: function(data) {
+                console.log(data);
+                var template_data = data.customers;
+                var toAppendCust = '';
+                $.each(template_data,function(i,o){
+                    toAppendCust += '<option value='+o.prof_id+'>'+o.first_name + ' ' + o.last_name +'</option>';
+                });
+                $('.customers').append(toAppendCust);
+            }
+        });
+
+        $.ajax({
+            type: "GET",
+            url: "<?= base_url() ?>api/fetchCategories",
+            success: function(data) {
+                console.log(data);
+                var template_data = data.categories;
+                var toAppendCust = '';
+                $.each(template_data,function(i,o){
+                    toAppendCust += '<option value='+o.id+'>'+o.name+'</option>';
+                });
+                $('.category').append(toAppendCust);
+            }
+        });
+    };
+
+    $('.create_rule').click(function(){
+        $('#createRuleModalRight').modal('show');
+    });
+
+    $('.splitTransBtn').click(function(){
+        $('#split_transaction_modal').modal('show');
+    });
+
+
+    $(function(){
+        $(".vendor-customer").select2({
+            placeholder: "Select Payee"
+        });
+        $(".category").select2({
+            placeholder: "Select Category"
+        });
+        $(".customers").select2({
+            placeholder: "Sales Customer/project"
+        });
+        $(".tags_select").select2({
+            placeholder: "Select Tag"
+        });
+    });
     $('.banking-sub-tab').click(function(){
         $(this).parent().addClass('banking-sub-active').siblings().removeClass('banking-sub-active')
     });
@@ -971,8 +1065,6 @@ add_css(array(
         var fileName = $(this).val().split("\\").pop();
         $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
     });
-    // Expand row table
-    $(document).ready(function () {
 
-    });
+
 </script>

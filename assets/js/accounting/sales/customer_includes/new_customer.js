@@ -36,7 +36,9 @@ $(document).ready(function() {
                             var html_temp2 = "";
 
                             for (let index = 0; index < data.titles.length; index++) {
+                                html_temp2 = "";
                                 html_temp += `
+                                <div class="row">
                                 <div class="col-md-6">
                                     <div class="checkbox checkbox-sec margin-right ">
                                         <input type="checkbox" name="temp` + index + `" value="` + index + `" id="temp` + index + `" checked="">
@@ -44,15 +46,66 @@ $(document).ready(function() {
                                             <span>` + data.titles[index] + `</span>
                                         </label>
                                     </div>
-                                </div>`;
+                                </div>
+                                <div class="col-md-6">
+                                    <select>`;
+                                for (let index1 = 0; index1 < data.table_column_names.length; index1++) {
+                                    var holder = "";
+                                    var count;
+                                    var indexHolder;
+                                    var selected = "";
+
+                                    if ((data.titles[index].split(' ').join('_') == data.table_column_names[index1]) || (data.titles[index].split('-').join('_') == data.table_column_names[index1])) {
+                                        selected = "selected";
+                                    }
+
+
+                                    html_temp2 += ` <option value = "` + data.table_column_names[index1] + `"
+                                                                        ` + selected + `> ` + data.table_column_names[index1] + ` </option>
+                                                                        `;
+
+                                    if (index1 == data.table_column_names.length - 1) {
+                                        data.table_column_names[indexHolder] = data.table_column_names[0]
+                                        data.table_column_names[0] = holder;
+                                        holder = "";
+                                        count = 0;
+                                        indexHolder = 0;
+                                    }
+
+
+
+                                }
+
+
+                                html_temp += html_temp2 + `</select> <h6>
+                                </h6>
+                                </div>
+                                </div>
+                             `;
+
+                                let selection = document.querySelector('select');
+                                let result = document.getElementById('h4');
+
+                                selection.addEventListener('change', () => {
+                                    result.innerText = selection.options[selection.selectedIndex].text;
+                                })
+
+
+
+
+
                             }
-                            for (let index = 0; index < data.table_column_names.length; index++) {
-                                html_temp2 +=
-                            }
-                            $("#holder-step-2 .form-check .row").html(html_temp);
+
+
+
+                            $("#holder-step-2 .form-check").html(html_temp);
+                            // $("#holder-step-2 .form-check #t_columns").html(html_temp2);
+
+
                             file_elem.removeFile(file_elem.files[0]);
                             $("#loader-modal").hide();
                             next_step("#holder-step-1 .next-step");
+
                         },
                     });
 

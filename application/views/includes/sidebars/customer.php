@@ -52,11 +52,11 @@
                 <span class="fa fa-user"></span>My Customers
             </a>
         </li>
-        <li class="submenus <?= $this->uri->segment(2) == 'module' ?  "active" : '';?>">
+        <!--<li class="submenus <?= $this->uri->segment(2) == 'module' ?  "active" : '';?>">
             <a href="<?php echo base_url('customer/module') ?>">
                 <span class="fa fa-user-circle"></span>Customer Dashboard
             </a>
-        </li>
+        </li>-->
         <li class="submenus <?= $this->uri->segment(2) == 'subscriptions' ?  "active" : '';?>">
             <a href="<?php echo base_url('customer/subscriptions') ?>">
                 <span class="fa fa-list"></span>Customer Subscriptions
