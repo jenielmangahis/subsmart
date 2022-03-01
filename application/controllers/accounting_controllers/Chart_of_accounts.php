@@ -2540,7 +2540,7 @@ class Chart_of_accounts extends MY_Controller {
         $creditMemoItems = $this->chart_of_accounts_model->get_credit_memo_registers($accountId);
 
         foreach($creditMemoItems as $item) {
-            $creditMemo = $this->accounting_credit_memo_model->getCreditMemoDetails($item->type_id)[0];
+            $creditMemo = $this->accounting_credit_memo_model->getCreditMemoDetails($item->type_id);
             $payee = $this->accounting_customers_model->get_by_id($creditMemo->customer_id);
             $payeeName = $payee->first_name . ' ' . $payee->last_name;
 

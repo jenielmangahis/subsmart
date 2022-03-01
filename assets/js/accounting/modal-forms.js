@@ -6333,6 +6333,9 @@ const submitModalForm = (event, el) => {
         });
 
         data.set('total_amount', $(`${modalId} .transaction-grand-total:first-child`).html().replace('$', ''));
+        data.set('subtotal', $(`${modalId} .transaction-subtotal:first-child`).html().replace('$', ''));
+        data.set('tax_total', $(`${modalId} .transaction-taxes:first-child`).html().replace('$', ''));
+        data.set('discount_total', $(`${modalId} .transaction-discounts:first-child`).html().replace('$', ''));
     }
 
     if(vendorModals.includes(modalId)) {
@@ -7499,7 +7502,7 @@ const initModalFields = (modalName, data = {}) => {
         $(`#${modalName} table#category-details-table tbody tr:first-child()`).remove();
         $(`#${modalName} table#category-details-table tbody tr:last-child()`).remove();
     } else {
-        if($(`#${modalName} .modal-body table`).length > 0) {
+        if($(`#${modalName} .modal-body table.clickable`).length > 0) {
             if(modalName !== 'inventoryModal') {
                 rowInputs = $(`div#modal-container #${modalName} .modal-body table tbody tr:first-child()`).html();
                 blankRow = $(`div#modal-container #${modalName} .modal-body table tbody tr:last-child()`).html();
@@ -8389,6 +8392,11 @@ const viewTransaction = (el) => {
 
                 $('#receivePaymentModal').modal('show');
             break;
+            case 'credit-memo' :
+                initModalFields('creditMemoModal', data);
+
+                $('#creditMemoModal').modal('show');
+            break;
         }
     });
 }
@@ -8712,7 +8720,11 @@ const loadPaymentInvoices = (data) => {
                 data: null,
                 name: 'payment',
                 fnCreatedCell: function(td, cellData, rowData, row, col) {
-                    $(td).html(`<input type="number" onchange="convertToDecimal(this)" step=".01" class="form-control text-right" name="payment[]">`);
+                    if(rowData.checked) {
+                        $(td).html(`<input type="number" onchange="convertToDecimal(this)" step=".01" class="form-control text-right" name="payment[]" value="${rowData.payment_amount}">`);
+                    } else {
+                        $(td).html(`<input type="number" onchange="convertToDecimal(this)" step=".01" class="form-control text-right" name="payment[]">`);
+                    }
                 }
             }
         ]

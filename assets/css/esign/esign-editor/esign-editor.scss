@@ -9,8 +9,11 @@
 
 .link {
   color: #1e5da9;
+  font-size: 14px;
 
-  &:hover {
+  &:hover,
+  &:focus,
+  &:active {
     color: #1e5da9;
     text-decoration: underline;
   }
@@ -63,6 +66,11 @@
       display: none;
     }
   }
+}
+
+.esigneditor__title {
+  font-size: 32px;
+  color: #333;
 }
 
 .esigneditor__btn {

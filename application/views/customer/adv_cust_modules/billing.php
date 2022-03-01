@@ -196,7 +196,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             </div>
 
             <div style="margin-left:30px;  padding-top:140px;" align="left" class="normaltext1">
-                <a href="#" style="color:#58bc4f;">View/Edit Module</a>&nbsp;&nbsp;
+                <a href="<?= base_url('/customer/add_advance/' . $profile_info->prof_id);?>" style="color:#58bc4f;">View/Edit Module</a>&nbsp;&nbsp;
                 <!--  <a href="javascript:void(0);">Action/Notes</a>-->
             </div>
 

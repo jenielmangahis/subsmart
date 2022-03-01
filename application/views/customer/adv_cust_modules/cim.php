@@ -36,7 +36,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             </div>
             <div style="margin-left:325px;  padding-top: <?= !empty($profile_info->custom_fields) ? '50':'330'; ?>px; text-align: right !important;" class="normaltext1">
                 <?php if(isset($profile_info)) : ?>
-                    <a href="/customer/index/tab3/<?= $profile_info->prof_id  ?>/mt12" style="color:#58bc4f;">View/Edit Fields</a>
+                    <a href="<?php if (isset($profile_info)) { echo url('/customer/add_advance/' . $profile_info->prof_id);} ?>" style="color:#58bc4f;">View/Edit Fields</a>
                 <?php endif; ?>
             </div>
 

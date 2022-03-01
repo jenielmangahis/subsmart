@@ -16,7 +16,7 @@ ini_set('max_input_vars', 30000);
 
     <div class="container mt-4">
         <div>
-            <h1 class="esigneditor__title">eSign Editor</h1>
+            <h1 class="esigneditor__title">Add Letter</h1>
             <div class="alert alert-warning" role="alert">
                 <p>Build and automate e-signature workflows in seconds. Speed up e-signing processes. Assign roles, set up steps and send documents for signing.</p>
             </div>
@@ -26,7 +26,7 @@ ini_set('max_input_vars', 30000);
             <div class="form-group">
                 <div class="d-flex justify-content-between align-items-center">
                     <label for="category">Category</label>
-                    <a class="link" href="#" data-toggle="modal" data-target="#manageTemplateModal">Manage template category</a>
+                    <a class="link" href="#" data-toggle="modal" data-target="#manageTemplateModal">Manage template categories</a>
                 </div>
                 <select class="form-control" id="category" data-name="category_id"></select>
             </div>
@@ -61,8 +61,11 @@ ini_set('max_input_vars', 30000);
         </form>
 
         <fieldset>
-            <legend>
+            <legend class="d-flex justify-content-between align-items-center">
                 <h2>Placeholder Information</h2>
+                <a class="link" href="#" data-toggle="modal" data-target="#createPlaceholderModal">
+                    Manage template placeholders
+                </a>
             </legend>
             <ul class="placeholders__list"></ul>
         </fieldset>
@@ -73,13 +76,13 @@ ini_set('max_input_vars', 30000);
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Manage Template Category</h5>
+        <h5 class="modal-title">Manage Template Categories</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        <form class="d-flex align-items-center" id="addModalForm">
+        <form class="d-flex align-items-center" id="addCategoryForm">
             <div class="form-group w-100" style="margin-bottom: 0 !important;">
                 <input class="form-control" placeholder="Enter category name">
             </div>
@@ -112,6 +115,40 @@ ini_set('max_input_vars', 30000);
                 </template>
             </div>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="createPlaceholderModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Manage Template Placeholders</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="addPlaceholderForm">
+            <div class="form-group">
+                <label>Code</label>
+                <input data-name="code" class="form-control" placeholder="Enter code">
+                <small class="form-text text-muted">Only alphanumeric and underscore characters are allowed.</small>
+            </div>
+            <div class="form-group">
+                <label>Description</label>
+                <input data-name="description" class="form-control" placeholder="Enter description">
+            </div>
+            <div class="d-flex justify-content-end">
+                <button type="button" class="btn btn-primary esigneditor__btn">
+                    <div class="spinner-border spinner-border-sm" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                    Add
+                </button>
+            </div>
+        </form>
       </div>
     </div>
   </div>

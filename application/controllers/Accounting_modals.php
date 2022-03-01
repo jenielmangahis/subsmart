@@ -5139,7 +5139,7 @@ class Accounting_modals extends MY_Controller
                 'email' => $data['email'],
                 'send_later' => !isset($data['template_name']) ? $data['send_later'] : null,
                 'credit_memo_date' => !isset($data['template_name']) ? date("Y-m-d", strtotime($data['credit_memo_date'])) : null,
-                'billing_address' => $data['billing_address'],
+                'billing_address' => nl2br($data['billing_address']),
                 'location_of_sale' => $data['location_of_sale'],
                 'po_number' => $data['purchase_order_no'],
                 'sales_rep' => $data['sales_rep'],
@@ -5148,6 +5148,9 @@ class Accounting_modals extends MY_Controller
                 'adjustment_name' => $data['adjustment_name'],
                 'adjustment_value' => $data['adjustment_value'],
                 'total_amount' => $data['total_amount'],
+                'subtotal' => $data['subtotal'],
+                'tax_total' => $data['tax_total'],
+                'discount_total' => $data['discount_total'],
                 'recurring' => isset($data['template_name']) ? 1 : null,
                 'status' => 1
             ];
@@ -5388,7 +5391,7 @@ class Accounting_modals extends MY_Controller
                 'customer_id' => $data['customer'],
                 'email' => $data['email'],
                 'send_later' => !isset($data['template_name']) ? $data['send_later'] : null,
-                'billing_address' => $data['billing_address'],
+                'billing_address' => nl2br($data['billing_address']),
                 'sales_receipt_date' => !isset($data['template_name']) ? date("Y-m-d", strtotime($data['sales_receipt_date'])) : null,
                 'location_of_sale' => $data['location_of_sale'],
                 'po_number' => $data['purchase_order_no'],
@@ -5661,7 +5664,7 @@ class Accounting_modals extends MY_Controller
                 'company_id' => logged('company_id'),
                 'customer_id' => $data['customer'],
                 'email' => $data['email'],
-                'billing_address' => $data['billing_address'],
+                'billing_address' => nl2br($data['billing_address']),
                 'refund_receipt_date' => !isset($data['template_name']) ? date("Y-m-d", strtotime($data['refund_receipt_date'])) : null,
                 'location_of_sale' => $data['location_of_sale'],
                 'po_number' => $data['purchase_order_no'],
@@ -8865,6 +8868,9 @@ class Accounting_modals extends MY_Controller
             case 'receive-payment' :
                 $attachments = $this->accounting_attachments_model->get_attachments('Payment', $linkedId);
             break;
+            case 'credit-memo' :
+                $attachments = $this->accounting_attachments_model->get_attachments('Credit Memo', $linkedId);
+            break;
         }
 
         echo json_encode($attachments);
@@ -8923,6 +8929,9 @@ class Accounting_modals extends MY_Controller
             break;
             case 'receive-payment' :
                 $this->view_receive_payment($transactionId);
+            break;
+            case 'credit-memo' :
+                $this->view_credit_memo($transactionId);
             break;
         }
     }
@@ -9277,6 +9286,18 @@ class Accounting_modals extends MY_Controller
 
         $this->page_data['payment'] = $payment;
         $this->load->view("accounting/modals/receive_payment_modal", $this->page_data);
+    }
+
+    private function view_credit_memo($creditMemoId)
+    {
+        $creditMemo = $this->accounting_credit_memo_model->getCreditMemoDetails($creditMemoId);
+        $items = $this->accounting_credit_memo_model->get_customer_transaction_items('Credit Memo', $creditMemoId);
+
+        $this->page_data['creditMemo'] = $creditMemo;
+        $this->page_data['items'] = $items;
+        $this->page_data['tags'] = $this->tags_model->get_transaction_tags('Credit Memo', $creditMemoId);
+
+        $this->load->view("accounting/modals/credit_memo_modal", $this->page_data);
     }
 
     public function load_bills_payed($billPaymentId)
@@ -14396,16 +14417,59 @@ class Accounting_modals extends MY_Controller
         $limit = $post['length'];
 
         $filters = [
-            'from_date' => date("Y-m-d", strtotime($post['from_date'])),
-            'to_date' => date("Y-m-d", strtotime($post['to_date'])),
             'overdue' => $post['overdue'],
-            'customer_id' => $paymentId
+            'customer_id' => $payment->customer_id
         ];
+
+        if($post['from_date'] !== "") {
+            $filters['from_date'] = date("Y-m-d", strtotime($post['from_date']));
+        }
+
+        if($post['to_date'] !== "") {
+            $filters['to_date'] = date("Y-m-d", strtotime($post['to_date']));
+        }
 
         $paymentInvoices = $this->accounting_receive_payment_model->get_payment_invoices($paymentId);
         $invoices = $this->accounting_invoices_model->get_customer_invoices_to_pay($filters);
 
         $data = [];
+        foreach($paymentInvoices as $paymentInvoice) {
+            $invoice = $this->accounting_invoices_model->get_invoice_by_invoice_id($paymentInvoice->invoice_id);
+            $invoiceNum = str_replace('INV-', '', $invoice->invoice_number);
+            $description = "<a href='/invoice/genview/$invoice->id' class='text-info'>Invoice #$invoiceNum</a> (".date("m/d/Y", strtotime($invoice->date_issued)).")";
+
+            $paymentRecords = $this->accounting_invoices_model->get_invoice_payment_records($invoice->invoice_number);
+
+            $paymentAmounts = array_column($paymentRecords, 'invoice_amount');
+            $totalPayment = array_sum($paymentAmounts);
+
+            $balance = floatval($invoice->grand_total) - floatval($totalPayment);
+
+            if($search !== "") {
+                if(stripos($invoiceNum, $search) !== false) {
+                    $data[] = [
+                        'id' => $invoice->id,
+                        'description' => $description,
+                        'due_date' => date("m/d/Y", strtotime($invoice->due_date)),
+                        'original_amount' => number_format(floatval($invoice->grand_total), 2, '.', ','),
+                        'open_balance' => number_format(floatval($balance), 2, '.', ','),
+                        'checked' => true,
+                        'payment_amount' => number_format(floatval($paymentInvoice->payment_amount), 2, '.', ',')
+                    ];
+                }
+            } else {
+                $data[] = [
+                    'id' => $invoice->id,
+                    'description' => $description,
+                    'due_date' => date("m/d/Y", strtotime($invoice->due_date)),
+                    'original_amount' => number_format(floatval($invoice->grand_total), 2, '.', ','),
+                    'open_balance' => number_format(floatval($balance), 2, '.', ','),
+                    'checked' => true,
+                    'payment_amount' => number_format(floatval($paymentInvoice->payment_amount), 2, '.', ',')
+                ];
+            }
+        }
+
         foreach($invoices as $invoice) {
             $invoiceNum = str_replace('INV-', '', $invoice->invoice_number);
             $description = "<a href='/invoice/genview/$invoice->id' class='text-info'>Invoice #$invoiceNum</a> (".date("m/d/Y", strtotime($invoice->date_issued)).")";
@@ -14417,30 +14481,30 @@ class Accounting_modals extends MY_Controller
 
             $balance = floatval($invoice->grand_total) - floatval($totalPayment);
 
-            $search = array_filter($paymentInvoices, function($v, $k) use ($invoice) {
-                return $v->id === $invoice->id;
+            $lookup = array_filter($data, function($v, $k) use ($invoice) {
+                return $v['id'] === $invoice->id;
             }, ARRAY_FILTER_USE_BOTH);
 
-            if($search !== "") {
-                if(stripos($invoiceNum, $search) !== false) {
+            if(count($lookup) < 1) {
+                if($search !== "") {
+                    if(stripos($invoiceNum, $search) !== false) {
+                        $data[] = [
+                            'id' => $invoice->id,
+                            'description' => $description,
+                            'due_date' => date("m/d/Y", strtotime($invoice->due_date)),
+                            'original_amount' => number_format(floatval($invoice->grand_total), 2, '.', ','),
+                            'open_balance' => number_format(floatval($balance), 2, '.', ',')
+                        ];
+                    }
+                } else {
                     $data[] = [
                         'id' => $invoice->id,
                         'description' => $description,
                         'due_date' => date("m/d/Y", strtotime($invoice->due_date)),
                         'original_amount' => number_format(floatval($invoice->grand_total), 2, '.', ','),
-                        'open_balance' => number_format(floatval($balance), 2, '.', ','),
-                        'checked' => count($search) > 0
+                        'open_balance' => number_format(floatval($balance), 2, '.', ',')
                     ];
                 }
-            } else {
-                $data[] = [
-                    'id' => $invoice->id,
-                    'description' => $description,
-                    'due_date' => date("m/d/Y", strtotime($invoice->due_date)),
-                    'original_amount' => number_format(floatval($invoice->grand_total), 2, '.', ','),
-                    'open_balance' => number_format(floatval($balance), 2, '.', ','),
-                    'checked' => count($search) > 0
-                ];
             }
         }
 

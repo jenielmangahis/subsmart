@@ -39,6 +39,24 @@ export function editLetter(payload) {
   return http.post(`${prefixURL}/EsignEditor/apiEditLetter/${id}`, rest);
 }
 
+export function getPlaceholders() {
+  return http.get(`${prefixURL}/EsignEditor/apiGetPlaceholders`);
+}
+
+export function createPlaceholder(payload) {
+  return http.post(`${prefixURL}/EsignEditor/apiCreatePlaceholder`, payload);
+}
+
+export function getLetterByCategoryId(categoryId) {
+  return http.get(
+    `${prefixURL}/EsignEditor/apiGetLetterByCategoryId/${categoryId}`
+  );
+}
+
+export function getCustomer(id) {
+  return http.get(`${prefixURL}/EsignEditor/apiGetCustomer/${id}`);
+}
+
 const http = {
   post: sendPost,
   delete: sendDelete,

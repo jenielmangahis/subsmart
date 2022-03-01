@@ -32,13 +32,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 <input type="file" name="upload_document" id="upload_document_1" style="visibility:hidden; width:2px; height:1px;">
                                             </div>
                                             <div style="float:right;  width:70px;">
-                                                <a href="javascript:void(0);" style="text-decoration:none;display:inline-block;"  title="Choose File" class="js-qwynlraxz">
+                                                <a href="#" style="text-decoration:none;display:inline-block;"  title="Choose File" class="js-qwynlraxz">
                                                     <img width="16px" height="16px" border="0" src="https://app.creditrepaircloud.com/application/images/file-upload.png" style="vertical-align:middle;">
                                                 </a>
-                                                <a href="" style="text-decoration:none;display:inline-block;" title="Download Document" class="js-qwynlraxz">
+                                                <a href="#" style="text-decoration:none;display:inline-block;" title="Download Document" class="js-qwynlraxz">
                                                     <img width="16px" height="16px" border="0" src="https://app.creditrepaircloud.com/application/images/download-icon.png">
                                                 </a>
-                                                <a href="" style="text-decoration:none;display:inline-block;" title="Delete Document" class="js-qwynlraxz">
+                                                <a href="#" style="text-decoration:none;display:inline-block;" title="Delete Document" class="js-qwynlraxz">
                                                     <img width="16px" height="16px" border="0" src="https://app.creditrepaircloud.com/application/images/cross.png">
                                                 </a>
                                             </div>
@@ -58,13 +58,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 <input type="file" name="upload_document" id="upload_document_4" style="visibility:hidden; width:2px; height:1px;">
                                             </div>
                                             <div style="float:right;  width:70px;">
-                                                <a href="javascript:void(0);" style="text-decoration:none;display:inline-block;"  title="Choose File" class="js-qwynlraxz">
+                                                <a href="#" style="text-decoration:none;display:inline-block;"  title="Choose File" class="js-qwynlraxz">
                                                     <img width="16px" height="16px" border="0" src="https://app.creditrepaircloud.com/application/images/file-upload.png" style="vertical-align:middle;">
                                                 </a>
-                                                <a href="" style="text-decoration:none;display:inline-block;" title="Download Document" class="js-qwynlraxz">
+                                                <a href="#" style="text-decoration:none;display:inline-block;" title="Download Document" class="js-qwynlraxz">
                                                     <img width="16px" height="16px" border="0" src="https://app.creditrepaircloud.com/application/images/download-icon.png">
                                                 </a>
-                                                <a href="" style="text-decoration:none;display:inline-block;" title="Delete Document" class="js-qwynlraxz">
+                                                <a href="#" style="text-decoration:none;display:inline-block;" title="Delete Document" class="js-qwynlraxz">
                                                     <img width="16px" height="16px" border="0" src="https://app.creditrepaircloud.com/application/images/cross.png">
                                                 </a>
                                             </div>
@@ -88,13 +88,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 <input type="file" name="upload_document" id="upload_document_6" style="visibility:hidden; width:2px; height:1px;">
                                             </div>
                                             <div style="float:right;  width:70px;">
-                                                <a href="javascript:void(0);" style="text-decoration:none;display:inline-block;"  title="Choose File" class="js-qwynlraxz">
+                                                <a href="#" style="text-decoration:none;display:inline-block;"  title="Choose File" class="js-qwynlraxz">
                                                     <img width="16px" height="16px" border="0" src="https://app.creditrepaircloud.com/application/images/file-upload.png" style="vertical-align:middle;">
                                                 </a>
-                                                <a href="" style="text-decoration:none;display:inline-block;" title="Download Document" class="js-qwynlraxz">
+                                                <a href="#" style="text-decoration:none;display:inline-block;" title="Download Document" class="js-qwynlraxz">
                                                     <img width="16px" height="16px" border="0" src="https://app.creditrepaircloud.com/application/images/download-icon.png">
                                                 </a>
-                                                <a href="" style="text-decoration:none;display:inline-block;" title="Delete Document" class="js-qwynlraxz">
+                                                <a href="#" style="text-decoration:none;display:inline-block;" title="Delete Document" class="js-qwynlraxz">
                                                     <img width="16px" height="16px" border="0" src="https://app.creditrepaircloud.com/application/images/cross.png">
                                                 </a>
                                             </div>
@@ -118,13 +118,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 <input type="file" name="upload_document" id="upload_document_6" style="visibility:hidden; width:2px; height:1px;">
                                             </div>
                                             <div style="float:right;  width:70px;">
-                                                <a href="javascript:void(0);" style="text-decoration:none;display:inline-block;"  title="Choose File" class="js-qwynlraxz">
+                                                <a href="#" style="text-decoration:none;display:inline-block;"  title="Choose File" class="js-qwynlraxz">
                                                     <img width="16px" height="16px" border="0" src="https://app.creditrepaircloud.com/application/images/file-upload.png" style="vertical-align:middle;">
                                                 </a>
-                                                <a href="" style="text-decoration:none;display:inline-block;" title="Download Document" class="js-qwynlraxz">
+                                                <a href="#" style="text-decoration:none;display:inline-block;" title="Download Document" class="js-qwynlraxz">
                                                     <img width="16px" height="16px" border="0" src="https://app.creditrepaircloud.com/application/images/download-icon.png">
                                                 </a>
-                                                <a href="" style="text-decoration:none;display:inline-block;" title="Delete Document" class="js-qwynlraxz">
+                                                <a href="#" style="text-decoration:none;display:inline-block;" title="Delete Document" class="js-qwynlraxz">
                                                     <img width="16px" height="16px" border="0" src="https://app.creditrepaircloud.com/application/images/cross.png">
                                                 </a>
                                             </div>

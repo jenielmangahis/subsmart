@@ -180,7 +180,8 @@ div#import-customers-modal {
     cursor: pointer;
     padding: 10px 5px;
     margin: 10px 5px 10px 0px;
-    float: right
+    float: right;
+    background: #755c8b;
 }
 
 #import-customers-modal.form,
@@ -310,4 +311,9 @@ div#import-customers-modal {
     padding: 5px;
     width: 300px;
     font-size: 13px;
+}
+
+#import-customers-modal .form-check {
+    text-align: left !important;
+    margin-left: 20px;
 }
