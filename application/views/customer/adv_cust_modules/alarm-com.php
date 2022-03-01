@@ -114,7 +114,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             </div>
 
             <div style="margin-left:30px;  padding-top:55px;" align="left" class="normaltext1">
-                <a href="#" style="color:#58bc4f;">History Log</a>&nbsp;&nbsp;
+                <a href="<?= base_url('timesheet/attendance_logs') ?>" style="color:#58bc4f;">History Log</a>&nbsp;&nbsp;
                 <!--  <a href="javascript:void(0);">Action/Notes</a>-->
             </div>
 

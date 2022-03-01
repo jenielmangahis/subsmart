@@ -35,7 +35,7 @@
                         <div class="col">
                             <div class="card p-0 m-0" style="min-height: 100%">
                                 <div class="card-body" style="padding-bottom: 1.25rem">
-                                    <div class="row">
+                                    <div class="row customer-details">
                                         <div class="col-md-8">
                                             <div class="row">
                                                 <div class="col-md-5">
@@ -60,7 +60,7 @@
                                                 AMOUNT
                                             </h6>
                                             <h2 class="text-right">
-                                                <span class="transaction-total-amount">$0.00</span>
+                                                <span class="transaction-grand-total">$0.00</span>
                                             </h2>
                                         </div>
                                         <div class="col-md-3">
@@ -87,10 +87,11 @@
                                         <div class="col-md-12">
                                             <div class="delayed-charge-item-table-container w-100">
                                                 <div class="delayed-charge-item-table">
-                                                    <table class="table table-bordered table-hover" id="delayed-charge-item-table">
+                                                    <table class="table table-bordered table-hover" id="item-table">
                                                         <thead>
                                                             <th width="20%">NAME</th>
                                                             <th>TYPE</th>
+                                                            <th>LOCATION</th>
                                                             <th width="10%">QUANTITY</th>
                                                             <th width="10%">PRICE</th>
                                                             <th width="10%">DISCOUNT</th>
@@ -104,7 +105,7 @@
                                                 <div class="delayed-charge-item-table-footer">
                                                     <div class="row">
                                                         <div class="col-md-6">
-                                                            <a class="link-modal-open" href="#" id="add_another_items" data-target="#item_list"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a>
+                                                            <a class="link-modal-open" href="#" id="add_item" data-target="#item_list"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -142,25 +143,29 @@
                                                 <tbody>
                                                     <tr>
                                                         <td>Subtotal</td>
-                                                        <td class="w-25"><span class="credit-memo-subtotal">$0.00</span></td>
+                                                        <td class="w-25"><span class="transaction-subtotal">$0.00</span></td>
                                                     </tr>
                                                     <tr>
                                                         <td>Taxes</td>
-                                                        <td class="w-25"><span class="credit-memo-taxes">$0.00</span></td>
+                                                        <td class="w-25"><span class="transaction-taxes">$0.00</span></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Discounts</td>
+                                                        <td class="w-25"><span class="transaction-discounts">$0.00</span></td>
                                                     </tr>
                                                     <tr>
                                                         <td class="d-flex align-items-center justify-content-end">
                                                             <input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control w-50 mr-2">
-                                                            <input type="number" name="adjustment_value" id="adjustment_input_cm" step=".01" class="form-control adjustment_input_cm_c w-25 mr-2">
+                                                            <input type="number" name="adjustment_value" id="adjustment_input_cm" step=".01" class="form-control adjustment_input_cm_c w-25 mr-2" onchange="convertToDecimal(this)">
                                                             <span class="fa fa-question-circle" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Optional it allows you to adjust the total amount Eg. +10 or -10." data-original-title="" title=""></span>
                                                         </td>
-                                                        <td class="w-25"><span class="adjustment-total-value">$0.00</span></td>
+                                                        <td class="w-25"><span class="transaction-adjustment">$0.00</span></td>
                                                     </tr>
                                                 </tbody>
                                                 <tfoot>
                                                     <tr>
                                                         <td>Grand Total ($)</td>
-                                                        <td class="w-25">$0.00</td>
+                                                        <td class="w-25"><span class="transaction-grand-total">$0.00</span></td>
                                                     </tr>
                                                 </tfoot>
                                             </table>
@@ -178,7 +183,7 @@
                             <button type="button" class="btn btn-secondary btn-rounded border" data-dismiss="modal">Close</button>
                         </div>
                         <div class="col-md-4 d-flex">
-                            <a href="#" class="text-white m-auto" onclick="makeRecurring('delayed_credit')">Make Recurring</a>
+                            <a href="#" class="text-white m-auto" onclick="makeRecurring('delayed_charge')">Make Recurring</a>
                         </div>
                         <div class="col-md-4">
                             <!-- Split dropup button -->

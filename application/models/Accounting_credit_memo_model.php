@@ -40,7 +40,7 @@ class Accounting_credit_memo_model extends MY_Model {
     }
 	public function getCreditMemoDetails($id){
 	    $vendor = $this->db->get_where('accounting_credit_memo', array('id' => $id));
-	    return $vendor->result();
+	    return $vendor->row();
     }
 
 	public function getAllByCompany($company_id)
@@ -59,5 +59,22 @@ class Accounting_credit_memo_model extends MY_Model {
 	{
 		$this->db->insert_batch('accounting_customer_transaction_items', $items);
 		return $this->db->insert_id();
+	}
+
+	public function get_company_credit_memos($filters = [])
+	{
+		$this->db->where('company_id', $filters['company_id']);
+		$this->db->where('status !=', 0);
+		$this->db->where('recurring', null);
+		$query = $this->db->get($this->table);
+        return $query->result();
+	}
+
+	public function get_customer_transaction_items($transactionType, $transactionId)
+	{
+		$this->db->where('transaction_type', $transactionType);
+		$this->db->where('transaction_id', $transactionId);
+		$query = $this->db->get('accounting_customer_transaction_items');
+		return $query->result();
 	}
 }

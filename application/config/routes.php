@@ -367,6 +367,7 @@ $route['accounting/get-timesheet-activities']['post'] = 'accounting_modals/get_t
 $route['accounting/copy-transaction/(:any)/(:any)'] = 'accounting_modals/copy_transaction/$1/$2';
 $route['accounting/load-customer-invoices/(:any)']['post'] = 'accounting_modals/load_customer_invoices/$1';
 $route['accounting/find-customer-by-invoice-no']['post'] = 'accounting_modals/find_customer_by_invoice_no';
+$route['accounting/load-payment-invoices/(:any)']['post'] = 'accounting_modals/load_payment_invoices/$1';
 
 $route['accounting/lists'] = 'accounting/lists';
 

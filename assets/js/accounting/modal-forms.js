@@ -64,7 +64,8 @@ const dropdownFields = [
     'income-account',
     'item-expense-account',
     'sales-tax-category',
-    'deposit-to-account'
+    'deposit-to-account',
+    'refund-from-account'
 ];
 const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
 
@@ -5406,15 +5407,17 @@ $(function() {
             var locs = '';
 
             if(item.type === 'product' || item.type === 'inventory') {
+                locs += '<select name="location[]" class="form-control" required>';
                 for (var i in locations) {
                     locs += `<option value="${locations[i].id}">${locations[i].name}</option>`;
                 }
+                locs += '</select>';
             }
 
             var fields = `
                 <td>${item.title}<input type="hidden" name="item[]" value="${item.id}"></td>
                 <td>${type.charAt(0).toUpperCase() + type.slice(1)}</td>
-                <td><select name="location[]" class="form-control" required>${locs}</select></td>
+                <td>${locs}</td>
                 <td><input type="number" name="quantity[]" class="form-control text-right" required value="0" min="0"></td>
                 <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${item.price}"></td>
                 <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="0.00"></td>
@@ -5450,6 +5453,7 @@ $(function() {
 
         var subtotal = 0.00;
         var taxes = 0.00;
+        var discounts = 0.00;
         $('#modal-container #modal-form .modal #item-table tbody tr').each(function() {
             var itemAmount = $(this).parent().parent().find('input[name="item_amount[]"]').val();
             var itemQty = $(this).parent().parent().find('input[name="quantity[]"]').val();
@@ -5458,18 +5462,20 @@ $(function() {
 
             var itemTotal = parseFloat(itemAmount) * parseFloat(itemQty);
             var taxAmount = parseFloat(itemTax) * itemTotal / 100;
-            itemTotal -= parseFloat(itemDisc);
 
             subtotal = parseFloat(subtotal) + parseFloat(itemTotal);
             taxes = parseFloat(taxes) + parseFloat(taxAmount);
+            discounts = parseFloat(discounts) + parseFloat(itemDisc);
         });
 
 
         subtotal = '$'+parseFloat(subtotal).toFixed(2);
         taxes = '$'+parseFloat(taxes).toFixed(2);
+        discounts = '$'+parseFloat(discounts).toFixed(2);
 
         $('#modal-container #modal-form .modal span.transaction-subtotal').html(subtotal.replace('$-', '-$'));
         $('#modal-container #modal-form .modal span.transaction-taxes').html(taxes.replace('$-', '-$'));
+        $('#modal-container #modal-form .modal span.transaction-discounts').html(discounts.replace('$-', '-$'));
         $('#modal-container #modal-form .modal #adjustment_input_cm').trigger('change');
     });
 
@@ -5477,14 +5483,122 @@ $(function() {
         var value = $(this).val();
         var subtotal = $('#modal-container #modal-form .modal span.transaction-subtotal').html().replace('$', '');
         var taxes = $('#modal-container #modal-form .modal span.transaction-taxes').html().replace('$', '');
+        var discounts = $('#modal-container #modal-form .modal span.transaction-discounts').html().replace('$', '');
 
         var grandTotal = parseFloat(subtotal) + parseFloat(taxes);
+        grandTotal -= parseFloat(discounts);
         grandTotal -= parseFloat(value);
         grandTotal = '$'+parseFloat(grandTotal).toFixed(2);
         value = '$'+value;
 
         $('#modal-container #modal-form .modal span.transaction-adjustment').html(value.replace('$-', '-$'));
         $('#modal-container #modal-form .modal span.transaction-grand-total').html(grandTotal.replace('$-', '-$'));
+    });
+
+    $(document).on('click', '#modal-container #modal-form .modal #item-table .deleteRow', function() {
+        $(this).parent().parent().parent().remove();
+
+        var subtotal = 0.00;
+        var taxes = 0.00;
+        var discounts = 0.00;
+        $('#modal-container #modal-form .modal #item-table tbody tr').each(function() {
+            var itemAmount = $(this).parent().parent().find('input[name="item_amount[]"]').val();
+            var itemQty = $(this).parent().parent().find('input[name="quantity[]"]').val();
+            var itemDisc = $(this).parent().parent().find('input[name="discount[]"]').val();
+            var itemTax = $(this).parent().parent().find('input[name="item_tax[]"]').val();
+
+            var itemTotal = parseFloat(itemAmount) * parseFloat(itemQty);
+            var taxAmount = parseFloat(itemTax) * itemTotal / 100;
+
+            subtotal = parseFloat(subtotal) + parseFloat(itemTotal);
+            taxes = parseFloat(taxes) + parseFloat(taxAmount);
+            discounts = parseFloat(discounts) + parseFloat(itemDisc);
+        });
+
+        subtotal = '$'+parseFloat(subtotal).toFixed(2);
+        taxes = '$'+parseFloat(taxes).toFixed(2);
+        discounts = '$'+parseFloat(discounts).toFixed(2);
+
+        $('#modal-container #modal-form .modal span.transaction-subtotal').html(subtotal.replace('$-', '-$'));
+        $('#modal-container #modal-form .modal span.transaction-taxes').html(taxes.replace('$-', '-$'));
+        $('#modal-container #modal-form .modal span.transaction-discounts').html(discounts.replace('$-', '-$'));
+        $('#modal-container #modal-form .modal #adjustment_input_cm').trigger('change');
+    });
+
+    $(document).on('change', '#salesReceiptModal #customer', function() {
+        $.get(`/accounting/get-customer-details/${$(this).val()}`, function(result) {
+            var customer = JSON.parse(result);
+
+            var customerName = '';
+            customerName += customer.first_name !== "" ? customer.first_name + " " : "";
+            customerName += customer.middle_name !== "" ? customer.middle_name + " " : "";
+            customerName += customer.last_name !== "" ? customer.last_name : "";
+            $('#salesReceiptModal #billing-address').html(customerName.trim());
+            $('#salesReceiptModal #billing-address').append('\n');
+            if (customer.business_name !== "" && customer.business_name !== null) {
+                $('#salesReceiptModal #billing-address').append(customer.business_name);
+                $('#salesReceiptModal #billing-address').append('\n');
+            }
+            var address = '';
+            address += customer.mail_add !== "" ? customer.mail_add : "";
+            address += customer.city !== "" ? '\n' + customer.city : "";
+            address += customer.state !== "" ? ', ' + customer.state : "";
+            address += customer.zip_code !== "" ? ' ' + customer.zip_code : "";
+            address += customer.country !== "" ? ' ' + customer.country : "";
+
+            $('#salesReceiptModal #billing-address').append(address.trim());
+            $('#salesReceiptModal #email').val(customer.email);
+        });
+    });
+
+    $(document).on('change', '#refundReceiptModal #refund-from-account', function() {
+        var rowEl = $(this).parent().parent().parent();
+        var val = $(this).val();
+
+        if (val !== '' && val !== null && val !== 'add-new') {
+            $.get('/accounting/get-account-balance/' + val, function(res) {
+                var result = JSON.parse(res);
+
+                rowEl.append(`<div class="col-md-2"><div class="form-group"><label>Balance</label><h4>${result.balance}</h4></div></div>`);
+                rowEl.append(`<div class="col-md-2"><div class="form-group"><label for="check-no">Check no.</label><input type="text" class="form-control" name="check_no" id="check-no" value="To print" disabled><div class="form-check"><div class="checkbox checkbox-sec"><input type="checkbox" name="print_later" value="1" class="form-check-input" id="print-later" checked><label class="form-check-label" for="print-later">Print later</label></div></div></div></div>`);
+            });
+        }
+    });
+
+    $(document).on('change', '#refundReceiptModal #print-later', function() {
+        if($(this).prop('checked')) {
+            $('#refundReceiptModal #check-no').prop('disabled', true);
+            $('#refundReceiptModal #check-no').val('To print').trigger('change');
+        } else {
+            $('#refundReceiptModal #check-no').prop('disabled', false);
+            $('#refundReceiptModal #check-no').val('').trigger('change');
+        }
+    });
+
+    $(document).on('change', '#refundReceiptModal #customer', function() {
+        $.get(`/accounting/get-customer-details/${$(this).val()}`, function(result) {
+            var customer = JSON.parse(result);
+
+            var customerName = '';
+            customerName += customer.first_name !== "" ? customer.first_name + " " : "";
+            customerName += customer.middle_name !== "" ? customer.middle_name + " " : "";
+            customerName += customer.last_name !== "" ? customer.last_name : "";
+            $('#refundReceiptModal #billing-address').html(customerName.trim());
+            $('#refundReceiptModal #billing-address').append('\n');
+            if (customer.business_name !== "" && customer.business_name !== null) {
+                $('#refundReceiptModal #billing-address').append(customer.business_name);
+                $('#refundReceiptModal #billing-address').append('\n');
+            }
+            var address = '';
+            address += customer.mail_add !== "" ? customer.mail_add : "";
+            address += customer.city !== "" ? '\n' + customer.city : "";
+            address += customer.state !== "" ? ', ' + customer.state : "";
+            address += customer.zip_code !== "" ? ' ' + customer.zip_code : "";
+            address += customer.country !== "" ? ' ' + customer.country : "";
+
+            $('#refundReceiptModal #billing-address').append(address.trim());
+            $('#refundReceiptModal #email').val(customer.email);
+        });
     });
 });
 
@@ -6207,13 +6321,21 @@ const submitModalForm = (event, el) => {
     }
 
     if(customerModals.includes(modalId)) {
+        data.delete('location[]');
         $(`${modalId} table#item-details-table tbody tr`).each(function() {
             if(data.has('item_total[]')) {
+                data.append('location[]', $(this).find('select[name="location[]"]').val());
                 data.append('item_total[]', $(this).find('span.row-total').html().replace('$', ''));
             } else {
+                data.set('location[]', $(this).find('select[name="location[]"]').val());
                 data.set('item_total[]', $(this).find('span.row-total').html().replace('$', ''));
             }
         });
+
+        data.set('total_amount', $(`${modalId} .transaction-grand-total:first-child`).html().replace('$', ''));
+        data.set('subtotal', $(`${modalId} .transaction-subtotal:first-child`).html().replace('$', ''));
+        data.set('tax_total', $(`${modalId} .transaction-taxes:first-child`).html().replace('$', ''));
+        data.set('discount_total', $(`${modalId} .transaction-discounts:first-child`).html().replace('$', ''));
     }
 
     if(vendorModals.includes(modalId)) {
@@ -6754,6 +6876,58 @@ const makeRecurring = (modalName) => {
             $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Credit Memo');
             $(`#${modalId} div.modal-body #sales-rep`).parent().removeClass('w-100').parent().removeClass('d-flex').removeClass('align-items-end');
             $(`#${modalId} div.modal-body #send-later`).parent().parent().remove();
+        break;
+        case 'sales_receipt' :
+            modalId = 'salesReceiptModal';
+            $(templateFields).insertBefore($(`#${modalId} div.modal-body div.row.customer-details`));
+            $(intervalFields).insertAfter($(`#${modalId} div.modal-body div.row.customer-details`));
+            $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Sales Receipt');
+            $(`div#${modalId} div.modal-body div.row.customer-details`).children('.col-md-4').remove();
+            $(`div#${modalId} div.modal-body #sales-receipt-date`).parent().parent().remove();
+            $(`#${modalId} div.modal-body #sales-rep`).parent().removeClass('w-100').parent().removeClass('d-flex').removeClass('align-items-end');
+            $(`#${modalId} div.modal-body #send-later`).parent().parent().remove();
+            
+            var addedFields = `<div class="col-md-3">`;
+            addedFields += `<div class="form-group">`;
+            addedFields += `<label>Options</label>`;
+            addedFields += `<div class="form-check">`;
+            addedFields += `<div class="checkbox checkbox-sec mr-3">`;
+            addedFields += `<input type="checkbox" name="auto_send_emails" value="1" class="form-check-input" id="auto-send-emails">`;
+            addedFields += `<label class="form-check-label" for="auto-send-emails">Automatically send emails</label>`;
+            addedFields += `</div>`;
+            addedFields += `<div class="checkbox checkbox-sec">`;
+            addedFields += `<input type="checkbox" name="print_later" value="1" class="form-check-input" id="print-later">`;
+            addedFields += `<label class="form-check-label" for="print-later">Print later</label>`;
+            addedFields += `</div>`;
+            addedFields += `</div>`;
+            addedFields += `</div>`;
+            addedFields += `</div>`;
+            $(addedFields).insertAfter($(`#${modalId} #email`).parent().parent());
+        break;
+        case 'refund_receipt' :
+            modalId = 'refundReceiptModal';
+            $(templateFields).insertBefore($(`#${modalId} div.modal-body div.row.customer-details`));
+            $(intervalFields).insertAfter($(`#${modalId} div.modal-body div.row.customer-details`));
+            $(`div#${modalId} div.modal-body div.row.customer-details`).children('.col-md-4').remove();
+            $(`div#${modalId} div.modal-body #refund-receipt-date`).parent().parent().remove();
+            $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Refund Receipt');
+            $(`#${modalId} div.modal-body #sales-rep`).parent().removeClass('w-100').parent().removeClass('d-flex').removeClass('align-items-end');
+        break;
+        case 'delayed_credit' :
+            modalId = 'delayedCreditModal';
+            $(templateFields).insertBefore($(`#${modalId} div.modal-body div.row.customer-details`));
+            $(intervalFields).insertAfter($(`#${modalId} div.modal-body div.row.customer-details`));
+            $(`div#${modalId} div.modal-body div.row.customer-details`).children('.col-md-4').remove();
+            $(`div#${modalId} div.modal-body #delayed-credit-date`).parent().parent().remove();
+            $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Delayed Credit');
+        break;
+        case 'delayed_charge' :
+            modalId = 'delayedChargeModal';
+            $(templateFields).insertBefore($(`#${modalId} div.modal-body div.row.customer-details`));
+            $(intervalFields).insertAfter($(`#${modalId} div.modal-body div.row.customer-details`));
+            $(`div#${modalId} div.modal-body div.row.customer-details`).children('.col-md-4').remove();
+            $(`div#${modalId} div.modal-body #delayed-charge-date`).parent().parent().remove();
+            $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Delayed Charge');
         break;
     }
 
@@ -7328,7 +7502,7 @@ const initModalFields = (modalName, data = {}) => {
         $(`#${modalName} table#category-details-table tbody tr:first-child()`).remove();
         $(`#${modalName} table#category-details-table tbody tr:last-child()`).remove();
     } else {
-        if($(`#${modalName} .modal-body table`).length > 0) {
+        if($(`#${modalName} .modal-body table.clickable`).length > 0) {
             if(modalName !== 'inventoryModal') {
                 rowInputs = $(`div#modal-container #${modalName} .modal-body table tbody tr:first-child()`).html();
                 blankRow = $(`div#modal-container #${modalName} .modal-body table tbody tr:last-child()`).html();
@@ -8211,6 +8385,18 @@ const viewTransaction = (el) => {
 
                 $('#singleTimeModal').modal('show');
             break;
+            case 'receive-payment' :
+                initModalFields('receivePaymentModal', data);
+
+                loadPaymentInvoices(data);
+
+                $('#receivePaymentModal').modal('show');
+            break;
+            case 'credit-memo' :
+                initModalFields('creditMemoModal', data);
+
+                $('#creditMemoModal').modal('show');
+            break;
         }
     });
 }
@@ -8450,4 +8636,97 @@ const resetInvoicesFilter = (e) => {
     $('#receivePaymentModal #invoices-to').val(today);
     $('#receivePaymentModal #overdue_invoices_only').prop('checked', false);
     $('#receivePaymentModal #invoices-table').DataTable().ajax.reload(null, true);
+}
+
+const loadPaymentInvoices = (data) => {
+    if($.fn.DataTable.isDataTable(`#receivePaymentModal #invoices-table`)) {
+        $('#receivePaymentModal #invoices-table').DataTable().clear();
+        $('#receivePaymentModal #invoices-table').DataTable().destroy();
+    }
+    $('#receivePaymentModal #invoices-table').DataTable({
+        autoWidth: false,
+        searching: false,
+        processing: true,
+        serverSide: true,
+        lengthChange: false,
+        ordering: false,
+        info: false,
+        ajax: {
+            url: `/accounting/load-payment-invoices/${data.id}`,
+            dataType: 'json',
+            contentType: 'application/json',
+            type: 'POST',
+            data: function(d) {
+                d.columns[0].search.value = $('#receivePaymentModal #search-invoice-no').val();
+                d.from_date = $('#receivePaymentModal #invoices-from').val();
+                d.to_date = $('#receivePaymentModal #invoices-to').val();
+                d.overdue = $('#receivePaymentModal #overdue_invoices_only').prop('checked') ? 1 : 0;
+                d.length = $('#receivePaymentModal #invoices_table_rows').val()
+                return JSON.stringify(d);
+            },
+            pagingType: 'full_numbers',
+        },
+        columns: [
+            {
+                data: null,
+                name: 'checkbox',
+                fnCreatedCell: function(td, cellData, rowData, row, col) {
+                    if(rowData.checked) {
+                        $(td).html(`<div class="d-flex justify-content-center">
+                            <div class="checkbox checkbox-sec m-0">
+                                <input type="checkbox" id="invoice-${rowData.id}" value="${rowData.id}" checked>
+                                <label for="invoice-${rowData.id}" class="p-0" style="width: 24px; height: 24px"></label>
+                            </div>
+                        </div>`);
+                    } else {
+                        $(td).html(`<div class="d-flex justify-content-center">
+                            <div class="checkbox checkbox-sec m-0">
+                                <input type="checkbox" id="invoice-${rowData.id}" value="${rowData.id}">
+                                <label for="invoice-${rowData.id}" class="p-0" style="width: 24px; height: 24px"></label>
+                            </div>
+                        </div>`);
+                    }
+                }
+            },
+            {
+                data: 'description',
+                name: 'description',
+                fnCreatedCell: function(td, cellData, rowData, row, col) {
+                    $(td).html(cellData);
+                }
+            },
+            {
+                data: 'due_date',
+                name: 'due_date',
+                fnCreatedCell: function(td, cellData, rowData, row, col) {
+                    $(td).html(cellData);
+                }
+            },
+            {
+                data: 'original_amount',
+                name: 'original_amount',
+                fnCreatedCell: function(td, cellData, rowData, row, col) {
+                    $(td).html(cellData);
+                }
+            },
+            {
+                data: 'open_balance',
+                name: 'open_balance',
+                fnCreatedCell: function(td, cellData, rowData, row, col) {
+                    $(td).html(cellData);
+                }
+            },
+            {
+                data: null,
+                name: 'payment',
+                fnCreatedCell: function(td, cellData, rowData, row, col) {
+                    if(rowData.checked) {
+                        $(td).html(`<input type="number" onchange="convertToDecimal(this)" step=".01" class="form-control text-right" name="payment[]" value="${rowData.payment_amount}">`);
+                    } else {
+                        $(td).html(`<input type="number" onchange="convertToDecimal(this)" step=".01" class="form-control text-right" name="payment[]">`);
+                    }
+                }
+            }
+        ]
+    });
 }

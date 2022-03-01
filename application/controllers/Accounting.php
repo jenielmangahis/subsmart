@@ -53,6 +53,7 @@ class Accounting extends MY_Controller
         $this->load->model('Accounting_account_settings_model', 'accounting_account_settings_model');
         $this->load->model('Accounting_statements_model', 'accounting_statements_model');
         $this->load->model('Accounting_management_reports', 'accounting_management_reports');
+        $this->load->model('Account_model.php', 'account_model');
         $this->load->library('excel');
         //$this->load->library('pdf');
         //        The "?v=rand()" is to remove browser caching. It needs to remove in the live website.
@@ -703,7 +704,45 @@ class Accounting extends MY_Controller
     }
     public function import_customers()
     {
-        
+        $ds = DIRECTORY_SEPARATOR;  //1
+
+        $storeFolder = './uploads/accounting/customers';   //2
+
+        if (!empty($_FILES)) {
+
+            $tempFile = $_FILES['file']['tmp_name'];          //3             
+
+            $targetPath = dirname(__FILE__) . $ds . $storeFolder . $ds;  //4
+
+            // $targetFile =  $targetPath . $_FILES['file']['name'];  //5
+
+            // move_uploaded_file($tempFile, $targetFile); //6
+            move_uploaded_file($tempFile, './uploads/accounting/customers/' . $_FILES['file']['name']);
+        }
+    }
+    public function imported_customer_title_covert_to_json()
+    {
+        $title_holder = array();
+        $filename = $this->input->post("filename");
+        $object = PHPExcel_IOFactory::load('./uploads/accounting/customers/' . $filename);
+        foreach ($object->getWorksheetIterator() as $worksheet_rows) {
+            $highest_Column = $worksheet_rows->getHighestColumn();
+            $colNumber = PHPExcel_Cell::columnIndexFromString($highest_Column);
+            for ($x = 1; $colNumber >= $x; $x++) {
+                $title = $worksheet_rows->getCellByColumnAndRow($x-1)->getValue();
+                $title_holder[$x - 1] = $title;
+            }
+        }
+
+
+        $table_column_names = $this->accounting_customers_model->get_users_table_column_names();
+        array_push($table_column_names, "Add Column");
+
+        $data = new stdClass();
+        $data->titles = $title_holder;
+        $data->table_column_names = $table_column_names;
+        echo json_encode($data);
+
     }
     public function deposits()
     {
@@ -11169,7 +11208,6 @@ class Accounting extends MY_Controller
     public function tester()
     {
         echo ceil(date("n", strtotime("1995-11-13")) / 3);
-
     }
     public function update_customer_notes()
     {

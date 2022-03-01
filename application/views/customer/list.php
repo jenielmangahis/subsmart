@@ -606,7 +606,7 @@ add_css(array(
                                             <tr>
                                                 <?php if( in_array('name', $enabled_table_headers) ){ ?>
                                                 <td>
-                                                    <a href="<?= base_url('/customer/preview_/' . $customer->prof_id); ?>"
+                                                    <a href="<?= base_url('/customer/module/' . $customer->prof_id); ?>"
                                                         style="color:#1E5DA9;">
                                                         <?= ($customer) ? $customer->first_name . ' ' . $customer->last_name : ''; ?>
                                                     </a>
@@ -806,7 +806,7 @@ add_css(array(
                                             <?php foreach ($profiles as $customer) : ?>
                                             <tr>
                                                 <td>
-                                                    <a href="<?= base_url('/customer/preview_/' . $customer->prof_id); ?>"
+                                                    <a href="<?= base_url('/customer/module/' . $customer->prof_id); ?>"
                                                         style="color:#1E5DA9;">
                                                         <?= ($customer) ? $customer->first_name . ' ' . $customer->last_name : ''; ?>
                                                     </a>

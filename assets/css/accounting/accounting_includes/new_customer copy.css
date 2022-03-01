@@ -1,0 +1,134 @@
+div#import-customers-modal {
+    position: fixed;
+    top: 0;
+    z-index: 1059;
+    width: 100%;
+    height: 100%;
+    background: #00000082;
+    display: none;
+}
+
+#import-customers-modal .modal-body {
+    background: #ffffff;
+    width: 500px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 30px;
+    font-size: 12px;
+    border-radius: 5px;
+    position: relative;
+}
+
+#import-customers-modal .close-modal {
+    position: absolute;
+    top: 12px;
+    right: 15px;
+    cursor: pointer;
+    color: #A19FA0;
+    font-size: 20px;
+    font-weight: 100;
+}
+
+#import-customers-modal .modal-body .panel-title {
+    padding: 10px 0;
+    font-size: 17px;
+    color: #262626;
+    letter-spacing: 3px;
+}
+
+#import-customers-modal .modal-body .upload-button {
+    text-align: center;
+    margin-top: 10px;
+}
+
+#import-customers-modal .modal-body .upload-button button {
+    background: #6a4b86;
+    height: auto;
+    padding: 10px 30px;
+    border: none;
+    color: #fff;
+    font-size: 15px;
+    letter-spacing: 3px;
+}
+
+#import-customers-modal .modal-body .upload-button button:hover {
+    background: #593976;
+}
+
+#import-customers-modal .modal-body .file-deop-label {
+    padding: 10px 0;
+    color: #898989;
+}
+
+#import-customers-modal .modal-body .dropzone .dz-message .dz-button {
+    color: #A19FA0;
+    font-size: 17px;
+    letter-spacing: 3px;
+}
+
+#import-customers-modal .modal-body .dropzone {
+    border: 2px dashed rgba(0, 0, 0, 0.3);
+    background: transparent;
+}
+
+#import-customers-modal .modal-body div#import_customer {
+    padding: 50px 10px;
+    border: 2px dashed rgba(0, 0, 0, 0.3);
+    background: transparent;
+    color: #A19FA0;
+    font-size: 17px;
+    letter-spacing: 3px;
+    text-align: center;
+    cursor: pointer;
+}
+
+#import-customers-modal .dz-success-mark,
+#import-customers-modal .dz-error-mark {
+    display: none;
+}
+
+#import-customers-modal a.dz-remove {
+    background: #811919b0;
+    color: #fff;
+    padding: 5px 20px;
+    margin-top: 10px;
+    border: none;
+    font-size: 12px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    transition: 0.3s;
+}
+
+#import-customers-modal a.dz-remove:hover {
+    background: #811919;
+}
+
+#import-customers-modal .dz-details {
+    margin-bottom: 20px;
+    padding: 20px 0;
+}
+
+#import-customers-modal .dz-filename {
+    width: 100%;
+    overflow: hidden;
+}
+
+#import-customers-modal .dz-image img {
+    max-width: 100px;
+}
+
+#import-customers-modal .dz-image {
+    display: inline-flex;
+}
+
+#import-customers-modal .dz-preview {
+    padding: 10px 0;
+}
+
+#import-customers-modal .dz-error-message {
+    padding-bottom: 20px;
+    color: #b4424c;
+    font-weight: 600;
+}

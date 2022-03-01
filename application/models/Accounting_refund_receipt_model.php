@@ -68,4 +68,13 @@ class Accounting_refund_receipt_model extends MY_Model
     {
         $this->db->delete('refund_receipt_items', array('refund_receipt_id' => $refund_receipt_id));
     }
+
+    public function get_company_refund_receipts($filters = [])
+    {
+        $this->db->where('company_id', $filters['company_id']);
+        $this->db->where('status !=', 0);
+		$this->db->where('recurring', null);
+        $query = $this->db->get($this->table);
+        return $query->result();
+    }
 }

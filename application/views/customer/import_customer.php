@@ -121,7 +121,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <input id="file-upload" name="file" type="file" accept=".csv"/>
                                     <input  name="file2" value="1" type="hidden"/>
                                     <br><br>
-                                    <div class="">
+                                    <div class="card"  style="box-shadow: 0 0 1px 0 !important;">
+                                        <div class="col-md-12" id="select_headers" style="text-align: left;margin: 0 0 0 40%;">
+                                            <label>Please select headers to import.</label><br>
+                                            <div><input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"> <b> I have a bike</b></div>
+
+                                        </div>
+                                    </div>
+                                    <div>
                                         <a href="<?= url('customer/') ?>">
                                             <button type="button" class="btn btn-primary btn-md" id="exportCustomers"><span class="fa fa-remove"></span> Cancel</button>
                                         </a>
@@ -265,6 +272,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     console.log(head);
                     $.each(csvHeaders,function(i,o){
                         console.log(o);
+                        $('#select_headers').append(
+                            '<div><input type="checkbox" id="vehicle1" name="'+i+'" value="'+o+'"> <b> '+o+'</b></div>'
+                        );
                     });
                 },
                 error: function (e) {

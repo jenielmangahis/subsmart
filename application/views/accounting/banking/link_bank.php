@@ -377,8 +377,6 @@
                                             </div>
                                         </div>
                                 </div>
-
-
                                 <div class="container modal-container paypal-container" style="display:none">
                                     <div class="row justify-content-md-center align-items-center pt-3">
                                         <div class="col-md-5 col-sm-6 col-xs-12">
@@ -436,6 +434,300 @@
             </div>
         </div>
 </div>
+<!--    Modal for creating rules-->
+<div class="modal-right-side createRuleModalRight" id="createRuleModalRight">
+    <div class="modal right fade" id="createRules" tabindex="" role="dialog" aria-labelledby="myModalLabel2">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="myModalLabel2" >Create rule</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <form id="addRuleForm">
+                    <div class="modal-body">
+
+                        <div class="formError">
+                            <div class="formError__inner">
+                                <i class="fa fa-info-circle"></i>
+                                <p>Something’s not quite right</p>
+                            </div>
+                        </div>
+
+                        <div class="subheader">Rules only apply to unreviewed transactions.</div>
+                        <div class="form-group">
+                            <label>What do you want to call this rule? *</label>
+                            <input
+                                    required
+                                    type="text"
+                                    name="rules_name"
+                                    class="form-control"
+                                    placeholder="Name this rule"
+                                    data-type="rules_name"
+                            >
+                        </div>
+                        <div class="form-group">
+                            <div>
+                                <label>Apply this to transactions that are</label>
+                            </div>
+                            <div class="createRuleModalRight__transactions">
+                                <div class="tab-select">
+                                    <select
+                                            name="apply_type"
+                                            class="form-control"
+                                            data-type="apply_type"
+                                    >
+                                        <option selected>Money in</option>
+                                        <option>Money out</option>
+                                    </select>
+                                </div>
+                                <span style="margin-right: 5px;margin-left: 5px;">in</span>
+                                <div class="tab-select">
+                                    <select name="apply_type" class="form-control" data-type="apply_type" required="">
+                                        <option value="">Select Bank Account</option>
+                                        <option value="all-bank-account">All bank accounts</option>
+                                        <option value="checking">Checking</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label style="position: relative;display: inline-block;">and include the following:</label>
+                            <select
+                                    name="include"
+                                    class="form-control inline-select"
+                                    data-type="include"
+                            >
+                                <option selected>All</option>
+                                <option>Any</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <div class="addCondition-container">
+                                <div id="addCondition" class="addCondition">
+                                    <div class="tab-select">
+                                        <input type="hidden" id="counterCondition" value="1">
+                                        <select
+                                                name="description[]"
+                                                class="form-control"
+                                                data-type="conditions.description"
+                                        >
+                                            <option selected>Description</option>
+                                            <option>Bank text</option>
+                                            <option>Amount</option>
+                                        </select>
+                                    </div>
+                                    <div class="tab-select">
+                                        <select
+                                                name="contain[]"
+                                                class="form-control"
+                                                style="max-width: 140px"
+                                                data-type="conditions.contain"
+                                        >
+                                            <option  selected>Contain</option>
+                                            <option>Doesn't contain</option>
+                                            <option>Is exactly</option>
+                                        </select>
+                                    </div>
+                                    <div class="tab-select" style="max-width: 140px">
+                                        <input
+                                                required
+                                                type="text"
+                                                name="comment[]"
+                                                class="form-control"
+                                                placeholder="Enter Text"
+                                                data-type="conditions.comment"
+                                        >
+                                    </div>
+                                    <div class="tab-select deleteCondition" id="deleteCondition" style="display: none;">
+                                        <a href="#" id="btnDeleteCondition"><i class="fa fa-trash fa-lg"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="margin-top: 15px;">
+                                <a href="#" id="btnAddCondition" style="color: #0b62a4;"><i class="fa fa-plus"></i> Add a condition</a>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Then assign</label>
+                            <div class="action-section">
+                                <span class="action-label">Transaction type</span>
+                                <select
+                                        name="trans_type"
+                                        class="form-control"
+                                        data-type="assignments.transaction_type"
+                                >
+                                    <option selected>Expenses</option>
+                                    <option>Transfer</option>
+                                    <option>Check</option>
+                                </select>
+                            </div>
+                            <div class="action-section" >
+                                <div id="categoryDefault">
+                                    <span class="action-label" style="margin-right: 70px">Category</span>
+                                    <div style="width: 220px;display: inline-block;">
+                                        <select
+                                                name="category[]"
+                                                id="mainCategory"
+                                                class="form-control select2-rules-category"
+                                                data-type="assignments.category"
+                                                data-main-category="true"
+                                                required
+                                        >
+                                            <!-- <option></option>
+                                            <option disabled>&plus; Add new</option>
+                                            <option>Advertising</option>
+                                            <option>Bad Debts</option>
+                                            <option>Bank Charges</option> -->
+                                        </select>
+                                    </div>
+                                    <span class="action-label d-none" style="margin-left: 5px;"><a href="#" id="btnAddSplit" style="color: #0b62a4;">Add split</a></span>
+                                </div>
+                                <!--Add Split Div-->
+                                <div class="add-split-container">
+                                    <div class="add-split-section">
+                                        <div class="split-header" style="margin-bottom: 12px;font-weight: bold">
+                                            Split detail #<span class="splitNum">1</span>
+                                            <a href="#" id="deleteSplitLine" style="float: right;right: 0;position: absolute;"><i class="fa fa-trash fa-lg"></i></a>
+                                        </div>
+                                        <div class="split-content">
+                                            <span class="split-category-text" >Percentage</span>
+                                            <input
+                                                    type="number"
+                                                    name="percentage[]"
+                                                    class="form-control"
+                                                    style="width: 205px"
+                                                    data-type="assignments.category_percent"
+                                                    required
+                                            >
+                                        </div>
+                                        <div class="split-content">
+                                            <span class="split-category-text">Category</span>
+                                            <div style="width: 220px;display: inline-block;">
+                                                <select
+                                                        name="category[]"
+                                                        class="form-control select2-rules-category"
+                                                        data-type="assignments.category"
+                                                        required
+                                                >
+                                                    <option></option>
+                                                    <option>Advertising</option>
+                                                    <option>Bad Debts</option>
+                                                    <option>Bank Charges</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <hr id="border-category">
+                                    </div>
+                                    <div class="add-split-section">
+                                        <div class="split-header" style="margin-bottom: 12px;font-weight: bold">
+                                            Split detail #<span class="splitNum">2</span>
+                                            <a href="#" id="deleteSplitLine" style="float: right;right: 0;position: absolute;"><i class="fa fa-trash fa-lg"></i></a>
+                                        </div>
+                                        <div class="split-content">
+                                            <span class="split-category-text" >Percentage</span>
+                                            <input
+                                                    type="number"
+                                                    name="percentage[]"
+                                                    class="form-control"
+                                                    style="width: 205px"
+                                                    data-type="assignments.category_percent"
+                                                    required
+                                            >
+                                        </div>
+                                        <div class="split-content">
+                                            <span class="split-category-text">Category</span>
+                                            <div style="width: 220px;display: inline-block;">
+                                                <select
+                                                        name="category[]"
+                                                        class="form-control select2-rules-category"
+                                                        data-type="assignments.category"
+                                                        required
+                                                >
+                                                    <option></option>
+                                                    <option>Advertising</option>
+                                                    <option>Bad Debts</option>
+                                                    <option>Bank Charges</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <hr id="border-category">
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="margin-left: 10px;margin-bottom: 10px;">
+                                <a href="#" id="btnAddLine"  style="color: #0b97c4;display: none;">Add a line</a>
+                            </div>
+                            <div class="action-section">
+                                <span class="action-label">Payee</span>
+                                <div style="width: 220px;display: inline-block;">
+                                    <select
+                                            name="payee"
+                                            class="form-control select2-rules-payee"
+                                            data-type="assignments.payee"
+                                    >
+                                        <!-- <option></option>
+                                        <option>Abacus Accounting</option>
+                                        <option>Absolute Power</option>
+                                        <option>ADSC</option> -->
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="action-section">
+                                <span class="action-label">Tags</span>
+                                <div style="width: 220px;display: inline-block;">
+                                    <select
+                                            id="accountingRulesTags"
+                                            name="tags"
+                                            class="form-control"
+                                            data-type="assignments.tags"
+                                            multiple="multiple"
+                                    >
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="action-section" id="assignMore" style="display: none;">
+                                <span class="action-label">Add memo</span>
+                                <textarea
+                                        name="memo"
+                                        cols="30"
+                                        rows="5"
+                                        placeholder="Enter Text"
+                                        style="resize: none;"
+                                        data-type="memo"
+                                ></textarea>
+                            </div>
+                            <div style="margin-top: 15px;">
+                                <a href="#" id="btnAssignMore" style="color: #0b62a4;"><i class="fa fa-plus"></i> Assign more</a>
+                            </div>
+                            <div style="margin-top: 15px;">
+                                <a href="#" style="display: none;color: #0b62a4;" id="btnClear"><i class="fa fa-trash"></i> Clear</a>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Automatically confirm transactions this rule applies to</label>
+                            <div class="custom-control custom-switch">
+                                <input
+                                        type="checkbox"
+                                        name="auto"
+                                        class="custom-control-input"
+                                        id="autoAddswitch"
+                                        data-type="auto"
+                                >
+                                <label class="custom-control-label" for="autoAddswitch">Auto-add</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-success" data-action="save">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!--    end of modal-->
 <footer class="footer">
     <div class="container-fluid">
         <div class="row">
