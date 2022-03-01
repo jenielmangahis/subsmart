@@ -18,13 +18,16 @@ class Plans extends MY_Controller {
 		$this->page_data['page']->title = 'Plans';
         $this->page_data['page']->parent = 'Sales';
         $role = logged('role');
-        if( $role == 1 || $role == 2 ){
+        /*if( $role == 1 || $role == 2 ){
         	$this->page_data['plans'] = $this->plans_model->getByWhere([]);
         }else{
         	$company_id =  logged('company_id');
 			$this->page_data['plans'] = $this->plans_model->getByWhere(['company_id'=>$company_id]);
-        }
+        }*/
         
+        $company_id =  logged('company_id');
+        $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id'=>$company_id]);
+
 		// ifPermissions('plan_list');
 
 		// $this->page_data['items'] = $this->items_model->get();
@@ -83,6 +86,7 @@ class Plans extends MY_Controller {
 			$discount = post('discount');
 			$type = post('item_type');
 			$location = post('location');
+			$tax = post('tax');
 
 			foreach(post('items') as $key=>$val) {
 
@@ -92,6 +96,7 @@ class Plans extends MY_Controller {
 					'item_type' => $type[$key],
 					'quantity'=> $quantity[$key],
 					//'location'=> $location[$key],
+					'tax' => $tax[$key],
 					'discount'=> $discount[$key],
 					'price' => $price[$key]
 				);
@@ -130,12 +135,15 @@ class Plans extends MY_Controller {
 			$discount = post('discount');
 			$type     = post('item_type');
 			$location = post('location');
+			$tax      = post('tax');
+			
 			foreach($items as $key=> $val) {				
 				$itemArray[] = array(
 					'item' => $val,
 					'item_id' => $item_ids[$key],
 					'item_type' => $type[$key],
 					'quantity'=> $quantity[$key],
+					'tax' => $tax[$key],
 					//'location'=> $location[$key],
 					'discount'=> $discount[$key],
 					'price' => $price[$key]

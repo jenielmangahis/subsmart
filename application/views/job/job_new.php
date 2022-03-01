@@ -662,7 +662,6 @@ add_css(array(
                                     <h6>Customer Info</h6>
                                     <select id="customer_id" name="customer_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select"  required>
                                         <option value="">Select Existing Customer</option>
-
                                     </select>
                                     <table id="customer_info" class="table">
                                         <thead>

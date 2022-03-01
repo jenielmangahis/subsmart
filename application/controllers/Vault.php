@@ -34,11 +34,7 @@ class Vault extends MY_Controller {
 	{
         $this->load->model('Before_after_model', 'before_after_model');
 		$comp_id = logged('company_id');
-		if( $role == 1 || $role == 2 ){
-			$this->page_data['photos'] = $this->before_after_model->getAll();
-		}else{
-			$this->page_data['photos'] = $this->before_after_model->getAllByCompanyId($comp_id);
-		}
+		$this->page_data['photos'] = $this->before_after_model->getAllByCompanyId($comp_id);
 		$this->load->view('vault/beforeafter', $this->page_data);
 	}
 

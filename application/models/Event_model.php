@@ -7,7 +7,7 @@ class Event_model extends MY_Model
     public $table = 'events';
     public $table_items = 'event_items';
 
-    public function get_all_events($limit=0)
+    public function get_all_events($limit=0, $conditions = array())
     {
         $cid=logged('company_id');
         $this->db->from($this->table);
@@ -15,6 +15,11 @@ class Event_model extends MY_Model
         $this->db->join('acs_profile', 'acs_profile.prof_id = events.customer_id','left');
         $this->db->join('users', 'users.id = events.employee_id','left');
         $this->db->where("events.company_id", $cid);
+        if( !empty($conditions) ){
+            foreach( $conditions as $key => $value ){
+                $this->db->where($value['field'], $value['value']);
+            }
+        }
         $this->db->order_by('id', "DESC");
         if($limit > 0){
             $this->db->limit($limit);

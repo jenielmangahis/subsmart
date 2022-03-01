@@ -1,5 +1,6 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed');?>
 <?php include viewPath('includes/header');?>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/1.18.0/TweenMax.min.js"></script>
 
 <div class="wrapper docusignSent" role="wrapper">
     <?php include viewPath('includes/sidebars/docusign');?>
