@@ -11,7 +11,7 @@ window.document.addEventListener("DOMContentLoaded", async () => {
   $customerName.textContent = `${customer.first_name} ${customer.last_name}`;
 
   Promise.all([initCategories(), initLetters()]).then(() => {
-    handleSubmit();
+    handleSubmit(customer);
     document.querySelector(".wrapper").classList.remove("wrapper--loading");
   });
 });
@@ -54,10 +54,50 @@ async function initLetters(categoryId) {
   });
 }
 
-function handleSubmit() {
+function handleSubmit(customer) {
   const $form = document.getElementById("selectLetterForm");
   const $letterSelect = $form.querySelector("#letter");
+  const $button = $form.querySelector(".btn-primary");
+  const $exportAsPDFLink = $form.querySelector(".wizardForm__step2 .link");
 
-  console.clear();
-  console.log($letterSelect.value);
+  const exportAsPDF = (payload) => async (event) => {
+    event.preventDefault();
+    await window.api.exportLetterAsPDF(payload);
+  };
+
+  $button.addEventListener("click", async () => {
+    const letterId = Number($letterSelect.value);
+    if (Number.isNaN(letterId) || letterId <= 0) {
+      return;
+    }
+
+    const { data: letter } = await window.api.getLetter(letterId);
+    const $letter = $("#letterContent");
+    $letter.summernote({
+      placeholder: "Type Here ... ",
+      tabsize: 2,
+      height: 450,
+      toolbar: [
+        ["style", ["style"]],
+        ["font", ["bold", "italic", "underline", "strikethrough", "clear"]],
+        ["fontname", ["fontname"]],
+        ["fontsize", ["fontsize"]],
+        ["para", ["ol", "ul", "paragraph", "height"]],
+        ["table", ["table"]],
+        ["insert", ["link"]],
+        ["view", ["undo", "redo", "fullscreen"]],
+      ],
+    });
+    $letter.summernote("code", letter.content);
+    $form.classList.add("wizardForm--step2");
+
+    $exportAsPDFLink.removeEventListener("click", exportAsPDF);
+    $exportAsPDFLink.addEventListener(
+      "click",
+      exportAsPDF({
+        letter_id: letter.id,
+        customer_id: customer.prof_id,
+      })
+    );
+  });
 }

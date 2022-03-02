@@ -160,3 +160,19 @@
     margin: 0;
   }
 }
+
+.wizardForm {
+  .wizardForm__step2 {
+    display: none;
+  }
+
+  &--step2 {
+    .wizardForm__step1 {
+      display: none;
+    }
+
+    .wizardForm__step2 {
+      display: block;
+    }
+  }
+}

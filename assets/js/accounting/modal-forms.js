@@ -8397,6 +8397,26 @@ const viewTransaction = (el) => {
 
                 $('#creditMemoModal').modal('show');
             break;
+            case 'sales-receipt' :
+                initModalFields('salesReceiptModal', data);
+
+                $('#salesReceiptModal').modal('show');
+            break;
+            case 'refund-receipt' :
+                initModalFields('refundReceiptModal', data);
+
+                $('#refundReceiptModal').modal('show');
+            break;
+            case 'delayed-credit' :
+                initModalFields('delayedCreditModal', data);
+
+                $('#delayedCreditModal').modal('show');
+            break;
+            case 'delayed-charge' :
+                initModalFields('delayedChargeModal', data);
+
+                $('#delayedChargeModal').modal('show');
+            break;
         }
     });
 }

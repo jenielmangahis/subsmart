@@ -60,13 +60,23 @@
                                                 AMOUNT
                                             </h6>
                                             <h2 class="text-right">
-                                                <span class="transaction-grand-total">$0.00</span>
+                                                <span class="transaction-grand-total">
+                                                <?php if(isset($charge)) : ?>
+                                                    <?php
+                                                    $amount = '$'.number_format(floatval($charge->total_amount), 2, '.', ',');
+                                                    $amount = str_replace('$-', '-$', $amount);
+                                                    echo $amount;
+                                                    ?>
+                                                <?php else : ?>
+                                                    $0.00
+                                                <?php endif; ?>
+                                                </span>
                                             </h2>
                                         </div>
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="delayed-charge-date">Delayed Charge date</label>
-                                                <input type="text" name="delayed_charge_date" id="delayed-charge-date" class="form-control date" value="<?=isset($charge) ? $charge->delayed_charge_date : date("m/d/Y")?>">
+                                                <input type="text" name="delayed_charge_date" id="delayed-charge-date" class="form-control date" value="<?=isset($charge) ? date("m/d/Y", strtotime($charge->delayed_charge_date)) : date("m/d/Y")?>">
                                             </div>
                                         </div>
                                     </div>
@@ -78,7 +88,20 @@
                                                     <label for="tags">Tags</label>
                                                     <span class="float-right"><a href="#" class="text-info" data-toggle="modal" data-target="#tags-modal" id="open-tags-modal">Manage tags</a></span>
                                                 </div>
-                                                <select name="tags[]" id="tags" class="form-control" multiple="multiple"></select>
+                                                <select name="tags[]" id="tags" class="form-control" multiple="multiple">
+                                                    <?php if(isset($tags) && count($tags) > 0) : ?>
+                                                        <?php foreach($tags as $tag) : ?>
+                                                            <?php 
+                                                                $name = $tag->name;
+                                                                if($tag->group_tag_id !== null) {
+                                                                    $group = $this->tags_model->getGroupById($tag->group_tag_id);
+                                                                    $name = $group->name.': '.$tag->name;
+                                                                }
+                                                            ?>
+                                                            <option value="<?=$tag->id?>" selected><?=$name?></option>
+                                                        <?php endforeach; ?>
+                                                    <?php endif; ?>
+                                                </select>
                                             </div>
                                         </div>
                                     </div>
@@ -99,7 +122,45 @@
                                                             <th>TOTAL</th>
                                                             <th width="3%"></th>
                                                         </thead>
-                                                        <tbody></tbody>
+                                                        <tbody>
+                                                            <?php if(isset($items) && count($items) > 0) : ?>
+                                                                <?php foreach($items as $item) : ?>
+                                                                    <?php $itemDetails = $this->items_model->getItemById($item->item_id)[0];?>
+                                                                    <?php $locations = $this->items_model->getLocationByItemId($item->item_id);?>
+                                                                    <tr>
+                                                                        <td><?=$itemDetails->title?><input type="hidden" name="item[]" value="<?=$item->item_id?>"></td>
+                                                                        <td><?=ucfirst($itemDetails->type)?></td>
+                                                                        <td>
+                                                                            <?php if($itemDetails->type === 'product' || $itemDetails->type === 'item') : ?>
+                                                                            <select name="location[]" class="form-control" required>
+                                                                                <?php foreach($locations as $location) : ?>
+                                                                                    <option value="<?=$location['id']?>" <?=$item->location_id === $location['id'] ? 'selected' : ''?>><?=$location['name']?></option>
+                                                                                <?php endforeach; ?>
+                                                                            </select>
+                                                                            <?php endif; ?>
+                                                                        </td>
+                                                                        <td><input type="number" name="quantity[]" class="form-control text-right" required value="<?=$item->quantity?>"></td>
+                                                                        <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="<?=number_format(floatval($item->price), 2, '.', ',')?>"></td>
+                                                                        <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="<?=number_format(floatval($item->discount), 2, '.', ',')?>"></td>
+                                                                        <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="<?=number_format(floatval($item->tax), 2, '.', ',')?>"></td>
+                                                                        <td>
+                                                                            <span class="row-total">
+                                                                                <?php
+                                                                                    $rowTotal = '$'.number_format(floatval($item->total), 2, '.', ',');
+                                                                                    $rowTotal = str_replace('$-', '-$', $rowTotal);
+                                                                                    echo $rowTotal;
+                                                                                ?>
+                                                                            </span>
+                                                                        </td>
+                                                                        <td>
+                                                                            <div class="d-flex align-items-center justify-content-center">
+                                                                                <a href="#" class="deleteRow"><i class="fa fa-trash"></i></a>
+                                                                            </div>
+                                                                        </td>
+                                                                    </tr>
+                                                                <?php endforeach; ?>
+                                                            <?php endif; ?>
+                                                        </tbody>
                                                     </table>
                                                 </div>
                                                 <div class="delayed-charge-item-table-footer">
@@ -143,29 +204,89 @@
                                                 <tbody>
                                                     <tr>
                                                         <td>Subtotal</td>
-                                                        <td class="w-25"><span class="transaction-subtotal">$0.00</span></td>
+                                                        <td class="w-25">
+                                                            <span class="transaction-subtotal">
+                                                            <?php if(isset($charge)) : ?>
+                                                                <?php
+                                                                $amount = '$'.number_format(floatval($charge->subtotal), 2, '.', ',');
+                                                                $amount = str_replace('$-', '-$', $amount);
+                                                                echo $amount;
+                                                                ?>
+                                                            <?php else : ?>
+                                                                $0.00
+                                                            <?php endif; ?>
+                                                            </span>
+                                                        </td>
                                                     </tr>
                                                     <tr>
                                                         <td>Taxes</td>
-                                                        <td class="w-25"><span class="transaction-taxes">$0.00</span></td>
+                                                        <td class="w-25">
+                                                            <span class="transaction-taxes">
+                                                            <?php if(isset($charge)) : ?>
+                                                                <?php
+                                                                $amount = '$'.number_format(floatval($charge->tax_total), 2, '.', ',');
+                                                                $amount = str_replace('$-', '-$', $amount);
+                                                                echo $amount;
+                                                                ?>
+                                                            <?php else : ?>
+                                                                $0.00
+                                                            <?php endif; ?>
+                                                            </span>
+                                                        </td>
                                                     </tr>
                                                     <tr>
                                                         <td>Discounts</td>
-                                                        <td class="w-25"><span class="transaction-discounts">$0.00</span></td>
+                                                        <td class="w-25">
+                                                            <span class="transaction-discounts">
+                                                            <?php if(isset($charge)) : ?>
+                                                                <?php
+                                                                $amount = '$'.number_format(floatval($charge->discount_total), 2, '.', ',');
+                                                                $amount = str_replace('$-', '-$', $amount);
+                                                                echo $amount;
+                                                                ?>
+                                                            <?php else : ?>
+                                                                $0.00
+                                                            <?php endif; ?>
+                                                            </span>
+                                                        </td>
                                                     </tr>
                                                     <tr>
                                                         <td class="d-flex align-items-center justify-content-end">
-                                                            <input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control w-50 mr-2">
-                                                            <input type="number" name="adjustment_value" id="adjustment_input_cm" step=".01" class="form-control adjustment_input_cm_c w-25 mr-2" onchange="convertToDecimal(this)">
+                                                            <input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control w-50 mr-2" value="<?=isset($charge) ? $charge->adjustment_name : ''?>">
+                                                            <input type="number" name="adjustment_value" id="adjustment_input_cm" step=".01" class="form-control adjustment_input_cm_c w-25 mr-2" onchange="convertToDecimal(this)" value="<?=isset($charge) ? number_format(floatval($charge->adjustment_value), 2, '.', ',') : ''?>">
                                                             <span class="fa fa-question-circle" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Optional it allows you to adjust the total amount Eg. +10 or -10." data-original-title="" title=""></span>
                                                         </td>
-                                                        <td class="w-25"><span class="transaction-adjustment">$0.00</span></td>
+                                                        <td class="w-25">
+                                                            <span class="transaction-adjustment">
+                                                            <?php if(isset($charge)) : ?>
+                                                                <?php
+                                                                $amount = '$'.number_format(floatval($charge->adjustment_value), 2, '.', ',');
+                                                                $amount = str_replace('$-', '-$', $amount);
+                                                                echo $amount;
+                                                                ?>
+                                                            <?php else : ?>
+                                                                $0.00
+                                                            <?php endif; ?>
+                                                            </span>
+                                                        </td>
                                                     </tr>
                                                 </tbody>
                                                 <tfoot>
                                                     <tr>
                                                         <td>Grand Total ($)</td>
-                                                        <td class="w-25"><span class="transaction-grand-total">$0.00</span></td>
+                                                        <td class="w-25">
+                                                            <span class="transaction-grand-total">
+                                                            <?php if(isset($charge)) : ?>
+                                                                <?php
+                                                                $amount = '$'.number_format(floatval($charge->total_amount), 2, '.', ',');
+                                                                $amount = str_replace('$-', '-$', $amount);
+                                                                echo $amount;
+                                                                ?>
+                                                            <?php else : ?>
+                                                                $0.00
+                                                            <?php endif; ?>
+                                                            </span>
+                                                        </td>
                                                     </tr>
                                                 </tfoot>
                                             </table>
@@ -182,8 +303,23 @@
                         <div class="col-md-4">
                             <button type="button" class="btn btn-secondary btn-rounded border" data-dismiss="modal">Close</button>
                         </div>
-                        <div class="col-md-4 d-flex">
+                        <div class="col-md-4 <?=!isset($charge) ? 'd-flex' : ''?>">
+                            <?php if(!isset($charge)) : ?>
                             <a href="#" class="text-white m-auto" onclick="makeRecurring('delayed_charge')">Make Recurring</a>
+                            <?php else : ?>
+                            <a href="#" class="text-white" onclick="makeRecurring('delayed_charge')">Make Recurring</a>
+                            <span class="mx-3 divider"></span>
+                            <span>
+                                <div class="dropup">
+                                    <a href="javascript:void(0);" class="text-white" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="#" id="copy-delayed-charge">Copy</a>
+                                        <a class="dropdown-item" href="#" id="delete-delayed-charge">Delete</a>
+                                        <a class="dropdown-item" href="#">Audit history</a>
+                                    </div>
+                                </div>
+                            </span>
+                            <?php endif; ?>
                         </div>
                         <div class="col-md-4">
                             <!-- Split dropup button -->

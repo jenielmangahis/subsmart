@@ -34,6 +34,7 @@ $(document).ready(function() {
                         success: function(data) {
                             var html_temp = "";
                             var html_temp2 = "";
+                            var html_temp3 = "";
 
                             for (let index = 0; index < data.titles.length; index++) {
                                 html_temp2 = "";
@@ -47,8 +48,8 @@ $(document).ready(function() {
                                         </label>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <select>`;
+                                <div class="col-md-6 align">
+                                    <select class="selected` + index + `">`;
                                 for (let index1 = 0; index1 < data.table_column_names.length; index1++) {
                                     var holder = "";
                                     var count;
@@ -57,6 +58,9 @@ $(document).ready(function() {
 
                                     if ((data.titles[index].split(' ').join('_') == data.table_column_names[index1]) || (data.titles[index].split('-').join('_') == data.table_column_names[index1])) {
                                         selected = "selected";
+
+                                    } else {
+
                                     }
 
 
@@ -77,25 +81,41 @@ $(document).ready(function() {
                                 }
 
 
-                                html_temp += html_temp2 + `</select> <h6>
-                                </h6>
+                                html_temp += html_temp2 + `</select> <div class="label"><p class="label` + index + `"></p></div><input style="display:none;" type="text" class="send"` + index + `>
+
                                 </div>
                                 </div>
                              `;
+                                $("body").delegate("#holder-step-2 select", "change", function() {
+                                    var select = $(this).val();
+                                    var cName = $(this).attr('class');
+                                    var num = cName.substring(8);
+                                    var column_N = data.titles[num];
+                                    var selection = ""
 
-                                let selection = document.querySelector('select');
-                                let result = document.getElementById('h4');
+                                    for (let index2 = 0; index2 < data.table_column_names.length; index2++) {
+                                        if ((data.titles[index].split(' ').join('_') == data.table_column_names[index2]) || (data.titles[index].split('-').join('_') == data.table_column_names[index2])) {
+                                            selection = "selected";
 
-                                selection.addEventListener('change', () => {
-                                    result.innerText = selection.options[selection.selectedIndex].text;
-                                })
+                                        }
+                                    }
 
+                                    if (select == "Add Column" && selection == "selected") {
+                                        column_N += "_1"
+                                        $("#holder-step-2 .label" + num + "").text(column_N);
+                                        $("#holder-step-2 .send").val() = column_N;
 
+                                    } else if (select == "Add Column" && selection == "") {
+                                        $("#holder-step-2 .label" + num + "").text(column_N);
+                                        $("#holder-step-2 .send").val() = column_N;
 
-
+                                    } else if (select != "Add Column") {
+                                        $("#holder-step-2 .label" + num + "").text(" ");
+                                        $("#holder-step-2 .send").val() = "";
+                                    }
+                                });
 
                             }
-
 
 
                             $("#holder-step-2 .form-check").html(html_temp);
@@ -109,7 +129,9 @@ $(document).ready(function() {
                         },
                     });
 
+
                 }
+
             });
             this.on("addedfile", function() {
                 $("#import-customers-modal .dz-image img").attr("src", baseURL + "assets/img/accounting/customers/excel.png");
@@ -138,6 +160,19 @@ $(document).ready(function() {
 
     });
 
+
+
+    /*get value of selected option*/
+
+    // $("body").delegate("#holder-step-2 select", "change", function() {
+
+    //     var select = $(this).val();
+    //     if (select == "Add Column") {
+    //         $("#holder-step-2 .label").text(select);
+    //     } else if (select != "Add Column") {
+    //         $("#holder-step-2 .label").text(" ");
+    //     }
+    // });
 
 
     /* For Progress Bar Javascript*/

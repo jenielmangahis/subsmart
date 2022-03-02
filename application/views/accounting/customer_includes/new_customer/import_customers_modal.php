@@ -43,12 +43,12 @@
                                 </div>
                                 <!--2nd Row-->
 
-                                <div class="row">
+                                <div class="row marg">
                                     <div class="col-md-6">
-                                        <h3>Checkbox</h3>
+                                        <h3 class="margi">Checkbox</h3>
                                     </div>
                                     <div class="col-md-6">
-                                        <h3>Select</h3>
+                                        <h3 class="margi">Select</h3>
                                     </div>
                                 </div>
 
@@ -58,7 +58,7 @@
 
 
 
-                            <input type="button" name="next-step" class="next-step" value="Next Step" />
+                            <input type="button" name="next-step" class="next-step" value="Save Now" />
                             <input type="button" name="previous-step" class="previous-step" value="Previous Step" />
                         </fieldset>
                         <fieldset id="holder-step-2">

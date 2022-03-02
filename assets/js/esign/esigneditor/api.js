@@ -57,6 +57,10 @@ export function getCustomer(id) {
   return http.get(`${prefixURL}/EsignEditor/apiGetCustomer/${id}`);
 }
 
+export function exportLetterAsPDF(payload) {
+  return http.post(`${prefixURL}/EsignEditor/apiExportLetterAsPDF`, payload);
+}
+
 const http = {
   post: sendPost,
   delete: sendDelete,

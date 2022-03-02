@@ -10,7 +10,7 @@ div#import-customers-modal {
 
 #import-customers-modal .modal-body {
     background: #ffffff;
-    width: 900px !important;
+    width: 1050px !important;
     height: 650px;
     position: fixed;
     top: 50%;
@@ -309,11 +309,37 @@ div#import-customers-modal {
 
 #import-customers-modal #holder-step-2 .row select {
     padding: 5px;
-    width: 300px;
+    width: 275px;
     font-size: 13px;
 }
 
 #import-customers-modal .form-check {
     text-align: left !important;
-    margin-left: 20px;
+    margin-left: 40px;
+}
+
+#import-customers-modal .form-check .row .align {
+    display: flex !important;
+    ;
+}
+
+#import-customers-modal .marg {
+    text-align: left;
+    margin-left: 140px;
+}
+
+#import-customers-modal .marg {
+    text-align: left;
+    margin-left: 18px;
+}
+
+#import-customers-modal .margi {
+    margin-left: 120px;
+}
+
+#import-customers-modal #holder-step-2 .row .label {
+    font-size: 12px;
+    padding-left: 20px;
+    padding-top: 10px;
+    color: rgb(92, 84, 84) !important;
 }
