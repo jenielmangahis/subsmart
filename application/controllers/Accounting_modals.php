@@ -5404,6 +5404,9 @@ class Accounting_modals extends MY_Controller
                 'adjustment_name' => $data['adjustment_name'],
                 'adjustment_value' => $data['adjustment_value'],
                 'total_amount' => $data['total_amount'],
+                'subtotal' => $data['subtotal'],
+                'tax_total' => $data['tax_total'],
+                'discount_total' => $data['discount_total'],
                 'recurring' => isset($data['template_name']) ? 1 : null,
                 'status' => 1
             ];
@@ -5676,6 +5679,9 @@ class Accounting_modals extends MY_Controller
                 'adjustment_name' => $data['adjustment_name'],
                 'adjustment_value' => $data['adjustment_value'],
                 'total_amount' => $data['total_amount'],
+                'subtotal' => $data['subtotal'],
+                'tax_total' => $data['tax_total'],
+                'discount_total' => $data['discount_total'],
                 'recurring' => isset($data['template_name']) ? 1 : null,
                 'status' => 1
             ];
@@ -5939,6 +5945,9 @@ class Accounting_modals extends MY_Controller
                 'adjustment_name' => $data['adjustment_name'],
                 'adjustment_value' => $data['adjustment_value'],
                 'total_amount' => $data['total_amount'],
+                'subtotal' => $data['subtotal'],
+                'tax_total' => $data['tax_total'],
+                'discount_total' => $data['discount_total'],
                 'recurring' => isset($data['template_name']) ? 1 : null,
                 'status' => 1
             ];
@@ -6144,6 +6153,9 @@ class Accounting_modals extends MY_Controller
                 'adjustment_name' => $data['adjustment_name'],
                 'adjustment_value' => $data['adjustment_value'],
                 'total_amount' => $data['total_amount'],
+                'subtotal' => $data['subtotal'],
+                'tax_total' => $data['tax_total'],
+                'discount_total' => $data['discount_total'],
                 'recurring' => isset($data['template_name']) ? 1 : null,
                 'status' => 1
             ];
@@ -8933,6 +8945,18 @@ class Accounting_modals extends MY_Controller
             case 'credit-memo' :
                 $this->view_credit_memo($transactionId);
             break;
+            case 'sales-receipt' :
+                $this->view_sales_receipt($transactionId);
+            break;
+            case 'refund-receipt' :
+                $this->view_refund_receipt($transactionId);
+            break;
+            case 'delayed-credit' :
+                $this->view_delayed_credit($transactionId);
+            break;
+            case 'delayed-charge' :
+                $this->view_delayed_charge($transactionId);
+            break;
         }
     }
 
@@ -9298,6 +9322,52 @@ class Accounting_modals extends MY_Controller
         $this->page_data['tags'] = $this->tags_model->get_transaction_tags('Credit Memo', $creditMemoId);
 
         $this->load->view("accounting/modals/credit_memo_modal", $this->page_data);
+    }
+
+    private function view_sales_receipt($salesReceiptId)
+    {
+        $salesReceipt = $this->accounting_sales_receipt_model->getSalesReceiptDetails_by_id($salesReceiptId);
+        $items = $this->accounting_credit_memo_model->get_customer_transaction_items('Sales Receipt', $salesReceiptId);
+
+        $this->page_data['receipt'] = $salesReceipt;
+        $this->page_data['items'] = $items;
+        $this->page_data['tags'] = $this->tags_model->get_transaction_tags('Sales Receipt', $salesReceiptId);
+        $this->load->view("accounting/modals/sales_receipt_modal", $this->page_data);
+    }
+
+    private function view_refund_receipt($refundReceiptId)
+    {
+        $refundReceipt = $this->accounting_refund_receipt_model->getRefundReceiptDetails_by_id($refundReceiptId);
+        $items = $this->accounting_credit_memo_model->get_customer_transaction_items('Refund Receipt', $refundReceiptId);
+        $refundAcc = $this->chart_of_accounts_model->getById($refundReceipt->refund_from_account);
+
+        $this->page_data['receipt'] = $refundReceipt;
+        $this->page_data['items'] = $items;
+        $this->page_data['tags'] = $this->tags_model->get_transaction_tags('Refund Receipt', $refundReceiptId);
+        $this->page_data['refundAcc'] = $refundAcc;
+        $this->load->view("accounting/modals/refund_receipt_modal", $this->page_data);
+    }
+
+    private function view_delayed_credit($delayedCreditId)
+    {
+        $delayedCredit = $this->accounting_delayed_credit_model->getDelayedCreditDetails($delayedCreditId);
+        $items = $this->accounting_credit_memo_model->get_customer_transaction_items('Delayed Credit', $delayedCreditId);
+
+        $this->page_data['credit'] = $delayedCredit;
+        $this->page_data['items'] = $items;
+        $this->page_data['tags'] = $this->tags_model->get_transaction_tags('Delayed Credit', $delayedCreditId);
+        $this->load->view("accounting/modals/delayed_credit_modal", $this->page_data);
+    }
+
+    private function view_delayed_charge($delayedChargeId)
+    {
+        $delayedCharge = $this->accounting_delayed_charge_model->getDelayedChargeDetails($delayedChargeId);
+        $items = $this->accounting_credit_memo_model->get_customer_transaction_items('Delayed Charge', $delayedChargeId);
+
+        $this->page_data['charge'] = $delayedCharge;
+        $this->page_data['items'] = $items;
+        $this->page_data['tags'] = $this->tags_model->get_transaction_tags('Delayed Charge', $delayedChargeId);
+        $this->load->view("accounting/modals/delayed_charge_modal", $this->page_data);
     }
 
     public function load_bills_payed($billPaymentId)
@@ -12695,16 +12765,16 @@ class Accounting_modals extends MY_Controller
                     return strtotime($b->created_at) > strtotime($a->created_at);
                 });
 
-                foreach($transactions as $receipt) {
-                    $amount = '$'.number_format(floatval($receipt->total_amount), 2, '.', ',');
-                    $customer = $this->accounting_customers_model->get_by_id($receipt->customer_id);
+                foreach($transactions as $credit) {
+                    $amount = '$'.number_format(floatval($credit->total_amount), 2, '.', ',');
+                    $customer = $this->accounting_customers_model->get_by_id($credit->customer_id);
                     $name = $customer->first_name . ' ' . $customer->last_name;
 
                     if(count($data) < 10) {
                         $data[] = [
-                            'id' => $receipt->id,
-                            'type' => !in_array($receipt->ref_no, ['', null, '0']) ? 'Delayed Credit No.'.$receipt->ref_no : 'Delayed Credit',
-                            'date' => date("m/d/Y", strtotime($receipt->delayed_credit_date)),
+                            'id' => $credit->id,
+                            'type' => !in_array($credit->ref_no, ['', null, '0']) ? 'Delayed Credit No.'.$credit->ref_no : 'Delayed Credit',
+                            'date' => date("m/d/Y", strtotime($credit->delayed_credit_date)),
                             'amount' => str_replace('$-', '-$', $amount),
                             'name' => $name
                         ];
@@ -12717,16 +12787,16 @@ class Accounting_modals extends MY_Controller
                     return strtotime($b->created_at) > strtotime($a->created_at);
                 });
 
-                foreach($transactions as $receipt) {
-                    $amount = '$'.number_format(floatval($receipt->total_amount), 2, '.', ',');
-                    $customer = $this->accounting_customers_model->get_by_id($receipt->customer_id);
+                foreach($transactions as $charge) {
+                    $amount = '$'.number_format(floatval($charge->total_amount), 2, '.', ',');
+                    $customer = $this->accounting_customers_model->get_by_id($charge->customer_id);
                     $name = $customer->first_name . ' ' . $customer->last_name;
 
                     if(count($data) < 10) {
                         $data[] = [
-                            'id' => $receipt->id,
-                            'type' => !in_array($receipt->ref_no, ['', null, '0']) ? 'Delayed Charge No.'.$receipt->ref_no : 'Delayed Charge',
-                            'date' => date("m/d/Y", strtotime($receipt->delayed_charge_date)),
+                            'id' => $charge->id,
+                            'type' => !in_array($charge->ref_no, ['', null, '0']) ? 'Delayed Charge No.'.$charge->ref_no : 'Delayed Charge',
+                            'date' => date("m/d/Y", strtotime($charge->delayed_charge_date)),
                             'amount' => str_replace('$-', '-$', $amount),
                             'name' => $name
                         ];

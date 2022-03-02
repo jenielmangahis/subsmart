@@ -736,6 +736,7 @@ class Accounting extends MY_Controller
 
 
         $table_column_names = $this->accounting_customers_model->get_users_table_column_names();
+        array_unshift($table_column_names, " ");
         array_push($table_column_names, "Add Column");
 
         $data = new stdClass();

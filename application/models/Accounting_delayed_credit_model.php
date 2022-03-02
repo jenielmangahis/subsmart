@@ -44,7 +44,7 @@ class Accounting_delayed_credit_model extends MY_Model
     }
     public function getDelayedCreditDetails($id)
     {
-        $query = $this->db->get_where('accounting_delayed_Credit', array('id' => $id));
+        $query = $this->db->get_where('accounting_delayed_credit', array('id' => $id));
         return $query->row();
     }
 	public function delete_delayed_credit_items($delayed_credit_id)

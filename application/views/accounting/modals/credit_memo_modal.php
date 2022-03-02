@@ -168,11 +168,13 @@
                                                                         <td><?=$itemDetails->title?><input type="hidden" name="item[]" value="<?=$item->item_id?>"></td>
                                                                         <td><?=ucfirst($itemDetails->type)?></td>
                                                                         <td>
+                                                                            <?php if($itemDetails->type === 'product' || $itemDetails->type === 'item') : ?>
                                                                             <select name="location[]" class="form-control" required>
                                                                                 <?php foreach($locations as $location) : ?>
                                                                                     <option value="<?=$location['id']?>" <?=$item->location_id === $location['id'] ? 'selected' : ''?>><?=$location['name']?></option>
                                                                                 <?php endforeach; ?>
                                                                             </select>
+                                                                            <?php endif; ?>
                                                                         </td>
                                                                         <td><input type="number" name="quantity[]" class="form-control text-right" required value="<?=$item->quantity?>"></td>
                                                                         <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="<?=number_format(floatval($item->price), 2, '.', ',')?>"></td>
@@ -243,17 +245,19 @@
                                                 <tbody>
                                                     <tr>
                                                         <td>Subtotal</td>
-                                                        <td class="w-25"><span class="transaction-subtotal">
-                                                        <?php if(isset($creditMemo)) : ?>
-                                                            <?php
-                                                            $amount = '$'.number_format(floatval($creditMemo->subtotal), 2, '.', ',');
-                                                            $amount = str_replace('$-', '-$', $amount);
-                                                            echo $amount;
-                                                            ?>
-                                                        <?php else : ?>
-                                                            $0.00
-                                                        <?php endif; ?>
-                                                        </span></td>
+                                                        <td class="w-25">
+                                                            <span class="transaction-subtotal">
+                                                            <?php if(isset($creditMemo)) : ?>
+                                                                <?php
+                                                                $amount = '$'.number_format(floatval($creditMemo->subtotal), 2, '.', ',');
+                                                                $amount = str_replace('$-', '-$', $amount);
+                                                                echo $amount;
+                                                                ?>
+                                                            <?php else : ?>
+                                                                $0.00
+                                                            <?php endif; ?>
+                                                            </span>
+                                                        </td>
                                                     </tr>
                                                     <tr>
                                                         <td>Taxes</td>
@@ -289,7 +293,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td class="d-flex align-items-center justify-content-end">
-                                                            <input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control w-50 mr-2" value="<?=isset($creditMemo) ? number_format(floatval($creditMemo->adjustment_name), 2, '.', ',') : ''?>">
+                                                            <input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control w-50 mr-2" value="<?=isset($creditMemo) ? $creditMemo->adjustment_name : ''?>">
                                                             <input type="number" name="adjustment_value" id="adjustment_input_cm" step=".01" class="form-control adjustment_input_cm_c w-25 mr-2" onchange="convertToDecimal(this)" value="<?=isset($creditMemo) ? number_format(floatval($creditMemo->adjustment_value), 2, '.', ',') : ''?>">
                                                             <span class="fa fa-question-circle" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Optional it allows you to adjust the total amount Eg. +10 or -10." data-original-title="" title=""></span>
                                                         </td>

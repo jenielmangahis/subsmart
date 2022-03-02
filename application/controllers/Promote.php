@@ -116,7 +116,9 @@ class Promote extends MY_Controller {
         $dealsSteals = $this->DealsSteals_model->getById($deals_steals_id);
         $customers   = $this->Customer_model->getAllByCompany($cid);            
         $customerGroups = $this->CustomerGroup_model->getAllByCompany($cid);
-        
+
+        $selectedExcludes = unserialize($dealsSteals->exclude_customer_groups);
+
         $this->page_data['dealsSteals'] = $dealsSteals;
         $this->page_data['selectedCustomer'] = unserialize($dealsSteals->certain_customers);
         $this->page_data['selectedGroups']   = unserialize($dealsSteals->certain_groups);
@@ -145,7 +147,7 @@ class Promote extends MY_Controller {
                 //Use optionB data    
                 if( isset($post['optionB']['customer_id']) ){
                     foreach( $post['optionB']['customer_id'] as $key => $value ){
-                    	$data_customers[] = $value;
+                    	$data_customers[$value] = $value;
                     }
                 }
                 
@@ -161,7 +163,7 @@ class Promote extends MY_Controller {
 
         if( isset($post['optionA']['exclude_customer_group_id']) ){
         	foreach( $post['optionA']['exclude_customer_group_id'] as $key => $value ){
-            	$data_exclude_groups[] = $value;
+            	$data_exclude_groups[$value] = $value;
             }
         }
 

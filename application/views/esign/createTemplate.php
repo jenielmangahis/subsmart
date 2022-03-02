@@ -1,7 +1,7 @@
 <?php
+error_reporting(E_ALL ^ E_WARNING); 
 defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header');
-
 ini_set('max_input_vars', 30000);
 
 ?>

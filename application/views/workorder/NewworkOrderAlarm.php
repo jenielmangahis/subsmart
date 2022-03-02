@@ -576,7 +576,7 @@ border: none;
 							 <div class="row" id="group_area">
                                 <div class="col-md-3 form-group">
                                     <label for="contact_name" class="label-element">Work Order #</label>
-                                    <input type="text" class="form-control input-element" name="workorder_number" id="contact_name" value="<?php echo "WO-"; 
+<!--                                     <input type="text" class="form-control input-element" name="workorder_number" id="contact_name" value="<?php echo "WO-"; 
                                             foreach ($number as $num):
                                                     $next = $num->work_order_number;
                                                     $arr = explode("-", $next);
@@ -586,7 +586,9 @@ border: none;
                                             endforeach;
                                             $val = $nextNum + 1;
                                             echo str_pad($val,7,"0",STR_PAD_LEFT);
-                                            ?>" required readonly/>
+                                            ?>" required readonly/> -->
+
+                                        <input type="text" class="form-control input-element" name="workorder_number" id="workorder-number" value="<?= $prefix . $next_num; ?>" required readonly/>
                                 </div>
 								<div class="col-md-12">
 									<div class="row">

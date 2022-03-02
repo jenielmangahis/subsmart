@@ -16,6 +16,10 @@ ini_set('max_input_vars', 30000);
     .notFavorite {
         color : black;
     }
+    label>input {
+      visibility: initial !important;
+      position: initial !important; 
+    }
 </style>
 <div class="wrapper library" role="wrapper">
 		<div>
@@ -46,7 +50,7 @@ ini_set('max_input_vars', 30000);
                     </select>
                 </div>
             </div>
-            <table id="myTable" class="display">
+            <table id="esign-table" class="display">
                 <thead>
                     <tr>
                         <th>Title</th>
@@ -114,7 +118,7 @@ ini_set('max_input_vars', 30000);
                 reloadDataTable();
             });
 
-            let table = $('#myTable').DataTable({
+            let table = $('#esign-table').DataTable({
                 columnDefs: [
                   { orderable: false, targets: -1 },
                   { orderable: false, targets: -2 }
@@ -129,7 +133,7 @@ ini_set('max_input_vars', 30000);
             });
              
  
-            $('#myTable tbody').on( 'click', 'i.fa-trash', function () {
+            $('#esign-table tbody').on( 'click', 'i.fa-trash', function () {
                 console.log('Delete');   
                 table
                 .row( $(this).parents('tr') )
