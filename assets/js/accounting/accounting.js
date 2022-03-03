@@ -764,6 +764,7 @@ $(document).ready(function() {
             // acceptedFiles: "image/*",
             maxFilesize: 20,
             addRemoveLinks: true,
+            
             init: function() {
                 this.on("success", function(file, response) {
                     fname.push(response.replace(/\"/g, ""));

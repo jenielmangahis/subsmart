@@ -32,7 +32,12 @@ ini_set('max_input_vars', 30000);
                 </div>
 
                 <div class="d-flex justify-content-end">
-                    <button class="btn btn-primary" type="button">Next</button>
+                    <button class="btn btn-primary esigneditor__btn" type="button">
+                        <div class="spinner-border spinner-border-sm" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                        Next
+                    </button>
                 </div>
             </div>
 
@@ -42,7 +47,12 @@ ini_set('max_input_vars', 30000);
                 </div>
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
-                        <a href="#" class="link">Export as PDF</a>
+                        <button class="link esigneditor__btn">
+                            <div class="spinner-border spinner-border-sm" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                            Export as PDF
+                        </button>
                     </div>
                     <div>
                         <button class="btn btn-secondary" type="button">

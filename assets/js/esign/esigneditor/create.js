@@ -128,7 +128,7 @@ function initAddCategoryForm() {
       return;
     }
 
-    const { data } = await submitBtn($button, () =>
+    const { data } = await window.helpers.submitBtn($button, () =>
       window.api.createCategory({ name: value })
     );
     appendCategoryInSelect(data);
@@ -171,7 +171,7 @@ function initAddPlaceholderForm() {
       payload[name] = value;
     }
 
-    const { data } = await submitBtn($button, () =>
+    const { data } = await window.helpers.submitBtn($button, () =>
       window.api.createPlaceholder(payload)
     );
 
@@ -252,17 +252,7 @@ function initLetterForm(letter = null) {
 
     payload.is_active = $form.querySelector("#status_active").checked ? 1 : 0;
     payload.content = $letter.summernote("code");
-    submitBtn($button, () => func(payload));
+    window.helpers.submitBtn($button, () => func(payload));
     window.location.href = `${window.api.prefixURL}/esigneditor/letters`;
   });
-}
-
-async function submitBtn($button, asyncCallback) {
-  $button.setAttribute("disabled", true);
-  $button.classList.add("esigneditor__btn--loading");
-  const response = await asyncCallback();
-
-  $button.removeAttribute("disabled");
-  $button.classList.remove("esigneditor__btn--loading");
-  return response;
 }

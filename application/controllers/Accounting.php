@@ -706,7 +706,7 @@ class Accounting extends MY_Controller
     {
         $ds = DIRECTORY_SEPARATOR;  //1
 
-        $storeFolder = './uploads/accounting/customers';   //2
+        $storeFolder = 'uploads/accounting/customers';   //2
 
         if (!empty($_FILES)) {
 
@@ -717,14 +717,15 @@ class Accounting extends MY_Controller
             // $targetFile =  $targetPath . $_FILES['file']['name'];  //5
 
             // move_uploaded_file($tempFile, $targetFile); //6
-            move_uploaded_file($tempFile, './uploads/accounting/customers/' . $_FILES['file']['name']);
+            move_uploaded_file($tempFile, 'uploads/accounting/customers/' . $_FILES['file']['name']);
         }
     }
     public function imported_customer_title_covert_to_json()
     {
+        $this->load->library('PHPExcel');
         $title_holder = array();
         $filename = $this->input->post("filename");
-        $object = PHPExcel_IOFactory::load('./uploads/accounting/customers/' . $filename);
+        $object = PHPExcel_IOFactory::load('uploads/accounting/customers/' . $filename);
         foreach ($object->getWorksheetIterator() as $worksheet_rows) {
             $highest_Column = $worksheet_rows->getHighestColumn();
             $colNumber = PHPExcel_Cell::columnIndexFromString($highest_Column);

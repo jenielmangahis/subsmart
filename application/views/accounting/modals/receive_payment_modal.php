@@ -234,6 +234,97 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="col-md-12 display-with-customer <?=!isset($payment) || isset($payment) && count($creditMemos) > 0 ? 'hide' : ''?>">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <h4>Credits</h4>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <div class="form-row">
+                                                        <div class="col-3">
+                                                            <input type="text" name="search" id="search-credit-memo-no" class="form-control" placeholder="Find Credit Memo No.">
+                                                        </div>
+                                                        <div class="col-3">
+                                                            <div class="dropdown d-inline-block d-flex align-items-center h-100">
+                                                                <a href="javascript:void(0);" class="btn btn-transparent hide-toggle" id="creditMemoFilterDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Filter <i class="fa fa-chevron-right"></i></a>
+
+                                                                <div class="dropdown-menu p-3 w-auto" aria-labelledby="creditMemoFilterDropdown" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 40px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                                                    <div class="inner-filter-list">
+                                                                        <div class="row">
+                                                                            <div class="col-sm-12">
+                                                                                <div class="form-row">
+                                                                                    <div class="col-6">
+                                                                                        <div class="form-group">
+                                                                                            <label for="credit-memo-from">Credit Memo from</label>
+                                                                                            <input type="text" name="credit_memo_from" id="credit-memo-from" class="form-control date" value="<?=!isset($payment) ? date("m/d/Y") : ''?>">
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="col-6">
+                                                                                        <div class="form-group">
+                                                                                            <label for="credit-memo-to">To</label>
+                                                                                            <input type="text" name="credit_memo_to" id="credit-memo-to" class="form-control date" value="<?=!isset($payment) ? date("m/d/Y") : ''?>">
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="btn-group">
+                                                                            <a href="#" class="btn-main" id="reset-btn" onclick="resetCreditMemoFilter(event)">Reset</a>
+                                                                            <a href="#" id="apply-btn" class="btn-main apply-btn" onclick="applyCreditMemoFilter(event)">Apply</a>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="action-bar h-100 d-flex align-items-center">
+                                                        <ul class="ml-auto">
+                                                            <li class="">
+                                                                <a class="hide-toggle dropdown-toggle" type="button" id="credit-memo" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                    <i class="fa fa-cog"></i>
+                                                                </a>
+                                                                <div class="dropdown-menu p-3" aria-labelledby="credit-memo" x-placement="bottom-start" style="position: absolute; transform: translate3d(970px, 33px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                                                    <p class="m-0">Rows</p>
+                                                                    <p class="m-0">
+                                                                        <select name="table_rows" id="credit_memo_table_rows" class="form-control select2-hidden-accessible" tabindex="-1" aria-hidden="true">
+                                                                            <option value="50" selected>50</option>
+                                                                            <option value="75">75</option>
+                                                                            <option value="100">100</option>
+                                                                            <option value="150">150</option>
+                                                                            <option value="300">300</option>
+                                                                        </select>
+                                                                    </p>
+                                                                </div>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-12 my-3">
+                                                    <table class="table table-bordered table-hover clickable" id="credit-memo-table">
+                                                        <thead>
+                                                            <th>
+                                                                <div class="d-flex justify-content-center">
+                                                                    <div class="checkbox checkbox-sec m-0">
+                                                                        <input type="checkbox" id="select-all-credit-memo">
+                                                                        <label for="select-all-credit-memo" class="p-0" style="width: 24px; height: 24px"></label>
+                                                                    </div>
+                                                                </div>
+                                                            </th>
+                                                            <th>DESCRIPTION</th>
+                                                            <th>ORIGINAL AMOUNT</th>
+                                                            <th>OPEN BALANCE</th>
+                                                            <th>PAYMENT</th>
+                                                        </thead>
+                                                        <tbody></tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div class="col-md-4 offset-md-8 display-with-customer hide">
                                             <table class="bg-transparent float-right table text-right w-50">
                                                 <tbody>

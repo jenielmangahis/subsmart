@@ -582,7 +582,7 @@ $(document).on("click", "#manage_reports_table tbody li a.export-pdf", function(
 });
 
 
-$(document).on("click", "#import-customer", function(event) {
+$(document).on("click", "#manage_reports_table tbody li a.export-docx", function(event) {
     var management_report_id = $(this).attr("data-id");
     $("body").css("cursor", "wait");
     $.ajax({

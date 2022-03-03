@@ -13,6 +13,11 @@ function app_notification(token, body, device_type, company_id, title) {
         success: function(data) {
             console.log("App notification success!");
         },
+        error: function(xhr, ajaxOptions, thrownError) {
+            console.log(xhr.status);
+            console.log(thrownError);
+            $("#loader-modal").hide();
+        },
     });
 }
 
@@ -39,6 +44,11 @@ $(document).ready(function() {
             type: "POST",
             data: { id: id },
             success: function(data) {},
+            error: function(xhr, ajaxOptions, thrownError) {
+                console.log(xhr.status);
+                console.log(thrownError);
+                $("#loader-modal").hide();
+            },
         });
     });
     $(document).on("click", "#clockIn", function() {
@@ -184,6 +194,11 @@ $(document).ready(function() {
                 console.log("sms_status")
                 console.log(data);
             },
+            error: function(xhr, ajaxOptions, thrownError) {
+                console.log(xhr.status);
+                console.log(thrownError);
+                $("#loader-modal").hide();
+            },
         });
     }
 
@@ -253,6 +268,11 @@ $(document).ready(function() {
                                 // get_user_current_geo_possition(data.timesheet_logs_id, "timesheet_logs");
                             }
                         },
+                        error: function(xhr, ajaxOptions, thrownError) {
+                            console.log(xhr.status);
+                            console.log(thrownError);
+                            $("#loader-modal").hide();
+                        },
                     });
                 } else if (result.isDenied) {
                     confirmClockOut();
@@ -278,6 +298,11 @@ $(document).ready(function() {
                 } else {
                     confirmClockOut();
                 }
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                console.log(xhr.status);
+                console.log(thrownError);
+                $("#loader-modal").hide();
             },
         });
     });
@@ -329,6 +354,11 @@ $(document).ready(function() {
                                 );
                                 // get_user_current_geo_possition(data.timesheet_logs_id, "timesheet_logs");
                             }
+                        },
+                        error: function(xhr, ajaxOptions, thrownError) {
+                            console.log(xhr.status);
+                            console.log(thrownError);
+                            $("#loader-modal").hide();
                         },
                     });
                 }
@@ -399,6 +429,11 @@ $(document).ready(function() {
                                 clock_in_clock_out_send_sms("+18506195914", data.FName + " " + data.LName + " " + data.content_notification)
                             } // get_user_current_geo_possition(data.timesheet_logs_id, "timesheet_logs");
                         },
+                        error: function(xhr, ajaxOptions, thrownError) {
+                            console.log(xhr.status);
+                            console.log(thrownError);
+                            $("#loader-modal").hide();
+                        },
                     });
                 }
             });
@@ -466,6 +501,11 @@ $(document).ready(function() {
                             console.log("Autoc lockout: Something is wrong!");
                         }
                     },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        console.log(xhr.status);
+                        console.log(thrownError);
+                        $("#loader-modal").hide();
+                    },
                 });
             }
         };
@@ -492,10 +532,9 @@ $(document).ready(function() {
     // end of Live clock
     show_my_attendance_logs();
 
-    try{
+    try {
         $(".ts_schedule").datepicker();
-    }
-    catch(err){
+    } catch (err) {
         console.log(err);
     }
 
@@ -512,10 +551,9 @@ $(document).ready(function() {
         $("#my-attendance-logs").hide();
         $(".table-ts-loader").show();
 
-        try{
-            $("#my-attendance-logs").DataTable().destroy(); 
-        }
-        catch(err){
+        try {
+            $("#my-attendance-logs").DataTable().destroy();
+        } catch (err) {
             console.log(err);
         }
 
@@ -529,7 +567,7 @@ $(document).ready(function() {
             },
             success: function(data) {
                 // console.log(data);
-                try{
+                try {
                     $(".table-ts-loader").hide();
                     $("#my-attendance-logs").show();
                     $("#my-attendance-logs").html(data);
@@ -537,10 +575,14 @@ $(document).ready(function() {
                         ordering: false,
                         paging: false,
                     });
-                }
-                catch(err){
+                } catch (err) {
                     console.log(err);
                 }
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                console.log(xhr.status);
+                console.log(thrownError);
+                $("#loader-modal").hide();
             },
         });
     }
@@ -583,6 +625,11 @@ $(document).ready(function() {
                                 icon: "success",
                             });
                         }
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        console.log(xhr.status);
+                        console.log(thrownError);
+                        $("#loader-modal").hide();
                     },
                 });
             }
@@ -635,6 +682,11 @@ $(document).ready(function() {
                 $("#form_expected_work_hours").html(data.expected_work_hours);
                 $("#editors_footprint").html(data.footprint_text);
             },
+            error: function(xhr, ajaxOptions, thrownError) {
+                console.log(xhr.status);
+                console.log(thrownError);
+                $("#loader-modal").hide();
+            },
         });
     });
     $(document).on("click", "#submit_attendance_correction_request", function() {
@@ -684,6 +736,11 @@ $(document).ready(function() {
                             });
                         }
                     },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        console.log(xhr.status);
+                        console.log(thrownError);
+                        $("#loader-modal").hide();
+                    },
                 });
             }
         });
@@ -720,6 +777,11 @@ $(document).ready(function() {
                     ordering: false,
                     paging: false,
                 });
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                console.log(xhr.status);
+                console.log(thrownError);
+                $("#loader-modal").hide();
             },
         });
     }
@@ -762,6 +824,11 @@ $(document).ready(function() {
                             icon: "success",
                         });
                     },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        console.log(xhr.status);
+                        console.log(thrownError);
+                        $("#loader-modal").hide();
+                    },
                 });
             }
         });
@@ -797,6 +864,11 @@ $(document).ready(function() {
                 } else {
                     $(".leave_request_action_td").show();
                 }
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                console.log(xhr.status);
+                console.log(thrownError);
+                $("#loader-modal").hide();
             },
         });
     }
@@ -842,6 +914,11 @@ $(document).ready(function() {
                             icon: "success",
                         });
                     },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        console.log(xhr.status);
+                        console.log(thrownError);
+                        $("#loader-modal").hide();
+                    },
                 });
             }
         });
@@ -871,6 +948,11 @@ $(document).ready(function() {
                 //   ordering: false,
                 //   paging: false,
                 // });
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                console.log(xhr.status);
+                console.log(thrownError);
+                $("#loader-modal").hide();
             },
         });
     }
@@ -912,6 +994,11 @@ $(document).ready(function() {
                                     success: function(data) {
                                         clearTimeout(counter);
                                     },
+                                    error: function(xhr, ajaxOptions, thrownError) {
+                                        console.log(xhr.status);
+                                        console.log(thrownError);
+                                        $("#loader-modal").hide();
+                                    },
                                 });
                                 autoClockOut();
                             }
@@ -942,15 +1029,13 @@ $(document).ready(function() {
                                         timerProgressBar: true,
                                         willOpen: () => {
                                             var content;
-                                            try{
+                                            try {
                                                 content = Swal.getContent();
-                                            }
-                                            catch(err){}
+                                            } catch (err) {}
 
-                                            try{
+                                            try {
                                                 content = Swal.getHtmlContainer();
-                                            }
-                                            catch(err){}
+                                            } catch (err) {}
                                             const $ = content.querySelector.bind(content);
                                             timerInterval = setInterval(() => {
                                                 if ((Swal.getTimerLeft() / 1000).toFixed(0) >= 0) {
@@ -964,20 +1049,18 @@ $(document).ready(function() {
                                                     } else {
                                                         text_countdown = parseInt((coundown - intV) * 60);
                                                     }
-                                                    
-                                                    try{
+
+                                                    try {
                                                         Swal.getContent().querySelector(
                                                             "strong"
                                                         ).textContent = text_countdown;
-                                                    }
-                                                    catch(err){}
+                                                    } catch (err) {}
 
-                                                    try{
+                                                    try {
                                                         Swal.getHtmlContainer().querySelector(
                                                             "strong"
                                                         ).textContent = text_countdown;
-                                                    }
-                                                    catch(err){}
+                                                    } catch (err) {}
                                                 } else {
                                                     clearInterval(timerInterval);
                                                 }
@@ -1008,6 +1091,11 @@ $(document).ready(function() {
                                                         });
                                                     }
                                                 },
+                                                error: function(xhr, ajaxOptions, thrownError) {
+                                                    console.log(xhr.status);
+                                                    console.log(thrownError);
+                                                    $("#loader-modal").hide();
+                                                },
                                             });
                                         } else if (result.isDenied) {
                                             clearInterval(autoclockout_checker_loop);
@@ -1035,8 +1123,18 @@ $(document).ready(function() {
                                                             dataType: "json",
                                                             data: { attn_id: attn_id },
                                                             success: function(data) {},
+                                                            error: function(xhr, ajaxOptions, thrownError) {
+                                                                console.log(xhr.status);
+                                                                console.log(thrownError);
+                                                                $("#loader-modal").hide();
+                                                            },
                                                         });
                                                     }
+                                                },
+                                                error: function(xhr, ajaxOptions, thrownError) {
+                                                    console.log(xhr.status);
+                                                    console.log(thrownError);
+                                                    $("#loader-modal").hide();
                                                 },
                                             });
                                         }
@@ -1044,10 +1142,20 @@ $(document).ready(function() {
                                 }
                             }
                         },
+                        error: function(xhr, ajaxOptions, thrownError) {
+                            console.log(xhr.status);
+                            console.log(thrownError);
+                            $("#loader-modal").hide();
+                        },
                     });
                 } else {
                     clearInterval(autoclockout_checker_loop);
                 }
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                console.log(xhr.status);
+                console.log(thrownError);
+                $("#loader-modal").hide();
             },
         });
     }
@@ -1173,6 +1281,11 @@ function show_user_current_geo_possition(position) {
                         success: function(data) {
                             console.log("current location saved.");
                             console.log(table_id);
+                        },
+                        error: function(xhr, ajaxOptions, thrownError) {
+                            console.log(xhr.status);
+                            console.log(thrownError);
+                            $("#loader-modal").hide();
                         },
                     });
                 }
