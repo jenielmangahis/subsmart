@@ -7,6 +7,7 @@ $(document).on("click", "#import-customers-modal .close-modal", function(event) 
 
 $(document).ready(function() {
 
+    var counter = 0;
     var checkDropzone = new Dropzone('div#import_customer', {
         url: baseURL + "accounting/import_customers",
         autoProcessQueue: false,
@@ -34,10 +35,13 @@ $(document).ready(function() {
                         success: function(data) {
                             var html_temp = "";
                             var html_temp2 = "";
-                            var html_temp3 = "";
+                            data.titles.length;
 
                             for (let index = 0; index < data.titles.length; index++) {
                                 html_temp2 = "";
+                                counter++;
+                                var count = 0;
+                                var cont;
                                 html_temp += `
                                 <div class="row">
                                 <div class="col-md-6">
@@ -58,9 +62,9 @@ $(document).ready(function() {
 
                                     if ((data.titles[index].split(' ').join('_') == data.table_column_names[index1]) || (data.titles[index].split('-').join('_') == data.table_column_names[index1])) {
                                         selected = "selected";
-
+                                        cont = count;
                                     } else {
-
+                                        count++;
                                     }
 
 
@@ -81,7 +85,7 @@ $(document).ready(function() {
                                 }
 
 
-                                html_temp += html_temp2 + `</select> <div class="label"><p class="label` + index + `"></p></div><input style="display:none;" type="text" class="send"` + index + `>
+                                html_temp += html_temp2 + `</select> <div class="label"><p class="label` + index + `"></p></div><input style="display:none;" name="column` + index + `" type="text" class="send` + index + `" value="` + data.table_column_names[cont] + `">
 
                                 </div>
                                 </div>
@@ -102,16 +106,23 @@ $(document).ready(function() {
 
                                     if (select == "Add Column" && selection == "selected") {
                                         column_N += "_1"
-                                        $("#holder-step-2 .label" + num + "").text(column_N);
-                                        $("#holder-step-2 .send").val() = column_N;
+                                        $("#holder-step-2 .label" + num + "").text(column_N.toLowerCase());
+                                        $("#holder-step-2 .send" + num + "").val(column_N);
+
 
                                     } else if (select == "Add Column" && selection == "") {
                                         $("#holder-step-2 .label" + num + "").text(column_N);
-                                        $("#holder-step-2 .send").val() = column_N;
+                                        $("#holder-step-2 .send" + num + "").val(column_N);
+
 
                                     } else if (select != "Add Column") {
-                                        $("#holder-step-2 .label" + num + "").text(" ");
-                                        $("#holder-step-2 .send").val() = "";
+                                        for (index3 = 1; index3 < data.table_column_names.length; index3++) {
+                                            if (select == data.table_column_names[index]) {
+                                                $("#holder-step-2 .label" + num + "").text(" ");
+                                                $("#holder-step-2 .send" + num + "").val(data.table_column_names[index]);
+                                            }
+                                        }
+
                                     }
                                 });
 
@@ -127,6 +138,10 @@ $(document).ready(function() {
                             next_step("#holder-step-1 .next-step");
 
                         },
+                        error: function(xhr, ajaxOptions, thrownError) {
+                            console.log(xhr.status);
+                            console.log(thrownError);
+                        }
                     });
 
 
@@ -160,7 +175,14 @@ $(document).ready(function() {
 
     });
 
-
+    //get values of hidden input
+    var tables = [];
+    $('#holder-step-2 .next-step').click(function() {
+        for (index1 = 0; index1 < counter; index1) {
+            console.log($("#holder-step-2 .send" + index1 + ""));
+        }
+    });
+    //close of the getter
 
     /*get value of selected option*/
 

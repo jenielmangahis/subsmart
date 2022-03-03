@@ -236,4 +236,10 @@ class Accounting_receive_payment_model extends MY_Model
         $query = $this->db->get('accounting_receive_payment_invoices');
         return $query->result();
     }
+
+    public function add_payment_credits($paymentCredits)
+    {
+        $this->db->insert_batch('accounting_receive_payment_credits', $paymentCredits);
+        return $this->db->insert_id();
+    }
 }

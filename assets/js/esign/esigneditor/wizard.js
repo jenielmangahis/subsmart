@@ -1,6 +1,7 @@
 window.document.addEventListener("DOMContentLoaded", async () => {
   window.api = await import("./api.js");
   window.helpers = await import("./helpers.js");
+  window.jsPDF = window.jspdf.jsPDF;
 
   const params = new Proxy(new URLSearchParams(window.location.search), {
     get: (searchParams, prop) => searchParams.get(prop),
@@ -62,7 +63,11 @@ function handleSubmit(customer) {
 
   const exportAsPDF = (payload) => async (event) => {
     event.preventDefault();
-    await window.api.exportLetterAsPDF(payload);
+    const { data } = await window.helpers.submitBtn($exportAsPDFLink, () =>
+      window.api.exportLetterAsPDF(payload)
+    );
+
+    htmlToPDF(decodeHtml(data.content));
   };
 
   $button.addEventListener("click", async () => {
@@ -71,7 +76,10 @@ function handleSubmit(customer) {
       return;
     }
 
-    const { data: letter } = await window.api.getLetter(letterId);
+    const { data: letter } = await window.helpers.submitBtn($button, () =>
+      window.api.getLetter(letterId)
+    );
+
     const $letter = $("#letterContent");
     $letter.summernote({
       placeholder: "Type Here ... ",
@@ -100,4 +108,38 @@ function handleSubmit(customer) {
       })
     );
   });
+}
+
+function htmlToPDF(string) {
+  const doc = new jsPDF({
+    orientation: "portrait",
+    format: "a4",
+    unit: "px",
+    hotfixes: ["px_scaling"],
+  });
+
+  const margin = { x: 48, y: 48 };
+  let { width, height } = doc.internal.pageSize;
+  width = width - margin.x * 2;
+  height = height - margin.y * 2;
+
+  doc.html(
+    `<div style="width:${width}px; height:${height}px;">
+      ${string}
+    </div>`,
+    {
+      margin: [margin.y, margin.x, margin.y, margin.x],
+      autoPaging: "text",
+      callback: (doc) => {
+        doc.output("dataurlnewwindow");
+      },
+    }
+  );
+}
+
+// https://stackoverflow.com/a/7394787/8062659
+function decodeHtml(html) {
+  const txt = document.createElement("textarea");
+  txt.innerHTML = html;
+  return txt.value;
 }

@@ -5077,6 +5077,17 @@ class Accounting_modals extends MY_Controller
                 }
 
                 $this->accounting_receive_payment_model->add_payment_invoices($paymentInvoices);
+
+                $paymentCredits = [];
+                foreach($data['credits'] as $key => $creditMemoId) {
+                    $paymentCredits[] = [
+                        'receive_payment_id' => $paymentId,
+                        'credit_memo_id' => $creditMemoId,
+                        'payment_amount' => number_format(floatval($data['payment'][$key]), 2, '.', ',')
+                    ];
+                }
+
+                $this->accounting_receive_payment_model->add_payment_credits($paymentCredits);
             }
 
             $return = [];
@@ -5147,6 +5158,7 @@ class Accounting_modals extends MY_Controller
                 'message_on_statement' => $data['message_on_statement'],
                 'adjustment_name' => $data['adjustment_name'],
                 'adjustment_value' => $data['adjustment_value'],
+                'balance' => $data['total_amount'],
                 'total_amount' => $data['total_amount'],
                 'subtotal' => $data['subtotal'],
                 'tax_total' => $data['tax_total'],
@@ -9307,8 +9319,10 @@ class Accounting_modals extends MY_Controller
     private function view_receive_payment($paymentId)
     {
         $payment = $this->accounting_receive_payment_model->getReceivePaymentDetails($paymentId);
+        $creditMemos = $this->accounting_credit_memo_model->get_customer_open_credit_memos(['company_id' => logged('company_id'), 'customer_id' => $payment->customer_id]);
 
         $this->page_data['payment'] = $payment;
+        $this->page_data['creditMemos'] = $creditMemos;
         $this->load->view("accounting/modals/receive_payment_modal", $this->page_data);
     }
 
@@ -14452,6 +14466,54 @@ class Accounting_modals extends MY_Controller
         $result = [
             'draw' => $post['draw'],
             'recordsTotal' => count($invoices),
+            'recordsFiltered' => count($data),
+            'data' => array_slice($data, $start, $limit)
+        ];
+
+        echo json_encode($result);
+    }
+
+    public function load_customer_credit_memos($customerId)
+    {
+        $post = json_decode(file_get_contents('php://input'), true);
+        $search = $post['columns'][0]['search']['value'];
+        $start = $post['start'];
+        $limit = $post['length'];
+
+        $filters = [
+            'from_date' => date("Y-m-d", strtotime($post['from_date'])),
+            'to_date' => date("Y-m-d", strtotime($post['to_date'])),
+            'customer_id' => $customerId
+        ];
+
+        $creditMemos = $this->accounting_credit_memo_model->get_customer_open_credit_memos($filters);
+
+        $data = [];
+        foreach($creditMemos as $creditMemo) {
+            $description = "<a href='#' class='text-info'>Credit Memo #$creditMemo->ref_no</a> (".date("m/d/Y", strtotime($creditMemo->credit_memo_date)).")";
+
+            if($search !== "") {
+                if(stripos($creditMemo->ref_no, $search) !== false) {
+                    $data[] = [
+                        'id' => $creditMemo->id,
+                        'description' => $description,
+                        'original_amount' => number_format(floatval($creditMemo->total_amount), 2, '.', ','),
+                        'open_balance' => number_format(floatval($creditMemo->balance), 2, '.', ',')
+                    ];
+                }
+            } else {
+                $data[] = [
+                    'id' => $creditMemo->id,
+                    'description' => $description,
+                    'original_amount' => number_format(floatval($creditMemo->total_amount), 2, '.', ','),
+                    'open_balance' => number_format(floatval($creditMemo->balance), 2, '.', ',')
+                ];
+            }
+        }
+
+        $result = [
+            'draw' => $post['draw'],
+            'recordsTotal' => count($creditMemos),
             'recordsFiltered' => count($data),
             'data' => array_slice($data, $start, $limit)
         ];

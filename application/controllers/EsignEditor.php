@@ -84,6 +84,10 @@ class EsignEditor extends MY_Controller
         add_footer_js([
             'assets/textEditor/summernote-bs4.js',
             'assets/js/esign/esigneditor/wizard.js',
+
+            'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.3.6/purify.min.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js',
         ]);
 
         $this->load->view('esign/esigneditor/wizard', $this->page_data);
@@ -469,13 +473,36 @@ SQL;
 
         $payload = json_decode(file_get_contents('php://input'), true);
 
-        $placeholders = $this->getUserPlaceholders();
-        $customer = $this->getCustomer($payload['customer_id']);
+        $placeholders = $this->getPlaceholders();
         $letter = $this->getLetter($payload['letter_id']);
 
+        $letterContent = $letter->content;
+        $placeholderParam = new PlaceholderGetParam(
+            (int) $payload['customer_id'],
+            (int) logged('company_id')
+        );
+
+        foreach ($placeholders as $placeholder) {
+            if (!array_key_exists('get', $placeholder)) {
+                continue;
+            }
+
+            ['code' => $code, 'get' => $getter] = $placeholder;
+
+            $callback = function () use ($getter, $placeholderParam) {
+                return $getter($placeholderParam);
+            };
+
+            $letterContent = preg_replace_callback(
+                "|{{$code}}|",
+                $callback,
+                $letterContent
+            );
+
+        }
+
         echo json_encode(['data' => [
-            'customer' => $customer,
-            'letter' => $letter,
+            'content' => $letterContent,
         ]]);
     }
 }
