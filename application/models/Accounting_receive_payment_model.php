@@ -242,4 +242,38 @@ class Accounting_receive_payment_model extends MY_Model
         $this->db->insert_batch('accounting_receive_payment_credits', $paymentCredits);
         return $this->db->insert_id();
     }
+
+    public function get_customer_unapplied_payments($filters = [])
+    {
+        if(isset($filters['customer_id'])) {
+            $this->db->where('customer_id', $filters['customer_id']);
+        }
+
+        if(isset($filters['from_date'])) {
+            $this->db->where('payment_date >=', $filters['from_date']);
+        }
+
+        if(isset($filters['to_date'])) {
+            $this->db->where('payment_date <=', $filters['to_date']);
+        }
+
+        $this->db->order_by('payment_date', 'desc');
+		$this->db->where('status', 1);
+		$query = $this->db->get('accounting_unapplied_payments');
+		return $query->result();
+    }
+
+    public function createUnappliedPayment($data)
+    {
+        $vendor = $this->db->insert('accounting_unapplied_payments', $data);
+        $insert_id = $this->db->insert_id();
+
+        return  $insert_id;
+    }
+
+    public function getUnappliedPaymentDetails($id)
+    {
+        $vendor = $this->db->get_where('accounting_unapplied_payments', array('id' => $id));
+        return $vendor->row();
+    }
 }

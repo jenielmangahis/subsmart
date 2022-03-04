@@ -473,10 +473,15 @@ SQL;
 
         $payload = json_decode(file_get_contents('php://input'), true);
 
-        $placeholders = $this->getPlaceholders();
-        $letter = $this->getLetter($payload['letter_id']);
+        $letterContent = null;
+        if (array_key_exists('content', $payload)) {
+            $letterContent = $payload['content'];
+        } else {
+            $letter = $this->getLetter($payload['letter_id']);
+            $letterContent = $letter->content;
+        }
 
-        $letterContent = $letter->content;
+        $placeholders = $this->getPlaceholders();
         $placeholderParam = new PlaceholderGetParam(
             (int) $payload['customer_id'],
             (int) logged('company_id')
@@ -504,5 +509,26 @@ SQL;
         echo json_encode(['data' => [
             'content' => $letterContent,
         ]]);
+    }
+
+    public function apiCreateCustomerLetter()
+    {
+        header('content-type: application/json');
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['success' => false]);
+            return;
+        }
+
+        $payload = json_decode(file_get_contents('php://input'), true);
+        $this->db->insert('esign_editor_customer_letters', array_merge(
+            $payload, [
+                'user_id' => logged('id'),
+                'company_id' => logged('company_id'),
+            ]
+        ));
+
+        $this->db->where('id', $this->db->insert_id());
+        $customerLetter = $this->db->get('esign_editor_customer_letters')->result();
+        echo json_encode(['data' => $customerLetter]);
     }
 }

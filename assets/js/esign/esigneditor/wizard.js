@@ -11,10 +11,12 @@ window.document.addEventListener("DOMContentLoaded", async () => {
   const $customerName = document.querySelector(".esigneditor__title span");
   $customerName.textContent = `${customer.first_name} ${customer.last_name}`;
 
-  Promise.all([initCategories(), initLetters()]).then(() => {
-    handleSubmit(customer);
-    document.querySelector(".wrapper").classList.remove("wrapper--loading");
-  });
+  Promise.all([initCategories(), initLetters(), initSaveForm(customer)]).then(
+    () => {
+      handleSubmit(customer);
+      document.querySelector(".wrapper").classList.remove("wrapper--loading");
+    }
+  );
 });
 
 async function initCategories() {
@@ -60,9 +62,11 @@ function handleSubmit(customer) {
   const $letterSelect = $form.querySelector("#letter");
   const $button = $form.querySelector(".btn-primary");
   const $exportAsPDFLink = $form.querySelector(".wizardForm__step2 .link");
+  const $letter = $("#letterContent");
 
   const exportAsPDF = (payload) => async (event) => {
     event.preventDefault();
+    payload.content = $letter.summernote("code");
     const { data } = await window.helpers.submitBtn($exportAsPDFLink, () =>
       window.api.exportLetterAsPDF(payload)
     );
@@ -80,25 +84,9 @@ function handleSubmit(customer) {
       window.api.getLetter(letterId)
     );
 
-    const $letter = $("#letterContent");
-    $letter.summernote({
-      placeholder: "Type Here ... ",
-      tabsize: 2,
-      height: 450,
-      toolbar: [
-        ["style", ["style"]],
-        ["font", ["bold", "italic", "underline", "strikethrough", "clear"]],
-        ["fontname", ["fontname"]],
-        ["fontsize", ["fontsize"]],
-        ["para", ["ol", "ul", "paragraph", "height"]],
-        ["table", ["table"]],
-        ["insert", ["link"]],
-        ["view", ["undo", "redo", "fullscreen"]],
-      ],
-    });
-    $letter.summernote("code", letter.content);
-    $form.classList.add("wizardForm--step2");
+    window.helpers.wysiwygEditor($letter, letter.content);
 
+    $form.classList.add("wizardForm--step2");
     $exportAsPDFLink.removeEventListener("click", exportAsPDF);
     $exportAsPDFLink.addEventListener(
       "click",
@@ -142,4 +130,47 @@ function decodeHtml(html) {
   const txt = document.createElement("textarea");
   txt.innerHTML = html;
   return txt.value;
+}
+
+function initSaveForm(customer) {
+  const $modal = document.getElementById("saveLetterModal");
+  const $name = $modal.querySelector("[data-name=name]");
+  const $saveButton = $modal.querySelector(".btn");
+  const $toggleButtons = $(".wizardForm__step2 [data-action]");
+  const $letter = $("#letterContent");
+  const $letterSelect = document.querySelector("#selectLetterForm #letter");
+
+  $toggleButtons.on("click", (event) => {
+    $modal.setAttribute("data-action", event.target.dataset.action);
+    $($modal).modal("show");
+  });
+
+  $saveButton.addEventListener("click", async () => {
+    const name = $name.value.trim();
+    if (!name.length) {
+      $name.focus();
+      return;
+    }
+
+    const payload = {
+      name,
+      customer_id: customer.prof_id,
+      letter_id: $letterSelect.value,
+      content: $letter.summernote("code"),
+    };
+
+    await window.helpers.submitBtn($saveButton, () =>
+      window.api.createCustomerLetter(payload)
+    );
+
+    if ($modal.dataset.action === "save_and_print") {
+      // TODO: redirect to print customer letter
+    } else {
+      $($modal).modal("hide");
+    }
+  });
+
+  $($modal).on("show.bs.modal", () => {
+    $name.value = "";
+  });
 }

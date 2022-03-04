@@ -36,6 +36,14 @@ $(document).ready(function() {
                             var html_temp = "";
                             var html_temp2 = "";
                             data.titles.length;
+                            var html_temp3 = "";
+
+                            html_temp3 += `
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <input style="display:none" class="file_name" name="file_name" value="` + data.filename + `">
+                                </div>
+                            </div>`;
 
                             for (let index = 0; index < data.titles.length; index++) {
                                 html_temp2 = "";
@@ -46,7 +54,7 @@ $(document).ready(function() {
                                 <div class="row">
                                 <div class="col-md-6">
                                     <div class="checkbox checkbox-sec margin-right ">
-                                        <input type="checkbox" name="temp` + index + `" value="` + index + `" id="temp` + index + `" checked="">
+                                        <input type="checkbox" name="temp` + index + `" value="` + data.titles[index] + `" id="temp` + index + `" checked="">
                                         <label for="temp` + index + `">
                                             <span>` + data.titles[index] + `</span>
                                         </label>
@@ -111,15 +119,17 @@ $(document).ready(function() {
 
 
                                     } else if (select == "Add Column" && selection == "") {
+
                                         $("#holder-step-2 .label" + num + "").text(column_N);
                                         $("#holder-step-2 .send" + num + "").val(column_N);
 
 
                                     } else if (select != "Add Column") {
                                         for (index3 = 1; index3 < data.table_column_names.length; index3++) {
-                                            if (select == data.table_column_names[index]) {
-                                                $("#holder-step-2 .label" + num + "").text(" ");
-                                                $("#holder-step-2 .send" + num + "").val(data.table_column_names[index]);
+                                            if (select != " ") {
+                                                if (select == data.table_column_names[index3]) {
+                                                    $("#holder-step-2 .send" + num + "").val(data.table_column_names[index3]);
+                                                }
                                             }
                                         }
 
@@ -128,8 +138,9 @@ $(document).ready(function() {
 
                             }
 
-
+                            html_temp += html_temp3;
                             $("#holder-step-2 .form-check").html(html_temp);
+
                             // $("#holder-step-2 .form-check #t_columns").html(html_temp2);
 
 
@@ -138,10 +149,6 @@ $(document).ready(function() {
                             next_step("#holder-step-1 .next-step");
 
                         },
-                        error: function(xhr, ajaxOptions, thrownError) {
-                            console.log(xhr.status);
-                            console.log(thrownError);
-                        }
                     });
 
 
@@ -176,11 +183,33 @@ $(document).ready(function() {
     });
 
     //get values of hidden input
-    var tables = [];
+
     $('#holder-step-2 .next-step').click(function() {
-        for (index1 = 0; index1 < counter; index1) {
-            console.log($("#holder-step-2 .send" + index1 + ""));
+
+        var tables = [];
+        var selCol = [];
+        var filename = ($("input[name=file_name]").val());
+        for (index1 = 0; index1 < counter; index1++) { //loop
+            if ($("input[name=temp" + index1 + "]").is(":checked")) {
+                //modified progress
+                selCol.push($("input[name=temp" + index1 + "]").val());
+                tables.push($("input[name=column" + index1 + "]").val());
+            }
+
+
         }
+        //Progress
+        console.log(tables);
+        $.ajax({
+            url: baseURL + "accounting/exported_data_from_forms",
+            type: "POST",
+            dataType: "json",
+            data: { tables: tables, filename: filename, selCol: selCol },
+            success: function(data) {
+
+            }
+        })
+
     });
     //close of the getter
 
