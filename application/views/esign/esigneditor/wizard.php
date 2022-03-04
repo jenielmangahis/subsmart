@@ -55,20 +55,47 @@ ini_set('max_input_vars', 30000);
                         </button>
                     </div>
                     <div>
-                        <button class="btn btn-secondary" type="button">
+                        <button class="btn btn-secondary" data-action="save_for_later" type="button">
                             Save For Later
                         </button>
 
-                        <button class="btn btn-primary" type="button">
+                        <button class="btn btn-primary" data-action="save_and_print" type="button">
                             Save & Continue To Print
                         </button>
                     </div>
                 </div>
             </div>
-
-
         </form>
     </div>
+</div>
+
+<div class="modal fade" id="saveLetterModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Save Letter</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+            <div class="form-group">
+                <label>Name of this letter</label>
+                <input data-name="name" class="form-control">
+            </div>
+            <div class="d-flex justify-content-end">
+                <button type="button" class="btn btn-primary esigneditor__btn">
+                    <div class="spinner-border spinner-border-sm" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                    Save Letter
+                </button>
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </div>
 
 <?php include viewPath('includes/footer');?>

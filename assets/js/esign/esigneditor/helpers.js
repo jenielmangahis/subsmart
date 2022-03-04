@@ -14,3 +14,27 @@ export async function submitBtn($button, asyncCallback) {
   $button.classList.remove("esigneditor__btn--loading");
   return response;
 }
+
+export function wysiwygEditor($textarea, content = null) {
+  const $letter = $($textarea);
+  $letter.summernote({
+    placeholder: "Type Here ... ",
+    tabsize: 2,
+    height: 450,
+    toolbar: [
+      ["style", ["style"]],
+      ["font", ["bold", "italic", "underline", "strikethrough", "clear"]],
+      ["fontsize", ["fontsize"]],
+      ["para", ["ol", "ul", "paragraph", "height"]],
+      ["table", ["table"]],
+      ["insert", ["link"]],
+      ["view", ["undo", "redo", "fullscreen"]],
+    ],
+  });
+
+  $letter.summernote("fontName", "Arial");
+
+  if (content !== null) {
+    $letter.summernote("code", content);
+  }
+}

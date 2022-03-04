@@ -730,7 +730,7 @@ class Accounting extends MY_Controller
             $highest_Column = $worksheet_rows->getHighestColumn();
             $colNumber = PHPExcel_Cell::columnIndexFromString($highest_Column);
             for ($x = 1; $colNumber >= $x; $x++) {
-                $title = $worksheet_rows->getCellByColumnAndRow($x-1)->getValue();
+                $title = $worksheet_rows->getCellByColumnAndRow($x - 1)->getValue();
                 $title_holder[$x - 1] = $title;
             }
         }
@@ -743,9 +743,76 @@ class Accounting extends MY_Controller
         $data = new stdClass();
         $data->titles = $title_holder;
         $data->table_column_names = $table_column_names;
+        $data->filename = $filename;
         echo json_encode($data);
-
     }
+
+    public function exported_data_from_forms()
+    {
+        $data = $this->input->post("tables");
+        $data1 = $this->input->post("filename");
+        $selCol = $this->input->post("selCol");
+        $tableArr = array();
+
+        $this->load->library('PHPExcel');
+        $object = PHPExcel_IOFactory::load('uploads/accounting/customers/' . $data1);
+
+        $highCol = "";
+        $highRow = "";
+
+        $table_column_names = $this->accounting_customers_model->get_users_table_column_names();
+        //progress
+        foreach ($object->getWorksheetIterator() as $work_sheet) {
+            $indiCol = $work_sheet->getHighestColumn();
+            $highCol = PHPExcel_Cell::columnIndexFromString($indiCol);
+            $highRow = $work_sheet->getHighestRow();
+
+            // for ($index = 0; $index < $highCol; $index++) {
+            //     $tableArr[$index][] = $data[$index];
+            // }
+
+                //progress
+            for ($d = 0; $d < count($selCol); $d++) { //data ni para ma-Identify ang kwaonon na data
+                for ($x = 0; $x < $highCol; $x++) { //Column
+                    $indicator = 1;
+                    $excCol = $work_sheet->getCellByColumnAndRow($x, $indicator)->getValue();
+
+
+ 
+                        if ($excCol == $selCol[$d]) {
+
+                            for ($y = 0; $y < $highRow; $y++) { //Row
+                                if($y==0){
+                                    $tableArr[$x][$y] = $data[$y];
+                                }else{
+                                    $tableArr[$x][$y] = $work_sheet->getCellByColumnAndRow($x, ($y + 1))->getValue();
+                                }
+
+                            }
+
+
+
+
+
+                        // if ($x == 0) {
+                        //     $tableArr[$x][$y] = $data[$y];
+                        // } else {
+                        //     $tableArr[$x][$y] = $work_sheet->getCellByColumnAndRow($y, ($x + 1))->getValue();
+                        // }
+                    }
+                }
+            }//end of the for loop
+
+            
+        }
+        $this->accounting_customers_model->import_customers_to_databease($tableArr);
+
+        
+
+
+        
+    }
+
     public function deposits()
     {
         $company_id = getLoggedCompanyID();

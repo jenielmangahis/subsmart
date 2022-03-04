@@ -4973,8 +4973,6 @@ class Accounting_modals extends MY_Controller
     private function receive_payment($data)
     {
         $this->form_validation->set_rules('customer', 'Customer', 'required');
-        $this->form_validation->set_rules('invoice[]', 'Payment amount', 'required');
-        $this->form_validation->set_rules('payment[]', 'Payment amount', 'required');
 
         if ($this->form_validation->run() === false) {
             $return['data'] = null;
@@ -4993,7 +4991,12 @@ class Accounting_modals extends MY_Controller
                 'status' => 1
             ];
 
-            $paymentId = $this->accounting_receive_payment_model->createReceivePayment($paymentData);
+            if(isset($data['invoices'])) {
+                $paymentId = $this->accounting_receive_payment_model->createReceivePayment($paymentData);
+            } else {
+                $paymentData['balance'] = $data['received_amount'];
+                $paymentId = $this->accounting_receive_payment_model->createUnappliedPayment($paymentData);
+            }
 
             if($paymentId) {
                 $depositToAcc = $this->chart_of_accounts_model->getById($data['deposit_to_account']);
@@ -8954,6 +8957,9 @@ class Accounting_modals extends MY_Controller
             case 'receive-payment' :
                 $this->view_receive_payment($transactionId);
             break;
+            case 'unapplied-payment' :
+                $this->view_unapplied_payment($transactionId);
+            break;
             case 'credit-memo' :
                 $this->view_credit_memo($transactionId);
             break;
@@ -9319,6 +9325,16 @@ class Accounting_modals extends MY_Controller
     private function view_receive_payment($paymentId)
     {
         $payment = $this->accounting_receive_payment_model->getReceivePaymentDetails($paymentId);
+        $creditMemos = $this->accounting_credit_memo_model->get_customer_open_credit_memos(['company_id' => logged('company_id'), 'customer_id' => $payment->customer_id]);
+
+        $this->page_data['payment'] = $payment;
+        $this->page_data['creditMemos'] = $creditMemos;
+        $this->load->view("accounting/modals/receive_payment_modal", $this->page_data);
+    }
+    
+    private function view_unapplied_payment($paymentId)
+    {
+        $payment = $this->accounting_receive_payment_model->getUnappliedPaymentDetails($paymentId);
         $creditMemos = $this->accounting_credit_memo_model->get_customer_open_credit_memos(['company_id' => logged('company_id'), 'customer_id' => $payment->customer_id]);
 
         $this->page_data['payment'] = $payment;
@@ -14422,11 +14438,14 @@ class Accounting_modals extends MY_Controller
         $limit = $post['length'];
 
         $filters = [
-            'from_date' => date("Y-m-d", strtotime($post['from_date'])),
-            'to_date' => date("Y-m-d", strtotime($post['to_date'])),
-            'overdue' => $post['overdue'],
             'customer_id' => $customerId
         ];
+
+        if($post['draw'] > 1) {
+            $filters['from_date'] = date("Y-m-d", strtotime($post['from_date']));
+            $filters['to_date'] = date("Y-m-d", strtotime($post['to_date']));
+            $filters['overdue'] = $post['overdue'];
+        }
 
         $invoices = $this->accounting_invoices_model->get_customer_invoices_to_pay($filters);
 
@@ -14481,21 +14500,25 @@ class Accounting_modals extends MY_Controller
         $limit = $post['length'];
 
         $filters = [
-            'from_date' => date("Y-m-d", strtotime($post['from_date'])),
-            'to_date' => date("Y-m-d", strtotime($post['to_date'])),
             'customer_id' => $customerId
         ];
+
+        if($post['draw'] > 1) {
+            $filters['from_date'] = date("Y-m-d", strtotime($post['from_date']));
+            $filters['to_date'] = date("Y-m-d", strtotime($post['to_date']));
+        }
 
         $creditMemos = $this->accounting_credit_memo_model->get_customer_open_credit_memos($filters);
 
         $data = [];
         foreach($creditMemos as $creditMemo) {
-            $description = "<a href='#' class='text-info'>Credit Memo #$creditMemo->ref_no</a> (".date("m/d/Y", strtotime($creditMemo->credit_memo_date)).")";
+            $description = "<a href='/accounting/view-transaction/credit-memo/$creditMemo->id' class='text-info'>Credit Memo #$creditMemo->ref_no</a> (".date("m/d/Y", strtotime($creditMemo->credit_memo_date)).")";
 
             if($search !== "") {
                 if(stripos($creditMemo->ref_no, $search) !== false) {
                     $data[] = [
                         'id' => $creditMemo->id,
+                        'type' => 'credit-memo',
                         'description' => $description,
                         'original_amount' => number_format(floatval($creditMemo->total_amount), 2, '.', ','),
                         'open_balance' => number_format(floatval($creditMemo->balance), 2, '.', ',')
@@ -14504,9 +14527,26 @@ class Accounting_modals extends MY_Controller
             } else {
                 $data[] = [
                     'id' => $creditMemo->id,
+                    'type' => 'credit-memo',
                     'description' => $description,
                     'original_amount' => number_format(floatval($creditMemo->total_amount), 2, '.', ','),
                     'open_balance' => number_format(floatval($creditMemo->balance), 2, '.', ',')
+                ];
+            }
+        }
+
+        $unappliedPayments = $this->accounting_receive_payment_model->get_customer_unapplied_payments($filters);
+
+        foreach($unappliedPayments as $unappliedPayment) {
+            $description = "<a href='/accounting/view-transaction/unapplied-payment/$unappliedPayment->id' class='text-info'>Unapplied Payment</a> (".date("m/d/Y", strtotime($unappliedPayment->payment_date)).")";
+
+            if($search === '') {
+                $data[] = [
+                    'id' => $unappliedPayment->id,
+                    'type' => 'unapplied-payment',
+                    'description' => $description,
+                    'original_amount' => number_format(floatval($unappliedPayment->amount)),
+                    'open_balance' => number_format(floatval($unappliedPayment->amount))
                 ];
             }
         }

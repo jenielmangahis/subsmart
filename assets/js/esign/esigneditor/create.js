@@ -193,21 +193,7 @@ function initAddPlaceholderForm() {
 
 function initLetterForm(letter = null) {
   const $letter = $("#letter");
-  $letter.summernote({
-    placeholder: "Type Here ... ",
-    tabsize: 2,
-    height: 450,
-    toolbar: [
-      ["style", ["style"]],
-      ["font", ["bold", "italic", "underline", "strikethrough", "clear"]],
-      ["fontname", ["fontname"]],
-      ["fontsize", ["fontsize"]],
-      ["para", ["ol", "ul", "paragraph", "height"]],
-      ["table", ["table"]],
-      ["insert", ["link"]],
-      ["view", ["undo", "redo", "fullscreen"]],
-    ],
-  });
+  window.helpers.wysiwygEditor($letter);
 
   const $form = document.getElementById("addLetterForm");
   const $inputs = [...$form.querySelectorAll("[data-name]")];

@@ -205,8 +205,25 @@ class Accounting_customers_model extends MY_Model
         return $query->result();
     }public function get_users_table_column_names()
 	{   
-        
 		$query= $this->db->query("SELECT * from customers");
         return $query->list_fields();
 	}
+    //function -> progress
+    public function import_customers_to_database($data){
+        $column_names=$this-> get_users_table_column_names();
+        $indicator=0;
+        for($index=0;$index<count($column_names);$index++){
+            for($x=0;$x<count($data);$x++){
+                if($data[$x][$indicator]==$column_names[$index]){
+                    
+                   for($y=0;$y<count($data[$x]);$y++){
+                    $query = $this->db->query("INSERT INTO customers (".$column_names[$index].") VALUES ('".$data[$x][$y+1]."')");
+                   }
+                };
+            };
+        };
+
+        return $query;
+        var_dump($data);
+    }
 }

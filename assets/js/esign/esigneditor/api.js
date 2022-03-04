@@ -61,6 +61,10 @@ export function exportLetterAsPDF(payload) {
   return http.post(`${prefixURL}/EsignEditor/apiExportLetterAsPDF`, payload);
 }
 
+export function createCustomerLetter(payload) {
+  return http.post(`${prefixURL}/EsignEditor/apiCreateCustomerLetter`, payload);
+}
+
 const http = {
   post: sendPost,
   delete: sendDelete,

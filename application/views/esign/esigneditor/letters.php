@@ -13,6 +13,12 @@ ini_set('max_input_vars', 30000);
             </div>
 
             <div>
+                <div class="d-flex justify-content-end mb-3">
+                    <a class="btn btn-primary" href="<?=base_url()?>esigneditor/create">
+                        <i class="fa fa-plus mr-1"></i>
+                        Create Letter
+                    </a>
+                </div>
                 <table id="letters" class="table table-striped table-bordered">
                     <thead>
                         <tr>
