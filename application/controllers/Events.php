@@ -28,7 +28,18 @@ class Events extends MY_Controller
     }
 
     public function index() {
-        $this->page_data['events'] = $this->event_model->get_all_events();
+        $get = $this->input->get();
+        $filter_status = '';
+
+        if( isset($get['status']) ){
+            $filter_status = $get['status'];
+            $condition[]   = ['field' => 'events.status', 'value' => ucfirst($get['status'])];
+            $this->page_data['events'] = $this->event_model->get_all_events(0, $condition);
+        }else{
+            $this->page_data['events'] = $this->event_model->get_all_events();
+        }
+
+        $this->page_data['filter_status'] = $filter_status;
         $this->page_data['title'] = 'Events';
         $this->load->view('v2/pages/events/list', $this->page_data);
     }
@@ -131,12 +142,15 @@ class Events extends MY_Controller
         $settings = $this->settings_model->getValueByKey(DB_SETTINGS_TABLE_KEY_SCHEDULE);
         $this->page_data['settings'] = unserialize($settings);
 
+        $page_action = 'add';
         if(!$id==NULL){
+            $page_action = 'edit';
             $this->page_data['jobs_data'] = $this->event_model->get_specific_event($id);
             $this->page_data['event_items'] = $this->event_model->get_specific_event_items($id);
             //print_r($this->page_data['jobs_data_items'] );
         }
 
+        $this->page_data['page_action'] = $page_action;
         $this->load->view('events/event_new', $this->page_data);
     }
 
@@ -517,18 +531,20 @@ class Events extends MY_Controller
             'customer_id' => $input['customer_id'],
             'employee_id' => $input['employee_id'],
             'event_description' => $input['event_description'],
+
             'start_date' => $input['start_date'],
             'start_time' => $input['start_time'],
             'end_date' => $input['end_date'],
             'end_time' => $input['end_time'],
-            'event_type' => $input['event_type'],
+            'event_type' => $input['event_types'],
             'event_tag' => $input['event_tag'],
             'event_color' => $input['event_color'],
             'customer_reminder_notification' => $input['customer_reminder_notification'],
             'url_link' => $input['link'],
             'event_address' => $input['event_address'],
             'status' => 'Scheduled',//$this->input->post('job_status'),
-            'description' => $input['message'],
+            'description' => $input['description'],
+            'timezone' => $input['timezone'],
             'created_by' => $input['created_by'],
             'company_id' => $comp_id,
             //'date_issued' => date('Y-m-d'),

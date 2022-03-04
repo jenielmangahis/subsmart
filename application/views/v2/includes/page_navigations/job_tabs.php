@@ -30,7 +30,7 @@
                 <span>Checklist</span>
             </a>
         </li>
-        <li class="<?php if($page->title == 'Settings'): echo 'active'; endif; ?>">
+        <li class="<?php if($page->title == 'Job Settings'): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="<?php echo base_url('job/settings') ?>">
                 <i class='bx bx-fw bx-cog'></i>
                 <span>Settings</span>

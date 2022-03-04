@@ -25,13 +25,14 @@
                     <div class="col-12 grid-mb text-end">
                         <div class="dropdown d-inline-block">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
-                                <span>Filter by All</span> <i class='bx bx-fw bx-chevron-down'></i>
+                                <span>Filter by <?= $filter_status != '' ? ucfirst($filter_status) : 'All' ; ?></span> <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="#">All</a></li>
-                                <li><a class="dropdown-item" href="#">Scheduled</a></li>
-                                <li><a class="dropdown-item" href="#">Started</a></li>
-                                <li><a class="dropdown-item" href="#">Finished</a></li>
+                                <li><a class="dropdown-item" href="<?= base_url('events'); ?>">All</a></li>
+                                <li><a class="dropdown-item" href="<?= base_url('events?status=draft'); ?>">Draft</a></li>
+                                <li><a class="dropdown-item" href="<?= base_url('events?status=scheduled'); ?>">Scheduled</a></li>
+                                <li><a class="dropdown-item" href="<?= base_url('events?status=started'); ?>">Started</a></li>
+                                <li><a class="dropdown-item" href="<?= base_url('events?status=finished'); ?>">Finished</a></li>
                             </ul>
                         </div>
                         <div class="nsm-page-buttons page-button-container">
@@ -51,6 +52,7 @@
                             <td data-name="Amount">Amount</td>
                             <td data-name="Event Type">Event Type</td>
                             <td data-name="Event Tag">Event Tag</td>
+                            <td data-name="Event Type">Status</td>
                             <td data-name="Manage"></td>
                         </tr>
                     </thead>
@@ -73,6 +75,7 @@
                                     <td>$<?= number_format((float)$event->amount, 2, '.', ','); ?></td>
                                     <td><?= $event->event_type; ?></td>
                                     <td><?= $event->event_tag; ?></td>
+                                    <td><?= ucfirst($event->status); ?></td>
                                     <td>
                                         <div class="dropdown table-management">
                                             <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">

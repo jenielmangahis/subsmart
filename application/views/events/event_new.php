@@ -33,6 +33,10 @@ add_css(array(
     .card{
         box-shadow: 0 0 13px 0 rgb(116 116 117 / 44%) !important;
     }
+    label>input {
+      visibility: initial !important;
+      position: initial !important; 
+    }
 </style>
 
 <div class="wrapper" role="wrapper">
@@ -102,7 +106,7 @@ add_css(array(
                             <div class="form-group label-width d-flex align-items-center">
                                 <label>From</label>
                                 <input type="date" name="start_date" id="start_date" class="form-control" value="<?= isset($jobs_data) ?  $jobs_data->start_date : '';  ?>" required>
-                                <select id="start_time" name="start_time" class="form-control" required>
+                                <select id="  " name="start_time" class="form-control" required>
                                     <option selected="">Start time</option>
                                     <?php for($x=0;$x<time_availability(0,TRUE);$x++){ ?>
                                         <option <?= isset($jobs_data) && strtolower($jobs_data->start_time) == time_availability($x) ?  'selected' : '';  ?> value="<?= time_availability($x); ?>"><?= time_availability($x); ?></option>
@@ -161,7 +165,11 @@ add_css(array(
                             </select>
                             <h6>Time Zone</h6>
                             <select id="inputState" name="timezone" class="form-control">
-                                <option selected="">Central Time (UTC -5)</option>
+                                <?php foreach (config_item('calendar_timezone') as $key => $zone) { ?>
+                                    <option value="<?php echo $key ?>" <?php echo ($jobs_data->timezone === $key) ? "selected" : "" ?>>
+                                        <?php echo $zone ?>
+                                    </option>
+                                <?php } ?>
                             </select>
 
                             <h6>Select Event Type</h6>
@@ -208,7 +216,7 @@ add_css(array(
                                 </div>
                                 <div id="notes_input_div" style="display:none;">
                                     <div style=" height:70px;margin-bottom: 10px;">
-                                        <textarea name="description" cols="40" style="width: 100%;" rows="3" id="note_txt" class="input"><?= isset($jobs_data) ? $jobs_data->message : ''; ?></textarea>
+                                        <textarea name="description" cols="50" style="width: 100%;margin-bottom: 8px;height:54px;" id="note_txt" class="form-control input"><?= isset($jobs_data) ? $jobs_data->message : ''; ?></textarea>
                                         <button type="button" class="btn btn-primary btn-sm" id="save_memo" style="color: #ffffff;"><span class="fa fa-save"></span> Save</button>
                                     </div>
                                 </div>
@@ -301,62 +309,66 @@ add_css(array(
                                 </div>
                             </div>
                         </div>
-
+                        <div class="row">
+                            <div class="col-6">
+                                <small>Event Type</small>
+                                <input type="text" id="event_type" name="event_type" value="<?= isset($jobs_data) ? $jobs_data->event_type : ''; ?>" class="form-control" readonly >
+                            </div>
+                            <div class="col-6">
+                                <small>Event Tags</small>
+                                <input type="text" name="event_tag" class="form-control" value="<?= isset($jobs_data) ? $jobs_data->event_tag : ''; ?>" id="job_tags_right" readonly>
+                            </div>
+                            <div class="col-sm-12">
+                                <p>Description of Event</p>
+                                <textarea name="event_description" required="" class="form-control"><?= isset($jobs_data) ? $jobs_data->event_description : ''; ?></textarea>
+                                <hr/>
+                            </div>
+                        </div>                        
                         <table class="table table-striped">
                             <thead>
                             <tr>
-                                <td>
+                                <td colspan="5" style="background-color: #32243d;color:#ffffff;padding: 0px 7px;">
                                     <h6>Event Items Listing</h6>
                                 </td>
                             </tr>
-                            </thead>
-                            <tbody id="events_items">
                             <tr>
-                                <td>
-                                    <small>Event Type</small>
-                                    <input type="text" id="event_type" name="event_type" value="<?= isset($jobs_data) ? $jobs_data->event_type : ''; ?>" class="form-control" readonly >
-                                </td>
-                                <td></td>
-                                <td>
-                                    <small>Event Tags</small>
-                                    <input type="text" name="event_tag" class="form-control" value="<?= isset($jobs_data) ? $jobs_data->event_tag : ''; ?>" id="job_tags_right" readonly>
-                                </td>
-                                <td></td>
+                                <td><b>Item Name</b></td>
+                                <td><b>Qty</b></td>
+                                <td><b>Unit Price</b></td>
+                                <td style="width:15%;"><b>Total Amount</b></td>
                                 <td></td>
                             </tr>
-                            <?php if(isset($jobs_data)): ?>
-                                <?php
-                                $subtotal = 0.00;
-                                foreach ($event_items as $item):
-                                    $total = $item->price * $item->qty;
+                            </thead>
+                            <tbody id="events_items">                            
+                            <?php if(isset($event_items)){ ?>
+                                <?php $subtotal = 0.00; ?>
+                                <?php foreach($event_items as $key => $i){ ?>
+                                    <?php 
+                                        $total    = (float)$i->price * (float)$i->qty;
+                                        $subtotal = $subtotal + $total;
                                     ?>
-                                    <tr id="ss">
-                                    <td width="35%">
-                                        <small>Item name</small>
-                                        <input value='<?= $item->title; ?>' type="text" name="item_name[]" class="form-control" >
-                                        <input type="hidden" value='"+idd+"' name="item_id[]">
-                                    </td>
-                                    <td width="20%">
-                                        <small>Qty</small>
-                                        <input data-itemid='' id='' value='<?= $item->qty; ?>' type="number" name="item_qty[]" class="form-control qty">
-                                    </td>
-                                    <td width="20%">
-                                        <small>Unit Price</small>
-                                        <input id='price<?= $item->price; ?>' value='<?= $item->price; ?>'  type="number" name="item_price[]" class="form-control" placeholder="Unit Price">
-                                    </td>
-                                    <td  style="text-align: center;margin-top: 20px;" class="d-flex" width="15%">
-                                        <b style="font-size: 16px;" data-subtotal='"+total_+"' id='sub_total"+idd+"' class="total_per_item"><?= number_format((float)$total,2,'.',',');?></b>
-                                    </td>
-                                    <td width="20%">
+                                    <tr>
+                                        <td width="35%">
+                                            <input value='<?= $i->title; ?>' type="text" name="item_name[]" class="form-control" >
+                                            <input type="hidden" value="<?= $i->items_id; ?>" name="item_id[]">
+                                        </td>
+                                        <td width="20%">
+                                            <input data-itemid="<?= $i->items_id; ?>" id="<?= $i->items_id; ?>" value='<?= $i->qty; ?>' type="number" name="item_qty[]" class="form-control qty">
+                                        </td>
+                                        <td width="20%">
+                                            <input id='price<?= $i->items_id; ?>' data-itemid="<?= $i->items_id; ?>" value='<?= $i->price; ?>'  type="number" name="item_price[]" class="form-control item-price" placeholder="Unit Price">
+                                        </td>
+                                        <td  style="text-align: center;margin-top: 20px;" class="d-flex" width="15%">
+                                            <b style="font-size: 16px;" id='sub_total<?= $i->items_id; ?>' class="total_per_item"><?= number_format($total,2,'.',',');?></b>
+                                        </td>
+                                        <td width="20%">
                                             <button style="margin-top: 20px;" type="button" class="btn btn-primary btn-sm items_remove_btn remove_item_row">
-                                                <span class="fa fa-trash-o"></span></button>
+                                                <span class="fa fa-trash-o"></span>
+                                            </button>
                                         </td>
                                     </tr>
-                                    <?php
-                                    $subtotal = $subtotal + $total;
-                                endforeach;
-                                ?>
-                            <?php endif; ?>
+                                <?php } ?>
+                            <?php } ?>
                             </tbody>
                         </table>
                         <div class="col-sm-12">
@@ -364,12 +376,7 @@ add_css(array(
                                 <span class="fa fa-plus-square fa-margin-right"></span>Add Items
                             </a>
                         </div>
-                        <br>
-                        <div class="col-sm-12">
-                            <p>Description of Event</p>
-                            <textarea name="event_description" required="" class="form-control"><?= isset($jobs_data) ? $jobs_data->job_description : ''; ?></textarea>
-                            <hr/>
-                        </div>
+                        <br>                        
                         <div class="col-md-12 table-responsive">
                             <div class="row">
                                 <div class="col-md-6 row pr-0">
@@ -802,10 +809,10 @@ add_css(array(
                         <table id="items_table" class="table table-hover" style="width: 100%;">
                             <thead>
                             <tr>
-                                <td> Name</td>
-                                <td> Qty</td>
-                                <td> Price</td>
-                                <td> Action</td>
+                                <td style="width: 70%;">Name</td>
+                                <td>Qty</td>
+                                <td>Price</td>
+                                <td style="width: 5%;"> Action</td>
                             </tr>
                             </thead>
                             <tbody>
@@ -823,11 +830,6 @@ add_css(array(
                             </tbody>
                         </table>
                     </div>
-                </div>
-            </div>
-            <div class="modal-footer modal-footer-detail">
-                <div class="button-modal-list">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><span class="fa fa-remove"></span> Close</button>
                 </div>
             </div>
         </div>
@@ -957,6 +959,13 @@ include viewPath('includes/footer');
 <?php include viewPath('events/js/new_event_js'); ?>
 <script>
     $(function(){
+        $('#items_table').DataTable({
+            "lengthChange": false,
+            "searching" : true,
+            "pageLength": 5,
+            "autoWidth": false,
+            "order": [],
+        });
         $("#customer_id").select2({
             placeholder: "Select Customer"
         });
