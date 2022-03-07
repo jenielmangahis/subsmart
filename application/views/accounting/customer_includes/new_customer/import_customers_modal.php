@@ -35,36 +35,48 @@
 
                         <fieldset id="holder-step-2">
 
-                                <!--1st Row-->
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <h2>Welcome To GFG Step 2</h2>
-                                    </div>
+                            <!--1st Row-->
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h2>Welcome To GFG Step 2</h2>
                                 </div>
-                                <!--2nd Row-->
+                            </div>
+                            <!--2nd Row-->
 
-                                <div class="row marg">
-                                    <div class="col-md-6">
-                                        <h3 class="margi">Checkbox</h3>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <h3 class="margi">Select</h3>
-                                    </div>
+                            <div class="row marg">
+                                <div class="col-md-6">
+                                    <h3 class="margi">Checkbox</h3>
                                 </div>
+                                <div class="col-md-6">
+                                    <h3 class="margi">Select</h3>
+                                </div>
+                            </div>
 
                             <div class="form-check">
-                
+
                             </div>
 
 
 
-                            <input type="button" name="next-step" class="next-step" value="Save Now" />
-                            <input type="button" name="previous-step" class="previous-step" value="Previous Step" />
+                            <input type="button" name="next-step" class="next-step mt-5" value="Save Now" />
+                            <input type="button" name="previous-step" class="previous-step mt-5" value="Previous Step" />
                         </fieldset>
-                        <fieldset id="holder-step-2">
-                            <h2>Welcome To GFG Step 3</h2>
-                            <input type="button" name="next-step" class="next-step" value="Finish Step" />
-                            <input type="button" name="previous-step" class="previous-step" value="Previous Step" />
+                        <fieldset id="holder-step-3">
+                            <div class="row">
+                                <div class="col-md-12 mt-4">
+                                   
+                                    <img src="https://localhost/nsmartrac/assets/img/accounting/customers/message.png" style="width: 200px; height:200px; margin:0 auto;">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                   
+                                    <h2>Saved!</h2>
+                                    <h3 style="color:#6a4b86">You've successfully added new customers!!</h3>
+                                    
+                                
+                                </div>
+                            </div>                            
                         </fieldset>
 
                     </form>

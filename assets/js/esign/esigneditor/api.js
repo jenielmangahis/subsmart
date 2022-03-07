@@ -65,6 +65,24 @@ export function createCustomerLetter(payload) {
   return http.post(`${prefixURL}/EsignEditor/apiCreateCustomerLetter`, payload);
 }
 
+export function getCustomerLetters(customerId) {
+  return http.get(
+    `${prefixURL}/EsignEditor/apiGetCustomerLetters/${customerId}`
+  );
+}
+
+export function editCustomerLetter(payload) {
+  const { id, ...rest } = payload;
+  return http.post(
+    `${prefixURL}/EsignEditor/apiEditCustomerLetter/${id}`,
+    rest
+  );
+}
+
+export function deleteCustomerLetter(id) {
+  return http.delete(`${prefixURL}/EsignEditor/apiDeleteCustomerLetter/${id}`);
+}
+
 const http = {
   post: sendPost,
   delete: sendDelete,

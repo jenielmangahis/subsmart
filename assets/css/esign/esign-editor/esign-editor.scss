@@ -179,3 +179,33 @@
     }
   }
 }
+
+.table {
+  &__selectColumn {
+    width: 50px !important;
+    padding: 0 !important;
+    text-align: center;
+
+    .table__checkbox {
+      width: 15px;
+      height: 15px;
+    }
+  }
+
+  &__row--selected {
+    background-color: #e4e7eb !important;
+  }
+
+  &__actions {
+    width: 135px !important;
+  }
+
+  .btn-light {
+    color: #333;
+
+    &:hover,
+    &:active {
+      color: #333;
+    }
+  }
+}

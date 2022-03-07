@@ -7,7 +7,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class Accounting_customers_model extends MY_Model
 {
     public $table = 'acs_profile';
-    
+
     public function __construct()
     {
         parent::__construct();
@@ -86,10 +86,10 @@ class Accounting_customers_model extends MY_Model
         business_profile.id as business_id, business_profile.street as bus_street, business_profile.city as bus_city, business_profile.state as bus_state, 
         business_profile.postal_code as bus_postal_code,
         acs_profile.mail_add as acs_mail_add, acs_profile.city as acs_city, acs_profile.state as acs_state, acs_profile.zip_code as acs_zip_code, acs_profile.email as acs_email, acs_profile.phone_h as customer_phone_h, acs_profile.attachment as asc_attachment
-        FROM acs_profile JOIN business_profile ON acs_profile.company_id = business_profile.company_id WHERE acs_profile.prof_id = ".$id);
+        FROM acs_profile JOIN business_profile ON acs_profile.company_id = business_profile.company_id WHERE acs_profile.prof_id = " . $id);
         return $query->row();
     }
-    public function getAllVendorsByCompany($company_id=0)
+    public function getAllVendorsByCompany($company_id = 0)
     {
         if ($company_id == 0) {
             $company_id = logged("company_id");
@@ -123,7 +123,7 @@ class Accounting_customers_model extends MY_Model
     }
     public function update_accounting_timesheet_settings($data)
     {
-        if ($this->get_accounting_timesheet_settings(logged("company_id"))>0) {
+        if ($this->get_accounting_timesheet_settings(logged("company_id")) > 0) {
             $this->db->where('company_id', logged("company_id"));
             $this->db->update('accounting_timesheet_settings', $data);
         } else {
@@ -135,15 +135,15 @@ class Accounting_customers_model extends MY_Model
     {
         $this->db->where('company_id', logged("company_id"));
         $this->db->where('prof_id', $customer_id);
-        $this->db->update('acs_profile', array("activated"=>0));
+        $this->db->update('acs_profile', array("activated" => 0));
     }
-    public function add_new_customer_type($data=array())
+    public function add_new_customer_type($data = array())
     {
         $this->db->insert('customer_types', $data);
         $insert_id = $this->db->insert_id();
         return  $insert_id;
     }
-    public function get_customer_type_by_company_id($company_id="")
+    public function get_customer_type_by_company_id($company_id = "")
     {
         $this->db->where('company_id', $company_id);
         $this->db->order_by('title');
@@ -186,44 +186,86 @@ class Accounting_customers_model extends MY_Model
     }
     public function get_customer_deposits($customer_id)
     {
-        $query = $this->db->query("SELECT * FROM accounting_bank_deposit WHERE customer_id = ".$customer_id);
+        $query = $this->db->query("SELECT * FROM accounting_bank_deposit WHERE customer_id = " . $customer_id);
         return $query->result();
     }
     public function get_customer_estimates($customer_id, $status)
     {
-        $query = $this->db->query("SELECT * FROM estimates WHERE customer_id = ".$customer_id." AND status = '".$status."'");
+        $query = $this->db->query("SELECT * FROM estimates WHERE customer_id = " . $customer_id . " AND status = '" . $status . "'");
         return $query->result();
     }
     public function get_customer_credit_memo($customer_id)
     {
-        $query = $this->db->query("SELECT * FROM accounting_credit_memo WHERE customer_id = ".$customer_id);
+        $query = $this->db->query("SELECT * FROM accounting_credit_memo WHERE customer_id = " . $customer_id);
         return $query->result();
     }
     public function get_customer_statement($customer_id)
     {
-        $query = $this->db->query("SELECT * FROM accounting_statements WHERE customer_id = ".$customer_id);
+        $query = $this->db->query("SELECT * FROM accounting_statements WHERE customer_id = " . $customer_id);
         return $query->result();
-    }public function get_users_table_column_names()
-	{   
-		$query= $this->db->query("SELECT * from customers");
+    }
+    public function get_users_table_column_names()
+    {
+        $query = $this->db->query("SELECT * from customers");
         return $query->list_fields();
-	}
+    }
     //function -> progress
-    public function import_customers_to_database($data){
-        $column_names=$this-> get_users_table_column_names();
-        $indicator=0;
-        for($index=0;$index<count($column_names);$index++){
-            for($x=0;$x<count($data);$x++){
-                if($data[$x][$indicator]==$column_names[$index]){
-                    
-                   for($y=0;$y<count($data[$x]);$y++){
-                    $query = $this->db->query("INSERT INTO customers (".$column_names[$index].") VALUES ('".$data[$x][$y+1]."')");
-                   }
+    public function import_customers_to_database($data, $selCol)
+    {
+        $column_names = $this->get_users_table_column_names();
+        $indicator = 0;
+        $columns = "";
+        $values = "";
+
+
+        //progress report
+
+        for ($index = 0; $index < count($column_names); $index++) { //for the database columns
+            for ($x = 0; $x < count($data); $x++) { //for the first index of the array 2times lang
+                if ($data[$x][$indicator] == $column_names[$index]) { //for the second index of the array
+                    for ($y = 0; $y < count($data[$x]); $y++) {
+                        if ($y == count($data[$x]) - 1) {
+                            if ($x == count($data) - 1) {
+                                $columns .= $column_names[$index];
+                            } else {
+                                $columns .= $column_names[$index] . ",";
+                            }
+                            break;
+                        }
+                        // if($y==count($data[$x])-2){
+                        //     $values.= "'".$data[$x][$y + 1]."'";
+                        // }else{
+                        //     $values.= "'".$data[$x][$y + 1]."',";
+                        // }
+
+                    }
                 };
             };
         };
 
-        return $query;
+        for ($x = 0; $x < count($data[0]); $x++) {
+            for ($y = 0; $y < count($data); $y++) {
+                if ($y == 0) {
+                    $values .= "('" . $data[$y][$x] . "',";
+                } else if ($y == count($data) - 1) {
+                    if ($x == count($data[0]) - 1) {
+                        $values .= "'" . $data[$y][$x] . "')";
+                    } else {
+                        $values .= "'" . $data[$y][$x] . "'),";
+                    }
+                } else {
+                    $values .= "'" . $data[$y][$x] . "'";
+                }
+            }
+        }
+
+        //progress report
+       
+        $query = $this->db->query("INSERT INTO customers ($columns ) VALUES  $values ");
+
         var_dump($data);
+        echo "<br>";
+        echo "<br>";
+        var_dump("INSERT INTO customers ($columns ) VALUES  $values ");
     }
 }

@@ -343,3 +343,8 @@ div#import-customers-modal {
     padding-top: 10px;
     color: rgb(92, 84, 84) !important;
 }
+
+#import-customers-modal h3 {
+    margin-left: 50px;
+    margin-top: 33px;
+}
