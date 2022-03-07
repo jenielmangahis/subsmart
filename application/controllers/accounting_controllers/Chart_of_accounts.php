@@ -1296,27 +1296,27 @@ class Chart_of_accounts extends MY_Controller {
             switch($accType) {
                 case 'Credit Card' :
                     $transaction['charge'] = '';
-                    $transaction['payment'] = number_format(floatval($payment->amount), 2, '.', ',');
+                    $transaction['payment'] = number_format(floatval($payment->amount_received), 2, '.', ',');
                     $transaction['charge_disabled'] = true;
-                    $transaction['payment_disabled'] = $count > 1;
+                    $transaction['payment_disabled'] = true;
                 break;
                 case 'Asset' :
-                    $transaction['increase'] = number_format(floatval($payment->amount), 2, '.', ',');
+                    $transaction['increase'] = number_format(floatval($payment->amount_received), 2, '.', ',');
                     $transaction['decrease'] = '';
-                    $transaction['increase_disabled'] = $count > 1;
+                    $transaction['increase_disabled'] = true;
                     $transaction['decrease_disabled'] = true;
                 break;
                 case 'Liability' :
-                    $transaction['increase'] = number_format(floatval($payment->amount), 2, '.', ',');
+                    $transaction['increase'] = number_format(floatval($payment->amount_received), 2, '.', ',');
                     $transaction['decrease'] = '';
-                    $transaction['increase_disabled'] = $count > 1;
+                    $transaction['increase_disabled'] = true;
                     $transaction['decrease_disabled'] = true;
                 break;
                 default :
                     $transaction['payment'] = '';
-                    $transaction['deposit'] = number_format(floatval($payment->amount), 2, '.', ',');
+                    $transaction['deposit'] = number_format(floatval($payment->amount_received), 2, '.', ',');
                     $transaction['payment_disabled'] = true;
-                    $transaction['deposit_disabled'] = $count > 1;
+                    $transaction['deposit_disabled'] = true;
                 break;
             }
 
@@ -2496,25 +2496,25 @@ class Chart_of_accounts extends MY_Controller {
                     $transaction['charge'] = '';
                     $transaction['payment'] = number_format(floatval($salesReceipt->amount), 2, '.', ',');
                     $transaction['charge_disabled'] = true;
-                    $transaction['payment_disabled'] = $count > 1;
+                    $transaction['payment_disabled'] = true;
                 break;
                 case 'Asset' :
                     $transaction['increase'] = number_format(floatval($salesReceipt->amount), 2, '.', ',');
                     $transaction['decrease'] = '';
-                    $transaction['increase_disabled'] = $count > 1;
+                    $transaction['increase_disabled'] = true;
                     $transaction['decrease_disabled'] = true;
                 break;
                 case 'Liability' :
                     $transaction['increase'] = number_format(floatval($salesReceipt->amount), 2, '.', ',');
                     $transaction['decrease'] = '';
-                    $transaction['increase_disabled'] = $count > 1;
+                    $transaction['increase_disabled'] = true;
                     $transaction['decrease_disabled'] = true;
                 break;
                 default :
                     $transaction['payment'] = '';
                     $transaction['deposit'] = number_format(floatval($salesReceipt->amount), 2, '.', ',');
                     $transaction['payment_disabled'] = true;
-                    $transaction['deposit_disabled'] = $count > 1;
+                    $transaction['deposit_disabled'] = true;
                 break;
             }
 
@@ -2575,25 +2575,25 @@ class Chart_of_accounts extends MY_Controller {
                     $transaction['charge'] = '';
                     $transaction['payment'] = number_format(floatval($item->total), 2, '.', ',');
                     $transaction['charge_disabled'] = true;
-                    $transaction['payment_disabled'] = $count > 1;
+                    $transaction['payment_disabled'] = true;
                 break;
                 case 'Asset' :
                     $transaction['increase'] = number_format(floatval($item->total), 2, '.', ',');
                     $transaction['decrease'] = '';
-                    $transaction['increase_disabled'] = $count > 1;
+                    $transaction['increase_disabled'] = true;
                     $transaction['decrease_disabled'] = true;
                 break;
                 case 'Liability' :
                     $transaction['increase'] = number_format(floatval($item->total), 2, '.', ',');
                     $transaction['decrease'] = '';
-                    $transaction['increase_disabled'] = $count > 1;
+                    $transaction['increase_disabled'] = true;
                     $transaction['decrease_disabled'] = true;
                 break;
                 default :
                     $transaction['payment'] = '';
                     $transaction['deposit'] = number_format(floatval($item->total), 2, '.', ',');
                     $transaction['payment_disabled'] = true;
-                    $transaction['deposit_disabled'] = $count > 1;
+                    $transaction['deposit_disabled'] = true;
                 break;
             }
 

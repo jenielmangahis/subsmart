@@ -33,6 +33,7 @@ var submitType = 'save-and-close';
 
 var dropdownEl = null;
 var modalAttachments = null;
+var receivedAmountIsChanged = false;
 
 const dropdownFields = [
     'customer',
@@ -5235,12 +5236,14 @@ $(function() {
                 var rowData = $('#receivePaymentModal #credit-memo-table').DataTable().row($(this)).data();
 
                 if(checked > 0) {
-                    $(this).find('td:first-child').html(`<div class="d-flex justify-content-center">
-                    <div class="checkbox checkbox-sec m-0">
-                        <input type="checkbox" id="credit-memo-${rowData.id}" value="${rowData.id}">
-                        <label for="credit-memo-${rowData.id}" class="p-0" style="width: 24px; height: 24px"></label>
-                    </div>
-                </div>`);
+                    if($(this).find('input[type="checkbox"]').length < 1) {
+                        $(this).find('td:first-child').html(`<div class="d-flex justify-content-center">
+                            <div class="checkbox checkbox-sec m-0">
+                                <input type="checkbox" id="${rowData.type}-${rowData.id}" value="${rowData.type}_${rowData.id}">
+                                <label for="${rowData.type}-${rowData.id}" class="p-0" style="width: 24px; height: 24px"></label>
+                            </div>
+                        </div>`);
+                    }
                 } else {
                     $(this).find('td:first-child').html('');
                 }
@@ -5248,7 +5251,7 @@ $(function() {
         });
     });
 
-    $(document).on('change', '#receivePaymentModal #credit-memo-table thead #select-all-invoices', function() {
+    $(document).on('change', '#receivePaymentModal #credit-memo-table thead #select-all-credit-memo', function() {
         $('#receivePaymentModal #credit-memo-table tbody input[type="checkbox"]').prop('checked', $(this).prop('checked')).trigger('change');
     });
 
@@ -5268,67 +5271,124 @@ $(function() {
         $('#receivePaymentModal #credit-memo-table thead #select-all-credit-memo').prop('checked', checked === all);
     });
 
-    $(document).on('change', '#receivePaymentModal #credit-memo-table tbody input[name="credit_payment[]"]', function() {
-        var row = $(this).parent().parent();
-        var rowData = $('#receivePaymentModal #credit-memo-table').DataTable().row(row).data();
+    $(document).on('change', '#receivePaymentModal #received-amount', function() {
+        receivedAmountIsChanged = true;
 
-        if(parseFloat($(this).val()) > parseFloat(rowData.open_balance)) {
-            $(this).val(rowData.open_balance);
-        }
-
-        var amountToApply = 0.00;
-        var total = 0.00;
+        var receivedAmount = parseFloat($(this).val());
+        var invoiceTotal = 0.00;
         $('#receivePaymentModal #invoices-table tbody input[name="payment[]"]').each(function() {
-            if($(this).val() !== '') {
-                amountToApply = parseFloat(amountToApply) + parseFloat($(this).val());
-                total = parseFloat(total) + parseFloat($(this).val());
+            var checked = $(this).parent().parent().find('input[type="checkbox"]').prop('checked');
+            if(checked) {
+                invoiceTotal = parseFloat(invoiceTotal) + parseFloat($(this).val());
             }
         });
 
         var creditAmount = 0.00;
         $('#receivePaymentModal #credit-memo-table tbody input[name="credit_payment[]"]').each(function() {
-            if($(this).val() !== '') {
+            var checked = $(this).parent().parent().find('input[type="checkbox"]').prop('checked');
+            if(checked) {
                 creditAmount = parseFloat(creditAmount) + parseFloat($(this).val());
-                total = parseFloat(total) - parseFloat($(this).val());
             }
         });
 
-        if(parseFloat(creditAmount) > parseFloat(amountToApply)) {
-            var val = $(this).val();
-            var diff = parseFloat(creditAmount) - parseFloat(amountToApply);
-            val = parseFloat(val) - parseFloat(diff);
-            val = parseFloat(val).toFixed(2);
-            $(this).val(val);
+        var total = parseFloat(invoiceTotal) - parseFloat(creditAmount);
 
-            total = 0.00;
-            $('#receivePaymentModal #invoices-table tbody input[name="payment[]"]').each(function() {
-                if($(this).val() !== '') {
-                    total = parseFloat(total) + parseFloat($(this).val());
-                }
-            });
+        var amountToCredit = receivedAmount - parseFloat(total);
+        amountToCredit = '$'+parseFloat(amountToCredit).toFixed(2);
+        $('#receivePaymentModal span.amount-to-credit').html(amountToCredit.replace('$-', '-$'));
 
-            $('#receivePaymentModal #credit-memo-table tbody input[name="credit_payment[]"]').each(function() {
-                if($(this).val() !== '') {
-                    total = parseFloat(total) - parseFloat($(this).val());
-                }
-            });
+        if(parseFloat(amountToCredit.replace('$', '')) > 0) {
+            $('#receivePaymentModal #credit-message').html(`This transaction will create an additional credit in the amount of ${amountToCredit.replace('$-', '-$')}`);
+            $('#receivePaymentModal #credit-message').parent().parent().removeClass('d-none');
+        } else {
+            $('#receivePaymentModal #credit-message').html('');
+            $('#receivePaymentModal #credit-message').parent().parent().addClass('d-none');
         }
+
+        var amountToApply = parseFloat(receivedAmount) + parseFloat(creditAmount);
+        amountToApply = '$'+parseFloat(amountToApply).toFixed(2);
+        $('#receivePaymentModal span.amount-to-apply').html(amountToApply.replace('$-', '-$'));
+
+        receivedAmount = '$'+parseFloat(receivedAmount).toFixed(2);
+        $('#receivePaymentModal .transaction-total-amount').html(receivedAmount.replace('$-', '-$'));
+    });
+
+    $(document).on('change', '#receivePaymentModal #credit-memo-table tbody input[name="credit_payment[]"]', function() {
+        var row = $(this).parent().parent();
+        var rowData = $('#receivePaymentModal #credit-memo-table').DataTable().row(row).data();
 
         if($(this).val() !== '' && $(this).val() !== '0.00') {
             row.find('input[type="checkbox"]').prop('checked', true);
 
             var checked = $('#receivePaymentModal #credit-memo-table tbody input[type="checkbox"]:checked').length;
             var all = $('#receivePaymentModal #credit-memo-table tbody input[type="checkbox"]').length;
-
             $('#receivePaymentModal #credit-memo-table thead #select-all-credit-memo').prop('checked', checked === all);
+        } else {
+            row.find('input[type="checkbox"]').prop('checked', false);
+            $('#receivePaymentModal #credit-memo-table thead #select-all-credit-memo').prop('checked', false);
         }
 
-        $('#receivePaymentModal #received-amount').val(parseFloat(total).toFixed(2));
-        total = '$'+parseFloat(total).toFixed(2);
-        $('#receivePaymentModal span.transaction-total-amount').val(total.replace('$-', '-$'));
-        amountToApply = '$'+parseFloat(amountToApply).toFixed(2);
+        if(parseFloat($(this).val()) > parseFloat(rowData.open_balance)) {
+            $(this).val(rowData.open_balance);
+        }
 
-        $('#receivePaymentModal span.amount-to-apply').html(amountToApply.replace('$-', '-$'));
+        var invoicePayment = 0.00;
+        $('#receivePaymentModal #invoices-table tbody input[name="payment[]"]').each(function() {
+            var checked = $(this).parent().parent().find('input[type="checkbox"]').prop('checked');
+            if(checked) {
+                invoicePayment = parseFloat(invoicePayment) + parseFloat($(this).val());
+            }
+        });
+
+        var creditAmount = 0.00;
+        $('#receivePaymentModal #credit-memo-table tbody input[name="credit_payment[]"]').each(function() {
+            var checked = $(this).parent().parent().find('input[type="checkbox"]').prop('checked');
+            if(checked) {
+                creditAmount = parseFloat(creditAmount) + parseFloat($(this).val());
+            }
+        });
+
+        if(parseFloat(creditAmount) > parseFloat(invoicePayment)) {
+            var val = $(this).val();
+            var diff = parseFloat(creditAmount) - parseFloat(invoicePayment);
+            val = parseFloat(val) - parseFloat(diff);
+            val = parseFloat(val).toFixed(2);
+            $(this).val(val);
+
+            creditAmount = 0.00;
+            $('#receivePaymentModal #credit-memo-table tbody input[name="credit_payment[]"]').each(function() {
+                var checked = $(this).parent().parent().find('input[type="checkbox"]').prop('checked');
+                if(checked) {
+                    creditAmount = parseFloat(creditAmount) - parseFloat($(this).val());
+                }
+            });
+        }
+
+        var total = parseFloat(invoicePayment) - parseFloat(creditAmount);
+
+        if(receivedAmountIsChanged === false) {
+            $('#receivePaymentModal #received-amount').val(parseFloat(total).toFixed(2));
+            total = '$'+parseFloat(total).toFixed(2);
+            $('#receivePaymentModal span.transaction-total-amount').html(total.replace('$-', '-$'));
+            invoicePayment = '$'+parseFloat(invoicePayment).toFixed(2);
+            $('#receivePaymentModal span.amount-to-apply').html(invoicePayment.replace('$-', '-$'));
+        } else {
+            var receivedAmount = parseFloat($('#receivePaymentModal #received-amount').val());
+            var amountToApply = parseFloat(receivedAmount) + parseFloat(creditAmount);
+            amountToApply = '$'+parseFloat(amountToApply).toFixed(2);
+            $('#receivePaymentModal span.amount-to-apply').html(amountToApply.replace('$-', '-$'));
+            var amountToCredit = parseFloat(receivedAmount) - parseFloat(total);
+            amountToCredit = '$'+parseFloat(amountToCredit).toFixed(2);
+            $('#receivePaymentModal span.amount-to-credit').html(amountToCredit.replace('$-', '-$'));
+
+            if(parseFloat(amountToCredit.replace('$', '')) > 0) {
+                $('#receivePaymentModal #credit-message').html(`This transaction will create an additional credit in the amount of ${amountToCredit.replace('$-', '-$')}`);
+                $('#receivePaymentModal #credit-message').parent().parent().removeClass('d-none');
+            } else {
+                $('#receivePaymentModal #credit-message').html('');
+                $('#receivePaymentModal #credit-message').parent().parent().addClass('d-none');
+            }
+        }
     });
 
     $(document).on('change', '#receivePaymentModal #invoices-table tbody input[name="payment[]"]', function() {
@@ -5336,7 +5396,7 @@ $(function() {
         var rowData = $('#receivePaymentModal #invoices-table').DataTable().row(row).data();
 
         if($(this).val() !== '' && $(this).val() !== "0.00") {
-            $(this).parent().parent().find('input[type="checkbox"]').prop('checked', true);
+            row.find('input[type="checkbox"]').prop('checked', true);
 
             var checked = $('#receivePaymentModal #invoices-table tbody input[type="checkbox"]:checked').length;
             var all = $('#receivePaymentModal #invoices-table tbody input[type="checkbox"]').length;
@@ -5346,218 +5406,103 @@ $(function() {
             if(parseFloat($(this).val()) > parseFloat(rowData.open_balance)) {
                 $(this).val(rowData.open_balance);
             }
+        } else {
+            row.find('input[type="checkbox"]').prop('checked', false);
+            $('#receivePaymentModal #invoices-table thead #select-all-invoices').prop('checked', false);
         }
 
-        var amountToApply = 0.00;
-        var total = 0.00;
+        var invoicePayment = 0.00;
         $('#receivePaymentModal #invoices-table tbody input[name="payment[]"]').each(function() {
-            if($(this).val() !== '') {
-                amountToApply = parseFloat(amountToApply) + parseFloat($(this).val());
-                total = parseFloat(total) + parseFloat($(this).val());
+            var checked = $(this).parent().parent().find('input[type="checkbox"]').prop('checked');
+            if(checked) {
+                invoicePayment = parseFloat(invoicePayment) + parseFloat($(this).val());
             }
         });
 
         var creditAmount = 0.00;
         $('#receivePaymentModal #credit-memo-table tbody input[name="credit_payment[]"]').each(function() {
-            if($(this).val() !== '') {
+            var checked = $(this).parent().parent().find('input[type="checkbox"]').prop('checked');
+            if(checked) {
                 creditAmount = parseFloat(creditAmount) + parseFloat($(this).val());
-                total = parseFloat(total) - parseFloat($(this).val());
             }
         });
 
-        if(parseFloat(creditAmount) > parseFloat(amountToApply)) {
+        if(parseFloat(creditAmount) > parseFloat(invoicePayment)) {
             var el = null;
             var val = null;
             $('#receivePaymentModal #credit-memo-table tbody input[name="credit_payment[]"]').each(function() {
-                if($(this).val() !== '' && $(this).val() !== '0.00') {
+                var checked = $(this).parent().parent().find('input[type="checkbox"]').prop('checked');
+                if(checked) {
                     el = $(this);
                     val = $(this).val();
                 }
             });
-            var diff = parseFloat(creditAmount) - parseFloat(amountToApply);
+            var diff = parseFloat(creditAmount) - parseFloat(invoicePayment);
             val = parseFloat(val) - parseFloat(diff);
             val = parseFloat(val).toFixed(2);
             el.val(val);
 
-            total = 0.00;
-            $('#receivePaymentModal #invoices-table tbody input[name="payment[]"]').each(function() {
-                if($(this).val() !== '') {
-                    total = parseFloat(total) + parseFloat($(this).val());
-                }
-            });
-
+            creditAmount = 0.00;
             $('#receivePaymentModal #credit-memo-table tbody input[name="credit_payment[]"]').each(function() {
-                if($(this).val() !== '') {
-                    total = parseFloat(total) - parseFloat($(this).val());
+                var checked = $(this).parent().parent().find('input[type="checkbox"]').prop('checked');
+                if(checked) {
+                    creditAmount = parseFloat(creditAmount) - parseFloat($(this).val());
                 }
             });
         }
 
-        $('#receivePaymentModal #received-amount').val(parseFloat(total).toFixed(2));
-        total = '$'+parseFloat(total).toFixed(2);
-        $('#receivePaymentModal span.transaction-total-amount').val(total.replace('$-', '-$'));
-        amountToApply = '$'+parseFloat(amountToApply).toFixed(2);
+        var total = parseFloat(invoicePayment) - parseFloat(creditAmount);
 
-        $('#receivePaymentModal span.amount-to-apply').html(amountToApply.replace('$-', '-$'));
+        if(receivedAmountIsChanged === false) {
+            $('#receivePaymentModal #received-amount').val(parseFloat(total).toFixed(2));
+            total = '$'+parseFloat(total).toFixed(2);
+            $('#receivePaymentModal span.transaction-total-amount').html(total.replace('$-', '-$'));
+            invoicePayment = '$'+parseFloat(invoicePayment).toFixed(2);
+            $('#receivePaymentModal span.amount-to-apply').html(invoicePayment.replace('$-', '-$'));
+        } else {
+            var receivedAmount = parseFloat($('#receivePaymentModal #received-amount').val());
+            var amountToApply = parseFloat(receivedAmount) + parseFloat(creditAmount);
+            amountToApply = '$'+parseFloat(amountToApply).toFixed(2);
+            $('#receivePaymentModal span.amount-to-apply').html(amountToApply.replace('$-', '-$'));
+            var amountToCredit = parseFloat(receivedAmount) - parseFloat(total);
+            amountToCredit = '$'+parseFloat(amountToCredit).toFixed(2);
+            $('#receivePaymentModal span.amount-to-credit').html(amountToCredit.replace('$-', '-$'));
+
+            if(parseFloat(amountToCredit.replace('$', '')) > 0) {
+                $('#receivePaymentModal #credit-message').html(`This transaction will create an additional credit in the amount of ${amountToCredit.replace('$-', '-$')}`);
+                $('#receivePaymentModal #credit-message').parent().parent().removeClass('d-none');
+            } else {
+                $('#receivePaymentModal #credit-message').html('');
+                $('#receivePaymentModal #credit-message').parent().parent().addClass('d-none');
+            }
+        }
+    });
+
+    $(document).on('click', '#receivePaymentModal #clear-payment', function(e) {
+        e.preventDefault();
+
+        $('#receivePaymentModal #received-amount').val('0.00');
+        $('#receivePaymentModal span.transaction-total-amount').html('$0.00');
+        $('#receivePaymentModal span.amount-to-apply').html('$0.00');
+        $('#receivePaymentModal span.amount-to-credit').html('$0.00');
+
+        $('#receivePaymentModal #invoices-table input[type="checkbox"]').prop('checked', false);
+        $('#receivePaymentModal #invoices-table tbody input[name="payment[]"]').val('');
+        $('#receivePaymentModal #credit-memo-table input[type="checkbox"]').prop('checked', false);
+        $('#receivePaymentModal #credit-memo-table tbody input[name="credit_payment[]"]').val('');
     });
 
     $(document).on('change', '#modal-container #modal-form #receivePaymentModal #customer', function(e) {
         var id = $(this).val();
 
-        if($.fn.DataTable.isDataTable(`#receivePaymentModal #invoices-table`)) {
-            $('#receivePaymentModal #invoices-table').DataTable().clear();
-            $('#receivePaymentModal #invoices-table').DataTable().destroy();
-        }
-
-        if($.fn.DataTable.isDataTable(`#receivePaymentModal #credit-memo-table`)) {
-            $('#receivePaymentModal #credit-memo-table').DataTable().clear();
-            $('#receivePaymentModal #credit-memo-table').DataTable().destroy();
-        }
-        $('#receivePaymentModal #invoices-table').DataTable({
-            autoWidth: false,
-            searching: false,
-            processing: true,
-            serverSide: true,
-            lengthChange: false,
-            ordering: false,
-            info: false,
-            ajax: {
-                url: `/accounting/load-customer-invoices/${id}`,
-                dataType: 'json',
-                contentType: 'application/json',
-                type: 'POST',
-                data: function(d) {
-                    d.columns[0].search.value = $('#receivePaymentModal #search-invoice-no').val();
-                    d.from_date = $('#receivePaymentModal #invoices-from').val();
-                    d.to_date = $('#receivePaymentModal #invoices-to').val();
-                    d.overdue = $('#receivePaymentModal #overdue_invoices_only').prop('checked') ? 1 : 0;
-                    d.length = $('#receivePaymentModal #invoices_table_rows').val()
-                    return JSON.stringify(d);
-                },
-                pagingType: 'full_numbers',
-            },
-            columns: [
-                {
-                    data: null,
-                    name: 'checkbox',
-                    fnCreatedCell: function(td, cellData, rowData, row, col) {
-                        $(td).html(`<div class="d-flex justify-content-center">
-                            <div class="checkbox checkbox-sec m-0">
-                                <input type="checkbox" id="invoice-${rowData.id}" value="${rowData.id}">
-                                <label for="invoice-${rowData.id}" class="p-0" style="width: 24px; height: 24px"></label>
-                            </div>
-                        </div>`);
-                    }
-                },
-                {
-                    data: 'description',
-                    name: 'description',
-                    fnCreatedCell: function(td, cellData, rowData, row, col) {
-                        $(td).html(cellData);
-                    }
-                },
-                {
-                    data: 'due_date',
-                    name: 'due_date',
-                    fnCreatedCell: function(td, cellData, rowData, row, col) {
-                        $(td).html(cellData);
-                    }
-                },
-                {
-                    data: 'original_amount',
-                    name: 'original_amount',
-                    fnCreatedCell: function(td, cellData, rowData, row, col) {
-                        $(td).html(cellData);
-                    }
-                },
-                {
-                    data: 'open_balance',
-                    name: 'open_balance',
-                    fnCreatedCell: function(td, cellData, rowData, row, col) {
-                        $(td).html(cellData);
-                    }
-                },
-                {
-                    data: null,
-                    name: 'payment',
-                    fnCreatedCell: function(td, cellData, rowData, row, col) {
-                        $(td).html(`<input type="number" onchange="convertToDecimal(this)" step=".01" class="form-control text-right" name="payment[]">`);
-                    }
-                }
-            ]
-        });
-
-        $('#receivePaymentModal #credit-memo-table').DataTable({
-            autoWidth: false,
-            searching: false,
-            processing: true,
-            serverSide: true,
-            lengthChange: false,
-            ordering: false,
-            info: false,
-            ajax: {
-                url: `/accounting/load-customer-credit-memos/${id}`,
-                dataType: 'json',
-                contentType: 'application/json',
-                type: 'POST',
-                data: function(d) {
-                    d.columns[0].search.value = $('#receivePaymentModal #search-credit-memo-no').val();
-                    d.from_date = $('#receivePaymentModal #credit-memo-from').val();
-                    d.to_date = $('#receivePaymentModal #credit-memo-to').val();
-                    d.length = $('#receivePaymentModal #credit_memo_table_rows').val()
-                    return JSON.stringify(d);
-                },
-                pagingType: 'full_numbers',
-            },
-            columns: [
-                {
-                    data: null,
-                    name: 'checkbox',
-                    fnCreatedCell: function(td, cellData, rowData, row, col) {
-                        if($('#receivePaymentModal #invoices-table tbody tr input[type="checkbox"]:checked').length > 0) {
-                            $(td).html(`<div class="d-flex justify-content-center">
-                                <div class="checkbox checkbox-sec m-0">
-                                    <input type="checkbox" id="credit-memo-${rowData.id}" value="${rowData.id}">
-                                    <label for="credit-memo-${rowData.id}" class="p-0" style="width: 24px; height: 24px"></label>
-                                </div>
-                            </div>`);
-                        } else {
-                            $(td).html('');
-                        }
-                    }
-                },
-                {
-                    data: 'description',
-                    name: 'description',
-                    fnCreatedCell: function(td, cellData, rowData, row, col) {
-                        $(td).html(cellData);
-                    }
-                },
-                {
-                    data: 'original_amount',
-                    name: 'original_amount',
-                    fnCreatedCell: function(td, cellData, rowData, row, col) {
-                        $(td).html(cellData);
-                    }
-                },
-                {
-                    data: 'open_balance',
-                    name: 'open_balance',
-                    fnCreatedCell: function(td, cellData, rowData, row, col) {
-                        $(td).html(cellData);
-                    }
-                },
-                {
-                    data: null,
-                    name: 'payment',
-                    fnCreatedCell: function(td, cellData, rowData, row, col) {
-                        $(td).html(`<input type="number" onchange="convertToDecimal(this)" step=".01" class="form-control text-right" name="credit_payment[]">`);
-                    }
-                }
-            ]
-        });
+        loadCustomerInvoices(id);
+        loadCustomerCredits(id);
 
         if($('#receivePaymentModal #invoices-table tbody tr td:not(.dataTables_empty)').length === 0) {
+            $('#receivePaymentModal .display-with-customer:first-child').removeClass('hide');
+        }
+
+        if($('#receivePaymentModal #credit-memo-table tbody tr td:not(.dataTables_empty)').length === 0) {
             $('#receivePaymentModal .display-with-customer').removeClass('hide');
         }
     });
@@ -6557,6 +6502,10 @@ const submitModalForm = (event, el) => {
         case '#receivePaymentModal' :
             data.delete('payment[]');
             data.delete('credit_payment[]');
+
+            data.set('amount_to_credit', $('#receivePaymentModal span.amount-to-credit').html().replace('$', ''));
+            data.set('amount_to_apply', $('#receivePaymentModal span.amount-to-apply').html().replace('$', ''));
+
             $('#receivePaymentModal #invoices-table tbody tr input[type="checkbox"]:checked').each(function() {
                 if(data.has('invoice[]') === false) {
                     data.set('invoice[]', $(this).val());
@@ -8915,6 +8864,35 @@ const resetInvoicesFilter = (e) => {
     $('#receivePaymentModal #invoices-to').val(today);
     $('#receivePaymentModal #overdue_invoices_only').prop('checked', false);
 
+    var customerId = $('#receivePaymentModal #customer').val();
+    loadCustomerInvoices(customerId);
+}
+
+const applyCreditMemoFilter = (e) => {
+    e.preventDefault();
+
+    $('#receivePaymentModal #credit-memo-table').DataTable().ajax.reload(null, true);
+}
+
+const resetCreditMemoFilter = (e) => {
+    e.preventDefault();
+
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+
+    today = mm + '/' + dd + '/' + yyyy;
+
+    $('#receivePaymentModal #credit-memo-from').val(today);
+    $('#receivePaymentModal #credit-memo-to').val(today);
+    $('#receivePaymentModal #overdue_credit_memo_only').prop('checked', false);
+
+    var customerId = $('#receivePaymentModal #customer').val();
+    loadCustomerCredits(customerId);
+}
+
+const loadCustomerInvoices = (id) => {
     if($.fn.DataTable.isDataTable(`#receivePaymentModal #invoices-table`)) {
         $('#receivePaymentModal #invoices-table').DataTable().clear();
         $('#receivePaymentModal #invoices-table').DataTable().destroy();
@@ -8995,26 +8973,7 @@ const resetInvoicesFilter = (e) => {
     });
 }
 
-const applyCreditMemoFilter = (e) => {
-    e.preventDefault();
-
-    $('#receivePaymentModal #credit-memo-table').DataTable().ajax.reload(null, true);
-}
-
-const resetCreditMemoFilter = (e) => {
-    e.preventDefault();
-
-    var today = new Date();
-    var dd = String(today.getDate()).padStart(2, '0');
-    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-    var yyyy = today.getFullYear();
-
-    today = mm + '/' + dd + '/' + yyyy;
-
-    $('#receivePaymentModal #credit-memo-from').val(today);
-    $('#receivePaymentModal #credit-memo-to').val(today);
-    $('#receivePaymentModal #overdue_credit_memo_only').prop('checked', false);
-
+const loadCustomerCredits = (id) => {
     if($.fn.DataTable.isDataTable(`#receivePaymentModal #credit-memo-table`)) {
         $('#receivePaymentModal #credit-memo-table').DataTable().clear();
         $('#receivePaymentModal #credit-memo-table').DataTable().destroy();
@@ -9029,7 +8988,7 @@ const resetCreditMemoFilter = (e) => {
         ordering: false,
         info: false,
         ajax: {
-            url: `/accounting/load-customer-credit-memos/${id}`,
+            url: `/accounting/load-customer-credits/${id}`,
             dataType: 'json',
             contentType: 'application/json',
             type: 'POST',
@@ -9050,8 +9009,8 @@ const resetCreditMemoFilter = (e) => {
                     if($('#receivePaymentModal #invoices-table tbody tr input[type="checkbox"]:checked').length > 0) {
                         $(td).html(`<div class="d-flex justify-content-center">
                             <div class="checkbox checkbox-sec m-0">
-                                <input type="checkbox" id="credit-memo-${rowData.id}" value="${rowData.id}">
-                                <label for="credit-memo-${rowData.id}" class="p-0" style="width: 24px; height: 24px"></label>
+                                <input type="checkbox" id="${rowData.type}-${rowData.id}" value="${rowData.type}_${rowData.id}">
+                                <label for="${rowData.type}-${rowData.id}" class="p-0" style="width: 24px; height: 24px"></label>
                             </div>
                         </div>`);
                     } else {

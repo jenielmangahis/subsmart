@@ -4973,6 +4973,7 @@ class Accounting_modals extends MY_Controller
     private function receive_payment($data)
     {
         $this->form_validation->set_rules('customer', 'Customer', 'required');
+        $this->form_validation->set_rules('deposit_to_account', 'Deposit to', 'required');
 
         if ($this->form_validation->run() === false) {
             $return['data'] = null;
@@ -4986,17 +4987,15 @@ class Accounting_modals extends MY_Controller
                 'payment_method' => $data['payment_method'],
                 'ref_no' => $data['ref_no'],
                 'deposit_to' => $data['deposit_to_account'],
-                'amount' => $data['received_amount'],
+                'amount_received' => $data['received_amount'],
+                'amount_to_credit' => $data['amount_to_credit'],
+                'amount_to_apply' => $data['amount_to_apply'],
+                'credit_balance' => $data['amount_to_credit'],
                 'memo' => $data['memo'],
                 'status' => 1
             ];
 
-            if(isset($data['invoices'])) {
-                $paymentId = $this->accounting_receive_payment_model->createReceivePayment($paymentData);
-            } else {
-                $paymentData['balance'] = $data['received_amount'];
-                $paymentId = $this->accounting_receive_payment_model->createUnappliedPayment($paymentData);
-            }
+            $paymentId = $this->accounting_receive_payment_model->createReceivePayment($paymentData);
 
             if($paymentId) {
                 $depositToAcc = $this->chart_of_accounts_model->getById($data['deposit_to_account']);
@@ -5034,7 +5033,107 @@ class Accounting_modals extends MY_Controller
                     }
                 }
 
+                $paymentCredits = [];
                 $paymentInvoices = [];
+                foreach($data['credits'] as $key => $transaction) {
+                    $transaction = explode('_', $transaction);
+
+                    switch($transaction[0]) {
+                        case 'credit-memo' :
+                            $paymentCredits[] = [
+                                'receive_payment_id' => $paymentId,
+                                'credit_memo_id' => $transaction[1],
+                                'payment_amount' => number_format(floatval($data['credit_payment'][$key]), 2, '.', ',')
+                            ];
+
+                            $creditMemo = $this->accounting_credit_memo_model->getCreditMemoDetails($transaction[1]);
+                            $balance = floatval($creditMemo->balance) - floatval($data['credit_payment'][$key]);
+
+                            $creditMemoData = [
+                                'balance' => number_format(floatval($balance), 2, '.', ',')
+                            ];
+                            $this->accounting_credit_memo_model->updateCreditMemo($creditMemo->id, $creditMemoData);
+                        break;
+                        case 'unapplied-payment' :
+                            $payment = $this->accounting_receive_payment_model->getReceivePaymentDetails($transaction[1]);
+                            $balance = floatval($payment->credit_balance) - floatval($data['credit_payment'][$key]);
+
+                            $paymentData = [
+                                'credit_balance' => number_format(floatval($balance), 2, '.', ',')
+                            ];
+
+                            $this->accounting_receive_payment_model->update_receive_payment_details($payment->id, $paymentData);
+
+                            $creditPayment = floatval($data['credit_payment'][$key]);
+                            for($i = count($data['invoice']) - 1; $creditPayment > 0; $i--) {
+                                $invoiceId = $data['invoice'][$i];
+                                $invoicePayment = $data['payment'][$i];
+
+                                if(floatval($invoicePayment) > $creditPayment) {
+                                    $paymentAmount = number_format(floatval($creditPayment), 2, '.', ',');
+                                    $data['payment'][$i] = floatval($invoicePayment) - $creditPayment;
+                                    $creditPayment = 0.00;
+                                } else {
+                                    $paymentAmount = number_format(floatval($invoicePayment), 2, '.', ',');
+                                    $data['payment'][$i] = 0.00;
+                                    $creditPayment -= floatval($invoicePayment);
+                                }
+
+                                $paymentInvoices[] = [
+                                    'receive_payment_id' => $payment->id,
+                                    'invoice_id' => $invoiceId,
+                                    'payment_amount' => $paymentAmount
+                                ];
+
+                                $invoice = $this->accounting_invoices_model->get_invoice_by_invoice_id($invoiceId);
+                                $paymentRecords = $this->accounting_invoices_model->get_invoice_payment_records($invoice->invoice_number);
+
+                                $paymentAmounts = array_column($paymentRecords, 'invoice_amount');
+                                $totalPayment = array_sum($paymentAmounts);
+
+                                $balance = floatval($invoice->grand_total) - floatval($totalPayment);
+                                $balance -= floatval($data['payment'][$i]);
+
+                                if($balance === 0) {
+                                    $status = 'Paid';
+                                } else {
+                                    if(floatval($invoice->grand_total) > $balance) {
+                                        $status = 'Partially Paid';
+                                    }
+                                }
+
+                                $invoiceData = [
+                                    'balance' => $balance,
+                                    'status' => isset($status) ? $status : $invoice->status
+                                ];
+                                $this->accounting_invoices_model->updateInvoices($invoiceId, $invoiceData);
+
+                                $this->payment_records_model->create([
+                                    'user_id' => logged('id'),
+                                    'company_id' => logged('company_id'),
+                                    'customer_id' => $data['customer'],
+                                    'invoice_amount' => number_format(floatval($data['payment'][$i]), 2, '.', ','),
+                                    'invoice_tip' => 0.00,
+                                    'payment_date' => date("Y-m-d", strtotime($data['payment_date'])),
+                                    'payment_method' => !is_null($data['payment_method']) ? $data['payment_method'] : 'cash',
+                                    'invoice_number' => $invoice->invoice_number,
+                                    'reference_number' => '',
+                                    'notes' => ''
+                                ]);
+
+                                if(floatval($data['payment'][$i]) === 0) {
+                                    unset($data['invoice'][$i]);
+                                    unset($data['payment'][$i]);
+                                }
+                            }
+                        break;
+                    }
+                }
+
+                if(count($paymentCredits) > 0) {
+                    $this->accounting_receive_payment_model->add_payment_credits($paymentCredits);
+                }
+
                 foreach($data['invoice'] as $key => $invoiceId) {
                     $paymentInvoices[] = [
                         'receive_payment_id' => $paymentId,
@@ -5072,7 +5171,7 @@ class Accounting_modals extends MY_Controller
                         'invoice_amount' => number_format(floatval($data['payment'][$key]), 2, '.', ','),
                         'invoice_tip' => 0.00,
                         'payment_date' => date("Y-m-d", strtotime($data['payment_date'])),
-                        'payment_method' => $data['payment_method'],
+                        'payment_method' => !is_null($data['payment_method']) ? $data['payment_method'] : 'cash',
                         'invoice_number' => $invoice->invoice_number,
                         'reference_number' => '',
                         'notes' => ''
@@ -5080,17 +5179,6 @@ class Accounting_modals extends MY_Controller
                 }
 
                 $this->accounting_receive_payment_model->add_payment_invoices($paymentInvoices);
-
-                $paymentCredits = [];
-                foreach($data['credits'] as $key => $creditMemoId) {
-                    $paymentCredits[] = [
-                        'receive_payment_id' => $paymentId,
-                        'credit_memo_id' => $creditMemoId,
-                        'payment_amount' => number_format(floatval($data['payment'][$key]), 2, '.', ',')
-                    ];
-                }
-
-                $this->accounting_receive_payment_model->add_payment_credits($paymentCredits);
             }
 
             $return = [];
@@ -7639,10 +7727,22 @@ class Accounting_modals extends MY_Controller
                 $stripos = stripos($name, $search);
                 if ($stripos !== false) {
                     $searched = substr($name, $stripos, strlen($search));
-                    $choices['results'][] = [
-                        'id' => 'customer-'.$customer->prof_id,
-                        'text' => str_replace($searched, "<strong>$searched</strong>", $name)
-                    ];
+                    if ($field === 'payee' || $field === 'received-from' || $field === 'names' || $field === 'contact') {
+                        if ($choices['results'] !== null && $choices['results'][array_key_last($choices['results'])]['text'] === 'Customers') {
+                            $choices['results'][array_key_last($choices['results'])]['text'] = 'Customers';
+                        } else {
+                            $choices['results'][]['text'] = 'Customers';
+                        }
+                        $choices['results'][array_key_last($choices['results'])]['children'][] = [
+                            'id' => 'customer-'.$customer->prof_id,
+                            'text' => str_replace($searched, "<strong>$searched</strong>", $name)
+                        ];
+                    } else {
+                        $choices['results'][] = [
+                            'id' => $customer->prof_id,
+                            'text' => str_replace($searched, "<strong>$searched</strong>", $name)
+                        ];
+                    }
                 }
             } else {
                 if ($field === 'payee' || $field === 'received-from' || $field === 'names' || $field === 'contact') {
@@ -12708,7 +12808,7 @@ class Accounting_modals extends MY_Controller
                 });
 
                 foreach($transactions as $payment) {
-                    $amount = '$'.number_format(floatval($payment->amount), 2, '.', ',');
+                    $amount = '$'.number_format(floatval($payment->amount_received), 2, '.', ',');
                     $customer = $this->accounting_customers_model->get_by_id($payment->customer_id);
                     $name = $customer->first_name . ' ' . $customer->last_name;
 
@@ -14492,7 +14592,7 @@ class Accounting_modals extends MY_Controller
         echo json_encode($result);
     }
 
-    public function load_customer_credit_memos($customerId)
+    public function load_customer_credits($customerId)
     {
         $post = json_decode(file_get_contents('php://input'), true);
         $search = $post['columns'][0]['search']['value'];
@@ -14545,8 +14645,8 @@ class Accounting_modals extends MY_Controller
                     'id' => $unappliedPayment->id,
                     'type' => 'unapplied-payment',
                     'description' => $description,
-                    'original_amount' => number_format(floatval($unappliedPayment->amount)),
-                    'open_balance' => number_format(floatval($unappliedPayment->amount))
+                    'original_amount' => number_format(floatval($unappliedPayment->amount_to_credit), 2, '.', ','),
+                    'open_balance' => number_format(floatval($unappliedPayment->credit_balance), 2, '.', ',')
                 ];
             }
         }

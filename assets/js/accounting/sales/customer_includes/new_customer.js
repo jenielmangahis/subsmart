@@ -4,6 +4,9 @@ $(document).on("click", "#import-customer", function(event) {
 $(document).on("click", "#import-customers-modal .close-modal", function(event) {
     $("#import-customers-modal").fadeOut();
 });
+$(document).on("click", "#import-customers-modal #holder-step-3 .next-modal", function(event) {
+    $("#import-customers-modal").fadeOut();
+});
 
 $(document).ready(function() {
 
@@ -211,6 +214,9 @@ $(document).ready(function() {
         })
 
     });
+    // $('#holder-step-3 .next-step').click(function() {
+    //     $("#import-customers-modal").fadeOut();
+    // });
     //close of the getter
 
     /*get value of selected option*/

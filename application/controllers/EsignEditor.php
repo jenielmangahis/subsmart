@@ -93,6 +93,28 @@ class EsignEditor extends MY_Controller
         $this->load->view('esign/esigneditor/wizard', $this->page_data);
     }
 
+    public function customers($id)
+    {
+        if (is_null($this->getCustomer($id))) {
+            return show_404();
+        }
+
+        add_css([
+            'assets/textEditor/summernote-bs4.css',
+            'assets/css/esign/esign-editor/esign-editor.css',
+            'https://cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css',
+        ]);
+
+        add_footer_js([
+            'assets/textEditor/summernote-bs4.js',
+            'assets/js/esign/esigneditor/customer-letters.js',
+            'https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js',
+        ]);
+
+        $this->load->view('esign/esigneditor/customer-letters', $this->page_data);
+    }
+
     public function apiGetCategories()
     {
         $this->db->where('user_id', logged('id'));
@@ -530,5 +552,48 @@ SQL;
         $this->db->where('id', $this->db->insert_id());
         $customerLetter = $this->db->get('esign_editor_customer_letters')->result();
         echo json_encode(['data' => $customerLetter]);
+    }
+
+    public function apiGetCustomerLetters($customerId)
+    {
+        $this->db->where('user_id', logged('id'));
+        $this->db->where('customer_id', $customerId);
+        $letters = $this->db->get('esign_editor_customer_letters')->result();
+
+        header('content-type: application/json');
+        echo json_encode(['data' => $letters]);
+    }
+
+    public function apiEditCustomerLetter($id)
+    {
+        header('content-type: application/json');
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['success' => false]);
+            return;
+        }
+
+        $payload = json_decode(file_get_contents('php://input'), true);
+
+        $this->db->where('id', $id);
+        $this->db->update('esign_editor_customer_letters', [
+            'content' => $payload['content'],
+        ]);
+
+        $this->db->where('id', $id);
+        $letter = $this->db->get('esign_editor_customer_letters')->row();
+        echo json_encode(['data' => $letter]);
+    }
+
+    public function apiDeleteCustomerLetter($id)
+    {
+        header('content-type: application/json');
+        if ($_SERVER['REQUEST_METHOD'] !== 'DELETE') {
+            echo json_encode(['success' => false]);
+            return;
+        }
+
+        $this->db->where('id', $id);
+        $this->db->delete('esign_editor_customer_letters');
+        echo json_encode(['data' => $id]);
     }
 }

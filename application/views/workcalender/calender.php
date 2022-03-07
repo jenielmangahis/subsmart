@@ -2,15 +2,16 @@
 defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
 <style>
+
+</style>
+<style>
 .modal.fade {
   background: rgba(0, 0, 0, 0.5);
 }
 .modal-backdrop.fade {
   opacity: 0;
 }
-</style>
-<style>
-  .hoverEffect {
+.hoverEffect {
     font-size: 29px;
     position: absolute;
     margin: 30px 55px;
@@ -65,7 +66,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                                     aria-hidden="true"></i><?php echo date('M d, Y', strtotime($row->create_at)); ?>
                                                             </div>
                                                             <h4>
-                                                                <span><a href="http://nsmartrac.com/workorder/edit/<?php echo $ss; ?>">View Workorder</a></span>
+                                                                <span><a href="<?= base_url('workorder/edit/'.$ss); ?>">View Workorder</a></span>
                                                             </h4>
                                                         </div>
                                                     </div>
@@ -306,7 +307,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                     <td style="background-color: <?php echo $rowBgColor; ?>"><input type="checkbox" class="chk-calendar-mini-entries" <?php echo $is_mini_checked; ?> data-id="<?php echo $calendar['id']; ?>"></td>
                                     <td style="background-color: <?php echo $rowBgColor; ?>"><?php echo $calendar['summary']; ?></td>
                                     <td style="background-color: <?php echo $rowBgColor; ?>">
-                                      <a class="btn btn-sm btn-info pull-right btn-add-gevent btn-gcustom top-1 br-99" title="Add Event" href="javascript:void(0);" data-id="<?php echo $calendar['id']; ?>"><i class="far fa-edit"></i></a>
+                                      <!-- <a class="btn btn-sm btn-info pull-right btn-add-gevent btn-gcustom top-1 br-99" title="Add Event" href="javascript:void(0);" data-id="<?php echo $calendar['id']; ?>"><i class="far fa-edit"></i></a> -->
                                     </td>
                               </tr>
                             <?php } ?>
@@ -346,8 +347,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                         <div class="col-xs-12 col-4 col-sm-4 col-md-4" style="text-align: left;">
                                             <a href="tel:<?= $recent_user->phone; ?>" class="calendar-profile-contact"><i class="fa fa-phone"></i></a>
                                             <a href="mailto:<?= $recent_user->email; ?>" class="calendar-profile-contact"><i class="fa fa-envelope-o"></i></a>
-                                            <a href="#" class="calendar-profile-contact"><i class="fa fa-comments-o"></i></a>
-                                            <a href="#" class="calendar-profile-contact"><i class="fa fa-print"></i></a>
+                                            <!-- <a href="#" class="calendar-profile-contact"><i class="fa fa-comments-o"></i></a> -->
+                                            <a href="<?= base_url('workcalender/print_contact/'.$recent_user->id); ?>" target="_blank" class="calendar-profile-contact"><i class="fa fa-print"></i></a>
                                             <!-- <a class="btn-calendar-small btn btn-default" href="javascript:void(0)">Contact</a> -->
                                         </div>
                                     </div>

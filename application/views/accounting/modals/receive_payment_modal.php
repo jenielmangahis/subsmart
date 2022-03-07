@@ -326,7 +326,7 @@
                                             </div>
                                         </div>
                                         <div class="col-md-4 offset-md-8 display-with-customer hide">
-                                            <table class="bg-transparent float-right table text-right w-50">
+                                            <table class="bg-transparent float-right table text-right w-75">
                                                 <tbody>
                                                     <tr>
                                                         <td class="border-0">Amount to Apply</td>
@@ -351,6 +351,9 @@
                                                     <tr>
                                                         <td class="border-0"></td>
                                                         <td class="border-0"><button type="button" class="btn btn-transparent" id="clear-payment">Clear payment</button></td>
+                                                    </tr>
+                                                    <tr class="d-none">
+                                                        <td colspan="2" class="border-0"><span id="credit-message"></span></td>
                                                     </tr>
                                                 </tbody>
                                             </table>

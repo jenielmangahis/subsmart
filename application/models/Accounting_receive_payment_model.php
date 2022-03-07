@@ -125,17 +125,14 @@ class Accounting_receive_payment_model extends MY_Model
         }
     }
 
-    public function update_receive_payment_details($data, $receive_payment_id)
-    {
-        $where = array(
-            "id" => $receive_payment_id
-        );
-        $this->db->update('accounting_receive_payment', $data, $where);
-        if ($this->db->affected_rows() > 0) {
-            return true;
-        } else {
-            return false;
-        }
+    public function update_receive_payment_details($id, $data){
+	    $this->db->where('id', $id);
+		$update = $this->db->update('accounting_receive_payment', $data);
+		if($this->db->affected_rows() > 0){
+			return true;
+		}else{
+			return false;
+		}
     }
     public function get_invoice_receive_payment($invoice_id, $receive_payment_id = 0)
     {
@@ -257,23 +254,11 @@ class Accounting_receive_payment_model extends MY_Model
             $this->db->where('payment_date <=', $filters['to_date']);
         }
 
-        $this->db->order_by('payment_date', 'desc');
+        $this->db->where('credit_balance >', 0);
+
 		$this->db->where('status', 1);
-		$query = $this->db->get('accounting_unapplied_payments');
+        $this->db->order_by('payment_date', 'desc');
+		$query = $this->db->get('accounting_receive_payment');
 		return $query->result();
-    }
-
-    public function createUnappliedPayment($data)
-    {
-        $vendor = $this->db->insert('accounting_unapplied_payments', $data);
-        $insert_id = $this->db->insert_id();
-
-        return  $insert_id;
-    }
-
-    public function getUnappliedPaymentDetails($id)
-    {
-        $vendor = $this->db->get_where('accounting_unapplied_payments', array('id' => $id));
-        return $vendor->row();
     }
 }

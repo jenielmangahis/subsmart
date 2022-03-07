@@ -738,8 +738,6 @@ class Accounting extends MY_Controller
 
         $table_column_names = $this->accounting_customers_model->get_users_table_column_names();
         array_unshift($table_column_names, " ");
-        array_push($table_column_names, "Add Column");
-
         $data = new stdClass();
         $data->titles = $title_holder;
         $data->table_column_names = $table_column_names;
@@ -783,7 +781,7 @@ class Accounting extends MY_Controller
 
                             for ($y = 0; $y < $highRow; $y++) { //Row
                                 if($y==0){
-                                    $tableArr[$x][$y] = $data[$y];
+                                    $tableArr[$x][$y] = $data[$x];
                                 }else{
                                     $tableArr[$x][$y] = $work_sheet->getCellByColumnAndRow($x, ($y + 1))->getValue();
                                 }
@@ -805,7 +803,7 @@ class Accounting extends MY_Controller
 
             
         }
-        $this->accounting_customers_model->import_customers_to_databease($tableArr);
+            $this->accounting_customers_model->import_customers_to_database($tableArr,$selCol);
 
         
 
