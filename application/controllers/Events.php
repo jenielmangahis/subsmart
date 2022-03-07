@@ -211,7 +211,7 @@ class Events extends MY_Controller
                 'company_id' => logged('company_id'),
             ),
             'table' => 'business_profile',
-            'select' => 'id,business_phone,business_name,business_logo,business_email,street,city,postal_code,state,business_image',
+            'select' => 'id,business_phone,business_name,business_email,street,city,postal_code,state,business_image',
         );
         $this->page_data['company_info'] = $this->general->get_data_with_param($get_company_info,FALSE);
 
@@ -561,6 +561,7 @@ class Events extends MY_Controller
                 $events_items_data['event_id'] = $event_id;
                 $events_items_data['items_id'] = $input['item_id'][$xx];
                 $events_items_data['qty'] = $input['item_qty'][$xx];
+                $events_items_data['item_price'] = $input['item_price'][$xx];
                 $this->general->add_($events_items_data, 'event_items');
                 unset($events_items_data);
             }
