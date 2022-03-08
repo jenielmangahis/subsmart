@@ -234,7 +234,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-12 display-with-customer <?=!isset($payment) || isset($payment) && count($creditMemos) > 0 ? 'hide' : ''?>">
+                                        <div class="col-md-12 display-with-customer <?=isset($payment) && count($credits) > 0 ? '' : 'hide'?>">
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <h4>Credits</h4>
