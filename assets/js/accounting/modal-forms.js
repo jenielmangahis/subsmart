@@ -5359,7 +5359,7 @@ $(function() {
             $('#receivePaymentModal #credit-memo-table tbody input[name="credit_payment[]"]').each(function() {
                 var checked = $(this).parent().parent().find('input[type="checkbox"]').prop('checked');
                 if(checked) {
-                    creditAmount = parseFloat(creditAmount) - parseFloat($(this).val());
+                    creditAmount = parseFloat(creditAmount) + parseFloat($(this).val());
                 }
             });
         }
@@ -8597,6 +8597,7 @@ const viewTransaction = (el) => {
                 initModalFields('receivePaymentModal', data);
 
                 loadPaymentInvoices(data);
+                loadPaymentCredits(data);
 
                 $('#receivePaymentModal').modal('show');
             break;
@@ -8853,19 +8854,28 @@ const applyInvoicesFilter = (e) => {
 const resetInvoicesFilter = (e) => {
     e.preventDefault();
 
-    var today = new Date();
-    var dd = String(today.getDate()).padStart(2, '0');
-    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-    var yyyy = today.getFullYear();
+    var href = $('#modal-container #modal-form').attr('data-href');
+    if(href === false || typeof href === 'undefined') {
+        var today = new Date();
+        var dd = String(today.getDate()).padStart(2, '0');
+        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var yyyy = today.getFullYear();
 
-    today = mm + '/' + dd + '/' + yyyy;
+        today = mm + '/' + dd + '/' + yyyy;
 
-    $('#receivePaymentModal #invoices-from').val(today);
-    $('#receivePaymentModal #invoices-to').val(today);
-    $('#receivePaymentModal #overdue_invoices_only').prop('checked', false);
+        $('#receivePaymentModal #invoices-from').val(today);
+        $('#receivePaymentModal #invoices-to').val(today);
+        $('#receivePaymentModal #overdue_invoices_only').prop('checked', false);
 
-    var customerId = $('#receivePaymentModal #customer').val();
-    loadCustomerInvoices(customerId);
+        var customerId = $('#receivePaymentModal #customer').val();
+        loadCustomerInvoices(customerId);
+    } else {
+        var split = href.split('/');
+        var data = {
+            id: split[split.length - 1]
+        };
+        loadPaymentInvoices(data);
+    }
 }
 
 const applyCreditMemoFilter = (e) => {
@@ -8877,19 +8887,28 @@ const applyCreditMemoFilter = (e) => {
 const resetCreditMemoFilter = (e) => {
     e.preventDefault();
 
-    var today = new Date();
-    var dd = String(today.getDate()).padStart(2, '0');
-    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-    var yyyy = today.getFullYear();
+    var href = $('#modal-container #modal-form').attr('data-href');
+    if(href === false || typeof href === 'undefined') {
+        var today = new Date();
+        var dd = String(today.getDate()).padStart(2, '0');
+        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var yyyy = today.getFullYear();
 
-    today = mm + '/' + dd + '/' + yyyy;
+        today = mm + '/' + dd + '/' + yyyy;
 
-    $('#receivePaymentModal #credit-memo-from').val(today);
-    $('#receivePaymentModal #credit-memo-to').val(today);
-    $('#receivePaymentModal #overdue_credit_memo_only').prop('checked', false);
+        $('#receivePaymentModal #credit-memo-from').val(today);
+        $('#receivePaymentModal #credit-memo-to').val(today);
+        $('#receivePaymentModal #overdue_credit_memo_only').prop('checked', false);
 
-    var customerId = $('#receivePaymentModal #customer').val();
-    loadCustomerCredits(customerId);
+        var customerId = $('#receivePaymentModal #customer').val();
+        loadCustomerCredits(customerId);
+    } else {
+        var split = href.split('/');
+        var data = {
+            id: split[split.length - 1]
+        };
+        loadPaymentCredits(data);
+    }
 }
 
 const loadCustomerInvoices = (id) => {
@@ -9136,6 +9155,91 @@ const loadPaymentInvoices = (data) => {
                         $(td).html(`<input type="number" onchange="convertToDecimal(this)" step=".01" class="form-control text-right" name="payment[]" value="${rowData.payment_amount}">`);
                     } else {
                         $(td).html(`<input type="number" onchange="convertToDecimal(this)" step=".01" class="form-control text-right" name="payment[]">`);
+                    }
+                }
+            }
+        ]
+    });
+}
+
+const loadPaymentCredits = (data) => {
+    if($.fn.DataTable.isDataTable(`#receivePaymentModal #credit-memo-table`)) {
+        $('#receivePaymentModal #credit-memo-table').DataTable().clear();
+        $('#receivePaymentModal #credit-memo-table').DataTable().destroy();
+    }
+    $('#receivePaymentModal #credit-memo-table').DataTable({
+        autoWidth: false,
+        searching: false,
+        processing: true,
+        serverSide: true,
+        lengthChange: false,
+        ordering: false,
+        info: false,
+        ajax: {
+            url: `/accounting/load-payment-credits/${data.id}`,
+            dataType: 'json',
+            contentType: 'application/json',
+            type: 'POST',
+            data: function(d) {
+                d.columns[0].search.value = $('#receivePaymentModal #search-credit-memo-no').val();
+                d.from_date = $('#receivePaymentModal #credit-memo-from').val();
+                d.to_date = $('#receivePaymentModal #credit-memo-to').val();
+                d.length = $('#receivePaymentModal #credit_memo_table_rows').val()
+                return JSON.stringify(d);
+            },
+            pagingType: 'full_numbers',
+        },
+        columns: [
+            {
+                data: null,
+                name: 'checkbox',
+                fnCreatedCell: function(td, cellData, rowData, row, col) {
+                    if(rowData.checked) {
+                        $(td).html(`<div class="d-flex justify-content-center">
+                            <div class="checkbox checkbox-sec m-0">
+                                <input type="checkbox" id="${rowData.type}-${rowData.id}" value="${rowData.type}_${rowData.id}" checked>
+                                <label for="${rowData.type}-${rowData.id}" class="p-0" style="width: 24px; height: 24px"></label>
+                            </div>
+                        </div>`);
+                    } else {
+                        $(td).html(`<div class="d-flex justify-content-center">
+                            <div class="checkbox checkbox-sec m-0">
+                                <input type="checkbox" id="${rowData.type}-${rowData.id}" value="${rowData.type}_${rowData.id}">
+                                <label for="${rowData.type}-${rowData.id}" class="p-0" style="width: 24px; height: 24px"></label>
+                            </div>
+                        </div>`);
+                    }
+                }
+            },
+            {
+                data: 'description',
+                name: 'description',
+                fnCreatedCell: function(td, cellData, rowData, row, col) {
+                    $(td).html(cellData);
+                }
+            },
+            {
+                data: 'original_amount',
+                name: 'original_amount',
+                fnCreatedCell: function(td, cellData, rowData, row, col) {
+                    $(td).html(cellData);
+                }
+            },
+            {
+                data: 'open_balance',
+                name: 'open_balance',
+                fnCreatedCell: function(td, cellData, rowData, row, col) {
+                    $(td).html(cellData);
+                }
+            },
+            {
+                data: null,
+                name: 'payment',
+                fnCreatedCell: function(td, cellData, rowData, row, col) {
+                    if(rowData.checked) {
+                        $(td).html(`<input type="number" onchange="convertToDecimal(this)" step=".01" class="form-control text-right" name="credit_payment[]" value="${rowData.payment_amount}">`);
+                    } else {
+                        $(td).html(`<input type="number" onchange="convertToDecimal(this)" step=".01" class="form-control text-right" name="credit_payment[]">`);
                     }
                 }
             }

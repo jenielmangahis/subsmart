@@ -77,7 +77,7 @@ add_css(array(
                                     <div class="row">
                                         <div class="col-md-6">
                                             <?php if($company_info->business_image != "" ): ?>
-                                                <img style="width: 100px" id="attachment-image" alt="Attachment" src="<?=  '/uploads/users/business_profile/'.$company_info->id.'/'.$company_info->business_image; ?> ">
+                                                <img style="width: 100px" id="attachment-image" alt="Attachment" src="<?= businessProfileImage($company_info->id); ?> ">
                                             <?php endif; ?>
                                         </div>
                                         <div class="col-md-3">
@@ -179,12 +179,12 @@ add_css(array(
                                                     <?php
                                                         $subtotal = 0.00;
                                                         foreach ($event_items as $item):
-                                                        $total = $item->price * $item->qty;
+                                                        $total = $item->item_price * $item->qty;
                                                     ?>
                                                         <tr>
                                                             <td><?= $item->title; ?></td>
                                                             <td><?= $item->qty; ?></td>
-                                                            <td>$<?= $item->price; ?></td>
+                                                            <td>$<?= $item->item_price; ?></td>
                                                             <td>$<?= number_format((float)$total,2,'.',','); ?></td>
                                                         </tr>
                                                 <?php

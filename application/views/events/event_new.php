@@ -205,24 +205,24 @@ add_css(array(
                         <br>
                     </div>
 
-                    <div class="card" id="notes_left_card" style="display: <?= isset($jobs_data) ? 'none' : 'block' ;?>;">
+                    <div class="card" id="notes_left_card">
                         <div class="card-header">
                            <h6 class="page-titles"> <span class="fa fa-book box_footer_icon"></span> &nbsp; Private Notes </h6>
                         </div>
                        <div class="card-body">
                             <div class="row">
                                 <div id="notes_edit_btn" class="pencil" style="width:100%; height:100px;cursor: pointer;">
-                                    <?= isset($jobs_data) ? $jobs_data->message : ''; ?>
+                                    <?= isset($jobs_data) ? $jobs_data->description : ''; ?>
                                 </div>
                                 <div id="notes_input_div" style="display:none;">
                                     <div style=" height:70px;margin-bottom: 10px;">
-                                        <textarea name="description" cols="50" style="width: 100%;margin-bottom: 8px;height:54px;" id="note_txt" class="form-control input"><?= isset($jobs_data) ? $jobs_data->message : ''; ?></textarea>
+                                        <textarea name="description" cols="50" style="width: 100%;margin-bottom: 8px;height:54px;" id="note_txt" class="form-control input"><?= isset($jobs_data) ? $jobs_data->description : ''; ?></textarea>
                                         <button type="button" class="btn btn-primary btn-sm" id="save_memo" style="color: #ffffff;"><span class="fa fa-save"></span> Save</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="card-footers">
+                        <div class="card-footers" style="display: none;">
                             <div style="float: right;margin-bottom: 10px;">
                                 <a href="javascript:void(0);" id="edit_note" class="fa fa-pencil box_footer_icon"></a> &nbsp;
                                 <?php if(isset($jobs_data)) : ?>
@@ -234,24 +234,18 @@ add_css(array(
                             <br>
 
                     </div>
-                   <div class="card" id="url_left_card" style="display: <?= isset($jobs_data) ? 'none' : 'block' ;?>;">
+                   <div class="card" id="url_left_card" style="display: <?= isset($jobs_data) ? 'block' : 'block' ;?>;">
                         <div class="card-header" id="headingThree">
                            <h6 class="page-title"><span style="font-size: 20px;"  class="fa fa-link"></span> &nbsp; &nbsp;Url Link </h6>
                         </div>
                         <div class="card-body">
                             <div id="url_link_form" class="collapses" aria-labelledby="headingThree" data-parent="#url_link_form">
                                 <div class="card-body">
-                                    <?php
-                                    if(isset($jobs_data) && $jobs_data->link != NULL) {
-                                        ?>
-                                        <a target="_blank" href="<?= $jobs_data->link; ?>"><p><?= $jobs_data->link; ?></p></a>
-                                        <?php
-                                    }else{
-                                        ?>
-                                        <label>Enter Url</label>
-                                        <input type="url" name="link" class="form-control checkDescription">
-                                        <?php
-                                    } ?>
+                                    <label>Enter Url</label>
+                                    <input type="url" name="link" class="form-control checkDescription" value="<?= isset($jobs_data) ? $jobs_data->url_link : ''; ?>">
+                                    <?php if( isset($jobs_data) ){ ?>
+                                        <a class="btn btn-sm btn-primary" target="_new" href="<?= $jobs_data->url_link; ?>" style="margin-top: 5px;"><i class="fa fa-globe"></i> Check link</a>
+                                    <?php } ?>
                                 </div>
                                 <br>
                             </div>
@@ -344,7 +338,7 @@ add_css(array(
                                 <?php $subtotal = 0.00; ?>
                                 <?php foreach($event_items as $key => $i){ ?>
                                     <?php 
-                                        $total    = (float)$i->price * (float)$i->qty;
+                                        $total    = (float)$i->item_price * (float)$i->qty;
                                         $subtotal = $subtotal + $total;
                                     ?>
                                     <tr>
@@ -356,10 +350,10 @@ add_css(array(
                                             <input data-itemid="<?= $i->items_id; ?>" id="<?= $i->items_id; ?>" value='<?= $i->qty; ?>' type="number" name="item_qty[]" class="form-control qty">
                                         </td>
                                         <td width="20%">
-                                            <input id='price<?= $i->items_id; ?>' data-itemid="<?= $i->items_id; ?>" value='<?= $i->price; ?>'  type="number" name="item_price[]" class="form-control item-price" placeholder="Unit Price">
+                                            <input id='price<?= $i->items_id; ?>' data-itemid="<?= $i->items_id; ?>" value='<?= $i->item_price; ?>'  type="number" name="item_price[]" class="form-control item-price" placeholder="Unit Price">
                                         </td>
                                         <td  style="text-align: center;margin-top: 20px;" class="d-flex" width="15%">
-                                            <b style="font-size: 16px;" id='sub_total<?= $i->items_id; ?>' class="total_per_item"><?= number_format($total,2,'.',',');?></b>
+                                            <b style="font-size: 16px;" data-subtotal="<?= $total; ?>" id='sub_total<?= $i->items_id; ?>' class="total_per_item">$<?= number_format($total,2,'.',',');?></b>
                                         </td>
                                         <td width="20%">
                                             <button style="margin-top: 20px;" type="button" class="btn btn-primary btn-sm items_remove_btn remove_item_row">
@@ -436,7 +430,7 @@ add_css(array(
                                 </div>
                                 <br>
                                 <div class="col-sm-12">
-                                    <div class="card box_right" id="notes_right_card" style="display: <?= isset($jobs_data) ? 'block' : 'none' ;?>;">
+                                    <div class="card box_right" id="notes_right_card" style="display: <?= isset($jobs_data) ? 'none' : 'none' ;?>;">
                                         <div class="row">
                                             <div class="col-md-12 ">
                                                 <div class="card-header">
@@ -467,7 +461,7 @@ add_css(array(
                                     </div>
                                 </div>
                                 <div class="col-sm-12">
-                                    <div class="card box_right" id="url_right_card" style="display: <?= isset($jobs_data) ? 'block' : 'none' ;?>;">
+                                    <div class="card box_right" id="url_right_card" style="display: <?= isset($jobs_data) ? 'none' : 'none' ;?>;">
                                         <div class="row">
                                             <div class="col-md-12 ">
                                                 <div class="card-header">
@@ -516,7 +510,7 @@ add_css(array(
                                     <button type="submit" class="btn btn-primary"><span class="fa fa-calendar-check-o"></span> Schedule</button>
                                 <?php endif; ?>
                                 <?php if(isset($jobs_data)): ?>
-                                    <a href="<?= base_url('events/job_preview/'.$this->uri->segment(3)) ?>" type="button" class="btn btn-primary"><span class="fa fa-search-plus"></span> Preview</a>
+                                    <a href="<?= base_url('events/event_preview/'.$this->uri->segment(3)) ?>" target="_new" class="btn btn-primary"><span class="fa fa-search-plus"></span> Preview</a>
                                 <?php endif; ?>
                             </div>
                         </div>
