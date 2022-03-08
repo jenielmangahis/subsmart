@@ -51,8 +51,9 @@ class MY_Controller extends CI_Controller {
 		$controller = $this->router->fetch_class();		
 		$controller = strtolower($controller);
 		$company_id = logged('company_id');
+		$exempted_company_ids = exempted_company_ids();
 
-		if( $company_id != 1 ){
+		if( !in_array($company_id, $exempted_company_ids) ){			
 			/*if( $is_plan_active == 0 && $controller != 'mycrm' && $method != 'membership' ){			
 				redirect('mycrm/renew_plan'); 
 			}*/

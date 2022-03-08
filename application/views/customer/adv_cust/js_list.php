@@ -1,4 +1,6 @@
 <script>
+    var memo_note = '';
+
         $(document).ready(function () {
         var table_dispute_items =$('#dispute_table').DataTable({
             "lengthChange": false,
@@ -247,21 +249,49 @@
             var note = $('#memo_txt').val();
             $.ajax({
                 type: "POST",
-                url: "/customer/update_customer_profile",
+                url: base_url + "/customer/update_customer_profile",
                 data: { notes : note , id : <?= isset($customer_profile_id) ? $customer_profile_id : 0; ?> }, // serializes the form's elements.
                 success: function(data)
                 {
                     if(data === "Success"){
-                        //$('#momo_edit_btn').text("");
-                        $('#momo_edit_btn').text(note);
+                        memo_note = $('#memo_txt').val();
+                        $('#memo_txt').attr('disabled', true);
+                        $('#memo_txt').attr('readonly', true);
+
+                        $('.memo-edit-tools').show();
+                        $('.memo-update-tools').hide();
+                       //$('#momo_edit_btn').text("");
+                       //$('#momo_edit_btn').text(note);
                        // $('#memo_txt').text(note);
-                        document.getElementById('memo_input_div').style.display = "none";
-                        document.getElementById('momo_edit_btn').style.display = "block";
-                    }else {
-                        console.log(data);
+                       //document.getElementById('memo_input_div').style.display = "none";
+                       //document.getElementById('momo_edit_btn').style.display = "block";
                     }
                 }
             });
+        });
+
+        $("#clear_memo").on( "click", function( event ) {
+            var note = '';
+            $.ajax({
+                type: "POST",
+                url: base_url + "/customer/update_customer_profile",
+                data: { notes : note , id : <?= isset($customer_profile_id) ? $customer_profile_id : 0; ?> }, // serializes the form's elements.
+                success: function(data)
+                {
+                    if(data === "Success"){
+                        $('#memo_txt').text(note);
+                    }
+                }
+            });
+        });
+
+        $('#edit_memo').on('click', function(e){
+            memo_note = $('#memo_txt').val();
+            $('.memo-edit-tools').hide();
+            $('.memo-update-tools').show();
+
+            $('#memo_txt').attr('disabled', false);
+            $('#memo_txt').attr('readonly', false);
         });
 
         $("#momo_edit_btn").on( "click", function( event ) {
@@ -270,8 +300,15 @@
         });
 
         $("#memo_cancel").on( "click", function( event ) {
-            document.getElementById('memo_input_div').style.display = "none";
-            document.getElementById('momo_edit_btn').style.display = "block";
+            $('#memo_txt').val(memo_note);
+
+            $('.memo-edit-tools').show();
+            $('.memo-update-tools').hide();
+
+            $('#memo_txt').attr('disabled', true);
+            $('#memo_txt').attr('readonly', true);
+            //document.getElementById('memo_input_div').style.display = "none";
+            //document.getElementById('momo_edit_btn').style.display = "block";
         });
 
         $("#add_ls").on( "click", function( event ) {
@@ -281,6 +318,7 @@
         });
 
         $("#add_task").on( "click", function( event ) {
+            alert(4);
             $('#task_form')[0].reset();
             //$('#lead_source_header').text('Add Lead Source');
             $('#modal_task').modal('show');

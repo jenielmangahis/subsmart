@@ -141,6 +141,66 @@ class Customer extends MY_Controller
         $this->load->view('customer/preview', $this->page_data);
     }
 
+    public function print_customer_details($id=null){
+        $this->load->model('jobs_model');
+        $is_allowed = $this->isAllowedModuleAccess(9);
+        if( !$is_allowed ){
+            $this->page_data['module'] = 'customer';
+            echo $this->load->view('no_access_module', $this->page_data, true);
+            die();
+        }
+        $userid = $id;
+        $user_id = logged('id');
+        if(isset($userid) || !empty($userid)){
+            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
+            $this->page_data['access_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_access");
+            $this->page_data['office_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_office");
+            $this->page_data['billing_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_billing");
+            $this->page_data['alarm_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_alarm");
+            $get_customer_notes = array(
+                'where' => array(
+                    'fk_prof_id' => $userid
+                ),
+                'table' => 'acs_notes',
+                'select' => '*',
+            );
+            $this->page_data['customer_notes'] = $this->general->get_data_with_param($get_customer_notes);
+
+            $get_login_user = array(
+                'where' => array(
+                    'id' => $user_id
+                ),
+                'table' => 'users',
+                'select' => 'id,FName,LName',
+            );
+            $this->page_data['logged_in_user'] = $this->general->get_data_with_param($get_login_user,FALSE);
+            $this->page_data['jobs_data_items'] = $this->jobs_model->get_customer_job_items($id);
+
+            $customer_papers_query = array(
+                'where' => array(
+                    'customer_id' => $userid
+                ),
+                'table' => 'acs_papers',
+                'select' => '*',
+            );
+            $this->page_data['papers'] = $this->general->get_data_with_param($customer_papers_query);
+
+            $customer_contacts = array(
+                'where' => array(
+                    'customer_id' => $userid
+                ),
+                'table' => 'contacts',
+                'select' => '*',
+            );
+            $this->page_data['contacts'] = $this->general->get_data_with_param($customer_contacts);
+        }
+        $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE,"","ASC","ac_salesarea","sa_id");
+        $this->page_data['employees'] = $this->customer_ad_model->get_all(FALSE,"","ASC","users","id");
+        $this->page_data['users'] = $this->users_model->getUsers();
+
+        $this->load->view('customer/print/customer_details', $this->page_data);
+    }
+
     public function preview($id=null){
         $this->load->model('jobs_model');
         $is_allowed = $this->isAllowedModuleAccess(9);
@@ -696,7 +756,9 @@ class Customer extends MY_Controller
 
     public function module($id=null)
     {
+        $this->load->model('taskhub_model');
         $this->load->library('wizardlib');
+        
         $is_allowed = $this->isAllowedModuleAccess(9);
         if( !$is_allowed ){
             $this->page_data['module'] = 'customer';
@@ -734,7 +796,8 @@ class Customer extends MY_Controller
             $this->page_data['alarm_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$id,"acs_alarm");
             $this->page_data['audit_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$id,"acs_audit_import");
             //$this->page_data['minitab'] = $this->uri->segment(5);
-            $this->page_data['task_info'] = $this->customer_ad_model->get_all_by_id("fk_prof_id",$id,"acs_tasks");
+            $this->page_data['task_info'] = $this->taskhub_model->getAllNotCompletedTasksByCompanyId(logged('company_id'));;
+            //$this->page_data['task_info'] = $this->customer_ad_model->get_all_by_id("fk_prof_id",$id,"acs_tasks");
             $this->page_data['module_sort'] = $this->customer_ad_model->get_data_by_id('fk_user_id',$user_id,"ac_module_sort");
             $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
 
@@ -1476,14 +1539,60 @@ class Customer extends MY_Controller
         $input = $this->input->post();
         if ($input) {
             unset($input['credit_report']);
-            unset($input['report_history']);
-            $input['company_id'] = logged('company_id');
-            if ($this->customer_ad_model->add($input, "ac_leads")) {
-                echo 'Saved';
+            unset($input['report_history']);            
+            if( isset($input['leads_id']) ){                
+                if ($this->customer_ad_model->update_data($input, "ac_leads", 'leads_id')) {
+                    echo 'Saved';
+                } else {
+                    echo "Error";
+                }
+            }else{
+                $input['company_id'] = logged('company_id');
+                if ($this->customer_ad_model->add($input, "ac_leads")) {
+                    echo 'Saved';
+                } else {
+                    echo "Error";
+                }
+            }
+            
+        }
+    }
+
+    public function convert_to_customer()
+    {
+        $is_success = 0;
+        $msg = 'Cannot save data';
+
+        $input = $this->input->post();
+        if ($input) {
+            $customer_data = [
+                'company_id' => logged('company_id'),
+                'fk_user_id' => logged('id'),
+                'fk_sa_id' => 0,
+                'contact_name' => '',
+                'status' => 'New',
+                'customer_type' => 'Residential',
+                'first_name' => $input['firstname'],
+                'middle_name' => $input['middle_initial'],
+                'last_name' => $input['lastname'],
+                'mail_add' => $input['address'],
+                'city' => $input['city'],
+                'state' => $input['state'],
+                'zip_code' => $input['zip_code'],
+                'country' => $input['country'],
+                'date_of_birth' => date('m/d/Y', strtotime($input['date_of_birth'])),
+                'email' => $input['email_add'],
+                'phone_h' => $input['phone_home']
+            ];
+            if ($this->customer_ad_model->add($customer_data, "acs_profile")) {
+                $is_success = 1;
             } else {
-                echo "Error";
+                $msg = 'Required field is missing. Cannot convert to customer.';
             }
         }
+
+        $json = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($json);
     }
 
     public function add_audit_import_ajax(){
@@ -1978,15 +2087,18 @@ class Customer extends MY_Controller
     public function get_customer_import_header(){
 
             if (is_uploaded_file($_FILES['file']['tmp_name'])) {
-                $this->load->library('CSVReader');
-                $csvData = $this->csvreader->get_header($_FILES['file']['tmp_name']);
-
-                if (!empty($csvData)) {
-                    foreach ($csvData as $row) {
-                        //echo $row['MonitoringID'];
+                $csv = array_map("str_getcsv", file($_FILES['file']['tmp_name'],FILE_SKIP_EMPTY_LINES));
+                $csvHeader = array_shift($csv);
+                foreach( $csvHeader as $key => $value ){
+                    if( strtolower($value) == 'firstname' ){
+                        unset($csvHeader[$key]);
                     }
-                    //print_r($csvData);
-                    echo json_encode($csvData,true);
+                    if( strtolower($value) == 'lastname' ){
+                        unset($csvHeader[$key]);
+                    }
+                }
+                if (!empty($csvHeader)) {
+                    echo json_encode($csvHeader,true);
                 }else{
                     echo 'error';
                 }
@@ -1995,8 +2107,11 @@ class Customer extends MY_Controller
     }
 
     public function import_customer_data() {
-        $data = array();
+        $is_success = 0;
+
+        $data = array();        
         $input = $this->input->post();
+
         if ($input) {
                 $insertCount = $updateCount = $rowCount = $notAddCount = 0;
                 if (is_uploaded_file($_FILES['file']['tmp_name'])) {
@@ -2005,20 +2120,64 @@ class Customer extends MY_Controller
                     if (!empty($csvData)) {
                         foreach ($csvData as $row) {
                             //print_r($row);
+                            $company = '';
+                            if( in_array('Company', $input['headers']) ){
+                                $company = $row['Company'];
+                            }
+
+                            $status = '';
+                            if( in_array('Status', $input['headers']) ){
+                                $status = $row['Status'];
+                            }
+
+                            $address = '';
+                            if( in_array('Address', $input['headers']) ){
+                                $address = $row['Address'];
+                            }
+
+                            $city = '';
+                            if( in_array('City', $input['headers']) ){
+                                $city = $row['City'];
+                            }
+
+                            $city = '';
+                            if( in_array('City', $input['headers']) ){
+                                $city = $row['City'];
+                            }
+
+                            $state = '';
+                            if( in_array('State', $input['headers']) ){
+                                $state = $row['State'];
+                            }
+
+                            $email = '';
+                            if( in_array('Email', $input['headers']) ){
+                                $email = $row['Email'];
+                            }
+
+                            $zip = '';
+                            if( in_array('Zip', $input['headers']) ){
+                                $city = $row['Zip'];
+                            }
+
+                            $country = '';
+                            if( in_array('Country', $input['headers']) ){
+                                $city = $row['Country'];
+                            }
 
                             $input_profile = array(
                                 'fk_user_id' => logged('id'),
                                 'fk_sa_id' => 0,
                                 'first_name' => $row['FirstName'],
                                 'last_name' => $row['LastName'],
-                                'business_name' => $row['Company'],
-                                'status' => $row['Status'],
-                                'mail_add' => $row['Address'],
-                                'city' => $row['City'],
-                                'email' => $row['Email'],
-                                'state' => $row['State'],
-                                'zip_code' => $row['Zip'],
-                                'country' => 'USA',
+                                'business_name' => $company,
+                                'status' => $status,
+                                'mail_add' => $address,
+                                'city' => $city,
+                                'email' => $email,
+                                'state' => $state,
+                                'zip_code' => $zip,
+                                'country' => $country,
                                 'company_id' => logged('company_id'),
                             );
                             if(!empty( $row['FirstName']) && !empty( $row['LastName'])) {
@@ -2100,9 +2259,9 @@ class Customer extends MY_Controller
                                                 'contract_term' => $row['ContractTerm'],
                                             );
                                         }
-                                        $this->customer_ad_model->add($input_alarm,"acs_alarm");
-                                        $this->customer_ad_model->add($input_office,"acs_office");
-                                        $this->customer_ad_model->add($input_billing,"acs_billing");
+                                        //$this->customer_ad_model->add($input_alarm,"acs_alarm");
+                                        //$this->customer_ad_model->add($input_office,"acs_office");
+                                        //$this->customer_ad_model->add($input_billing,"acs_billing");
                                     }
                                     $data[$rowCount]['firstname']= $row['FirstName'];
                                     $data[$rowCount]['lastname']= $row['LastName'];
@@ -2122,16 +2281,20 @@ class Customer extends MY_Controller
                         //$this->session->set_flashdata('alert-type', 'success');
                         //$this->session->set_flashdata('alert', $successMsg);
                     }
-                    echo json_encode($data);
+                    //echo json_encode($data);
+                    $is_success = 1;
                     //redirect(base_url('customer'));
                 } else {
                     //$this->session->set_userdata('error_msg', 'Error on file upload, please try again.');
                    // redirect($_SERVER['HTTP_REFERER'], 'refresh');
-                    echo 'no file';
+                    $is_success = 2;
                 }
         }else{
-            echo 'no input';
+            $is_success = 0;
         }
+
+        $json_data = ['is_success' => $is_success];
+        echo json_encode($json_data);
     }
 
     public function customer_export()

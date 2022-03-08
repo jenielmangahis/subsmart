@@ -4,18 +4,18 @@ defined('BASEPATH') or exit('No direct script access allowed');
 <div class="memos module ui-state-default" data-id="<?= $id ?>"    id="<?= $id ?>">
     <div class="col-sm-12 individual-module">
         <h6>Memo</h6>
-        <div class="row">
-            <div id="momo_edit_btn" class="pencil" >
-                <?= isset($profile_info) ? $profile_info->notes : ''; ?>
-            </div>
-            <div id="memo_input_div" style="display:none;">
+        <div class="row">            
+            <div id="memo_input_div">
                 <div style=" width:100%; height:200px;">
-                    <textarea name="memo_txt" id="memo_txt" style="width:400px; height:135px;" class="input"><?= isset($profile_info) ? $profile_info->notes : ''; ?></textarea>
-                    <button class="btn btn-primary btn-sm" id="save_memo" style="color: #ffffff;"><span class="fa fa-save"></span> Save Memo</button>
-                    <a class="btn btn-primary btn-sm" id="memo_cancel" href="javascript:void(0);" style="color: #ffffff;"><span class="fa fa-remove"></span> Cancel</a>
-                </div>
-                <div align="right" class="normaltext1" style="padding-right:15px;">
-                    <a href="#" id="clear_memo" name="clear_memo" style="" class="js-qwynlraxz">Clear Memo</a>
+                    <textarea disabled="" readonly="" name="memo_txt" id="memo_txt" style="width:400px; height:135px !important;" class="input form-control"><?= isset($profile_info) ? $profile_info->notes : ''; ?></textarea>
+                    <div class="mt-2 memo-update-tools" style="display:none;">
+                        <button class="btn btn-primary btn-sm" id="save_memo" style="color: #ffffff;"><span class="fa fa-save"></span> Save Memo</button>
+                        <a class="btn btn-primary btn-sm" id="memo_cancel" href="javascript:void(0);" style="color: #ffffff;"><span class="fa fa-remove"></span> Cancel</a>
+                    </div>
+                    <div class="mt-2 memo-edit-tools">                        
+                        <a href="javasacript:void(0);" class="btn btn-primary btn-sm" id="edit_memo" style="color: #ffffff;"><i class="fa fa-pencil"></i> Edit Memo</a>
+                        <a href="javascript:void(0);" class="btn btn-primary btn-sm" id="clear_memo" name="clear_memo" style="color: #ffffff;"><i class="fa fa-eraser"></i> Clear Memo</a>
+                    </div>
                 </div>
             </div>
         </div>

@@ -4365,4 +4365,10 @@ if (!function_exists('is_admin_logged')) {
         $return = ['is_valid' => $is_valid, 'err_msg' => $err_msg];
         return $return;
     }
+
+    /*Exempted to account renewal*/
+    function exempted_company_ids(){
+        $exempted_company_ids = [1,2,3];
+        return $exempted_company_ids;
+    }
 }
