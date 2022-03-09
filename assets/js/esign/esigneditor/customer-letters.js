@@ -1,6 +1,7 @@
 window.document.addEventListener("DOMContentLoaded", async () => {
   window.api = await import("./api.js");
   window.helpers = await import("./helpers.js");
+  window.jsPDF = window.jspdf.jsPDF;
 
   const parts = window.location.pathname.split("/");
   const customerId = parts.pop();
@@ -9,7 +10,7 @@ window.document.addEventListener("DOMContentLoaded", async () => {
   const $customerName = document.querySelector(".esigneditor__title span");
   $customerName.textContent = `${customer.first_name} ${customer.last_name}`;
 
-  Promise.all([initTable(customer)]).then(() => {
+  Promise.all([initTable(customer), initSendModal()]).then(() => {
     document.querySelector(".wrapper").classList.remove("wrapper--loading");
   });
 });
@@ -30,6 +31,9 @@ async function initTable(customer) {
     },
     created: (_, __, row) => {
       return moment(row.created_at).fromNow();
+    },
+    status: (_, __, row) => {
+      return row.print_status;
     },
     actions: () => {
       return `
@@ -116,6 +120,10 @@ async function initTable(customer) {
         sortable: false,
       },
       {
+        render: columns.status,
+        sortable: false,
+      },
+      {
         render: columns.actions,
         class: "table__actions",
       },
@@ -168,4 +176,126 @@ async function initTable(customer) {
     if (!func) return;
     func(row, table, event);
   });
+
+  const $filter = $("[name=letterStatusFilter]");
+  $filter.on("change", () => {
+    $selected = $("[name=letterStatusFilter]:checked");
+    let filtered = null;
+    if ($selected.val() === "unprinted") {
+      filtered = table.data().filter((row) => {
+        return row.print_status === "Pending Print";
+      });
+    }
+
+    table.clear();
+    table.rows.add(filtered === null ? data : filtered).draw();
+    $table.find(".table__checkbox--primary").prop("checked", false);
+  });
+}
+
+function initSendModal() {
+  const $modal = $("#sendLetterModal");
+  const $radios = $modal.find("[name=sendOption]");
+  const $print = $modal.find("#sendOptionPrint");
+  const $nextBtn = $modal.find("[data-action=next]");
+  const $modalTrigger = $("[data-action=select-send-option]");
+  const $printBtn = $modal.find("[data-action=print]");
+
+  $modalTrigger.on("click", () => {
+    const $table = $("#letters");
+    const $selectedRows = $table.find(".table__row--selected");
+
+    if ($selectedRows.length) {
+      $modal.modal("show");
+    }
+  });
+
+  $radios.on("change", (event) => {
+    const $prevActive = document.querySelector(".sendLetter__option--active");
+    if ($prevActive) {
+      $prevActive.classList.remove("sendLetter__option--active");
+    }
+
+    const $parent = event.target.closest(".sendLetter__option");
+    $parent.classList.add("sendLetter__option--active");
+  });
+
+  $nextBtn.on("click", async () => {
+    const $selected = $modal.find("[name=sendOption]:checked");
+    const method = $selected.val();
+
+    if (method === "print") {
+      const ids = getSelectedRowData().map((row) => row.id);
+      const { data: letters } = await window.helpers.submitBtn($nextBtn, () =>
+        window.api.printCustomerLetters({ ids })
+      );
+
+      const $previewContainer = $modal.find(".printPreview");
+      $previewContainer.empty();
+      letters.forEach((letter) => {
+        $previewContainer.append(
+          `<div class="printPreview__item">${letter}</div>`
+        );
+      });
+    }
+
+    $modal.get(0).dataset.stepActive = method;
+  });
+
+  $printBtn.on("click", () => {
+    const $previews = $modal.find(".printPreview__item");
+    const doc = new jsPDF({
+      orientation: "portrait",
+      format: "a4",
+      unit: "px",
+      hotfixes: ["px_scaling"],
+    });
+
+    const margin = { x: 48, y: 48 };
+    let { width, height } = doc.internal.pageSize;
+    width = width - margin.x * 2;
+    height = height - margin.y * 2;
+
+    $previews.each((_, $preview) => {
+      doc.addPage();
+      doc.html(
+        `<div style="width:${width}px; height:${height}px;">
+            ${$preview.innerHTML}
+          </div>`,
+        {
+          margin: [margin.y, margin.x, margin.y, margin.x],
+          autoPaging: "text",
+        }
+      );
+    });
+
+    window.helpers.submitBtn($printBtn, async () => {
+      const letters = getSelectedRowData().map((row) => ({
+        id: row.id,
+        print_status: "Printed/Sent",
+      }));
+
+      await window.api.batchEditCustomerLetters({ letters });
+      await window.helpers.sleep(1);
+      doc.output("dataurlnewwindow");
+      $modal.modal("hide");
+    });
+  });
+
+  $($modal).on("show.bs.modal", () => {
+    $print.trigger("change");
+    $print.prop("checked", true);
+    $modal.get(0).dataset.stepActive = "select";
+  });
+}
+
+function getSelectedRowData() {
+  const $table = $("#letters");
+  const table = $table.DataTable();
+  const rowsData = [];
+  table.rows(".table__row--selected").every((index) => {
+    rowsData.push(table.row(index).data());
+  });
+
+  return rowsData;
 }

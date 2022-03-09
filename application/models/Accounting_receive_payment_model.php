@@ -268,4 +268,18 @@ class Accounting_receive_payment_model extends MY_Model
 		$query = $this->db->get('accounting_receive_payment');
 		return $query->result();
     }
+
+    public function delete_payment_invoice($paymentInvoiceId)
+    {
+        $this->db->where('id', $paymentInvoiceId);
+        $delete = $this->db->delete('accounting_receive_payment_invoices');
+        return $delete;
+    }
+    
+    public function delete_payment_credit($paymentCreditId)
+    {
+        $this->db->where('id', $paymentCreditId);
+        $delete = $this->db->delete('accounting_receive_payment_credits');
+        return $delete;
+    }
 }

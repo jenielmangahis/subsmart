@@ -106,6 +106,7 @@ $(document).on('submit', '#modal-container #new-customer-modal #add-new-customer
 
 
 $(document).on("click", ".created-sales-receipt", function(event) {
+    $('#new-popup #accounting_customers .ajax-modal[data-view="sales_receipt_modal"]').trigger('click');
     $('#addsalesreceiptModal form').trigger("reset");
     $("#addsalesreceiptModal form #sel-customer2").val($(this).attr('data-customer-id'));
     $("#addsalesreceiptModal form #email2").val($(this).attr('data-email-add'));

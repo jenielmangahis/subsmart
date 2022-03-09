@@ -45,10 +45,10 @@
 
                             <div class="row marg">
                                 <div class="col-md-6">
-                                    <h3 class="margi">Checkbox</h3>
+                                    <h4 class="margi">COLUMNS FROM FILE</h4>
                                 </div>
                                 <div class="col-md-6">
-                                    <h3 class="margi">Select</h3>
+                                    <h4 class="margin">SELECT COLUMNS TO STORE</h4>
                                 </div>
                             </div>
 
@@ -63,20 +63,20 @@
                         </fieldset>
                         <fieldset id="holder-step-3">
                             <div class="row">
-                                <div class="col-md-12 mt-4">
+                                <div class="col-md-6">
                                    
-                                    <img src="https://localhost/nsmartrac/assets/img/accounting/customers/message.png" style="width: 200px; height:200px; margin:0 auto;">
+                                    <img src="https://localhost/nsmartrac/assets/img/accounting/customers/email-marketing.png" style="width:275px; height:275px; margin:0 auto;">
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-12">
+                                <div class="col-md-6" style="margin-top: 40px; text-align:left;">
                                    
-                                    <h2>Saved!</h2>
-                                    <h3 style="color:#6a4b86">You've successfully added new customers!!</h3>
-                                    
+                                    <h3 style="margin-left:5px;color:#6a4b86;">You've successfully added new customers!!</h3>
+                                    <p style="color:#6a4b86;font-size:15px; margin-left:5px;">The data of the customers from the file you imported has successfully uploaded!</p>
+                                    <button type="button" class="btn btn-primary" id="close" style="background-color:#6a4b86 !important">Close</button>
                                 
                                 </div>
-                            </div>                            
+                            </div>
+                           
+                                                   
                         </fieldset>
 
                     </form>

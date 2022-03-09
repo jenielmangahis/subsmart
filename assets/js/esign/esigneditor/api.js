@@ -83,6 +83,17 @@ export function deleteCustomerLetter(id) {
   return http.delete(`${prefixURL}/EsignEditor/apiDeleteCustomerLetter/${id}`);
 }
 
+export function printCustomerLetters(payload) {
+  return http.post(`${prefixURL}/EsignEditor/apiPrintCustomerLetters`, payload);
+}
+
+export function batchEditCustomerLetters(payload) {
+  return http.post(
+    `${prefixURL}/EsignEditor/apiBatchEditCustomerLetters`,
+    payload
+  );
+}
+
 const http = {
   post: sendPost,
   delete: sendDelete,

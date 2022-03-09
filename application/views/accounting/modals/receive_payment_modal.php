@@ -213,7 +213,7 @@
                                                 </div>
 
                                                 <div class="col-md-12 my-3">
-                                                    <table class="table table-bordered table-hover clickable" id="invoices-table">
+                                                    <table class="table table-bordered table-hover" id="invoices-table">
                                                         <thead>
                                                             <th>
                                                                 <div class="d-flex justify-content-center">
@@ -305,7 +305,7 @@
                                                 </div>
 
                                                 <div class="col-md-12 my-3">
-                                                    <table class="table table-bordered table-hover clickable" id="credit-memo-table">
+                                                    <table class="table table-bordered table-hover" id="credit-memo-table">
                                                         <thead>
                                                             <th>
                                                                 <div class="d-flex justify-content-center">
@@ -325,7 +325,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-4 offset-md-8 display-with-customer hide">
+                                        <div class="col-md-4 offset-md-8">
                                             <table class="bg-transparent float-right table text-right w-75">
                                                 <tbody>
                                                     <tr>
@@ -334,7 +334,7 @@
                                                             <span class="amount-to-apply">
                                                                 <?php if(isset($payment)) : ?>
                                                                 <?php
-                                                                $amount = '$'.number_format(floatval($payment->amount), 2, '.', ',');
+                                                                $amount = '$'.number_format(floatval($payment->amount_to_apply), 2, '.', ',');
                                                                 $amount = str_replace('$-', '-$', $amount);
                                                                 echo $amount;
                                                                 ?>
@@ -346,7 +346,19 @@
                                                     </tr>
                                                     <tr>
                                                         <td class="border-0">Amount to Credit</td>
-                                                        <td class="border-0"><span class="amount-to-credit">$0.00</span></td>
+                                                        <td class="border-0">
+                                                            <span class="amount-to-credit">
+                                                                <?php if(isset($payment)) : ?>
+                                                                <?php
+                                                                $amount = '$'.number_format(floatval($payment->amount_to_credit), 2, '.', ',');
+                                                                $amount = str_replace('$-', '-$', $amount);
+                                                                echo $amount;
+                                                                ?>
+                                                                <?php else : ?>
+                                                                $0.00
+                                                                <?php endif; ?>
+                                                            </span>
+                                                        </td>
                                                     </tr>
                                                     <tr>
                                                         <td class="border-0"></td>

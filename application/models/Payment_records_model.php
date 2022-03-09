@@ -157,6 +157,18 @@ class Payment_records_model extends MY_Model
 //        echo $this->db->last_query(); die;
         return $query->result();
     }
+
+    public function delete_payment_record($data = [])
+    {
+        $this->db->where('company_id', $data['company_id']);
+        $this->db->where('customer_id', $data['customer_id']);
+        $this->db->where('invoice_amount', $data['invoice_amount']);
+        $this->db->where('payment_date', $data['payment_date']);
+        $this->db->where('payment_method', $data['payment_method']);
+        $this->db->where('invoice_number', $data['invoice_number']);
+        $delete = $this->db->delete('payment_records');
+        return $delete;
+    }
 }
 
 /* End of file Invoice_model.php */

@@ -4,9 +4,11 @@ $(document).on("click", "#import-customer", function(event) {
 $(document).on("click", "#import-customers-modal .close-modal", function(event) {
     $("#import-customers-modal").fadeOut();
 });
-$(document).on("click", "#import-customers-modal #holder-step-3 .next-modal", function(event) {
+$(document).on("click", "#import-customers-modal #close", function(event) {
+    get_load_customers_table();
     $("#import-customers-modal").fadeOut();
 });
+
 
 $(document).ready(function() {
 
@@ -55,16 +57,16 @@ $(document).ready(function() {
                                 var cont;
                                 html_temp += `
                                 <div class="row">
-                                <div class="col-md-6">
-                                    <div class="checkbox checkbox-sec margin-right ">
-                                        <input type="checkbox" name="temp` + index + `" value="` + data.titles[index] + `" id="temp` + index + `" checked="">
+                                <div class="col-md-6" >
+                                    <div class="checkbox checkbox-sec margin-right " style="margin-left:60px; margin-top:20px;">
+                                        <input class="colTable" type="checkbox" name="temp` + index + `" value="` + data.titles[index] + `" id="temp` + index + `" checked="">
                                         <label for="temp` + index + `">
                                             <span>` + data.titles[index] + `</span>
                                         </label>
                                     </div>
                                 </div>
                                 <div class="col-md-6 align">
-                                    <select class="selected` + index + `">`;
+                                    <select class="selected` + index + `" required>`;
                                 for (let index1 = 0; index1 < data.table_column_names.length; index1++) {
                                     var holder = "";
                                     var count;
@@ -78,10 +80,15 @@ $(document).ready(function() {
                                         count++;
                                     }
 
-
-                                    html_temp2 += ` <option value = "` + data.table_column_names[index1] + `"
+                                    if (index1 == data.table_column_names.length - 2) {
+                                        break;
+                                    } else {
+                                        html_temp2 += ` <option value = "` + data.table_column_names[index1] + `"
                                                                         ` + selected + `> ` + data.table_column_names[index1] + ` </option>
                                                                         `;
+
+                                    }
+
 
                                     if (index1 == data.table_column_names.length - 1) {
                                         data.table_column_names[indexHolder] = data.table_column_names[0]
@@ -90,6 +97,7 @@ $(document).ready(function() {
                                         count = 0;
                                         indexHolder = 0;
                                     }
+
 
 
 
@@ -185,24 +193,28 @@ $(document).ready(function() {
 
     });
 
+
     //get values of hidden input
-
+    var hmtl_in = "";
     $('#holder-step-2 .next-step').click(function() {
-
+        $holder = this;
         var tables = [];
         var selCol = [];
         var filename = ($("input[name=file_name]").val());
+
+
+
         for (index1 = 0; index1 < counter; index1++) { //loop
-            if ($("input[name=temp" + index1 + "]").is(":checked")) {
+            if ($("input[name=temp" + index1 + "]").is(":checked") && $("input[name=column" + index1 + "]").val() != "") {
                 //modified progress
                 selCol.push($("input[name=temp" + index1 + "]").val());
                 tables.push($("input[name=column" + index1 + "]").val());
             }
 
 
+
+
         }
-        //Progress
-        console.log(tables);
         $.ajax({
             url: baseURL + "accounting/exported_data_from_forms",
             type: "POST",
@@ -211,9 +223,17 @@ $(document).ready(function() {
             success: function(data) {
 
             }
-        })
+        });
+        next_step(this);
+        //Progress
+        console.log(tables);
+
 
     });
+
+
+
+
     // $('#holder-step-3 .next-step').click(function() {
     //     $("#import-customers-modal").fadeOut();
     // });
@@ -237,13 +257,12 @@ $(document).ready(function() {
     var currentGfgStep, nextGfgStep, previousGfgStep;
     var opacity;
     var current = 1;
-    var steps = $("fieldset").length;
-
+    var steps = $("fieldset").length - 1;
     setProgressBar(current);
 
-    $("#holder-step-2 .next-step").click(function() {
-        next_step(this);
-    });
+    // $(".next-step").click(function() {
+    //     next_step(this);
+    // });
 
     function next_step(elem) {
         currentGfgStep = $(elem).parent();
