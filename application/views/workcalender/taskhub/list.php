@@ -73,6 +73,7 @@ label>input {
                                 <thead>
                                 <tr>
                                     <th style="width:60%;">Subject</th>
+                                    <th>Customer</th>
                                     <th>Status</th>
                                     <th>Date Completion</th>
                                     <th>Date Created</th>
@@ -85,6 +86,7 @@ label>input {
                                             <td>
                                                <a href="<?php echo url('taskhub/view/' . $row->task_id) ?>"><?php echo $row->subject; ?></a>
                                             </td>
+                                            <td><?= $row->customer_name; ?></td>
                                             <td>
                                                 <span class="badge badge-info" style="background-color: <?php echo $row->status_color; ?>"><?php echo $row->status_text; ?></span>
                                             </td>
@@ -203,7 +205,8 @@ label>input {
           "autoWidth": false,
           "responsive": true,
           "columns": [            
-            { "width": "50%" },
+            { "width": "40%" },
+            { "width": "20%" },
             { "width": "10%" },        
             { "width": "10%" },
             { "width": "10%" },                    
@@ -213,7 +216,6 @@ label>input {
 
         $('#btn-th-open-search').click(function(e){
             e.preventDefault();
-
             $('#modal-taskhub-search').modal('show');
         });
 

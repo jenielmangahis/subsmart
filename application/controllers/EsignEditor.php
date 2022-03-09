@@ -110,6 +110,10 @@ class EsignEditor extends MY_Controller
             'assets/js/esign/esigneditor/customer-letters.js',
             'https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js',
             'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js',
+
+            'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.3.6/purify.min.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js',
         ]);
 
         $this->load->view('esign/esigneditor/customer-letters', $this->page_data);
@@ -495,20 +499,25 @@ SQL;
 
         $payload = json_decode(file_get_contents('php://input'), true);
 
-        $letterContent = null;
+        $letter = $this->getLetter($payload['letter_id']);
         if (array_key_exists('content', $payload)) {
-            $letterContent = $payload['content'];
-        } else {
-            $letter = $this->getLetter($payload['letter_id']);
-            $letterContent = $letter->content;
+            $letter->content = $payload['content'];
         }
 
+        echo json_encode(['data' => [
+            'content' => $this->generateCustomerLetter($letter),
+        ]]);
+    }
+
+    private function generateCustomerLetter($customerLetter)
+    {
         $placeholders = $this->getPlaceholders();
         $placeholderParam = new PlaceholderGetParam(
-            (int) $payload['customer_id'],
+            (int) $customerLetter->customer_id,
             (int) logged('company_id')
         );
 
+        $letterContent = $customerLetter->content;
         foreach ($placeholders as $placeholder) {
             if (!array_key_exists('get', $placeholder)) {
                 continue;
@@ -525,12 +534,9 @@ SQL;
                 $callback,
                 $letterContent
             );
-
         }
 
-        echo json_encode(['data' => [
-            'content' => $letterContent,
-        ]]);
+        return $letterContent;
     }
 
     public function apiCreateCustomerLetter()
@@ -595,5 +601,46 @@ SQL;
         $this->db->where('id', $id);
         $this->db->delete('esign_editor_customer_letters');
         echo json_encode(['data' => $id]);
+    }
+
+    public function apiPrintCustomerLetters()
+    {
+        header('content-type: application/json');
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['success' => false]);
+            return;
+        }
+
+        $payload = json_decode(file_get_contents('php://input'), true);
+        ['ids' => $ids] = $payload;
+
+        $this->db->where_in('id', $ids);
+        $letters = $this->db->get('esign_editor_customer_letters')->result();
+
+        $generated = [];
+        foreach ($letters as $letter) {
+            array_push($generated, $this->generateCustomerLetter($letter));
+        }
+
+        echo json_encode(['data' => $generated]);
+    }
+
+    public function apiBatchEditCustomerLetters()
+    {
+        header('content-type: application/json');
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['success' => false]);
+            return;
+        }
+
+        $payload = json_decode(file_get_contents('php://input'), true);
+        ['letters' => $letters] = $payload;
+        $ids = array_map(function ($letter) {return $letter['id'];}, $letters);
+
+        $this->db->update_batch('esign_editor_customer_letters', $letters, 'id');
+
+        $this->db->where_in('id', $ids);
+        $letters = $this->db->get('esign_editor_customer_letters')->result();
+        echo json_encode(['data' => $letters]);
     }
 }

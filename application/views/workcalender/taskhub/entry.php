@@ -121,7 +121,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
                                     </div>
                                     <div class="col-6">
-
+                                            <div class="form-group">
+                                                <label for="assigned_to">Customer</label>                                                
+                                                <select name="customer_id" id="customer-id" class="form-control">
+                                                    <?php if( $task ){ ?>
+                                                        <option value="<?= $task->prof_id; ?>"><?= $task->customer_name; ?></option>
+                                                    <?php } ?>
+                                                </select>
+                                            </div>
                                         <?php if(isset($users_selection)){ ?>
                                             <div class="form-group">
                                                 <label for="assigned_to">Assign To</label>
@@ -322,6 +329,59 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     }
                 }
             });  
+        }
+
+        $('#customer-id').select2({
+            ajax: {
+                url: base_url + 'autocomplete/_company_customer',
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                  return {
+                    q: params.term, // search term
+                    page: params.page
+                  };
+                },
+                processResults: function (data, params) {
+                  // parse the results into the format expected by Select2
+                  // since we are using custom formatting functions we do not need to
+                  // alter the remote JSON data, except to indicate that infinite
+                  // scrolling can be used
+                  params.page = params.page || 1;
+
+                  return {
+                    results: data,
+                    // pagination: {
+                    //   more: (params.page * 30) < data.total_count
+                    // }
+                  };
+                },
+                cache: true
+              },
+              placeholder: 'Select Customer',
+              minimumInputLength: 0,
+              templateResult: formatRepoCustomer,
+              templateSelection: formatRepoCustomerSelection
+        });
+
+        function formatRepoCustomerSelection(repo) {
+            if( repo.first_name != null ){
+                return repo.first_name + ' ' + repo.last_name;      
+            }else{
+                return repo.text;
+            }
+        }
+
+        function formatRepoCustomer(repo) {
+          if (repo.loading) {
+            return repo.text;
+          }
+
+          var $container = $(
+            '<div>'+repo.first_name + ' ' + repo.last_name +'<br /><small>'+repo.phone_h+' / '+repo.email+'</small></div>'
+          );
+
+          return $container;
         }
     });
 </script>

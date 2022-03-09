@@ -6,6 +6,10 @@ export function htmlToElement(html) {
 }
 
 export async function submitBtn($button, asyncCallback) {
+  if ($button instanceof jQuery) {
+    $button = $button.get(0);
+  }
+
   $button.setAttribute("disabled", true);
   $button.classList.add("esigneditor__btn--loading");
   const response = await asyncCallback();
@@ -37,4 +41,8 @@ export function wysiwygEditor($textarea, content = null) {
   if (content !== null) {
     $letter.summernote("code", content);
   }
+}
+
+export function sleep(seconds) {
+  return new Promise((resolve) => setTimeout(resolve, seconds * 1000));
 }

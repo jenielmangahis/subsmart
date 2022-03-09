@@ -19,6 +19,7 @@ class Reconcile extends MY_Controller {
         $this->load->model('accounting_sales_receipt_model');
         $this->load->model('accounting_credit_memo_model');
         $this->load->model('accounting_statements_model');
+        $this->load->model('vendors_model');
 
         add_css(array(
             "assets/css/accounting/banking.css?v=".rand(),

@@ -781,55 +781,55 @@ $(document).on('change', '#table_rows', function() {
 $('a#new-time-activity').on('click', function(e) {
     e.preventDefault();
 
-    $('#new-popup #accounting_employees .ajax-single_time_activity_modal').trigger('click');
+    $('#new-popup #accounting_employees .ajax-modal[data-view="single_time_activity_modal"]').trigger('click');
 });
 
 $('a#new-expense-transaction').on('click', function(e) {
     e.preventDefault();
 
-    $('#new-popup #accounting_vendors .ajax-expense_modal').trigger('click');
+    $('#new-popup #accounting_vendors .ajax-modal[data-view="expense_modal"]').trigger('click');
 });
 
 $('a#new-check-transaction').on('click', function(e) {
     e.preventDefault();
 
-    $('#new-popup #accounting_vendors .ajax-check_modal').trigger('click');
+    $('#new-popup #accounting_vendors .ajax-modal[data-view="check_modal"]').trigger('click');
 });
 
 $('a#new-bill-transaction').on('click', function(e) {
     e.preventDefault();
 
-    $('#new-popup #accounting_vendors .ajax-bill_modal').trigger('click');
+    $('#new-popup #accounting_vendors .ajax-modal[data-view="bill_modal"]').trigger('click');
 });
 
 $('a#new-purchase-order-transaction').on('click', function(e) {
     e.preventDefault();
 
-    $('#new-popup #accounting_vendors .ajax-purchase_order_modal').trigger('click');
+    $('#new-popup #accounting_vendors .ajax-modal[data-view="purchase_order_modal"]').trigger('click');
 });
 
 $('a#new-vendor-credit-transaction').on('click', function(e) {
     e.preventDefault();
 
-    $('#new-popup #accounting_vendors .ajax-vendor_credit_modal').trigger('click');
+    $('#new-popup #accounting_vendors .ajax-modal[data-view="vendor_credit_modal"]').trigger('click');
 });
 
 $('a#new-credit-card-pmt').on('click', function(e) {
     e.preventDefault();
 
-    $('#new-popup #accounting_order .ajax-pay_down_credit_card_modal').trigger('click');
+    $('#new-popup #accounting_order .ajax-modal[data-view="pay_down_credit_card_modal"]').trigger('click');
 });
 
 $('a#pay-bills').on('click', function(e) {
     e.preventDefault();
 
-    $('#new-popup #accounting_vendors .ajax-pay_bills_modal').trigger('click');
+    $('#new-popup #accounting_vendors .ajax-modal[data-view="pay_bills_modal"]').trigger('click');
 });
 
 $('#print-checks').on('click', function(e) {
     e.preventDefault();
 
-    $('#new-popup #accounting_vendors .ajax-print_checks_modal').trigger('click');
+    $('#new-popup #accounting_vendors .ajax-modal[data-view="print_checks_modal"]').trigger('click');
 });
 
 $('.action-bar .dropdown-menu .show-more-button').on('click', function(e) {

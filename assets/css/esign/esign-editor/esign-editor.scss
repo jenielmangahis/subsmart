@@ -209,3 +209,136 @@
     }
   }
 }
+
+#sendLetterModal {
+  .sendLetter__option {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1rem;
+    border: 2px solid #333;
+    border-radius: 4px;
+    padding: 1rem;
+
+    &--active {
+      border-color: #0075ff;
+      border-width: 3px;
+    }
+
+    &:not(:last-child) {
+      margin-bottom: 1rem;
+    }
+
+    h3 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    p {
+      margin-bottom: 0;
+    }
+
+    &Text {
+      position: relative;
+      top: -3px;
+    }
+
+    .form-check-input {
+      width: 1rem;
+      height: 1rem;
+    }
+  }
+
+  &[data-step-active="select"] {
+    [data-step="print"],
+    [data-step="email"] {
+      display: none;
+    }
+
+    [data-action="next"] {
+      display: block;
+    }
+
+    [data-action="email"],
+    [data-action="print"] {
+      display: none;
+    }
+  }
+
+  &[data-step-active="email"] {
+    [data-step="select"],
+    [data-step="print"] {
+      display: none;
+    }
+
+    [data-step="email"] {
+      display: block;
+    }
+
+    [data-action="email"] {
+      display: block;
+    }
+
+    [data-action="next"],
+    [data-action="print"] {
+      display: none;
+    }
+  }
+
+  &[data-step-active="print"] {
+    [data-step="select"],
+    [data-step="email"] {
+      display: none;
+    }
+
+    [data-step="print"] {
+      display: block;
+    }
+
+    [data-action="print"] {
+      display: flex;
+    }
+
+    [data-action="next"],
+    [data-action="email"] {
+      display: none;
+    }
+  }
+
+  .printPreview {
+    background-color: #e2e2e2;
+    padding: 2rem;
+    max-height: 500px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    border: 1px solid #c9c9c9;
+    border-radius: 4px;
+
+    &__item {
+      background-color: #fff;
+      padding: 2.5rem;
+
+      &:not(:last-child) {
+        margin-bottom: 2rem;
+      }
+    }
+  }
+}
+
+.statusFilter {
+  padding: 8px 0;
+
+  input:not(:checked) {
+    & + label {
+      font-weight: 400;
+    }
+  }
+
+  label {
+    font-family: var(--font-family-sans-serif);
+  }
+
+  .custom-control-input:checked ~ .custom-control-label::before {
+    border-color: #007bff !important;
+    background-color: #007bff !important;
+  }
+}

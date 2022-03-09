@@ -737,6 +737,8 @@ class Accounting extends MY_Controller
 
 
         $table_column_names = $this->accounting_customers_model->get_users_table_column_names();
+        unset($table_column_names[0]);
+        unset($table_column_names[1]);
         array_unshift($table_column_names, " ");
         $data = new stdClass();
         $data->titles = $title_holder;
@@ -8957,7 +8959,7 @@ class Accounting extends MY_Controller
 
             $html .= '<li>
 												<a href="javascript:void(0)"
-													class="created-sales-receipt" data-toggle="modal" data-target="#addsalesreceiptModal" data-email-add="' . $cus->email . '" data-customer-id="' . $cus->prof_id . '">
+													class="created-sales-receipt"  data-target="#addsalesreceiptModal" data-email-add="' . $cus->email . '" data-customer-id="' . $cus->prof_id . '">
 													Create sales receipt
 												</a>
 											</li>

@@ -18,7 +18,32 @@ class Taskhub_model extends MY_Model {
         return $this->db->get('tasks')->result();
     }
 
+    public function getById($id)
+    {
+        $this->db->select('tasks.*, tasks_status.status_text, tasks_status.status_color, CONCAT(acs_profile.first_name," ",acs_profile.last_name)AS customer_name');
+        $this->db->from($this->table);
+        $this->db->join('acs_profile','tasks.prof_id = acs_profile.prof_id', 'left');
+        $this->db->join('tasks_status','tasks.status_id = tasks_status.status_id','right');
+        $this->db->where('tasks.task_id', $id);
+        $query = $this->db->get();
+        return $query->row();
+    }
+
     public function getAllByCompanyId($company_id)
+    {
+        $id = $user_id;
+        $this->db->select('tasks.*, tasks_status.status_text, tasks_status.status_color, CONCAT(acs_profile.first_name," ",acs_profile.last_name)AS customer_name');
+        $this->db->join('tasks_status','tasks.status_id = tasks_status.status_id','left');
+        $this->db->join('acs_profile','tasks.prof_id = acs_profile.prof_id', 'left');
+        $this->db->from($this->table);
+
+        $this->db->where('tasks.company_id', $company_id);
+        $this->db->order_by('tasks.date_created','DESC');
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function getAllNotCompletedTasksByCompanyId($company_id)
     {
         $id = $user_id;
         $this->db->select('tasks.*, tasks_status.status_text, tasks_status.status_color');
@@ -26,6 +51,21 @@ class Taskhub_model extends MY_Model {
         $this->db->from($this->table);
 
         $this->db->where('tasks.company_id', $company_id);
+        $this->db->where('tasks.status_id <>', 6); //Refer to task status table. 6 = completed
+        $this->db->order_by('tasks.date_created','DESC');
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function getAllTasksByCompanyIdAndStatusId($company_id, $status_id)
+    {
+        $id = $user_id;
+        $this->db->select('tasks.*, tasks_status.status_text, tasks_status.status_color');
+        $this->db->join('tasks_status','tasks.status_id = tasks_status.status_id','left');
+        $this->db->from($this->table);
+
+        $this->db->where('tasks.company_id', $company_id);
+        $this->db->where('tasks.status_id', $status_id); //Refer to task status table. 6 = completed
         $this->db->order_by('tasks.date_created','DESC');
         $query = $this->db->get();
         return $query->result();

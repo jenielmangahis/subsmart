@@ -206,7 +206,7 @@ class Accounting_customers_model extends MY_Model
     }
     public function get_users_table_column_names()
     {
-        $query = $this->db->query("SELECT * from customers");
+        $query = $this->db->query("SELECT * from acs_profile");
         return $query->list_fields();
     }
     //function -> progress
@@ -217,7 +217,7 @@ class Accounting_customers_model extends MY_Model
         $columns = "";
         $values = "";
 
-
+        
         //progress report
 
         for ($index = 0; $index < count($column_names); $index++) { //for the database columns
@@ -244,26 +244,35 @@ class Accounting_customers_model extends MY_Model
         };
 
         for ($x = 0; $x < count($data[0]); $x++) {
-            for ($y = 0; $y < count($data); $y++) {
+            for ($y = 0 ; $y < count($data); $y++) {
                 if ($y == 0) {
                     $values .= "('" . $data[$y][$x] . "',";
                 } else if ($y == count($data) - 1) {
                     if ($x == count($data[0]) - 1) {
                         $values .= "'" . $data[$y][$x] . "')";
                     } else {
-                        $values .= "'" . $data[$y][$x] . "'),";
+                        $values .= "'" . $data[$y][$x] . "')";
                     }
                 } else {
                     $values .= "'" . $data[$y][$x] . "'";
                 }
             }
+
+            $query = $this->db->query("INSERT INTO acs_profile ($columns) VALUES  $values ");
+            $id = $this->db->insert_id();
+            $cId = logged("company_id");
+            $fk_id = logged("id");
+            $update = $this->db->query("UPDATE acs_profile
+             set company_id=$cId ,fk_user_id=$fk_id
+             where prof_id=$id");
+             $values ="";
         }
 
         //progress report
+        
        
-        $query = $this->db->query("INSERT INTO customers ($columns ) VALUES  $values ");
-
-        var_dump($data);
+       
+        var_dump($cId, $fk_id);
         echo "<br>";
         echo "<br>";
         var_dump("INSERT INTO customers ($columns ) VALUES  $values ");

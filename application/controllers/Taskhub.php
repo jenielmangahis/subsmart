@@ -30,7 +30,12 @@ class Taskhub extends MY_Controller {
 	public function index(){
 		$this->hasAccessModule(6); 
 		$cid = logged('company_id');
-		$this->page_data['tasks'] = $this->taskhub_model->getAllByCompanyId($cid);
+		if( $this->input->get('status') ){
+			$this->page_data['tasks'] = $this->taskhub_model->getAllTasksByCompanyIdAndStatusId($cid, $this->input->get('status'));
+		}else{
+			$this->page_data['tasks'] = $this->taskhub_model->getAllByCompanyId($cid);	
+		}
+		
 		$this->page_data['status_selection'] = $this->taskhub_status_model->get();
 
 		$this->load->view('workcalender/taskhub/list', $this->page_data);
@@ -63,7 +68,8 @@ class Taskhub extends MY_Controller {
 			if($id > 0){
 				$taskid = $id;
 			}
-			$this->page_data['task'] = $this->taskhub_model->getById($taskid);
+			$task = $this->taskhub_model->getById($taskid);
+			$this->page_data['task'] = $task;
 
 			$this->page_data['selected_participants'] = $this->db->query(
 															'select a.*, concat(b.FName, " ", b.LName) as `name` from tasks_participants a '.
@@ -149,6 +155,7 @@ class Taskhub extends MY_Controller {
 				$data = array(
 					'subject' => $this->input->post('subject'),
 					'description' => $this->input->post('description'),
+					'prof_id' => $this->input->post('customer_id'),
 					'estimated_date_complete' => $this->input->post('estimated_date_complete'),
 					'status_id' => $status
 				);
@@ -167,6 +174,7 @@ class Taskhub extends MY_Controller {
 			} else {
 				$data = array(
 					'subject' => $this->input->post('subject'),
+					'prof_id' => $this->input->post('customer_id'),
 					'description' => $this->input->post('description'),
 					'created_by' => $uid,
 					'date_created' => date('Y-m-d h:i:s'),
@@ -356,19 +364,26 @@ class Taskhub extends MY_Controller {
 			$keyword = $_POST['keyword'];
 		}
 
-		if(isset($_POST['statusid'])){
+		if(isset($_POST['status'])){
 			$status_id = $_POST['status'];
 		}
 
-		if(isset($_POST['fromdate'])){
-			$from_date = $_POST['fromdate'];
+		if($_POST['fromdate'] != ''){
+			$from_date = $_POST['fromdate'] . ' 00:00:00';
 		}
 
-		if(isset($_POST['todate'])){
-			$to_date = $_POST['todate'];
+		if($_POST['todate'] != ''){
+			$to_date = $_POST['todate'] . ' 23:59:59';
 		}
 
-		$result = getTasks(true, $keyword, $status_id, $from_date, $to_date);
+		$date_range = array();
+		if( $from_date != '' && $to_date != '' ){
+			$date_range = ['from' => $from_date, 'to' => $to_date];
+		}
+
+		$cid = logged('company_id');
+		$result = $this->taskhub_model->getCompanyTasksWithFilter($cid,$keyword, $status_id, $date_range);
+		//$result = getTasks(true, $keyword, $status_id, $from_date, $to_date);
 
 		echo json_encode($result);
 	}

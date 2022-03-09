@@ -262,7 +262,7 @@ if ($action == "preview") {
                 <h1 class="page-title">'.$report->report_page_title.'</h1>
                 <hr>
                 <div class="reports-data">
-
+                    
                 </div>
             </div>';
     }
