@@ -58,7 +58,9 @@ $route['customer/_load_billing_credit_card_details'] = 'customer/ajax_load_compa
 $route['customer/_update_billing_credit_card_details'] = 'customer/ajax_update_billing_credit_card_details';
 
 $route['customer/add_data_sheet'] = 'customer/add_data_sheet';
-$route['customer/add_data_sheet'] = 'customer/add_data_sheet';
+
+$route['customer/jobs_list/(:num)'] = 'Customer/jobs_list/$1';
+$route['customer/estimates_list/(:num)'] = 'Customer/estimates_list/$1';
 
 $route['equipments/(:any)?/(:any)?'] = 'equipment/$1/$2';
 $route['equipments/(:any)?'] = 'equipment/$1';

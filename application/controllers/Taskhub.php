@@ -30,8 +30,8 @@ class Taskhub extends MY_Controller {
 	public function index(){
 		$this->hasAccessModule(6); 
 		$cid = logged('company_id');
-		if( $this->input->get('status') ){
-			$this->page_data['tasks'] = $this->taskhub_model->getAllTasksByCompanyIdAndStatusId($cid, $this->input->get('status'));
+		if( $this->input->get('status') && $this->input->get('cus_id') ){
+			$this->page_data['tasks'] = $this->taskhub_model->getAllTasksByCustomerIdAndStatusId($this->input->get('cus_id'), $this->input->get('status'));
 		}else{
 			$this->page_data['tasks'] = $this->taskhub_model->getAllByCompanyId($cid);	
 		}
@@ -233,16 +233,15 @@ class Taskhub extends MY_Controller {
 	public function view($id){
 		$this->page_data['task'] = $this->db->query(
 			'select '.
-
 			'a.*, '.
+			'CONCAT(cus.first_name, " ", cus.last_name)AS customer_name, '.
 			'b.status_text, '.
 			'b.status_color, '.
 			'concat(c.FName, " ", c.LName) as `created_by_name` '.
-
 			'from tasks a '.
 			'left join tasks_status b on b.status_id = a.status_id '.
 			'left join users c on c.id = a.created_by '.
-
+			'left join acs_profile cus on a.prof_id = cus.prof_id '.
 			'where a.task_id = '. $id
 		)->row();
 

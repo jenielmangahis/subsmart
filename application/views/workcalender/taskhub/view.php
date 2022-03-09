@@ -106,6 +106,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
 			                				<td class="taskhub_sidebar_details_values"><?php echo $task->created_by_name; ?></td>
 			                			</tr>
 			                			<tr>
+			                				<td class="taskhub_sidebar_details_caption font-weight-bold">Customer :</td>
+			                				<td class="taskhub_sidebar_details_values"><?php echo $task->customer_name; ?></td>
+			                			</tr>
+			                			<tr>
 			                				<td class="taskhub_sidebar_details_caption font-weight-bold">Assigned To :</td>
 			                				<td class="taskhub_sidebar_details_values"><?php
 			                					$assigned_to_name = '';

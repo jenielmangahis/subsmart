@@ -57,6 +57,20 @@ class Taskhub_model extends MY_Model {
         return $query->result();
     }
 
+    public function getAllNotCompletedTasksByCustomerId($customer_id)
+    {
+        $id = $user_id;
+        $this->db->select('tasks.*, tasks_status.status_text, tasks_status.status_color');
+        $this->db->join('tasks_status','tasks.status_id = tasks_status.status_id','left');
+        $this->db->from($this->table);
+
+        $this->db->where('tasks.prof_id', $customer_id);
+        $this->db->where('tasks.status_id <>', 6); //Refer to task status table. 6 = completed
+        $this->db->order_by('tasks.date_created','DESC');
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function getAllTasksByCompanyIdAndStatusId($company_id, $status_id)
     {
         $id = $user_id;
@@ -65,6 +79,20 @@ class Taskhub_model extends MY_Model {
         $this->db->from($this->table);
 
         $this->db->where('tasks.company_id', $company_id);
+        $this->db->where('tasks.status_id', $status_id); //Refer to task status table. 6 = completed
+        $this->db->order_by('tasks.date_created','DESC');
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function getAllTasksByCustomerIdAndStatusId($customer_id, $status_id)
+    {
+        $id = $user_id;
+        $this->db->select('tasks.*, tasks_status.status_text, tasks_status.status_color');
+        $this->db->join('tasks_status','tasks.status_id = tasks_status.status_id','left');
+        $this->db->from($this->table);
+
+        $this->db->where('tasks.prof_id', $customer_id);
         $this->db->where('tasks.status_id', $status_id); //Refer to task status table. 6 = completed
         $this->db->order_by('tasks.date_created','DESC');
         $query = $this->db->get();
