@@ -477,6 +477,24 @@ class Jobs_model extends MY_Model
         $result = $this->db->get();
         return $result->result();
     }
+
+    /**
+     * @return mixed
+     */
+    public function getAllJobsByCustomerId($customer_id)
+    {
+        $cid=logged('company_id');
+        $this->db->from($this->table);
+        $this->db->select('jobs.*,LName,FName,acs_profile.first_name,acs_profile.last_name,job_tags.name,job_payments.amount,acs_profile.mail_add,acs_profile.city as cust_city,acs_profile.state as cust_state');
+        $this->db->join('acs_profile', 'acs_profile.prof_id = jobs.customer_id', 'left');
+        $this->db->join('users', 'users.id = jobs.employee_id', 'left');
+        $this->db->join('job_tags', 'job_tags.id = jobs.tags', 'left');
+        $this->db->join('job_payments', 'jobs.id = job_payments.job_id', 'left');
+        $this->db->where("jobs.customer_id", $customer_id);
+        $this->db->order_by('id', "DESC");
+        $query = $this->db->get();
+        return $query->result();
+    }
 }
 
 /* End of file JobType_model.php */

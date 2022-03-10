@@ -1723,6 +1723,23 @@ class Workorder_model extends MY_Model
         $query = $this->db->get();
         return $query->num_rows();
     }
+
+    public function getAllByCustomerId( $customer_id, $filters = array(), $sort = array() )
+    {
+        $this->db->select('work_orders.*, work_orders.status AS w_status');
+        $this->db->from('work_orders');
+        $this->db->join('acs_profile', 'work_orders.customer_id  = acs_profile.prof_id');        
+        $this->db->where('work_orders.customer_id', $customer_id);
+
+        if( !empty($sort) ){
+            $this->db->order_by($sort['field'], strtoupper($sort['order']));
+        }else{
+            $this->db->order_by('id', 'DESC');    
+        }
+        
+        $query = $this->db->get();
+        return $query->result();
+    }
 }
 
 /* End of file Workorder_model.php */

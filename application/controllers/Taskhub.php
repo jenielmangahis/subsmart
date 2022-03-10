@@ -78,6 +78,14 @@ class Taskhub extends MY_Controller {
 														)->result();
 		}
 
+		$customer = '';
+		if( $this->input->get('cus_id') ){
+			$this->load->model('AcsProfile_model');			
+			$customer = $this->AcsProfile_model->getByProfId($this->input->get('cus_id'));
+		}
+
+		$this->page_data['customer'] = $customer;
+		
 		$this->form_validation->set_rules('subject', 'Subject', 'trim|required');
 		$this->form_validation->set_rules('description', 'Description', 'trim|required');
 		$this->form_validation->set_rules('estimated_date_complete', 'Estimated Date of Competion', 'trim|required');

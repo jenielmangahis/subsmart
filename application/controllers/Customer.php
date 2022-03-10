@@ -859,6 +859,7 @@ class Customer extends MY_Controller
         $customer = $this->AcsProfile_model->getByProfId($cid);
 
         $this->page_data['cust_active_tab'] = 'workorders';
+        $this->page_data['cus_id']    = $cid;
         $this->page_data['workorders'] = $workorders;
         $this->page_data['customer']   = $customer;
 
@@ -874,10 +875,91 @@ class Customer extends MY_Controller
         $customer = $this->AcsProfile_model->getByProfId($cid);
 
         $this->page_data['cust_active_tab'] = 'internal_notes';
+        $this->page_data['cus_id']    = $cid;
         $this->page_data['internalNotes']   = $internalNotes;
         $this->page_data['customer']        = $customer;
 
         $this->load->view('customer/internal_notes', $this->page_data);
+    }
+
+    public function ajax_create_internal_notes()
+    {
+        $this->load->model('CustomerInternalNotes_model');
+        $this->load->model('AcsProfile_model');
+        
+        $is_success = false;
+        $msg = '';
+
+        $user_id = logged('id');
+        $post    = $this->input->post();
+
+        if( $post['interal_notes'] != '' && $post['customer_id'] > 0 ){
+            $customer = $this->AcsProfile_model->getByProfId($post['customer_id']);
+            if( $customer ){
+                $data = [
+                    'prof_id' => $customer->prof_id,
+                    'user_id' => $user_id,
+                    'note_date' => date("Y-m-d",strtotime($post['note_date'])),
+                    'notes' => $post['interal_notes'],
+                    'date_created' => date("Y-m-d H:i:s"),
+                    'date_modified' => date("Y-m-d H:i:s")
+                ];
+
+                $internal_note = $this->CustomerInternalNotes_model->create($data);
+
+                $is_success = true;
+
+            }else{
+                $msg = 'Cannot find customer';
+            }
+        }else{
+            $msg = 'Cannot save data';
+        }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($json_data);        
+    }
+
+    public function ajax_delete_internal_notes()
+    {
+        $this->load->model('CustomerInternalNotes_model');
+
+        $is_success = 0;
+        $msg    = '';
+
+        $company_id = logged('company_id');
+        $post = $this->input->post(); 
+        $internalNote = $this->CustomerInternalNotes_model->getById($post['nid']);
+        if( $internalNote ){
+            if( $internalNote->company_id == $company_id  ){
+                $this->CustomerInternalNotes_model->deleteById($internalNote->id);
+                $is_success = 1;
+                $msg = 'Record deleted';
+            }else{
+                $msg = 'Cannot find record';    
+            }
+        }else{
+            $msg = 'Cannot find record';
+        }
+
+        $json_data = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($json_data);
+    }
+
+    public function ajax_edit_internal_note()
+    {
+        $this->load->model('CustomerInternalNotes_model');
+
+        $post = $this->input->post(); 
+
+        $internalNote = $this->CustomerInternalNotes_model->getById($post['nid']);      
+
+        $this->page_data['internalNote']   = $internalNote;
+        $this->load->view('customer/ajax_edit_internal_note', $this->page_data);
     }
 
     public function add_advance($id=null)
