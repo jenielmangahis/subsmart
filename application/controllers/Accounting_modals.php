@@ -9454,7 +9454,7 @@ class Accounting_modals extends MY_Controller
     
     private function view_unapplied_payment($paymentId)
     {
-        $payment = $this->accounting_receive_payment_model->getUnappliedPaymentDetails($paymentId);
+        $payment = $this->accounting_receive_payment_model->getReceivePaymentDetails($paymentId);
         $creditMemos = $this->accounting_credit_memo_model->get_customer_open_credit_memos(['company_id' => logged('company_id'), 'customer_id' => $payment->customer_id]);
 
         $this->page_data['payment'] = $payment;
@@ -9466,9 +9466,20 @@ class Accounting_modals extends MY_Controller
     {
         $creditMemo = $this->accounting_credit_memo_model->getCreditMemoDetails($creditMemoId);
         $items = $this->accounting_credit_memo_model->get_customer_transaction_items('Credit Memo', $creditMemoId);
+        $payments = $this->accounting_credit_memo_model->get_credit_memo_payments($creditMemoId);
+
+        $paymentAmounts = array_column($payments, 'payment_amount');
+        $totalPayment = array_sum($paymentAmounts);
+
+        foreach($payments as $key => $payment) {
+            $receivePayment = $this->accounting_receive_payment_model->getReceivePaymentDetails($payment->receive_payment_id);
+            $payments[$key]->receive_payment = $receivePayment;
+        }
 
         $this->page_data['creditMemo'] = $creditMemo;
         $this->page_data['items'] = $items;
+        $this->page_data['payments'] = $payments;
+        $this->page_data['totalPayment'] = $totalPayment;
         $this->page_data['tags'] = $this->tags_model->get_transaction_tags('Credit Memo', $creditMemoId);
 
         $this->load->view("accounting/modals/credit_memo_modal", $this->page_data);
@@ -9770,6 +9781,9 @@ class Accounting_modals extends MY_Controller
             break;
             case 'receive-payment' :
                 $return = $this->update_receive_payment($transactionId, $data);
+            break;
+            case 'credit-memo' :
+                $return = $this->update_credit_memo($transactionId, $data);
             break;
         }
 
@@ -11033,7 +11047,7 @@ class Accounting_modals extends MY_Controller
             }
         }
     }
-
+//
     private function update_items($transactionType, $transactionId, $data)
     {
         $items = $this->expenses_model->get_transaction_items($transactionId, $transactionType);
@@ -12493,7 +12507,7 @@ class Accounting_modals extends MY_Controller
                     'customer_id' => $payment->customer_id,
                     'invoice_amount' => floatval($paymentInvoice->payment_amount),
                     'payment_date' => date("Y-m-d", strtotime($payment->payment_date)),
-                    'payment_method' => is_null($payment->payment_method) ? 'cash' : $payment->payment_method,
+                    'payment_method' => is_null($payment->payment_method) || $payment->payment_method === '' ? 'cash' : $payment->payment_method,
                     'invoice_number' => $invoice->invoice_number
                 ];
                 $this->payment_records_model->delete_payment_record($paymentRecordData);
@@ -12724,6 +12738,181 @@ class Accounting_modals extends MY_Controller
         $return['message'] = $update ? 'Update Successful!' : 'An unexpected error occured';
 
         return $return;
+    }
+
+    private function update_credit_memo($creditMemoId, $data)
+    {
+        $creditMemo = $this->accounting_credit_memo_model->getCreditMemoDetails($creditMemoId);
+        $diff = floatval($creditMemo->total_amount) - floatval($creditMemo->balance);
+
+        $creditMemoData = [
+            'customer_id' => $data['customer'],
+            'email' => $data['email'],
+            'send_later' => !isset($data['template_name']) ? $data['send_later'] : null,
+            'credit_memo_date' => !isset($data['template_name']) ? date("Y-m-d", strtotime($data['credit_memo_date'])) : null,
+            'billing_address' => nl2br($data['billing_address']),
+            'location_of_sale' => $data['location_of_sale'],
+            'po_number' => $data['purchase_order_no'],
+            'sales_rep' => $data['sales_rep'],
+            'message_credit_memo' => $data['message_credit_memo'],
+            'message_on_statement' => $data['message_on_statement'],
+            'adjustment_name' => $data['adjustment_name'],
+            'adjustment_value' => $data['adjustment_value'],
+            'balance' => $data['total_amount'],
+            'total_amount' => number_format(floatval($diff) + floatval($data['total_amount']), 2, '.', ','),
+            'subtotal' => $data['subtotal'],
+            'tax_total' => $data['tax_total'],
+            'discount_total' => $data['discount_total'],
+        ];
+
+        $update = $this->accounting_credit_memo_model->updateCreditMemo($creditMemo->id, $creditMemoData);
+
+        if($update) {
+            $attachments = $this->accounting_attachments_model->get_attachments('Credit Memo', $creditMemo->id);
+            $tags = $this->tags_model->get_transaction_tags('Credit Memo', $creditMemo->id);
+
+            // OLD
+            if(count($attachments) > 0) {
+                foreach($attachments as $attachment) {
+                    if(!isset($data['attachments']) || !in_array($attachment->id, $data['attachments'])) {
+                        $attachmentLink = $this->accounting_attachments_model->get_attachment_link(['type' => 'Credit Memo', 'attachment_id' => $attachment->id, 'linked_id' => $creditMemo->id]);
+                        $this->accounting_attachments_model->unlink_attachment($attachmentLink->id);
+                    }
+                }
+            }
+
+            if(count($tags) > 0) {
+                foreach($tags as $key => $tag) {
+                    if(!isset($data['tags']) || !isset($data['tags'][$key])) {
+                        $this->tags_model->unlink_tag(['transaction_type' => 'Credit Memo', 'tag_id' => $tag->id, 'transaction_id' => $creditMemo->id]);
+                    }
+                }
+            }
+
+            foreach($items as $item) {
+
+            }
+
+            // NEW
+            if (isset($data['attachments']) && is_array($data['attachments'])) {
+                $order = 1;
+                foreach ($data['attachments'] as $attachmentId) {
+                    $link = array_filter($attachments, function($v, $k) use ($attachmentId) {
+                        return $v->id === $attachmentId;
+                    }, ARRAY_FILTER_USE_BOTH);
+
+                    if(count($link) > 0) {
+                        $attachmentData = [
+                            'type' => 'Credit Memo',
+                            'attachment_id' => $attachmentId,
+                            'linked_id' => $creditMemo->id,
+                            'order_no' => $order
+                        ];
+
+                        $updateOrder = $this->accounting_attachments_model->update_order($attachmentData);
+                    } else {
+                        $linkAttachmentData = [
+                            'type' => 'Credit Memo',
+                            'attachment_id' => $attachmentId,
+                            'linked_id' => $creditMemo->id,
+                            'order_no' => $order
+                        ];
+    
+                        $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
+                    }
+
+                    $order++;
+                }
+            }
+
+            if(isset($data['tags']) && is_array($data['tags'])) {
+                $order = 1;
+                foreach($data['tags'] as $key => $tagId) {
+                    $linkTagData = [
+                        'transaction_type' => 'CreditMemo',
+                        'transaction_id' => $creditMemo->id,
+                        'tag_id' => $tagId,
+                        'order_no' => $order
+                    ];
+
+                    if($tags[$key] === null) {
+                        $linkTagId = $this->tags_model->link_tag($linkTagData);
+                    } else {
+                        $updateOrder = $this->tags_model->update_link($linkTagData);
+                    }
+
+                    $order++;
+                }
+            }
+
+            // $this->update_customer_transaction_items('Credit Memo', $creditMemo->id, $data);
+        }
+
+        $return['data'] = $creditMemoId;
+        $return['success'] = $update ? true : false;
+        $return['message'] = $update ? 'Update Successful!' : 'An unexpected error occured';
+
+        return $return;
+    }
+
+    private function update_customer_transaction_items($transactionType, $transactionId, $data)
+    {
+        $items = $this->accounting_credit_memo_model->get_customer_transaction_items('Credit Memo', $creditMemo->id);
+
+        if(!is_null($data['item'])) {
+            foreach($data['item'] as $key => $itemId) {
+                $items[] = [
+                    'transaction_type' => 'Credit Memo',
+                    'transaction_id' => $creditMemoId,
+                    'item_id' => $itemId,
+                    'location_id' => $data['location'][$key],
+                    'quantity' => $data['quantity'][$key],
+                    'price' => $data['item_amount'][$key],
+                    'discount' => $data['discount'][$key],
+                    'tax' => $data['item_tax'][$key],
+                    'total' => $data['item_total'][$key]
+                ];
+    
+                if(!isset($data['template_name'])) {
+                    $item = $this->items_model->getItemById($itemId);
+                    $itemAccDetails = $this->items_model->getItemAccountingDetails($itemId);
+    
+                    if ($itemAccDetails) {
+                        if($item->type === 'product' || $item->type === 'inventory') {
+                            $location = $this->items_model->getItemLocation($data['location'][$index], $itemId);
+                            $newQty = intval($location->qty) + intval($data['quantity'][$index]);
+                            $this->items_model->updateLocationQty($data['location'][$index], $itemId, $newQty);
+    
+                            $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+                            $newBalance = floatval($invAssetAcc->balance) + floatval($data['item_amount'][$index]);
+                            $newBalance = number_format($newBalance, 2, '.', ',');
+    
+                            $invAssetAccData = [
+                                'id' => $invAssetAcc->id,
+                                'company_id' => logged('company_id'),
+                                'balance' => $newBalance
+                            ];
+    
+                            $this->chart_of_accounts_model->updateBalance($invAssetAccData);
+                        } else {
+                            if($item->type !== 'bundle' && $item->type !== 'Bundle') {
+                                $incomeAcc = $this->chart_of_accounts_model->getById($itemAccDetails->income_account_id);
+                                $newBalance = floatval($incomeAcc->balance) - floatval($data['item_amount'][$index]);
+                                $newBalance = number_format($newBalance, 2, '.', ',');
+        
+                                $incomeAccData = [
+                                    'id' => $incomeAcc->id,
+                                    'company_id' => logged('company_id'),
+                                    'balance' => $newBalance
+                                ];
+        
+                                $this->chart_of_accounts_model->updateBalance($incomeAccData);
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     public function get_attachment_file_path($attachmentId)

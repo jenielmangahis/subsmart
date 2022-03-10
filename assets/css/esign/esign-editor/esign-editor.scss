@@ -275,7 +275,7 @@
     }
 
     [data-action="email"] {
-      display: block;
+      display: flex;
     }
 
     [data-action="next"],
@@ -304,7 +304,7 @@
     }
   }
 
-  .printPreview {
+  .preview {
     background-color: #e2e2e2;
     padding: 2rem;
     max-height: 500px;

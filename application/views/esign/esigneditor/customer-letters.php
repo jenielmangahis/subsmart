@@ -122,19 +122,24 @@ ini_set('max_input_vars', 30000);
           <div data-step="print" style="font-size: 16px;">
             <p>Are you ready to print all selected letters now?</p>
             <p>Continuing will generate a PDF file for you to download and print yourself on your own printer. They will be marked as printed.</p>
-            <div class="printPreview"></div>
+            <div class="preview"></div>
           </div>
 
           <div data-step="email">
             <form>
                 <div class="mb-3">
+                    <label class="form-label">Subject</label>
+                    <input class="form-control" data-type="subject">
+                </div>
+                <div class="mb-3">
                     <label class="form-label">Recipient</label>
-                    <input type="email" class="form-control">
+                    <input type="email" class="form-control" data-type="email">
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Message</label>
-                    <textarea class="form-control" rows="3"></textarea>
+                    <textarea class="form-control" rows="3" data-type="message"></textarea>
                 </div>
+                <div class="preview"></div>
             </form>
           </div>
       </div>

@@ -42,7 +42,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <div class="col-md-6">
                                     <div class="breadcrumb-pager m-0">
                                         <ul>
-                                            <li><a href="<?= url('accounting/chart_of_accounts') ?>">Chart of Accounts</a></li>
+                                            <li><a href="<?= url('accounting/chart-of-accounts') ?>">Chart of Accounts</a></li>
                                             <li><a href="#">Bank Register</a></li>
                                             <li>Reconcile</li>
                                         </ul>

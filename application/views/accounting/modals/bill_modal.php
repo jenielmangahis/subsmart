@@ -111,7 +111,7 @@
                                                             </button>
                                                             <button class="btn btn-transparent" type="button">
                                                                 Mark as paid
-                                                            </button>                                                    
+                                                        </button>
                                                         </div>
                                                         <?php if(count($bill_payments) > 0) : ?>
                                                         <div class="btn-group dropleft d-inline-block float-right">

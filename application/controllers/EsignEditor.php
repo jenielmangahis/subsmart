@@ -643,4 +643,56 @@ SQL;
         $letters = $this->db->get('esign_editor_customer_letters')->result();
         echo json_encode(['data' => $letters]);
     }
+
+    public function apiEmailCustomerLetter()
+    {
+        header('content-type: application/json');
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['success' => false]);
+            return;
+        }
+
+        $storePath = FCPATH . 'uploads/esigneditor/';
+        if (!file_exists($storePath)) {
+            mkdir($storePath, 0777, true);
+        }
+
+        $ids = explode(',', $this->input->post('ids'));
+        $subject = trim($this->input->post('subject'));
+        $message = trim($this->input->post('message'));
+        $email = trim($this->input->post('email'));
+
+        $pdfName = md5(uniqid(logged('id'), true));
+        $pdfPath = rtrim($storePath, '/') . "/{$pdfName}.pdf";
+        move_uploaded_file($_FILES['pdf']['tmp_name'], $pdfPath);
+
+        include APPPATH . 'controllers/DocuSign.php';
+        $mail = getMailInstance();
+        $mailTemplate = file_get_contents(VIEWPATH . 'esign/esigneditor/email/customer-letter.html');
+
+        $data = ['%message%' => $message];
+        $mailContent = strtr($mailTemplate, $data);
+
+        $mail->Subject = '[nSmarTrac] ' . $subject;
+        $mail->MsgHTML($mailContent);
+        $mail->addAddress($email);
+
+        $mail->AddAttachment($pdfPath, $pdfName . '.pdf');
+        $isSent = $mail->send();
+        $mail->ClearAllRecipients();
+
+        if (file_exists($pdfPath)) {
+            unlink($pdfPath);
+        }
+
+        $letters = array_map(function ($id) {
+            return ['id' => $id, 'print_status' => 'Printed/Sent'];
+        }, $ids);
+        $this->db->update_batch('esign_editor_customer_letters', $letters, 'id');
+
+        $this->db->where_in('id', $ids);
+        $letters = $this->db->get('esign_editor_customer_letters')->result();
+        echo json_encode(['data' => $letters, 'is_sent' => $isSent]);
+
+    }
 }

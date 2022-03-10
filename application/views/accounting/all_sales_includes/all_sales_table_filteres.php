@@ -205,10 +205,10 @@ if ($filter_type == "All transactions" || $filter_type == "All plus deposits"  |
 
             <button class="dropdown-toggle" type="button" id="dropdown-edit" style="height: 25px;"
                 data-toggle="dropdown" aria-expanded="true">
-                <span class="btn-label"></span>
-                <span class="caret-holder">
-                    <span class="caret"></span>
+                <span class="btn-label">
+                <i class="fa fa-caret-down fa-sm"></i>
                 </span>
+                
             </button>
             <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
                 <li role="presentation">

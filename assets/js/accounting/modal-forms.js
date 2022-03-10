@@ -5675,7 +5675,6 @@ $(function() {
             discounts = parseFloat(discounts) + parseFloat(itemDisc);
         });
 
-
         subtotal = '$'+parseFloat(subtotal).toFixed(2);
         taxes = '$'+parseFloat(taxes).toFixed(2);
         discounts = '$'+parseFloat(discounts).toFixed(2);
@@ -5695,6 +5694,9 @@ $(function() {
         var grandTotal = parseFloat(subtotal) + parseFloat(taxes);
         grandTotal -= parseFloat(discounts);
         grandTotal -= parseFloat(value);
+        if($('#modal-container #modal-form .modal').attr('id') === 'creditMemoModal') {
+            grandTotal -= parseFloat($('#creditMemoModal #total-payment-amount').html().replace('$', ''));
+        }
         grandTotal = '$'+parseFloat(grandTotal).toFixed(2);
         value = '$'+value;
 

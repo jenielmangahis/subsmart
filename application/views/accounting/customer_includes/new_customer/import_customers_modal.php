@@ -55,7 +55,7 @@
                             <div class="form-check">
 
                             </div>
-
+                            <h1 class="error"></h1>
 
 
                             <input type="button" name="next-step" class="next-step mt-5" value="Save Now" />

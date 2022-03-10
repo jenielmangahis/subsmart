@@ -795,7 +795,7 @@ $(document).on('click', '#products-services-table .reorder', function(e) {
 
 		var locs = '';
 		for(i in rowData.locations) {
-			locs += `<option value="${rowData.locations[i].id}">${rowData.locations[i].name}</option>`;
+			locs += `<option value="${rowData.locations[i].id}" data-quantity="${rowData.locations[i].qty === "null" ? 0 : rowData.locations[i].qty}">${rowData.locations[i].name}</option>`;
 		}
 
 		$('#purchaseOrderModal #item-details-table tbody').append(`
@@ -804,13 +804,15 @@ $(document).on('click', '#products-services-table .reorder', function(e) {
 			<td>Product</td>
 			<td><select name="location[]" class="form-control" required>${locs}</select></td>
 			<td><input type="number" name="quantity[]" class="form-control text-right" required value="0" min="0"></td>
-			<td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${rowData.price}"></td>
+			<td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${rowData.sales_price}"></td>
 			<td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="0.00"></td>
 			<td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="7.50"></td>
-			<td>$<span class="row-total">0.00</span></td>
+			<td><span class="row-total">$0.00</span></td>
 			<td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
 		</tr>
 		`);
+
+		
 
 		$(`#purchaseOrderModal select`).each(function() {
 			var type = $(this).attr('id');

@@ -94,6 +94,10 @@ export function batchEditCustomerLetters(payload) {
   );
 }
 
+export function emailCustomerLetter(payload) {
+  return http.post(`${prefixURL}/EsignEditor/apiEmailCustomerLetter`, payload);
+}
+
 const http = {
   post: sendPost,
   delete: sendDelete,
@@ -101,15 +105,18 @@ const http = {
 };
 
 async function sendPost(url, payload) {
-  const response = await fetch(url, {
-    method: "post",
-    body: JSON.stringify(payload),
-    headers: {
-      accept: "application/json",
-      "content-type": "application/json",
-    },
-  });
+  let body = JSON.stringify(payload);
+  const headers = {
+    accept: "application/json",
+    "content-type": "application/json",
+  };
 
+  if (payload instanceof FormData) {
+    body = payload;
+    delete headers["content-type"];
+  }
+
+  const response = await fetch(url, { method: "post", body, headers });
   return response.json();
 }
 
