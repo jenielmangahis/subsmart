@@ -796,10 +796,11 @@ class Customer extends MY_Controller
             $this->page_data['alarm_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$id,"acs_alarm");
             $this->page_data['audit_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$id,"acs_audit_import");
             //$this->page_data['minitab'] = $this->uri->segment(5);
-            $this->page_data['task_info'] = $this->taskhub_model->getAllNotCompletedTasksByCompanyId(logged('company_id'));;
+            $this->page_data['task_info'] = $this->taskhub_model->getAllNotCompletedTasksByCustomerId($id);
             //$this->page_data['task_info'] = $this->customer_ad_model->get_all_by_id("fk_prof_id",$id,"acs_tasks");
             $this->page_data['module_sort'] = $this->customer_ad_model->get_data_by_id('fk_user_id',$user_id,"ac_module_sort");
             $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
+            $this->page_data['cus_id'] = $id;
 
             if($this->uri->segment(5) == "mt3-cdl"){
                 $template_id = !empty($this->uri->segment(6)) ? $this->uri->segment(6) : '';
@@ -811,9 +812,72 @@ class Customer extends MY_Controller
             redirect(base_url('customer/'));
         }
         $this->page_data['cust_tab'] = $this->uri->segment(3);
+        $this->page_data['cust_active_tab'] = 'dashboard';
         $this->page_data['users'] = $this->users_model->getUsers();
         $this->page_data['history_activity_list'] = $this->activity->getActivity($user_id, [6,0], 1);
         $this->load->view('customer/module', $this->page_data);
+    }
+
+    public function jobs_list($cid)
+    {
+        $this->load->model('Jobs_model');
+        $this->load->model('AcsProfile_model');
+
+        $jobs = $this->Jobs_model->getAllJobsByCustomerId($cid);
+        $customer = $this->AcsProfile_model->getByProfId($cid);
+
+        $this->page_data['cust_active_tab'] = 'jobs';
+        $this->page_data['cus_id']   = $cid;
+        $this->page_data['jobs']     = $jobs;
+        $this->page_data['customer'] = $customer;
+
+        $this->load->view('customer/jobs_list', $this->page_data);
+    }
+
+    public function estimates_list($cid)
+    {
+        $this->load->model('Estimate_model');
+        $this->load->model('AcsProfile_model');
+
+        $estimates = $this->Estimate_model->getAllEstimatesByCustomerId($cid);
+        $customer  = $this->AcsProfile_model->getByProfId($cid);
+
+        $this->page_data['cust_active_tab'] = 'estimates';
+        $this->page_data['cus_id']    = $cid;
+        $this->page_data['estimates'] = $estimates;
+        $this->page_data['customer']  = $customer;
+
+        $this->load->view('customer/estimate_list', $this->page_data);
+    }
+
+    public function workorders_list($cid)
+    {
+        $this->load->model('Workorder_model');
+        $this->load->model('AcsProfile_model');
+
+        $workorders = $this->Workorder_model->getAllByCustomerId($cid);
+        $customer = $this->AcsProfile_model->getByProfId($cid);
+
+        $this->page_data['cust_active_tab'] = 'workorders';
+        $this->page_data['workorders'] = $workorders;
+        $this->page_data['customer']   = $customer;
+
+        $this->load->view('customer/workorders_list', $this->page_data);
+    }
+
+    public function internal_notes($cid)
+    {
+        $this->load->model('CustomerInternalNotes_model');
+        $this->load->model('AcsProfile_model');
+
+        $internalNotes = $this->CustomerInternalNotes_model->getAllByProfId($cid);
+        $customer = $this->AcsProfile_model->getByProfId($cid);
+
+        $this->page_data['cust_active_tab'] = 'internal_notes';
+        $this->page_data['internalNotes']   = $internalNotes;
+        $this->page_data['customer']        = $customer;
+
+        $this->load->view('customer/internal_notes', $this->page_data);
     }
 
     public function add_advance($id=null)
