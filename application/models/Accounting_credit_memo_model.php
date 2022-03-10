@@ -98,4 +98,14 @@ class Accounting_credit_memo_model extends MY_Model {
 		$query = $this->db->get($this->table);
 		return $query->result();
 	}
+
+	public function get_credit_memo_payments($creditMemoId)
+	{
+		$this->db->select('accounting_receive_payment_credits.*');
+		$this->db->where('accounting_receive_payment_credits.credit_memo_id', $creditMemoId);
+		$this->db->where('accounting_receive_payment.status', 1);
+		$this->db->join('accounting_receive_payment', 'accounting_receive_payment.id = accounting_receive_payment_credits.receive_payment_id');
+		$query = $this->db->get('accounting_receive_payment_credits');
+		return $query->result();
+	}
 }

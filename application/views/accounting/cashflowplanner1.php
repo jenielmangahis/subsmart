@@ -267,24 +267,170 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                             </div>
                         </div>
                         <div class="col-md-4 banking-tab-container" align="right">
-                            <a href="<?php echo base_url('accounting/cashflowPDF/') ?>"
-                                class="banking-tab btn btn-primary" id="moneyall" style="color:white;">Export as PDF</a>
-                            <button class="banking-tab btn btn-success cfp_add_item" style="color:white;">Add
-                                item</button>
+                            <div class="buttons">
+                                <a href="<?php echo base_url('accounting/cashflowPDF/') ?>" class="banking-tab btn btn-primary" id="moneyall" style="color:white;">Export as PDF</a>
+                                <div class="filter-btn-section">
+                                    <button class="btn btn-default filter-btn" type="button">
+                                        Filter <span class="fa fa-caret-down"></span></button>
+                                    <div class="filter-panel" style="display: none;">
+                                        <div class="achor-holder"><img src="<?= base_url("assets/img/accounting/customers/anchor.png") ?>" alt=""></div>
+
+                                        <div class="header" style="display: flex;"><header><span class="h-title">Filter</span></header><button class="eks" style="margin-left:300px; background:none;border:none;"><i class="fa fa-times" aria-hidden="true" style="font-size: 20px;"></i></button></div>
+                                        <div class="all_items">
+                                            <div class="money_choice">
+                                                <div class="checkbox checkbox-sec margin-right cash-filter" style="margin-left:60px; margin-top:20px;">
+                                                    <input class="colTable" type="checkbox" name="MONEY_IN" value="MONEY_IN" id="MONEY_IN" checked="">
+                                                    <label for="MONEY_IN">
+                                                        <span class="choices">MONEY IN</span>
+                                                    </label>
+                                                </div>
+                                                <div class="checkbox checkbox-sec margin-right cash-filter" style="margin-left:60px; margin-top:20px;">
+                                                    <input class="colTable" type="checkbox" name="MONEY_OUT`" value="MONEY_OUT" id="MONEY_OUT" checked="">
+                                                    <label for="MONEY_OUT">
+                                                        <span class="choices">MONEY OUT</span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="from-your-books">
+                                                <div class="checkbox checkbox-sec margin-right cash-filter" style="margin-left:60px; margin-top:20px;">
+                                                    <input class="colTable" type="checkbox" name="fyb`" value="fyb" id="fyb" checked="">
+                                                    <label for="fyb">
+                                                        <span class="items-all">FROM YOUR BOOKS</span>
+                                                    </label>
+                                                </div>
+                                                <div class="fyb-items">
+                                                    <div class="checkbox checkbox-sec margin-right cash-filter" style="margin-left:60px; margin-top:20px;">
+                                                        <input class="colTable" type="checkbox" name="Bills" value="Bills" id="Bills" checked="">
+                                                        <label for="Bills">
+                                                            <span>BILLS</span>
+                                                        </label>
+                                                    </div>
+                                                    <div class="checkbox checkbox-sec margin-right cash-filter" style="margin-left:60px; margin-top:20px;">
+                                                        <input class="colTable" type="checkbox" name="EXPENSES" value="EXPENSES" id="EXPENSES" checked="">
+                                                        <label for="EXPENSES">
+                                                            <span>EXPENSES</span>
+                                                        </label>
+                                                    </div>
+                                                    <div class="checkbox checkbox-sec margin-right cash-filter" style="margin-left:60px; margin-top:20px;">
+                                                        <input class="colTable" type="checkbox" name="CHECK" value="CHECK" id="CHECK" checked="">
+                                                        <label for="CHECK">
+                                                            <span>CHECK</span>
+                                                        </label>
+                                                    </div>
+                                                    <div class="checkbox checkbox-sec margin-right cash-filter" style="margin-left:60px; margin-top:20px;">
+                                                        <input class="colTable" type="checkbox" name="INVOICES" value="INVOICES" id="INVOICES" checked="">
+                                                        <label for="INVOICES">
+                                                            <span>INVOICES</span>
+                                                        </label>
+                                                    </div>
+                                                    <div class="checkbox checkbox-sec margin-right cash-filter" style="margin-left:60px; margin-top:20px;">
+                                                        <input class="colTable" type="checkbox" name="CREDIT_CARDS" value="CREDIT_CARDS" id="CREDIT_CARDS" checked="">
+                                                        <label for="CREDIT_CARDS">
+                                                            <span>CREDIT CARDS</span>
+                                                        </label>
+                                                    </div>
+                                                    <div class="checkbox checkbox-sec margin-right cash-filter" style="margin-left:60px; margin-top:20px;">
+                                                        <input class="colTable" type="checkbox" name="PAYCHECKS`" value="PAYCHECKS" id="PAYCHECKS" checked="">
+                                                        <label for="PAYCHECKS">
+                                                            <span>PAYCHECKS</span>
+                                                        </label>
+                                                    </div>
+                                                    <div class="checkbox checkbox-sec margin-right cash-filter" style="margin-left:60px; margin-top:20px;">
+                                                        <input class="colTable" type="checkbox" name="ESTIMATES" value="ESTIMATES" id="ESTIMATES" checked="">
+                                                        <label for="ESTIMATES">
+                                                            <span>ESTIMATES</span>
+                                                        </label>
+                                                    </div>
+                                                    <div class="checkbox checkbox-sec margin-right cash-filter" style="margin-left:60px; margin-top:20px;">
+                                                        <input class="colTable" type="checkbox" name="SALES RECEIPTS" value="SALES RECEIPTS" id="SALES RECEIPTS" checked="">
+                                                        <label for="SALES RECEIPTS">
+                                                            <span>SALES RECEIPTS</span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="prediction">
+                                                <div class="checkbox checkbox-sec margin-right cash-filter" style="margin-left:60px; margin-top:20px;">
+                                                    <input class="colTable" type="checkbox" name="PREDICTED" value="PREDICTED" id="PREDICTED" checked="">
+                                                    <label for="PREDICTED">
+                                                        <span class="items-all">PREDICTED</span>
+                                                    </label>
+                                                </div>
+                                                <div class="predicted-items">
+                                                    <div class="checkbox checkbox-sec margin-right cash-filter" style="margin-left:60px; margin-top:20px;">
+                                                        <input class="colTable" type="checkbox" name="CREDIT_CARDS1" value="CREDIT_CARDS1" id="CREDIT_CARDS1" checked="">
+                                                        <label for="CREDIT_CARDS1">
+                                                            <span>CREDIT CARDS</span>
+                                                        </label>
+                                                    </div>
+                                                    <div class="checkbox checkbox-sec margin-right cash-filter" style="margin-left:60px; margin-top:20px;">
+                                                        <input class="colTable" type="checkbox" name="EXPENSES1" value="EXPENSES1" id="EXPENSES1" checked="">
+                                                        <label for="EXPENSES1">
+                                                            <span>EXPENSES</span>
+                                                        </label>
+                                                    </div>
+                                                    <div class="checkbox checkbox-sec margin-right cash-filter" style="margin-left:60px; margin-top:20px;">
+                                                        <input class="colTable" type="checkbox" name="PAYROLL1" value="PAYROLL1" id="PAYROLL1" checked="">
+                                                        <label for="PAYROLL1">
+                                                            <span>PAYROLL</span>
+                                                        </label>
+                                                    </div>
+                                                    <div class="checkbox checkbox-sec margin-right cash-filter" style="margin-left:60px; margin-top:20px;">
+                                                        <input class="colTable" type="checkbox" name="SALES_RECEIPTS1" value="SALES_RECEIPTS1" id="SALES_RECEIPTS1" checked="">
+                                                        <label for="SALES_RECEIPTS1">
+                                                            <span>SALES RECEIPTS</span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="added-by-you">
+                                                <div class="checkbox checkbox-sec margin-right cash-filter" style="margin-left:60px; margin-top:20px;">
+                                                    <input class="colTable" type="checkbox" name="ADDED_BY_YOU" value="ADDED_BY_YOU" id="ADDED_BY_YOU" checked="">
+                                                    <label for="ADDED_BY_YOU">
+                                                        <span class="items-all">ADDED BY YOU</span>
+                                                    </label>
+                                                </div>
+                                                <div class="aby-items">
+                                                    <div class="checkbox checkbox-sec margin-right cash-filter" style="margin-left:60px; margin-top:20px;">
+                                                        <input class="colTable" type="checkbox" name="temp1`" value="1" id="temp1" checked="">
+                                                        <label for="temp1">
+                                                            <span>REPEATING</span>
+                                                        </label>
+                                                    </div>
+                                                    <div class="checkbox checkbox-sec margin-right cash-filter" style="margin-left:60px; margin-top:20px;">
+                                                        <input class="colTable" type="checkbox" name="MONEY_IN1" value="MONEY_IN1" id="MONEY_IN1" checked="">
+                                                        <label for="MONEY_IN1">
+                                                            <span>MONEY IN</span>
+                                                        </label>
+                                                    </div>
+                                                    <div class="checkbox checkbox-sec margin-right cash-filter" style="margin-left:60px; margin-top:20px;">
+                                                        <input class="colTable" type="checkbox" name="MONEY_OUT1" value="MONEY_OUT1" id="MONEY_OUT1" checked="">
+                                                        <label for="MONEY_OUT1">
+                                                            <span>MONEY OUT</span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="pull-right">
+                                            <button class="btn btn-success apply-btn px-4" type="button">Apply</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button class="banking-tab btn btn-success cfp_add_item" style="color:white;">Add
+                                    item</button>
+                            </div>
                         </div>
                     </div>
 
                     <div style="background-color:#f4f5f8;padding:1.5%;display:none;" id="cfp_add_item_area">
                         <div class="row">
                             <div class="col-md-3">
-                                <input type="date" id="datepicker" name="item_date" class="form-control date_plan"
-                                    placeholder="Date">
+                                <input type="date" id="datepicker" name="item_date" class="form-control date_plan" placeholder="Date">
                             </div>
                             <div class="col-md-6 input-group" style="">
-                                <input type="text" name="item_desc" class="form-control merchant_name"
-                                    style="width: 65%;" placeholder="Merchant name"> &nbsp;&nbsp;&nbsp;
-                                <input type="text" name="item_amt" class="form-control plan_amount" style="width: 30%;"
-                                    placeholder="$0.00">
+                                <input type="text" name="item_desc" class="form-control merchant_name" style="width: 65%;" placeholder="Merchant name"> &nbsp;&nbsp;&nbsp;
+                                <input type="text" name="item_amt" class="form-control plan_amount" style="width: 30%;" placeholder="$0.00">
                             </div>
                             <div class="col-md-2">
                                 <label>Planned</label>
@@ -300,20 +446,16 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                             <div class="col-md-3">
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <input type="radio" name="plan_type" class="form-control_" id="plan_type"
-                                            value="moneyin" checked> &nbsp; <label>Money in</label>
+                                        <input type="radio" name="plan_type" class="form-control_" id="plan_type" value="moneyin" checked> &nbsp; <label>Money in</label>
                                         <!-- <input type="radio" name="item_type" class="form-control"> <label>Money out</label> -->
                                     </div>
-                                    <div class="col-md-6"><input type="radio" name="item_type"
-                                            class="form-control_ plan_one_time">
-                                        One-time &nbsp;<br> <input type="radio" name="item_type"
-                                            class="form-control_ plan_repeat"> &nbsp; <label> Repeating</label>
+                                    <div class="col-md-6"><input type="radio" name="item_type" class="form-control_ plan_one_time">
+                                        One-time &nbsp;<br> <input type="radio" name="item_type" class="form-control_ plan_repeat"> &nbsp; <label> Repeating</label>
                                     </div>
                                 </div><br>
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <input type="radio" name="plan_type" class="form-control_" id="plan_type"
-                                            value="moneyout"> &nbsp; <label>Money out</label>
+                                        <input type="radio" name="plan_type" class="form-control_" id="plan_type" value="moneyout"> &nbsp; <label>Money out</label>
                                     </div>
                                 </div>
                             </div>
@@ -339,83 +481,85 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 									<td>$100.00</td>
 									<td>Invoice</td>
 								</tr> -->
-                                <?php foreach ($invoices as $inv):?>
-                                <tr class="moneyin">
-                                    <td><?php echo  date('m'.'/'.'d'.'/'. 'Y', strtotime($inv->date_issued)); ?>
-                                    </td>
-                                    <td><?php echo $inv->contact_name . '' . $inv->first_name."&nbsp;".$inv->last_name;?>
-                                    </td>
-                                    <td><?php echo number_format($inv->grand_total, 2); ?>
-                                    </td>
-                                    <td><?php echo 'Invoice'; ?>
-                                    </td>
-                                </tr>
+                                <?php foreach ($invoices as $inv) : ?>
+                                    <tr class="moneyin">
+                                        <td><?php echo  date('m' . '/' . 'd' . '/' . 'Y', strtotime($inv->date_issued)); ?>
+                                        </td>
+                                        <td><?php echo $inv->contact_name . '' . $inv->first_name . "&nbsp;" . $inv->last_name; ?>
+                                        </td>
+                                        <td><?php echo number_format($inv->grand_total, 2); ?>
+                                        </td>
+                                        <td><?php echo 'Invoice'; ?>
+                                        </td>
+                                    </tr>
                                 <?php endforeach; ?>
 
-                                <?php foreach ($plans as $plan):?>
-                                <tr class="moneyin">
-                                    <td><?php echo  date('m'.'/'.'d'.'/'. 'Y', strtotime($plan->date_plan)); ?>
-                                    </td>
-                                    <td><?php echo $plan->merchant_name;?>
-                                    </td>
-                                    <td><?php echo number_format($plan->amount, 2); ?>
-                                    </td>
-                                    <td><?php echo 'Planned'; ?>
-                                    </td>
-                                </tr>
+                                <?php foreach ($plans as $plan) : ?>
+                                    <tr class="moneyin">
+                                        <td><?php echo  date('m' . '/' . 'd' . '/' . 'Y', strtotime($plan->date_plan)); ?>
+                                        </td>
+                                        <td><?php echo $plan->merchant_name; ?>
+                                        </td>
+                                        <td><?php echo number_format($plan->amount, 2); ?>
+                                        </td>
+                                        <td><?php echo 'Planned'; ?>
+                                        </td>
+                                    </tr>
                                 <?php endforeach; ?>
 
                                 <?php foreach ($checks as $check) { ?>
-                                <tr>
-                                    <td>
-                                        <div class="table-nowrap">
-                                            <?php echo  date('m'.'/'.'d'.'/'. 'Y', strtotime($check->payment_date)) ?>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <!-- <a href="<?php //echo base_url('customer/view/' . $rpayment->customer_id)?>">
+                                    <tr>
+                                        <td>
+                                            <div class="table-nowrap">
+                                                <?php echo  date('m' . '/' . 'd' . '/' . 'Y', strtotime($check->payment_date)) ?>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <!-- <a href="<?php //echo base_url('customer/view/' . $rpayment->customer_id)
+                                                            ?>">
                                         -->
-                                        <?php
+                                            <?php
 
-                                                                        switch ($check->payee_type) {
-                                                                            case 'vendor':
-                                                                                $vendor = $this->vendors_model->get_vendor_by_id($check->payee_id);
-                                                                                // echo $vendor->display_name;
-                                                                                print_r('test'.$vendor);
-                                                                            break;
-                                                                            case 'customer':
-                                                                                $customer = $this->accounting_customers_model->get_customer_by_id($check->payee_id);
-                                                                                echo $customer->first_name . ' ' . $customer->last_name;
-                                                                            break;
-                                                                            case 'employee':
-                                                                                $employee = $this->users_model->getUser($check->payee_id);
-                                                                                echo $employee->FName . ' ' . $employee->LName;
-                                                                            break;
-                                                                        }
-                                                                        
-                                                                        ?>
-                                        <!-- </a> -->
-                                    </td>
-                                    <td><?php echo number_format($check->total_amount, 2); ?>
-                                    </td>
-                                    <td>
-                                        <?php echo 'Check'; ?>
-                                    </td>
-                                    </td>
-                                </tr>
-                                <?php } //print_r($sales_receipts);?>
+                                            switch ($check->payee_type) {
+                                                case 'vendor':
+                                                    $vendor = $this->vendors_model->get_vendor_by_id($check->payee_id);
+                                                    // echo $vendor->display_name;
+                                                    print_r('test' . $vendor);
+                                                    break;
+                                                case 'customer':
+                                                    $customer = $this->accounting_customers_model->get_customer_by_id($check->payee_id);
+                                                    echo $customer->first_name . ' ' . $customer->last_name;
+                                                    break;
+                                                case 'employee':
+                                                    $employee = $this->users_model->getUser($check->payee_id);
+                                                    echo $employee->FName . ' ' . $employee->LName;
+                                                    break;
+                                            }
 
-                                <?php foreach ($expenses as $exp):?>
-                                <tr class="moneyin">
-                                    <td><?php echo  date('m'.'/'.'d'.'/'. 'Y', strtotime($exp->payment_date)); ?>
-                                    </td>
-                                    <td><?php echo get_customer_by_id($exp->vendor_id)->first_name .' '. get_customer_by_id($exp->vendor_id)->last_name ?>
-                                    </td>
-                                    <td><?php echo number_format($exp->amount, 2); ?>
-                                    </td>
-                                    <td><?php echo 'Expense'; ?>
-                                    </td>
-                                </tr>
+                                            ?>
+                                            <!-- </a> -->
+                                        </td>
+                                        <td><?php echo number_format($check->total_amount, 2); ?>
+                                        </td>
+                                        <td>
+                                            <?php echo 'Check'; ?>
+                                        </td>
+                                        </td>
+                                    </tr>
+                                <?php } //print_r($sales_receipts);
+                                ?>
+
+                                <?php foreach ($expenses as $exp) : ?>
+                                    <tr class="moneyin">
+                                        <td><?php echo  date('m' . '/' . 'd' . '/' . 'Y', strtotime($exp->payment_date)); ?>
+                                        </td>
+                                        <td><?php echo get_customer_by_id($exp->vendor_id)->first_name . ' ' . get_customer_by_id($exp->vendor_id)->last_name ?>
+                                        </td>
+                                        <td><?php echo number_format($exp->amount, 2); ?>
+                                        </td>
+                                        <td><?php echo 'Expense'; ?>
+                                        </td>
+                                    </tr>
                                 <?php endforeach; ?>
 
                                 <!-- <tr>
@@ -449,17 +593,17 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 									<td>$100.00</td>
 									<td>Invoice</td>
 								</tr> -->
-                                <?php foreach ($invoices as $inv):?>
-                                <tr class="moneyin">
-                                    <td><?php echo  date('m'.'/'.'d'.'/'. 'Y', strtotime($inv->date_issued)); ?>
-                                    </td>
-                                    <td><?php echo $inv->contact_name . '' . $inv->first_name."&nbsp;".$inv->last_name;?>
-                                    </td>
-                                    <td><?php echo number_format($inv->grand_total, 2); ?>
-                                    </td>
-                                    <td><?php echo 'Invoice'; ?>
-                                    </td>
-                                </tr>
+                                <?php foreach ($invoices as $inv) : ?>
+                                    <tr class="moneyin">
+                                        <td><?php echo  date('m' . '/' . 'd' . '/' . 'Y', strtotime($inv->date_issued)); ?>
+                                        </td>
+                                        <td><?php echo $inv->contact_name . '' . $inv->first_name . "&nbsp;" . $inv->last_name; ?>
+                                        </td>
+                                        <td><?php echo number_format($inv->grand_total, 2); ?>
+                                        </td>
+                                        <td><?php echo 'Invoice'; ?>
+                                        </td>
+                                    </tr>
                                 <?php endforeach; ?>
                                 <!-- <tr>
 									<td>08/30/2021</td>
@@ -496,56 +640,58 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 								</tr> -->
 
                             <?php foreach ($checks as $check) { ?>
-                            <tr>
-                                <td>
-                                    <div class="table-nowrap">
-                                        <?php echo  date('m'.'/'.'d'.'/'. 'Y', strtotime($check->payment_date)) ?>
-                                    </div>
-                                </td>
-                                <td>
-                                    <!-- <a href="<?php //echo base_url('customer/view/' . $rpayment->customer_id)?>">
+                                <tr>
+                                    <td>
+                                        <div class="table-nowrap">
+                                            <?php echo  date('m' . '/' . 'd' . '/' . 'Y', strtotime($check->payment_date)) ?>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <!-- <a href="<?php //echo base_url('customer/view/' . $rpayment->customer_id)
+                                                        ?>">
                                     -->
-                                    <?php
+                                        <?php
 
-                                                                        switch ($check->payee_type) {
-                                                                            case 'vendor':
-                                                                                $vendor = $this->vendors_model->get_vendor_by_id($check->payee_id);
-                                                                                // echo $vendor->display_name;
-                                                                                print_r('test'.$vendor);
-                                                                            break;
-                                                                            case 'customer':
-                                                                                $customer = $this->accounting_customers_model->get_customer_by_id($check->payee_id);
-                                                                                echo $customer->first_name . ' ' . $customer->last_name;
-                                                                            break;
-                                                                            case 'employee':
-                                                                                $employee = $this->users_model->getUser($check->payee_id);
-                                                                                echo $employee->FName . ' ' . $employee->LName;
-                                                                            break;
-                                                                        }
-                                                                        
-                                                                        ?>
-                                    <!-- </a> -->
-                                </td>
-                                <td><?php echo $check->total_amount; ?>
-                                </td>
-                                <td>
-                                    <?php echo 'Check'; ?>
-                                </td>
-                                </td>
-                            </tr>
-                            <?php } //print_r($sales_receipts);?>
+                                        switch ($check->payee_type) {
+                                            case 'vendor':
+                                                $vendor = $this->vendors_model->get_vendor_by_id($check->payee_id);
+                                                // echo $vendor->display_name;
+                                                print_r('test' . $vendor);
+                                                break;
+                                            case 'customer':
+                                                $customer = $this->accounting_customers_model->get_customer_by_id($check->payee_id);
+                                                echo $customer->first_name . ' ' . $customer->last_name;
+                                                break;
+                                            case 'employee':
+                                                $employee = $this->users_model->getUser($check->payee_id);
+                                                echo $employee->FName . ' ' . $employee->LName;
+                                                break;
+                                        }
 
-                            <?php foreach ($expenses as $exp):?>
-                            <tr class="moneyin">
-                                <td><?php echo  date('m'.'/'.'d'.'/'. 'Y', strtotime($exp->payment_date)); ?>
-                                </td>
-                                <td><?php echo get_customer_by_id($exp->vendor_id)->first_name .' '. get_customer_by_id($exp->vendor_id)->last_name ?>
-                                </td>
-                                <td><?php echo number_format($exp->amount, 2); ?>
-                                </td>
-                                <td><?php echo 'Expense'; ?>
-                                </td>
-                            </tr>
+                                        ?>
+                                        <!-- </a> -->
+                                    </td>
+                                    <td><?php echo $check->total_amount; ?>
+                                    </td>
+                                    <td>
+                                        <?php echo 'Check'; ?>
+                                    </td>
+                                    </td>
+                                </tr>
+                            <?php } //print_r($sales_receipts);
+                            ?>
+
+                            <?php foreach ($expenses as $exp) : ?>
+                                <tr class="moneyin">
+                                    <td><?php echo  date('m' . '/' . 'd' . '/' . 'Y', strtotime($exp->payment_date)); ?>
+                                    </td>
+                                    <td><?php echo get_customer_by_id($exp->vendor_id)->first_name . ' ' . get_customer_by_id($exp->vendor_id)->last_name ?>
+                                    </td>
+                                    <td><?php echo number_format($exp->amount, 2); ?>
+                                    </td>
+                                    <td><?php echo 'Expense'; ?>
+                                    </td>
+                                </tr>
                             <?php endforeach; ?>
                             <!-- <tr>
 									<td>08/30/2021</td>
@@ -566,8 +712,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             <!-- end row -->
             <div class="row"></div>
 
-            <div class="modal fade updateoverdue" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
-                aria-hidden="true">
+            <div class="modal fade updateoverdue" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         <div style="padding:3%;">
@@ -640,68 +785,55 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
                                     <?php foreach ($overdues as $overdue) { ?>
 
-                                    <tr data-toggle="collapse"
-                                        data-target=".demo<?php echo $overdue->id; ?>">
-                                        <td><?php echo $overdue->due_date; ?>
-                                        </td>
-                                        <td><?php echo get_customer_by_id($overdue->customer_id)->first_name .' '. get_customer_by_id($overdue->customer_id)->last_name ?>
-                                        </td>
-                                        <td>$<?php echo number_format($overdue->grand_total, 2); ?>
-                                        </td>
-                                        <td>Invoice</td>
-                                        <td><i class="fa fa-toggle-down"></i></td>
-                                    </tr>
-                                    <tr>
-                                        <td class="hiddenRow" colspan="5"
-                                            style="background-color: #f4f5f8; padding: 0 8px !important;">
-                                            <div
-                                                class="collapse demo<?php echo $overdue->id; ?>">
-                                                <!-- <div class="row">
+                                        <tr data-toggle="collapse" data-target=".demo<?php echo $overdue->id; ?>">
+                                            <td><?php echo $overdue->due_date; ?>
+                                            </td>
+                                            <td><?php echo get_customer_by_id($overdue->customer_id)->first_name . ' ' . get_customer_by_id($overdue->customer_id)->last_name ?>
+                                            </td>
+                                            <td>$<?php echo number_format($overdue->grand_total, 2); ?>
+                                            </td>
+                                            <td>Invoice</td>
+                                            <td><i class="fa fa-toggle-down"></i></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="hiddenRow" colspan="5" style="background-color: #f4f5f8; padding: 0 8px !important;">
+                                                <div class="collapse demo<?php echo $overdue->id; ?>">
+                                                    <!-- <div class="row">
 														<div class="col-md-12"> -->
-                                                <table class="table">
-                                                    <tr>
-                                                        <td style="width:20%;"><input type="text"
-                                                                id="datepickerOD<?php echo $overdue->id; ?>"
-                                                                over-id="<?php echo $overdue->id; ?>"
-                                                                value="<?php echo $overdue->due_date; ?>"
-                                                                class="form-control overdate<?php echo $overdue->id; ?> overdate">
-                                                        </td>
-                                                        <td colspan="3"><?php echo get_customer_by_id($overdue->customer_id)->first_name .' '. get_customer_by_id($overdue->customer_id)->last_name ?>
-                                                        </td>
-                                                        <td style="width:24%;"><input type="text"
-                                                                value="<?php echo$overdue->grand_total; ?>"
-                                                                class="form-control overtotal<?php echo $overdue->id; ?>">
-                                                        </td>
-                                                        <td>Invoice</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td colspan="3">
-                                                            <table>
-                                                                <tr>
-                                                                    <td>DUE DATE <br> <?php echo $overdue->due_date; ?>
-                                                                    </td>
-                                                                    <td>DUE AMOUNT <br> $<?php echo $overdue->grand_total; ?>
-                                                                    </td>
-                                                                    <td>REF NUMBER <br> <a href="#"
-                                                                            style="color: blue;"> <?php echo $overdue->id; ?>
-                                                                        </a></td>
-                                                                </tr>
-                                                            </table>
-                                                        </td>
-                                                        <td colspan="3">
-                                                            <div align="right"> <a href="#" style="color:#0077c5;"
-                                                                    class="btn">Remove</a> &emsp; <a href="#"
-                                                                    over-id="<?php echo $overdue->id; ?>"
-                                                                    class="btn btn-primary updateOverdue">Update</a>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                </table>
-                                                <!-- </div>
+                                                    <table class="table">
+                                                        <tr>
+                                                            <td style="width:20%;"><input type="text" id="datepickerOD<?php echo $overdue->id; ?>" over-id="<?php echo $overdue->id; ?>" value="<?php echo $overdue->due_date; ?>" class="form-control overdate<?php echo $overdue->id; ?> overdate">
+                                                            </td>
+                                                            <td colspan="3"><?php echo get_customer_by_id($overdue->customer_id)->first_name . ' ' . get_customer_by_id($overdue->customer_id)->last_name ?>
+                                                            </td>
+                                                            <td style="width:24%;"><input type="text" value="<?php echo $overdue->grand_total; ?>" class="form-control overtotal<?php echo $overdue->id; ?>">
+                                                            </td>
+                                                            <td>Invoice</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td colspan="3">
+                                                                <table>
+                                                                    <tr>
+                                                                        <td>DUE DATE <br> <?php echo $overdue->due_date; ?>
+                                                                        </td>
+                                                                        <td>DUE AMOUNT <br> $<?php echo $overdue->grand_total; ?>
+                                                                        </td>
+                                                                        <td>REF NUMBER <br> <a href="#" style="color: blue;"> <?php echo $overdue->id; ?>
+                                                                            </a></td>
+                                                                    </tr>
+                                                                </table>
+                                                            </td>
+                                                            <td colspan="3">
+                                                                <div align="right"> <a href="#" style="color:#0077c5;" class="btn">Remove</a> &emsp; <a href="#" over-id="<?php echo $overdue->id; ?>" class="btn btn-primary updateOverdue">Update</a>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                    <!-- </div>
 													</div> -->
-                                            </div>
-                                        </td>
-                                    </tr>
+                                                </div>
+                                            </td>
+                                        </tr>
 
                                     <?php } ?>
                                     <!-- <tr data-toggle="collapse" data-target="#demo2">
@@ -719,8 +851,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 </tbody>
                             </table>
 
-                            <input type="submit" class="btn btn-success" value="Done" style="float: right;"
-                                data-dismiss="modal">
+                            <input type="submit" class="btn btn-success" value="Done" style="float: right;" data-dismiss="modal">
                         </div>
                     </div>
                 </div>
@@ -735,6 +866,22 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
 
 <script>
+    $(document).on("click", ".filter-btn-section button.filter-btn", function(event) {
+        setTimeout(function() { $(".filter-btn-section .filter-panel").fadeIn();},300);
+        
+    });
+    $(document).on("click", ".eks", function(event) {
+        setTimeout(function() { $(".filter-btn-section .filter-panel").fadeOut();},300);
+        
+    });
+
+
+
+    // $(document).on("click", function(event) {
+    //     if ($(event.target).closest(".filter-btn-section button.filter-btn").length === 0) {
+    //         $(".filter-btn-section .filter-panel").hide();
+    //     }
+    // });
     <?php
     $data_dates_projected = "[";
     $data_dates = "[";
@@ -747,23 +894,23 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     $date_end = date("Y-m-t", strtotime("+ 2 months", strtotime(date("Y-m-01"))));
     $total = 0;
     $month = date("m", strtotime($date_start));
-    $ctr=0;
+    $ctr = 0;
     while ($date_start <= $date_end) {
-        $value = rand(rand(1, $ctr+2), $ctr+2);
+        $value = rand(rand(1, $ctr + 2), $ctr + 2);
         if ($month == date("m", strtotime($date_start))) {
-            $total+=$value;
+            $total += $value;
         } else {
             $month = date("m", strtotime($date_start));
-            $data_dates .= $total.",";
-            $data_dates_projected .= rand(rand(1, $total), $total+2).",";
-            $data_labels .= "'". strtoupper(date("M", strtotime($date_start)))."',";
+            $data_dates .= $total . ",";
+            $data_dates_projected .= rand(rand(1, $total), $total + 2) . ",";
+            $data_labels .= "'" . strtoupper(date("M", strtotime($date_start))) . "',";
             $total = 0;
         }
         $date_start = date("Y-m-d", strtotime("+ 1 day", strtotime($date_start)));
         $ctr++;
     }
-    $data_dates_projected.="]";
-    $data_dates.="]";
+    $data_dates_projected .= "]";
+    $data_dates .= "]";
     $data_labels .= "]";
 
     $data_dates_projected_3m .= "]";
@@ -771,13 +918,13 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     $data_labels_3m .= "]";
     ?>
 
-    var labels = <?=$data_labels?> ;
-    var data = <?=$data_dates?> ;
-    var data_projected = <?=$data_dates_projected?> ;
+    var labels = <?= $data_labels ?>;
+    var data = <?= $data_dates ?>;
+    var data_projected = <?= $data_dates_projected ?>;
 
-    var labels_3m = <?=$data_labels_3m?> ;
-    var data_3m = <?=$data_dates_3m?> ;
-    var data_projected_3m = <?=$data_dates_projected_3m?> ;
+    var labels_3m = <?= $data_labels_3m ?>;
+    var data_3m = <?= $data_dates_3m ?>;
+    var data_projected_3m = <?= $data_dates_projected_3m ?>;
 </script>
 
 <?php include viewPath('includes/footer_accounting');

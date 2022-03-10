@@ -75,7 +75,7 @@
                                                 <span class="transaction-grand-total">
                                                 <?php if(isset($creditMemo)) : ?>
                                                     <?php
-                                                    $amount = '$'.number_format(floatval($creditMemo->total_amount), 2, '.', ',');
+                                                    $amount = '$'.number_format(floatval($creditMemo->balance), 2, '.', ',');
                                                     $amount = str_replace('$-', '-$', $amount);
                                                     echo $amount;
                                                     ?>
@@ -84,6 +84,31 @@
                                                 <?php endif; ?>
                                                 </span>
                                             </h2>
+                                            <?php if(isset($creditMemo) && count($payments) > 0) : ?>
+                                            <div class="btn-group dropleft d-inline-block float-right">
+                                                    <button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="btn text-info p-0">
+                                                        <?=count($payments)?> payment made (<span id="total-payment-amount"><?=number_format(floatval($totalPayment), 2, '.', ',')?></span>)
+                                                    </button>
+                                                    <div class="dropdown-menu p-3" id="payments-dropdown" style="min-width: 275px">
+                                                        <table class="table bg-white m-0">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Date</th>
+                                                                    <th>Amount applied</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <?php foreach($payments as $payment) : ?>
+                                                                    <tr>
+                                                                        <td><a href="/accounting/view-transaction/unapplied-payment/<?=$payment->receive_payment->id?>" class="text-info"><?=date("m/d/Y", strtotime($payment->receive_payment->payment_date))?></a></td>
+                                                                        <td class="text-right">$<?=number_format(floatval($payment->payment_amount), 2, '.', ',')?></td>
+                                                                    </tr>
+                                                                <?php endforeach; ?>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            <?php endif;?>
                                         </div>
                                     </div>
 

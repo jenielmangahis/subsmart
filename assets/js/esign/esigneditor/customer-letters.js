@@ -200,50 +200,10 @@ function initSendModal() {
   const $nextBtn = $modal.find("[data-action=next]");
   const $modalTrigger = $("[data-action=select-send-option]");
   const $printBtn = $modal.find("[data-action=print]");
+  const $emailBtn = $modal.find("[data-action=email]");
 
-  $modalTrigger.on("click", () => {
-    const $table = $("#letters");
-    const $selectedRows = $table.find(".table__row--selected");
-
-    if ($selectedRows.length) {
-      $modal.modal("show");
-    }
-  });
-
-  $radios.on("change", (event) => {
-    const $prevActive = document.querySelector(".sendLetter__option--active");
-    if ($prevActive) {
-      $prevActive.classList.remove("sendLetter__option--active");
-    }
-
-    const $parent = event.target.closest(".sendLetter__option");
-    $parent.classList.add("sendLetter__option--active");
-  });
-
-  $nextBtn.on("click", async () => {
-    const $selected = $modal.find("[name=sendOption]:checked");
-    const method = $selected.val();
-
-    if (method === "print") {
-      const ids = getSelectedRowData().map((row) => row.id);
-      const { data: letters } = await window.helpers.submitBtn($nextBtn, () =>
-        window.api.printCustomerLetters({ ids })
-      );
-
-      const $previewContainer = $modal.find(".printPreview");
-      $previewContainer.empty();
-      letters.forEach((letter) => {
-        $previewContainer.append(
-          `<div class="printPreview__item">${letter}</div>`
-        );
-      });
-    }
-
-    $modal.get(0).dataset.stepActive = method;
-  });
-
-  $printBtn.on("click", () => {
-    const $previews = $modal.find(".printPreview__item");
+  const generatePDF = async () => {
+    const $previews = $modal.find(".preview__item");
     const doc = new jsPDF({
       orientation: "portrait",
       format: "a4",
@@ -269,7 +229,54 @@ function initSendModal() {
       );
     });
 
+    await window.helpers.sleep(1);
+    return doc;
+  };
+
+  $modalTrigger.on("click", () => {
+    const $table = $("#letters");
+    const $selectedRows = $table.find(".table__row--selected");
+
+    if ($selectedRows.length) {
+      $modal.modal("show");
+    }
+  });
+
+  $radios.on("change", (event) => {
+    const $prevActive = document.querySelector(".sendLetter__option--active");
+    if ($prevActive) {
+      $prevActive.classList.remove("sendLetter__option--active");
+    }
+
+    const $parent = event.target.closest(".sendLetter__option");
+    $parent.classList.add("sendLetter__option--active");
+  });
+
+  $nextBtn.on("click", async () => {
+    const $selected = $modal.find("[name=sendOption]:checked");
+    const method = $selected.val();
+
+    let $previewContainer = $modal.find("[data-step=email] .preview");
+    if (method === "print") {
+      $previewContainer = $modal.find("[data-step=print] .preview");
+    }
+
+    const ids = getSelectedRowData().map((row) => row.id);
+    const { data: letters } = await window.helpers.submitBtn($nextBtn, () =>
+      window.api.printCustomerLetters({ ids })
+    );
+
+    $previewContainer.empty();
+    letters.forEach((letter) => {
+      $previewContainer.append(`<div class="preview__item">${letter}</div>`);
+    });
+
+    $modal.get(0).dataset.stepActive = method;
+  });
+
+  $printBtn.on("click", () => {
     window.helpers.submitBtn($printBtn, async () => {
+      const doc = await generatePDF();
       const letters = getSelectedRowData().map((row) => ({
         id: row.id,
         print_status: "Printed/Sent",
@@ -282,7 +289,52 @@ function initSendModal() {
     });
   });
 
+  $emailBtn.on("click", () => {
+    const payload = {};
+    const $inputs = $modal.find("[data-type]");
+
+    for (let index = 0; index < $inputs.length; index++) {
+      const $input = $inputs[index];
+      const value = $input.value.trim();
+      const key = $input.dataset.type;
+
+      if (!value.length) {
+        $input.focus();
+        return;
+      }
+
+      if (key === "email" && !window.helpers.isEmail(value)) {
+        $input.focus();
+        return;
+      }
+
+      payload[key] = value;
+    }
+
+    window.helpers.submitBtn($emailBtn, async () => {
+      const ids = getSelectedRowData().map((row) => row.id);
+      const doc = await generatePDF();
+      const pdf = doc.output("blob");
+
+      const form = new FormData();
+      form.append("ids", ids);
+      form.append("subject", payload.subject);
+      form.append("email", payload.email);
+      form.append("message", payload.message);
+      form.append("pdf", pdf);
+
+      await window.helpers.sleep(1);
+      await window.api.emailCustomerLetter(form);
+      $modal.modal("hide");
+    });
+  });
+
   $($modal).on("show.bs.modal", () => {
+    const $inputs = $modal.find("[data-type]");
+    $inputs.each((_, $input) => {
+      $input.value = "";
+    });
+
     $print.trigger("change");
     $print.prop("checked", true);
     $modal.get(0).dataset.stepActive = "select";

@@ -612,7 +612,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             </div>
         </div>
         <!-- end row -->
-        <div class="row ml-2"></div>
+        <div class="row ml-2">
+            
+        </div>
         <!-- end row -->
     </div>
 </div>

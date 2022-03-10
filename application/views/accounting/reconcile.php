@@ -2919,7 +2919,7 @@ $accBalance = $this->chart_of_accounts_model->getBalance($rows[0]->chart_of_acco
                                 <div class="col-sm-6">
                                     <div class="breadcrumb-pager m-0">
                                         <ul>
-                                            <li><a href="<?= url('accounting/chart_of_accounts') ?>">Chart of Accounts</a></li>
+                                            <li><a href="<?= url('accounting/chart-of-accounts') ?>">Chart of Accounts</a></li>
                                             <li><a href="#">Bank Register</a></li>
                                             <li>Reconcile</li>
                                         </ul>

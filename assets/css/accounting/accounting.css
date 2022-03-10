@@ -295,6 +295,9 @@ button {
 .banking-tab-container {
     border-bottom: 2px solid #E3E5E8;
     padding-left: 0;
+    display: flex;
+    align-items: center;
+    position: relative;
 }
 
 .banking-tab {
@@ -1310,4 +1313,155 @@ button {
 
 #filterDropdown:after {
     display: none;
+}
+
+
+/* Cash flow css */
+
+.filter-btn-section .filter-panel {
+    width: 450px;
+    position: absolute;
+    background: #fff;
+    padding: 10px;
+    border-radius: 2px;
+    border: solid 1px #CACACA;
+    padding-bottom: 20px;
+    box-shadow: 3px 6px 20px #cacaca;
+    top: 47px;
+    z-index: 1;
+    left: -76px;
+    text-align: left;
+}
+
+.filter-btn-section .filter-panel .achor-holder {
+    position: absolute;
+    top: -13px;
+    width: 20px;
+    left: 264px;
+}
+
+.filter-btn-section .filter-panel .btn-success {
+    font-size: 13px;
+    font-weight: 700;
+    border: solid 1px #2CA01C;
+    padding: 5px 20px;
+    background: #2CA01C;
+    border-radius: 24px;
+    height: auto;
+    margin-top: 15px;
+    color: #ffffff;
+}
+
+.filter-btn-section .filter-panel .form-group .label {
+    margin-bottom: 5px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.filter-btn-section .filter-panel .btn-success:hover {
+    background-image: none;
+    background-color: #108000;
+}
+
+.buttons {
+    display: flex;
+    position: absolute;
+    right: 0;
+    margin-right: 60px;
+}
+
+button.btn.btn-default.filter-btn {
+    font-size: 15px;
+    padding: 5px 25px;
+    font-weight: 700;
+    border: solid 2px #393A3D;
+    height: auto;
+    color: #393A3D;
+}
+
+.prediction label {
+    padding-left: 32px !important;
+    padding-top: 0px !important;
+    padding-bottom: -30px !important;
+}
+
+.from-your-books label {
+    padding-left: 32px !important;
+    padding-top: 0px !important;
+    padding-bottom: -30px !important;
+}
+
+.added-by-you label {
+    padding-left: 32px !important;
+    padding-top: 0px !important;
+    padding-bottom: -30px !important;
+}
+
+.checkbox.checkbox-sec.margin-right.cash-filter {
+    margin-left: 0 !important;
+}
+
+.predicted-items span {
+    font-size: 13px;
+}
+
+.from-your-books span {
+    font-size: 13px;
+}
+
+.added-by-you span {
+    font-size: 13px;
+}
+
+span.items-all {
+    font-size: 17px;
+    font-weight: 600;
+}
+
+span.h-title {
+    font-size: 30px;
+    margin: 15px;
+    font-weight: 600;
+}
+
+.money_choice {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    border-bottom: solid 2px;
+    margin-left: 15px;
+}
+
+span.choices {
+    font-size: 19px;
+    font-weight: 600;
+}
+
+.from-your-books {
+    margin-left: 15px;
+}
+
+.fyb-items {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    margin-left: 2rem;
+}
+
+.prediction {
+    margin-left: 15px;
+}
+
+.predicted-items {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    margin-left: 2rem;
+}
+
+.added-by-you {
+    margin-left: 15px;
+}
+
+.aby-items {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    margin-left: 2rem;
 }

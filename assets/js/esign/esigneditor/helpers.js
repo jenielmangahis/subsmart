@@ -46,3 +46,8 @@ export function wysiwygEditor($textarea, content = null) {
 export function sleep(seconds) {
   return new Promise((resolve) => setTimeout(resolve, seconds * 1000));
 }
+
+export function isEmail(email) {
+  const regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+  return regex.test(email);
+}
