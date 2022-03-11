@@ -65,7 +65,7 @@
                                                 <th>Employees</th>
                                                 <th>Priority</th>
                                                 <th>Status</th>
-                                                <th class="text-center">Action</th>
+                                                <th class="text-center"></th>
                                             </tr>
                                             </thead>
 

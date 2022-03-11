@@ -66,6 +66,9 @@ $route['customer/internal_notes/(:num)'] = 'Customer/internal_notes/$1';
 $route['customer/_create_internal_notes'] = 'Customer/ajax_create_internal_notes';
 $route['customer/_delete_internal_notes'] = 'Customer/ajax_delete_internal_notes';
 $route['customer/_load_edit_internal_note'] = 'Customer/ajax_edit_internal_note';
+$route['customer/_update_internal_notes'] = 'Customer/ajax_update_internal_notes';
+$route['customer/inventory_list/(:num)'] = 'Customer/inventory_list/$1';
+$route['customer/messages_list/(:num)'] = 'Customer/messages_list/$1';
 
 $route['equipments/(:any)?/(:any)?'] = 'equipment/$1/$2';
 $route['equipments/(:any)?'] = 'equipment/$1';

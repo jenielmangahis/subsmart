@@ -862,6 +862,62 @@ class Customer extends MY_Controller
         $this->load->view('customer/estimate_list', $this->page_data);
     }
 
+    public function invoice_list($cid)
+    {
+        $this->load->model('Invoice_model');
+        $this->load->model('AcsProfile_model');
+
+        $invoices = $this->Invoice_model->getAllByCustomerId($cid);
+        $customer  = $this->AcsProfile_model->getByProfId($cid);
+
+        $this->page_data['cust_active_tab'] = 'invoices';
+        $this->page_data['cus_id']    = $cid;
+        $this->page_data['invoices']  = $invoices;
+        $this->page_data['customer']  = $customer;
+
+        $this->load->view('customer/invoice_list', $this->page_data);
+    }
+
+    public function messages_list($cid)
+    {
+        $this->load->model('CustomerMessages_model');
+        $this->load->model('AcsProfile_model');
+
+        $messages = $this->CustomerMessages_model->getAllByProfId($cid);
+        $customer  = $this->AcsProfile_model->getByProfId($cid);
+
+        $this->page_data['cust_active_tab'] = 'messages';
+        $this->page_data['cus_id']    = $cid;
+        $this->page_data['messages']  = $messages;
+        $this->page_data['customer']  = $customer;
+
+        $this->load->view('customer/messages_list', $this->page_data);
+    }
+
+    public function inventory_list($cid)
+    {
+        $this->load->model('Jobs_model');
+        $this->load->model('AcsProfile_model');
+
+        $jobs = $this->Jobs_model->getAllJobsByCustomerId($cid);
+        $inventory = array();
+        foreach( $jobs as $j ){
+            $jobItems = $this->Jobs_model->get_specific_job_items($j->id);
+            $inventory[$j->id]['job'] = $j;
+            if( $jobItems ){
+                $inventory[$j->id]['items'] = $jobItems;
+            }            
+        }
+
+        $customer  = $this->AcsProfile_model->getByProfId($cid);
+        $this->page_data['cust_active_tab'] = 'inventory';
+        $this->page_data['cus_id']    = $cid;
+        $this->page_data['inventory'] = $inventory;
+        $this->page_data['customer']  = $customer;
+
+        $this->load->view('customer/inventory_list', $this->page_data);
+    }
+
     public function workorders_list($cid)
     {
         $this->load->model('Workorder_model');
@@ -927,6 +983,36 @@ class Customer extends MY_Controller
         }else{
             $msg = 'Cannot save data';
         }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($json_data);        
+    }
+
+    public function ajax_update_internal_notes()
+    {
+        $this->load->model('CustomerInternalNotes_model');
+        $this->load->model('AcsProfile_model');
+        
+        $is_success = false;
+        $msg = '';
+
+        $user_id = logged('id');
+        $post    = $this->input->post();
+        $internalNote = $this->CustomerInternalNotes_model->getById($post['nid']);  
+
+        if( $internalNote ){
+            $data = [
+                'note_date' => date("Y-m-d",strtotime($post['note_date'])),
+                'notes' => $post['interal_notes']
+            ];
+
+            $this->CustomerInternalNotes_model->update($internalNote->id, $data);
+
+            $is_success = 1;
+
+        }else{
+            $msg = 'Cannot find data';
+        }  
 
         $json_data = ['is_success' => $is_success, 'msg' => $msg];
         echo json_encode($json_data);        

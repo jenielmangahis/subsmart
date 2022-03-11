@@ -60,7 +60,7 @@
                                                     <th scope="col"><strong>Job Types</strong></th>
                                                     <th scope="col"><strong>Job Tags</strong></th>
                                                     <th scope="col"><strong>Priority</strong></th>
-                                                    <th scope="col"><strong>Manage</strong></th>
+                                                    <th scope="col"><strong></strong></th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -89,7 +89,7 @@
                                                         <div class="dropdown dropdown-btn text-center">
                                                             <button class="btn btn-default" type="button" id="dropdown-edit"
                                                                 data-toggle="dropdown" aria-expanded="true">
-                                                                <span class="btn-label">Manage <i
+                                                                <span class="btn-label">Manage<i
                                                                         class="fa fa-caret-down fa-sm"
                                                                         style="margin-left:10px;"></i></span></span>
                                                             </button>
@@ -99,13 +99,13 @@
                                                                     <a role="menuitem" tabindex="-1"
                                                                         href="<?= base_url('job/new_job1/').$job->id; ?>"
                                                                         class="editJobTypeBtn editItemBtn">
-                                                                        <span class="fa fa-pencil"></span> Edit
+                                                                        <span class="fa fa-pencil icon"></span> Edit
                                                                     </a>
                                                                 </li>
                                                                 <li>
                                                                     <a href="<?= base_url('job/job_preview/').$job->id; ?>"
                                                                         class="editItemBtn">
-                                                                        <span class="fa fa-search-plus"></span> Preview
+                                                                        <span class="fa fa-search-plus icon"></span> Preview
                                                                     </a>
                                                                 </li>
                                                                 <?php if ($job->status=='Draft' || $job->status=='Scheduled') : ?>
@@ -113,7 +113,7 @@
                                                                     <a href="javascript:void(0)"
                                                                         id="<?= $job->id; ?>"
                                                                         class="delete_job editItemBtn">
-                                                                        <span class="fa fa-trash"></span> Delete
+                                                                        <span class="fa fa-trash icon"></span> Delete
                                                                     </a>
                                                                 </li>
                                                                 <?php endif; ?>
