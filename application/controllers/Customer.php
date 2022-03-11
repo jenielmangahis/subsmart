@@ -53,6 +53,18 @@ class Customer extends MY_Controller
 
     public function index()
     {
+
+
+        add_css(array(
+            "assets/css/accounting/accounting_includes/new_customer.css",
+        ));
+        add_footer_js(array(
+            "assets/js/accounting/sales/customer_includes/new_customer.js",
+            'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js',
+            'https://unpkg.com/dropzone@5/dist/min/dropzone.min.js'
+        ));
+
+
         $this->hasAccessModule(9);
 
         $this->load->library('wizardlib');        

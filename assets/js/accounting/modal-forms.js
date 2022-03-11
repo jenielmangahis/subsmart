@@ -5628,7 +5628,7 @@ $(function() {
                 <td><input type="number" name="quantity[]" class="form-control text-right" required value="0" min="0"></td>
                 <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${item.price}"></td>
                 <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="0.00"></td>
-                <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="0.00"></td>
+                <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="7.50"></td>
                 <td><span class="row-total">$0.00</span></td>
                 <td>
                     <div class="d-flex align-items-center justify-content-center">
@@ -5662,10 +5662,10 @@ $(function() {
         var taxes = 0.00;
         var discounts = 0.00;
         $('#modal-container #modal-form .modal #item-table tbody tr').each(function() {
-            var itemAmount = $(this).parent().parent().find('input[name="item_amount[]"]').val();
-            var itemQty = $(this).parent().parent().find('input[name="quantity[]"]').val();
-            var itemDisc = $(this).parent().parent().find('input[name="discount[]"]').val();
-            var itemTax = $(this).parent().parent().find('input[name="item_tax[]"]').val();
+            var itemAmount = $(this).find('input[name="item_amount[]"]').val();
+            var itemQty = $(this).find('input[name="quantity[]"]').val();
+            var itemDisc = $(this).find('input[name="discount[]"]').val();
+            var itemTax = $(this).find('input[name="item_tax[]"]').val();
 
             var itemTotal = parseFloat(itemAmount) * parseFloat(itemQty);
             var taxAmount = parseFloat(itemTax) * itemTotal / 100;
@@ -5694,7 +5694,7 @@ $(function() {
         var grandTotal = parseFloat(subtotal) + parseFloat(taxes);
         grandTotal -= parseFloat(discounts);
         grandTotal -= parseFloat(value);
-        if($('#modal-container #modal-form .modal').attr('id') === 'creditMemoModal') {
+        if($('#modal-container #modal-form .modal').attr('id') === 'creditMemoModal' && $('#creditMemoModal #total-payment-amount').length > 0) {
             grandTotal -= parseFloat($('#creditMemoModal #total-payment-amount').html().replace('$', ''));
         }
         grandTotal = '$'+parseFloat(grandTotal).toFixed(2);
@@ -6546,7 +6546,7 @@ const submitModalForm = (event, el) => {
 
     if(customerModals.includes(modalId)) {
         data.delete('location[]');
-        $(`${modalId} table#item-details-table tbody tr`).each(function() {
+        $(`${modalId} table#item-table tbody tr`).each(function() {
             if(data.has('item_total[]')) {
                 data.append('location[]', $(this).find('select[name="location[]"]').val());
                 data.append('item_total[]', $(this).find('span.row-total').html().replace('$', ''));
@@ -7629,7 +7629,7 @@ const updateTransaction = (event, el) => {
 
     if(customerModals.includes(modalId)) {
         data.delete('location[]');
-        $(`${modalId} table#item-details-table tbody tr`).each(function() {
+        $(`${modalId} table#item-table tbody tr`).each(function() {
             if(data.has('item_total[]')) {
                 data.append('location[]', $(this).find('select[name="location[]"]').val());
                 data.append('item_total[]', $(this).find('span.row-total').html().replace('$', ''));

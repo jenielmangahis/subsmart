@@ -126,6 +126,9 @@ ini_set('max_input_vars', 30000);
           </div>
 
           <div data-step="email">
+            <div class="alert alert-danger d-none" role="alert">
+                Something went wrong sending this email.
+            </div>
             <form>
                 <div class="mb-3">
                     <label class="form-label">Subject</label>

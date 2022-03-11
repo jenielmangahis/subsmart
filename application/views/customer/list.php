@@ -137,13 +137,16 @@ add_css(array(
         font-size: 11px !important;
         line-height: 150%;
     }
+
     table.dataTable {
         border-collapse: collapse;
         margin-top: 5px;
     }
+
     table.dataTable thead tr th {
         border: 1px solid black !important;
     }
+
     table.dataTable tbody tr td {
         border: 1px solid black !important;
     }
@@ -173,23 +176,16 @@ add_css(array(
                                     <div class="float-right d-md-block">
                                         <div class="dropdown">
                                             <!--<input type="file" name="file" /> -->
-                                            <a
-                                                href="<?= url('customer/import_customer') ?>">
-                                                <button type="button" class="btn btn-primary btn-md"
-                                                    id="exportCustomers"><span class="fa fa-download"></span>
+                                            <!-- <a href="<?= url('customer/import_customer') ?>"> -->
+                                                <button type="button" class="btn btn-primary btn-md" id="import-customer"><span class="fa fa-download"></span>
                                                     Import</button>
-                                            </a>
-                                            <a
-                                                href="<?= url('customer/customer_export') ?>">
-                                                <button type="button" class="btn btn-primary btn-md"
-                                                    id="exportCustomers"><span class="fa fa-upload"></span>
+                                            <!-- </a> -->
+                                            <a href="<?= url('customer/customer_export') ?>">
+                                                <button type="button" class="btn btn-primary btn-md" id="exportCustomers"><span class="fa fa-upload"></span>
                                                     Export</button>
                                             </a>
-                                            <a class="btn btn-primary btn-md"
-                                                href="<?php echo url('customer/add_lead') ?>"><span
-                                                    class="fa fa-plus"></span> Add Lead</a>
-                                            <a class="btn btn-primary btn-md"
-                                                href="<?php echo url('customer/add_advance') ?>">
+                                            <a class="btn btn-primary btn-md" href="<?php echo url('customer/add_lead') ?>"><span class="fa fa-plus"></span> Add Lead</a>
+                                            <a class="btn btn-primary btn-md" href="<?php echo url('customer/add_advance') ?>">
                                                 <span class="fa fa-plus"></span> New Customer
                                             </a>
                                         </div>
@@ -207,8 +203,7 @@ add_css(array(
                             </div>
                         </div>
                         <div class="tab-content" id="myTabContent">
-                            <div class="card <?=  isset($profiles) && !empty($profiles) ? 'collapse' : '' ?>"
-                                id="advance_search_wizard">
+                            <div class="card <?= isset($profiles) && !empty($profiles) ? 'collapse' : '' ?>" id="advance_search_wizard">
                                 <div class="card-header">
                                     Advance Search
                                 </div>
@@ -218,92 +213,78 @@ add_css(array(
                                             <div class="col-md-3">
                                                 <div class="col-md-12">
                                                     <label for="">Monitoring ID</label>
-                                                    <input type="text" class="form-control" name="monitoring_id"
-                                                        id="acs_custom_field2" />
+                                                    <input type="text" class="form-control" name="monitoring_id" id="acs_custom_field2" />
                                                 </div>
                                                 <div class="col-md-12">
                                                     <label for="">First Name</label>
-                                                    <input type="text" class="form-control" name="firstname"
-                                                        id="acs_custom_field2" />
+                                                    <input type="text" class="form-control" name="firstname" id="acs_custom_field2" />
                                                 </div>
                                                 <div class="col-md-12">
                                                     <label for="">Last Name</label>
-                                                    <input type="text" class="form-control" name="lastname"
-                                                        id="acs_custom_field2" />
+                                                    <input type="text" class="form-control" name="lastname" id="acs_custom_field2" />
                                                 </div>
                                                 <div class="col-md-12">
                                                     <label for="">Email</label>
-                                                    <input type="text" class="form-control" name="email"
-                                                        id="acs_custom_field2" />
+                                                    <input type="text" class="form-control" name="email" id="acs_custom_field2" />
                                                 </div>
                                                 <div class="col-md-12">
                                                     <label for="">Phone</label>
-                                                    <input type="text" class="form-control" name="phone"
-                                                        id="acs_custom_field2" />
+                                                    <input type="text" class="form-control" name="phone" id="acs_custom_field2" />
                                                 </div>
                                             </div>
                                             <div class="col-md-3">
                                                 <div class="col-md-12">
                                                     <label for="">Sales Date</label>
-                                                    <input type="text" class="form-control" name="sales_date"
-                                                        id="acs_custom_field2" />
+                                                    <input type="text" class="form-control" name="sales_date" id="acs_custom_field2" />
                                                 </div>
                                                 <div class="col-md-12">
                                                     <label for="">Company Name</label>
-                                                    <input type="text" class="form-control" name="company_name"
-                                                        id="acs_custom_field2" />
+                                                    <input type="text" class="form-control" name="company_name" id="acs_custom_field2" />
                                                 </div>
                                                 <div class="col-md-12">
                                                     <label for="">Panel Type</label>
                                                     <select name="panel_type" id="panel_type" class="input_select">
                                                         <option <?php if (isset($alarm_info)) {
-    if ($alarm_info->panel_type == '') {
-        echo "selected";
-    }
-} ?>
-                                                            value="">
+                                                                    if ($alarm_info->panel_type == '') {
+                                                                        echo "selected";
+                                                                    }
+                                                                } ?> value="">
                                                         </option>
                                                         <option <?php if (isset($alarm_info)) {
-    if ($alarm_info->panel_type == 'DIGI') {
-        echo "selected";
-    }
-} ?>
-                                                            value="DIGI">Landline
+                                                                    if ($alarm_info->panel_type == 'DIGI') {
+                                                                        echo "selected";
+                                                                    }
+                                                                } ?> value="DIGI">Landline
                                                         </option>
                                                         <option <?php if (isset($alarm_info)) {
-    if ($alarm_info->panel_type == 'DW2W') {
-        echo "selected";
-    }
-} ?>
-                                                            value="DW2W">Landline W/ 2-Way
+                                                                    if ($alarm_info->panel_type == 'DW2W') {
+                                                                        echo "selected";
+                                                                    }
+                                                                } ?> value="DW2W">Landline W/ 2-Way
                                                         </option>
                                                         <option <?php if (isset($alarm_info)) {
-    if ($alarm_info->panel_type == 'DWCB') {
-        echo "selected";
-    }
-} ?>
-                                                            value="DWCB">Landline W/ Cell Backup
+                                                                    if ($alarm_info->panel_type == 'DWCB') {
+                                                                        echo "selected";
+                                                                    }
+                                                                } ?> value="DWCB">Landline W/ Cell Backup
                                                         </option>
                                                         <option <?php if (isset($alarm_info)) {
-    if ($alarm_info->panel_type == 'D2CB') {
-        echo "selected";
-    }
-} ?>
-                                                            value="D2CB">Landline W/ 2-Way &amp; Cell Backup
+                                                                    if ($alarm_info->panel_type == 'D2CB') {
+                                                                        echo "selected";
+                                                                    }
+                                                                } ?> value="D2CB">Landline W/ 2-Way &amp; Cell Backup
                                                         </option>
                                                         <option <?php if (isset($alarm_info)) {
-    if ($alarm_info->panel_type == 'CPDB') {
-        echo "selected";
-    }
-} ?>
-                                                            value="CPDB">Cell Primary
+                                                                    if ($alarm_info->panel_type == 'CPDB') {
+                                                                        echo "selected";
+                                                                    }
+                                                                } ?> value="CPDB">Cell Primary
                                                         </option>
                                                         <option <?php if (isset($alarm_info)) {
-    if ($alarm_info->panel_type == 'CP2W') {
-        echo "selected";
-    }
-} ?>
-                                                            value="CP2W">Cell Primary w/2Way
+                                                                    if ($alarm_info->panel_type == 'CP2W') {
+                                                                        echo "selected";
+                                                                    }
+                                                                } ?> value="CP2W">Cell Primary w/2Way
                                                         </option>
                                                     </select>
                                                 </div>
@@ -311,81 +292,70 @@ add_css(array(
                                                     <label for="">Account Type</label>
                                                     <select name="acct_type" id="acct_type" class="input_select">
                                                         <option <?php if (isset($alarm_info)) {
-    if ($alarm_info->acct_type == '') {
-        echo "selected";
-    }
-} ?>
-                                                            value="">
+                                                                    if ($alarm_info->acct_type == '') {
+                                                                        echo "selected";
+                                                                    }
+                                                                } ?> value="">
                                                         </option>
                                                         <option <?php if (isset($alarm_info)) {
-    if ($alarm_info->acct_type == 'In-House') {
-        echo "selected";
-    }
-} ?>
-                                                            value="In-House">In-House
+                                                                    if ($alarm_info->acct_type == 'In-House') {
+                                                                        echo "selected";
+                                                                    }
+                                                                } ?> value="In-House">In-House
                                                         </option>
                                                         <option <?php if (isset($alarm_info)) {
-    if ($alarm_info->acct_type == 'Purchase') {
-        echo "selected";
-    }
-} ?>
-                                                            value="Purchase">Purchase
+                                                                    if ($alarm_info->acct_type == 'Purchase') {
+                                                                        echo "selected";
+                                                                    }
+                                                                } ?> value="Purchase">Purchase
                                                         </option>
                                                     </select>
                                                 </div>
                                                 <div class="col-md-12">
                                                     <label for="">Status</label>
-                                                    <select id="status" name="status" data-customer-source="dropdown"
-                                                        class="input_select">
+                                                    <select id="status" name="status" data-customer-source="dropdown" class="input_select">
                                                         <option value=""></option>
                                                         <option <?php if (isset($profile_info)) {
-    if ($profile_info->status == 'Assigned') {
-        echo 'selected';
-    }
-} ?>
-                                                            value="Assigned">Assigned
+                                                                    if ($profile_info->status == 'Assigned') {
+                                                                        echo 'selected';
+                                                                    }
+                                                                } ?> value="Assigned">Assigned
                                                         </option>
                                                         <option <?php if (isset($profile_info)) {
-    if ($profile_info->status == 'Not Assign') {
-        echo 'selected';
-    }
-} ?>
-                                                            value="Not Assign">Not Assign
+                                                                    if ($profile_info->status == 'Not Assign') {
+                                                                        echo 'selected';
+                                                                    }
+                                                                } ?> value="Not Assign">Not Assign
                                                         </option>
                                                         <option <?php if (isset($profile_info)) {
-    if ($profile_info->status == 'Converted') {
-        echo 'selected';
-    }
-} ?>
-                                                            value="Converted">Converted
+                                                                    if ($profile_info->status == 'Converted') {
+                                                                        echo 'selected';
+                                                                    }
+                                                                } ?> value="Converted">Converted
                                                         </option>
                                                         <option <?php if (isset($profile_info)) {
-    if ($profile_info->status == 'Not Converted') {
-        echo 'selected';
-    }
-} ?>
-                                                            value="Not Converted">Not Converted
+                                                                    if ($profile_info->status == 'Not Converted') {
+                                                                        echo 'selected';
+                                                                    }
+                                                                } ?> value="Not Converted">Not Converted
                                                         </option>
                                                         <option <?php if (isset($profile_info)) {
-    if ($profile_info->status == 'Scheduled') {
-        echo 'selected';
-    }
-} ?>
-                                                            value="Scheduled">Scheduled
+                                                                    if ($profile_info->status == 'Scheduled') {
+                                                                        echo 'selected';
+                                                                    }
+                                                                } ?> value="Scheduled">Scheduled
                                                         </option>
                                                         <option <?php if (isset($profile_info)) {
-    if ($profile_info->status == 'Installed') {
-        echo 'selected';
-    }
-} ?>
-                                                            value="Installed">Installed
+                                                                    if ($profile_info->status == 'Installed') {
+                                                                        echo 'selected';
+                                                                    }
+                                                                } ?> value="Installed">Installed
                                                         </option>
                                                         <option <?php if (isset($profile_info)) {
-    if ($profile_info->status == 'Completed ') {
-        echo 'selected';
-    }
-} ?>
-                                                            value="Completed">Completed
+                                                                    if ($profile_info->status == 'Completed ') {
+                                                                        echo 'selected';
+                                                                    }
+                                                                } ?> value="Completed">Completed
                                                         </option>
                                                     </select>
                                                 </div>
@@ -393,18 +363,15 @@ add_css(array(
                                             <div class="col-md-3">
                                                 <div class="col-md-12">
                                                     <label for="">Address</label>
-                                                    <input type="text" class="form-control" name="address"
-                                                        id="acs_custom_field2" />
+                                                    <input type="text" class="form-control" name="address" id="acs_custom_field2" />
                                                 </div>
                                                 <div class="col-md-12">
                                                     <label for="">City</label>
-                                                    <input type="text" class="form-control" name="city"
-                                                        id="acs_custom_field2" />
+                                                    <input type="text" class="form-control" name="city" id="acs_custom_field2" />
                                                 </div>
                                                 <div class="col-md-12">
                                                     <label for="">State</label>
-                                                    <select id="state" name="state" data-customer-source="dropdown"
-                                                        class="input_select">
+                                                    <select id="state" name="state" data-customer-source="dropdown" class="input_select">
                                                         <option value=""></option>
                                                         <option value="AB">AB</option>
                                                         <option value="AL">AL</option>
@@ -482,42 +449,35 @@ add_css(array(
                                                 </div>
                                                 <div class="col-md-12">
                                                     <label for="">Zip</label>
-                                                    <input type="text" class="form-control" name="zip"
-                                                        id="acs_custom_field2" />
+                                                    <input type="text" class="form-control" name="zip" id="acs_custom_field2" />
                                                 </div>
                                                 <div class="col-md-12">
                                                     <label for="">Routing Number</label>
-                                                    <input type="text" class="form-control" name="routing_number"
-                                                        id="acs_custom_field2" />
+                                                    <input type="text" class="form-control" name="routing_number" id="acs_custom_field2" />
                                                 </div>
                                             </div>
                                             <div class="col-md-3">
                                                 <div class="col-md-12">
                                                     <label for="">Technician</label>
-                                                    <select id="technician" name="technician"
-                                                        data-customer-source="dropdown" class="input_select">
+                                                    <select id="technician" name="technician" data-customer-source="dropdown" class="input_select">
                                                         <option value=""></option>
                                                     </select>
                                                 </div>
                                                 <div class="col-md-12">
                                                     <label for="">Company</label>
-                                                    <input type="text" class="form-control" name="company"
-                                                        id="company" />
+                                                    <input type="text" class="form-control" name="company" id="company" />
                                                 </div>
                                                 <div class="col-md-12">
                                                     <label for="">Monitoring Company</label>
-                                                    <input type="text" class="form-control" name="monitor_company"
-                                                        id="monitor_company" />
+                                                    <input type="text" class="form-control" name="monitor_company" id="monitor_company" />
                                                 </div>
                                                 <div class="col-md-12">
                                                     <label for="">Credit Score</label>
-                                                    <input type="text" class="form-control" name="credit_score"
-                                                        id="credit_score" />
+                                                    <input type="text" class="form-control" name="credit_score" id="credit_score" />
                                                 </div>
                                                 <div class="col-md-12">
                                                     <label for="">Contract Term</label>
-                                                    <select id="contract_term" name="contract_term"
-                                                        data-customer-source="dropdown" class="input_select">
+                                                    <select id="contract_term" name="contract_term" data-customer-source="dropdown" class="input_select">
                                                         <option value=""></option>
                                                         <option value="36">36</option>
                                                         <option value="60">60</option>
@@ -530,8 +490,7 @@ add_css(array(
                                         <div class="col-md-12">
                                             <br>
                                             <a href="#" style="right: 0;position: absolute;padding-right: 20px;">
-                                                <button type="submit" class="btn btn-primary btn-md"><span
-                                                        class="fa fa-search-plus"></span> Search</button>
+                                                <button type="submit" class="btn btn-primary btn-md"><span class="fa fa-search-plus"></span> Search</button>
                                             </a>
                                         </div>
                                     </form>
@@ -540,199 +499,341 @@ add_css(array(
                             </div>
                             <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1">
                                 <?php if (isset($profiles) && !empty($profiles)) : ?>
-                                <a id="more_detail_furnisher" href="#advance_search_wizard" role="button"
-                                    aria-expanded="false" aria-controls="collapseExample" data-toggle="collapse"
-                                    style="color:#1E5DA9;right: 0;position: absolute;margin-top: -20px;padding-right: 20px;">
-                                    +Show Advance Search
-                                </a>
+                                    <a id="more_detail_furnisher" href="#advance_search_wizard" role="button" aria-expanded="false" aria-controls="collapseExample" data-toggle="collapse" style="color:#1E5DA9;right: 0;position: absolute;margin-top: -20px;padding-right: 20px;">
+                                        +Show Advance Search
+                                    </a>
 
-                                <div id="status_sorting" class=""></div>
-                                <?php if( !empty($enabled_table_headers) ){ ?>
-                                    <table class="table" id="customer_list_table">
-                                        <thead>
-                                            <tr>
-                                                <?php if( in_array('name', $enabled_table_headers) ){ ?>
-                                                    <th width="300px">Name</th>
-                                                <?php } ?>
+                                    <div id="status_sorting" class=""></div>
+                                    <?php if (!empty($enabled_table_headers)) { ?>
+                                        <table class="table" id="customer_list_table">
+                                            <thead>
+                                                <tr>
+                                                    <?php if (in_array('name', $enabled_table_headers)) { ?>
+                                                        <th width="300px">Name</th>
+                                                    <?php } ?>
 
-                                                <?php if( in_array('city', $enabled_table_headers) ){ ?>
+                                                    <?php if (in_array('city', $enabled_table_headers)) { ?>
+                                                        <th>City</th>
+                                                    <?php } ?>
+
+                                                    <?php if (in_array('state', $enabled_table_headers)) { ?>
+                                                        <th>State</th>
+                                                    <?php } ?>
+
+                                                    <?php if (in_array('source', $enabled_table_headers)) { ?>
+                                                        <th>Source</th>
+                                                    <?php } ?>
+
+                                                    <?php if (in_array('email', $enabled_table_headers)) { ?>
+                                                        <th>Email</th>
+                                                    <?php } ?>
+
+                                                    <?php if (in_array('added', $enabled_table_headers)) { ?>
+                                                        <th>Added</th>
+                                                    <?php } ?>
+
+                                                    <?php if (in_array('sales_rep', $enabled_table_headers)) { ?>
+                                                        <th>Sales Rep</th>
+                                                    <?php } ?>
+
+                                                    <?php if (in_array('tech', $enabled_table_headers)) { ?>
+                                                        <th>Tech</th>
+                                                    <?php } ?>
+
+                                                    <?php if (in_array('plan_type', $enabled_table_headers)) { ?>
+                                                        <th>Plan Type</th>
+                                                    <?php } ?>
+
+                                                    <?php if (in_array('subscription_amount', $enabled_table_headers)) { ?>
+                                                        <th>Subscription Amount</th>
+                                                    <?php } ?>
+
+                                                    <?php if (in_array('phone', $enabled_table_headers)) { ?>
+                                                        <th>Phone</th>
+                                                    <?php } ?>
+
+                                                    <?php if (in_array('status', $enabled_table_headers)) { ?>
+                                                        <th>Status</th>
+                                                    <?php } ?>
+                                                    <th width="80px">Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php foreach ($profiles as $customer) : ?>
+                                                    <tr>
+                                                        <?php if (in_array('name', $enabled_table_headers)) { ?>
+                                                            <td>
+                                                                <a href="<?= base_url('/customer/module/' . $customer->prof_id); ?>" style="color:#1E5DA9;">
+                                                                    <?= ($customer) ? $customer->first_name . ' ' . $customer->last_name : ''; ?>
+                                                                </a>
+                                                            </td>
+                                                        <?php } ?>
+
+                                                        <?php if (in_array('city', $enabled_table_headers)) { ?>
+                                                            <td><?php echo $customer->city; ?></td>
+                                                        <?php } ?>
+
+                                                        <?php if (in_array('state', $enabled_table_headers)) { ?>
+                                                            <td><?php echo $customer->state; ?></td>
+                                                        <?php } ?>
+
+                                                        <?php if (in_array('source', $enabled_table_headers)) { ?>
+                                                            <td><?= $customer->lead_source != "" ? $customer->lead_source : 'n/a'; ?></td>
+                                                        <?php } ?>
+
+                                                        <?php if (in_array('email', $enabled_table_headers)) { ?>
+                                                            <td><?php echo $customer->email; ?></td>
+                                                        <?php } ?>
+
+                                                        <?php if (in_array('added', $enabled_table_headers)) { ?>
+                                                            <td><?php echo $customer->entered_by; ?></td>
+                                                        <?php } ?>
+
+                                                        <?php if (in_array('sales_rep', $enabled_table_headers)) { ?>
+                                                            <td><?php echo ($customer) ? $customer->FName . ' ' . $customer->LName : ''; ?></td>
+                                                        <?php } ?>
+
+                                                        <?php if (in_array('tech', $enabled_table_headers)) { ?>
+                                                            <td><?= $customer->technician != null ? $customer->technician : 'Not Assigned'; ?></td>
+                                                        <?php } ?>
+
+                                                        <?php if (in_array('plan_type', $enabled_table_headers)) { ?>
+                                                            <td><?php echo $customer->system_type; ?></td>
+                                                        <?php } ?>
+
+                                                        <?php if (in_array('subscription_amount', $enabled_table_headers)) { ?>
+                                                            <td>$<?= $customer->total_amount; ?></td>
+                                                        <?php } ?>
+
+                                                        <?php if (in_array('phone', $enabled_table_headers)) { ?>
+                                                            <td><?php echo $customer->phone_m; ?></td>
+                                                        <?php } ?>
+
+                                                        <?php if (in_array('status', $enabled_table_headers)) { ?>
+                                                            <td><?= $customer->status != null ? $customer->status : 'Pending'; ?></td>
+                                                        <?php } ?>
+
+                                                        <td>
+                                                            <div class="dropdown dropdown-btn text-center">
+                                                                <button class="btn btn-default" type="button" id="dropdown-edit" data-toggle="dropdown" aria-expanded="true">
+                                                                    <span class="btn-label">Manage <i class="fa fa-caret-down fa-sm" style="margin-left:10px;"></i></span>
+                                                                </button>
+                                                                <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
+                                                                    <li role="presentation">
+                                                                        <a role="menuitem" tabindex="-1" href="<?php echo base_url('customer/preview_/' . $customer->prof_id); ?>" class="editItemBtn">
+                                                                            <span class="fa fa-search-plus icon"></span>
+                                                                            Preview
+                                                                        </a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a href="<?php echo base_url('customer/add_advance/' . $customer->prof_id); ?>" class="editItemBtn">
+                                                                            <span class="fa fa-edit icon"></span>
+                                                                            Edit
+                                                                        </a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a href="mailto:<?= $customer->email; ?>" class="editItemBtn">
+                                                                            <span class="fa fa-envelope icon"></span>
+                                                                            Email
+                                                                        </a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a href="javascript:void(0);" id="<?= $customer->phone_m; ?>" onclick='call(this.id);return false;' class="editItemBtn">
+                                                                            <span class="fa fa-phone icon"></span>
+                                                                            Call
+                                                                        </a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a href="<?= base_url('invoice/add/'); ?>" class="editItemBtn">
+                                                                            <span class="fa fa-file icon"></span>
+                                                                            Invoice
+                                                                        </a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a href="<?= base_url('customer/billing/' . $customer->prof_id); ?>" class="editItemBtn">
+                                                                            <span class="fa fa-file icon"></span>
+                                                                            Billing
+                                                                        </a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a href="<?= base_url('customer/module/' . $customer->prof_id); ?>" class="editItemBtn">
+                                                                            <span class="fa fa-dashboard icon"></span>
+                                                                            Dashboard
+                                                                        </a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a href="<?= base_url('job/new_job1/'); ?>" class="editItemBtn">
+                                                                            <span class="fa fa-calendar-check-o icon"></span>
+                                                                            Schedule
+                                                                        </a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a href="#" class="editItemBtn">
+                                                                            <span class="fa fa-file-text icon"></span>
+                                                                            Message
+                                                                        </a>
+                                                                    </li>
+                                                                    <li role="separator" class="divider"></li>
+                                                                </ul>
+                                                            </div>
+                                                            <!--<a href="<?php echo url('/customer/add_advance/' . $customer->prof_id); ?>"
+                                                    style="text-decoration:none;display:inline-block;" title="Edit
+                                                    Customer">
+                                                    <img src="/assets/img/customer/actions/ac_edit.png" width="16px"
+                                                        height="16px" border="0" title="Edit Customer">
+                                                    </a>
+                                                    <a href="#" style="text-decoration:none;display:inline-block;"
+                                                        id="<?php echo $customer->prof_id; ?>"
+                                                        title="Delete Customer" class="delete_cust">
+                                                        <img src="https://app.creditrepaircloud.com/application/images/cross.png"
+                                                            width="16px" height="16px" border="0">
+                                                    </a <a
+                                                        href="mailto:<?= $customer->email; ?>"
+                                                        style="text-decoration:none; display:inline-block;">
+                                                    <img src="/assets/img/customer/actions/ac_email.png" width="16px"
+                                                        height="16px" border="0" title="Email Customer">
+                                                    </a>
+                                                    <a href="#" style="text-decoration:none; display:inline-block;">
+                                                        <img src="/assets/img/customer/actions/ac_call.png" width="16px"
+                                                            height="16px" border="0" title="Call Customer">
+                                                    </a>
+                                                    <a href="#" style="text-decoration:none; display:inline-block;">
+                                                        <img src="/assets/img/customer/actions/ac_invoice.png" width="16px"
+                                                            height="16px" border="0" title="Invoice Customer">
+                                                    </a>
+                                                    <a href="#" style="text-decoration:none; display:inline-block;">
+                                                        <img src="/assets/img/customer/actions/ac_work.png" width="16px"
+                                                            height="16px" border="0" title="Create Work Order">
+                                                    </a>
+                                                    <a href="#" style="text-decoration:none; display:inline-block;">
+                                                        <img src="/assets/img/customer/actions/ac_ticket.png" width="16px"
+                                                            height="16px" border="0" title="Create Service Ticket">
+                                                    </a>
+                                                    <a href="#" style="text-decoration:none; display:inline-block;">
+                                                        <img src="/assets/img/customer/actions/ac_sched.png" width="16px"
+                                                            height="16px" border="0" title="Schedule">
+                                                    </a>
+                                                    <a href="#" style="text-decoration:none; display:inline-block;">
+                                                        <img src="/assets/img/customer/actions/ac_sms.png" width="16px"
+                                                            height="16px" border="0" title="Message Customer">
+                                                    </a>
+                                                    <a href="<?php echo url('/customer/index/tab2/' . $customer->prof_id); ?>"
+                                                        style="text-decoration:none; display:inline-block;">
+                                                        <img src="https://app.creditrepaircloud.com/application/images/assign-contact.png"
+                                                            border="0" title="View Profile">
+                                                    </a>-->
+                                                        </td>
+                                                    </tr>
+                                                <?php endforeach; ?>
+                                            </tbody>
+                                        </table>
+                                    <?php } else { ?>
+                                        <table class="table" id="customer_list_table">
+                                            <thead>
+                                                <tr>
+                                                    <th width="100px">Name</th>
                                                     <th>City</th>
-                                                <?php } ?>
-
-                                                <?php if( in_array('state', $enabled_table_headers) ){ ?>
                                                     <th>State</th>
-                                                <?php } ?>
-
-                                                <?php if( in_array('source', $enabled_table_headers) ){ ?>
                                                     <th>Source</th>
-                                                <?php } ?>
-
-                                                <?php if( in_array('email', $enabled_table_headers) ){ ?>
                                                     <th>Email</th>
-                                                <?php } ?>
-
-                                                <?php if( in_array('added', $enabled_table_headers) ){ ?>
                                                     <th>Added</th>
-                                                <?php } ?>
-
-                                                <?php if( in_array('sales_rep', $enabled_table_headers) ){ ?>
                                                     <th>Sales Rep</th>
-                                                <?php } ?>
-
-                                                <?php if( in_array('tech', $enabled_table_headers) ){ ?>
                                                     <th>Tech</th>
-                                                <?php } ?>
-
-                                                <?php if( in_array('plan_type', $enabled_table_headers) ){ ?>
                                                     <th>Plan Type</th>
-                                                <?php } ?>
-
-                                                <?php if( in_array('subscription_amount', $enabled_table_headers) ){ ?>
                                                     <th>Subscription Amount</th>
-                                                <?php } ?>
-
-                                                <?php if( in_array('phone', $enabled_table_headers) ){ ?>
                                                     <th>Phone</th>
-                                                <?php } ?>
-
-                                                <?php if( in_array('status', $enabled_table_headers) ){ ?>
                                                     <th>Status</th>
-                                                <?php } ?>
-                                                <th width="80px">Actions</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php foreach ($profiles as $customer) : ?>
-                                            <tr>
-                                                <?php if( in_array('name', $enabled_table_headers) ){ ?>
-                                                <td>
-                                                    <a href="<?= base_url('/customer/module/' . $customer->prof_id); ?>"
-                                                        style="color:#1E5DA9;">
-                                                        <?= ($customer) ? $customer->first_name . ' ' . $customer->last_name : ''; ?>
-                                                    </a>
-                                                </td>
-                                                <?php } ?>
-
-                                                <?php if( in_array('city', $enabled_table_headers) ){ ?>
-                                                    <td><?php echo $customer->city; ?></td>
-                                                <?php } ?>
-
-                                                <?php if( in_array('state', $enabled_table_headers) ){ ?>
-                                                    <td><?php echo $customer->state; ?></td>
-                                                <?php } ?>
-
-                                                <?php if( in_array('source', $enabled_table_headers) ){ ?>
-                                                    <td><?= $customer->lead_source != "" ? $customer->lead_source : 'n/a'; ?></td>
-                                                <?php } ?>
-
-                                                <?php if( in_array('email', $enabled_table_headers) ){ ?>
-                                                    <td><?php echo $customer->email; ?></td>
-                                                <?php } ?>
-
-                                                <?php if( in_array('added', $enabled_table_headers) ){ ?>
-                                                    <td><?php echo $customer->entered_by; ?></td>
-                                                <?php } ?>
-
-                                                <?php if( in_array('sales_rep', $enabled_table_headers) ){ ?>
-                                                    <td><?php echo ($customer) ? $customer->FName . ' ' . $customer->LName : ''; ?></td>
-                                                <?php } ?>
-
-                                                <?php if( in_array('tech', $enabled_table_headers) ){ ?>
-                                                    <td><?= $customer->technician != null ? $customer->technician : 'Not Assigned'; ?></td>
-                                                <?php } ?>
-
-                                                <?php if( in_array('plan_type', $enabled_table_headers) ){ ?>
-                                                    <td><?php echo $customer->system_type; ?></td>
-                                                <?php } ?>
-
-                                                <?php if( in_array('subscription_amount', $enabled_table_headers) ){ ?>
-                                                    <td>$<?= $customer->total_amount; ?></td>
-                                                <?php } ?>
-
-                                                <?php if( in_array('phone', $enabled_table_headers) ){ ?>
-                                                    <td><?php echo $customer->phone_m; ?></td>
-                                                <?php } ?>
-
-                                                <?php if( in_array('status', $enabled_table_headers) ){ ?>
-                                                    <td><?= $customer->status != null ? $customer->status : 'Pending'; ?></td>
-                                                <?php } ?>
-                                                
-                                                <td>
-                                                    <div class="dropdown dropdown-btn text-center">
-                                                        <button class="btn btn-default" type="button" id="dropdown-edit" data-toggle="dropdown" aria-expanded="true">
-                                                            <span class="btn-label">Manage <i class="fa fa-caret-down fa-sm" style="margin-left:10px;"></i></span>
-                                                        </button>
-                                                        <ul class="dropdown-menu dropdown-menu-right" role="menu"
-                                                            aria-labelledby="dropdown-edit">
-                                                            <li role="presentation">
-                                                                <a role="menuitem" tabindex="-1"
-                                                                    href="<?php echo base_url('customer/preview_/'.$customer->prof_id); ?>"
-                                                                    class="editItemBtn">
-                                                                    <span class="fa fa-search-plus icon"></span>
-                                                                    Preview
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="<?php echo base_url('customer/add_advance/'.$customer->prof_id); ?>"
-                                                                    class="editItemBtn">
-                                                                    <span class="fa fa-edit icon"></span>
-                                                                    Edit
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="mailto:<?= $customer->email; ?>"
-                                                                    class="editItemBtn">
-                                                                    <span class="fa fa-envelope icon"></span>
-                                                                    Email
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="javascript:void(0);"
-                                                                    id="<?= $customer->phone_m; ?>"
-                                                                    onclick='call(this.id);return false;'
-                                                                    class="editItemBtn">
-                                                                    <span class="fa fa-phone icon"></span>
-                                                                    Call
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="<?= base_url('invoice/add/'); ?>"
-                                                                    class="editItemBtn">
-                                                                    <span class="fa fa-file icon"></span>
-                                                                    Invoice
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="<?= base_url('customer/billing/'.$customer->prof_id); ?>"
-                                                                    class="editItemBtn">
-                                                                    <span class="fa fa-file icon"></span>
-                                                                    Billing
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="<?= base_url('customer/module/'.$customer->prof_id); ?>"
-                                                                    class="editItemBtn">
-                                                                    <span class="fa fa-dashboard icon"></span>
-                                                                    Dashboard
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="<?= base_url('job/new_job1/'); ?>"
-                                                                    class="editItemBtn">
-                                                                    <span class="fa fa-calendar-check-o icon"></span>
-                                                                    Schedule
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="#" class="editItemBtn">
-                                                                    <span class="fa fa-file-text icon"></span>
-                                                                    Message
-                                                                </a>
-                                                            </li>
-                                                            <li role="separator" class="divider"></li>
-                                                        </ul>
-                                                    </div>
-                                                    <!--<a href="<?php echo url('/customer/add_advance/' . $customer->prof_id); ?>"
+                                                    <th>Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php foreach ($profiles as $customer) : ?>
+                                                    <tr>
+                                                        <td>
+                                                            <a href="<?= base_url('/customer/module/' . $customer->prof_id); ?>" style="color:#1E5DA9;">
+                                                                <?= ($customer) ? $customer->first_name . ' ' . $customer->last_name : ''; ?>
+                                                            </a>
+                                                        </td>
+                                                        <td><?php echo $customer->city; ?>
+                                                        </td>
+                                                        <td><?php echo $customer->state; ?>
+                                                        </td>
+                                                        <td><?= $customer->lead_source != "" ? $customer->lead_source : 'n/a'; ?>
+                                                        </td>
+                                                        <td><?php echo $customer->email; ?>
+                                                        </td>
+                                                        <td><?php echo $customer->entered_by; ?>
+                                                        </td>
+                                                        <td><?php echo ($customer) ? $customer->FName . ' ' . $customer->LName : ''; ?>
+                                                        </td>
+                                                        <td><?= $customer->technician != null ? $customer->technician : 'Not Assigned'; ?>
+                                                        </td>
+                                                        <td><?php echo $customer->system_type; ?>
+                                                        </td>
+                                                        <td>$<?= $customer->total_amount; ?>
+                                                        </td>
+                                                        <td><?php echo $customer->phone_m; ?>
+                                                        </td>
+                                                        <td><?= $customer->status != null ? $customer->status : 'Pending'; ?>
+                                                        </td>
+                                                        <td>
+                                                            <div class="dropdown dropdown-btn text-center">
+                                                                <button class="btn btn-default" type="button" id="dropdown-edit" data-toggle="dropdown" aria-expanded="true">
+                                                                    <span class="btn-label">Manage <i class="fa fa-caret-down fa-sm" style="margin-left:10px;"></i></span>
+                                                                </button>
+                                                                <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
+                                                                    <li role="presentation">
+                                                                        <a role="menuitem" tabindex="-1" href="<?php echo base_url('customer/preview_/' . $customer->prof_id); ?>" class="editItemBtn">
+                                                                            <span class="fa fa-search-plus icon"></span>
+                                                                            Preview
+                                                                        </a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a href="<?php echo base_url('customer/add_advance/' . $customer->prof_id); ?>" class="editItemBtn">
+                                                                            <span class="fa fa-edit icon"></span>
+                                                                            Edit
+                                                                        </a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a href="mailto:<?= $customer->email; ?>" class="editItemBtn">
+                                                                            <span class="fa fa-envelope icon"></span>
+                                                                            Email
+                                                                        </a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a href="javascript:void(0);" id="<?= $customer->phone_m; ?>" onclick='call(this.id);return false;' class="editItemBtn">
+                                                                            <span class="fa fa-phone icon"></span>
+                                                                            Call
+                                                                        </a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a href="<?= base_url('invoice/add/'); ?>" class="editItemBtn">
+                                                                            <span class="fa fa-file icon"></span>
+                                                                            Invoice
+                                                                        </a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a href="<?= base_url('customer/module/' . $customer->prof_id); ?>" class="editItemBtn">
+                                                                            <span class="fa fa-dashboard icon"></span>
+                                                                            Dashboard
+                                                                        </a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a href="<?= base_url('job/new_job1/'); ?>" class="editItemBtn">
+                                                                            <span class="fa fa-calendar-check-o icon"></span>
+                                                                            Schedule
+                                                                        </a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a href="#" class="editItemBtn">
+                                                                            <span class="fa fa-file-text icon"></span>
+                                                                            Message
+                                                                        </a>
+                                                                    </li>
+                                                                    <li role="separator" class="divider"></li>
+                                                                </ul>
+                                                            </div>
+                                                            <!--<a href="<?php echo url('/customer/add_advance/' . $customer->prof_id); ?>"
                                                     style="text-decoration:none;display:inline-block;" title="Edit
                                                     Customer">
                                                     <img src="/assets/img/customer/actions/ac_edit.png" width="16px"
@@ -778,182 +879,13 @@ add_css(array(
                                                         <img src="https://app.creditrepaircloud.com/application/images/assign-contact.png"
                                                             border="0" title="View Profile">
                                                     </a>-->
-                                                </td>
-                                            </tr>
-                                            <?php endforeach; ?>
-                                        </tbody>
-                                    </table>
-                                <?php }else{ ?>
-                                    <table class="table" id="customer_list_table">
-                                        <thead>
-                                            <tr>
-                                                <th width="100px">Name</th>
-                                                <th>City</th>
-                                                <th>State</th>
-                                                <th>Source</th>
-                                                <th>Email</th>
-                                                <th>Added</th>
-                                                <th>Sales Rep</th>
-                                                <th>Tech</th>
-                                                <th>Plan Type</th>
-                                                <th>Subscription Amount</th>
-                                                <th>Phone</th>
-                                                <th>Status</th>
-                                                <th>Actions</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php foreach ($profiles as $customer) : ?>
-                                            <tr>
-                                                <td>
-                                                    <a href="<?= base_url('/customer/module/' . $customer->prof_id); ?>"
-                                                        style="color:#1E5DA9;">
-                                                        <?= ($customer) ? $customer->first_name . ' ' . $customer->last_name : ''; ?>
-                                                    </a>
-                                                </td>
-                                                <td><?php echo $customer->city; ?>
-                                                </td>
-                                                <td><?php echo $customer->state; ?>
-                                                </td>
-                                                <td><?= $customer->lead_source != "" ? $customer->lead_source : 'n/a'; ?>
-                                                </td>
-                                                <td><?php echo $customer->email; ?>
-                                                </td>
-                                                <td><?php echo $customer->entered_by; ?>
-                                                </td>
-                                                <td><?php echo ($customer) ? $customer->FName . ' ' . $customer->LName : ''; ?>
-                                                </td>
-                                                <td><?= $customer->technician != null ? $customer->technician : 'Not Assigned'; ?>
-                                                </td>
-                                                <td><?php echo $customer->system_type; ?>
-                                                </td>
-                                                <td>$<?= $customer->total_amount; ?>
-                                                </td>
-                                                <td><?php echo $customer->phone_m; ?>
-                                                </td>
-                                                <td><?= $customer->status != null ? $customer->status : 'Pending'; ?>
-                                                </td>
-                                                <td>
-                                                    <div class="dropdown dropdown-btn text-center">
-                                                        <button class="btn btn-default" type="button" id="dropdown-edit" data-toggle="dropdown" aria-expanded="true">
-                                                            <span class="btn-label">Manage <i class="fa fa-caret-down fa-sm" style="margin-left:10px;"></i></span>
-                                                        </button>
-                                                        <ul class="dropdown-menu dropdown-menu-right" role="menu"
-                                                            aria-labelledby="dropdown-edit">
-                                                            <li role="presentation">
-                                                                <a role="menuitem" tabindex="-1"
-                                                                    href="<?php echo base_url('customer/preview_/'.$customer->prof_id); ?>"
-                                                                    class="editItemBtn">
-                                                                    <span class="fa fa-search-plus icon"></span>
-                                                                    Preview
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="<?php echo base_url('customer/add_advance/'.$customer->prof_id); ?>"
-                                                                    class="editItemBtn">
-                                                                    <span class="fa fa-edit icon"></span>
-                                                                    Edit
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="mailto:<?= $customer->email; ?>"
-                                                                    class="editItemBtn">
-                                                                    <span class="fa fa-envelope icon"></span>
-                                                                    Email
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="javascript:void(0);"
-                                                                    id="<?= $customer->phone_m; ?>"
-                                                                    onclick='call(this.id);return false;'
-                                                                    class="editItemBtn">
-                                                                    <span class="fa fa-phone icon"></span>
-                                                                    Call
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="<?= base_url('invoice/add/'); ?>"
-                                                                    class="editItemBtn">
-                                                                    <span class="fa fa-file icon"></span>
-                                                                    Invoice
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="<?= base_url('customer/module/'.$customer->prof_id); ?>"
-                                                                    class="editItemBtn">
-                                                                    <span class="fa fa-dashboard icon"></span>
-                                                                    Dashboard
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="<?= base_url('job/new_job1/'); ?>"
-                                                                    class="editItemBtn">
-                                                                    <span class="fa fa-calendar-check-o icon"></span>
-                                                                    Schedule
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="#" class="editItemBtn">
-                                                                    <span class="fa fa-file-text icon"></span>
-                                                                    Message
-                                                                </a>
-                                                            </li>
-                                                            <li role="separator" class="divider"></li>
-                                                        </ul>
-                                                    </div>
-                                                    <!--<a href="<?php echo url('/customer/add_advance/' . $customer->prof_id); ?>"
-                                                    style="text-decoration:none;display:inline-block;" title="Edit
-                                                    Customer">
-                                                    <img src="/assets/img/customer/actions/ac_edit.png" width="16px"
-                                                        height="16px" border="0" title="Edit Customer">
-                                                    </a>
-                                                    <a href="#" style="text-decoration:none;display:inline-block;"
-                                                        id="<?php echo $customer->prof_id; ?>"
-                                                        title="Delete Customer" class="delete_cust">
-                                                        <img src="https://app.creditrepaircloud.com/application/images/cross.png"
-                                                            width="16px" height="16px" border="0">
-                                                    </a <a
-                                                        href="mailto:<?= $customer->email; ?>"
-                                                        style="text-decoration:none; display:inline-block;">
-                                                    <img src="/assets/img/customer/actions/ac_email.png" width="16px"
-                                                        height="16px" border="0" title="Email Customer">
-                                                    </a>
-                                                    <a href="#" style="text-decoration:none; display:inline-block;">
-                                                        <img src="/assets/img/customer/actions/ac_call.png" width="16px"
-                                                            height="16px" border="0" title="Call Customer">
-                                                    </a>
-                                                    <a href="#" style="text-decoration:none; display:inline-block;">
-                                                        <img src="/assets/img/customer/actions/ac_invoice.png" width="16px"
-                                                            height="16px" border="0" title="Invoice Customer">
-                                                    </a>
-                                                    <a href="#" style="text-decoration:none; display:inline-block;">
-                                                        <img src="/assets/img/customer/actions/ac_work.png" width="16px"
-                                                            height="16px" border="0" title="Create Work Order">
-                                                    </a>
-                                                    <a href="#" style="text-decoration:none; display:inline-block;">
-                                                        <img src="/assets/img/customer/actions/ac_ticket.png" width="16px"
-                                                            height="16px" border="0" title="Create Service Ticket">
-                                                    </a>
-                                                    <a href="#" style="text-decoration:none; display:inline-block;">
-                                                        <img src="/assets/img/customer/actions/ac_sched.png" width="16px"
-                                                            height="16px" border="0" title="Schedule">
-                                                    </a>
-                                                    <a href="#" style="text-decoration:none; display:inline-block;">
-                                                        <img src="/assets/img/customer/actions/ac_sms.png" width="16px"
-                                                            height="16px" border="0" title="Message Customer">
-                                                    </a>
-                                                    <a href="<?php echo url('/customer/index/tab2/' . $customer->prof_id); ?>"
-                                                        style="text-decoration:none; display:inline-block;">
-                                                        <img src="https://app.creditrepaircloud.com/application/images/assign-contact.png"
-                                                            border="0" title="View Profile">
-                                                    </a>-->
-                                                </td>
-                                            </tr>
-                                            <?php endforeach; ?>
-                                        </tbody>
-                                    </table>
-                                <?php } ?>
-                                <?php else: ?>
+                                                        </td>
+                                                    </tr>
+                                                <?php endforeach; ?>
+                                            </tbody>
+                                        </table>
+                                    <?php } ?>
+                                <?php else : ?>
                                     <hr>
                                     <div class="page-empty-container" style="text-align:center; margin-top:50px;">
                                         <h5 class="page-empty-header">No Customer Added</h5>
@@ -993,18 +925,18 @@ add_css(array(
 <!-- Reasons Modal -->
 <?php include viewPath('customer/adv_modals/modal_reasons'); ?>
 <!-- End Modals -->
-
+<?php include viewPath('accounting/customer_includes/new_customer/import_customers_modal'); ?>
 
 <?php
 // JS to add only Customer module
 add_footer_js(array(
-'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js',
- 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js',
- 'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js',
- 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js',
- 'https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js',
- 'https://code.jquery.com/ui/1.12.1/jquery-ui.js',
- 'assets/textEditor/summernote-bs4.js'
+    'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js',
+    'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js',
+    'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js',
+    'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js',
+    'https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js',
+    'https://code.jquery.com/ui/1.12.1/jquery-ui.js',
+    'assets/textEditor/summernote-bs4.js'
     // 'assets/frontend/js/creditcard.js',
     // 'assets/frontend/js/customer/add.js',
 ));

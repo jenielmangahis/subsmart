@@ -37,8 +37,9 @@
 
                             <!--1st Row-->
                             <div class="row">
-                                <div class="col-md-12">
-                                    <h2>Welcome To GFG Step 2</h2>
+                                <div class="col-md-12 instruction" style="text-align:left;">
+                            
+                                    <p style="text-indent: 10px;padding-top: 13px;padding-left: 8px; font-size:15px;">For the column from files section, this is the column names of the data in your excel. You can uncheck and check the columns that only need to be stored in the database. For the select columns to store section, after checking the desired column you wanted to store, you can choose the column of the database you want to store your selected data.</p>
                                 </div>
                             </div>
                             <!--2nd Row-->

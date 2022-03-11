@@ -5,9 +5,10 @@ $(document).on("click", "#import-customers-modal .close-modal", function(event) 
     $("#import-customers-modal").fadeOut();
 });
 $(document).on("click", "#import-customers-modal #close", function(event) {
-    get_load_customers_table();
+    // get_load_customers_table();
     $("#import-customers-modal").fadeOut();
 });
+
 
 
 $(document).ready(function() {

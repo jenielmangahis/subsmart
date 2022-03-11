@@ -356,3 +356,10 @@ div#import-customers-modal {
     margin-left: 50px;
     margin-top: 33px;
 }
+
+#import-customers-modal .instruction {
+    padding: 2px;
+    background-color: rgb(231 231 231);
+    margin-bottom: 10px;
+    border-radius: 8px;
+}
