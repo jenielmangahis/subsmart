@@ -1319,7 +1319,6 @@ button {
 /* Cash flow css */
 
 .filter-btn-section .filter-panel {
-    width: 450px;
     position: absolute;
     background: #fff;
     padding: 10px;
@@ -1329,15 +1328,15 @@ button {
     box-shadow: 3px 6px 20px #cacaca;
     top: 47px;
     z-index: 1;
-    left: -76px;
+    left: -639px;
     text-align: left;
 }
 
 .filter-btn-section .filter-panel .achor-holder {
     position: absolute;
-    top: -13px;
+    top: -14px;
     width: 20px;
-    left: 264px;
+    left: 826px;
 }
 
 .filter-btn-section .filter-panel .btn-success {
@@ -1429,6 +1428,9 @@ span.h-title {
     grid-template-columns: repeat(2, 1fr);
     border-bottom: solid 2px;
     margin-left: 15px;
+    text-align: center;
+    padding-bottom: 12px;
+    margin-bottom: 10px;
 }
 
 span.choices {
@@ -1447,7 +1449,7 @@ span.choices {
 }
 
 .prediction {
-    margin-left: 15px;
+    margin-left: -46px;
 }
 
 .predicted-items {
@@ -1457,7 +1459,7 @@ span.choices {
 }
 
 .added-by-you {
-    margin-left: 15px;
+    margin-left: -62px;
 }
 
 .aby-items {
@@ -1465,3 +1467,21 @@ span.choices {
     grid-template-columns: repeat(2, 1fr);
     margin-left: 2rem;
 }
+
+.row.cols {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.eks {
+    position: absolute;
+    background: none;
+    border: none;
+    left: 915px;
+}
+
+
+/* div#radioB {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+} */

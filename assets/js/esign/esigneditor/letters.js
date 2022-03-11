@@ -1,6 +1,9 @@
 window.document.addEventListener("DOMContentLoaded", async () => {
   window.api = await import("./api.js");
+  window.helpers = await import("./helpers.js");
+
   const { data } = await window.api.getLetters();
+  await initCategories();
 
   const $table = $("#letters");
   const table = $table.DataTable({
@@ -48,6 +51,38 @@ window.document.addEventListener("DOMContentLoaded", async () => {
     if (!func) return;
     await actions[action](row, table, event);
   });
+
+  const $categorySelect = $("#category");
+  const $statusSelect = $("#status");
+
+  function filterTable() {
+    const status = $statusSelect.val();
+    const category = $categorySelect.val();
+
+    if (status === "all" && category === "all") {
+      table.clear();
+      table.rows.add(data).draw();
+      return;
+    }
+
+    const statusInt = status === "active" ? 1 : 0;
+    const filtered = data.filter((row) => {
+      if (category !== "all" && row.name !== category) return false;
+      if (status === "all") return true;
+      return Number.parseInt(row.is_active) === statusInt;
+    });
+
+    table.clear();
+    table.rows.add(filtered).draw();
+  }
+
+  $categorySelect.on("change", filterTable);
+  $statusSelect.on("change", filterTable);
+  $categorySelect.val("all").trigger("change");
+  $statusSelect.val("all").trigger("change");
+
+  // table has been loaded
+  document.querySelector(".wrapper").classList.remove("wrapper--loading");
 });
 
 const columns = {
@@ -89,3 +124,14 @@ const actions = {
     }
   },
 };
+
+async function initCategories() {
+  const categories = await window.api.getCategories();
+  const $select = document.getElementById("category");
+  categories.data.forEach((category) => {
+    const $option = window.helpers.htmlToElement(
+      `<option value="${category.name}">${category.name}</option>`
+    );
+    $select.appendChild($option);
+  });
+}

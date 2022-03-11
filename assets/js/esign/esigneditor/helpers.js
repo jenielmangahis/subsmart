@@ -51,3 +51,18 @@ export function isEmail(email) {
   const regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
   return regex.test(email);
 }
+
+export async function mergePdfs(
+  pdfsToMerges /* array of jsPDF doc.output("arraybuffer") */
+) {
+  const mergedPdf = await PDFDocument.create();
+  const actions = pdfsToMerges.map(async (pdfBuffer) => {
+    const pdf = await PDFDocument.load(pdfBuffer);
+    const copiedPages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
+    copiedPages.forEach((page) => {
+      mergedPdf.addPage(page);
+    });
+  });
+  await Promise.all(actions);
+  return mergedPdf.saveAsBase64({ dataUri: true });
+}

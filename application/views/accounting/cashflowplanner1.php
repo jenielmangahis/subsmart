@@ -275,7 +275,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                     <div class="filter-panel" style="display: none;">
                                         <div class="achor-holder"><img src="<?= base_url("assets/img/accounting/customers/anchor.png") ?>" alt=""></div>
 
-                                        <div class="header" style="display: flex;"><header><span class="h-title">Filter</span></header><button class="eks" style="margin-left:300px; background:none;border:none;"><i class="fa fa-times" aria-hidden="true" style="font-size: 20px;"></i></button></div>
+                                        <div class="header" style="display: flex;">
+                                            <header><span class="h-title">Filter</span></header><button class="eks"><i class="fa fa-times" aria-hidden="true" style="font-size: 20px;"></i></button>
+                                        </div>
                                         <div class="all_items">
                                             <div class="money_choice">
                                                 <div class="checkbox checkbox-sec margin-right cash-filter" style="margin-left:60px; margin-top:20px;">
@@ -285,135 +287,140 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                     </label>
                                                 </div>
                                                 <div class="checkbox checkbox-sec margin-right cash-filter" style="margin-left:60px; margin-top:20px;">
-                                                    <input class="colTable" type="checkbox" name="MONEY_OUT`" value="MONEY_OUT" id="MONEY_OUT" checked="">
+                                                    <input class="colTable" type="checkbox" name="MONEY_OUT" value="MONEY_OUT" id="MONEY_OUT" checked="">
                                                     <label for="MONEY_OUT">
                                                         <span class="choices">MONEY OUT</span>
                                                     </label>
                                                 </div>
                                             </div>
-                                            <div class="from-your-books">
-                                                <div class="checkbox checkbox-sec margin-right cash-filter" style="margin-left:60px; margin-top:20px;">
-                                                    <input class="colTable" type="checkbox" name="fyb`" value="fyb" id="fyb" checked="">
-                                                    <label for="fyb">
-                                                        <span class="items-all">FROM YOUR BOOKS</span>
-                                                    </label>
+                                            <div class="row cols">
+                                                <div class="from-your-books col-4">
+                                                    <div class="checkbox checkbox-sec margin-right cash-filter" style="margin-left:60px; margin-top:20px;">
+                                                        <input class="colTable" type="checkbox" name="fyb" value="fyb" id="fyb" checked="">
+                                                        <label for="fyb">
+                                                            <span class="items-all">FROM YOUR BOOKS</span>
+                                                        </label>
+                                                    </div>
+                                                    <div class="fyb-items">
+                                                        <div class="checkbox checkbox-sec margin-right cash-filter" style="margin-left:60px; margin-top:20px;">
+                                                            <input class="colTable" type="checkbox" name="BILLS" value="BILLS" id="BILLS" checked="">
+                                                            <label for="BILLS">
+                                                                <span>BILLS</span>
+                                                            </label>
+                                                        </div>
+                                                        <div class="checkbox checkbox-sec margin-right cash-filter" style="margin-left:60px; margin-top:20px;">
+                                                            <input class="colTable" type="checkbox" name="EXPENSES" value="EXPENSES" id="EXPENSES" checked="">
+                                                            <label for="EXPENSES">
+                                                                <span>EXPENSES</span>
+                                                            </label>
+                                                        </div>
+                                                        <div class="checkbox checkbox-sec margin-right cash-filter" style="margin-left:60px; margin-top:20px;">
+                                                            <input class="colTable" type="checkbox" name="CHECK" value="CHECK" id="CHECK" checked="">
+                                                            <label for="CHECK">
+                                                                <span>CHECK</span>
+                                                            </label>
+                                                        </div>
+                                                        <div class="checkbox checkbox-sec margin-right cash-filter" style="margin-left:60px; margin-top:20px;">
+                                                            <input class="colTable" type="checkbox" name="INVOICES" value="INVOICES" id="INVOICES" checked="">
+                                                            <label for="INVOICES">
+                                                                <span>INVOICES</span>
+                                                            </label>
+                                                        </div>
+                                                        <div class="checkbox checkbox-sec margin-right cash-filter" style="margin-left:60px; margin-top:20px;">
+                                                            <input class="colTable" type="checkbox" name="CREDIT_CARDS" value="CREDIT_CARDS" id="CREDIT_CARDS" checked="">
+                                                            <label for="CREDIT_CARDS">
+                                                                <span>CREDIT CARDS</span>
+                                                            </label>
+                                                        </div>
+                                                        <div class="checkbox checkbox-sec margin-right cash-filter" style="margin-left:60px; margin-top:20px;">
+                                                            <input class="colTable" type="checkbox" name="PAYCHECKS" value="PAYCHECKS" id="PAYCHECKS" checked="">
+                                                            <label for="PAYCHECKS">
+                                                                <span>PAYCHECKS</span>
+                                                            </label>
+                                                        </div>
+                                                        <div class="checkbox checkbox-sec margin-right cash-filter" style="margin-left:60px; margin-top:20px;">
+                                                            <input class="colTable" type="checkbox" name="ESTIMATES" value="ESTIMATES" id="ESTIMATES" checked="">
+                                                            <label for="ESTIMATES">
+                                                                <span>ESTIMATES</span>
+                                                            </label>
+                                                        </div>
+                                                        <div class="checkbox checkbox-sec margin-right cash-filter" style="margin-left:60px; margin-top:20px;">
+                                                            <input class="colTable" type="checkbox" name="SALES_RECEIPTS" value="SALES_RECEIPTS" id="SALES_RECEIPTS" checked="">
+                                                            <label for="SALES_RECEIPTS">
+                                                                <span>SALES RECEIPTS</span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                <div class="fyb-items">
+                                                <div class="prediction col-4">
                                                     <div class="checkbox checkbox-sec margin-right cash-filter" style="margin-left:60px; margin-top:20px;">
-                                                        <input class="colTable" type="checkbox" name="Bills" value="Bills" id="Bills" checked="">
-                                                        <label for="Bills">
-                                                            <span>BILLS</span>
+                                                        <input class="colTable" type="checkbox" name="PREDICTED" value="PREDICTED" id="PREDICTED" checked="">
+                                                        <label for="PREDICTED">
+                                                            <span class="items-all">PREDICTED</span>
                                                         </label>
                                                     </div>
+                                                    <div class="predicted-items">
+                                                        <div class="checkbox checkbox-sec margin-right cash-filter" style="margin-left:60px; margin-top:20px;">
+                                                            <input class="colTable" type="checkbox" name="CREDIT_CARDS1" value="CREDIT_CARDS1" id="CREDIT_CARDS1" checked="">
+                                                            <label for="CREDIT_CARDS1">
+                                                                <span>CREDIT CARDS</span>
+                                                            </label>
+                                                        </div>
+                                                        <div class="checkbox checkbox-sec margin-right cash-filter" style="margin-left:60px; margin-top:20px;">
+                                                            <input class="colTable" type="checkbox" name="EXPENSES1" value="EXPENSES1" id="EXPENSES1" checked="">
+                                                            <label for="EXPENSES1">
+                                                                <span>EXPENSES</span>
+                                                            </label>
+                                                        </div>
+                                                        <div class="checkbox checkbox-sec margin-right cash-filter" style="margin-left:60px; margin-top:20px;">
+                                                            <input class="colTable" type="checkbox" name="PAYROLL1" value="PAYROLL1" id="PAYROLL1" checked="">
+                                                            <label for="PAYROLL1">
+                                                                <span>PAYROLL</span>
+                                                            </label>
+                                                        </div>
+                                                        <div class="checkbox checkbox-sec margin-right cash-filter" style="margin-left:60px; margin-top:20px;">
+                                                            <input class="colTable" type="checkbox" name="SALES_RECEIPTS1" value="SALES_RECEIPTS1" id="SALES_RECEIPTS1" checked="">
+                                                            <label for="SALES_RECEIPTS1">
+                                                                <span>SALES RECEIPTS</span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="added-by-you col-4">
                                                     <div class="checkbox checkbox-sec margin-right cash-filter" style="margin-left:60px; margin-top:20px;">
-                                                        <input class="colTable" type="checkbox" name="EXPENSES" value="EXPENSES" id="EXPENSES" checked="">
-                                                        <label for="EXPENSES">
-                                                            <span>EXPENSES</span>
+                                                        <input class="colTable" type="checkbox" name="ADDED_BY_YOU" value="ADDED_BY_YOU" id="ADDED_BY_YOU" checked="">
+                                                        <label for="ADDED_BY_YOU">
+                                                            <span class="items-all">ADDED BY YOU</span>
                                                         </label>
                                                     </div>
-                                                    <div class="checkbox checkbox-sec margin-right cash-filter" style="margin-left:60px; margin-top:20px;">
-                                                        <input class="colTable" type="checkbox" name="CHECK" value="CHECK" id="CHECK" checked="">
-                                                        <label for="CHECK">
-                                                            <span>CHECK</span>
-                                                        </label>
-                                                    </div>
-                                                    <div class="checkbox checkbox-sec margin-right cash-filter" style="margin-left:60px; margin-top:20px;">
-                                                        <input class="colTable" type="checkbox" name="INVOICES" value="INVOICES" id="INVOICES" checked="">
-                                                        <label for="INVOICES">
-                                                            <span>INVOICES</span>
-                                                        </label>
-                                                    </div>
-                                                    <div class="checkbox checkbox-sec margin-right cash-filter" style="margin-left:60px; margin-top:20px;">
-                                                        <input class="colTable" type="checkbox" name="CREDIT_CARDS" value="CREDIT_CARDS" id="CREDIT_CARDS" checked="">
-                                                        <label for="CREDIT_CARDS">
-                                                            <span>CREDIT CARDS</span>
-                                                        </label>
-                                                    </div>
-                                                    <div class="checkbox checkbox-sec margin-right cash-filter" style="margin-left:60px; margin-top:20px;">
-                                                        <input class="colTable" type="checkbox" name="PAYCHECKS`" value="PAYCHECKS" id="PAYCHECKS" checked="">
-                                                        <label for="PAYCHECKS">
-                                                            <span>PAYCHECKS</span>
-                                                        </label>
-                                                    </div>
-                                                    <div class="checkbox checkbox-sec margin-right cash-filter" style="margin-left:60px; margin-top:20px;">
-                                                        <input class="colTable" type="checkbox" name="ESTIMATES" value="ESTIMATES" id="ESTIMATES" checked="">
-                                                        <label for="ESTIMATES">
-                                                            <span>ESTIMATES</span>
-                                                        </label>
-                                                    </div>
-                                                    <div class="checkbox checkbox-sec margin-right cash-filter" style="margin-left:60px; margin-top:20px;">
-                                                        <input class="colTable" type="checkbox" name="SALES RECEIPTS" value="SALES RECEIPTS" id="SALES RECEIPTS" checked="">
-                                                        <label for="SALES RECEIPTS">
-                                                            <span>SALES RECEIPTS</span>
-                                                        </label>
+                                                    <div class="aby-items">
+                                                        <div class="checkbox checkbox-sec margin-right cash-filter" style="margin-left:60px; margin-top:20px;">
+                                                            <input class="colTable" type="checkbox" name="REPEATING" value="1" id="temp1" checked="">
+                                                            <label for="temp1">
+                                                                <span>REPEATING</span>
+                                                            </label>
+                                                        </div>
+                                                        <div class="checkbox checkbox-sec margin-right cash-filter" style="margin-left:60px; margin-top:20px;">
+                                                            <input class="colTable" type="checkbox" name="MONEY_IN1" value="MONEY_IN1" id="MONEY_IN1" checked="">
+                                                            <label for="MONEY_IN1">
+                                                                <span>MONEY IN</span>
+                                                            </label>
+                                                        </div>
+                                                        <div class="checkbox checkbox-sec margin-right cash-filter" style="margin-left:60px; margin-top:20px;">
+                                                            <input class="colTable" type="checkbox" name="MONEY_OUT1" value="MONEY_OUT1" id="MONEY_OUT1" checked="">
+                                                            <label for="MONEY_OUT1">
+                                                                <span>MONEY OUT</span>
+                                                            </label>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="prediction">
-                                                <div class="checkbox checkbox-sec margin-right cash-filter" style="margin-left:60px; margin-top:20px;">
-                                                    <input class="colTable" type="checkbox" name="PREDICTED" value="PREDICTED" id="PREDICTED" checked="">
-                                                    <label for="PREDICTED">
-                                                        <span class="items-all">PREDICTED</span>
-                                                    </label>
-                                                </div>
-                                                <div class="predicted-items">
-                                                    <div class="checkbox checkbox-sec margin-right cash-filter" style="margin-left:60px; margin-top:20px;">
-                                                        <input class="colTable" type="checkbox" name="CREDIT_CARDS1" value="CREDIT_CARDS1" id="CREDIT_CARDS1" checked="">
-                                                        <label for="CREDIT_CARDS1">
-                                                            <span>CREDIT CARDS</span>
-                                                        </label>
-                                                    </div>
-                                                    <div class="checkbox checkbox-sec margin-right cash-filter" style="margin-left:60px; margin-top:20px;">
-                                                        <input class="colTable" type="checkbox" name="EXPENSES1" value="EXPENSES1" id="EXPENSES1" checked="">
-                                                        <label for="EXPENSES1">
-                                                            <span>EXPENSES</span>
-                                                        </label>
-                                                    </div>
-                                                    <div class="checkbox checkbox-sec margin-right cash-filter" style="margin-left:60px; margin-top:20px;">
-                                                        <input class="colTable" type="checkbox" name="PAYROLL1" value="PAYROLL1" id="PAYROLL1" checked="">
-                                                        <label for="PAYROLL1">
-                                                            <span>PAYROLL</span>
-                                                        </label>
-                                                    </div>
-                                                    <div class="checkbox checkbox-sec margin-right cash-filter" style="margin-left:60px; margin-top:20px;">
-                                                        <input class="colTable" type="checkbox" name="SALES_RECEIPTS1" value="SALES_RECEIPTS1" id="SALES_RECEIPTS1" checked="">
-                                                        <label for="SALES_RECEIPTS1">
-                                                            <span>SALES RECEIPTS</span>
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="added-by-you">
-                                                <div class="checkbox checkbox-sec margin-right cash-filter" style="margin-left:60px; margin-top:20px;">
-                                                    <input class="colTable" type="checkbox" name="ADDED_BY_YOU" value="ADDED_BY_YOU" id="ADDED_BY_YOU" checked="">
-                                                    <label for="ADDED_BY_YOU">
-                                                        <span class="items-all">ADDED BY YOU</span>
-                                                    </label>
-                                                </div>
-                                                <div class="aby-items">
-                                                    <div class="checkbox checkbox-sec margin-right cash-filter" style="margin-left:60px; margin-top:20px;">
-                                                        <input class="colTable" type="checkbox" name="temp1`" value="1" id="temp1" checked="">
-                                                        <label for="temp1">
-                                                            <span>REPEATING</span>
-                                                        </label>
-                                                    </div>
-                                                    <div class="checkbox checkbox-sec margin-right cash-filter" style="margin-left:60px; margin-top:20px;">
-                                                        <input class="colTable" type="checkbox" name="MONEY_IN1" value="MONEY_IN1" id="MONEY_IN1" checked="">
-                                                        <label for="MONEY_IN1">
-                                                            <span>MONEY IN</span>
-                                                        </label>
-                                                    </div>
-                                                    <div class="checkbox checkbox-sec margin-right cash-filter" style="margin-left:60px; margin-top:20px;">
-                                                        <input class="colTable" type="checkbox" name="MONEY_OUT1" value="MONEY_OUT1" id="MONEY_OUT1" checked="">
-                                                        <label for="MONEY_OUT1">
-                                                            <span>MONEY OUT</span>
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            </div>
+
                                         </div>
                                         <div class="pull-right">
-                                            <button class="btn btn-success apply-btn px-4" type="button">Apply</button>
+                                            <button class="btn btn-success apply-btn px-4" id="reset" type="button">Reset</button>
+                                            <button class="btn btn-success apply-btn px-4" id="Apply" type="button">Apply</button>
+
                                         </div>
                                     </div>
                                 </div>
@@ -422,11 +429,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                             </div>
                         </div>
                     </div>
-
+                    <!-- form for adding items -->
                     <div style="background-color:#f4f5f8;padding:1.5%;display:none;" id="cfp_add_item_area">
                         <div class="row">
                             <div class="col-md-3">
-                                <input type="date" id="datepicker" name="item_date" class="form-control date_plan" placeholder="Date">
+                                <input type="date" id="datepicker" class="addDate" name="item_date" class="form-control date_plan" placeholder="Date">
                             </div>
                             <div class="col-md-6 input-group" style="">
                                 <input type="text" name="item_desc" class="form-control merchant_name" style="width: 65%;" placeholder="Merchant name"> &nbsp;&nbsp;&nbsp;
@@ -436,7 +443,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 <label>Planned</label>
                             </div>
                             <div class="col-md-1" align="right">
-                                <button" style="font-size:20px;" class="close_add_item">X</button>
+                                <button" style="font-size:20px;" class="close_add_item"><i class="fa fa-times" aria-hidden="true" style="font-size: 20px;"></i></button>
                             </div>
                         </div>
 
@@ -447,7 +454,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 <div class="row">
                                     <div class="col-md-6">
                                         <input type="radio" name="plan_type" class="form-control_" id="plan_type" value="moneyin" checked> &nbsp; <label>Money in</label>
-                                        <!-- <input type="radio" name="item_type" class="form-control"> <label>Money out</label> -->
+                                       
                                     </div>
                                     <div class="col-md-6"><input type="radio" name="item_type" class="form-control_ plan_one_time">
                                         One-time &nbsp;<br> <input type="radio" name="item_type" class="form-control_ plan_repeat"> &nbsp; <label> Repeating</label>
@@ -464,6 +471,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                             </div>
                         </div>
                     </div>
+                    <!-- end off adding items -->
                     <br><br>
 
                     <div id="London" class="tabcontent all" style="display: block;">
@@ -867,13 +875,102 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
 <script>
     $(document).on("click", ".filter-btn-section button.filter-btn", function(event) {
-        setTimeout(function() { $(".filter-btn-section .filter-panel").fadeIn();},300);
-        
+        setTimeout(function() {
+            $(".filter-btn-section .filter-panel").fadeIn();
+        }, 300);
+
     });
     $(document).on("click", ".eks", function(event) {
-        setTimeout(function() { $(".filter-btn-section .filter-panel").fadeOut();},300);
-        
+        setTimeout(function() {
+            $(".filter-btn-section .filter-panel").fadeOut();
+        }, 300);
+
     });
+
+    $(document).on("click", "#Apply", function(event) {
+        setTimeout(function() {
+            $(".filter-btn-section .filter-panel").fadeOut();
+        }, 300);
+
+    });
+    $(document).on("click", "#reset", function(event) {
+        $('input[name=CREDIT_CARDS1]').prop("checked", false);
+            $('input[name=EXPENSES1]').prop("checked", false);
+            $('input[name=PAYROLL1]').prop("checked", false);
+            $('input[name=SALES_RECEIPTS1]').prop("checked", false);
+            $('input[name=BILLS]').prop("checked", false);
+            $('input[name=EXPENSES]').prop("checked", false);
+            $('input[name=CHECK]').prop("checked", false);
+            $('input[name=INVOICES]').prop("checked", false);
+            $('input[name=CREDIT_CARDS]').prop("checked", false);
+            $('input[name=PAYCHECKS]').prop("checked", false);
+            $('input[name=ESTIMATES]').prop("checked", false);
+            $('input[name=SALES_RECEIPTS]').prop("checked", false);
+            $('input[name=REPEATING]').prop("checked", false);
+            $('input[name=MONEY_IN1]').prop("checked", false);
+            $('input[name=MONEY_OUT1]').prop("checked", false);
+            $('input[name=MONEY_OUT]').prop("checked", false);
+            $('input[name=MONEY_IN]').prop("checked", false);
+            $('input[name=PREDICTED]').prop("checked",false);
+            $('input[name=fyb]').prop("checked",false);
+            $('input[name=ADDED_BY_YOU]').prop("checked",false);
+    });
+    $(document).on("click", "#PREDICTED", function(event) {
+        if ($('input[name=PREDICTED]').is(":checked")) {
+            $('input[name=CREDIT_CARDS1]').prop("checked", true);
+            $('input[name=EXPENSES1]').prop("checked", true);
+            $('input[name=PAYROLL1]').prop("checked", true);
+            $('input[name=SALES_RECEIPTS1]').prop("checked", true);
+        } else {
+            $('input[name=CREDIT_CARDS1]').prop("checked", false);
+            $('input[name=EXPENSES1]').prop("checked", false);
+            $('input[name=PAYROLL1]').prop("checked", false);
+            $('input[name=SALES_RECEIPTS1]').prop("checked", false);
+
+        }
+    });
+
+    $(document).on("click", "#fyb", function(event) {
+        if ($('input[name=fyb]').is(":checked")) {
+            $('input[name=BILLS]').prop("checked", true);
+            $('input[name=EXPENSES]').prop("checked", true);
+            $('input[name=CHECK]').prop("checked", true);
+            $('input[name=INVOICES]').prop("checked", true);
+            $('input[name=CREDIT_CARDS]').prop("checked", true);
+            $('input[name=PAYCHECKS]').prop("checked", true);
+            $('input[name=ESTIMATES]').prop("checked", true);
+            $('input[name=SALES_RECEIPTS]').prop("checked", true);
+        } else {
+            $('input[name=BILLS]').prop("checked", false);
+            $('input[name=EXPENSES]').prop("checked", false);
+            $('input[name=CHECK]').prop("checked", false);
+            $('input[name=INVOICES]').prop("checked", false);
+            $('input[name=CREDIT_CARDS]').prop("checked", false);
+            $('input[name=PAYCHECKS]').prop("checked", false);
+            $('input[name=ESTIMATES]').prop("checked", false);
+            $('input[name=SALES_RECEIPTS]').prop("checked", false);
+
+        }
+    })
+    $(document).on("click", "#ADDED_BY_YOU", function(event) {
+        if ($('input[name=ADDED_BY_YOU]').is(":checked")) {
+            $('input[name=REPEATING]').prop("checked", true);
+            $('input[name=MONEY_IN1]').prop("checked", true);
+            $('input[name=MONEY_OUT1]').prop("checked", true);
+           
+        } else {
+            $('input[name=REPEATING]').prop("checked", false);
+            $('input[name=MONEY_IN1]').prop("checked", false);
+            $('input[name=MONEY_OUT1]').prop("checked", false);
+        }
+    });
+    $(document).on("click", ".savecashflowplanned", function(event){
+        var date = $('.addDate').val();
+        var name = $('.merchant_name').val();
+        var amount = $('.plan_amount').val();
+    })
+
+
 
 
 

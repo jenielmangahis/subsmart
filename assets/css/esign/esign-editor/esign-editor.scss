@@ -212,6 +212,7 @@
 
 #sendLetterModal {
   .sendLetter__option {
+    position: relative;
     display: grid;
     grid-template-columns: auto 1fr;
     gap: 1rem;
@@ -238,8 +239,14 @@
     }
 
     &Text {
-      position: relative;
-      top: -3px;
+      &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
     }
 
     .form-check-input {
@@ -340,5 +347,13 @@
   .custom-control-input:checked ~ .custom-control-label::before {
     border-color: #007bff !important;
     background-color: #007bff !important;
+  }
+}
+
+.esignEditorLetters {
+  select.form-control {
+    width: fit-content;
+    min-width: 225px;
+    margin-right: 8px !important;
   }
 }

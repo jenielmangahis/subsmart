@@ -53,6 +53,18 @@ class Customer extends MY_Controller
 
     public function index()
     {
+
+
+        add_css(array(
+            "assets/css/accounting/accounting_includes/new_customer.css",
+        ));
+        add_footer_js(array(
+            "assets/js/accounting/sales/customer_includes/new_customer.js",
+            'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js',
+            'https://unpkg.com/dropzone@5/dist/min/dropzone.min.js'
+        ));
+
+
         $this->hasAccessModule(9);
 
         $this->load->library('wizardlib');        
@@ -796,10 +808,11 @@ class Customer extends MY_Controller
             $this->page_data['alarm_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$id,"acs_alarm");
             $this->page_data['audit_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$id,"acs_audit_import");
             //$this->page_data['minitab'] = $this->uri->segment(5);
-            $this->page_data['task_info'] = $this->taskhub_model->getAllNotCompletedTasksByCompanyId(logged('company_id'));;
+            $this->page_data['task_info'] = $this->taskhub_model->getAllNotCompletedTasksByCustomerId($id);
             //$this->page_data['task_info'] = $this->customer_ad_model->get_all_by_id("fk_prof_id",$id,"acs_tasks");
             $this->page_data['module_sort'] = $this->customer_ad_model->get_data_by_id('fk_user_id',$user_id,"ac_module_sort");
             $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
+            $this->page_data['cus_id'] = $id;
 
             if($this->uri->segment(5) == "mt3-cdl"){
                 $template_id = !empty($this->uri->segment(6)) ? $this->uri->segment(6) : '';
@@ -811,9 +824,154 @@ class Customer extends MY_Controller
             redirect(base_url('customer/'));
         }
         $this->page_data['cust_tab'] = $this->uri->segment(3);
+        $this->page_data['cust_active_tab'] = 'dashboard';
         $this->page_data['users'] = $this->users_model->getUsers();
         $this->page_data['history_activity_list'] = $this->activity->getActivity($user_id, [6,0], 1);
         $this->load->view('customer/module', $this->page_data);
+    }
+
+    public function jobs_list($cid)
+    {
+        $this->load->model('Jobs_model');
+        $this->load->model('AcsProfile_model');
+
+        $jobs = $this->Jobs_model->getAllJobsByCustomerId($cid);
+        $customer = $this->AcsProfile_model->getByProfId($cid);
+
+        $this->page_data['cust_active_tab'] = 'jobs';
+        $this->page_data['cus_id']   = $cid;
+        $this->page_data['jobs']     = $jobs;
+        $this->page_data['customer'] = $customer;
+
+        $this->load->view('customer/jobs_list', $this->page_data);
+    }
+
+    public function estimates_list($cid)
+    {
+        $this->load->model('Estimate_model');
+        $this->load->model('AcsProfile_model');
+
+        $estimates = $this->Estimate_model->getAllEstimatesByCustomerId($cid);
+        $customer  = $this->AcsProfile_model->getByProfId($cid);
+
+        $this->page_data['cust_active_tab'] = 'estimates';
+        $this->page_data['cus_id']    = $cid;
+        $this->page_data['estimates'] = $estimates;
+        $this->page_data['customer']  = $customer;
+
+        $this->load->view('customer/estimate_list', $this->page_data);
+    }
+
+    public function workorders_list($cid)
+    {
+        $this->load->model('Workorder_model');
+        $this->load->model('AcsProfile_model');
+
+        $workorders = $this->Workorder_model->getAllByCustomerId($cid);
+        $customer = $this->AcsProfile_model->getByProfId($cid);
+
+        $this->page_data['cust_active_tab'] = 'workorders';
+        $this->page_data['cus_id']    = $cid;
+        $this->page_data['workorders'] = $workorders;
+        $this->page_data['customer']   = $customer;
+
+        $this->load->view('customer/workorders_list', $this->page_data);
+    }
+
+    public function internal_notes($cid)
+    {
+        $this->load->model('CustomerInternalNotes_model');
+        $this->load->model('AcsProfile_model');
+
+        $internalNotes = $this->CustomerInternalNotes_model->getAllByProfId($cid);
+        $customer = $this->AcsProfile_model->getByProfId($cid);
+
+        $this->page_data['cust_active_tab'] = 'internal_notes';
+        $this->page_data['cus_id']    = $cid;
+        $this->page_data['internalNotes']   = $internalNotes;
+        $this->page_data['customer']        = $customer;
+
+        $this->load->view('customer/internal_notes', $this->page_data);
+    }
+
+    public function ajax_create_internal_notes()
+    {
+        $this->load->model('CustomerInternalNotes_model');
+        $this->load->model('AcsProfile_model');
+        
+        $is_success = false;
+        $msg = '';
+
+        $user_id = logged('id');
+        $post    = $this->input->post();
+
+        if( $post['interal_notes'] != '' && $post['customer_id'] > 0 ){
+            $customer = $this->AcsProfile_model->getByProfId($post['customer_id']);
+            if( $customer ){
+                $data = [
+                    'prof_id' => $customer->prof_id,
+                    'user_id' => $user_id,
+                    'note_date' => date("Y-m-d",strtotime($post['note_date'])),
+                    'notes' => $post['interal_notes'],
+                    'date_created' => date("Y-m-d H:i:s"),
+                    'date_modified' => date("Y-m-d H:i:s")
+                ];
+
+                $internal_note = $this->CustomerInternalNotes_model->create($data);
+
+                $is_success = true;
+
+            }else{
+                $msg = 'Cannot find customer';
+            }
+        }else{
+            $msg = 'Cannot save data';
+        }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($json_data);        
+    }
+
+    public function ajax_delete_internal_notes()
+    {
+        $this->load->model('CustomerInternalNotes_model');
+
+        $is_success = 0;
+        $msg    = '';
+
+        $company_id = logged('company_id');
+        $post = $this->input->post(); 
+        $internalNote = $this->CustomerInternalNotes_model->getById($post['nid']);
+        if( $internalNote ){
+            if( $internalNote->company_id == $company_id  ){
+                $this->CustomerInternalNotes_model->deleteById($internalNote->id);
+                $is_success = 1;
+                $msg = 'Record deleted';
+            }else{
+                $msg = 'Cannot find record';    
+            }
+        }else{
+            $msg = 'Cannot find record';
+        }
+
+        $json_data = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($json_data);
+    }
+
+    public function ajax_edit_internal_note()
+    {
+        $this->load->model('CustomerInternalNotes_model');
+
+        $post = $this->input->post(); 
+
+        $internalNote = $this->CustomerInternalNotes_model->getById($post['nid']);      
+
+        $this->page_data['internalNote']   = $internalNote;
+        $this->load->view('customer/ajax_edit_internal_note', $this->page_data);
     }
 
     public function add_advance($id=null)

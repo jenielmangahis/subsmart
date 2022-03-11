@@ -54,8 +54,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <td align="right" valign="top" class="normaltext1">
                                         <div style="margin-right:15px; padding-top:20px;" align="left" class="normaltext1">
                                             <!-- <a id="add_task" title="Add Task" href="javascript:void(0);"  style="color:#58bc4f;">Add task</a>&nbsp;&nbsp; -->
-                                            <a href="<?= base_url('taskhub?status=6'); ?>" class="btn btn-sm btn-primary" style="color:#ffffff;">View completed tasks</a>
-                                            <a class="btn btn-sm btn-primary" title="Add Task" href="<?= base_url('taskhub/entry'); ?>"  style="color:#ffffff;">Add task</a>
+                                            <a href="<?= base_url('taskhub?status=6&cus_id='.$cus_id); ?>" class="btn btn-sm btn-primary" style="color:#ffffff;">View completed tasks</a>
+                                            <a class="btn btn-sm btn-primary" title="Add Task" href="<?= base_url('taskhub/entry?cus_id='.$cus_id); ?>"  style="color:#ffffff;">Add task</a>
                                         </div>
                                     </td>
                                 </tr>
@@ -80,7 +80,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <a  href="#" class="js-qwynlraxz">View completed client tasks</a>
                                     </td>
                                     <td align="right" valign="top" class="normaltext1">
-                                        <a href="#"  class="js-qwynlraxz"><img src="https://app.creditrepaircloud.com/application/images/plus-small.png" style="vertical-align:middle;margin-right: 3px;"> Add task</a>
+                                        <a href="#"  class="js-qwynlraxz"><!-- <img src="https://app.creditrepaircloud.com/application/images/plus-small.png" style="vertical-align:middle;margin-right: 3px;"> --> Add task</a>
                                     </td>
                                 </tr>
                                 </tbody></table>

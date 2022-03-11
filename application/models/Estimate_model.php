@@ -638,6 +638,17 @@ class Estimate_model extends MY_Model
         $query2 = $this->db->get();
         return $query2->result();
     }
+
+    public function getAllEstimatesByCustomerId($customer_id)
+    {
+
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('view_flag', '0');
+        $this->db->where('customer_id', $customer_id);
+        $query = $this->db->get();
+        return $query->result();
+    }
 }
 
 /* End of file Estimate_model.php */

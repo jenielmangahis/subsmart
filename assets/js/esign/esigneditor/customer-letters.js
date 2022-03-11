@@ -2,6 +2,7 @@ window.document.addEventListener("DOMContentLoaded", async () => {
   window.api = await import("./api.js");
   window.helpers = await import("./helpers.js");
   window.jsPDF = window.jspdf.jsPDF;
+  window.PDFDocument = window.PDFLib.PDFDocument;
 
   const parts = window.location.pathname.split("/");
   const customerId = parts.pop();
@@ -182,7 +183,7 @@ async function initTable(customer) {
     $selected = $("[name=letterStatusFilter]:checked");
     let filtered = null;
     if ($selected.val() === "unprinted") {
-      filtered = table.data().filter((row) => {
+      filtered = data.filter((row) => {
         return row.print_status === "Pending Print";
       });
     }
@@ -204,20 +205,19 @@ function initSendModal() {
 
   const generatePDF = async () => {
     const $previews = $modal.find(".preview__item");
-    const doc = new jsPDF({
-      orientation: "portrait",
-      format: "a4",
-      unit: "px",
-      hotfixes: ["px_scaling"],
-    });
+    const docPromises = $previews.map(async (_, $preview) => {
+      const doc = new jsPDF({
+        orientation: "portrait",
+        format: "a4",
+        unit: "px",
+        hotfixes: ["px_scaling"],
+      });
 
-    const margin = { x: 48, y: 48 };
-    let { width, height } = doc.internal.pageSize;
-    width = width - margin.x * 2;
-    height = height - margin.y * 2;
+      const margin = { x: 48, y: 48 };
+      let { width, height } = doc.internal.pageSize;
+      width = width - margin.x * 2;
+      height = height - margin.y * 2;
 
-    $previews.each((_, $preview) => {
-      doc.addPage();
       doc.html(
         `<div style="width:${width}px; height:${height}px;">
             ${$preview.innerHTML}
@@ -227,10 +227,14 @@ function initSendModal() {
           autoPaging: "text",
         }
       );
+
+      await window.helpers.sleep(1);
+      return doc.output("arraybuffer");
     });
 
     await window.helpers.sleep(1);
-    return doc;
+    const docs = await Promise.all(docPromises);
+    return window.helpers.mergePdfs(docs);
   };
 
   $modalTrigger.on("click", () => {
@@ -276,7 +280,7 @@ function initSendModal() {
 
   $printBtn.on("click", () => {
     window.helpers.submitBtn($printBtn, async () => {
-      const doc = await generatePDF();
+      const docUri = await generatePDF();
       const letters = getSelectedRowData().map((row) => ({
         id: row.id,
         print_status: "Printed/Sent",
@@ -284,7 +288,16 @@ function initSendModal() {
 
       await window.api.batchEditCustomerLetters({ letters });
       await window.helpers.sleep(1);
-      doc.output("dataurlnewwindow");
+
+      const win = window.open("", "_blank");
+      win.document.write(`
+        <html>
+          <body style="margin:0!important">
+            <embed width="100%" height="100%" src="${docUri}" type="application/pdf" />
+          </body>
+        </html>
+      `);
+
       $modal.modal("hide");
     });
   });
@@ -313,8 +326,9 @@ function initSendModal() {
 
     window.helpers.submitBtn($emailBtn, async () => {
       const ids = getSelectedRowData().map((row) => row.id);
-      const doc = await generatePDF();
-      const pdf = doc.output("blob");
+      const pdfUri = await generatePDF();
+      const response = await fetch(pdfUri);
+      const pdf = await response.blob();
 
       const form = new FormData();
       form.append("ids", ids);
@@ -324,8 +338,14 @@ function initSendModal() {
       form.append("pdf", pdf);
 
       await window.helpers.sleep(1);
-      await window.api.emailCustomerLetter(form);
-      $modal.modal("hide");
+      const { is_sent } = await window.api.emailCustomerLetter(form);
+      if (is_sent !== true) {
+        const $alert = $modal.find("[data-step=email] .alert-danger");
+        $alert.removeClass("d-none");
+        $modal.get(0).scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        $modal.modal("hide");
+      }
     });
   });
 
@@ -338,6 +358,9 @@ function initSendModal() {
     $print.trigger("change");
     $print.prop("checked", true);
     $modal.get(0).dataset.stepActive = "select";
+
+    const $alert = $modal.find("[data-step=email] .alert-danger");
+    $alert.addClass("d-none");
   });
 }
 

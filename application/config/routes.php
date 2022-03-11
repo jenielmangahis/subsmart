@@ -61,6 +61,11 @@ $route['customer/add_data_sheet'] = 'customer/add_data_sheet';
 
 $route['customer/jobs_list/(:num)'] = 'Customer/jobs_list/$1';
 $route['customer/estimates_list/(:num)'] = 'Customer/estimates_list/$1';
+$route['customer/workorders_list/(:num)'] = 'Customer/workorders_list/$1';
+$route['customer/internal_notes/(:num)'] = 'Customer/internal_notes/$1';
+$route['customer/_create_internal_notes'] = 'Customer/ajax_create_internal_notes';
+$route['customer/_delete_internal_notes'] = 'Customer/ajax_delete_internal_notes';
+$route['customer/_load_edit_internal_note'] = 'Customer/ajax_edit_internal_note';
 
 $route['equipments/(:any)?/(:any)?'] = 'equipment/$1/$2';
 $route['equipments/(:any)?'] = 'equipment/$1';

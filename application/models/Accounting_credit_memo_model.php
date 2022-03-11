@@ -78,6 +78,13 @@ class Accounting_credit_memo_model extends MY_Model {
 		return $query->result();
 	}
 
+	public function update_customer_transaction_item($transacItemId, $transacItemData)
+	{
+		$this->db->where('id', $transacItemId);
+		$update = $this->db->update('accounting_customer_transaction_items', $transacItemData);
+		return $update;
+	}
+
 	public function get_customer_open_credit_memos($filters = [])
 	{
 		if(isset($filters['customer_id'])) {
