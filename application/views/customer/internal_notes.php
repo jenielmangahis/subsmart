@@ -60,7 +60,7 @@
                                                 <th>Date</th>
                                                 <th>Note</th>
                                                 <th>Added By</th>
-                                                <th class="text-center">Action</th>
+                                                <th class="text-center"></th>
                                             </tr>
                                             </thead>
                                             <tbody>
@@ -153,11 +153,11 @@
                                     </div>
                                     <form id="frm-update-internal-note" method="post">
                                         <input type="hidden" name="customer_id" value="<?= $customer->prof_id; ?>">
-                                        <input type="hidden" name="edit_nid" value="" id="edit-nid">
+                                        <input type="hidden" name="nid" value="" id="edit-nid">
                                         <div class="modal-body edit-internal-notes" style="padding:1.5rem;margin-bottom: 50px;"></div>
                                         <div class="modal-footer custom-modal-footer" style="margin-top:-2.5rem;">
                                             <button type="button" style="" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                            <button type="submit" class="btn btn-primary btn-create-internal-note" name="action" value="create_appointment">Save</button>
+                                            <button type="submit" class="btn btn-primary btn-update-internal-note" name="action" value="create_appointment">Save</button>
                                         </div>
                                     </form>
                                 </div>                                
@@ -268,9 +268,9 @@ $(document).ready(function () {
                           cancelButtonColor: '#d33',
                           confirmButtonText: 'Ok'
                       }).then((result) => {
-                          if (result.value) {
+                          //if (result.value) {
                             location.reload();
-                          }
+                          //}
                       });
                   }else{
                       Swal.fire({
@@ -281,6 +281,48 @@ $(document).ready(function () {
                   }
 
                   $(".btn-create-internal-note").html('Save');
+               }
+            });
+        }, 1000);
+    });
+
+    $("#frm-update-internal-note").submit(function(e){
+        e.preventDefault();
+
+        var url = base_url + 'customer/_update_internal_notes';
+        $(".btn-update-internal-note").html('<span class="spinner-border spinner-border-sm m-0"></span> Saving');
+        setTimeout(function () {
+            $.ajax({
+               type: "POST",
+               url: url,
+               dataType: "json",
+               data: $("#frm-update-internal-note").serialize(),
+               success: function(o)
+               {
+                  if( o.is_success ){
+                      $("#modal-edit-internal-note").modal('hide');
+                      Swal.fire({
+                          title: 'Success',
+                          text: 'Internal note was successfully updated.',
+                          icon: 'success',
+                          showCancelButton: false,
+                          confirmButtonColor: '#32243d',
+                          cancelButtonColor: '#d33',
+                          confirmButtonText: 'Ok'
+                      }).then((result) => {
+                          //if (result.value) {
+                            location.reload();
+                          //}
+                      });
+                  }else{
+                      Swal.fire({
+                        icon: 'error',
+                        title: 'Cannot save data.',
+                        text: o.msg
+                      });
+                  }
+
+                  $(".btn-update-internal-note").html('Save');
                }
             });
         }, 1000);
@@ -310,9 +352,9 @@ $(document).ready(function () {
                           cancelButtonColor: '#d33',
                           confirmButtonText: 'Ok'
                       }).then((result) => {
-                          if (result.value) {
+                          //if (result.value) {
                             location.reload();
-                          }
+                          //}
                       });
                   }else{
                       Swal.fire({

@@ -70,6 +70,14 @@ $route['customer/_update_internal_notes'] = 'Customer/ajax_update_internal_notes
 $route['customer/inventory_list/(:num)'] = 'Customer/inventory_list/$1';
 $route['customer/messages_list/(:num)'] = 'Customer/messages_list/$1';
 
+//Quick Notes
+$route['quick_notes/list'] = 'Quick_Notes/index';
+$route['quick_notes/add_new'] = 'Quick_Notes/add_new';
+$route['quick_notes/_create_quick_note'] = 'Quick_Notes/ajax_create_quick_note';
+$route['quick_notes/_delete_quick_note'] = 'Quick_Notes/ajax_delete_quick_note';
+$route['quick_notes/edit/(:num)'] = 'Quick_Notes/edit/$1';
+$route['quick_notes/_update_quick_note'] = 'Quick_Notes/ajax_update_quick_note';
+
 $route['equipments/(:any)?/(:any)?'] = 'equipment/$1/$2';
 $route['equipments/(:any)?'] = 'equipment/$1';
 $route['equipments'] = 'equipment';
