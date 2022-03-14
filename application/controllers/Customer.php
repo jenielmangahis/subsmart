@@ -881,15 +881,20 @@ class Customer extends MY_Controller
     public function messages_list($cid)
     {
         $this->load->model('CustomerMessages_model');
+        $this->load->model('QuickNote_model');
         $this->load->model('AcsProfile_model');
 
-        $messages = $this->CustomerMessages_model->getAllByProfId($cid);
-        $customer  = $this->AcsProfile_model->getByProfId($cid);
+        $company_id = logged('company_id');
+
+        $messages   = $this->CustomerMessages_model->getAllByProfId($cid);
+        $customer   = $this->AcsProfile_model->getByProfId($cid);
+        $quickNotes = $this->QuickNote_model->getAllByCompanyId($company_id);
 
         $this->page_data['cust_active_tab'] = 'messages';
-        $this->page_data['cus_id']    = $cid;
-        $this->page_data['messages']  = $messages;
-        $this->page_data['customer']  = $customer;
+        $this->page_data['cus_id']     = $cid;
+        $this->page_data['messages']   = $messages;
+        $this->page_data['quickNotes'] = $quickNotes;
+        $this->page_data['customer']   = $customer;
 
         $this->load->view('customer/messages_list', $this->page_data);
     }
@@ -948,6 +953,20 @@ class Customer extends MY_Controller
         $this->page_data['customer']        = $customer;
 
         $this->load->view('customer/internal_notes', $this->page_data);
+    }
+
+    public function credit_industry($cid)
+    {
+        $this->load->model('AcsProfile_model');
+
+        $company_id = logged('company_id');
+        $customer   = $this->AcsProfile_model->getByProfId($cid);
+
+        $this->page_data['cust_active_tab'] = 'credit_industry';
+        $this->page_data['cus_id']     = $cid;
+        $this->page_data['customer']   = $customer;
+
+        $this->load->view('customer/credit_industry', $this->page_data);
     }
 
     public function ajax_create_internal_notes()
@@ -3928,4 +3947,111 @@ class Customer extends MY_Controller
         $this->load->view('customer/ajax_load_subscription_payment_history', $this->page_data);
     }
 
+    public function ajax_use_quick_note()
+    {
+        $this->load->model('QuickNote_model');
+
+        $company_id    = logged('company_id');
+        $post = $this->input->post();
+
+        $quickNote  = $this->QuickNote_model->getById($post['qnid']);
+        $quickNotes = $this->QuickNote_model->getAllByCompanyId($company_id);
+
+        $this->page_data['quickNote'] = $quickNote;
+        $this->page_data['quickNotes'] = $quickNotes;
+        $this->load->view('customer/ajax_load_quick_note', $this->page_data);
+    }
+
+    public function ajax_send_message()
+    {
+        $this->load->model('CustomerMessages_model');
+        $this->load->model('AcsProfile_model');
+        
+        $is_success = 0;
+        $msg = '';
+
+        $user_id = logged('id');
+        $post    = $this->input->post();
+
+        if( $post['message_subject'] != '' && $post['message_body'] != '' && $post['cid'] > 0 ){
+            $customer = $this->AcsProfile_model->getByProfId($post['cid']);
+            if( $customer ){
+                $data = [
+                    'prof_id' => $customer->prof_id,
+                    'customer_email' => $customer->email,
+                    'date_sent' => date("Y-m-d"),
+                    'subject' => $post['message_subject'],
+                    'message' => $post['message_body'],
+                    'is_sent' => 0,
+                    'date_created' => date("Y-m-d H:i:s")
+                ];
+
+                $last_id = $this->CustomerMessages_model->create($data);
+
+                //Send mail
+                $body    = $post['message_body'];
+                $attachment = '';
+
+                $subject = 'nSmarTrac: ' . $post['message_subject'];
+                $to      = $customer->email;
+
+                $data_email = [
+                    'subject' => $subject, 
+                    'body' => $body,
+                    'to' => $to,
+                    'cc' => '',
+                    'bcc' => '',
+                    'attachment' => $attachment
+                ];
+
+                $isSent = sendEmail($data_email);
+                if( $isSent['is_valid'] ){
+                    $cus_data = ['is_sent' => 1];
+                    $this->CustomerMessages_model->update($last_id, $cus_data);
+
+                    $is_success = 1;
+                }ELSE{
+                    $msg = $isSent['err_msg'] ;
+                }
+            }else{
+                $msg = 'Cannot find customer';
+            }
+        }else{
+            $msg = 'Cannot save data';
+        }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($json_data);        
+    }
+
+    public function ajax_delete_customer_message()
+    {
+        $this->load->model('CustomerMessages_model');
+
+        $is_success = 0;
+        $msg    = '';
+
+        $company_id = logged('company_id');
+        $post = $this->input->post(); 
+
+        $customerMessage = $this->CustomerMessages_model->getById($post['mid']);
+        if( $customerMessage ){
+            if( $customerMessage->company_id == $company_id  ){
+                $this->CustomerMessages_model->deleteById($customerMessage->id);
+                $is_success = 1;
+                $msg = 'Record deleted';
+            }else{
+                $msg = 'Cannot find record';    
+            }
+        }else{
+            $msg = 'Cannot find record';
+        }
+
+        $json_data = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($json_data);
+    }
 }

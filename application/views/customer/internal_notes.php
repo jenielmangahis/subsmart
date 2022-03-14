@@ -240,8 +240,6 @@ $(document).ready(function () {
                }
             });
         }, 1000);
-
-
     });
 
     $("#frm-create-internal-note").submit(function(e){
