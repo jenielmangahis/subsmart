@@ -64,10 +64,11 @@ function removeIcon()
 {
 	$('.modal-right-side input#icon').val('').trigger('change');
 }
-
+//
 function occupyFields(rowData, type, action = 'edit')
 {
 	var name = action === 'duplicate' ? rowData.name+' - copy' : rowData.name;
+	console.log($('#item-modal'));
 	$(`#item-modal #name`).val(name);
 	$(`#item-modal #sku`).val(rowData.sku);
 	if(rowData.category !== null && rowData.category !== "") {
@@ -77,15 +78,15 @@ function occupyFields(rowData, type, action = 'edit')
 	$(`#item-modal #asOfDate`).val(rowData.as_of_date);
 	$(`#item-modal #reorderPoint`).val(rowData.reorder_point);
 	if(rowData.inventory_account !== null && rowData.inventory_account !== "") {
-		$(`#item-modal #invAssetAcc`).append(`<option value="${rowData.inventory_account_id}" selected>${rowData.inventory_account}</option>`);
+		$(`#item-modal #inv_asset_account`).append(`<option value="${rowData.inventory_account_id}" selected>${rowData.inventory_account}</option>`);
 	}
 	$(`#item-modal #description`).val(rowData.sales_desc);
 	$(`#item-modal #price`).val(rowData.sales_price);
 	if(rowData.income_account !== null && rowData.income_account !== "") {
-		$(`#item-modal #incomeAccount`).append(`<option value="${rowData.income_account_id}" selected>${rowData.income_account}</option>`);
+		$(`#item-modal #income_account`).append(`<option value="${rowData.income_account_id}" selected>${rowData.income_account}</option>`);
 	}
 	if(rowData.sales_tax_cat !== null && rowData.sales_tax_cat !== "") {
-		$(`#item-modal #salesTaxCat`).append(`<option value="${rowData.sales_tax_cat_id}" selected>${rowData.sales_tax_cat}</option>`);
+		$(`#item-modal #sales_tax_category`).append(`<option value="${rowData.sales_tax_cat_id}" selected>${rowData.sales_tax_cat}</option>`);
 	}
 	if(rowData.purch_desc !== null && rowData.purch_desc !== "") {
 		$(`#item-modal #purchasing`).prop('checked', true).trigger('change');
@@ -93,7 +94,7 @@ function occupyFields(rowData, type, action = 'edit')
 	$(`#item-modal #purchaseDescription`).val(rowData.purch_desc);
 	$(`#item-modal #cost`).val(rowData.cost);
 	if(rowData.expense_account !== null && rowData.expense_account !== "") {
-		$(`#item-modal #expenseAcc`).append(`<option value="${rowData.expense_account_id}" selected>${rowData.expense_account}</option>`);
+		$(`#item-modal #item_expense_account`).append(`<option value="${rowData.expense_account_id}" selected>${rowData.expense_account}</option>`);
 	}
 	if(rowData.icon !== null && rowData.icon !== "" && action === 'edit') {
 		$(`#item-modal img.image-prev`).attr('src', `${rowData.icon}`);

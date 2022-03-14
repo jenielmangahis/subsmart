@@ -307,18 +307,22 @@
                             <?php if(!isset($credit)) : ?>
                             <a href="#" class="text-white m-auto" onclick="makeRecurring('delayed_credit')">Make Recurring</a>
                             <?php else : ?>
-                            <a href="#" class="text-white" onclick="makeRecurring('delayed_credit')">Make Recurring</a>
-                            <span class="mx-3 divider"></span>
-                            <span>
-                                <div class="dropup">
-                                    <a href="javascript:void(0);" class="text-white" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
-                                    <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="#" id="copy-delayed-credit">Copy</a>
-                                        <a class="dropdown-item" href="#" id="delete-delayed-credit">Delete</a>
-                                        <a class="dropdown-item" href="#">Audit history</a>
-                                    </div>
+                            <div class="row h-100">
+                                <div class="col-md-12 d-flex align-items-center justify-content-center">
+                                    <a href="#" class="text-white" onclick="makeRecurring('delayed_credit')">Make Recurring</a>
+                                    <span class="mx-3 divider"></span>
+                                    <span>
+                                        <div class="dropup">
+                                            <a href="javascript:void(0);" class="text-white" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
+                                            <div class="dropdown-menu">
+                                                <a class="dropdown-item" href="#" id="copy-delayed-credit">Copy</a>
+                                                <a class="dropdown-item" href="#" id="delete-delayed-credit">Delete</a>
+                                                <a class="dropdown-item" href="#">Audit history</a>
+                                            </div>
+                                        </div>
+                                    </span>
                                 </div>
-                            </span>
+                            </div>
                             <?php endif; ?>
                         </div>
                         <div class="col-md-4">

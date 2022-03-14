@@ -35,6 +35,11 @@ var dropdownEl = null;
 var modalAttachments = null;
 var receivedAmountIsChanged = false;
 
+const formatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD'
+});
+
 const dropdownFields = [
     'customer',
     'employee',
@@ -1723,7 +1728,7 @@ $(function() {
         var total = parseFloat(parseFloat(amount) + parseFloat(taxAmount) - parseFloat(discount)).toFixed(2);
         total = '$'+total;
 
-        $(this).parent().parent().find('td span.row-total').html(total.replace('$-', '-$'));
+        $(this).parent().parent().find('td span.row-total').html(formatter.format(parseFloat(total)));
         computeTransactionTotal();
     });
 
@@ -2459,8 +2464,6 @@ $(function() {
                                 var qtyField = `<input type="number" name="quantity[]" class="form-control text-right" required value="0">`;
                             }
 
-                            var itemTotal = '$'+parseFloat(item.total).toFixed(2);
-
                             $('#modal-container .modal table#item-details-table tbody').append(`
                                 <tr>
                                     <td>${item.details.title}<input type="hidden" name="item[]" value="${item.item_id}"></td>
@@ -2470,7 +2473,7 @@ $(function() {
                                     <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${parseFloat(item.rate).toFixed(2)}"></td>
                                     <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${parseFloat(item.discount).toFixed(2)}"></td>
                                     <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${parseFloat(item.tax).toFixed(2)}"></td>
-                                    <td><span class="row-total">${itemTotal.replace('$-', '-$')}</span></td>
+                                    <td><span class="row-total">${formatter.format(parseFloat(itemTotal))}</span></td>
                                     ${link}
                                     <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
                                 </tr>
@@ -2967,9 +2970,7 @@ $(function() {
             }
         });
 
-        billPayment = '$'+parseFloat(billPayment).toFixed(2);
-
-        $('#billPaymentModal span.amount-to-apply').html(billPayment.replace('$-', '-$'));
+        $('#billPaymentModal span.amount-to-apply').html(formatter.format(parseFloat(billPayment)));
 
         var creditPayment = 0.00;
         $('#billPaymentModal #vendor-credits-table tbody tr').each(function() {
@@ -2978,18 +2979,15 @@ $(function() {
             }
         });
 
-        creditPayment = '$'+parseFloat(creditPayment).toFixed(2);
+        $('#billPaymentModal span.amount-to-credit').html(formatter.format(parseFloat(creditPayment)));
 
-        $('#billPaymentModal span.amount-to-credit').html(creditPayment.replace('$-', '-$'));
-
-        billPayment = parseFloat(billPayment.replace('$', ''));
-        creditPayment = parseFloat(creditPayment.replace('$', ''));
+        billPayment = parseFloat(billPayment.replace('$', '').replaceAll(',', ''));
+        creditPayment = parseFloat(creditPayment.replace('$', '').replaceAll(',', ''));
 
         var amountPaid = parseFloat(billPayment - creditPayment).toFixed(2);
 
         $('#billPaymentModal #bill-payment-amount').val(amountPaid);
-        amountPaid = '$'+amountPaid;
-        $('#billPaymentModal .payment-total-amount').html(amountPaid.replace('$-', '-$'));
+        $('#billPaymentModal .payment-total-amount').html(formatter.format(parseFloat(amountPaid)));
     });
 
     $(document).on('click', '#billPaymentModal #clear-payment', function(e) {
@@ -3029,14 +3027,14 @@ $(function() {
         var notChecked = $('#printChecksModal #checks-table tbody tr input[type="checkbox"]:not(:checked)').length;
         $('#printChecksModal #checks-table #select-all-checks').prop('checked', notChecked === 0);
 
-        var selectedTotal = parseFloat($('#printChecksModal #selected-checks-total').html());
+        var selectedTotal = parseFloat($('#printChecksModal #selected-checks-total').html().replaceAll(',', ''));
         var row = $(this).parent().parent().parent();
         var rowData = $('#printChecksModal #checks-table').DataTable().row(row).data();
 
         if ($(this).prop('checked')) {
-            selectedTotal += parseFloat(rowData.amount.replace('$', ''));
+            selectedTotal += parseFloat(rowData.amount.replace('$', '').replaceAll(',', ''));
         } else {
-            selectedTotal -= parseFloat(rowData.amount.replace('$', ''));
+            selectedTotal -= parseFloat(rowData.amount.replace('$', '').replaceAll(',', ''));
         }
 
         $('#printChecksModal #selected-checks-total').html(parseFloat(selectedTotal).toFixed(2));
@@ -5294,11 +5292,10 @@ $(function() {
         var total = parseFloat(invoiceTotal) - parseFloat(creditAmount);
 
         var amountToCredit = receivedAmount - parseFloat(total);
-        amountToCredit = '$'+parseFloat(amountToCredit).toFixed(2);
-        $('#receivePaymentModal span.amount-to-credit').html(amountToCredit.replace('$-', '-$'));
+        $('#receivePaymentModal span.amount-to-credit').html(formatter.format(parseFloat(amountToCredit)));
 
-        if(parseFloat(amountToCredit.replace('$', '')) > 0) {
-            $('#receivePaymentModal #credit-message').html(`This transaction will create an additional credit in the amount of ${amountToCredit.replace('$-', '-$')}`);
+        if(parseFloat(amountToCredit.replace('$', '').replaceAll(',', '')) > 0) {
+            $('#receivePaymentModal #credit-message').html(`This transaction will create an additional credit in the amount of ${formatter.format(parseFloat(amountToCredit))}`);
             $('#receivePaymentModal #credit-message').parent().parent().removeClass('d-none');
         } else {
             $('#receivePaymentModal #credit-message').html('');
@@ -5306,11 +5303,9 @@ $(function() {
         }
 
         var amountToApply = parseFloat(receivedAmount) + parseFloat(creditAmount);
-        amountToApply = '$'+parseFloat(amountToApply).toFixed(2);
-        $('#receivePaymentModal span.amount-to-apply').html(amountToApply.replace('$-', '-$'));
+        $('#receivePaymentModal span.amount-to-apply').html(formatter.format(parseFloat(amountToApply)));
 
-        receivedAmount = '$'+parseFloat(receivedAmount).toFixed(2);
-        $('#receivePaymentModal .transaction-total-amount').html(receivedAmount.replace('$-', '-$'));
+        $('#receivePaymentModal .transaction-total-amount').html(formatter.format(parseFloat(receivedAmount)));
     });
 
     $(document).on('change', '#receivePaymentModal #credit-memo-table tbody input[name="credit_payment[]"]', function() {
@@ -5375,21 +5370,17 @@ $(function() {
 
         if(receivedAmountIsChanged === false) {
             $('#receivePaymentModal #received-amount').val(parseFloat(total).toFixed(2));
-            total = '$'+parseFloat(total).toFixed(2);
-            $('#receivePaymentModal span.transaction-total-amount').html(total.replace('$-', '-$'));
-            invoicePayment = '$'+parseFloat(invoicePayment).toFixed(2);
-            $('#receivePaymentModal span.amount-to-apply').html(invoicePayment.replace('$-', '-$'));
+            $('#receivePaymentModal span.transaction-total-amount').html(formatter.format(parseFloat(total)));
+            $('#receivePaymentModal span.amount-to-apply').html(formatter.format(parseFloat(invoicePayment)));
         } else {
             var receivedAmount = parseFloat($('#receivePaymentModal #received-amount').val());
             var amountToApply = parseFloat(receivedAmount) + parseFloat(creditAmount);
-            amountToApply = '$'+parseFloat(amountToApply).toFixed(2);
-            $('#receivePaymentModal span.amount-to-apply').html(amountToApply.replace('$-', '-$'));
+            $('#receivePaymentModal span.amount-to-apply').html(formatter.format(parseFloat(amountToApply)));
             var amountToCredit = parseFloat(receivedAmount) - parseFloat(total);
-            amountToCredit = '$'+parseFloat(amountToCredit).toFixed(2);
-            $('#receivePaymentModal span.amount-to-credit').html(amountToCredit.replace('$-', '-$'));
+            $('#receivePaymentModal span.amount-to-credit').html(formatter.format(parseFloat(amountToCredit)));
 
-            if(parseFloat(amountToCredit.replace('$', '')) > 0) {
-                $('#receivePaymentModal #credit-message').html(`This transaction will create an additional credit in the amount of ${amountToCredit.replace('$-', '-$')}`);
+            if(parseFloat(amountToCredit.replace('$', '').replaceAll(',', '')) > 0) {
+                $('#receivePaymentModal #credit-message').html(`This transaction will create an additional credit in the amount of ${formatter.format(parseFloat(amountToCredit))}`);
                 $('#receivePaymentModal #credit-message').parent().parent().removeClass('d-none');
             } else {
                 $('#receivePaymentModal #credit-message').html('');
@@ -5469,21 +5460,17 @@ $(function() {
 
         if(receivedAmountIsChanged === false) {
             $('#receivePaymentModal #received-amount').val(parseFloat(total).toFixed(2));
-            total = '$'+parseFloat(total).toFixed(2);
-            $('#receivePaymentModal span.transaction-total-amount').html(total.replace('$-', '-$'));
-            invoicePayment = '$'+parseFloat(invoicePayment).toFixed(2);
-            $('#receivePaymentModal span.amount-to-apply').html(invoicePayment.replace('$-', '-$'));
+            $('#receivePaymentModal span.transaction-total-amount').html(formatter.format(parseFloat(total)));
+            $('#receivePaymentModal span.amount-to-apply').html(formatter.format(parseFloat(invoicePayment)));
         } else {
             var receivedAmount = parseFloat($('#receivePaymentModal #received-amount').val());
             var amountToApply = parseFloat(receivedAmount) + parseFloat(creditAmount);
-            amountToApply = '$'+parseFloat(amountToApply).toFixed(2);
-            $('#receivePaymentModal span.amount-to-apply').html(amountToApply.replace('$-', '-$'));
+            $('#receivePaymentModal span.amount-to-apply').html(formatter.format(parseFloat(amountToApply)));
             var amountToCredit = parseFloat(receivedAmount) - parseFloat(total);
-            amountToCredit = '$'+parseFloat(amountToCredit).toFixed(2);
-            $('#receivePaymentModal span.amount-to-credit').html(amountToCredit.replace('$-', '-$'));
+            $('#receivePaymentModal span.amount-to-credit').html(formatter.format(parseFloat(amountToCredit)));
 
-            if(parseFloat(amountToCredit.replace('$', '')) > 0) {
-                $('#receivePaymentModal #credit-message').html(`This transaction will create an additional credit in the amount of ${amountToCredit.replace('$-', '-$')}`);
+            if(parseFloat(amountToCredit.replace('$', '').replaceAll(',', '')) > 0) {
+                $('#receivePaymentModal #credit-message').html(`This transaction will create an additional credit in the amount of ${formatter.format(parseFloat(amountToCredit))}`);
                 $('#receivePaymentModal #credit-message').parent().parent().removeClass('d-none');
             } else {
                 $('#receivePaymentModal #credit-message').html('');
@@ -5613,7 +5600,7 @@ $(function() {
             var locations = result.locations;
             var locs = '';
 
-            if(item.type === 'product' || item.type === 'inventory') {
+            if(item.type.toLowerCase() === 'product' || item.type.toLowerCase() === 'inventory') {
                 locs += '<select name="location[]" class="form-control" required>';
                 for (var i in locations) {
                     locs += `<option value="${locations[i].id}">${locations[i].name}</option>`;
@@ -5654,9 +5641,8 @@ $(function() {
         var amount = parseFloat(amount) * parseInt(quantity);
         var taxAmount = parseFloat(tax) * amount / 100;
         var total = parseFloat(amount) + parseFloat(taxAmount) - parseFloat(discount);
-        var rowTotal = '$'+parseFloat(total).toFixed(2);
 
-        $(this).parent().parent().find('.row-total').html(rowTotal.replace('$-', '-$'));
+        $(this).parent().parent().find('.row-total').html(formatter.format(parseFloat(total)));
 
         var subtotal = 0.00;
         var taxes = 0.00;
@@ -5675,33 +5661,27 @@ $(function() {
             discounts = parseFloat(discounts) + parseFloat(itemDisc);
         });
 
-        subtotal = '$'+parseFloat(subtotal).toFixed(2);
-        taxes = '$'+parseFloat(taxes).toFixed(2);
-        discounts = '$'+parseFloat(discounts).toFixed(2);
-
-        $('#modal-container #modal-form .modal span.transaction-subtotal').html(subtotal.replace('$-', '-$'));
-        $('#modal-container #modal-form .modal span.transaction-taxes').html(taxes.replace('$-', '-$'));
-        $('#modal-container #modal-form .modal span.transaction-discounts').html(discounts.replace('$-', '-$'));
+        $('#modal-container #modal-form .modal span.transaction-subtotal').html(formatter.format(parseFloat(subtotal)));
+        $('#modal-container #modal-form .modal span.transaction-taxes').html(formatter.format(parseFloat(taxes)));
+        $('#modal-container #modal-form .modal span.transaction-discounts').html(formatter.format(parseFloat(discounts)));
         $('#modal-container #modal-form .modal #adjustment_input_cm').trigger('change');
     });
 
     $(document).on('change', '#modal-container #modal-form .modal #adjustment_input_cm', function() {
         var value = $(this).val();
-        var subtotal = $('#modal-container #modal-form .modal span.transaction-subtotal').html().replace('$', '');
-        var taxes = $('#modal-container #modal-form .modal span.transaction-taxes').html().replace('$', '');
-        var discounts = $('#modal-container #modal-form .modal span.transaction-discounts').html().replace('$', '');
+        var subtotal = $('#modal-container #modal-form .modal span.transaction-subtotal').html().replace('$', '').replaceAll(',', '');
+        var taxes = $('#modal-container #modal-form .modal span.transaction-taxes').html().replace('$', '').replaceAll(',', '');
+        var discounts = $('#modal-container #modal-form .modal span.transaction-discounts').html().replace('$', '').replaceAll(',', '');
 
         var grandTotal = parseFloat(subtotal) + parseFloat(taxes);
         grandTotal -= parseFloat(discounts);
         grandTotal -= parseFloat(value);
         if($('#modal-container #modal-form .modal').attr('id') === 'creditMemoModal' && $('#creditMemoModal #total-payment-amount').length > 0) {
-            grandTotal -= parseFloat($('#creditMemoModal #total-payment-amount').html().replace('$', ''));
+            grandTotal -= parseFloat($('#creditMemoModal #total-payment-amount').html().replace('$', '').replaceAll(',', ''));
         }
-        grandTotal = '$'+parseFloat(grandTotal).toFixed(2);
-        value = '$'+value;
 
-        $('#modal-container #modal-form .modal span.transaction-adjustment').html(value.replace('$-', '-$'));
-        $('#modal-container #modal-form .modal span.transaction-grand-total').html(grandTotal.replace('$-', '-$'));
+        $('#modal-container #modal-form .modal span.transaction-adjustment').html(formatter.format(parseFloat(value)));
+        $('#modal-container #modal-form .modal span.transaction-grand-total').html(formatter.format(parseFloat(grandTotal)));
     });
 
     $(document).on('click', '#modal-container #modal-form .modal #item-table .deleteRow', function() {
@@ -5724,13 +5704,9 @@ $(function() {
             discounts = parseFloat(discounts) + parseFloat(itemDisc);
         });
 
-        subtotal = '$'+parseFloat(subtotal).toFixed(2);
-        taxes = '$'+parseFloat(taxes).toFixed(2);
-        discounts = '$'+parseFloat(discounts).toFixed(2);
-
-        $('#modal-container #modal-form .modal span.transaction-subtotal').html(subtotal.replace('$-', '-$'));
-        $('#modal-container #modal-form .modal span.transaction-taxes').html(taxes.replace('$-', '-$'));
-        $('#modal-container #modal-form .modal span.transaction-discounts').html(discounts.replace('$-', '-$'));
+        $('#modal-container #modal-form .modal span.transaction-subtotal').html(formatter.format(parseFloat(subtotal)));
+        $('#modal-container #modal-form .modal span.transaction-taxes').html(formatter.format(parseFloat(taxes)));
+        $('#modal-container #modal-form .modal span.transaction-discounts').html(formatter.format(parseFloat(discounts)));
         $('#modal-container #modal-form .modal #adjustment_input_cm').trigger('change');
     });
 
@@ -5768,8 +5744,12 @@ $(function() {
             $.get('/accounting/get-account-balance/' + val, function(res) {
                 var result = JSON.parse(res);
 
-                rowEl.append(`<div class="col-md-2"><div class="form-group"><label>Balance</label><h4>${result.balance}</h4></div></div>`);
-                rowEl.append(`<div class="col-md-2"><div class="form-group"><label for="check-no">Check no.</label><input type="text" class="form-control" name="check_no" id="check-no" value="To print" disabled><div class="form-check"><div class="checkbox checkbox-sec"><input type="checkbox" name="print_later" value="1" class="form-check-input" id="print-later" checked><label class="form-check-label" for="print-later">Print later</label></div></div></div></div>`);
+                if(rowEl.find('#check-no').length > 0) {
+                    rowEl.children('div.col-md-2:nth-child(3)').find('h4').html(result.balance);
+                } else {
+                    rowEl.append(`<div class="col-md-2"><div class="form-group"><label>Balance</label><h4>${result.balance}</h4></div></div>`);
+                    rowEl.append(`<div class="col-md-2"><div class="form-group"><label for="check-no">Check no.</label><input type="text" class="form-control" name="check_no" id="check-no" value="To print" disabled><div class="form-check"><div class="checkbox checkbox-sec"><input type="checkbox" name="print_later" value="1" class="form-check-input" id="print-later" checked><label class="form-check-label" for="print-later">Print later</label></div></div></div></div>`);
+                }
             });
         }
     });
@@ -5897,10 +5877,10 @@ const payrollTotal = () => {
     $('div#payrollModal table#payroll-table tfoot tr td:nth-child(4)').html(hours);
     $('div#payrollModal table#payroll-table tfoot tr td:nth-child(7)').html(hours);
 
-    $('table#payroll-table tfoot tr td:nth-child(5)').html('$' + commission);
+    $('table#payroll-table tfoot tr td:nth-child(5)').html(formatter.format(parseFloat(commission)));
 
-    $('div#payrollModal h2.total-pay').html('$' + totalPay);
-    $('table#payroll-table tfoot tr td:last-child() p').html('$' + totalPay);
+    $('div#payrollModal h2.total-pay').html(formatter.format(parseFloat(totalPay)));
+    $('table#payroll-table tfoot tr td:last-child() p').html(formatter.format(parseFloat(totalPay)));
 }
 
 const tableWeekDate = (el) => {
@@ -5919,8 +5899,7 @@ const timeActivitySummary = (el) => {
     var date = $('div#singleTimeModal input#date').val();
     var time = $('div#singleTimeModal input#time').val();
     var billable = $('div#singleTimeModal input#billable').prop('checked');
-    var hourlyRate = '$'+$('div#singleTimeModal input#hourlyRate').val();
-    hourlyRate = hourlyRate.replace('$-', '-$');
+    hourlyRate = formatter.format(parseFloat(hourlyRate));
     var taxable = $('div#singleTimeModal input#taxable').prop('checked');
     var timeSplit = time !== "" ? time.split(':') : "";
     var hour = 0;
@@ -5971,17 +5950,16 @@ const timeActivitySummary = (el) => {
 
         if(billable) {
             if (hourlyRate !== undefined && hourlyRate !== '$0.00' && hourlyRate !== '$' && totalHours !== undefined) {
-                summary += ' at '+hourlyRate+' per hour ='
+                summary += ' at '+formatter.format(parseFloat(hourlyRate))+' per hour ='
 
                 var totalHrsSplit = totalHours.split(':');
-                var rate = parseFloat(hourlyRate.replace('$', ''));
+                var rate = parseFloat(hourlyRate.replace('$', '').replaceAll(',', ''));
 
                 var minutesDecimal = parseInt(totalHrsSplit[1]) / 60;
                 totalHours = parseFloat(totalHrsSplit[0]) + minutesDecimal;
 
                 var totalBill = totalHours * rate;
-                totalBill = '$'+parseFloat(totalBill).toFixed(2);
-                totalBill = totalBill.replace('$-', '-$');
+                totalBill = formatter.format(parseFloat(totalBill));
                 summary += ' '+totalBill;
                 summary += taxable ? ' plus tax' : '';
             }
@@ -6018,9 +5996,9 @@ const computeTotalBill = () => {
                 if ($(this).find('.total-cell').find('p').length < 4) {
                     $(this).find('.total-cell').find('p:nth-child(2)').removeClass('m-0');
                     $(this).find('.total-cell').append(`<p class="text-right m-0">Billable</p>`);
-                    $(this).find('.total-cell').append(`<p class="text-right m-0">$${parseFloat(totalBill).toFixed(2)}</p>`);
+                    $(this).find('.total-cell').append(`<p class="text-right m-0">${formatter.format(parseFloat(totalBill))}</p>`);
                 } else {
-                    $(this).find('.total-cell').find('p:last-child()').html(`$${parseFloat(totalBill).toFixed(2)}`);
+                    $(this).find('.total-cell').find('p:last-child()').html(`${formatter.format(parseFloat(totalBill))}`);
                 }
             }
         }
@@ -6311,12 +6289,10 @@ const computeBankDepositeTotal = () => {
     }
 
     var totalDepositAmount = (parseFloat(otherFundsTotal) - parseFloat(cashBackAmount)).toFixed(2);
-    totalDepositAmount = `$${totalDepositAmount}`;
-    otherFundsTotal = `$${parseFloat(otherFundsTotal).toFixed(2)}`;
 
-    $('div#depositModal span.other-funds-total').html(otherFundsTotal.replace('$-', '-$'));
-    $('div#depositModal h2.total-deposit-amount').html(totalDepositAmount.replace('$-', '-$'));
-    $('div#depositModal span.total-cash-back').html(totalDepositAmount.replace('$-', '-$'));
+    $('div#depositModal span.other-funds-total').html(formatter.format(parseFloat(otherFundsTotal)));
+    $('div#depositModal h2.total-deposit-amount').html(formatter.format(parseFloat(totalDepositAmount)));
+    $('div#depositModal span.total-cash-back').html(formatter.format(parseFloat(totalDepositAmount)));
 }
 
 const addTableLines = (e) => {
@@ -7327,13 +7303,12 @@ const computeTransactionTotal = () => {
     });
 
     $('#modal-container table#item-details-table tbody tr td span.row-total').each(function() {
-        var value = $(this).html() === "" ? 0.00 : parseFloat($(this).html().replace('$', '')).toFixed(2);
+        var value = $(this).html() === "" ? 0.00 : parseFloat($(this).html().replace('$', '').replaceAll(',', '')).toFixed(2);
 
         total = parseFloat(parseFloat(total) + parseFloat(value)).toFixed(2);
     });
 
-    total = '$'+parseFloat(total).toFixed(2);
-    $('#modal-container .transaction-total-amount').html(total.replace('$-', '-$'));
+    $('#modal-container .transaction-total-amount').html(formatter.format(parseFloat(total)));
 }
 
 const loadBills = () => {
@@ -7461,7 +7436,7 @@ const computeBillsPaymentTotal = () => {
     });
 
     total = '$'+parseFloat(total).toFixed(2);
-    $('#payBillsModal span.transaction-total-amount').html(total.replace('$-', '-$'));
+    $('#payBillsModal span.transaction-total-amount').html(formatter.format(parseFloat(total)));
 }
 
 const updateTransaction = (event, el) => {

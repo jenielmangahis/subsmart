@@ -430,7 +430,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                         </div>
                     </div>
                     <!-- form for adding items -->
-                    <div style="background-color:#f4f5f8;padding:1.5%;display:none;" id="cfp_add_item_area">
+                    <div style="background-color:#f4f5f8;padding:1.5%;display:none;height: rem;" id="cfp_add_item_area">
                         <div class="row">
                             <div class="col-md-3">
                                 <input type="date" id="datepicker" class="addDate" name="item_date" class="form-control date_plan" placeholder="Date">
@@ -450,7 +450,35 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                         <hr>
 
                         <div class="row">
-                            <div class="col-md-3">
+
+                            <div class="radioB">
+                                <div class="row1">
+                                    <input type="radio" name="plan_type" id="plan_type" value="money_in">
+                                    <label for="money_in">
+                                        <span>MONEY IN</span>
+                                    </label>
+                                </div>
+                                <div class="row2">
+                                    <input type="radio" name="plan_type" id="plan_type" value="money_out">
+                                    <label for="money_in">
+                                        <span>MONEY OUT</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="radioS">
+                                <div class="F_row">
+                                    <span>ONE-TIME</span>
+                                    <div>
+                                        <input type="checkbox" name="toggle_switch" id="toggle_switch">
+                                        <label for="toggle_switch" id="labelcheck"></label>
+                                    </div>
+                                    <span>REPEATING</span>
+                                </div>
+                            </div>
+
+
+
+                            <!-- <div class="col-md-3">
                                 <div class="row">
                                     <div class="col-md-6">
                                         <input type="radio" name="plan_type" class="form-control_" id="plan_type" value="moneyin" checked> &nbsp; <label>Money in</label>
@@ -468,8 +496,176 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                             </div>
                             <div class="col-md-9" align="right">
                                 <a href="#" class="btn btn-success savecashflowplanned"> Save </a>
-                            </div>
+                            </div> -->
                         </div>
+                        <div class="row">
+                            <div class="S_row" id="container_hide" style="display: none;">
+                                <div class="F_col">
+                                    <div class="r1ow">
+                                        <select name="sched" id="sched">
+                                            <option value="daily" selected>DAILY</option>
+                                            <option value="weekly">WEEKLY</option>
+                                            <option value="monthly">MONTHLY</option>
+                                        </select>
+                                    </div>
+                                    <!-- <h6>ON</h6>
+                                        <div class="r2ow">
+                                            
+                                            <span>Weekdays</span>
+                                            <div>
+                                                <input type="checkbox" name="toggle_switch1" id="toggle_switch1">
+                                                <label for="toggle_switch1" id="labelcheck1"></label>
+                                            </div>
+                                            <span>Everyday</span>
+                                        </div> -->
+
+                                </div>
+
+                                <div class="S_col">
+                                    <div class="item1">
+                                        <p class="finding">Repeats every weekday</p>
+                                    </div>
+                                    <!-- <h6>END</h6>
+                                        <div class="item2">
+                                            <div class="radio1">
+                                                <input type="radio" name="does_not_end" value="does_not_end" id="dne"><span id="dneS">Does not end</span>
+                                            </div>
+                                            <div class="radio1">
+                                                <input type="radio" name="date" value="date" id="date"><input type="date" name="end_date" id="end_date">
+                                            </div>
+                                            <div class="radio1">
+                                                <input type="radio" name="not" value="not"><span id="not1">after</span><input type="text" name="number_of_times" id="not"><span>occurence(s)</span>
+                                            </div>
+                                        </div> -->
+                                </div>
+                            </div>
+
+                            <div class="daily_hide" style="display: none;">
+                                <div class="daily1">
+                                    <h6>ON</h6>
+                                    <div class="r2ow">
+
+                                        <span>Weekdays</span>
+                                        <div>
+                                            <input type="checkbox" name="toggle_switch1" id="toggle_switch1">
+                                            <label for="toggle_switch1" id="labelcheck1"></label>
+                                        </div>
+                                        <span>Everyday</span>
+                                    </div>
+                                </div>
+                                <div class="daily2">
+                                    <h6>END</h6>
+                                    <div class="item2">
+                                        <div class="radio1">
+                                            <input type="radio" name="does_not_end" value="does_not_end" id="dne"><span id="dneS">Does not end</span>
+                                        </div>
+                                        <div class="radio1">
+                                            <input type="radio" name="date" value="date" id="date"><input type="date" name="end_date" id="end_date">
+                                        </div>
+                                        <div class="radio1">
+                                            <input type="radio" name="not" value="not"><span id="not1">after</span><input type="text" name="number_of_times" id="not"><span>occurence(s)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="weekly_hide" style="display: none;">
+                                <div class="weekly1">
+                                    <h6>Every</h6>
+                                    <input type="text" name="num_weeks" class="num_weeks"><span>week(s)</span>
+                                </div>
+                                <div class="weekly2">
+                                    <h6>ON</h6>
+                                    <div class="weekly2_items">
+                                        <button class="days color" type="button" id="sun">
+                                            S
+                                        </button>
+                                        <button class="days" type="button" id="mon">
+                                            M
+                                        </button>
+                                        <button class="days" type="button" id="tue">
+                                            T
+                                        </button>
+                                        <button class="days" type="button" id="wed">
+                                            W
+                                        </button>
+                                        <button class="days" type="button" id="thu">
+                                            T
+                                        </button>
+                                        <button class="days" type="button" id="fri">
+                                            F
+                                        </button>
+                                        <button class="days" type="button" id="sat">
+                                            S
+                                        </button>
+
+                                    </div>
+                                </div>
+                                <div class="weekly3">
+                                    <h6>END</h6>
+                                    <div class="item2">
+                                        <div class="radio1">
+                                            <input type="radio" name="does_not_end" value="does_not_end" id="dne"><span id="dneS">Does not end</span>
+                                        </div>
+                                        <div class="radio1">
+                                            <input type="radio" name="date" value="date" id="date"><input type="date" name="end_date" id="end_date">
+                                        </div>
+                                        <div class="radio1">
+                                            <input type="radio" name="not" value="not"><span id="not1">after</span><input type="text" name="number_of_times" id="not"><span>occurence(s)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="monthly_hide" style="display: none;">
+                                <div class="monthly1">
+                                    <h6>Every</h6>
+                                    <input type="text" name="num_months" class="num_months"><span>month(s)</span>
+                                </div>
+                                <div class="monthly2">
+                                    <h6>ON</h6>
+                                    <div class="monthly_items">
+                                        <div class="m2_item1">
+                                            <input type="radio" name="day_n" id="day_n"><span>day</span><input type="text" name="day_num" id="day_num">
+                                        </div>
+                                        <div class="m2_item2">
+                                            <input type="radio" name="day_sched"><span id="the">the</span>
+                                            <select name="day_place" id="day_place">
+                                                <option value="first">FIRST</option>
+                                                <option value="Second">SECOND</option>
+                                                <option value="third">THIRD</option>
+                                                <option value="fourth">FOURTH</option>
+                                                <option value="fifth">FRIDAY</option>
+                                            </select>
+                                            <select name="day_want" id="day_want">
+                                                <option value="SUNDAY">SUNDAY</option>
+                                                <option value="MONDAY">MONDAY</option>
+                                                <option value="TUESDAY">TUESDAY</option>
+                                                <option value="WEDNESDAY">WEDNESDAY</option>
+                                                <option value="THURSDAY">THURSDAY</option>
+                                                <option value="FRIDAY">FRIDAY</option>
+                                                <option value="SATURDAY">SATURDAY</option>
+                                            </select>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="monthly3">
+                                    <h6>END</h6>
+                                    <div class="item2">
+                                        <div class="radio1">
+                                            <input type="radio" name="does_not_end" value="does_not_end" id="dne"><span id="dneS">Does not end</span>
+                                        </div>
+                                        <div class="radio1">
+                                            <input type="radio" name="date" value="date" id="date"><input type="date" name="end_date" id="end_date">
+                                        </div>
+                                        <div class="radio1">
+                                            <input type="radio" name="not" value="not"><span id="not1">after</span><input type="text" name="number_of_times" id="not"><span>occurence(s)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
                     </div>
                     <!-- end off adding items -->
                     <br><br>
@@ -895,25 +1091,25 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     });
     $(document).on("click", "#reset", function(event) {
         $('input[name=CREDIT_CARDS1]').prop("checked", false);
-            $('input[name=EXPENSES1]').prop("checked", false);
-            $('input[name=PAYROLL1]').prop("checked", false);
-            $('input[name=SALES_RECEIPTS1]').prop("checked", false);
-            $('input[name=BILLS]').prop("checked", false);
-            $('input[name=EXPENSES]').prop("checked", false);
-            $('input[name=CHECK]').prop("checked", false);
-            $('input[name=INVOICES]').prop("checked", false);
-            $('input[name=CREDIT_CARDS]').prop("checked", false);
-            $('input[name=PAYCHECKS]').prop("checked", false);
-            $('input[name=ESTIMATES]').prop("checked", false);
-            $('input[name=SALES_RECEIPTS]').prop("checked", false);
-            $('input[name=REPEATING]').prop("checked", false);
-            $('input[name=MONEY_IN1]').prop("checked", false);
-            $('input[name=MONEY_OUT1]').prop("checked", false);
-            $('input[name=MONEY_OUT]').prop("checked", false);
-            $('input[name=MONEY_IN]').prop("checked", false);
-            $('input[name=PREDICTED]').prop("checked",false);
-            $('input[name=fyb]').prop("checked",false);
-            $('input[name=ADDED_BY_YOU]').prop("checked",false);
+        $('input[name=EXPENSES1]').prop("checked", false);
+        $('input[name=PAYROLL1]').prop("checked", false);
+        $('input[name=SALES_RECEIPTS1]').prop("checked", false);
+        $('input[name=BILLS]').prop("checked", false);
+        $('input[name=EXPENSES]').prop("checked", false);
+        $('input[name=CHECK]').prop("checked", false);
+        $('input[name=INVOICES]').prop("checked", false);
+        $('input[name=CREDIT_CARDS]').prop("checked", false);
+        $('input[name=PAYCHECKS]').prop("checked", false);
+        $('input[name=ESTIMATES]').prop("checked", false);
+        $('input[name=SALES_RECEIPTS]').prop("checked", false);
+        $('input[name=REPEATING]').prop("checked", false);
+        $('input[name=MONEY_IN1]').prop("checked", false);
+        $('input[name=MONEY_OUT1]').prop("checked", false);
+        $('input[name=MONEY_OUT]').prop("checked", false);
+        $('input[name=MONEY_IN]').prop("checked", false);
+        $('input[name=PREDICTED]').prop("checked", false);
+        $('input[name=fyb]').prop("checked", false);
+        $('input[name=ADDED_BY_YOU]').prop("checked", false);
     });
     $(document).on("click", "#PREDICTED", function(event) {
         if ($('input[name=PREDICTED]').is(":checked")) {
@@ -957,14 +1153,14 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             $('input[name=REPEATING]').prop("checked", true);
             $('input[name=MONEY_IN1]').prop("checked", true);
             $('input[name=MONEY_OUT1]').prop("checked", true);
-           
+
         } else {
             $('input[name=REPEATING]').prop("checked", false);
             $('input[name=MONEY_IN1]').prop("checked", false);
             $('input[name=MONEY_OUT1]').prop("checked", false);
         }
     });
-    $(document).on("click", ".savecashflowplanned", function(event){
+    $(document).on("click", ".savecashflowplanned", function(event) {
         var date = $('.addDate').val();
         var name = $('.merchant_name').val();
         var amount = $('.plan_amount').val();

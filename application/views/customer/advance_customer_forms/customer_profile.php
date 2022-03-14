@@ -137,7 +137,7 @@
                 Address <span class="required"> *</span>
             </div>
             <div class="col-md-8">
-                <input type="text" class="form-control" name="mail_add" id="mail_add" value="<?php if(isset($profile_info->mail_add)){ echo $profile_info->mail_add; } ?>" required/>
+                <input type="text" class="form-control" name="mail_add" id="mail_address" value="<?php if(isset($profile_info->mail_add)){ echo $profile_info->mail_add; } ?>" required/>
             </div>
         </div>
         <div class="row form_line">

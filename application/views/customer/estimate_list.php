@@ -140,13 +140,6 @@
                                                                 <?php } ?>
 
                                                                 <li role="separator" class="divider"></li>
-                                                                <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                                           href="<?php echo base_url('invoice') ?>"
-                                                                                           data-convert-to-invoice-modal="open"
-                                                                                           data-id="161983"
-                                                                                           data-name="WO-00433"><span
-                                                                                class="fa fa-money icon"></span> Convert to Invoice</a>
-                                                                </li>
                                                                 <li role="presentation">
                                                                     <a role="menuitem" target="_new" href="<?php echo base_url('estimate/view_pdf/' . $estimate->id) ?>" class="">
                                                                     <span class="fa fa-file-pdf-o icon"></span>  View PDF</a></li>
@@ -158,14 +151,6 @@
                                                                     <span class="fa fa-envelope-open-o icon"></span>  Send to Customer</a></li> -->
                                                                     <a href="" acs-id="<?php echo $estimate->customer_id; ?>" est-id="<?php echo $estimate->id; ?>" class="send_to_customer"><span class="fa fa-envelope-o icon"></span> Send to Customer</a>
                                                                 <li><div class="dropdown-divider"></div></li>
-                                                                <li role="presentation">
-                                                                    <!-- <a role="menuitem" href="<?php //echo base_url('estimate/delete/' . $estimate->id) ?>>" onclick="return confirm('Do you really want to delete this item ?')" data-delete-modal="open"><span class="fa fa-trash-o icon"></span> Delete</a> -->
-                                                                    <a href="#" est-id="<?php echo $estimate->id; ?>" id="delete_estimate"><span class="fa fa-trash-o icon"></span> Delete </a>
-                                                                </li>
-                                                                <li role="presentation">
-                                                                    <a role="menuitem" href="<?= base_url('job/estimate_job/'. $estimate->id) ?>">
-                                                                        <span class="fa fa-briefcase icon"></span> Convert to Job</a>
-                                                                </li>
                                                             </ul>
                                                         </div>
                                                     </td>
