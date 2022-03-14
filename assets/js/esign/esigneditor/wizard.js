@@ -61,7 +61,8 @@ function handleSubmit(customer) {
   const $form = document.getElementById("selectLetterForm");
   const $letterSelect = $form.querySelector("#letter");
   const $button = $form.querySelector(".btn-primary");
-  const $exportAsPDFLink = $form.querySelector(".wizardForm__step2 .link");
+  const $exportAsPDFLink = $form.querySelector("[data-action=export]");
+  const $backLink = $form.querySelector("[data-action=back]");
   const $letter = $("#letterContent");
 
   const exportAsPDF = (payload) => async (event) => {
@@ -95,6 +96,11 @@ function handleSubmit(customer) {
         customer_id: customer.prof_id,
       })
     );
+  });
+
+  $backLink.addEventListener("click", (event) => {
+    event.preventDefault();
+    $form.classList.remove("wizardForm--step2");
   });
 }
 
@@ -136,7 +142,7 @@ function initSaveForm(customer) {
   const $modal = document.getElementById("saveLetterModal");
   const $name = $modal.querySelector("[data-name=name]");
   const $saveButton = $modal.querySelector(".btn");
-  const $toggleButtons = $(".wizardForm__step2 [data-action]");
+  const $toggleButtons = $("[data-action=save_for_later], [data-action=save_and_print]"); // prettier-ignore
   const $letter = $("#letterContent");
   const $letterSelect = document.querySelector("#selectLetterForm #letter");
 
@@ -164,7 +170,7 @@ function initSaveForm(customer) {
     );
 
     if ($modal.dataset.action === "save_and_print") {
-      // TODO: redirect to print customer letter
+      window.location.href = `${window.api.prefixURL}/esigneditor/customers/${customer.prof_id}`;
     } else {
       $($modal).modal("hide");
     }

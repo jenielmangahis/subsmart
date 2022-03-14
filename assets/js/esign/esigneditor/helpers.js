@@ -21,7 +21,7 @@ export async function submitBtn($button, asyncCallback) {
 
 export function wysiwygEditor($textarea, content = null) {
   const $letter = $($textarea);
-  $letter.summernote({
+  const $summernote = $letter.summernote({
     placeholder: "Type Here ... ",
     tabsize: 2,
     height: 450,
@@ -31,9 +31,17 @@ export function wysiwygEditor($textarea, content = null) {
       ["fontsize", ["fontsize"]],
       ["para", ["ol", "ul", "paragraph", "height"]],
       ["table", ["table"]],
-      ["insert", ["link"]],
+      ["insert", ["link", "picture"]],
       ["view", ["undo", "redo", "fullscreen"]],
     ],
+    callbacks: {
+      onImageUpload: async ([file]) => {
+        try {
+          const base64 = await toBase64(file);
+          $summernote.summernote("insertImage", base64);
+        } catch (error) {}
+      },
+    },
   });
 
   $letter.summernote("fontName", "Arial");
@@ -65,4 +73,14 @@ export async function mergePdfs(
   });
   await Promise.all(actions);
   return mergedPdf.saveAsBase64({ dataUri: true });
+}
+
+// https://stackoverflow.com/a/57272491/8062659
+export function toBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = (error) => reject(error);
+  });
 }

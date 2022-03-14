@@ -499,7 +499,7 @@ class Chart_of_accounts_model extends MY_Model {
 
 	public function get_sales_receipt_registers($accountId)
 	{
-		$this->db->where('deposit_to', $accountId);
+		$this->db->where('deposit_to_account', $accountId);
 		$this->db->where('status !=', 0);
 		$query= $this->db->get('accounting_sales_receipt');
 		return $query->result();
