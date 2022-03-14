@@ -208,9 +208,9 @@ class EsignEditor extends MY_Controller
     {
         $userId = logged('id');
         $query = <<<SQL
-            SELECT `l`.`id`, `l`.`title`, `l`.`content`, `l`.`is_active`, `c`.`name` FROM `esign_editor_letters` AS `l`
+            SELECT `l`.`id`, `l`.`title`, `l`.`content`, `l`.`is_active`, `l`.`user_id`, `c`.`name` FROM `esign_editor_letters` AS `l`
                 LEFT JOIN `esign_editor_categories` AS `c` ON `l`.`category_id` = `c`.`id`
-            WHERE `l`.`user_id` = {$userId};
+            WHERE (`l`.`user_id` = {$userId} OR `l`.`user_id` IS NULL);
 SQL;
 
         $query = $this->db->query($query);
@@ -224,6 +224,12 @@ SQL;
     {
         header('content-type: application/json');
         if ($_SERVER['REQUEST_METHOD'] !== 'DELETE') {
+            echo json_encode(['success' => false]);
+            return;
+        }
+
+        $letter = $this->getLetter($id);
+        if ($letter->user_id != logged('id')) {
             echo json_encode(['success' => false]);
             return;
         }
@@ -247,6 +253,12 @@ SQL;
             return;
         }
 
+        $letter = $this->getLetter($id);
+        if ($letter->user_id != logged('id')) {
+            echo json_encode(['success' => false]);
+            return;
+        }
+
         $payload = json_decode(file_get_contents('php://input'), true);
         $this->db->where('id', $id);
         $this->db->update('esign_editor_letters', $payload);
@@ -264,9 +276,9 @@ SQL;
 
         $userId = logged('id');
         $query = <<<SQL
-            SELECT `l`.`id`, `l`.`title`, `l`.`content`, `l`.`is_active`, `c`.`name`, `c`.`id` AS category_id FROM `esign_editor_letters` AS `l`
+            SELECT `l`.`id`, `l`.`title`, `l`.`content`, `l`.`is_active`, `l`.`user_id`, `c`.`name`, `c`.`id` AS category_id FROM `esign_editor_letters` AS `l`
                 LEFT JOIN `esign_editor_categories` AS `c` ON `l`.`category_id` = `c`.`id`
-            WHERE `l`.`user_id` = {$userId} AND `l`.`id` = {$id};
+            WHERE (`l`.`user_id` = {$userId} OR `l`.`user_id` IS NULL) AND `l`.`id` = {$id};
 SQL;
 
         $query = $this->db->query($query);
@@ -694,6 +706,38 @@ SQL;
         $this->db->where_in('id', $ids);
         $letters = $this->db->get('esign_editor_customer_letters')->result();
         echo json_encode(['data' => $letters, 'is_sent' => $isSent]);
+    }
 
+    public function apiSeedLetters()
+    {
+        $jsonPath = FCPATH . './assets/js/esign/esigneditor/creditrepairletters.json';
+        $jsonString = file_get_contents($jsonPath);
+        $data = json_decode($jsonString, true);
+
+        $categoryName = 'Credit Repair Industry';
+        $this->db->where('name', $categoryName);
+        $category = $this->db->get('esign_editor_categories')->row();
+
+        if (is_null($category)) {
+            $this->db->insert('esign_editor_categories', [
+                'name' => $categoryName,
+            ]);
+
+            $this->db->where('id', $this->db->insert_id());
+            $category = $this->db->get('esign_editor_categories')->row();
+        }
+
+        $letters = array_map(function ($letter) use ($category) {
+            return [
+                'category_id' => $category->id,
+                'title' => $letter['title'],
+                'content' => $letter['content'],
+            ];
+        }, $data);
+
+        $this->db->insert_batch('esign_editor_letters', $letters);
+
+        header('content-type: application/json');
+        echo json_encode(['data' => $letters]);
     }
 }

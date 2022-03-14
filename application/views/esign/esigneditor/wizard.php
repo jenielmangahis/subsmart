@@ -46,8 +46,12 @@ ini_set('max_input_vars', 30000);
                     <textarea class="form-control" id="letterContent"></textarea>
                 </div>
                 <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <button class="link esigneditor__btn">
+                    <div class="d-flex">
+                        <button class="link mr-3" data-action="back">
+                            Back
+                        </button>
+
+                        <button class="link esigneditor__btn" data-action="export">
                             <div class="spinner-border spinner-border-sm" role="status">
                                 <span class="sr-only">Loading...</span>
                             </div>

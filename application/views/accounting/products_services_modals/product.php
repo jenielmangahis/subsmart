@@ -112,8 +112,8 @@
                     <div class="row">
                         <div class="col-sm-12">
                             <div class="form-group" style="margin-bottom: 0 !important">
-                                <label for="invAssetAcc">Inventory asset account</label>
-                                <select name="inv_asset_account" class="form-control" required></select>
+                                <label for="inv_asset_account">Inventory asset account</label>
+                                <select name="inv_asset_account" id="inv_asset_account" class="form-control" required></select>
                             </div>
                         </div>
                     </div>
@@ -136,8 +136,8 @@
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group" style="margin-bottom: 0 !important">
-                                <label for="incomeAccount">Income account</label>
-                                <select name="income_account" class="form-control" required></select>
+                                <label for="income_account">Income account</label>
+                                <select name="income_account" id="income_account" class="form-control" required></select>
                             </div>
                         </div>
                     </div>
@@ -148,8 +148,8 @@
                     <div class="row">
                         <div class="col-sm-12">
                             <div class="form-group" style="margin-bottom: 0 !important">
-                                <label for="salesTaxCat">Sales tax category</label>
-                                <select name="sales_tax_category" class="form-control"></select>
+                                <label for="sales_tax_category">Sales tax category</label>
+                                <select name="sales_tax_category" id="sales_tax_category" class="form-control"></select>
                             </div>
                         </div>
                     </div>
@@ -174,8 +174,8 @@
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group" style="margin-bottom: 0 !important">
-                                <label for="expenseAcc">Expense account</label>
-                                <select name="item_expense_account" class="form-control"></select>
+                                <label for="item_expense_account">Expense account</label>
+                                <select name="item_expense_account" id="item_expense_account" class="form-control"></select>
                             </div>
                         </div>
                         <div class="col-sm-12">

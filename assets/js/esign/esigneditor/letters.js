@@ -87,7 +87,7 @@ window.document.addEventListener("DOMContentLoaded", async () => {
 
 const columns = {
   title: (_, __, row) => {
-    return row.title;
+    return `<a href="#" class="link" data-action="preview">${row.title}</a>`;
   },
   category: (_, __, row) => {
     return row.name;
@@ -95,7 +95,11 @@ const columns = {
   status: (_, __, row) => {
     return Number.parseInt(row.is_active) ? "Active" : "Inactive";
   },
-  actions: () => {
+  actions: (_, __, row) => {
+    if (row.user_id === null) {
+      return "<span></span>";
+    }
+
     return `
     <div class="btn-group">
       <button type="button" class="btn btn-sm btn-primary" data-action="edit">Edit</button>
@@ -122,6 +126,17 @@ const actions = {
       const $row = $target.closest("tr");
       table.row($row).remove().draw();
     }
+  },
+  preview: (row) => {
+    const $modal = $("#previewLetterModal");
+    const $preview = $modal.find(".preview");
+
+    const $letter = $("<div/>").html(row.content);
+    $letter.addClass("preview__item");
+    $letter.find(".pageBreak").removeAttr("style");
+
+    $preview.html($letter);
+    $modal.modal("show");
   },
 };
 

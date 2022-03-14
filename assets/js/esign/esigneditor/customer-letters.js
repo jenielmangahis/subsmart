@@ -214,12 +214,11 @@ function initSendModal() {
       });
 
       const margin = { x: 48, y: 48 };
-      let { width, height } = doc.internal.pageSize;
+      let { width } = doc.internal.pageSize;
       width = width - margin.x * 2;
-      height = height - margin.y * 2;
 
       doc.html(
-        `<div style="width:${width}px; height:${height}px;">
+        `<div style="width:${width}px;">
             ${$preview.innerHTML}
           </div>`,
         {
@@ -228,11 +227,10 @@ function initSendModal() {
         }
       );
 
-      await window.helpers.sleep(1);
-      return doc.output("arraybuffer");
+      await window.helpers.sleep(5); // sometimes setting this to lower will result to blank pages
+      return doc.output("arraybuffer", { returnPromise: true });
     });
 
-    await window.helpers.sleep(1);
     const docs = await Promise.all(docPromises);
     return window.helpers.mergePdfs(docs);
   };

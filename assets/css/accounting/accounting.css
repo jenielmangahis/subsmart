@@ -1480,8 +1480,289 @@ span.choices {
     left: 915px;
 }
 
-
-/* div#radioB {
+.row1,
+.row2 {
     display: grid;
-    grid-template-columns: repeat(1, 1fr);
-} */
+    grid-template-columns: repeat(2, 1fr);
+}
+
+input#plan_type {
+    align-items: right;
+    margin-left: 51px;
+    margin-top: 6px;
+}
+
+input[name="toggle_switch"] {
+    width: 0;
+    height: 0;
+    visibility: hidden;
+}
+
+#labelcheck {
+    top: -21px;
+    left: 7px;
+    display: block;
+    width: 52px;
+    height: 21px;
+    background-color: #2aa01c;
+    border-radius: 100px;
+    position: relative;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+#labelcheck::after {
+    content: "";
+    width: 14px;
+    height: 14px;
+    background-color: #ffffff;
+    position: absolute;
+    border-radius: 70px;
+    top: 2px;
+    left: 3px;
+    transition: 0.2s;
+}
+
+#labelcheck::after {
+    content: "";
+    width: 14px;
+    height: 14px;
+    background-color: #2aa01c;
+    position: absolute;
+    border-radius: 70px;
+    top: 2px;
+    left: 3px;
+    transition: 0.2s ease-in;
+}
+
+input[name="toggle_switch"]:checked+#labelcheck:after {
+    left: calc(100% - 4.5px);
+    transform: translateX(-100%);
+    background-color: #ffffff;
+    top: 3px;
+}
+
+input[name="toggle_switch"]:not(:checked)+#labelcheck {
+    background-color: #e4e4e4;
+    border: solid 1px;
+}
+
+.radioS {
+    display: grid;
+    grid-template-columns: 1fr;
+    margin-left: 40px;
+}
+
+.F_row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+}
+
+input[name="toggle_switch1"] {
+    width: 0;
+    height: 0;
+    visibility: hidden;
+}
+
+#labelcheck1 {
+    top: -21px;
+    left: 7px;
+    display: block;
+    width: 52px;
+    height: 21px;
+    background-color: #2aa01c;
+    border-radius: 100px;
+    position: relative;
+    cursor: pointer;
+    transition: 0.2s ease-in;
+}
+
+#labelcheck1::after {
+    content: "";
+    width: 14px;
+    height: 14px;
+    background-color: #ffffff;
+    position: absolute;
+    border-radius: 70px;
+    top: 2px;
+    left: 3px;
+    transition: 0.2s ease-in;
+}
+
+#labelcheck1::after {
+    content: "";
+    width: 14px;
+    height: 14px;
+    background-color: #2aa01c;
+    position: absolute;
+    border-radius: 70px;
+    top: 2px;
+    left: 3px;
+    transition: 0.2s ease-in;
+}
+
+input[name="toggle_switch1"]:checked+#labelcheck1:after {
+    left: calc(100% - 4.5px);
+    transform: translateX(-100%);
+    background-color: #ffffff;
+    top: 3px;
+}
+
+input[name="toggle_switch1"]:not(:checked)+#labelcheck1 {
+    background-color: #e4e4e4;
+    border: solid 1px;
+}
+
+.row2 {
+    margin-top: 22px;
+}
+
+.r2ow {
+    margin-top: -4px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.S_row {
+    margin-top: -31px;
+    margin-left: 228px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+}
+
+select#sched {
+    width: 200px;
+    height: 35px;
+    text-align: center;
+    letter-spacing: 5px;
+}
+
+.S_col {
+    margin-left: 32px;
+}
+
+input#not {
+    width: 19px;
+    height: 26px;
+    border-radius: 4px;
+}
+
+span#dneS {
+    margin-left: 10px;
+    font-size: 14px;
+}
+
+.radio1 {
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+input#end_date {
+    margin-left: 10px;
+    border-radius: 5px;
+    width: 150px;
+    height: 41px;
+}
+
+span#not1 {
+    margin-left: 10px;
+    margin-right: 8px;
+}
+
+input#not {
+    margin-right: 10px;
+    width: 29px;
+}
+
+.daily_hide {
+    position: relative;
+    display: flex;
+    top: 4px;
+    left: -376px;
+}
+
+.daily2 {
+    margin-left: 33px;
+}
+
+.weekly_hide {
+    position: relative;
+    display: flex;
+    top: 4px;
+    left: 236px;
+}
+
+.weekly2 {
+    margin-left: 30px;
+    margin-right: 30px;
+}
+
+button.days {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+input.num_weeks {
+    width: 30px;
+    height: 30px;
+    border-radius: 10px;
+    margin-right: 10px;
+}
+
+.monthly_hide {
+    position: relative;
+    display: flex;
+    top: 4px;
+    left: 236px;
+}
+
+input.num_months {
+    width: 29px;
+    height: 30px;
+    border-radius: 10px;
+    margin-right: 10px;
+}
+
+input#day_num {
+    width: 30px;
+    height: 30px;
+    border-radius: 10px;
+    margin-left: 5px;
+}
+
+input#day_n {
+    margin-right: 10px;
+}
+
+input#day_n {
+    margin-right: 10px;
+}
+
+select#day_place {
+    width: 75px;
+    height: 30px;
+}
+
+select#day_want {
+    width: 75px;
+    height: 30px;
+}
+
+span#the {
+    margin-left: 10px;
+}
+
+.color {
+    background-color: rgb(61, 60, 60);
+    color: white;
+}
+
+.item1 {
+    position: absolute;
+}
+
+.monthly2 {
+    margin-right: 22px;
+    margin-left: 22px;
+}

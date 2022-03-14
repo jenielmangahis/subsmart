@@ -85,6 +85,14 @@ class Accounting_credit_memo_model extends MY_Model {
 		return $update;
 	}
 
+	public function delete_customer_transaction_item($transactionItemId, $transactionType)
+	{
+		$this->db->where('id', $transactionItemId);
+		$this->db->where('transaction_type', $transactionType);
+		$delete = $this->db->delete('accounting_customer_transaction_items');
+		return $delete;
+	}
+
 	public function get_customer_open_credit_memos($filters = [])
 	{
 		if(isset($filters['customer_id'])) {
