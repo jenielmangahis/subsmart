@@ -836,6 +836,7 @@ class Vendors_model extends MY_Model {
 	}
 
 	public function savecashflowplan($new_data){
+	
         $vendor = $this->db->insert('cashflow_planned', $new_data);
         $insert_id = $this->db->insert_id();
 

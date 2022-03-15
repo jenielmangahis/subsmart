@@ -14533,6 +14533,24 @@ class Accounting_modals extends MY_Controller
             case 'time-activity' :
                 $delete = $this->delete_time_activity($transactionId);
             break;
+            case 'receive-payment' :
+
+            break;
+            case 'credit-memo' :
+                $delete = $this->delete_credit_memo($transactionId);
+            break;
+            case 'sales-receipt' :
+                $delete = $this->delete_sales_receipt($transactionId);
+            break;
+            case 'refund-receipt' :
+                $delete = $this->delete_refund_receipt($transactionId);
+            break;
+            case 'delayed-credit' :
+                $delete = $this->delete_delayed_credit($transactionId);
+            break;
+            case 'delayed-charge' :
+                $delete = $this->delete_delayed_charge($transactionId);
+            break;
         }
 
         if ($delete) {
@@ -15204,7 +15222,7 @@ class Accounting_modals extends MY_Controller
         return $update;
     }
 
-    public function delete_time_activity($activityId)
+    private function delete_time_activity($activityId)
     {
         $activity = $this->accounting_single_time_activity_model->get_by_id($activityId);
 
@@ -15238,6 +15256,155 @@ class Accounting_modals extends MY_Controller
         return $update;
     }
 
+    private function delete_credit_memo($creditMemoId)
+    {
+        $creditMemo = $this->accounting_credit_memo_model->getCreditMemoDetails($creditMemoId);
+
+        $creditMemoData = [
+            'balance' => 0.00,
+            'total_amount' => 0.00,
+            'subtotal' => 0.00,
+            'tax_total' => 0.00,
+            'discount_total' => 0.00,
+            'adjustment_value' => 0.00,
+            'status' => 0
+        ];
+
+        $update = $this->accounting_credit_memo_model->updateCreditMemo($creditMemoId, $creditMemoData);
+
+        if($update) {
+            $this->void_customer_transaction_items('Credit Memo', $creditMemoId);
+        }
+
+        return $update;
+    }
+
+    private function delete_sales_receipt($salesReceiptId)
+    {
+        $salesReceipt = $this->accounting_sales_receipt_model->getSalesReceiptDetails_by_id($salesReceiptId);
+
+        $salesReceiptData = [
+            'total_amount' => 0.00,
+            'subtotal' => 0.00,
+            'tax_total' => 0.00,
+            'discount_total' => 0.00,
+            'adjustment_value' => 0.00,
+            'status' => 0
+        ];
+
+        $update = $this->accounting_sales_receipt_model->updateSalesReceipt($salesReceiptId, $salesReceiptData);
+
+        if($update) {
+            $depositAcc = $this->chart_of_accounts_model->getById($salesReceipt->deposit_to_account);
+            $depositAccType = $this->account_model->getById($depositAcc->account_id);
+
+            if ($depositAccType->account_name === 'Credit Card') {
+                $newBalance = floatval($depositAcc->balance) + floatval($salesReceipt->total_amount);
+            } else {
+                $newBalance = floatval($depositAcc->balance) - floatval($salesReceipt->total_amount);
+            }
+
+            $newBalance = number_format($newBalance, 2, '.', ',');
+
+            $depositAccData = [
+                'id' => $depositAcc->id,
+                'company_id' => logged('company_id'),
+                'balance' => $newBalance
+            ];
+
+            $this->chart_of_accounts_model->updateBalance($depositAccData);
+
+            $this->void_customer_transaction_items('Sales Receipt', $salesReceiptId);
+        }
+
+        return $update;
+    }
+
+    private function delete_refund_receipt($refundReceiptId)
+    {
+        $refundReceipt = $this->accounting_refund_receipt_model->getRefundReceiptDetails_by_id($refundReceiptId);
+
+        $refundReceiptData = [
+            'total_amount' => 0.00,
+            'subtotal' => 0.00,
+            'tax_total' => 0.00,
+            'discount_total' => 0.00,
+            'adjustment_value' => 0.00,
+            'status' => 0
+        ];
+
+        $update = $this->accounting_refund_receipt_model->updateRefundReceipt($refundReceiptId, $refundReceiptData);
+
+        if($update) {
+            $refundAcc = $this->chart_of_accounts_model->getById($refundReceipt->refund_from_account);
+            $refundAccType = $this->account_model->getById($refundAcc->account_id);
+
+            if ($refundAccType->account_name === 'Credit Card') {
+                $newBalance = floatval($refundAcc->balance) - floatval($refundReceipt->total_amount);
+            } else {
+                $newBalance = floatval($refundAcc->balance) + floatval($refundReceipt->total_amount);
+            }
+
+            $newBalance = number_format($newBalance, 2, '.', ',');
+
+            $refundAccData = [
+                'id' => $refundAcc->id,
+                'company_id' => logged('company_id'),
+                'balance' => $newBalance
+            ];
+
+            $this->chart_of_accounts_model->updateBalance($refundAccData);
+
+            $this->void_customer_transaction_items('Refund Receipt', $refundReceiptId);
+        }
+
+        return $update;
+    }
+
+    private function delete_delayed_credit($delayedCreditId)
+    {
+        $delayedCredit = $this->accounting_delayed_credit_model->getDelayedCreditDetails($delayedCreditId);
+
+        $refundReceiptData = [
+            'total_amount' => 0.00,
+            'subtotal' => 0.00,
+            'tax_total' => 0.00,
+            'discount_total' => 0.00,
+            'adjustment_value' => 0.00,
+            'status' => 0
+        ];
+
+        $update = $this->accounting_delayed_credit_model->updateDelayedCredit($delayedCreditId, $refundReceiptData);
+
+        if($update) {
+            $this->void_customer_transaction_items('Delayed Credit', $delayedCreditId);
+        }
+
+        return $update;
+    }
+
+    private function delete_delayed_charge($delayedChargeId)
+    {
+        $delayedCharge = $this->accounting_delayed_charge_model->getDelayedChargeDetails($delayedChargeId);
+
+        $refundReceiptData = [
+            'total_amount' => 0.00,
+            'subtotal' => 0.00,
+            'tax_total' => 0.00,
+            'discount_total' => 0.00,
+            'adjustment_value' => 0.00,
+            'status' => 0
+        ];
+
+        $update = $this->accounting_delayed_charge_model->updateDelayedCharge($delayedChargeId, $refundReceiptData);
+
+        if($update) {
+            $this->void_customer_transaction_items('Delayed Charge', $delayedChargeId);
+        }
+
+        return $update;
+    }
+
     public function void_transaction($transactionType, $transactionId)
     {
         switch ($transactionType) {
@@ -15258,6 +15425,18 @@ class Accounting_modals extends MY_Controller
             break;
             case 'transfer' :
                 $return = $this->void_transfer($transactionId);
+            break;
+            case 'receive-payment' :
+
+            break;
+            case 'credit-memo' :
+                $return = $this->void_credit_memo($transactionId);
+            break;
+            case 'sales-receipt' :
+                $return = $this->void_sales_receipt($transactionId);
+            break;
+            case 'refund-receipt' :
+                $return = $this->void_refund_receipt($transactionId);
             break;
         }
 
@@ -15550,6 +15729,9 @@ class Accounting_modals extends MY_Controller
 
                 $itemDetails = [
                     'quantity' => 0,
+                    'rate' => 0.00,
+                    'discount' => 0.00,
+                    'tax' => 0.00,
                     'total' => 0.00
                 ];
 
@@ -15600,6 +15782,218 @@ class Accounting_modals extends MY_Controller
             'success' => $void ? true : false,
             'message' => $void ? 'Transaction successfully voided!' : 'Unexpected error occurred.'
         ];
+    }
+
+    private function void_credit_memo($creditMemoId)
+    {
+        $creditMemo = $this->accounting_credit_memo_model->getCreditMemoDetails($creditMemoId);
+
+        $creditMemoData = [
+            'balance' => 0.00,
+            'total_amount' => 0.00,
+            'subtotal' => 0.00,
+            'tax_total' => 0.00,
+            'discount_total' => 0.00,
+            'adjustment_value' => 0.00,
+            'message_on_statement' => 'Voided',
+            'status' => 4
+        ];
+
+        $void = $this->accounting_credit_memo_model->updateCreditMemo($creditMemoId, $creditMemoData);
+
+        if($void) {
+            $this->void_customer_transaction_items('Credit Memo', $creditMemoId);
+        }
+
+        return [
+            'data' => $creditMemoId,
+            'success' => $void ? true : false,
+            'message' => $void ? 'Transaction successfully voided!' : 'Unexpected error occurred.'
+        ];
+    }
+
+    private function void_sales_receipt($salesReceiptId)
+    {
+        $salesReceipt = $this->accounting_sales_receipt_model->getSalesReceiptDetails_by_id($salesReceiptId);
+
+        $salesReceiptData = [
+            'total_amount' => 0.00,
+            'subtotal' => 0.00,
+            'tax_total' => 0.00,
+            'discount_total' => 0.00,
+            'adjustment_value' => 0.00,
+            'message_on_statement' => 'Voided',
+            'status' => 4
+        ];
+
+        $void = $this->accounting_sales_receipt_model->updateSalesReceipt($salesReceiptId, $salesReceiptData);
+
+        if($void) {
+            $depositAcc = $this->chart_of_accounts_model->getById($salesReceipt->deposit_to_account);
+            $depositAccType = $this->account_model->getById($depositAcc->account_id);
+
+            if ($depositAccType->account_name === 'Credit Card') {
+                $newBalance = floatval($depositAcc->balance) + floatval($salesReceipt->total_amount);
+            } else {
+                $newBalance = floatval($depositAcc->balance) - floatval($salesReceipt->total_amount);
+            }
+
+            $newBalance = number_format($newBalance, 2, '.', ',');
+
+            $depositAccData = [
+                'id' => $depositAcc->id,
+                'company_id' => logged('company_id'),
+                'balance' => $newBalance
+            ];
+
+            $this->chart_of_accounts_model->updateBalance($depositAccData);
+
+            $this->void_customer_transaction_items('Sales Receipt', $salesReceiptId);
+        }
+
+        return [
+            'data' => $salesReceiptId,
+            'success' => $void ? true : false,
+            'message' => $void ? 'Transaction successfully voided!' : 'Unexpected error occurred.'
+        ];
+    }
+
+    private function void_refund_receipt($refundReceiptId)
+    {
+        $refundReceipt = $this->accounting_refund_receipt_model->getRefundReceiptDetails_by_id($refundReceiptId);
+
+        $refundReceiptData = [
+            'total_amount' => 0.00,
+            'subtotal' => 0.00,
+            'tax_total' => 0.00,
+            'discount_total' => 0.00,
+            'adjustment_value' => 0.00,
+            'message_on_statement' => 'Voided',
+            'status' => 4
+        ];
+
+        $void = $this->accounting_refund_receipt_model->updateRefundReceipt($refundReceiptId, $refundReceiptData);
+
+        if($void) {
+            $refundAcc = $this->chart_of_accounts_model->getById($refundReceipt->refund_from_account);
+            $refundAccType = $this->account_model->getById($refundAcc->account_id);
+
+            if ($refundAccType->account_name === 'Credit Card') {
+                $newBalance = floatval($refundAcc->balance) - floatval($refundReceipt->total_amount);
+            } else {
+                $newBalance = floatval($refundAcc->balance) + floatval($refundReceipt->total_amount);
+            }
+
+            $newBalance = number_format($newBalance, 2, '.', ',');
+
+            $refundAccData = [
+                'id' => $refundAcc->id,
+                'company_id' => logged('company_id'),
+                'balance' => $newBalance
+            ];
+
+            $this->chart_of_accounts_model->updateBalance($refundAccData);
+
+            $this->void_customer_transaction_items('Refund Receipt', $refundReceiptId);
+        }
+
+        return [
+            'data' => $refundReceiptId,
+            'success' => $void ? true : false,
+            'message' => $void ? 'Transaction successfully voided!' : 'Unexpected error occurred.'
+        ];
+    }
+
+    private function void_customer_transaction_items($transactionType, $transactionId)
+    {
+        $items = $this->accounting_credit_memo_model->get_customer_transaction_items($transactionType, $transactionId);
+
+        foreach($items as $transacItem) {
+            $item = $this->items_model->getItemById($transacItem->item_id)[0];
+            $itemAccDetails = $this->items_model->getItemAccountingDetails($transacItem->item_id);
+
+            if($transactionType !== 'Delayed Credit' && $transactionType !== 'Delayed Charge') {
+                if ($itemAccDetails) {
+                    if(strtolower($item->type) === 'product' || strtolower($item->type) === 'inventory') {
+                        $location = $this->items_model->getItemLocation($transacItem->location_id, $transacItem->item_id);
+                        $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+    
+                        switch($transactionType) {
+                            case 'Credit Memo' :
+                                $newQty = intval($location->qty) - intval($transacItem->quantity);
+                                $newBalance = floatval($invAssetAcc->balance) - floatval($transacItem->total);
+                            break;
+                            case 'Sales Receipt' :
+                                $newQty = intval($location->qty) + intval($transacItem->quantity);
+                                $newBalance = floatval($invAssetAcc->balance) + floatval($transacItem->total);
+                            break;
+                            case 'Refund Receipt' :
+                                $newQty = intval($location->qty) - intval($transacItem->quantity);
+                                $newBalance = floatval($invAssetAcc->balance) + floatval($transacItem->total);
+                            break;
+                        }
+                        $newBalance = number_format($newBalance, 2, '.', ',');
+    
+                        $invAssetAccData = [
+                            'id' => $invAssetAcc->id,
+                            'company_id' => logged('company_id'),
+                            'balance' => $newBalance
+                        ];
+    
+                        $this->items_model->updateLocationQty($transacItem->location_id, $transacItem->item_id, $newQty);
+                        $this->chart_of_accounts_model->updateBalance($invAssetAccData);
+                    } else {
+                        if(strtolower($item->type) !== 'bundle') {
+                            $incomeAcc = $this->chart_of_accounts_model->getById($itemAccDetails->income_account_id);
+                            $incomeAccType = $this->account_model->getById($incomeAcc->account_id);
+    
+                            switch($transactionType) {
+                                case 'Credit Memo' :
+                                    if ($incomeAccType->account_name === 'Credit Card') {
+                                        $newBalance = floatval($incomeAcc->balance) - floatval($transacItem->total);
+                                    } else {
+                                        $newBalance = floatval($incomeAcc->balance) + floatval($transacItem->total);
+                                    }
+                                break;
+                                case 'Sales Receipt' :
+                                    if ($incomeAccType->account_name === 'Credit Card') {
+                                        $newBalance = floatval($incomeAcc->balance) - floatval($transacItem->total);
+                                    } else {
+                                        $newBalance = floatval($incomeAcc->balance) + floatval($transacItem->total);
+                                    }
+                                break;
+                                case 'Refund Receipt' :
+                                    if ($incomeAccType->account_name === 'Credit Card') {
+                                        $newBalance = floatval($incomeAcc->balance) + floatval($transacItem->total);
+                                    } else {
+                                        $newBalance = floatval($incomeAcc->balance) - floatval($transacItem->total);
+                                    }
+                                break;
+                            }
+                            $newBalance = number_format($newBalance, 2, '.', ',');
+    
+                            $incomeAccData = [
+                                'id' => $incomeAcc->id,
+                                'company_id' => logged('company_id'),
+                                'balance' => $newBalance
+                            ];
+    
+                            $this->chart_of_accounts_model->updateBalance($incomeAccData);
+                        }
+                    }
+                }
+            }
+
+            $transacItemData = [
+                'quantity' => 0,
+                'price' => 0.00,
+                'discount' => 0.00,
+                'tax' => 0.00,
+                'total' => 0.00
+            ];
+
+            $this->accounting_credit_memo_model->update_customer_transaction_item($transacItem->id, $transacItemData);
+        }
     }
 
     private function generate_purchase_order_pdf($purchaseOrderId, $fileName = 'print.pdf')

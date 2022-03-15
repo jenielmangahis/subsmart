@@ -1689,7 +1689,7 @@ input#not {
     position: relative;
     display: flex;
     top: 4px;
-    left: 236px;
+    left: 230px;
 }
 
 .weekly2 {
@@ -1714,7 +1714,7 @@ input.num_weeks {
     position: relative;
     display: flex;
     top: 4px;
-    left: 236px;
+    left: 233px;
 }
 
 input.num_months {
@@ -1765,4 +1765,10 @@ span#the {
 .monthly2 {
     margin-right: 22px;
     margin-left: 22px;
+}
+
+button.btn.btn-primary {
+    position: relative;
+    left: 1457px;
+    background-color: #2ca01d;
 }
