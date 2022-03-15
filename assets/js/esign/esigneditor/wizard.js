@@ -65,13 +65,19 @@ function handleSubmit(customer) {
   const $backLink = $form.querySelector("[data-action=back]");
   const $letter = $("#letterContent");
 
+  let isExporting = false;
   const exportAsPDF = (payload) => async (event) => {
     event.preventDefault();
+
+    if (isExporting) return;
+
+    isExporting = true;
     payload.content = $letter.summernote("code");
     const { data } = await window.helpers.submitBtn($exportAsPDFLink, () =>
       window.api.exportLetterAsPDF(payload)
     );
 
+    isExporting = false;
     htmlToPDF(decodeHtml(data.content));
   };
 
@@ -115,10 +121,9 @@ function htmlToPDF(string) {
   const margin = { x: 48, y: 48 };
   let { width, height } = doc.internal.pageSize;
   width = width - margin.x * 2;
-  height = height - margin.y * 2;
 
   doc.html(
-    `<div style="width:${width}px; height:${height}px;">
+    `<div style="width:${width}px;">
       ${string}
     </div>`,
     {

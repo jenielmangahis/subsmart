@@ -69,7 +69,11 @@
                                         </div>
                                         <div class="col-md-4">
                                             <h6 class="text-right">
-                                                AMOUNT TO REFUND
+                                                <?php if(isset($creditMemo) && $creditMemo->status !== "4") : ?>
+                                                    REFUND STATUS
+                                                <?php else : ?>
+                                                    AMOUNT TO REFUND
+                                                <?php endif; ?>
                                             </h6>
                                             <h2 class="text-right">
                                                 <span class="transaction-grand-total">
@@ -382,7 +386,9 @@
                                             <a href="javascript:void(0);" class="text-white" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
                                             <div class="dropdown-menu">
                                                 <a class="dropdown-item" href="#" id="copy-credit-memo">Copy</a>
+                                                <?php if($creditMemo->status !== "4") : ?>
                                                 <a class="dropdown-item" href="#" id="void-credit-memo">Void</a>
+                                                <?php endif; ?>
                                                 <a class="dropdown-item" href="#" id="delete-credit-memo">Delete</a>
                                                 <a class="dropdown-item" href="#">Transaction journal</a>
                                                 <a class="dropdown-item" href="#">Audit history</a>

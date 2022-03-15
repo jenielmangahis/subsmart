@@ -453,13 +453,13 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
                             <div class="radioB">
                                 <div class="row1">
-                                    <input type="radio" name="plan_type" id="plan_type" value="money_in">
+                                    <input type="radio" name="plan_type" id="plan_type" value="moneyin">
                                     <label for="money_in">
                                         <span>MONEY IN</span>
                                     </label>
                                 </div>
                                 <div class="row2">
-                                    <input type="radio" name="plan_type" id="plan_type" value="money_out">
+                                    <input type="radio" name="plan_type" id="plan_type" value="moneyout">
                                     <label for="money_in">
                                         <span>MONEY OUT</span>
                                     </label>
@@ -557,14 +557,14 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                     <h6>END</h6>
                                     <div class="item2">
                                         <div class="radio1">
-                                            <input type="radio" name="does_not_end" value="does_not_end" id="dne"><span id="dneS">Does not end</span>
+                                            <input type="radio" name="Dend" class="Dend"  value="does_not_end" id="dneD"><span id="dneS">Does not end</span>
                                         </div>
                                         <div class="radio1">
-                                            <input type="radio" name="date" value="date" id="date"><input type="date" name="end_date" id="end_date">
+                                            <input type="radio" name="Dend" class="Dend" value="date" id="dateD"><input type="date" name="end_date" id="end_date">
                                         </div>
                                         <div class="radio1">
-                                            <input type="radio" name="not" value="not"><span id="not1">after</span><input type="text" name="number_of_times" id="not"><span>occurence(s)</span>
-                                        </div>
+                                            <input type="radio" name="Dend" class="Dend" value="not" id="notD"><span id="not1">after</span><input type="text" name="number_of_times" id="not"><span>occurence(s)</span>
+                                        </div> 
                                     </div>
                                 </div>
                             </div>
@@ -604,13 +604,13 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                     <h6>END</h6>
                                     <div class="item2">
                                         <div class="radio1">
-                                            <input type="radio" name="does_not_end" value="does_not_end" id="dne"><span id="dneS">Does not end</span>
+                                            <input type="radio" name="Wend" value="does_not_end" id="dne" class="Wend"><span id="dneS">Does not end</span>
                                         </div>
                                         <div class="radio1">
-                                            <input type="radio" name="date" value="date" id="date"><input type="date" name="end_date" id="end_date">
+                                            <input type="radio" name="Wend" value="date" id="date" class="Wend"> <input type="date" name="end_date" class="end_date" id="end_date">
                                         </div>
                                         <div class="radio1">
-                                            <input type="radio" name="not" value="not"><span id="not1">after</span><input type="text" name="number_of_times" id="not"><span>occurence(s)</span>
+                                            <input type="radio" name="Wend" value="not" class="Wend"><span id="not1">after</span><input type="text" class="not" name="number_of_times" id="not"><span>occurence(s)</span>
                                         </div>
                                     </div>
                                 </div>
@@ -624,10 +624,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                     <h6>ON</h6>
                                     <div class="monthly_items">
                                         <div class="m2_item1">
-                                            <input type="radio" name="day_n" id="day_n"><span>day</span><input type="text" name="day_num" id="day_num">
+                                            <input type="radio" class="rClass" name="day_sched" id="day_n" value="day"><span>day</span><input type="text" name="day_num" id="day_num">
                                         </div>
                                         <div class="m2_item2">
-                                            <input type="radio" name="day_sched"><span id="the">the</span>
+                                            <input type="radio" class="rClass" name="day_sched" value="spec_day"><span id="the">the</span>
                                             <select name="day_place" id="day_place">
                                                 <option value="first">FIRST</option>
                                                 <option value="Second">SECOND</option>
@@ -652,20 +652,21 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                     <h6>END</h6>
                                     <div class="item2">
                                         <div class="radio1">
-                                            <input type="radio" name="does_not_end" value="does_not_end" id="dne"><span id="dneS">Does not end</span>
+                                            <input type="radio" name="Mend" value="does_not_end" class="Mend" id="dne"><span id="dneS">Does not end</span>
                                         </div>
                                         <div class="radio1">
-                                            <input type="radio" name="date" value="date" id="date"><input type="date" name="end_date" id="end_date">
+                                            <input type="radio" name="Mend" value="date" class="Mend" id="date"><input type="date" name="end_date" id="end_date" class="close_end">
                                         </div>
                                         <div class="radio1">
-                                            <input type="radio" name="not" value="not"><span id="not1">after</span><input type="text" name="number_of_times" id="not"><span>occurence(s)</span>
+                                            <input type="radio" name="Mend" class="Mend" value="not"><span id="not1">after</span><input type="text" name="number_of_times" id="not" class="close_not"><span>occurence(s)</span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
                         </div>
-
+                        <hr>
+                        <button class="btn btn-primary bton">Save</button>
                     </div>
                     <!-- end off adding items -->
                     <br><br>

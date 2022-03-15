@@ -268,14 +268,18 @@ $(document).on("click", "#cfp_add_item_area .close_add_item", function(event) {
     event.preventDefault();
     $("#cfp_add_item_area").fadeOut();
 });
-
-//productivity
+var p_type = "0"
+    //productivity
 $(document).on("click", "#toggle_switch", function(event) {
 
     if ($("input[name=toggle_switch]").is(":checked")) {
+        p_type = "1";
+        $("#sched").val('daily');
         $("#container_hide").fadeIn();
         $(".daily_hide").fadeIn();
     } else {
+        p_type = "0";
+        $("#sched").val('daily');
         $("#container_hide").fadeOut();
         $(".daily_hide").fadeOut();
         $(".weekly_hide").fadeOut();
@@ -288,6 +292,7 @@ var html = "";
 $(document).on("click", "#toggle_switch1", function(event) {
 
     if ($("input[name=toggle_switch1]").is(":checked")) {
+
         html = "Repeats every day";
         $('.finding').html(html);
     } else if ($("input[name=toggle_switch1]").not(":checked")) {
@@ -295,6 +300,9 @@ $(document).on("click", "#toggle_switch1", function(event) {
         $('.finding').html(html);
     }
 });
+
+
+
 
 
 $(document).on("change", "#sched", function(event) {
@@ -307,8 +315,10 @@ $(document).on("change", "#sched", function(event) {
         $(".weekly_hide").fadeIn();
         $(".monthly_hide").hide();
 
-        $('.num_weeks').val("1")
-        var weeks = "week";
+        $('.num_weeks').val("")
+        var months = "";
+        var day = ""
+        var weeks = "";
         var mon = "";
         var tue = "";
         var wed = "";
@@ -316,7 +326,7 @@ $(document).on("change", "#sched", function(event) {
         var fri = "";
         var sat = "";
         var sun = "Sunday";
-        var html2 = "Repeats every " + weeks + " on " + sun;
+        var html2 = "";
 
         $('.finding').html(html2);
 
@@ -324,97 +334,198 @@ $(document).on("change", "#sched", function(event) {
             if ($('#sun').hasClass('color')) {
                 $('#sun').removeClass('color');
                 sun = "";
+                var html2 = "";
                 var html2 = "Repeats every " + weeks + " on " + sun + mon + tue + wed + thur + fri + sat;
                 $('.finding').html(html2);
+
             } else {
                 $('#sun').toggleClass('color');
                 sun = "SUNDAY";
-                var html2 = "Repeats every " + weeks + " on " + sun + mon + tue + wed + thur + fri + sat;
-                $('.finding').html(html2);
+                if (weeks == "") {
+                    var html2 = "";
+                    var html2 = "Please enter a week";
+                    $('.finding').html(html2);
+                } else {
+                    if (mon != "" || tue != "" || wed != "" || thur != "" || fri != "" || sat != "" || sun != "") {
+                        var html2 = "";
+                        var html2 = "Repeats every " + weeks + " on " + sun + mon + tue + wed + thur + fri + sat;
+                        $('.finding').html(html2);
+                    } else {
+                        var html2 = "";
+                        var html2 = "Please choose a day";
+                        $('.finding').html(html2);
+                    }
+                }
             }
         });
         $(document).on("click", "#mon", function(event) {
             if ($('#mon').hasClass('color')) {
                 $('#mon').removeClass('color');
                 mon = "";
+                var html2 = "";
                 var html2 = "Repeats every " + weeks + " on " + sun + mon + tue + wed + thur + fri + sat;
                 $('.finding').html(html2);
             } else {
                 $('#mon').toggleClass('color');
                 mon = ", MONDAY";
-                var html2 = "Repeats every " + weeks + " on " + sun + mon + tue + wed + thur + fri + sat;
-                $('.finding').html(html2);
+                if (weeks == "") {
+
+                    var html2 = "";
+                    var html2 = "Please enter a week";
+                    $('.finding').html(html2);
+                } else {
+                    if (mon != "" || tue != "" || wed != "" || thur != "" || fri != "" || sat != "" || sun != "") {
+                        var html2 = "";
+                        var html2 = "Repeats every " + weeks + " on " + sun + mon + tue + wed + thur + fri + sat;
+                        $('.finding').html(html2);
+                    } else {
+                        var html2 = "";
+                        var html2 = "Please choose a day";
+                        $('.finding').html(html2);
+                    }
+                }
             }
         });
         $(document).on("click", "#tue", function(event) {
             if ($('#tue').hasClass('color')) {
                 $('#tue').removeClass('color');
                 tue = "";
+                var html2 = "";
                 var html2 = "Repeats every " + weeks + " on " + sun + mon + tue + wed + thur + fri + sat;
                 $('.finding').html(html2);
             } else {
                 $('#tue').toggleClass('color');
                 tue = ", TUESDAY";
-                var html2 = "Repeats every " + weeks + " on " + sun + mon + tue + wed + thur + fri + sat;
-                $('.finding').html(html2);
+                if (weeks == "") {
+                    var html2 = "";
+                    var html2 = "Please enter a week";
+                    $('.finding').html(html2);
+                } else {
+                    if (mon != "" || tue != "" || wed != "" || thur != "" || fri != "" || sat != "" || sun != "") {
+                        var html2 = "";
+                        var html2 = "Repeats every " + weeks + " on " + sun + mon + tue + wed + thur + fri + sat;
+                        $('.finding').html(html2);
+                    } else {
+                        var html2 = "";
+                        var html2 = "Please choose a day";
+                        $('.finding').html(html2);
+                    }
+                }
             }
         });
         $(document).on("click", "#wed", function(event) {
             if ($('#wed').hasClass('color')) {
                 $('#wed').removeClass('color');
                 wed = "";
+                var html2 = "";
                 var html2 = "Repeats every " + weeks + " on " + sun + mon + tue + wed + thur + fri + sat;
                 $('.finding').html(html2);
             } else {
                 $('#wed').toggleClass('color');
                 wed = ", WEDNESDAY";
-                var html2 = "Repeats every " + weeks + " on " + sun + mon + tue + wed + thur + fri + sat;
-                $('.finding').html(html2);
+                if (weeks == "") {
+                    var html2 = "";
+                    var html2 = "Please enter a week";
+                    $('.finding').html(html2);
+                } else {
+                    if (mon != "" || tue != "" || wed != "" || thur != "" || fri != "" || sat != "" || sun != "") {
+                        var html2 = "";
+                        var html2 = "Repeats every " + weeks + " on " + sun + mon + tue + wed + thur + fri + sat;
+                        $('.finding').html(html2);
+                    } else {
+                        var html2 = "";
+                        var html2 = "Please choose a day";
+                        $('.finding').html(html2);
+                    }
+                }
             }
         });
         $(document).on("click", "#thu", function(event) {
             if ($('#thu').hasClass('color')) {
                 $('#thu').removeClass('color');
                 thur = "";
+                var html2 = "";
                 var html2 = "Repeats every " + weeks + " on " + sun + mon + tue + wed + thur + fri + sat;
                 $('.finding').html(html2);
             } else {
                 $('#thu').toggleClass('color');
                 thur = ", THURSDAY";
-                var html2 = "Repeats every " + weeks + " on " + sun + mon + tue + wed + thur + fri + sat;
-                $('.finding').html(html2);
+                if (weeks == "") {
+                    var html2 = "";
+                    var html2 = "Please enter a week";
+                    $('.finding').html(html2);
+                } else {
+                    if (mon != "" || tue != "" || wed != "" || thur != "" || fri != "" || sat != "" || sun != "") {
+                        var html2 = "";
+                        var html2 = "Repeats every " + weeks + " on " + sun + mon + tue + wed + thur + fri + sat;
+                        $('.finding').html(html2);
+                    } else {
+                        var html2 = "";
+                        var html2 = "Please choose a day";
+                        $('.finding').html(html2);
+                    }
+                }
             }
         });
         $(document).on("click", "#fri", function(event) {
             if ($('#fri').hasClass('color')) {
                 $('#fri').removeClass('color');
                 fri = "";
+                var html2 = "";
                 var html2 = "Repeats every " + weeks + " on " + sun + mon + tue + wed + thur + fri + sat;
                 $('.finding').html(html2);
             } else {
                 $('#fri').toggleClass('color');
                 fri = ", FRIDAY";
-                var html2 = "Repeats every " + weeks + " on " + sun + mon + tue + wed + thur + fri + sat;
-                $('.finding').html(html2);
+                if (weeks == "") {
+                    var html2 = "";
+                    var html2 = "Please enter a week";
+                    $('.finding').html(html2);
+                } else {
+                    if (mon != "" || tue != "" || wed != "" || thur != "" || fri != "" || sat != "" || sun != "") {
+                        var html2 = "";
+                        var html2 = "Repeats every " + weeks + " on " + sun + mon + tue + wed + thur + fri + sat;
+                        $('.finding').html(html2);
+                    } else {
+                        var html2 = "";
+                        var html2 = "Please choose a day";
+                        $('.finding').html(html2);
+                    }
+                }
             }
         });
         $(document).on("click", "#sat", function(event) {
             if ($('#sat').hasClass('color')) {
                 $('#sat').removeClass('color');
                 sat = "";
+                var html2 = "";
                 var html2 = "Repeats every " + weeks + " on " + sun + mon + tue + wed + thur + fri + sat;
                 $('.finding').html(html2);
             } else {
                 $('#sat').toggleClass('color');
                 sat = ", SATURDAY";
-                var html2 = "Repeats every " + weeks + " on " + sun + mon + tue + wed + thur + fri + sat;
-                $('.finding').html(html2);
+                if (weeks == "") {
+                    var html2 = "";
+                    var html2 = "Please enter a week";
+                    $('.finding').html(html2);
+                } else {
+                    if (mon != "" || tue != "" || wed != "" || thur != "" || fri != "" || sat != "" || sun != "") {
+                        var html2 = "";
+                        var html2 = "Repeats every " + weeks + " on " + sun + mon + tue + wed + thur + fri + sat;
+                        $('.finding').html(html2);
+                    } else {
+                        var html2 = "";
+                        var html2 = "Please choose a day";
+                        $('.finding').html(html2);
+                    }
+                }
             }
         });
 
         $(document).on("input", ".num_weeks", function() {
 
-            weeks = $('.num_weeks').val() + " weeks ";
+
+            weeks = $('.num_weeks').val() + "";
             var html2 = "Repeats every " + weeks + " on " + sun + mon + tue + wed + thur + fri + sat;
             $('.finding').html(html2);
         })
@@ -423,5 +534,219 @@ $(document).on("change", "#sched", function(event) {
         $(".daily_hide").hide();
         $(".weekly_hide").hide();
         $(".monthly_hide").fadeIn();
+        $('#day_num').val("1");
+        $('.num_months').val("1");
+        day = $('#day_num').val();
+        months = $('.num_months').val();
+
+        if (months == "1") {
+            var html2 = "Repeats on day " + day + " of every month";
+            $('.finding').html(html2);
+        } else {
+            var html2 = "Repeats on day " + day + " of every " + months + " months";
+            $('.finding').html(html2);
+        }
+
+
+        $(document).on("input", ".num_months", function() {
+            months = $('.num_months').val();
+            if (months == "1") {
+                var html2 = "Repeats on day " + day + " of every month";
+                $('.finding').html(html2);
+            } else {
+                var html2 = "Repeats on day " + day + " of every " + months + " months";
+                $('.finding').html(html2);
+            }
+
+
+        });
+
+        $(document).on("change", ".rClass", function() {
+
+
+            var html2 = "Repeats on day " + day + " of every " + months + " month";
+            var determine = $('input[name=day_sched]:checked').val();
+            if (determine == "day") {
+                if (months == "1") {
+                    var html2 = "Repeats on day " + day + " of every month";
+                    $('.finding').html(html2);
+                } else {
+                    var html2 = "Repeats on day " + day + " of every " + months + " months";
+                    $('.finding').html(html2);
+                }
+
+                console.log(determine);
+                if (months != "") {
+                    $(document).on("input", "#day_num", function() {
+                        if ($('#day_num').val() != "") {
+                            day = $('#day_num').val();
+                            if (months == "1") {
+                                var html2 = "Repeats on day " + day + " of every month";
+                                $('.finding').html(html2);
+                            } else {
+                                var html2 = "Repeats on day " + day + " of every " + months + " months";
+                                $('.finding').html(html2);
+                            }
+                        } else {
+                            var html2 = "input a day";
+                            $('.finding').html(html2);
+                        }
+                    })
+                } else {
+                    var html2 = "input a month";
+                    $('.finding').html(html2);
+
+                }
+                $("select[name='day_place']").attr("disabled", true);
+                $("select[name='day_want']").attr("disabled", true);
+                $("input[name='day_num']").removeAttr("disabled");
+            } else {
+                $("select[name='day_place']").removeAttr("disabled");
+                $("select[name='day_want']").removeAttr("disabled");
+                $("input[name='day_num']").attr("disabled", true);
+                console.log(determine);
+                var rank = $("#day_place").val();
+                var want = $("#day_want").val();
+
+                if (months == "1") {
+                    var html2 = "Repeats on the " + rank + " " + want + " of every month";
+                    $('.finding').html(html2);
+                } else {
+                    var html2 = "Repeats on the " + rank + " " + want + " of every " + months + " months";
+                    $('.finding').html(html2);
+                }
+                $(document).on("change", "#day_place", function() {
+                    var rank = $('#day_place').val();
+                    if (months == "1") {
+                        var html2 = "Repeats on the " + rank + " " + want + " of every month";
+                        $('.finding').html(html2);
+                    } else {
+                        var html2 = "Repeats on the " + rank + " " + want + " of every " + months + " months";
+                        $('.finding').html(html2);
+                    }
+                    $(document).on("change", "#day_want", function() {
+                        var want = $('#day_want').val();
+                        if (months == "1") {
+                            var html2 = "Repeats on the " + rank + " " + want + " of every month.";
+                            $('.finding').html(html2);
+                        } else {
+                            var html2 = "Repeats on the " + rank + " " + want + " of every " + months + " months";
+                            $('.finding').html(html2);
+                        }
+
+                    })
+
+                })
+            }
+        });
+
     }
 });
+$(document).on("change", ".Dend", function(event) {
+    if ($("input[name=Dend]:checked").val() == 'does_not_end') {
+        $("#end_date").attr('disabled', true);
+        $("#not").attr('disabled', true);
+    } else if ($("input[name=Dend]:checked").val() == 'date') {
+        $("#end_date").removeAttr('disabled');
+        $("#not").attr('disabled', true);
+    } else if ($("input[name=Dend]:checked").val() == 'not') {
+        $("#not").removeAttr('disabled');
+        $("#end_date").attr('disabled', true);
+    }
+
+})
+$(document).on("change", ".Wend", function(event) {
+    if ($("input[name=Wend]:checked").val() == 'does_not_end') {
+        $(".end_date").attr('disabled', true);
+        $(".not").attr('disabled', true);
+    } else if ($("input[name=Wend]:checked").val() == 'date') {
+        $(".end_date").removeAttr('disabled');
+        $(".not").attr('disabled', true);
+    } else if ($("input[name=Wend]:checked").val() == 'not') {
+        $(".not").removeAttr('disabled');
+        $(".end_date").attr('disabled', true);
+    }
+
+})
+$(document).on("change", ".Mend", function(event) {
+    if ($("input[name=Mend]:checked").val() == 'does_not_end') {
+        $(".close_end").attr('disabled', true);
+        $(".close_not").attr('disabled', true);
+    } else if ($("input[name=Mend]:checked").val() == 'date') {
+        $(".close_end").removeAttr('disabled');
+        $(".close_not").attr('disabled', true);
+    } else if ($("input[name=Mend]:checked").val() == 'not') {
+        $(".close_not").removeAttr('disabled');
+        $(".close_end").attr('disabled', true);
+    }
+
+})
+
+
+
+$(document).on('click', ".bton", function() {
+    var name = $('.merchant_name').val();
+    var amt = $('.plan_amount').val();
+    var addDate = $('.addDate').val();
+    var plan = $('input[name=plan_type]').val();
+    var d_sched = "";
+    var w_weeks = "";
+    var w_days = "";
+    var m_months = "";
+    var m_day = "";
+    var sc_day = "";
+    var sc_rank = "";
+    if (p_type == "1") {
+        if ($("#sched").val() == "daily") {
+            if ($("input[name=toggle_switch1]").is(":checked")) {
+                d_sched = "everyday";
+            } else {
+                d_sched = "weekdays";
+            }
+        } else if ($("#sched").val() == "weekly") {
+            w_weeks = $('.num_weeks').val();
+            if ($("#sun").hasClass('color')) {
+                w_days += "s";
+            }
+            if ($("#mon").hasClass('color')) {
+                w_days += "m";
+            }
+            if ($("#tue").hasClass('color')) {
+                w_days += "t";
+            }
+            if ($("#wed").hasClass('color')) {
+                w_days += "w";
+            }
+            if ($("#thur").hasClass('color')) {
+                w_days += "th";
+            }
+            if ($("#fri").hasClass('color')) {
+                w_days += "f";
+            }
+            if ($("#sat").hasClass('color')) {
+                w_days += "sa";
+            }
+        } else if ($("#sched").val() == "monthly") {
+            m_months = $('.num_months').val();
+            if ($('input[name=day_sched]:checked').val() == "day") {
+                m_day = $('#day_num').val();
+
+            } else {
+                sc_day = $('#day_place').val();
+                sc_rank = $("#day_want").val();
+            }
+        }
+    }
+
+    console.log(d_sched, w_weeks, w_days, m_months, m_day, sc_day, sc_rank);
+
+    // $.ajax({
+    //     url: baseURL + "accounting/savecashflowplan",
+    //     type: "POST",
+    //     dataType: "json",
+    //     data: { merchant_name: name, date_plan: addDate, plan_amount: amt, plan_type: plan, plan_repeat: plan },
+    //     success: function(data) {
+
+    //     }
+    // });
+})

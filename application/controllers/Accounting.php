@@ -13574,7 +13574,8 @@ class Accounting extends MY_Controller
     }
 
     public function savecashflowplan()
-    {
+    {   
+        echo "pasok";
         $date_plan      = $this->input->post("date_plan");
         $merchant_name  = $this->input->post("merchant_name");
         $plan_amount    = $this->input->post("plan_amount");

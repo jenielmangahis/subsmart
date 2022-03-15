@@ -4967,6 +4967,106 @@ $(function() {
         });
     });
 
+    $(document).on('click', '#modal-container form #creditMemoModal #void-credit-memo', function(e) {
+        e.preventDefault();
+
+        var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
+
+        $.get('/accounting/void-transaction/credit-memo/'+split[1], function(res) {
+            location.reload();
+        });
+    });
+
+    $(document).on('click', '#modal-container form #creditMemoModal #delete-credit-memo', function(e) {
+        e.preventDefault();
+
+        var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
+
+        $.ajax({
+            url: `/accounting/delete-transaction/credit-memo/${split[1]}`,
+            type: 'DELETE',
+            success: function(result) {
+                location.reload();
+            }
+        });
+    });
+
+    $(document).on('click', '#modal-container #salesReceiptModal #void-sales-receipt', function(e) {
+        e.preventDefault();
+
+        var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
+
+        $.get('/accounting/void-transaction/sales-receipt/'+split[1], function(res) {
+            location.reload();
+        });
+    });
+
+    $(document).on('click', '#modal-container form #salesReceiptModal #delete-sales-receipt', function(e) {
+        e.preventDefault();
+
+        var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
+
+        $.ajax({
+            url: `/accounting/delete-transaction/sales-receipt/${split[1]}`,
+            type: 'DELETE',
+            success: function(result) {
+                location.reload();
+            }
+        });
+    });
+
+    $(document).on('click', '#modal-container #refundReceiptModal #void-refund-receipt', function(e) {
+        e.preventDefault();
+
+        var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
+
+        $.get('/accounting/void-transaction/refund-receipt/'+split[1], function(res) {
+            location.reload();
+        });
+    });
+
+    $(document).on('click', '#modal-container form #refundReceiptModal #delete-refund-receipt', function(e) {
+        e.preventDefault();
+
+        var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
+
+        $.ajax({
+            url: `/accounting/delete-transaction/refund-receipt/${split[1]}`,
+            type: 'DELETE',
+            success: function(result) {
+                location.reload();
+            }
+        });
+    });
+
+    $(document).on('click', '#modal-container form #delayedCreditModal #delete-delayed-credit', function(e) {
+        e.preventDefault();
+
+        var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
+
+        $.ajax({
+            url: `/accounting/delete-transaction/delayed-credit/${split[1]}`,
+            type: 'DELETE',
+            success: function(result) {
+                location.reload();
+            }
+        });
+    });
+
+    $(document).on('click', '#modal-container form #delayedChargeModal #delete-delayed-charge', function(e) {
+        e.preventDefault();
+
+        var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
+
+        $.ajax({
+            url: `/accounting/delete-transaction/delayed-charge/${split[1]}`,
+            type: 'DELETE',
+            success: function(result) {
+                location.reload();
+            }
+        });
+    });
+
     $(document).on('show.bs.dropdown', '#modal-container .modal .modal-header .dropdown', function() {
         var tableId = $(this).find('table').attr('id');
         if($.fn.DataTable.isDataTable(`#${tableId}`)) {
