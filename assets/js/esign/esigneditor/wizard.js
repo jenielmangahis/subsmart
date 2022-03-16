@@ -55,6 +55,8 @@ async function initLetters(categoryId) {
     );
     $select.appendChild($option);
   });
+
+  $($select).select2();
 }
 
 function handleSubmit(customer) {

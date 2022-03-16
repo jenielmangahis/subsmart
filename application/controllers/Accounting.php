@@ -13124,6 +13124,13 @@ class Accounting extends MY_Controller
         $this->load->library('pdf');
         $this->pdf->load_view('accounting/cashflow_pdf_template', $data, $filename, "portrait");
     }
+
+    public function getCashFlowPlanned(){
+        $container = $this->vendors_model->getcashflowplan(logged('company_id'));
+        $data = new stdClass();
+        $data->values = $container;
+        echo json_encode($data);
+    }
     public function get_info_for_send_invoice_reminder()
     {
         $invoice_id = $this->input->post("invoice_id");
@@ -13581,17 +13588,93 @@ class Accounting extends MY_Controller
         $plan_amount    = $this->input->post("plan_amount");
         $plan_type      = $this->input->post("plan_type");
         $plan_repeat    = $this->input->post("plan_repeat");
+        $d_sched        = $this->input->post("d_sched");
+        $w_weeks        = $this->input->post("w_weeks");
+        $w_days         = $this->input->post("w_days");
+        $m_months       = $this->input->post("m_months");
+        $m_day          = $this->input->post("m_day");
+        $sc_day         = $this->input->post("sc_day");
+        $sc_rank        = $this->input->post("sc_rank");
+        $d_dne          = $this->input->post("d_dne");
+        $d_date         = $this->input->post("d_date");
+        $d_not          = $this->input->post("d_not");
+        $w_dne          = $this->input->post("w_dne");
+        $w_date         = $this->input->post("w_date");
+        $w_not          = $this->input->post("w_not");
+        $m_dne          = $this->input->post("m_dne");
+        $m_date         = $this->input->post("m_date");
+        $m_not          = $this->input->post("m_not");
+        $indic          = $this->input->post("indic");
 
-        $new_data = array(
-            'date_plan'     => $date_plan,
-            'merchant_name' => $merchant_name,
-            'amount'        => $plan_amount,
-            'type'          => $plan_type,
-            'description'   => 'Planned',
-            'repeating'     => $plan_repeat,
-            'created_at'    => date("Y-m-d H:i:s"),
-            'updated_at'    => date("Y-m-d H:i:s")
-        );
+        if($indic == 'daily'){
+            $new_data = array(
+                'date_plan'     => $date_plan,
+                'merchant_name' => $merchant_name,
+                'amount'        => $plan_amount,
+                'type'          => $plan_type,
+                'description'   => 'Planned',
+                'repeating'     => $plan_repeat,
+                'created_at'    => date("Y-m-d H:i:s"),
+                'updated_at'    => date("Y-m-d H:i:s"),
+                'daily_sched'   => $d_sched,
+                'end_date'      => $d_date,
+                'end_type'       => $d_dne,
+                'end_occurence' => $d_not                
+
+            );
+        }else if($indic == "weekly"){
+            $new_data = array(
+                'date_plan'     => $date_plan,
+                'merchant_name' => $merchant_name,
+                'amount'        => $plan_amount,
+                'type'          => $plan_type,
+                'description'   => 'Planned',
+                'repeating'     => $plan_repeat,
+                'created_at'    => date("Y-m-d H:i:s"),
+                'updated_at'    => date("Y-m-d H:i:s"),
+                'weekly_weeks'  => $w_weeks,
+                'weekly_days'   => $w_days,
+                'end_date'      => $w_date,
+                'end_type'       => $w_dne,
+                'end_occurence' => $w_not 
+            );
+        }else if($indic == "monthly"){
+            $new_data = array(
+                'date_plan'     => $date_plan,
+                'merchant_name' => $merchant_name,
+                'amount'        => $plan_amount,
+                'type'          => $plan_type,
+                'description'   => 'Planned',
+                'repeating'     => $plan_repeat,
+                'created_at'    => date("Y-m-d H:i:s"),
+                'updated_at'    => date("Y-m-d H:i:s"),
+                'monthly_months'=> $m_months,
+                'monthly_day'   => $m_day,
+                'monthly_rank'  => $sc_day,
+                'monthly_week_day'=> $sc_rank,
+                'end_date'      => $m_date,
+                'end_type'       => $m_dne,
+                'end_occurence' => $m_not 
+            );
+        }
+
+        // $new_data = array(
+        //     'date_plan'     => $date_plan,
+        //     'merchant_name' => $merchant_name,
+        //     'amount'        => $plan_amount,
+        //     'type'          => $plan_type,
+        //     'description'   => 'Planned',
+        //     'repeating'     => $plan_repeat,
+        //     'created_at'    => date("Y-m-d H:i:s"),
+        //     'updated_at'    => date("Y-m-d H:i:s"),
+        //     'daily_sched'   => $d_sched,
+        //     'weekly_weeks'  => $w_weeks,
+        //     'weekly_days'   => $w_days,
+        //     'monthly_months'=> $m_months,
+        //     'monthly_day'   => $m_day,
+        //     'monthly_rank'  => $sc_day,
+        //     'monthly_week_day'=> $sc_rank,
+        // );
 
         $addQuery = $this->vendors_model->savecashflowplan($new_data);
 

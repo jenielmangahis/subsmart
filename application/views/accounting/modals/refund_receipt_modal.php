@@ -63,16 +63,24 @@
                                         </div>
                                         <div class="col-md-4">
                                             <h6 class="text-right">
+                                            <?php if(isset($receipt) && $receipt->status === '4') : ?>
+                                                PAYMENT STATUS
+                                                <?php else : ?>
                                                 AMOUNT
+                                                <?php endif; ?>
                                             </h6>
                                             <h2 class="text-right">
                                                 <span class="transaction-grand-total">
                                                 <?php if(isset($receipt)) : ?>
-                                                    <?php
-                                                    $amount = '$'.number_format(floatval($receipt->total_amount), 2, '.', ',');
-                                                    $amount = str_replace('$-', '-$', $amount);
-                                                    echo $amount;
-                                                    ?>
+                                                    <?php if($receipt->status === '4') : ?>
+                                                        VOID
+                                                    <?php else : ?>
+                                                        <?php
+                                                        $amount = '$'.number_format(floatval($receipt->total_amount), 2, '.', ',');
+                                                        $amount = str_replace('$-', '-$', $amount);
+                                                        echo $amount;
+                                                        ?>
+                                                    <?php endif; ?>
                                                 <?php else : ?>
                                                     $0.00
                                                 <?php endif; ?>

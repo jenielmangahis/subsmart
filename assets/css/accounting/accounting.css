@@ -1550,7 +1550,7 @@ input[name="toggle_switch"]:not(:checked)+#labelcheck {
 .radioS {
     display: grid;
     grid-template-columns: 1fr;
-    margin-left: 40px;
+    width: 300px;
 }
 
 .F_row {
@@ -1624,10 +1624,9 @@ input[name="toggle_switch1"]:not(:checked)+#labelcheck1 {
 }
 
 .S_row {
-    margin-top: -31px;
-    margin-left: 228px;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
+    width: 300px;
 }
 
 select#sched {
@@ -1678,7 +1677,6 @@ input#not {
     position: relative;
     display: flex;
     top: 4px;
-    left: -376px;
 }
 
 .daily2 {
@@ -1689,7 +1687,6 @@ input#not {
     position: relative;
     display: flex;
     top: 4px;
-    left: 230px;
 }
 
 .weekly2 {
@@ -1714,7 +1711,6 @@ input.num_weeks {
     position: relative;
     display: flex;
     top: 4px;
-    left: 233px;
 }
 
 input.num_months {
@@ -1767,8 +1763,19 @@ span#the {
     margin-left: 22px;
 }
 
-button.btn.btn-primary {
+button.btn.btn-warning.bton {
     position: relative;
-    left: 1457px;
-    background-color: #2ca01d;
+    left: 1469px;
+    background-color: #2aa01c;
+}
+
+button.button_edit {
+    background: transparent;
+    border: none;
+    font-size: x-large;
+}
+
+button.btn_cashflow_table {
+    background-color: transparent;
+    border: none;
 }

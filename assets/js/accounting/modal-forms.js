@@ -4703,6 +4703,8 @@ $(function() {
                 <span>This is a copy of an expense. Revise as needed and save the expense.</span>
             </div>
         </div>`);
+
+        $('#modal-container form#modal-form .modal-footer .row').children('div:nth-child(2)').addClass('d-flex').html(`<a href="#" class="text-white m-auto" onclick="makeRecurring('journal_entry')">Make Recurring</a>`);
     });
 
     $(document).on('click', '#modal-container form #journalEntryModal #delete-journal-entry', function(e) {
@@ -4731,6 +4733,8 @@ $(function() {
                 <span>This is a copy of an expense. Revise as needed and save the expense.</span>
             </div>
         </div>`);
+
+        $('#modal-container form#modal-form .modal-footer .row').children('div:nth-child(2)').addClass('d-flex').html(`<a href="#" class="text-white m-auto" onclick="makeRecurring('expense')">Make Recurring</a>`);
     });
 
     $(document).on('click', '#modal-container form #expenseModal #delete-expense', function(e) {
@@ -4769,6 +4773,8 @@ $(function() {
                 <span>This is a copy of a check. Revise as needed and save the check.</span>
             </div>
         </div>`);
+
+        $('#modal-container form#modal-form .modal-footer .row').children('div:nth-child(2)').find('.dropdown-menu').html(`<a class="dropdown-item" href="#" onclick="saveAndVoid(event)" id="save-and-void">Void</a>`);
     });
 
     $(document).on('click', '#modal-container form #checkModal #delete-check', function(e) {
@@ -4819,6 +4825,8 @@ $(function() {
                 <span>This is a copy of a bill. Revise as needed and save the bill.</span>
             </div>
         </div>`);
+
+        $('#modal-container form#modal-form .modal-footer .row').children('div:nth-child(2)').addClass('d-flex').html(`<a href="#" class="text-white m-auto" onclick="makeRecurring('bill')">Make Recurring</a>`);
     });
 
     $(document).on('click', '#modal-container form #billModal #delete-bill', function(e) {
@@ -4847,6 +4855,9 @@ $(function() {
                 <span>This is a copy of a purchase order. Revise as needed and save the purchase order.</span>
             </div>
         </div>`);
+
+        $('#modal-container form#modal-form .modal-footer .row').children('div:nth-child(2)').find('.dropdown-menu').parent().parent().prev().remove();
+        $('#modal-container form#modal-form .modal-footer .row').children('div:nth-child(2)').find('.dropdown-menu').parent().parent().remove();
     });
 
     $(document).on('click', '#modal-container form #purchaseOrderModal #delete-purchase-order', function(e) {
@@ -4875,6 +4886,8 @@ $(function() {
                 <span>This is a copy of a vendor credit. Revise as needed and save the vendor credit.</span>
             </div>
         </div>`);
+
+        $('#modal-container form#modal-form .modal-footer .row').children('div:nth-child(2)').addClass('d-flex').html(`<a href="#" class="text-white m-auto" onclick="makeRecurring('vendor_credit')">Make Recurring</a>`);
     });
 
     $(document).on('click', '#modal-container form #vendorCreditModal #delete-vendor-credit', function(e) {
@@ -4903,6 +4916,8 @@ $(function() {
                 <span>This is a copy of a credit card credit. Revise as needed and save the credit card credit.</span>
             </div>
         </div>`);
+
+        $('#modal-container form#modal-form .modal-footer .row').children('div:nth-child(2)').addClass('d-flex').html(`<a href="#" class="text-white m-auto" onclick="makeRecurring('credit_card_credit')">Make Recurring</a>`);
     });
 
     $(document).on('click', '#modal-container form #creditCardCreditModal #delete-cc-credit', function(e) {
@@ -4967,6 +4982,47 @@ $(function() {
         });
     });
 
+    $(document).on('click', '#modal-container form #receivePaymentModal #void-payment', function(e) {
+        e.preventDefault();
+
+        var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
+
+        $.get('/accounting/void-transaction/receive-payment/'+split[1], function(res) {
+            location.reload();
+        });
+    });
+
+    $(document).on('click', '#modal-container form #receivePaymentModal #delete-payment', function(e) {
+        e.preventDefault();
+
+        var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
+
+        $.ajax({
+            url: `/accounting/delete-transaction/receive-payment/${split[1]}`,
+            type: 'DELETE',
+            success: function(result) {
+                location.reload();
+            }
+        });
+    });
+
+    $(document).on('click', '#modal-container form #creditMemoModal #copy-credit-memo', function(e) {
+        e.preventDefault();
+
+        $('#modal-container form#modal-form').attr('onsubmit', 'submitModalForm(event, this)');
+        $('#modal-container form#modal-form').removeAttr('data-href');
+        $('#modal-container form#modal-form .modal-body .row.customer-details').next().prepend(`<div class="col-md-12">
+            <div class="alert alert-info alert-dismissible mb-4" role="alert">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <h6 class="mt-0">This is a copy</h6>
+                <span>This is a copy of a credit memo. Revise as needed and save the credit memo.</span>
+            </div>
+        </div>`);
+
+        $('#modal-container form#modal-form .modal-footer .row').children('div:nth-child(2)').find('.dropdown-menu').parent().parent().prev().remove();
+        $('#modal-container form#modal-form .modal-footer .row').children('div:nth-child(2)').find('.dropdown-menu').parent().parent().remove();
+    });
+
     $(document).on('click', '#modal-container form #creditMemoModal #void-credit-memo', function(e) {
         e.preventDefault();
 
@@ -4989,6 +5045,23 @@ $(function() {
                 location.reload();
             }
         });
+    });
+
+    $(document).on('click', '#modal-container form #salesReceiptModal #copy-sales-receipt', function(e) {
+        e.preventDefault();
+
+        $('#modal-container form#modal-form').attr('onsubmit', 'submitModalForm(event, this)');
+        $('#modal-container form#modal-form').removeAttr('data-href');
+        $('#modal-container form#modal-form .modal-body .row.customer-details').next().prepend(`<div class="col-md-12">
+            <div class="alert alert-info alert-dismissible mb-4" role="alert">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <h6 class="mt-0">This is a copy</h6>
+                <span>This is a copy of a sales receipt. Revise as needed and save the sales receipt.</span>
+            </div>
+        </div>`);
+
+        $('#modal-container form#modal-form .modal-footer .row').children('div:nth-child(2)').find('.dropdown-menu').parent().parent().prev().remove();
+        $('#modal-container form#modal-form .modal-footer .row').children('div:nth-child(2)').find('.dropdown-menu').parent().parent().remove();
     });
 
     $(document).on('click', '#modal-container #salesReceiptModal #void-sales-receipt', function(e) {
@@ -5015,6 +5088,23 @@ $(function() {
         });
     });
 
+    $(document).on('click', '#modal-container form #refundReceiptModal #copy-refund-receipt', function(e) {
+        e.preventDefault();
+
+        $('#modal-container form#modal-form').attr('onsubmit', 'submitModalForm(event, this)');
+        $('#modal-container form#modal-form').removeAttr('data-href');
+        $('#modal-container form#modal-form .modal-body .row.customer-details').next().prepend(`<div class="col-md-12">
+            <div class="alert alert-info alert-dismissible mb-4" role="alert">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <h6 class="mt-0">This is a copy</h6>
+                <span>This is a copy of a refund receipt. Revise as needed and save the refund receipt.</span>
+            </div>
+        </div>`);
+
+        $('#modal-container form#modal-form .modal-footer .row').children('div:nth-child(2)').find('.dropdown-menu').parent().parent().prev().remove();
+        $('#modal-container form#modal-form .modal-footer .row').children('div:nth-child(2)').find('.dropdown-menu').parent().parent().remove();
+    });
+
     $(document).on('click', '#modal-container #refundReceiptModal #void-refund-receipt', function(e) {
         e.preventDefault();
 
@@ -5039,6 +5129,22 @@ $(function() {
         });
     });
 
+    $(document).on('click', '#modal-container form #delayedCreditModal #copy-delayed-credit', function(e) {
+        e.preventDefault();
+
+        $('#modal-container form#modal-form').attr('onsubmit', 'submitModalForm(event, this)');
+        $('#modal-container form#modal-form').removeAttr('data-href');
+        $('#modal-container form#modal-form .modal-body .row.customer-details').next().prepend(`<div class="col-md-12">
+            <div class="alert alert-info alert-dismissible mb-4" role="alert">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <h6 class="mt-0">This is a copy</h6>
+                <span>This is a copy of a delayed credit. Revise as needed and save the delayed credit.</span>
+            </div>
+        </div>`);
+
+        $('#modal-container form#modal-form .modal-footer .row').children('div:nth-child(2)').addClass('d-flex').html(`<a href="#" class="text-white m-auto" onclick="makeRecurring('delayed_credit')">Make Recurring</a>`);
+    });
+
     $(document).on('click', '#modal-container form #delayedCreditModal #delete-delayed-credit', function(e) {
         e.preventDefault();
 
@@ -5051,6 +5157,22 @@ $(function() {
                 location.reload();
             }
         });
+    });
+
+    $(document).on('click', '#modal-container form #delayedChargeModal #copy-delayed-charge', function(e) {
+        e.preventDefault();
+
+        $('#modal-container form#modal-form').attr('onsubmit', 'submitModalForm(event, this)');
+        $('#modal-container form#modal-form').removeAttr('data-href');
+        $('#modal-container form#modal-form .modal-body .row.customer-details').next().prepend(`<div class="col-md-12">
+            <div class="alert alert-info alert-dismissible mb-4" role="alert">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <h6 class="mt-0">This is a copy</h6>
+                <span>This is a copy of a delayed charge. Revise as needed and save the delayed charge.</span>
+            </div>
+        </div>`);
+
+        $('#modal-container form#modal-form .modal-footer .row').children('div:nth-child(2)').addClass('d-flex').html(`<a href="#" class="text-white m-auto" onclick="makeRecurring('delayed_charge')">Make Recurring</a>`);
     });
 
     $(document).on('click', '#modal-container form #delayedChargeModal #delete-delayed-charge', function(e) {

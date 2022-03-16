@@ -78,11 +78,15 @@
                                             <h2 class="text-right">
                                                 <span class="transaction-grand-total">
                                                 <?php if(isset($creditMemo)) : ?>
+                                                    <?php if($creditMemo->status === '4') : ?>
+                                                        VOID
+                                                    <?php else : ?>
                                                     <?php
                                                     $amount = '$'.number_format(floatval($creditMemo->balance), 2, '.', ',');
                                                     $amount = str_replace('$-', '-$', $amount);
                                                     echo $amount;
                                                     ?>
+                                                    <?php endif; ?>
                                                 <?php else : ?>
                                                     $0.00
                                                 <?php endif; ?>
