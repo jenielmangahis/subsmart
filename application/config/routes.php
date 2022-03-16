@@ -74,6 +74,22 @@ $route['customer/_send_message'] = 'Customer/ajax_send_message';
 $route['customer/_delete_customer_message'] = 'Customer/ajax_delete_customer_message';
 $route['customer/credit_industry/(:num)'] = 'Customer/credit_industry/$1';
 
+//Credit Bureau
+$route['credit_bureau/list'] = 'Credit_Bureau/index';
+$route['credit_bureau/add_new'] = 'Credit_Bureau/add_new';
+$route['credit_bureau/_create_credit_bureau'] = 'Credit_Bureau/ajax_create_credit_bureau';
+$route['credit_bureau/_delete_credit_bureau'] = 'Credit_Bureau/ajax_delete_credit_bureau';
+$route['credit_bureau/edit/(:num)'] = 'Credit_Bureau/edit/$1';
+$route['credit_bureau/_update_credit_bureau'] = 'Credit_Bureau/ajax_update_credit_bureau';
+
+//Creditor Furnisher
+$route['creditor_furnisher/list'] = 'CreditorFurnisher/index';
+$route['creditor_furnisher/add_new'] = 'CreditorFurnisher/add_new';
+$route['creditor_furnisher/_create_furnisher'] = 'CreditorFurnisher/ajax_create_furnisher';
+$route['creditor_furnisher/_delete_creditor_furnisher'] = 'CreditorFurnisher/ajax_delete_furnisher';
+$route['creditor_furnisher/edit/(:num)'] = 'CreditorFurnisher/edit/$1';
+$route['creditor_furnisher/_update_creditor_furnisher'] = 'CreditorFurnisher/ajax_update_creditor_furnisher';
+
 //Quick Notes
 $route['quick_notes/list'] = 'Quick_Notes/index';
 $route['quick_notes/add_new'] = 'Quick_Notes/add_new';
