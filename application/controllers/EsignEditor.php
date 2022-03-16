@@ -79,6 +79,8 @@ class EsignEditor extends MY_Controller
         add_css([
             'assets/textEditor/summernote-bs4.css',
             'assets/css/esign/esign-editor/esign-editor.css',
+
+            'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css',
         ]);
 
         add_footer_js([
@@ -88,6 +90,8 @@ class EsignEditor extends MY_Controller
             'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',
             'https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.3.6/purify.min.js',
             'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js',
+
+            'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js',
         ]);
 
         $this->load->view('esign/esigneditor/wizard', $this->page_data);

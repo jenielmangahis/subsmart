@@ -70,16 +70,28 @@
                                         </div>
                                         <div class="col-md-4">
                                             <h6 class="text-right">
-                                                <?=!isset($payment) ? 'AMOUNT' : 'AMOUNT RECEIVED'?>
+                                                <?php if(!isset($payment)) : ?>
+                                                    AMOUNT
+                                                <?php else : ?>
+                                                    <?php if($payment->status === '4') : ?>
+                                                        PAYMENT STATUS
+                                                    <?php else : ?>
+                                                        AMOUNT RECEIVED
+                                                    <?php endif; ?>
+                                                <?php endif; ?>
                                             </h6>
                                             <h2 class="text-right">
                                                 <span class="transaction-total-amount">
                                                     <?php if(isset($payment)) : ?>
-                                                    <?php
-                                                    $amount = '$'.number_format(floatval($payment->amount), 2, '.', ',');
-                                                    $amount = str_replace('$-', '-$', $amount);
-                                                    echo $amount;
-                                                    ?>
+                                                        <?php if($payment->status === '4') : ?>
+                                                            VOID
+                                                        <?php else : ?>
+                                                            <?php
+                                                            $amount = '$'.number_format(floatval($payment->amount), 2, '.', ',');
+                                                            $amount = str_replace('$-', '-$', $amount);
+                                                            echo $amount;
+                                                            ?>
+                                                        <?php endif; ?>
                                                     <?php else : ?>
                                                     $0.00
                                                     <?php endif; ?>

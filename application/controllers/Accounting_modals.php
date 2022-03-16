@@ -12510,7 +12510,7 @@ class Accounting_modals extends MY_Controller
             foreach($invoices as $paymentInvoice) {
                 $invoice = $this->accounting_invoices_model->get_invoice_by_invoice_id($paymentInvoice->invoice_id);
 
-                $balance = floatval($invoice->balance) - floatval($paymentInvoice->payment_amount);
+                $balance = floatval($invoice->balance) + floatval($paymentInvoice->payment_amount);
 
                 if(floatval($invoice->grand_total) === $balance) {
                     $status = 'Schedule';
@@ -12542,7 +12542,7 @@ class Accounting_modals extends MY_Controller
             foreach($credits as $paymentCredit) {
                 $creditMemo = $this->accounting_credit_memo_model->getCreditMemoDetails($paymentCredit->credit_memo_id);
 
-                $balance = floatval($creditMemo->balance) + floatval($paymentCredit->balance);
+                $balance = floatval($creditMemo->balance) + floatval($paymentCredit->payment_amount);
 
                 $creditMemoData = [
                     'balance' => number_format(floatval($balance), 2, '.', ',')
@@ -14534,7 +14534,7 @@ class Accounting_modals extends MY_Controller
                 $delete = $this->delete_time_activity($transactionId);
             break;
             case 'receive-payment' :
-
+                $delete = $this->delete_receive_payment($transactionId);
             break;
             case 'credit-memo' :
                 $delete = $this->delete_credit_memo($transactionId);
@@ -15083,6 +15083,9 @@ class Accounting_modals extends MY_Controller
 
                 $cashBack = $this->chart_of_accounts_model->updateBalance($cashBackData);
             }
+
+            $removeAttachments = $this->accounting_attachments_model->unlink_attachments('Deposit', $depositId);
+            $removeTags = $this->tags_model->remove_transaction_tags('Deposit', $depositId);
         }
 
         return $update;
@@ -15123,6 +15126,8 @@ class Accounting_modals extends MY_Controller
     
                 $this->chart_of_accounts_model->updateBalance($accountData);
             }
+
+            $removeAttachments = $this->accounting_attachments_model->unlink_attachments('Journal', $journalEntryId);
         }
 
         return $update;
@@ -15159,6 +15164,8 @@ class Accounting_modals extends MY_Controller
 
             $this->chart_of_accounts_model->updateBalance($transferFromAccData);
             $this->chart_of_accounts_model->updateBalance($transferToAccData);
+
+            $removeAttachments = $this->accounting_attachments_model->unlink_attachments('Transfer', $transferId);
         }
 
         return $update;
@@ -15256,6 +15263,74 @@ class Accounting_modals extends MY_Controller
         return $update;
     }
 
+    private function delete_receive_payment($receivePaymentId)
+    {
+        $payment = $this->accounting_receive_payment_model->getReceivePaymentDetails($receivePaymentId);
+
+        $paymentData = [
+            'amount_received' => 0.00,
+            'amount_to_credit' => 0.00,
+            'amount_to_apply' => 0.00,
+            'credit_balance' => 0.00,
+            'status' => 0
+        ];
+
+        $update = $this->accounting_receive_payment_model->updateReceivePayment($payment->id, $paymentData);
+
+        if($update) {
+            $invoices = $this->accounting_receive_payment_model->get_payment_invoices($payment->id);
+            $credits = $this->accounting_receive_payment_model->get_payment_credits($payment->id);
+
+            foreach($invoices as $paymentInvoice) {
+                $invoice = $this->accounting_invoices_model->get_invoice_by_invoice_id($paymentInvoice->invoice_id);
+                $balance = floatval($invoice->balance) + floatval($paymentInvoice->payment_amount);
+
+                if(floatval($invoice->grand_total) === $balance) {
+                    $status = 'Schedule';
+                }
+
+                if(floatval($invoice->grand_total) > $balance) {
+                    $status = 'Partially Paid';
+                }
+
+                $invoiceData = [
+                    'balance' => $balance,
+                    'status' => isset($status) ? $status : $invoice->status
+                ];
+                $this->accounting_invoices_model->updateInvoices($invoiceId, $invoiceData);
+
+                $paymentRecordData = [
+                    'company_id' => logged('company_id'),
+                    'customer_id' => $payment->customer_id,
+                    'invoice_amount' => floatval($paymentInvoice->payment_amount),
+                    'payment_date' => date("Y-m-d", strtotime($payment->payment_date)),
+                    'payment_method' => is_null($payment->payment_method) || $payment->payment_method === '' ? 'cash' : $payment->payment_method,
+                    'invoice_number' => $invoice->invoice_number
+                ];
+                $this->payment_records_model->delete_payment_record($paymentRecordData);
+
+                $this->accounting_receive_payment_model->delete_payment_invoice($paymentInvoice->id);
+            }
+
+            foreach($credits as $paymentCredit) {
+                $creditMemo = $this->accounting_credit_memo_model->getCreditMemoDetails($paymentCredit->credit_memo_id);
+
+                $balance = floatval($creditMemo->balance) + floatval($paymentCredit->payment_amount);
+
+                $creditMemoData = [
+                    'balance' => number_format(floatval($balance), 2, '.', ',')
+                ];
+                $this->accounting_credit_memo_model->updateCreditMemo($creditMemo->id, $creditMemoData);
+
+                $this->accounting_receive_payment_model->delete_payment_credit($paymentCredit->id);
+            }
+
+            $removeAttachments = $this->accounting_attachments_model->unlink_attachments('Payment', $receivePaymentId);
+        }
+
+        return $update;
+    }
+
     private function delete_credit_memo($creditMemoId)
     {
         $creditMemo = $this->accounting_credit_memo_model->getCreditMemoDetails($creditMemoId);
@@ -15274,6 +15349,9 @@ class Accounting_modals extends MY_Controller
 
         if($update) {
             $this->void_customer_transaction_items('Credit Memo', $creditMemoId);
+
+            $removeAttachments = $this->accounting_attachments_model->unlink_attachments('Credit Memo', $creditMemoId);
+            $removeTags = $this->tags_model->remove_transaction_tags('Credit Memo', $creditMemoId);
         }
 
         return $update;
@@ -15315,6 +15393,9 @@ class Accounting_modals extends MY_Controller
             $this->chart_of_accounts_model->updateBalance($depositAccData);
 
             $this->void_customer_transaction_items('Sales Receipt', $salesReceiptId);
+
+            $removeAttachments = $this->accounting_attachments_model->unlink_attachments('Sales Receipt', $salesReceiptId);
+            $removeTags = $this->tags_model->remove_transaction_tags('Sales Receipt', $salesReceiptId);
         }
 
         return $update;
@@ -15356,6 +15437,9 @@ class Accounting_modals extends MY_Controller
             $this->chart_of_accounts_model->updateBalance($refundAccData);
 
             $this->void_customer_transaction_items('Refund Receipt', $refundReceiptId);
+
+            $removeAttachments = $this->accounting_attachments_model->unlink_attachments('Refund Receipt', $refundReceiptId);
+            $removeTags = $this->tags_model->remove_transaction_tags('Refund Receipt', $refundReceiptId);
         }
 
         return $update;
@@ -15378,6 +15462,9 @@ class Accounting_modals extends MY_Controller
 
         if($update) {
             $this->void_customer_transaction_items('Delayed Credit', $delayedCreditId);
+
+            $removeAttachments = $this->accounting_attachments_model->unlink_attachments('Delayed Credit', $delayedCreditId);
+            $removeTags = $this->tags_model->remove_transaction_tags('Delayed Credit', $delayedCreditId);
         }
 
         return $update;
@@ -15400,6 +15487,9 @@ class Accounting_modals extends MY_Controller
 
         if($update) {
             $this->void_customer_transaction_items('Delayed Charge', $delayedChargeId);
+
+            $removeAttachments = $this->accounting_attachments_model->unlink_attachments('Delayed Charge', $delayedChargeId);
+            $removeTags = $this->tags_model->remove_transaction_tags('Delayed Charge', $delayedChargeId);
         }
 
         return $update;
@@ -15427,7 +15517,7 @@ class Accounting_modals extends MY_Controller
                 $return = $this->void_transfer($transactionId);
             break;
             case 'receive-payment' :
-
+                $return = $this->void_receive_payment($transactionId);
             break;
             case 'credit-memo' :
                 $return = $this->void_credit_memo($transactionId);
@@ -15782,6 +15872,72 @@ class Accounting_modals extends MY_Controller
             'success' => $void ? true : false,
             'message' => $void ? 'Transaction successfully voided!' : 'Unexpected error occurred.'
         ];
+    }
+
+    private function void_receive_payment($receivePaymentId)
+    {
+        $payment = $this->accounting_receive_payment_model->getReceivePaymentDetails($receivePaymentId);
+
+        $paymentData = [
+            'amount_received' => 0.00,
+            'amount_to_credit' => 0.00,
+            'amount_to_apply' => 0.00,
+            'credit_balance' => 0.00,
+            'status' => 4
+        ];
+
+        $update = $this->accounting_receive_payment_model->updateReceivePayment($payment->id, $paymentData);
+
+        if($update) {
+            $invoices = $this->accounting_receive_payment_model->get_payment_invoices($payment->id);
+            $credits = $this->accounting_receive_payment_model->get_payment_credits($payment->id);
+
+            foreach($invoices as $paymentInvoice) {
+                $invoice = $this->accounting_invoices_model->get_invoice_by_invoice_id($paymentInvoice->invoice_id);
+                $balance = floatval($invoice->balance) + floatval($paymentInvoice->payment_amount);
+
+                if(floatval($invoice->grand_total) === $balance) {
+                    $status = 'Schedule';
+                }
+
+                if(floatval($invoice->grand_total) > $balance) {
+                    $status = 'Partially Paid';
+                }
+
+                $invoiceData = [
+                    'balance' => $balance,
+                    'status' => isset($status) ? $status : $invoice->status
+                ];
+                $this->accounting_invoices_model->updateInvoices($invoiceId, $invoiceData);
+
+                $paymentRecordData = [
+                    'company_id' => logged('company_id'),
+                    'customer_id' => $payment->customer_id,
+                    'invoice_amount' => floatval($paymentInvoice->payment_amount),
+                    'payment_date' => date("Y-m-d", strtotime($payment->payment_date)),
+                    'payment_method' => is_null($payment->payment_method) || $payment->payment_method === '' ? 'cash' : $payment->payment_method,
+                    'invoice_number' => $invoice->invoice_number
+                ];
+                $this->payment_records_model->delete_payment_record($paymentRecordData);
+
+                $this->accounting_receive_payment_model->delete_payment_invoice($paymentInvoice->id);
+            }
+
+            foreach($credits as $paymentCredit) {
+                $creditMemo = $this->accounting_credit_memo_model->getCreditMemoDetails($paymentCredit->credit_memo_id);
+
+                $balance = floatval($creditMemo->balance) + floatval($paymentCredit->payment_amount);
+
+                $creditMemoData = [
+                    'balance' => number_format(floatval($balance), 2, '.', ',')
+                ];
+                $this->accounting_credit_memo_model->updateCreditMemo($creditMemo->id, $creditMemoData);
+
+                $this->accounting_receive_payment_model->delete_payment_credit($paymentCredit->id);
+            }
+        }
+
+        return $update;
     }
 
     private function void_credit_memo($creditMemoId)

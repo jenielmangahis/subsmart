@@ -642,9 +642,104 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 <th>TYPE</th>
                                 <th></th>
                             </thead>
-                            <tbody class="planner_table">
+                            <tbody>
                                
-                                
+                                <?php foreach ($invoices as $inv) : ?>
+                                    <tr class="moneyin">
+                                        <td><?php echo  date('m' . '/' . 'd' . '/' . 'Y', strtotime($inv->date_issued)); ?>
+                                        </td>
+                                        <td><?php echo $inv->contact_name . '' . $inv->first_name . "&nbsp;" . $inv->last_name; ?>
+                                        </td>
+                                        <td><?php echo number_format($inv->grand_total, 2); ?>
+                                        </td>
+                                        <td><?php echo 'Invoice'; ?>
+                                        </td>
+                                        
+                                    </tr>
+                                <?php endforeach; ?>
+
+                                <?php foreach ($plans as $plan) : ?>
+                                    <tr class="moneyin">
+                                        <td><?php echo  date('m' . '/' . 'd' . '/' . 'Y', strtotime($plan->date_plan)); ?>
+                                        </td>
+                                        <td><?php echo $plan->merchant_name; ?>
+                                        </td>
+                                        <td><?php echo number_format($plan->amount, 2); ?>
+                                        </td>
+                                        <td><?php echo 'Planned'; ?>
+                                        </td>
+                                        <td><button class="button_edit" ><i class="fa fa-sort-desc" aria-hidden="true"></i></button></td>
+                                        <tr><td colspan="5">yawa</td></tr>
+                                    </tr>
+                                <?php endforeach; ?>
+
+                                <?php foreach ($checks as $check) { ?>
+                                    <tr>
+                                        <td>
+                                            <div class="table-nowrap">
+                                                <?php echo  date('m' . '/' . 'd' . '/' . 'Y', strtotime($check->payment_date)) ?>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <!-- <a href="<?php //echo base_url('customer/view/' . $rpayment->customer_id)
+                                                            ?>">
+                                        -->
+                                            <?php
+
+                                            switch ($check->payee_type) {
+                                                case 'vendor':
+                                                    $vendor = $this->vendors_model->get_vendor_by_id($check->payee_id);
+                                                    // echo $vendor->display_name;
+                                                    print_r('test' . $vendor);
+                                                    break;
+                                                case 'customer':
+                                                    $customer = $this->accounting_customers_model->get_customer_by_id($check->payee_id);
+                                                    echo $customer->first_name . ' ' . $customer->last_name;
+                                                    break;
+                                                case 'employee':
+                                                    $employee = $this->users_model->getUser($check->payee_id);
+                                                    echo $employee->FName . ' ' . $employee->LName;
+                                                    break;
+                                            }
+
+                                            ?>
+                                            <!-- </a> -->
+                                        </td>
+                                        <td><?php echo number_format($check->total_amount, 2); ?>
+                                        </td>
+                                        <td>
+                                            <?php echo 'Check'; ?>
+                                        </td>
+                                        </td>
+                                    </tr>
+                                <?php } //print_r($sales_receipts);
+                                ?>
+
+                                <?php foreach ($expenses as $exp) : ?>
+                                    <tr class="moneyin">
+                                        <td><?php echo  date('m' . '/' . 'd' . '/' . 'Y', strtotime($exp->payment_date)); ?>
+                                        </td>
+                                        <td><?php echo get_customer_by_id($exp->vendor_id)->first_name . ' ' . get_customer_by_id($exp->vendor_id)->last_name ?>
+                                        </td>
+                                        <td><?php echo number_format($exp->amount, 2); ?>
+                                        </td>
+                                        <td><?php echo 'Expense'; ?>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+
+                                <!-- <tr>
+									<td>08/30/2021</td>
+									<td>Loucelle Emperio</td>
+									<td>$200.00</td>
+									<td>Check</td>
+								</tr>
+								<tr>
+									<td>08/30/2021</td>
+									<td>Brannon Nguyen</td>
+									<td>$500.00</td>
+									<td>Invoice</td>
+								</tr> -->
                             </tbody>
                         </table>
                     </div>

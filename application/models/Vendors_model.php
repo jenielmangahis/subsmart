@@ -849,6 +849,7 @@ class Vendors_model extends MY_Model {
 		$query = $this->db->get('cashflow_planned');
 		return $query->result();
 	}
+
 	public function addcashflowplan($company_id){
 		
 	}
