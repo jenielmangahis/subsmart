@@ -8,7 +8,8 @@ window.document.addEventListener("DOMContentLoaded", async () => {
   const $table = $("#letters");
   const table = $table.DataTable({
     data,
-    paging: false,
+    pageLength: 50,
+    lengthChange: false,
     language: {
       search: '<div class="icon"><i class="fa fa-search"></i></div>',
       searchPlaceholder: "Search...",
@@ -130,10 +131,12 @@ const actions = {
   preview: (row) => {
     const $modal = $("#previewLetterModal");
     const $preview = $modal.find(".preview");
+    const $title = $modal.find(".modal-title");
 
     const $letter = $("<div/>").html(row.content);
     $letter.addClass("preview__item");
     $letter.find(".pageBreak").removeAttr("style");
+    $title.text(row.title);
 
     $preview.html($letter);
     $modal.modal("show");

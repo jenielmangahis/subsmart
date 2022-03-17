@@ -20,25 +20,25 @@
         <a class="h6 mb-0 nav-link <?= $cust_active_tab == 'jobs' ?   "active" : ''; ?> nav-link" href="<?= base_url('customer/jobs_list/'.$cus_id) ?>">Jobs</a>
     </li>
     <li class="nav-item">
-        <a class="h6 mb-0 nav-link <?= $cust_active_tab == 'workorders' ?   "active" : ''; ?> nav-link" href="<?= base_url('customer/workorders_list/'.$cus_id) ?>">Workorders</a>
+        <a class="h6 mb-0 nav-link <?= $cust_active_tab == 'workorders' ?   "active" : ''; ?> nav-link" href="<?= base_url('customer/workorders_list/'.$cus_id) ?>">Service</a>
     </li>
     <li class="nav-item">
         <a class="h6 mb-0 nav-link <?= $cust_active_tab == 'estimates' ?   "active" : ''; ?> nav-link" href="<?= base_url('customer/estimates_list/'.$cus_id); ?>">Estimates</a>
     </li>    
-    <li class="nav-item">
+    <!-- <li class="nav-item">
         <a class="h6 mb-0 nav-link <?= $active_tab == 'leadSource' ?   "active" : ''; ?> nav-link">Import/Audit</a>
-    </li>
-    <li class="nav-item">
+    </li> -->
+    <!-- <li class="nav-item">
         <a class="h6 mb-0 nav-link <?= $active_tab == 'leadTypes' ?   "active" : ''; ?> nav-link">Tag Pending Report</a>
-    </li>
+    </li> -->
     <li class="nav-item">
         <a class="h6 mb-0 nav-link" href="<?= base_url('esign/createTemplate') ?> nav-link">Send Letters</a>
     </li>
     <li class="nav-item">
-        <a class="h6 mb-0 nav-link <?= $active_tab == 'header' ?   "active" : ''; ?> nav-link">Dispute Items</a>
+        <a class="h6 mb-0 nav-link <?= $cust_active_tab == 'credit_industry' ?   "active" : ''; ?> nav-link" href="<?= base_url('customer/credit_industry/'.$cus_id) ?>">Credit Industry</a>
     </li>
     <li class="nav-item">
-        <a class="h6 mb-0 nav-link banking-sub-tab <?= $active_tab == 'header' ?   "active" : ''; ?> nav-link">Educate</a>
+        <a class="h6 mb-0 nav-link banking-sub-tab <?= $active_tab == 'header' ?   "active" : ''; ?> nav-link">Payment</a>
     </li>
     <li class="nav-item">
         <a class="h6 mb-0 nav-link <?= $cust_active_tab == 'messages' ?   "active" : ''; ?> nav-link" href="<?= base_url('customer/messages_list/'.$cus_id); ?>">Messages</a>

@@ -7,6 +7,7 @@ $(document).on("click", "#import-customers-modal .close-modal", function(event) 
 $(document).on("click", "#import-customers-modal #close", function(event) {
     // get_load_customers_table();
     $("#import-customers-modal").fadeOut();
+    location.reload();
 });
 
 

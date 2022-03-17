@@ -5006,6 +5006,35 @@ $(function() {
         });
     });
 
+    $(document).on('click', '#modal-container form #receivePaymentModal #save-and-print', function(e) {
+        e.preventDefault();
+
+        $('#modal-container form#modal-form').submit();
+
+        var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
+
+        $.get('/accounting/print-payment-modal/'+split[1], function(result) {
+            $('div#modal-container').append(result);
+
+            $('#viewPrintPaymentModal').modal('show');
+        });
+    });
+
+    $(document).on('hidden.bs.modal', '#viewPrintPaymentModal', function() {
+        $(this).parent().parent().next('.modal-backdrop').remove();
+        $(this).parent().remove();
+    });
+
+    $(document).on('click', '#viewPrintPaymentModal #preview-and-print', function(e) {
+        e.preventDefault();
+
+        let pdfWindow = window.open("");
+        pdfWindow.document.write(`<iframe width="100%" height="100%" src="${$('#viewPrintPaymentModal iframe').attr('src')}"></iframe>`);
+        $(pdfWindow.document).find('body').css('padding', '0');
+        $(pdfWindow.document).find('body').css('margin', '0');
+        $(pdfWindow.document).find('iframe').css('border', '0');
+    });
+
     $(document).on('click', '#modal-container form #creditMemoModal #copy-credit-memo', function(e) {
         e.preventDefault();
 
@@ -6842,6 +6871,9 @@ const submitModalForm = (event, el) => {
                     case 'payDownCreditModal' :
                         var type = 'credit-card-payment';
                     break;
+                    case 'receivePaymentModal' :
+                        var type = 'receive-payment';
+                    break;
                 }
 
                 if(submitType === 'save-and-close' || submitType === 'save-and-void') {
@@ -6870,6 +6902,11 @@ const submitModalForm = (event, el) => {
                     $('#modal-container #modal-form').attr('data-href', `/accounting/update-transaction/${type}/${res.data}`);
                     $('#modal-container #modal-form').attr('onsubmit', 'updateTransaction(event, this)');
                     printTimesheet(res.data);
+                }
+
+                if(submitType === 'save-and-print' && modalId === '#receivePaymentModal') {
+                    $('#modal-container #modal-form').attr('data-href', `/accounting/update-transaction/${type}/${res.data}`);
+                    $('#modal-container #modal-form').attr('onsubmit', 'updateTransaction(event, this)');
                 }
 
                 if(submitType === 'save-and-new') {
