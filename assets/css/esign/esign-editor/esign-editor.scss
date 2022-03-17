@@ -379,3 +379,14 @@
     display: block;
   }
 }
+
+#previewLetterModal {
+  .modal-title {
+    display: block;
+    width: inherit;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin-right: 1rem;
+  }
+}

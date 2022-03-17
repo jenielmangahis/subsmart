@@ -421,11 +421,11 @@
                         </div>
                         <div class="col-md-4 <?=!isset($payment) ? 'd-flex' : ''?>">
                             <?php if(!isset($payment)) : ?>
-                            <a href="#" class="text-white m-auto">Print</a>
+                            <a href="#" class="text-white m-auto" id="save-and-print">Print</a>
                             <?php else : ?>
                             <div class="row h-100">
                                 <div class="col-md-12 d-flex align-items-center justify-content-center">
-                                    <span><a href="#" class="text-white">Print</a></span>
+                                    <span><a href="#" class="text-white" id="save-and-print">Print</a></span>
                                     <span class="mx-3 divider"></span>
                                     <span>
                                         <div class="dropup">

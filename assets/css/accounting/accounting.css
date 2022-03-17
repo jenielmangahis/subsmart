@@ -1765,7 +1765,7 @@ span#the {
 
 button.btn.btn-warning.bton {
     position: relative;
-    left: 1469px;
+    left: 90%;
     background-color: #2aa01c;
 }
 
@@ -1778,4 +1778,40 @@ button.button_edit {
 button.btn_cashflow_table {
     background-color: transparent;
     border: none;
+}
+
+.col-md-1\.5.due_date {
+    margin-left: 50px;
+}
+
+.cp_buttons button {
+    border-radius: 20px;
+    height: 35px;
+    width: 100px;
+    background-color: #2ca01d;
+    color: white;
+    border: none;
+    margin-right: 10px;
+}
+
+.row.cp_buttons {
+    margin-left: 77%;
+}
+
+.edit-panel {
+    display: none;
+}
+
+.edit-panels {
+    display: none;
+}
+
+input.date_type {
+    background: transparent;
+    border: none;
+}
+
+input.amnt {
+    background: transparent !important;
+    border: none !important;
 }

@@ -684,11 +684,12 @@ jQuery(document).ready(function() {
     })
 
 
+
     $(document).on('click', "#cfp_add_item_area .bton", function() {
         var name = $('.merchant_name').val();
         var amt = $('.plan_amount').val();
         var addDate = $('.addDate').val();
-        var plan = $('input[name=plan_type]').val();
+        var plan = $('input[name=plan_type]:checked').val();
         var d_sched = "";
         var w_weeks = "";
         var w_days = "";
@@ -705,13 +706,14 @@ jQuery(document).ready(function() {
         var m_dne = "";
         var m_date = "";
         var m_not = "";
-        var indic = $("#sched").val();
+        var indic = $("#sched option:selected").val();
 
 
         if (p_type == "1") {
 
 
-            if ($("#sched").val() == "daily") {
+            if ($("#sched option:selected").val() == "daily") {
+                console.log($("#sched option:selected").val());
                 if ($("input[name=toggle_switch1]").is(":checked")) {
                     d_sched = "everyday";
 
@@ -738,7 +740,8 @@ jQuery(document).ready(function() {
 
                     }
                 });
-            } else if ($("#sched").val() == "weekly") {
+            } else if ($("#sched option:selected").val() == "weekly") {
+                console.log($("#sched option:selected").val());
                 w_weeks = $('.num_weeks').val();
                 if ($("#sun").hasClass('color')) {
                     w_days += "sunday";
@@ -775,20 +778,22 @@ jQuery(document).ready(function() {
                     url: baseURL + "accounting/savecashflowplan",
                     type: "POST",
                     dataType: "json",
-                    data: { merchant_name: name, date_plan: addDate, plan_amount: amt, plan_type: plan, plan_repeat: plan, w_dne: w_dne, w_date: w_date, w_not: w_not, w_weeks: w_weeks, w_days: w_days },
+                    data: { merchant_name: name, date_plan: addDate, plan_amount: amt, plan_type: plan, plan_repeat: plan, w_dne: w_dne, w_date: w_date, w_not: w_not, w_weeks: w_weeks, w_days: w_days, indic: indic },
                     success: function(data) {
 
                     }
                 });
-            } else if ($("#sched").val() == "monthly") {
+            } else if ($("#sched option:selected").val() == "monthly") {
+                console.log($("#sched option:selected").val());
                 m_months = $('.num_months').val();
                 if ($('input[name=day_sched]:checked').val() == "day") {
                     m_day = $('#day_num').val();
 
                 } else {
-                    sc_day = $('#day_place').val();
-                    sc_rank = $("#day_want").val();
+                    sc_day = $('#day_place option:selected').val();
+                    sc_rank = $("#day_want option:selected").val();
                 }
+
                 if ($("#cfp_add_item_area input[name=Mend]:checked").val() == 'date') {
                     m_date = $('input[name=end_dateM]').val();
                     m_dne = $("#cfp_add_item_area input[name='Mend']:checked").val();
@@ -803,16 +808,78 @@ jQuery(document).ready(function() {
                     url: baseURL + "accounting/savecashflowplan",
                     type: "POST",
                     dataType: "json",
-                    data: { merchant_name: name, date_plan: addDate, plan_amount: amt, plan_type: plan, plan_repeat: plan, m_dne: m_dne, m_date: m_date, m_not: m_not, m_months: m_months, m_day: m_day },
+                    data: { merchant_name: name, date_plan: addDate, plan_amount: amt, plan_type: plan, plan_repeat: plan, sc_day: sc_day, sc_rank: sc_rank, m_dne: m_dne, m_date: m_date, m_not: m_not, m_months: m_months, m_day: m_day, indic: indic },
                     success: function(data) {
 
                     }
                 });
             }
         }
-
+        location.reload();
         $('#cfp_add_item_area').fadeOut();
     });
+
+    $(document).on('click', "#cashflowtransactions #toggle_button", function() {
+        var id = $(this).parents("tr").attr("data-id");
+
+        console.log($(this).children(".fa-chevron-down").length);
+        if ($(this).children(".fa-chevron-down").length == 0) {
+            $("#cashflowtransactions tr .fa-chevron-down").attr("class", "fa fa-chevron-right");
+            $("#cashflowtransactions tr.edit-panel").hide();
+            $(this).children(".fa-chevron-right").attr("class", "fa fa-chevron-down");
+            $("#cashflowtransactions tr.info-" + id).fadeIn();
+            $("#cashflowtransactions input#date" + id).removeAttr("disabled");
+            $("#cashflowtransactions input#date" + id).removeClass("date_type");
+            $("#cashflowtransactions input#text" + id).removeClass("amnt");
+        } else {
+            $("#cashflowtransactions tr .fa-chevron-down").attr("class", "fa fa-chevron-right");
+            $("#cashflowtransactions tr.edit-panel").fadeOut();
+            $("#cashflowtransactions  input#date" + id).attr("disabled", true);
+            $("#cashflowtransactions input#date" + id).addClass("date_type");
+            $("#cashflowtransactions input#text" + id).addClass("amnt");
+        }
+    })
+    $(document).on('click', "#cashflowmoneyin #toggle_button", function() {
+        var id = $(this).parents("tr").attr("data-id");
+
+        console.log($(this).children(".fa-chevron-down").length);
+        if ($(this).children(".fa-chevron-down").length == 0) {
+            $("#cashflowmoneyin tr .fa-chevron-down").attr("class", "fa fa-chevron-right");
+            $("#cashflowmoneyin tr.edit-panel").hide();
+            $(this).children(".fa-chevron-right").attr("class", "fa fa-chevron-down");
+            $("#cashflowmoneyin tr.info-" + id).fadeIn();
+            $("#cashflowmoneyin input#date" + id).removeAttr("disabled");
+            $("#cashflowmoneyin input#date" + id).removeClass("date_type");
+            $("#cashflowmoneyin input#text" + id).removeClass("date_type");
+            $("#cashflowmoneyin input#text" + id).removeClass("amnt");
+        } else {
+            $("#cashflowmoneyin tr .fa-chevron-down").attr("class", "fa fa-chevron-right");
+            $("#cashflowmoneyin tr.edit-panel").fadeOut();
+            $("#cashflowmoneyin  input#date" + id).attr("disabled", true);
+            $("#cashflowmoneyin input#date" + id).addClass("date_type");
+            $("#cashflowmoneyin input#text" + id).addClass("amnt");
+        }
+    })
+    $(document).on('click', "#cashflowmoneyout #toggle_button", function() {
+        var id = $(this).parents("tr").attr("data-id");
+
+        console.log($(this).children(".fa-chevron-down").length);
+        if ($(this).children(".fa-chevron-down").length == 0) {
+            $("#cashflowmoneyout tr .fa-chevron-down").attr("class", "fa fa-chevron-right");
+            $("#cashflowmoneyout tr.edit-panel").hide();
+            $(this).children(".fa-chevron-right").attr("class", "fa fa-chevron-down");
+            $("#cashflowmoneyout tr.info-" + id).fadeIn();
+            $("#cashflowmoneyout input#date" + id).removeAttr("disabled");
+            $("#cashflowmoneyout input#text" + id).removeClass("amnt");
+        } else {
+            $("#cashflowmoneyout tr .fa-chevron-down").attr("class", "fa fa-chevron-right");
+            $("#cashflowmoneyout tr.edit-panel").fadeOut();
+            $("#cashflowmoneyout  input#date" + id).attr("disabled", true);
+            $("#cashflowmoneyout input#date" + id).addClass("date_type");
+            $("#cashflowmoneyout input#text" + id).addClass("amnt");
+        }
+    })
+
     $.ajax({
         url: baseURL + "accounting/getCashFlowPlanned",
         type: "POST",
@@ -820,18 +887,21 @@ jQuery(document).ready(function() {
         data: {},
         success: function(data) {
             var html = "";
-
+            var html_moneyin = "";
+            var html_moneyout = "";
+            //for planner table
+            count = 0;
             for (index = 0; index < data.values.length; index++) {
-                html += `<tr class="moneyin">
-                <td>` + data.values[index]["created_at"] + `</td>
-                <td>` + data.values[index]["merchant_name"] + `</td>
-                <td>` + data.values[index]["amount"] + `</td>
+                html += `<tr class="moneyin" data-id="` + index + `">
+                <td> <input class="date_type" id="date` + index + `" type="date" value="` + data.values[index]["created_at"] + `" disabled></td>
+                <td>` + data.values[index]["merchant_name"].toUpperCase() + `</td>
+                <td><input type="text" id="text` + index + `" class="amnt" value="` + data.values[index]["amount"] + `"></td>
                 <td>` + data.values[index]["description"] + `</td>
-                <td><button class="btn_cashflow_table">edit</button></td>
-                <tr>
+                <td><button class="btn_cashflow_table" id="toggle_button">edit <i class="fa fa-chevron-right" aria-hidden="true"></i></button></td>
+                <tr class="info-` + index + ` edit-panel">
                     <td colspan="5">
                        <div class="row">
-                            <div class="col-md-1.5">
+                            <div class="col-md-1.5 due_date">
                                 <div class="row">
                                     <div class="col">
                                         <h6>Due date</h6>
@@ -844,9 +914,60 @@ jQuery(document).ready(function() {
                 } else if (data.values[index]["end_type"] == "date") {
                     html += `<p>` + data.values[index]["end_date"] + `</p>`;
                 } else {
-                    html += `<p>` + data.values[index]["end_occurence"] + `</p>`;
+                    html += `<p>` + data.values[index]["end_occurence"] + ` occurence</p>`;
                 }
                 html += `</div>
+                        </div>
+                            </div>
+                        
+                            <div class="col-3">
+                                <div class="row">
+                                    <div class="col-md-10">
+                                        <h6>Due amount</h6>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <p>` + data.values[index]["amount"] + `</p>    
+                                    </div>
+                                </div>
+                            </div>
+
+                       </div>
+                       <hr>
+                       <div class="row cp_buttons">
+                            <button>REMOVE</button><button>UPDATE</button>
+                       </div>
+                    </td>
+                </tr>`;
+
+
+                if (data.values[index]["type"] == "moneyin") {
+                    html_moneyin += `<tr class="moneyin" data-id="` + index + `">
+                    <td> <input class="date_type" id="date` + index + `" type="date" value="` + data.values[index]["created_at"] + `"disabled></td>
+                <td>` + data.values[index]["merchant_name"].toUpperCase() + `</td>
+                <td> <input type="text" id="text` + index + `" class="amnt" value="` + data.values[index]["amount"] + `"></td>
+                <td>` + data.values[index]["description"] + `</td>
+                <td><button class="btn_cashflow_table" id="toggle_button">edit <i class="fa fa-chevron-right" aria-hidden="true"></i></button></td>
+                <tr class="info-` + index + ` edit-panel">
+                    <td colspan="5">
+                       <div class="row">
+                            <div class="col-md-1.5 due_date">
+                                <div class="row">
+                                    <div class="col">
+                                        <h6>Due date</h6>
+                                    </div>   
+                                </div>
+                                <div class="row">
+                            <div class="col">`
+                    if (data.values[index]["end_type"] == "does_not_end") {
+                        html_moneyin += `<p>` + data.values[index]["end_type"] + `</p>`;
+                    } else if (data.values[index]["end_type"] == "date") {
+                        html_moneyin += `<p>` + data.values[index]["end_date"] + `</p>`;
+                    } else {
+                        html_moneyin += `<p>` + data.values[index]["end_occurence"] + `</p>`;
+                    }
+                    html_moneyin += `</div>
                         </div>
                             </div>
                         
@@ -863,11 +984,75 @@ jQuery(document).ready(function() {
                                 </div>
                             </div>
                        </div>
+                       <hr>
+                       <div class="row cp_buttons">
+                            <button>REMOVE</button><button>UPDATE</button>
+                       </div>
                     </td>
                 </tr>`;
+                }
+
+                if (data.values[index]["type"] == "moneyout") {
+                    count++;
+                    console.log(count);
+                    html_moneyout += `<tr class="moneyin" data-id="` + index + `">
+                <td> <input class="date_type" id="date` + index + `" type="date" value="` + data.values[index]["created_at"] + `" disabled></td>
+                <td>` + data.values[index]["merchant_name"].toUpperCase() + `</td>
+                <td><input type="text" id="text` + index + `" class="amnt" value="` + data.values[index]["amount"] + `"></td>
+                <td>` + data.values[index]["description"] + `</td>
+                  <td><button class="btn_cashflow_table" id="toggle_button">edit <i class="fa fa-chevron-right" aria-hidden="true"></i></button></td>
+                <tr class="info-` + index + ` edit-panel">
+                    <td colspan="5">
+                       <div class="row">
+                            <div class="col-md-1.5 due_date">
+                                <div class="row">
+                                    <div class="col">
+                                        <h6>Due date</h6>
+                                    </div>   
+                                </div>
+                                <div class="row">
+                            <div class="col">`
+                    if (data.values[index]["end_type"] == "does_not_end") {
+                        html_moneyout += `<p>` + data.values[index]["end_type"] + `</p>`;
+                    } else if (data.values[index]["end_type"] == "date") {
+                        html_moneyout += `<p>` + data.values[index]["end_date"] + `</p>`;
+                    } else {
+                        html_moneyout += `<p>` + data.values[index]["end_occurence"] + `</p>`;
+                    }
+                    html_moneyout += `</div>
+                        </div>
+                            </div>
+                        
+                            <div class="col">
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <h6>Due amount</h6>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <p>` + data.values[index]["amount"] + `</p>    
+                                    </div>
+                                </div>
+                            </div>
+                       </div>
+                       <hr>
+                       <div class="row cp_buttons">
+                            <button>REMOVE</button><button>UPDATE</button>
+                       </div>
+                    </td>
+                </tr>`;
+                }
+
             }
 
+            //for money in table
+
             $('#cashflowtransactions .planner_table').html(html);
+            $('#cashflowmoneyin .moneyin_table').html(html_moneyin);
+            $('#cashflowmoneyout .moneyout_table').html(html_moneyout);
+
+
         }
     });
 });
