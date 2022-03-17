@@ -73,6 +73,7 @@ $route['customer/_use_quick_note'] = 'Customer/ajax_use_quick_note';
 $route['customer/_send_message'] = 'Customer/ajax_send_message';
 $route['customer/_delete_customer_message'] = 'Customer/ajax_delete_customer_message';
 $route['customer/credit_industry/(:num)'] = 'Customer/credit_industry/$1';
+$route['customer/add_dispute_item/(:num)'] = 'Customer/add_new_dispute_item/$1';
 
 //Credit Bureau
 $route['credit_bureau/list'] = 'Credit_Bureau/index';
