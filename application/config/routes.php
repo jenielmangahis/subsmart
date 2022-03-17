@@ -409,6 +409,8 @@ $route['accounting/load-customer-credits/(:any)']['post'] = 'accounting_modals/l
 $route['accounting/find-customer-by-invoice-no']['post'] = 'accounting_modals/find_customer_by_invoice_no';
 $route['accounting/load-payment-invoices/(:any)']['post'] = 'accounting_modals/load_payment_invoices/$1';
 $route['accounting/load-payment-credits/(:any)']['post'] = 'accounting_modals/load_payment_credits/$1';
+$route['accounting/print-payment-modal/(:any)'] = 'accounting_modals/print_payment/$1';
+$route['accounting/download-payment-pdf/(:any)'] = 'accounting_modals/download_payment_pdf/$1';
 
 $route['accounting/lists'] = 'accounting/lists';
 

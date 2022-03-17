@@ -15278,6 +15278,25 @@ class Accounting_modals extends MY_Controller
         $update = $this->accounting_receive_payment_model->updateReceivePayment($payment->id, $paymentData);
 
         if($update) {
+            $depositToAcc = $this->chart_of_accounts_model->getById($payment->deposit_to);
+            $depositToAccType = $this->account_model->getById($depositToAcc->account_id);
+
+            if ($depositToAccType->account_name === 'Credit Card') {
+                $newBalance = floatval($depositToAcc->balance) + floatval($payment->amount_received);
+            } else {
+                $newBalance = floatval($depositToAcc->balance) - floatval($payment->amount_received);
+            }
+
+            $newBalance = number_format($newBalance, 2, '.', ',');
+
+            $depositToAccData = [
+                'id' => $depositToAcc->id,
+                'company_id' => logged('company_id'),
+                'balance' => $newBalance
+            ];
+
+            $this->chart_of_accounts_model->updateBalance($depositToAccData);
+
             $invoices = $this->accounting_receive_payment_model->get_payment_invoices($payment->id);
             $credits = $this->accounting_receive_payment_model->get_payment_credits($payment->id);
 
@@ -15889,6 +15908,25 @@ class Accounting_modals extends MY_Controller
         $update = $this->accounting_receive_payment_model->updateReceivePayment($payment->id, $paymentData);
 
         if($update) {
+            $depositToAcc = $this->chart_of_accounts_model->getById($payment->deposit_to);
+            $depositToAccType = $this->account_model->getById($depositToAcc->account_id);
+
+            if ($depositToAccType->account_name === 'Credit Card') {
+                $newBalance = floatval($depositToAcc->balance) + floatval($payment->amount_received);
+            } else {
+                $newBalance = floatval($depositToAcc->balance) - floatval($payment->amount_received);
+            }
+
+            $newBalance = number_format($newBalance, 2, '.', ',');
+
+            $depositToAccData = [
+                'id' => $depositToAcc->id,
+                'company_id' => logged('company_id'),
+                'balance' => $newBalance
+            ];
+
+            $this->chart_of_accounts_model->updateBalance($depositToAccData);
+
             $invoices = $this->accounting_receive_payment_model->get_payment_invoices($payment->id);
             $credits = $this->accounting_receive_payment_model->get_payment_credits($payment->id);
 
@@ -16997,5 +17035,114 @@ class Accounting_modals extends MY_Controller
         ];
 
         echo json_encode($result);
+    }
+
+    public function print_payment($paymentId)
+    {
+        $this->load->helper('string');
+        $this->load->library('pdf');
+        $view = "accounting/modals/print_action/print_payment";
+
+        $extension = '.pdf';
+
+        do {
+            $randomString = random_string('alnum');
+            $fileName = 'print_payment_'.$randomString . '.' .$extension;
+            $exists = file_exists('./assets/pdf/'.$fileName);
+        } while ($exists);
+
+        $payment = $this->accounting_receive_payment_model->getReceivePaymentDetails($paymentId);
+        $paymentInvoices = $this->accounting_receive_payment_model->get_payment_invoices($paymentId);
+
+        foreach($paymentInvoices as $key => $paymentInvoice) {
+            $invoice = $this->accounting_invoices_model->get_invoice_by_invoice_id($paymentInvoice->invoice_id);
+
+            $paymentInvoices[$key]->invoice = $invoice;
+        }
+
+        $customer = $this->accounting_customers_model->get_by_id($payment->customer_id);
+        $customerName = $customer->first_name . ' ' . $customer->last_name;
+
+        $address = '';
+        $address .= $customer->mail_add !== "" ? $customer->mail_add : "";
+        $address .= $customer->city !== "" ? '<br />' . $customer->city : "";
+        $address .= $customer->state !== "" ? ', ' . $customer->state : "";
+        $address .= $customer->zip_code !== "" ? ' ' . $customer->zip_code : "";
+        $address .= $customer->country !== "" ? ' ' . $customer->country : "";
+
+        $pdfData = [
+            'customerName' => $customerName,
+            'address' => $address,
+            'payment' => $payment,
+            'paymentInvoices' => $paymentInvoices
+        ];
+
+        $this->pdf->save_pdf($view, $pdfData, $fileName, 'portrait');
+
+        $pdf = base64_encode(file_get_contents(base_url("/assets/pdf/$fileName")));
+        if (file_exists(getcwd()."/assets/pdf/$fileName")) {
+            unlink(getcwd()."/assets/pdf/$fileName");
+        }
+
+        $this->page_data['pdf'] = $pdf;
+        $this->load->view('accounting/modals/view_print_payment', $this->page_data);
+    }
+
+    public function download_payment_pdf($paymentId)
+    {
+        $this->load->library('pdf');
+        $this->load->helper('string');
+        $payment = $this->accounting_receive_payment_model->getReceivePaymentDetails($paymentId);
+
+        $view = "accounting/modals/print_action/print_payment";
+        $extension = '.pdf';
+
+        do {
+            $randomString = random_string('alnum');
+            $fileName = 'print_payment_'.$randomString . '.' .$extension;
+            $exists = file_exists('./assets/pdf/'.$fileName);
+        } while ($exists);
+
+        $payment = $this->accounting_receive_payment_model->getReceivePaymentDetails($paymentId);
+        $paymentInvoices = $this->accounting_receive_payment_model->get_payment_invoices($paymentId);
+
+        foreach($paymentInvoices as $key => $paymentInvoice) {
+            $invoice = $this->accounting_invoices_model->get_invoice_by_invoice_id($paymentInvoice->invoice_id);
+
+            $paymentInvoices[$key]->invoice = $invoice;
+        }
+
+        $customer = $this->accounting_customers_model->get_by_id($payment->customer_id);
+        $customerName = $customer->first_name . ' ' . $customer->last_name;
+
+        $address = '';
+        $address .= $customer->mail_add !== "" ? $customer->mail_add : "";
+        $address .= $customer->city !== "" ? '<br />' . $customer->city : "";
+        $address .= $customer->state !== "" ? ', ' . $customer->state : "";
+        $address .= $customer->zip_code !== "" ? ' ' . $customer->zip_code : "";
+        $address .= $customer->country !== "" ? ' ' . $customer->country : "";
+
+        $pdfData = [
+            'customerName' => $customerName,
+            'address' => $address,
+            'payment' => $payment,
+            'paymentInvoices' => $paymentInvoices
+        ];
+
+        $this->pdf->save_pdf($view, $pdfData, $fileName, 'portrait');
+
+        $fullPath = base_url("/assets/pdf/$fileName");
+        if ($fd = fopen ($fullPath, "r")) {
+            $fsize = filesize($fullPath);
+            header("Content-type: application/pdf"); // add here more headers for diff.     extensions
+            header("Content-Disposition: attachment; filename=\"Receive Payment.pdf\"");
+            header("Content-length: $fsize");
+            header("Cache-control: private"); //use this to open files directly
+            readfile($fullPath);
+
+            unlink(getcwd()."/assets/pdf/$fileName");
+            fclose ($fd);
+            exit;
+        }
     }
 }
