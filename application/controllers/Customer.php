@@ -1220,6 +1220,18 @@ class Customer extends MY_Controller
             $check_customer = $this->customer_ad_model->check_customer($input);
         }
 
+        $custom_fields_array = [];
+        if (array_key_exists('custom_name', $input) && array_key_exists('custom_value', $input)) {
+            foreach ($input['custom_name'] as $key => $name) {
+                $cleanName = trim($name);
+                $cleanValue = trim($input['custom_value'][$key]);
+
+                if (!empty($cleanName) && !empty($cleanValue)) {
+                    array_push($custom_fields_array, ['name' => $cleanName, 'value' => $cleanValue]);
+                }
+            }
+        }
+
         if(empty($check_customer) ){
             // customer profile info
             $input_profile = array();
@@ -1247,7 +1259,7 @@ class Customer extends MY_Controller
             $input_profile['date_of_birth'] = $input['date_of_birth'];
             $input_profile['phone_h'] = $input['phone_h'];
             $input_profile['phone_m'] = $input['phone_m'];
-            //$input_profile['custom_fields'] = json_encode($custom_fields_array);
+            $input_profile['custom_fields'] = json_encode($custom_fields_array);
             if( $input['bill_method'] == 'CC' ){
                 //Check cc if valid using converge
                 $a_exp_date = explode("/", $input['credit_card_exp']);

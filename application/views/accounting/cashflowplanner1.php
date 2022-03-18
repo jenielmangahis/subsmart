@@ -516,13 +516,13 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                         <h6>END</h6>
                                         <div class="item2">
                                             <div class="radio1">
-                                                <input type="radio" name="Dend" class="Dend daily_dne" value="does_not_end" id="dneS"><span id="dneS" required checked>Does not end</span>
+                                                <input type="radio" name="Dend" class="Dend daily_dne" value="does_not_end" id="dneS" checked><span id="dneS" >Does not end</span>
                                             </div>
                                             <div class="radio1">
-                                                <input type="radio" name="Dend" class="Dend" value="date" id="dateD"><input type="date" class="daily_date" name="end_date" id="end_date">
+                                                <input type="radio" name="Dend" class="Dend" value="date" id="dateD"><input type="date" class="daily_date" name="end_date" id="end_date" disabled>
                                             </div>
                                             <div class="radio1">
-                                                <input type="radio" name="Dend" class="Dend" value="not" id="notD"><span id="not1">after</span><input type="text" name="number_of_times" class="daily_not" id="not"><span>occurence(s)</span>
+                                                <input type="radio" name="Dend" class="Dend" value="not" id="notD"><span id="not1">after</span><input type="text" name="number_of_times" class="daily_not" id="not" disabled><span>occurence(s)</span>
                                             </div>
                                         </div>
                                     </div>
@@ -566,10 +566,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                 <input type="radio" name="Wend" value="does_not_end" id="dne" class="Wend" checked><span id="dneS">Does not end</span>
                                             </div>
                                             <div class="radio1">
-                                                <input type="radio" name="Wend" value="date" id="date" class="Wend"> <input type="date" name="end_dateW" class="end_date" id="end_date">
+                                                <input type="radio" name="Wend" value="date" id="date" class="Wend"> <input type="date" name="end_dateW" class="end_date" id="end_date" disabled>
                                             </div>
                                             <div class="radio1">
-                                                <input type="radio" name="Wend" value="not" class="Wend"><span id="not1">after</span><input type="text" class="not" name="number_of_timesW" id="not"><span>occurence(s)</span>
+                                                <input type="radio" name="Wend" value="not" class="Wend"><span id="not1">after</span><input type="text" class="not" name="number_of_timesW" id="not" disabled><span>occurence(s)</span>
                                             </div>
                                         </div>
                                     </div>
@@ -589,14 +589,14 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                         </div>
                                         <div class="m2_item2">
                                             <input type="radio" class="rClass" name="day_sched" value="spec_day"><span id="the">the</span>
-                                            <select name="day_place" id="day_place">
+                                            <select name="day_place" id="day_place" disabled>
                                                 <option value="first" selected>FIRST</option>
                                                 <option value="Second">SECOND</option>
                                                 <option value="third">THIRD</option>
                                                 <option value="fourth">FOURTH</option>
                                                 <option value="fifth">FRIDAY</option>
                                             </select>
-                                            <select name="day_want" id="day_want">
+                                            <select name="day_want" id="day_want" disabled>
                                                 <option value="SUNDAY" selected>SUNDAY</option>
                                                 <option value="MONDAY">MONDAY</option>
                                                 <option value="TUESDAY">TUESDAY</option>
@@ -613,13 +613,13 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                     <h6>END</h6>
                                     <div class="item2">
                                         <div class="radio1">
-                                            <input type="radio" name="Mend" value="does_not_end" class="Mend" id="dne" required><span id="dneS">Does not end</span>
+                                            <input type="radio" name="Mend" value="does_not_end" class="Mend" id="dne" required checked> <span id="dneS">Does not end</span>
                                         </div>
                                         <div class="radio1">
-                                            <input type="radio" name="Mend" value="date" class="Mend" id="date"><input type="date" name="end_dateM" id="end_date" class="close_end" required>
+                                            <input type="radio" name="Mend" value="date" class="Mend" id="date"><input type="date" name="end_dateM" id="end_date" class="close_end" required disabled>
                                         </div>
                                         <div class="radio1">
-                                            <input type="radio" name="Mend" class="Mend" value="not"><span id="not1">after</span><input type="text" name="number_of_timesM" id="not" class="close_not" required><span>occurence(s)</span>
+                                            <input type="radio" name="Mend" class="Mend" value="not"><span id="not1">after</span><input type="text" name="number_of_timesM" id="not" class="close_not" required disabled><span>occurence(s)</span>
                                         </div>
                                     </div>
                                 </div>
@@ -641,6 +641,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 <th>AMOUNT</th>
                                 <th>TYPE</th>
                                 <th></th>
+                                <th ></th>
                             </thead>
                             <tbody class="planner_table">
                                
@@ -656,6 +657,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 <th>DESCRIPTION</th>
                                 <th>AMOUNT</th>
                                 <th>TYPE</th>
+                                <th></th>
                                 <th></th>
                             </thead>
                             <tbody class="moneyin_table">
@@ -673,6 +675,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                             <th>DESCRIPTION</th>
                             <th>AMOUNT</th>
                             <th>TYPE</th>
+                            <th></th>
                             <th></th>
                         </thead>
                         <tbody class="moneyout_table">
@@ -699,6 +702,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                     <th>DESCRIPTION</th>
                                     <th>AMOUNT</th>
                                     <th>TYPE</th>
+                                    <th></th>
                                     <th></th>
                                 </thead>
                                 <tbody>
