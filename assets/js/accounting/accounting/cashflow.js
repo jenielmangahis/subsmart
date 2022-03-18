@@ -708,119 +708,205 @@ jQuery(document).ready(function() {
         var m_not = "";
         var indic = $("#sched option:selected").val();
 
+        if (name == "" || amt == "" || addDate == "" || plan == "") {
+            alert("input all fields");
+        } else {
+            if (p_type == "1") {
+                if ($("#sched option:selected").val() == "daily") {
+                    console.log($("#sched option:selected").val());
+                    if ($("input[name=toggle_switch1]").is(":checked")) {
+                        d_sched = "everyday";
 
-        if (p_type == "1") {
-
-
-            if ($("#sched option:selected").val() == "daily") {
-                console.log($("#sched option:selected").val());
-                if ($("input[name=toggle_switch1]").is(":checked")) {
-                    d_sched = "everyday";
-
-                } else {
-                    d_sched = "weekdays";
-
-                }
-                if ($("#cfp_add_item_area input[name='Dend']:checked").val() == "date") {
-                    d_date = $("#cfp_add_item_area input[name='end_date']").val();
-                    d_dne = $("#cfp_add_item_area input[name='Dend']:checked").val();;
-                } else if ($("#cfp_add_item_area input[name='Dend']:checked").val() == "not") {
-                    d_not = $("#cfp_add_item_area input[name='number_of_times']").val();
-                    d_dne = $("#cfp_add_item_area input[name='Dend']:checked").val();;
-                } else {
-                    d_dne = $("#cfp_add_item_area input[name='Dend']:checked").val();
-                }
-
-                $.ajax({
-                    url: baseURL + "accounting/savecashflowplan",
-                    type: "POST",
-                    dataType: "json",
-                    data: { merchant_name: name, date_plan: addDate, plan_amount: amt, plan_type: plan, plan_repeat: plan, d_sched: d_sched, d_dne: d_dne, d_date: d_date, d_not: d_not, indic: indic },
-                    success: function(data) {
+                    } else {
+                        d_sched = "weekdays";
 
                     }
-                });
-            } else if ($("#sched option:selected").val() == "weekly") {
-                console.log($("#sched option:selected").val());
-                w_weeks = $('.num_weeks').val();
-                if ($("#sun").hasClass('color')) {
-                    w_days += "sunday";
-                }
-                if ($("#mon").hasClass('color')) {
-                    w_days += ",monday";
-                }
-                if ($("#tue").hasClass('color')) {
-                    w_days += ",tuesday";
-                }
-                if ($("#wed").hasClass('color')) {
-                    w_days += "wednesday";
-                }
-                if ($("#thur").hasClass('color')) {
-                    w_days += "thursday";
-                }
-                if ($("#fri").hasClass('color')) {
-                    w_days += "friday";
-                }
-                if ($("#sat").hasClass('color')) {
-                    w_days += "saturday";
-                }
-                if ($("#cfp_add_item_area input[name=Wend]:checked").val() == 'date') {
-                    w_date = $('input[name=end_dateW]').val();
-                    w_dne = $("#cfp_add_item_area input[name='Wend']:checked").val();
-                } else if ($("#cfp_add_item_area input[name=Wend]:checked").val() == 'not') {
-                    w_not = $('input[name=number_of_timesW]').val();
-                    w_dne = $("#cfp_add_item_area input[name='Wend']:checked").val();
-                } else {
-                    w_dne = $("#cfp_add_item_area input[name='Wend']:checked").val();
-                }
-
-                $.ajax({
-                    url: baseURL + "accounting/savecashflowplan",
-                    type: "POST",
-                    dataType: "json",
-                    data: { merchant_name: name, date_plan: addDate, plan_amount: amt, plan_type: plan, plan_repeat: plan, w_dne: w_dne, w_date: w_date, w_not: w_not, w_weeks: w_weeks, w_days: w_days, indic: indic },
-                    success: function(data) {
-
+                    if ($("#cfp_add_item_area input[name='Dend']:checked").val() == "date") {
+                        d_date = $("#cfp_add_item_area input[name='end_date']").val();
+                        d_dne = $("#cfp_add_item_area input[name='Dend']:checked").val();;
+                    } else if ($("#cfp_add_item_area input[name='Dend']:checked").val() == "not") {
+                        d_not = $("#cfp_add_item_area input[name='number_of_times']").val();
+                        d_dne = $("#cfp_add_item_area input[name='Dend']:checked").val();;
+                    } else {
+                        d_dne = $("#cfp_add_item_area input[name='Dend']:checked").val();
                     }
-                });
-            } else if ($("#sched option:selected").val() == "monthly") {
-                console.log($("#sched option:selected").val());
-                m_months = $('.num_months').val();
-                if ($('input[name=day_sched]:checked').val() == "day") {
-                    m_day = $('#day_num').val();
 
-                } else {
-                    sc_day = $('#day_place option:selected').val();
-                    sc_rank = $("#day_want option:selected").val();
+                    if (d_dne == "date") {
+                        if (d_date == "") {
+                            alert("input date");
+                            console.log("yawa");
+                        } else {
+                            $.ajax({
+                                url: baseURL + "accounting/savecashflowplan",
+                                type: "POST",
+                                dataType: "json",
+                                data: { merchant_name: name, date_plan: addDate, plan_amount: amt, plan_type: plan, plan_repeat: p_type, d_sched: d_sched, d_dne: d_dne, d_date: d_date, d_not: d_not, indic: indic },
+                                success: function(data) {
+                                    console.log("success");
+                                    location.reload();
+                                    $('#cfp_add_item_area').fadeOut();
+                                }
+                            });
+                        }
+                    } else if (d_dne == "not") {
+                        if (d_not == "") {
+                            alert("fill in the occurence input");
+                        } else {
+                            $.ajax({
+                                url: baseURL + "accounting/savecashflowplan",
+                                type: "POST",
+                                dataType: "json",
+                                data: { merchant_name: name, date_plan: addDate, plan_amount: amt, plan_type: plan, plan_repeat: p_type, d_sched: d_sched, d_dne: d_dne, d_date: d_date, d_not: d_not, indic: indic },
+                                success: function(data) {
+                                    console.log("success");
+                                    location.reload();
+                                    $('#cfp_add_item_area').fadeOut();
+                                }
+                            });
+                        }
+                    } else {
+                        $.ajax({
+                            url: baseURL + "accounting/savecashflowplan",
+                            type: "POST",
+                            dataType: "json",
+                            data: { merchant_name: name, date_plan: addDate, plan_amount: amt, plan_type: plan, plan_repeat: p_type, d_sched: d_sched, d_dne: d_dne, d_date: d_date, d_not: d_not, indic: indic },
+                            success: function(data) {
+                                console.log("success");
+                                location.reload();
+                                $('#cfp_add_item_area').fadeOut();
+                            }
+                        });
+                    }
+
+
+                } else if ($("#sched option:selected").val() == "weekly") {
+                    console.log($("#sched option:selected").val());
+                    w_weeks = $('.num_weeks').val();
+                    if ($("#sun").hasClass('color')) {
+                        w_days += "sunday";
+                    }
+                    if ($("#mon").hasClass('color')) {
+                        w_days += ",monday";
+                    }
+                    if ($("#tue").hasClass('color')) {
+                        w_days += ",tuesday";
+                    }
+                    if ($("#wed").hasClass('color')) {
+                        w_days += "wednesday";
+                    }
+                    if ($("#thur").hasClass('color')) {
+                        w_days += "thursday";
+                    }
+                    if ($("#fri").hasClass('color')) {
+                        w_days += "friday";
+                    }
+                    if ($("#sat").hasClass('color')) {
+                        w_days += "saturday";
+                    }
+                    if ($("#cfp_add_item_area input[name=Wend]:checked").val() == 'date') {
+                        w_date = $('input[name=end_dateW]').val();
+                        w_dne = $("#cfp_add_item_area input[name='Wend']:checked").val();
+                    } else if ($("#cfp_add_item_area input[name=Wend]:checked").val() == 'not') {
+                        w_not = $('input[name=number_of_timesW]').val();
+                        w_dne = $("#cfp_add_item_area input[name='Wend']:checked").val();
+                    } else {
+                        w_dne = $("#cfp_add_item_area input[name='Wend']:checked").val();
+                    }
+                    if (w_weeks == "" || w_days == "") {
+                        alert("input all fields");
+                    } else {
+                        $.ajax({
+                            url: baseURL + "accounting/savecashflowplan",
+                            type: "POST",
+                            dataType: "json",
+                            data: { merchant_name: name, date_plan: addDate, plan_amount: amt, plan_type: plan, plan_repeat: p_type, w_dne: w_dne, w_date: w_date, w_not: w_not, w_weeks: w_weeks, w_days: w_days, indic: indic },
+                            success: function(data) {
+                                location.reload();
+                                $('#cfp_add_item_area').fadeOut();
+                            }
+                        });
+                    }
+
+                } else if ($("#sched option:selected").val() == "monthly") {
+                    console.log($("#sched option:selected").val());
+                    m_months = $('.num_months').val();
+                    if ($('input[name=day_sched]:checked').val() == "day") {
+                        m_day = $('#day_num').val();
+                        if ($("#cfp_add_item_area input[name=Mend]:checked").val() == 'date') {
+                            m_date = $('input[name=end_dateM]').val();
+                            m_dne = $("#cfp_add_item_area input[name='Mend']:checked").val();
+                        } else if ($("#cfp_add_item_area input[name=Mend]:checked").val() == 'not') {
+                            m_not = $('input[name=number_of_timesM]').val();
+                            m_dne = $("#cfp_add_item_area input[name='Mend']:checked").val();;
+                        } else {
+                            m_dne = $("#cfp_add_item_area input[name='Mend']:checked").val();
+                        }
+                        if (m_months == "" || m_day == "") {
+                            alert("input all fields");
+                        } else {
+                            $.ajax({
+                                url: baseURL + "accounting/savecashflowplan",
+                                type: "POST",
+                                dataType: "json",
+                                data: { merchant_name: name, date_plan: addDate, plan_amount: amt, plan_type: plan, plan_repeat: p_type, sc_day: sc_day, sc_rank: sc_rank, m_dne: m_dne, m_date: m_date, m_not: m_not, m_months: m_months, m_day: m_day, indic: indic },
+                                success: function(data) {
+                                    location.reload();
+                                    $('#cfp_add_item_area').fadeOut();
+                                }
+                            });
+                        }
+
+                    } else {
+                        sc_day = $('#day_place option:selected').val();
+                        sc_rank = $("#day_want option:selected").val();
+                        if ($("#cfp_add_item_area input[name=Mend]:checked").val() == 'date') {
+                            m_date = $('input[name=end_dateM]').val();
+                            m_dne = $("#cfp_add_item_area input[name='Mend']:checked").val();
+                        } else if ($("#cfp_add_item_area input[name=Mend]:checked").val() == 'not') {
+                            m_not = $('input[name=number_of_timesM]').val();
+                            m_dne = $("#cfp_add_item_area input[name='Mend']:checked").val();;
+                        } else {
+                            m_dne = $("#cfp_add_item_area input[name='Mend']:checked").val();
+                        }
+                        if (sc_day == "" || sc_rank == "") {
+                            alert("input all fields");
+                        } else {
+                            $.ajax({
+                                url: baseURL + "accounting/savecashflowplan",
+                                type: "POST",
+                                dataType: "json",
+                                data: { merchant_name: name, date_plan: addDate, plan_amount: amt, plan_type: plan, plan_repeat: p_type, sc_day: sc_day, sc_rank: sc_rank, m_dne: m_dne, m_date: m_date, m_not: m_not, m_months: m_months, m_day: m_day, indic: indic },
+                                success: function(data) {
+                                    location.reload();
+                                    $('#cfp_add_item_area').fadeOut();
+                                }
+                            });
+                        }
+                    }
+
                 }
-
-                if ($("#cfp_add_item_area input[name=Mend]:checked").val() == 'date') {
-                    m_date = $('input[name=end_dateM]').val();
-                    m_dne = $("#cfp_add_item_area input[name='Mend']:checked").val();
-                } else if ($("#cfp_add_item_area input[name=Mend]:checked").val() == 'not') {
-                    m_not = $('input[name=number_of_timesM]').val();
-                    m_dne = $("#cfp_add_item_area input[name='Mend']:checked").val();;
-                } else {
-                    m_dne = $("#cfp_add_item_area input[name='Mend']:checked").val();
-                }
-
+            } else if (p_type == 0) {
+                indic = "no_repeat";
                 $.ajax({
                     url: baseURL + "accounting/savecashflowplan",
                     type: "POST",
                     dataType: "json",
-                    data: { merchant_name: name, date_plan: addDate, plan_amount: amt, plan_type: plan, plan_repeat: plan, sc_day: sc_day, sc_rank: sc_rank, m_dne: m_dne, m_date: m_date, m_not: m_not, m_months: m_months, m_day: m_day, indic: indic },
+                    data: { merchant_name: name, date_plan: addDate, plan_amount: amt, plan_type: plan, plan_repeat: p_type, indic: indic },
                     success: function(data) {
-
+                        location.reload();
+                        $('#cfp_add_item_area').fadeOut();
                     }
                 });
             }
         }
-        location.reload();
-        $('#cfp_add_item_area').fadeOut();
+
+
+
     });
 
     $(document).on('click', "#cashflowtransactions #toggle_button", function() {
         var id = $(this).parents("tr").attr("data-id");
+        var id1 = $(this).parents("tr").attr("id");
 
         console.log($(this).children(".fa-chevron-down").length);
         if ($(this).children(".fa-chevron-down").length == 0) {
@@ -829,18 +915,23 @@ jQuery(document).ready(function() {
             $(this).children(".fa-chevron-right").attr("class", "fa fa-chevron-down");
             $("#cashflowtransactions tr.info-" + id).fadeIn();
             $("#cashflowtransactions input#date" + id).removeAttr("disabled");
+            $("#cashflowtransactions input#text" + id).removeAttr("disabled");
             $("#cashflowtransactions input#date" + id).removeClass("date_type");
             $("#cashflowtransactions input#text" + id).removeClass("amnt");
         } else {
             $("#cashflowtransactions tr .fa-chevron-down").attr("class", "fa fa-chevron-right");
             $("#cashflowtransactions tr.edit-panel").fadeOut();
             $("#cashflowtransactions  input#date" + id).attr("disabled", true);
+            $("#cashflowtransactions  input#text" + id).attr("disabled", true);
             $("#cashflowtransactions input#date" + id).addClass("date_type");
             $("#cashflowtransactions input#text" + id).addClass("amnt");
+
+
         }
     })
     $(document).on('click', "#cashflowmoneyin #toggle_button", function() {
         var id = $(this).parents("tr").attr("data-id");
+
 
         console.log($(this).children(".fa-chevron-down").length);
         if ($(this).children(".fa-chevron-down").length == 0) {
@@ -879,180 +970,322 @@ jQuery(document).ready(function() {
             $("#cashflowmoneyout input#text" + id).addClass("amnt");
         }
     })
+    var valdata = Array();
+    load_money_in_out_table();
 
-    $.ajax({
-        url: baseURL + "accounting/getCashFlowPlanned",
-        type: "POST",
-        dataType: "json",
-        data: {},
-        success: function(data) {
-            var html = "";
-            var html_moneyin = "";
-            var html_moneyout = "";
-            //for planner table
-            count = 0;
-            for (index = 0; index < data.values.length; index++) {
-                html += `<tr class="moneyin" data-id="` + index + `">
-                <td> <input class="date_type" id="date` + index + `" type="date" value="` + data.values[index]["created_at"] + `" disabled></td>
-                <td>` + data.values[index]["merchant_name"].toUpperCase() + `</td>
-                <td><input type="text" id="text` + index + `" class="amnt" value="` + data.values[index]["amount"] + `"></td>
-                <td>` + data.values[index]["description"] + `</td>
-                <td><button class="btn_cashflow_table" id="toggle_button">edit <i class="fa fa-chevron-right" aria-hidden="true"></i></button></td>
-                <tr class="info-` + index + ` edit-panel">
-                    <td colspan="5">
-                       <div class="row">
-                            <div class="col-md-1.5 due_date">
-                                <div class="row">
-                                    <div class="col">
-                                        <h6>Due date</h6>
-                                    </div>   
-                                </div>
-                                <div class="row">
-                            <div class="col">`
-                if (data.values[index]["end_type"] == "does_not_end") {
-                    html += `<p>` + data.values[index]["end_type"] + `</p>`;
-                } else if (data.values[index]["end_type"] == "date") {
-                    html += `<p>` + data.values[index]["end_date"] + `</p>`;
-                } else {
-                    html += `<p>` + data.values[index]["end_occurence"] + ` occurence</p>`;
-                }
-                html += `</div>
-                        </div>
-                            </div>
-                        
-                            <div class="col-3">
-                                <div class="row">
-                                    <div class="col-md-10">
-                                        <h6>Due amount</h6>
+    function load_money_in_out_table() {
+        $.ajax({
+            url: baseURL + "accounting/getCashFlowPlanned",
+            type: "POST",
+            dataType: "json",
+            data: {},
+            success: function(data) {
+                var html = "";
+                var html_moneyin = "";
+                var html_moneyout = "";
+                //for planner table
+                count = 0;
+                for (index = 0; index < data.values.length; index++) {
+                    valdata[index] = data.values[index]["amount"];
+                    html += `<tr class="moneyin" data-id="` + data.values[index]["id"] + `" id="` + index + `">
+                    <td> <input class="date_type" id="date` + data.values[index]["id"] + `" type="date" value="` + data.values[index]["created_at"] + `" disabled></td>
+                    <td>` + data.values[index]["merchant_name"].toUpperCase() + `</td>
+                    <td><input type="text" id="text` + data.values[index]["id"] + `" class="amnt" value="` + data.values[index]["amount"] + `" disabled></td>
+                    <td>` + data.values[index]["description"] + `</td>
+                    
+                    <td><button class="btn_cashflow_table" id="toggle_button">edit <i class="fa fa-chevron-right" aria-hidden="true"></i></button></td>
+                    <td class="cont_remove"> <button id="ct_remove">REMOVE</button></td>
+                    <tr class="info-` + data.values[index]["id"] + ` edit-panel"  id="` + data.values[index]["id"] + `">
+                        <td colspan="6">
+                           <div class="row">
+                                <div class="col-md-1.5 due_date">
+                                    <div class="row">
+                                        <div class="col">
+                                            <h6>Due date</h6>
+                                        </div>   
                                     </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <p>` + data.values[index]["amount"] + `</p>    
-                                    </div>
-                                </div>
-                            </div>
-
-                       </div>
-                       <hr>
-                       <div class="row cp_buttons">
-                            <button>REMOVE</button><button>UPDATE</button>
-                       </div>
-                    </td>
-                </tr>`;
-
-
-                if (data.values[index]["type"] == "moneyin") {
-                    html_moneyin += `<tr class="moneyin" data-id="` + index + `">
-                    <td> <input class="date_type" id="date` + index + `" type="date" value="` + data.values[index]["created_at"] + `"disabled></td>
-                <td>` + data.values[index]["merchant_name"].toUpperCase() + `</td>
-                <td> <input type="text" id="text` + index + `" class="amnt" value="` + data.values[index]["amount"] + `"></td>
-                <td>` + data.values[index]["description"] + `</td>
-                <td><button class="btn_cashflow_table" id="toggle_button">edit <i class="fa fa-chevron-right" aria-hidden="true"></i></button></td>
-                <tr class="info-` + index + ` edit-panel">
-                    <td colspan="5">
-                       <div class="row">
-                            <div class="col-md-1.5 due_date">
-                                <div class="row">
-                                    <div class="col">
-                                        <h6>Due date</h6>
-                                    </div>   
-                                </div>
-                                <div class="row">
-                            <div class="col">`
+                                    <div class="row">
+                                <div class="col">`
                     if (data.values[index]["end_type"] == "does_not_end") {
-                        html_moneyin += `<p>` + data.values[index]["end_type"] + `</p>`;
+                        html += `<p>` + data.values[index]["end_type"] + `</p>`;
                     } else if (data.values[index]["end_type"] == "date") {
-                        html_moneyin += `<p>` + data.values[index]["end_date"] + `</p>`;
+                        html += `<p>` + data.values[index]["end_date"] + `</p>`;
                     } else {
-                        html_moneyin += `<p>` + data.values[index]["end_occurence"] + `</p>`;
+                        html += `<p>` + data.values[index]["end_occurence"] + ` occurence</p>`;
                     }
-                    html_moneyin += `</div>
-                        </div>
+                    html += `</div>
                             </div>
-                        
-                            <div class="col">
-                                <div class="row">
-                                    <div class="col-md-2">
-                                        <h6>Due amount</h6>
+                                </div>
+                            
+                                <div class="col-3">
+                                    <div class="row">
+                                        <div class="col-md-10">
+                                            <h6>Due amount</h6>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <p>` + data.values[index]["amount"] + `</p>    
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <p>` + data.values[index]["amount"] + `</p>    
+    
+                           </div>
+                           <hr>
+                           <div class="row cp_buttons">
+                               <button id="ct_update">UPDATE</button>
+                           </div>
+                        </td>
+                    </tr>`;
+
+
+                    if (data.values[index]["type"] == "moneyin") {
+                        html_moneyin += `<tr class="moneyin" data-id="` + data.values[index]["id"] + `">
+                        <td> <input class="date_type" id="date` + data.values[index]["id"] + `" type="date" value="` + data.values[index]["created_at"] + `"disabled></td>
+                    <td>` + data.values[index]["merchant_name"].toUpperCase() + `</td>
+                    <td> <input type="text" id="text` + data.values[index]["id"] + `" class="amnt" value="` + data.values[index]["amount"] + `"></td>
+                    <td>` + data.values[index]["description"] + `</td>
+                    <td><button class="btn_cashflow_table" id="toggle_button">edit <i class="fa fa-chevron-right" aria-hidden="true"></i></button></td>
+                    <td class="cont_remove"> <button id="ct_remove">REMOVE</button></td>
+                    <tr class="info-` + data.values[index]["id"] + ` edit-panel"  id="` + data.values[index]["id"] + `">
+                        <td colspan="5">
+                           <div class="row">
+                                <div class="col-md-1.5 due_date">
+                                    <div class="row">
+                                        <div class="col">
+                                            <h6>Due date</h6>
+                                        </div>   
+                                    </div>
+                                    <div class="row">
+                                <div class="col">`
+                        if (data.values[index]["end_type"] == "does_not_end") {
+                            html_moneyin += `<p>` + data.values[index]["end_type"] + `</p>`;
+                        } else if (data.values[index]["end_type"] == "date") {
+                            html_moneyin += `<p>` + data.values[index]["end_date"] + `</p>`;
+                        } else {
+                            html_moneyin += `<p>` + data.values[index]["end_occurence"] + `</p>`;
+                        }
+                        html_moneyin += `</div>
+                            </div>
+                                </div>
+                            
+                                <div class="col">
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <h6>Due amount</h6>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <p>` + data.values[index]["amount"] + `</p>    
+                                        </div>
                                     </div>
                                 </div>
+                           </div>
+                           <hr>
+                           <div class="row cp_buttons">
+                          <button id="cmi_update">UPDATE</button>
+                           </div>
+                        </td>
+                    </tr>`;
+                    }
+
+                    if (data.values[index]["type"] == "moneyout") {
+                        count++;
+                        console.log(count);
+                        html_moneyout += `<tr class="moneyin" data-id="` + data.values[index]["id"] + `">
+                    <td> <input class="date_type" id="date` + data.values[index]["id"] + `" type="date" value="` + data.values[index]["created_at"] + `" disabled></td>
+                    <td>` + data.values[index]["merchant_name"].toUpperCase() + `</td>
+                    <td><input type="text" id="text` + data.values[index]["id"] + `" class="amnt" value="` + data.values[index]["amount"] + `"></td>
+                    <td>` + data.values[index]["description"] + `</td>
+                      <td><button class="btn_cashflow_table" id="toggle_button">edit <i class="fa fa-chevron-right" aria-hidden="true"></i></button></td>
+                      <td class="cont_remove"> <button id="ct_remove">REMOVE</button></td>
+                    <tr class="info-` + data.values[index]["id"] + ` edit-panel" id="` + data.values[index]["id"] + `">
+                        <td colspan="5">
+                           <div class="row">
+                                <div class="col-md-1.5 due_date">
+                                    <div class="row">
+                                        <div class="col">
+                                            <h6>Due date</h6>
+                                        </div>   
+                                    </div>
+                                    <div class="row">
+                                <div class="col">`
+                        if (data.values[index]["end_type"] == "does_not_end") {
+                            html_moneyout += `<p>` + data.values[index]["end_type"] + `</p>`;
+                        } else if (data.values[index]["end_type"] == "date") {
+                            html_moneyout += `<p>` + data.values[index]["end_date"] + `</p>`;
+                        } else {
+                            html_moneyout += `<p>` + data.values[index]["end_occurence"] + `</p>`;
+                        }
+                        html_moneyout += `</div>
                             </div>
-                       </div>
-                       <hr>
-                       <div class="row cp_buttons">
-                            <button>REMOVE</button><button>UPDATE</button>
-                       </div>
-                    </td>
-                </tr>`;
+                                </div>
+                            
+                                <div class="col">
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <h6>Due amount</h6>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <p>` + data.values[index]["amount"] + `</p>    
+                                        </div>
+                                    </div>
+                                </div>
+                           </div>
+                           <hr>
+                           <div class="row cp_buttons">
+                           <button id="cmo_update">UPDATE</button>
+                           </div>
+                        </td>
+                    </tr>`;
+                    }
+
                 }
 
-                if (data.values[index]["type"] == "moneyout") {
-                    count++;
-                    console.log(count);
-                    html_moneyout += `<tr class="moneyin" data-id="` + index + `">
-                <td> <input class="date_type" id="date` + index + `" type="date" value="` + data.values[index]["created_at"] + `" disabled></td>
-                <td>` + data.values[index]["merchant_name"].toUpperCase() + `</td>
-                <td><input type="text" id="text` + index + `" class="amnt" value="` + data.values[index]["amount"] + `"></td>
-                <td>` + data.values[index]["description"] + `</td>
-                  <td><button class="btn_cashflow_table" id="toggle_button">edit <i class="fa fa-chevron-right" aria-hidden="true"></i></button></td>
-                <tr class="info-` + index + ` edit-panel">
-                    <td colspan="5">
-                       <div class="row">
-                            <div class="col-md-1.5 due_date">
-                                <div class="row">
-                                    <div class="col">
-                                        <h6>Due date</h6>
-                                    </div>   
-                                </div>
-                                <div class="row">
-                            <div class="col">`
-                    if (data.values[index]["end_type"] == "does_not_end") {
-                        html_moneyout += `<p>` + data.values[index]["end_type"] + `</p>`;
-                    } else if (data.values[index]["end_type"] == "date") {
-                        html_moneyout += `<p>` + data.values[index]["end_date"] + `</p>`;
-                    } else {
-                        html_moneyout += `<p>` + data.values[index]["end_occurence"] + `</p>`;
-                    }
-                    html_moneyout += `</div>
-                        </div>
-                            </div>
-                        
-                            <div class="col">
-                                <div class="row">
-                                    <div class="col-md-2">
-                                        <h6>Due amount</h6>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <p>` + data.values[index]["amount"] + `</p>    
-                                    </div>
-                                </div>
-                            </div>
-                       </div>
-                       <hr>
-                       <div class="row cp_buttons">
-                            <button>REMOVE</button><button>UPDATE</button>
-                       </div>
-                    </td>
-                </tr>`;
-                }
+                //for money in table
+
+                $('#cashflowtransactions .planner_table').html(html);
+                $('#cashflowmoneyin .moneyin_table').html(html_moneyin);
+                $('#cashflowmoneyout .moneyout_table').html(html_moneyout);
+
+
+
+
+
 
             }
+        });
+    }
 
-            //for money in table
+    $(document).on('click', '#cashflowtransactions #ct_update', function(event) {
+        var id = $(this).parents("tr").attr("id");
 
-            $('#cashflowtransactions .planner_table').html(html);
-            $('#cashflowmoneyin .moneyin_table').html(html_moneyin);
-            $('#cashflowmoneyout .moneyout_table').html(html_moneyout);
+        var date = $("#cashflowtransactions #date" + id).val();
+        var amount = $("#cashflowtransactions #text" + id).val();
+
+        $.ajax({
+            url: baseURL + "accounting/update_cashflow_date_amount",
+            type: "POST",
+            dataType: "json",
+            data: { date: date, amount: amount, id: id },
+            success: function(data) {
+                console.log("sent");
+                // location.reload();
+            }
+        })
+        location.reload();
+        $("#cashflowmoneyin tr.edit-panel").hide();
+    })
+    $(document).on('click', '#cashflowmoneyin #ct_update', function(event) {
+        var id = $(this).parents("tr").attr("id");
+
+        var date = $("#cashflowmoneyin #date" + id).val();
+        var amount = $("#cashflowmoneyin #text" + id).val();
+
+        $.ajax({
+            url: baseURL + "accounting/update_cashflow_date_amount",
+            type: "POST",
+            dataType: "json",
+            data: { date: date, amount: amount, id: id },
+            success: function(data) {
+                console.log("sent");
+                // location.reload();
+            }
+        })
+        location.reload();
+        $("#cashflowmoneyin tr.edit-panel").hide();
+    })
+    $(document).on('click', '#cashflowmoneyout #ct_update', function(event) {
+        var id = $(this).parents("tr").attr("id");
+
+        var date = $("#cashflowmoneyout #date" + id).val();
+        var amount = $("#cashflowmoneyout #text" + id).val();
+
+        $.ajax({
+            url: baseURL + "accounting/update_cashflow_date_amount",
+            type: "POST",
+            dataType: "json",
+            data: { date: date, amount: amount, id: id },
+            success: function(data) {
+                console.log("sent");
+                // location.reload();
+            }
+        })
+        location.reload();
+        $("#cashflowmoneyin tr.edit-panel").hide();
+    })
 
 
-        }
-    });
+
+
+
+    $(document).on('click', '#cashflowtransactions #ct_remove', function(event) {
+        var id = $(this).parents("tr").attr("data-id");
+
+        Swal.fire({
+            title: "Are you sure?",
+            html: "Once deleted, you will not be able to recover this !",
+            showCancelButton: true,
+            icon: "warning",
+            cancelButtonColor: "#d33",
+            confirmButtonColor: "#2ca01c",
+        }).then((result) => {
+            if (result) {
+                $.ajax({
+                    url: baseURL + "accounting/remove_cashflow_customer",
+                    type: "POST",
+                    dataType: "json",
+                    data: { id: id },
+                    success: function(data) {
+                        load_money_in_out_table()
+                        $("#cashflowmoneyin tr.edit-panel").hide();
+                        Swal.fire({
+                            showConfirmButton: false,
+                            timer: 2000,
+                            html: "Info deleted.",
+                            icon: "success",
+                        });
+                    }
+                })
+            }
+        });
+
+
+    })
+
+    $(document).on('click', '#cashflowmoneyin #ct_remove', function(event) {
+        var id = $(this).parents("tr").attr("data-id");
+
+        $.ajax({
+            url: baseURL + "accounting/remove_cashflow_customer",
+            type: "POST",
+            dataType: "json",
+            data: { id: id },
+            success: function(data) {
+                console.log("sent");
+                // location.reload();
+            }
+        })
+        location.reload();
+        $("#cashflowmoneyin tr.edit-panel").hide();
+    })
+    $(document).on('click', '#cashflowmoneyout #ct_remove', function(event) {
+        var id = $(this).parents("tr").attr("data-id");
+
+        $.ajax({
+            url: baseURL + "accounting/remove_cashflow_customer",
+            type: "POST",
+            dataType: "json",
+            data: { id: id },
+            success: function(data) {
+                console.log("sent");
+                // location.reload();
+            }
+        })
+        location.reload();
+        $("#cashflowmoneyin tr.edit-panel").hide();
+    })
 });

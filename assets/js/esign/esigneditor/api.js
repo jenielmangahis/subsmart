@@ -71,6 +71,12 @@ export function getCustomerLetters(customerId) {
   );
 }
 
+export function getCustomerPlaceholders(customerId) {
+  return http.get(
+    `${prefixURL}/EsignEditor/apiGetCustomerPlaceholders/${customerId}`
+  );
+}
+
 export function editCustomerLetter(payload) {
   const { id, ...rest } = payload;
   return http.post(

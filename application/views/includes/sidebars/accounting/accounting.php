@@ -128,7 +128,8 @@
                         <h4>CUSTOMERS</h4>
 
                         <ul id="accounting_customers">
-                            <li><a href="<?php echo base_url('accounting/addnewInvoice') ?>">Invoice</a>
+                            <li><a href="#" class="ajax-modal" data-view="invoice_modal" data-toggle="modal" data-target="#invoiceModal">Invoice</a></li>
+                            <!-- <li><a href="<?php echo base_url('accounting/addnewInvoice') ?>">Invoice</a> -->
                             <li><a href="#" class="ajax-modal" data-view="receive_payment_modal" data-toggle="modal" data-target="#receivePaymentModal">Receive Payment</a></li>
                             <li><a href="#" data-toggle="modal" data-target="#newJobModal">Estimate</a></li>
                             <li><a href="#" class="ajax-modal" data-view="credit_memo_modal" data-toggle="modal" data-target="#creditMemoModal">Credit memo</a></li>

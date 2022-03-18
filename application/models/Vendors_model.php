@@ -842,6 +842,20 @@ class Vendors_model extends MY_Model {
 
         return  $insert_id;
     }
+	public function update_cashflow_date_amount($id,$data){
+        $updateCashFlow = $this->db->update('cashflow_planned', $data, array('id' => $id));
+		$insert_id = $this->db->insert_id();
+
+		return  $insert_id;
+    }
+
+	public function remove_cashflow_customer($id){
+		$getId = $this->db->where('id', $id);
+		$removeID = $this->db->delete('cashflow_planned');	
+
+
+		
+	}
 
 	public function getcashflowplan($company_id)
 	{

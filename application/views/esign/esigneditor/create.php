@@ -62,7 +62,7 @@ ini_set('max_input_vars', 30000);
 
         <fieldset>
             <legend class="d-flex justify-content-between align-items-center">
-                <h2>Placeholder Information</h2>
+                <h2>Placeholders</h2>
                 <a class="link" href="#" data-toggle="modal" data-target="#createPlaceholderModal">
                     Manage template placeholders
                 </a>
