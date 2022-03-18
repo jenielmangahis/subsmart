@@ -13656,6 +13656,17 @@ class Accounting extends MY_Controller
                 'end_type'       => $m_dne,
                 'end_occurence' => $m_not 
             );
+        }else{
+            $new_data = array(
+                'date_plan'     => $date_plan,
+                'merchant_name' => $merchant_name,
+                'amount'        => $plan_amount,
+                'type'          => $plan_type,
+                'description'   => 'Planned',
+                'repeating'     => $plan_repeat,
+                'created_at'    => date("Y-m-d H:i:s"),
+                'updated_at'    => date("Y-m-d H:i:s")
+            );
         }
 
         // $new_data = array(
@@ -13686,6 +13697,27 @@ class Accounting extends MY_Controller
         // echo $indic;
         echo json_encode($data);
 
+    }
+
+    public function update_cashflow_date_amount(){
+        $date       = $this->input->post("date");
+        $amount     = $this->input->post("amount");
+        $id         = $this->input->post("id");
+
+        $new_data = array(
+            'date_plan' => $date,
+            'updated_at' => $date,
+            'amount'    => $amount
+        );
+
+        $addQuery = $this->vendors_model->update_cashflow_date_amount($id, $new_data);
+        echo json_encode($new_data);
+    }
+
+    public function remove_cashflow_customer(){
+        $id = $this->input->post("id");
+        $addQuery = $this->vendors_model->remove_cashflow_customer($id);
+        echo json_encode($id);
     }
 
     public function updateOverdueCashflow()

@@ -1815,3 +1815,16 @@ input.amnt {
     background: transparent !important;
     border: none !important;
 }
+
+button#ct_remove {
+    border-radius: 20px;
+    height: 35px;
+    width: 100px;
+    background-color: #2ca01d;
+    color: white;
+    border: none;
+}
+
+td.cont_remove {
+    text-align: center;
+}

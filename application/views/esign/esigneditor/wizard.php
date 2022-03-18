@@ -68,6 +68,13 @@ ini_set('max_input_vars', 30000);
                         </button>
                     </div>
                 </div>
+
+                <fieldset class="mt-3">
+                    <legend class="d-flex justify-content-between align-items-center">
+                        <h2>Customer Placeholders</h2>
+                    </legend>
+                    <ul class="placeholders__list"></ul>
+                </fieldset>
             </div>
         </form>
     </div>

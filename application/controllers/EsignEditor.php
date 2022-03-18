@@ -289,9 +289,9 @@ SQL;
         return $query->row();
     }
 
-    public function getPlaceholders()
+    public function getPlaceholders(int $customerId = null)
     {
-        return [
+        $placeholders = [
             [
                 'code' => 'company_logo',
                 'description' => 'Company logo',
@@ -437,6 +437,28 @@ SQL;
                 'description' => 'Report number',
             ],
         ];
+
+        if (is_null($customerId)) {
+            return $placeholders;
+        }
+
+        $customer = $this->getCustomer($customerId);
+        $customFields = [];
+        if (!is_null($customer->custom_fields) && !empty($customer->custom_fields)) {
+            $customFields = json_decode($customer->custom_fields);
+        }
+
+        foreach ($customFields as $field) {
+            array_push($placeholders, [
+                'code' => $this->toPlaceholderCode($field->name),
+                'description' => $field->name,
+                'get' => function () use ($field) {
+                    return $field->value;
+                },
+            ]);
+        }
+
+        return $placeholders;
     }
 
     public function apiSeedPlaceholders()
@@ -452,6 +474,37 @@ SQL;
     {
         header('content-type: application/json');
         echo json_encode(['data' => $this->getUserPlaceholders()]);
+    }
+
+    public function apiGetCustomerPlaceholders($id)
+    {
+        $customer = $this->getCustomer($id);
+        $customFields = [];
+        if (!is_null($customer->custom_fields) && !empty($customer->custom_fields)) {
+            $customFields = json_decode($customer->custom_fields);
+        }
+
+        $placeholders = $this->getUserPlaceholders();
+        $ids = array_map('intval', array_column($placeholders, 'id'));
+        $lastId = max($ids);
+
+        foreach ($customFields as $field) {
+            $lastId++;
+            array_push($placeholders, [
+                'id' => $lastId,
+                'user_id' => null,
+                'code' => $this->toPlaceholderCode($field->name),
+                'description' => $field->name,
+            ]);
+        }
+
+        header('content-type: application/json');
+        echo json_encode(['data' => $placeholders]);
+    }
+
+    private function toPlaceholderCode(string $string)
+    {
+        return preg_replace('/\s+/', '_', strtolower($string));
     }
 
     private function getUserPlaceholders()
@@ -517,6 +570,7 @@ SQL;
         $payload = json_decode(file_get_contents('php://input'), true);
 
         $letter = $this->getLetter($payload['letter_id']);
+        $letter->customer_id = (int) $payload['customer_id'];
         if (array_key_exists('content', $payload)) {
             $letter->content = $payload['content'];
         }
@@ -528,7 +582,7 @@ SQL;
 
     private function generateCustomerLetter($customerLetter)
     {
-        $placeholders = $this->getPlaceholders();
+        $placeholders = $this->getPlaceholders((int) $customerLetter->customer_id);
         $placeholderParam = new PlaceholderGetParam(
             (int) $customerLetter->customer_id,
             (int) logged('company_id')

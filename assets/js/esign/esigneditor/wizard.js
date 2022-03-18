@@ -11,12 +11,15 @@ window.document.addEventListener("DOMContentLoaded", async () => {
   const $customerName = document.querySelector(".esigneditor__title span");
   $customerName.textContent = `${customer.first_name} ${customer.last_name}`;
 
-  Promise.all([initCategories(), initLetters(), initSaveForm(customer)]).then(
-    () => {
-      handleSubmit(customer);
-      document.querySelector(".wrapper").classList.remove("wrapper--loading");
-    }
-  );
+  Promise.all([
+    initCategories(),
+    initLetters(),
+    initSaveForm(customer),
+    initPlaceholders(customer),
+  ]).then(() => {
+    handleSubmit(customer);
+    document.querySelector(".wrapper").classList.remove("wrapper--loading");
+  });
 });
 
 async function initCategories() {
@@ -57,6 +60,24 @@ async function initLetters(categoryId) {
   });
 
   $($select).select2();
+}
+
+async function initPlaceholders(customer) {
+  const { data: placeholders } = await window.api.getCustomerPlaceholders(
+    customer.prof_id
+  );
+  placeholders.sort((a, b) => a.code.localeCompare(b.code));
+  placeholders.forEach(appendPlaceholderInList);
+}
+
+function appendPlaceholderInList(placeholder) {
+  const $placeholderList = document.querySelector(".placeholders__list");
+  const $item = window.helpers.htmlToElement(
+    `<li data-id=${placeholder.id}>
+      {${placeholder.code}} - <strong>${placeholder.description}</strong>
+    </li>`
+  );
+  $placeholderList.appendChild($item);
 }
 
 function handleSubmit(customer) {

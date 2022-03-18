@@ -24,7 +24,7 @@
                                 </div>
                             </div>
                             <h4 class="modal-title">
-                                Expense <span></span>
+                                Expense <span><?=isset($expense) ? '#'.$expense->ref_no : ''?></span>
                             </h4>
                         </div>
                     </div>
