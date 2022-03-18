@@ -770,6 +770,7 @@ class Customer extends MY_Controller
     {
         $this->load->model('taskhub_model');
         $this->load->library('wizardlib');
+        $this->load->model('Invoice_model', 'invoice_model');
         
         $is_allowed = $this->isAllowedModuleAccess(9);
         if( !$is_allowed ){
@@ -801,6 +802,7 @@ class Customer extends MY_Controller
         // set a global data for customer profile id
         $this->page_data['customer_profile_id'] = $userid;
         if($id!=null){
+            $this->page_data['cust_invoices'] = $this->invoice_model->getAllByCustomerId($id);
             $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$id,"acs_profile");
             $this->page_data['access_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$id,"acs_access");
             $this->page_data['office_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$id,"acs_office");

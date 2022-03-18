@@ -344,7 +344,12 @@ input:checked + .slider:before {
                                     <select name="customer_id" id="customer_id" class="form-control" required>
                                     <option>Select a customer</option>
                                     <?php foreach ($customers as $customer):?>
-                                    <option <?= !empty($workorder[0]) && $workorder[0]->customer_id == $customer->prof_id ? 'selected="selected"' : ''; ?> value="<?php echo $customer->prof_id?>"><?php echo $customer->first_name."&nbsp;".$customer->last_name;?> </option>
+                                    <?php 
+                                        if( !empty($workorder[0]) ){
+                                            $default_cust_id = $workorder[0]->customer_id;
+                                        }
+                                    ?>
+                                    <option <?= $default_cust_id == $customer->prof_id ? 'selected="selected"' : ''; ?> value="<?php echo $customer->prof_id?>"><?php echo $customer->first_name."&nbsp;".$customer->last_name;?> </option>
                                     <?php endforeach; ?>
                                 </select>
                                 </div>

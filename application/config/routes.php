@@ -74,6 +74,8 @@ $route['customer/_send_message'] = 'Customer/ajax_send_message';
 $route['customer/_delete_customer_message'] = 'Customer/ajax_delete_customer_message';
 $route['customer/credit_industry/(:num)'] = 'Customer/credit_industry/$1';
 $route['customer/add_dispute_item/(:num)'] = 'Customer/add_new_dispute_item/$1';
+$route['customer/_load_company_reasons'] = 'Customer/ajax_load_company_reason_list';
+$route['customer/_create_company_reason'] = 'Customer/ajax_create_company_reason';
 
 //Credit Bureau
 $route['credit_bureau/list'] = 'Credit_Bureau/index';
@@ -1200,6 +1202,7 @@ $route['sales-overview/income-overtime'] = 'AccountingSales/get_income_overtime'
 $route['autocomplete/_company_users'] = 'Autocomplete/company_users';
 $route['autocomplete/_company_customer'] = 'Autocomplete/company_customers';
 $route['autocomplete/_company_event_tags'] = 'Autocomplete/company_event_tags';
+$route['autocomplete/_company_reasons'] = 'Autocomplete/company_reasons';
 
 //Quick Add
 $route['quick_add/_add_customer'] = 'Quick_Add/ajax_add_company_customer';

@@ -4,32 +4,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
 <div class="invoices module ui-state-default" data-id="<?= $id ?>"  id="<?= $id ?>">
     <div class="col-sm-12 individual-module">
         <h6>Invoice</h6>
-        <div class="row">
-            <div class="col-sm-12">
-                <div style="position:relative;display: inline-block;float: left;" class="boverdue">Balance</div>
-                <!-- updated on 10-11-2016 start (fixed chargebee permission issue) -->
-                <div style="position:relative; float: right; text-align: right;">
-                    <div class="normaltext1">
-                        <a href="#" class="js-qwynlraxz">Chargebee Transaction History</a>
-                    </div>
-                    <!-- updated on 25-01-2017 start (updated tooltip message for chargebee) -->
-                    <div style="line-height: 18px; margin-left: -15px; margin-top: 45px; width: 220px; display: none;" class="tooltipbox" id="pwd-tiptxt">
-                        <p style="font-weight:normal; font-size:13px; margin:0px; left:18px;" class="clientname">
-                            Requires Chargebee (recommended) <span class="normaltext1"><a href="https://app.creditrepaircloud.com/mycompany/chargebee_settings" class="js-qwynlraxz">click here</a></span>
-                        </p>
-                        <div class="tooltiparrow1"></div>
-                        <div class="tooltiparrow2"></div>
-                    </div>
-                    <!-- updated on 25-01-2017 end -->
-                </div>
-            </div>
-
+        <div class="row">            
             <!-- updated on 10-11-2016 end -->
-            <div class="balance" style="width:97%;">
+            <div class="balance" style="width:97%;height: 50px;">
 
-                <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table-bordered">
+                <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table-bordered" style="font-size: 12px !important;">
 
-                    <tbody><tr>
+                    <tbody>
+                    <tr>
 
                         <td width="25%" valign="top" height="15" align="center" class="gridheader">
                             Total Invoiced
@@ -45,55 +27,92 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <td width="25%" valign="top" height="15" align="center" class="gridheader">
                             Past Due
                         </td>
-
                     </tr>
                     <tr class="gridrow">
                         <!-- updated on 10-11-2016 start (fixed invoice permission issue) -->
                         <td valign="top" height="15" align="center">
-                            <span id="Total_Invoice">$0</span>
+                            <span id="Total_Invoice">$<?= get_customer_invoice_amount('year', $cus_id); ?></span>
                         </td>
                         <td valign="top" height="15" align="center">
-                            <span id="received_total">$0</span>
+                            <span id="received_total">$<?= get_customer_invoice_amount('paid', $cus_id); ?></span>
                         </td>
                         <td valign="top" height="15" align="center">
-                            <span id="Total_Outstanding">$0</span>
+                            <span id="Total_Outstanding">$<?= get_customer_invoice_amount('pending', $cus_id); ?></span>
                         </td>
                         <td valign="top" height="15" align="center">
                             <span id="Past_Due">$0</span>
                         </td>
                         <!-- updated on 10-11-2016 end -->
                     </tr>
-
-
-
-                    </tbody></table>
+                    </tbody>
+                </table>                
             </div>
-            <div>
+            <div class="invoice-list" style="max-height:90px; overflow-y: scroll;">
+                <table class="table table-bordered table-striped" width="100%" border="1" cellspacing="0" cellpadding="0" style="font-size:12px;">
+                    <thead>
+                        <tr>
+                            <td data-name="Invoice Number">Invoice Number</td>
+                            <td data-name="Date Issued">Date Issued</td>
+                            <td data-name="Status">Status</td>
+                            <td data-name="Amount">Amount</td>
+                            <td data-name="Manage"></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <?php
+                    foreach ($cust_invoices as $invoice) :
+                        switch ($invoice->INV_status):
+                            case "Partially Paid":
+                                $badge = "secondary";
+                                break;
+                            case "Paid":
+                                $badge = "success";
+                                break;
+                            case "Due":
+                                $badge = "secondary";
+                                break;
+                            case "Overdue":
+                                $badge = "error";
+                                break;
+                            case "Submitted":
+                                $badge = "success";
+                                break;
+                            case "Approved":
+                                $badge = "success";
+                                break;
+                            case "Declined":
+                                $badge = "error";
+                                break;
+                            case "Scheduled":
+                                $badge = "primary";
+                                break;
+                            default:
+                                $badge = "";
+                                break;
+                        endswitch;
+                    ?>
+                        <tr>
+                            <td class="fw-bold nsm-text-primary nsm-link default" onclick="location.href='<?php echo base_url('invoice/genview/' . $invoice->id) ?>'"><?php echo $invoice->invoice_number ?></td>
+                            <td><?php echo get_format_date($invoice->date_issued) ?></td>
+                            <td><span class="nsm-badge <?= $badge ?>"><?php echo $invoice->INV_status ?></span></td>
+                            <td>$<?php echo ($invoice->grand_total); ?></td>
+                            <td>
+                                <a class="btn btn-sm btn-primary" href="<?= base_url('invoice/send/'.$invoice->id); ?>" target="_blank" style="display: inline-block;color:#ffffff;">Email Invoice</a>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                    </tbody>
+                </table>
             </div>
 
             <div class="invoicetext" style="margin-left:0px; margin-top:6px;">
                 <!-- updated on 10-11-2016 start (fixed invoice permission issue) -->
-                <a style="color:#58bc4f;" href="https://app.creditrepaircloud.com/invoices/add/NTk=" class="js-qwynlraxz">
-                    Create Invoice</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <a href="https://app.creditrepaircloud.com/invoices/client_invoices_history/NTk=/item" class="js-qwynlraxz">
-                    All Invoices</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <a href="https://app.creditrepaircloud.com/invoices/client_invoices_history/NTk=/payment" class="js-qwynlraxz">
-                    Payments</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <a class="btn btn-sm btn-primary" href="<?= base_url('invoice/add?cus_id='.$cus_id); ?>" target="_blank" style="display: inline-block;color:#ffffff;">Create Invoice</a>
+                <a class="btn btn-sm btn-primary" href="<?= base_url('customer/invoice_list/'.$cus_id); ?>" target="_blank" style="display: inline-block;color:#ffffff;">All Invoices</a>
                 <!-- updated on 10-11-2016 start (fixed invoice permission issue) -->
-                <a href="#" class="js-qwynlraxz">
-                    New Task</a>
-                <!--<a href="javascript:void(0);">Billing Reminders</a><br />-->
-                <!--<a href="javascript:void(0);">Billing Notes</a><br />-->
-                <!--<a href="javascript:void(0);">Reminders</a>-->
+                
             </div>
             <!--Updated by akshay 05-06-2017 s-->
-
-            <div style="margin-right:15px; padding-top:1px;" align="right" class="normaltext1">
-                <a href="#" style="color:#58bc4f;"><span class="fa fa-envelope"></span> Email Invoice</a>&nbsp;&nbsp;
-
-                <!--  <a href="javascript:void(0);">Action/Notes</a>-->
-            </div>
-
         </div>
     </div>
 </div>
