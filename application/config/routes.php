@@ -353,6 +353,10 @@ $route['accounting/get-item-details/(:any)'] = 'accounting_modals/getItemDetails
 $route['accounting/load-bills']['post'] = 'accounting_modals/load_bills';
 $route['accounting/get-products-list-modal'] = 'accounting_modals/products_list_modal';
 $route['accounting/get-items-list-modal'] = 'accounting_modals/items_list_modal';
+$route['accounting/get-items-categories-list-modal'] = 'accounting_modals/get_items_categories_list_modal';
+$route['accounting/get-package-list-modal'] = 'accounting_modals/get_package_list_modal';
+$route['accounting/get-category-items/(:any)'] = 'accounting_modals/get_category_items/$1';
+$route['accounting/get-package-details/(:any)'] = 'accounting_modals/get_package_details/$1';
 $route['accounting/get-term-details/(:any)'] = 'accounting_modals/get_term_details/$1';
 $route['accounting/get-vendor-details/(:any)'] = 'accounting_modals/get_vendor_details/$1';
 $route['accounting/get-customer-details/(:any)'] = 'accounting_modals/get_customer_details/$1';
@@ -414,6 +418,7 @@ $route['accounting/load-payment-invoices/(:any)']['post'] = 'accounting_modals/l
 $route['accounting/load-payment-credits/(:any)']['post'] = 'accounting_modals/load_payment_credits/$1';
 $route['accounting/print-payment-modal/(:any)'] = 'accounting_modals/print_payment/$1';
 $route['accounting/download-payment-pdf/(:any)'] = 'accounting_modals/download_payment_pdf/$1';
+$route['accounting/add-package']['post'] = 'accounting_modals/add_package';
 
 $route['accounting/lists'] = 'accounting/lists';
 

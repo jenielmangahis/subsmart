@@ -117,7 +117,7 @@ const columns = {
 
 const actions = {
   edit: async (row) => {
-    window.location.href = `${window.api.prefixURL}/esigneditor/edit?id=${row.id}`;
+    window.location.href = `${window.api.prefixURL}/EsignEditor/edit?id=${row.id}`;
   },
   delete: async (row, table, event) => {
     if (confirm("Are you sure you want to delete letter?")) {

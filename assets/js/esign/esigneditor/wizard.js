@@ -16,6 +16,7 @@ window.document.addEventListener("DOMContentLoaded", async () => {
     initLetters(),
     initSaveForm(customer),
     initPlaceholders(customer),
+    initCustomerCustomFields(customer),
   ]).then(() => {
     handleSubmit(customer);
     document.querySelector(".wrapper").classList.remove("wrapper--loading");
@@ -43,6 +44,8 @@ async function initCategories() {
 }
 
 async function initLetters(categoryId) {
+  if (categoryId === undefined) return;
+
   const $select = document.getElementById("letter");
   $select.innerHTML = "";
   $select.appendChild(
@@ -78,6 +81,91 @@ function appendPlaceholderInList(placeholder) {
     </li>`
   );
   $placeholderList.appendChild($item);
+}
+
+async function initCustomerCustomFields(customer) {
+  let { data: customFields } = await window.api.getCustomerCustomFields(
+    customer.prof_id
+  );
+
+  const $modal = document.getElementById("manageCustomFieldsModal");
+  const $fieldsWrapper = $modal.querySelector(".fields");
+  const template = $modal.querySelector("template");
+
+  let copyId = 0;
+  function createCopy() {
+    copyId++;
+
+    const $copy = document.importNode(template.content, true);
+    const $root = $copy.querySelector(".customerCustomField");
+    $root.setAttribute("data-id", copyId);
+
+    const $button = $copy.querySelector(".btn");
+    $button.addEventListener("click", () => {
+      $root.remove();
+    });
+
+    $fieldsWrapper.append($copy);
+    const $retval = $fieldsWrapper.querySelector(`[data-id="${copyId}"]`);
+    $retval.scrollIntoView();
+    return $retval;
+  }
+
+  // sets up add field link
+  const $addLink = $modal.querySelector(".link");
+  $addLink.addEventListener("click", (event) => {
+    event.preventDefault();
+    createCopy();
+  });
+
+  const $submit = $modal.querySelector("[data-action=submit]");
+  $submit.addEventListener("click", async () => {
+    // validate for empty value
+    const $inputs = $modal.querySelectorAll("[data-key]");
+    for (let index = 0; index < $inputs.length; index++) {
+      const $input = $inputs[index];
+      const value = $input.value.trim();
+
+      if (!value.length) {
+        $input.focus();
+        return;
+      }
+    }
+
+    const $customFields = $modal.querySelectorAll(".customerCustomField");
+    const payload = [];
+    $customFields.forEach(($field) => {
+      const field = {};
+      const $inputs = $field.querySelectorAll("[data-key]");
+      $inputs.forEach(($input) => {
+        field[$input.dataset.key] = $input.value.trim();
+      });
+
+      payload.push(field);
+    });
+
+    const { data } = await window.helpers.submitBtn($submit, () =>
+      window.api.saveCustomerCustomFields(customer.prof_id, { fields: payload })
+    );
+    customFields = data;
+    $($modal).modal("hide");
+  });
+
+  // set up advance customer link
+  const $link = $modal.querySelector("[data-base-url]");
+  const url = `${$link.dataset.baseUrl}/${customer.prof_id}?section=custom_field`;
+  $link.setAttribute("href", url);
+
+  $($modal).on("show.bs.modal", () => {
+    $fieldsWrapper.innerHTML = "";
+    customFields.forEach((field) => {
+      const $copy = createCopy();
+      const $inputs = $copy.querySelectorAll("[data-key]");
+      $inputs.forEach(($input) => {
+        $input.value = field[$input.dataset.key];
+      });
+    });
+  });
 }
 
 function handleSubmit(customer) {
@@ -198,7 +286,7 @@ function initSaveForm(customer) {
     );
 
     if ($modal.dataset.action === "save_and_print") {
-      window.location.href = `${window.api.prefixURL}/esigneditor/customers/${customer.prof_id}`;
+      window.location.href = `${window.api.prefixURL}/EsignEditor/customers/${customer.prof_id}`;
     } else {
       $($modal).modal("hide");
     }

@@ -140,6 +140,10 @@ ini_set('max_input_vars', 30000);
                 <label>Description</label>
                 <input data-name="description" class="form-control" placeholder="Enter description">
             </div>
+            <div class="form-group">
+                <label>Value</label>
+                <input data-name="value" class="form-control" placeholder="Enter value">
+            </div>
             <div class="d-flex justify-content-end">
                 <button type="button" class="btn btn-primary esigneditor__btn">
                     <div class="spinner-border spinner-border-sm" role="status">

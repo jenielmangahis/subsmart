@@ -104,6 +104,19 @@ export function emailCustomerLetter(payload) {
   return http.post(`${prefixURL}/EsignEditor/apiEmailCustomerLetter`, payload);
 }
 
+export function getCustomerCustomFields(customerId) {
+  return http.get(
+    `${prefixURL}/EsignEditor/apiGetCustomerCustomFields/${customerId}`
+  );
+}
+
+export function saveCustomerCustomFields(customerId, payload) {
+  return http.post(
+    `${prefixURL}/EsignEditor/apiSaveCustomerCustomFields/${customerId}`,
+    payload
+  );
+}
+
 const http = {
   post: sendPost,
   delete: sendDelete,

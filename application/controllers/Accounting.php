@@ -13127,10 +13127,16 @@ class Accounting extends MY_Controller
 
     public function getCashFlowPlanned(){
         $container = $this->vendors_model->getcashflowplan(logged('company_id'));
-        $data = new stdClass();
+        $container2 =  $this->vendors_model->get_data_in_invoice(logged('company_id'));
+        $container3 = $this->vendors_model->get_data_in_arpi(logged('company_id'));
+        $data = new stdClass(); 
         $data->values = $container;
+        $data->invoice = $container2;
+        $data->arpi = $container3; 
         echo json_encode($data);
     }
+
+    
     public function get_info_for_send_invoice_reminder()
     {
         $invoice_id = $this->input->post("invoice_id");
@@ -13699,6 +13705,8 @@ class Accounting extends MY_Controller
 
     }
 
+    
+
     public function update_cashflow_date_amount(){
         $date       = $this->input->post("date");
         $amount     = $this->input->post("amount");
@@ -13711,6 +13719,21 @@ class Accounting extends MY_Controller
         );
 
         $addQuery = $this->vendors_model->update_cashflow_date_amount($id, $new_data);
+        echo json_encode($new_data);
+    }
+
+    public function update_invoice_date_amount(){
+        $date       = $this->input->post("date");
+        $amount     = $this->input->post("amount");
+        $id         = $this->input->post("id");
+
+        $new_data = array(
+            'date_issued' => $date,
+            'date_updated' => $date,
+            'grand_total'    => $amount
+        );
+
+        $addQuery = $this->vendors_model->update_invoice_date_amount($id, $new_data);
         echo json_encode($new_data);
     }
 
@@ -13745,7 +13768,7 @@ class Accounting extends MY_Controller
 
     public function cashflowDataJson()
     {
-        $invoices        = $this->invoice_model->getAllData2(logged('company_id'));
+        $invoices        = 
         // $response['price'] = $invoices;
         // echo json_encode($response,TRUE);
 

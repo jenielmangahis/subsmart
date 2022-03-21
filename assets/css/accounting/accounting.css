@@ -1828,3 +1828,12 @@ button#ct_remove {
 td.cont_remove {
     text-align: center;
 }
+
+button#cti_remove {
+    border-radius: 20px;
+    height: 35px;
+    width: 100px;
+    background-color: #2ca01d;
+    color: white;
+    border: none;
+}
