@@ -138,8 +138,8 @@
                                         </div>
                                         <div class="col-md-3">
                                             <div class="form-group">
-                                                <label for="email">Email</label>
-                                                <input type="email" name="email" id="email" class="form-control" placeholder="Email (Separate emails with a comma)" value="<?=isset($invoice) ? $invoice->customer_email : ''?>">
+                                                <label for="customer-email">Customer email</label>
+                                                <input type="email" name="customer_email" id="customer-email" class="form-control" value="<?=isset($invoice) ? $invoice->customer_email : ''?>">
                                                 <div class="form-check">
                                                     <div class="checkbox checkbox-sec">
                                                         <input type="checkbox" name="send_later" value="1" class="form-check-input" id="send-later" <?=isset($invoice) && $invoice->send_later === "1" ? 'checked' : ''?>>
@@ -187,7 +187,7 @@
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="invoice-no">Invoice #</label>
-                                                <input type="text" class="form-control" id="invoice-no" name="invoice_no" value="" disabled>
+                                                <input type="text" class="form-control" id="invoice-no" name="invoice_no" value="INV-<?=str_pad(intval($number) + 1, 9, "0", STR_PAD_LEFT)?>" disabled>
                                             </div>
                                         </div>
                                         <div class="col-md-3">

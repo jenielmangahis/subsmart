@@ -188,6 +188,12 @@ class Invoice extends MY_Controller
             $this->page_data['terms'] = $terms;
         }
 
+        $default_cust_id = 0;
+        if( $this->input->get('cus_id') ){
+            $default_cust_id = $this->input->get('cus_id');
+        }
+
+        $this->page_data['default_cust_id'] = $default_cust_id;
         $this->page_data['workorder']  = $workorder;
         $this->page_data['w_customer'] = $w_customer;
         $this->page_data['w_items']    = $w_items;

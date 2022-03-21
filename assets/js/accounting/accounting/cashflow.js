@@ -709,6 +709,7 @@ jQuery(document).ready(function() {
         var indic = $("#sched option:selected").val();
 
         if (name == "" || amt == "" || addDate == "" || plan == "") {
+
             alert("input all fields");
         } else {
             if (p_type == "1") {
@@ -903,6 +904,19 @@ jQuery(document).ready(function() {
 
 
     });
+    $(document).on("click", ".filter-btn-section button.filter-btn", function(event) {
+        setTimeout(function() {
+            $(".filter-btn-section .filter-panel").fadeIn();
+        }, 300);
+
+    });
+
+    $(document).on("click", ".eks", function(event) {
+        setTimeout(function() {
+            $(".filter-btn-section .filter-panel").fadeOut();
+        }, 300);
+
+    });
 
     $(document).on('click', "#cashflowtransactions #toggle_button", function() {
         var id = $(this).parents("tr").attr("data-id");
@@ -918,6 +932,11 @@ jQuery(document).ready(function() {
             $("#cashflowtransactions input#text" + id).removeAttr("disabled");
             $("#cashflowtransactions input#date" + id).removeClass("date_type");
             $("#cashflowtransactions input#text" + id).removeClass("amnt");
+            //cti
+            $("#cashflowtransactions input#dates" + id).removeAttr("disabled");
+            $("#cashflowtransactions input#texts" + id).removeAttr("disabled");
+            $("#cashflowtransactions input#dates" + id).removeClass("date_type");
+            $("#cashflowtransactions input#texts" + id).removeClass("amnt");
         } else {
             $("#cashflowtransactions tr .fa-chevron-down").attr("class", "fa fa-chevron-right");
             $("#cashflowtransactions tr.edit-panel").fadeOut();
@@ -925,6 +944,11 @@ jQuery(document).ready(function() {
             $("#cashflowtransactions  input#text" + id).attr("disabled", true);
             $("#cashflowtransactions input#date" + id).addClass("date_type");
             $("#cashflowtransactions input#text" + id).addClass("amnt");
+            //cti
+            $("#cashflowtransactions  input#dates" + id).attr("disabled", true);
+            $("#cashflowtransactions  input#texts" + id).attr("disabled", true);
+            $("#cashflowtransactions input#dates" + id).addClass("date_type");
+            $("#cashflowtransactions input#texts" + id).addClass("amnt");
 
 
         }
@@ -940,15 +964,19 @@ jQuery(document).ready(function() {
             $(this).children(".fa-chevron-right").attr("class", "fa fa-chevron-down");
             $("#cashflowmoneyin tr.info-" + id).fadeIn();
             $("#cashflowmoneyin input#date" + id).removeAttr("disabled");
+            $("#cashflowmoneyin input#text" + id).removeAttr("disabled");
             $("#cashflowmoneyin input#date" + id).removeClass("date_type");
-            $("#cashflowmoneyin input#text" + id).removeClass("date_type");
             $("#cashflowmoneyin input#text" + id).removeClass("amnt");
+
+
         } else {
             $("#cashflowmoneyin tr .fa-chevron-down").attr("class", "fa fa-chevron-right");
             $("#cashflowmoneyin tr.edit-panel").fadeOut();
             $("#cashflowmoneyin  input#date" + id).attr("disabled", true);
+            $("#cashflowmoneyin  input#text" + id).attr("disabled", true);
             $("#cashflowmoneyin input#date" + id).addClass("date_type");
             $("#cashflowmoneyin input#text" + id).addClass("amnt");
+
         }
     })
     $(document).on('click', "#cashflowmoneyout #toggle_button", function() {
@@ -961,34 +989,137 @@ jQuery(document).ready(function() {
             $(this).children(".fa-chevron-right").attr("class", "fa fa-chevron-down");
             $("#cashflowmoneyout tr.info-" + id).fadeIn();
             $("#cashflowmoneyout input#date" + id).removeAttr("disabled");
+            $("#cashflowmoneyout input#text" + id).removeAttr("disabled");
+            $("#cashflowmoneyout input#date" + id).removeClass("date_type");
             $("#cashflowmoneyout input#text" + id).removeClass("amnt");
         } else {
             $("#cashflowmoneyout tr .fa-chevron-down").attr("class", "fa fa-chevron-right");
             $("#cashflowmoneyout tr.edit-panel").fadeOut();
             $("#cashflowmoneyout  input#date" + id).attr("disabled", true);
+            $("#cashflowmoneyout  input#text" + id).attr("disabled", true);
             $("#cashflowmoneyout input#date" + id).addClass("date_type");
+
             $("#cashflowmoneyout input#text" + id).addClass("amnt");
+
         }
     })
     var valdata = Array();
     load_money_in_out_table();
 
     function load_money_in_out_table() {
+        var html = "";
+        var html_moneyin = "";
+        var html_moneyout = "";
         $.ajax({
             url: baseURL + "accounting/getCashFlowPlanned",
             type: "POST",
             dataType: "json",
             data: {},
             success: function(data) {
-                var html = "";
-                var html_moneyin = "";
-                var html_moneyout = "";
+
                 //for planner table
                 count = 0;
+                for (var index = 0; index < data.arpi.length; index++) {
+                    html_moneyin += `<tr class="moneyin" data-id="` + data.arpi[index]["id"] + `" id="` + index + `">
+                    <td> <input class="date_type" id="dates` + data.arpi[index]["id"] + `" type="date" value="` + data.arpi[index]["date_issued"] + `" disabled></td>
+                    <td>` + data.arpi[index]["customer_email"].toUpperCase() + `</td>
+                    <td><input type="text" id="texts` + data.arpi[index]["id"] + `" class="amnt" value="` + data.arpi[index]["grand_total"] + `" disabled></td>
+                    <td> Money In </td>
+                    
+                    <td></td>
+                    <td class="cont_remove"></td>
+                    <tr class="info-` + data.arpi[index]["id"] + ` edit-panel"  id="` + data.arpi[index]["id"] + `">
+                        <td colspan="6">
+                           <div class="row">
+                                <div class="col-md-1.5 due_date">
+                                    <div class="row">
+                                        <div class="col">
+                                            <h6>Due date</h6>
+                                        </div>   
+                                    </div>
+                                    <div class="row">
+                                <div class="col">`
+
+                    html_moneyin += `<p>` + data.arpi[index]["created_at"] + `</p>`;
+
+                    html_moneyin += `</div>
+                            </div>
+                                </div>
+                            
+                                <div class="col-3">
+                                    <div class="row">
+                                        <div class="col-md-10">
+                                            <h6>Due amount</h6>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <p>` + data.arpi[index]["payment_amount"] + `</p>    
+                                        </div>
+                                    </div>
+                                </div>
+    
+                           </div>
+                           <hr>
+                           <div class="row cp_buttons">
+                               <button id="cti_update">UPDATE</button>
+                           </div>
+                        </td>
+                    </tr>`;
+                }
+
+                for (var index = 0; index < data.invoice.length; index++) {
+                    html += `<tr class="moneyin" data-id="` + data.invoice[index]["id"] + `" id="` + index + `">
+                    <td> <input class="date_type" id="dates` + data.invoice[index]["id"] + `" type="date" value="` + data.invoice[index]["date_issued"] + `" disabled></td>
+                    <td>` + data.invoice[index]["customer_email"].toUpperCase() + `</td>
+                    <td><input type="text" id="texts` + data.invoice[index]["id"] + `" class="amnt" value="` + data.invoice[index]["grand_total"] + `" disabled></td>
+                    <td> Invoice </td>
+                    
+                    <td></td>
+                    <td class="cont_remove"></td>
+                    <tr class="info-` + data.invoice[index]["id"] + ` edit-panel"  id="` + data.invoice[index]["id"] + `">
+                        <td colspan="6">
+                           <div class="row">
+                                <div class="col-md-1.5 due_date">
+                                    <div class="row">
+                                        <div class="col">
+                                            <h6>Due date</h6>
+                                        </div>   
+                                    </div>
+                                    <div class="row">
+                                <div class="col">`
+
+                    html += `<p>` + data.invoice[index]["date_issued"] + `</p>`;
+
+                    html += `</div>
+                            </div>
+                                </div>
+                            
+                                <div class="col-3">
+                                    <div class="row">
+                                        <div class="col-md-10">
+                                            <h6>Due amount</h6>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <p>` + data.invoice[index]["grand_total"] + `</p>    
+                                        </div>
+                                    </div>
+                                </div>
+    
+                           </div>
+                           <hr>
+                           <div class="row cp_buttons">
+                               <button id="cti_update">UPDATE</button>
+                           </div>
+                        </td>
+                    </tr>`
+                }
                 for (index = 0; index < data.values.length; index++) {
                     valdata[index] = data.values[index]["amount"];
                     html += `<tr class="moneyin" data-id="` + data.values[index]["id"] + `" id="` + index + `">
-                    <td> <input class="date_type" id="date` + data.values[index]["id"] + `" type="date" value="` + data.values[index]["created_at"] + `" disabled></td>
+                    <td> <input class="date_type" id="date` + data.values[index]["id"] + `" type="date" value="` + data.values[index]["created_at"] + `" data-date="` + data.values[index]["created_at"] + `" disabled></td>
                     <td>` + data.values[index]["merchant_name"].toUpperCase() + `</td>
                     <td><input type="text" id="text` + data.values[index]["id"] + `" class="amnt" value="` + data.values[index]["amount"] + `" disabled></td>
                     <td>` + data.values[index]["description"] + `</td>
@@ -1036,14 +1167,15 @@ jQuery(document).ready(function() {
                                <button id="ct_update">UPDATE</button>
                            </div>
                         </td>
-                    </tr>`;
+                    </tr>
+                    `;
 
 
                     if (data.values[index]["type"] == "moneyin") {
-                        html_moneyin += `<tr class="moneyin" data-id="` + data.values[index]["id"] + `">
-                        <td> <input class="date_type" id="date` + data.values[index]["id"] + `" type="date" value="` + data.values[index]["created_at"] + `"disabled></td>
+                        html_moneyin += `<tr class="moneyin" data-id="` + data.values[index]["id"] + `" id="` + index + `">
+                        <td> <input class="date_type" id="date` + data.values[index]["id"] + `" type="date" value="` + data.values[index]["created_at"] + `" data-date"` + data.values[index]["created_at"] + `" disabled></td>
                     <td>` + data.values[index]["merchant_name"].toUpperCase() + `</td>
-                    <td> <input type="text" id="text` + data.values[index]["id"] + `" class="amnt" value="` + data.values[index]["amount"] + `"></td>
+                    <td> <input type="text" id="text` + data.values[index]["id"] + `" class="amnt" value="` + data.values[index]["amount"] + `" disabled></td>
                     <td>` + data.values[index]["description"] + `</td>
                     <td><button class="btn_cashflow_table" id="toggle_button">edit <i class="fa fa-chevron-right" aria-hidden="true"></i></button></td>
                     <td class="cont_remove"> <button id="ct_remove">REMOVE</button></td>
@@ -1087,16 +1219,17 @@ jQuery(document).ready(function() {
                           <button id="cmi_update">UPDATE</button>
                            </div>
                         </td>
-                    </tr>`;
+                    </tr>
+                    `;
                     }
 
                     if (data.values[index]["type"] == "moneyout") {
                         count++;
                         console.log(count);
-                        html_moneyout += `<tr class="moneyin" data-id="` + data.values[index]["id"] + `">
+                        html_moneyout += `<tr class="moneyin" data-id="` + data.values[index]["id"] + `" id="` + index + `">
                     <td> <input class="date_type" id="date` + data.values[index]["id"] + `" type="date" value="` + data.values[index]["created_at"] + `" disabled></td>
                     <td>` + data.values[index]["merchant_name"].toUpperCase() + `</td>
-                    <td><input type="text" id="text` + data.values[index]["id"] + `" class="amnt" value="` + data.values[index]["amount"] + `"></td>
+                    <td><input type="text" id="text` + data.values[index]["id"] + `" class="amnt" value="` + data.values[index]["amount"] + `" disabled></td>
                     <td>` + data.values[index]["description"] + `</td>
                       <td><button class="btn_cashflow_table" id="toggle_button">edit <i class="fa fa-chevron-right" aria-hidden="true"></i></button></td>
                       <td class="cont_remove"> <button id="ct_remove">REMOVE</button></td>
@@ -1140,26 +1273,41 @@ jQuery(document).ready(function() {
                            <button id="cmo_update">UPDATE</button>
                            </div>
                         </td>
-                    </tr>`;
+                    </tr>
+                    `;
                     }
 
                 }
 
+
+
                 //for money in table
 
+
+
+
+
+
+
                 $('#cashflowtransactions .planner_table').html(html);
+
                 $('#cashflowmoneyin .moneyin_table').html(html_moneyin);
                 $('#cashflowmoneyout .moneyout_table').html(html_moneyout);
-
-
-
-
-
-
             }
         });
+
+
+
     }
 
+    $('tr.moneyin').each(function() {
+        var t = this.cells[1].textContent.split('-');
+        $(this).data('_ts', new Date(t[2], t[1] - 1, t[0]).getTime());
+    }).sort(function(a, b) {
+        return $(a).data('_ts') < $(b).data('_ts');
+    }).appendTo('tbody');
+
+    //update
     $(document).on('click', '#cashflowtransactions #ct_update', function(event) {
         var id = $(this).parents("tr").attr("id");
 
@@ -1179,7 +1327,26 @@ jQuery(document).ready(function() {
         location.reload();
         $("#cashflowmoneyin tr.edit-panel").hide();
     })
-    $(document).on('click', '#cashflowmoneyin #ct_update', function(event) {
+    $(document).on('click', '#cashflowtransactions #cti_update', function(event) {
+        var id = $(this).parents("tr").attr("id");
+
+        var date = $("#cashflowtransactions #dates" + id).val();
+        var amount = $("#cashflowtransactions #texts" + id).val();
+
+        $.ajax({
+            url: baseURL + "accounting/update_invoice_date_amount",
+            type: "POST",
+            dataType: "json",
+            data: { date: date, amount: amount, id: id },
+            success: function(data) {
+                console.log("sent");
+                // location.reload();
+            }
+        })
+        location.reload();
+        $("#cashflowmoneyin tr.edit-panel").hide();
+    })
+    $(document).on('click', '#cashflowmoneyin #cmi_update', function(event) {
         var id = $(this).parents("tr").attr("id");
 
         var date = $("#cashflowmoneyin #date" + id).val();
@@ -1198,7 +1365,7 @@ jQuery(document).ready(function() {
         location.reload();
         $("#cashflowmoneyin tr.edit-panel").hide();
     })
-    $(document).on('click', '#cashflowmoneyout #ct_update', function(event) {
+    $(document).on('click', '#cashflowmoneyout #cmi_update', function(event) {
         var id = $(this).parents("tr").attr("id");
 
         var date = $("#cashflowmoneyout #date" + id).val();
@@ -1221,7 +1388,7 @@ jQuery(document).ready(function() {
 
 
 
-
+    //remove
     $(document).on('click', '#cashflowtransactions #ct_remove', function(event) {
         var id = $(this).parents("tr").attr("data-id");
 

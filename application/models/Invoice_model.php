@@ -957,6 +957,14 @@ class Invoice_model extends MY_Model
         $insert_id = $this->db->insert_id();
         return  $insert_id;
     }
+
+    public function get_last_invoice_number()
+    {
+        $this->db->order_by('date_created', 'desc');
+        $query = $this->db->get('invoices');
+        $last = $query->row();
+        return str_replace('INV-', '', $last->invoice_number);
+    }
 }
 
 /* End of file Invoice_model.php */

@@ -291,7 +291,7 @@
             <span style="position: absolute;right: 0;margin-right: 25px;font-size: 20px;padding-top:10px;" class="fa fa-ellipsis-v"></span>
             <h6 ><span class="fa fa-user"></span>&nbsp; &nbsp;Custom Field</h6>
         </div>
-        <div class="card-body" id="custom_field">
+        <div class="card-body" id="custom_field" data-section="custom_field">
             <a href="javascript:void;" id="add_field" style="color:#58bc4f;font-size: 12px;"><span class="fa fa-plus"></span> Add Field</a>
             <?php if(isset($profile_info)):  ?>
                 <?php $custom_fields = json_decode($profile_info->custom_fields); ?>

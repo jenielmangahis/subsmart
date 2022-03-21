@@ -5883,11 +5883,205 @@ $(function() {
         });
     });
 
+    $(document).on('click', '#modal-container a#add_group', function(e) {
+        e.preventDefault();
+
+        if ($('#modal-container #item_category_list.modal').length === 0) {
+            $.get('/accounting/get-items-categories-list-modal', function(res) {
+                $('#modal-container').append(res);
+
+                $('#modal-container #item_category_list table').DataTable({
+                    autoWidth: false,
+                    searching: false,
+                    processing: true,
+                    lengthChange: false,
+                    info: false,
+                    pageLength: 10,
+                    ordering: false
+                });
+
+                $('#modal-container #item_category_list').modal('show');
+            });
+        } else {
+            $('#modal-container #item_category_list').modal('show');
+        }
+    });
+
+    $(document).on('click', '#modal-container a#add_create_package', function(e) {
+        e.preventDefault();
+
+        if ($('#modal-container #package_list.modal').length === 0) {
+            $.get('/accounting/get-package-list-modal', function(res) {
+                $('#modal-container').append(res);
+
+                $('#modal-container #package_list').modal('show');
+            });
+        } else {
+            $('#modal-container #package_list').modal('show');
+        }
+    });
+
+    $(document).on('click', '#modal-container #item_category_list table button', function(e) {
+        e.preventDefault();
+        var id = e.currentTarget.dataset.id;
+
+        $.get('/accounting/get-category-items/' + id, function(res) {
+            var items = JSON.parse(res);
+
+            for(var i in items) {
+                var type = items[i].type;
+                var locations = items[i].locations;
+                var locs = '';
+
+                if(type.toLowerCase() === 'product' || type.toLowerCase() === 'inventory') {
+                    locs += '<select name="location[]" class="form-control" required>';
+                    for (var o in locations) {
+                        locs += `<option value="${locations[o].id}">${locations[o].name}</option>`;
+                    }
+                    locs += '</select>';
+                }
+
+                var fields = `
+                    <td>${items[i].title}<input type="hidden" name="item[]" value="${items[i].id}"></td>
+                    <td>${type.charAt(0).toUpperCase() + type.slice(1)}</td>
+                    <td>${locs}</td>
+                    <td><input type="number" name="quantity[]" class="form-control text-right" required value="0" min="0"></td>
+                    <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${items[i].price}"></td>
+                    <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="0.00"></td>
+                    <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="7.50"></td>
+                    <td><span class="row-total">$0.00</span></td>
+                    <td>
+                        <div class="d-flex align-items-center justify-content-center">
+                            <a href="#" class="deleteRow"><i class="fa fa-trash"></i></a>
+                        </div>
+                    </td>
+                `;
+
+                $('#modal-container form#modal-form .modal #item-table tbody').append(`<tr>${fields}</tr>`);
+
+                $('#modal-container form#modal-form .modal #item-table tbody tr:last-child select').select2({
+                    minimumResultsForSearch: -1
+                });
+            }
+        });
+    });
+
+    $(document).on('click', '#modal-container #package_list table#package-table button.addNewPackageToList', function(e) {
+        e.preventDefault();
+        var id = e.currentTarget.dataset.id;
+
+        $.get('/accounting/get-package-details/' + id, function(res) {
+            var result = JSON.parse(res);
+            var details = result.package;
+            var items = result.items;
+
+            var fields = `
+                <td>${details.name}<input type="hidden" name="package[]" value="${details.id}"></td>
+                <td>Package</td>
+                <td></td>
+                <td><input type="number" name="quantity[]" class="form-control text-right" required value="0" min="0"></td>
+                <td>${parseFloat(details.amount_set).toFixed(2)}</td>
+                <td></td>
+                <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="7.50"></td>
+                <td><span class="row-total">$0.00</span></td>
+                <td>
+                    <div class="d-flex align-items-center justify-content-center">
+                        <a href="#" class="deleteRow"><i class="fa fa-trash"></i></a>
+                    </div>
+                </td>
+            `;
+
+            $('#modal-container form#modal-form .modal #item-table tbody').append(`<tr class="package">${fields}</tr>`);
+
+            var packageItems = `
+                <td colspan="3">
+                    <table class="table m-0 bg-white">
+                        <thead>
+                            <tr class="package-item-header">
+                                <th>Item Name</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>`;
+
+            for(var i in items) {
+                packageItems += `<tr class="package-item"><td>${items[i].details.title}</td><td>${items[i].quantity}</td><td>${parseFloat(items[i].price).toFixed(2)}</td></tr>`;
+            }
+
+            packageItems += `
+                        </tbody>
+                    </table>
+                </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            `;
+
+            $('#modal-container form#modal-form .modal #item-table tbody').append(`<tr class="package-items">${packageItems}</tr>`);
+        });
+    });
+
+    $(document).on('click', '#modal-container #package_list #add_package_item', function(e) {
+        e.preventDefault();
+
+        if ($('#modal-container #package_item_list.modal').length === 0) {
+            $.get('/accounting/get-items-list-modal', function(res) {
+                $('#modal-container').append(res);
+
+                $('#modal-container #item_list').attr('id', 'package_item_list');
+
+                $('#modal-container #package_item_list table').DataTable({
+                    autoWidth: false,
+                    searching: false,
+                    processing: true,
+                    lengthChange: false,
+                    info: false,
+                    pageLength: 10,
+                    ordering: false
+                });
+
+                $('#modal-container #package_item_list').modal('show');
+            });
+        } else {
+            $('#modal-container #package_item_list').modal('show');
+        }
+    });
+
+    $(document).on('click', '#modal-container #package_item_list table button', function(e) {
+        e.preventDefault();
+        var id = e.currentTarget.dataset.id;
+
+        $.get('/accounting/get-item-details/' + id, function(res) {
+            var result = JSON.parse(res);
+            var item = result.item;
+            var type = item.type;
+            var locations = result.locations;
+            var locs = '';
+
+            var fields = `
+                <td>${item.title}<input type="hidden" name="item[]" value="${item.id}"></td>
+                <td><input type="number" name="quantity[]" class="form-control text-right" required value="0" min="0"></td>
+                <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${item.price}"></td>
+                <td><a href="#" class="remove btn btn-sm btn-success" id="149"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
+            `;
+
+            $('#modal-container #package_list #package-items-table tbody').append(`<tr>${fields}</tr>`);
+        });
+    });
+
     $(document).on('change', '#modal-container #modal-form .modal #item-table tbody tr input', function() {
-        var quantity = $(this).parent().parent().find('input[name="quantity[]"]').val();
-        var amount = $(this).parent().parent().find('input[name="item_amount[]"]').val();
-        var discount = $(this).parent().parent().find('input[name="discount[]"]').val();
-        var tax = $(this).parent().parent().find('input[name="item_tax[]"]').val();
+        var quantityEl = $(this).parent().parent().find('input[name="quantity[]"]');
+        var quantity = quantityEl.length > 0 ? quantityEl.val() : 0.00;
+        var amountEl = $(this).parent().parent().find('input[name="item_amount[]"]');
+        var amount = amountEl.length > 0 ? amountEl.val() : $(this).parent().parent().find('td:nth-child(5)').html();
+        var discountEl = $(this).parent().parent().find('input[name="discount[]"]');
+        var discount = discountEl.length > 0 ? discountEl.val() : 0.00;
+        var taxEl = $(this).parent().parent().find('input[name="item_tax[]"]');
+        var tax = taxEl.length > 0 ? taxEl.val() : 0.00;
 
         var amount = parseFloat(amount) * parseInt(quantity);
         var taxAmount = parseFloat(tax) * amount / 100;
@@ -5898,11 +6092,11 @@ $(function() {
         var subtotal = 0.00;
         var taxes = 0.00;
         var discounts = 0.00;
-        $('#modal-container #modal-form .modal #item-table tbody tr').each(function() {
-            var itemAmount = $(this).find('input[name="item_amount[]"]').val();
-            var itemQty = $(this).find('input[name="quantity[]"]').val();
-            var itemDisc = $(this).find('input[name="discount[]"]').val();
-            var itemTax = $(this).find('input[name="item_tax[]"]').val();
+        $('#modal-container #modal-form .modal #item-table tbody tr:not(.package-items, .package-item, .package-item-header)').each(function() {
+            var itemAmount = $(this).find('input[name="item_amount[]"]').legnth > 0 ? $(this).find('input[name="item_amount[]"]').val() : $(this).find('td:nth-child(5)').html();
+            var itemQty = $(this).find('input[name="quantity[]"]').length > 0 ? $(this).find('input[name="quantity[]"]').val() : 0;
+            var itemDisc = $(this).find('input[name="discount[]"]').length > 0 ? $(this).find('input[name="discount[]"]').val() : 0.00;
+            var itemTax = $(this).find('input[name="item_tax[]"]').length > 0 ? $(this).find('input[name="item_tax[]"]').val() : 0.00;
 
             var itemTotal = parseFloat(itemAmount) * parseFloat(itemQty);
             var taxAmount = parseFloat(itemTax) * itemTotal / 100;
@@ -5936,6 +6130,9 @@ $(function() {
     });
 
     $(document).on('click', '#modal-container #modal-form .modal #item-table .deleteRow', function() {
+        if($(this).parent().parent().parent().hasClass('package')) {
+            $(this).parent().parent().parent().next().remove();
+        }
         $(this).parent().parent().parent().remove();
 
         var subtotal = 0.00;

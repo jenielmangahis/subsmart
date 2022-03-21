@@ -66,6 +66,21 @@ class Autocomplete extends MY_Controller
 
         die(json_encode($tags));   
     }
+
+    public function company_reasons()
+    {
+        $this->load->model('CompanyReason_model');
+
+        $search = $this->input->get('q');
+        $filter = ['search' => $search];
+        $cid    = logged('company_id');
+        $reasons = $this->CompanyReason_model->getAllDefaultAndByCompanyId($cid, $filter);   
+        $obj = array();      
+        foreach( $reasons as $r ){
+            $obj[] = ['id' => $r->id, 'text' => $r->reason];
+        }
+        die(json_encode($obj));   
+    }
 }
 
 

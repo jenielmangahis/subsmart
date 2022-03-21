@@ -116,5 +116,29 @@ add_css(array(
         }
         console.log(place);
     }
+
+    window.document.addEventListener("DOMContentLoaded", () => {
+        const params = new Proxy(new URLSearchParams(window.location.search), {
+            get: (searchParams, prop) => searchParams.get(prop),
+        });
+        const $section = document.querySelector(`[data-section=${params.section}]`);
+        if ($section) {
+            const $header = document.getElementById("topnav");
+            const sectionRect = $section.getBoundingClientRect();
+            const headerRect = $header.getBoundingClientRect();
+            window.scroll({top: ((sectionRect.top + window.scrollY) - headerRect.height * 2), behavior: "smooth"});
+            $section.classList.add("active-section");
+        }
+    });
 </script>
+<style>
+.active-section {
+    transition: background-color 0.3s;
+    animation: active-section 0.5s 2;
+}
+@keyframes active-section {
+  0%, 49% { background-color: transparent; }
+  50%, 100% { background-color: #e4e4e4; }
+}
+</style>
 <?php include viewPath('customer/js/add_advance_js'); ?>

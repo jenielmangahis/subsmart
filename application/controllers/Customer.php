@@ -770,6 +770,7 @@ class Customer extends MY_Controller
     {
         $this->load->model('taskhub_model');
         $this->load->library('wizardlib');
+        $this->load->model('Invoice_model', 'invoice_model');
         
         $is_allowed = $this->isAllowedModuleAccess(9);
         if( !$is_allowed ){
@@ -801,6 +802,7 @@ class Customer extends MY_Controller
         // set a global data for customer profile id
         $this->page_data['customer_profile_id'] = $userid;
         if($id!=null){
+            $this->page_data['cust_invoices'] = $this->invoice_model->getAllByCustomerId($id);
             $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$id,"acs_profile");
             $this->page_data['access_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$id,"acs_access");
             $this->page_data['office_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$id,"acs_office");
@@ -967,6 +969,70 @@ class Customer extends MY_Controller
         $this->page_data['customer']   = $customer;
 
         $this->load->view('customer/credit_industry', $this->page_data);
+    }
+
+    public function add_new_dispute_item($cid)
+    {
+        $this->load->model('AcsProfile_model');
+        $this->load->model('CreditBureau_model');
+        $this->load->model('Furnisher_model');
+        $this->load->model('CompanyReason_model');
+
+        $company_id = logged('company_id');
+        $customer   = $this->AcsProfile_model->getByProfId($cid);
+        $reasons    = $this->CompanyReason_model->getAllDefaultAndByCompanyId($company_id);
+
+        $creditBureaus = $this->CreditBureau_model->getAll();
+        $furnishers    = $this->Furnisher_model->getAllByCompanyId($company_id);
+
+        $this->page_data['customer'] = $customer;
+        $this->page_data['cid'] = $cid;
+        $this->page_data['creditBureaus'] = $creditBureaus;
+        $this->page_data['furnishers'] = $furnishers;
+        $this->page_data['reasons'] = $reasons;
+
+        $this->load->view('customer/add_new_dispute_item', $this->page_data);
+    }
+
+    public function ajax_load_company_reason_list()
+    {
+        $this->load->model('CompanyReason_model');
+
+        $company_id = logged('company_id');
+        $reasons    = $this->CompanyReason_model->getAllDefaultAndByCompanyId($company_id);
+    
+        $this->page_data['reasons'] = $reasons;        
+        $this->load->view('customer/ajax_load_company_reason_list', $this->page_data);
+
+    }
+
+    public function ajax_create_company_reason()
+    {
+        $this->load->model('CompanyReason_model');
+        
+        $is_success = false;
+        $msg = '';
+
+        $company_id = logged('company_id');
+        $post       = $this->input->post();
+
+        if( $post['company_reason'] != '' ){
+            $data = [
+                'company_id' => $company_id,
+                'reason' => $post['company_reason'],
+                'date_created' => date("Y-m-d H:i:s"),
+                'date_modified' => date("Y-m-d H:i:s")
+            ];
+
+            $this->CompanyReason_model->create($data);
+
+            $is_success = true;
+        }else{
+            $msg = 'Cannot save data';
+        }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($json_data);     
     }
 
     public function ajax_create_internal_notes()

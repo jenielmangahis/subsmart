@@ -842,18 +842,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
 
 <script>
-    $(document).on("click", ".filter-btn-section button.filter-btn", function(event) {
-        setTimeout(function() {
-            $(".filter-btn-section .filter-panel").fadeIn();
-        }, 300);
-
-    });
-    $(document).on("click", ".eks", function(event) {
-        setTimeout(function() {
-            $(".filter-btn-section .filter-panel").fadeOut();
-        }, 300);
-
-    });
+    
+    
 
     $(document).on("click", "#Apply", function(event) {
         setTimeout(function() {

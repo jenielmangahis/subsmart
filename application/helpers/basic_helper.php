@@ -2362,6 +2362,33 @@ function get_invoice_amount($type)
 /**
  * @return mixed
  */
+function get_customer_invoice_amount($type, $customer_id)
+{
+    $CI =& get_instance();
+    $CI->load->model('Invoice_model', 'invoice_model');
+    $company_id = logged('company_id');
+    $result = 0;
+    $start_date = date("Y") . "-01-01";
+    $end_date = date("Y") . "-12-31";
+
+    switch ($type) {
+        case "year":
+            $result = $CI->invoice_model->getByWhere(array('customer_id' => $customer_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date));
+            return total_invoice_amount($result);
+
+        case "pending":
+            $result = $CI->invoice_model->getByWhere(array('customer_id' => $customer_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status' => 'Draft'));
+            return total_invoice_amount($result);
+
+        default:
+            $result = $CI->invoice_model->getByWhere(array('customer_id' => $customer_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status !=' => 'Draft'));
+            return total_invoice_amount($result);
+    }
+}
+
+/**
+ * @return mixed
+ */
 function total_invoice_amount($invoices)
 {
     $grand_total = 0;

@@ -289,7 +289,7 @@ SQL;
         return $query->row();
     }
 
-    public function getPlaceholders(int $customerId = null)
+    public function getPlaceholders(int $customerId = null, bool $forSeed = false)
     {
         $placeholders = [
             [
@@ -312,9 +312,7 @@ SQL;
                 'code' => 'client_suffix',
                 'description' => 'Suffix of client',
                 'get' => function (PlaceholderGetParam $param) {
-                    $this->db->where('prof_id', $param->customerId);
-                    $this->db->select('suffix');
-                    $customer = $this->db->get('acs_profile')->row();
+                    $customer = $this->getCustomer($param->customerId);
                     return $customer ? $customer->suffix : null;
                 },
             ],
@@ -322,9 +320,7 @@ SQL;
                 'code' => 'client_first_name',
                 'description' => 'First name of client',
                 'get' => function (PlaceholderGetParam $param) {
-                    $this->db->where('prof_id', $param->customerId);
-                    $this->db->select('first_name');
-                    $customer = $this->db->get('acs_profile')->row();
+                    $customer = $this->getCustomer($param->customerId);
                     return $customer ? $customer->first_name : null;
                 },
             ],
@@ -332,9 +328,7 @@ SQL;
                 'code' => 'client_middle_name',
                 'description' => 'Middle name of client',
                 'get' => function (PlaceholderGetParam $param) {
-                    $this->db->where('prof_id', $param->customerId);
-                    $this->db->select('middle_name');
-                    $customer = $this->db->get('acs_profile')->row();
+                    $customer = $this->getCustomer($param->customerId);
                     return $customer ? $customer->middle_name : null;
                 },
             ],
@@ -342,15 +336,17 @@ SQL;
                 'code' => 'client_last_name',
                 'description' => 'Last name of client',
                 'get' => function (PlaceholderGetParam $param) {
-                    $this->db->where('prof_id', $param->customerId);
-                    $this->db->select('last_name');
-                    $customer = $this->db->get('acs_profile')->row();
+                    $customer = $this->getCustomer($param->customerId);
                     return $customer ? $customer->last_name : null;
                 },
             ],
             [
                 'code' => 'client_address',
                 'description' => 'Address of client',
+                'get' => function (PlaceholderGetParam $param) {
+                    $customer = $this->getCustomer($param->customerId);
+                    return $customer ? $customer->mail_add : null;
+                },
             ],
             [
                 'code' => 'client_previous_address',
@@ -360,9 +356,7 @@ SQL;
                 'code' => 'bdate',
                 'description' => 'Birth date of client',
                 'get' => function (PlaceholderGetParam $param) {
-                    $this->db->where('prof_id', $param->customerId);
-                    $this->db->select('date_of_birth');
-                    $customer = $this->db->get('acs_profile')->row();
+                    $customer = $this->getCustomer($param->customerId);
                     return $customer ? $customer->date_of_birth : null;
                 },
             ],
@@ -370,15 +364,17 @@ SQL;
                 'code' => 'ss_number',
                 'description' => 'Last 4 of SSN of client',
                 'get' => function (PlaceholderGetParam $param) {
-                    $this->db->where('prof_id', $param->customerId);
-                    $this->db->select('ssn');
-                    $customer = $this->db->get('acs_profile')->row();
+                    $customer = $this->getCustomer($param->customerId);
                     return $customer ? $customer->ssn : null;
                 },
             ],
             [
                 'code' => 't_no',
                 'description' => 'Telephone number of client',
+                'get' => function (PlaceholderGetParam $param) {
+                    $customer = $this->getCustomer($param->customerId);
+                    return $customer ? ($customer->phone_h ?? $customer->phone_m) : null;
+                },
             ],
             [
                 'code' => 'curr_date',
@@ -391,6 +387,15 @@ SQL;
             [
                 'code' => 'client_signature',
                 'description' => "Client's signature",
+                'get' => function (PlaceholderGetParam $param) {
+                    $this->db->where('user_id', $param->customerId);
+                    $record = $this->db->get('user_signatures')->row();
+                    if (is_null($record) || empty($record->signature)) {
+                        return null;
+                    }
+
+                    return str_replace('{source}', $record->signature, '<img src="{source}" width="200" alt="" />');
+                },
             ],
             [
                 'code' => 'bureau_name',
@@ -438,6 +443,23 @@ SQL;
             ],
         ];
 
+        if ($forSeed) {
+            return $placeholders;
+        }
+
+        $this->db->where('user_id', logged('id'));
+        $userPlaceholders = $this->db->get('esign_editor_placeholders')->result();
+
+        foreach ($userPlaceholders as $placeholder) {
+            array_push($placeholders, [
+                'code' => $placeholder->code,
+                'description' => $placeholder->description,
+                'get' => function () use ($placeholder) {
+                    return $placeholder->value;
+                },
+            ]);
+        }
+
         if (is_null($customerId)) {
             return $placeholders;
         }
@@ -448,14 +470,25 @@ SQL;
             $customFields = json_decode($customer->custom_fields);
         }
 
+        $placeholderCodes = array_column($placeholders, 'code');
         foreach ($customFields as $field) {
-            array_push($placeholders, [
-                'code' => $this->toPlaceholderCode($field->name),
-                'description' => $field->name,
-                'get' => function () use ($field) {
-                    return $field->value;
-                },
-            ]);
+            $code = $this->toPlaceholderCode($field->name);
+            $description = $field->name . ' (custom field)';
+            $key = array_search($code, $placeholderCodes);
+            $getter = function () use ($field) {
+                return $field->value;
+            };
+
+            if ($key === false) {
+                array_push($placeholders, [
+                    'code' => $code,
+                    'description' => $description,
+                    'get' => $getter,
+                ]);
+            } else {
+                $placeholders[$key]['get'] = $getter;
+                $placeholders[$key]['description'] = $description;
+            }
         }
 
         return $placeholders;
@@ -463,7 +496,7 @@ SQL;
 
     public function apiSeedPlaceholders()
     {
-        $placeholders = $this->getPlaceholders();
+        $placeholders = $this->getPlaceholders(null, true);
         $placeholders = array_map(function ($placeholder) {
             return ['code' => $placeholder['code'], 'description' => $placeholder['description']];
         }, $placeholders);
@@ -473,33 +506,13 @@ SQL;
     public function apiGetPlaceholders()
     {
         header('content-type: application/json');
-        echo json_encode(['data' => $this->getUserPlaceholders()]);
+        echo json_encode(['data' => $this->getPlaceholders()]);
     }
 
     public function apiGetCustomerPlaceholders($id)
     {
-        $customer = $this->getCustomer($id);
-        $customFields = [];
-        if (!is_null($customer->custom_fields) && !empty($customer->custom_fields)) {
-            $customFields = json_decode($customer->custom_fields);
-        }
-
-        $placeholders = $this->getUserPlaceholders();
-        $ids = array_map('intval', array_column($placeholders, 'id'));
-        $lastId = max($ids);
-
-        foreach ($customFields as $field) {
-            $lastId++;
-            array_push($placeholders, [
-                'id' => $lastId,
-                'user_id' => null,
-                'code' => $this->toPlaceholderCode($field->name),
-                'description' => $field->name,
-            ]);
-        }
-
         header('content-type: application/json');
-        echo json_encode(['data' => $placeholders]);
+        echo json_encode(['data' => $this->getPlaceholders((int) $id)]);
     }
 
     private function toPlaceholderCode(string $string)
@@ -507,14 +520,38 @@ SQL;
         return preg_replace('/\s+/', '_', strtolower($string));
     }
 
-    private function getUserPlaceholders()
+    public function apiGetCustomerCustomFields($id)
     {
-        $this->db->where('user_id', logged('id'));
-        $this->db->or_group_start();
-        $this->db->where('user_id', null);
-        $this->db->where('company_id', null);
-        $this->db->group_end();
-        return $this->db->get('esign_editor_placeholders')->result();
+        header('content-type: application/json');
+        echo json_encode(['data' => $this->getCustomerCustomFields($id)]);
+    }
+
+    private function getCustomerCustomFields($id)
+    {
+        $customer = $this->getCustomer($id);
+        $customFields = [];
+        if (!is_null($customer->custom_fields) && !empty($customer->custom_fields)) {
+            $customFields = json_decode($customer->custom_fields);
+        }
+
+        return $customFields;
+    }
+
+    public function apiSaveCustomerCustomFields($id)
+    {
+        header('content-type: application/json');
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['success' => false]);
+            return;
+        }
+
+        $payload = json_decode(file_get_contents('php://input'), true);
+        $this->db->where('prof_id', $id);
+        $this->db->update('acs_profile', [
+            'custom_fields' => json_encode($payload['fields']),
+        ]);
+
+        echo json_encode(['data' => $this->getCustomerCustomFields($id)]);
     }
 
     public function apiCreatePlaceholder()
@@ -555,8 +592,13 @@ SQL;
 
     private function getCustomer($id)
     {
-        $this->db->where('prof_id', $id);
-        return $this->db->get('acs_profile')->row();
+        static $customersMap = [];
+        if (!array_key_exists($id, $customersMap)) {
+            $this->db->where('prof_id', $id);
+            $customersMap[$id] = $this->db->get('acs_profile')->row();
+        }
+
+        return $customersMap[$id];
     }
 
     public function apiExportLetterAsPDF()
