@@ -457,6 +457,28 @@ class Items_model extends MY_Model
         $query = $this->db->get();
         return $query->row();
     }
+
+    public function get_items_by_category($categoryId)
+    {
+        $this->db->where('item_categories_id', $categoryId);
+        $this->db->where('is_active', 1);
+        $query = $this->db->get($this->table);
+        return $query->result();
+    }
+
+    public function get_package_items($packageId)
+    {
+        $this->db->where('package_id', $packageId);
+        $query = $this->db->get('item_package');
+        return $query->result();
+    }
+
+    public function get_package_by_id($packageId)
+    {
+        $this->db->where('id', $packageId);
+        $query = $this->db->get('package_details');
+        return $query->row();
+    }
 }
 
 

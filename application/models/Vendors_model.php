@@ -835,6 +835,19 @@ class Vendors_model extends MY_Model {
 		return $delete ? true : false;
 	}
 
+	public function get_data_in_invoice($company_id){
+		$query = $this->db->get('invoices');
+		return $query->result();
+	}
+	public function get_data_in_arpi($company_id){
+		$this->db->select('customer_email, date_issued, grand_total');
+		$this->db->from('invoices');
+		$this->db->join('accounting_receive_payment_invoices', 'invoice_id = invoices.id');
+
+		$query = $this->db->get();
+		return $query->result();
+	}
+
 	public function savecashflowplan($new_data){
 	
         $vendor = $this->db->insert('cashflow_planned', $new_data);
@@ -848,13 +861,16 @@ class Vendors_model extends MY_Model {
 
 		return  $insert_id;
     }
+	public function update_invoice_date_amount($id,$data){
+        $updateCashFlow = $this->db->update('invoices', $data, array('id' => $id));
+		$insert_id = $this->db->insert_id();
+
+		return  $insert_id;
+    }
 
 	public function remove_cashflow_customer($id){
 		$getId = $this->db->where('id', $id);
 		$removeID = $this->db->delete('cashflow_planned');	
-
-
-		
 	}
 
 	public function getcashflowplan($company_id)

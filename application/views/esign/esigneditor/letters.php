@@ -33,7 +33,7 @@ ini_set('max_input_vars', 30000);
                             <option value="inactive">Inactive</option>
                         </select>
                     </div>
-                    <a class="btn btn-primary" href="<?=base_url()?>esigneditor/create">
+                    <a class="btn btn-primary" href="<?=base_url()?>EsignEditor/create">
                         <i class="fa fa-plus mr-1"></i>
                         Create Letter
                     </a>

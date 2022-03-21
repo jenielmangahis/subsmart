@@ -72,6 +72,9 @@ ini_set('max_input_vars', 30000);
                 <fieldset class="mt-3">
                     <legend class="d-flex justify-content-between align-items-center">
                         <h2>Customer Placeholders</h2>
+                        <a class="link" href="#" data-toggle="modal" data-target="#manageCustomFieldsModal">
+                            Manage Customer Custom Field
+                        </a>
                     </legend>
                     <ul class="placeholders__list"></ul>
                 </fieldset>
@@ -108,5 +111,54 @@ ini_set('max_input_vars', 30000);
     </div>
   </div>
 </div>
+
+<div class="modal fade" id="manageCustomFieldsModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Manage Custom Fields</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+            <template>
+                <div class="customerCustomField">
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input data-key="name" class="form-control" placeholder="Enter name">
+                    </div>
+                    <div class="form-group">
+                        <label>Value</label>
+                        <input data-key="value" class="form-control" placeholder="Enter value">
+                    </div>
+                    <button class="btn btn-sm btn-primary" type="button">
+                        <span class="fa fa-trash-o"></span>
+                    </button>
+                </div>
+            </template>
+
+            <div class="fields"></div>
+            <div class="mt-3">
+                <button class="link mr-3">+ Add field</button>
+                <a class="link" data-base-url="<?=base_url('customer/add_advance')?>" href="#" target="_blank">
+                    View advance customer
+                </a>
+            </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary esigneditor__btn" data-action="submit">
+            <div class="spinner-border spinner-border-sm" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+            Save
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 <?php include viewPath('includes/footer');?>

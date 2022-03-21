@@ -54,6 +54,8 @@ class Accounting_modals extends MY_Controller
         $this->load->model('accounting_refund_receipt_model');
         $this->load->model('accounting_delayed_credit_model');
         $this->load->model('accounting_delayed_charge_model');
+        $this->load->model('invoice_model');
+        $this->load->model('workorder_model');
         $this->load->library('form_validation');
     }
 
@@ -272,6 +274,9 @@ class Accounting_modals extends MY_Controller
                             }
                         }
                     }
+                break;
+                case 'invoice_modal' :
+                    $this->page_data['number'] = $this->invoice_model->get_last_invoice_number();
                 break;
             }
 
@@ -4274,6 +4279,59 @@ class Accounting_modals extends MY_Controller
 
         $this->page_data['items'] = $items;
         $this->load->view('accounting/modals/item_list_modal', $this->page_data);
+    }
+
+    public function get_items_categories_list_modal()
+    {
+        $categories = $this->items_model->getItemCategories();
+
+        $this->page_data['categories'] = $categories;
+        $this->load->view('accounting/modals/item_category_list_modal', $this->page_data);
+    }
+
+    public function get_category_items($categoryId)
+    {
+        $items = $this->items_model->get_items_by_category($categoryId);
+
+        foreach($items as $key => $item) {
+            $locations = $this->items_model->getLocationByItemId($item->id);
+
+            $items[$key]->locations = $locations;
+        }
+
+        echo json_encode($items);
+    }
+
+    public function get_package_details($packageId)
+    {
+        $package = $this->items_model->get_package_by_id($packageId);
+        $packageItems = $this->items_model->get_package_items($packageId);
+
+        foreach($packageItems as $key => $packageItem) {
+            $item = $this->items_model->getItemById($packageItem->item_id)[0];
+
+            $packageItems[$key]->details = $item;
+        }
+
+        echo json_encode(['package' => $package, 'items' => $packageItems]);
+    }
+
+    public function get_package_list_modal()
+    {
+        $packages = $this->workorder_model->getPackageDetailsByCompany(logged('company_id'));
+
+        foreach($packages as $key => $package) {
+            $items = $this->items_model->get_package_items($package->id);
+
+            foreach($items as $index => $item) {
+                $items[$index]->item = $this->items_model->getItemById($item->item_id)[0];
+            }
+
+            $packages[$key]->items = $items;
+        }
+
+        $this->page_data['itemPackages'] = $packages;
+        $this->load->view('accounting/modals/package_list_modal', $this->page_data);
     }
 
     public function get_term_details($termId)
@@ -17144,5 +17202,10 @@ class Accounting_modals extends MY_Controller
             fclose ($fd);
             exit;
         }
+    }
+
+    public function add_package()
+    {
+        $post = $this->input->post();
     }
 }
