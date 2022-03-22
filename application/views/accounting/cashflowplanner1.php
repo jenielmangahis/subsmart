@@ -264,6 +264,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 <button class="tablinks all active">All</button>
                                 <button class="tablinks money_in">Money in</button>
                                 <button class="tablinks money_out">Money out</button>
+                                <button class="tablinks overdue_planned">Overdue Planned</button>
                             </div>
                         </div>
                         <div class="col-md-4 banking-tab-container" align="right">
@@ -433,7 +434,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     <div style="background-color:#f4f5f8;padding:1.5%;display:none;height: rem;" id="cfp_add_item_area">
                         <div class="row">
                             <div class="col-md-3">
-                                <input type="date" id="datepicker" class="addDate" name="item_date" class="form-control date_plan" placeholder="Date" required>
+                                <input type="date" id="datepicker"  class="addDate" name="item_date" class="form-control date_plan" placeholder="Date" required>
                             </div>
                             <div class="col-md-6 input-group" style="">
                                 <input type="text" name="item_desc" class="form-control merchant_name" style="width: 65%;" placeholder="Merchant name" required> &nbsp;&nbsp;&nbsp;
@@ -636,7 +637,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     <div id="London" class="tabcontent all" style="display: block;">
                         <table class="table" id="cashflowtransactions">
                             <thead>
-                                <th>DATE</th>
+                                <th data-sort="date">DATE</th>
                                 <th>DESCRIPTION</th>
                                 <th>AMOUNT</th>
                                 <th>TYPE</th>
@@ -679,6 +680,22 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                             <th></th>
                         </thead>
                         <tbody class="moneyout_table">
+                          
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="England" class="tabcontent overdue_planned">
+                    <table class="table" id="cashflow_overdue">
+                        <thead>
+                            <th>DATE</th>
+                            <th>DESCRIPTION</th>
+                            <th>AMOUNT</th>
+                            <th>TYPE</th>
+                            <th></th>
+                            <th></th>
+                        </thead>
+                        <tbody class="overdue_table">
                           
                         </tbody>
                     </table>

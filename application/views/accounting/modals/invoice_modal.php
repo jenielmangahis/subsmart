@@ -210,7 +210,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="row">
+                                    <div class="row date-row">
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="date-issued">Date issued <span class="text-danger">*</span></label>

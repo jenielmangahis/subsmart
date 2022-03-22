@@ -1087,6 +1087,9 @@ class Accounting_modals extends MY_Controller
                 case 'billPaymentModal':
                     $this->result = $this->bill_payment($data);
                 break;
+                case 'invoiceModal' :
+                    $this->result = $this->invoice($data);
+                break;
                 case 'receivePaymentModal' :
                     $this->result = $this->receive_payment($data);
                 break;
@@ -5019,6 +5022,48 @@ class Accounting_modals extends MY_Controller
         }
 
         return $return;
+    }
+
+    private function invoice($data)
+    {
+        dd($data);
+        $this->form_validation->set_rules('customer', 'Customer', 'required');
+        $this->form_validation->set_rules('item[]', 'Item', 'required');
+        $this->form_validation->set_rules('item_total[]', 'Item total', 'required');
+
+        if(isset($data['template_name'])) {
+            $this->form_validation->set_rules('template_name', 'Template Name', 'required');
+            $this->form_validation->set_rules('recurring_type', 'Recurring Type', 'required');
+
+            if ($data['recurring_type'] !== 'unscheduled') {
+                $this->form_validation->set_rules('recurring_interval', 'Recurring interval', 'required');
+
+                if ($data['recurring_interval'] !== 'daily') {
+                    if ($data['recurring_interval'] === 'monthly') {
+                        $this->form_validation->set_rules('recurring_week', 'Recurring week', 'required');
+                    } elseif ($data['recurring_interval'] === 'yearly') {
+                        $this->form_validation->set_rules('recurring_month', 'Recurring month', 'required');
+                    }
+
+                    $this->form_validation->set_rules('recurring_day', 'Recurring day', 'required');
+                }
+                if ($data['recurring_interval'] !== 'yearly') {
+                    $this->form_validation->set_rules('recurr_every', 'Recurring interval', 'required');
+                }
+                $this->form_validation->set_rules('end_type', 'Recurring end type', 'required');
+
+                if ($data['end_type'] === 'by') {
+                    $this->form_validation->set_rules('end_date', 'Recurring end date', 'required');
+                } elseif ($data['end_type'] === 'after') {
+                    $this->form_validation->set_rules('max_occurence', 'Recurring max occurence', 'required');
+                }
+            }
+        } else {
+            $this->form_validation->set_rules('date_issued', 'Date issued', 'required');
+            $this->form_validation->set_rules('due_date', 'Due date', 'required');
+            $this->form_validation->set_rules('status', 'Status', 'required');
+            $this->form_validation->set_rules('invoice_no', 'Invoice #', 'required');
+        }
     }
 
     private function receive_payment($data)
@@ -17207,5 +17252,31 @@ class Accounting_modals extends MY_Controller
     public function add_package()
     {
         $post = $this->input->post();
+
+        $packageDetails = [
+            'name' => $post['name'],
+            'package_type'  => '1',
+            'total_price' => $post['total_price'],
+            'amount_set' => $post['amount_set'],
+            'created_by' => logged('id'),
+            'company_id' => logged('company_id'),
+            'created_at' => date("Y-m-d H:i:s")
+        ];
+
+        $packageId = $this->workorder_model->addPackage($packageDetails);
+
+        foreach($post['item'] as $key => $itemId) {
+            $packageItemData = [
+                'item_id' => $itemId,
+                'package_id' => $packageId,
+                'package_type' => '1',
+                'price' => $post['item_amount'][$key],
+                'quantity' => $post['quantity'][$key]
+            ];
+
+            $addPackageItem = $this->workorder_model->addItemPackage($packageItemData);
+        }
+
+        echo json_encode(['id' => $packageId, 'success' => $packageId ? true : false]);
     }
 }
