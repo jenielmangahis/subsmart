@@ -13611,6 +13611,7 @@ class Accounting extends MY_Controller
         $m_date         = $this->input->post("m_date");
         $m_not          = $this->input->post("m_not");
         $indic          = $this->input->post("indic");
+        $m_indic        = $this->input->post("m_indic");
 
         if($indic == 'daily'){
             $new_data = array(
@@ -13625,7 +13626,8 @@ class Accounting extends MY_Controller
                 'daily_sched'   => $d_sched,
                 'end_date'      => $d_date,
                 'end_type'       => $d_dne,
-                'end_occurence' => $d_not                
+                'end_occurence' => $d_not,
+                'schedule'      => $indic           
 
             );
         }else if($indic == "weekly"){
@@ -13642,7 +13644,8 @@ class Accounting extends MY_Controller
                 'weekly_days'   => $w_days,
                 'end_date'      => $w_date,
                 'end_type'       => $w_dne,
-                'end_occurence' => $w_not 
+                'end_occurence' => $w_not,
+                'schedule'      => $indic
             );
         }else if($indic == "monthly"){
             $new_data = array(
@@ -13660,7 +13663,9 @@ class Accounting extends MY_Controller
                 'monthly_week_day'=> $sc_rank,
                 'end_date'      => $m_date,
                 'end_type'       => $m_dne,
-                'end_occurence' => $m_not 
+                'end_occurence' => $m_not,
+                'schedule'      => $indic, 
+                'm_indic'       => $m_indic
             );
         }else{
             $new_data = array(

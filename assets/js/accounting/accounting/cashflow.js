@@ -253,12 +253,15 @@ jQuery(document).ready(function() {
         $(".tabcontent.all").hide();
         $(".tabcontent.money_in").hide();
         $(".tabcontent.money_out").hide();
+        $(".tabcontent.overdue_planned").hide();
         if ($(this).hasClass("all")) {
             $(".tabcontent.all").fadeIn();
         } else if ($(this).hasClass("money_in")) {
             $(".tabcontent.money_in").fadeIn();
         } else if ($(this).hasClass("money_out")) {
             $(".tabcontent.money_out").fadeIn();
+        } else if ($(this).hasClass("overdue_planned")) {
+            $(".tabcontent.overdue_planned").fadeIn();
         }
     });
     $(document).on("click", "button.cfp_add_item", function(event) {
@@ -703,6 +706,7 @@ jQuery(document).ready(function() {
         var w_dne = "";
         var w_date = "";
         var w_not = "";
+        var m_indic = $('input[name=day_sched]:checked').val();
         var m_dne = "";
         var m_date = "";
         var m_not = "";
@@ -849,7 +853,7 @@ jQuery(document).ready(function() {
                                 url: baseURL + "accounting/savecashflowplan",
                                 type: "POST",
                                 dataType: "json",
-                                data: { merchant_name: name, date_plan: addDate, plan_amount: amt, plan_type: plan, plan_repeat: p_type, sc_day: sc_day, sc_rank: sc_rank, m_dne: m_dne, m_date: m_date, m_not: m_not, m_months: m_months, m_day: m_day, indic: indic },
+                                data: { merchant_name: name, date_plan: addDate, plan_amount: amt, plan_type: plan, plan_repeat: p_type, sc_day: sc_day, sc_rank: sc_rank, m_dne: m_dne, m_date: m_date, m_not: m_not, m_months: m_months, m_day: m_day, indic: indic, m_indic: m_indic },
                                 success: function(data) {
                                     location.reload();
                                     $('#cfp_add_item_area').fadeOut();
@@ -876,7 +880,7 @@ jQuery(document).ready(function() {
                                 url: baseURL + "accounting/savecashflowplan",
                                 type: "POST",
                                 dataType: "json",
-                                data: { merchant_name: name, date_plan: addDate, plan_amount: amt, plan_type: plan, plan_repeat: p_type, sc_day: sc_day, sc_rank: sc_rank, m_dne: m_dne, m_date: m_date, m_not: m_not, m_months: m_months, m_day: m_day, indic: indic },
+                                data: { merchant_name: name, date_plan: addDate, plan_amount: amt, plan_type: plan, plan_repeat: p_type, sc_day: sc_day, sc_rank: sc_rank, m_dne: m_dne, m_date: m_date, m_not: m_not, m_months: m_months, m_day: m_day, indic: indic, m_indic: m_indic },
                                 success: function(data) {
                                     location.reload();
                                     $('#cfp_add_item_area').fadeOut();
@@ -918,6 +922,41 @@ jQuery(document).ready(function() {
 
     });
 
+    $(document).on('click', "#cashflow_overdue #toggle_button", function() {
+        var id = $(this).parents("tr").attr("data-id");
+        var id1 = $(this).parents("tr").attr("id");
+
+        console.log($(this).children(".fa-chevron-down").length);
+        if ($(this).children(".fa-chevron-down").length == 0) {
+            $("#cashflow_overdue tr .fa-chevron-down").attr("class", "fa fa-chevron-right");
+            $("#cashflow_overdue tr.edit-panel").hide();
+            $(this).children(".fa-chevron-right").attr("class", "fa fa-chevron-down");
+            $("#cashflow_overdue tr.info-" + id).fadeIn();
+            $("#cashflow_overdue input#date" + id).removeAttr("disabled");
+            $("#cashflow_overdue input#text" + id).removeAttr("disabled");
+            $("#cashflow_overdue input#date" + id).removeClass("date_type");
+            $("#cashflow_overdue input#text" + id).removeClass("amnt");
+            //cti
+            $("#cashflow_overdue input#dates" + id).removeAttr("disabled");
+            $("#cashflow_overdue input#texts" + id).removeAttr("disabled");
+            $("#cashflow_overdue input#dates" + id).removeClass("date_type");
+            $("#cashflow_overdue input#texts" + id).removeClass("amnt");
+        } else {
+            $("#cashflow_overdue tr .fa-chevron-down").attr("class", "fa fa-chevron-right");
+            $("#cashflow_overdue tr.edit-panel").fadeOut();
+            $("#cashflow_overdue  input#date" + id).attr("disabled", true);
+            $("#cashflow_overdue  input#text" + id).attr("disabled", true);
+            $("#cashflow_overdue input#date" + id).addClass("date_type");
+            $("#cashflow_overdue input#text" + id).addClass("amnt");
+            //cti
+            $("#cashflow_overdue  input#dates" + id).attr("disabled", true);
+            $("#cashflow_overdue  input#texts" + id).attr("disabled", true);
+            $("#cashflow_overdue input#dates" + id).addClass("date_type");
+            $("#cashflow_overdue input#texts" + id).addClass("amnt");
+
+
+        }
+    })
     $(document).on('click', "#cashflowtransactions #toggle_button", function() {
         var id = $(this).parents("tr").attr("data-id");
         var id1 = $(this).parents("tr").attr("id");
@@ -1006,10 +1045,14 @@ jQuery(document).ready(function() {
     var valdata = Array();
     load_money_in_out_table();
 
+
+
+
     function load_money_in_out_table() {
         var html = "";
         var html_moneyin = "";
         var html_moneyout = "";
+        var html_overdue = "";
         $.ajax({
             url: baseURL + "accounting/getCashFlowPlanned",
             type: "POST",
@@ -1020,6 +1063,8 @@ jQuery(document).ready(function() {
                 //for planner table
                 count = 0;
                 for (var index = 0; index < data.arpi.length; index++) {
+
+
                     html_moneyin += `<tr class="moneyin" data-id="` + data.arpi[index]["id"] + `" id="` + index + `">
                     <td> <input class="date_type" id="dates` + data.arpi[index]["id"] + `" type="date" value="` + data.arpi[index]["date_issued"] + `" disabled></td>
                     <td>` + data.arpi[index]["customer_email"].toUpperCase() + `</td>
@@ -1066,11 +1111,58 @@ jQuery(document).ready(function() {
                            </div>
                         </td>
                     </tr>`;
+
+                    html += `<tr class="moneyin" data-id="` + data.arpi[index]["id"] + `" id="` + index + `">
+                    <td> <input class="date_type" style="display:none;" id="dates` + data.arpi[index]["id"] + `" type="date" value="` + data.arpi[index]["date_issued"] + `" disabled>` + data.arpi[index]["date_issued"] + `</td>
+                    <td>` + data.arpi[index]["customer_email"].toUpperCase() + `</td>
+                    <td><input type="text" id="texts` + data.arpi[index]["id"] + `" class="amnt" value="` + data.arpi[index]["grand_total"] + `" disabled></td>
+                    <td> Money In </td>
+                    
+                    <td></td>
+                    <td class="cont_remove"></td>
+                    <tr class="info-` + data.arpi[index]["id"] + ` edit-panel"  id="` + data.arpi[index]["id"] + `">
+                        <td colspan="6">
+                           <div class="row">
+                                <div class="col-md-1.5 due_date">
+                                    <div class="row">
+                                        <div class="col">
+                                            <h6>Due date</h6>
+                                        </div>   
+                                    </div>
+                                    <div class="row">
+                                <div class="col">`
+
+                    html += `<p>` + data.arpi[index]["created_at"] + `</p>`;
+
+                    html += `</div>
+                            </div>
+                                </div>
+                            
+                                <div class="col-3">
+                                    <div class="row">
+                                        <div class="col-md-10">
+                                            <h6>Due amount</h6>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <p>` + data.arpi[index]["payment_amount"] + `</p>    
+                                        </div>
+                                    </div>
+                                </div>
+    
+                           </div>
+                           <hr>
+                           <div class="row cp_buttons">
+                               <button id="cti_update">UPDATE</button>
+                           </div>
+                        </td>
+                    </tr>`;
                 }
 
                 for (var index = 0; index < data.invoice.length; index++) {
                     html += `<tr class="moneyin" data-id="` + data.invoice[index]["id"] + `" id="` + index + `">
-                    <td> <input class="date_type" id="dates` + data.invoice[index]["id"] + `" type="date" value="` + data.invoice[index]["date_issued"] + `" disabled></td>
+                    <td> <input class="date_type" style="display:none;" id="dates` + data.invoice[index]["id"] + `" type="date" value="` + data.invoice[index]["date_issued"] + `" disabled> ` + data.invoice[index]["date_issued"] + `</td>
                     <td>` + data.invoice[index]["customer_email"].toUpperCase() + `</td>
                     <td><input type="text" id="texts` + data.invoice[index]["id"] + `" class="amnt" value="` + data.invoice[index]["grand_total"] + `" disabled></td>
                     <td> Invoice </td>
@@ -1118,14 +1210,22 @@ jQuery(document).ready(function() {
                 }
                 for (index = 0; index < data.values.length; index++) {
                     valdata[index] = data.values[index]["amount"];
-                    html += `<tr class="moneyin" data-id="` + data.values[index]["id"] + `" id="` + index + `">
-                    <td> <input class="date_type" id="date` + data.values[index]["id"] + `" type="date" value="` + data.values[index]["created_at"] + `" data-date="` + data.values[index]["created_at"] + `" disabled></td>
+                    var today = new Date();
+                    var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+                    var comp_date = new Date(data.values[index]["date_plan"]);
+                    var updated_date = moment(comp_date).format('YYYY-M-DD');
+                    console.log(updated_date);
+                    console.log(date);
+
+                    if (updated_date < date) {
+                        console.log('overdue');
+                        html_overdue += `<tr class="moneyin" data-id="` + data.values[index]["id"] + `" id="` + index + `">
+                    <td> <input class="date_type"  id="date` + data.values[index]["id"] + `" type="date" value="` + data.values[index]["date_plan"] + `" data-date="` + data.values[index]["date_plan"] + `" disabled></td>
                     <td>` + data.values[index]["merchant_name"].toUpperCase() + `</td>
                     <td><input type="text" id="text` + data.values[index]["id"] + `" class="amnt" value="` + data.values[index]["amount"] + `" disabled></td>
                     <td>` + data.values[index]["description"] + `</td>
-                    
-                    <td><button class="btn_cashflow_table" id="toggle_button">edit <i class="fa fa-chevron-right" aria-hidden="true"></i></button></td>
                     <td class="cont_remove"> <button id="ct_remove">REMOVE</button></td>
+                    <td></td>
                     <tr class="info-` + data.values[index]["id"] + ` edit-panel"  id="` + data.values[index]["id"] + `">
                         <td colspan="6">
                            <div class="row">
@@ -1137,14 +1237,14 @@ jQuery(document).ready(function() {
                                     </div>
                                     <div class="row">
                                 <div class="col">`
-                    if (data.values[index]["end_type"] == "does_not_end") {
-                        html += `<p>` + data.values[index]["end_type"] + `</p>`;
-                    } else if (data.values[index]["end_type"] == "date") {
-                        html += `<p>` + data.values[index]["end_date"] + `</p>`;
-                    } else {
-                        html += `<p>` + data.values[index]["end_occurence"] + ` occurence</p>`;
-                    }
-                    html += `</div>
+                        if (data.values[index]["end_type"] == "does_not_end") {
+                            html += `<p>` + data.values[index]["end_type"] + `</p>`;
+                        } else if (data.values[index]["end_type"] == "date") {
+                            html += `<p>` + data.values[index]["end_date"] + `</p>`;
+                        } else {
+                            html += `<p>` + data.values[index]["end_occurence"] + ` occurence</p>`;
+                        }
+                        html += `</div>
                             </div>
                                 </div>
                             
@@ -1170,17 +1270,18 @@ jQuery(document).ready(function() {
                     </tr>
                     `;
 
-
-                    if (data.values[index]["type"] == "moneyin") {
-                        html_moneyin += `<tr class="moneyin" data-id="` + data.values[index]["id"] + `" id="` + index + `">
-                        <td> <input class="date_type" id="date` + data.values[index]["id"] + `" type="date" value="` + data.values[index]["created_at"] + `" data-date"` + data.values[index]["created_at"] + `" disabled></td>
+                    } else {
+                        console.log('all');
+                        html += `<tr class="moneyin" data-id="` + data.values[index]["id"] + `" id="` + index + `">
+                    <td> <input class="date_type" style="display:none;" id="date` + data.values[index]["id"] + `" type="date" value="` + data.values[index]["date_plan"] + `" data-date="` + data.values[index]["date_plan"] + `" disabled>` + data.values[index]["date_plan"] + `</td>
                     <td>` + data.values[index]["merchant_name"].toUpperCase() + `</td>
-                    <td> <input type="text" id="text` + data.values[index]["id"] + `" class="amnt" value="` + data.values[index]["amount"] + `" disabled></td>
+                    <td><input type="text" id="text` + data.values[index]["id"] + `" class="amnt" value="` + data.values[index]["amount"] + `" disabled></td>
                     <td>` + data.values[index]["description"] + `</td>
+                    
                     <td><button class="btn_cashflow_table" id="toggle_button">edit <i class="fa fa-chevron-right" aria-hidden="true"></i></button></td>
                     <td class="cont_remove"> <button id="ct_remove">REMOVE</button></td>
                     <tr class="info-` + data.values[index]["id"] + ` edit-panel"  id="` + data.values[index]["id"] + `">
-                        <td colspan="5">
+                        <td colspan="6">
                            <div class="row">
                                 <div class="col-md-1.5 due_date">
                                     <div class="row">
@@ -1191,19 +1292,19 @@ jQuery(document).ready(function() {
                                     <div class="row">
                                 <div class="col">`
                         if (data.values[index]["end_type"] == "does_not_end") {
-                            html_moneyin += `<p>` + data.values[index]["end_type"] + `</p>`;
+                            html += `<p>` + data.values[index]["end_type"] + `</p>`;
                         } else if (data.values[index]["end_type"] == "date") {
-                            html_moneyin += `<p>` + data.values[index]["end_date"] + `</p>`;
+                            html += `<p>` + data.values[index]["end_date"] + `</p>`;
                         } else {
-                            html_moneyin += `<p>` + data.values[index]["end_occurence"] + `</p>`;
+                            html += `<p>` + data.values[index]["end_occurence"] + ` occurence</p>`;
                         }
-                        html_moneyin += `</div>
+                        html += `</div>
                             </div>
                                 </div>
                             
-                                <div class="col">
+                                <div class="col-3">
                                     <div class="row">
-                                        <div class="col-md-2">
+                                        <div class="col-md-10">
                                             <h6>Due amount</h6>
                                         </div>
                                     </div>
@@ -1213,68 +1314,130 @@ jQuery(document).ready(function() {
                                         </div>
                                     </div>
                                 </div>
+    
                            </div>
                            <hr>
                            <div class="row cp_buttons">
-                          <button id="cmi_update">UPDATE</button>
+                               <button id="ct_update">UPDATE</button>
                            </div>
                         </td>
                     </tr>
                     `;
                     }
 
+
+                    if (data.values[index]["type"] == "moneyin") {
+
+                        if (updated_date > date) {
+                            html_moneyin += `<tr class="moneyin" data-id="` + data.values[index]["id"] + `" id="` + index + `">
+                            <td> <input class="date_type" id="date` + data.values[index]["id"] + `" type="date" value="` + data.values[index]["date_plan"] + `" data-date"` + data.values[index]["date_plan"] + `" disabled></td>
+                        <td>` + data.values[index]["merchant_name"].toUpperCase() + `</td>
+                        <td> <input type="text" id="text` + data.values[index]["id"] + `" class="amnt" value="` + data.values[index]["amount"] + `" disabled></td>
+                        <td>` + data.values[index]["description"] + `</td>
+                        <td><button class="btn_cashflow_table" id="toggle_button">edit <i class="fa fa-chevron-right" aria-hidden="true"></i></button></td>
+                        <td class="cont_remove"> <button id="ct_remove">REMOVE</button></td>
+                        <tr class="info-` + data.values[index]["id"] + ` edit-panel"  id="` + data.values[index]["id"] + `">
+                            <td colspan="5">
+                               <div class="row">
+                                    <div class="col-md-1.5 due_date">
+                                        <div class="row">
+                                            <div class="col">
+                                                <h6>Due date</h6>
+                                            </div>   
+                                        </div>
+                                        <div class="row">
+                                    <div class="col">`
+                            if (data.values[index]["end_type"] == "does_not_end") {
+                                html_moneyin += `<p>` + data.values[index]["end_type"] + `</p>`;
+                            } else if (data.values[index]["end_type"] == "date") {
+                                html_moneyin += `<p>` + data.values[index]["end_date"] + `</p>`;
+                            } else {
+                                html_moneyin += `<p>` + data.values[index]["end_occurence"] + `</p>`;
+                            }
+                            html_moneyin += `</div>
+                                </div>
+                                    </div>
+                                
+                                    <div class="col">
+                                        <div class="row">
+                                            <div class="col-md-2">
+                                                <h6>Due amount</h6>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col">
+                                                <p>` + data.values[index]["amount"] + `</p>    
+                                            </div>
+                                        </div>
+                                    </div>
+                               </div>
+                               <hr>
+                               <div class="row cp_buttons">
+                              <button id="cmi_update">UPDATE</button>
+                               </div>
+                            </td>
+                        </tr>
+                        `;
+                        }
+
+                    }
+
                     if (data.values[index]["type"] == "moneyout") {
                         count++;
                         console.log(count);
-                        html_moneyout += `<tr class="moneyin" data-id="` + data.values[index]["id"] + `" id="` + index + `">
-                    <td> <input class="date_type" id="date` + data.values[index]["id"] + `" type="date" value="` + data.values[index]["created_at"] + `" disabled></td>
-                    <td>` + data.values[index]["merchant_name"].toUpperCase() + `</td>
-                    <td><input type="text" id="text` + data.values[index]["id"] + `" class="amnt" value="` + data.values[index]["amount"] + `" disabled></td>
-                    <td>` + data.values[index]["description"] + `</td>
-                      <td><button class="btn_cashflow_table" id="toggle_button">edit <i class="fa fa-chevron-right" aria-hidden="true"></i></button></td>
-                      <td class="cont_remove"> <button id="ct_remove">REMOVE</button></td>
-                    <tr class="info-` + data.values[index]["id"] + ` edit-panel" id="` + data.values[index]["id"] + `">
-                        <td colspan="5">
-                           <div class="row">
-                                <div class="col-md-1.5 due_date">
-                                    <div class="row">
-                                        <div class="col">
-                                            <h6>Due date</h6>
-                                        </div>   
+                        if (updated_date > date) {
+
+                            html_moneyout += `<tr class="moneyin" data-id="` + data.values[index]["id"] + `" id="` + index + `">
+                            <td> <input class="date_type" id="date` + data.values[index]["id"] + `" type="date" value="` + data.values[index]["date_plan"] + `" disabled></td>
+                            <td>` + data.values[index]["merchant_name"].toUpperCase() + `</td>
+                            <td><input type="text" id="text` + data.values[index]["id"] + `" class="amnt" value="` + data.values[index]["amount"] + `" disabled></td>
+                            <td>` + data.values[index]["description"] + `</td>
+                              <td><button class="btn_cashflow_table" id="toggle_button">edit <i class="fa fa-chevron-right" aria-hidden="true"></i></button></td>
+                              <td class="cont_remove"> <button id="ct_remove">REMOVE</button></td>
+                            <tr class="info-` + data.values[index]["id"] + ` edit-panel" id="` + data.values[index]["id"] + `">
+                                <td colspan="5">
+                                   <div class="row">
+                                        <div class="col-md-1.5 due_date">
+                                            <div class="row">
+                                                <div class="col">
+                                                    <h6>Due date</h6>
+                                                </div>   
+                                            </div>
+                                            <div class="row">
+                                        <div class="col">`
+                            if (data.values[index]["end_type"] == "does_not_end") {
+                                html_moneyout += `<p>` + data.values[index]["end_type"] + `</p>`;
+                            } else if (data.values[index]["end_type"] == "date") {
+                                html_moneyout += `<p>` + data.values[index]["end_date"] + `</p>`;
+                            } else {
+                                html_moneyout += `<p>` + data.values[index]["end_occurence"] + `</p>`;
+                            }
+                            html_moneyout += `</div>
                                     </div>
-                                    <div class="row">
-                                <div class="col">`
-                        if (data.values[index]["end_type"] == "does_not_end") {
-                            html_moneyout += `<p>` + data.values[index]["end_type"] + `</p>`;
-                        } else if (data.values[index]["end_type"] == "date") {
-                            html_moneyout += `<p>` + data.values[index]["end_date"] + `</p>`;
-                        } else {
-                            html_moneyout += `<p>` + data.values[index]["end_occurence"] + `</p>`;
+                                        </div>
+                                    
+                                        <div class="col">
+                                            <div class="row">
+                                                <div class="col-md-2">
+                                                    <h6>Due amount</h6>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col">
+                                                    <p>` + data.values[index]["amount"] + `</p>    
+                                                </div>
+                                            </div>
+                                        </div>
+                                   </div>
+                                   <hr>
+                                   <div class="row cp_buttons">
+                                   <button id="cmo_update">UPDATE</button>
+                                   </div>
+                                </td>
+                            </tr>
+                            `;
                         }
-                        html_moneyout += `</div>
-                            </div>
-                                </div>
-                            
-                                <div class="col">
-                                    <div class="row">
-                                        <div class="col-md-2">
-                                            <h6>Due amount</h6>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col">
-                                            <p>` + data.values[index]["amount"] + `</p>    
-                                        </div>
-                                    </div>
-                                </div>
-                           </div>
-                           <hr>
-                           <div class="row cp_buttons">
-                           <button id="cmo_update">UPDATE</button>
-                           </div>
-                        </td>
-                    </tr>
-                    `;
+
                     }
 
                 }
@@ -1293,12 +1456,41 @@ jQuery(document).ready(function() {
 
                 $('#cashflowmoneyin .moneyin_table').html(html_moneyin);
                 $('#cashflowmoneyout .moneyout_table').html(html_moneyout);
+                $('#cashflow_overdue .overdue_table').html(html_overdue);
+
+
             }
         });
 
 
 
     }
+
+    //table sorting
+
+
+    $('#cashflowtransactions tr.moneyin').each(function() {
+        load_money_in_out_table();
+        var t = this.cells[1].textContent.split('-');
+        $(this).data('_ts', new Date(t[2], t[1] - 1, t[0]).getTime());
+    }).sort(function(a, b) {
+        return $(a).data('_ts') < $(b).data('_ts');
+    }).appendTo('#cashflowtransactions .planner_table');
+    //end table sorting
+    var dtToday = new Date();
+
+    var month = dtToday.getMonth() + 1;
+    var day = dtToday.getDate();
+    var year = dtToday.getFullYear();
+    if (month < 10)
+        month = '0' + month.toString();
+    if (day < 10)
+        day = '0' + day.toString();
+
+    var maxDate = year + '-' + month + '-' + day;
+    $('#datepicker').attr('min', maxDate);
+
+
 
     $('tr.moneyin').each(function() {
         var t = this.cells[1].textContent.split('-');

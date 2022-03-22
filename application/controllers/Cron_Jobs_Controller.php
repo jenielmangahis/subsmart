@@ -899,6 +899,7 @@ class Cron_Jobs_Controller extends CI_Controller
     {
         $this->invoice_due_status_checker();
         $this->cron_recurring_transactions();
+        $this->cron_cashflow_planned();
     }
     public function invoice_due_status_checker()
     {
@@ -1922,5 +1923,57 @@ class Cron_Jobs_Controller extends CI_Controller
         }
 
         $this->expenses_model->insert_vendor_transaction_items($itemDetails);
+    }
+
+    public function get_data_from_cashflow_planned($company_id){
+        $query = $this->db->get('cashflow_planned');
+        return $query->result();
+    }
+
+    public function cron_cashflow_planned()
+    {
+       $container = $this->get_data_from_cashflow_planned(logged('company_id'));
+       
+        
+        for($index = 0; $index < count($container); $index++){
+            if($container[$index]->repeating == '0'){
+               
+            }else{
+                if($container[$index]->schedule == "daily"){
+                    
+                    if($container[$index]->d_sched == "everyday"){
+                        $new_data = array(
+                            'created_at'        => date("Y-m-d"),
+                            'reapeating'        => "0",
+                            'merchant_name'     => $container[$index]->merchant_name,
+                            'amount'            => $container[$index]->amount,
+                            'type'              => $container[$index]->type,
+                        );
+                        
+                    }else{
+                        if(date("l")=="Monday" || date("l")=="Tuesday" || date("l")=="Wednesday" || date("l")=="Thursday" || date("l")=="Friday"){
+                            $new_data = array(
+                                'created_at'        => date("Y-m-d"),
+                                'reapeating'        => "0",
+                                'merchant_name'     => $container[$index]->merchant_name,
+                                'amount'            => $container[$index]->amount,
+                                'type'              => $container[$index]->type,
+                            );
+                        }
+                    }
+                    var_dump($new_data);
+                }else if($container[$index]->schedule == "weekly"){
+                    
+                }else if($container[$index]->schedule == "monthly"){
+                    if($container[$index]->m_indic == "day"){
+
+                    }else{
+
+                    }
+                }
+            }
+        }
+       
+       
     }
 }

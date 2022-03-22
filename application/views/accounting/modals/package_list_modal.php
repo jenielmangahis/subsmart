@@ -111,7 +111,7 @@
                                         <div class="col-md-6">
                                         </div>
                                         <div class="col-md-6" align="right">
-                                            <button type="button" class="btn btn-primary addCreatePackage">Create/Add Package</button>
+                                            <button type="button" class="btn btn-primary" id="create-package">Create/Add Package</button>
                                         </div>
                                     </div>
 

@@ -5875,9 +5875,9 @@ $(function() {
                 </td>
             `;
 
-            $('#modal-container form#modal-form .modal #item-table tbody').append(`<tr>${fields}</tr>`);
+            $('#modal-container form#modal-form .modal #item-table tbody:not(#package-items-table)').append(`<tr>${fields}</tr>`);
 
-            $('#modal-container form#modal-form .modal #item-table tbody tr:last-child select').select2({
+            $('#modal-container form#modal-form .modal #item-table tbody:not(#package-items-table) tr:last-child select').select2({
                 minimumResultsForSearch: -1
             });
         });
@@ -5957,9 +5957,9 @@ $(function() {
                     </td>
                 `;
 
-                $('#modal-container form#modal-form .modal #item-table tbody').append(`<tr>${fields}</tr>`);
+                $('#modal-container form#modal-form .modal #item-table tbody:not(#package-items-table)').append(`<tr>${fields}</tr>`);
 
-                $('#modal-container form#modal-form .modal #item-table tbody tr:last-child select').select2({
+                $('#modal-container form#modal-form .modal #item-table tbody:not(#package-items-table) tr:last-child select').select2({
                     minimumResultsForSearch: -1
                 });
             }
@@ -5991,7 +5991,7 @@ $(function() {
                 </td>
             `;
 
-            $('#modal-container form#modal-form .modal #item-table tbody').append(`<tr class="package">${fields}</tr>`);
+            $('#modal-container form#modal-form .modal #item-table tbody:not(#package-items-table)').append(`<tr class="package">${fields}</tr>`);
 
             var packageItems = `
                 <td colspan="3">
@@ -6003,7 +6003,7 @@ $(function() {
                                 <th>Price</th>
                             </tr>
                         </thead>
-                        <tbody>`;
+                        <tbody id="package-items-table">`;
 
             for(var i in items) {
                 packageItems += `<tr class="package-item"><td>${items[i].details.title}</td><td>${items[i].quantity}</td><td>${parseFloat(items[i].price).toFixed(2)}</td></tr>`;
@@ -6058,9 +6058,6 @@ $(function() {
         $.get('/accounting/get-item-details/' + id, function(res) {
             var result = JSON.parse(res);
             var item = result.item;
-            var type = item.type;
-            var locations = result.locations;
-            var locs = '';
 
             var fields = `
                 <td>${item.title}<input type="hidden" name="item[]" value="${item.id}"></td>
@@ -6071,6 +6068,101 @@ $(function() {
 
             $('#modal-container #package_list #package-items-table tbody').append(`<tr>${fields}</tr>`);
         });
+    });
+
+    $(document).on('click', '#modal-container #package_list #create-package', function(e) {
+        e.preventDefault();
+
+        var data = new FormData();
+
+        data.set('name', $('#modal-container #package_list #package_name').val());
+        data.set('total_price', $('#modal-container #package_list #package_price').val());
+        data.set('amount_set', $('#modal-container #package_list #package_price_set').val());
+
+        $('#modal-container #package_list #package-items-table tbody tr').each(function() {
+            if(data.has('item[]')) {
+                data.append('item[]', $(this).find('[name="item[]"]').val());
+                data.append('quantity[]', $(this).find('[name="quantity[]"]').val());
+                data.append('item_amount[]', $(this).find('[name="item_amount[]"]').val());
+            } else {
+                data.set('item[]', $(this).find('[name="item[]"]').val());
+                data.set('quantity[]', $(this).find('[name="quantity[]"]').val());
+                data.set('item_amount[]', $(this).find('[name="item_amount[]"]').val());
+            }
+        });
+
+        $.ajax({
+            url: '/accounting/add-package',
+            data: data,
+            type: 'post',
+            processData: false,
+            contentType: false,
+            success: function(result) {
+                var res = JSON.parse(result);
+
+                if(res.success) {
+                    var appendPackage = `<tr>
+                        <td>${res.id}</td>
+                        <td>${data.get('name')}</td>
+                        <td></td>
+                        <td class="text-success"></td>
+                        <td class="text-success">${data.get('amount_set')}</td>
+                        <td class="text-error">
+                            <button id="${res.id}" data-id="${res.id}" type="button" data-dismiss="modal" class="btn btn-sm btn-default addNewPackageToList">
+                                <span class="fa fa-plus"></span>
+                            </button>
+                        </td>
+                        <td><a href="#" data-toggle="collapse" data-target="#demo${res.id}" data-parent="#package-table" id="packageID" data-id="${res.id}"><i class="fa fa-sort-down" style="font-size:24px"></i></a></td>
+                    </tr>`;
+                    $('#modal-container #package_list #package-table tbody').append(appendPackage);
+
+                    var appendPackageItems = `<tr id="demo${res.id}" class="collapse">
+                        <td colspan="6" class="hiddenRow">
+                            <div id="packageItems<?=$pItems->id?>">
+                                <table>
+                                    <tbody>`;
+
+                    $('#modal-container #package_list #package-items-table tbody tr').each(function() {
+                        appendPackageItems += `<tr>
+                            <td></td>
+                            <td>${$(this).find('[name="item[]"]').parent().text()}</td>
+                            <td>${$(this).find('[name="quantity[]"]').val()}</td>
+                            <td>${$(this).find('[name="item_amount[]"]').val()}</td>
+                        </tr>`;
+                    });
+
+                    appendPackageItems += `</tbody>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>`;
+
+                    $('#modal-container #package_list #package-table tbody').append(appendPackageItems);
+
+                    $('#modal-container #package_list #package_name').val('')
+                    $('#modal-container #package_list #package_price').val('');
+                    $('#modal-container #package_list #package_price_set').val('');
+
+                    $('#modal-container #package_list #package-items-table tbody tr').each(function() {
+                        $(this).remove();
+                    });
+                }
+            }
+        });
+    });
+
+    $(document).on('change', '#modal-container #package_list #package-items-table input[name="quantity[]"], #modal-container #package_list #package-items-table input[name="item_amount[]"]', function() {
+        var total = 0.00;
+
+        $('#modal-container #package_list #package-items-table tbody tr').each(function() {
+            var quantity = $(this).find('[name="quantity[]"]').val();
+            var amount = $(this).find('[name="item_amount[]"]').val();
+            var rowTotal = parseFloat(amount) * parseFloat(quantity);
+
+            total = parseFloat(total) + parseFloat(rowTotal);
+        });
+
+        $('#modal-container #package_list #package_price').val(parseFloat(total).toFixed(2));
     });
 
     $(document).on('change', '#modal-container #modal-form .modal #item-table tbody tr input', function() {
@@ -6970,7 +7062,7 @@ const submitModalForm = (event, el) => {
 
     if(customerModals.includes(modalId)) {
         data.delete('location[]');
-        $(`${modalId} table#item-table tbody tr`).each(function() {
+        $(`${modalId} table#item-table tbody tr:not(.package-items)`).each(function() {
             if(data.has('item_total[]')) {
                 data.append('location[]', $(this).find('select[name="location[]"]').val());
                 data.append('item_total[]', $(this).find('span.row-total').html().replace('$', ''));
@@ -7584,6 +7676,15 @@ const makeRecurring = (modalName) => {
             $(`div#${modalId} div.modal-body div.row.customer-details`).children('.col-md-4').remove();
             $(`div#${modalId} div.modal-body #delayed-charge-date`).parent().parent().remove();
             $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Delayed Charge');
+        break;
+        case 'invoice' :
+            modalId = 'invoiceModal';
+            $(templateFields).insertBefore($(`#${modalId} div.modal-body div.row.customer-details`));
+            $(intervalFields).insertAfter($(`#${modalId} div.modal-body div.row.customer-details`));
+            $(`div#${modalId} div.modal-body div.row.customer-details`).children('.col-md-4').remove();
+            $(`div#${modalId} div.modal-body div.row.date-row`).remove();
+            $(`div#${modalId} div.modal-body #shipping-date`).parent().parent().remove();
+            $(`div#${modalId} div.modal-body #invoice-no`).parent().parent().remove();
         break;
     }
 

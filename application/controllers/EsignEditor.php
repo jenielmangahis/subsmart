@@ -394,7 +394,7 @@ SQL;
                         return null;
                     }
 
-                    return str_replace('{source}', $record->signature, '<img src="{source}" width="200" alt="" />');
+                    return $record->signature;
                 },
             ],
             [
@@ -639,7 +639,11 @@ SQL;
             ['code' => $code, 'get' => $getter] = $placeholder;
 
             $callback = function () use ($getter, $placeholderParam) {
-                return $getter($placeholderParam);
+                $value = $getter($placeholderParam);
+                if ($this->isImage($value)) {
+                    return str_replace('{source}', $value, '<img src="{source}" width="200" alt="" />');
+                }
+                return $value;
             };
 
             $letterContent = preg_replace_callback(
@@ -839,5 +843,52 @@ SQL;
 
         header('content-type: application/json');
         echo json_encode(['data' => $letters]);
+    }
+
+    private function isImage(string $source)
+    {
+        try {
+            $validExtensions = ['png', 'jpeg', 'jpg', 'gif', 'svg'];
+
+            if (strpos($source, 'data:image') === 0) {
+                list(, $decoded) = explode(';', $source);
+                list(, $decoded) = explode(',', $decoded);
+                $image = base64_decode($decoded, true);
+
+                if ($image === false) {
+                    return false;
+                }
+            } else {
+                $fileInfo = new SplFileInfo($source);
+                $fileExtension = $fileInfo->getExtension();
+
+                if (empty($fileInfo->getExtension())) { // no extension
+                    return false;
+                }
+
+                if (preg_match(sprintf('/^%s/', implode('|', $validExtensions)), $fileExtension) !== 1) { // invalid extension
+                    return false;
+                }
+
+                $image = file_get_contents($source);
+            }
+
+            $tempFile = tempnam(sys_get_temp_dir(), 'esigneditor');
+            file_put_contents($tempFile, $image);
+
+            $contentType = finfo_file(finfo_open(FILEINFO_MIME_TYPE), $tempFile);
+            if (substr($contentType, 0, 5) !== 'image') {
+                return false;
+            }
+
+            $extension = ltrim($contentType, 'image/');
+            if (!in_array(strtolower($extension), $validExtensions)) {
+                return false;
+            }
+
+            return true;
+        } catch (Throwable $th) {
+            return 'haha';
+        }
     }
 }
