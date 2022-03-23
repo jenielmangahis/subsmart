@@ -76,6 +76,9 @@ $route['customer/credit_industry/(:num)'] = 'Customer/credit_industry/$1';
 $route['customer/add_dispute_item/(:num)'] = 'Customer/add_new_dispute_item/$1';
 $route['customer/_load_company_reasons'] = 'Customer/ajax_load_company_reason_list';
 $route['customer/_create_company_reason'] = 'Customer/ajax_create_company_reason';
+$route['customer/_create_dispute_item'] = 'Customer/ajax_create_dispute_item';
+$route['customer/_delete_customer_dispute'] = 'Customer/ajax_delete_customer_dispute';
+$route['customer/_edit_dispute_item'] = 'Customer/ajax_edit_dispute_item';
 
 //Credit Bureau
 $route['credit_bureau/list'] = 'Credit_Bureau/index';
@@ -92,6 +95,7 @@ $route['creditor_furnisher/_create_furnisher'] = 'CreditorFurnisher/ajax_create_
 $route['creditor_furnisher/_delete_creditor_furnisher'] = 'CreditorFurnisher/ajax_delete_furnisher';
 $route['creditor_furnisher/edit/(:num)'] = 'CreditorFurnisher/edit/$1';
 $route['creditor_furnisher/_update_creditor_furnisher'] = 'CreditorFurnisher/ajax_update_creditor_furnisher';
+$route['creditor_furnisher/_quick_save'] = 'CreditorFurnisher/ajax_quick_save';
 
 //Quick Notes
 $route['quick_notes/list'] = 'Quick_Notes/index';
@@ -1208,6 +1212,8 @@ $route['autocomplete/_company_users'] = 'Autocomplete/company_users';
 $route['autocomplete/_company_customer'] = 'Autocomplete/company_customers';
 $route['autocomplete/_company_event_tags'] = 'Autocomplete/company_event_tags';
 $route['autocomplete/_company_reasons'] = 'Autocomplete/company_reasons';
+$route['autocomplete/_company_furnishers'] = 'Autocomplete/company_furnishers';
+$route['autocomplete/_company_instructions'] = 'Autocomplete/company_instructions';
 
 //Quick Add
 $route['quick_add/_add_customer'] = 'Quick_Add/ajax_add_company_customer';

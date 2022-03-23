@@ -81,6 +81,36 @@ class Autocomplete extends MY_Controller
         }
         die(json_encode($obj));   
     }
+
+    public function company_furnishers()
+    {
+        $this->load->model('Furnisher_model');
+
+        $search = $this->input->get('q');
+        $filter = ['search' => $search];
+        $cid    = logged('company_id');
+        $furnishers = $this->Furnisher_model->getAllByCompanyId($cid, $filter);   
+        $obj = array();      
+        foreach( $furnishers as $f ){
+            $obj[] = ['id' => $f->id, 'text' => $f->name, 'address' => $f->address];
+        }
+        die(json_encode($obj));   
+    }
+
+    public function company_instructions()
+    {
+        $this->load->model('CompanyDisputeInstruction_model');
+
+        $search = $this->input->get('q');
+        $filter = ['search' => $search];
+        $cid    = logged('company_id');
+        $instructions = $this->CompanyDisputeInstruction_model->getAllDefaultAndByCompanyId($cid, $filter);   
+        $obj = array();      
+        foreach( $instructions as $i ){
+            $obj[] = ['id' => $i->id, 'text' => $i->instructions];
+        }
+        die(json_encode($obj));   
+    }
 }
 
 

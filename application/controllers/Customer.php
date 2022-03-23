@@ -977,6 +977,7 @@ class Customer extends MY_Controller
         $this->load->model('CreditBureau_model');
         $this->load->model('Furnisher_model');
         $this->load->model('CompanyReason_model');
+        $this->load->model('CustomerDispute_model');
 
         $company_id = logged('company_id');
         $customer   = $this->AcsProfile_model->getByProfId($cid);
@@ -985,6 +986,7 @@ class Customer extends MY_Controller
         $creditBureaus = $this->CreditBureau_model->getAll();
         $furnishers    = $this->Furnisher_model->getAllByCompanyId($company_id);
 
+        $this->page_data['optionOtherInfoStatus'] = $this->CustomerDispute_model->optionOtherInfoStatus();
         $this->page_data['customer'] = $customer;
         $this->page_data['cid'] = $cid;
         $this->page_data['creditBureaus'] = $creditBureaus;
