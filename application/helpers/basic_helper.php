@@ -4398,4 +4398,20 @@ if (!function_exists('is_admin_logged')) {
         $exempted_company_ids = [1,2,3];
         return $exempted_company_ids;
     }
+
+    function customerAuditLog($user_id, $prof_id, $obj_id, $module, $remarks){
+        $CI =& get_instance();
+        $CI->load->model('CustomerAuditLog_model');
+
+        $data_log = [
+            'user_id' => $user_id,
+            'prof_id' => $prof_id,
+            'obj_id' => $obj_id,
+            'module' => $module,
+            'remarks' => $remarks,
+            'date_created' => date('Y-m-d H:i:s')
+        ];
+
+        $CI->CustomerAuditLog_model->create($data_log);
+    }
 }

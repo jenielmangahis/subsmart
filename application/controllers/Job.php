@@ -905,6 +905,10 @@ class Job extends MY_Controller
                 $input['omw_time'] = date("H:i A");
             }
             if ($this->general->update_with_key($input, $id, "jobs")) {
+                //Log audit trail
+                $job = $this->jobs_model->get_specific_job($id);
+                customerAuditLog(logged('id'), $job->customer_id, $job->id, 'Jobs', 'Updated status of Job #'.$job->job_number.' to '.$input['status']);
+
                 echo "Success";
             } else {
                 echo "Error";
@@ -1140,9 +1144,15 @@ class Job extends MY_Controller
             ),
             'table' => 'jobs'
         );
-        if ($this->general->delete_($remove_job)) {
-            echo '1';
-        }
+
+        //Get Job
+        $job = $this->jobs_model->get_specific_job($_POST['job_id']);
+        if( $job ){
+            if ($this->general->delete_($remove_job)) {
+                customerAuditLog(logged('id'), $job->customer_id, $job->id, 'Jobs', 'Deleted Job #'.$job->job_number);
+                echo '1';
+            }    
+        }        
     }
 
     public function add_tag()
@@ -1350,6 +1360,8 @@ class Job extends MY_Controller
             'date_issued' => $input['start_date'],
         );
         $jobs_id = $this->general->add_return_id($jobs_data, 'jobs');
+
+        customerAuditLog(logged('id'), $input['customer_id'], $jobs_id, 'Jobs', 'Added New Job #'.$job_number);
 
         if (isset($input['item_id'])) {
             $devices = count($input['item_id']);
