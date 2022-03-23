@@ -3666,11 +3666,20 @@ class Customer extends MY_Controller
         $company_id = logged('company_id');
         $role = logged('role');
         // $this->page_data['workstatus'] = $this->Workstatus_model->getByWhere(['company_id'=>$company_id]);
-        if( $role == 1 || $role == 2 ){
+        /*if( $role == 1 || $role == 2 ){
             $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
         }else{
             $this->page_data['customers'] = $this->AcsProfile_model->getAll();
+        }*/
+        $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
+
+        $default_customer_id = 0;
+        if( $this->input->get('cus_id') ){
+            $default_customer_id = $this->input->get('cus_id');
         }
+
+        $this->page_data['default_customer_id'] = $default_customer_id;
+
         $type = $this->input->get('type');
         $this->page_data['type'] = $type;
         $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);

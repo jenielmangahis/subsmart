@@ -661,7 +661,9 @@ add_css(array(
                                 <div class="col-md-4">
                                     <h6>Customer Info</h6>
                                     <select id="customer_id" name="customer_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select"  required>
-                                        <option value="">Select Existing Customer</option>
+                                        <?php if( $default_customer_id > 0 ){ ?>
+                                            <option value="<?= $default_customer_id; ?>"><?= $default_customer_name; ?></option>
+                                        <?php } ?>                                        
                                     </select>
                                     <table id="customer_info" class="table">
                                         <thead>
@@ -1418,9 +1420,63 @@ include viewPath('includes/footer');
 <?php include viewPath('job/js/job_new_js'); ?>
 <script>
     $(function(){
-        $("#customer_id").select2({
-            placeholder: "Select Customer"
+        $('#customer_id').select2({
+            ajax: {
+                url: base_url + 'autocomplete/_company_customer',
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                  return {
+                    q: params.term, // search term
+                    page: params.page
+                  };
+                },
+                processResults: function (data, params) {
+                  // parse the results into the format expected by Select2
+                  // since we are using custom formatting functions we do not need to
+                  // alter the remote JSON data, except to indicate that infinite
+                  // scrolling can be used
+                  params.page = params.page || 1;
+
+                  return {
+                    results: data,
+                    // pagination: {
+                    //   more: (params.page * 30) < data.total_count
+                    // }
+                  };
+                },
+                cache: true
+              },
+              placeholder: 'Select Customer',
+              minimumInputLength: 0,
+              templateResult: formatRepoCustomer,
+              templateSelection: formatRepoCustomerSelection
         });
+
+        function formatRepoCustomerSelection(repo) {
+            if( repo.first_name != null ){
+                return repo.first_name + ' ' + repo.last_name;      
+            }else{
+                return repo.text;
+            }
+          
+        }
+
+        function formatRepoCustomer(repo) {
+          if (repo.loading) {
+            return repo.text;
+          }
+
+          var $container = $(
+            '<div>'+repo.first_name + ' ' + repo.last_name +'<br /><small>'+repo.phone_h+' / '+repo.email+'</small></div>'
+          );
+
+          return $container;
+        }
+
+        /*$("#customer_id").select2({
+            placeholder: "Select Customer"
+        });*/
         $("#employee_id").select2({
             placeholder: "Select Employee"
         });
@@ -1430,6 +1486,11 @@ include viewPath('includes/footer');
         $("#priority").select2({
             placeholder: ""
         });
+
+        <?php if( $default_customer_id > 0 ){ ?>
+            $('#customer_id').click();
+            load_customer_data('<?= $default_customer_id; ?>');
+        <?php } ?>
     });
 </script>
 

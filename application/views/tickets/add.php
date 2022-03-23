@@ -187,7 +187,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <select id="sel-customer" name="customer_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
                                         <option value="0">- none -</option>
                                         <?php foreach($customers as $c){ ?>
-                                            <option value="<?= $c->prof_id; ?>"><?= $c->first_name . ' ' . $c->last_name; ?></option>
+                                            <?php if( $default_customer_id > 0 ){ ?>
+                                                <option <?= $default_customer_id == $c->prof_id ? 'selected="selected"' : ''; ?> value="<?= $c->prof_id; ?>"><?= $c->first_name . ' ' . $c->last_name; ?></option>
+                                            <?php }else{ ?>
+                                                <option value="<?= $c->prof_id; ?>"><?= $c->first_name . ' ' . $c->last_name; ?></option>
+                                            <?php } ?>                                            
                                         <?php } ?>
                                     </select>
                                 </div>
