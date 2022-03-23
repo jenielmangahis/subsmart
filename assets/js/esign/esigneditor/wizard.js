@@ -66,6 +66,8 @@ async function initLetters(categoryId) {
 }
 
 async function initPlaceholders(customer) {
+  const $placeholderList = document.querySelector(".placeholders__list");
+  $placeholderList.innerHTML = "";
   const { data: placeholders } = await window.api.getCustomerPlaceholders(
     customer.prof_id
   );
@@ -144,9 +146,14 @@ async function initCustomerCustomFields(customer) {
       payload.push(field);
     });
 
-    const { data } = await window.helpers.submitBtn($submit, () =>
-      window.api.saveCustomerCustomFields(customer.prof_id, { fields: payload })
-    );
+    const result = await window.helpers.submitBtn($submit, () => {
+      return Promise.all([
+        window.api.saveCustomerCustomFields(customer.prof_id, { fields: payload }), // prettier-ignore
+        initPlaceholders(customer),
+      ]);
+    });
+
+    const [{ data }] = result;
     customFields = data;
     $($modal).modal("hide");
   });
