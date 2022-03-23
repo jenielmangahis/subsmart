@@ -45,7 +45,7 @@
     </li>
     <li class="nav-item">
         <a class="h6 mb-0 nav-link <?= $cust_active_tab == 'internal_notes' ?   "active" : ''; ?> nav-link" href="<?= base_url('customer/internal_notes/'.$cus_id); ?>">
-        Internal Notes</a>
+        Internal Memo</a>
     </li>
     <li class="nav-item">
         <a class="h6 mb-0 nav-link <?= $cust_active_tab == 'invoices' ?   "active" : ''; ?> nav-link" href="<?= base_url('customer/invoice_list/'.$cus_id) ?>">Invoices</a>

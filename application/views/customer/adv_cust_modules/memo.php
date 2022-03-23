@@ -15,6 +15,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <div class="mt-2 memo-edit-tools">                        
                         <a href="javasacript:void(0);" class="btn btn-primary btn-sm" id="edit_memo" style="color: #ffffff;"><i class="fa fa-pencil"></i> Edit Memo</a>
                         <a href="javascript:void(0);" class="btn btn-primary btn-sm" id="clear_memo" name="clear_memo" style="color: #ffffff;"><i class="fa fa-eraser"></i> Clear Memo</a>
+                        <a href="<?= base_url('customer/internal_notes/'.$cus_id); ?>" class="btn btn-primary btn-sm" id="view_memo_history" name="view_memo_history" style="color: #ffffff;"><i class="fa fa-list"></i> View History</a>
                     </div>
                 </div>
             </div>

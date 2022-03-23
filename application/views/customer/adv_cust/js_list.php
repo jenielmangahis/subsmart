@@ -250,7 +250,7 @@
             $.ajax({
                 type: "POST",
                 url: base_url + "/customer/update_customer_profile",
-                data: { notes : note , id : <?= isset($customer_profile_id) ? $customer_profile_id : 0; ?> }, // serializes the form's elements.
+                data: { notes : note , memo_note:memo_note, id : <?= isset($customer_profile_id) ? $customer_profile_id : 0; ?> }, // serializes the form's elements.
                 success: function(data)
                 {
                     if(data === "Success"){
@@ -279,7 +279,13 @@
                 success: function(data)
                 {
                     if(data === "Success"){
-                        $('#memo_txt').text(note);
+                        $('#memo_txt').attr('disabled', false);
+                        $('#memo_txt').attr('readonly', false);
+
+                        $('#memo_txt').val(note);
+
+                        $('#memo_txt').attr('disabled', true);
+                        $('#memo_txt').attr('readonly', true);
                     }
                 }
             });
