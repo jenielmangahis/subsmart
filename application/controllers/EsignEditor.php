@@ -640,7 +640,7 @@ SQL;
 
             $callback = function () use ($getter, $placeholderParam) {
                 $value = $getter($placeholderParam);
-                if ($this->isImage($value)) {
+                if (!empty($value) && is_string($value) && $this->isImage($value)) {
                     return str_replace('{source}', $value, '<img src="{source}" width="200" alt="" />');
                 }
                 return $value;

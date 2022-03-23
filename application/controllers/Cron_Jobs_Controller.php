@@ -47,7 +47,7 @@ class Cron_Jobs_Controller extends CI_Controller
         $username = MAIL_USERNAME;
         $password = MAIL_PASSWORD;
         $from = MAIL_FROM;
-        $subject = $company_name.': Time logs for Week ' . date("M d", strtotime($date_from)).' to '. $subj_date_to;
+        $subject = $company_name . ': Time logs for Week ' . date("M d", strtotime($date_from)) . ' to ' . $subj_date_to;
 
         $mail = new PHPMailer(true);
         $mail->isSMTP();
@@ -62,7 +62,7 @@ class Cron_Jobs_Controller extends CI_Controller
         $mail->From = $from;
         $mail->FromName = 'nSmarTrac';
         $mail->Subject = $subject;
-        
+
         $this->page_data['company_name'] = $company_name;
         $this->page_data['date_from'] = $date_from;
         $this->page_data['date_to'] = date("Y-m-d", strtotime('saturday this week', strtotime(date('Y-m-d'))));
@@ -74,9 +74,9 @@ class Cron_Jobs_Controller extends CI_Controller
         $this->page_data['est_wage_privacy'] = $est_wage_privacy;
         $mail->IsHTML(true);
         $mail->AddEmbeddedImage(dirname(__DIR__, 2) . '/assets/dashboard/images/logo.png', 'logo_2u', 'logo.png');
-        $filePath = base_url() . '/uploads/users/business_profile/'.$logo_folder.'/'.$company_logo;
+        $filePath = base_url() . '/uploads/users/business_profile/' . $logo_folder . '/' . $company_logo;
         if (@getimagesize($filePath)) {
-            $mail->AddEmbeddedImage(dirname(__DIR__, 2) . '/uploads/users/business_profile/'.$logo_folder.'/'.$company_logo, 'company_logo', $company_logo);
+            $mail->AddEmbeddedImage(dirname(__DIR__, 2) . '/uploads/users/business_profile/' . $logo_folder . '/' . $company_logo, 'company_logo', $company_logo);
             $this->page_data['has_logo'] = true;
         }
         $mail->Body =  'Timesheet Report.';
@@ -91,19 +91,19 @@ class Cron_Jobs_Controller extends CI_Controller
             exit;
         }
     }
-    
+
     public function get_admin_for_reports()
     {
         date_default_timezone_set('UTC');
-        $hour_now = date("H").":00:00";
+        $hour_now = date("H") . ":00:00";
         if (date("Y-m-d", strtotime('sunday this week', strtotime(date('Y-m-d')))) == date("Y-m-d")) {
             $all_admin_report_settings = $this->timesheet_model->get_all_admin_report_settings();
-            $and_query ="";
+            $and_query = "";
             foreach ($all_admin_report_settings as $setting) {
-                if ($and_query=="") {
-                    $and_query = " id != ".$setting->user_id;
+                if ($and_query == "") {
+                    $and_query = " id != " . $setting->user_id;
                 } else {
-                    $and_query .= " and id !=".$setting->user_id;
+                    $and_query .= " and id !=" . $setting->user_id;
                 }
             }
             $all_admin_for_default_report = $this->timesheet_model->get_all_admin_for_default_report($and_query);
@@ -112,15 +112,15 @@ class Cron_Jobs_Controller extends CI_Controller
             }
         }
         $admins_subject_for_report = $this->timesheet_model->get_admins_subject_for_report($hour_now);
-        $date_hour_now_pst = date('Y-m-d')." ".$hour_now;
-        $admins_for_reports=array();
+        $date_hour_now_pst = date('Y-m-d') . " " . $hour_now;
+        $admins_for_reports = array();
         // var_dump($admins_subject_for_report);
         foreach ($admins_subject_for_report as $admin) {
             $date_hour_now_selected_tz = $this->datetime_zone_converter($date_hour_now_pst, 'UTC', $admin->id_of_timezone);
             $week_day = date("D", strtotime($date_hour_now_selected_tz));
             $schedules = explode(",", $admin->schedule_day);
-            $found= false;
-            for ($i = 0; $i<count($schedules); $i++) {
+            $found = false;
+            for ($i = 0; $i < count($schedules); $i++) {
                 if ($schedules[$i] == $week_day) {
                     $found = true;
                     break;
@@ -149,7 +149,7 @@ class Cron_Jobs_Controller extends CI_Controller
                 $date_to = date("Y-m-d", strtotime('saturday this week', strtotime(date('Y-m-d'))));
                 $subscribed = false;
                 if ($admin->subscribed == 1) {
-                    $subscribed=true;
+                    $subscribed = true;
                 }
                 if ($subscribed) {
                     $this->generate_timelogs_csv($file_info[2], $file_info[0], $est_wage_privacy);
@@ -179,7 +179,7 @@ class Cron_Jobs_Controller extends CI_Controller
             }
         }
         $title = "Timesheet Report";
-        $body ="Timesheet report for week ".date("M d", strtotime($date_from))." to ".date("M d", strtotime($date_to))." has been sent to your email. If you don't see it in your inbox, kindly check your spam.";
+        $body = "Timesheet report for week " . date("M d", strtotime($date_from)) . " to " . date("M d", strtotime($date_to)) . " has been sent to your email. If you don't see it in your inbox, kindly check your spam.";
         if (count($android_tokens) > 0) {
             $this->send_android_push($android_tokens, $title, $body);
         }
@@ -354,7 +354,7 @@ class Cron_Jobs_Controller extends CI_Controller
             if ($est_wage_privacy == 1) {
                 $data[] = $est_wage;
             }
-            
+
             $data[] = $timehseet_storage[$i][19];
             fputcsv($file, $data);
             $data = array();
@@ -689,22 +689,22 @@ class Cron_Jobs_Controller extends CI_Controller
 
         foreach ($all_timedin as $employee_attendance) {
             $last_aux = $this->timesheet_model->get_latest_aux($employee_attendance->id, "DESC");
-            
+
             if ($last_aux->action != "Break in") {
                 $date_start = $employee_attendance->date_created;
                 $date_end = date("Y-m-d H:i:s");
                 $worked_duration = $this->get_differenct_of_dates($date_start, $date_end);
                 if ($last_aux->action == "Break out") {
-                    $worked_duration =$worked_duration-$employee_attendance->break_duration;
+                    $worked_duration = $worked_duration - $employee_attendance->break_duration;
                 }
                 echo "<br><br>";
-                
+
                 if ($worked_duration > 8 && $worked_duration < 9) {
                     //set for app
                     if ($employee_attendance->device_type == "iOS") {
-                        $ios_tokens_less_9[]=$employee_attendance->device_token;
+                        $ios_tokens_less_9[] = $employee_attendance->device_token;
                     } elseif ($employee_attendance->device_type == "Android") {
-                        $android_tokens_less_9[]=$employee_attendance->device_token;
+                        $android_tokens_less_9[] = $employee_attendance->device_token;
                     }
                     $data = new stdClass();
                     $data->notif_action_made = "over8less9";
@@ -719,9 +719,9 @@ class Cron_Jobs_Controller extends CI_Controller
                 } elseif ($worked_duration > 12) {
                     //auto clockout
                     if ($employee_attendance->device_type == "iOS") {
-                        $ios_tokens_over_9[]=$employee_attendance->device_token;
+                        $ios_tokens_over_9[] = $employee_attendance->device_token;
                     } elseif ($employee_attendance->device_type == "Android") {
-                        $android_tokens_over_9[]=$employee_attendance->device_token;
+                        $android_tokens_over_9[] = $employee_attendance->device_token;
                     }
                     $this->auto_clockOutEmployee($employee_attendance->user_id, $employee_attendance->id, $employee_attendance->company_id, $last_aux->user_location, $last_aux->user_location_address);
                 }
@@ -741,7 +741,7 @@ class Cron_Jobs_Controller extends CI_Controller
             $this->send_ios_push($ios_tokens_over_9, "Autoclock Out Alert", "Hey! we haven't heard from you since the last time clock notification. Please note that you have been auto clocked out.");
         }
     }
-    
+
     public function auto_clockOutEmployee($user_id, $attn_id, $company_id, $latlng, $address)
     {
         $_SESSION['autoclockout_timer_closed'] = false;
@@ -750,9 +750,9 @@ class Cron_Jobs_Controller extends CI_Controller
 
         $employeeLongnameAddress = $address;
         $check_attn = $this->db->get_where('timesheet_attendance', array('id' => $attn_id, 'user_id' => $user_id));
-        
+
         if ($check_attn->num_rows() == 1) {
-            $content_notification = "Has been auto clocked out ".date("M d, Y")." GMT+0";
+            $content_notification = "Has been auto clocked out " . date("M d, Y") . " GMT+0";
             $clock_out_notify = array(
                 'user_id' => $user_id,
                 'title' => 'Clock Out',
@@ -774,7 +774,7 @@ class Cron_Jobs_Controller extends CI_Controller
             );
             $this->db->insert('timesheet_logs', $out);
             $timesheet_logs_id = $this->db->insert_id();
-            
+
             $hours_worked = $this->timesheet_model->calculateShiftDuration_and_overtime($attn_id);
             $shift_duration = round($hours_worked[0], 2);
             $update = array(
@@ -812,7 +812,7 @@ class Cron_Jobs_Controller extends CI_Controller
             $data->FName = $getUserDetail->FName;
             $data->LName = $getUserDetail->LName;
             $data->profile_img = $getUserDetail->profile_img;
-            $data->body = $data->body = $getUserDetail->FName . " " . $getUserDetail->LName . " ".$content_notification;
+            $data->body = $data->body = $getUserDetail->FName . " " . $getUserDetail->LName . " " . $content_notification;
             $data->device_type =  $getUserDetail->device_type;
             $data->company_id = $company_id;
             $data->token = $getUserDetail->device_token;
@@ -851,7 +851,7 @@ class Cron_Jobs_Controller extends CI_Controller
     public function autoclockout_app_notification($body, $title, $device_type, $under_company_id)
     {
         //User App notification
-        
+
         $ios_tokens = array();
         $android_tokens = array();
         $ios_token_ctr = 0;
@@ -913,72 +913,72 @@ class Cron_Jobs_Controller extends CI_Controller
         $this->load->model('accounting_recurring_transactions_model');
         $transactions = $this->accounting_recurring_transactions_model->get_by_next_date(date('Y-m-d'));
 
-        foreach($transactions as $transaction) {
-            switch($transaction->txn_type) {
-                case 'deposit' :
+        foreach ($transactions as $transaction) {
+            switch ($transaction->txn_type) {
+                case 'deposit':
                     $success = $this->occur_deposit($transaction->txn_id);
-                break;
-                case 'transfer' :
+                    break;
+                case 'transfer':
                     $success = $this->occur_transfer($transaction->txn_id);
-                break;
-                case 'journal entry' :
+                    break;
+                case 'journal entry':
                     $success = $this->occur_journal_entry($transaction->txn_id);
-                break;
-                case 'expense' :
+                    break;
+                case 'expense':
                     $success = $this->occur_expense($transaction->txn_id);
-                break;
-                case 'check' :
+                    break;
+                case 'check':
                     $success = $this->occur_check($transaction->txn_id);
-                break;
-                case 'bill' :
+                    break;
+                case 'bill':
                     $success = $this->occur_bill($transaction->txn_id);
-                break;
-                case 'purchase order' :
+                    break;
+                case 'purchase order':
                     $success = $this->occur_purchase_order($transaction->txn_id);
-                break;
-                case 'vendor credit' :
+                    break;
+                case 'vendor credit':
                     $success = $this->occur_vendor_credit($transaction->txn_id);
-                break;
-                case 'credit card credit' :
+                    break;
+                case 'credit card credit':
                     $success = $this->occur_credit_card_credit($transaction->txn_id);
-                break;
+                    break;
             }
 
             $currentOccurrence = intval($transaction->current_occurrence) + 1;
             $every = $transaction->recurr_every;
             $nextDate = date("m/d/Y", strtotime($transaction->next_date));
-            switch($transaction->recurring_interval) {
-                case 'daily' :
+            switch ($transaction->recurring_interval) {
+                case 'daily':
                     $nextDate = date("Y-m-d", strtotime("$nextDate +$every days"));
-                break;
-                case 'weekly' :
+                    break;
+                case 'weekly':
                     $nextDate = date("Y-m-d", strtotime("$nextDate +$every weeks"));
-                break;
-                case 'monthly' :
-                    if($transaction->recurring_week === 'day') {
+                    break;
+                case 'monthly':
+                    if ($transaction->recurring_week === 'day') {
                         $day = $transaction->recurring_day === 'last' ? 't' : $transaction->recurring_day;
                         $nextDate = date("Y-m-$day", strtotime("$nextDate +$every months"));
                     } else {
                         $week = $transaction->recurring_week;
                         $day = $transaction->recurring_day;
-                        $nextDate = date("Y-m-d", strtotime("$week $day ".date("Y-m", strtotime("$nextDate +$every months"))));
+                        $nextDate = date("Y-m-d", strtotime("$week $day " . date("Y-m", strtotime("$nextDate +$every months"))));
                     }
-                break;
-                case 'yearly' :
+                    break;
+                case 'yearly':
                     $month = $transaction->recurring_month;
                     $day = $transaction->recurring_day;
 
                     $nextDate = date("Y-$month-$day", strtotime("$nextDate +1 year"));
-                break;
+                    break;
             }
 
-            if($transaction->end_type === 'after') {
-                if($currentOccurrence === intval($transaction->max_occurrences)) {
+            if ($transaction->end_type === 'after') {
+                if ($currentOccurrence === intval($transaction->max_occurrences)) {
                     $nextDate = null;
                 }
             } else {
-                if($transaction->end_type !== 'none') {
-                    if(strtotime($nextDate) > strtotime($transaction->end_date)) {
+                if ($transaction->end_type !== 'none') {
+                    if (strtotime($nextDate) > strtotime($transaction->end_date)) {
                         $nextDate = null;
                     }
                 }
@@ -1018,10 +1018,10 @@ class Cron_Jobs_Controller extends CI_Controller
 
         $newDeposit = $this->accounting_bank_deposit_model->create($insertData);
 
-        if($newDeposit) {
-            if(count($tags) > 0) {
+        if ($newDeposit) {
+            if (count($tags) > 0) {
                 $order = 1;
-                foreach($tags as $tag) {
+                foreach ($tags as $tag) {
                     $linkTagData = [
                         'transaction_type' => 'Deposit',
                         'transaction_id' => $newDeposit,
@@ -1072,7 +1072,7 @@ class Cron_Jobs_Controller extends CI_Controller
 
             $fundsData = [];
             foreach ($funds as $fund) {
-                $fundsData[] =[
+                $fundsData[] = [
                     'bank_deposit_id' => $newDeposit,
                     'received_from_key' => $fund->received_from_key,
                     'received_from_id' => $fund->received_from_id,
@@ -1121,7 +1121,7 @@ class Cron_Jobs_Controller extends CI_Controller
 
         $newTransfer = $this->accounting_transfer_funds_model->create($insertData);
 
-        if($newTransfer) {
+        if ($newTransfer) {
             if (count($attachments) > 0) {
                 $order = 1;
                 foreach ($attachments as $attachment) {
@@ -1184,7 +1184,7 @@ class Cron_Jobs_Controller extends CI_Controller
 
         $newJournal = $this->accounting_journal_entries_model->create($insertData);
 
-        if($newJournal) {
+        if ($newJournal) {
             if (count($attachments) > 0) {
                 $order = 1;
                 foreach ($attachments as $attachment) {
@@ -1214,7 +1214,7 @@ class Cron_Jobs_Controller extends CI_Controller
                 ];
 
                 $account = $this->chart_of_accounts_model->getById($entry->account_id);
-                if($account->account_id !== "7") {
+                if ($account->account_id !== "7") {
                     $newBalance = floatval($account->balance) - floatval($entry->credit);
                     $newBalance = $newBalance + floatval($entry->debit);
                 } else {
@@ -1268,10 +1268,10 @@ class Cron_Jobs_Controller extends CI_Controller
 
         $newExpense = $this->expenses_model->addExpense($expenseData);
 
-        if($newExpense) {
-            if(count($tags) > 0) {
+        if ($newExpense) {
+            if (count($tags) > 0) {
                 $order = 1;
-                foreach($tags as $tag) {
+                foreach ($tags as $tag) {
                     $linkTagData = [
                         'transaction_type' => 'Expense',
                         'transaction_id' => $newExpense,
@@ -1355,7 +1355,7 @@ class Cron_Jobs_Controller extends CI_Controller
             'bank_account_id' => $check->bank_account_id,
             'mailing_address' => $check->mailing_address,
             'payment_date' => date("Y-m-d"),
-            'check_no' => $check->check_no !== "" && !is_null($check->check_no) ? intval($lastCheck->check_no)+1 : $check->check_no,
+            'check_no' => $check->check_no !== "" && !is_null($check->check_no) ? intval($lastCheck->check_no) + 1 : $check->check_no,
             'to_print' => $check->to_print,
             'permit_no' => $check->permit_no,
             'tags' => $check->tags,
@@ -1366,10 +1366,10 @@ class Cron_Jobs_Controller extends CI_Controller
 
         $newCheck = $this->expenses_model->addCheck($checkData);
 
-        if($newCheck) {
-            if(count($tags) > 0) {
+        if ($newCheck) {
+            if (count($tags) > 0) {
                 $order = 1;
-                foreach($tags as $tag) {
+                foreach ($tags as $tag) {
                     $linkTagData = [
                         'transaction_type' => 'Check',
                         'transaction_id' => $newCheck,
@@ -1465,10 +1465,10 @@ class Cron_Jobs_Controller extends CI_Controller
 
         $newBill = $this->expenses_model->addBill($billData);
 
-        if($newBill) {
-            if(count($tags) > 0) {
+        if ($newBill) {
+            if (count($tags) > 0) {
                 $order = 1;
-                foreach($tags as $tag) {
+                foreach ($tags as $tag) {
                     $linkTagData = [
                         'transaction_type' => 'Bill',
                         'transaction_id' => $newBill,
@@ -1527,7 +1527,7 @@ class Cron_Jobs_Controller extends CI_Controller
         $purchaseOrderData = [
             'company_id' => $purchaseOrder->company_id,
             'vendor_id' => $purchaseOrder->vendor_id,
-            'purchase_order_no' => $lastPO === null ? 1 : intval($lastPO->purchase_order_no)+1,
+            'purchase_order_no' => $lastPO === null ? 1 : intval($lastPO->purchase_order_no) + 1,
             'permit_no' => $purchaseOrder->permit_no,
             'email' => $purchaseOrder->email,
             'mailing_address' => $purchaseOrder->mailing_address,
@@ -1545,10 +1545,10 @@ class Cron_Jobs_Controller extends CI_Controller
 
         $newPurchaseOrder = $this->expenses_model->add_purchase_order($purchaseOrderData);
 
-        if($newPurchaseOrder) {
-            if(count($tags) > 0) {
+        if ($newPurchaseOrder) {
+            if (count($tags) > 0) {
                 $order = 1;
-                foreach($tags as $tag) {
+                foreach ($tags as $tag) {
                     $linkTagData = [
                         'transaction_type' => 'Purchase Order',
                         'transaction_id' => $newPurchaseOrder,
@@ -1618,10 +1618,10 @@ class Cron_Jobs_Controller extends CI_Controller
 
         $newvCredit = $this->expenses_model->add_vendor_credit($vCreditData);
 
-        if($newvCredit) {
-            if(count($tags) > 0) {
+        if ($newvCredit) {
+            if (count($tags) > 0) {
                 $order = 1;
-                foreach($tags as $tag) {
+                foreach ($tags as $tag) {
                     $linkTagData = [
                         'transaction_type' => 'Vendor Credit',
                         'transaction_id' => $newvCredit,
@@ -1705,7 +1705,7 @@ class Cron_Jobs_Controller extends CI_Controller
 
         $newCredit = $this->expenses_model->add_credit_card_credit($creditData);
 
-        if($newCredit) {
+        if ($newCredit) {
             $creditAcc = $this->chart_of_accounts_model->getById($ccCredit->bank_credit_account_id);
 
             $newBalance = floatval($creditAcc->balance) - floatval($ccCredit->total_amount);
@@ -1713,9 +1713,9 @@ class Cron_Jobs_Controller extends CI_Controller
 
             $this->chart_of_accounts_model->updateBalance(['id' => $creditAcc->id, 'company_id' => $creditAcc->company_id, 'balance' => $newBalance]);
 
-            if(count($tags) > 0) {
+            if (count($tags) > 0) {
                 $order = 1;
-                foreach($tags as $tag) {
+                foreach ($tags as $tag) {
                     $linkTagData = [
                         'transaction_type' => 'CC Credit',
                         'transaction_id' => $newCredit,
@@ -1780,45 +1780,45 @@ class Cron_Jobs_Controller extends CI_Controller
             $expenseAcc = $this->chart_of_accounts_model->getById($category->expense_account_id);
             $expenseAccType = $this->account_model->getById($expenseAcc->account_id);
 
-            switch($category->transaction_type) {
-                case 'Expense' :
+            switch ($category->transaction_type) {
+                case 'Expense':
                     if ($expenseAccType->account_name === 'Credit Card') {
                         $newBalance = floatval($expenseAcc->balance) - floatval($category->amount);
                     } else {
                         $newBalance = floatval($expenseAcc->balance) + floatval($category->amount);
                     }
-                break;
-                case 'Check' :
+                    break;
+                case 'Check':
                     if ($expenseAccType->account_name === 'Credit Card') {
                         $newBalance = floatval($expenseAcc->balance) - floatval($category->amount);
                     } else {
                         $newBalance = floatval($expenseAcc->balance) + floatval($category->amount);
                     }
-                break;
-                case 'Bill' :
+                    break;
+                case 'Bill':
                     if ($expenseAccType->account_name === 'Credit Card') {
                         $newBalance = floatval($expenseAcc->balance) - floatval($category->amount);
                     } else {
                         $newBalance = floatval($expenseAcc->balance) + floatval($category->amount);
                     }
-                break;
-                case 'Vendor Credit' :
+                    break;
+                case 'Vendor Credit':
                     if ($expenseAccType->account_name === 'Credit Card') {
                         $newBalance = floatval($expenseAcc->balance) + floatval($category->amount);
                     } else {
                         $newBalance = floatval($expenseAcc->balance) - floatval($category->amount);
                     }
-                break;
-                case 'Credit Card Credit' :
+                    break;
+                case 'Credit Card Credit':
                     if ($expenseAccType->account_name === 'Credit Card') {
                         $newBalance = floatval($expenseAcc->balance) + floatval($category->amount);
                     } else {
                         $newBalance = floatval($expenseAcc->balance) - floatval($category->amount);
                     }
-                break;
+                    break;
             }
 
-            if($category->transaction_type !== 'Purchase Order') {
+            if ($category->transaction_type !== 'Purchase Order') {
                 $newBalance = number_format($newBalance, 2, '.', ',');
 
                 $expenseAccData = [
@@ -1855,25 +1855,25 @@ class Cron_Jobs_Controller extends CI_Controller
 
             $location = $this->items_model->getItemLocation($item->location_id, $item->item_id);
 
-            switch($item->transaction_type) {
-                case 'Expense' :
+            switch ($item->transaction_type) {
+                case 'Expense':
                     $newQty = intval($location->qty) + intval($item->quantity);
-                break;
-                case 'Check' :
+                    break;
+                case 'Check':
                     $newQty = intval($location->qty) + intval($item->quantity);
-                break;
-                case 'Bill' :
+                    break;
+                case 'Bill':
                     $newQty = intval($location->qty) + intval($item->quantity);
-                break;
-                case 'Vendor Credit' :
+                    break;
+                case 'Vendor Credit':
                     $newQty = intval($location->qty) - intval($item->quantity);
-                break;
-                case 'Credit Card Credit' :
+                    break;
+                case 'Credit Card Credit':
                     $newQty = intval($location->qty) - intval($item->quantity);
-                break;
+                    break;
             }
 
-            if($item->transaction_type !== 'Purchase Order') {
+            if ($item->transaction_type !== 'Purchase Order') {
                 $this->items_model->updateLocationQty($item->location_id, $item->item_id, $newQty);
 
                 $itemAccDetails = $this->items_model->getItemAccountingDetails($item->item_id);
@@ -1881,34 +1881,34 @@ class Cron_Jobs_Controller extends CI_Controller
 
             if ($itemAccDetails) {
                 $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
-                switch($item->transaction_type) {
-                    case 'Expense' :
+                switch ($item->transaction_type) {
+                    case 'Expense':
                         $newBalance = floatval($invAssetAcc->balance) + floatval($item->amount);
-                    break;
-                    case 'Check' :
+                        break;
+                    case 'Check':
                         $newBalance = floatval($invAssetAcc->balance) + floatval($item->amount);
-                    break;
-                    case 'Bill' :
+                        break;
+                    case 'Bill':
                         $newBalance = floatval($invAssetAcc->balance) + floatval($item->amount);
-                    break;
-                    case 'Purchase Order' :
+                        break;
+                    case 'Purchase Order':
                         $newQtyPO = intval($itemAccDetails->qty_po) + intval($item->quantity);
 
                         $this->items_model->updateItemAccountingDetails(['qty_po' => $newQtyPO], $item->item_id);
-                    break;
-                    case 'Vendor Credit' :
+                        break;
+                    case 'Vendor Credit':
                         $newBalance = floatval($item->total) - floatval($item->quantity);
                         $newBalance = floatval($invAssetAcc->balance) + $newBalance;
                         $newBalance = $newBalance - floatval($item->total);
-                    break;
-                    case 'Credit Card Credit' :
+                        break;
+                    case 'Credit Card Credit':
                         $newBalance = floatval($item->total) - floatval($item->quantity);
                         $newBalance = floatval($invAssetAcc->balance) + $newBalance;
                         $newBalance = $newBalance - floatval($item->total);
-                    break;
+                        break;
                 }
 
-                if($item->transaction_type !== 'Purchase Order') {
+                if ($item->transaction_type !== 'Purchase Order') {
                     $newBalance = number_format($newBalance, 2, '.', ',');
 
                     $invAssetAccData = [
@@ -1916,7 +1916,7 @@ class Cron_Jobs_Controller extends CI_Controller
                         'company_id' => $invAssetAcc->company_id,
                         'balance' => $newBalance
                     ];
-    
+
                     $this->chart_of_accounts_model->updateBalance($invAssetAccData);
                 }
             }
@@ -1925,55 +1925,516 @@ class Cron_Jobs_Controller extends CI_Controller
         $this->expenses_model->insert_vendor_transaction_items($itemDetails);
     }
 
-    public function get_data_from_cashflow_planned($company_id){
+    public function get_data_from_cashflow_planned($company_id)
+    {
         $query = $this->db->get('cashflow_planned');
         return $query->result();
     }
 
+    public function addcashflowplanRecurrinbg($new_data)
+    {
+
+        $vendor = $this->db->insert('cashflow_planned_recurring', $new_data);
+        $insert_id = $this->db->insert_id();
+
+        return  $insert_id;
+    }
+
+    public function update_cashflow_date_amount($id, $data)
+    {
+        $updateCashFlow = $this->db->update('cashflow_planned', $data, array('id' => $id));
+        $insert_id = $this->db->insert_id();
+
+        return  $insert_id;
+    }
+    function weekOfMonth($when = null) {
+        if ($when === null) $when = time();
+        
+        $week = date('W', strtotime($when)); // note that ISO weeks start on Monday
+        $firstWeekOfMonth = date('W', strtotime(date('Y-m-01', strtotime($when))));
+        
+        return 1 + ($week < $firstWeekOfMonth ? $week : $week - $firstWeekOfMonth);
+    }
     public function cron_cashflow_planned()
     {
-       $container = $this->get_data_from_cashflow_planned(logged('company_id'));
-       
-        
-        for($index = 0; $index < count($container); $index++){
-            if($container[$index]->repeating == '0'){
-               
-            }else{
-                if($container[$index]->schedule == "daily"){
-                    
-                    if($container[$index]->d_sched == "everyday"){
-                        $new_data = array(
-                            'created_at'        => date("Y-m-d"),
-                            'reapeating'        => "0",
-                            'merchant_name'     => $container[$index]->merchant_name,
-                            'amount'            => $container[$index]->amount,
-                            'type'              => $container[$index]->type,
-                        );
-                        
-                    }else{
-                        if(date("l")=="Monday" || date("l")=="Tuesday" || date("l")=="Wednesday" || date("l")=="Thursday" || date("l")=="Friday"){
-                            $new_data = array(
-                                'created_at'        => date("Y-m-d"),
-                                'reapeating'        => "0",
-                                'merchant_name'     => $container[$index]->merchant_name,
-                                'amount'            => $container[$index]->amount,
-                                'type'              => $container[$index]->type,
-                            );
+        $container = $this->get_data_from_cashflow_planned(logged('company_id'));
+
+
+        for ($index = 0; $index < count($container); $index++) {
+            if ($container[$index]->end_indic == "on_going") {
+                if (date("Y-m-d") == $container[$index]->date_plan) {
+                    if ($container[$index]->repeating == '0') {
+                    } else {
+                        if ($container[$index]->schedule == "daily") {
+
+                            if ($container[$index]->d_sched == "everyday") {
+                                $new_data = array(
+                                    'created_at'        => date("Y-m-d"),
+                                    'repeating'        => "0",
+                                    'merchant_name'     => $container[$index]->merchant_name,
+                                    'amount'            => $container[$index]->amount,
+                                    'type'              => $container[$index]->type,
+                                );
+                                $this->addcashflowplanRecurrinbg($new_data);
+
+                                if ($container[$index]->end_type == "not") {
+                                    $occur = $container[$index]->end_occurence;
+                                    $occur--;
+
+                                    if ($occur != 0) {
+                                        $new_data2 = array(
+                                            'date_plan'     => date("Y-m-d", strtotime("+1 day")),
+                                            'end_indic'     => "on_going",
+                                            'end_occurence' => $occur
+                                        );
+                                        $this->update_cashflow_date_amount($container[$index]->id, $new_data2);
+                                    } else {
+                                        $new_data2 = array(
+                                            'end_occurence' => $occur,
+                                            'end_indic'     => "end"
+                                        );
+                                        $this->update_cashflow_date_amount($container[$index]->id, $new_data2);
+                                    }
+                                } else if ($container[$index]->end_type == "date") {
+                                    if (date("Y-m-d") != $container[$index]->end_date) {
+                                        $new_data2 = array(
+                                            'date_plan'     => date("Y-m-d", strtotime("+1 day")),
+                                            'end_indic'     => "on_going"
+                                        );
+                                        $this->update_cashflow_date_amount($container[$index]->id, $new_data2);
+                                    } else {
+                                        $new_data2 = array(
+                                            'end_indic'     => "end"
+                                        );
+                                        $this->update_cashflow_date_amount($container[$index]->id, $new_data2);
+                                    }
+                                }
+                                // $this->addcashflowplan($new_data);
+                                print_r($new_data);
+                            } else {
+                                if (date("l") == "Monday" || date("l") == "Tuesday" || date("l") == "Wednesday" || date("l") == "Thursday" || date("l") == "Friday") {
+                                    $new_data = array(
+                                        'created_at'        => date("Y-m-d"),
+                                        'repeating'        => "0",
+                                        'merchant_name'     => $container[$index]->merchant_name,
+                                        'amount'            => $container[$index]->amount,
+                                        'type'              => $container[$index]->type,
+                                    );
+                                    $this->addcashflowplanRecurrinbg($new_data);
+
+                                    if ($container[$index]->end_type == "not") {
+                                        $occur = $container[$index]->end_occurence;
+                                        $occur--;
+
+                                        if ($occur != 0) {
+                                            if (date("l") == "Friday") {
+                                                $new_data2 = array(
+                                                    'date_plan'     => date("Y-m-d", strtotime("+3 day")),
+                                                    'end_indic'     => "on_going",
+                                                    'end_occurence' => $occur
+                                                );
+                                                $this->update_cashflow_date_amount($container[$index]->id, $new_data2);
+                                            } else {
+                                                $new_data2 = array(
+                                                    'date_plan'     => date("Y-m-d", strtotime("+1 day")),
+                                                    'end_indic'     => "on_going",
+                                                    'end_occurence' => $occur
+                                                );
+                                                $this->update_cashflow_date_amount($container[$index]->id, $new_data2);
+                                            }
+                                        } else {
+                                            $new_data2 = array(
+                                                'end_occurence' => $occur,
+                                                'end_indic'     => "end"
+                                            );
+                                            $this->update_cashflow_date_amount($container[$index]->id, $new_data2);
+                                        }
+                                    } else if ($container[$index]->end_type == "date") {
+                                        if (date("Y-m-d") != $container[$index]->end_date) {
+                                            if (date("l") == "Friday") {
+                                                $new_data2 = array(
+                                                    'date_plan'     => date("Y-m-d", strtotime("+3 day")),
+                                                    'end_indic'     => "on_going"
+                                                );
+                                                $this->update_cashflow_date_amount($container[$index]->id, $new_data2);
+                                            } else {
+                                                $new_data2 = array(
+                                                    'date_plan'     => date("Y-m-d", strtotime("+1 day")),
+                                                    'end_indic'     => "on_going"
+                                                );
+                                                $this->update_cashflow_date_amount($container[$index]->id, $new_data2);
+                                            }
+                                        } else {
+                                            $new_data2 = array(
+                                                'end_indic'     => "end"
+                                            );
+                                            $this->update_cashflow_date_amount($container[$index]->id, $new_data2);
+                                        }
+                                    }
+                                    print_r($new_data);
+                                    // $this->addcashflowplan($new_data);
+                                }
+                            }
+                        }  // var_dump($new_data);
+                        else if ($container[$index]->schedule == "weekly") {
+                            $exploded_weeks = explode(" ", $container[$index]->weekly_days);
+                            $findings = "";
+                            $place = 0;
+                            for ($i = 0; $i < count($exploded_weeks); $i++) {
+                                if (date("l") == $exploded_weeks[$i]) {
+                                    for ($i = 0; $i < count($exploded_weeks); $i++) {
+                                        $i = $place;
+                                        if (date("l") == $exploded_weeks[$i]) {
+                                            $new_data = array(
+                                                'created_at'        => date("Y-m-d"),
+                                                'repeating'        => "0",
+                                                'merchant_name'     => $container[$index]->merchant_name,
+                                                'amount'            => $container[$index]->amount,
+                                                'type'              => $container[$index]->type,
+                                            );
+                                            $this->addcashflowplanRecurrinbg($new_data);
+
+                                            if ($container[$index]->end_type == "not") {
+                                                $occur = $container[$index]->end_occurence;
+                                                $occur--;
+
+                                                if ($occur != 0) {
+                                                    if ($place == count($exploded_weeks) - 1) {
+                                                        $new_data2 = array(
+                                                            'date_plan'     => date("Y-m-d", strtotime("+" . $container[$index]->weekly_weeks . " weeks")),
+                                                            'end_indic'     => "on_going",
+                                                            'end_occurence' => $occur
+                                                        );
+                                                        $this->update_cashflow_date_amount($container[$index]->id, $new_data2);
+                                                    } else {
+                                                        $new_data2 = array(
+                                                            'date_plan'     => date("Y-m-d", strtotime("+1 days")),
+                                                            'end_indic'     => "on_going",
+                                                            'end_occurence' => $occur
+                                                        );
+                                                        $this->update_cashflow_date_amount($container[$index]->id, $new_data2);
+                                                    }
+                                                } else {
+                                                    $new_data2 = array(
+                                                        'end_occurence' => $occur,
+                                                        'end_indic'     => "end"
+                                                    );
+                                                    $this->update_cashflow_date_amount($container[$index]->id, $new_data2);
+                                                }
+                                            } else if ($container[$index]->end_type == "date") {
+                                                if (date("Y-m-d") != $container[$index]->end_date) {
+                                                    $new_data2 = array(
+                                                        'date_plan'     => date("Y-m-d", strtotime("+" . $container[$index]->weekly_weeks . " weeks")),
+                                                        'end_indic'     => "on_going"
+                                                    );
+                                                    if ($place == count($exploded_weeks) - 1) {
+                                                        $new_data2 = array(
+                                                            'date_plan'     => date("Y-m-d", strtotime("+" . $container[$index]->weekly_weeks . " weeks")),
+                                                            'end_indic'     => "on_going"
+                                                        );
+                                                        $this->update_cashflow_date_amount($container[$index]->id, $new_data2);
+                                                    } else {
+                                                        $new_data2 = array(
+                                                            'date_plan'     => date("Y-m-d", strtotime("+1 days")),
+                                                            'end_indic'     => "on_going",
+                                                        );
+                                                        $this->update_cashflow_date_amount($container[$index]->id, $new_data2);
+                                                    }
+                                                    $this->update_cashflow_date_amount($container[$index]->id, $new_data2);
+                                                } else {
+                                                    $new_data2 = array(
+                                                        'end_indic'     => "end"
+                                                    );
+                                                    $this->update_cashflow_date_amount($container[$index]->id, $new_data2);
+                                                }
+                                            }
+                                        } else {
+                                            $new_data2 = array(
+                                                'date_plan'     => date("Y-m-d", strtotime("+1 days")),
+                                            );
+                                            $this->update_cashflow_date_amount($container[$index]->id, $new_data2);
+                                        }
+                                    }
+                                } else {
+                                    if (date("l") == "Saturday") {
+                                        $new_data2 = array(
+                                            'date_plan'     => date("Y-m-d", strtotime("+" . $container[$index]->weekly_weeks . " weeks")),
+                                            'end_indic'     => "on_going"
+                                        );
+                                        $this->update_cashflow_date_amount($container[$index]->id, $new_data2);
+                                    } else {
+                                        $new_data2 = array(
+                                            'date_plan'     => date("Y-m-d", strtotime("+1 days")),
+                                            'end_indic'     => "on_going",
+                                        );
+                                        $this->update_cashflow_date_amount($container[$index]->id, $new_data2);
+                                    }
+                                }
+                            }
                         }
-                    }
-                    var_dump($new_data);
-                }else if($container[$index]->schedule == "weekly"){
-                    
-                }else if($container[$index]->schedule == "monthly"){
-                    if($container[$index]->m_indic == "day"){
+                        //end week
+                        else if ($container[$index]->schedule == "monthly") {
+                            if ($container[$index]->m_indic == "spec_day") {
+                                $new_data = array(
+                                    'created_at'        => date("Y-m-d"),
+                                    'repeating'        => "0",
+                                    'merchant_name'     => $container[$index]->merchant_name,
+                                    'amount'            => $container[$index]->amount,
+                                    'type'              => $container[$index]->type,
+                                );
+                                $this->addcashflowplanRecurrinbg($new_data);
 
-                    }else{
 
+                                $addDate = date("Y-m-01", strtotime(" +5 months"));
+                                $monthly_rank=0;
+                                if($container[$index]->monthly_rank == "first"){
+                                    $monthly_rank=1;
+                                }elseif($container[$index]->monthly_rank == "Second"){
+                                    $monthly_rank=2;
+                                }elseif($container[$index]->monthly_rank == "third"){
+                                    $monthly_rank=3;
+                                }elseif($container[$index]->monthly_rank == "fourth"){
+                                    $monthly_rank=4;
+                                }
+                                $the_next_date="";
+                                for($i=7;$i<31;){
+                                    if($this->weekOfMonth($addDate) == $monthly_rank){
+                                        $the_next_date=date("Y-m-d",strtotime($addDate.' '.$container[$index]->monthly_week_day.' this week'));
+                                        $i+=31;
+                                    }else{
+                                        $addDate = date("Y-m-d", strtotime($addDate." + 7 days"));
+                                        $i+=7;
+                                    }
+
+                                }
+                                
+                                if ($container[$index]->end_type == "not") {
+                                    $occur = $container[$index]->end_occurence;
+                                    $occur--;
+
+                                    if ($occur != 0) {
+                                        $new_data2 = array(
+                                            'date_plan'     => $the_next_date,
+                                            'end_indic'     => "on_going",
+                                            'end_occurence' => $occur
+                                        );
+                                        echo "pasok";
+                                        $this->update_cashflow_date_amount($container[$index]->id, $new_data2);
+                                    } else {
+                                        $new_data2 = array(
+                                            'end_occurence' => $occur,
+                                            'end_indic'     => "end"
+                                        );
+                                        echo "pasok";
+                                        $this->update_cashflow_date_amount($container[$index]->id, $new_data2);
+                                    }
+                                } else if ($container[$index]->end_type == "date") {
+                                    if (date("Y-m-d") != $container[$index]->end_date) {
+                                        $new_data2 = array(
+                                            'date_plan'     => $the_next_date,
+                                            'end_indic'     => "on_going"
+                                        );
+                                        echo "pasok";
+                                        $this->update_cashflow_date_amount($container[$index]->id, $new_data2);
+                                    } else {
+                                        $new_data2 = array(
+                                            'end_indic'     => "end"
+                                        );
+                                        echo "pasok";
+                                        $this->update_cashflow_date_amount($container[$index]->id, $new_data2);
+                                    }
+                                }else{
+                                    $new_data2 = array(
+                                        'date_plan'     => $the_next_date,
+                                        'end_indic'     => "on_going"
+                                    );
+                                    echo "pasok";
+                                    $this->update_cashflow_date_amount($container[$index]->id, $new_data2);
+                                }
+
+                                echo `</br>` . $the_next_date;
+                            }else{
+                                $new_data = array(
+                                    'created_at'        => date("Y-m-d"),
+                                    'repeating'        => "0",
+                                    'merchant_name'     => $container[$index]->merchant_name,
+                                    'amount'            => $container[$index]->amount,
+                                    'type'              => $container[$index]->type,
+                                );
+                                $this->addcashflowplanRecurrinbg($new_data);
+
+                                $addDate = date("Y-m-0".$container[$index]->monthly_day."", strtotime("+".$container[$index]->monthly_months." months"));
+                                echo $addDate;
+
+                                if ($container[$index]->end_type == "not") {
+                                    $occur = $container[$index]->end_occurence;
+                                    $occur--;
+
+                                    if ($occur != 0) {
+                                        $new_data2 = array(
+                                            'date_plan'     => $addDate,
+                                            'end_indic'     => "on_going",
+                                            'end_occurence' => $occur
+                                        );
+                                        echo "pasok";
+                                        $this->update_cashflow_date_amount($container[$index]->id, $new_data2);
+                                    } else {
+                                        $new_data2 = array(
+                                            'end_occurence' => $occur,
+                                            'end_indic'     => "end"
+                                        );
+                                        echo "pasok";
+                                        $this->update_cashflow_date_amount($container[$index]->id, $new_data2);
+                                    }
+                                } else if ($container[$index]->end_type == "date") {
+                                    if (date("Y-m-d") != $container[$index]->end_date) {
+                                        $new_data2 = array(
+                                            'date_plan'     => $addDate,
+                                            'end_indic'     => "on_going"
+                                        );
+                                        echo "pasok";
+                                        $this->update_cashflow_date_amount($container[$index]->id, $new_data2);
+                                    } else {
+                                        $new_data2 = array(
+                                            'end_indic'     => "end"
+                                        );
+                                        echo "pasok";
+                                        $this->update_cashflow_date_amount($container[$index]->id, $new_data2);
+                                    }
+                                }else{
+                                    $new_data2 = array(
+                                        'date_plan'     => $addDate,
+                                        'end_indic'     => "on_going"
+                                    );
+                                    echo "pasok";
+                                    $this->update_cashflow_date_amount($container[$index]->id, $new_data2);
+                                }
+                            }
+                        }
                     }
                 }
             }
         }
-       
-       
+        // if($container[$index]->repeating == '0'){
+
+        // }else{
+        //     // if($container[$index]->schedule == "daily"){
+
+        //     //     if($container[$index]->d_sched == "everyday"){
+        //     //         $new_data = array(
+        //     //             'created_at'        => date("Y-m-d"),
+        //     //             'reapeating'        => "0",
+        //     //             'merchant_name'     => $container[$index]->merchant_name,
+        //     //             'amount'            => $container[$index]->amount,
+        //     //             'type'              => $container[$index]->type,
+        //     //         );
+        //     //         // $this->addcashflowplan($new_data);
+        //     //         print_r($new_data);
+
+        //     //     }else{
+        //     //         if(date("l")=="Monday" || date("l")=="Tuesday" || date("l")=="Wednesday" || date("l")=="Thursday" || date("l")=="Friday"){
+        //     //             $new_data = array(
+        //     //                 'created_at'        => date("Y-m-d"),
+        //     //                 'reapeating'        => "0",
+        //     //                 'merchant_name'     => $container[$index]->merchant_name,
+        //     //                 'amount'            => $container[$index]->amount,
+        //     //                 'type'              => $container[$index]->type,
+        //     //             );
+        //     //             print_r($new_data);
+        //     //             // $this->addcashflowplan($new_data);
+        //     //         }
+        //     //     }
+        //     //     // var_dump($new_data);
+        //     // }else 
+        //     if($container[$index]->schedule == "weekly"){
+        //        $remainder = fmod(idate("W"), 4);
+
+
+        //        if($remainder == $container[$index]->weekly_weeks){
+        //         $exploded_weeks = explode(" ",$container[$index]->weekly_days);
+        //         for($index2 = 0; $index2 < count($exploded_weeks); $index2++){
+        //             if(strtolower(date("l")) == strtolower($exploded_weeks[$index2])){
+        //                 $new_data = array(
+        //                     'created_at'        => date("Y-m-d"),
+        //                     'reapeating'        => "0",
+        //                     'merchant_name'     => $container[$index]->merchant_name,
+        //                     'amount'            => $container[$index]->amount,
+        //                     'type'              => $container[$index]->type,
+        //                 );
+        //                 // $this->addcashflowplan($new_data);
+        //             }
+        //         }
+
+        //        }else if($remainder == 0 && $container[$index]->weekly_weeks == 4){
+        //         $exploded_weeks = explode(" ",$container[$index]->weekly_days);
+        //         for($index2 = 0; $index2 < count($exploded_weeks); $index2++){
+        //             if(strtolower(date("l")) == strtolower($exploded_weeks[$index2])){
+        //                 $new_data = array(
+        //                     'created_at'        => date("Y-m-d"),
+        //                     'reapeating'        => "0",
+        //                     'merchant_name'     => $container[$index]->merchant_name,
+        //                     'amount'            => $container[$index]->amount,
+        //                     'type'              => $container[$index]->type,
+        //                 );
+        //                 // $this->addcashflowplan($new_data);
+        //             }
+        //         }
+        //        }
+        //         // echo $remainder;
+
+
+        //     }else if($container[$index]->schedule == "monthly"){
+        //         if($container[$index]->m_indic == "day"){
+        //             $remainder = fmod(idate("n"),$container[$index]->monthly_months);
+        //             if($remainder == 0 && idate("j")==$container[$index]->monthly_day){
+        //                 $new_data = array(
+        //                     'created_at'        => date("Y-m-d"),
+        //                     'reapeating'        => "0",
+        //                     'merchant_name'     => $container[$index]->merchant_name,
+        //                     'amount'            => $container[$index]->amount,
+        //                     'type'              => $container[$index]->type,
+        //                 );
+        //                 // $this->addcashflowplan($new_data);
+        //             }
+        //         }else{
+        //             $remainder = fmod(idate("n"),$container[$index]->monthly_months);
+        //             $remainder1 = fmod(idate("W"), 4);
+        //             $rank = 0;
+        //             switch($container[$index]->monthly_rank){
+        //                 case "First":
+        //                     $rank = 1;
+        //                     break;
+        //                 case "Second":
+        //                     $rank = 2;
+        //                     break;
+        //                 case "Third":
+        //                     $rank = 3;
+        //                     break;
+        //                 case "Fourth":
+        //                     $rank = 4;
+        //                     break;
+        //             }
+        //             if($remainder == $container[$index]->monthly_months && $remainder == $rank && strtolower(date("l"))==strtolower($container[$index]->monthly_week_day)){
+        //                 $new_data = array(
+        //                     'created_at'        => date("Y-m-d"),
+        //                     'reapeating'        => "0",
+        //                     'merchant_name'     => $container[$index]->merchant_name,
+        //                     'amount'            => $container[$index]->amount,
+        //                     'type'              => $container[$index]->type,
+        //                 );
+        //                 // $this->addcashflowplan($new_data);
+        //             }else if($remainder == $container[$index]->monthly_months && $remainder == 0 && $rank == 4 && strtolower(date("l"))==strtolower($container[$index]->monthly_week_day)){
+        //                 $new_data = array(
+        //                     'created_at'        => date("Y-m-d"),
+        //                     'reapeating'        => "0",
+        //                     'merchant_name'     => $container[$index]->merchant_name,
+        //                     'amount'            => $container[$index]->amount,
+        //                     'type'              => $container[$index]->type,
+        //                 );
+        //                 // $this->addcashflowplan($new_data);
+        //             }
+        //         }
+        //     }
+        // }
     }
 }

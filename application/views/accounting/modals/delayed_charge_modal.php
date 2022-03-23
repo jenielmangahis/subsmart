@@ -166,7 +166,9 @@
                                                 <div class="delayed-charge-item-table-footer">
                                                     <div class="row">
                                                         <div class="col-md-6">
-                                                            <a class="link-modal-open" href="#" id="add_item" data-target="#item_list"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a>
+                                                            <a class="link-modal-open" href="#" id="add_item" data-target="#item_list"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a> &emsp;
+                                                            <a class="link-modal-open" href="#" id="add_group" data-target="#item_group_list"><span class="fa fa-plus-square fa-margin-right"></span>Add By Group</a> &emsp;
+                                                            <a class="link-modal-open" href="#" id="add_create_package" data-target="#package_list"><span class="fa fa-plus-square fa-margin-right"></span>Add/Create Package</a>
                                                         </div>
                                                     </div>
                                                 </div>
