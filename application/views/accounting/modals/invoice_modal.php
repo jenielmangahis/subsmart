@@ -172,7 +172,7 @@
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="shipping-date">Shipping date</label>
-                                                <input type="text" class="form-control date" id="shipping-date" name="shippimg_date">
+                                                <input type="text" class="form-control date" id="shipping-date" name="shipping_date">
                                             </div>
                                         </div>
                                         <div class="col-md-3">
@@ -351,7 +351,7 @@
                                                 </div>
                                                 <div class="col-md-4">
                                                     <div class="form-group">
-                                                        <input type="number" class="form-control" id="deposit_amount" onchange="convertToDecimal(this)" value="0.00" step=".01">
+                                                        <input type="number" class="form-control" id="deposit-amount" name="deposit_amount" onchange="convertToDecimal(this)" value="0.00" step=".01">
                                                     </div>
                                                 </div>
                                                 <div class="col-md-12">

@@ -791,22 +791,22 @@ jQuery(document).ready(function() {
                         w_days += "sunday";
                     }
                     if ($("#mon").hasClass('color')) {
-                        w_days += ",monday";
+                        w_days += " monday";
                     }
                     if ($("#tue").hasClass('color')) {
-                        w_days += ",tuesday";
+                        w_days += " tuesday";
                     }
                     if ($("#wed").hasClass('color')) {
-                        w_days += "wednesday";
+                        w_days += " wednesday";
                     }
                     if ($("#thur").hasClass('color')) {
-                        w_days += "thursday";
+                        w_days += " thursday";
                     }
                     if ($("#fri").hasClass('color')) {
-                        w_days += "friday";
+                        w_days += " friday";
                     }
                     if ($("#sat").hasClass('color')) {
-                        w_days += "saturday";
+                        w_days += " saturday";
                     }
                     if ($("#cfp_add_item_area input[name=Wend]:checked").val() == 'date') {
                         w_date = $('input[name=end_dateW]').val();
