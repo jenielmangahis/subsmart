@@ -180,7 +180,7 @@ class Login extends CI_Controller
 
         if ($is_startup == 1) {
             redirect('onboarding/business_info');
-        } else {
+        } else {            
             if( $client->is_plan_active == 1 ){
                 $billingErrors = $this->Customer_advance_model->get_customer_billing_errors($client->id);
                 if( $billingErrors ){
@@ -193,7 +193,13 @@ class Login extends CI_Controller
                 if( $client->id == 1 ){
                     redirect('dashboard');
                 }else{
-                    redirect('mycrm/renew_plan');  
+                    $exempted_company_ids = exempted_company_ids();
+                    if( !in_array($client->id, $exempted_company_ids) ){
+                        redirect('mycrm/renew_plan');  
+                    }else{
+                        redirect('dashboard');
+                    }
+                    
                 }
             }
             
