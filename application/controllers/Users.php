@@ -761,7 +761,7 @@ class Users extends MY_Controller {
 
 		$this->page_data['users1'] = $this->users_model->getById(getLoggedUserID());
 		
-		$role_id = logged('role');
+		/*$role_id = logged('role');
 		if( $role_id == 1 || $role_id == 2 ){
 			$this->page_data['show_pass'] = 1;
 			$this->page_data['users'] = $this->users_model->getAllUsers();
@@ -770,7 +770,11 @@ class Users extends MY_Controller {
 			$this->page_data['show_pass'] = 0;
 			$this->page_data['users'] = $this->users_model->getCompanyUsers($cid);
 			$this->page_data['payscale'] = $this->PayScale_model->getAllByCompanyId($cid);
-		}
+		}*/
+
+		$this->page_data['show_pass'] = 1;
+		$this->page_data['users'] = $this->users_model->getCompanyUsers($cid);
+		$this->page_data['payscale'] = $this->PayScale_model->getAllByCompanyId($cid);
 		
 
 		// echo '<pre>';print_r($this->page_data);die;

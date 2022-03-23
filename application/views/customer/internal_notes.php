@@ -30,19 +30,19 @@
                             <div class="row margin-bottom-ter align-items-center">
                                 <!-- Nav tabs -->
                                 <div class="col-auto">
-                                    <h2 class="page-title" style="display:inline-block;">Internal Notes </h2>
+                                    <h2 class="page-title" style="display:inline-block;">Internal Memos </h2>
                                     <span style="display:inline-block;color:#4a4a4a;font-size: 28px;margin-left: 9px;">(<i><?= $customer->first_name . ' ' . $customer->last_name; ?></i>)</span>
                                 </div>
                                 <div class="col-auto">
                                     <div class="h1-spacer">
                                         <a class="btn btn-primary btn-md btn-customer-add-note" href="javascript:void(0);">
-                                            <span class="fa fa-plus"></span> Add Internal Note
+                                            <span class="fa fa-plus"></span> Add Internal Memo
                                         </a>
                                     </div>
                                 </div>
                                 <div class="alert alert-warning col-md-12 mt-4 mb-4" role="alert">
                                     <span style="color:black;">
-                                        Internal notes saved here are not seen by the client.
+                                        Internal memo saved here are not seen by the client.
                                     </span>
                                 </div>
                             </div>
@@ -57,14 +57,15 @@
                                         <table class="table table-hover table-to-list" id="internalNotesTable">
                                             <thead>
                                             <tr>
-                                                <th>Date</th>
+                                                <th style="width:10%;">Date</th>
                                                 <th>Note</th>
-                                                <th>Added By</th>
-                                                <th class="text-center"></th>
+                                                <th style="width:20%;">Added By</th>
+                                                <th class="text-center" style="width:10%;"></th>
                                             </tr>
                                             </thead>
                                             <tbody>
                                                 <?php foreach($internalNotes as $i){ ?>
+                                                <tr>
                                                     <td><?= date("m/d/Y", strtotime($i->note_date)); ?></td>
                                                     <td><?= $i->notes; ?></td>
                                                     <td><?= $i->user_name; ?></td>
@@ -87,6 +88,7 @@
                                                             </ul>
                                                         </div>
                                                     </td>
+                                                </tr>
                                                 <?php } ?>
                                             </tbody>
                                         </table>
@@ -100,7 +102,7 @@
                             <div class="modal-dialog modal-xl" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" style="display:inline-block;">Add Internal Notes: not seen by client</h5>
+                                        <h5 class="modal-title" style="display:inline-block;">Add Internal Memo: not seen by client</h5>
                                         <span style="display:inline-block;color:#4a4a4a;font-size: 22px;margin-left: 9px;">(<i><?= $customer->first_name . ' ' . $customer->last_name; ?></i>)</span>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">×</span>
@@ -145,7 +147,7 @@
                             <div class="modal-dialog modal-xl" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" style="display:inline-block;">Edit Internal notes: not seen by client</h5>
+                                        <h5 class="modal-title" style="display:inline-block;">Edit Internal memos: not seen by client</h5>
                                         <span style="display:inline-block;color:#4a4a4a;font-size: 22px;margin-left: 9px;">(<i><?= $customer->first_name . ' ' . $customer->last_name; ?></i>)</span>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">×</span>
@@ -259,7 +261,7 @@ $(document).ready(function () {
                       $("#modal-create-internal-note").modal('hide');
                       Swal.fire({
                           title: 'Success',
-                          text: 'Internal note was successfully created.',
+                          text: 'Internal memo was successfully created.',
                           icon: 'success',
                           showCancelButton: false,
                           confirmButtonColor: '#32243d',
@@ -301,7 +303,7 @@ $(document).ready(function () {
                       $("#modal-edit-internal-note").modal('hide');
                       Swal.fire({
                           title: 'Success',
-                          text: 'Internal note was successfully updated.',
+                          text: 'Internal memo was successfully updated.',
                           icon: 'success',
                           showCancelButton: false,
                           confirmButtonColor: '#32243d',
@@ -343,7 +345,7 @@ $(document).ready(function () {
                       $("#modal-delete-internal-note").modal('hide');
                       Swal.fire({
                           title: 'Success',
-                          text: 'Internal note was successfully deleted.',
+                          text: 'Internal memo was successfully deleted.',
                           icon: 'success',
                           showCancelButton: false,
                           confirmButtonColor: '#32243d',
