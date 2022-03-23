@@ -76,6 +76,9 @@ $route['customer/credit_industry/(:num)'] = 'Customer/credit_industry/$1';
 $route['customer/add_dispute_item/(:num)'] = 'Customer/add_new_dispute_item/$1';
 $route['customer/_load_company_reasons'] = 'Customer/ajax_load_company_reason_list';
 $route['customer/_create_company_reason'] = 'Customer/ajax_create_company_reason';
+$route['customer/_create_dispute_item'] = 'Customer/ajax_create_dispute_item';
+$route['customer/_delete_customer_dispute'] = 'Customer/ajax_delete_customer_dispute';
+$route['customer/_edit_dispute_item'] = 'Customer/ajax_edit_dispute_item';
 
 //Credit Bureau
 $route['credit_bureau/list'] = 'Credit_Bureau/index';
