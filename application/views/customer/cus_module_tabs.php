@@ -16,14 +16,23 @@
     <li class="nav-item">
         <a class="h6 mb-0 nav-link <?= $cust_active_tab == 'inventory' ?   "active" : ''; ?> nav-link" href="<?= base_url('customer/inventory_list/'.$cus_id) ?>">Inventory</a>
     </li>
-    <li class="nav-item">
+    <!-- <li class="nav-item">
         <a class="h6 mb-0 nav-link <?= $cust_active_tab == 'jobs' ?   "active" : ''; ?> nav-link" href="<?= base_url('customer/jobs_list/'.$cus_id) ?>">Jobs</a>
-    </li>
+    </li> -->
     <li class="nav-item">
+        <a class="h6 mb-0 nav-link <?= $cust_active_tab == 'jobs' ?   "active" : ''; ?> nav-link" target="_blank" href="<?= base_url('job/new_job1?cus_id='.$cus_id); ?>">Jobs</a>
+    </li>
+    <!-- <li class="nav-item">
         <a class="h6 mb-0 nav-link <?= $cust_active_tab == 'workorders' ?   "active" : ''; ?> nav-link" href="<?= base_url('customer/workorders_list/'.$cus_id) ?>">Service</a>
-    </li>
+    </li> -->
     <li class="nav-item">
+        <a class="h6 mb-0 nav-link <?= $cust_active_tab == 'workorders' ?   "active" : ''; ?> nav-link" target="_blank" href="<?= base_url('customer/addTicket?cus_id='.$cus_id); ?>">Services</a>
+    </li>
+    <!-- <li class="nav-item">
         <a class="h6 mb-0 nav-link <?= $cust_active_tab == 'estimates' ?   "active" : ''; ?> nav-link" href="<?= base_url('customer/estimates_list/'.$cus_id); ?>">Estimates</a>
+    </li> -->
+    <li class="nav-item">
+        <a class="h6 mb-0 nav-link <?= $cust_active_tab == 'estimates' ?   "active" : ''; ?> nav-link" target="_blank" href="<?= base_url('estimate/add?cus_id='.$cus_id); ?>">Estimates</a>
     </li>    
     <!-- <li class="nav-item">
         <a class="h6 mb-0 nav-link <?= $active_tab == 'leadSource' ?   "active" : ''; ?> nav-link">Import/Audit</a>

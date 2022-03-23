@@ -182,6 +182,23 @@ class Job extends MY_Controller
             $this->page_data['jobs_data_items'] = $this->jobs_model->get_specific_job_items($id);
         }
 
+        $default_customer_id = 0;
+        $default_customer_name = '';
+
+        if( $this->input->get('cus_id') ){
+            $this->load->model('AcsProfile_model');         
+            $customer = $this->AcsProfile_model->getByProfId($this->input->get('cus_id'));
+            if( $customer ){
+                $default_customer_id = $customer->prof_id;
+                $default_customer_name = $customer->first_name . ' ' . $customer->last_name;
+            }
+            $default_customer_id = $this->input->get('cus_id');
+
+        }
+
+        $this->page_data['default_customer_id'] = $default_customer_id;
+        $this->page_data['default_customer_name'] = $default_customer_name;
+
         add_css([
             'assets/css/esign/fill-and-sign/fill-and-sign.css',
         ]);
