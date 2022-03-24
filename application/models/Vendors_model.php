@@ -873,6 +873,11 @@ class Vendors_model extends MY_Model {
 		$removeID = $this->db->delete('cashflow_planned');	
 	}
 
+	public function get_accounting_expense($company_id){
+		$query = $this->db->get('accounting_expense');
+		return $query->result();
+	}
+
 	public function getcashflowplan($company_id)
 	{
 		// $this->db->where('company_id', $company_id);

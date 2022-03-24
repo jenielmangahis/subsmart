@@ -212,9 +212,19 @@ class EsignEditor extends MY_Controller
     {
         $userId = logged('id');
         $query = <<<SQL
-            SELECT `l`.`id`, `l`.`title`, `l`.`content`, `l`.`is_active`, `l`.`user_id`, `c`.`name` FROM `esign_editor_letters` AS `l`
-                LEFT JOIN `esign_editor_categories` AS `c` ON `l`.`category_id` = `c`.`id`
-            WHERE (`l`.`user_id` = {$userId} OR `l`.`user_id` IS NULL);
+            SELECT
+                `l`.`id`,
+                `l`.`title`,
+                `l`.`content`,
+                `l`.`is_active`,
+                `l`.`user_id`,
+                `c`.`name` AS `category`,
+                IF(`f`.`id`, TRUE, FALSE) as `is_favorite`
+                    FROM `esign_editor_letters` AS `l`
+                    LEFT JOIN `esign_editor_categories` AS `c` ON `l`.`category_id` = `c`.`id`
+                    LEFT JOIN `esign_editor_favorite_letters` AS `f` ON `l`.`id` = `f`.`letter_id`
+            WHERE (`l`.`user_id` = {$userId} OR `l`.`user_id` IS NULL)
+            ORDER BY `l`.`title`;
 SQL;
 
         $query = $this->db->query($query);
@@ -577,11 +587,35 @@ SQL;
 
     public function apiGetLetterByCategoryId($categoryId)
     {
-        $this->db->where('category_id', $categoryId);
-        $categories = $this->db->get('esign_editor_letters')->result();
+        $limit = $this->input->get('limit') ?? 10;
+        $offset = $this->input->get('offset') ?? 0;
+        $search = $this->input->get('search');
+
+        $ids = null;
+        if ($categoryId === 'favorite') {
+            // gets favorite letter ids
+            $this->db->where('company_id', logged('company_id'));
+            $this->db->where('user_id', logged('id'));
+            $favorites = $this->db->get('esign_editor_favorite_letters')->result();
+            $ids = empty($favorites) ? [-1] : array_column($favorites, 'letter_id');
+        }
+
+        if ($categoryId !== 'favorite') {
+            $this->db->where('category_id', $categoryId);
+        }
+        if (!is_null($search)) {
+            $this->db->like('title', $search);
+        }
+        if (is_array($ids)) {
+            $this->db->where_in('id', $ids);
+        }
+
+        $this->db->order_by('title', 'asc');
+        $this->db->limit((int) $limit, (int) $offset);
+        $letters = $this->db->get('esign_editor_letters')->result();
 
         header('content-type: application/json');
-        echo json_encode(['data' => $categories]);
+        echo json_encode(['data' => $letters, 'is_last' => count($letters) < $limit]);
     }
 
     public function apiGetCustomer($id)
@@ -640,7 +674,7 @@ SQL;
 
             $callback = function () use ($getter, $placeholderParam) {
                 $value = $getter($placeholderParam);
-                if ($this->isImage($value)) {
+                if (!empty($value) && is_string($value) && $this->isImage($value)) {
                     return str_replace('{source}', $value, '<img src="{source}" width="200" alt="" />');
                 }
                 return $value;
@@ -890,5 +924,36 @@ SQL;
         } catch (Throwable $th) {
             return 'haha';
         }
+    }
+
+    public function apiToggleFavoriteLetter($letterId)
+    {
+        $userId = logged('id');
+        $companyId = logged('company_id');
+
+        $this->db->where('user_id', $userId);
+        $this->db->where('company_id', $companyId);
+        $this->db->where('letter_id', $letterId);
+        $favorite = $this->db->get('esign_editor_favorite_letters')->row();
+        $isFavorite = false;
+
+        if (is_null($favorite)) {
+            $isFavorite = true;
+            $this->db->insert('esign_editor_favorite_letters', [
+                'user_id' => $userId,
+                'company_id' => $companyId,
+                'letter_id' => $letterId,
+            ]);
+        } else {
+            $this->db->where('id', $favorite->id);
+            $this->db->delete('esign_editor_favorite_letters');
+        }
+
+        $this->db->where('id', $letterId);
+        $letter = $this->db->get('esign_editor_letters')->row();
+        $letter->is_favorite = $isFavorite;
+
+        header('content-type: application/json');
+        echo json_encode(['data' => $letter]);
     }
 }

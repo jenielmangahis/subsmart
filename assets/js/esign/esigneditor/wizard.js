@@ -33,6 +33,10 @@ async function initCategories() {
     $select.appendChild($option);
   });
 
+  $select.appendChild(
+    window.helpers.htmlToElement(`<option value="favorite">Favorite</option>`)
+  );
+
   if (categories.length) {
     const $option = $select.querySelector("option");
     initLetters($option.value);
@@ -48,21 +52,34 @@ async function initLetters(categoryId) {
 
   const $select = document.getElementById("letter");
   $select.innerHTML = "";
-  $select.appendChild(
-    window.helpers.htmlToElement(
-      `<option selected="selected" value="">Select letter</option>`
-    )
-  );
 
-  const { data: letters } = await window.api.getLetterByCategoryId(categoryId);
-  letters.forEach((letter) => {
-    const $option = window.helpers.htmlToElement(
-      `<option value="${letter.id}">${letter.title}</option>`
-    );
-    $select.appendChild($option);
+  $($select).select2({
+    placeholder: "Select letter",
+    ajax: {
+      url: `${window.api.prefixURL}/EsignEditor/apiGetLetterByCategoryId/${categoryId}`,
+      data: (params) => {
+        const limit = 10;
+        const page = params.page || 1;
+
+        return {
+          limit,
+          search: params.term,
+          offset: page === 1 ? 0 : (page - 1) * limit,
+        };
+      },
+      processResults: (response) => {
+        return {
+          results: response.data.map((letter) => ({
+            id: letter.id,
+            text: letter.title,
+          })),
+          pagination: {
+            more: !response.is_last,
+          },
+        };
+      },
+    },
   });
-
-  $($select).select2();
 }
 
 async function initPlaceholders(customer) {
@@ -78,7 +95,7 @@ async function initPlaceholders(customer) {
 function appendPlaceholderInList(placeholder) {
   const $placeholderList = document.querySelector(".placeholders__list");
   const $item = window.helpers.htmlToElement(
-    `<li data-id=${placeholder.id}>
+    `<li>
       {${placeholder.code}} - <strong>${placeholder.description}</strong>
     </li>`
   );

@@ -44,7 +44,7 @@
         <a class="h6 mb-0 nav-link" href="<?= base_url('esign/createTemplate') ?> nav-link">Send Letters</a>
     </li>
     <li class="nav-item">
-        <a class="h6 mb-0 nav-link <?= $cust_active_tab == 'credit_industry' ?   "active" : ''; ?> nav-link" href="<?= base_url('customer/credit_industry/'.$cus_id) ?>">Credit Industry</a>
+        <a class="h6 mb-0 nav-link <?= $cust_active_tab == 'call' ?   "active" : ''; ?> nav-link" href="<?= base_url('customer/call/'.$cus_id) ?>">Call</a>
     </li>
     <li class="nav-item">
         <a class="h6 mb-0 nav-link banking-sub-tab <?= $active_tab == 'header' ?   "active" : ''; ?> nav-link">Payment</a>
@@ -62,5 +62,8 @@
     <li class="nav-item">
         <a class="h6 mb-0 nav-link <?= $cust_active_tab == 'activites' ?   "active" : ''; ?> nav-link" href="<?= base_url('customer/activities/'.$cus_id) ?>">
         Activity</a>
+    </li>
+    <li class="nav-item">
+        <a class="h6 mb-0 nav-link" href="<?= base_url('vault/mylibrary'); ?>">eSign</a>
     </li>
 </ul>

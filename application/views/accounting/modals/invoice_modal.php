@@ -112,13 +112,13 @@
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="job-location">Job location (optional, select, or add new one)</label>
-                                                <input type="text" class="form-control" id="job-location" name="job_location">
+                                                <input type="text" class="form-control" id="job-location" name="job_location" value="<?=isset($invoice) ? $invoice->job_location : ''?>">
                                             </div>
                                         </div>
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="job-name">Job name (optional)</label>
-                                                <input type="text" class="form-control" id="job-name" name="job_name">
+                                                <input type="text" class="form-control" id="job-name" name="job_name" value="<?=isset($invoice) ? $invoice->job_name : ''?>">
                                             </div>
                                         </div>
                                     </div>
@@ -151,13 +151,13 @@
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="location-of-sale">Location of sale</label>
-                                                <input type="text" class="form-control" id="location-of-sale" name="location_of_sale">
+                                                <input type="text" class="form-control" id="location-of-sale" name="location_of_sale" value="<?=isset($invoice) ? $invoice->location_scale : ''?>">
                                             </div>
                                         </div>
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="tracking-no">Tracking no.</label>
-                                                <input type="text" class="form-control" id="tracking-no" name="tracking_no">
+                                                <input type="text" class="form-control" id="tracking-no" name="tracking_no" value="<?=isset($invoice) ? $invoice->tracking_number : ''?>">
                                             </div>
                                         </div>
                                     </div>
@@ -166,19 +166,19 @@
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="ship-via">Ship via</label>
-                                                <input type="text" class="form-control" id="ship-via" name="ship_via">
+                                                <input type="text" class="form-control" id="ship-via" name="ship_via" value="<?=isset($invoice) ? $invoice->ship_via : ''?>">
                                             </div>
                                         </div>
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="shipping-date">Shipping date</label>
-                                                <input type="text" class="form-control date" id="shipping-date" name="shippimg_date">
+                                                <input type="text" class="form-control date" id="shipping-date" name="shipping_date" value="<?=isset($invoice) ? date("m/d/Y", strtotime($invoice->shipping_date)) : ''?>">
                                             </div>
                                         </div>
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="billing-address">Billing address</label>
-                                                <textarea name="billing_address" id="billing-address" class="form-control"></textarea>
+                                                <textarea name="billing_address" id="billing-address" class="form-control"><?=isset($invoice) ? str_replace("<br />", "", $invoice->billing_address) : ''?></textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -187,25 +187,25 @@
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="invoice-no">Invoice #</label>
-                                                <input type="text" class="form-control" id="invoice-no" name="invoice_no" value="INV-<?=str_pad(intval($number) + 1, 9, "0", STR_PAD_LEFT)?>" disabled>
+                                                <input type="text" class="form-control" id="invoice-no" name="invoice_no" value="<?=isset($invoice) ? $invoice->invoice_number : 'INV-'.str_pad(intval($number) + 1, 9, "0", STR_PAD_LEFT)?>" disabled>
                                             </div>
                                         </div>
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="job-no">Job # (optional) <span class="fa fa-question-circle" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Field is auto-populated on create invoice from a Work Order." data-original-title="" title=""></span></label>
-                                                <input type="text" class="form-control" id="job-no" name="job_no">
+                                                <input type="text" class="form-control" id="job-no" name="job_no" value="<?=isset($invoice) ? $invoice->work_order_number : ''?>">
                                             </div>
                                         </div>
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="purchase-order-no">Purchase order # (optional) <span class="fa fa-question-circle" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Optional if you want to display the purchase order number on invoice." data-original-title="" title=""></span></label>
-                                                <input type="text" class="form-control" id="purchase-order-no" name="purchase_order_no">
+                                                <input type="text" class="form-control" id="purchase-order-no" name="purchase_order_no" value="<?=isset($invoice) ? $invoice->po_number : ''?>">
                                             </div>
                                         </div>
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="shipping-to">Shipping to</label>
-                                                <textarea name="shipping_to" id="shipping-to" class="form-control"></textarea>
+                                                <textarea name="shipping_to" id="shipping-to" class="form-control"><?=isset($invoice) ? str_replace("<br />", "", $invoice->shipping_to_address) : ''?></textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -214,28 +214,28 @@
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="date-issued">Date issued <span class="text-danger">*</span></label>
-                                                <input type="text" name="date_issued" id="date-issued" class="form-control date">
+                                                <input type="text" name="date_issued" id="date-issued" class="form-control date" value="<?=isset($invoice) ? date("m/d/Y", strtotime($invoice->date_issued)) : ''?>">
                                             </div>
                                         </div>
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="due-date">Due date <span class="text-danger">*</span></label>
-                                                <input type="text" name="due_date" id="due-date" class="form-control date">
+                                                <input type="text" name="due_date" id="due-date" class="form-control date" value="<?=isset($invoice) ? date("m/d/Y", strtotime($invoice->due_date)) : ''?>">
                                             </div>
                                         </div>
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="status">Status <span class="text-danger">*</span></label>
                                                 <select name="status" id="status" class="form-control">
-                                                    <option value="Draft">Draft</option>
-                                                    <option value="Submitted">Submitted</option>
-                                                    <option value="Partially Paid">Partially Paid</option>
-                                                    <option value="Paid">Paid</option>
-                                                    <option value="Due">Due</option>
-                                                    <option value="Overdue">Overdue</option>
-                                                    <option value="Approved">Approved</option>
-                                                    <option value="Declined">Declined</option>
-                                                    <option value="Schedule">Schedule</option>
+                                                    <option value="Draft" <?=isset($invoice) && $invoice->status === 'Draft' ? 'selected' : ''?>>Draft</option>
+                                                    <option value="Submitted" <?=isset($invoice) && $invoice->status === 'Submitted' ? 'selected' : ''?>>Submitted</option>
+                                                    <option value="Partially Paid" <?=isset($invoice) && $invoice->status === 'Partially Paid' ? 'selected' : ''?>>Partially Paid</option>
+                                                    <option value="Paid" <?=isset($invoice) && $invoice->status === 'Paid' ? 'selected' : ''?>>Paid</option>
+                                                    <option value="Due" <?=isset($invoice) && $invoice->status === 'Due' ? 'selected' : ''?>>Due</option>
+                                                    <option value="Overdue" <?=isset($invoice) && $invoice->status === 'Overdue' ? 'selected' : ''?>>Overdue</option>
+                                                    <option value="Approved" <?=isset($invoice) && $invoice->status === 'Approved' ? 'selected' : ''?>>Approved</option>
+                                                    <option value="Declined" <?=isset($invoice) && $invoice->status === 'Declined' ? 'selected' : ''?>>Declined</option>
+                                                    <option value="Schedule" <?=isset($invoice) && $invoice->status === 'Schedule' ? 'selected' : ''?>>Schedule</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -344,14 +344,14 @@
                                                 <div class="col-md-4">
                                                     <div class="form-group">
                                                         <select name="deposit_request_type" id="deposit-request-type" class="form-control">
-                                                            <option value="$" selected>Deposit amount $</option>
-                                                            <option value="%">Percentage %</option>
+                                                            <option value="$" <?=isset($invoice) && $invoice->deposit_request_type === '$' ? 'selected' : ''?>>Deposit amount $</option>
+                                                            <option value="%" <?=isset($invoice) && $invoice->deposit_request_type === '%' ? 'selected' : ''?>>Percentage %</option>
                                                         </select>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <div class="form-group">
-                                                        <input type="number" class="form-control" id="deposit_amount" onchange="convertToDecimal(this)" value="0.00" step=".01">
+                                                        <input type="number" class="form-control" id="deposit-amount" name="deposit_amount" onchange="convertToDecimal(this)" value="<?=isset($invoice) ? $invoice->deposit_request : '0.00'?>" step=".01">
                                                     </div>
                                                 </div>
                                                 <div class="col-md-12">
@@ -406,7 +406,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        
+
                                         <div class="col-md-6">
                                             <table class="table-borderless bg-transparent float-right table text-right w-50">
                                                 <tbody>
@@ -416,7 +416,7 @@
                                                             <span class="transaction-subtotal">
                                                             <?php if(isset($invoice)) : ?>
                                                                 <?php
-                                                                $amount = '$'.number_format(floatval($invoice->subtotal), 2, '.', ',');
+                                                                $amount = '$'.number_format(floatval($invoice->sub_total), 2, '.', ',');
                                                                 $amount = str_replace('$-', '-$', $amount);
                                                                 echo $amount;
                                                                 ?>
@@ -432,7 +432,7 @@
                                                             <span class="transaction-taxes">
                                                             <?php if(isset($invoice)) : ?>
                                                                 <?php
-                                                                $amount = '$'.number_format(floatval($invoice->tax_total), 2, '.', ',');
+                                                                $amount = '$'.number_format(floatval($invoice->taxes), 2, '.', ',');
                                                                 $amount = str_replace('$-', '-$', $amount);
                                                                 echo $amount;
                                                                 ?>
@@ -486,7 +486,7 @@
                                                             <span class="transaction-grand-total">
                                                             <?php if(isset($invoice)) : ?>
                                                                 <?php
-                                                                $amount = '$'.number_format(floatval($invoice->total_amount), 2, '.', ',');
+                                                                $amount = '$'.number_format(floatval($invoice->grand_total), 2, '.', ',');
                                                                 $amount = str_replace('$-', '-$', $amount);
                                                                 echo $amount;
                                                                 ?>
@@ -508,12 +508,12 @@
                                                     <div class="form-group">
                                                         <h5>Message to Customer</h5>
                                                         <span class="help help-sm help-block">Add a message that will be displayed on the invoice.</span>
-                                                        <textarea name="message_to_customer" cols="40" rows="2" class="form-control">Thank you for your business.</textarea>
+                                                        <textarea name="message_to_customer" cols="40" rows="2" class="form-control"><?=isset($invoice) ? $invoice->message_to_customer : 'Thank you for your business.'?></textarea>
                                                     </div>
                                                     <div class="form-group">
                                                         <h5>Terms &amp; Conditions</h5>
                                                         <span class="help help-sm help-block">Mention your company's T&amp;C that will appear on the invoice.</span>
-                                                        <textarea name="terms_and_conditions" cols="40" rows="2" class="form-control"></textarea>
+                                                        <textarea name="terms_and_conditions" cols="40" rows="2" class="form-control"><?=isset($invoice) ? $invoice->terms_and_conditions : ''?></textarea>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-8">

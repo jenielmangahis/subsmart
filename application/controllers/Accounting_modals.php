@@ -5026,9 +5026,10 @@ class Accounting_modals extends MY_Controller
 
     private function invoice($data)
     {
-        dd($data);
         $this->form_validation->set_rules('customer', 'Customer', 'required');
         $this->form_validation->set_rules('item[]', 'Item', 'required');
+        $this->form_validation->set_rules('quantity[]', 'Item total', 'required');
+        $this->form_validation->set_rules('item_amount[]', 'Item total', 'required');
         $this->form_validation->set_rules('item_total[]', 'Item total', 'required');
 
         if(isset($data['template_name'])) {
@@ -5064,6 +5065,297 @@ class Accounting_modals extends MY_Controller
             $this->form_validation->set_rules('status', 'Status', 'required');
             $this->form_validation->set_rules('invoice_no', 'Invoice #', 'required');
         }
+
+        if ($this->form_validation->run() === false) {
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = 'Error';
+        } else {
+            $invoiceData = [
+                'customer_id' => $data['customer'],
+                'job_location' => $data['job_location'],
+                'job_name' => $data['job_name'],
+                'work_order_number' => $data['job_no'],
+                'po_number' => $data['purchase_order_no'],
+                'invoice_number' => !isset($data['template_name']) ? $data['invoice_no'] : null,
+                'date_issued' => !isset($data['template_name']) ? date("Y-m-d", strtotime($data['date_issued'])) : null,
+                'due_date' => !isset($data['template_name']) ? date("Y-m-d", strtotime($data['due_date'])) : null,
+                'status' => !isset($data['template_name']) ? $data['status'] : 'Schedule',
+                'customer_email' => $data['customer_email'],
+                'billing_address' => nl2br($data['billing_address']),
+                'shipping_to_address' => nl2br($data['shipping_to']),
+                'ship_via' => $data['ship_via'],
+                'shipping_date' => !isset($data['template_name']) ? date("Y-m-d", strtotime($data['shipping_date'])) : null,
+                'tracking_number' => $data['tracking_no'],
+                'terms' => $data['terms'],
+                'location_scale' => $data['location_of_sale'],
+                'attachments' => json_encode($data['attachments']),
+                'tags' => json_encode($data['tags']),
+                'total_due' => $data['total_amount'],
+                'balance' => $data['total_amount'],
+                'deposit_request' => $data['deposit_amount'],
+                'deposit_request_type' => $data['deposit_request_type'],
+                'message_to_customer' => $data['message_to_customer'],
+                'terms_and_conditions' => $data['terms_and_conditions'],
+                'company_id' => logged('company_id'),
+                'is_recurring' => isset($data['template_name']) ? 1 : 0,
+                'user_id' => logged('company_id'),
+                'sub_total' => $data['subtotal'],
+                'taxes' => $data['tax_total'],
+                'adjustment_name' => $data['adjustment_name'],
+                'adjustment_value' => $data['adjustment_value'],
+                'grand_total' => $data['total_amount']
+            ];
+
+            $invoiceId = $this->invoice_model->createInvoice($invoiceData);
+
+            if($invoiceId) {
+                if(isset($data['template_name'])) {
+                    if($data['recurring_type'] !== 'unscheduled') {
+                        $currentDate = date("m/d/Y");
+                        $startDate = $data['start_date'] === '' ? $currentDate : date("m/d/Y", strtotime($data['start_date']));
+                        $every = $data['recurr_every'];
+
+                        switch($data['recurring_interval']) {
+                            case 'daily' :
+                                $next = $startDate;
+                            break;
+                            case 'weekly' :
+                                $days = [
+                                    'sunday',
+                                    'monday',
+                                    'tuesday',
+                                    'wednesday',
+                                    'thursday',
+                                    'friday',
+                                    'saturday'
+                                ];
+        
+                                $day = $data['recurring_day'];
+                                $dayNum = array_search($day, $days);
+                                $next = $startDate;
+        
+                                if(intval(date("w", strtotime($next))) !== $dayNum) {
+                                    do {
+                                        $next = date("m/d/Y", strtotime("$next +1 day"));
+                                    } while(intval(date("w", strtotime($next))) !== $dayNum);
+                                }
+                            break;
+                            case 'monthly' :
+                                if($data['recurring_week'] === 'day') {
+                                    $day = $data['recurring_day'] === 'last' ? 't' : $data['recurring_day'];
+                                    $next = date("m/$day/Y", strtotime($startDate));
+
+                                    if(strtotime($currentDate) > strtotime($next)) {
+                                        $next = date("m/$day/Y", strtotime("$next +$every months"));
+                                    }
+                                } else {
+                                    $week = $data['recurring_week'];
+                                    $day = $data['recurring_day'];
+                                    $next = date("m/d/Y", strtotime("$week $day ".date("Y-m", strtotime($startDate))));
+
+                                    if(strtotime($currentDate) > strtotime($next)) {
+                                        $next = date("m/d/Y", strtotime("$week $day ".date("Y-m", strtotime("$startDate +$every months"))));
+                                    }
+                                }
+                            break;
+                            case 'yearly' :
+                                $month = $data['recurring_month'];
+                                $day = $data['recurring_day'];
+                                $previous = date("$month/$day/Y", strtotime($startDate));
+                                $next = date("$month/$day/Y", strtotime($startDate));
+
+                                if(strtotime($currentDate) > strtotime($next)) {
+                                    $next = date("$month/$day/Y", strtotime("$next +1 year"));
+                                }
+                            break;
+                        }
+                    }
+
+                    $recurringData = [
+                        'company_id' => getLoggedCompanyID(),
+                        'template_name' => $data['template_name'],
+                        'recurring_type' => $data['recurring_type'],
+                        'days_in_advance' => $data['recurring_type'] !== 'unscheduled' ? $data['days_in_advance'] !== '' ? $data['days_in_advance'] : null : null,
+                        'txn_type' => 'invoice',
+                        'txn_id' => $invoiceId,
+                        'recurring_interval' => $data['recurring_interval'],
+                        'recurring_month' => $data['recurring_interval'] === 'yearly' ? $data['recurring_month'] : null,
+                        'recurring_week' => $data['recurring_interval'] === 'monthly' ? $data['recurring_week'] : null,
+                        'recurring_day' => $data['recurring_interval'] !== 'daily' ? $data['recurring_day'] : null,
+                        'recurr_every' => $data['recurring_interval'] !== 'yearly' ? $data['recurr_every'] : null,
+                        'start_date' => $data['recurring_type'] !== 'unscheduled' ? ($data['start_date'] !== '' ? date('Y-m-d', strtotime($data['start_date'])) : null) : null,
+                        'end_type' => $data['end_type'],
+                        'end_date' => $data['end_type'] === 'by' ? date('Y-m-d', strtotime($data['end_date'])) : null,
+                        'max_occurrences' => $data['end_type'] === 'after' ? $data['max_occurrence'] : null,
+                        'current_occurrence' => 0,
+                        'next_date' => date("Y-m-d", strtotime($next)),
+                        'status' => 1
+                    ];
+    
+                    $recurringId = $this->accounting_recurring_transactions_model->create($recurringData);
+                } else {
+                    $new_status_data = array(
+                        "invoice_id" => $invoiceId,
+                        "status" => $data['status'],
+                        "note" => "First status"
+                    );
+                    $this->invoice_model->new_invoice_status($new_status_data);
+                }
+
+                if (isset($data['attachments']) && is_array($data['attachments'])) {
+                    $order = 1;
+                    foreach ($data['attachments'] as $attachmentId) {
+                        $linkAttachmentData = [
+                            'type' => 'Invoice',
+                            'attachment_id' => $attachmentId,
+                            'linked_id' => $invoiceId,
+                            'order_no' => $order
+                        ];
+
+                        $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
+
+                        $order++;
+                    }
+                }
+
+                if(isset($data['tags']) && is_array($data['tags'])) {
+                    $order = 1;
+                    foreach($data['tags'] as $tagId) {
+                        $linkTagData = [
+                            'transaction_type' => 'Invoice',
+                            'transaction_id' => $invoiceId,
+                            'tag_id' => $tagId,
+                            'order_no' => $order
+                        ];
+
+                        $linkTagId = $this->tags_model->link_tag($linkTagData);
+
+                        $order++;
+                    }
+                }
+
+                foreach($data['item'] as $key => $input) {
+                    $explode = explode('-', $input);
+
+                    $invoiceItem = [
+                        'invoice_id' => $invoiceId,
+                        'items_id' => $explode[0] === 'item' ? $explode[1] : '',
+                        'location_id' => $data['location'][$key],
+                        'qty' => $data['quantity'][$key],
+                        'package_id' => $explode[0] === 'package' ? $explode[1] : '',
+                        'cost' => $data['item_amount'][$key],
+                        'tax' => $data['item_tax'][$key],
+                        'discount' => $data['discount'][$key],
+                        'total' => $data['item_total'][$key],
+                        'tax_rate_used' => $data['item_tax'][$key]
+                    ];
+
+                    $addInvoiceItem = $this->invoice_model->add_invoice_items($invoiceItem);
+
+                    if(!isset($data['template_name'])) {
+                        if($explode[0] === 'item') {
+                            $item = $this->items_model->getItemById($explode[1])[0];
+                            $itemAccDetails = $this->items_model->getItemAccountingDetails($explode[1]);
+
+                            if ($itemAccDetails) {
+                                if(strtolower($item->type) === 'product' || strtolower($item->type) === 'inventory') {
+                                    $location = $this->items_model->getItemLocation($data['location'][$key], $explode[1]);
+                                    $newQty = intval($location->qty) - intval($data['quantity'][$key]);
+                                    $this->items_model->updateLocationQty($data['location'][$key], $explode[1], $newQty);
+
+                                    $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+                                    $newBalance = floatval($invAssetAcc->balance) - floatval($item->cost);
+                                    $newBalance = number_format($newBalance, 2, '.', ',');
+
+                                    $invAssetAccData = [
+                                        'id' => $invAssetAcc->id,
+                                        'company_id' => logged('company_id'),
+                                        'balance' => $newBalance
+                                    ];
+
+                                    $this->chart_of_accounts_model->updateBalance($invAssetAccData);
+                                } else {
+                                    $incomeAcc = $this->chart_of_accounts_model->getById($itemAccDetails->income_account_id);
+                                    $incomeAccType = $this->account_model->getById($incomeAcc->account_id);
+
+                                    if ($incomeAccType->account_name === 'Credit Card') {
+                                        $newBalance = floatval($incomeAcc->balance) + floatval($data['item_total'][$key]);
+                                    } else {
+                                        $newBalance = floatval($incomeAcc->balance) - floatval($data['item_total'][$key]);
+                                    }
+                                    $newBalance = number_format($newBalance, 2, '.', ',');
+
+                                    $incomeAccData = [
+                                        'id' => $incomeAcc->id,
+                                        'company_id' => logged('company_id'),
+                                        'balance' => $newBalance
+                                    ];
+
+                                    $this->chart_of_accounts_model->updateBalance($incomeAccData);
+                                }
+                            }
+                        } else {
+                            $package = $this->items_model->get_package_by_id($explode[1]);
+                            $packageItems = $this->items_model->get_package_items($explode[1]);
+
+                            foreach($packageItems as $packageItem) {
+                                $item = $this->items_model->getItemById($packageItem->item_id)[0];
+                                $itemAccDetails = $this->items_model->getItemAccountingDetails($packageItem->item_id);
+                                $totalQty = intval($packageItem->quantity) * intval($data['quantity'][$key]);
+
+                                if ($itemAccDetails) {
+                                    if(strtolower($item->type) === 'product' || strtolower($item->type) === 'inventory') {
+                                        $location = $this->items_model->get_first_location($packageItem->item_id);
+                                        $newQty = intval($location->qty) - intval($totalQty);
+                                        $this->items_model->updateLocationQty($location->id, $packageItem->item_id, $newQty);
+
+                                        $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+                                        $totalAmount = floatval($item->cost) * floatval($totalQty);
+                                        $newBalance = floatval($invAssetAcc->balance) - floatval($totalAmount);
+                                        $newBalance = number_format($newBalance, 2, '.', ',');
+
+                                        $invAssetAccData = [
+                                            'id' => $invAssetAcc->id,
+                                            'company_id' => logged('company_id'),
+                                            'balance' => $newBalance
+                                        ];
+
+                                        $this->chart_of_accounts_model->updateBalance($invAssetAccData);
+                                    } else {
+                                        $incomeAcc = $this->chart_of_accounts_model->getById($itemAccDetails->income_account_id);
+                                        $incomeAccType = $this->account_model->getById($incomeAcc->account_id);
+                                        $totalAmount = floatval($item->price) * floatval($totalQty);
+
+                                        if ($incomeAccType->account_name === 'Credit Card') {
+                                            $newBalance = floatval($incomeAcc->balance) + floatval($totalAmount);
+                                        } else {
+                                            $newBalance = floatval($incomeAcc->balance) - floatval($totalAmount);
+                                        }
+                                        $newBalance = number_format($newBalance, 2, '.', ',');
+
+                                        $incomeAccData = [
+                                            'id' => $incomeAcc->id,
+                                            'company_id' => logged('company_id'),
+                                            'balance' => $newBalance
+                                        ];
+
+                                        $this->chart_of_accounts_model->updateBalance($incomeAccData);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            $return = [];
+            $return['data'] = $invoiceId;
+            $return['success'] = $invoiceId ? true : false;
+            $return['message'] = $invoiceId ? 'Entry Successful!' : 'An unexpected error occured!';
+        }
+
+        return $return;
     }
 
     private function receive_payment($data)
@@ -9116,8 +9408,23 @@ class Accounting_modals extends MY_Controller
             case 'receive-payment' :
                 $attachments = $this->accounting_attachments_model->get_attachments('Payment', $linkedId);
             break;
+            case 'invoice' :
+                $attachments = $this->accounting_attachments_model->get_attachments('Invoice', $linkedId);
+            break;
             case 'credit-memo' :
                 $attachments = $this->accounting_attachments_model->get_attachments('Credit Memo', $linkedId);
+            break;
+            case 'sales-receipt' :
+                $attachments = $this->accounting_attachments_model->get_attachments('Sales Receipt', $linkedId);
+            break;
+            case 'refund-receipt' :
+                $attachments = $this->accounting_attachments_model->get_attachments('Refund Receipt', $linkedId);
+            break;
+            case 'delayed-charge' :
+                $attachments = $this->accounting_attachments_model->get_attachments('Delayed Charge', $linkedId);
+            break;
+            case 'delayed-credit' :
+                $attachments = $this->accounting_attachments_model->get_attachments('Delayed Credit', $linkedId);
             break;
         }
 
@@ -9195,6 +9502,9 @@ class Accounting_modals extends MY_Controller
             break;
             case 'delayed-charge' :
                 $this->view_delayed_charge($transactionId);
+            break;
+            case 'invoice' :
+                $this->view_invoice($transactionId);
             break;
         }
     }
@@ -9644,6 +9954,21 @@ class Accounting_modals extends MY_Controller
         $this->page_data['items'] = $items;
         $this->page_data['tags'] = $this->tags_model->get_transaction_tags('Delayed Charge', $delayedChargeId);
         $this->load->view("accounting/modals/delayed_charge_modal", $this->page_data);
+    }
+
+    private function view_invoice($invoiceId)
+    {
+        $invoice = $this->invoice_model->getinvoice($invoiceId);
+        $invoiceItems = $this->invoice_model->get_invoice_items($invoiceId);
+        $paymentRecords = $this->accounting_invoices_model->get_invoice_payment_records($invoice->invoice_number);
+        $term = $this->accounting_terms_model->getById($invoice->terms);
+
+        $this->page_data['invoice'] = $invoice;
+        $this->page_data['invoiceItems'] = $invoiceItems;
+        $this->page_data['payments'] = $paymentRecords;
+        $this->page_data['term'] = $term;
+        $this->page_data['tags'] = $this->tags_model->get_transaction_tags('Invoice', $invoiceId);
+        $this->load->view("accounting/modals/invoice_modal", $this->page_data);
     }
 
     public function load_bills_payed($billPaymentId)
@@ -14573,6 +14898,28 @@ class Accounting_modals extends MY_Controller
                             'id' => $charge->id,
                             'type' => !in_array($charge->ref_no, ['', null, '0']) ? 'Delayed Charge No.'.$charge->ref_no : 'Delayed Charge',
                             'date' => date("m/d/Y", strtotime($charge->delayed_charge_date)),
+                            'amount' => str_replace('$-', '-$', $amount),
+                            'name' => $name
+                        ];
+                    }
+                }
+            break;
+            case 'invoices' :
+                $transactions = $this->invoice_model->get_company_invoices(['company_id' => logged('company_id')]);
+                usort($transactions, function($a, $b) {
+                    return strtotime($b->date_created) > strtotime($a->date_created);
+                });
+
+                foreach($transactions as $invoice) {
+                    $amount = '$'.number_format(floatval($invoice->total_due), 2, '.', ',');
+                    $customer = $this->accounting_customers_model->get_by_id($invoice->customer_id);
+                    $name = $customer->first_name . ' ' . $customer->last_name;
+
+                    if(count($data) < 10) {
+                        $data[] = [
+                            'id' => $invoice->id,
+                            'type' => 'Invoice No.'.str_replace('INV-', '', $invoice->invoice_number),
+                            'date' => date("m/d/Y", strtotime($invoice->date_issued)),
                             'amount' => str_replace('$-', '-$', $amount),
                             'name' => $name
                         ];

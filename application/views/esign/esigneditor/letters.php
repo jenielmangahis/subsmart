@@ -44,6 +44,7 @@ ini_set('max_input_vars', 30000);
                             <th>Letter Title</th>
                             <th>Category</th>
                             <th>Status</th>
+                            <th>Favorite</th>
                             <th>Actions</th>
                         </tr>
                     </thead>

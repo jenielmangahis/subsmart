@@ -1,6 +1,6 @@
 const GET_OTHER_MODAL_URL = "/accounting/get-other-modals/";
 const vendorModals = ['#expenseModal', '#checkModal', '#billModal', '#vendorCreditModal', '#purchaseOrderModal', '#creditCardCreditModal'];
-const customerModals = ['#creditMemoModal', '#salesReceiptModal', '#refundReceiptModal', '#delayedCreditModal', '#delayedChargeModal'];
+const customerModals = ['#invoiceModal', '#creditMemoModal', '#salesReceiptModal', '#refundReceiptModal', '#delayedCreditModal', '#delayedChargeModal'];
 var rowCount = 0;
 var rowInputs = '';
 var blankRow = '';
@@ -5980,7 +5980,7 @@ $(function() {
                 <td>Package</td>
                 <td></td>
                 <td><input type="number" name="quantity[]" class="form-control text-right" required value="0" min="0"></td>
-                <td>${parseFloat(details.amount_set).toFixed(2)}</td>
+                <td><span class="item-amount">${parseFloat(details.amount_set).toFixed(2)}</span></td>
                 <td></td>
                 <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="7.50"></td>
                 <td><span class="row-total">$0.00</span></td>
@@ -6169,7 +6169,7 @@ $(function() {
         var quantityEl = $(this).parent().parent().find('input[name="quantity[]"]');
         var quantity = quantityEl.length > 0 ? quantityEl.val() : 0.00;
         var amountEl = $(this).parent().parent().find('input[name="item_amount[]"]');
-        var amount = amountEl.length > 0 ? amountEl.val() : $(this).parent().parent().find('td:nth-child(5)').html();
+        var amount = amountEl.length > 0 ? amountEl.val() : $(this).parent().parent().find('span.item-amount').html();
         var discountEl = $(this).parent().parent().find('input[name="discount[]"]');
         var discount = discountEl.length > 0 ? discountEl.val() : 0.00;
         var taxEl = $(this).parent().parent().find('input[name="item_tax[]"]');
@@ -6185,7 +6185,7 @@ $(function() {
         var taxes = 0.00;
         var discounts = 0.00;
         $('#modal-container #modal-form .modal #item-table tbody tr:not(.package-items, .package-item, .package-item-header)').each(function() {
-            var itemAmount = $(this).find('input[name="item_amount[]"]').legnth > 0 ? $(this).find('input[name="item_amount[]"]').val() : $(this).find('td:nth-child(5)').html();
+            var itemAmount = $(this).find('input[name="item_amount[]"]').length > 0 ? $(this).find('input[name="item_amount[]"]').val() : $(this).find('span.item-amount').html();
             var itemQty = $(this).find('input[name="quantity[]"]').length > 0 ? $(this).find('input[name="quantity[]"]').val() : 0;
             var itemDisc = $(this).find('input[name="discount[]"]').length > 0 ? $(this).find('input[name="discount[]"]').val() : 0.00;
             var itemTax = $(this).find('input[name="item_tax[]"]').length > 0 ? $(this).find('input[name="item_tax[]"]').val() : 0.00;
@@ -7058,16 +7058,49 @@ const submitModalForm = (event, el) => {
                 }
             });
         break;
+        case '#invoiceModal' :
+            data.set('invoice_no', $('#invoiceModal #invoice-no').val());
+        break;
     }
 
     if(customerModals.includes(modalId)) {
+        data.delete('item[]');
+        data.delete('package[]');
         data.delete('location[]');
-        $(`${modalId} table#item-table tbody tr:not(.package-items)`).each(function() {
+        data.delete('quantity[]');
+        data.delete('item_amount[]');
+        data.delete('discount[]');
+        data.delete('item_tax[]');
+        $(`${modalId} table#item-table tbody:not(#package-items-table) tr:not(.package-items, .package-item, .package-item-header)`).each(function() {
             if(data.has('item_total[]')) {
-                data.append('location[]', $(this).find('select[name="location[]"]').val());
+                if($(this).hasClass('package')) {
+                    data.append('item[]', 'package-'+$(this).find('input[name="package[]"]').val());
+                    data.append('location[]', null);
+                    data.append('item_amount[]', $(this).find('span.item-amount').html());
+                    data.append('discount[]', null);
+                } else {
+                    data.append('item[]', 'item-'+$(this).find('input[name="item[]"]').val());
+                    data.append('location[]', $(this).find('select[name="location[]"]').val());
+                    data.append('item_amount[]', $(this).find('input[name="item_amount[]"]').val());
+                    data.append('discount[]', $(this).find('input[name="discount[]"]').val());
+                }
+                data.append('item_tax[]', $(this).find('input[name="item_tax[]"]').val());
+                data.append('quantity[]', $(this).find('input[name="quantity[]"]').val());
                 data.append('item_total[]', $(this).find('span.row-total').html().replace('$', ''));
             } else {
-                data.set('location[]', $(this).find('select[name="location[]"]').val());
+                if($(this).hasClass('package')) {
+                    data.set('item[]', 'package-'+$(this).find('input[name="package[]"]').val());
+                    data.set('location[]', null);
+                    data.set('item_amount[]', $(this).find('span.item-amount').html());
+                    data.set('discount[]', null);
+                } else {
+                    data.set('item[]', 'item-'+$(this).find('input[name="item[]"]').val());
+                    data.set('location[]', $(this).find('select[name="location[]"]').val());
+                    data.set('item_amount[]', $(this).find('input[name="item_amount[]"]').val());
+                    data.set('discount[]', $(this).find('input[name="discount[]"]').val());
+                }
+                data.set('item_tax[]', $(this).find('input[name="item_tax[]"]').val());
+                data.set('quantity[]', $(this).find('input[name="quantity[]"]').val());
                 data.set('item_total[]', $(this).find('span.row-total').html().replace('$', ''));
             }
         });
@@ -9237,6 +9270,11 @@ const viewTransaction = (el) => {
                 initModalFields('delayedChargeModal', data);
 
                 $('#delayedChargeModal').modal('show');
+            break;
+            case 'invoice' :
+                initModalFields('invoiceModal', data);
+
+                $('#invoiceModal').modal('show');
             break;
         }
     });
