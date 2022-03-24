@@ -9271,6 +9271,11 @@ const viewTransaction = (el) => {
 
                 $('#delayedChargeModal').modal('show');
             break;
+            case 'invoice' :
+                initModalFields('invoiceModal', data);
+
+                $('#invoiceModal').modal('show');
+            break;
         }
     });
 }

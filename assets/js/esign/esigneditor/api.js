@@ -117,6 +117,12 @@ export function saveCustomerCustomFields(customerId, payload) {
   );
 }
 
+export function toggleFavoriteLetter(letterId) {
+  return http.post(
+    `${prefixURL}/EsignEditor/apiToggleFavoriteLetter/${letterId}`
+  );
+}
+
 const http = {
   post: sendPost,
   delete: sendDelete,

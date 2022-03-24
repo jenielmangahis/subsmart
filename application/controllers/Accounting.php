@@ -13129,10 +13129,12 @@ class Accounting extends MY_Controller
         $container = $this->vendors_model->getcashflowplan(logged('company_id'));
         $container2 =  $this->vendors_model->get_data_in_invoice(logged('company_id'));
         $container3 = $this->vendors_model->get_data_in_arpi(logged('company_id'));
+        $container4 = $this->vendors_model->get_accounting_expense(logged('company_id'));
         $data = new stdClass(); 
         $data->values = $container;
         $data->invoice = $container2;
         $data->arpi = $container3; 
+        $data->expense = $container4;
         echo json_encode($data);
     }
 

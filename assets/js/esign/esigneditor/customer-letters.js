@@ -36,6 +36,10 @@ async function initTable(customer) {
     status: (_, __, row) => {
       return row.print_status;
     },
+    sentAt: (_, __, row) => {
+      if (row.sent_at === null) return "—";
+      return moment(row.sent_at).format("MM/DD/YYYY h:mmA");
+    },
     actions: () => {
       return `
       <div>
@@ -122,6 +126,10 @@ async function initTable(customer) {
       },
       {
         render: columns.status,
+        sortable: false,
+      },
+      {
+        render: columns.sentAt,
         sortable: false,
       },
       {
@@ -282,9 +290,10 @@ function initSendModal() {
       const letters = getSelectedRowData().map((row) => ({
         id: row.id,
         print_status: "Printed/Sent",
+        sent_at: moment().format("YYYY-MM-DD H:mm:ss"),
       }));
 
-      await window.api.batchEditCustomerLetters({ letters });
+      const response = await window.api.batchEditCustomerLetters({ letters });
       await window.helpers.sleep(1);
 
       const win = window.open("", "_blank");
@@ -297,6 +306,22 @@ function initSendModal() {
       `);
 
       $modal.modal("hide");
+
+      // update talbe
+      const $table = document.getElementById("letters");
+      const table = $($table).DataTable();
+      response.data.forEach((letter) => {
+        table.row(`#row${letter.id}`).data(letter).draw();
+      });
+
+      const $checkbox = $table.querySelector(".table__checkbox--primary");
+      $checkbox.checked = false;
+
+      const $selected = $table.querySelectorAll(".table__row--selected");
+      [...$selected].forEach(($row) => {
+        $row.querySelector(".table__checkbox").checked = false;
+        $row.classList.remove("table__row--selected");
+      });
     });
   });
 

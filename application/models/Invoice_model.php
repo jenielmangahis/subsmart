@@ -965,6 +965,23 @@ class Invoice_model extends MY_Model
         $last = $query->row();
         return str_replace('INV-', '', $last->invoice_number);
     }
+
+    public function get_company_invoices($filters = [])
+    {
+        $this->db->where('company_id', $filters['company_id']);
+        $this->db->where('is_recurring', 0);
+        $this->db->where('view_flag', 0);
+        $this->db->where_not_in('status', ['Draft', 'Submitted', 'Approved', 'Declined']);
+        $query = $this->db->get('invoices');
+        return $query->result();
+    }
+
+    public function get_invoice_items($invoiceId)
+    {
+        $this->db->where('invoice_id', $invoiceId);
+        $query = $this->db->get('invoices_items');
+        return $query->result();
+    }
 }
 
 /* End of file Invoice_model.php */

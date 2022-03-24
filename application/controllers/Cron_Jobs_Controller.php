@@ -2078,93 +2078,98 @@ class Cron_Jobs_Controller extends CI_Controller
                         }  // var_dump($new_data);
                         else if ($container[$index]->schedule == "weekly") {
                             $exploded_weeks = explode(" ", $container[$index]->weekly_days);
+                            print_r($exploded_weeks);
                             $findings = "";
                             $place = 0;
-                            for ($i = 0; $i < count($exploded_weeks); $i++) {
-                                if (date("l") == $exploded_weeks[$i]) {
-                                    for ($i = 0; $i < count($exploded_weeks); $i++) {
-                                        $i = $place;
-                                        if (date("l") == $exploded_weeks[$i]) {
-                                            $new_data = array(
-                                                'created_at'        => date("Y-m-d"),
-                                                'repeating'        => "0",
-                                                'merchant_name'     => $container[$index]->merchant_name,
-                                                'amount'            => $container[$index]->amount,
-                                                'type'              => $container[$index]->type,
+                            for($i = 0; $i < count($exploded_weeks);$i++){
+                                if(date("l") == $exploded_weeks[$i]){
+                                    echo $exploded_weeks[$i];
+                                    $place = $i;
+                                    echo $place;
+                                    
+                                    $new_data = array(
+                                        'created_at'        => date("Y-m-d"),
+                                        'repeating'        => "0",
+                                        'merchant_name'     => $container[$index]->merchant_name,
+                                        'amount'            => $container[$index]->amount,
+                                        'type'              => $container[$index]->type,
+                                    );
+                                    $this->addcashflowplanRecurrinbg($new_data);
+
+                                    if ($container[$index]->end_type == "not") {
+                                        $occur = $container[$index]->end_occurence;
+                                        $occur--;
+    
+                                        if ($occur != 0) {
+                                            if($place == count($exploded_weeks)-1){
+                                                $new_data2 = array(
+                                                    'date_plan'     => date("Y-m-d", strtotime("+". $container[$index]->weekly_weeks ." weeks")),
+                                                    'end_indic'     => "on_going",
+                                                    'end_occurence' => $occur
+                                                );
+                                                $this->update_cashflow_date_amount($container[$index]->id, $new_data2);
+                                            }else{
+                                                $new_data2 = array(
+                                                    'date_plan'     => date("Y-m-d", strtotime("+1 day")),
+                                                    'end_indic'     => "on_going",
+                                                    'end_occurence' => $occur
+                                                );
+                                                $this->update_cashflow_date_amount($container[$index]->id, $new_data2);
+                                            }
+                                            
+                                        } else {
+                                            $new_data2 = array(
+                                                'end_occurence' => $occur,
+                                                'end_indic'     => "end"
                                             );
-                                            $this->addcashflowplanRecurrinbg($new_data);
-
-                                            if ($container[$index]->end_type == "not") {
-                                                $occur = $container[$index]->end_occurence;
-                                                $occur--;
-
-                                                if ($occur != 0) {
-                                                    if ($place == count($exploded_weeks) - 1) {
-                                                        $new_data2 = array(
-                                                            'date_plan'     => date("Y-m-d", strtotime("+" . $container[$index]->weekly_weeks . " weeks")),
-                                                            'end_indic'     => "on_going",
-                                                            'end_occurence' => $occur
-                                                        );
-                                                        $this->update_cashflow_date_amount($container[$index]->id, $new_data2);
-                                                    } else {
-                                                        $new_data2 = array(
-                                                            'date_plan'     => date("Y-m-d", strtotime("+1 days")),
-                                                            'end_indic'     => "on_going",
-                                                            'end_occurence' => $occur
-                                                        );
-                                                        $this->update_cashflow_date_amount($container[$index]->id, $new_data2);
-                                                    }
-                                                } else {
-                                                    $new_data2 = array(
-                                                        'end_occurence' => $occur,
-                                                        'end_indic'     => "end"
-                                                    );
-                                                    $this->update_cashflow_date_amount($container[$index]->id, $new_data2);
-                                                }
-                                            } else if ($container[$index]->end_type == "date") {
-                                                if (date("Y-m-d") != $container[$index]->end_date) {
-                                                    $new_data2 = array(
-                                                        'date_plan'     => date("Y-m-d", strtotime("+" . $container[$index]->weekly_weeks . " weeks")),
-                                                        'end_indic'     => "on_going"
-                                                    );
-                                                    if ($place == count($exploded_weeks) - 1) {
-                                                        $new_data2 = array(
-                                                            'date_plan'     => date("Y-m-d", strtotime("+" . $container[$index]->weekly_weeks . " weeks")),
-                                                            'end_indic'     => "on_going"
-                                                        );
-                                                        $this->update_cashflow_date_amount($container[$index]->id, $new_data2);
-                                                    } else {
-                                                        $new_data2 = array(
-                                                            'date_plan'     => date("Y-m-d", strtotime("+1 days")),
-                                                            'end_indic'     => "on_going",
-                                                        );
-                                                        $this->update_cashflow_date_amount($container[$index]->id, $new_data2);
-                                                    }
-                                                    $this->update_cashflow_date_amount($container[$index]->id, $new_data2);
-                                                } else {
-                                                    $new_data2 = array(
-                                                        'end_indic'     => "end"
-                                                    );
-                                                    $this->update_cashflow_date_amount($container[$index]->id, $new_data2);
-                                                }
+                                            $this->update_cashflow_date_amount($container[$index]->id, $new_data2);
+                                        }
+                                    } else if ($container[$index]->end_type == "date") {
+                                        if (date("Y-m-d") != $container[$index]->end_date) {
+                                            if($place == count($exploded_weeks)-1){
+                                                $new_data2 = array(
+                                                    'date_plan'     => date("Y-m-d", strtotime("+". $container[$index]->weekly_weeks ." weeks")),
+                                                    'end_indic'     => "on_going",
+                                                );
+                                                $this->update_cashflow_date_amount($container[$index]->id, $new_data2);
+                                            }else{
+                                                $new_data2 = array(
+                                                    'date_plan'     => date("Y-m-d", strtotime("+1 day")),
+                                                    'end_indic'     => "on_going",
+                                                );
+                                                $this->update_cashflow_date_amount($container[$index]->id, $new_data2);
                                             }
                                         } else {
                                             $new_data2 = array(
-                                                'date_plan'     => date("Y-m-d", strtotime("+1 days")),
+                                                'end_indic'     => "end"
+                                            );
+                                            $this->update_cashflow_date_amount($container[$index]->id, $new_data2);
+                                        }
+                                    }{
+                                        if($place == count($exploded_weeks)-1){
+                                            $new_data2 = array(
+                                                'date_plan'     => date("Y-m-d", strtotime("+". $container[$index]->weekly_weeks ." weeks")),
+                                                'end_indic'     => "on_going",
+                                            );
+                                            $this->update_cashflow_date_amount($container[$index]->id, $new_data2);
+                                        }else{
+                                            $new_data2 = array(
+                                                'date_plan'     => date("Y-m-d", strtotime("+1 day")),
+                                                'end_indic'     => "on_going",
                                             );
                                             $this->update_cashflow_date_amount($container[$index]->id, $new_data2);
                                         }
                                     }
-                                } else {
-                                    if (date("l") == "Saturday") {
+                                }else{
+                                    if(date("l")=="Saturday"){
                                         $new_data2 = array(
-                                            'date_plan'     => date("Y-m-d", strtotime("+" . $container[$index]->weekly_weeks . " weeks")),
-                                            'end_indic'     => "on_going"
+                                            'date_plan'     => date("Y-m-d", strtotime("+". $container[$index]->weekly_weeks ." weeks")),
+                                            'end_indic'     => "on_going",
                                         );
                                         $this->update_cashflow_date_amount($container[$index]->id, $new_data2);
-                                    } else {
+                                    }else{
                                         $new_data2 = array(
-                                            'date_plan'     => date("Y-m-d", strtotime("+1 days")),
+                                            'date_plan'     => date("Y-m-d", strtotime("+1 day")),
                                             'end_indic'     => "on_going",
                                         );
                                         $this->update_cashflow_date_amount($container[$index]->id, $new_data2);
@@ -2315,126 +2320,6 @@ class Cron_Jobs_Controller extends CI_Controller
                 }
             }
         }
-        // if($container[$index]->repeating == '0'){
-
-        // }else{
-        //     // if($container[$index]->schedule == "daily"){
-
-        //     //     if($container[$index]->d_sched == "everyday"){
-        //     //         $new_data = array(
-        //     //             'created_at'        => date("Y-m-d"),
-        //     //             'reapeating'        => "0",
-        //     //             'merchant_name'     => $container[$index]->merchant_name,
-        //     //             'amount'            => $container[$index]->amount,
-        //     //             'type'              => $container[$index]->type,
-        //     //         );
-        //     //         // $this->addcashflowplan($new_data);
-        //     //         print_r($new_data);
-
-        //     //     }else{
-        //     //         if(date("l")=="Monday" || date("l")=="Tuesday" || date("l")=="Wednesday" || date("l")=="Thursday" || date("l")=="Friday"){
-        //     //             $new_data = array(
-        //     //                 'created_at'        => date("Y-m-d"),
-        //     //                 'reapeating'        => "0",
-        //     //                 'merchant_name'     => $container[$index]->merchant_name,
-        //     //                 'amount'            => $container[$index]->amount,
-        //     //                 'type'              => $container[$index]->type,
-        //     //             );
-        //     //             print_r($new_data);
-        //     //             // $this->addcashflowplan($new_data);
-        //     //         }
-        //     //     }
-        //     //     // var_dump($new_data);
-        //     // }else 
-        //     if($container[$index]->schedule == "weekly"){
-        //        $remainder = fmod(idate("W"), 4);
-
-
-        //        if($remainder == $container[$index]->weekly_weeks){
-        //         $exploded_weeks = explode(" ",$container[$index]->weekly_days);
-        //         for($index2 = 0; $index2 < count($exploded_weeks); $index2++){
-        //             if(strtolower(date("l")) == strtolower($exploded_weeks[$index2])){
-        //                 $new_data = array(
-        //                     'created_at'        => date("Y-m-d"),
-        //                     'reapeating'        => "0",
-        //                     'merchant_name'     => $container[$index]->merchant_name,
-        //                     'amount'            => $container[$index]->amount,
-        //                     'type'              => $container[$index]->type,
-        //                 );
-        //                 // $this->addcashflowplan($new_data);
-        //             }
-        //         }
-
-        //        }else if($remainder == 0 && $container[$index]->weekly_weeks == 4){
-        //         $exploded_weeks = explode(" ",$container[$index]->weekly_days);
-        //         for($index2 = 0; $index2 < count($exploded_weeks); $index2++){
-        //             if(strtolower(date("l")) == strtolower($exploded_weeks[$index2])){
-        //                 $new_data = array(
-        //                     'created_at'        => date("Y-m-d"),
-        //                     'reapeating'        => "0",
-        //                     'merchant_name'     => $container[$index]->merchant_name,
-        //                     'amount'            => $container[$index]->amount,
-        //                     'type'              => $container[$index]->type,
-        //                 );
-        //                 // $this->addcashflowplan($new_data);
-        //             }
-        //         }
-        //        }
-        //         // echo $remainder;
-
-
-        //     }else if($container[$index]->schedule == "monthly"){
-        //         if($container[$index]->m_indic == "day"){
-        //             $remainder = fmod(idate("n"),$container[$index]->monthly_months);
-        //             if($remainder == 0 && idate("j")==$container[$index]->monthly_day){
-        //                 $new_data = array(
-        //                     'created_at'        => date("Y-m-d"),
-        //                     'reapeating'        => "0",
-        //                     'merchant_name'     => $container[$index]->merchant_name,
-        //                     'amount'            => $container[$index]->amount,
-        //                     'type'              => $container[$index]->type,
-        //                 );
-        //                 // $this->addcashflowplan($new_data);
-        //             }
-        //         }else{
-        //             $remainder = fmod(idate("n"),$container[$index]->monthly_months);
-        //             $remainder1 = fmod(idate("W"), 4);
-        //             $rank = 0;
-        //             switch($container[$index]->monthly_rank){
-        //                 case "First":
-        //                     $rank = 1;
-        //                     break;
-        //                 case "Second":
-        //                     $rank = 2;
-        //                     break;
-        //                 case "Third":
-        //                     $rank = 3;
-        //                     break;
-        //                 case "Fourth":
-        //                     $rank = 4;
-        //                     break;
-        //             }
-        //             if($remainder == $container[$index]->monthly_months && $remainder == $rank && strtolower(date("l"))==strtolower($container[$index]->monthly_week_day)){
-        //                 $new_data = array(
-        //                     'created_at'        => date("Y-m-d"),
-        //                     'reapeating'        => "0",
-        //                     'merchant_name'     => $container[$index]->merchant_name,
-        //                     'amount'            => $container[$index]->amount,
-        //                     'type'              => $container[$index]->type,
-        //                 );
-        //                 // $this->addcashflowplan($new_data);
-        //             }else if($remainder == $container[$index]->monthly_months && $remainder == 0 && $rank == 4 && strtolower(date("l"))==strtolower($container[$index]->monthly_week_day)){
-        //                 $new_data = array(
-        //                     'created_at'        => date("Y-m-d"),
-        //                     'reapeating'        => "0",
-        //                     'merchant_name'     => $container[$index]->merchant_name,
-        //                     'amount'            => $container[$index]->amount,
-        //                     'type'              => $container[$index]->type,
-        //                 );
-        //                 // $this->addcashflowplan($new_data);
-        //             }
-        //         }
-        //     }
-        // }
+        
     }
 }

@@ -39,6 +39,7 @@ ini_set('max_input_vars', 30000);
                         <th>Letter Title</th>
                         <th>Created</th>
                         <th>Print Status</th>
+                        <th>Date Printed/Sent</th>
                         <th>Actions</th>
                     </tr>
                 </thead>

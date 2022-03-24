@@ -424,3 +424,18 @@
     height: var(--input-height);
   }
 }
+
+.btn-favorite {
+  border: 0;
+  padding: 0;
+  background-color: transparent;
+  width: 30px;
+  height: 30px;
+  font-size: 18px;
+  color: #b4b4b4;
+
+  &--active,
+  &:hover {
+    color: #fc2e63;
+  }
+}

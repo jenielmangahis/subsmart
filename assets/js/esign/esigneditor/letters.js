@@ -25,6 +25,10 @@ window.document.addEventListener("DOMContentLoaded", async () => {
         render: columns.status,
       },
       {
+        render: columns.favorite,
+        class: "text-center",
+      },
+      {
         filter: false,
         sortable: false,
         render: columns.actions,
@@ -39,7 +43,11 @@ window.document.addEventListener("DOMContentLoaded", async () => {
   table.on("click", "[data-action]", async (event) => {
     event.preventDefault();
 
-    const $target = $(event.target);
+    let $target = $(event.target);
+    if (!$target.get(0).dataset.action) {
+      $target = $target.closest("[data-action]");
+    }
+
     const $parent = $target.closest("tr");
     const rows = table.rows().data().toArray();
 
@@ -47,10 +55,10 @@ window.document.addEventListener("DOMContentLoaded", async () => {
     const row = rows.find(({ id }) => id == rowId);
 
     const action = $target.data("action");
-    const func = actions[action].bind(this);
+    if (!action || !actions[action]) return;
 
-    if (!func) return;
-    await actions[action](row, table, event);
+    const func = actions[action].bind(this);
+    await func(row, table, event);
   });
 
   const $categorySelect = $("#category");
@@ -91,10 +99,22 @@ const columns = {
     return `<a href="#" class="link" data-action="preview">${row.title}</a>`;
   },
   category: (_, __, row) => {
-    return row.name;
+    return row.category;
   },
   status: (_, __, row) => {
     return Number.parseInt(row.is_active) ? "Active" : "Inactive";
+  },
+  favorite: (_, __, { is_favorite }) => {
+    const $button = window.helpers.htmlToElement(`
+      <button class="btn-favorite" data-action="favorite">
+        <i class="fa fa-heart"></i>
+      </button>`);
+
+    if (is_favorite === true || is_favorite == 1) {
+      $button.classList.add("btn-favorite--active");
+    }
+
+    return $button.outerHTML;
   },
   actions: (_, __, row) => {
     if (row.user_id === null) {
@@ -140,6 +160,11 @@ const actions = {
 
     $preview.html($letter);
     $modal.modal("show");
+  },
+  favorite: async (row, table) => {
+    const { data } = await window.api.toggleFavoriteLetter(row.id);
+    row.is_favorite = data.is_favorite;
+    table.row(`#row${row.id}`).data(row).draw();
   },
 };
 
