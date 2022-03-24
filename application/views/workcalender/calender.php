@@ -2117,9 +2117,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                           cancelButtonColor: '#d33',
                           confirmButtonText: 'Ok'
                       }).then((result) => {
-                          if (result.value) {
+                          //if (result.value) {
                             reload_calendar();
-                          }
+                          //}
                       });
                   }else{
                       Swal.fire({
@@ -2165,6 +2165,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                {
                   if( o.is_success ){
                       $("#modal-create-appointment").modal('hide');
+                      $("#modal-create-wait-list").modal('hide');
                       Swal.fire({
                           title: 'Success',
                           text: 'Appointment wait list was successfully created.',
@@ -2174,10 +2175,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                           cancelButtonColor: '#d33',
                           confirmButtonText: 'Ok'
                       }).then((result) => {
-                          if (result.value) {
-                            $("#modal-create-wait-list").modal('hide');
+                          //if (result.value) {
                             load_wait_list();
-                          }
+                          //}
                       });
                   }else{
                       Swal.fire({
@@ -2217,9 +2217,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                           cancelButtonColor: '#d33',
                           confirmButtonText: 'Ok'
                       }).then((result) => {
-                          if (result.value) {                            
+                          //if (result.value) {                            
                             reload_calendar();
-                          }
+                          //}
                       });
                   }else{
                       Swal.fire({
@@ -2266,7 +2266,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     $(".btn-delete-appointment-waitlist").click(function(){
         Swal.fire({
           title: 'Do you want to delete selected wait list?',
-          icon: 'warning',
+          icon: 'question',
           showCancelButton: true,
           confirmButtonText: 'Delete',
           confirmButtonColor: '#ec4561'
@@ -2640,9 +2640,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                           cancelButtonColor: '#d33',
                           confirmButtonText: 'Ok'
                       }).then((result) => {
-                          if (result.value) {                            
+                          //if (result.value) {                            
                             load_wait_list();
-                          }
+                          //}
                       });
                   }else{
                       $("#w_is_wait_list").val(0);

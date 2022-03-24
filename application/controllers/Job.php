@@ -182,6 +182,23 @@ class Job extends MY_Controller
             $this->page_data['jobs_data_items'] = $this->jobs_model->get_specific_job_items($id);
         }
 
+        $default_customer_id = 0;
+        $default_customer_name = '';
+
+        if( $this->input->get('cus_id') ){
+            $this->load->model('AcsProfile_model');         
+            $customer = $this->AcsProfile_model->getByProfId($this->input->get('cus_id'));
+            if( $customer ){
+                $default_customer_id = $customer->prof_id;
+                $default_customer_name = $customer->first_name . ' ' . $customer->last_name;
+            }
+            $default_customer_id = $this->input->get('cus_id');
+
+        }
+
+        $this->page_data['default_customer_id'] = $default_customer_id;
+        $this->page_data['default_customer_name'] = $default_customer_name;
+
         add_css([
             'assets/css/esign/fill-and-sign/fill-and-sign.css',
         ]);
@@ -888,6 +905,10 @@ class Job extends MY_Controller
                 $input['omw_time'] = date("H:i A");
             }
             if ($this->general->update_with_key($input, $id, "jobs")) {
+                //Log audit trail
+                $job = $this->jobs_model->get_specific_job($id);
+                customerAuditLog(logged('id'), $job->customer_id, $job->id, 'Jobs', 'Updated status of Job #'.$job->job_number.' to '.$input['status']);
+
                 echo "Success";
             } else {
                 echo "Error";
@@ -1123,9 +1144,15 @@ class Job extends MY_Controller
             ),
             'table' => 'jobs'
         );
-        if ($this->general->delete_($remove_job)) {
-            echo '1';
-        }
+
+        //Get Job
+        $job = $this->jobs_model->get_specific_job($_POST['job_id']);
+        if( $job ){
+            if ($this->general->delete_($remove_job)) {
+                customerAuditLog(logged('id'), $job->customer_id, $job->id, 'Jobs', 'Deleted Job #'.$job->job_number);
+                echo '1';
+            }    
+        }        
     }
 
     public function add_tag()
@@ -1333,6 +1360,8 @@ class Job extends MY_Controller
             'date_issued' => $input['start_date'],
         );
         $jobs_id = $this->general->add_return_id($jobs_data, 'jobs');
+
+        customerAuditLog(logged('id'), $input['customer_id'], $jobs_id, 'Jobs', 'Added New Job #'.$job_number);
 
         if (isset($input['item_id'])) {
             $devices = count($input['item_id']);

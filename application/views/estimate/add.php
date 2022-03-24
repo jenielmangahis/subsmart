@@ -334,7 +334,12 @@ input:checked + .slider:before {
                                     <select name="customer_id"  id="sel-customer" class="form-control" required>
                                         <option value="0">Select a customer</option>
                                         <?php foreach ($customers as $customer):?>
-                                        <option value="<?php echo $customer->prof_id?>"><?php echo $customer->contact_name . '' . $customer->first_name."&nbsp;".$customer->last_name;?> </option>
+                                        <?php if( $default_customer_id > 0 ){ ?>
+                                            <option <?= $default_customer_id == $customer->prof_id ? 'selected="selected"' : ''; ?> value="<?php echo $customer->prof_id?>"><?php echo $customer->contact_name . '' . $customer->first_name."&nbsp;".$customer->last_name;?> </option>
+                                        <?php }else{ ?>
+                                            <option value="<?php echo $customer->prof_id?>"><?php echo $customer->contact_name . '' . $customer->first_name."&nbsp;".$customer->last_name;?> </option>
+                                        <?php } ?>
+                                        
                                         <?php endforeach; ?>
                                     </select>
                                     </div>
@@ -1029,8 +1034,15 @@ function initialize() {
 $(document).ready(function(){
  
     $('#sel-customer').change(function(){
-    var id  = $(this).val();
-    //alert(id);
+        var id  = $(this).val();
+        load_customer_address(id);
+    });
+
+    <?php if( $default_customer_id > 0 ){ ?>
+        load_customer_address("<?= $default_customer_id; ?>");
+    <?php } ?>
+
+    function load_customer_address(id){
 
         $.ajax({
             type: 'POST',
@@ -1048,7 +1060,7 @@ $(document).ready(function(){
        
                 }
         });
-    });
+    }
 
     var table = $('#dt-package-list').DataTable({
       "searching" : true,

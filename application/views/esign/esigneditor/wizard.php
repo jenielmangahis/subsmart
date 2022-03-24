@@ -4,6 +4,17 @@ include viewPath('includes/header');
 ini_set('max_input_vars', 30000);
 ?>
 
+<style>
+/* https://github.com/select2/select2/issues/4939#issuecomment-306176634 */
+html,
+body {
+  height: 100%;
+}
+.footer {
+    display: none;
+}
+</style>
+
 <div class="wrapper wrapper--loading" role="wrapper">
     <div class="esigneditor__loader">
         <div class="esigneditor__loaderInner">
@@ -76,7 +87,7 @@ ini_set('max_input_vars', 30000);
                             Manage Customer Custom Field
                         </a>
                     </legend>
-                    <ul class="placeholders__list"></ul>
+                    <ul class="placeholders__list mb-3"></ul>
                 </fieldset>
             </div>
         </form>

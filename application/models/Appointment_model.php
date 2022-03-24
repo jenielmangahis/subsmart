@@ -105,6 +105,14 @@ class Appointment_model extends MY_Model
         $query = $this->db->get();
         return $query->result();
     }
+
+    public function createAppointment($post_data)
+    {
+        $this->db->insert($this->table, $post_data);
+        $insert_id = $this->db->insert_id();
+
+        return  $insert_id;
+    }
 }
 
 /* End of file Appointment_model.php */

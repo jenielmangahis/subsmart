@@ -479,6 +479,13 @@ class Items_model extends MY_Model
         $query = $this->db->get('package_details');
         return $query->row();
     }
+
+    public function get_first_location($itemId)
+    {
+        $this->db->where('item_id', $itemId);
+        $query = $this->db->get('items_has_storage_loc');
+        return $query->row();
+    }
 }
 
 

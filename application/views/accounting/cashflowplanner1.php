@@ -1000,3 +1000,4 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 </script>
 
 <?php include viewPath('includes/footer_accounting');
+      include viewPath('accounting/cashflow_modal');
