@@ -5043,9 +5043,6 @@ class Workorder extends MY_Controller
             $ai++;
         }
         
-
-        
-
         $update_data = array(
             'id'                    => $this->input->post('wo_id_alarm'),
             // 'work_order_number'     => $this->input->post('workorder_number'),
@@ -5131,6 +5128,11 @@ class Workorder extends MY_Controller
         );
 
         $addQuery = $this->workorder_model->update_workorder_alarm($update_data);
+
+        $objWorkOrder = $this->workorder_model->getDataByWO($this->input->post('wo_id_alarm'));
+        if( $objWorkOrder ){
+            customerAuditLog(logged('id'), $objWorkOrder->id, $objWorkOrder->customer_id, 'Workorder', 'Updated workorder #'.$objWorkOrder->work_order_number);
+        }        
 
         $cameras = array(
             'work_order_id'         => $this->input->post('wo_id_alarm'),
@@ -5997,6 +5999,8 @@ class Workorder extends MY_Controller
         );
 
         $addQuery = $this->workorder_model->save_workorder($new_data);
+
+        customerAuditLog(logged('id'), $w_acs, $addQuery, 'Workorder', 'Crated workorder #'.$this->input->post('workorder_number'));
 
         
 

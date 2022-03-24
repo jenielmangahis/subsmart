@@ -20,19 +20,19 @@
         <a class="h6 mb-0 nav-link <?= $cust_active_tab == 'jobs' ?   "active" : ''; ?> nav-link" href="<?= base_url('customer/jobs_list/'.$cus_id) ?>">Jobs</a>
     </li> -->
     <li class="nav-item">
-        <a class="h6 mb-0 nav-link <?= $cust_active_tab == 'jobs' ?   "active" : ''; ?> nav-link" onclick="window.open('<?= base_url('job/new_job1?cus_id='.$cus_id); ?>', '_blank', 'location=yes,height=570,width=520,scrollbars=yes,status=yes');" href="javascript:void(0);">Jobs</a>
+        <a class="h6 mb-0 nav-link <?= $cust_active_tab == 'jobs' ?   "active" : ''; ?> nav-link" onclick="window.open('<?= base_url('job/new_job1?cus_id='.$cus_id); ?>', '_blank', 'location=yes,height=1080,width=1500,scrollbars=yes,status=yes');" href="javascript:void(0);">Jobs</a>
     </li>
     <!-- <li class="nav-item">
         <a class="h6 mb-0 nav-link <?= $cust_active_tab == 'workorders' ?   "active" : ''; ?> nav-link" href="<?= base_url('customer/workorders_list/'.$cus_id) ?>">Service</a>
     </li> -->
     <li class="nav-item">
-        <a class="h6 mb-0 nav-link <?= $cust_active_tab == 'workorders' ?   "active" : ''; ?> nav-link" onclick="window.open('<?= base_url('customer/addTicket?cus_id='.$cus_id); ?>', '_blank', 'location=yes,height=570,width=520,scrollbars=yes,status=yes');" href="javascript:void(0);">Services</a>
+        <a class="h6 mb-0 nav-link <?= $cust_active_tab == 'workorders' ?   "active" : ''; ?> nav-link" onclick="window.open('<?= base_url('customer/addTicket?cus_id='.$cus_id); ?>', '_blank', 'location=yes,height=1080,width=1500,scrollbars=yes,status=yes');" href="javascript:void(0);">Services</a>
     </li>
     <!-- <li class="nav-item">
         <a class="h6 mb-0 nav-link <?= $cust_active_tab == 'estimates' ?   "active" : ''; ?> nav-link" href="<?= base_url('customer/estimates_list/'.$cus_id); ?>">Estimates</a>
     </li> -->
     <li class="nav-item">
-        <a class="h6 mb-0 nav-link <?= $cust_active_tab == 'estimates' ?   "active" : ''; ?> nav-link" onclick="window.open('<?= base_url('estimate/add?cus_id='.$cus_id); ?>', '_blank', 'location=yes,height=570,width=520,scrollbars=yes,status=yes');" href="javascript:void(0);">Estimates</a>
+        <a class="h6 mb-0 nav-link <?= $cust_active_tab == 'estimates' ?   "active" : ''; ?> nav-link" onclick="window.open('<?= base_url('estimate/add?cus_id='.$cus_id); ?>', '_blank', 'location=yes,height=1080,width=1500,scrollbars=yes,status=yes');" href="javascript:void(0);">Estimates</a>
     </li>    
     <!-- <li class="nav-item">
         <a class="h6 mb-0 nav-link <?= $active_tab == 'leadSource' ?   "active" : ''; ?> nav-link">Import/Audit</a>
@@ -60,6 +60,7 @@
         <a class="h6 mb-0 nav-link <?= $cust_active_tab == 'invoices' ?   "active" : ''; ?> nav-link" href="<?= base_url('customer/invoice_list/'.$cus_id) ?>">Invoices</a>
     </li>
     <li class="nav-item">
-        <a class="h6 mb-0 nav-link" href="<?= base_url('timesheet/notification') ?> nav-link">Activity</a>
+        <a class="h6 mb-0 nav-link <?= $cust_active_tab == 'activites' ?   "active" : ''; ?> nav-link" href="<?= base_url('customer/activities/'.$cus_id) ?>">
+        Activity</a>
     </li>
 </ul>
