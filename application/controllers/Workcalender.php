@@ -980,10 +980,13 @@ class Workcalender extends MY_Controller
 
                 $calendar_list = $data->getItems();
                 $email = $google_user_api->google_email;
-                $enabled_mini_calendar = unserialize($google_user_api->enabled_calendars);
+                $enabled_mini_calendar = array();
+                if ($google_user_api->enabled_calendars != '') {
+                    $enabled_mini_calendar = unserialize($google_user_api->enabled_calendars);   
+                }                
 
                 foreach ($calendar_list as $cl) {
-                    if (in_array($cl['id'], $enabled_mini_calendar)) {
+                    if (in_array($cl['id'], $enabled_mini_calendar) && !empty($enabled_mini_calendar)) {
                         //Display in events
                         $optParams = array(
                           'orderBy' => 'starttime',
@@ -1926,7 +1929,9 @@ class Workcalender extends MY_Controller
                 'created' => date("Y-m-d H:i:s")
             ];
 
-            $this->Appointment_model->create($data_appointment);
+            $last_id = $this->Appointment_model->createAppointment($data_appointment);
+
+            customerAuditLog(logged('id'), $post['appointment_customer_id'], $last_id, 'Appointment', 'Created an appointment');
 
             $is_success = true;
             $message    = '';
@@ -1983,7 +1988,9 @@ class Workcalender extends MY_Controller
                 'created' => date("Y-m-d H:i:s")
             ];
 
-            $this->Appointment_model->create($data_appointment);
+            $last_id = $this->Appointment_model->createAppointment($data_appointment);
+
+            customerAuditLog(logged('id'), $post['appointment_customer_id'], $last_id, 'Appointment', 'Created appointment waitlist');
 
             $is_success = true;
             $message    = '';
@@ -2089,6 +2096,8 @@ class Workcalender extends MY_Controller
 
                 $this->Appointment_model->update($appointment->id, $data_appointment);
 
+                customerAuditLog(logged('id'), $post['appointment_customer_id'], $appointment->id, 'Appointment', 'Updated appointment id '.$appointment->id);
+
                 $is_success = true;
                 $message    = '';
 
@@ -2137,6 +2146,8 @@ class Workcalender extends MY_Controller
 
                 $this->Appointment_model->update($appointment->id, $data_appointment);
 
+                customerAuditLog(logged('id'), $post['appointment_customer_id'], $appointment->id, 'Appointment', 'Updated appointment id '.$appointment->id);
+
                 $is_success = true;
                 $message    = '';
                 $is_wait_list = $post['is_wait_list'];
@@ -2167,7 +2178,13 @@ class Workcalender extends MY_Controller
         $appointment = $this->Appointment_model->getByIdAndCompanyId($post['appointment_id'], $cid);
 
         if( $appointment ){
+            $appointment_id = $appointment->id;
+            $appointment_cus_id = $appointment->prof_id;
+
             $this->Appointment_model->delete($appointment->id);
+
+            customerAuditLog(logged('id'), $appointment_cus_id, $appointment_id, 'Appointment', 'Deleted appointment id '.$appointment_id);
+
             $is_success = true;
             $message    = '';
         }
@@ -2582,6 +2599,8 @@ class Workcalender extends MY_Controller
                 ];
 
                 $this->Appointment_model->update($appointment->id, $data_appointment);
+
+                customerAuditLog(logged('id'), $appointment->prof_id, $appointment->id, 'Appointment', 'Moved waitlist id '.$appointment->id.' to appointment');
 
                 $is_error = 0;
                 $msg = '';
