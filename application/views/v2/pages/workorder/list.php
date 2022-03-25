@@ -285,9 +285,9 @@
                         showCancelButton: false,
                         confirmButtonText: 'Okay'
                     }).then((result) => {
-                        if (result.value) {
+                        //if (result.value) {
                             location.reload();
-                        }
+                        //}
                     });
                 },
             });

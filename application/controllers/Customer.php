@@ -1551,8 +1551,13 @@ class Customer extends MY_Controller
                 if(isset($input['customer_id'])){
                     $this->general->update_with_key_field($input_profile, $input['customer_id'],'acs_profile','prof_id');
                     $profile_id = $input['customer_id'];
+
+                    customerAuditLog(logged('id'), $profile_id, $profile_id, 'Customer', 'Updated customer ' .$input['first_name'].' '.$input['last_name']);
+
                 }else{
                     $profile_id = $this->general->add_return_id($input_profile, 'acs_profile');
+
+                    customerAuditLog(logged('id'), $profile_id, $profile_id, 'Customer', 'Created customer ' .$input['first_name'].' '.$input['last_name']);
                 }
 
                 $save_billing = $this->save_billing_information($input,$profile_id);
@@ -3654,6 +3659,7 @@ class Customer extends MY_Controller
     {
         $this->hasAccessModule(39);
         $this->load->model('AcsProfile_model');
+        $this->load->model('Job_tags_model');
 
         $query_autoincrment = $this->db->query("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'customer_groups'");
         $result_autoincrement = $query_autoincrment->result_array();
@@ -3697,6 +3703,7 @@ class Customer extends MY_Controller
         $this->page_data['default_customer_id'] = $default_customer_id;
 
         $type = $this->input->get('type');
+        $this->page_data['tags'] = $this->Job_tags_model->getJobTagsByCompany($company_id);
         $this->page_data['type'] = $type;
         $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
 

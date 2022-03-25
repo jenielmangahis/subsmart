@@ -293,6 +293,8 @@ class Invoice extends MY_Controller
 
         $addQuery = $this->invoice_model->createInvoice($new_data);
 
+        customerAuditLog(logged('id'), $this->input->post('customer_id'), $addQuery, 'Invoice', 'Created invoice #'.$this->input->post('invoice_number'));
+
         // if ($addQuery > 0) {
         //     //echo json_encode($addQuery);
         //     $new_data2 = array(
@@ -845,16 +847,23 @@ class Invoice extends MY_Controller
 
     public function deleteInvoiceBtnNew()
     {
+        $is_success = false;
+
         $id = $this->input->post('id');
 
-        $data = array(
-            'id' => $id,
-            'view_flag' => '1',
-        );
+        $invoice = $this->invoice_model->getinvoice($id);
+        if($invoice){
+            $data = array(
+                'id' => $id,
+                'view_flag' => '1',
+            );
 
-        $delete = $this->invoice_model->deleteInvoice($data);
+            $is_success = $this->invoice_model->deleteInvoice($data);
 
-        echo json_encode($delete);
+            customerAuditLog(logged('id'), $invoice->customer_id, $invoice->id, 'Invoice', 'Deleted invoice #'.$invoice->invoice_number);
+        }
+
+        echo json_encode($is_success);
     }
     
     public function void_invoice()
@@ -977,6 +986,9 @@ class Invoice extends MY_Controller
         );
 
         $addQuery = $this->invoice_model->update_invoice_data($update_data);
+        $objInvoice = $this->invoice_model->getinvoice($this->input->post('invoiceDataID'));
+
+        customerAuditLog(logged('id'), $this->input->post('customer_id'), $this->input->post('invoiceDataID'), 'Invoice', 'Updated invoice #'.$objInvoice->invoice_number);
 
         $delete2 = $this->invoice_model->delete_items($id);
 
@@ -1200,7 +1212,11 @@ class Invoice extends MY_Controller
      */
     public function clone($id)
     {
+        $invoice = $this->invoice_model->getinvoice($id);  
         $id = $this->invoice_model->duplicateRecord($id, logged('company_id'));
+
+        customerAuditLog(logged('id'), $invoice->customer_id, $invoice->id, 'Invoice', 'Clone invoice #'.$invoice->invoice_number);
+
         $this->activity_model->add("invoice #$id Clone by User:" . logged('name'));
         $this->session->set_flashdata('alert-type', 'success');
         $this->session->set_flashdata('alert', 'invoice has been Cloned Successfully');

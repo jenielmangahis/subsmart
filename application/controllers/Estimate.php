@@ -181,6 +181,7 @@ class Estimate extends MY_Controller
 
         $addQuery = $this->estimate_model->save_estimate($new_data);
         if ($addQuery > 0) {
+            customerAuditLog(logged('id'), $this->input->post('customer_id'), $addQuery, 'Estimate', 'Created estimate #'.$this->input->post('estimate_number'));
             // $new_data2 = array(
             //     'item_type' => $this->input->post('type'),
             //     'description' => $this->input->post('desc'),
@@ -371,16 +372,24 @@ class Estimate extends MY_Controller
 
     public function delete_estimate()
     {
-        $id = $this->input->post('id');
+        $is_success = false;
 
-        $data = array(
-            'id' => $id,
-            'view_flag' => '1',
-        );
+        $id = $this->input->post('id');        
+        $estimate = $this->estimate_model->getById($id);
+        if( $estimate ){
+            $data = array(
+                'id' => $id,
+                'view_flag' => '1',
+            );
 
-        $delete = $this->estimate_model->deleteEstimate($data);
+            $is_success = $this->estimate_model->deleteEstimate($data);    
 
-        echo json_encode($delete);
+            customerAuditLog(logged('id'), $estimate->customer_id, $estimate->id, 'Estimate', 'Deleted estimate #'.$estimate->estimate_number);
+        }  
+
+        echo json_encode($is_success);
+
+        
     }
 
     public function addbundle()
@@ -895,6 +904,8 @@ class Estimate extends MY_Controller
             'instructions' => post('instructions'),
         ]);
 
+        customerAuditLog(logged('id'), post('customer_id'), $id, 'Estimate', 'Created estimate #'.post('estimate_number'));
+
         $this->activity_model->add('New User $' . $user->id . ' Created by User:' . logged('name'), logged('id'));
         $this->session->set_flashdata('alert-type', 'success');
         $this->session->set_flashdata('alert', 'New Estimate Created Successfully');
@@ -978,13 +989,16 @@ class Estimate extends MY_Controller
         $role    = logged('role');
         //$parent_id = $this->db->query("select parent_id from users where id=$user_id")->row();
 
-        if ($role == 1 || $role == 2) {
+        /*if ($role == 1 || $role == 2) {
             $this->page_data['users'] = $this->users_model->getAllUsers();
             $this->page_data['customers'] = $this->AcsProfile_model->getAll();
         } else {
             $this->page_data['users'] = $this->users_model->getAllUsersByCompany($user_id);
             $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
-        }
+        }*/
+
+        $this->page_data['users'] = $this->users_model->getAllUsersByCompany($user_id);
+        $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
 
 
         $this->load->model('Customer_model', 'customer_model');
@@ -1278,7 +1292,12 @@ class Estimate extends MY_Controller
                 'updated_at'                => date("Y-m-d H:i:s")
             );
 
+
             $addQuery = $this->estimate_model->update_estimateBundle($new_data);
+
+            $objEstimate = $this->estimate_model->getById($id);
+
+            customerAuditLog(logged('id'), $objEstimate->customer_id, $objEstimate->id, 'Credit Note', 'Updated estimate #'.$objEstimate->estimate_number);
 
             $delete2 = $this->estimate_model->delete_items($id);
 
@@ -1605,6 +1624,8 @@ class Estimate extends MY_Controller
                 $json_data['is_success'] = 0;
                 $json_data['error']      = 'Mailer Error: ' . $mail->ErrorInfo;
             }
+
+            customerAuditLog(logged('id'), $workData->customer_id, $workData->id, 'Estimate', 'Sent to email estimate #'.$workData->estimate_number);
 
             $this->session->set_flashdata('alert-type', 'success');
             $this->session->set_flashdata('alert', 'Successfully sent to Customer.');
@@ -2020,6 +2041,8 @@ class Estimate extends MY_Controller
         );
 
         $addQuery = $this->estimate_model->save_estimate($new_data);
+
+        customerAuditLog(logged('id'), $datas->customer_id, $datas->id, 'Estimate', 'Cloned estimate #'.$datas->estimate_number);
     }
 
     public function estimate_settings()

@@ -178,6 +178,8 @@ class Taskhub extends MY_Controller {
 					);
 
 					$this->taskhub_updates_model->trans_create($data);
+
+					customerAuditLog(logged('id'), $this->input->post('customer_id'), $taskid, 'Taskhub', 'Updated task '.$this->input->post('subject'));
 				}
 			} else {
 				$data = array(
@@ -191,7 +193,12 @@ class Taskhub extends MY_Controller {
 					'company_id' => $company_id
 				);
 
-				$process_successful = $this->taskhub_model->trans_create($data);
+				$last_id = $this->taskhub_model->saveTask($data);
+				if( $last_id > 0 ){
+					$process_successful = 1;
+					customerAuditLog(logged('id'), $this->input->post('customer_id'), $last_id, 'Taskhub', 'Created task '.$this->input->post('subject'));
+				}
+
 				if($process_successful){
 					$task = $this->db->query(
 						'select task_id from tasks where created_by = ' . $uid . ' order by date_created DESC limit 1'

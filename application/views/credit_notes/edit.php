@@ -112,8 +112,15 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <span class="help help-sm">(optional)</span>
                                     <input type="text" class="form-control" name="job_name" id="job_name" value="<?= $creditNote->job_name; ?>" placeholder="" required/>
                                 </div>
-                            </div>
-
+                                <div class="col-md-3 form-group">
+                                    <label for="estimate_date">Status</label>
+                                    <select class="form-control" name="status">
+                                        <?php foreach($status as $key => $value){ ?>
+                                            <option <?= $creditNote->status == $key ? 'selected="selected"' : ''; ?> value="<?= $key; ?>"><?= $value; ?></option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+                            </div>                            
                             <div class="row">
                                 <div class="col-md-4 form-group">
                                     <label for="estimate_date">Credit Note#</label>
@@ -300,7 +307,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
                             <div class="row">
                                 <div class="col-md-4 form-group">
-                                    <button type="submit" class="btn btn-flat btn-primary">Save as Draft</button>
+                                    <button type="submit" class="btn btn-flat btn-primary">Save</button>
                                     <a href="<?php echo url('credit_notes') ?>" class="btn btn-danger">Cancel this</a>
                                 </div>
                             </div>

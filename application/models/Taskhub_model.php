@@ -123,5 +123,13 @@ class Taskhub_model extends MY_Model {
         $this->db->order_by('priority','DESC');
         return $this->db->get('tasks')->result();
     }
+
+    public function saveTask($post_data)
+    {
+        $this->db->insert($this->table, $post_data);
+        $insert_id = $this->db->insert_id();
+
+        return  $insert_id;
+    }
         
 }

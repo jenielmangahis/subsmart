@@ -4421,6 +4421,8 @@ class Workorder extends MY_Controller
 
         $new_workorder_id = $this->workorder_model->save_workorder($new_data);
 
+        customerAuditLog(logged('id'), $datas->customer_id, $datas->id, 'Workorder', 'Cloned workorder #'.$datas->work_order_number);
+
         //Get Workorder items
         $workorderItems = $this->workorder_model->getworkorderItems($new_workorder_id);
         foreach( $workorderItems as $i ){
@@ -5131,7 +5133,7 @@ class Workorder extends MY_Controller
 
         $objWorkOrder = $this->workorder_model->getDataByWO($this->input->post('wo_id_alarm'));
         if( $objWorkOrder ){
-            customerAuditLog(logged('id'), $objWorkOrder->id, $objWorkOrder->customer_id, 'Workorder', 'Updated workorder #'.$objWorkOrder->work_order_number);
+            customerAuditLog(logged('id'), $objWorkOrder->customer_id, $objWorkOrder->id, 'Workorder', 'Updated workorder #'.$objWorkOrder->work_order_number);
         }        
 
         $cameras = array(
@@ -5518,16 +5520,22 @@ class Workorder extends MY_Controller
 
     public function delete_workorder()
     {
+        $is_success = false;
+
         $id = $this->input->post('id');
 
-        $data = array(
-            'id' => $id,
-            'view_flag' => '1',
-        );
+        $workOrder = $this->workorder_model->getDataByWO($id);
+        if( $workOrder ){            
+            $data = array(
+                'id' => $id,
+                'view_flag' => '1',
+            );
+            $is_success = $this->workorder_model->deleteWorkorder($data);
 
-        $delete = $this->workorder_model->deleteWorkorder($data);
+            customerAuditLog(logged('id'), $workOrder->customer_id, $workOrder->id, 'Workorder', 'Deleted work order #'.$workOrder->work_order_number);
+        }        
 
-        echo json_encode($delete);
+        echo json_encode($is_success);
     }
 
     public function work_order_templates()
@@ -6000,7 +6008,7 @@ class Workorder extends MY_Controller
 
         $addQuery = $this->workorder_model->save_workorder($new_data);
 
-        customerAuditLog(logged('id'), $w_acs, $addQuery, 'Workorder', 'Crated workorder #'.$this->input->post('workorder_number'));
+        customerAuditLog(logged('id'), $w_acs, $addQuery, 'Workorder', 'Created workorder #'.$this->input->post('workorder_number'));
 
         
 

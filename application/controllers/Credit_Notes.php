@@ -134,11 +134,8 @@ class Credit_Notes extends MY_Controller
 
         $company_id = logged('company_id');
         $role = logged('role');
-        if( $role == 1 || $role == 2 ){
-            $this->page_data['customers'] = $this->AcsProfile_model->getAll();
-        }else{
-            $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
-        }
+        $this->page_data['status'] = $this->CreditNote_model->optionStatus();
+        $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
 
         $this->load->view('credit_notes/add', $this->page_data);
     }
@@ -164,7 +161,7 @@ class Credit_Notes extends MY_Controller
                 'grand_total' => $post['total_due'],
                 'note_customer' => $post['customer_message'],
                 'terms_condition' => $post['terms_conditions'],
-                'status' => $this->CreditNote_model->isDraft(),
+                'status' => $post['status'],
                 'created' => date("Y-m-d H:i:s"),
                 'modified' => date("Y-m-d H:i:s")
             ];
@@ -186,6 +183,8 @@ class Credit_Notes extends MY_Controller
                     $this->CreditNoteItem_model->create($data);
                 }
 
+                customerAuditLog(logged('id'), $post['customer_id'], $credit_note_id, 'Credit Note', 'Created credit note #'.$post['credit_note_number']);
+
                 $this->session->set_flashdata('message', 'Credit Note was successful saved');
                 $this->session->set_flashdata('alert_class', 'alert-success');
 
@@ -206,7 +205,11 @@ class Credit_Notes extends MY_Controller
     {
         postAllowed();
 
-        $id = $this->CreditNote_model->deleteCreditNote(post('eid'));
+        $creditNote = $this->CreditNote_model->getById(post('eid'));
+        if( $creditNote ){
+            customerAuditLog(logged('id'), $creditNote->customer_id, $creditNote->id, 'Credit Note', 'Deleted credit note #'.$creditNote->credit_note_number);
+            $id = $this->CreditNote_model->deleteCreditNote(post('eid'));
+        }
 
         $this->session->set_flashdata('message', 'Credit Note has been Deleted Successfully');
         $this->session->set_flashdata('alert_class', 'alert-success');
@@ -228,6 +231,7 @@ class Credit_Notes extends MY_Controller
                 $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
             }
 
+            $this->page_data['status'] = $this->CreditNote_model->optionStatus();
             $this->page_data['creditNote'] = $creditNote;
             $this->page_data['creditNoteItems'] = $creditNoteItems;
 
@@ -259,6 +263,7 @@ class Credit_Notes extends MY_Controller
                 'adjustment_amount' => $post['adjustment_total'],
                 'total_discount' => $post['total_discount'],
                 'grand_total' => $post['total_due'],
+                'status' => $post['status'],
                 'note_customer' => $post['customer_message'],
                 'terms_condition' => $post['terms_conditions'],
                 'modified' => date("Y-m-d H:i:s")
@@ -281,6 +286,8 @@ class Credit_Notes extends MY_Controller
 
                 $this->CreditNoteItem_model->create($data);
             }
+
+            customerAuditLog(logged('id'), $creditNote->customer_id, $creditNote->id, 'Credit Note', 'Updated credit note #'.$creditNote->credit_note_number);
 
             $this->session->set_flashdata('message', 'Credit Note was successful saved');
             $this->session->set_flashdata('alert_class', 'alert-success');
@@ -359,6 +366,8 @@ class Credit_Notes extends MY_Controller
                 $this->session->set_flashdata('alert', 'Cannot send email.');
             }else {
                 $this->estimate_model->update($estimate->id, ['status' => 'Submitted']);
+
+                customerAuditLog(logged('id'), $creditNote->customer_id, $creditNote->id, 'Credit Note', 'Sent to email credit note #'.$creditNote->credit_note_number);
 
                 $this->session->set_flashdata('alert-type', 'success');
                 $this->session->set_flashdata('alert', 'Your credit note was successfully sent');
@@ -471,6 +480,7 @@ class Credit_Notes extends MY_Controller
                 $this->session->set_flashdata('alert', 'Cannot send email.');
             }else {
                 $this->CreditNote_model->update($creditNote->id, ['status' => $this->CreditNote_model->isSubmitted()]);
+                customerAuditLog(logged('id'), $creditNote->customer_id, $creditNote->id, 'Credit Note', 'Sent to email credit note #'.$creditNote->credit_note_number);
 
                 $this->session->set_flashdata('alert-type', 'success');
                 $this->session->set_flashdata('alert', 'Your credit note was successfully sent');
@@ -630,6 +640,8 @@ class Credit_Notes extends MY_Controller
 
             $this->CreditNote_model->update($creditNote->id, $data);
 
+            customerAuditLog(logged('id'), $creditNote->customer_id, $creditNote->id, 'Credit Note', 'Updated credit note #'.$creditNote->credit_note_number.' set status to Closed');
+
             $this->session->set_flashdata('message', 'Credit Note was successful updated');
             $this->session->set_flashdata('alert_class', 'alert-success');
 
@@ -696,6 +708,8 @@ class Credit_Notes extends MY_Controller
 
                     $this->CreditNoteItem_model->create($data_credit_note_items);
                 }
+
+                customerAuditLog(logged('id'), $creditNote->customer_id, $creditNote->id, 'Credit Note', 'Cloned credit note #'.$creditNote->credit_note_number);
 
                 $this->session->set_flashdata('message', 'Credit Note was successful clone');
                 $this->session->set_flashdata('alert_class', 'alert-success');

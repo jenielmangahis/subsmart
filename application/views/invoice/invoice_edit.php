@@ -303,27 +303,24 @@ input:checked + .slider:before {
         <div class="container-fluid" style="background-color:white;">
             <div class="page-title-box">
                 <div class="row align-items-center">
-                    <div class="col-sm-6">
-                        <h3 style="font-family: Sarabun, sans-serif">Update Invoice</h3>
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item active">Complete the fields below to create a new invoice.</li>
-                        </ol>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="float-right d-none d-md-block">
-                            <div class="dropdown">
-                                <?php if (hasPermissions('WORKORDER_MASTER')) : ?>
-                                    <a href="<?php echo base_url('invoice') ?>" class="btn btn-primary"
-                                       aria-expanded="false">
-                                        <i class="mdi mdi-settings mr-2"></i> Go Back to Invoices
-                                    </a>
-                                <?php endif ?>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-12">
-                        <div class="validation-error" id="estimate-error" style="display: none;">You selected Credit Card Payments as payment method for this invoice. Please configure the <a href="https://www.markate.com/pro/settings/payments/main">Online Payment processor</a> first to accept cart payments.</div>
-                    </div>
+                  <div class="col-sm-6">
+                      <h3 class="page-title mt-0" style="font-size: 1.75rem; font-weight: 600;">Update Invoice</h3>
+                  </div>
+                  <div class="col-sm-6">
+                      <div class="float-right d-none d-md-block">
+                          <div class="dropdown">
+                                  <a href="<?php echo base_url('invoice') ?>" class="btn btn-primary"
+                                     aria-expanded="false">
+                                      <i class="mdi mdi-settings mr-2"></i> Go Back to Invoices List
+                                  </a>
+                          </div>
+                      </div>
+                  </div>
+                </div>
+                <div class="pl-3 pr-3 mt-2 row">
+                  <div class="col mb-4 left alert alert-warning mt-0 mb-0">
+                      <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Complete the fields below to create a new invoice.</span>
+                  </div>
                 </div>
             </div>
             <!-- end row -->
