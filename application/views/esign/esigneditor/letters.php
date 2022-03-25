@@ -25,12 +25,12 @@ ini_set('max_input_vars', 30000);
                 <div class="d-flex justify-content-between mb-3">
                     <div class="d-flex">
                         <select class="form-control" id="category">
-                            <option value="all">All Categories</option>
+                            <option value="-1" selected>All Categories</option>
                         </select>
                         <select class="form-control" id="status">
-                            <option value="all">All Statuses</option>
-                            <option value="active">Active</option>
-                            <option value="inactive">Inactive</option>
+                            <option value="-1" selected>All Statuses</option>
+                            <option value="1">Active</option>
+                            <option value="0">Inactive</option>
                         </select>
                     </div>
                     <a class="btn btn-primary" href="<?=base_url()?>EsignEditor/create">

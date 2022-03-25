@@ -428,8 +428,13 @@ class Events extends MY_Controller
             ),
             'table' => 'events'
         );
-        if($this->general->delete_($remove_event)){
-            echo '1';
+
+        $event = $this->event_model->get_specific_event($_POST['job_id']);
+        if( $event ){
+            if($this->general->delete_($remove_event)){
+                customerAuditLog(logged('id'), $event->customer_id, $event->id, 'Event', 'Deleted event #'.$event->event_number);
+                echo '1';
+            }
         }
     }
 
@@ -570,6 +575,8 @@ class Events extends MY_Controller
             'event_next_num' => $event_settings[0]->event_next_num + 1,
         );
         $this->general->update_with_key($event_settings_data,$event_settings[0]->id, 'event_settings');
+
+        customerAuditLog(logged('id'), $input['customer_id'], $event_id, 'Events', 'Created an event #'.$event_number);
 
         echo $event_id;
     }

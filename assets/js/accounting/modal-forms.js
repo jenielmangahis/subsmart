@@ -8193,13 +8193,43 @@ const updateTransaction = (event, el) => {
     }
 
     if(customerModals.includes(modalId)) {
+        data.delete('item[]');
+        data.delete('package[]');
         data.delete('location[]');
-        $(`${modalId} table#item-table tbody tr`).each(function() {
+        data.delete('quantity[]');
+        data.delete('item_amount[]');
+        data.delete('discount[]');
+        data.delete('item_tax[]');
+        $(`${modalId} table#item-table tbody:not(#package-items-table) tr:not(.package-items, .package-item, .package-item-header)`).each(function() {
             if(data.has('item_total[]')) {
-                data.append('location[]', $(this).find('select[name="location[]"]').val());
+                if($(this).hasClass('package')) {
+                    data.append('item[]', 'package-'+$(this).find('input[name="package[]"]').val());
+                    data.append('location[]', null);
+                    data.append('item_amount[]', $(this).find('span.item-amount').html());
+                    data.append('discount[]', null);
+                } else {
+                    data.append('item[]', 'item-'+$(this).find('input[name="item[]"]').val());
+                    data.append('location[]', $(this).find('select[name="location[]"]').val());
+                    data.append('item_amount[]', $(this).find('input[name="item_amount[]"]').val());
+                    data.append('discount[]', $(this).find('input[name="discount[]"]').val());
+                }
+                data.append('item_tax[]', $(this).find('input[name="item_tax[]"]').val());
+                data.append('quantity[]', $(this).find('input[name="quantity[]"]').val());
                 data.append('item_total[]', $(this).find('span.row-total').html().replace('$', ''));
             } else {
-                data.set('location[]', $(this).find('select[name="location[]"]').val());
+                if($(this).hasClass('package')) {
+                    data.set('item[]', 'package-'+$(this).find('input[name="package[]"]').val());
+                    data.set('location[]', null);
+                    data.set('item_amount[]', $(this).find('span.item-amount').html());
+                    data.set('discount[]', null);
+                } else {
+                    data.set('item[]', 'item-'+$(this).find('input[name="item[]"]').val());
+                    data.set('location[]', $(this).find('select[name="location[]"]').val());
+                    data.set('item_amount[]', $(this).find('input[name="item_amount[]"]').val());
+                    data.set('discount[]', $(this).find('input[name="discount[]"]').val());
+                }
+                data.set('item_tax[]', $(this).find('input[name="item_tax[]"]').val());
+                data.set('quantity[]', $(this).find('input[name="quantity[]"]').val());
                 data.set('item_total[]', $(this).find('span.row-total').html().replace('$', ''));
             }
         });

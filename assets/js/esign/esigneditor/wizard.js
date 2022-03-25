@@ -34,7 +34,7 @@ async function initCategories() {
   });
 
   $select.appendChild(
-    window.helpers.htmlToElement(`<option value="favorite">Favorite</option>`)
+    window.helpers.htmlToElement(`<option value="favorite">Favorites</option>`)
   );
 
   if (categories.length) {

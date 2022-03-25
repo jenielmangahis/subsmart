@@ -637,7 +637,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     <div id="London" class="tabcontent all" style="display: block;">
                         <table class="table" id="cashflowtransactions">
                             <thead>
-                                <th data-sort="date">DATE</th>
+                                <th>DATE</th>
                                 <th>DESCRIPTION</th>
                                 <th>AMOUNT</th>
                                 <th>TYPE</th>
@@ -1001,3 +1001,4 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
 <?php include viewPath('includes/footer_accounting');
       include viewPath('accounting/cashflow_modal');
+

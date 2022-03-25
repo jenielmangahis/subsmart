@@ -864,6 +864,22 @@ class Customer extends MY_Controller
         $this->load->view('customer/estimate_list', $this->page_data);
     }
 
+    public function activities($cid)
+    {
+        $this->load->model('CustomerAuditLog_model');
+        $this->load->model('AcsProfile_model');
+
+        $activities = $this->CustomerAuditLog_model->getAllByCustomerId($cid);
+        $customer  = $this->AcsProfile_model->getByProfId($cid);
+
+        $this->page_data['cust_active_tab'] = 'activites';
+        $this->page_data['cus_id']    = $cid;
+        $this->page_data['activities'] = $activities;
+        $this->page_data['customer']   = $customer;
+
+        $this->load->view('customer/activities', $this->page_data);
+    }
+
     public function invoice_list($cid)
     {
         $this->load->model('Invoice_model');
