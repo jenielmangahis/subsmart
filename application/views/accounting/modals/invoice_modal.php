@@ -285,10 +285,11 @@
                                                         <tbody>
                                                             <?php if(isset($items) && count($items) > 0) : ?>
                                                                 <?php foreach($items as $item) : ?>
-                                                                    <?php $itemDetails = $this->items_model->getItemById($item->item_id)[0];?>
-                                                                    <?php $locations = $this->items_model->getLocationByItemId($item->item_id);?>
+                                                                    <?php if(!is_null($item->itemDetails)) : ?>
+                                                                    <?php $itemDetails = $item->itemDetails;?>
+                                                                    <?php $locations = $item->locations;?>
                                                                     <tr>
-                                                                        <td><?=$itemDetails->title?><input type="hidden" name="item[]" value="<?=$item->item_id?>"></td>
+                                                                        <td><?=$itemDetails->title?><input type="hidden" name="item[]" value="<?=$item->items_id?>"></td>
                                                                         <td><?=ucfirst($itemDetails->type)?></td>
                                                                         <td>
                                                                             <?php if($itemDetails->type === 'product' || $itemDetails->type === 'item') : ?>
@@ -299,8 +300,8 @@
                                                                             </select>
                                                                             <?php endif; ?>
                                                                         </td>
-                                                                        <td><input type="number" name="quantity[]" class="form-control text-right" required value="<?=$item->quantity?>"></td>
-                                                                        <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="<?=number_format(floatval($item->price), 2, '.', ',')?>"></td>
+                                                                        <td><input type="number" name="quantity[]" class="form-control text-right" required value="<?=$item->qty?>"></td>
+                                                                        <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="<?=number_format(floatval($item->cost), 2, '.', ',')?>"></td>
                                                                         <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="<?=number_format(floatval($item->discount), 2, '.', ',')?>"></td>
                                                                         <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="<?=number_format(floatval($item->tax), 2, '.', ',')?>"></td>
                                                                         <td>
@@ -318,6 +319,62 @@
                                                                             </div>
                                                                         </td>
                                                                     </tr>
+                                                                    <?php else : ?>
+                                                                    <?php $packageDetails = $item->packageDetails; ?>
+                                                                    <?php $packageItems = $item->packageItems; ?>
+                                                                    <tr class="package">
+                                                                        <td><?=$packageDetails->name?><input type="hidden" name="package[]" value="<?=$packageDetails->id?>"></td>
+                                                                        <td>Package</td>
+                                                                        <td></td>
+                                                                        <td><input type="number" name="quantity[]" class="form-control text-right" required value="<?=$item->qty?>"></td>
+                                                                        <td><span class="item-amount"><?=number_format(floatval($item->cost), 2, '.', ',')?></span></td>
+                                                                        <td></td>
+                                                                        <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="<?=number_format(floatval($item->tax), 2, '.', ',')?>"></td>
+                                                                        <td>
+                                                                            <span class="row-total">
+                                                                                <?php
+                                                                                    $rowTotal = '$'.number_format(floatval($item->total), 2, '.', ',');
+                                                                                    $rowTotal = str_replace('$-', '-$', $rowTotal);
+                                                                                    echo $rowTotal;
+                                                                                ?>
+                                                                            </span>
+                                                                        </td>
+                                                                        <td>
+                                                                            <div class="d-flex align-items-center justify-content-center">
+                                                                                <a href="#" class="deleteRow"><i class="fa fa-trash"></i></a>
+                                                                            </div>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr class="package-items">
+                                                                        <td colspan="3">
+                                                                            <table class="table m-0 bg-white">
+                                                                                <thead>
+                                                                                    <tr class="package-item-header">
+                                                                                        <th>Item Name</th>
+                                                                                        <th>Quantity</th>
+                                                                                        <th>Price</th>
+                                                                                    </tr>
+                                                                                </thead>
+                                                                                <tbody id="package-items-table">
+                                                                                    <?php foreach($packageItems as $packageItem) : ?>
+                                                                                        <?php $item = $this->items_model->getItemById($packageItem->item_id)[0]; ?>
+                                                                                        <tr class="package-item">
+                                                                                            <td><?=$item->title?></td>
+                                                                                            <td><?=$packageItem->quantity?></td>
+                                                                                            <td><?=number_format(floatval($packageItem->price), 2, '.', ',')?></td>
+                                                                                        </tr>
+                                                                                    <?php endforeach; ?>
+                                                                                </tbody>
+                                                                            </table>
+                                                                        </td>
+                                                                        <td></td>
+                                                                        <td></td>
+                                                                        <td></td>
+                                                                        <td></td>
+                                                                        <td></td>
+                                                                        <td></td>
+                                                                    </tr>
+                                                                    <?php endif; ?>
                                                                 <?php endforeach; ?>
                                                             <?php endif; ?>
                                                         </tbody>
@@ -365,7 +422,7 @@
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="checkbox checkbox-sec margin-right my-0 mr-3 pt-2 pb-2">
-                                                        <input type="checkbox" name="credit_card_payments" value="1" checked id="credit-card-payments">
+                                                        <input type="checkbox" name="credit_card_payments" value="1" <?=isset($paymentMethods) && in_array('Credit Card', $paymentMethods) || !isset($invoice) ? 'checked' : ''?> id="credit-card-payments">
                                                         <label for="credit-card-payments"><span>Credit Card Payments ()</span></label>
                                                     </div>
                                                     <span class="help help-sm help-block">Your client can pay your invoice using credit card or bank account online. You will be notified when your client makes a payment and the money will be transferred to your bank account automatically.</span>
@@ -376,31 +433,31 @@
                                                 </div>
                                                 <div class="col-md-12">
                                                     <div class="checkbox checkbox-sec margin-right my-0 mr-3 pt-2 pb-2">
-                                                        <input type="checkbox" name="bank_transfer" value="1" checked id="bank-transfer">
+                                                        <input type="checkbox" name="bank_transfer" value="1" <?=isset($paymentMethods) && in_array('Bank Transfer', $paymentMethods) || !isset($invoice) ? 'checked' : ''?> id="bank-transfer">
                                                         <label for="bank-transfer"><span>Bank Transfer</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-12">
                                                     <div class="checkbox checkbox-sec margin-right my-0 mr-3 pt-2 pb-2">
-                                                        <input type="checkbox" name="instapay" value="1" checked id="instapay-payment">
+                                                        <input type="checkbox" name="instapay" value="1" <?=isset($paymentMethods) && in_array('Instapay', $paymentMethods) || !isset($invoice) ? 'checked' : ''?> id="instapay-payment">
                                                         <label for="instapay-payment"><span>Instapay</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-12">
                                                     <div class="checkbox checkbox-sec margin-right my-0 mr-3 pt-2 pb-2">
-                                                        <input type="checkbox" name="check" value="1" checked id="check-payment">
+                                                        <input type="checkbox" name="check" value="1" <?=isset($paymentMethods) && in_array('Check', $paymentMethods) || !isset($invoice) ? 'checked' : ''?> id="check-payment">
                                                         <label for="check-payment"><span>Check</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-12">
                                                     <div class="checkbox checkbox-sec margin-right my-0 mr-3 pt-2 pb-2">
-                                                        <input type="checkbox" name="cash" value="1" checked id="cash-payment">
+                                                        <input type="checkbox" name="cash" value="1" <?=isset($paymentMethods) && in_array('Cash', $paymentMethods) || !isset($invoice) ? 'checked' : ''?> id="cash-payment">
                                                         <label for="cash-payment"><span>Cash</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-12">
                                                     <div class="checkbox checkbox-sec margin-right my-0 mr-3 pt-2 pb-2">
-                                                        <input type="checkbox" name="deposit" value="1" checked id="deposit-payment">
+                                                        <input type="checkbox" name="deposit" value="1" <?=isset($paymentMethods) && in_array('Deposit', $paymentMethods) || !isset($invoice) ? 'checked' : ''?> id="deposit-payment">
                                                         <label for="deposit-payment"><span>Deposit</span></label>
                                                     </div>
                                                 </div>

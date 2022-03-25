@@ -1,15 +1,25 @@
 window.document.addEventListener("DOMContentLoaded", async () => {
   window.api = await import("./api.js");
   window.helpers = await import("./helpers.js");
-
-  const { data } = await window.api.getLetters();
   await initCategories();
 
   const $table = $("#letters");
+  const $categorySelect = $("#category");
+  const $statusSelect = $("#status");
+
   const table = $table.DataTable({
-    data,
-    pageLength: 50,
+    serverSide: true,
+    processing: true,
     lengthChange: false,
+    pageLength: 20,
+    ajax: {
+      url: `${window.api.prefixURL}/EsignEditor/apiGetLetters`,
+      data: (param) => {
+        param.status = parseInt($statusSelect.val());
+        param.category = parseInt($categorySelect.val());
+        return param;
+      },
+    },
     language: {
       search: '<div class="icon"><i class="fa fa-search"></i></div>',
       searchPlaceholder: "Search...",
@@ -61,34 +71,9 @@ window.document.addEventListener("DOMContentLoaded", async () => {
     await func(row, table, event);
   });
 
-  const $categorySelect = $("#category");
-  const $statusSelect = $("#status");
-
-  function filterTable() {
-    const status = $statusSelect.val();
-    const category = $categorySelect.val();
-
-    if (status === "all" && category === "all") {
-      table.clear();
-      table.rows.add(data).draw();
-      return;
-    }
-
-    const statusInt = status === "active" ? 1 : 0;
-    const filtered = data.filter((row) => {
-      if (category !== "all" && row.name !== category) return false;
-      if (status === "all") return true;
-      return Number.parseInt(row.is_active) === statusInt;
-    });
-
-    table.clear();
-    table.rows.add(filtered).draw();
-  }
-
+  const filterTable = table.draw;
   $categorySelect.on("change", filterTable);
   $statusSelect.on("change", filterTable);
-  $categorySelect.val("all").trigger("change");
-  $statusSelect.val("all").trigger("change");
 
   // table has been loaded
   document.querySelector(".wrapper").classList.remove("wrapper--loading");
@@ -164,7 +149,7 @@ const actions = {
   favorite: async (row, table) => {
     const { data } = await window.api.toggleFavoriteLetter(row.id);
     row.is_favorite = data.is_favorite;
-    table.row(`#row${row.id}`).data(row).draw();
+    table.row(`#row${row.id}`).data(row).invalidate();
   },
 };
 
@@ -173,7 +158,7 @@ async function initCategories() {
   const $select = document.getElementById("category");
   categories.data.forEach((category) => {
     const $option = window.helpers.htmlToElement(
-      `<option value="${category.name}">${category.name}</option>`
+      `<option value="${category.id}">${category.name}</option>`
     );
     $select.appendChild($option);
   });

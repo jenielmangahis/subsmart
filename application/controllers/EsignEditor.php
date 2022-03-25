@@ -210,28 +210,70 @@ class EsignEditor extends MY_Controller
 
     public function apiGetLetters()
     {
-        $userId = logged('id');
-        $query = <<<SQL
-            SELECT
-                `l`.`id`,
-                `l`.`title`,
-                `l`.`content`,
-                `l`.`is_active`,
-                `l`.`user_id`,
-                `c`.`name` AS `category`,
-                IF(`f`.`id`, TRUE, FALSE) as `is_favorite`
-                    FROM `esign_editor_letters` AS `l`
-                    LEFT JOIN `esign_editor_categories` AS `c` ON `l`.`category_id` = `c`.`id`
-                    LEFT JOIN `esign_editor_favorite_letters` AS `f` ON `l`.`id` = `f`.`letter_id`
-            WHERE (`l`.`user_id` = {$userId} OR `l`.`user_id` IS NULL)
-            ORDER BY `l`.`title`;
-SQL;
+        // Expects datatable.js pagination params
+        $limit = (int) $this->input->get('length') ?? 10;
+        $offset = (int) $this->input->get('start') ?? 0;
+        $draw = (int) $this->input->get('draw');
+        $category = (int) $this->input->get('category') ?? -1; // -1 = all
+        $status = (int) $this->input->get('status') ?? -1; // -1 = all
+        $userId = (int) logged('id');
+        $searchQuery = $this->input->get('search[value]');
 
-        $query = $this->db->query($query);
-        $letters = $query->result();
+        $this->db->select('l.id, l.title, l.content, l.is_active, l.user_id, c.name AS category, IF(f.id, TRUE, FALSE) as is_favorite', false);
+        $this->db->from('esign_editor_letters l');
+        $this->db->join('esign_editor_categories c', 'l.category_id = c.id', 'left');
+        $this->db->join('esign_editor_favorite_letters f', 'l.id = f.letter_id', 'left');
+        $this->db->group_start();
+        $this->db->where('l.user_id', $userId);
+        $this->db->or_where('l.user_id', null);
+        $this->db->group_end();
+        $this->db->order_by('l.title', 'asc');
+        $this->db->limit($limit, $offset);
+        if (!is_null($searchQuery)) {
+            $this->db->like('l.title', $searchQuery);
+        }
+        if ($category !== -1) {
+            $this->db->where('c.id', $category);
+        }
+        if ($status !== -1) {
+            $this->db->where('l.is_active', $status);
+        }
+        $query = $this->db->get();
+        $results = $query->result();
+
+        $this->db->select('l.id');
+        $this->db->from('esign_editor_letters l');
+        $this->db->join('esign_editor_categories c', 'l.category_id = c.id', 'left');
+        $this->db->group_start();
+        $this->db->where('l.user_id', $userId);
+        $this->db->or_where('l.user_id', null);
+        $this->db->group_end();
+        if (!is_null($searchQuery)) {
+            $this->db->like('title', $searchQuery);
+        }
+        if ($category !== -1) {
+            $this->db->where('c.id', $category);
+        }
+        if ($status !== -1) {
+            $this->db->where('l.is_active', $status);
+        }
+        $query = $this->db->get();
+        $recordsFiltered = $query->num_rows();
+
+        $this->db->select('id');
+        $this->db->group_start();
+        $this->db->where('user_id', $userId);
+        $this->db->or_where('user_id', null);
+        $this->db->group_end();
+        $recordsTotal = $this->db->get('esign_editor_letters')->num_rows();
 
         header('content-type: application/json');
-        echo json_encode(['data' => $letters]);
+        echo json_encode([
+            'data' => $results,
+            'draw' => $draw,
+            'recordsTotal' => $recordsTotal,
+            'recordsFiltered' => $recordsFiltered,
+        ]);
     }
 
     public function apiDeleteLetter($id)

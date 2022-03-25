@@ -948,8 +948,8 @@ jQuery(document).ready(function() {
                 for (var index1 = 0; index1 < data.invoice.length; index1++) {
                     console.log(data.invoice[index1]["customer_email"]);
                     html += `
-                    <tr class="entry">
-                        <td><input type="date" value="` + data.invoice[index1]["date_issued"] + `" data-field-type="date" class="date_type" disabled></td>
+                    <tr class="entry" data-id="` + data.invoice[index1]["id"] + `">
+                        <td><input type="date" value="` + data.invoice[index1]["date_issued"] + `" data-field-type="date" class="date_type" disabled style="display:none;">` + data.invoice[index1]["date_issued"] + `</td>
                         <td>` + data.invoice[index1]["customer_email"].toUpperCase() + `</td>
                         <td><input type="text" value="` + data.invoice[index1]["grand_total"] + `" class="amnt" disabled></td>
                         <td>Invoice</td>
@@ -961,7 +961,7 @@ jQuery(document).ready(function() {
                 for (var index2 = 0; index2 < data.expense.length; index2++) {
                     console.log(data.expense[index2]["payment_date"]);
                     html_moneyout += `
-                    <tr class="entry">
+                    <tr class="entry" data-id="` + data.expense[index2]["id"] + `">
                         <td><input type="date" value="` + data.expense[index2]["payment_date"] + `" data-field-type="date" class="date_type" disabled></td>
                         <td>` + data.expense[index2]["payee_type"].toUpperCase() + `</td>
                         <td><input type="text" value="` + data.expense[index2]["total_amount"] + `" class="amnt" disabled></td>
@@ -974,7 +974,7 @@ jQuery(document).ready(function() {
                 for (var index1 = 0; index1 < data.arpi.length; index1++) {
                     console.log(data.arpi[index1]["customer_email"]);
                     html_moneyin += `
-                    <tr class="entry">
+                    <tr class="entry" data-id="` + data.arpi[index1]["id"] + `">
                         <td><input type="date" value="` + data.arpi[index1]["date_issued"] + `" data-field-type="date" class="date_type" disabled></td>
                         <td>` + data.arpi[index1]["customer_email"].toUpperCase() + `</td>
                         <td><input type="text" value="` + data.arpi[index1]["grand_total"] + `" class="amnt" disabled></td>
@@ -996,46 +996,46 @@ jQuery(document).ready(function() {
 
                         html += `
                     <tr class="entry">
-                        <td><input type="date" value="` + data.values[index]["date_plan"] + `" data-field-type="date" class="date_type" disabled></td>
-                        <td>` + data.values[index]["merchant_name"].toUpperCase() + `</td>
-                        <td><input type="text" value="` + data.values[index]["amount"] + `" class="amnt" disabled></td>
+                        <td><input type="date" id="date` + data.values[index]["id"] + `" value="` + data.values[index]["date_plan"] + `" data-field-type="date" class="date_type" disabled style="display:none;">` + data.values[index]["date_plan"] + `</td>
+                        <td> <input type="text" id="name` + data.values[index]["id"] + `" value="` + data.values[index]["merchant_name"].toUpperCase() + `" class="amnt" disabled></td>
+                        <td><input type="text" id="text` + data.values[index]["id"] + `" value="` + data.values[index]["amount"] + `" class="amnt" disabled></td>
                         <td>Planned</td>
-                        <td><button class="button_edit">Edit <i class="fa fa-caret-right" aria-hidden="true"></i></button></td>
-                        <td><button id="ct_remove">Remove</button></td>
+                        <td><button class="button_edit"  value="` + data.values[index]["id"] + `">Edit <i class="fa fa-caret-right" aria-hidden="true"></i></button></td>
+                        <td><button id="ct_remove" value="` + data.values[index]["id"] + `">Remove</button></td>
                     </tr>`;
 
                         //for money in table
 
                         if (data.values[index]["type"] == "moneyin") {
                             html_moneyin += `
-                    <tr>
-                        <td><input type="date" value="` + data.values[index]["date_plan"] + `" class="date_type" disabled></td>
-                        <td>` + data.values[index]["merchant_name"].toUpperCase() + `</td>
-                        <td><input type="text" value="` + data.values[index]["amount"] + `" class="amnt" disabled></td>
+                    <tr class="entry" id="` + data.values[index]["id"] + `">
+                        <td><input type="date" id="date` + data.values[index]["id"] + `" value="` + data.values[index]["date_plan"] + `" class="date_type" disabled></td>
+                        <td><input type="text" id="name` + data.values[index]["id"] + `" value="` + data.values[index]["merchant_name"].toUpperCase() + `" class="amnt" disabled></td>
+                        <td><input type="text" id="text` + data.values[index]["id"] + `" value="` + data.values[index]["amount"] + `" class="amnt" disabled></td>
                         <td>` + data.values[index]["description"] + `</td>
-                        <td><button class="button_edit">Edit <i class="fa fa-caret-right" aria-hidden="true"></i></button></td>
-                        <td><button id="ct_remove">Remove</button></td>
+                        <td><button class="button_edit" value="` + data.values[index]["id"] + `">Edit <i class="fa fa-caret-right" aria-hidden="true"></i></button></td>
+                        <td><button id="ct_remove" value="` + data.values[index]["id"] + `">Remove</button></td>
                     </tr>`;
                         } else if (data.values[index]["type"] == "moneyout") {
                             html_moneyout += `
-                    <tr>
-                        <td><input type="date" value="` + data.values[index]["date_plan"] + `" class="date_type" disabled></td>
-                        <td>` + data.values[index]["merchant_name"].toUpperCase() + `</td>
-                        <td><input type="text" value="` + data.values[index]["amount"] + `" class="amnt" disabled></td>
+                    <tr class="entry "id="` + data.values[index]["id"] + `">
+                        <td><input type="date" id="date` + data.values[index]["id"] + `" value="` + data.values[index]["date_plan"] + `" class="date_type" disabled></td>
+                        <td><input type="text" id="name` + data.values[index]["id"] + `" value="` + data.values[index]["merchant_name"].toUpperCase() + `" class="amnt" disabled></td>
+                        <td><input type="text" id="text` + data.values[index]["id"] + `" value="` + data.values[index]["amount"] + `" class="amnt" disabled></td>
                         <td>` + data.values[index]["description"] + `</td>
-                        <td><button class="button_edit">Edit <i class="fa fa-caret-right" aria-hidden="true"></i></button></td>
-                        <td><button id="ct_remove">Remove</button></td>
+                        <td><button class="button_edit" value="` + data.values[index]["id"] + `">Edit <i class="fa fa-caret-right" aria-hidden="true"></i></button></td>
+                        <td><button id="ct_remove" value="` + data.values[index]["id"] + `">Remove</button></td>
                     </tr>`
                         }
                     } else {
                         html_overdue += `
-                    <tr>
-                        <td><input type="date" value="` + data.values[index]["date_plan"] + `" class="date_type" disabled></td>
-                        <td>` + data.values[index]["merchant_name"].toUpperCase() + `</td>
-                        <td><input type="text" value="` + data.values[index]["amount"] + `" class="amnt" disabled></td>
+                    <tr class="entry" id="` + data.values[index]["id"] + `">
+                        <td><input type="date" id="date` + data.values[index]["id"] + `" value="` + data.values[index]["date_plan"] + `" class="date_type" disabled></td>
+                        <td><input type="text" id="name` + data.values[index]["id"] + `" value="` + data.values[index]["merchant_name"].toUpperCase() + `" class="amnt" disabled></td>
+                        <td><input type="text" id="text` + data.values[index]["id"] + `" value="` + data.values[index]["amount"] + `" class="amnt" disabled></td>
                         <td>Planned</td>
-                        <td><button class="button_edit">Edit <i class="fa fa-caret-right" aria-hidden="true"></i></button></td>
-                        <td><button id="ct_remove">Remove</button></td>
+                        <td><button class="button_edit" value="` + data.values[index]["id"] + `">Edit <i class="fa fa-caret-right" aria-hidden="true"></i></button></td>
+                        <td><button id="ct_remove" value="` + data.values[index]["id"] + `">Remove</button></td>
                     </tr>`;
                     }
 
@@ -1070,13 +1070,12 @@ jQuery(document).ready(function() {
     //table sorting
 
 
-    $('#cashflowtransactions tr.moneyin').each(function() {
-        load_money_in_out_table();
+    $('tr.entry').each(function() {
         var t = this.cells[1].textContent.split('-');
         $(this).data('_ts', new Date(t[2], t[1] - 1, t[0]).getTime());
     }).sort(function(a, b) {
         return $(a).data('_ts') < $(b).data('_ts');
-    }).appendTo('#cashflowtransactions .planner_table');
+    }).appendTo('#cashflowtransactions');
     //end table sorting
     var dtToday = new Date();
 
@@ -1095,5 +1094,56 @@ jQuery(document).ready(function() {
 
     $(document).on("click", ".button_edit", function() {
         $("#edit-cashflow-customer").fadeIn();
+        var id = $(this).val();
+        console.log(id);
+        var date = $("#date" + id).val();
+        var text = $("#text" + id).val();
+        var name = "NAME: " + $("#name" + id).val();
+        console.log(name);
+        $('#edit-cashflow-customer #merchant_name').html(name);
+        $('#edit-cashflow-customer #date').val(date);
+        $('#edit-cashflow-customer .text').val(text);
+        $('#edit-cashflow-customer #id').val(id);
     })
+
+    $(document).on("click", "#edit-cashflow-customer .saving", function() {
+        var date = $('#edit-cashflow-customer #date').val();
+        var amount = $('#edit-cashflow-customer .text').val();
+        var id = $('#edit-cashflow-customer #id').val();
+
+
+        $.ajax({
+            url: baseURL + "accounting/update_cashflow_date_amount",
+            type: "POST",
+            dataType: "json",
+            data: { date: date, amount: amount, id: id },
+            success: function(data) {
+                $("#edit-cashflow-customer").fadeOut();
+                console.log(date + " " + amount + " " + id);
+            }
+        });
+    })
+
+    $(document).on("click", "#ct_remove", function() {
+        var id = $(this).val();
+        $.ajax({
+            url: baseURL + "accounting/remove_cashflow_customer",
+            type: "POST",
+            dataType: "json",
+            data: { id: id },
+            success: function(data) {
+                location.reload();
+                console.log("delete");
+            }
+        });
+    })
+
+
+
+    $(document).on("click", ".closing", function() {
+        $("#edit-cashflow-customer").fadeOut();
+        var table = $(".planner_table tr.entry")[1];
+        console.log(table);
+    })
+
 });

@@ -38,7 +38,10 @@ body {
                 </div>
 
                 <div class="form-group">
-                    <label for="letter">Letter Name</label>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <label for="letter">Letter Name</label>
+                        <a href="<?=base_url('EsignEditor/create');?>" class="link">Create Letter</a>
+                    </div>
                     <select class="form-control" id="letter" data-name="letter_id"></select>
                 </div>
 
