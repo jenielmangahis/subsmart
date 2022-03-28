@@ -32,7 +32,7 @@
         <a class="h6 mb-0 nav-link <?= $cust_active_tab == 'estimates' ?   "active" : ''; ?> nav-link" href="<?= base_url('customer/estimates_list/'.$cus_id); ?>">Estimates</a>
     </li> -->
     <li class="nav-item">
-        <a class="h6 mb-0 nav-link <?= $cust_active_tab == 'estimates' ?   "active" : ''; ?> nav-link" onclick="window.open('<?= base_url('estimate/add?cus_id='.$cus_id); ?>', '_blank', 'location=yes,height=1080,width=1500,scrollbars=yes,status=yes');" href="javascript:void(0);">Estimates</a>
+        <a class="h6 mb-0 nav-link <?= $cust_active_tab == 'estimates' ?   "active" : ''; ?> nav-link cus-nav-estimate" href="javascript:void(0);">Estimates</a>
     </li>    
     <!-- <li class="nav-item">
         <a class="h6 mb-0 nav-link <?= $active_tab == 'leadSource' ?   "active" : ''; ?> nav-link">Import/Audit</a>
@@ -41,7 +41,12 @@
         <a class="h6 mb-0 nav-link <?= $active_tab == 'leadTypes' ?   "active" : ''; ?> nav-link">Tag Pending Report</a>
     </li> -->
     <li class="nav-item">
-        <a class="h6 mb-0 nav-link" href="<?= base_url('esign/createTemplate') ?> nav-link">Send Letters</a>
+        <a class="h6 mb-0 nav-link <?= $active_tab == 'leadTypes' ?   "active" : ''; ?> nav-link">Tag Pending Report</a>
+    </li>
+    <li class="nav-item">
+        <a class="h6 mb-0 nav-link <?= $cust_active_tab == 'credit_industry' ?   "active" : ''; ?> nav-link" href="<?= base_url('customer/credit_industry/'.$cus_id) ?>">
+            Credit Industry
+        </a>
     </li>
     <li class="nav-item">
         <a class="h6 mb-0 nav-link <?= $cust_active_tab == 'call' ?   "active" : ''; ?> nav-link" href="<?= base_url('customer/call/'.$cus_id) ?>">Call</a>
@@ -67,3 +72,10 @@
         <a class="h6 mb-0 nav-link" href="<?= base_url('vault/mylibrary'); ?>">eSign</a>
     </li>
 </ul>
+<script>
+$(function(){
+    $(document).on('click', '.cus-nav-estimate', function(){
+        $('#new_estimate_modal').modal('show');
+    });
+});
+</script>

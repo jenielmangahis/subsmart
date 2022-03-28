@@ -131,11 +131,108 @@ defined('BASEPATH') or exit('No direct script access allowed');
             </div>
 
             <div style="margin-left:30px;  padding-top:30px;" align="left" class="normaltext1">
-                <a href="#" style="color:#58bc4f;">Checklists</a>&nbsp;&nbsp;
-                <a href="#" style="color:#58bc4f;">Welcome Letter</a>&nbsp;&nbsp;
+                <a class="btn btn-sm btn-primary" href="javascript:void(0);" onclick="window.open('<?= base_url('job_checklists/list'); ?>', '_blank', 'location=yes,height=1080,width=1500,scrollbars=yes,status=yes');" style="color:#ffffff;">Checklists</a>&nbsp;&nbsp;
+                <a class="btn btn-sm btn-primary btn-send-welcome-letter" href="javascript:void(0);" style="color:#ffffff;">Welcome Email</a>&nbsp;&nbsp;
+                <a class="btn btn-sm btn-primary"  href="javascript:void(0);" onclick="window.open('<?= base_url('survey'); ?>', '_blank', 'location=yes,height=1080,width=1500,scrollbars=yes,status=yes');" style="color:#ffffff;">Survey</a>
                 <!--  <a href="javascript:void(0);">Action/Notes</a>-->
+            </div>
+
+
+            <!-- Modal send welcome email -->
+            <div class="modal fade bd-example-modal-md" id="modal-welcome-email" tabindex="-1" role="dialog" aria-labelledby="modalWelcomeEmailTitle" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-envelope-o"></i> Send Welcome Email</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form id="frm-send-welcome-email" method="post">
+                            <input type="hidden" name="cid" value="<?= $cus_id; ?>">                            
+                            <div class="modal-body welcome-email-container"></div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary btn-send-welcome-email">Send</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
 
         </div>
     </div>
 </div>
+<script>
+$(function(){
+    $(document).on('click', '.btn-send-welcome-letter', function(){        
+        var url = base_url + 'customer/_load_welcome_email_form';
+        var cid = "<?= $cus_id; ?>";
+
+        $('#modal-welcome-email').modal('show');        
+        $(".welcome-email-container").html('<span class="spinner-border spinner-border-sm m-0"></span>');
+
+        setTimeout(function () {
+          $.ajax({
+             type: "POST",
+             url: url,
+             data: {cid:cid},
+             success: function(o)
+             {  
+                $('.welcome-email-container').html(o);
+             }
+          });
+        }, 800);
+    });
+
+    $("#frm-send-welcome-email").submit(function(e){
+      e.preventDefault();
+      var url = base_url + '/customer/_send_welcome_email';
+      $(".btn-send-welcome-email").html('<span class="spinner-border spinner-border-sm m-0"></span>');
+
+      for (instance in CKEDITOR.instances) {
+        CKEDITOR.instances[instance].updateElement();
+      }
+
+      var formData = new FormData($("#frm-send-welcome-email")[0]);   
+
+      setTimeout(function () {
+          $.ajax({
+             type: "POST",
+             url: url,
+             dataType: 'json',
+             contentType: false,
+             cache: false,
+             processData:false,
+             data: formData,
+             success: function(o)
+             {       
+                $('#modal-welcome-email').modal('hide');    
+
+                if( o.is_success == 1 ){
+                  Swal.fire({
+                      text: 'Welcome email was successfully sent',
+                      icon: 'success',
+                      showCancelButton: false,
+                      confirmButtonColor: '#32243d',
+                      cancelButtonColor: '#d33',
+                      confirmButtonText: 'Ok'
+                  }).then((result) => {
+                      //location.reload();
+                  });
+                }else{
+                  
+                  Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    confirmButtonColor: '#32243d',
+                    html: o.msg
+                  });
+                } 
+                $(".btn-send-welcome-email").html('Send');
+             }
+          });
+      }, 800);
+    });
+});
+</script>
