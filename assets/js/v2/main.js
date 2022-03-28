@@ -63,6 +63,13 @@ $(document).ready(function () {
 		});
 	});
 
+	$(".nsm-callout button").on("click", function () {
+		let _alert = $(this).closest(".nsm-callout");
+		_alert.fadeOut(300, function () {
+			resizeSidebar();
+		});
+	});
+
 	$(".nsm-img-upload").on("click", function(){
 		let fileInput = $(this).find("input[type=file]");
 
@@ -174,3 +181,14 @@ function debounce(func, wait, immediate) {
 		if (callNow) func.apply(context, args);
 	};
 };
+
+function showLoader(_elem){
+	let loader = '<div class="row">'+
+                        '<div class="col-12">'+
+                            '<div class="nsm-loader">'+
+                                '<i class="bx bx-loader-alt bx-spin"></i>'+
+                            '</div>'+
+                        '</div>'+
+                    '</div>';
+	_elem.html(loader);
+}

@@ -15,7 +15,7 @@
             <div class="nsm-page-content">
                 <div class="row">
                     <div class="col-12">
-                        <div class="nsm-alert warning">
+                        <div class="nsm-callout primary">
                             <button><i class='bx bx-x'></i></button>
                             Event types can be separated into seminars, conference, trade show, work shop, corporate, private, or charity. Event types can also be track for categories where an invoice will not be submit like estimates, tasks, demos and reminders. With our Crm you can choose, create or delete the appropriate classification for your business model.
                         </div>

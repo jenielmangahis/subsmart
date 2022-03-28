@@ -5,8 +5,8 @@
                 <button class="closing"><i class="fa fa-times" aria-hidden="true"></i></button>
             </div>
             <div class="holder">
-                <h3>EDIT THE FOLLOWING FIELDS</h3>
-                <h6>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.</h6>
+                <h2>EDIT THE FOLLOWING FIELDS</h2>
+
                 <div class="input-holder">
                     <h5 id="merchant_name"></h5>
                     <input type="text" id="id" style="display: none;">
@@ -31,6 +31,10 @@
         text-align: -webkit-center;
     }
 
+    #edit-cashflow-customer .input-holder {
+        margin-top: 22px;
+    }
+
     #edit-cashflow-customer input#date {
         margin: 20px 26px;
         height: 37px;
@@ -52,6 +56,7 @@
         border-radius: 20px;
         background-color: #2ca01d;
         color: white;
+        border: none;
     }
 
     #edit-cashflow-customer .modal-body {
@@ -60,6 +65,7 @@
         border-radius: 30px;
         text-align: left;
         margin-top: 125px;
+
     }
 
     #edit-cashflow-customer .cont-close {
@@ -70,5 +76,17 @@
         background: none;
         border: none;
         font-size: 23px;
+    }
+
+    @media only screen and (max-width: 2265px) {
+        #edit-cashflow-customer .modal-body {
+            width: 23%;
+        }
+    }
+
+    @media only screen and (max-width: 1686px) {
+        #edit-cashflow-customer .modal-body {
+            width: 30%;
+        }
     }
 </style>

@@ -9,7 +9,7 @@
             <div class="nsm-page-content">
                 <div class="row">
                     <div class="col-12">
-                        <div class="nsm-alert warning">
+                        <div class="nsm-callout primary">
                             <button><i class='bx bx-x'></i></button>
                             For any business, getting customers is only half the battle; creating a job workflow will help track each scheduled ticket from draft to receiving payment.
                         </div>

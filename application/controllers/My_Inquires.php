@@ -20,8 +20,10 @@ class My_Inquires extends MY_Controller {
 
 	public function index()
 	{	
+        $this->page_data['page']->title = 'My Inquiry List';
+        $this->page_data['page']->parent = 'Marketing';
 
-		$this->load->view('my_inquires/index', $this->page_data);
+		$this->load->view('v2/pages/my_inquires/index', $this->page_data);
 
 	}
 }

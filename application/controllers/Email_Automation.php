@@ -17,12 +17,15 @@ class Email_Automation extends MY_Controller {
 	}
 
 	public function index(){	
+        $this->page_data['page']->title = 'Email Automation';
+        $this->page_data['page']->parent = 'Marketing';
+
 		$email_automation_list = $this->MarketingEmailAutomation_model->getAll();
         $email_automation_templates_list = $this->MarketingEmailAutomationTemplate_model->getAll();
 
         $this->page_data['email_automation_templates_list'] = $email_automation_templates_list;
 		$this->page_data['email_automation_list'] = $email_automation_list;
-		$this->load->view('email_automation/index', $this->page_data);
+		$this->load->view('v2/pages/email_automation/index', $this->page_data);
 	}
 
     public function add_email_automation(){
@@ -471,7 +474,7 @@ class Email_Automation extends MY_Controller {
         $this->page_data['optionRuleEvent']    = $optionRuleEvent;
         $this->page_data['optionIsActive']     = $optoptionIsActiveionStatus;
         $this->page_data['emailAutomation']    = $emailAutomation;
-        $this->load->view('email_automation/ajax_load_automation_list', $this->page_data);
+        $this->load->view('v2/pages/email_automation/ajax_load_automation_list', $this->page_data);
     }
 
     public function ajax_update_automation_is_active(){

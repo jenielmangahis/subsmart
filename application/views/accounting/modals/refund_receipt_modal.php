@@ -213,8 +213,9 @@
                                                         <tbody>
                                                             <?php if(isset($items) && count($items) > 0) : ?>
                                                                 <?php foreach($items as $item) : ?>
-                                                                    <?php $itemDetails = $this->items_model->getItemById($item->item_id)[0];?>
-                                                                    <?php $locations = $this->items_model->getLocationByItemId($item->item_id);?>
+                                                                    <?php if(!is_null($item->itemDetails)) : ?>
+                                                                    <?php $itemDetails = $item->itemDetails;?>
+                                                                    <?php $locations = $item->locations;?>
                                                                     <tr>
                                                                         <td><?=$itemDetails->title?><input type="hidden" name="item[]" value="<?=$item->item_id?>"></td>
                                                                         <td><?=ucfirst($itemDetails->type)?></td>
@@ -246,6 +247,62 @@
                                                                             </div>
                                                                         </td>
                                                                     </tr>
+                                                                    <?php else : ?>
+                                                                    <?php $packageDetails = $item->packageDetails; ?>
+                                                                    <?php $packageItems = $item->packageItems; ?>
+                                                                    <tr class="package">
+                                                                        <td><?=$packageDetails->name?><input type="hidden" name="package[]" value="<?=$packageDetails->id?>"></td>
+                                                                        <td>Package</td>
+                                                                        <td></td>
+                                                                        <td><input type="number" name="quantity[]" class="form-control text-right" required value="<?=$item->quantity?>"></td>
+                                                                        <td><span class="item-amount"><?=number_format(floatval($item->price), 2, '.', ',')?></span></td>
+                                                                        <td></td>
+                                                                        <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="<?=number_format(floatval($item->tax), 2, '.', ',')?>"></td>
+                                                                        <td>
+                                                                            <span class="row-total">
+                                                                                <?php
+                                                                                    $rowTotal = '$'.number_format(floatval($item->total), 2, '.', ',');
+                                                                                    $rowTotal = str_replace('$-', '-$', $rowTotal);
+                                                                                    echo $rowTotal;
+                                                                                ?>
+                                                                            </span>
+                                                                        </td>
+                                                                        <td>
+                                                                            <div class="d-flex align-items-center justify-content-center">
+                                                                                <a href="#" class="deleteRow"><i class="fa fa-trash"></i></a>
+                                                                            </div>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr class="package-items">
+                                                                        <td colspan="3">
+                                                                            <table class="table m-0 bg-white">
+                                                                                <thead>
+                                                                                    <tr class="package-item-header">
+                                                                                        <th>Item Name</th>
+                                                                                        <th>Quantity</th>
+                                                                                        <th>Price</th>
+                                                                                    </tr>
+                                                                                </thead>
+                                                                                <tbody id="package-items-table">
+                                                                                    <?php foreach($packageItems as $packageItem) : ?>
+                                                                                        <?php $item = $this->items_model->getItemById($packageItem->item_id)[0]; ?>
+                                                                                        <tr class="package-item">
+                                                                                            <td><?=$item->title?></td>
+                                                                                            <td><?=$packageItem->quantity?></td>
+                                                                                            <td><?=number_format(floatval($packageItem->price), 2, '.', ',')?></td>
+                                                                                        </tr>
+                                                                                    <?php endforeach; ?>
+                                                                                </tbody>
+                                                                            </table>
+                                                                        </td>
+                                                                        <td></td>
+                                                                        <td></td>
+                                                                        <td></td>
+                                                                        <td></td>
+                                                                        <td></td>
+                                                                        <td></td>
+                                                                    </tr>
+                                                                    <?php endif; ?>
                                                                 <?php endforeach; ?>
                                                             <?php endif; ?>
                                                         </tbody>

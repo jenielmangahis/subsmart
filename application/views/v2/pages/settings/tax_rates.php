@@ -16,7 +16,7 @@
             <div class="nsm-page-content">
                 <div class="row">
                     <div class="col-12">
-                        <div class="nsm-alert warning">
+                        <div class="nsm-callout primary">
                             <button><i class='bx bx-x'></i></button>
                             Listing all your predefined tax rates.
                         </div>

@@ -55,6 +55,10 @@ class Survey extends MY_Controller
   }
 
   public function index(){
+    $this->page_data['page']->title = 'Survey Wizard';
+    $this->page_data['page']->parent = 'Marketing';
+    $this->page_data['page']->message = 'What would you like to do?';
+
     $templates = file_get_contents('application/views/survey/survey_templates.json')    ;
 
     $this->page_data['surveys'] = $this->survey_model->list();
@@ -67,7 +71,8 @@ class Survey extends MY_Controller
     $this->page_data['survey_question_templates'] = $this->survey_model->getTemplateQuestions();
     $this->page_data['template_categories'] = array_unique(array_column(json_decode($templates), 'category'));
     $this->page_data["survey_themes"] = $this->survey_model->getThemes();
-    $this->load->view('survey/index.php', $this->page_data);
+    // $this->load->view('survey/index.php', $this->page_data);
+    $this->load->view('v2/pages/survey/index.php', $this->page_data);
   }
 
   public function add($settings = null){

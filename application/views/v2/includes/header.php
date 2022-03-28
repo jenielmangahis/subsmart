@@ -14,7 +14,7 @@ if ($this->session->userdata('usertimezone') == null) {
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>nSmartrac</title>
+    <title>nSmarTrac</title>
 
     <!-- Custom CSS -->
     <link rel="stylesheet" type="text/css" href="<?= base_url("assets/css/v2/main.css") ?>">
@@ -134,7 +134,7 @@ if ($this->session->userdata('usertimezone') == null) {
                                 <i class='bx bx-fw bx-file'></i> Credit Notes
                             </a>
                         </li>
-                        <li>
+                        <li class="<?php if($page->title == 'Leads Manager List'): echo 'selected'; endif; ?>">
                             <a href="<?= base_url("customer/leads") ?>">
                                 <i class='bx bx-fw bx-notepad'></i> Leads
                             </a>
@@ -146,7 +146,7 @@ if ($this->session->userdata('usertimezone') == null) {
                         </li>
                     </ul>
                 </li>
-                <li>
+                <li class="<?php if($page->title == 'Customers'): echo 'selected'; endif; ?>">
                     <a href="<?= base_url("customer") ?>">
                         <i class='bx bx-fw bx-group'></i> Customers
                     </a>
@@ -167,26 +167,71 @@ if ($this->session->userdata('usertimezone') == null) {
                     <ul>
                     </ul>
                 </li>
-                <li>
+                <li class="<?php if($page->title == 'Marketing Features' || $page->title == 'Survey Wizard' || $page->title == 'SMS Automation' || $page->title == 'Email Blast' || $page->title == 'Email Automation' || $page->title == 'Deals & Steals' || $page->title == 'My Inquiry List' || $page->title == 'Campaign 360'): echo 'selected '; endif; if($page->parent == 'Marketing'): echo 'active'; endif; ?>">
                     <a href="<?= base_url("marketing") ?>">
-                        <i class='bx bx-fw bx-bar-chart-square'></i> Marketing
+                        <i class='bx bx-fw bx-bar-chart-square'></i> Marketing <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
                     </a>
-                    <ul>
+                    <ul class="mt-3">
+                        <li class="<?php if($page->title == 'Customers'): echo 'selected'; endif; ?>">
+                            <a href="<?= base_url("customer") ?>">
+                                <i class='bx bx-fw bx-group'></i> My Customers
+                            </a>
+                        </li>
+                        <li class="<?php if($page->title == 'SMS Blast'): echo 'selected'; endif; ?>">
+                            <a href="<?= base_url("sms_campaigns") ?>">
+                                <i class='bx bx-fw bx-chat'></i> SMS Blast
+                            </a>
+                        </li>
+                        <li class="<?php if($page->title == 'Survey Wizard'): echo 'selected'; endif; ?>">
+                            <a href="<?= base_url("survey") ?>">
+                                <i class='bx bx-fw bx-list-check'></i> Survey
+                            </a>
+                        </li>
+                        <li class="<?php if($page->title == 'SMS Automation'): echo 'selected'; endif; ?>">
+                            <a href="<?= base_url("sms_automation") ?>">
+                                <i class='bx bx-fw bx-message-dots'></i> SMS Automation
+                            </a>
+                        </li>
+                        <li class="<?php if($page->title == 'Email Blast'): echo 'selected'; endif; ?>">
+                            <a href="<?= base_url("email_campaigns") ?>">
+                                <i class='bx bx-fw bx-envelope'></i> Email Blast
+                            </a>
+                        </li>
+                        <li class="<?php if($page->title == 'Email Automation'): echo 'selected'; endif; ?>">
+                            <a href="<?= base_url("email_automation") ?>">
+                                <i class='bx bx-fw bx-mail-send'></i> Email Automation
+                            </a>
+                        </li>
+                        <li class="<?php if($page->title == 'Deals & Steals'): echo 'selected'; endif; ?>">
+                            <a href="<?= base_url("promote/deals") ?>">
+                                <i class='bx bx-fw bx-purchase-tag-alt'></i> Deals and Steals
+                            </a>
+                        </li>
+                        <li class="<?php if($page->title == 'Campaign 360'): echo 'selected'; endif; ?>">
+                            <a href="<?= base_url("campaign") ?>">
+                                <i class='bx bx-fw bx-map-pin'></i> Campaign 360
+                            </a>
+                        </li>
+                        <li class="<?php if($page->title == 'My Inquiry List'): echo 'selected'; endif; ?>">
+                            <a href="<?= base_url("my_inquires") ?>">
+                                <i class='bx bx-fw bx-help-circle'></i> My Inquiry List
+                            </a>
+                        </li>
                     </ul>
                 </li>
-                <li>
+                <li class="<?php if($page->title == 'Business Tools'): echo 'selected '; endif; if($page->parent == 'Tools'): echo 'active'; endif; ?>">
                     <a href="#">
                         <i class='bx bx-fw bx-extension'></i> Tools <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
                     </a>
                     <ul class="mt-3">
-                        <li>
+                        <li class="<?php if($page->title == 'Business Tools' || $page->title == 'API Connectors' || $page->title == 'Google Contacts' || $page->title == 'Quickbooks Payroll' || $page->title == 'Nice Job' || $page->title == 'MailChimp' || $page->title == 'Active Campaign' || $page->title == 'API Integration'): echo 'selected'; endif; ?>">
                             <a href="<?= base_url("tools/business_tools") ?>">
-                                <i class='bx bx-fw bx-wrench'></i> Business Tools
+                                <i class='bx bx-fw bx-wrench'></i> Business Tools 
                             </a>
                         </li>
-                        <li>
+                        <li class="<?php if($page->title == 'eSign Tools'): echo 'selected'; endif; ?>">
                             <a href="<?= base_url("esignmain") ?>">
-                                <i class='bx bx-fw bx-pallete'></i> eSign
+                                <i class='bx bx-fw bx-palette'></i> eSign
                             </a>
                         </li>
                         <li>
@@ -282,6 +327,10 @@ if ($this->session->userdata('usertimezone') == null) {
                     if($page->title == 'Dashboard'):
                     ?>
                     <span>Welcome <?php echo getLoggedName(); ?>!</span>
+                    <?php
+                    else:
+                    ?>
+                    <?= $page->message; ?>
                     <?php
                     endif;
                     ?>

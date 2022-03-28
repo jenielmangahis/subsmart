@@ -15,7 +15,7 @@
             <div class="nsm-page-content">
                 <div class="row">
                     <div class="col-12">
-                        <div class="nsm-alert warning">
+                        <div class="nsm-callout primary">
                             <button><i class='bx bx-x'></i></button>
                             This is where you will create, view, and edit your events and all event-related records, go to the Events work area where you can create a new event and—working from this single event record—add most of the other types of records and information that you need to plan, publish, promote, and analyze it. Like many of our sales items the event record provides a customizable business process workflow that helps guide you through each step of the process.
                         </div>

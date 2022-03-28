@@ -123,6 +123,10 @@ export function toggleFavoriteLetter(letterId) {
   );
 }
 
+export function deletePlaceholder(id) {
+  return http.delete(`${prefixURL}/EsignEditor/apiDeletePlaceholder/${id}`);
+}
+
 const http = {
   post: sendPost,
   delete: sendDelete,

@@ -218,6 +218,7 @@ class EsignEditor extends MY_Controller
         $status = (int) $this->input->get('status') ?? -1; // -1 = all
         $userId = (int) logged('id');
         $searchQuery = $this->input->get('search[value]');
+        $order = $this->input->get('order[0][dir]');
 
         $this->db->select('l.id, l.title, l.content, l.is_active, l.user_id, c.name AS category, IF(f.id, TRUE, FALSE) as is_favorite', false);
         $this->db->from('esign_editor_letters l');
@@ -227,7 +228,7 @@ class EsignEditor extends MY_Controller
         $this->db->where('l.user_id', $userId);
         $this->db->or_where('l.user_id', null);
         $this->db->group_end();
-        $this->db->order_by('l.title', 'asc');
+        $this->db->order_by('l.title', $order);
         $this->db->limit($limit, $offset);
         if (!is_null($searchQuery)) {
             $this->db->like('l.title', $searchQuery);
@@ -397,7 +398,18 @@ SQL;
                 'description' => 'Address of client',
                 'get' => function (PlaceholderGetParam $param) {
                     $customer = $this->getCustomer($param->customerId);
-                    return $customer ? $customer->mail_add : null;
+                    $address = [
+                        $customer->mail_add,
+                        $customer->city,
+                        $customer->state,
+                        $customer->zip_code,
+                    ];
+
+                    $address = array_filter($address, function ($data) {
+                        return !is_null($data) && !empty($data);
+                    });
+
+                    return empty($address) ? null : implode(', ', $address);
                 },
             ],
             [
@@ -409,7 +421,18 @@ SQL;
                 'description' => 'Birth date of client',
                 'get' => function (PlaceholderGetParam $param) {
                     $customer = $this->getCustomer($param->customerId);
-                    return $customer ? $customer->date_of_birth : null;
+                    $dateOfBirth = $customer->date_of_birth;
+
+                    if (is_null($dateOfBirth) || empty($dateOfBirth)) {
+                        return null;
+                    }
+
+                    try {
+                        $date = DateTime::createFromFormat('Y-m-d', $dateOfBirth);
+                        return $date->format('m/d/Y');
+                    } catch (\Throwable$th) {
+                        return $dateOfBirth; // unexpected format
+                    }
                 },
             ],
             [
@@ -509,6 +532,9 @@ SQL;
                 'get' => function () use ($placeholder) {
                     return $placeholder->value;
                 },
+
+                'id' => $placeholder->id,
+                '_user_defined' => true,
             ]);
         }
 
@@ -519,16 +545,20 @@ SQL;
         $customer = $this->getCustomer($customerId);
         $customFields = [];
         if (!is_null($customer->custom_fields) && !empty($customer->custom_fields)) {
-            $customFields = json_decode($customer->custom_fields);
+            $customFields = json_decode($customer->custom_fields, true);
+        }
+
+        if (!is_array($customFields)) {
+            return $placeholders;
         }
 
         $placeholderCodes = array_column($placeholders, 'code');
         foreach ($customFields as $field) {
-            $code = $this->toPlaceholderCode($field->name);
-            $description = $field->name . ' (custom field)';
+            $code = $this->toPlaceholderCode($field['name']);
+            $description = $field['name'] . ' (custom field)';
             $key = array_search($code, $placeholderCodes);
             $getter = function () use ($field) {
-                return $field->value;
+                return $field['value'];
             };
 
             if ($key === false) {
@@ -624,6 +654,7 @@ SQL;
 
         $this->db->where('id', $this->db->insert_id());
         $placeholder = $this->db->get('esign_editor_placeholders')->row();
+        $placeholder->_user_defined = true;
         echo json_encode(['data' => $placeholder]);
     }
 
@@ -997,5 +1028,27 @@ SQL;
 
         header('content-type: application/json');
         echo json_encode(['data' => $letter]);
+    }
+
+    public function apiDeletePlaceholder($placeholderId)
+    {
+        header('content-type: application/json');
+        if ($_SERVER['REQUEST_METHOD'] !== 'DELETE') {
+            echo json_encode(['success' => false]);
+            return;
+        }
+
+        $this->db->where('user_id', logged('id'));
+        $this->db->where('id', $placeholderId);
+        $placeholder = $this->db->get('esign_editor_placeholders')->row();
+
+        if (is_null($placeholder)) {
+            echo json_encode(['success' => false]);
+            return;
+        }
+
+        $this->db->where('id', $placeholder->id);
+        $this->db->delete('esign_editor_placeholders');
+        echo json_encode(['data' => $placeholder->id]);
     }
 }

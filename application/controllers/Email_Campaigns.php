@@ -24,12 +24,14 @@ class Email_Campaigns extends MY_Controller {
 	}
 
 	public function index(){	
+        $this->page_data['page']->title = 'Email Blast';
+        $this->page_data['page']->parent = 'Marketing';
 
         $this->page_data['status_active'] = $this->EmailBlast_model->statusActive();                
         $this->page_data['status_scheduled'] = $this->EmailBlast_model->statusScheduled();
         $this->page_data['status_closed']    = $this->EmailBlast_model->statusClosed();
         $this->page_data['status_draft']     = $this->EmailBlast_model->statusDraft();
-		$this->load->view('email_campaigns/index', $this->page_data);
+		$this->load->view('v2/pages/email_campaigns/index', $this->page_data);
 
 	}
 
@@ -472,7 +474,7 @@ class Email_Campaigns extends MY_Controller {
         $this->page_data['sendToOptions'] = $sendToOptions;
         $this->page_data['emailBlast']    = $emailBlast;
         $this->page_data['status_draft']  = $status_draft;
-        $this->load->view('email_campaigns/ajax_load_campaigns', $this->page_data);
+        $this->load->view('v2/pages/email_campaigns/ajax_load_campaigns', $this->page_data);
     }
 
     public function ajax_load_email_campaign_counter(){

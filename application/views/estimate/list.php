@@ -690,7 +690,7 @@ $(document).on('click touchstart','.send_to_customer',function(){
 
 var id = $(this).attr('acs-id');
 var est_id = $(this).attr('est-id');
-// alert(wo_id);
+alert(id);
 
 var r = confirm("Send this to customer?");
 

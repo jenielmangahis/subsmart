@@ -12,6 +12,9 @@ class Esign_Main extends MY_Controller {
 
 	public function index()
 	{
+        $this->page_data['page']->title = 'eSign Tools';
+        $this->page_data['page']->parent = 'Tools';
+
 		$is_allowed = $this->isAllowedModuleAccess(49);
         if( !$is_allowed ){
             $this->page_data['module'] = 'eSign_main';
@@ -20,7 +23,7 @@ class Esign_Main extends MY_Controller {
         }
 
 		$this->page_data['users'] = $this->users_model->getUser(logged('id'));
-		$this->load->view('esignMain/esignMain', $this->page_data);
+		$this->load->view('v2/pages/esignMain/esignMain', $this->page_data);
 	}
 
 	public function blank() {

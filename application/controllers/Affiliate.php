@@ -26,6 +26,9 @@ class Affiliate extends MY_Controller {
 
 	public function index()
 	{
+        $this->page_data['page']->title = 'Affiliate Partners';
+        $this->page_data['page']->parent = 'Tools';
+
         $is_allowed = $this->isAllowedModuleAccess(50);
         if( !$is_allowed ){
             $this->page_data['module'] = 'affiliates';
@@ -65,7 +68,7 @@ class Affiliate extends MY_Controller {
         }
         
 		$this->page_data['affiliates'] = $affiliates;
-		$this->load->view('affiliate/list', $this->page_data);
+		$this->load->view('v2/pages/affiliate/list', $this->page_data);
 
 	}
 

@@ -15,7 +15,7 @@
             <div class="nsm-page-content">
                 <div class="row">
                     <div class="col-12">
-                        <div class="nsm-alert warning">
+                        <div class="nsm-callout primary">
                             <button><i class='bx bx-x'></i></button>
                             While categories are broader designations that are typically assigned one per event, tags are short but specific, and each event can be assigned as many tags as you'd like. It's a great way to use keywords or other important phrases to help you locate events that are most relevant to your interests.
                         </div>

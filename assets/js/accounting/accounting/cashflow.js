@@ -579,7 +579,6 @@ jQuery(document).ready(function() {
                         $('.finding').html(html2);
                     }
 
-                    console.log(determine);
                     if (months != "") {
                         $(document).on("input", "#day_num", function() {
                             if ($('#day_num').val() != "") {
@@ -608,7 +607,6 @@ jQuery(document).ready(function() {
                     $("select[name='day_place']").removeAttr("disabled");
                     $("select[name='day_want']").removeAttr("disabled");
                     $("input[name='day_num']").attr("disabled", true);
-                    console.log(determine);
                     var rank = $("#day_place").val();
                     var want = $("#day_want").val();
 
@@ -718,7 +716,6 @@ jQuery(document).ready(function() {
         } else {
             if (p_type == "1") {
                 if ($("#sched option:selected").val() == "daily") {
-                    console.log($("#sched option:selected").val());
                     if ($("input[name=toggle_switch1]").is(":checked")) {
                         d_sched = "everyday";
 
@@ -739,7 +736,6 @@ jQuery(document).ready(function() {
                     if (d_dne == "date") {
                         if (d_date == "") {
                             alert("input date");
-                            console.log("yawa");
                         } else {
                             $.ajax({
                                 url: baseURL + "accounting/savecashflowplan",
@@ -747,7 +743,6 @@ jQuery(document).ready(function() {
                                 dataType: "json",
                                 data: { merchant_name: name, date_plan: addDate, plan_amount: amt, plan_type: plan, plan_repeat: p_type, d_sched: d_sched, d_dne: d_dne, d_date: d_date, d_not: d_not, indic: indic },
                                 success: function(data) {
-                                    console.log("success");
                                     location.reload();
                                     $('#cfp_add_item_area').fadeOut();
                                 }
@@ -763,7 +758,6 @@ jQuery(document).ready(function() {
                                 dataType: "json",
                                 data: { merchant_name: name, date_plan: addDate, plan_amount: amt, plan_type: plan, plan_repeat: p_type, d_sched: d_sched, d_dne: d_dne, d_date: d_date, d_not: d_not, indic: indic },
                                 success: function(data) {
-                                    console.log("success");
                                     location.reload();
                                     $('#cfp_add_item_area').fadeOut();
                                 }
@@ -776,7 +770,6 @@ jQuery(document).ready(function() {
                             dataType: "json",
                             data: { merchant_name: name, date_plan: addDate, plan_amount: amt, plan_type: plan, plan_repeat: p_type, d_sched: d_sched, d_dne: d_dne, d_date: d_date, d_not: d_not, indic: indic },
                             success: function(data) {
-                                console.log("success");
                                 location.reload();
                                 $('#cfp_add_item_area').fadeOut();
                             }
@@ -785,7 +778,6 @@ jQuery(document).ready(function() {
 
 
                 } else if ($("#sched option:selected").val() == "weekly") {
-                    console.log($("#sched option:selected").val());
                     w_weeks = $('.num_weeks').val();
                     if ($("#sun").hasClass('color')) {
                         w_days += "Sunday";
@@ -833,7 +825,6 @@ jQuery(document).ready(function() {
                     }
 
                 } else if ($("#sched option:selected").val() == "monthly") {
-                    console.log($("#sched option:selected").val());
                     m_months = $('.num_months').val();
                     if ($('input[name=day_sched]:checked').val() == "day") {
                         m_day = $('#day_num').val();
@@ -942,14 +933,12 @@ jQuery(document).ready(function() {
             success: function(data) {
 
 
-
                 //for planner table
                 count = 0;
                 for (var index1 = 0; index1 < data.invoice.length; index1++) {
-                    console.log(data.invoice[index1]["customer_email"]);
                     html += `
-                    <tr class="entry" data-id="` + data.invoice[index1]["id"] + `">
-                        <td><input type="date" value="` + data.invoice[index1]["date_issued"] + `" data-field-type="date" class="date_type" disabled style="display:none;">` + data.invoice[index1]["date_issued"] + `</td>
+                    <tr class="entry" data-date="` + data.invoice[index1]["date_issued"] + `" data-id="` + data.invoice[index1]["id"] + `">
+                        <td>` + data.invoice[index1]["date_issued"] + `</td>
                         <td>` + data.invoice[index1]["customer_email"].toUpperCase() + `</td>
                         <td><input type="text" value="` + data.invoice[index1]["grand_total"] + `" class="amnt" disabled></td>
                         <td>Invoice</td>
@@ -959,10 +948,9 @@ jQuery(document).ready(function() {
 
                 }
                 for (var index2 = 0; index2 < data.expense.length; index2++) {
-                    console.log(data.expense[index2]["payment_date"]);
                     html_moneyout += `
-                    <tr class="entry" data-id="` + data.expense[index2]["id"] + `">
-                        <td><input type="date" value="` + data.expense[index2]["payment_date"] + `" data-field-type="date" class="date_type" disabled></td>
+                    <tr class="entry" data-date="` + data.expense[index2]["payment_date"] + ` data-id="` + data.expense[index2]["id"] + `">
+                        <td>` + data.expense[index2]["payment_date"] + `</td>
                         <td>` + data.expense[index2]["payee_type"].toUpperCase() + `</td>
                         <td><input type="text" value="` + data.expense[index2]["total_amount"] + `" class="amnt" disabled></td>
                         <td>Money Out</td>
@@ -972,10 +960,9 @@ jQuery(document).ready(function() {
 
                 }
                 for (var index1 = 0; index1 < data.arpi.length; index1++) {
-                    console.log(data.arpi[index1]["customer_email"]);
                     html_moneyin += `
-                    <tr class="entry" data-id="` + data.arpi[index1]["id"] + `">
-                        <td><input type="date" value="` + data.arpi[index1]["date_issued"] + `" data-field-type="date" class="date_type" disabled></td>
+                    <tr class="entry" data-date="` + data.arpi[index1]["date_issued"] + `" data-id="` + data.arpi[index1]["id"] + `">
+                        <td>` + data.arpi[index1]["date_issued"] + `</td>
                         <td>` + data.arpi[index1]["customer_email"].toUpperCase() + `</td>
                         <td><input type="text" value="` + data.arpi[index1]["grand_total"] + `" class="amnt" disabled></td>
                         <td>Money In</td>
@@ -990,13 +977,11 @@ jQuery(document).ready(function() {
                     var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
                     var comp_date = new Date(data.values[index]["date_plan"]);
                     var updated_date = moment(comp_date).format('YYYY-M-DD');
-                    console.log(updated_date);
-                    console.log(date);
                     if (updated_date > date) {
 
                         html += `
-                    <tr class="entry">
-                        <td><input type="date" id="date` + data.values[index]["id"] + `" value="` + data.values[index]["date_plan"] + `" data-field-type="date" class="date_type" disabled style="display:none;">` + data.values[index]["date_plan"] + `</td>
+                    <tr class="entry" data-date="` + data.values[index]["date_plan"] + `">
+                    <td><input type="date" id="date` + data.values[index]["id"] + `" value="` + data.values[index]["date_plan"] + `" class="date_type" disabled style="display:none;">` + data.values[index]["date_plan"] + `</td>
                         <td> <input type="text" id="name` + data.values[index]["id"] + `" value="` + data.values[index]["merchant_name"].toUpperCase() + `" class="amnt" disabled></td>
                         <td><input type="text" id="text` + data.values[index]["id"] + `" value="` + data.values[index]["amount"] + `" class="amnt" disabled></td>
                         <td>Planned</td>
@@ -1008,8 +993,8 @@ jQuery(document).ready(function() {
 
                         if (data.values[index]["type"] == "moneyin") {
                             html_moneyin += `
-                    <tr class="entry" id="` + data.values[index]["id"] + `">
-                        <td><input type="date" id="date` + data.values[index]["id"] + `" value="` + data.values[index]["date_plan"] + `" class="date_type" disabled></td>
+                    <tr class="entry" data-date="` + data.values[index]["date_plan"] + `">
+                    <td><input type="date" id="date` + data.values[index]["id"] + `" value="` + data.values[index]["date_plan"] + `" class="date_type" disabled style="display:none;">` + data.values[index]["date_plan"] + `</td>
                         <td><input type="text" id="name` + data.values[index]["id"] + `" value="` + data.values[index]["merchant_name"].toUpperCase() + `" class="amnt" disabled></td>
                         <td><input type="text" id="text` + data.values[index]["id"] + `" value="` + data.values[index]["amount"] + `" class="amnt" disabled></td>
                         <td>` + data.values[index]["description"] + `</td>
@@ -1018,8 +1003,8 @@ jQuery(document).ready(function() {
                     </tr>`;
                         } else if (data.values[index]["type"] == "moneyout") {
                             html_moneyout += `
-                    <tr class="entry "id="` + data.values[index]["id"] + `">
-                        <td><input type="date" id="date` + data.values[index]["id"] + `" value="` + data.values[index]["date_plan"] + `" class="date_type" disabled></td>
+                    <tr class="entry" data-date="` + data.values[index]["date_plan"] + `">
+                    <td><input type="date" id="date` + data.values[index]["id"] + `" value="` + data.values[index]["date_plan"] + `" class="date_type" disabled style="display:none;">` + data.values[index]["date_plan"] + `</td>
                         <td><input type="text" id="name` + data.values[index]["id"] + `" value="` + data.values[index]["merchant_name"].toUpperCase() + `" class="amnt" disabled></td>
                         <td><input type="text" id="text` + data.values[index]["id"] + `" value="` + data.values[index]["amount"] + `" class="amnt" disabled></td>
                         <td>` + data.values[index]["description"] + `</td>
@@ -1029,8 +1014,8 @@ jQuery(document).ready(function() {
                         }
                     } else {
                         html_overdue += `
-                    <tr class="entry" id="` + data.values[index]["id"] + `">
-                        <td><input type="date" id="date` + data.values[index]["id"] + `" value="` + data.values[index]["date_plan"] + `" class="date_type" disabled></td>
+                    <tr class="entry" data-date="` + data.values[index]["date_plan"] + `">
+                    <td><input type="date" id="date` + data.values[index]["id"] + `" value="` + data.values[index]["date_plan"] + `" class="date_type" disabled style="display:none;">` + data.values[index]["date_plan"] + `</td>
                         <td><input type="text" id="name` + data.values[index]["id"] + `" value="` + data.values[index]["merchant_name"].toUpperCase() + `" class="amnt" disabled></td>
                         <td><input type="text" id="text` + data.values[index]["id"] + `" value="` + data.values[index]["amount"] + `" class="amnt" disabled></td>
                         <td>Planned</td>
@@ -1060,22 +1045,62 @@ jQuery(document).ready(function() {
                 $('#cashflowmoneyin .moneyin_table').html(html_moneyin);
                 $('#cashflowmoneyout .moneyout_table').html(html_moneyout);
                 $('#cashflow_overdue .overdue_table').html(html_overdue);
+
+                sortTable('#cashflowtransactions');
+                sortTable('#cashflowmoneyin');
+                sortTable('#cashflowmoneyout');
+                sortTable('#cashflow_overdue');
             }
         });
-
-
-
     }
 
     //table sorting
 
+    function sortTable(table) {
+        var sorted_tables = []
+        var sorted_tables_ctrs = []
+        var ctr = 0;
+        $(table + " tr.entry").each(function() {
 
-    $('tr.entry').each(function() {
-        var t = this.cells[1].textContent.split('-');
-        $(this).data('_ts', new Date(t[2], t[1] - 1, t[0]).getTime());
-    }).sort(function(a, b) {
-        return $(a).data('_ts') < $(b).data('_ts');
-    }).appendTo('#cashflowtransactions');
+            var found = false;
+            ctr++;
+            $(this).attr("data-ctr", ctr);
+            for (var i = 0; i < sorted_tables.length; i++) {
+
+                var to_find_date = new Date($(this).attr("data-date"));
+                var date_in_place = new Date(sorted_tables[i]);
+
+                if (to_find_date < date_in_place) {
+                    var temp_var = sorted_tables[sorted_tables.length - 1];
+                    sorted_tables.push(temp_var);
+
+                    temp_var = sorted_tables_ctrs[sorted_tables_ctrs.length - 1];
+                    sorted_tables_ctrs.push(temp_var);
+                    for (var x = i + 1; x < sorted_tables.length; x++) {
+                        sorted_tables[x] = sorted_tables[x - 1];
+                        sorted_tables_ctrs[x] = sorted_tables_ctrs[x - 1];
+                    }
+                    sorted_tables[i] = $(this).attr("data-date");
+                    sorted_tables_ctrs[i] = $(this).attr("data-ctr");
+                    found = true;
+                    break;
+                }
+
+            }
+            if (found == false) {
+                sorted_tables.push($(this).attr("data-date"));
+                sorted_tables_ctrs.push($(this).attr("data-ctr"));
+            }
+        });
+        var tr_htmls = "";
+        for (var i = 0; i < sorted_tables_ctrs.length; i++) {
+            tr_htmls += '<tr class="entry" data-date="' + $(table + " tr.entry[data-ctr='" + sorted_tables_ctrs[i] + "']").attr("data-date") + '" data-ctr="' + $(table + " tr.entry[data-ctr='" + sorted_tables_ctrs[i] + "']").attr("data-ctr") + '">' + $(table + " tr.entry[data-ctr='" + sorted_tables_ctrs[i] + "']").html() + '</tr>';
+
+        }
+        $(table + " tbody").html(tr_htmls);
+    }
+
+
     //end table sorting
     var dtToday = new Date();
 
@@ -1095,11 +1120,9 @@ jQuery(document).ready(function() {
     $(document).on("click", ".button_edit", function() {
         $("#edit-cashflow-customer").fadeIn();
         var id = $(this).val();
-        console.log(id);
         var date = $("#date" + id).val();
         var text = $("#text" + id).val();
         var name = "NAME: " + $("#name" + id).val();
-        console.log(name);
         $('#edit-cashflow-customer #merchant_name').html(name);
         $('#edit-cashflow-customer #date').val(date);
         $('#edit-cashflow-customer .text').val(text);
@@ -1119,7 +1142,6 @@ jQuery(document).ready(function() {
             data: { date: date, amount: amount, id: id },
             success: function(data) {
                 $("#edit-cashflow-customer").fadeOut();
-                console.log(date + " " + amount + " " + id);
             }
         });
     })
@@ -1133,7 +1155,6 @@ jQuery(document).ready(function() {
             data: { id: id },
             success: function(data) {
                 location.reload();
-                console.log("delete");
             }
         });
     })
@@ -1143,7 +1164,8 @@ jQuery(document).ready(function() {
     $(document).on("click", ".closing", function() {
         $("#edit-cashflow-customer").fadeOut();
         var table = $(".planner_table tr.entry")[1];
-        console.log(table);
     })
+
+
 
 });

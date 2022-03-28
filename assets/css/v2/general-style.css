@@ -150,7 +150,7 @@
 	margin-bottom: 1rem;
 }
 
-.nsm-alert > button{
+.nsm-alert > button, .nsm-callout > button{
 	border: unset;
 	background: none;
 	outline: none !important;
@@ -197,4 +197,32 @@
    -khtml-user-select: none;
    -moz-user-select: none;
    -ms-user-select: none;
+}
+
+.nsm-callout{
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+    border: 1px solid #e9ecef;
+    border-left-width: 0.25rem;
+    border-radius: 0.25rem;
+}
+
+.nsm-callout.warning{
+	border-left-color: #e4d675 !important;
+}
+
+.nsm-callout.success{
+	border-left-color: #198754 !important;
+}
+
+.nsm-callout.primary{
+	border-left-color: #6a4a86 !important;
+}
+
+.nsm-callout.error{
+	border-left-color: #dc3545 !important;
+}
+
+.nsm-callout > button{
+	color: #727272;
 }

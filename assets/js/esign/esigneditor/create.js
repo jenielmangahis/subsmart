@@ -32,13 +32,50 @@ async function initPlaceholders() {
 }
 
 function appendPlaceholderInList(placeholder) {
-  const $placeholderList = document.querySelector(".placeholders__list");
+  const $list = document.getElementById("placeholders");
   const $item = window.helpers.htmlToElement(
     `<li data-id=${placeholder.id}>
       {${placeholder.code}} - <strong>${placeholder.description}</strong>
     </li>`
   );
-  $placeholderList.appendChild($item);
+  $list.appendChild($item);
+
+  if (placeholder._user_defined === true) {
+    const $userList = document.getElementById("userplaceholders");
+    $userList.classList.add("userPlaceholder");
+
+    const $wrapper = $userList.parentNode;
+    $wrapper.classList.remove("d-none");
+
+    const $userItem = window.helpers.htmlToElement(
+      `<li data-id=${placeholder.id} class="userPlaceholder__item">
+        <div>{${placeholder.code}} - <strong>${placeholder.description}</strong></div>
+        <div class="userPlaceholder__actions">
+            <button data-action="edit_placeholder">
+                <i class="fa fa-times"></i>
+            </button>
+        </div>
+      </li>`
+    );
+    $userList.appendChild($userItem);
+
+    const $delete = $userItem.querySelector("[data-action=edit_placeholder]");
+    $delete.addEventListener("click", async () => {
+      if (!confirm("Are you sure you want to delete placeholder?")) {
+        return;
+      }
+
+      const response = await window.api.deletePlaceholder(placeholder.id);
+      if (response.success !== false) {
+        $item.remove();
+        $userItem.remove();
+
+        if (!$userList.querySelectorAll(".userPlaceholder__item").length) {
+          $wrapper.classList.add("d-none");
+        }
+      }
+    });
+  }
 }
 
 async function initCategories() {
@@ -148,6 +185,13 @@ function initAddPlaceholderForm() {
   const $inputs = [...$form.querySelectorAll("[data-name]")];
   const $button = $form.querySelector("button");
 
+  function resetInputs() {
+    for (let index = 0; index < $inputs.length; index++) {
+      const $input = $inputs[index];
+      $input.value = "";
+    }
+  }
+
   $button.addEventListener("click", async () => {
     const payload = {};
     for (let index = 0; index < $inputs.length; index++) {
@@ -176,14 +220,12 @@ function initAddPlaceholderForm() {
     );
 
     appendPlaceholderInList(data);
-    $($modal).modal("hide");
+    resetInputs();
+    $inputs[0].focus();
   });
 
   $($modal).on("show.bs.modal", () => {
-    for (let index = 0; index < $inputs.length; index++) {
-      const $input = $inputs[index];
-      $input.value = "";
-    }
+    resetInputs();
   });
 
   $form.addEventListener("submit", (event) => {

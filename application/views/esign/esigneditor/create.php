@@ -67,7 +67,7 @@ ini_set('max_input_vars', 30000);
                     Manage template placeholders
                 </a>
             </legend>
-            <ul class="placeholders__list"></ul>
+            <ul class="placeholders__list" id="placeholders"></ul>
         </fieldset>
     </div>
 </div>
@@ -153,6 +153,11 @@ ini_set('max_input_vars', 30000);
                 </button>
             </div>
         </form>
+
+        <div class="mt-4 d-none">
+            <h6>My Placeholders</h6>
+            <ul class="placeholders__list" id="userplaceholders"></ul>
+        </div>
       </div>
     </div>
   </div>

@@ -3,7 +3,7 @@
         <div class="w-100">
             <div class="row">
                 <div class="col-12 d-flex mt-4">
-                    <span class="content-subtitle">Copyright © 2020 nSmartrac. All rights reserved.</span>
+                    <span class="content-subtitle">Copyright © 2020 nSmarTrac. All rights reserved.</span>
                 </div>
             </div>
         </div>

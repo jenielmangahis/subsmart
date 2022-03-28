@@ -123,4 +123,12 @@ class Accounting_credit_memo_model extends MY_Model {
 		$query = $this->db->get('accounting_receive_payment_credits');
 		return $query->result();
 	}
+
+	public function delete_customer_transaction_items($transactionType, $transactionId)
+	{
+		$this->db->where('transaction_type', $transactionType);
+		$this->db->where('transaction_id', $transactionId);
+		$delete = $this->db->delete('accounting_customer_transaction_items');
+		return $delete;
+	}
 }

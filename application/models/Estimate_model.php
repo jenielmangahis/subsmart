@@ -43,6 +43,24 @@ class Estimate_model extends MY_Model
         return $query->result();
     }
 
+    public function mailIsOpen($data)
+    {
+        // $this->db->where('id', $id);
+        // $this->db->update('estimates', array('is_mail_open' => 1));
+        // return true;
+        extract($data);
+        $this->db->where('id', $id);
+        $update = $this->db->update('estimates', array('is_mail_open' => $is_mail_open));
+        // return $id;
+        if($update) return TRUE;
+        return FALSE;
+
+        // $this->db->from($this->table);
+        // $this->db->set(['is_mail_open' => 1]);
+        // $this->db->where('id', $id);
+        // $this->db->update();
+    }
+
     public function getlastInsert(){
 
         $this->db->select('*');

@@ -688,72 +688,72 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <p>Finding the right classification for your business ensures that your quote will be as accurate as possible. But don't worry if you don't find an exact match – an agent will review this before anything is finalized.</p>
 
                                 <h6><br>General industry</h6>
-                                <select class="form-control">
-                                    <option>Select General industry</option>
-                                    <option>Advertising, Graphic Design, Photography and Printing</option>
-                                    <option>Agriculture, Forestry, Fishing and Hunting</option>
-                                    <option>Arts, Entertainment and Recreation</option>
-                                    <option>Communications, Electric or Gas Service</option>
-                                    <option>Educational and Social Services</option>
-                                    <option>Health Care, Social Assistance and Public Administration</option>
-                                    <option>Legal, Finance, Insurance and Real Estate</option>
-                                    <option>Manufacturing</option>
-                                    <option>Membership, Religious and Fraternal Organizations</option>
-                                    <option>Personal and Business Services</option>
-                                    <option>Restaurants and Lodging</option>
-                                    <option>Retail Trade - Nonstore</option>
-                                    <option>Retail Trade - Storefront</option>
-                                    <option>Specialty Trade Contractors</option>
-                                    <option>Technology, Engineering and Consulting</option>
-                                    <option>Transportation & Warehousing</option>
-                                    <option>Wholesale Trade</option>
+                                <select class="form-control" name="general_industry">
+                                    <option value="">Select General industry</option>
+                                    <option value="1">Advertising, Graphic Design, Photography and Printing</option>
+                                    <option value="2">Agriculture, Forestry, Fishing and Hunting</option>
+                                    <option value="3">Arts, Entertainment and Recreation</option>
+                                    <option value="4">Communications, Electric or Gas Service</option>
+                                    <option value="5">Educational and Social Services</option>
+                                    <option value="6">Health Care, Social Assistance and Public Administration</option>
+                                    <option value="7">Legal, Finance, Insurance and Real Estate</option>
+                                    <option value="8">Manufacturing</option>
+                                    <option value="9">Membership, Religious and Fraternal Organizations</option>
+                                    <option value="10">Personal and Business Services</option>
+                                    <option value="11">Restaurants and Lodging</option>
+                                    <option value="12">Retail Trade - Nonstore</option>
+                                    <option value="13">Retail Trade - Storefront</option>
+                                    <option value="14">Specialty Trade Contractors</option>
+                                    <option value="15">Technology, Engineering and Consulting</option>
+                                    <option value="16">Transportation & Warehousing</option>
+                                    <option value="17">Wholesale Trade</option>
                                     <!-- <option></option> -->
                                 </select>
 
                                 <h6><br>Type of business</h6>
-                                <select class="form-control">
-                                    <option>Select type of business</option>
-                                    <option>Apparel, Piece Goods and Notions</option>
-                                    <option>Beer, Wine and Distilled Alcoholic Beverages</option>
-                                    <option>Chemicals and Allied Products</option>
-                                    <option>Drugs, Drug Proprietaries and Druggists' Sundries</option>
-                                    <option>Electrical Goods</option>
-                                    <option>Furniture and Home furnishings</option>
-                                    <option>Groceries and Related Products</option>
+                                <select class="form-control" name="type_of_business">
+                                    <option value="">Select type of business</option>
+                                    <option value="1">Apparel, Piece Goods and Notions</option>
+                                    <option value="2">Beer, Wine and Distilled Alcoholic Beverages</option>
+                                    <option value="3">Chemicals and Allied Products</option>
+                                    <option value="4">Drugs, Drug Proprietaries and Druggists' Sundries</option>
+                                    <option value="5">Electrical Goods</option>
+                                    <option value="6">Furniture and Home furnishings</option>
+                                    <option value="7">Groceries and Related Products</option>
                                 </select>
 
                                 <h6><br>Standard industry classification (SIC)</h6>
-                                <select class="form-control">
-                                    <option>Select Standard industry classification</option>
-                                    <option>Confectionery</option>
-                                    <option>Dairy Products, Except Dried Or Canned</option>
-                                    <option>Fish and Seafoods</option>
-                                    <option>Fresh Fruits and Vegetables</option>
-                                    <option>Groceries and Related Products, Not Elsewhere Classified</option>
-                                    <option>Groceries, General Line</option>
-                                    <option>Meats and Meat Products</option>
-                                    <option>Meats and Meat Products (with butchering or slaughtering)</option>
-                                    <option>Packaged Frozen Foods</option>
-                                    <option>Poultry and Poultry Products</option>
+                                <select class="form-control" name="classification">
+                                    <option value="">Select Standard industry classification</option>
+                                    <option value="1">Confectionery</option>
+                                    <option value="2">Dairy Products, Except Dried Or Canned</option>
+                                    <option value="3">Fish and Seafoods</option>
+                                    <option value="4">Fresh Fruits and Vegetables</option>
+                                    <option value="5">Groceries and Related Products, Not Elsewhere Classified</option>
+                                    <option value="6">Groceries, General Line</option>
+                                    <option value="7">Meats and Meat Products</option>
+                                    <option value="8">Meats and Meat Products (with butchering or slaughtering)</option>
+                                    <option value="9">Packaged Frozen Foods</option>
+                                    <option value="10">Poultry and Poultry Products</option>
                                     <!-- <option></option> -->
                                 </select>
 
                                 <h6><br>Business name</h6>
-                                <input type="text" class="form-control">
+                                <input type="text" class="form-control" name="business_name">
 
                                 <h6><br>Principal business address</h6>
-                                <input type="text" class="form-control">
+                                <input type="text" class="form-control"  name="business_address">
                                 
                                 <h6><br>Suite/Floor</h6>
-                                <input type="text" class="form-control" style="width:30%;">
+                                <input type="text" class="form-control" style="width:30%;" name="suite">
 
                                 <h6><br>Year business started</h6>
-                                <select class="form-control" id="year" style="width:40%;">
+                                <select class="form-control" id="year" style="width:40%;" name="year_started">
                                     <option></option>
                                 </select>
 
                                 <h6><br>Legal entity type</h6>
-                                <select class="form-control">
+                                <select class="form-control" name="legal_entity_type">
                                     <option>Corporation</option>
                                     <option>Limited Liability Company</option>
                                     <option>Non-Profit</option>
@@ -763,7 +763,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </select>
 
                                 <h6><br>Federal Identification Number (optional)</h6>
-                                <input type="text" class="form-control" style="width:40%;">
+                                <input type="text" class="form-control" style="width:40%;" name="federal_identification_number">
                                 <br><br>
                                 <!-- <input type="submit" value="Next" class="btn btn-success" style="float:right; margin:2px;"> -->
 
@@ -787,16 +787,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </tbody>
                                 </table>
                                 <br>
-                                <a class="link-modal-open" href="#" id="" data-toggle="modal" data-target="#item_list">Add new employee or owner</a>
+                                <a class="link-modal-open" href="#" id="" data-toggle="modal" data-target="#employee_list">Add new employee or owner</a>
                                 <br>
                                 <h6><br>Total estimated annual payroll</h6>
-                                <input type="text" class="form-control">
+                                <input type="text" class="form-control" name="total_est_annual_payroll">
 
                                 <h6><br>Payroll frequency</h6>
-                                <select class="form-control">
-                                    <option>Weekly</option>
-                                    <option>Monthly</option>
-                                    <option>Biweekly</option>
+                                <select class="form-control" name="payroll_frequency">
+                                    <option value="Weekly">Weekly</option>
+                                    <option value="Monthly">Monthly</option>
+                                    <option value="Biweekly">Biweekly</option>
                                 </select>
 
                             </div>
@@ -811,7 +811,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <table>
                                 <tr>
                                     <td><label class="switch">
-                                        <input class="switch-input" type="checkbox" />
+                                        <input class="switch-input" id="switch-input" name="check_01" type="checkbox" />
                                         <span class="switch-label" data-on="Yes" data-off="No"></span> 
                                         <span class="switch-handle"></span> 
                                     </label></td>
@@ -820,7 +820,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <tr>
                                     <td>
                                     <label class="switch">
-                                        <input class="switch-input" type="checkbox" />
+                                        <input class="switch-input" id="switch-input" name="check_02" type="checkbox" />
                                         <span class="switch-label" data-on="Yes" data-off="No"></span> 
                                         <span class="switch-handle"></span> 
                                     </label></td>
@@ -829,7 +829,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <tr>
                                     <td>
                                     <label class="switch">
-                                        <input class="switch-input" type="checkbox" />
+                                        <input class="switch-input" id="switch-input" name="check_03" type="checkbox" />
                                         <span class="switch-label" data-on="Yes" data-off="No"></span> 
                                         <span class="switch-handle"></span> 
                                     </label></td>
@@ -838,7 +838,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <tr>
                                     <td>
                                     <label class="switch">
-                                        <input class="switch-input" type="checkbox" />
+                                        <input class="switch-input" id="switch-input" name="check_04" type="checkbox" />
                                         <span class="switch-label" data-on="Yes" data-off="No"></span> 
                                         <span class="switch-handle"></span> 
                                     </label></td>
@@ -847,7 +847,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <tr>
                                     <td>
                                     <label class="switch">
-                                        <input class="switch-input" type="checkbox" />
+                                        <input class="switch-input" id="switch-input" name="check_05" type="checkbox" />
                                         <span class="switch-label" data-on="Yes" data-off="No"></span> 
                                         <span class="switch-handle"></span> 
                                     </label></td>
@@ -856,7 +856,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <tr>
                                     <td>
                                     <label class="switch">
-                                        <input class="switch-input" type="checkbox" />
+                                        <input class="switch-input" id="switch-input" name="check_06" type="checkbox" />
                                         <span class="switch-label" data-on="Yes" data-off="No"></span> 
                                         <span class="switch-handle"></span> 
                                     </label></td>
@@ -865,7 +865,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <tr>
                                     <td>
                                     <label class="switch">
-                                        <input class="switch-input" type="checkbox" />
+                                        <input class="switch-input" id="switch-input" name="check_07" type="checkbox" />
                                         <span class="switch-label" data-on="Yes" data-off="No"></span> 
                                         <span class="switch-handle"></span> 
                                     </label></td>
@@ -874,7 +874,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <tr>
                                     <td>
                                     <label class="switch">
-                                        <input class="switch-input" type="checkbox" />
+                                        <input class="switch-input" id="switch-input" name="check_08" type="checkbox" />
                                         <span class="switch-label" data-on="Yes" data-off="No"></span> 
                                         <span class="switch-handle"></span> 
                                     </label></td>
@@ -883,7 +883,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <tr>
                                     <td>
                                     <label class="switch">
-                                        <input class="switch-input" type="checkbox" />
+                                        <input class="switch-input" id="switch-input" name="check_09" type="checkbox" />
                                         <span class="switch-label" data-on="Yes" data-off="No"></span> 
                                         <span class="switch-handle"></span> 
                                     </label></td>
@@ -892,7 +892,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <tr>
                                     <td>
                                     <label class="switch">
-                                        <input class="switch-input" type="checkbox" />
+                                        <input class="switch-input" id="switch-input" name="check_10" type="checkbox" />
                                         <span class="switch-label" data-on="Yes" data-off="No"></span> 
                                         <span class="switch-handle"></span> 
                                     </label></td>
@@ -901,7 +901,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <tr>
                                     <td>
                                     <label class="switch">
-                                        <input class="switch-input" type="checkbox" />
+                                        <input class="switch-input" id="switch-input" name="check_11" type="checkbox" />
                                         <span class="switch-label" data-on="Yes" data-off="No"></span> 
                                         <span class="switch-handle"></span> 
                                     </label></td>
@@ -921,27 +921,27 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <div class="row">
                                     <div class="col-md-6">
                                         <h6>First name</h6>
-                                        <input type="text" class="form-control">
+                                        <input type="text" class="form-control" name="first_name">
                                     </div>
                                     <div class="col-md-6">
                                         <h6>Last name</h6>
-                                        <input type="text" class="form-control">
+                                        <input type="text" class="form-control" name="last_name">
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6">
                                         <h6>Phone</h6>
-                                        <input type="text" class="form-control">
+                                        <input type="text" class="form-control" name="phone">
                                     </div>
                                     <div class="col-md-6">
                                         <h6>Email</h6>
-                                        <input type="email" class="form-control">
+                                        <input type="email" class="form-control" name="email">
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6">
                                         <h6>Requested policy start date</h6>
-                                        <input type="text" class="form-control" value="<?php echo date('m/d/Y', strtotime("+1 day")); ?>">
+                                        <input type="text" class="form-control" value="<?php echo date('m/d/Y', strtotime("+1 day")); ?>" name="policy_start_date">
                                     </div>
                                     <!-- <div class="col-md-6">
                                         <h6>Email</h6>
@@ -980,7 +980,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 	</div>
 
         <!-- Modal -->
-        <div class="modal fade" id="item_list" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
+        <div class="modal fade" id="employee_list" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg" role="document" style="width:800px;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -1297,19 +1297,47 @@ function fixStepIndicator(n) {
 <script>
 (function() {
   $(document).ready(function() {
-    $('.switch-input').on('change', function() {
-      var isChecked = $(this).is(':checked');
-      var selectedData;
-      var $switchLabel = $('.switch-label');
-      console.log('isChecked: ' + isChecked); 
+    // $('.switch-input').on('change', function() {
+    //   var isChecked = $(this).is(':checked');
+    //   var selectedData;
+    //   var $switchLabel = $('.switch-label');
+    //   console.log('isChecked: ' + isChecked); 
       
-      if(isChecked) {
-        selectedData = $switchLabel.attr('data-on');
-      } else {
-        selectedData = $switchLabel.attr('data-off');
-      }
+    //   if(isChecked) {
+    //     selectedData = $switchLabel.attr('data-on');
+    //   } else {
+    //     selectedData = $switchLabel.attr('data-off');
+    //   }
       
-      console.log('Selected data: ' + selectedData);
+    //   console.log('Selected data: ' + selectedData);
+      
+    // });
+    
+    // // Params ($selector, boolean)
+    // function setSwitchState(el, flag) {
+    //   el.attr('', flag);
+    // }
+    
+    // // Usage
+    // setSwitchState($('.switch-input'), true);    
+
+    $("*[id^='switch-input']").each(function() {
+      // alert('test');
+            // $(this).upload()
+            $(this).change(function(){ 
+            var isChecked = $(this).is(':checked');
+            var selectedData;
+            var $switchLabel = $('.switch-label');
+            // console.log('isChecked: ' + isChecked); 
+            
+            if(isChecked) {
+              selectedData = 'yes';
+            } else {
+              selectedData = 'no';
+            }
+            
+            $(this).val(selectedData);
+            // alert(selectedData);
       
     });
     
@@ -1319,8 +1347,11 @@ function fixStepIndicator(n) {
     }
     
     // Usage
-    setSwitchState($('.switch-input'), true);    
-  });
+    setSwitchState($('#switch-input'), true);
+             
+            });
+        });
+  // });
   
 })();
 </script>

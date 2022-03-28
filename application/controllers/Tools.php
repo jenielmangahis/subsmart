@@ -20,6 +20,9 @@ class Tools extends MY_Controller {
       } */
 
     public function api_connectors() {
+        $this->page_data['page']->title = 'API Connectors';
+        $this->page_data['page']->parent = 'Tools';
+
         $this->load->model('SettingOnlinePayment_model');
         $this->load->model('users_model');
         $this->load->model('CompanyOnlinePaymentAccount_model');
@@ -45,7 +48,7 @@ class Tools extends MY_Controller {
         $this->page_data['onlinePaymentAccount'] = $onlinePaymentAccount;
         $this->page_data['setting'] = $setting;
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
-        $this->load->view('tools/api_connectors', $this->page_data);
+        $this->load->view('v2/pages/tools/api_connectors', $this->page_data);
     }
 
     public function api_sidebars()
@@ -132,6 +135,9 @@ class Tools extends MY_Controller {
     }
 
     public function business_tools() {
+        $this->page_data['page']->title = 'Business Tools';
+        $this->page_data['page']->parent = 'Tools';
+
         $is_allowed = $this->isAllowedModuleAccess(48);
 
         $this->page_data['sidebar'] = $this->api_sidebars();
@@ -142,10 +148,12 @@ class Tools extends MY_Controller {
         }
 
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
-        $this->load->view('tools/business_tools', $this->page_data);
+        $this->load->view('v2/pages/tools/business_tools', $this->page_data);
     }
 
     public function google_contacts() {
+        $this->page_data['page']->title = 'Google Contacts';
+        $this->page_data['page']->parent = 'Tools';
 
         $this->load->library('GoogleApi');
 
@@ -160,10 +168,13 @@ class Tools extends MY_Controller {
             $this->page_data['api_enabled'] = false;
        // }
        // $this->page_data['contacts'] = $this->api_gc->get_all();
-        $this->load->view('tools/google_contacts', $this->page_data);
+        $this->load->view('v2/pages/tools/google_contacts', $this->page_data);
     }
 
     public function quickbooks() {
+        $this->page_data['page']->title = 'Quickbooks Payroll';
+        $this->page_data['page']->parent = 'Tools';
+
         $this->load->library('quickbooksapi');
         $this->page_data['sidebar'] = $this->api_sidebars();
         $user_id = getLoggedUserID();
@@ -181,32 +192,47 @@ class Tools extends MY_Controller {
             $this->page_data['authurl'] = $this->quickbooksapi->initialize_auth();
         }
 
-        $this->load->view('tools/quickbooks', $this->page_data);
+        $this->load->view('v2/pages/tools/quickbooks', $this->page_data);
     }
 
     public function nicejob() {
+        $this->page_data['page']->title = 'Nice Job';
+        $this->page_data['page']->parent = 'Tools';
+
         $this->page_data['sidebar'] = $this->api_sidebars();
-        $this->load->view('tools/nicejob', $this->page_data);
+        $this->load->view('v2/pages/tools/nicejob', $this->page_data);
     }
 
     public function zapier() {
+        $this->page_data['page']->title = 'Zapier';
+        $this->page_data['page']->parent = 'Tools';
+
         $this->page_data['sidebar'] = $this->api_sidebars();
-        $this->load->view('tools/zapier', $this->page_data);
+        $this->load->view('v2/pages/tools/zapier', $this->page_data);
     }
 
     public function mailchimp() {
+        $this->page_data['page']->title = 'MailChimp';
+        $this->page_data['page']->parent = 'Tools';
+
         $this->page_data['sidebar'] = $this->api_sidebars();
-        $this->load->view('tools/mailchimp', $this->page_data);
+        $this->load->view('v2/pages/tools/mailchimp', $this->page_data);
     }
 
     public function active_campaign() {
-        $this->load->view('tools/active_campaign', $this->page_data);
+        $this->page_data['page']->title = 'Active Campaign';
+        $this->page_data['page']->parent = 'Tools';
+
+        $this->load->view('v2/pages/tools/active_campaign', $this->page_data);
     }
 
     public function api_integration()
     {
+        $this->page_data['page']->title = 'API Integration';
+        $this->page_data['page']->parent = 'Tools';
+
         $this->page_data['sidebar'] = $this->api_sidebars();
-        $this->load->view('tools/api_integration', $this->page_data);
+        $this->load->view('v2/pages/tools/api_integration', $this->page_data);
     }
 
     public function zapier_api_connect() {
@@ -299,7 +325,7 @@ class Tools extends MY_Controller {
         $converge = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($company_id);
 
         $this->page_data['converge'] = $converge;
-        $this->load->view('tools/ajax_company_converge_form', $this->page_data);
+        $this->load->view('v2/pages/tools/ajax_company_converge_form', $this->page_data);
     }
 
     public function ajax_activate_company_converge_account(){
@@ -373,7 +399,7 @@ class Tools extends MY_Controller {
         $stripe = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($company_id);
 
         $this->page_data['stripe'] = $stripe;
-        $this->load->view('tools/ajax_company_stripe_form', $this->page_data);
+        $this->load->view('v2/pages/tools/ajax_company_stripe_form', $this->page_data);
     }
 
     public function ajax_load_company_paypal_form(){
@@ -383,7 +409,7 @@ class Tools extends MY_Controller {
         $paypal = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($company_id);
 
         $this->page_data['paypal'] = $paypal;
-        $this->load->view('tools/ajax_company_paypal_form', $this->page_data);
+        $this->load->view('v2/pages/tools/ajax_company_paypal_form', $this->page_data);
     }
 
     public function ajax_load_company_nmi_form(){
@@ -393,7 +419,7 @@ class Tools extends MY_Controller {
         $nmi = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($company_id);
 
         $this->page_data['nmi'] = $nmi;
-        $this->load->view('tools/ajax_company_nmi_form', $this->page_data);
+        $this->load->view('v2/pages/tools/ajax_company_nmi_form', $this->page_data);
     }
 
 }

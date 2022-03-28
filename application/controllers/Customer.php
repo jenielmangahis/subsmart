@@ -53,17 +53,8 @@ class Customer extends MY_Controller
 
     public function index()
     {
-
-
-        add_css(array(
-            "assets/css/accounting/accounting_includes/new_customer.css",
-        ));
-        add_footer_js(array(
-            "assets/js/accounting/sales/customer_includes/new_customer.js",
-            'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js',
-            'https://unpkg.com/dropzone@5/dist/min/dropzone.min.js'
-        ));
-
+        $this->page_data['page']->title = 'Customers';
+        $this->page_data['page']->parent = 'Customers';
 
         $this->hasAccessModule(9);
 
@@ -90,7 +81,7 @@ class Customer extends MY_Controller
         }
         
         $this->page_data['enabled_table_headers'] = $enabled_table_headers;
-        $this->load->view('customer/list', $this->page_data);
+        $this->load->view('v2/pages/customer/list', $this->page_data);
     }
 
     public function preview_($id=null){
@@ -696,6 +687,9 @@ class Customer extends MY_Controller
 
     public function settings()
     {
+        $this->page_data['page']->title = 'Customer Settings';
+        $this->page_data['page']->parent = 'Sales';
+
         $this->load->library('wizardlib');
         $this->hasAccessModule(9); 
         /*$is_allowed = $this->isAllowedModuleAccess(9);
@@ -1412,11 +1406,14 @@ class Customer extends MY_Controller
 
     public function leads()
     {   
+        $this->page_data['page']->title = 'Leads Manager List';
+        $this->page_data['page']->parent = 'Sales';
+
         $this->hasAccessModule(14);
         
         $user_id = logged('id');
         $this->page_data['leads'] = $this->customer_ad_model->get_leads_data();
-        $this->load->view('customer/leads', $this->page_data);
+        $this->load->view('v2/pages/customer/leads', $this->page_data);
     }
 
     public function ac_module_sort($id=NULL){
@@ -3510,11 +3507,15 @@ class Customer extends MY_Controller
 
     public function group()
     {
+        $this->page_data['page']->title = 'Customer Groups';
+        $this->page_data['page']->parent = 'Customers';
+
         $this->hasAccessModule(9);
         // pass the $this so that we can use it to load view, model, library or helper classes
        // $customerGroup = new CustomerGroup($this);
         $this->page_data['customerGroups'] =  $this->customer_ad_model->get_all_by_id('user_id',logged('id'),'customer_groups');
-        $this->load->view('customer/group/list', $this->page_data);
+        // $this->load->view('customer/group/list', $this->page_data);
+        $this->load->view('v2/pages/customer/group/list', $this->page_data);
     }
 
     public function group_edit($id=null)
@@ -4135,15 +4136,22 @@ class Customer extends MY_Controller
         $post = $this->input->post();
         $billing_id = $post['billing_id'];
         $billing = $this->customer_ad_model->get_company_billing_error(logged('company_id'), $billing_id);
-        if( $billing ){
-            $date_year = explode("/", $billing->credit_card_exp);
+        // if( $billing ){
+        //     $date_year = explode("/", $billing->credit_card_exp);
 
-            $this->page_data['cc_date_year'] = $date_year;
-            $this->page_data['billing'] = $billing;
-            $this->load->view('customer/billing_error/ajax_credit_card_details', $this->page_data);
-        }else{
-            echo "<div class='alert alert-danger'>Cannot find record</div>";
-        }        
+        //     $this->page_data['cc_date_year'] = $date_year;
+        //     $this->page_data['billing'] = $billing;
+        //     $this->load->view('customer/billing_error/ajax_credit_card_details', $this->page_data);
+            
+        // }else{
+        //     echo "<div class='alert alert-danger'>Cannot find record</div>";
+        // }        
+
+        $date_year = explode("/", $billing->credit_card_exp);
+
+        $this->page_data['cc_date_year'] = $date_year;
+        $this->page_data['billing'] = $billing;
+        $this->load->view('v2/pages/customer/load_credit_card_details', $this->page_data);
     }
 
     public function ajax_update_billing_credit_card_details(){
@@ -4189,8 +4197,11 @@ class Customer extends MY_Controller
 
     public function customer_subscriptions()
     {
+        $this->page_data['page']->title = 'Customer Subscriptions';
+        $this->page_data['page']->parent = 'Customers';
         
-        $this->load->view('customer/subscription_list', $this->page_data);
+        // $this->load->view('customer/subscription_list', $this->page_data);
+        $this->load->view('v2/pages/customer/subscription_list', $this->page_data);
     }
 
     public function ajax_load_active_subscriptions()
@@ -4200,7 +4211,8 @@ class Customer extends MY_Controller
         $company_id    = logged('company_id');
         $activeSubscriptions = $this->Customer_advance_model->get_all_active_subscription_by_company_id($company_id);        
         $this->page_data['activeSubscriptions'] = $activeSubscriptions;
-        $this->load->view('customer/ajax_load_active_subscriptions', $this->page_data);
+        // $this->load->view('customer/ajax_load_active_subscriptions', $this->page_data);
+        $this->load->view('v2/pages/customer/load_active_subscriptions', $this->page_data);
     }
 
     public function ajax_load_completed_subscriptions()
@@ -4210,7 +4222,8 @@ class Customer extends MY_Controller
         $company_id    = logged('company_id');
         $completedSubscriptions = $this->Customer_advance_model->get_all_completed_subscription_by_company_id($company_id);        
         $this->page_data['completedSubscriptions'] = $completedSubscriptions;
-        $this->load->view('customer/ajax_load_completed_subscriptions', $this->page_data);
+        // $this->load->view('customer/ajax_load_completed_subscriptions', $this->page_data);
+        $this->load->view('v2/pages/customer/load_completed_subscriptions', $this->page_data);
     }
 
     public function ajax_load_billing_error_subscriptions()
@@ -4220,7 +4233,8 @@ class Customer extends MY_Controller
         $company_id    = logged('company_id');
         $errorSubscriptions = $this->Customer_advance_model->get_all_billing_errors_by_company_id($company_id);        
         $this->page_data['errorSubscriptions'] = $errorSubscriptions;
-        $this->load->view('customer/ajax_load_billing_error_subscriptions', $this->page_data);
+        // $this->load->view('customer/ajax_load_billing_error_subscriptions', $this->page_data);
+        $this->load->view('v2/pages/customer/load_biller_error_subscriptions', $this->page_data);
     }
 
     public function ajax_load_subscription_list_counter(){
@@ -4248,9 +4262,198 @@ class Customer extends MY_Controller
         
         $paymentHistory = $this->Customer_advance_model->get_all_subscription_payments($post['customer_id']);        
         $this->page_data['paymentHistory'] = $paymentHistory;
-        $this->load->view('customer/ajax_load_subscription_payment_history', $this->page_data);
+        // $this->load->view('customer/ajax_load_subscription_payment_history', $this->page_data);
+        $this->load->view('v2/pages/customer/load_subscription_payment_history', $this->page_data);
     }
 
+    public function settings_sales_area()
+    {
+        $this->page_data['page']->title = 'Sales Area';
+        $this->page_data['page']->parent = 'Sales';
+
+        $this->load->library('wizardlib');
+        $this->hasAccessModule(9); 
+
+        $user_id = logged('id');
+
+        // set a global data for customer profile id
+        $this->page_data['customer_profile_id'] = $user_id;
+
+        if(isset($userid) || !empty($userid)){
+            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
+            $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
+        }
+
+        $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE,"","","ac_salesarea","sa_id");
+
+        $this->load->view('v2/pages/customer/settings_sales_area', $this->page_data);
+    }
+
+    public function settings_lead_source()
+    {
+        $this->page_data['page']->title = 'Lead Source';
+        $this->page_data['page']->parent = 'Sales';
+
+        $this->load->library('wizardlib');
+        $this->hasAccessModule(9); 
+
+        $user_id = logged('id');
+
+        // set a global data for customer profile id
+        $this->page_data['customer_profile_id'] = $user_id;
+
+        if(isset($userid) || !empty($userid)){
+            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
+            $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
+        }
+
+        $this->page_data['lead_source'] = $this->customer_ad_model->get_all(FALSE,"","","ac_leadsource","ls_id");
+        
+        $this->load->view('v2/pages/customer/settings_lead_source', $this->page_data);
+    }
+
+    public function settings_lead_types()
+    {
+        $this->page_data['page']->title = 'Lead Types';
+        $this->page_data['page']->parent = 'Sales';
+
+        $this->load->library('wizardlib');
+        $this->hasAccessModule(9); 
+
+        $user_id = logged('id');
+
+        // set a global data for customer profile id
+        $this->page_data['customer_profile_id'] = $user_id;
+
+        if(isset($userid) || !empty($userid)){
+            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
+            $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
+        }
+
+        $this->page_data['lead_types'] = $this->customer_ad_model->get_all(FALSE,"","","ac_leadtypes","lead_id");
+
+        $this->load->view('v2/pages/customer/settings_lead_types', $this->page_data);
+    }
+
+    public function settings_rate_plans()
+    {
+        $this->page_data['page']->title = 'Rate Plans';
+        $this->page_data['page']->parent = 'Sales';
+
+        $this->load->library('wizardlib');
+        $this->hasAccessModule(9); 
+
+        $user_id = logged('id');
+
+        // set a global data for customer profile id
+        $this->page_data['customer_profile_id'] = $user_id;
+
+        if(isset($userid) || !empty($userid)){
+            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
+            $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
+        }
+
+        $this->page_data['rate_plans'] = $this->customer_ad_model->get_all(FALSE,"","","ac_rateplan","id");
+        
+        $this->load->view('v2/pages/customer/settings_rate_plans', $this->page_data);
+    }
+
+    public function settings_activation_fee()
+    {
+        $this->page_data['page']->title = 'Activation Fee';
+        $this->page_data['page']->parent = 'Sales';
+
+        $this->load->library('wizardlib');
+        $this->hasAccessModule(9); 
+
+        $user_id = logged('id');
+
+        // set a global data for customer profile id
+        $this->page_data['customer_profile_id'] = $user_id;
+
+        if(isset($userid) || !empty($userid)){
+            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
+            $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
+        }
+
+        // get activation fee
+        $activation_fee_query = array(
+            'table' => 'ac_activationfee',
+            'order' => array(
+                'order_by' => 'id',
+            ),
+            'select' => '*',
+        );
+        $this->page_data['activation_fee'] = $this->general->get_data_with_param($activation_fee_query);
+
+        $this->load->view('v2/pages/customer/settings_activation_fee', $this->page_data);
+    }
+
+    public function settings_system_package()
+    {
+        $this->page_data['page']->title = 'System Package Type';
+        $this->page_data['page']->parent = 'Sales';
+
+        $this->load->library('wizardlib');
+        $this->hasAccessModule(9); 
+
+        $user_id = logged('id');
+
+        // set a global data for customer profile id
+        $this->page_data['customer_profile_id'] = $user_id;
+
+        if(isset($userid) || !empty($userid)){
+            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
+            $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
+        }
+
+        $spt_query = array(
+            'table' => 'ac_system_package_type',
+            'order' => array(
+                'order_by' => 'id',
+            ),
+            'select' => '*',
+        );
+        $this->page_data['system_package_type'] = $this->general->get_data_with_param($spt_query);
+
+        $this->load->view('v2/pages/customer/settings_system_package', $this->page_data);
+    }
+
+    public function settings_headers()
+    {
+        $this->page_data['page']->title = 'Headers';
+        $this->page_data['page']->parent = 'Sales';
+
+        $this->load->library('wizardlib');
+        $this->hasAccessModule(9); 
+
+        $user_id = logged('id');
+
+        // set a global data for customer profile id
+        $this->page_data['customer_profile_id'] = $user_id;
+
+        if(isset($userid) || !empty($userid)){
+            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
+            $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
+        }
+
+        $this->page_data['customer_list_headers'] = customer_list_headers();
+        $this->page_data['profiles'] = $this->customer_ad_model->get_customer_data_settings($user_id);
+
+        $get_company_settings = array(
+            'where' => array(
+                'company_id' => logged('company_id')
+            ),
+            'table' => 'customer_settings_headers',
+            'select' => '*',
+        );
+        $customer_settings = $this->general->get_data_with_param($get_company_settings);
+        $headers = unserialize($customer_settings[0]->headers);
+        $this->page_data['customer_tbl_headers'] = $headers;
+
+        $this->load->view('v2/pages/customer/settings_headers', $this->page_data);
+    }
+    
     public function ajax_use_quick_note()
     {
         $this->load->model('QuickNote_model');

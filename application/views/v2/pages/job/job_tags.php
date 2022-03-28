@@ -15,7 +15,7 @@
             <div class="nsm-page-content">
                 <div class="row">
                     <div class="col-12">
-                        <div class="nsm-alert warning">
+                        <div class="nsm-callout primary">
                             <button><i class='bx bx-x'></i></button>
                             A job tag identifies similar jobs or job templates. Use job tags to easily search and filter jobs and job templates when viewing them in the Jobs view. Tags will also help you to see the growth direction of your product, service, source and more.
                         </div>

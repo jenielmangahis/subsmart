@@ -130,6 +130,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     // console.dir(tableRows);
 </script>
 
+
 <div class="wrapper" role="wrapper">
     <!-- page wrapper start -->
     <div wrapper__section style="padding-left:1.4%;">
@@ -944,6 +945,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         var name = $('.merchant_name').val();
         var amount = $('.plan_amount').val();
     })
+
 
 
 

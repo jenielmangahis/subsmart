@@ -38,7 +38,7 @@ ini_set('max_input_vars', 30000);
                         Create Letter
                     </a>
                 </div>
-                <table id="letters" class="table table-striped table-bordered">
+                <table id="letters" class="table table-striped table-bordered" style="min-height: 500px;">
                     <thead>
                         <tr>
                             <th>Letter Title</th>

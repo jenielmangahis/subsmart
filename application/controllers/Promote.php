@@ -18,11 +18,14 @@ class Promote extends MY_Controller {
 	}
 
 	public function deals(){
+        $this->page_data['page']->title = 'Deals & Steals';
+        $this->page_data['page']->parent = 'Marketing';
+
 		$this->page_data['status_active']    = $this->DealsSteals_model->statusActive();                
         $this->page_data['status_scheduled'] = $this->DealsSteals_model->statusScheduled();
         $this->page_data['status_ended']     = $this->DealsSteals_model->statusEnded();
         $this->page_data['status_draft']     = $this->DealsSteals_model->statusDraft();
-		$this->load->view('promote/deals', $this->page_data);
+		$this->load->view('v2/pages/promote/deals', $this->page_data);
 	}
 
 	public function create_deals(){
@@ -337,6 +340,25 @@ class Promote extends MY_Controller {
         $this->page_data['status_ended']     = $this->DealsSteals_model->statusEnded();
         $this->page_data['status_draft']     = $this->DealsSteals_model->statusDraft();
         $this->load->view('promote/ajax_load_deals_list', $this->page_data);
+    }
+
+    public function ajax_load_deals_list_v2($status){
+    	$company_id = logged('company_id');
+        if( $status == 'all' ){
+            $conditions = array();
+        }else{
+            $conditions[] = ['field' => 'deals_steals.status','value' => $status];    
+        }      
+        $dealsSteals   = $this->DealsSteals_model->getAllByCompanyId($company_id, array(), $conditions);
+        $statusOptions = $this->DealsSteals_model->statusOptions();
+        $this->page_data['dealsSteals'] = $dealsSteals;
+        $this->page_data['statusOptions'] = $statusOptions;
+        $this->page_data['status_selected']  = $status; 
+        $this->page_data['status_active']    = $this->DealsSteals_model->statusActive();                
+        $this->page_data['status_scheduled'] = $this->DealsSteals_model->statusScheduled();
+        $this->page_data['status_ended']     = $this->DealsSteals_model->statusEnded();
+        $this->page_data['status_draft']     = $this->DealsSteals_model->statusDraft();
+        $this->load->view('v2/pages/promote/ajax_load_deals_list', $this->page_data);
     }
 
     public function ajax_load_status_counter(){

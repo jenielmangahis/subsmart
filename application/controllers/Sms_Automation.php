@@ -36,8 +36,10 @@ class Sms_Automation extends MY_Controller {
 
 	public function index()
 	{	
+        $this->page_data['page']->title = 'SMS Automation';
+        $this->page_data['page']->parent = 'Marketing';
 
-		$this->load->view('sms_automation/index', $this->page_data);
+		$this->load->view('v2/pages/sms_automation/index', $this->page_data);
 
 	}
 
@@ -58,7 +60,7 @@ class Sms_Automation extends MY_Controller {
         $this->page_data['optionRuleEvent'] = $optionRuleEvent;
         $this->page_data['optionStatus'] = $optionStatus;
         $this->page_data['smsAutomation'] = $smsAutomation;
-        $this->load->view('sms_automation/ajax_load_automation_list', $this->page_data);
+        $this->load->view('v2/pages/sms_automation/ajax_load_automation_list', $this->page_data);
     }
 
     public function add_sms_automation(){

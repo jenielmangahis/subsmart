@@ -87,7 +87,7 @@ body {
                     <legend class="d-flex justify-content-between align-items-center">
                         <h2>Customer Placeholders</h2>
                         <a class="link" href="#" data-toggle="modal" data-target="#manageCustomFieldsModal">
-                            Manage Customer Custom Field
+                            Manage Customer Custom Fields
                         </a>
                     </legend>
                     <ul class="placeholders__list mb-3"></ul>
@@ -130,7 +130,7 @@ body {
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Manage Custom Fields</h5>
+        <h5 class="modal-title">Customer Custom Fields</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>

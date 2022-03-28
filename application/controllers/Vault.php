@@ -27,7 +27,7 @@ class Vault extends MY_Controller {
 	{
 		$this->page_data['folder_manager'] = getFolderManagerView(true, true);
 		add_footer_js(['assets/js/vaults/dataTables.checkboxes.min.js']);
-		$this->load->view('vault/list', $this->page_data);
+		$this->load->view('v2/pages/vault/list', $this->page_data);
 	}
 
 	public function beforeafter()

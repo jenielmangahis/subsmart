@@ -110,7 +110,7 @@ class Estimate extends MY_Controller
 
             $this->page_data['estimateStatusFilters'] = $this->estimate_model->getStatusWithCount();
         }*/
-
+        // $this->load->view('estimate/list', $this->page_data);
         $this->load->view('v2/pages/estimate/list', $this->page_data);
     }
 

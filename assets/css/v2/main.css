@@ -359,6 +359,21 @@ html, body{
     border-radius: 5px;
 	padding: 1em;
     height: 100%;
+	overflow: hidden;
+}
+
+.nsm-card .nsm-card-img{
+	width: 100%;
+	max-width: 100px;
+	margin-bottom: 1rem;
+}
+
+.nsm-card .nsm-card-img-lg{
+	width: 100%;
+	max-width: 200px;
+	margin-bottom: 1rem;
+	min-height: 115px;
+	object-fit: contain;
 }
 
 .nsm-card .nsm-card-header{
@@ -418,6 +433,28 @@ html, body{
 	height: calc(100% - 43px);
 }
 
+.nsm-card .nsm-card-thumbnail{
+	width: 100%;
+	min-height: 180px;
+	background-position: center;
+	background-size: cover;
+	background-repeat: no-repeat;
+}
+
+.nsm-card .thumbnail-header{
+	position: relative;
+}
+
+.nsm-card .thumbnail-header > .nsm-card-controls{
+	position: absolute;
+	right: 1.5rem;
+	top: .5rem;
+}
+
+.nsm-card .thumbnail-header > .nsm-card-controls a.dropdown-toggle{
+	color: #fff !important;
+}
+
 .nsm-button{
 	border: 1px solid #d3d3d3;
     border-radius: 5px;
@@ -463,6 +500,16 @@ a.nsm-button{
 .nsm-button.primary .bx{
 	color: #fff;
 }
+
+.nsm-button.error{
+	background-color: #dc3545;
+	color: #fff;
+}
+
+.nsm-button.error .bx{
+	color: #fff;
+}
+
 
 .nsm-button.btn-sm{
     font-size: 10px;
@@ -879,6 +926,10 @@ a.nsm-button{
 
 .nsm-empty span{
 	font-size: 13px;
+}
+
+.nsm-empty.page-empty{
+	height: calc(100vh - 300px);
 }
 
 .nsm-list-icon{
@@ -1330,4 +1381,82 @@ a.nsm-button{
     margin: auto;
 	font-size: 13px;
 	color: #c7c7c7;
+}
+
+ul.workspace-list{
+	margin: unset;
+	padding: unset;
+	list-style: none;
+}
+
+ul.workspace-list > li > .nsm-badge{
+	float: right;
+	margin-top: 3px;
+	padding-top: unset !important;
+	padding-bottom: unset !important;
+}
+
+div.workspace-list > .dropdown-toggle{
+	text-align: left;
+}
+
+div.workspace-list > .dropdown-toggle > .bx{
+	float: right;
+	padding-top: 6px;
+}
+
+div.workspace-list .dropdown-menu{
+	width: 100%;
+}
+
+div.workspace-list > ul > li .nsm-badge{
+	float: right;
+	margin-top: 2px;
+	padding-top: unset !important;
+	padding-bottom: unset !important;
+}
+
+#workspace_tabs > .tab-pane{
+	min-height: 350px;
+}
+
+.accordion-button:not(.collapsed){
+	color: #6a4a86 !important;
+    background-color: #6a4a8624 !important;
+}
+
+.accordion-button:not(.collapsed)::after{
+	background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%236a4a86'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e") !important;
+}
+
+.nsm-questions-icon{
+	display: flex;
+    align-items: center;
+    background-color: lightblue;
+    color: #fff;
+    padding: 0.5rem;
+    border-radius: 100%;
+    margin-right: 1rem;
+}
+
+.nsm-switch{
+	width: max-content !important;
+}
+
+.nsm-switch .form-check-input:checked{
+	background-color: #6a4a86 !important;
+    border-color: #dad1e0 !important;
+}
+
+.nsm-switch .form-check-input:focus{
+	border-color: #dad1e0 !important;
+	box-shadow: 0 0 0 0.25rem rgb(218 209 224) !important;
+}
+
+.nsm-switch .form-check-input:focus{
+	background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%236a4a86'/%3e%3c/svg%3e") !important;
+}
+
+.nsm-switch .form-check-input:checked{
+	background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23fff'/%3e%3c/svg%3e") !important;
 }

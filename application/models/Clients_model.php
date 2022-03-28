@@ -48,6 +48,31 @@ class Clients_model extends MY_Model
         return $query;
     }
 
+    public function getByIdPub($id)
+    {
+        // $user_id = logged('company_id');
+
+        $this->db->select('*');
+        $this->db->from($this->table);
+
+        // $this->db->join('industry_type', 'clients.industry_type_id = industry_type.id', 'left');
+        // $this->db->join('nsmart_plans', 'nsmart_plans.nsmart_plans_id = clients.nsmart_plan_id', 'left');
+
+        $this->db->where('id', $id);
+
+        $query = $this->db->get()->row();
+        return $query;
+    }
+
+    public function getByIdPubClientProf($id)
+    {
+        $this->db->select('*');
+        $this->db->from('business_profile');
+        $this->db->where('id', $id);
+        $query = $this->db->get()->row();
+        return $query;
+    }
+
     public function getByEmail($email)
     {
         $user_email = $email;

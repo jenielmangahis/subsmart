@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    let _table = $(".nsm-table");
+    let _table = $(document).find(".nsm-table");
     let _headCols = _table.find("thead td");
     let _bodyRows = _table.find("tbody tr:not(.nsm-row-collapse)");
     let withIcon = _table.find("thead td:first-child").hasClass("table-icon");

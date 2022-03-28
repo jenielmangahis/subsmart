@@ -29,12 +29,15 @@ window.document.addEventListener("DOMContentLoaded", async () => {
         render: columns.title,
       },
       {
+        sortable: false,
         render: columns.category,
       },
       {
+        sortable: false,
         render: columns.status,
       },
       {
+        sortable: false,
         render: columns.favorite,
         class: "text-center",
       },
