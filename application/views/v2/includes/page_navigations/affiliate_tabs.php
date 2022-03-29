@@ -7,7 +7,7 @@
             </a>
         </li>
         <li class="<?php if($page->title == 'Affiliates Stats Dashboard'): echo 'active'; endif; ?>">
-            <a class="nsm-page-link" href="<?= base_url('tools/google_contacts') ?>">
+            <a class="nsm-page-link" href="<?= base_url('affiliate/stats_dashboard') ?>">
                 <i class='bx bx-fw bxs-dashboard'></i>
                 <span>Affiliates Stats Dashboard</span>
             </a>

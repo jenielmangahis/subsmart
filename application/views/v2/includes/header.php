@@ -234,7 +234,7 @@ if ($this->session->userdata('usertimezone') == null) {
                                 <i class='bx bx-fw bx-palette'></i> eSign
                             </a>
                         </li>
-                        <li>
+                        <li class="<?php if($page->title == 'Affiliate Partners' || $page->title == 'Affiliates Stats Dashboard'): echo 'selected'; endif; ?>">
                             <a href="<?= base_url("affiliate") ?>">
                                 <i class='bx bx-fw bx-group'></i> Affiliates
                             </a>
