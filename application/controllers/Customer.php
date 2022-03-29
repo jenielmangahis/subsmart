@@ -4561,4 +4561,61 @@ class Customer extends MY_Controller
 
         echo json_encode($json_data);
     }
+
+    public function ajax_welcome_email_form()
+    {
+        $post = $this->input->post(); 
+
+        $customer = $this->customer_ad_model->get_data_by_id('prof_id',$post['cid'],"acs_profile");
+        $this->page_data['customer'] = $customer;
+        $this->load->view('customer/ajax_welcome_email_form', $this->page_data);
+    }
+
+    public function ajax_send_welcome_email()
+    {
+        $this->load->model('AcsProfile_model');
+        
+        $is_success = 0;
+        $msg = '';
+
+        $user_id = logged('id');
+        $post    = $this->input->post();
+
+        if( $post['message_subject'] != '' && $post['message_body'] != '' && $post['cid'] > 0 ){
+            $customer = $this->AcsProfile_model->getByProfId($post['cid']);
+            if( $customer ){
+
+                //Send mail
+                $body    = $post['message_body'];
+                $attachment = '';
+
+                $subject = 'nSmarTrac: ' . $post['message_subject'];
+                $to      = $customer->email;
+
+                $data_email = [
+                    'subject' => $subject, 
+                    'body' => $body,
+                    'to' => $to,
+                    'cc' => '',
+                    'bcc' => '',
+                    'attachment' => $attachment
+                ];
+
+                $isSent = sendEmail($data_email);
+                if( $isSent['is_valid'] ){
+                    customerAuditLog(logged('id'), $customer->prof_id, $customer->prof_id, 'Customer', 'Sent welcome email to ' . $customer->email);
+                    $is_success = 1;
+                }ELSE{
+                    $msg = $isSent['err_msg'] ;
+                }
+            }else{
+                $msg = 'Cannot find customer';
+            }
+        }else{
+            $msg = 'Cannot save data';
+        }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($json_data);        
+    }
 }

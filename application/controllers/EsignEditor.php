@@ -44,6 +44,11 @@ class EsignEditor extends MY_Controller
         add_footer_js([
             'assets/js/esign/esigneditor/letters.js',
             'https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js',
+
+            'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.3.6/purify.min.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js',
         ]);
 
         $this->load->view('esign/esigneditor/letters', $this->page_data);
@@ -881,7 +886,6 @@ SQL;
             mkdir($storePath, 0777, true);
         }
 
-        $ids = explode(',', $this->input->post('ids'));
         $subject = trim($this->input->post('subject'));
         $message = trim($this->input->post('message'));
         $email = trim($this->input->post('email'));
@@ -909,6 +913,12 @@ SQL;
             unlink($pdfPath);
         }
 
+        if (!$this->input->post('ids')) {
+            echo json_encode(['data' => null, 'is_sent' => $isSent]);
+            return;
+        }
+
+        $ids = explode(',', $this->input->post('ids'));
         $letters = array_map(function ($id) {
             return ['id' => $id, 'print_status' => 'Printed/Sent'];
         }, $ids);
@@ -917,6 +927,7 @@ SQL;
         $this->db->where_in('id', $ids);
         $letters = $this->db->get('esign_editor_customer_letters')->result();
         echo json_encode(['data' => $letters, 'is_sent' => $isSent]);
+
     }
 
     public function apiSeedLetters()
@@ -1050,5 +1061,19 @@ SQL;
         $this->db->where('id', $placeholder->id);
         $this->db->delete('esign_editor_placeholders');
         echo json_encode(['data' => $placeholder->id]);
+    }
+
+    public function apiGetCustomers()
+    {
+        $this->load->model('Customer_advance_model', 'customer_ad_model');
+        $customers = $this->customer_ad_model->get_customer_data();
+
+        $customers = array_map(function ($customer) {
+            $customer->profile = userProfilePicture($customer->id);
+            return $customer;
+        }, $customers);
+
+        header('content-type: application/json');
+        echo json_encode(['data' => $customers]);
     }
 }

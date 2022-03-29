@@ -107,7 +107,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
             <div class="invoicetext" style="margin-left:0px; margin-top:6px;">
                 <!-- updated on 10-11-2016 start (fixed invoice permission issue) -->
-                <a class="btn btn-sm btn-primary" href="<?= base_url('invoice/add?cus_id='.$cus_id); ?>" target="_blank" style="display: inline-block;color:#ffffff;">Create Invoice</a>
+                <a class="btn btn-sm btn-primary" onclick="window.open('<?= base_url('invoice/add?cus_id='.$cus_id); ?>', '_blank', 'location=yes,height=1080,width=1500,scrollbars=yes,status=yes');" href="javascript:void(0);" style="display: inline-block;color:#ffffff;">Create Invoice</a>
                 <a class="btn btn-sm btn-primary" href="<?= base_url('customer/invoice_list/'.$cus_id); ?>" target="_blank" style="display: inline-block;color:#ffffff;">All Invoices</a>
                 <!-- updated on 10-11-2016 start (fixed invoice permission issue) -->
                 

@@ -97,6 +97,32 @@
     .card{
         box-shadow: 0 0 13px 0 rgb(116 116 117 / 44%) !important;
     }
+    .nsm-button {
+        border: 1px solid #d3d3d3;
+        border-radius: 5px;
+        padding: 0.5em 0.7em;
+        background-color: transparent;
+        font-size: 14px;
+        font-weight: 700;
+    }
+    .content-title {
+        font-size: 15px !important;
+        font-weight: bold;
+        line-height: 1.3;
+        display: block;
+        margin-bottom: 14px !important;
+    }
+    .nsm-button.primary {
+        background-color: #6a4a86;
+        color: #fff;
+    }
+    .nsm-button:not(:first-child), .nsm-button:not(:last-child) {
+        margin-left: 5px;
+        margin-bottom: 15px;
+    }
+    .mb-2 {
+        margin-bottom: 0.5rem!important;
+    }
 </style>
 
 <div class="wrapper" role="wrapper">
@@ -179,6 +205,40 @@
                     </div>
 
                     </div>
+
+                    <div class="modal fade nsm-modal fade" id="new_estimate_modal" tabindex="-1" aria-labelledby="new_estimate_modal_label" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <span class="modal-title content-title" id="new_estimate_modal_label">New Estimate</span>
+                                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row text-center gy-3">
+                                        <div class="col-12">
+                                            <label class="content-title">What type of estimate you want to create</label>
+                                        </div>
+                                        <div class="col-12">
+                                            <label class="content-subtitle d-block mb-2">Create a regular estimate with items</label>
+                                            <button type="button" class="nsm-button w-50 primary" onclick="window.open('<?= base_url('estimate/add?cus_id='.$cus_id); ?>', '_blank', 'location=yes,height=1080,width=1500,scrollbars=yes,status=yes');">Standard Estimate</button>
+                                        </div>
+                                        <div class="col-12">
+                                            <label class="content-subtitle d-block mb-2">Customers can select all or only certain options</label>
+                                            <button type="button" class="nsm-button w-50 primary" onclick="window.open('<?= base_url('estimate/addoptions?type=2&cus_id='.$cus_id); ?>', '_blank', 'location=yes,height=1080,width=1500,scrollbars=yes,status=yes');">Options Estimate</button>
+                                        </div>
+                                        <div class="col-12">
+                                            <label class="content-subtitle d-block mb-2">Customers can select both Bundle Packages to<br>obtain an overall discount</label>
+                                            <button type="button" class="nsm-button w-50 primary" onclick="window.open('<?= base_url('estimate/addbundle?type=3&cus_id='.$cus_id); ?>', '_blank', 'location=yes,height=1080,width=1500,scrollbars=yes,status=yes');">Bundle Estimate</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
                 </div>
             </div>
         </div>

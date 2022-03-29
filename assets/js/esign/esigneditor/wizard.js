@@ -213,7 +213,7 @@ function handleSubmit(customer) {
     );
 
     isExporting = false;
-    htmlToPDF(decodeHtml(data.content));
+    window.helpers.htmlToPDF(data.content);
   };
 
   $button.addEventListener("click", async () => {
@@ -243,39 +243,6 @@ function handleSubmit(customer) {
     event.preventDefault();
     $form.classList.remove("wizardForm--step2");
   });
-}
-
-function htmlToPDF(string) {
-  const doc = new jsPDF({
-    orientation: "portrait",
-    format: "a4",
-    unit: "px",
-    hotfixes: ["px_scaling"],
-  });
-
-  const margin = { x: 48, y: 48 };
-  let { width, height } = doc.internal.pageSize;
-  width = width - margin.x * 2;
-
-  doc.html(
-    `<div style="width:${width}px;">
-      ${string}
-    </div>`,
-    {
-      margin: [margin.y, margin.x, margin.y, margin.x],
-      autoPaging: "text",
-      callback: (doc) => {
-        doc.output("dataurlnewwindow");
-      },
-    }
-  );
-}
-
-// https://stackoverflow.com/a/7394787/8062659
-function decodeHtml(html) {
-  const txt = document.createElement("textarea");
-  txt.innerHTML = html;
-  return txt.value;
 }
 
 function initSaveForm(customer) {

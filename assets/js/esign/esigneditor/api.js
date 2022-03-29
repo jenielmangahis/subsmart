@@ -127,6 +127,10 @@ export function deletePlaceholder(id) {
   return http.delete(`${prefixURL}/EsignEditor/apiDeletePlaceholder/${id}`);
 }
 
+export function getCustomers() {
+  return http.get(`${prefixURL}/EsignEditor/apiGetCustomers`);
+}
+
 const http = {
   post: sendPost,
   delete: sendDelete,

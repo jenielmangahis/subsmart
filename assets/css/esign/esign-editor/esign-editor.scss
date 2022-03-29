@@ -471,3 +471,38 @@
     margin: 0;
   }
 }
+
+.customers {
+  max-height: 500px;
+  overflow: auto;
+  padding: 0 0.5rem;
+}
+.customer {
+  display: flex;
+  gap: 1rem;
+  padding: 8px;
+  cursor: pointer;
+  border: 1px solid transparent;
+
+  &:hover,
+  &--isSelected {
+    background-color: #eaeaea;
+    border-color: #e0e0e0;
+  }
+
+  &__img {
+    --size: 50px;
+    width: var(--size);
+    height: var(--size);
+    border-radius: var(--size);
+  }
+
+  &__name {
+    font-weight: 600;
+  }
+
+  &__email {
+    color: #737373;
+    font-size: 13px;
+  }
+}

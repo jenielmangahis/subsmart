@@ -321,7 +321,12 @@ input:checked + .slider:before {
                                     <select id="sel-customer" name="customer_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
                                         <option value="0">- none -</option>
                                         <?php foreach($customers as $c){ ?>
-                                            <option value="<?= $c->prof_id; ?>"><?= $c->contact_name . '' . $c->first_name . ' ' . $c->last_name; ?></option>
+                                            <?php if( $default_customer_id > 0 ){ ?>
+                                                <option <?= $default_customer_id == $c->prof_id ? 'selected="selected"' : ''; ?> value="<?= $c->prof_id; ?>"><?= $c->contact_name . '' . $c->first_name . ' ' . $c->last_name; ?></option>
+                                            <?php }else{ ?>
+                                                <option value="<?= $c->prof_id; ?>"><?= $c->contact_name . '' . $c->first_name . ' ' . $c->last_name; ?></option>
+                                            <?php } ?>
+                                            
                                         <?php } ?>
                                     </select>
                                     </div>
@@ -1119,9 +1124,15 @@ function initialize() {
 $(document).ready(function(){
  
     $('#sel-customer').change(function(){
-    var id  = $(this).val();
-    // alert(id);
+        var id  = $(this).val();
+        load_customer_address(id);
+    });
 
+    <?php if( $default_customer_id > 0 ){ ?>
+        load_customer_address("<?= $default_customer_id; ?>");
+    <?php } ?>
+
+    function load_customer_address(id){
         $.ajax({
             type: 'POST',
             url:"<?php echo base_url(); ?>accounting/addLocationajax",
@@ -1141,7 +1152,7 @@ $(document).ready(function(){
        
                 }
         });
-    });
+    }
 
     $(document).on('click','.setmarkup',function(){
        // alert('yeah');
