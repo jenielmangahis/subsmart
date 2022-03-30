@@ -324,6 +324,16 @@ class Affiliate extends MY_Controller {
         }
     }
 
+
+    public function stats_dashboard()
+	{
+        $this->page_data['page']->title = 'Affiliates Stats Dashboard';
+        $this->page_data['page']->parent = 'Tools';
+
+        $is_allowed = $this->isAllowedModuleAccess(50);
+		$this->load->view('v2/pages/affiliate/stats_dashboard', $this->page_data);
+	}
+
 }
 
 /* End of file Activity_logs.php */

@@ -989,6 +989,13 @@ class Invoice_model extends MY_Model
         $update = $this->db->update($this->table, $data);
         return $update ? true : false;
     }
+
+    public function update_invoice_item($invoiceItemId, $data)
+    {
+        $this->db->where('id', $invoiceItemId);
+        $update = $this->db->update('invoices_items', $data);
+        return $update ? true : false;
+    }
 }
 
 /* End of file Invoice_model.php */

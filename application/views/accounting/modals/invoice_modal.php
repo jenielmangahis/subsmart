@@ -605,7 +605,7 @@
                         <div class="col-md-4">
                             <div class="row h-100">
                                 <div class="col-md-12 d-flex align-items-center justify-content-center">
-                                    <span><a href="#" class="text-white">Print or Preview</a></span>
+                                    <span><a href="#" class="text-white" id="save-and-print">Print or Preview</a></span>
                                     <span class="mx-3 divider"></span>
                                     <span><a href="#" class="text-white" onclick="makeRecurring('invoice')">Make Recurring</a></span>
                                     <?php if(isset($invoice)) : ?>
@@ -615,7 +615,7 @@
                                             <a href="javascript:void(0);" class="text-white" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
                                             <div class="dropdown-menu">
                                                 <a class="dropdown-item" href="#" id="copy-invoice">Copy</a>
-                                                <?php if($invoice->status !== "4") : ?>
+                                                <?php if($invoice->voided !== "1") : ?>
                                                 <a class="dropdown-item" href="#" id="void-invoice">Void</a>
                                                 <?php endif; ?>
                                                 <a class="dropdown-item" href="#" id="delete-invoice">Delete</a>

@@ -1,3 +1,8 @@
+try {
+  window.jsPDF = window.jspdf.jsPDF;
+  window.PDFDocument = window.PDFLib.PDFDocument;
+} catch (error) {}
+
 // https://stackoverflow.com/a/35385518/8062659
 export function htmlToElement(html) {
   const template = document.createElement("template");
@@ -83,4 +88,73 @@ export function toBase64(file) {
     reader.onload = () => resolve(reader.result);
     reader.onerror = (error) => reject(error);
   });
+}
+
+export function htmlToPDF(string) {
+  const doc = new jsPDF({
+    orientation: "portrait",
+    format: "a4",
+    unit: "px",
+    hotfixes: ["px_scaling"],
+  });
+
+  const margin = { x: 48, y: 48 };
+  let { width, height } = doc.internal.pageSize;
+  width = width - margin.x * 2;
+
+  doc.html(
+    `<div style="width:${width}px;">
+      ${decodeHtml(string)}
+    </div>`,
+    {
+      margin: [margin.y, margin.x, margin.y, margin.x],
+      autoPaging: "text",
+      callback: (doc) => {
+        doc.output("dataurlnewwindow");
+      },
+    }
+  );
+}
+
+// https://stackoverflow.com/a/7394787/8062659
+function decodeHtml(html) {
+  const txt = document.createElement("textarea");
+  txt.innerHTML = html;
+  return txt.value;
+}
+
+export async function generatePDF(html) {
+  let htmls = html;
+  if (!Array.isArray(htmls)) {
+    htmls = [html];
+  }
+
+  const docPromises = htmls.map(async (html) => {
+    const doc = new jsPDF({
+      orientation: "portrait",
+      format: "a4",
+      unit: "px",
+      hotfixes: ["px_scaling"],
+    });
+
+    const margin = { x: 48, y: 48 };
+    let { width } = doc.internal.pageSize;
+    width = width - margin.x * 2;
+
+    doc.html(
+      `<div style="width:${width}px;">
+          ${html}
+        </div>`,
+      {
+        margin: [margin.y, margin.x, margin.y, margin.x],
+        autoPaging: "text",
+      }
+    );
+
+    await sleep(5); // sometimes setting this to lower will result to blank pages
+    return doc.output("arraybuffer", { returnPromise: true });
+  });
+
+  const docs = await Promise.all(docPromises);
+  return mergePdfs(docs);
 }

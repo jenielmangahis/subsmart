@@ -1,7 +1,9 @@
 window.document.addEventListener("DOMContentLoaded", async () => {
   window.api = await import("./api.js");
   window.helpers = await import("./helpers.js");
+
   await initCategories();
+  await initCustomers();
 
   const $table = $("#letters");
   const $categorySelect = $("#category");
@@ -105,18 +107,57 @@ const columns = {
     return $button.outerHTML;
   },
   actions: (_, __, row) => {
+    let actions = [
+      {
+        value: "edit",
+        text: "Edit",
+        isPrimary: true,
+      },
+      {
+        value: "delete",
+        text: "Delete",
+      },
+      {
+        value: "print",
+        text: "Print",
+      },
+      {
+        value: "duplicate",
+        text: "Duplicate",
+      },
+      {
+        value: "send_pdf",
+        text: "Send PDF",
+      },
+    ];
+
     if (row.user_id === null) {
-      return "<span></span>";
+      actions = actions.filter((action) => {
+        return !["edit", "delete"].includes(action.value);
+      });
+
+      actions = actions.map((action) => {
+        action.isPrimary = action.value === "duplicate";
+        return action;
+      });
     }
+
+    const primary = actions.find((action) => action.isPrimary);
+    const menus = actions.map((action) => {
+      if (action.isPrimary) return null;
+      return `<a class="dropdown-item" href="#" data-action="${action.value}">${action.text}</a>`;
+    });
 
     return `
     <div class="btn-group">
-      <button type="button" class="btn btn-sm btn-primary" data-action="edit">Edit</button>
-      <button type="button" class="btn btn-sm btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <button class="btn btn-sm btn-primary" data-action="${primary.value}">
+        ${primary.text}
+      </button>
+      <button class="btn btn-sm btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <span class="sr-only">Toggle Dropdown</span>
       </button>
       <div class="dropdown-menu">
-        <a class="dropdown-item" href="#" data-action="delete">Delete</a>
+        ${menus.join("")}
       </div>
     </div>
   `;
@@ -154,6 +195,115 @@ const actions = {
     row.is_favorite = data.is_favorite;
     table.row(`#row${row.id}`).data(row).invalidate();
   },
+  print: (row) => {
+    if (window.__isExporting === true) {
+      return;
+    }
+
+    const $modal = document.getElementById("customersModal");
+    const $next = removeButtonListeners($modal.querySelector(".btn-primary"));
+
+    $next.addEventListener("click", async () => {
+      const $selected = $modal.querySelector(".customer--isSelected");
+      if (!$selected) return;
+
+      const payload = {
+        content: row.content,
+        letter_id: row.id,
+        customer_id: $selected.dataset.id,
+      };
+
+      window.__isExporting = true;
+      const { data } = await window.helpers.submitBtn($next, () =>
+        window.api.exportLetterAsPDF(payload)
+      );
+
+      window.helpers.htmlToPDF(data.content);
+      window.__isExporting = false;
+    });
+
+    $($modal).modal("show");
+  },
+  send_pdf: (row) => {
+    const $modal = document.getElementById("customersModal");
+    const $next = removeButtonListeners($modal.querySelector(".btn-primary"));
+
+    const $sendModal = document.getElementById("sendLetterModal");
+    const $preview = $sendModal.querySelector(".preview");
+    const $sendBtn = removeButtonListeners($sendModal.querySelector(".btn-primary")); // prettier-ignore
+
+    async function sendEmailHandler() {
+      const { is_sent } = await window.helpers.submitBtn($sendBtn, async () => {
+        const payload = {};
+        const $inputs = $sendModal.querySelectorAll("[data-type]");
+
+        for (let index = 0; index < $inputs.length; index++) {
+          const $input = $inputs[index];
+          const value = $input.value.trim();
+          const key = $input.dataset.type;
+
+          if (!value.length) {
+            $input.focus();
+            return;
+          }
+
+          if (key === "email" && !window.helpers.isEmail(value)) {
+            $input.focus();
+            return;
+          }
+
+          payload[key] = value;
+        }
+
+        const pdfUri = await window.helpers.generatePDF($preview.innerHTML);
+        const response = await fetch(pdfUri);
+        const pdf = await response.blob();
+
+        const form = new FormData();
+        form.append("subject", payload.subject);
+        form.append("email", payload.email);
+        form.append("message", payload.message);
+        form.append("pdf", pdf);
+
+        await window.helpers.sleep(1);
+        return window.api.emailCustomerLetter(form);
+      });
+
+      if (is_sent !== true) {
+        const $alert = $($sendModal).find("[data-step=email] .alert-danger");
+        $alert.removeClass("d-none");
+        $($sendModal).get(0).scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        $($sendModal).modal("hide");
+      }
+    }
+
+    async function nextHandler() {
+      const $selected = $modal.querySelector(".customer--isSelected");
+      if (!$selected) return;
+
+      const payload = {
+        content: row.content,
+        letter_id: row.id,
+        customer_id: $selected.dataset.id,
+      };
+      const { data } = await window.helpers.submitBtn($next, () =>
+        window.api.exportLetterAsPDF(payload)
+      );
+      $preview.innerHTML = `<div class="preview__item">${data.content}</div>`;
+
+      $sendBtn.addEventListener("click", sendEmailHandler);
+      $($modal).modal("hide");
+      $($sendModal).modal("show");
+    }
+
+    $next.addEventListener("click", nextHandler);
+    $($modal).modal("show");
+  },
+  duplicate: async (row) => {
+    const { data } = await window.api.duplicateLetter(row.id);
+    window.location.href = `${window.api.prefixURL}/EsignEditor/edit?id=${data.id}`;
+  },
 };
 
 async function initCategories() {
@@ -165,4 +315,63 @@ async function initCategories() {
     );
     $select.appendChild($option);
   });
+}
+
+async function initCustomers() {
+  const { data: customers } = await window.api.getCustomers();
+  const $modal = document.getElementById("customersModal");
+
+  const $fragment = document.createDocumentFragment();
+  customers.forEach((customer) => {
+    $fragment.appendChild(createCustomer(customer));
+  });
+  const $customers = $modal.querySelector(".customers");
+  $customers.appendChild($fragment);
+
+  $($modal).on("hidden.bs.modal", () => {
+    unselectAllCustomers();
+  });
+}
+
+function createCustomer(customer) {
+  const $modal = document.getElementById("customersModal");
+  const $template = $modal.querySelector("template");
+
+  const $copy = document.importNode($template.content, true);
+  const name = `${customer.first_name} ${customer.last_name}`;
+
+  const $image = $copy.querySelector(".customer__img");
+  $image.setAttribute("alt", name);
+  $image.setAttribute("src", customer.profile);
+
+  const $name = $copy.querySelector(".customer__name");
+  $name.textContent = name;
+
+  const $email = $copy.querySelector(".customer__email");
+  $email.textContent = customer.email || customer.phone_m;
+
+  const $customer = $copy.querySelector(".customer");
+  $customer.setAttribute("data-id", customer.prof_id);
+
+  $customer.addEventListener("click", () => {
+    unselectAllCustomers();
+    $customer.classList.add("customer--isSelected");
+  });
+
+  return $customer;
+}
+
+function unselectAllCustomers() {
+  const $modal = document.getElementById("customersModal");
+  const $selected = [...$modal.querySelectorAll(".customer--isSelected")];
+
+  $selected.forEach(($node) => {
+    $node.classList.remove("customer--isSelected");
+  });
+}
+
+function removeButtonListeners($button) {
+  const $newButton = $button.cloneNode(true);
+  $button.parentNode.replaceChild($newButton, $button);
+  return $newButton;
 }
