@@ -1082,8 +1082,6 @@ class Customer extends MY_Controller
 
         if( !empty($post['creditedBureau']) ){
             if( $post['cus_id'] > 0 ){
-                
-                $companyReason      = $this->CompanyReason_model->getById($post['dispute_reason']);
 
                 $instruction = '';
                 if( $post['new_instruction'] != '' ){
@@ -1103,20 +1101,14 @@ class Customer extends MY_Controller
                     if( $companyInstruction ){
                         $instruction = $companyInstruction->instructions;
                     } 
-                }
-                
-
-                $reason = '';
-                if( $companyReason ){
-                    $reason = $companyReason->reason;
-                }                
+                }              
                 
                 $data_dispute = [
                     'company_id' => $company_id,
                     'prof_id' => $post['cus_id'],
                     'furnisher_id' => $post['furnisher_id'],
-                    'date_dispuite' => date('Y-m-d'),                 
-                    'reason' => $reason,
+                    'date_dispute' => date('Y-m-d'),                 
+                    'company_reason_id' => $post['dispute_reason'],
                     'instruction' => $instruction,
                     'date_created' => date("Y-m-d H:i:s"),
                     'date_modified' => date("Y-m-d H:i:s")
@@ -1144,14 +1136,14 @@ class Customer extends MY_Controller
                                 if( $field == 'status' ){
                                     $status = $value;
                                 }
-                                $other_fields[] = ['field' => $field, 'value' => $value];
+                                $other_fields[$field] = ['field' => $field, 'value' => $value];
                             }
                         }else{
                             foreach($post['otherInfo']['individual'][$bureauId] as $field => $value){
                                 if( $field == 'status' ){
                                     $status = $value;
                                 }
-                                $other_fields[] = ['field' => $field, 'value' => $value];
+                                $other_fields[$field] = ['field' => $field, 'value' => $value];
                             }
                         }
 
@@ -1189,12 +1181,25 @@ class Customer extends MY_Controller
     {
         $this->load->model('CustomerDispute_model');
         $this->load->model('CustomerDisputeItem_model');
+        $this->load->model('CreditBureau_model');
 
         $cid  = logged('company_id');
         $post = $this->input->post();
 
-        $this->page_data['reasons'] = $reasons;        
-        $this->load->view('customer/ajax_load_company_reason_list', $this->page_data);
+        $dispute = $this->CustomerDispute_model->getById($post['did']);
+        $disputeItems = $this->CustomerDisputeItem_model->getAllByCustomerDisputeId($post['did']); 
+        $creditBureaus = $this->CreditBureau_model->getAll();   
+
+        $aDisputeItems = array();
+        foreach($disputeItems as $di){
+            $aDisputeItems[$di->credit_bureau_id] = $di;
+        }
+
+        $this->page_data['dispute'] = $dispute;
+        $this->page_data['aDisputeItems'] = $aDisputeItems;
+        $this->page_data['creditBureaus'] = $creditBureaus;
+        $this->page_data['optionOtherInfoStatus'] = $this->CustomerDisputeItem_model->optionOtherInfoStatus();
+        $this->load->view('customer/ajax_edit_dispute_item', $this->page_data);
     }
 
     public function ajax_delete_customer_dispute()
@@ -4617,5 +4622,77 @@ class Customer extends MY_Controller
 
         $json_data = ['is_success' => $is_success, 'msg' => $msg];
         echo json_encode($json_data);        
+    }
+
+    public function ajax_update_customer_dispute()
+    {
+        $this->load->model('CustomerDispute_model');
+        $this->load->model('CompanyReason_model');
+        $this->load->model('CompanyDisputeInstruction_model');
+        $this->load->model('CustomerDisputeItem_model');
+        
+        $is_success = false;
+        $msg = '';
+
+        $company_id = logged('company_id');
+        $post       = $this->input->post();
+
+        $dispute = $this->CustomerDispute_model->getById($post['did']);
+
+        if( $dispute && $dispute->company_id == $company_id ){
+            if( !empty($post['creditedBureau']) ){                
+                $data_dispute = [
+                    'furnisher_id' => $post['furnisher_id'],
+                    'date_dispute' => $post['dispute_date'],                 
+                    'company_reason_id' => $post['dispute_reason'],
+                    'instruction' => $post['dispute_instruction'],
+                    'date_modified' => date("Y-m-d H:i:s")
+                ];
+
+                $this->CustomerDispute_model->update($dispute->id, $data_dispute);
+                $this->CustomerDisputeItem_model->deleteByCustomerDisputeId($dispute->id);
+
+                foreach( $post['creditedBureau'] as $key => $bureauId ){
+
+                    $account_number = '';
+                    if( isset($post['cb_account_number'][$bureauId]) ){
+                        $account_number = $post['cb_account_number'][$bureauId];
+                    }
+
+                    //Other fields
+                    $status = '';
+                    $other_fields = array();
+                    foreach($post['otherInfo']['individual'][$bureauId] as $field => $value){
+                        if( $field == 'status' ){
+                            $status = $value;
+                        }
+                        $other_fields[$field] = ['field' => $field, 'value' => $value];
+                    }
+
+                    $other_fields = serialize($other_fields);
+
+                    $data_dispute_item = [                            
+                        'customer_dispute_id' => $customer_dispute_id,
+                        'credit_bureau_id' => $bureauId,
+                        'account_number`' => $account_number,
+                        'status' => $status,
+                        'other_fields' => $other_fields,
+                        'date_created' => date("Y-m-d H:i:s"),
+                        'date_modified' => date("Y-m-d H:i:s")
+                    ];
+
+                    $companyDisputeItems = $this->CustomerDisputeItem_model->create($data_dispute_item);
+                }
+
+                $is_success = true;
+            }else{
+                $msg = 'Please select credit bureau';
+            }
+        }else{
+            $msg = 'Cannot find data';
+        }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($json_data);     
     }
 }

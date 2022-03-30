@@ -82,6 +82,7 @@ $route['customer/_edit_dispute_item'] = 'Customer/ajax_edit_dispute_item';
 $route['customer/activities/(:num)'] = 'Customer/activities/$1';
 $route['customer/_load_welcome_email_form'] = 'Customer/ajax_welcome_email_form';
 $route['customer/_send_welcome_email'] = 'Customer/ajax_send_welcome_email';
+$route['customer/_update_customer_dispute'] = 'Customer/ajax_update_customer_dispute';
 
 //Credit Bureau
 $route['credit_bureau/list'] = 'Credit_Bureau/index';
