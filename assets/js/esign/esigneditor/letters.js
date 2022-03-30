@@ -233,41 +233,41 @@ const actions = {
     const $sendBtn = removeButtonListeners($sendModal.querySelector(".btn-primary")); // prettier-ignore
 
     async function sendEmailHandler() {
-      const payload = {};
-      const $inputs = $sendModal.querySelectorAll("[data-type]");
+      const { is_sent } = await window.helpers.submitBtn($sendBtn, async () => {
+        const payload = {};
+        const $inputs = $sendModal.querySelectorAll("[data-type]");
 
-      for (let index = 0; index < $inputs.length; index++) {
-        const $input = $inputs[index];
-        const value = $input.value.trim();
-        const key = $input.dataset.type;
+        for (let index = 0; index < $inputs.length; index++) {
+          const $input = $inputs[index];
+          const value = $input.value.trim();
+          const key = $input.dataset.type;
 
-        if (!value.length) {
-          $input.focus();
-          return;
+          if (!value.length) {
+            $input.focus();
+            return;
+          }
+
+          if (key === "email" && !window.helpers.isEmail(value)) {
+            $input.focus();
+            return;
+          }
+
+          payload[key] = value;
         }
 
-        if (key === "email" && !window.helpers.isEmail(value)) {
-          $input.focus();
-          return;
-        }
+        const pdfUri = await window.helpers.generatePDF($preview.innerHTML);
+        const response = await fetch(pdfUri);
+        const pdf = await response.blob();
 
-        payload[key] = value;
-      }
+        const form = new FormData();
+        form.append("subject", payload.subject);
+        form.append("email", payload.email);
+        form.append("message", payload.message);
+        form.append("pdf", pdf);
 
-      const pdfUri = await window.helpers.generatePDF($preview.innerHTML);
-      const response = await fetch(pdfUri);
-      const pdf = await response.blob();
-
-      const form = new FormData();
-      form.append("subject", payload.subject);
-      form.append("email", payload.email);
-      form.append("message", payload.message);
-      form.append("pdf", pdf);
-
-      await window.helpers.sleep(1);
-      const { is_sent } = await window.helpers.submitBtn($sendBtn, () =>
-        window.api.emailCustomerLetter(form)
-      );
+        await window.helpers.sleep(1);
+        return window.api.emailCustomerLetter(form);
+      });
 
       if (is_sent !== true) {
         const $alert = $($sendModal).find("[data-step=email] .alert-danger");
@@ -299,6 +299,10 @@ const actions = {
 
     $next.addEventListener("click", nextHandler);
     $($modal).modal("show");
+  },
+  duplicate: async (row) => {
+    const { data } = await window.api.duplicateLetter(row.id);
+    window.location.href = `${window.api.prefixURL}/EsignEditor/edit?id=${data.id}`;
   },
 };
 

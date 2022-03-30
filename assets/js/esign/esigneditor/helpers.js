@@ -1,5 +1,7 @@
-window.jsPDF = window.jspdf.jsPDF;
-window.PDFDocument = window.PDFLib.PDFDocument;
+try {
+  window.jsPDF = window.jspdf.jsPDF;
+  window.PDFDocument = window.PDFLib.PDFDocument;
+} catch (error) {}
 
 // https://stackoverflow.com/a/35385518/8062659
 export function htmlToElement(html) {

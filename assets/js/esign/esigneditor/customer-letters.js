@@ -211,36 +211,28 @@ function initSendModal() {
   const $printBtn = $modal.find("[data-action=print]");
   const $emailBtn = $modal.find("[data-action=email]");
 
-  const generatePDF = async () => {
+  const generatePDF = () => {
     const $previews = $modal.find(".preview__item");
-    const docPromises = $previews.map(async (_, $preview) => {
-      const doc = new jsPDF({
-        orientation: "portrait",
-        format: "a4",
-        unit: "px",
-        hotfixes: ["px_scaling"],
-      });
+    const htmls = [...$previews.map((_, $preview) => $preview.innerHTML)];
+    return window.helpers.generatePDF(htmls);
+  };
 
-      const margin = { x: 48, y: 48 };
-      let { width } = doc.internal.pageSize;
-      width = width - margin.x * 2;
-
-      doc.html(
-        `<div style="width:${width}px;">
-            ${$preview.innerHTML}
-          </div>`,
-        {
-          margin: [margin.y, margin.x, margin.y, margin.x],
-          autoPaging: "text",
-        }
-      );
-
-      await window.helpers.sleep(5); // sometimes setting this to lower will result to blank pages
-      return doc.output("arraybuffer", { returnPromise: true });
+  const updateTable = (updatedRows) => {
+    const $table = document.getElementById("letters");
+    const table = $($table).DataTable();
+    updatedRows.forEach((letter) => {
+      table.row(`#row${letter.id}`).data(letter).draw();
     });
 
-    const docs = await Promise.all(docPromises);
-    return window.helpers.mergePdfs(docs);
+    const $checkbox = $table.querySelector(".table__checkbox--primary");
+    $checkbox.indeterminate = false;
+    $checkbox.checked = false;
+
+    const $selected = $table.querySelectorAll(".table__row--selected");
+    [...$selected].forEach(($row) => {
+      $row.querySelector(".table__checkbox").checked = false;
+      $row.classList.remove("table__row--selected");
+    });
   };
 
   $modalTrigger.on("click", () => {
@@ -306,48 +298,33 @@ function initSendModal() {
       `);
 
       $modal.modal("hide");
-
-      // update talbe
-      const $table = document.getElementById("letters");
-      const table = $($table).DataTable();
-      response.data.forEach((letter) => {
-        table.row(`#row${letter.id}`).data(letter).draw();
-      });
-
-      const $checkbox = $table.querySelector(".table__checkbox--primary");
-      $checkbox.checked = false;
-
-      const $selected = $table.querySelectorAll(".table__row--selected");
-      [...$selected].forEach(($row) => {
-        $row.querySelector(".table__checkbox").checked = false;
-        $row.classList.remove("table__row--selected");
-      });
+      updateTable(response.data);
     });
   });
 
   $emailBtn.on("click", () => {
-    const payload = {};
-    const $inputs = $modal.find("[data-type]");
-
-    for (let index = 0; index < $inputs.length; index++) {
-      const $input = $inputs[index];
-      const value = $input.value.trim();
-      const key = $input.dataset.type;
-
-      if (!value.length) {
-        $input.focus();
-        return;
-      }
-
-      if (key === "email" && !window.helpers.isEmail(value)) {
-        $input.focus();
-        return;
-      }
-
-      payload[key] = value;
-    }
-
     window.helpers.submitBtn($emailBtn, async () => {
+      const payload = {};
+      const $inputs = $modal.find("[data-type]");
+
+      for (let index = 0; index < $inputs.length; index++) {
+        const $input = $inputs[index];
+        const value = $input.value.trim();
+        const key = $input.dataset.type;
+
+        if (!value.length) {
+          $input.focus();
+          return;
+        }
+
+        if (key === "email" && !window.helpers.isEmail(value)) {
+          $input.focus();
+          return;
+        }
+
+        payload[key] = value;
+      }
+
       const ids = getSelectedRowData().map((row) => row.id);
       const pdfUri = await generatePDF();
       const response = await fetch(pdfUri);
@@ -361,13 +338,14 @@ function initSendModal() {
       form.append("pdf", pdf);
 
       await window.helpers.sleep(1);
-      const { is_sent } = await window.api.emailCustomerLetter(form);
-      if (is_sent !== true) {
+      const sendResponse = await window.api.emailCustomerLetter(form);
+      if (sendResponse.is_sent !== true) {
         const $alert = $modal.find("[data-step=email] .alert-danger");
         $alert.removeClass("d-none");
         $modal.get(0).scrollTo({ top: 0, behavior: "smooth" });
       } else {
         $modal.modal("hide");
+        updateTable(sendResponse.data);
       }
     });
   });

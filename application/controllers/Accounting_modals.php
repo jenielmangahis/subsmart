@@ -15433,6 +15433,9 @@ class Accounting_modals extends MY_Controller
             case 'delayed-charge' :
                 $delete = $this->delete_delayed_charge($transactionId);
             break;
+            case 'invoice' : 
+                $delete = $this->delete_invoice($transactionId);
+            break;
         }
 
         if ($delete) {
@@ -16375,7 +16378,7 @@ class Accounting_modals extends MY_Controller
     {
         $delayedCharge = $this->accounting_delayed_charge_model->getDelayedChargeDetails($delayedChargeId);
 
-        $refundReceiptData = [
+        $delayedChargeData = [
             'total_amount' => 0.00,
             'subtotal' => 0.00,
             'tax_total' => 0.00,
@@ -16384,13 +16387,132 @@ class Accounting_modals extends MY_Controller
             'status' => 0
         ];
 
-        $update = $this->accounting_delayed_charge_model->updateDelayedCharge($delayedChargeId, $refundReceiptData);
+        $update = $this->accounting_delayed_charge_model->updateDelayedCharge($delayedChargeId, $delayedChargeData);
 
         if($update) {
             $this->void_customer_transaction_items('Delayed Charge', $delayedChargeId);
 
             $removeAttachments = $this->accounting_attachments_model->unlink_attachments('Delayed Charge', $delayedChargeId);
             $removeTags = $this->tags_model->remove_transaction_tags('Delayed Charge', $delayedChargeId);
+        }
+
+        return $update;
+    }
+
+    private function delete_invoice($invoiceId)
+    {
+        $invoice = $this->invoice_model->getinvoice($invoiceId);
+
+        $invoiceData = [
+            'total_due' => 0.00,
+            'balance' => 0.00,
+            'sub_total' => 0.00,
+            'taxes' => 0.00,
+            'adjustment_value' => 0.00,
+            'grand_total' => 0.00,
+            'view_flag' => 1
+        ];
+
+        $update = $this->invoice_model->update_invoice($invoiceId, $invoiceData);
+
+        if($update) {
+            $invoiceItems = $this->invoice_model->get_invoice_items($invoice->id);
+
+            foreach($invoiceItems as $invoiceItem) {
+                if(!in_array($invoiceItem->items_id, ['0', null, '']) && in_array($invoiceItem->package_id, ['0', null, ''])) {
+                    $item = $this->items_model->getItemById($invoiceItem->items_id)[0];
+                    $itemAccDetails = $this->items_model->getItemAccountingDetails($invoiceItem->items_id);
+
+                    if ($itemAccDetails) {
+                        if(strtolower($item->type) === 'product' || strtolower($item->type) === 'inventory') {
+                            $location = $this->items_model->getItemLocation($invoiceItem->location_id, $invoiceItem->items_id);
+                            $newQty = intval($location->qty) + intval($invoiceItem->qty);
+                            $this->items_model->updateLocationQty($invoiceItem->location_id, $invoiceItem->items_id, $newQty);
+
+                            $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+                            $newBalance = floatval($invAssetAcc->balance) + floatval($item->cost);
+                            $newBalance = number_format($newBalance, 2, '.', ',');
+
+                            $invAssetAccData = [
+                                'id' => $invAssetAcc->id,
+                                'company_id' => logged('company_id'),
+                                'balance' => $newBalance
+                            ];
+
+                            $this->chart_of_accounts_model->updateBalance($invAssetAccData);
+                        } else {
+                            $incomeAcc = $this->chart_of_accounts_model->getById($itemAccDetails->income_account_id);
+                            $incomeAccType = $this->account_model->getById($incomeAcc->account_id);
+
+                            if ($incomeAccType->account_name === 'Credit Card') {
+                                $newBalance = floatval($incomeAcc->balance) - floatval($invoiceItem->total);
+                            } else {
+                                $newBalance = floatval($incomeAcc->balance) + floatval($invoiceItem->total);
+                            }
+                            $newBalance = number_format($newBalance, 2, '.', ',');
+
+                            $incomeAccData = [
+                                'id' => $incomeAcc->id,
+                                'company_id' => logged('company_id'),
+                                'balance' => $newBalance
+                            ];
+
+                            $this->chart_of_accounts_model->updateBalance($incomeAccData);
+                        }
+                    }
+                } else {
+                    $package = $this->items_model->get_package_by_id($invoiceItem->package_id);
+                    $packageItems = $this->items_model->get_package_items($invoiceItem->package_id);
+
+                    foreach($packageItems as $packageItem) {
+                        $item = $this->items_model->getItemById($packageItem->item_id)[0];
+                        $itemAccDetails = $this->items_model->getItemAccountingDetails($packageItem->item_id);
+                        $totalQty = intval($packageItem->quantity) * intval($invoiceItem->qty);
+
+                        if ($itemAccDetails) {
+                            if(strtolower($item->type) === 'product' || strtolower($item->type) === 'inventory') {
+                                $location = $this->items_model->get_first_location($packageItem->item_id);
+                                $newQty = intval($location->qty) + intval($totalQty);
+                                $this->items_model->updateLocationQty($location->id, $packageItem->item_id, $newQty);
+
+                                $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+                                $totalAmount = floatval($item->cost) * floatval($totalQty);
+                                $newBalance = floatval($invAssetAcc->balance) + floatval($totalAmount);
+                                $newBalance = number_format($newBalance, 2, '.', ',');
+
+                                $invAssetAccData = [
+                                    'id' => $invAssetAcc->id,
+                                    'company_id' => logged('company_id'),
+                                    'balance' => $newBalance
+                                ];
+
+                                $this->chart_of_accounts_model->updateBalance($invAssetAccData);
+                            } else {
+                                $incomeAcc = $this->chart_of_accounts_model->getById($itemAccDetails->income_account_id);
+                                $incomeAccType = $this->account_model->getById($incomeAcc->account_id);
+                                $totalAmount = floatval($item->price) * floatval($totalQty);
+
+                                if ($incomeAccType->account_name === 'Credit Card') {
+                                    $newBalance = floatval($incomeAcc->balance) - floatval($totalAmount);
+                                } else {
+                                    $newBalance = floatval($incomeAcc->balance) + floatval($totalAmount);
+                                }
+                                $newBalance = number_format($newBalance, 2, '.', ',');
+
+                                $incomeAccData = [
+                                    'id' => $incomeAcc->id,
+                                    'company_id' => logged('company_id'),
+                                    'balance' => $newBalance
+                                ];
+
+                                $this->chart_of_accounts_model->updateBalance($incomeAccData);
+                            }
+                        }
+                    }
+                }
+            }
+
+            $this->invoice_model->delete_items($invoice->id);
         }
 
         return $update;
@@ -16428,6 +16550,9 @@ class Accounting_modals extends MY_Controller
             break;
             case 'refund-receipt' :
                 $return = $this->void_refund_receipt($transactionId);
+            break;
+            case 'invoice' :
+                $return = $this->void_invoice($transactionId);
             break;
         }
 
@@ -16975,6 +17100,139 @@ class Accounting_modals extends MY_Controller
 
         return [
             'data' => $refundReceiptId,
+            'success' => $void ? true : false,
+            'message' => $void ? 'Transaction successfully voided!' : 'Unexpected error occurred.'
+        ];
+    }
+
+    private function void_invoice($invoiceId)
+    {
+        $invoice = $this->invoice_model->getinvoice($invoiceId);
+
+        $invoiceData = [
+            'total_due' => 0.00,
+            'balance' => 0.00,
+            'message_to_customer' => 'Voided',
+            'sub_total' => 0.00,
+            'taxes' => 0.00,
+            'adjustment_value' => 0.00,
+            'grand_total' => 0.00,
+            'voided' => 1
+        ];
+
+        $void = $this->invoice_model->update_invoice($invoiceId, $invoiceData);
+
+        if($void) {
+            $invoiceItems = $this->invoice_model->get_invoice_items($invoice->id);
+
+            foreach($invoiceItems as $invoiceItem) {
+                if(!in_array($invoiceItem->items_id, ['0', null, '']) && in_array($invoiceItem->package_id, ['0', null, ''])) {
+                    $item = $this->items_model->getItemById($invoiceItem->items_id)[0];
+                    $itemAccDetails = $this->items_model->getItemAccountingDetails($invoiceItem->items_id);
+
+                    if ($itemAccDetails) {
+                        if(strtolower($item->type) === 'product' || strtolower($item->type) === 'inventory') {
+                            $location = $this->items_model->getItemLocation($invoiceItem->location_id, $invoiceItem->items_id);
+                            $newQty = intval($location->qty) + intval($invoiceItem->qty);
+                            $this->items_model->updateLocationQty($invoiceItem->location_id, $invoiceItem->items_id, $newQty);
+
+                            $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+                            $newBalance = floatval($invAssetAcc->balance) + floatval($item->cost);
+                            $newBalance = number_format($newBalance, 2, '.', ',');
+
+                            $invAssetAccData = [
+                                'id' => $invAssetAcc->id,
+                                'company_id' => logged('company_id'),
+                                'balance' => $newBalance
+                            ];
+
+                            $this->chart_of_accounts_model->updateBalance($invAssetAccData);
+                        } else {
+                            $incomeAcc = $this->chart_of_accounts_model->getById($itemAccDetails->income_account_id);
+                            $incomeAccType = $this->account_model->getById($incomeAcc->account_id);
+
+                            if ($incomeAccType->account_name === 'Credit Card') {
+                                $newBalance = floatval($incomeAcc->balance) - floatval($invoiceItem->total);
+                            } else {
+                                $newBalance = floatval($incomeAcc->balance) + floatval($invoiceItem->total);
+                            }
+                            $newBalance = number_format($newBalance, 2, '.', ',');
+
+                            $incomeAccData = [
+                                'id' => $incomeAcc->id,
+                                'company_id' => logged('company_id'),
+                                'balance' => $newBalance
+                            ];
+
+                            $this->chart_of_accounts_model->updateBalance($incomeAccData);
+                        }
+                    }
+                } else {
+                    $package = $this->items_model->get_package_by_id($invoiceItem->package_id);
+                    $packageItems = $this->items_model->get_package_items($invoiceItem->package_id);
+
+                    foreach($packageItems as $packageItem) {
+                        $item = $this->items_model->getItemById($packageItem->item_id)[0];
+                        $itemAccDetails = $this->items_model->getItemAccountingDetails($packageItem->item_id);
+                        $totalQty = intval($packageItem->quantity) * intval($invoiceItem->qty);
+
+                        if ($itemAccDetails) {
+                            if(strtolower($item->type) === 'product' || strtolower($item->type) === 'inventory') {
+                                $location = $this->items_model->get_first_location($packageItem->item_id);
+                                $newQty = intval($location->qty) + intval($totalQty);
+                                $this->items_model->updateLocationQty($location->id, $packageItem->item_id, $newQty);
+
+                                $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+                                $totalAmount = floatval($item->cost) * floatval($totalQty);
+                                $newBalance = floatval($invAssetAcc->balance) + floatval($totalAmount);
+                                $newBalance = number_format($newBalance, 2, '.', ',');
+
+                                $invAssetAccData = [
+                                    'id' => $invAssetAcc->id,
+                                    'company_id' => logged('company_id'),
+                                    'balance' => $newBalance
+                                ];
+
+                                $this->chart_of_accounts_model->updateBalance($invAssetAccData);
+                            } else {
+                                $incomeAcc = $this->chart_of_accounts_model->getById($itemAccDetails->income_account_id);
+                                $incomeAccType = $this->account_model->getById($incomeAcc->account_id);
+                                $totalAmount = floatval($item->price) * floatval($totalQty);
+
+                                if ($incomeAccType->account_name === 'Credit Card') {
+                                    $newBalance = floatval($incomeAcc->balance) - floatval($totalAmount);
+                                } else {
+                                    $newBalance = floatval($incomeAcc->balance) + floatval($totalAmount);
+                                }
+                                $newBalance = number_format($newBalance, 2, '.', ',');
+
+                                $incomeAccData = [
+                                    'id' => $incomeAcc->id,
+                                    'company_id' => logged('company_id'),
+                                    'balance' => $newBalance
+                                ];
+
+                                $this->chart_of_accounts_model->updateBalance($incomeAccData);
+                            }
+                        }
+                    }
+                }
+
+                $invoiceItemData = [
+                    'qty' => 0,
+                    'cost' => 0.00,
+                    'tax' => 0.00,
+                    'discount' => 0.00,
+                    'total' => 0.00,
+                    'tax_rate_used' => 0.00
+                ];
+
+                $this->invoice_model->update_invoice_item($invoiceItem->id, $invoiceItemData);
+            }
+        }
+
+        return [
+            'data' => $invoiceId,
             'success' => $void ? true : false,
             'message' => $void ? 'Transaction successfully voided!' : 'Unexpected error occurred.'
         ];
@@ -17966,8 +18224,54 @@ class Accounting_modals extends MY_Controller
             unlink(getcwd()."/assets/pdf/$fileName");
         }
 
+        $this->page_data['payment'] = $payment;
         $this->page_data['pdf'] = $pdf;
         $this->load->view('accounting/modals/view_print_payment', $this->page_data);
+    }
+
+    public function print_invoice($invoiceId)
+    {
+        $this->load->helper('string');
+        $this->load->library('pdf');
+        $view = "accounting/modals/print_action/print_invoice";
+
+        $extension = '.pdf';
+
+        do {
+            $randomString = random_string('alnum');
+            $fileName = 'print_invoice_'.$randomString . '.' .$extension;
+            $exists = file_exists('./assets/pdf/'.$fileName);
+        } while ($exists);
+
+        $invoice = $this->invoice_model->getinvoice($invoiceId);
+        $invoiceItems = $this->invoice_model->get_invoice_items($invoiceId);
+
+        $customer = $this->accounting_customers_model->get_by_id($invoice->customer_id);
+        $customerName = $customer->first_name . ' ' . $customer->last_name;
+
+        $address = $customerName;
+        $address .= $customer->mail_add !== "" ? $customer->mail_add : "";
+        $address .= $customer->city !== "" ? '<br />' . $customer->city : "";
+        $address .= $customer->state !== "" ? ', ' . $customer->state : "";
+        $address .= $customer->zip_code !== "" ? ' ' . $customer->zip_code : "";
+        $address .= $customer->country !== "" ? ' ' . $customer->country : "";
+
+        $pdfData = [
+            'invoice' => $invoice,
+            'invoiceItems' => $invoiceItems,
+            'address' => $address
+        ];
+
+        $this->pdf->save_pdf($view, $pdfData, $fileName, 'portrait');
+
+        $pdf = base64_encode(file_get_contents(base_url("/assets/pdf/$fileName")));
+        if (file_exists(getcwd()."/assets/pdf/$fileName")) {
+            unlink(getcwd()."/assets/pdf/$fileName");
+        }
+
+        $this->page_data['pdf'] = $pdf;
+        $this->page_data['invoice'] = $invoice;
+        $this->load->view('accounting/modals/view_print_invoice', $this->page_data);
     }
 
     public function download_payment_pdf($paymentId)
@@ -18057,5 +18361,13 @@ class Accounting_modals extends MY_Controller
         }
 
         echo json_encode(['id' => $packageId, 'success' => $packageId ? true : false]);
+    }
+
+    public function get_last_invoice_number()
+    {
+        $lastInvoiceNum = $this->invoice_model->get_last_invoice_number();
+        $newInvoiceNum = 'INV-'.str_pad(intval($lastInvoiceNum) + 1, 9, "0", STR_PAD_LEFT);
+
+        echo $newInvoiceNum;
     }
 }
