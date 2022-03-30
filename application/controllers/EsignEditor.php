@@ -920,7 +920,11 @@ SQL;
 
         $ids = explode(',', $this->input->post('ids'));
         $letters = array_map(function ($id) {
-            return ['id' => $id, 'print_status' => 'Printed/Sent'];
+            return [
+                'id' => $id,
+                'print_status' => 'Printed/Sent',
+                'sent_at' => date('Y-m-d H:i:s'),
+            ];
         }, $ids);
         $this->db->update_batch('esign_editor_customer_letters', $letters, 'id');
 
@@ -1075,5 +1079,27 @@ SQL;
 
         header('content-type: application/json');
         echo json_encode(['data' => $customers]);
+    }
+
+    public function apiDuplicateLetter($letterId)
+    {
+        header('content-type: application/json');
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['success' => false]);
+            return;
+        }
+
+        $this->db->where('id', $letterId);
+        $letter = $this->db->get('esign_editor_letters')->row_array();
+
+        $letter['user_id'] = logged('id');
+        $letter['_auto_generated'] = 0;
+        $letter['title'] = $letter['title'] . ' - Copy';
+        unset($letter['id']);
+        $this->db->insert('esign_editor_letters', $letter);
+
+        $this->db->where('id', $this->db->insert_id());
+        $copy = $this->db->get('esign_editor_letters')->row();
+        echo json_encode(['data' => $copy]);
     }
 }

@@ -5009,6 +5009,8 @@ $(function() {
     $(document).on('click', '#modal-container form #receivePaymentModal #save-and-print', function(e) {
         e.preventDefault();
 
+        submitType = 'save-and-print';
+
         $('#modal-container form#modal-form').submit();
 
         var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
@@ -5033,6 +5035,68 @@ $(function() {
         $(pdfWindow.document).find('body').css('padding', '0');
         $(pdfWindow.document).find('body').css('margin', '0');
         $(pdfWindow.document).find('iframe').css('border', '0');
+    });
+
+    $(document).on('click', '#modal-container form #invoiceModal #copy-invoice', function(e) {
+        e.preventDefault();
+
+        $('#modal-container form#modal-form').attr('onsubmit', 'submitModalForm(event, this)');
+        $('#modal-container form#modal-form').removeAttr('data-href');
+        $('#modal-container form#modal-form .modal-body .row.customer-details').next().prepend(`<div class="col-md-12">
+            <div class="alert alert-info alert-dismissible mb-4" role="alert">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <h6 class="mt-0">This is a copy</h6>
+                <span>This is a copy of a invoice. Revise as needed and save the invoice.</span>
+            </div>
+        </div>`);
+
+        $('#modal-container form#modal-form .modal-footer .row').children('div:nth-child(2)').find('.dropdown-menu').parent().parent().prev().remove();
+        $('#modal-container form#modal-form .modal-footer .row').children('div:nth-child(2)').find('.dropdown-menu').parent().parent().remove();
+
+        $('#invoiceModal .modal-title span').html('');
+        $.get('/accounting/get-last-invoice-number', function(result) {
+            $('#invoiceModal #invoice-no').val(result);
+        });
+    });
+
+    $(document).on('click', '#modal-container form #invoiceModal #void-invoice', function(e) {
+        e.preventDefault();
+
+        var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
+
+        $.get('/accounting/void-transaction/invoice/'+split[1], function(res) {
+            location.reload();
+        });
+    });
+
+    $(document).on('click', '#modal-container form #invoiceModal #delete-invoice', function(e) {
+        e.preventDefault();
+
+        var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
+
+        $.ajax({
+            url: `/accounting/delete-transaction/invoice/${split[1]}`,
+            type: 'DELETE',
+            success: function(result) {
+                location.reload();
+            }
+        });
+    });
+
+    $(document).on('click', '#invoiceModal .modal-footer #save-and-print', function(e) {
+        e.preventDefault();
+
+        submitType = 'save-and-print';
+
+        $('#modal-container form#modal-form').submit();
+
+        var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
+
+        $.get('/accounting/print-invoice-modal/'+split[1], function(result) {
+            $('div#modal-container').append(result);
+
+            $('#viewPrintInvoiceModal').modal('show');
+        });
     });
 
     $(document).on('click', '#modal-container form #creditMemoModal #copy-credit-memo', function(e) {
@@ -6021,7 +6085,7 @@ $(function() {
                 <td></td>
             `;
 
-            $('#modal-container form#modal-form .modal #item-table tbody').append(`<tr class="package-items">${packageItems}</tr>`);
+            $('#modal-container form#modal-form .modal #item-table tbody:not(#package-items-table)').append(`<tr class="package-items">${packageItems}</tr>`);
         });
     });
 
@@ -7196,6 +7260,9 @@ const submitModalForm = (event, el) => {
                     case 'receivePaymentModal' :
                         var type = 'receive-payment';
                     break;
+                    case 'invoiceModal' :
+                        var type = 'invoice';
+                    break;
                 }
 
                 if(submitType === 'save-and-close' || submitType === 'save-and-void') {
@@ -7227,6 +7294,11 @@ const submitModalForm = (event, el) => {
                 }
 
                 if(submitType === 'save-and-print' && modalId === '#receivePaymentModal') {
+                    $('#modal-container #modal-form').attr('data-href', `/accounting/update-transaction/${type}/${res.data}`);
+                    $('#modal-container #modal-form').attr('onsubmit', 'updateTransaction(event, this)');
+                }
+
+                if(submitType === 'save-and-print' && modalId === '#invoiceModal') {
                     $('#modal-container #modal-form').attr('data-href', `/accounting/update-transaction/${type}/${res.data}`);
                     $('#modal-container #modal-form').attr('onsubmit', 'updateTransaction(event, this)');
                 }
