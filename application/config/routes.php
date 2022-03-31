@@ -428,6 +428,7 @@ $route['accounting/download-payment-pdf/(:any)'] = 'accounting_modals/download_p
 $route['accounting/add-package']['post'] = 'accounting_modals/add_package';
 $route['accounting/get-last-invoice-number'] = 'accounting_modals/get_last_invoice_number';
 $route['accounting/print-invoice-modal/(:any)'] = 'accounting_modals/print_invoice/$1';
+$route['accounting/download-invoice-pdf/(:any)'] = 'accounting_modals/download_invoice_pdf/$1';
 
 $route['accounting/lists'] = 'accounting/lists';
 

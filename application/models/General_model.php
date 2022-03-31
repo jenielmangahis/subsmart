@@ -18,6 +18,9 @@ class General_model extends MY_Model {
             return $query->row();
         }
     }
+    public function check_if_exist($elem = array(), $resutl=true){
+        
+    }
 
     public function get_data_with_param($params = array(),$result=TRUE){
 
@@ -132,6 +135,7 @@ class General_model extends MY_Model {
     {
         //$input['date_modified'] = date('Y-m-d H:i:s');;
         if ($this->db->update($table, $input, array('id' => $id))) {
+            echo "pasok";
             return true;
         } else {
             return false;

@@ -131,7 +131,7 @@ add_css(array(
         <div class="container-fluid">
             <div class="page-title-box">
 
-                <div class="card">
+            <div class="card">
                 <!-- <h3 style="font-family: Sarabun, sans-serif">&nbsp;Bank and Credit Cards</h3> -->
                     <div class="col-sm-12">
                           <h3 class="page-title left" style="font-family: Sarabun, sans-serif !important;font-size: 1.75rem !important;font-weight: 600 !important;">Bank and Credit Cards</h3>
@@ -294,7 +294,7 @@ add_css(array(
                                         <?php $count = 1; foreach ($banking_payments as $payment) : ?>
                                             <tr class="accordion" data-bankingId="<?= $payment->id ?>" data-toggle="collapse" href="#multiCollapseExample1">
                                                 <td></td>
-                                                <td ><?=date_format(date_create($payment->date_paid), "m/d/Y"); ?></td>
+                                                <td ><?=date_format(date_create($payment->date_paid), "m/d/y"); ?></td>
                                                 <td ><?= $payment->description ?></td>
                                                 <td ><?= $payment->payee ?></td>
                                                 <td >$<?= $payment->amount ?></td>
@@ -892,7 +892,7 @@ add_css(array(
         width: 16px;
         height: 16px;
         border: 2px solid #2ca01c;
-        transition: 0.2s all linear;0
+        transition: 0.2s all linear;
         margin-right: 5px;
         position: relative;
         top: 4px;

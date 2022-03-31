@@ -102,6 +102,15 @@ class EsignEditor extends MY_Controller
         $this->load->view('esign/esigneditor/wizard', $this->page_data);
     }
 
+    public function wizard2()
+    {
+        add_css([
+            'assets/css/esign/esign-editor/esign-editor.css',
+        ]);
+
+        $this->load->view('esign/esigneditor/wizard2', $this->page_data);
+    }
+
     public function customers($id)
     {
         if (is_null($this->getCustomer($id))) {

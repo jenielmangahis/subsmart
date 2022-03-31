@@ -56,6 +56,7 @@ class Accounting_modals extends MY_Controller
         $this->load->model('accounting_delayed_charge_model');
         $this->load->model('invoice_model');
         $this->load->model('workorder_model');
+        $this->load->model('invoice_settings_model');
         $this->load->library('form_validation');
     }
 
@@ -276,7 +277,10 @@ class Accounting_modals extends MY_Controller
                     }
                 break;
                 case 'invoice_modal' :
-                    $this->page_data['number'] = $this->invoice_model->get_last_invoice_number();
+                    $invoiceSettings = $this->invoice_settings_model->getAllByCompany(logged('company_id'));
+
+                    $this->page_data['invoice_prefix'] = $invoiceSettings->invoice_num_prefix;
+                    $this->page_data['number'] = $this->invoice_model->get_last_invoice_number(logged('company_id'), $invoiceSettings->invoice_num_prefix);
                 break;
             }
 
@@ -10213,17 +10217,25 @@ class Accounting_modals extends MY_Controller
         $paymentRecords = $this->accounting_invoices_model->get_invoice_payment_records($invoice->invoice_number);
         $term = $this->accounting_terms_model->getById($invoice->terms);
         $paymentMethods = explode(',', $invoice->payment_methods);
+        $invoiceSettings = $this->invoice_settings_model->getAllByCompany(logged('company_id'));
+
+        $discount = floatval($invoice->grand_total) - floatval($invoice->sub_total);
+        $discount += floatval($invoice->taxes);
+        $discount += floatval($invoice->adjustment_value);
+
+        $invoice->discount_total = $discount;
 
         foreach($invoiceItems as $key => $invoiceItem) {
             if(!in_array($invoiceItem->items_id, ['0', null, '']) && in_array($invoiceItem->package_id, ['0', null, ''])) {
-                $invoiceItems[$key]->itemDetails = $this->items_model->getItemById($invoiceItem->item_id)[0];
-                $invoiceItems[$key]->locations = $this->items_model->getLocationByItemId($invoiceItem->item_id);
+                $invoiceItems[$key]->itemDetails = $this->items_model->getItemById($invoiceItem->items_id)[0];
+                $invoiceItems[$key]->locations = $this->items_model->getLocationByItemId($invoiceItem->items_id);
             } else {
                 $invoiceItems[$key]->packageDetails = $this->items_model->get_package_by_id($invoiceItem->package_id);
                 $invoiceItems[$key]->packageItems = $this->items_model->get_package_items($invoiceItem->package_id);
             }
         }
 
+        $this->page_data['invoice_prefix'] = $invoiceSettings->invoice_num_prefix;
         $this->page_data['paymentMethods'] = $paymentMethods;
         $this->page_data['invoice'] = $invoice;
         $this->page_data['items'] = $invoiceItems;
@@ -14122,15 +14134,15 @@ class Accounting_modals extends MY_Controller
             'job_name' => $data['job_name'],
             'work_order_number' => $data['job_no'],
             'po_number' => $data['purchase_order_no'],
-            'invoice_number' => !isset($data['template_name']) ? $data['invoice_no'] : null,
-            'date_issued' => !isset($data['template_name']) ? date("Y-m-d", strtotime($data['date_issued'])) : null,
-            'due_date' => !isset($data['template_name']) ? date("Y-m-d", strtotime($data['due_date'])) : null,
-            'status' => !isset($data['template_name']) ? $data['status'] : 'Schedule',
+            'invoice_number' => $data['invoice_no'],
+            'date_issued' => date("Y-m-d", strtotime($data['date_issued'])),
+            'due_date' => date("Y-m-d", strtotime($data['due_date'])),
+            'status' => $data['status'],
             'customer_email' => $data['customer_email'],
             'billing_address' => nl2br($data['billing_address']),
             'shipping_to_address' => nl2br($data['shipping_to']),
             'ship_via' => $data['ship_via'],
-            'shipping_date' => !isset($data['template_name']) ? date("Y-m-d", strtotime($data['shipping_date'])) : null,
+            'shipping_date' => date("Y-m-d", strtotime($data['shipping_date'])),
             'tracking_number' => $data['tracking_no'],
             'terms' => $data['terms'],
             'location_scale' => $data['location_of_sale'],
@@ -15342,6 +15354,7 @@ class Accounting_modals extends MY_Controller
                     return strtotime($b->date_created) > strtotime($a->date_created);
                 });
 
+                $invoiceSettings = $this->invoice_settings_model->getAllByCompany(logged('company_id'));
                 foreach($transactions as $invoice) {
                     $amount = '$'.number_format(floatval($invoice->grand_total), 2, '.', ',');
                     $customer = $this->accounting_customers_model->get_by_id($invoice->customer_id);
@@ -15350,7 +15363,7 @@ class Accounting_modals extends MY_Controller
                     if(count($data) < 10) {
                         $data[] = [
                             'id' => $invoice->id,
-                            'type' => 'Invoice No.'.str_replace('INV-', '', $invoice->invoice_number),
+                            'type' => 'Invoice No.'.str_replace($invoiceSettings->invoice_num_prefix, '', $invoice->invoice_number),
                             'date' => date("m/d/Y", strtotime($invoice->date_issued)),
                             'amount' => str_replace('$-', '-$', $amount),
                             'name' => $name
@@ -17819,10 +17832,11 @@ class Accounting_modals extends MY_Controller
         }
 
         $invoices = $this->accounting_invoices_model->get_customer_invoices_to_pay($filters);
+        $invoiceSettings = $this->invoice_settings_model->getAllByCompany(logged('company_id'));
 
         $data = [];
         foreach($invoices as $invoice) {
-            $invoiceNum = str_replace('INV-', '', $invoice->invoice_number);
+            $invoiceNum = str_replace($invoiceSettings->invoice_num_prefix, '', $invoice->invoice_number);
             $description = "<a href='/invoice/genview/$invoice->id' class='text-info'>Invoice #$invoiceNum</a> (".date("m/d/Y", strtotime($invoice->date_issued)).")";
 
             $paymentRecords = $this->accounting_invoices_model->get_invoice_payment_records($invoice->invoice_number);
@@ -17974,11 +17988,12 @@ class Accounting_modals extends MY_Controller
 
         $paymentInvoices = $this->accounting_receive_payment_model->get_payment_invoices($paymentId);
         $invoices = $this->accounting_invoices_model->get_customer_invoices_to_pay($filters);
+        $invoiceSettings = $this->invoice_settings_model->getAllByCompany(logged('company_id'));
 
         $data = [];
         foreach($paymentInvoices as $paymentInvoice) {
             $invoice = $this->accounting_invoices_model->get_invoice_by_invoice_id($paymentInvoice->invoice_id);
-            $invoiceNum = str_replace('INV-', '', $invoice->invoice_number);
+            $invoiceNum = str_replace($invoiceSettings->invoice_num_prefix, '', $invoice->invoice_number);
             $description = "<a href='/invoice/genview/$invoice->id' class='text-info'>Invoice #$invoiceNum</a> (".date("m/d/Y", strtotime($invoice->date_issued)).")";
 
             $paymentRecords = $this->accounting_invoices_model->get_invoice_payment_records($invoice->invoice_number);
@@ -18014,7 +18029,7 @@ class Accounting_modals extends MY_Controller
         }
 
         foreach($invoices as $invoice) {
-            $invoiceNum = str_replace('INV-', '', $invoice->invoice_number);
+            $invoiceNum = str_replace($invoiceSettings->invoice_num_prefix, '', $invoice->invoice_number);
             $description = "<a href='/invoice/genview/$invoice->id' class='text-info'>Invoice #$invoiceNum</a> (".date("m/d/Y", strtotime($invoice->date_issued)).")";
 
             $paymentRecords = $this->accounting_invoices_model->get_invoice_payment_records($invoice->invoice_number);
@@ -18193,6 +18208,7 @@ class Accounting_modals extends MY_Controller
 
         $payment = $this->accounting_receive_payment_model->getReceivePaymentDetails($paymentId);
         $paymentInvoices = $this->accounting_receive_payment_model->get_payment_invoices($paymentId);
+        $invoiceSettings = $this->invoice_settings_model->getAllByCompany(logged('company_id'));
 
         foreach($paymentInvoices as $key => $paymentInvoice) {
             $invoice = $this->accounting_invoices_model->get_invoice_by_invoice_id($paymentInvoice->invoice_id);
@@ -18211,6 +18227,7 @@ class Accounting_modals extends MY_Controller
         $address .= $customer->country !== "" ? ' ' . $customer->country : "";
 
         $pdfData = [
+            'invoice_prefix' => $invoiceSettings->invoice_num_prefix,
             'customerName' => $customerName,
             'address' => $address,
             'payment' => $payment,
@@ -18245,11 +18262,26 @@ class Accounting_modals extends MY_Controller
 
         $invoice = $this->invoice_model->getinvoice($invoiceId);
         $invoiceItems = $this->invoice_model->get_invoice_items($invoiceId);
+        $invoiceSettings = $this->invoice_settings_model->getAllByCompany(logged('company_id'));
+
+        $discount = floatval($invoice->grand_total) - floatval($invoice->sub_total);
+        $discount += floatval($invoice->taxes);
+        $discount += floatval($invoice->adjustment_value);
+
+        $invoice->discount_total = $discount;
+
+        foreach($invoiceItems as $key => $invoiceItem) {
+            $invoiceItems[$key]->item = $this->items_model->getItemById($invoiceItem->items_id)[0];
+
+            $taxAmount = floatval($invoiceItem->tax) * floatval($invoiceItem->total);
+            $taxAmount = floatval($taxAmount) / 100;
+            $invoiceItems[$key]->tax_amount = number_format(floatval($taxAmount), 2, '.', ',');
+        }
 
         $customer = $this->accounting_customers_model->get_by_id($invoice->customer_id);
         $customerName = $customer->first_name . ' ' . $customer->last_name;
 
-        $address = $customerName;
+        $address = $customerName."<br />";
         $address .= $customer->mail_add !== "" ? $customer->mail_add : "";
         $address .= $customer->city !== "" ? '<br />' . $customer->city : "";
         $address .= $customer->state !== "" ? ', ' . $customer->state : "";
@@ -18257,6 +18289,7 @@ class Accounting_modals extends MY_Controller
         $address .= $customer->country !== "" ? ' ' . $customer->country : "";
 
         $pdfData = [
+            'invoice_prefix' => $invoiceSettings->invoice_num_prefix,
             'invoice' => $invoice,
             'invoiceItems' => $invoiceItems,
             'address' => $address
@@ -18274,11 +18307,80 @@ class Accounting_modals extends MY_Controller
         $this->load->view('accounting/modals/view_print_invoice', $this->page_data);
     }
 
+    public function download_invoice_pdf($invoiceId)
+    {
+        $this->load->library('pdf');
+        $this->load->helper('string');
+
+        $invoice = $this->invoice_model->getinvoice($invoiceId);
+        $invoiceItems = $this->invoice_model->get_invoice_items($invoiceId);
+        $invoiceSettings = $this->invoice_settings_model->getAllByCompany(logged('company_id'));
+
+        $view = "accounting/modals/print_action/print_invoice";
+        $extension = '.pdf';
+
+        do {
+            $randomString = random_string('alnum');
+            $fileName = 'print_invoice_'.$randomString . '.' .$extension;
+            $exists = file_exists('./assets/pdf/'.$fileName);
+        } while ($exists);
+
+        $discount = floatval($invoice->grand_total) - floatval($invoice->sub_total);
+        $discount += floatval($invoice->taxes);
+        $discount += floatval($invoice->adjustment_value);
+
+        $invoice->discount_total = $discount;
+
+        foreach($invoiceItems as $key => $invoiceItem) {
+            $invoiceItems[$key]->item = $this->items_model->getItemById($invoiceItem->items_id)[0];
+
+            $taxAmount = floatval($invoiceItem->tax) * floatval($invoiceItem->total);
+            $taxAmount = floatval($taxAmount) / 100;
+            $invoiceItems[$key]->tax_amount = number_format(floatval($taxAmount), 2, '.', ',');
+        }
+
+        $customer = $this->accounting_customers_model->get_by_id($invoice->customer_id);
+        $customerName = $customer->first_name . ' ' . $customer->last_name;
+
+        $address = $customerName."<br />";
+        $address .= $customer->mail_add !== "" ? $customer->mail_add : "";
+        $address .= $customer->city !== "" ? '<br />' . $customer->city : "";
+        $address .= $customer->state !== "" ? ', ' . $customer->state : "";
+        $address .= $customer->zip_code !== "" ? ' ' . $customer->zip_code : "";
+        $address .= $customer->country !== "" ? ' ' . $customer->country : "";
+
+        $pdfData = [
+            'invoice_prefix' => $invoiceSettings->invoice_num_prefix,
+            'invoice' => $invoice,
+            'invoiceItems' => $invoiceItems,
+            'address' => $address
+        ];
+
+        $this->pdf->save_pdf($view, $pdfData, $fileName, 'portrait');
+
+        $invoiceNum = str_replace($invoiceSettings->invoice_num_prefix, '', $invoice->invoice_number);
+
+        $fullPath = base_url("/assets/pdf/$fileName");
+        if ($fd = fopen ($fullPath, "r")) {
+            $fsize = filesize($fullPath);
+            header("Content-type: application/pdf"); // add here more headers for diff.     extensions
+            header("Content-Disposition: attachment; filename=\"Invoice $invoiceNum.pdf\"");
+            header("Content-length: $fsize");
+            header("Cache-control: private"); //use this to open files directly
+            readfile($fullPath);
+
+            unlink(getcwd()."/assets/pdf/$fileName");
+            fclose ($fd);
+            exit;
+        }
+    }
+
     public function download_payment_pdf($paymentId)
     {
         $this->load->library('pdf');
         $this->load->helper('string');
         $payment = $this->accounting_receive_payment_model->getReceivePaymentDetails($paymentId);
+        $invoiceSettings = $this->invoice_settings_model->getAllByCompany(logged('company_id'));
 
         $view = "accounting/modals/print_action/print_payment";
         $extension = '.pdf';
@@ -18309,6 +18411,7 @@ class Accounting_modals extends MY_Controller
         $address .= $customer->country !== "" ? ' ' . $customer->country : "";
 
         $pdfData = [
+            'invoice_prefix' => $invoiceSettings->invoice_num_prefix,
             'customerName' => $customerName,
             'address' => $address,
             'payment' => $payment,
@@ -18365,7 +18468,9 @@ class Accounting_modals extends MY_Controller
 
     public function get_last_invoice_number()
     {
-        $lastInvoiceNum = $this->invoice_model->get_last_invoice_number();
+        $invoiceSettings = $this->invoice_settings_model->getAllByCompany(logged('company_id'));
+
+        $lastInvoiceNum = $this->invoice_model->get_last_invoice_number(logged('company_id'), $invoiceSettings->invoice_num_prefix);
         $newInvoiceNum = 'INV-'.str_pad(intval($lastInvoiceNum) + 1, 9, "0", STR_PAD_LEFT);
 
         echo $newInvoiceNum;

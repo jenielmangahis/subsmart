@@ -154,8 +154,35 @@ class Api extends MYF_Controller
                 $input['company_id'] = $comp_id;
                 $this->general_model->add_($input, 'accounting_bank_accounts');
                 echo "1";
+            }else{
+                $this->general_model->update_with_key($input,$is_exist->id, 'accounting_bank_accounts');
+                echo "1";
             }
         }
+    }   
+
+    
+    public function if_stripeAcc_of_company_exist(){
+        $company_id = logged('company_id');
+        $query = $this->db->get_where('accounting_bank_accounts', array('company_id'=> $company_id));
+        $result = $query->result();
+        
+        
+           
+            $data = $this->input->post();
+            echo "pasok";
+            $str = $this->db->update('accounting_bank_accounts', $data, array("company_id" => $company_id));
+        
+    }
+    public function if_paypalAcc_of_company_exist(){
+        $company_id = logged('company_id');
+        $query = $this->db->get_where('accounting_bank_accounts', array('company_id'=> $company_id));
+        $result = $query->result();
+
+            $data = $this->input->post();
+            echo "pasok";
+            $str = $this->db->update('accounting_bank_accounts', $data, array("company_id" => $company_id));
+       
     }
 
     public function on_save_stripe_crendetials()
@@ -173,7 +200,7 @@ class Api extends MYF_Controller
             if(empty($is_exist)){
                 $input['company_id'] = $comp_id;
                 $this->general_model->add_($input, 'accounting_bank_accounts');
-                echo "1";
+                echo "0";
             }else{
                 $this->general_model->update_with_key($input,$is_exist->id, 'accounting_bank_accounts');
                 echo "1";

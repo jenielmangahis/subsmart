@@ -812,10 +812,11 @@
         }, 1000);
     });
     $('.click-stripe').click(function() {
-
         $('.accounts-list').hide();
         $('.stripe-container').show();
         $('.bankOfAmerica-container').hide();
+
+        
     });
     $('.close-stripe-container').click(function() {
 
@@ -865,7 +866,7 @@
             var form = $(this);
             $.ajax({
                 type: "POST",
-                url: "<?= base_url() ?>api/on_save_paypal_credentials",
+                url: "<?= base_url() ?>api/if_paypalAcc_of_company_exist",
                 data: form.serialize(), // serializes the form's elements.
                 beforeSend: function() {
                     $("#overlay_message").text('Saving credentials...');
@@ -887,19 +888,20 @@
             var form = $(this);
             $.ajax({
                 type: "POST",
-                url: "<?= base_url() ?>api/on_save_stripe_crendetials",
+                url: "<?= base_url() ?>api/if_stripeAcc_of_company_exist",
                 data: form.serialize(), // serializes the form's elements.
                 beforeSend: function() {
                     $("#overlay_message").text('Saving Stripe Credentials...');
                     document.getElementById('overlay').style.display = "flex";
                 },
                 success: function(data) {
-                    if (data === "1") {
-                        nsmartrac_alert('Nice!', 'Stripe Crendentials Saved!', 'success');
-                    }
+
+                    
+                    nsmartrac_alert('Nice!', 'Stripe Crendentials Saved!', 'success');
                     document.getElementById('overlay').style.display = "none";
                     $('.stripe-container').hide();
                     $('.accounts-list').show();
+                   
                 }
             });
         });
