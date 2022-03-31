@@ -82,6 +82,7 @@ $route['customer/_edit_dispute_item'] = 'Customer/ajax_edit_dispute_item';
 $route['customer/activities/(:num)'] = 'Customer/activities/$1';
 $route['customer/_load_welcome_email_form'] = 'Customer/ajax_welcome_email_form';
 $route['customer/_send_welcome_email'] = 'Customer/ajax_send_welcome_email';
+$route['customer/_update_customer_dispute'] = 'Customer/ajax_update_customer_dispute';
 
 //Credit Bureau
 $route['credit_bureau/list'] = 'Credit_Bureau/index';
@@ -427,6 +428,7 @@ $route['accounting/download-payment-pdf/(:any)'] = 'accounting_modals/download_p
 $route['accounting/add-package']['post'] = 'accounting_modals/add_package';
 $route['accounting/get-last-invoice-number'] = 'accounting_modals/get_last_invoice_number';
 $route['accounting/print-invoice-modal/(:any)'] = 'accounting_modals/print_invoice/$1';
+$route['accounting/download-invoice-pdf/(:any)'] = 'accounting_modals/download_invoice_pdf/$1';
 
 $route['accounting/lists'] = 'accounting/lists';
 

@@ -285,10 +285,15 @@
                     </div>
 
                     <?php
-                    if ($setting['is_active'] == 1) {
-                        $is_active = 'YES';
-                        $is_setup = 'YES';
-                    } else {
+                    if( isset($settings) ){
+                        if ($setting['is_active'] == 1) {
+                            $is_active = 'YES';
+                            $is_setup = 'YES';
+                        } else {
+                            $is_active = 'NO';
+                            $is_setup = 'NOT SET';
+                        }
+                    }else{
                         $is_active = 'NO';
                         $is_setup = 'NOT SET';
                     }

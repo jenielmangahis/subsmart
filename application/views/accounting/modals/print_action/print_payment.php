@@ -44,7 +44,7 @@
                     <tbody>
                         <?php foreach($paymentInvoices as $paymentInvoice) : ?>
                             <tr>
-                                <td><?=str_replace('INV-', '', $paymentInvoice->invoice->invoice_number)?></td>
+                                <td><?=str_replace($invoice_prefix, '', $paymentInvoice->invoice->invoice_number)?></td>
                                 <td><?=date("m/d/Y", strtotime($paymentInvoice->invoice->date_issued))?></td>
                                 <td><?=date("m/d/Y", strtotime($paymentInvoice->invoice->due_date))?></td>
                                 <td><?=number_format(floatval($paymentInvoice->invoice->grand_total), 2, '.', ',')?></td>

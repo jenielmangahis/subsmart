@@ -506,3 +506,112 @@
     font-size: 13px;
   }
 }
+
+#wizard .step {
+  padding: 1rem 1.3rem;
+  border: 1px solid #333;
+  border-radius: 5px;
+
+  &__title {
+    font-size: 1.3rem;
+    margin: 0;
+
+    span {
+      font-weight: 400;
+    }
+  }
+
+  &__radioGroup {
+    padding: 8px 0;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1rem;
+
+    &:first-child {
+      margin-top: 2rem;
+    }
+
+    label {
+      font-size: 14px;
+      margin-bottom: 0;
+    }
+
+    .form-check {
+      position: relative;
+      top: -2px;
+    }
+  }
+
+  &__radio {
+    width: 1rem;
+    height: 1rem;
+  }
+}
+#newdisputemodal .newdisputemodal {
+  &__title {
+    font-size: 1.3rem;
+    margin: 0;
+  }
+
+  &__bureaus {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1rem;
+
+    .form-check {
+      display: flex;
+      align-items: center;
+    }
+
+    .form-check-input {
+      width: 1rem;
+      height: 1rem;
+    }
+
+    .form-check-label {
+      position: relative;
+      top: 2px;
+      margin-left: 8px;
+    }
+  }
+
+  &__accnumber {
+    .form-check-input {
+      width: 1rem;
+      height: 1rem;
+    }
+
+    .form-check-label {
+      margin-left: 10px;
+      position: relative;
+      top: 1px;
+    }
+  }
+
+  &__selects {
+    .form-group {
+      label {
+        font-size: 13px;
+      }
+    }
+
+    .link {
+      display: block;
+      margin-top: 10px;
+    }
+  }
+}
+
+.btn-ghost {
+  --color: #32243d;
+  border-color: var(--color);
+  color: var(--color);
+
+  &:hover,
+  &:active,
+  &:focus {
+    border-color: var(--color) !important;
+    color: var(--color) !important;
+  }
+}
