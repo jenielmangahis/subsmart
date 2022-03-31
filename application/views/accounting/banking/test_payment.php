@@ -39,12 +39,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <h3 class="page-title left" style="font-family: Sarabun, sans-serif !important;font-size: 1.75rem !important;font-weight: 600 !important;">Payment Test</h3>
                     </div>
                     <div class="row" style="padding-bottom: 20px;">
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <?php if($accounts->stripe_publish_key !== NULL): ?>
-
+                            
                             <?php endif; ?>
-
-                            <?php if($accounts->paypal_client_id !== NULL): ?>
+                            
+                           
+                        </div>
+                        <div class="col-md-6">
+                        <?php if($accounts->paypal_client_id !== NULL): ?>
                                 <div id="paypal-button-container"></div>
                             <?php endif; ?>
                         </div>
@@ -80,7 +83,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 },
                 purchase_units: [{
                     amount: {
-                        value: '0.01'
+                        value: '0.03'
                     }
                 }],
                 application_context: {
@@ -96,7 +99,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 var tokenRequest = {
                     description: "Paypal Test",
                     payee: "nSmarTrac Tester",
-                    amount: '0.01',
+                    amount: '0.03',
                     assign_to: 'Not yet'
                 };
                 //$("#payment-method").val('paypal');

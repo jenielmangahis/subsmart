@@ -958,12 +958,13 @@ class Invoice_model extends MY_Model
         return  $insert_id;
     }
 
-    public function get_last_invoice_number()
+    public function get_last_invoice_number($company_id, $invoicePrefix)
     {
+        $this->db->where('company_id', $company_id);
         $this->db->order_by('date_created', 'desc');
         $query = $this->db->get('invoices');
         $last = $query->row();
-        return str_replace('INV-', '', $last->invoice_number);
+        return str_replace($invoicePrefix, '', $last->invoice_number);
     }
 
     public function get_company_invoices($filters = [])

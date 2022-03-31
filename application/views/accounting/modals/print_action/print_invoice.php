@@ -15,7 +15,7 @@
                     <tbody>
                         <tr>
                             <td style="text-align: right"><strong>INVOICE #</strong></td>
-                            <td><?=str_replace('INV-', '', $invoice->invoice_number)?></td>
+                            <td><?=str_replace($invoice_prefix, '', $invoice->invoice_number)?></td>
                         </tr>
                         <tr>
                             <td style="text-align: right"><strong>DATE</strong></td>
@@ -27,13 +27,13 @@
                         </tr>
                     </tbody>
                 </table>
-                <table class="table" style="width: 40%; margin-bottom: 1rem; color: #212529;border-collapse: collapse; margin-top: 1rem;">
+                <table class="table" style="width: 60%; margin-bottom: 1rem; color: #212529;border-collapse: collapse; margin-top: 1rem;">
                     <tbody>
                         <tr>
                             <td><strong>BILL TO</strong></td>
                         </tr>
                         <tr>
-                            <td width="60%"><?=$address?></td>
+                            <td><?=$address?></td>
                         </tr>
                     </tbody>
                 </table>
@@ -43,12 +43,81 @@
                             <th>ACTIVITY</th>
                             <th>QTY</th>
                             <th>RATE</th>
+                            <th>DISCOUNT</th>
+                            <th>TAX AMOUNT</th>
                             <th>AMOUNT</th>
                         </tr>
                     </thead>
                     <tbody>
-                        
+                        <?php foreach($invoiceItems as $invoiceItem) : ?>
+                            <tr>
+                                <td><?=$invoiceItem->item->title?></td>
+                                <td><?=$invoiceItem->qty?></td>
+                                <td><?=number_format(floatval($invoiceItem->cost), 2, '.', ',')?></td>
+                                <td><?=number_format(floatval($invoiceItem->discount), 2, '.', ',')?></td>
+                                <td><?=number_format(floatval($invoiceItem->tax_amount), 2, '.', ',')?></td>
+                                <td><?=number_format(floatval($invoiceItem->total), 2, '.', ',')?></td>
+                            </tr>
+                        <?php endforeach; ?>
                     </tbody>
+                    <tfoot>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>SUBTOTAL</td>
+                            <td></td>
+                            <td><?=number_format(floatval($invoice->sub_total), 2, '.', ',')?></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>TAX</td>
+                            <td></td>
+                            <td><?=number_format(floatval($invoice->taxes), 2, '.', ',')?></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>DISCOUNT</td>
+                            <td></td>
+                            <td><?=number_format(floatval($invoice->discount_total), 2, '.', ',')?></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>ADJUSTMENT VALUE</td>
+                            <td></td>
+                            <td><?=number_format(floatval($invoice->adjustment_value), 2, '.', ',')?></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>TOTAL</td>
+                            <td></td>
+                            <td><?=number_format(floatval($invoice->grand_total), 2, '.', ',')?></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>BALANCE DUE</td>
+                            <td></td>
+                            <td>
+                                <strong>
+                                    <?php
+                                        $amount = '$'.number_format(floatval($invoice->balance), 2, '.', ',');
+                                        $amount = str_replace('$-', '-$', $amount);
+                                        echo $amount;
+                                    ?>
+                                </strong>
+                            </td>
+                        </tr>
+                    </tfoot>
                 </table>
             </div>
         </div>

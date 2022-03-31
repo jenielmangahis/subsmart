@@ -24,7 +24,7 @@
                                 </div>
                             </div>
                             <h4 class="modal-title">
-                                Invoice <span><?=isset($invoice) ? '#'.str_replace('INV-', '', $invoice->invoice_number) : ''?></span>
+                                Invoice <span><?=isset($invoice) ? '#'.str_replace($invoice_prefix, '', $invoice->invoice_number) : ''?></span>
                             </h4>
                         </div>
                     </div>
@@ -187,7 +187,7 @@
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="invoice-no">Invoice #</label>
-                                                <input type="text" class="form-control" id="invoice-no" name="invoice_no" value="<?=isset($invoice) ? $invoice->invoice_number : 'INV-'.str_pad(intval($number) + 1, 9, "0", STR_PAD_LEFT)?>" disabled>
+                                                <input type="text" class="form-control" id="invoice-no" name="invoice_no" value="<?=isset($invoice) ? $invoice->invoice_number : "$invoice_prefix".str_pad(intval($number) + 1, 9, "0", STR_PAD_LEFT)?>" disabled>
                                             </div>
                                         </div>
                                         <div class="col-md-3">
