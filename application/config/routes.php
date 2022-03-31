@@ -1037,6 +1037,11 @@ $route['login/customer'] = 'Login/customer';
 
 //Customer Access
 $route['acs_access/dashboard'] = 'AcsAccess/dashboard';
+$route['acs_access/messages'] = 'AcsAccess/messages';
+$route['acs_access/logout'] = 'AcsAccess/logout';
+$route['acs_access/_load_message_replies'] = 'AcsAccess/ajax_load_messages_list';
+$route['acs_access/_load_message_thread'] = 'AcsAccess/ajax_load_message_thread';
+$route['acs_access/_send_message_reply'] = 'AcsAccess/ajax_send_message_reply';
 
 //Cards File
 $route['cards_file/list'] = 'CardsFile/index';

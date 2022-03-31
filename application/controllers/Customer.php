@@ -4672,7 +4672,7 @@ class Customer extends MY_Controller
                     $other_fields = serialize($other_fields);
 
                     $data_dispute_item = [                            
-                        'customer_dispute_id' => $customer_dispute_id,
+                        'customer_dispute_id' => $dispute->id,
                         'credit_bureau_id' => $bureauId,
                         'account_number`' => $account_number,
                         'status' => $status,
