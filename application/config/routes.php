@@ -1031,6 +1031,12 @@ $route['job/update_job_tag'] = 'Job/update_job_tag';
 $route['login/_check_user_id_exists'] = 'Login/ajax_check_user_id_exists';
 $route['login/_update_user_password'] = 'Login/ajax_update_user_password';
 
+//Customer Login
+$route['login/customer'] = 'Login/customer';
+
+//Customer Access
+$route['acs_access/dashboard'] = 'AcsAccess/dashboard';
+
 //Cards File
 $route['cards_file/list'] = 'CardsFile/index';
 $route['cards_file/add_new'] = 'CardsFile/add_new_card';
