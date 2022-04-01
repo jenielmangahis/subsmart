@@ -48,14 +48,6 @@
                                 </ul>
                             </div>
                         </div>
-                        <div class="col-sm-12">
-                            <div class="form-group form-check p-0" style="margin-bottom: 0 !important">
-                                <div class="checkbox checkbox-sec m-0">
-                                    <input type="checkbox" name="rebate_item" id="rebate-item" class="form-check-input" value="1">
-                                    <label for="rebate-item" class="form-check-lable">Rebate Item</label>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </td>
             </tr>
@@ -66,6 +58,18 @@
                             <div class="form-group" style="margin: 0 !important">                                                
                                 <label for="description">Description</label>
                                 <textarea name="description" id="description" placeholder="Description on sales forms" class="form-control"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group" style="margin: 0 !important">
+                                <label for="price">Price</label>
+                                <input type="text" class="form-control text-right" id="price" name="price" required onchange="convertToDecimal(this)">
                             </div>
                         </div>
                     </div>

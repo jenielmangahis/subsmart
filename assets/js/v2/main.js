@@ -127,7 +127,7 @@ function initializeWindow() {
 function resizeSidebar() {
 	$(".nsm-sidebar").css("height", "auto");
 	$(".nsm-sidebar").css("min-height", $(".nsm-main").innerHeight() + "px");
-	$(".nsm-sidebar-bg").css("height", $(".nsm-main").innerHeight() + "px");
+	$(".nsm-sidebar-bg").css("height", $(".nsm-sidebar").innerHeight() + "px");
 }
 
 function initializeChart(chartType = "all") {

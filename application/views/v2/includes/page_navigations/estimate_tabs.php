@@ -18,5 +18,7 @@
                 <span>Settings</span>
             </a>
         </li>
+        <!-- Do not remove the last li -->
+        <li><label></label></li>
     </ul>
 </div>

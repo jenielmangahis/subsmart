@@ -7,7 +7,7 @@
     </div>
 </div>
 
-<div class="row">
+<div class="row page-content g-0">
     <div class="col-12">
         <div class="nsm-page">
             <div class="nsm-page-content">

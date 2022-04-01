@@ -1,4 +1,6 @@
 <?php include viewPath('includes/header_no_navbar'); ?>
+<script src="https://js.stripe.com/v3/"></script>
+
 <style>
     tr.hide-table-padding td {
         padding: 0;
@@ -191,7 +193,7 @@
                                                 <div class="col-md-6">
                                                     <div class="row">
                                                         <div class="col-md-12">
-                                                            <div class="fdx-entity-container click-stripe">
+                                                            <div class="fdx-entity-container click-stripe" id="open_stripe">
                                                                 <a href="javascript:void(0)">
                                                                     <button tabindex="0" class="fdx-entity-container-button" data-di-id="di-id-e786b9cc-bb63c05f">
                                                                         <div class="fdx-provider-logo-container fdx-provider-logo-container-small fdx-provider-logo-container-fade fdx-provider-image-loaded fdx-provider-logo-container-outline">
@@ -389,7 +391,7 @@
                                                 <form method="post" id="stripe_form">
                                                     <div class="col-md-12 form-group">
                                                         <label for=""><b>Publish Key</b></label><br>
-                                                        <input type="text" class="form-control" name="stripe_publish_key" id="" required="">
+                                                        <input type="text" class="form-control" name="stripe_publish_key" id="stripe_publish" required="">
                                                     </div>
                                                     <div class="col-md-12 form-group">
                                                         <label for=""><b>Secret Key</b></label><br>
@@ -495,7 +497,7 @@
                                 </div>
 
 
-                               
+
                                 <div class="container modal-container usBank-container" style="display:none">
                                     <div class="row justify-content-md-center align-items-center pt-3 padd">
                                         <div class="col-md-5 col-sm-6 col-xs-12">
@@ -794,9 +796,9 @@
 <script type="text/javascript">
     window.base_url = <?php echo json_encode(base_url()); ?>;
 </script>
-
+<script src="https://checkout.stripe.com/checkout.js"></script>
 <script>
-    $('#open_stripe').click(function() {
+    $('open_stripe').click(function() {
         const openWin = window.open('https://connect.stripe.com/oauth/v2/authorize?response_type=code&client_id=ca_KBQqImsoRKsn8QTIvr9DdP0dH37hPQ3Y&scope=read_write', 'Ratting', 'width=550,height=650,left=450,top=200,toolbar=0,status=0');
         var timer = setInterval(function() {
             if (openWin.closed) {
@@ -812,17 +814,52 @@
         }, 1000);
     });
     $('.click-stripe').click(function() {
-        $('.accounts-list').hide();
-        $('.stripe-container').show();
-        $('.bankOfAmerica-container').hide();
+        $.ajax({
+            url: "<?= base_url() ?>api/get_stripe_acc",
+            type: "POST",
+            dataType: "json",
+            data: {},
+            success: function(data) {
+                var handler = StripeCheckout.configure({
+                    key: ''+data.stripeAcc[0]['stripe_publish_key']+'',
+                    image: '<?= base_url() ?>assets/images/v2/profile-placeholder.jpeg',
+                    token: function(token) {
+                        $("#payment-method").val('stripe');
+                        $("#payment-method-status").val('COMPLETED');
+                        activate_registration();
+                        /*$("#stripeToken").val(token.id);
+                        $("#stripeEmail").val(token.email);
+                        $("#amountInCents").val(Math.floor($("#amountInDollars").val() * 100));
+                        $("#myForm").submit();*/
 
-        
+                    }
+                });
+                handler.open({
+                    name: 'nSmarTrac',
+                    description: 'To be paid($)',
+                    amount: "",
+                });
+
+                $("#stripe_form input[name='stripe_publish_key']").val(data.stripeAcc[0]['stripe_publish_key']);
+                $("#stripe_form input[name='stripe_secret_key']").val(data.stripeAcc[0]['stripe_secret_key']);
+
+                $('.accounts-list').hide();
+                $('.stripe-container').show();
+                $('.bankOfAmerica-container').hide();
+            }
+        });
+
+
+
     });
     $('.close-stripe-container').click(function() {
+
 
         $('.stripe-container').hide();
         $('.accounts-list').show();
         $('.bankOfAmerica-container').hide();
+
+
     });
     $('.click-bankOfAmerica').click(function() {
         $('.modal-body').hide();
@@ -851,8 +888,22 @@
     });
 
     $('.click-paypal').click(function() {
-        $('.accounts-list').hide();
-        $('.paypal-container').show();
+
+        $.ajax({
+            url: "<?= base_url() ?>api/get_paypal_acc",
+            type: "POST",
+            dataType: "json",
+            data: {},
+            success: function(data) {
+                $("#paypal_form input[name='paypal_client_id']").val(data.paypalAcc[0]['paypal_client_id']);
+                $("#paypal_form input[name='paypal_secret_key']").val(data.paypalAcc[0]['paypal_secret_key']);
+
+
+                $('.accounts-list').hide();
+                $('.paypal-container').show();
+            }
+        });
+
     });
     $('.close-paypal-container').click(function() {
         $('.paypal-container').hide();
@@ -896,12 +947,12 @@
                 },
                 success: function(data) {
 
-                    
+
                     nsmartrac_alert('Nice!', 'Stripe Crendentials Saved!', 'success');
                     document.getElementById('overlay').style.display = "none";
                     $('.stripe-container').hide();
                     $('.accounts-list').show();
-                   
+
                 }
             });
         });

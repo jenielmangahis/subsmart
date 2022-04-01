@@ -6,7 +6,7 @@
     </div>
 </div>
 
-<div class="row">
+<div class="row page-content g-0">
     <div class="col-12 col-md-6 grid-mb">
         <div class="nsm-field-group search">
             <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" placeholder="Search Mail">
@@ -18,7 +18,7 @@
         </button>
     </div>
 </div>
-<div class="row">
+<div class="row page-content g-0">
     <div class="col-12">
         <table class="nsm-table">
             <thead>
