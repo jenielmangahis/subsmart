@@ -12,8 +12,6 @@ class Survey extends MY_Controller
       $this->page_data['page']->menu = 'Survey';
       $this->load->model('Survey_model', 'survey_model');
 
-
-
       add_css(array(
         'https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css',
         'https://cdn.jsdelivr.net/jquery.jssocials/1.4.0/jssocials-theme-minima.css',
@@ -75,8 +73,7 @@ class Survey extends MY_Controller
     $this->load->view('v2/pages/survey/index.php', $this->page_data);
   }
 
-  public function add($settings = null){
-    
+  public function add($settings = null){    
     $data = array(
       'created_by' => $_SESSION['uid'],
       'title' => $this->input->post('title'),
@@ -483,7 +480,9 @@ class Survey extends MY_Controller
     
     $data = array(
       "name" => $this->input->post('txtWorkspaceName'),
-      "users" => json_encode(array(0))
+      "users" => '',
+      "company_id" => logged('company_id')
+
     );
     $this->survey_model->addWorkspace($data);
     $result = array(
@@ -492,7 +491,8 @@ class Survey extends MY_Controller
     );
     echo json_encode($result);
     if(isset($_GET['redirect'])){
-      redirect('survey/workspace');
+      //redirect('survey/workspace');
+      redirect('survey');
     }
   }
 

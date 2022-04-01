@@ -193,7 +193,7 @@
         </div>
   
   
-        <div class="custom-control custom-switch">
+        <div class="custom-control custom-switch" style="display:none;">
           <input type="checkbox" class="custom-control-input" id="templateToggleSwitch" onchange="toggleTemplate()">
           <label class="custom-control-label" for="templateToggleSwitch">Toggle this switch element</label>
         </div>  
@@ -667,7 +667,7 @@
       setTimeout(() => {
         // add survey
         $.ajax({
-          url: surveyBaseUrl + 'survey/create',
+          url: base_url + 'survey/create',
           data: surveyData,
           dataType: 'json',
           type: 'POST',
