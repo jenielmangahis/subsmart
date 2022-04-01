@@ -222,18 +222,6 @@ class Products_and_services extends MY_Controller {
                 $icon = "";
             }
 
-            $bundleItems = $this->items_model->getBundleContents($item->id);
-            $bundItems = [];
-            if(!empty($bundleItems)) {
-                foreach($bundleItems as $bundItem) {
-                    $bundItems[] = [
-                        'id' => $bundItem->id,
-                        'item_id' => $bundItem->bundle_item_id,
-                        'quantity' => $bundItem->quantity,
-                        'name' => $this->items_model->getItemById($bundItem->bundle_item_id)[0]->title
-                    ];
-                }
-            }
             if($search !== "") {
                 if(stripos($item->title, $search) !== false) {
                     $data[] = [
@@ -263,7 +251,6 @@ class Products_and_services extends MY_Controller {
                         'vendor' => !is_null($this->vendors_model->get_vendor_by_id($item->vendor_id)) ? $this->vendors_model->get_vendor_by_id($item->vendor_id)->display_name : '',
                         'sales_tax_cat_id' => !is_null($accountingDetails) ? $accountingDetails->tax_rate_id : '',
                         'sales_tax_cat' => !is_null($this->TaxRates_model->getById($accountingDetails->tax_rate_id)) ? $this->TaxRates_model->getById($accountingDetails->tax_rate_id)->name : $accountingDetails->tax_rate_id === "0" ? "Nontaxable" : '',
-                        'bundle_items' => $bundItems,
                         'locations' => $this->items_model->getLocationByItemId($item->id),
                         'display_on_print' => !is_null($accountingDetails) ? $accountingDetails->display_on_print : '',
                         'status' => $item->is_active
@@ -297,10 +284,96 @@ class Products_and_services extends MY_Controller {
                     'vendor' => !is_null($this->vendors_model->get_vendor_by_id($item->vendor_id)) ? $this->vendors_model->get_vendor_by_id($item->vendor_id)->display_name : '',
                     'sales_tax_cat_id' => !is_null($accountingDetails) ? $accountingDetails->tax_rate_id : '',
                     'sales_tax_cat' => !is_null($this->TaxRates_model->getById($accountingDetails->tax_rate_id)) ? $this->TaxRates_model->getById($accountingDetails->tax_rate_id)->name : $accountingDetails->tax_rate_id === "0" ? "Nontaxable" : '',
-                    'bundle_items' => $bundItems,
                     'locations' => $this->items_model->getLocationByItemId($item->id),
                     'display_on_print' => !is_null($accountingDetails) ? $accountingDetails->display_on_print : '',
                     'status' => $item->is_active
+                ];
+            }
+        }
+
+        $packages = $this->items_model->get_company_packages(logged('company_id'));
+        foreach($packages as $package) {
+            $packageItems = $this->items_model->get_package_items($package->id);
+
+            $items = [];
+            foreach($packageItems as $packageItem) {
+                $item = $this->items_model->getItemById($packageItem->item_id)[0];
+
+                $items[] = $item;
+            }
+
+            $accountingDetails = $this->items_model->getPackageAccountingDetails($package->id);
+
+            if($accountingDetails->attachment_id !== null && $accountingDetails->attachment_id !== "") {
+                $attachment = $this->accounting_attachments_model->getById($accountingDetails->attachment_id);
+                $icon = "/uploads/accounting/attachments/$attachment->stored_name";
+            } else {
+                $icon = "";
+            }
+
+            if($search !== "") {
+                if(stripos($package->name, $search) !== false) {
+                    $data[] = [
+                        'id' => $package->id,
+                        'name' => $package->name,
+                        'category_id' => null,
+                        'category' => '',
+                        'sku' => !is_null($accountingDetails) ? $accountingDetails->sku : '',
+                        'type' => 'Bundle',
+                        'rebate' => null,
+                        'sales_desc' => '',
+                        'income_account_id' => '',
+                        'income_account' => '',
+                        'expense_account_id' => '',
+                        'expense_account' => '',
+                        'inventory_account_id' => '',
+                        'inventory_account' => '',
+                        'purch_desc' => '',
+                        'sales_price' => number_format(floatval($package->total_price), 2, '.', ','),
+                        'cost' => '',
+                        'taxable' => $accountingDetails->tax_rate_id,
+                        'qty_on_hand' => '',
+                        'qty_po' => '',
+                        'reorder_point' => '',
+                        'icon' => $icon,
+                        'vendor_id' => '',
+                        'vendor' => '',
+                        'sales_tax_cat_id' => '',
+                        'sales_tax_cat' => '',
+                        'display_on_print' => !is_null($accountingDetails) ? $accountingDetails->display_on_print : '',
+                        'bundle_items' => $items
+                    ];
+                }
+            } else {
+                $data[] = [
+                    'id' => $package->id,
+                    'name' => $package->name,
+                    'category_id' => null,
+                    'category' => '',
+                    'sku' => !is_null($accountingDetails) ? $accountingDetails->sku : '',
+                    'type' => 'Bundle',
+                    'rebate' => null,
+                    'sales_desc' => '',
+                    'income_account_id' => '',
+                    'income_account' => '',
+                    'expense_account_id' => '',
+                    'expense_account' => '',
+                    'inventory_account_id' => '',
+                    'inventory_account' => '',
+                    'purch_desc' => '',
+                    'sales_price' => number_format(floatval($package->total_price), 2, '.', ','),
+                    'cost' => '',
+                    'taxable' => $accountingDetails->tax_rate_id,
+                    'qty_on_hand' => '',
+                    'qty_po' => '',
+                    'reorder_point' => '',
+                    'icon' => $icon,
+                    'vendor_id' => '',
+                    'vendor' => '',
+                    'sales_tax_cat_id' => '',
+                    'sales_tax_cat' => '',
+                    'display_on_print' => !is_null($accountingDetails) ? $accountingDetails->display_on_print : '',
+                    'bundle_items' => $items
                 ];
             }
         }
@@ -466,15 +539,24 @@ class Products_and_services extends MY_Controller {
         
         switch($type) {
             case 'bundle' :
-                $data = [
+                $amountSet = 0.00;
+                foreach($input['item'] as $key => $value) {
+                    $item = $this->items_model->getItemById($value)[0];
+
+                    $amountSet = floatval($amountSet) + floatval($item->price);
+                }
+
+                $packageDetails = [
+                    'name' => $name,
+                    'package_type'  => '1',
+                    'total_price' => $input['price'],
+                    'amount_set' => number_format(floatval($amountSet), 2, '.', ','),
+                    'created_by' => logged('id'),
                     'company_id' => logged('company_id'),
-                    'title' => $name,
-                    'type' => $type,
-                    'rebate' => isset($input['rebate_item']) ? $input['rebate_item'] : 0,
-                    'item_categories_id' => 0,
-                    'description' => $input['description'],
-                    'is_active' => 1
+                    'created_at' => date("Y-m-d H:i:s")
                 ];
+
+                $create = $this->workorder_model->addPackage($packageDetails);
             break;
             case 'product' :
                 $data = [
@@ -507,29 +589,34 @@ class Products_and_services extends MY_Controller {
             break;
         }
 
-        $create = $this->items_model->create($data);
+        if($type !== 'bundle') {
+            $create = $this->items_model->create($data);
+        }
 
         if($create) {
             switch($type) {
                 case 'bundle' :
                     $accountingDetails = [
-                        'item_id' => $create,
+                        'package_id' => $create,
                         'attachment_id' => isset($attachmentId) ? $attachmentId : null,
                         'display_on_print' => isset($input['display_on_print']) ? $input['display_on_print'] : null,
                         'sku' => $input['sku']
                     ];
                     $itemAccDetails = $this->items_model->saveItemAccountingDetails($accountingDetails);
 
-                    $bundleItems = [];
                     foreach($input['item'] as $key => $value) {
-                        $bundleItems[] = [
-                            'company_id' => logged('company_id'),
-                            'item_id' => $create,
-                            'bundle_item_id' => $value,
+                        $item = $this->items_model->getItemById($value)[0];
+
+                        $packageItemData = [
+                            'item_id' => $value,
+                            'package_id' => $create,
+                            'package_type' => '1',
+                            'price' => number_format(floatval($item->price), 2, '.', ','),
                             'quantity' => $input['quantity'][$key]
                         ];
+            
+                        $addPackageItem = $this->workorder_model->addItemPackage($packageItemData);
                     }
-                    $addBundleItems = $this->items_model->addBundleItems($bundleItems);
                 break;
                 case 'product' :
                     $accountingDetails = [

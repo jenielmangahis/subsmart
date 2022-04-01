@@ -27,7 +27,7 @@
     </ul>
 </div>
 
-<div class="row">
+<div class="row page-content g-0">
     <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/workorder_tabs'); ?>
     </div>

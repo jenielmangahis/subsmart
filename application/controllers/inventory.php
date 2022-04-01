@@ -621,6 +621,7 @@ class Inventory extends MY_Controller
     
                                     $data = array(
                                         'company_id' => logged('company_id'),
+                                        'initial_qty' => $location_quantities[1],
                                         'qty' => $location_quantities[1],
                                         'name' => $location_quantities[0],
                                         'item_id' => $last_id,
@@ -749,6 +750,7 @@ class Inventory extends MY_Controller
         $comp_id = logged('company_id');
         $data = array(
             'company_id' => $comp_id,
+            'initial_qty' => $this->input->post('qty'),
             'qty' => $this->input->post('qty'),
             'name' => $this->input->post('name'),
             'item_id' => $this->input->post('item_id'),

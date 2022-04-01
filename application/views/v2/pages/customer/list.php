@@ -6,7 +6,7 @@
     </div>
 </div>
 
-<div class="row">
+<div class="row page-content g-0">
     <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/customer_tabs'); ?>
     </div>
@@ -99,7 +99,7 @@
                                                     <div class="nsm-profile" style="background-image: url('<?php echo $image; ?>');"></div>
                                                 <?php endif; ?>
                                             </td>
-                                            <td class="fw-bold nsm-text-primary" onclick="location.href='<?= base_url('/customer/preview_/' . $customer->prof_id); ?>'"><?= ($customer) ? $customer->first_name . ' ' . $customer->last_name : ''; ?></td>
+                                            <td class="fw-bold nsm-text-primary nsm-link default" onclick="location.href='<?= base_url('/customer/preview_/' . $customer->prof_id); ?>'"><?= ($customer) ? $customer->first_name . ' ' . $customer->last_name : ''; ?></td>
                                         <?php endif; ?>
                                         <?php if (in_array('city', $enabled_table_headers)) : ?>
                                             <td><?php echo $customer->city; ?></td>

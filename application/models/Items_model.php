@@ -370,6 +370,13 @@ class Items_model extends MY_Model
         return $query->row();
     }
 
+    public function getPackageAccountingDetails($packageId)
+    {
+        $this->db->where('package_id', $packageId);
+        $query = $this->db->get('items_accounting_details');
+        return $query->row();
+    }
+
     public function countQty($item_id)
     {
         $items = $this->getLocationByItemId($item_id);
@@ -485,6 +492,20 @@ class Items_model extends MY_Model
         $this->db->where('item_id', $itemId);
         $query = $this->db->get('items_has_storage_loc');
         return $query->row();
+    }
+
+    public function update_package($id, $data)
+    {
+        $this->db->where('id', $id);
+        $update = $this->db->update('package_details', $data);
+        return $update;
+    }
+
+    public function get_company_packages($companyId)
+    {
+        $this->db->where('company_id', $companyId);
+        $query = $this->db->get('package_details');
+        return $query->result();
     }
 }
 

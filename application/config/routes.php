@@ -1032,6 +1032,17 @@ $route['job/update_job_tag'] = 'Job/update_job_tag';
 $route['login/_check_user_id_exists'] = 'Login/ajax_check_user_id_exists';
 $route['login/_update_user_password'] = 'Login/ajax_update_user_password';
 
+//Customer Login
+$route['login/customer'] = 'Login/customer';
+
+//Customer Access
+$route['acs_access/dashboard'] = 'AcsAccess/dashboard';
+$route['acs_access/messages'] = 'AcsAccess/messages';
+$route['acs_access/logout'] = 'AcsAccess/logout';
+$route['acs_access/_load_message_replies'] = 'AcsAccess/ajax_load_messages_list';
+$route['acs_access/_load_message_thread'] = 'AcsAccess/ajax_load_message_thread';
+$route['acs_access/_send_message_reply'] = 'AcsAccess/ajax_send_message_reply';
+
 //Cards File
 $route['cards_file/list'] = 'CardsFile/index';
 $route['cards_file/add_new'] = 'CardsFile/add_new_card';

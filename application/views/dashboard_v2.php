@@ -51,7 +51,7 @@
         </li>
     </ul>
 </div>
-<div class="row nsm-page-buttons">
+<div class="row nsm-page-buttons page-content g-0">
     <div class="col-12 grid-mb text-end">
         <button type="button" class="nsm-button" onclick="location.href='<?php echo base_url('customer/add_advance') ?>'">
             <i class='bx bx-fw bx-user-plus'></i> Add Customer
@@ -77,43 +77,51 @@
     </div>
 </div>
 
-<?php
-if (count($main_widgets) > 0) :
-    echo '<div class="row h-100 g-3 grid-row-mb nsm-draggable-container">';
+<div class="row page-content g-0">
+    <div class="col-12">
+        <?php
+        if (count($main_widgets) > 0) :
+            echo '<div class="row h-100 g-3 grid-row-mb nsm-draggable-container">';
 
-    foreach ($main_widgets as $wids) :
-        if ($wids->wu_is_main) :
-            echo '<div class="col-12 col-lg-6">';
-            $data['class'] = 'nsm-card nsm-grid';
-            $data['isMain'] = True;
-            $data['id'] = $wids->w_id;
-            $data['isGlobal'] = ($wids->wu_company_id == '0' ? false : true);
-            $this->load->view("v2/" . $wids->w_view_link, $data);
+            foreach ($main_widgets as $wids) :
+                if ($wids->wu_is_main) :
+                    echo '<div class="col-12 col-lg-6">';
+                    $data['class'] = 'nsm-card nsm-grid';
+                    $data['isMain'] = True;
+                    $data['id'] = $wids->w_id;
+                    $data['isGlobal'] = ($wids->wu_company_id == '0' ? false : true);
+                    $this->load->view("v2/" . $wids->w_view_link, $data);
+                    echo '</div>';
+                endif;
+            endforeach;
+
             echo '</div>';
         endif;
-    endforeach;
-
-    echo '</div>';
-endif;
-?>
-
-<div class="row h-100 g-3 grid-row-mb nsm-draggable-container" id="nsm_widgets">
-    <?php
-    foreach ($widgets as $wids) :
-        if (!$wids->wu_is_main) :
-            echo '<div class="col-12 col-lg-4">';
-            $data['class'] = 'nsm-card nsm-grid';
-            $data['isMain'] = False;
-            $data['id'] = $wids->w_id;
-            $data['isGlobal'] = ($wids->wu_company_id == '0' ? false : true);
-            $this->load->view("v2/" . $wids->w_view_link, $data);
-            echo '</div>';
-        endif;
-    endforeach;
-    ?>
+        ?>
+    </div>
 </div>
 
-<div class="row nsm-tickertape mb-3">
+<div class="row page-content g-0">
+    <div class="col-12">
+        <div class="row h-100 g-3 grid-row-mb nsm-draggable-container" id="nsm_widgets">
+            <?php
+            foreach ($widgets as $wids) :
+                if (!$wids->wu_is_main) :
+                    echo '<div class="col-12 col-lg-4">';
+                    $data['class'] = 'nsm-card nsm-grid';
+                    $data['isMain'] = False;
+                    $data['id'] = $wids->w_id;
+                    $data['isGlobal'] = ($wids->wu_company_id == '0' ? false : true);
+                    $this->load->view("v2/" . $wids->w_view_link, $data);
+                    echo '</div>';
+                endif;
+            endforeach;
+            ?>
+        </div>
+    </div>
+</div>
+
+<div class="row nsm-tickertape mb-3 page-content g-0">
     <div class="col-12">
         <div class="nsm-card pb-1 pt-2">
             <div class="tradingview-widget-container">
@@ -152,84 +160,88 @@ endif;
     </div>
 </div>
 
-<div class="row h-100 g-3">
-    <div class="col-12 col-lg-6">
-        <div class="nsm-card">
-            <div class="nsm-card-header">
-                <div class="nsm-card-title">
-                    <span>Feeds</span>
-                </div>
-            </div>
-            <div class="nsm-card-content">
-                <div class="nsm-widget-table">
-                    <?php
-                    if (count($feeds) > 0) :
-                        foreach ($feeds as $feed) :
-                    ?>
-                            <div class="widget-item">
-                                <div class="content">
-                                    <div class="details">
-                                        <span class="content-title mb-1"><?= ucfirst($feed->title) ?></span>
-                                        <span class="content-subtitle d-block"><?= ucfirst($feed->message) ?></span>
+<div class="row page-content g-0">
+    <div class="col-12">
+        <div class="row h-100 g-3">
+            <div class="col-12 col-lg-6">
+                <div class="nsm-card">
+                    <div class="nsm-card-header">
+                        <div class="nsm-card-title">
+                            <span>Feeds</span>
+                        </div>
+                    </div>
+                    <div class="nsm-card-content">
+                        <div class="nsm-widget-table">
+                            <?php
+                            if (count($feeds) > 0) :
+                                foreach ($feeds as $feed) :
+                            ?>
+                                    <div class="widget-item">
+                                        <div class="content">
+                                            <div class="details">
+                                                <span class="content-title mb-1"><?= ucfirst($feed->title) ?></span>
+                                                <span class="content-subtitle d-block"><?= ucfirst($feed->message) ?></span>
+                                            </div>
+                                            <div class="controls"></div>
+                                        </div>
                                     </div>
-                                    <div class="controls"></div>
+                                <?php
+                                endforeach;
+                                ?>
+                            <?php
+                            else :
+                            ?>
+                                <div class="nsm-empty">
+                                    <i class='bx bx-meh-blank'></i>
+                                    <span>Feed is empty.</span>
                                 </div>
-                            </div>
-                        <?php
-                        endforeach;
-                        ?>
-                    <?php
-                    else :
-                    ?>
-                        <div class="nsm-empty">
-                            <i class='bx bx-meh-blank'></i>
-                            <span>Feed is empty.</span>
+                            <?php
+                            endif;
+                            ?>
                         </div>
-                    <?php
-                    endif;
-                    ?>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
-    <div class="col-12 col-lg-6">
-        <div class="nsm-card">
-            <div class="nsm-card-header">
-                <div class="nsm-card-title">
-                    <span>Bulletins</span>
-                </div>
-            </div>
-            <div class="nsm-card-content">
-                <div class="nsm-widget-table">
-                    <?php
-                    if (count($news) > 0) :
-                        foreach ($news as $new) :
-                    ?>
-                            <div class="widget-item">
-                                <div class="content">
-                                    <div class="details">
-                                        <span class="content-title mb-1"><?= ucfirst($new->message) ?></span>
-                                        <span class="content-subtitle d-block">
-                                            <a href="<?= base_url('' . $new->file_link) ?>" target="_blank" class="nsm-link"><?= ucfirst($new->file_link) ?></a>
-                                        </span>
+            <div class="col-12 col-lg-6">
+                <div class="nsm-card">
+                    <div class="nsm-card-header">
+                        <div class="nsm-card-title">
+                            <span>Bulletins</span>
+                        </div>
+                    </div>
+                    <div class="nsm-card-content">
+                        <div class="nsm-widget-table">
+                            <?php
+                            if (count($news) > 0) :
+                                foreach ($news as $new) :
+                            ?>
+                                    <div class="widget-item">
+                                        <div class="content">
+                                            <div class="details">
+                                                <span class="content-title mb-1"><?= ucfirst($new->message) ?></span>
+                                                <span class="content-subtitle d-block">
+                                                    <a href="<?= base_url('' . $new->file_link) ?>" target="_blank" class="nsm-link"><?= ucfirst($new->file_link) ?></a>
+                                                </span>
+                                            </div>
+                                            <div class="controls"></div>
+                                        </div>
                                     </div>
-                                    <div class="controls"></div>
+                                <?php
+                                endforeach;
+                                ?>
+                            <?php
+                            else :
+                            ?>
+                                <div class="nsm-empty">
+                                    <i class='bx bx-meh-blank'></i>
+                                    <span>Bulletin is empty.</span>
                                 </div>
-                            </div>
-                        <?php
-                        endforeach;
-                        ?>
-                    <?php
-                    else :
-                    ?>
-                        <div class="nsm-empty">
-                            <i class='bx bx-meh-blank'></i>
-                            <span>Bulletin is empty.</span>
+                                <?php
+                            endif;
+                                ?>
+                                </div>
                         </div>
-                        <?php
-                    endif;
-                        ?>
-                        </div>
+                    </div>
                 </div>
             </div>
         </div>
