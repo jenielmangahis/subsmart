@@ -20,7 +20,8 @@ html, body{
 }
 
 .nsm-content{
-	min-height: calc(100vh - 183px);
+	/* min-height: calc(100vh - 183px); */
+	min-height: calc(100vh - 213px);
 }
 
 .nsm-container.nsm-mobile .nsm-sidebar{
@@ -214,18 +215,23 @@ html, body{
 	transition: unset;
 }
 
+.nsm-content-container{
+	width: 100%;
+}
+
 .nsm-main{
 	/* width: calc(100% - 300px); */
 	width: 100%;
 	float: right;
 	height: auto;
 	min-height: 100%;
-	padding: 2em;
+	/* padding: 2em; */
 }
 
 .nsm-nav{
 	display: flex;
 	margin-bottom: 2em;
+	padding: 2em 2em 0 2em;
 }
 
 .nsm-nav .nsm-nav-menu{
@@ -1266,16 +1272,26 @@ a.nsm-button{
 	padding: unset;
 	list-style: none;
 	position: relative;
+	overflow: hidden;
 }
 
 .nsm-page-nav > ul > li{
 	float: left;
-	border-bottom: 3px solid lightgray;
-	padding: 1rem 0.25rem;
+	/* border-bottom: 3px solid lightgray; */
+	padding: 0.75rem 0.25rem;
+	border-bottom: 1px solid;
+    border-radius: 5px 5px 0px 0;
+	border-color: #d3d3d3;
+	position: relative;
 }
 
 .nsm-page-nav > ul > li.active{
-	border-color: #6a4a86;
+	/* border-color: #6a4a86; */
+	border-top: 1px solid;
+	border-left: 1px solid;
+	border-right: 1px solid;
+	border-bottom: unset;
+	border-color: #d3d3d3;
 }
 
 .nsm-page-nav > ul > li.active .nsm-page-link > i{
@@ -1291,11 +1307,13 @@ a.nsm-button{
 	color: #888888;
 	text-decoration: none !important;
 	font-weight: bold;
-	font-size: 15px;
+	/* font-size: 15px; */
+	font-size: 14px;
 }
 
 .nsm-page-nav .nsm-page-link > i{
-	font-size: 1.5rem;
+	/* font-size: 1.5rem; */
+	font-size: 15px;
 }
 
 .nsm-page-nav .dropdown > .dropdown-menu{
@@ -1312,6 +1330,20 @@ a.nsm-button{
 
 .nsm-page-nav > ul > li:hover > .dropdown > .dropdown-menu{
 	display: block;
+}
+
+.nsm-page-nav > ul > li:hover a{
+	color: #686666;
+}
+
+.nsm-page-nav > ul > li:last-child::after{
+	content: '';
+    border-bottom: 1px solid #d3d3d3 !important;
+    position: absolute;
+    width: 5000px;
+	right: -5000px;
+    bottom: -1px;
+    height: 0;
 }
 
 .nsm-page-nav .dropdown > .dropdown-menu .dropdown-item{
@@ -1459,4 +1491,13 @@ div.workspace-list > ul > li .nsm-badge{
 
 .nsm-switch .form-check-input:checked{
 	background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23fff'/%3e%3c/svg%3e") !important;
+}
+
+.nsm-footer{
+	padding: 2em;
+	width: 100%;
+}
+
+.nsm-content > .page-content{
+	padding: 0 2em;
 }

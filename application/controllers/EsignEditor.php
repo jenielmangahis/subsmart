@@ -108,6 +108,10 @@ class EsignEditor extends MY_Controller
             'assets/css/esign/esign-editor/esign-editor.css',
         ]);
 
+        add_footer_js([
+            'assets/js/esign/esigneditor/wizard2.js',
+        ]);
+
         $this->load->view('esign/esigneditor/wizard2', $this->page_data);
     }
 

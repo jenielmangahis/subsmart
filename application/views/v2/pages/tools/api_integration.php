@@ -1,7 +1,7 @@
 <?php include viewPath('v2/includes/header'); ?>
 <?php include viewPath('v2/includes/tools/api_connectors_modals'); ?>
 
-<div class="row">
+<div class="row page-content g-0">
     <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/tools_tabs'); ?>
     </div>

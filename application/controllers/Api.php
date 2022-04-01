@@ -160,8 +160,24 @@ class Api extends MYF_Controller
             }
         }
     }   
+    public function get_paypal_acc(){
+        $company_id = logged('company_id');
+        $query = $this->db->get_where('accounting_bank_accounts', array('company_id'=> $company_id));
 
-    
+        $data = new stdClass();
+        $data->paypalAcc = $query->result();
+        echo json_encode($data);
+    }
+
+    public function get_stripe_acc(){
+        $company_id = logged('company_id');
+        $query = $this->db->get_where('accounting_bank_accounts', array('company_id'=> $company_id));
+
+        $data = new stdClass();
+        $data->stripeAcc = $query->result();
+        echo json_encode($data);
+    }
+
     public function if_stripeAcc_of_company_exist(){
         $company_id = logged('company_id');
         $query = $this->db->get_where('accounting_bank_accounts', array('company_id'=> $company_id));

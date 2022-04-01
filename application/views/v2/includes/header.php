@@ -671,4 +671,5 @@ if ($this->session->userdata('usertimezone') == null) {
                     </ul>
                 </div>
             </div>
-            <div class="nsm-content">
+            <div class="nsm-content-container">
+                <div class="nsm-content">
