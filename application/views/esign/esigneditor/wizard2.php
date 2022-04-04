@@ -110,21 +110,22 @@ ini_set('max_input_vars', 30000);
                         <button class="btn btn-ghost" type="button" data-toggle="modal" data-target="#newdisputemodal">+ Add New Dispute Items</button>
                     </div>
 
-                    <table class="mt-4 table">
+                    <table class="mt-4 table" id="selecteddisputeitemstable">
                         <thead>
                             <tr>
                                 <th>Creditor/Furnisher</th>
-                                <th>Account #</th>
+                                <th class="accountnum">Account #</th>
                                 <th>Dispute items</th>
-                                <th class="step__step2DisputeCol">
+                                <th>
                                     <img alt="" src="<?=base_url('/assets/img/customer/images/equifax.png');?>"/>
                                 </th>
-                                <th class="step__step2DisputeCol">
+                                <th>
                                     <img alt="" src="<?=base_url('/assets/img/customer/images/experian.png');?>"/>
                                 </th>
-                                <th class="step__step2DisputeCol">
+                                <th>
                                     <img alt="" src="<?=base_url('/assets/img/customer/images/trans_union.png');?>"/>
                                 </th>
+                                <th></th>
                             </tr>
                         </thead>
                     </table>
@@ -285,36 +286,36 @@ ini_set('max_input_vars', 30000);
             Select the item(s) to include in your letter. On the next page you can choose which bureaus to include.
         </p>
 
-        <table class="mt-4 table">
-            <thead>
-                <tr>
-                    <th>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" style="position: static;width:1rem;height:1rem">
-                        </div>
-                    </th>
-                    <th>Creditor/Furnisher</th>
-                    <th>Account #</th>
-                    <th>Reason</th>
-                    <th>Disputed</th>
-                    <th>
-                        <img alt="" src="<?=base_url('/assets/img/customer/images/equifax.png');?>"/>
-                    </th>
-                    <th>
-                        <img alt="" src="<?=base_url('/assets/img/customer/images/experian.png');?>"/>
-                    </th>
-                    <th>
-                        <img alt="" src="<?=base_url('/assets/img/customer/images/trans_union.png');?>"/>
-                    </th>
-                </tr>
-            </thead>
-        </table>
+        <div class="table-wraper">
+            <table class="mt-4 table" id="customerdisputestable">
+                <thead>
+                    <tr>
+                        <th>
+                            <input type="checkbox" class="table__checkbox table__checkbox--primary"/>
+                        </th>
+                        <th>Creditor/Furnisher</th>
+                        <th class="accountnum">Account #</th>
+                        <th>Reason</th>
+                        <th>Disputed</th>
+                        <th>
+                            <img alt="" src="<?=base_url('/assets/img/customer/images/equifax.png');?>"/>
+                        </th>
+                        <th>
+                            <img alt="" src="<?=base_url('/assets/img/customer/images/experian.png');?>"/>
+                        </th>
+                        <th>
+                            <img alt="" src="<?=base_url('/assets/img/customer/images/trans_union.png');?>"/>
+                        </th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">
             Cancel
         </button>
-        <button type="button" class="btn btn-primary">
+        <button type="button" class="btn btn-primary" data-action="on_add_to_dispute">
             Add to Dispute
         </button>
       </div>

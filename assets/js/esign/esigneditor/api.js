@@ -135,6 +135,12 @@ export function duplicateLetter(letterId) {
   return http.post(`${prefixURL}/EsignEditor/apiDuplicateLetter/${letterId}`);
 }
 
+export function getCustomerDisputeItems(customerId) {
+  return http.get(
+    `${prefixURL}/EsignEditor/apiGetCustomerDisputeItems/${customerId}`
+  );
+}
+
 const http = {
   post: sendPost,
   delete: sendDelete,

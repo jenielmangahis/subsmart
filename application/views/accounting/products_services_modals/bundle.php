@@ -55,18 +55,6 @@
                 <td>
                     <div class="row">
                         <div class="col-sm-12">
-                            <div class="form-group" style="margin: 0 !important">                                                
-                                <label for="description">Description</label>
-                                <textarea name="description" id="description" placeholder="Description on sales forms" class="form-control"></textarea>
-                            </div>
-                        </div>
-                    </div>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <div class="row">
-                        <div class="col-sm-12">
                             <div class="form-group" style="margin: 0 !important">
                                 <label for="price">Price</label>
                                 <input type="text" class="form-control text-right" id="price" name="price" required onchange="convertToDecimal(this)">

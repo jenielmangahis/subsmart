@@ -6,12 +6,12 @@
                 <span>My Customers</span>
             </a>
         </li>
-        <li class="<?php if($page->title == 'Customer Dashboard'): echo 'active'; endif; ?>">
+        <!-- <li class="<?php if($page->title == 'Customer Dashboard'): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="<?php echo base_url('customer/module') ?>">
                 <i class='bx bx-fw bx-detail'></i>
                 <span>Customer Dashboard</span>
             </a>
-        </li>
+        </li> -->
         <li class="<?php if($page->title == 'Customer Subscriptions'): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="<?php echo base_url('customer/subscriptions') ?>">
                 <i class='bx bx-fw bx-user-pin'></i>

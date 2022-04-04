@@ -226,3 +226,7 @@
 .nsm-callout > button{
 	color: #727272;
 }
+
+.modal-dialog.modal-xxl{
+	max-width: 1800px !important;
+}

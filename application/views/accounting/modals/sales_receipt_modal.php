@@ -444,7 +444,7 @@
                         <div class="col-md-4">
                             <div class="row h-100">
                                 <div class="col-md-12 d-flex align-items-center justify-content-center">
-                                    <span><a href="#" class="text-white">Print or Preview</a></span>
+                                    <span><a href="#" class="text-white" id="save-and-print">Print or Preview</a></span>
                                     <span class="mx-3 divider"></span>
                                     <span><a href="#" class="text-white" onclick="makeRecurring('sales_receipt')">Make Recurring</a></span>
                                     <?php if(isset($receipt)) : ?>

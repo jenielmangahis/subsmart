@@ -48,7 +48,7 @@
                     <input type="hidden" class="form-control" name="sa_id" id="sa_id" />
                     <div class="row">
                         <div class="col-12">
-                            <input type="text" placeholder="Sales Area Name" name="sa_name" id="sa_name" class="nsm-field form-control mb-2" required/>
+                            <input type="text" placeholder="Sales Area Name" name="sa_name" id="sa_name" class="nsm-field form-control mb-2" required />
                         </div>
                     </div>
                 </div>
@@ -70,10 +70,10 @@
                     <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
                 </div>
                 <div class="modal-body">
-                    <input type="hidden" class="form-control" name="sa_id" id="edit_sa_id" value=""/>
+                    <input type="hidden" class="form-control" name="sa_id" id="edit_sa_id" value="" />
                     <div class="row">
                         <div class="col-12">
-                            <input type="text" placeholder="Sales Area Name" name="sa_name" id="edit_sa_name" class="nsm-field form-control mb-2" value="" required/>
+                            <input type="text" placeholder="Sales Area Name" name="sa_name" id="edit_sa_name" class="nsm-field form-control mb-2" value="" required />
                         </div>
                     </div>
                 </div>
@@ -98,7 +98,7 @@
                     <input type="hidden" class="form-control" name="ls_id" id="ls_id" />
                     <div class="row">
                         <div class="col-12">
-                            <input type="text" placeholder="Sales Area Name" name="ls_name" id="ls_name" class="nsm-field form-control mb-2" required/>
+                            <input type="text" placeholder="Sales Area Name" name="ls_name" id="ls_name" class="nsm-field form-control mb-2" required />
                         </div>
                     </div>
                 </div>
@@ -123,7 +123,7 @@
                     <input type="hidden" class="form-control" name="ls_id" id="edit_ls_id" />
                     <div class="row">
                         <div class="col-12">
-                            <input type="text" placeholder="Sales Area Name" name="ls_name" id="edit_ls_name" class="nsm-field form-control mb-2" required/>
+                            <input type="text" placeholder="Sales Area Name" name="ls_name" id="edit_ls_name" class="nsm-field form-control mb-2" required />
                         </div>
                     </div>
                 </div>
@@ -148,7 +148,7 @@
                     <input type="hidden" class="form-control" name="lead_id" id="lead_id" />
                     <div class="row">
                         <div class="col-12">
-                            <input type="text" placeholder="Lead Type Name" name="lead_name" id="lead_name" class="nsm-field form-control mb-2" required/>
+                            <input type="text" placeholder="Lead Type Name" name="lead_name" id="lead_name" class="nsm-field form-control mb-2" required />
                         </div>
                     </div>
                 </div>
@@ -173,7 +173,7 @@
                     <input type="hidden" class="form-control" name="lead_id" id="edit_lead_id" />
                     <div class="row">
                         <div class="col-12">
-                            <input type="text" placeholder="Lead Type Name" name="lead_name" id="edit_lead_name" class="nsm-field form-control mb-2" required/>
+                            <input type="text" placeholder="Lead Type Name" name="lead_name" id="edit_lead_name" class="nsm-field form-control mb-2" required />
                         </div>
                     </div>
                 </div>
@@ -198,12 +198,12 @@
                     <input type="hidden" class="form-control" name="id" id="rate_id" />
                     <div class="row">
                         <div class="col-12">
-                            <input type="text" placeholder="Plan Name" name="plan_name" id="plan_name" class="nsm-field form-control mb-2" required/>
+                            <input type="text" placeholder="Plan Name" name="plan_name" id="plan_name" class="nsm-field form-control mb-2" required />
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-12">
-                            <input type="number" placeholder="Rate Amount" name="amount" id="amount" class="nsm-field form-control mb-2" required/>
+                            <input type="number" placeholder="Rate Amount" name="amount" id="amount" class="nsm-field form-control mb-2" required />
                         </div>
                     </div>
                 </div>
@@ -229,12 +229,12 @@
                     <input type="hidden" class="form-control" name="id" id="edit_rate_id" />
                     <div class="row">
                         <div class="col-12">
-                            <input type="text" placeholder="Plan Name" name="plan_name" id="edit_plan_name" class="nsm-field form-control mb-2" required/>
+                            <input type="text" placeholder="Plan Name" name="plan_name" id="edit_plan_name" class="nsm-field form-control mb-2" required />
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-12">
-                            <input type="number" placeholder="Rate Amount" name="amount" id="edit_amount" class="nsm-field form-control mb-2" required/>
+                            <input type="number" placeholder="Rate Amount" name="amount" id="edit_amount" class="nsm-field form-control mb-2" required />
                         </div>
                     </div>
                 </div>
@@ -259,7 +259,7 @@
                     <input type="hidden" class="form-control" name="id" id="fee_id" />
                     <div class="row">
                         <div class="col-12">
-                            <input type="number" placeholder="Amount" name="amount" id="amount" step=".01" class="nsm-field form-control mb-2" required/>
+                            <input type="number" placeholder="Amount" name="amount" id="amount" step=".01" class="nsm-field form-control mb-2" required />
                         </div>
                     </div>
                 </div>
@@ -284,7 +284,7 @@
                     <input type="hidden" class="form-control" name="id" id="edit_fee_id" />
                     <div class="row">
                         <div class="col-12">
-                            <input type="number" placeholder="Amount" name="amount" id="edit_fee_amount" step=".01" class="nsm-field form-control mb-2" required/>
+                            <input type="number" placeholder="Amount" name="amount" id="edit_fee_amount" step=".01" class="nsm-field form-control mb-2" required />
                         </div>
                     </div>
                 </div>
@@ -309,7 +309,7 @@
                     <input type="hidden" class="form-control" name="id" id="system_id" />
                     <div class="row">
                         <div class="col-12">
-                            <input type="text" placeholder="Name" name="name" id="system_name" class="nsm-field form-control mb-2" required/>
+                            <input type="text" placeholder="Name" name="name" id="system_name" class="nsm-field form-control mb-2" required />
                         </div>
                     </div>
                 </div>
@@ -334,7 +334,7 @@
                     <input type="hidden" class="form-control" name="id" id="edit_system_id" />
                     <div class="row">
                         <div class="col-12">
-                            <input type="text" placeholder="Name" name="name" id="edit_system_name" class="nsm-field form-control mb-2" required/>
+                            <input type="text" placeholder="Name" name="name" id="edit_system_name" class="nsm-field form-control mb-2" required />
                         </div>
                     </div>
                 </div>
@@ -344,5 +344,409 @@
                 </div>
             </div>
         </form>
+    </div>
+</div>
+
+<div class="modal fade nsm-modal fade" id="print_view_customer_list_modal" tabindex="-1" aria-labelledby="print_view_customer_list_modal_label" aria-hidden="true">
+    <div class="modal-dialog modal-xxl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title">Print Customer List</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body">
+                <table class="w-100" id="customer_table_print">
+                    <?php if (!empty($enabled_table_headers)) : ?>
+                        <thead>
+                            <tr>
+                                <?php if (in_array('name', $enabled_table_headers)) : ?><td data-name="Name">Name</td><?php endif; ?>
+                                <?php if (in_array('city', $enabled_table_headers)) : ?><td data-name="City">City</td><?php endif; ?>
+                                <?php if (in_array('state', $enabled_table_headers)) : ?><td data-name="State">State</td><?php endif; ?>
+                                <?php if (in_array('source', $enabled_table_headers)) : ?><td data-name="Source">Source</td><?php endif; ?>
+                                <?php if (in_array('added', $enabled_table_headers)) : ?><td data-name="Added">Added</td><?php endif; ?>
+                                <?php if (in_array('sales_rep', $enabled_table_headers)) : ?><td data-name="Sales Rep">Sales Rep</td><?php endif; ?>
+                                <?php if (in_array('tech', $enabled_table_headers)) : ?><td data-name="Tech">Tech</td><?php endif; ?>
+                                <?php if (in_array('plan_type', $enabled_table_headers)) : ?><td data-name="Plan Type">Plan Type</td><?php endif; ?>
+                                <?php if (in_array('subscription_amount', $enabled_table_headers)) : ?><td data-name="Subscription Amount">Subscription Amount</td><?php endif; ?>
+                                <?php if (in_array('phone', $enabled_table_headers)) : ?><td data-name="Phone">Phone</td><?php endif; ?>
+                                <?php if (in_array('status', $enabled_table_headers)) : ?><td data-name="Status">Status</td><?php endif; ?>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            if (!empty($profiles)) :
+                            ?>
+                                <?php
+                                foreach ($profiles as $customer) :
+                                    switch ($customer->status):
+                                        case "INSTALLED":
+                                            $badge = "success";
+                                            break;
+                                        case "CANCELLED":
+                                            $badge = "error";
+                                            break;
+                                        case "COLLECTIONS":
+                                            $badge = "secondary";
+                                            break;
+                                        case "CHARGED BACK":
+                                            $badge = "primary";
+                                            break;
+                                        default:
+                                            $badge = "";
+                                            break;
+                                    endswitch;
+
+                                    $image = userProfilePicture($customer->id);
+                                ?>
+                                    <?php if (in_array('name', $enabled_table_headers)) : ?>
+                                        <td class="nsm-text-primary">
+                                            <label class="nsm-link default d-block fw-bold"><?= ($customer) ? $customer->first_name . ' ' . $customer->last_name : ''; ?></label>
+                                            <label class="content-subtitle fst-italic d-block"><?php echo $customer->email; ?></label>
+                                        </td>
+                                    <?php endif; ?>
+                                    <?php if (in_array('city', $enabled_table_headers)) : ?>
+                                        <td><?php echo $customer->city; ?></td>
+                                    <?php endif; ?>
+                                    <?php if (in_array('state', $enabled_table_headers)) : ?>
+                                        <td><?php echo $customer->state; ?></td>
+                                    <?php endif; ?>
+                                    <?php if (in_array('source', $enabled_table_headers)) : ?>
+                                        <td><?= $customer->lead_source != "" ? $customer->lead_source : 'n/a'; ?></td>
+                                    <?php endif; ?>
+                                    <?php if (in_array('added', $enabled_table_headers)) : ?>
+                                        <td><?php echo $customer->entered_by; ?></td>
+                                    <?php endif; ?>
+                                    <?php if (in_array('sales_rep', $enabled_table_headers)) : ?>
+                                        <td><?php echo ($customer) ? $customer->FName . ' ' . $customer->LName : ''; ?></td>
+                                    <?php endif; ?>
+                                    <?php if (in_array('tech', $enabled_table_headers)) : ?>
+                                        <td><?= $customer->technician != null ? $customer->technician : 'Not Assigned'; ?></td>
+                                    <?php endif; ?>
+                                    <?php if (in_array('plan_type', $enabled_table_headers)) : ?>
+                                        <td><?php echo $customer->system_type; ?></td>
+                                    <?php endif; ?>
+                                    <?php if (in_array('subscription_amount', $enabled_table_headers)) : ?>
+                                        <td>$<?= $customer->total_amount; ?></td>
+                                    <?php endif; ?>
+                                    <?php if (in_array('phone', $enabled_table_headers)) : ?>
+                                        <td><?php echo $customer->phone_m; ?></td>
+                                    <?php endif; ?>
+                                    <?php if (in_array('status', $enabled_table_headers)) : ?>
+                                        <td><span class="nsm-badge <?= $badge ?>"><?= $customer->status != null ? $customer->status : 'Pending'; ?></span></td>
+                                    <?php endif; ?>
+                                    </tr>
+                                <?php
+                                endforeach;
+                                ?>
+                            <?php
+                            else :
+                            ?>
+                                <tr>
+                                    <td colspan="12">
+                                        <div class="nsm-empty">
+                                            <span>No results found.</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <?php
+                            endif;
+                            ?>
+                        </tbody>
+                    <?php else : ?>
+                        <thead>
+                            <tr>
+                                <td data-name="Name">Name</td>
+                                <td data-name="City">City</td>
+                                <td data-name="State">State</td>
+                                <td data-name="Source">Source</td>
+                                <td data-name="Added">Added</td>
+                                <td data-name="Sales Rep">Sales Rep</td>
+                                <td data-name="Tech">Tech</td>
+                                <td data-name="Plan Type">Plan Type</td>
+                                <td data-name="Subscription Amount">Subscription Amount</td>
+                                <td data-name="Phone">Phone</td>
+                                <td data-name="Status">Status</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            if (!empty($profiles)) :
+                            ?>
+                                <?php
+                                foreach ($profiles as $customer) :
+                                    switch ($customer->status):
+                                        case "INSTALLED":
+                                            $badge = "success";
+                                            break;
+                                        case "CANCELLED":
+                                            $badge = "error";
+                                            break;
+                                        case "COLLECTIONS":
+                                            $badge = "secondary";
+                                            break;
+                                        case "CHARGED BACK":
+                                            $badge = "primary";
+                                            break;
+                                        default:
+                                            $badge = "";
+                                            break;
+                                    endswitch;
+
+                                    $image = userProfilePicture($customer->id);
+                                ?>
+                                    <tr>
+                                        <td class="nsm-text-primary">
+                                            <label class="nsm-link default d-block fw-bold"><?= ($customer) ? $customer->first_name . ' ' . $customer->last_name : ''; ?></label>
+                                            <label class="content-subtitle fst-italic d-block"><?php echo $customer->email; ?></label>
+                                        </td>
+                                        <td><?php echo $customer->city; ?></td>
+                                        <td><?php echo $customer->state; ?></td>
+                                        <td><?= $customer->lead_source != "" ? $customer->lead_source : 'n/a'; ?></td>
+                                        <td><?php echo $customer->entered_by; ?></td>
+                                        <td><?php echo ($customer) ? $customer->FName . ' ' . $customer->LName : ''; ?></td>
+                                        <td><?= $customer->technician != null ? $customer->technician : 'Not Assigned'; ?></td>
+                                        <td><?php echo $customer->system_type; ?></td>
+                                        <td>$<?= $customer->total_amount; ?></td>
+                                        <td><?php echo $customer->phone_m; ?></td>
+                                        <td><span class="nsm-badge <?= $badge ?>"><?= $customer->status != null ? $customer->status : 'Pending'; ?></span></td>
+                                    </tr>
+                                <?php
+                                endforeach;
+                                ?>
+                            <?php
+                            else :
+                            ?>
+                                <tr>
+                                    <td colspan="12">
+                                        <div class="nsm-empty">
+                                            <span>No results found.</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <?php
+                            endif;
+                            ?>
+                        </tbody>
+                    <?php endif; ?>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade nsm-modal fade" id="print_customer_list_modal" tabindex="-1" aria-labelledby="print_customer_list_modal_label" aria-hidden="true">
+    <div class="modal-dialog modal-xxl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title">Print Customer List</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body">
+                <?php if (!empty($enabled_table_headers)) : ?>
+                    <table class="nsm-table">
+                        <thead>
+                            <tr>
+                                <td class="table-icon"></td>
+                                <?php if (in_array('name', $enabled_table_headers)) : ?><td data-name="Name">Name</td><?php endif; ?>
+                                <?php if (in_array('city', $enabled_table_headers)) : ?><td data-name="City">City</td><?php endif; ?>
+                                <?php if (in_array('state', $enabled_table_headers)) : ?><td data-name="State">State</td><?php endif; ?>
+                                <?php if (in_array('source', $enabled_table_headers)) : ?><td data-name="Source">Source</td><?php endif; ?>
+                                <?php if (in_array('added', $enabled_table_headers)) : ?><td data-name="Added">Added</td><?php endif; ?>
+                                <?php if (in_array('sales_rep', $enabled_table_headers)) : ?><td data-name="Sales Rep">Sales Rep</td><?php endif; ?>
+                                <?php if (in_array('tech', $enabled_table_headers)) : ?><td data-name="Tech">Tech</td><?php endif; ?>
+                                <?php if (in_array('plan_type', $enabled_table_headers)) : ?><td data-name="Plan Type">Plan Type</td><?php endif; ?>
+                                <?php if (in_array('subscription_amount', $enabled_table_headers)) : ?><td data-name="Subscription Amount">Subscription Amount</td><?php endif; ?>
+                                <?php if (in_array('phone', $enabled_table_headers)) : ?><td data-name="Phone">Phone</td><?php endif; ?>
+                                <?php if (in_array('status', $enabled_table_headers)) : ?><td data-name="Status">Status</td><?php endif; ?>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            if (!empty($profiles)) :
+                            ?>
+                                <?php
+                                foreach ($profiles as $customer) :
+                                    switch ($customer->status):
+                                        case "INSTALLED":
+                                            $badge = "success";
+                                            break;
+                                        case "CANCELLED":
+                                            $badge = "error";
+                                            break;
+                                        case "COLLECTIONS":
+                                            $badge = "secondary";
+                                            break;
+                                        case "CHARGED BACK":
+                                            $badge = "primary";
+                                            break;
+                                        default:
+                                            $badge = "";
+                                            break;
+                                    endswitch;
+
+                                    $image = userProfilePicture($customer->id);
+                                ?>
+                                    <?php if (in_array('name', $enabled_table_headers)) : ?>
+                                        <td>
+                                            <?php if (is_null($image)) : ?>
+                                                <div class="nsm-profile">
+                                                    <span><?php echo getLoggedNameInitials($customer->id); ?></span>
+                                                </div>
+                                            <?php else : ?>
+                                                <div class="nsm-profile" style="background-image: url('<?php echo $image; ?>');"></div>
+                                            <?php endif; ?>
+                                        </td>
+                                        <td class="nsm-text-primary">
+                                            <label class="nsm-link default d-block fw-bold"><?= ($customer) ? $customer->first_name . ' ' . $customer->last_name : ''; ?></label>
+                                            <label class="content-subtitle fst-italic d-block"><?php echo $customer->email; ?></label>
+                                        </td>
+                                    <?php endif; ?>
+                                    <?php if (in_array('city', $enabled_table_headers)) : ?>
+                                        <td><?php echo $customer->city; ?></td>
+                                    <?php endif; ?>
+                                    <?php if (in_array('state', $enabled_table_headers)) : ?>
+                                        <td><?php echo $customer->state; ?></td>
+                                    <?php endif; ?>
+                                    <?php if (in_array('source', $enabled_table_headers)) : ?>
+                                        <td><?= $customer->lead_source != "" ? $customer->lead_source : 'n/a'; ?></td>
+                                    <?php endif; ?>
+                                    <?php if (in_array('added', $enabled_table_headers)) : ?>
+                                        <td><?php echo $customer->entered_by; ?></td>
+                                    <?php endif; ?>
+                                    <?php if (in_array('sales_rep', $enabled_table_headers)) : ?>
+                                        <td><?php echo ($customer) ? $customer->FName . ' ' . $customer->LName : ''; ?></td>
+                                    <?php endif; ?>
+                                    <?php if (in_array('tech', $enabled_table_headers)) : ?>
+                                        <td><?= $customer->technician != null ? $customer->technician : 'Not Assigned'; ?></td>
+                                    <?php endif; ?>
+                                    <?php if (in_array('plan_type', $enabled_table_headers)) : ?>
+                                        <td><?php echo $customer->system_type; ?></td>
+                                    <?php endif; ?>
+                                    <?php if (in_array('subscription_amount', $enabled_table_headers)) : ?>
+                                        <td>$<?= $customer->total_amount; ?></td>
+                                    <?php endif; ?>
+                                    <?php if (in_array('phone', $enabled_table_headers)) : ?>
+                                        <td><?php echo $customer->phone_m; ?></td>
+                                    <?php endif; ?>
+                                    <?php if (in_array('status', $enabled_table_headers)) : ?>
+                                        <td><span class="nsm-badge <?= $badge ?>"><?= $customer->status != null ? $customer->status : 'Pending'; ?></span></td>
+                                    <?php endif; ?>
+                                    </tr>
+                                <?php
+                                endforeach;
+                                ?>
+                            <?php
+                            else :
+                            ?>
+                                <tr>
+                                    <td colspan="13">
+                                        <div class="nsm-empty">
+                                            <span>No results found.</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <?php
+                            endif;
+                            ?>
+                        </tbody>
+                    </table>
+                <?php else : ?>
+                    <table class="nsm-table">
+                        <thead>
+                            <tr>
+                                <td class="table-icon"></td>
+                                <td data-name="Name">Name</td>
+                                <td data-name="City">City</td>
+                                <td data-name="State">State</td>
+                                <td data-name="Source">Source</td>
+                                <td data-name="Added">Added</td>
+                                <td data-name="Sales Rep">Sales Rep</td>
+                                <td data-name="Tech">Tech</td>
+                                <td data-name="Plan Type">Plan Type</td>
+                                <td data-name="Subscription Amount">Subscription Amount</td>
+                                <td data-name="Phone">Phone</td>
+                                <td data-name="Status">Status</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            if (!empty($profiles)) :
+                            ?>
+                                <?php
+                                foreach ($profiles as $customer) :
+                                    switch ($customer->status):
+                                        case "INSTALLED":
+                                            $badge = "success";
+                                            break;
+                                        case "CANCELLED":
+                                            $badge = "error";
+                                            break;
+                                        case "COLLECTIONS":
+                                            $badge = "secondary";
+                                            break;
+                                        case "CHARGED BACK":
+                                            $badge = "primary";
+                                            break;
+                                        default:
+                                            $badge = "";
+                                            break;
+                                    endswitch;
+
+                                    $image = userProfilePicture($customer->id);
+                                ?>
+                                    <tr>
+                                        <td>
+                                            <?php if (is_null($image)) : ?>
+                                                <div class="nsm-profile">
+                                                    <span><?php echo getLoggedNameInitials($customer->id); ?></span>
+                                                </div>
+                                            <?php else : ?>
+                                                <div class="nsm-profile" style="background-image: url('<?php echo $image; ?>');"></div>
+                                            <?php endif; ?>
+                                        </td>
+                                        <td class="nsm-text-primary">
+                                            <label class="nsm-link default d-block fw-bold"><?= ($customer) ? $customer->first_name . ' ' . $customer->last_name : ''; ?></label>
+                                            <label class="content-subtitle fst-italic d-block"><?php echo $customer->email; ?></label>
+                                        </td>
+                                        <td><?php echo $customer->city; ?></td>
+                                        <td><?php echo $customer->state; ?></td>
+                                        <td><?= $customer->lead_source != "" ? $customer->lead_source : 'n/a'; ?></td>
+                                        <td><?php echo $customer->entered_by; ?></td>
+                                        <td><?php echo ($customer) ? $customer->FName . ' ' . $customer->LName : ''; ?></td>
+                                        <td><?= $customer->technician != null ? $customer->technician : 'Not Assigned'; ?></td>
+                                        <td><?php echo $customer->system_type; ?></td>
+                                        <td>$<?= $customer->total_amount; ?></td>
+                                        <td><?php echo $customer->phone_m; ?></td>
+                                        <td><span class="nsm-badge <?= $badge ?>"><?= $customer->status != null ? $customer->status : 'Pending'; ?></span></td>
+                                    </tr>
+                                <?php
+                                endforeach;
+                                ?>
+                            <?php
+                            else :
+                            ?>
+                                <tr>
+                                    <td colspan="13">
+                                        <div class="nsm-empty">
+                                            <span>No results found.</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <?php
+                            endif;
+                            ?>
+                        </tbody>
+                    </table>
+                <?php endif; ?>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="nsm-button primary" id="btn_print_customer_list">Print</button>
+            </div>
+        </div>
     </div>
 </div>

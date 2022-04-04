@@ -295,11 +295,16 @@ class Products_and_services extends MY_Controller {
         foreach($packages as $package) {
             $packageItems = $this->items_model->get_package_items($package->id);
 
-            $items = [];
+            $bundleItems = [];
             foreach($packageItems as $packageItem) {
                 $item = $this->items_model->getItemById($packageItem->item_id)[0];
 
-                $items[] = $item;
+                $bundleItems[] = [
+                    'id' => $packageItem->id,
+                    'item_id' => $packageItem->item_id,
+                    'quantity' => $packageItem->quantity,
+                    'name' => $item->title
+                ];
             }
 
             $accountingDetails = $this->items_model->getPackageAccountingDetails($package->id);
@@ -341,7 +346,8 @@ class Products_and_services extends MY_Controller {
                         'sales_tax_cat_id' => '',
                         'sales_tax_cat' => '',
                         'display_on_print' => !is_null($accountingDetails) ? $accountingDetails->display_on_print : '',
-                        'bundle_items' => $items
+                        'bundle_items' => $bundleItems,
+                        'status' => "1"
                     ];
                 }
             } else {
@@ -373,7 +379,8 @@ class Products_and_services extends MY_Controller {
                     'sales_tax_cat_id' => '',
                     'sales_tax_cat' => '',
                     'display_on_print' => !is_null($accountingDetails) ? $accountingDetails->display_on_print : '',
-                    'bundle_items' => $items
+                    'bundle_items' => $bundleItems,
+                    'status' => "1"
                 ];
             }
         }
@@ -394,29 +401,107 @@ class Products_and_services extends MY_Controller {
             });
         }
 
-        if($columnName === 'qty_on_hand') {
-            $sort = usort($data, function($a, $b) use ($order) {
-                if($order === 'asc') {
-                    return $a['qty_on_hand'] > $b['qty_on_hand'];
-                } else {
-                    return $a['qty_on_hand'] < $b['qty_on_hand'];
-                }
-            });
-        } else if(in_array($columnName, ['income_account', 'expense_account', 'inventory_account', 'sku', 'purch_desc'])) {
-            $sort = usort($data, function($a, $b) use ($order, $columnName) {
-                if($order === 'asc') {
-                    return strcmp($a[$columnName], $b[$columnName]);
-                } else {
-                    return strcmp($b[$columnName], $a[$columnName]);
-                }
-            });
-        }
+        usort($data, function($a, $b) use ($order, $columnName) {
+            switch($columnName) {
+                case 'name' :
+                    if($order === 'asc') {
+                        return strcmp($a['name'], $b['name']);
+                    } else {
+                        return strcmp($b['name'], $a['name']);
+                    }
+                break;
+                case 'sku' :
+                    if($order === 'asc') {
+                        return strcmp($a['sku'], $b['sku']);
+                    } else {
+                        return strcmp($b['sku'], $a['sku']);
+                    }
+                break;
+                case 'type' :
+                    if($order === 'asc') {
+                        return strcmp($a['type'], $b['type']);
+                    } else {
+                        return strcmp($b['type'], $a['type']);
+                    }
+                break;
+                case 'sales_desc' :
+                    if($order === 'asc') {
+                        return strcmp($a['sales_desc'], $b['sales_desc']);
+                    } else {
+                        return strcmp($b['sales_desc'], $a['sales_desc']);
+                    }
+                break;
+                case 'income_account' :
+                    if($order === 'asc') {
+                        return strcmp($a['income_account'], $b['income_account']);
+                    } else {
+                        return strcmp($b['income_account'], $a['income_account']);
+                    }
+                break;
+                case 'expense_account' :
+                    if($order === 'asc') {
+                        return strcmp($a['expense_account'], $b['expense_account']);
+                    } else {
+                        return strcmp($b['expense_account'], $a['expense_account']);
+                    }
+                break;
+                case 'inventory_account' :
+                    if($order === 'asc') {
+                        return strcmp($a['inventory_account'], $b['inventory_account']);
+                    } else {
+                        return strcmp($b['inventory_account'], $a['inventory_account']);
+                    }
+                break;
+                case 'purch_desc' :
+                    if($order === 'asc') {
+                        return strcmp($a['purch_desc'], $b['purch_desc']);
+                    } else {
+                        return strcmp($b['purch_desc'], $a['purch_desc']);
+                    }
+                break;
+                case 'sales_price' :
+                    if($order === 'asc') {
+                        return floatval($a['sales_price']) > floatval($b['sales_price']);
+                    } else {
+                        return floatval($a['sales_price']) < floatval($b['sales_price']);
+                    }
+                break;
+                case 'cost' :
+                    if($order === 'asc') {
+                        return floatval($a['cost']) > floatval($b['cost']);
+                    } else {
+                        return floatval($a['cost']) < floatval($b['cost']);
+                    }
+                break;
+                case 'qty_on_hand' :
+                    if($order === 'asc') {
+                        return intval($a['qty_on_hand']) > intval($b['qty_on_hand']);
+                    } else {
+                        return intval($a['qty_on_hand']) < intval($b['qty_on_hand']);
+                    }
+                break;
+                case 'qty_po' :
+                    if($order === 'asc') {
+                        return intval($a['qty_po']) > intval($b['qty_po']);
+                    } else {
+                        return intval($a['qty_po']) < intval($b['qty_po']);
+                    }
+                break;
+                case 'reorder_point' :
+                    if($order === 'asc') {
+                        return intval($a['reorder_point']) > intval($b['reorder_point']);
+                    } else {
+                        return intval($a['reorder_point']) < intval($b['reorder_point']);
+                    }
+                break;
+            }
+        });
 
         $recordsFiltered = count($data);
 
         if($postData['group_by_category'] === "1" || $postData['group_by_category'] === 1) {
             $uncategorized = array_filter($data, function($item) {
-                return $item['category_id'] === "0" || $item['category_id'] === null || $item['category_id'] === "";
+                return in_array($item['category_id'], ['0', null, '']);
             });
 
             $categories = $this->items_model->getItemCategories();
@@ -468,7 +553,7 @@ class Products_and_services extends MY_Controller {
 
         $result = [
             'draw' => $postData['draw'],
-            'recordsTotal' => count($items),
+            'recordsTotal' => count($items) + count($packages),
             'recordsFiltered' => $recordsFiltered,
             'data' => array_slice($data, $start, $limit)
         ];
@@ -543,7 +628,8 @@ class Products_and_services extends MY_Controller {
                 foreach($input['item'] as $key => $value) {
                     $item = $this->items_model->getItemById($value)[0];
 
-                    $amountSet = floatval($amountSet) + floatval($item->price);
+                    $subTotal = floatval($item->price) * floatval($input['quantity'][$key]);
+                    $amountSet = floatval($amountSet) + floatval($subTotal);
                 }
 
                 $packageDetails = [
@@ -714,13 +800,21 @@ class Products_and_services extends MY_Controller {
 
         switch($type) {
             case 'bundle' :
-                $data = [
-                    'title' => $name,
-                    'type' => $type,
-                    'rebate' => isset($input['rebate_item']) ? $input['rebate_item'] : 0,
-                    'description' => $input['description'],
-                    're_order_points' => null
+                $amountSet = 0.00;
+                foreach($input['item'] as $key => $value) {
+                    $item = $this->items_model->getItemById($value)[0];
+
+                    $subTotal = floatval($item->price) * floatval($input['quantity'][$key]);
+                    $amountSet = floatval($amountSet) + floatval($subTotal);
+                }
+
+                $packageDetails = [
+                    'name' => $name,
+                    'total_price' => $input['price'],
+                    'amount_set' => number_format(floatval($amountSet), 2, '.', ',')
                 ];
+
+                $update = $this->items_model->update_package($id, $packageDetails);
             break;
             case 'product' :
                 $data = [
@@ -772,8 +866,10 @@ class Products_and_services extends MY_Controller {
             $attachmentId = $this->uploadFile($files);
         }
 
-        $condition = ['id' => $id, 'company_id' => getLoggedCompanyID()];
-        $update = $this->items_model->update($data, $condition);
+        if($type !== 'bundle') {
+            $condition = ['id' => $id, 'company_id' => getLoggedCompanyID()];
+            $update = $this->items_model->update($data, $condition);
+        }
 
         if($update) {
             switch($type) {
@@ -784,34 +880,20 @@ class Products_and_services extends MY_Controller {
                         'sku' => $input['sku']
                     ];
 
-                    $bundleItems = $this->items_model->getBundleContents($id);
+                    $this->items_model->deletePackageItems($id);
 
-                    foreach($bundleItems as $bundleItem) {
-                        if(!in_array($bundleItem->id, $input['bundle_item_content_id'])) {
-                            $this->items_model->deleteBundleItem($bundleItem->id, $id);
-                        }
-                    }
+                    foreach($input['item'] as $key => $value) {
+                        $item = $this->items_model->getItemById($value)[0];
 
-                    foreach($input['item'] as $key => $item) {
-                        if($input['bundle_item_content_id'][$key] === null) {
-                            $itemContent = [
-                                [
-                                    'company_id' => logged('company_id'),
-                                    'item_id' => $id,
-                                    'bundle_item_id' => $item,
-                                    'quantity' => $input['quantity'][$key]
-                                ]
-                            ];
-    
-                            $addBundleItem = $this->items_model->addBundleItems($itemContent);
-                        } else {
-                            $itemContent = [
-                                'bundle_item_id' => $item,
-                                'quantity' => $input['quantity'][$key]
-                            ];
-    
-                            $updateBundleItem = $this->items_model->updateBundleItem($itemContent, $input['bundle_item_content_id'][$key]);
-                        }
+                        $packageItemData = [
+                            'item_id' => $value,
+                            'package_id' => $id,
+                            'package_type' => '1',
+                            'price' => number_format(floatval($item->price), 2, '.', ','),
+                            'quantity' => $input['quantity'][$key]
+                        ];
+
+                        $addPackageItem = $this->workorder_model->addItemPackage($packageItemData);
                     }
                 break;
                 case 'product' :
@@ -838,7 +920,11 @@ class Products_and_services extends MY_Controller {
             }
 
             if($this->items_model->getItemAccountingDetails($id) === null) {
-                $accountingDetails['item_id'] = $id;
+                if($type === 'bundle') {
+                    $accountingDetails['package_id'] = $id;
+                } else {
+                    $accountingDetails['item_id'] = $id;
+                }
                 $accountingDetails['as_of_date'] = null;
                 $accountingDetails['qty_po'] = 0;
                 $itemAccDetails = $this->items_model->saveItemAccountingDetails($accountingDetails, $id);
