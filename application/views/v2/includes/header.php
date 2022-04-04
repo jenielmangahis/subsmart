@@ -146,7 +146,7 @@ if ($this->session->userdata('usertimezone') == null) {
                         </li>
                     </ul>
                 </li>
-                <li class="<?php if($page->title == 'Customers'): echo 'selected'; endif; ?>">
+                <li class="<?php if($page->parent == 'Customers'): echo 'selected'; endif; ?>">
                     <a href="<?= base_url("customer") ?>">
                         <i class='bx bx-fw bx-group'></i> Customers
                     </a>

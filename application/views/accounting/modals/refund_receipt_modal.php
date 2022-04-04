@@ -461,7 +461,7 @@
                                     <span><a href="#" class="text-white">Order checks</a></span>
                                     <span class="mx-3 divider"></span>
                                     <?php endif; ?>
-                                    <span><a href="#" class="text-white">Print or Preview</a></span>
+                                    <span><a href="#" class="text-white" id="save-and-print">Print or Preview</a></span>
                                     <span class="mx-3 divider"></span>
                                     <span><a href="#" class="text-white" onclick="makeRecurring('refund_receipt')">Make Recurring</a></span>
                                     <?php if(isset($receipt)) : ?>

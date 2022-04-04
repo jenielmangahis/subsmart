@@ -5993,7 +5993,7 @@ class Accounting_modals extends MY_Controller
                 'po_number' => $data['purchase_order_no'],
                 'sales_rep' => $data['sales_rep'],
                 'payment_method' => $data['payment_method'],
-                'reference_no' => $data['ref_no'],
+                'ref_no' => $data['ref_no'],
                 'deposit_to_account' => $data['deposit_to_account'],
                 'message_sales_receipt' => $data['message_sales_receipt'],
                 'message_on_statement' => $data['message_on_statement'],
@@ -6488,7 +6488,7 @@ class Accounting_modals extends MY_Controller
 
                     $items[] = [
                         'transaction_type' => 'Refund Receipt',
-                        'transaction_id' => $refundreceiptId,
+                        'transaction_id' => $refundReceiptId,
                         'item_id' => $explode[0] === 'item' ? $explode[1] : null,
                         'package_id' => $explode[0] === 'package' ? $explode[1] : null,
                         'location_id' => $data['location'][$key],
@@ -10098,7 +10098,7 @@ class Accounting_modals extends MY_Controller
         $payments = $this->accounting_credit_memo_model->get_credit_memo_payments($creditMemoId);
 
         foreach($items as $key => $item) {
-            if(!in_array($item->items_id, ['0', null, '']) && in_array($item->package_id, ['0', null, ''])) {
+            if(!in_array($item->item_id, ['0', null, '']) && in_array($item->package_id, ['0', null, ''])) {
                 $items[$key]->itemDetails = $this->items_model->getItemById($item->item_id)[0];
                 $items[$key]->locations = $this->items_model->getLocationByItemId($item->item_id);
             } else {
@@ -10130,7 +10130,7 @@ class Accounting_modals extends MY_Controller
         $items = $this->accounting_credit_memo_model->get_customer_transaction_items('Sales Receipt', $salesReceiptId);
 
         foreach($items as $key => $item) {
-            if(!in_array($item->items_id, ['0', null, '']) && in_array($item->package_id, ['0', null, ''])) {
+            if(!in_array($item->item_id, ['0', null, '']) && in_array($item->package_id, ['0', null, ''])) {
                 $items[$key]->itemDetails = $this->items_model->getItemById($item->item_id)[0];
                 $items[$key]->locations = $this->items_model->getLocationByItemId($item->item_id);
             } else {
@@ -10152,7 +10152,7 @@ class Accounting_modals extends MY_Controller
         $refundAcc = $this->chart_of_accounts_model->getById($refundReceipt->refund_from_account);
 
         foreach($items as $key => $item) {
-            if(!in_array($item->items_id, ['0', null, '']) && in_array($item->package_id, ['0', null, ''])) {
+            if(!in_array($item->item_id, ['0', null, '']) && in_array($item->package_id, ['0', null, ''])) {
                 $items[$key]->itemDetails = $this->items_model->getItemById($item->item_id)[0];
                 $items[$key]->locations = $this->items_model->getLocationByItemId($item->item_id);
             } else {
@@ -10174,7 +10174,7 @@ class Accounting_modals extends MY_Controller
         $items = $this->accounting_credit_memo_model->get_customer_transaction_items('Delayed Credit', $delayedCreditId);
 
         foreach($items as $key => $item) {
-            if(!in_array($item->items_id, ['0', null, '']) && in_array($item->package_id, ['0', null, ''])) {
+            if(!in_array($item->item_id, ['0', null, '']) && in_array($item->package_id, ['0', null, ''])) {
                 $items[$key]->itemDetails = $this->items_model->getItemById($item->item_id)[0];
                 $items[$key]->locations = $this->items_model->getLocationByItemId($item->item_id);
             } else {
@@ -10195,7 +10195,7 @@ class Accounting_modals extends MY_Controller
         $items = $this->accounting_credit_memo_model->get_customer_transaction_items('Delayed Charge', $delayedChargeId);
 
         foreach($items as $key => $item) {
-            if(!in_array($item->items_id, ['0', null, '']) && in_array($item->package_id, ['0', null, ''])) {
+            if(!in_array($item->item_id, ['0', null, '']) && in_array($item->package_id, ['0', null, ''])) {
                 $items[$key]->itemDetails = $this->items_model->getItemById($item->item_id)[0];
                 $items[$key]->locations = $this->items_model->getLocationByItemId($item->item_id);
             } else {
@@ -18278,21 +18278,10 @@ class Accounting_modals extends MY_Controller
             $invoiceItems[$key]->tax_amount = number_format(floatval($taxAmount), 2, '.', ',');
         }
 
-        $customer = $this->accounting_customers_model->get_by_id($invoice->customer_id);
-        $customerName = $customer->first_name . ' ' . $customer->last_name;
-
-        $address = $customerName."<br />";
-        $address .= $customer->mail_add !== "" ? $customer->mail_add : "";
-        $address .= $customer->city !== "" ? '<br />' . $customer->city : "";
-        $address .= $customer->state !== "" ? ', ' . $customer->state : "";
-        $address .= $customer->zip_code !== "" ? ' ' . $customer->zip_code : "";
-        $address .= $customer->country !== "" ? ' ' . $customer->country : "";
-
         $pdfData = [
             'invoice_prefix' => $invoiceSettings->invoice_num_prefix,
             'invoice' => $invoice,
-            'invoiceItems' => $invoiceItems,
-            'address' => $address
+            'invoiceItems' => $invoiceItems
         ];
 
         $this->pdf->save_pdf($view, $pdfData, $fileName, 'portrait');
@@ -18474,5 +18463,284 @@ class Accounting_modals extends MY_Controller
         $newInvoiceNum = 'INV-'.str_pad(intval($lastInvoiceNum) + 1, 9, "0", STR_PAD_LEFT);
 
         echo $newInvoiceNum;
+    }
+
+    public function print_credit_memo($creditMemoId)
+    {
+        $this->load->helper('string');
+        $this->load->library('pdf');
+        $view = "accounting/modals/print_action/print_credit_memo";
+
+        $extension = '.pdf';
+
+        do {
+            $randomString = random_string('alnum');
+            $fileName = 'print_credit_memo_'.$randomString . '.' .$extension;
+            $exists = file_exists('./assets/pdf/'.$fileName);
+        } while ($exists);
+
+        $creditMemo = $this->accounting_credit_memo_model->getCreditMemoDetails($creditMemoId);
+        $memoItems = $this->accounting_credit_memo_model->get_customer_transaction_items('Credit Memo', $creditMemoId);
+
+        foreach($memoItems as $key => $creditMemoItem) {
+            $subtotal = floatval($creditMemoItem->price) * floatval($creditMemoItem->quantity);
+            $taxAmount = floatval($creditMemoItem->tax) * floatval($subtotal);
+            $taxAmount = floatval($taxAmount) / 100;
+
+            $memoItems[$key]->item = $this->items_model->getItemById($creditMemoItem->item_id)[0];
+            $memoItems[$key]->tax_amount = number_format(floatval($taxAmount), 2, '.', ',');
+        }
+
+        $pdfData = [
+            'creditMemo' => $creditMemo,
+            'memoItems' => $memoItems
+        ];
+
+        $this->pdf->save_pdf($view, $pdfData, $fileName, 'portrait');
+
+        $pdf = base64_encode(file_get_contents(base_url("/assets/pdf/$fileName")));
+        if (file_exists(getcwd()."/assets/pdf/$fileName")) {
+            unlink(getcwd()."/assets/pdf/$fileName");
+        }
+
+        $this->page_data['pdf'] = $pdf;
+        $this->page_data['creditMemo'] = $creditMemo;
+        $this->load->view('accounting/modals/view_print_credit_memo', $this->page_data);
+    }
+
+    public function download_credit_memo_pdf($creditMemoId)
+    {
+        $this->load->library('pdf');
+        $this->load->helper('string');
+
+        $creditMemo = $this->accounting_credit_memo_model->getCreditMemoDetails($creditMemoId);
+        $memoItems = $this->accounting_credit_memo_model->get_customer_transaction_items('Credit Memo', $creditMemoId);
+
+        $view = "accounting/modals/print_action/print_credit_memo";
+        $extension = '.pdf';
+
+        do {
+            $randomString = random_string('alnum');
+            $fileName = 'print_credit_memo_'.$randomString . '.' .$extension;
+            $exists = file_exists('./assets/pdf/'.$fileName);
+        } while ($exists);
+
+        foreach($memoItems as $key => $creditMemoItem) {
+            $subtotal = floatval($creditMemoItem->price) * floatval($creditMemoItem->quantity);
+            $taxAmount = floatval($creditMemoItem->tax) * floatval($subtotal);
+            $taxAmount = floatval($taxAmount) / 100;
+
+            $memoItems[$key]->item = $this->items_model->getItemById($creditMemoItem->item_id)[0];
+            $memoItems[$key]->tax_amount = number_format(floatval($taxAmount), 2, '.', ',');
+        }
+
+        $pdfData = [
+            'creditMemo' => $creditMemo,
+            'memoItems' => $memoItems
+        ];
+
+        $this->pdf->save_pdf($view, $pdfData, $fileName, 'portrait');
+
+        $fullPath = base_url("/assets/pdf/$fileName");
+        if ($fd = fopen ($fullPath, "r")) {
+            $fsize = filesize($fullPath);
+            header("Content-type: application/pdf"); // add here more headers for diff.     extensions
+            header("Content-Disposition: attachment; filename=\"Credit Memo $creditMemo->ref_no.pdf\"");
+            header("Content-length: $fsize");
+            header("Cache-control: private"); //use this to open files directly
+            readfile($fullPath);
+
+            unlink(getcwd()."/assets/pdf/$fileName");
+            fclose ($fd);
+            exit;
+        }
+    }
+
+    public function print_sales_receipt($salesReceiptId)
+    {
+        $this->load->helper('string');
+        $this->load->library('pdf');
+        $view = "accounting/modals/print_action/print_sales_receipt";
+
+        $extension = '.pdf';
+
+        do {
+            $randomString = random_string('alnum');
+            $fileName = 'print_sales_receipt_'.$randomString . '.' .$extension;
+            $exists = file_exists('./assets/pdf/'.$fileName);
+        } while ($exists);
+
+        $salesReceipt = $this->accounting_sales_receipt_model->getSalesReceiptDetails_by_id($salesReceiptId);
+        $receiptItems = $this->accounting_credit_memo_model->get_customer_transaction_items('Sales Receipt', $salesReceiptId);
+
+        foreach($receiptItems as $key => $receiptItem) {
+            $subtotal = floatval($receiptItem->price) * floatval($receiptItem->quantity);
+            $taxAmount = floatval($receiptItem->tax) * floatval($subtotal);
+            $taxAmount = floatval($taxAmount) / 100;
+
+            $receiptItems[$key]->item = $this->items_model->getItemById($receiptItem->item_id)[0];
+            $receiptItems[$key]->tax_amount = number_format(floatval($taxAmount), 2, '.', ',');
+        }
+
+        $pdfData = [
+            'salesReceipt' => $salesReceipt,
+            'receiptItems' => $receiptItems
+        ];
+
+        $this->pdf->save_pdf($view, $pdfData, $fileName, 'portrait');
+
+        $pdf = base64_encode(file_get_contents(base_url("/assets/pdf/$fileName")));
+        if (file_exists(getcwd()."/assets/pdf/$fileName")) {
+            unlink(getcwd()."/assets/pdf/$fileName");
+        }
+
+        $this->page_data['pdf'] = $pdf;
+        $this->page_data['salesReceipt'] = $salesReceipt;
+        $this->load->view('accounting/modals/view_print_sales_receipt', $this->page_data);
+    }
+
+    public function download_sales_receipt_pdf($salesReceiptId)
+    {
+        $this->load->library('pdf');
+        $this->load->helper('string');
+
+        $salesReceipt = $this->accounting_sales_receipt_model->getSalesReceiptDetails_by_id($salesReceiptId);
+        $receiptItems = $this->accounting_credit_memo_model->get_customer_transaction_items('Sales Receipt', $salesReceiptId);
+
+        $view = "accounting/modals/print_action/print_sales_receipt";
+        $extension = '.pdf';
+
+        do {
+            $randomString = random_string('alnum');
+            $fileName = 'print_sales_receipt_'.$randomString . '.' .$extension;
+            $exists = file_exists('./assets/pdf/'.$fileName);
+        } while ($exists);
+
+        foreach($receiptItems as $key => $receiptItem) {
+            $subtotal = floatval($receiptItem->price) * floatval($receiptItem->quantity);
+            $taxAmount = floatval($receiptItem->tax) * floatval($subtotal);
+            $taxAmount = floatval($taxAmount) / 100;
+
+            $receiptItems[$key]->item = $this->items_model->getItemById($receiptItem->item_id)[0];
+            $receiptItems[$key]->tax_amount = number_format(floatval($taxAmount), 2, '.', ',');
+        }
+
+        $pdfData = [
+            'salesReceipt' => $salesReceipt,
+            'receiptItems' => $receiptItems
+        ];
+
+        $this->pdf->save_pdf($view, $pdfData, $fileName, 'portrait');
+
+        $fullPath = base_url("/assets/pdf/$fileName");
+        if ($fd = fopen ($fullPath, "r")) {
+            $fsize = filesize($fullPath);
+            header("Content-type: application/pdf"); // add here more headers for diff.     extensions
+            header("Content-Disposition: attachment; filename=\"Sales Receipt $salesReceipt->ref_no.pdf\"");
+            header("Content-length: $fsize");
+            header("Cache-control: private"); //use this to open files directly
+            readfile($fullPath);
+
+            unlink(getcwd()."/assets/pdf/$fileName");
+            fclose ($fd);
+            exit;
+        }
+    }
+
+    public function print_refund_receipt($refundReceiptId)
+    {
+        $this->load->helper('string');
+        $this->load->library('pdf');
+        $view = "accounting/modals/print_action/print_refund_receipt";
+
+        $extension = '.pdf';
+
+        do {
+            $randomString = random_string('alnum');
+            $fileName = 'print_refund_receipt_'.$randomString . '.' .$extension;
+            $exists = file_exists('./assets/pdf/'.$fileName);
+        } while ($exists);
+
+        $refundReceipt = $this->accounting_refund_receipt_model->getRefundReceiptDetails_by_id($refundReceiptId);
+        $receiptItems = $this->accounting_credit_memo_model->get_customer_transaction_items('Refund Receipt', $refundReceiptId);
+
+        $paymentMethod = $this->accounting_payment_methods_model->getById($refundReceipt->payment_method);
+
+        foreach($receiptItems as $key => $receiptItem) {
+            $subtotal = floatval($receiptItem->price) * floatval($receiptItem->quantity);
+            $taxAmount = floatval($receiptItem->tax) * floatval($subtotal);
+            $taxAmount = floatval($taxAmount) / 100;
+
+            $receiptItems[$key]->item = $this->items_model->getItemById($receiptItem->item_id)[0];
+            $receiptItems[$key]->tax_amount = number_format(floatval($taxAmount), 2, '.', ',');
+        }
+
+        $pdfData = [
+            'paymentMethod' => $paymentMethod,
+            'refundReceipt' => $refundReceipt,
+            'receiptItems' => $receiptItems
+        ];
+
+        $this->pdf->save_pdf($view, $pdfData, $fileName, 'portrait');
+
+        $pdf = base64_encode(file_get_contents(base_url("/assets/pdf/$fileName")));
+        if (file_exists(getcwd()."/assets/pdf/$fileName")) {
+            unlink(getcwd()."/assets/pdf/$fileName");
+        }
+
+        $this->page_data['pdf'] = $pdf;
+        $this->page_data['refundReceipt'] = $refundReceipt;
+        $this->load->view('accounting/modals/view_print_refund_receipt', $this->page_data);
+    }
+
+    public function download_refund_receipt_pdf($refundReceiptId)
+    {
+        $this->load->library('pdf');
+        $this->load->helper('string');
+
+        $refundReceipt = $this->accounting_refund_receipt_model->getRefundReceiptDetails_by_id($refundReceiptId);
+        $receiptItems = $this->accounting_credit_memo_model->get_customer_transaction_items('Refund Receipt', $refundReceiptId);
+
+        $paymentMethod = $this->accounting_payment_methods_model->getById($refundReceipt->payment_method);
+
+        $view = "accounting/modals/print_action/print_refund_receipt";
+        $extension = '.pdf';
+
+        do {
+            $randomString = random_string('alnum');
+            $fileName = 'print_refund_receipt_'.$randomString . '.' .$extension;
+            $exists = file_exists('./assets/pdf/'.$fileName);
+        } while ($exists);
+
+        foreach($receiptItems as $key => $receiptItem) {
+            $subtotal = floatval($receiptItem->price) * floatval($receiptItem->quantity);
+            $taxAmount = floatval($receiptItem->tax) * floatval($subtotal);
+            $taxAmount = floatval($taxAmount) / 100;
+
+            $receiptItems[$key]->item = $this->items_model->getItemById($receiptItem->item_id)[0];
+            $receiptItems[$key]->tax_amount = number_format(floatval($taxAmount), 2, '.', ',');
+        }
+
+        $pdfData = [
+            'paymentMethod' => $paymentMethod,
+            'refundReceipt' => $refundReceipt,
+            'receiptItems' => $receiptItems
+        ];
+
+        $this->pdf->save_pdf($view, $pdfData, $fileName, 'portrait');
+
+        $fullPath = base_url("/assets/pdf/$fileName");
+        if ($fd = fopen ($fullPath, "r")) {
+            $fsize = filesize($fullPath);
+            header("Content-type: application/pdf"); // add here more headers for diff.     extensions
+            header("Content-Disposition: attachment; filename=\"Refund Receipt $salesReceipt->ref_no.pdf\"");
+            header("Content-length: $fsize");
+            header("Cache-control: private"); //use this to open files directly
+            readfile($fullPath);
+
+            unlink(getcwd()."/assets/pdf/$fileName");
+            fclose ($fd);
+            exit;
+        }
     }
 }

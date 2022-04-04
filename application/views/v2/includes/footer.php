@@ -38,7 +38,7 @@
 
             $('#manage_widgets_modal').on('show.bs.modal', function () {
                 $.ajax({
-                    url: '<?php echo base_url(); ?>dashboard_v2/getWidgetList',
+                    url: '<?php echo base_url(); ?>dashboard/getWidgetList',
                     method: 'get',
                     data: {},
                     success: function (response) {

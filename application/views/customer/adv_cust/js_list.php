@@ -2,57 +2,60 @@
     var memo_note = '';
 
         $(document).ready(function () {
-        var table_dispute_items =$('#dispute_table').DataTable({
-            "lengthChange": false,
-            "searching" : false,
-            "pageLength": 20,
-            "info": false,
-            "order": [],
-            initComplete: function () {
-            }
-        });
+            try{
+            var table_dispute_items =$('#dispute_table').DataTable({
+                "lengthChange": false,
+                "searching" : false,
+                "pageLength": 20,
+                "info": false,
+                "order": [],
+                initComplete: function () {
+                }
+            });
 
-        var table_notes =$('#internal_notes_table').DataTable({
-            "lengthChange": false,
-            "searching" : false,
-            "pageLength": 20,
-            "info": false,
-            "order": [],
-        });
+            var table_notes =$('#internal_notes_table').DataTable({
+                "lengthChange": false,
+                "searching" : false,
+                "pageLength": 20,
+                "info": false,
+                "order": [],
+            });
 
-        var table_quick_list =$('#customer_list_quick').DataTable({
-            "lengthChange": false,
-            "searching" : false,
-            "pageLength": 20,
-            "info": false
-        });
+            var table_quick_list =$('#customer_list_quick').DataTable({
+                "lengthChange": false,
+                "searching" : false,
+                "pageLength": 20,
+                "info": false
+            });
 
-        var table_cust_list =$('#customer_list_table').DataTable({
-            "lengthChange": true,
-            "searching" : true,
-            "pageLength": 10,
-            "info": true,
-            "responsive": true,
+            var table_cust_list =$('#customer_list_table').DataTable({
+                "lengthChange": true,
+                "searching" : true,
+                "pageLength": 10,
+                "info": true,
+                "responsive": true,
 
-            "order": [],
-            initComplete: function () {
-                this.api().columns([11]).every( function () {
-                    var column = this;
-                    var select = $('<select class="input_select" style="padding: 5px;border-radius: 5px;display: inline-block !important;"><option value="">All</option></select>').appendTo($(".dataTables_filter"))
-                        .on( 'change', function () {
-                            var val = $.fn.dataTable.util.escapeRegex($(this).val());
-                            column.search( val ? val : '', false, true ).draw();
-                            $(this).val();
-                        } );
-                    column.data().unique().sort().each( function ( d, j ) {
-                        //var val = $('<div/>').html(d).text();
-                        //select.append( '<option value="' + val + '">' + val + '</option>' );
-                        select.append( '<option value="'+d+'">'+d+'</option>' )
-                        //console.log(val);
-                    });
-                } );
-            }
-        });
+                "order": [],
+                initComplete: function () {
+                    this.api().columns([11]).every( function () {
+                        var column = this;
+                        var select = $('<select class="input_select" style="padding: 5px;border-radius: 5px;display: inline-block !important;"><option value="">All</option></select>').appendTo($(".dataTables_filter"))
+                            .on( 'change', function () {
+                                var val = $.fn.dataTable.util.escapeRegex($(this).val());
+                                column.search( val ? val : '', false, true ).draw();
+                                $(this).val();
+                            } );
+                        column.data().unique().sort().each( function ( d, j ) {
+                            //var val = $('<div/>').html(d).text();
+                            //select.append( '<option value="' + val + '">' + val + '</option>' );
+                            select.append( '<option value="'+d+'">'+d+'</option>' )
+                            //console.log(val);
+                        });
+                    } );
+                }
+            });
+        }
+        catch(e){}
         // var table_clt =$('#customerListTable').DataTable({
         //     "lengthChange": false,
         //     "searching" : true,
@@ -393,12 +396,16 @@
                 }
             });
         });
-        var table_reasons = $('#reasons_table').DataTable({
-            "lengthChange": false,
-            "searching" : false,
-            "paging": false,
-            "ordering": false,
-        });
+
+        try{
+            var table_reasons = $('#reasons_table').DataTable({
+                "lengthChange": false,
+                "searching" : false,
+                "paging": false,
+                "ordering": false,
+            });
+        }
+        catch(e){}
 
         function display_reasons(url){
             if(url === "/customer/fetch_all_reasons_data"){
@@ -691,20 +698,23 @@
 
     });
 
-    $('#dataTable1').DataTable({
-        columnDefs: [{
-            orderable: true,
-            className: 'select-checkbox',
-            targets: 0,
-            checkboxes: {
-                selectRow: true
-            }
-        }],
-        select: {
-            'style': 'multi'
-        },
-        order: [[1, 'asc']],
-    });
+    try{
+        $('#dataTable1').DataTable({
+            columnDefs: [{
+                orderable: true,
+                className: 'select-checkbox',
+                targets: 0,
+                checkboxes: {
+                    selectRow: true
+                }
+            }],
+            select: {
+                'style': 'multi'
+            },
+            order: [[1, 'asc']],
+        });
+    }
+    catch(e){}
 
     var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
 

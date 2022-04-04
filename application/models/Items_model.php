@@ -300,12 +300,10 @@ class Items_model extends MY_Model
         return $query->result();
     }
 
-    public function deleteBundleItem($id, $item_id)
+    public function deletePackageItems($packageId)
     {
-        $this->db->where('company_id', logged('company_id'));
-        $this->db->where('id', $id);
-        $this->db->where('item_id', $item_id);
-        $delete = $this->db->delete('bundle_item_contents');
+        $this->db->where('package_id', $packageId);
+        $delete = $this->db->delete('item_package');
         return $delete ? true : false;
     }
 

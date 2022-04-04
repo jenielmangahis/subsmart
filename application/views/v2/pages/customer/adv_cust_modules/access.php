@@ -1,0 +1,74 @@
+<div class="col-12 col-md-4" data-id="<?= $id ?>" id="<?= $id ?>">
+    <div class="nsm-card nsm-grid">
+        <div class="nsm-card-header d-block">
+            <div class="nsm-card-title">
+                <span>Access</span>
+            </div>
+        </div>
+        <div class="nsm-card-content">
+            <div class="row g-3">
+                <div class="col-12 col-md-6">
+                    <div class="row g-2">
+                        <div class="col-12 col-md-6">
+                            <label class="content-title">Portal Status</label>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <span class="content-subtitle">
+                                <?php if(isset($access_info)){  if($access_info->portal_status == 1){echo "On";}else{echo "Off";}; }; ?>
+                            </span>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label class="content-title">Login</label>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <span class="content-subtitle">
+                                <?php if(isset($access_info)){ echo $access_info->access_login; }; ?>
+                            </span>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label class="content-title">Cancel Date</label>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <span class="content-subtitle">
+                                <?php if(isset($office_info)){ echo $office_info->cancel_date; }; ?>
+                            </span>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label class="content-title">Cancel Reason</label>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <span class="content-subtitle">
+                                <?php if(isset($office_info)){ echo $office_info->cancel_reason; }; ?>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6">
+                    <div class="row g-2">
+                        <div class="col-12 col-md-6">
+                            <label class="content-title">Collection Date</label>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <span class="content-subtitle">
+                                <?php if(isset($office_info)){ echo $office_info->collect_date; }; ?>
+                            </span>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label class="content-title">Collection Amount</label>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <span class="content-subtitle">
+                                <?php if(isset($office_info)){ echo $office_info->collect_amount; }; ?>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <button role="button" class="nsm-button primary w-100 ms-0 mt-3">
+                        <i class='bx bx-fw bx-link-external'></i> Send Link Reset Password
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -60,6 +60,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     </thead>
                     <tbody>
                     <?php
+                    if (!empty($cust_invoices)) :
                     foreach ($cust_invoices as $invoice) :
                         switch ($invoice->INV_status):
                             case "Partially Paid":
@@ -100,7 +101,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <a class="btn btn-sm btn-primary" href="<?= base_url('invoice/send/'.$invoice->id); ?>" target="_blank" style="display: inline-block;color:#ffffff;">Email Invoice</a>
                             </td>
                         </tr>
-                    <?php endforeach; ?>
+                    <?php endforeach; 
+                    endif;?>
                     </tbody>
                 </table>
             </div>

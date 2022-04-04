@@ -64,11 +64,10 @@ function removeIcon()
 {
 	$('.modal-right-side input#icon').val('').trigger('change');
 }
-//
+
 function occupyFields(rowData, type, action = 'edit')
 {
 	var name = action === 'duplicate' ? rowData.name+' - copy' : rowData.name;
-	console.log($('#item-modal'));
 	$(`#item-modal #name`).val(name);
 	$(`#item-modal #sku`).val(rowData.sku);
 	if(rowData.category !== null && rowData.category !== "") {
@@ -122,6 +121,10 @@ function occupyFields(rowData, type, action = 'edit')
 		}
 		$($(`#item-modal #storage-locations tbody tr`)[i]).children('td:first-child').html(`<input type="text" name="location_name[]" class="form-control" value="${rowData.locations[i].name}">`);
 		$($(`#item-modal #storage-locations tbody tr`)[i]).children('td:nth-child(2)').html(`<input type="number" name="quantity[]" class="text-right form-control" value="${rowData.locations[i].qty}">`);
+	}
+
+	if(rowData.type === 'Bundle') {
+		$('#item-modal #price').val(rowData.sales_price);
 	}
 
 	for(i in rowData.bundle_items) {
@@ -1210,38 +1213,6 @@ $(document).on('click', '#products-services-table .edit-item', function(e) {
 		
 		$('#item-modal form').attr('id', `update-${type}-form`);
 		$(`#item-modal form`).attr('action', `/accounting/products-and-services/update/${type}/${rowData.id}`);
-		for(i in rowData.bundle_items) {
-			if($($('#item-modal #bundle-items-table tbody tr')[i]).length > 0 ) {
-				$($('#item-modal #bundle-items-table tbody tr')[i]).attr('data-id', `${rowData.bundle_items[i].id}`);
-				$($('#item-modal #bundle-items-table tbody tr')[i]).attr('data-item', `${rowData.bundle_items[i].item_id}`);
-				$($('#item-modal #bundle-items-table tbody tr')[i]).attr('data-name', `${rowData.bundle_items[i].name}`);
-				$($('#item-modal #bundle-items-table tbody tr')[i]).attr('data-quantity', `${rowData.bundle_items[i].quantity}`);
-				$($('#item-modal #bundle-items-table tbody tr')[i]).children('td:first-child').html(`
-				<span>${rowData.bundle_items[i].name}</span>
-				<input type="hidden" value="${rowData.bundle_items[i].id}" name="bundle_item_content_id[]">
-				<input type="hidden" value="${rowData.bundle_items[i].item_id}" name="item[]">
-				`);
-				$($('#item-modal #bundle-items-table tbody tr')[i]).children('td:nth-child(2)').html(`
-				<span>${rowData.bundle_items[i].quantity}</span>
-				<input type="number" name="quantity[]" class="text-right form-control hide" value="${rowData.bundle_items[i].quantity}">
-				`);
-			} else {
-				$('#item-modal #bundle-items-table tbody').append(`
-				<tr data-id="${rowData.bundle_items[i].id}" data-item="${rowData.bundle_items[i].item_id}" data-name="${rowData.bundle_items[i].name}" data-quantity="${rowData.bundle_items[i].quantity}">
-					<td>
-						<span>${rowData.bundle_items[i].name}</span>
-						<input type="hidden" value="${rowData.bundle_items[i].id}" name="bundle_item_content_id[]">
-						<input type="hidden" value="${rowData.bundle_items[i].item_id}" name="item[]">
-					</td>
-					<td>
-						<span>${rowData.bundle_items[i].quantity}</span>
-						<input type="number" name="quantity[]" class="text-right form-control hide" value="${rowData.bundle_items[i].quantity}">
-					</td>
-					<td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
-				</tr>
-				`);
-			}
-		}
 
 		$(`#modal-container #item-modal`).modal({
 			backdrop: 'static',

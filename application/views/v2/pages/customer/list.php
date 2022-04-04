@@ -1,4 +1,5 @@
 <?php include viewPath('v2/includes/header'); ?>
+<?php include viewPath('v2/includes/customer/customer_modals'); ?>
 
 <div class="nsm-fab-container">
     <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?php echo url('customer/add_lead') ?>'">
@@ -37,14 +38,17 @@
                             <button type="button" class="nsm-button" onclick="location.href='<?php echo url('customer/add_lead') ?>'">
                                 <i class='bx bx-fw bx-chart'></i> Add Lead
                             </button>
-                            <button type="button" class="nsm-button primary" onclick="location.href='<?php echo url('customer/add_advance') ?>'">
+                            <button type="button" class="nsm-button" onclick="location.href='<?php echo url('customer/add_advance') ?>'">
                                 <i class='bx bx-fw bx-chart'></i> New Customer
+                            </button>
+                            <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#print_customer_list_modal">
+                                <i class='bx bx-fw bx-printer'></i>
                             </button>
                         </div>
                     </div>
                 </div>
                 <?php if (!empty($enabled_table_headers)) : ?>
-                    <table class="nsm-table">
+                    <table class="nsm-table customer-list">
                         <thead>
                             <tr>
                                 <td class="table-icon"></td>
@@ -52,7 +56,6 @@
                                 <?php if (in_array('city', $enabled_table_headers)) : ?><td data-name="City">City</td><?php endif; ?>
                                 <?php if (in_array('state', $enabled_table_headers)) : ?><td data-name="State">State</td><?php endif; ?>
                                 <?php if (in_array('source', $enabled_table_headers)) : ?><td data-name="Source">Source</td><?php endif; ?>
-                                <?php if (in_array('email', $enabled_table_headers)) : ?><td data-name="Email">Email</td><?php endif; ?>
                                 <?php if (in_array('added', $enabled_table_headers)) : ?><td data-name="Added">Added</td><?php endif; ?>
                                 <?php if (in_array('sales_rep', $enabled_table_headers)) : ?><td data-name="Sales Rep">Sales Rep</td><?php endif; ?>
                                 <?php if (in_array('tech', $enabled_table_headers)) : ?><td data-name="Tech">Tech</td><?php endif; ?>
@@ -99,7 +102,10 @@
                                                     <div class="nsm-profile" style="background-image: url('<?php echo $image; ?>');"></div>
                                                 <?php endif; ?>
                                             </td>
-                                            <td class="fw-bold nsm-text-primary nsm-link default" onclick="location.href='<?= base_url('/customer/preview_/' . $customer->prof_id); ?>'"><?= ($customer) ? $customer->first_name . ' ' . $customer->last_name : ''; ?></td>
+                                            <td class="nsm-text-primary" onclick="location.href='<?= base_url('/customer/preview_/' . $customer->prof_id); ?>'">
+                                                <label class="nsm-link default d-block fw-bold"><?= ($customer) ? $customer->first_name . ' ' . $customer->last_name : ''; ?></label>
+                                                <label class="nsm-link default content-subtitle fst-italic d-block"><?php echo $customer->email; ?></label>
+                                            </td>
                                         <?php endif; ?>
                                         <?php if (in_array('city', $enabled_table_headers)) : ?>
                                             <td><?php echo $customer->city; ?></td>
@@ -109,9 +115,6 @@
                                         <?php endif; ?>
                                         <?php if (in_array('source', $enabled_table_headers)) : ?>
                                             <td><?= $customer->lead_source != "" ? $customer->lead_source : 'n/a'; ?></td>
-                                        <?php endif; ?>
-                                        <?php if (in_array('email', $enabled_table_headers)) : ?>
-                                            <td><?php echo $customer->email; ?></td>
                                         <?php endif; ?>
                                         <?php if (in_array('added', $enabled_table_headers)) : ?>
                                             <td><?php echo $customer->entered_by; ?></td>
@@ -187,7 +190,7 @@
                         </tbody>
                     </table>
                 <?php else : ?>
-                    <table class="nsm-table">
+                    <table class="nsm-table customer-list">
                         <thead>
                             <tr>
                                 <td class="table-icon"></td>
@@ -195,7 +198,6 @@
                                 <td data-name="City">City</td>
                                 <td data-name="State">State</td>
                                 <td data-name="Source">Source</td>
-                                <td data-name="Email">Email</td>
                                 <td data-name="Added">Added</td>
                                 <td data-name="Sales Rep">Sales Rep</td>
                                 <td data-name="Tech">Tech</td>
@@ -242,11 +244,13 @@
                                                 <div class="nsm-profile" style="background-image: url('<?php echo $image; ?>');"></div>
                                             <?php endif; ?>
                                         </td>
-                                        <td class="fw-bold nsm-text-primary nsm-link default" onclick="location.href='<?= base_url('/customer/preview_/' . $customer->prof_id); ?>'"><?= ($customer) ? $customer->first_name . ' ' . $customer->last_name : ''; ?></td>
+                                        <td class="nsm-text-primary" onclick="location.href='<?= base_url('/customer/preview_/' . $customer->prof_id); ?>'">
+                                            <label class="nsm-link default d-block fw-bold"><?= ($customer) ? $customer->first_name . ' ' . $customer->last_name : ''; ?></label>
+                                            <label class="nsm-link default content-subtitle fst-italic d-block"><?php echo $customer->email; ?></label>
+                                        </td>
                                         <td><?php echo $customer->city; ?></td>
                                         <td><?php echo $customer->state; ?></td>
                                         <td><?= $customer->lead_source != "" ? $customer->lead_source : 'n/a'; ?></td>
-                                        <td><?php echo $customer->email; ?></td>
                                         <td><?php echo $customer->entered_by; ?></td>
                                         <td><?php echo ($customer) ? $customer->FName . ' ' . $customer->LName : ''; ?></td>
                                         <td><?= $customer->technician != null ? $customer->technician : 'Not Assigned'; ?></td>
@@ -312,14 +316,19 @@
     </div>
 </div>
 
+<script src="<?= base_url("assets/js/v2/printThis.js") ?>"></script>
 <script type="text/javascript">
     $(document).ready(function() {
-        $(".nsm-table").nsmPagination();
+        $(".customer-list").nsmPagination();
 
         $(document).on("click", ".call-item", function() {
             let phone = $(this).attr("data-id");
 
             window.open('tel:' + phone);
+        });
+
+        $("#btn_print_customer_list").on("click", function(){
+            $("#customer_table_print").printThis();
         });
     });
 </script>
