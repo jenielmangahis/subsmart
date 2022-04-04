@@ -132,6 +132,42 @@
     .btn-block+.btn-block {
         margin-top: 0 !important;
     }
+
+    button#another-account {
+        background: transparent;
+        border: solid 1px;
+        border-radius: 9px;
+        padding: 4px 26px;
+        transition: 0.5s;
+    }
+
+    button#another-account:hover {
+        background: #e8e8e8;
+    }
+
+    button.style:hover {
+        font-size: 18px;
+    }
+
+    button.style {
+        background: transparent;
+        border: none;
+        border-radius: 9px;
+        padding: 4px 12px;
+        transition: 0.5s;
+    }
+
+    button#back {
+        background: transparent;
+        border: solid 1px;
+        border-radius: 9px;
+        padding: 4px 26px;
+        transition: 0.5s;
+    }
+
+    button#back:hover {
+        background: #e8e8e8;
+    }
 </style>
 <style>
     #overlay {
@@ -155,6 +191,11 @@
     .row.justify-content-md-center.align-items-center.pt-3.padd {
         padding-top: 49px !important;
         padding-bottom: 49px !important;
+    }
+
+    .col-md-12.justify-content-md-center {
+        text-align: center;
+        margin-top: 45px;
     }
 </style>
 <div id="overlay">
@@ -388,7 +429,11 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <form method="post" id="stripe_form">
+                                                <form method="post" id="stripe_form" style="display:none;">
+                                                    <div class="col-md-12 form-group">
+                                                        <label for=""><b>Account Name</b></label><br>
+                                                        <input type="text" class="form-control" name="account_name" id="account_name" required="">
+                                                    </div>
                                                     <div class="col-md-12 form-group">
                                                         <label for=""><b>Publish Key</b></label><br>
                                                         <input type="text" class="form-control" name="stripe_publish_key" id="stripe_publish" required="">
@@ -404,6 +449,34 @@
                                                         </div>
                                                     </div>
                                                 </form>
+                                                <form method="post" id="stripe_form_edit" style="display:none;">
+                                                    <div class="col-md-12 form-group">
+                                                        <label for=""><b>Account Name</b></label><br>
+                                                        <input type="text" class="form-control" name="account_name" id="account_name" required="">
+                                                        <input type="text" class="form-control" name="id" id="id" style="display: none;">
+                                                    </div>
+                                                    <div class="col-md-12 form-group">
+                                                        <label for=""><b>Publish Key</b></label><br>
+                                                        <input type="text" class="form-control" name="stripe_publish_key" id="stripe_publish" required="">
+                                                    </div>
+                                                    <div class="col-md-12 form-group">
+                                                        <label for=""><b>Secret Key</b></label><br>
+                                                        <input type="text" class="form-control" name="stripe_secret_key" id="" required="">
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="modal-footer close-modal-footer">
+                                                            <button type="button" class="btn btn-default btn-block close-stripe-container">Back</button>
+                                                            <button type="submit" class="btn btn-success btn-block" id="">Save</button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                                <div id="list-linked-accounts" style="display:none;">
+                                                    <div id="accounts"></div>
+                                                    <div class="col-md-12 justify-content-md-center">
+                                                        <button id="another-account"><i class="fa fa-plus" aria-hidden="true"></i> add another account</button><br><br>
+                                                        <button id="back"><i class="fa fa-arrow-left" aria-hidden="true"></i> back</button>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -813,6 +886,22 @@
             }
         }, 1000);
     });
+    $('#another-account').click(function() {
+        $("#stripe_form input[name='account_name']").val("");
+        $("#stripe_form input[name='stripe_publish_key']").val("");
+        $("#stripe_form input[name='stripe_secret_key']").val("");
+        $('.stripe-container #list-linked-accounts').hide();
+        $('.stripe-container #stripe_form').show();
+
+    })
+    $('#back').click(function() {
+        $('.stripe-container #stripe_form_edit').hide();
+        $('.stripe-container #stripe_form').hide();
+        $('.stripe-container').hide();
+        $('.accounts-list').show();
+        $('.stripe-container #list-linked-accounts').show();
+        $('.bankOfAmerica-container').hide();
+    })
     $('.click-stripe').click(function() {
         $.ajax({
             url: "<?= base_url() ?>api/get_stripe_acc",
@@ -820,43 +909,92 @@
             dataType: "json",
             data: {},
             success: function(data) {
-                var handler = StripeCheckout.configure({
-                    key: ''+data.stripeAcc[0]['stripe_publish_key']+'',
-                    image: '<?= base_url() ?>assets/images/v2/profile-placeholder.jpeg',
-                    token: function(token) {
-                        $("#payment-method").val('stripe');
-                        $("#payment-method-status").val('COMPLETED');
-                        activate_registration();
-                        /*$("#stripeToken").val(token.id);
-                        $("#stripeEmail").val(token.email);
-                        $("#amountInCents").val(Math.floor($("#amountInDollars").val() * 100));
-                        $("#myForm").submit();*/
 
+                var html = "";
+                if (data.stripeAcc.length != 0) {
+                    for (var index = 0; index < data.stripeAcc.length; index++) {
+                        html += `
+                            <div class="col-md-12">
+                                <hr>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <img class="fdx-provider-logo" src="<?php echo base_url('assets/img/accounting/stripe.png') ?>" title="Stripe" alt="Stripe">
+                                        </div>
+                                        <div class="col-md-5">
+                                            <h6>` + data.stripeAcc[index]['account_name'] + `</h6>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <button class="style ebutton" id="` + data.stripeAcc[index]['id'] + `">edit</button>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <button class="style dbutton"id="` + data.stripeAcc[index]['id'] + `">delete</button>
+                                        </div>
+                                    </div>
+                                <hr>
+                            </div>`;
                     }
-                });
-                handler.open({
-                    name: 'nSmarTrac',
-                    description: 'To be paid($)',
-                    amount: "",
-                });
+                    $('.stripe-container #list-linked-accounts #accounts').html(html);
+                    $('.accounts-list').hide();
+                    $('.stripe-container').show();
+                    $('.bankOfAmerica-container').hide();
+                    $('.stripe-container #list-linked-accounts').show();
+                }
 
-                $("#stripe_form input[name='stripe_publish_key']").val(data.stripeAcc[0]['stripe_publish_key']);
-                $("#stripe_form input[name='stripe_secret_key']").val(data.stripeAcc[0]['stripe_secret_key']);
 
-                $('.accounts-list').hide();
-                $('.stripe-container').show();
-                $('.bankOfAmerica-container').hide();
+
+
             }
         });
 
 
 
     });
+    $(document).on("click", "#list-linked-accounts #accounts .dbutton", function() {
+        var id = $(this).attr("id");
+        console.log(id);
+        location.reload();
+        $.ajax({
+            url: "<?= base_url() ?>api/delete_stripe_acc",
+            type: "POST",
+            dataType: "json",
+            data: {
+                id: id
+            },
+            success: function(data) {
+                
+            }
+        });
+    });
+
+
+    $(document).on("click", "#list-linked-accounts #accounts .ebutton", function() {
+        var id = $(this).attr("id");
+        console.log(id);
+        $('.stripe-container #list-linked-accounts').hide();
+        $('.stripe-container #stripe_form_edit').fadeIn();
+
+        $.ajax({
+            url: "<?= base_url() ?>api/get_stripe_acc_cond",
+            type: "POST",
+            dataType: "json",
+            data: {
+                id: id
+            },
+            success: function(data) {
+                console.log(data.account[0]['account_name']);
+                $("#stripe_form_edit input[name='id']").val(data.account[0]['id']);
+                $("#stripe_form_edit input[name='account_name']").val(data.account[0]['account_name']);
+                $("#stripe_form_edit input[name='stripe_publish_key']").val(data.account[0]['stripe_publish_key']);
+                $("#stripe_form_edit input[name='stripe_secret_key']").val(data.account[0]['stripe_secret_key']);
+
+            }
+        });
+    });
     $('.close-stripe-container').click(function() {
-
-
-        $('.stripe-container').hide();
-        $('.accounts-list').show();
+        $('.stripe-container #stripe_form_edit').hide();
+        $('.stripe-container #stripe_form').hide();
+        $('.stripe-container').show();
+        $('.stripe-container #list-linked-accounts').show();
         $('.bankOfAmerica-container').hide();
 
 
@@ -952,6 +1090,31 @@
                     document.getElementById('overlay').style.display = "none";
                     $('.stripe-container').hide();
                     $('.accounts-list').show();
+                    $('.stripe-container #stripe_form').hide();
+
+
+                }
+            });
+        });
+        $("#stripe_form_edit").submit(function(e) {
+            e.preventDefault(); // avoid to execute the actual submit of the form.
+            var form = $(this);
+            $.ajax({
+                type: "POST",
+                url: "<?= base_url() ?>api/update_stripe_acc",
+                data: form.serialize(), // serializes the form's elements.
+                beforeSend: function() {
+                    $("#overlay_message").text('Saving Stripe Credentials...');
+                    document.getElementById('overlay').style.display = "flex";
+                },
+                success: function(data) {
+
+
+                    nsmartrac_alert('Nice!', 'Stripe Crendentials Saved!', 'success');
+                    document.getElementById('overlay').style.display = "none";
+                    $('.stripe-container').hide();
+                    $('.accounts-list').show();
+                    $('.stripe-container #stripe_form_edit').hide();
 
                 }
             });

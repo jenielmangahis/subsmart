@@ -1056,16 +1056,19 @@ a.nsm-button{
 	min-height: 150px;
 }
 
-#manage_widgets_modal .form-switch{
+#manage_widgets_modal .form-switch,
+#manage_modules_modal .form-switch{
 	margin: unset !important;
 }
 
-#manage_widgets_modal .form-check-input:checked{
+#manage_widgets_modal .form-check-input:checked,
+#manage_modules_modal .form-check-input:checked{
 	background-color: rgb(106 74 134) !important;
     border-color: #6d6970 !important;
 }
 
-#manage_widgets_modal .form-check-input:focus{
+#manage_widgets_modal .form-check-input:focus,
+#manage_modules_modal .form-check-input:focus{
 	box-shadow: 0 0 0 0.25rem rgb(106 74 134 / 25%) !important;
 	border-color: #bdaacf !important;
 }

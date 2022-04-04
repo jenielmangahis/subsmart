@@ -114,6 +114,8 @@ $(document).ready(function() {
                                 clock_in_clock_out_send_sms("+18506195914", data.FName + " " + data.LName + " " + data.content_notification)
                             }
                             // get_user_current_geo_possition(data.timesheet_logs_id, "timesheet_logs");
+
+                            location.reload();
                         }
                     },
                     error: function(xhr, status, error) {

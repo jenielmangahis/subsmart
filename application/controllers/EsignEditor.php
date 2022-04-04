@@ -106,10 +106,12 @@ class EsignEditor extends MY_Controller
     {
         add_css([
             'assets/css/esign/esign-editor/esign-editor.css',
+            'https://cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css',
         ]);
 
         add_footer_js([
-            'assets/js/esign/esigneditor/wizard2.js',
+            'assets/js/esign/esigneditor/wizard2/index.js',
+            'https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js',
         ]);
 
         $this->load->view('esign/esigneditor/wizard2', $this->page_data);
@@ -1114,5 +1116,202 @@ SQL;
         $this->db->where('id', $this->db->insert_id());
         $copy = $this->db->get('esign_editor_letters')->row();
         echo json_encode(['data' => $copy]);
+    }
+
+    public function apiGetCustomerDisputeItems($customerId)
+    {
+        $retval = [
+            [
+                'creditor' => 'Bank of America Mortgage',
+                'account_numbers' => [
+                    'equifax' => null,
+                    'experian' => '12312412',
+                    'transunion' => '12312412',
+                ],
+                'reason' => 'The following personal information is incorrect',
+                'is_disputed' => false,
+                'equifax' => 'verified',
+                'experian' => 'negative',
+                'transunion' => 'in_dispute',
+            ],
+            [
+                'creditor' => 'Sears Card',
+                'account_numbers' => [
+                    'equifax' => null,
+                    'experian' => null,
+                    'transunion' => null,
+                ],
+                'reason' => 'The inquiry was not authorized',
+                'is_disputed' => false,
+                'equifax' => 'verified',
+                'experian' => 'negative',
+                'transunion' => null,
+            ],
+            [
+                'creditor' => 'Bank of America Mortgage',
+                'account_numbers' => [
+                    'equifax' => null,
+                    'experian' => '000000456',
+                    'transunion' => '000000465',
+                ],
+                'reason' => 'This is a duplicate account',
+                'is_disputed' => false,
+                'equifax' => 'verified',
+                'experian' => null,
+                'transunion' => null,
+            ],
+            [
+                'creditor' => 'Bank of America Mortgage',
+                'account_numbers' => [
+                    'equifax' => null,
+                    'experian' => '000000456',
+                    'transunion' => null,
+                ],
+                'reason' => 'The following account was a Bankruptcy/Charge-off. Balance should be $0',
+                'is_disputed' => false,
+                'equifax' => 'verified',
+                'experian' => 'negative',
+                'transunion' => null,
+            ],
+            [
+                'creditor' => 'Bank of America Mortgage',
+                'account_numbers' => [
+                    'equifax' => '000000789',
+                    'experian' => '000000789',
+                    'transunion' => null,
+                ],
+                'reason' => 'Other information I would like changed',
+                'is_disputed' => false,
+                'equifax' => 'verified',
+                'experian' => 'negative',
+                'transunion' => 'in_dispute',
+            ],
+            [
+                'creditor' => 'Bank of America Mortgage',
+                'account_numbers' => [
+                    'equifax' => null,
+                    'experian' => '000000456',
+                    'transunion' => '000000465',
+                ],
+                'reason' => 'This is a duplicate account',
+                'is_disputed' => false,
+                'equifax' => 'verified',
+                'experian' => null,
+                'transunion' => null,
+            ],
+            [
+                'creditor' => 'Bank of America Mortgage',
+                'account_numbers' => [
+                    'equifax' => null,
+                    'experian' => '000000456',
+                    'transunion' => null,
+                ],
+                'reason' => 'The following account was a Bankruptcy/Charge-off. Balance should be $0',
+                'is_disputed' => false,
+                'equifax' => 'verified',
+                'experian' => 'negative',
+                'transunion' => null,
+            ],
+            [
+                'creditor' => 'Bank of America Mortgage',
+                'account_numbers' => [
+                    'equifax' => '000000789',
+                    'experian' => '000000789',
+                    'transunion' => null,
+                ],
+                'reason' => 'Other information I would like changed',
+                'is_disputed' => false,
+                'equifax' => 'verified',
+                'experian' => 'negative',
+                'transunion' => 'in_dispute',
+            ],
+            [
+                'creditor' => 'Bank of America Mortgage',
+                'account_numbers' => [
+                    'equifax' => null,
+                    'experian' => '000000456',
+                    'transunion' => '000000465',
+                ],
+                'reason' => 'This is a duplicate account',
+                'is_disputed' => false,
+                'equifax' => 'verified',
+                'experian' => null,
+                'transunion' => null,
+            ],
+            [
+                'creditor' => 'Bank of America Mortgage',
+                'account_numbers' => [
+                    'equifax' => null,
+                    'experian' => '000000456',
+                    'transunion' => null,
+                ],
+                'reason' => 'The following account was a Bankruptcy/Charge-off. Balance should be $0',
+                'is_disputed' => false,
+                'equifax' => 'verified',
+                'experian' => 'negative',
+                'transunion' => null,
+            ],
+            [
+                'creditor' => 'Bank of America Mortgage',
+                'account_numbers' => [
+                    'equifax' => '000000789',
+                    'experian' => '000000789',
+                    'transunion' => null,
+                ],
+                'reason' => 'Other information I would like changed',
+                'is_disputed' => false,
+                'equifax' => 'verified',
+                'experian' => 'negative',
+                'transunion' => 'in_dispute',
+            ],
+            [
+                'creditor' => 'Bank of America Mortgage',
+                'account_numbers' => [
+                    'equifax' => null,
+                    'experian' => '000000456',
+                    'transunion' => '000000465',
+                ],
+                'reason' => 'This is a duplicate account',
+                'is_disputed' => false,
+                'equifax' => 'verified',
+                'experian' => null,
+                'transunion' => null,
+            ],
+            [
+                'creditor' => 'Bank of America Mortgage',
+                'account_numbers' => [
+                    'equifax' => null,
+                    'experian' => '000000456',
+                    'transunion' => null,
+                ],
+                'reason' => 'The following account was a Bankruptcy/Charge-off. Balance should be $0',
+                'is_disputed' => false,
+                'equifax' => 'verified',
+                'experian' => 'negative',
+                'transunion' => null,
+            ],
+            [
+                'creditor' => 'Bank of America Mortgage',
+                'account_numbers' => [
+                    'equifax' => '000000789',
+                    'experian' => '000000789',
+                    'transunion' => null,
+                ],
+                'reason' => 'Other information I would like changed',
+                'is_disputed' => false,
+                'equifax' => 'verified',
+                'experian' => 'negative',
+                'transunion' => 'in_dispute',
+            ],
+        ];
+
+        $retval = array_map(function ($item, $key) {
+            $item['id'] = $key;
+            return $item;
+        }, $retval, array_keys($retval));
+
+        // sleep(3);
+        header('content-type: application/json');
+        echo json_encode(['data' => $retval]);
     }
 }

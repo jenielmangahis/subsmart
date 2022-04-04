@@ -5147,6 +5147,29 @@ $(function() {
         });
     });
 
+    $(document).on('click', '#creditMemoModal .modal-footer #save-and-print', function(e) {
+        e.preventDefault();
+
+        submitType = 'save-and-print';
+
+        $('#modal-container form#modal-form').submit();
+    });
+
+    $(document).on('hidden.bs.modal', '#viewPrintCreditMemoModal', function() {
+        $(this).parent().parent().next('.modal-backdrop').remove();
+        $(this).parent().remove();
+    });
+
+    $(document).on('click', '#viewPrintCreditMemoModal #preview-and-print', function(e) {
+        e.preventDefault();
+
+        let pdfWindow = window.open("");
+        pdfWindow.document.write(`<iframe width="100%" height="100%" src="${$('#viewPrintCreditMemoModal iframe').attr('src')}"></iframe>`);
+        $(pdfWindow.document).find('body').css('padding', '0');
+        $(pdfWindow.document).find('body').css('margin', '0');
+        $(pdfWindow.document).find('iframe').css('border', '0');
+    });
+
     $(document).on('click', '#modal-container form #salesReceiptModal #copy-sales-receipt', function(e) {
         e.preventDefault();
 
@@ -5188,6 +5211,29 @@ $(function() {
         });
     });
 
+    $(document).on('click', '#salesReceiptModal .modal-footer #save-and-print', function(e) {
+        e.preventDefault();
+
+        submitType = 'save-and-print';
+
+        $('#modal-container form#modal-form').submit();
+    });
+
+    $(document).on('hidden.bs.modal', '#viewPrintSalesReceiptModal', function() {
+        $(this).parent().parent().next('.modal-backdrop').remove();
+        $(this).parent().remove();
+    });
+
+    $(document).on('click', '#viewPrintSalesReceiptModal #preview-and-print', function(e) {
+        e.preventDefault();
+
+        let pdfWindow = window.open("");
+        pdfWindow.document.write(`<iframe width="100%" height="100%" src="${$('#viewPrintSalesReceiptModal iframe').attr('src')}"></iframe>`);
+        $(pdfWindow.document).find('body').css('padding', '0');
+        $(pdfWindow.document).find('body').css('margin', '0');
+        $(pdfWindow.document).find('iframe').css('border', '0');
+    });
+
     $(document).on('click', '#modal-container form #refundReceiptModal #copy-refund-receipt', function(e) {
         e.preventDefault();
 
@@ -5227,6 +5273,29 @@ $(function() {
                 location.reload();
             }
         });
+    });
+
+    $(document).on('click', '#refundReceiptModal .modal-footer #save-and-print', function(e) {
+        e.preventDefault();
+
+        submitType = 'save-and-print';
+
+        $('#modal-container form#modal-form').submit();
+    });
+
+    $(document).on('hidden.bs.modal', '#viewPrintRefundReceiptModal', function() {
+        $(this).parent().parent().next('.modal-backdrop').remove();
+        $(this).parent().remove();
+    });
+
+    $(document).on('click', '#viewPrintRefundReceiptModal #preview-and-print', function(e) {
+        e.preventDefault();
+
+        let pdfWindow = window.open("");
+        pdfWindow.document.write(`<iframe width="100%" height="100%" src="${$('#viewPrintRefundReceiptModal iframe').attr('src')}"></iframe>`);
+        $(pdfWindow.document).find('body').css('padding', '0');
+        $(pdfWindow.document).find('body').css('margin', '0');
+        $(pdfWindow.document).find('iframe').css('border', '0');
     });
 
     $(document).on('click', '#modal-container form #delayedCreditModal #copy-delayed-credit', function(e) {
@@ -7270,6 +7339,18 @@ const submitModalForm = (event, el) => {
                     case 'invoiceModal' :
                         var type = 'invoice';
                     break;
+                    case 'weeklyTimesheetModal' :
+                        var type = 'weekly-timesheet';
+                    break;
+                    case 'creditMemoModal' :
+                        var type = 'credit-memo';
+                    break;
+                    case 'salesReceiptModal' :
+                        var type = 'sales-receipt';
+                    break;
+                    case 'refundReceiptModal' :
+                        var type = 'refund-receipt';
+                    break;
                 }
 
                 if(submitType === 'save-and-close' || submitType === 'save-and-void') {
@@ -7281,12 +7362,6 @@ const submitModalForm = (event, el) => {
                     $('#modal-container #modal-form').attr('onsubmit', 'updateTransaction(event, this)');
                 }
 
-                if(submitType === 'save-and-print' && modalId === '#purchaseOrderModal') {
-                    $('#modal-container #modal-form').attr('data-href', `/accounting/update-transaction/${type}/${res.data}`);
-                    $('#modal-container #modal-form').attr('onsubmit', 'updateTransaction(event, this)');
-                    printPurchaseOrder();
-                }
-
                 if(submitType === 'save-and-send' && modalId === '#purchaseOrderModal') {
                     $('#modal-container #modal-form').attr('data-href', `/accounting/update-transaction/${type}/${res.data}`);
                     $('#modal-container #modal-form').attr('onsubmit', 'updateTransaction(event, this)');
@@ -7294,22 +7369,33 @@ const submitModalForm = (event, el) => {
                     sendPurchaseOrder(res.data);
                 }
 
-                if(submitType === 'save-and-print' && modalId === '#weeklyTimesheetModal') {
-                    $('#modal-container #modal-form').attr('data-href', `/accounting/update-transaction/${type}/${res.data}`);
-                    $('#modal-container #modal-form').attr('onsubmit', 'updateTransaction(event, this)');
-                    printTimesheet(res.data);
-                }
-
-                if(submitType === 'save-and-print' && modalId === '#receivePaymentModal') {
-                    $('#modal-container #modal-form').attr('data-href', `/accounting/update-transaction/${type}/${res.data}`);
-                    $('#modal-container #modal-form').attr('onsubmit', 'updateTransaction(event, this)');
-                }
-
-                if(submitType === 'save-and-print' && modalId === '#invoiceModal') {
+                if(submitType === 'save-and-print') {
                     $('#modal-container #modal-form').attr('data-href', `/accounting/update-transaction/${type}/${res.data}`);
                     $('#modal-container #modal-form').attr('onsubmit', 'updateTransaction(event, this)');
 
-                    printPreviewInvoice();
+                    switch(type) {
+                        case 'purchase-order' :
+                            printPurchaseOrder();
+                        break;
+                        case 'weekly-timesheet' :
+                            printTimesheet(res.data);
+                        break;
+                        case 'receive-payment' :
+
+                        break;
+                        case 'invoice' :
+                            printPreviewInvoice();
+                        break;
+                        case 'credit-memo' :
+                            printPreviewCreditMemo();
+                        break;
+                        case 'sales-receipt' :
+                            printPreviewSalesReceipt();
+                        break;
+                        case 'refund-receipt' :
+                            printPreviewRefundReceipt();
+                        break;
+                    }
                 }
 
                 if(submitType === 'save-and-new') {
@@ -8379,20 +8465,34 @@ const updateTransaction = (event, el) => {
                     $(el).children().modal('hide');
                 }
 
-                if(submitType === 'save-and-print' && modalId === '#purchaseOrderModal') {
-                    printPurchaseOrder();
-                }
-
                 if(submitType === 'save-and-send' && modalId === '#purchaseOrderModal') {
                     sendPurchaseOrder(res.data);
                 }
 
-                if(submitType === 'save-and-print' && modalId === '#weeklyTimesheetModal') {
-                    printTimesheet(res.data);
-                }
+                if(submitType === 'save-and-print') {
+                    switch(modalId) {
+                        case '#purchaseOrderModal' :
+                            printPurchaseOrder();
+                        break;
+                        case '#weeklyTimesheetModal' :
+                            printTimesheet(res.data);
+                        break;
+                        case '#receivePaymentModal' :
 
-                if(submitType === 'save-and-print' && modalId === '#invoiceModal') {
-                    printPreviewInvoice();
+                        break;
+                        case '#invoiceModal' :
+                            printPreviewInvoice();
+                        break;
+                        case '#creditMemoModal' :
+                            printPreviewCreditMemo();
+                        break;
+                        case '#salesReceiptModal' :
+                            printPreviewSalesReceipt();
+                        break;
+                        case '#refundReceiptModal' :
+                            printPreviewRefundReceipt();
+                        break;
+                    }
                 }
 
                 if(submitType === 'save-and-new') {
@@ -10022,5 +10122,35 @@ const printPreviewInvoice = () => {
         $('div#modal-container').append(result);
 
         $('#viewPrintInvoiceModal').modal('show');
+    });
+}
+
+const printPreviewCreditMemo = () => {
+    var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
+
+    $.get('/accounting/print-credit-memo-modal/'+split[1], function(result) {
+        $('div#modal-container').append(result);
+
+        $('#viewPrintCreditMemoModal').modal('show');
+    });
+}
+
+const printPreviewSalesReceipt = () => {
+    var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
+
+    $.get('/accounting/print-sales-receipt-modal/'+split[1], function(result) {
+        $('div#modal-container').append(result);
+
+        $('#viewPrintSalesReceiptModal').modal('show');
+    });
+}
+
+const printPreviewRefundReceipt = () => {
+    var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
+
+    $.get('/accounting/print-refund-receipt-modal/'+split[1], function(result) {
+        $('div#modal-container').append(result);
+
+        $('#viewPrintRefundReceiptModal').modal('show');
     });
 }

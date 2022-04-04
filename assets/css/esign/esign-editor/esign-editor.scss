@@ -614,6 +614,117 @@
   }
 }
 
+#additemmodal,
+#selecteddisputeitemstable {
+  .modal-dialog {
+    @media (min-width: 992px) {
+      max-width: 1000px;
+    }
+  }
+
+  #customerdisputestable {
+    width: 100% !important;
+  }
+
+  .table-wraper {
+    max-height: 500px;
+    overflow: auto;
+  }
+
+  th.accountnum,
+  td.accountnum {
+    width: 100px !important;
+  }
+  div.accountnum {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: inherit;
+    text-transform: capitalize;
+  }
+
+  .status {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    text-align: center;
+
+    &__logo {
+      --size: 20px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: var(--size);
+      width: var(--size);
+
+      .fa {
+        line-height: 0;
+      }
+    }
+
+    &--verified,
+    &--negative {
+      .status__logo {
+        background-color: #e4251b;
+        color: #fff;
+
+        .fa::before {
+          content: "\f00d";
+        }
+      }
+    }
+
+    &--in_dispute {
+      .status__logo {
+        background-color: #f89e3f;
+        color: #fff;
+
+        .fa::before {
+          content: "\f017";
+        }
+      }
+    }
+  }
+
+  .reason {
+    --line-clamp: 3;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: var(--line-clamp);
+    line-clamp: var(--line-clamp);
+    -webkit-box-orient: vertical;
+  }
+
+  .btn-delete {
+    --size: 40px;
+    --color: #32243d;
+    height: var(--size);
+    width: var(--size);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    padding: 0;
+    color: #32243d;
+    border: 0;
+    background-color: transparent;
+    border-radius: var(--size);
+
+    &:hover,
+    &:active,
+    &:focus {
+      color: var(--color);
+    }
+
+    &:hover {
+      background-color: #faf3ff;
+    }
+  }
+}
+
 .btn-ghost {
   --color: #32243d;
   border-color: var(--color);

@@ -170,24 +170,49 @@ class Api extends MYF_Controller
     }
 
     public function get_stripe_acc(){
+        
         $company_id = logged('company_id');
         $query = $this->db->get_where('accounting_bank_accounts', array('company_id'=> $company_id));
+        
 
         $data = new stdClass();
         $data->stripeAcc = $query->result();
         echo json_encode($data);
+    }
+    public function get_stripe_acc_cond(){
+        $id = $this->input->post("id");
+        $query = $this->db->get_where('accounting_bank_accounts', array('id' => $id)); 
+
+        $data = new stdClass();
+        $data->account = $query->result();
+        echo json_encode($data);
+    }
+
+    public function delete_stripe_acc(){
+        $id = $this->input->post("id");
+        $getId = $this->db->where('id', $id);
+		$removeID = $this->db->delete('accounting_bank_accounts');	
+    }
+
+    public function update_stripe_acc(){
+        $data = $this->input->post();
+        echo json_encode($data['id']);
+        $id = $data['id'];
+        $update = $this->db->update('accounting_bank_accounts', $data, array("id" => $id));
+
     }
 
     public function if_stripeAcc_of_company_exist(){
         $company_id = logged('company_id');
         $query = $this->db->get_where('accounting_bank_accounts', array('company_id'=> $company_id));
         $result = $query->result();
-        
-        
+            
            
             $data = $this->input->post();
-            echo "pasok";
-            $str = $this->db->update('accounting_bank_accounts', $data, array("company_id" => $company_id));
+            $str = $this->db->insert("accounting_bank_accounts", $data);
+            $id = $this->db->insert_id();
+            $data2 = array('company_id'=>$company_id);
+            $update = $this->db->update('accounting_bank_accounts', $data2, array("id" => $id));
         
     }
     public function if_paypalAcc_of_company_exist(){
@@ -196,7 +221,6 @@ class Api extends MYF_Controller
         $result = $query->result();
 
             $data = $this->input->post();
-            echo "pasok";
             $str = $this->db->update('accounting_bank_accounts', $data, array("company_id" => $company_id));
        
     }

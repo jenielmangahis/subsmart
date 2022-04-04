@@ -429,6 +429,12 @@ $route['accounting/add-package']['post'] = 'accounting_modals/add_package';
 $route['accounting/get-last-invoice-number'] = 'accounting_modals/get_last_invoice_number';
 $route['accounting/print-invoice-modal/(:any)'] = 'accounting_modals/print_invoice/$1';
 $route['accounting/download-invoice-pdf/(:any)'] = 'accounting_modals/download_invoice_pdf/$1';
+$route['accounting/print-credit-memo-modal/(:any)'] = 'accounting_modals/print_credit_memo/$1';
+$route['accounting/download-credit-memo-pdf/(:any)'] = 'accounting_modals/download_credit_memo_pdf/$1';
+$route['accounting/print-sales-receipt-modal/(:any)'] = 'accounting_modals/print_sales_receipt/$1';
+$route['accounting/download-sales-receipt-pdf/(:any)'] = 'accounting_modals/download_sales_receipt_pdf/$1';
+$route['accounting/print-refund-receipt-modal/(:any)'] = 'accounting_modals/print_refund_receipt/$1';
+$route['accounting/download-refund-receipt-pdf/(:any)'] = 'accounting_modals/download_refund_receipt_pdf/$1';
 
 $route['accounting/lists'] = 'accounting/lists';
 

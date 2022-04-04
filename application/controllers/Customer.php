@@ -48,7 +48,7 @@ class Customer extends MY_Controller
 
         $this->page_data['module_sort'] = $this->customer_ad_model->get_data_by_id('fk_user_id',$user_id,"ac_module_sort");
         $this->page_data['widgets'] = $this->customer_ad_model->getModulesList();
-        $this->load->view('customer/adv_cust_modules/add_module_details', $this->page_data);
+        $this->load->view('v2/pages/customer/adv_cust_modules/add_module_details', $this->page_data);
     }
 
     public function index()
@@ -85,6 +85,9 @@ class Customer extends MY_Controller
     }
 
     public function preview_($id=null){
+        $this->page_data['page']->title = 'Customer Preview';
+        $this->page_data['page']->parent = 'Customers';
+
         $this->load->model('jobs_model');
         $is_allowed = $this->isAllowedModuleAccess(9);
         if( !$is_allowed ){
@@ -141,7 +144,7 @@ class Customer extends MY_Controller
         $this->page_data['employees'] = $this->customer_ad_model->get_all(FALSE,"","ASC","users","id");
         $this->page_data['users'] = $this->users_model->getUsers();
 
-        $this->load->view('customer/preview', $this->page_data);
+        $this->load->view('v2/pages/customer/preview', $this->page_data);
     }
 
     public function print_customer_details($id=null){
@@ -762,6 +765,9 @@ class Customer extends MY_Controller
 
     public function module($id=null)
     {
+        $this->page_data['page']->title = 'Customer Dashboard';
+        $this->page_data['page']->parent = 'Customers';
+
         $this->load->model('taskhub_model');
         $this->load->library('wizardlib');
         $this->load->model('Invoice_model', 'invoice_model');
@@ -823,7 +829,7 @@ class Customer extends MY_Controller
         $this->page_data['cust_active_tab'] = 'dashboard';
         $this->page_data['users'] = $this->users_model->getUsers();
         $this->page_data['history_activity_list'] = $this->activity->getActivity($user_id, [6,0], 1);
-        $this->load->view('customer/module', $this->page_data);
+        $this->load->view('v2/pages/customer/module', $this->page_data);
     }
 
     public function jobs_list($cid)
@@ -1428,7 +1434,8 @@ class Customer extends MY_Controller
         if($this->customer_ad_model->update_data($input,"ac_module_sort","ams_id")){
             $view = $this->wizardlib->getModuleById($id);
             $data['id'] = $id;
-            $this->load->view($view->ac_view_link, $data);
+            $page = 'v2/pages/'.$view->ac_view_link;
+            $this->load->view($page, $data);
         }else{
             echo "Error";
         }
