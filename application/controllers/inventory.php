@@ -389,11 +389,30 @@ class Inventory extends MY_Controller
         $post = $this->input->post();
         $id   = $post['id'];
         $company_id =  logged('company_id');
-        $remove_item = array(
-            'where' => array('id' =>$id, 'company_id' => $company_id),
-            'table' => 'items'
-        );
-        if ($this->general->delete_($remove_item)) {
+
+        $item = $this->items_model->getItemById($id)[0];
+
+        $attempt = 0;
+        do {
+            $name = $attempt > 0 ? "$item->title (deleted - $attempt)" : "$item->title (deleted)";
+            $checkName = $this->items_model->check_name($company_id, $name);
+
+            $attempt++;
+        } while(!is_null($checkName));
+
+        $data = [
+            'id' => $id,
+            'name' => $name,
+            'company_id' => logged('company_id')
+        ];
+
+        $delete = $this->items_model->inactiveItem($data);
+
+        // $remove_item = array(
+        //     'where' => array('id' =>$id, 'company_id' => $company_id),
+        //     'table' => 'items'
+        // );
+        if ($delete) {
 
             $this->session->set_flashdata('alert-type', 'success');
             $this->session->set_flashdata('alert', 'Record was successfully deleted');

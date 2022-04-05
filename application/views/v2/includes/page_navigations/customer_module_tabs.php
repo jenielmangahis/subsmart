@@ -6,7 +6,7 @@
                 <span>Dashboard</span>
             </a>
         </li>
-        <li class="<?php if($page->title == ''): echo 'active'; endif; ?>">
+        <li class="<?php if($page->title == 'Customer Inventory List'): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="<?= base_url('customer/inventory_list/'.$cus_id) ?>">
                 <i class='bx bx-fw bx-box'></i>
                 <span>Inventory</span>

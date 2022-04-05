@@ -104,12 +104,26 @@ class EsignEditor extends MY_Controller
 
     public function wizard2()
     {
+        $customerId = $this->input->get('customer_id', true);
+        if (is_null($this->getCustomer($customerId))) {
+            return show_404();
+        }
+
         add_css([
+            'assets/textEditor/summernote-bs4.css',
             'assets/css/esign/esign-editor/esign-editor.css',
             'https://cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css',
+
+            'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css',
         ]);
 
         add_footer_js([
+            'assets/textEditor/summernote-bs4.js',
+
+            'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.3.6/purify.min.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js',
+
             'assets/js/esign/esigneditor/wizard2/index.js',
             'https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js',
         ]);

@@ -4,167 +4,217 @@ include viewPath('includes/header');
 ini_set('max_input_vars', 30000);
 ?>
 
-<div class="wrapper" role="wrapper" id="wizard">
+<div class="wrapper wrapper--loading" role="wrapper" id="wizard">
+    <div class="esigneditor__loader">
+        <div class="esigneditor__loaderInner">
+            <div class="spinner-border" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+            Loading...
+        </div>
+    </div>
+
     <div class="container mt-4">
         <div>
-            <h1 class="esigneditor__title">Letter Wizard (<span>Sample Client</span>)</h1>
+            <h1 class="esigneditor__title">Letter Wizard (<span></span>)</h1>
         </div>
 
-        <p>This is where you select items to dispute so you can build your letter. All new clients start with a Round 1 Dispute. Next "Add New Items" manually or "Add Saved/Pending Items".</p>
+        <p class="letterInfo">This is where you select items to dispute so you can build your letter. All new clients start with a Round 1 Dispute. Next "Add New Items" manually or "Add Saved/Pending Items".</p>
 
         <form class="mt-3 wizardForm">
-            <div class="step step-1 step--active">
-                <div class="step__1Selects">
-                    <h2 class="step__title">
-                        Step 1: <span>Choose Letter Type</span>
-                    </h2>
+            <div class="part1">
+                <div class="step step-1 step--active">
+                    <div class="step__1Selects">
+                        <h2 class="step__title">
+                            Step 1: <span>Choose Letter Type</span>
+                        </h2>
 
-                    <div class="step__inner">
+                        <div class="step__inner">
+                            <div class="step__radioGroup">
+                                <div class="form-check">
+                                    <input class="form-check-input step__radio" name="round" type="radio" value="round1" id="round1" data-action="on_choose_letter_type">
+                                </div>
+                                <label for="round1">
+                                    Round 1: Basic Dispute - Credit Bureaus
+                                </label>
+                            </div>
+                            <div class="step__radioGroup">
+                                <div class="form-check">
+                                    <input class="form-check-input step__radio" name="round" type="radio" value="round2" id="round2" data-action="on_choose_letter_type">
+                                </div>
+                                <label for="round2">
+                                    Round 2 or Higher: All Other Letters - Credit Bureaus, Creditors/Furnishers, or Collectors
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-end">
+                        <a class="link" href="javascript:void(0);" data-action="on_no_dispute">Generate a letter (with no dispute items)</a>
+                    </div>
+
+                    <div class="step__chooseLetter d-none">
+                        <h2 class="step__title mb-3">
+                            Choose a Letter (No Dispute Items)
+                        </h2>
+
+                        <div class="wizardForm__step1">
+                            <div class="form-group">
+                                <label for="chooseLetter_category">Letter Category</label>
+                                <select class="form-control" id="chooseLetter_category" data-name="category_id"></select>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <label for="chooseLetter_letter">Letter Name</label>
+                                    <a href="<?=base_url('EsignEditor/create');?>" class="link">Create Letter</a>
+                                </div>
+                                <select class="form-control" id="chooseLetter_letter" data-name="letter_id"></select>
+                            </div>
+
+                            <div class="d-flex justify-content-end">
+                                <button class="link mr-4" type="button" data-action="on_no_dispute_back">Back</button>
+                                <button class="btn btn-primary esigneditor__btn" type="button" data-action="on_no_dispute_next">
+                                    <div class="spinner-border spinner-border-sm" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+                                    Next
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step__letterRecipient d-none">
+                        <h2 class="step__title mb-3">
+                            Letter Recipient
+                        </h2>
+
                         <div class="step__radioGroup">
                             <div class="form-check">
-                                <input class="form-check-input step__radio" name="round" type="radio" value="round1" id="round1" data-action="on_choose_letter_type">
+                                <input class="form-check-input step__radio" name="recipient" type="radio" value="credit_bureau" id="recipient1" data-action="on_choose_letter_recipient" checked>
                             </div>
-                            <label for="round1">
-                                Round 1: Basic Dispute - Credit Bureaus
+                            <label for="recipient1">
+                                Credit Bureau
                             </label>
                         </div>
                         <div class="step__radioGroup">
                             <div class="form-check">
-                                <input class="form-check-input step__radio" name="round" type="radio" value="round2" id="round2" data-action="on_choose_letter_type">
+                                <input class="form-check-input step__radio" name="recipient" type="radio" value="credito_or_furnisher" id="recipient2" data-action="on_choose_letter_recipient">
                             </div>
-                            <label for="round2">
-                                Round 2 or Higher: All Other Letters - Credit Bureaus, Creditors/Furnishers, or Collectors
+                            <label for="recipient2">
+                                Creditor/Furnisher Reporting the Item
                             </label>
                         </div>
                     </div>
                 </div>
 
-                <div class="d-flex justify-content-end">
-                    <a class="link" href="javascript:void(0);" data-action="on_no_dispute">Generate a letter (with no dispute items)</a>
-                </div>
+                <div class="step step-2 step--disabled mt-3">
+                    <h2 class="step__title">Step 2: <span>Choose Dispute Items</span></h2>
+                    <p class="mt-4 step__step2Message">
+                        We recommend never sending more than 5 dispute items per month to each credit bureau (unless it’s identity theft and you are including a police report), otherwise the bureaus may mark your disputes as "frivolous and irrelevant" and reject them.
+                    </p>
 
-                <div class="step__chooseLetter d-none">
-                    <h2 class="step__title mb-3">
-                        Choose a Letter (No Dispute Items)
-                    </h2>
-
-                    <div class="wizardForm__step1">
-                        <div class="form-group">
-                            <label for="category">Letter Category</label>
-                            <select class="form-control" id="category" data-name="category_id"></select>
+                    <div class="mt-5 step__step2Form d-none">
+                        <div class="d-flex" style="gap: 1rem;">
+                            <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#additemmodal">+ Add Saved Pending Items</button>
+                            <button class="btn btn-ghost" type="button" data-toggle="modal" data-target="#newdisputemodal">+ Add New Dispute Items</button>
                         </div>
 
-                        <div class="form-group">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <label for="letter">Letter Name</label>
-                                <a href="<?=base_url('EsignEditor/create');?>" class="link">Create Letter</a>
+                        <table class="mt-4 table" id="selecteddisputeitemstable">
+                            <thead>
+                                <tr>
+                                    <th>Creditor/Furnisher</th>
+                                    <th class="accountnum">Account #</th>
+                                    <th>Dispute items</th>
+                                    <th>
+                                        <img alt="" src="<?=base_url('/assets/img/customer/images/equifax.png');?>"/>
+                                    </th>
+                                    <th>
+                                        <img alt="" src="<?=base_url('/assets/img/customer/images/experian.png');?>"/>
+                                    </th>
+                                    <th>
+                                        <img alt="" src="<?=base_url('/assets/img/customer/images/trans_union.png');?>"/>
+                                    </th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                        </table>
+
+                        <div class="mt-4 d-flex justify-content-end">
+                            <button class="btn btn-primary" type="button" data-action="step2_generate_letter">Next: Generate Letter</button>
+                            <button class="btn btn-primary" type="button" data-action="step2_save_and_continue">Save and Continue</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step step-3 step--disabled mt-3 d-none">
+                    <h2 class="step__title">Step 3: <span>Choose A Letter</span></h2>
+
+                    <div class="mt-5">
+                        <div class="wizardForm__step1">
+                            <div class="form-group">
+                                <label for="step3_category">Letter Category</label>
+                                <select class="form-control" id="step3_category" data-name="category_id"></select>
                             </div>
-                            <select class="form-control" id="letter" data-name="letter_id"></select>
-                        </div>
 
-                        <div class="d-flex justify-content-end">
-                            <button class="link mr-4" type="button" data-action="on_no_dispute_back">Back</button>
-                            <button class="btn btn-primary esigneditor__btn" type="button">
-                                <div class="spinner-border spinner-border-sm" role="status">
-                                    <span class="sr-only">Loading...</span>
+                            <div class="form-group">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <label for="step3_letter">Letter Name</label>
+                                    <a href="<?=base_url('EsignEditor/create');?>" class="link">Create Letter</a>
                                 </div>
-                                Next
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                                <select class="form-control" id="step3_letter" data-name="letter_id"></select>
+                            </div>
 
-                <div class="step__letterRecipient d-none">
-                    <h2 class="step__title mb-3">
-                        Letter Recipient
-                    </h2>
-
-                    <div class="step__radioGroup">
-                        <div class="form-check">
-                            <input class="form-check-input step__radio" name="recipient" type="radio" value="credit_bureau" id="recipient1" data-action="on_choose_letter_recipient" checked>
+                            <div class="d-flex justify-content-end">
+                                <button class="btn btn-primary esigneditor__btn" type="button">
+                                    <div class="spinner-border spinner-border-sm" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+                                    Next: Generate Letter
+                                </button>
+                            </div>
                         </div>
-                        <label for="recipient1">
-                            Credit Bureau
-                        </label>
-                    </div>
-                    <div class="step__radioGroup">
-                        <div class="form-check">
-                            <input class="form-check-input step__radio" name="recipient" type="radio" value="credito_or_furnisher" id="recipient2" data-action="on_choose_letter_recipient">
-                        </div>
-                        <label for="recipient2">
-                            Creditor/Furnisher Reporting the Item
-                        </label>
                     </div>
                 </div>
             </div>
 
-            <div class="step step-2 step--disabled mt-3">
-                <h2 class="step__title">Step 2: <span>Choose Dispute Items</span></h2>
-                <p class="mt-4 step__step2Message">
-                    We recommend never sending more than 5 dispute items per month to each credit bureau (unless it’s identity theft and you are including a police report), otherwise the bureaus may mark your disputes as "frivolous and irrelevant" and reject them.
-                </p>
-
-                <div class="mt-5 step__step2Form d-none">
-                    <div class="d-flex" style="gap: 1rem;">
-                        <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#additemmodal">+ Add Saved Pending Items</button>
-                        <button class="btn btn-ghost" type="button" data-toggle="modal" data-target="#newdisputemodal">+ Add New Dispute Items</button>
-                    </div>
-
-                    <table class="mt-4 table" id="selecteddisputeitemstable">
-                        <thead>
-                            <tr>
-                                <th>Creditor/Furnisher</th>
-                                <th class="accountnum">Account #</th>
-                                <th>Dispute items</th>
-                                <th>
-                                    <img alt="" src="<?=base_url('/assets/img/customer/images/equifax.png');?>"/>
-                                </th>
-                                <th>
-                                    <img alt="" src="<?=base_url('/assets/img/customer/images/experian.png');?>"/>
-                                </th>
-                                <th>
-                                    <img alt="" src="<?=base_url('/assets/img/customer/images/trans_union.png');?>"/>
-                                </th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                    </table>
-
-                    <div class="mt-4 d-flex justify-content-end">
-                        <button class="btn btn-primary" type="button" data-action="step2_generate_letter">Next: Generate Letter</button>
-                        <button class="btn btn-primary" type="button" data-action="step2_save_and_continue">Save and Continue</button>
-                    </div>
+            <div class="d-none part2">
+                <div class="form-group">
+                    <textarea class="form-control" id="letterContent"></textarea>
                 </div>
-            </div>
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex">
+                        <button class="link mr-3" type="button" data-action="on_back_to_part1">
+                            Back
+                        </button>
 
-            <div class="step step-3 step--disabled mt-3 d-none">
-                <h2 class="step__title">Step 3: <span>Choose A Letter</span></h2>
-
-                <div class="mt-5">
-                    <div class="wizardForm__step1">
-                        <div class="form-group">
-                            <label for="step3_category">Letter Category</label>
-                            <select class="form-control" id="step3_category" data-name="category_id"></select>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <label for="step3_letter">Letter Name</label>
-                                <a href="<?=base_url('EsignEditor/create');?>" class="link">Create Letter</a>
+                        <button class="link esigneditor__btn" type="button" data-action="on_export_pdf">
+                            <div class="spinner-border spinner-border-sm" role="status">
+                                <span class="sr-only">Loading...</span>
                             </div>
-                            <select class="form-control" id="step3_letter" data-name="letter_id"></select>
-                        </div>
+                            Export as PDF
+                        </button>
+                    </div>
+                    <div>
+                        <button class="btn btn-secondary" type="button">
+                            Save For Later
+                        </button>
 
-                        <div class="d-flex justify-content-end">
-                            <button class="btn btn-primary esigneditor__btn" type="button">
-                                <div class="spinner-border spinner-border-sm" role="status">
-                                    <span class="sr-only">Loading...</span>
-                                </div>
-                                Next: Generate Letter
-                            </button>
-                        </div>
+                        <button class="btn btn-primary" type="button">
+                            Save & Continue To Print
+                        </button>
                     </div>
                 </div>
+
+                <fieldset class="mt-3">
+                    <legend class="d-flex justify-content-between align-items-center">
+                        <h2>Customer Placeholders</h2>
+                        <a class="link" href="#" data-toggle="modal" data-target="#manageCustomFieldsModal">
+                            Manage Customer Custom Fields
+                        </a>
+                    </legend>
+                    <ul class="placeholders__list mb-3"></ul>
+                </fieldset>
             </div>
         </form>
     </div>
@@ -317,6 +367,54 @@ ini_set('max_input_vars', 30000);
         </button>
         <button type="button" class="btn btn-primary" data-action="on_add_to_dispute">
             Add to Dispute
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" tabindex="-1" role="dialog" id="manageCustomFieldsModal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Customer Custom Fields</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+            <template>
+                <div class="customerCustomField">
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input data-key="name" class="form-control" placeholder="Enter name">
+                    </div>
+                    <div class="form-group">
+                        <label>Value</label>
+                        <input data-key="value" class="form-control" placeholder="Enter value">
+                    </div>
+                    <button class="btn btn-sm btn-primary" type="button">
+                        <span class="fa fa-trash-o"></span>
+                    </button>
+                </div>
+            </template>
+
+            <div class="fields"></div>
+            <div class="mt-3">
+                <button class="link mr-3">+ Add field</button>
+                <a class="link" data-base-url="<?=base_url('customer/add_advance')?>" href="#" target="_blank">
+                    View advance customer
+                </a>
+            </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary esigneditor__btn" data-action="submit">
+            <div class="spinner-border spinner-border-sm" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+            Save
         </button>
       </div>
     </div>

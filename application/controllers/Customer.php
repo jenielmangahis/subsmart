@@ -919,6 +919,9 @@ class Customer extends MY_Controller
 
     public function inventory_list($cid)
     {
+        $this->page_data['page']->title = 'Customer Inventory List';
+        $this->page_data['page']->parent = 'Customers';
+
         $this->load->model('Jobs_model');
         $this->load->model('AcsProfile_model');
 
@@ -938,7 +941,7 @@ class Customer extends MY_Controller
         $this->page_data['inventory'] = $inventory;
         $this->page_data['customer']  = $customer;
 
-        $this->load->view('customer/inventory_list', $this->page_data);
+        $this->load->view('v2/pages/customer/inventory_list', $this->page_data);
     }
 
     public function workorders_list($cid)

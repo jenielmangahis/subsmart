@@ -1,5 +1,22 @@
 window.document.addEventListener("DOMContentLoaded", async () => {
   window.api = await import("../api.js");
+  window.helpers = await import("../helpers.js");
+
+  const params = new Proxy(new URLSearchParams(window.location.search), {
+    get: (searchParams, prop) => searchParams.get(prop),
+  });
+
+  const { data: customer } = await window.api.getCustomer(params.customer_id);
+  const $customerName = document.querySelector(".esigneditor__title span");
+  $customerName.textContent = `${customer.first_name} ${customer.last_name}`;
+
+  Promise.all([
+    initCategories(),
+    initPlaceholders(customer),
+    initCustomerCustomFields(customer),
+  ]).then(() => {
+    document.querySelector(".wrapper").classList.remove("wrapper--loading");
+  });
 
   const $actions = document.querySelectorAll("[data-action]");
   const actions = {
@@ -9,6 +26,9 @@ window.document.addEventListener("DOMContentLoaded", async () => {
     on_choose_letter_recipient: onChooseLetterRecipient,
     step2_save_and_continue: step2SaveContinue,
     on_add_to_dispute: addToDispute,
+    on_no_dispute_next: onNoDisputeNext,
+    on_back_to_part1: onBackToPart1,
+    on_export_pdf: () => onExportPDF(customer),
   };
 
   $actions.forEach(($action) => {
@@ -105,14 +125,70 @@ function onChooseLetterType(event) {
   }
 }
 
-function onChooseLetterRecipient(event) {
-  const $step2 = document.querySelector(".step-2");
-  const $step2DisputeCols = $step2.querySelectorAll(".step__step2DisputeCol");
-  const classListFunc = event.target.value === "credit_bureau" ? "remove" : "add"; // prettier-ignore
+function onChooseLetterRecipient() {
+  const $table = $("#selecteddisputeitemstable");
+  if (!$.fn.DataTable.isDataTable($table)) return;
 
-  $step2DisputeCols.forEach(($col) => {
-    $col.classList[classListFunc]("d-none");
+  const table = $table.DataTable();
+  // 3, 4, 5 are the columns of equifax, experian, and transunion
+  [3, 4, 5].forEach((colNumber) => {
+    const column = table.column(colNumber);
+    column.visible(!column.visible());
   });
+}
+
+async function onNoDisputeNext() {
+  const $letterSelect = document.getElementById("chooseLetter_letter");
+  const letterId = Number($letterSelect.value);
+  if (Number.isNaN(letterId) || letterId <= 0) {
+    return;
+  }
+
+  const $button = document.querySelector("[data-action=on_no_dispute_next]");
+  const { data: letter } = await window.helpers.submitBtn($button, () =>
+    window.api.getLetter(letterId)
+  );
+
+  const $letter = $("#letterContent");
+  window.helpers.wysiwygEditor($letter, letter.content);
+
+  document.querySelector(".part1").classList.add("d-none");
+  document.querySelector(".part2").classList.remove("d-none");
+  document.querySelector(".letterInfo").classList.add("d-none");
+}
+
+function onBackToPart1() {
+  document.querySelector(".part1").classList.remove("d-none");
+  document.querySelector(".part2").classList.add("d-none");
+  document.querySelector(".letterInfo").classList.remove("d-none");
+}
+
+async function onExportPDF(customer) {
+  if (window.__wizardIsExporting) return;
+
+  const $letterSelect = document.getElementById("chooseLetter_letter");
+  const letterId = Number($letterSelect.value);
+  if (Number.isNaN(letterId) || letterId <= 0) {
+    return;
+  }
+
+  const $button = document.querySelector("[data-action=on_export_pdf]");
+  window.__wizardIsExporting = false;
+
+  const payload = {
+    letter_id: letterId,
+    customer_id: customer.prof_id,
+  };
+
+  const $letter = $("#letterContent");
+  payload.content = $letter.summernote("code");
+
+  const { data } = await window.helpers.submitBtn($button, () =>
+    window.api.exportLetterAsPDF(payload)
+  );
+
+  window.helpers.htmlToPDF(data.content);
+  window.__wizardIsExporting = false;
 }
 
 function step2SaveContinue() {
@@ -143,4 +219,173 @@ async function addToDispute() {
     $("#additemmodal").modal("hide");
     new selected.Table();
   }
+}
+
+async function initCategories() {
+  const { data: categories } = await window.api.getCategories();
+  const $select = document.getElementById("chooseLetter_category");
+
+  categories.forEach((category) => {
+    const $option = window.helpers.htmlToElement(
+      `<option value="${category.id}">${category.name}</option>`
+    );
+    $select.appendChild($option);
+  });
+
+  $select.appendChild(
+    window.helpers.htmlToElement(`<option value="favorite">Favorites</option>`)
+  );
+
+  if (categories.length) {
+    const $option = $select.querySelector("option");
+    initLetters($option.value);
+  }
+
+  $select.addEventListener("change", (event) => {
+    initLetters(event.target.value);
+  });
+}
+
+async function initLetters(categoryId) {
+  if (categoryId === undefined) return;
+
+  const $select = document.getElementById("chooseLetter_letter");
+  $select.innerHTML = "";
+  $($select).select2({
+    placeholder: "Select letter",
+    ajax: {
+      url: `${window.api.prefixURL}/EsignEditor/apiGetLetterByCategoryId/${categoryId}`,
+      data: (params) => {
+        const limit = 10;
+        const page = params.page || 1;
+
+        return {
+          limit,
+          search: params.term,
+          offset: page === 1 ? 0 : (page - 1) * limit,
+        };
+      },
+      processResults: (response) => {
+        return {
+          results: response.data.map((letter) => ({
+            id: letter.id,
+            text: letter.title,
+          })),
+          pagination: {
+            more: !response.is_last,
+          },
+        };
+      },
+    },
+  });
+}
+
+async function initPlaceholders(customer) {
+  const $placeholderList = document.querySelector(".placeholders__list");
+  $placeholderList.innerHTML = "";
+  const { data: placeholders } = await window.api.getCustomerPlaceholders(
+    customer.prof_id
+  );
+  placeholders.sort((a, b) => a.code.localeCompare(b.code));
+  placeholders.forEach(appendPlaceholderInList);
+}
+
+function appendPlaceholderInList(placeholder) {
+  const $placeholderList = document.querySelector(".placeholders__list");
+  const $item = window.helpers.htmlToElement(
+    `<li>
+      {${placeholder.code}} - <strong>${placeholder.description}</strong>
+    </li>`
+  );
+  $placeholderList.appendChild($item);
+}
+
+async function initCustomerCustomFields(customer) {
+  let { data: customFields } = await window.api.getCustomerCustomFields(
+    customer.prof_id
+  );
+
+  const $modal = document.getElementById("manageCustomFieldsModal");
+  const $fieldsWrapper = $modal.querySelector(".fields");
+  const template = $modal.querySelector("template");
+
+  let copyId = 0;
+  function createCopy() {
+    copyId++;
+
+    const $copy = document.importNode(template.content, true);
+    const $root = $copy.querySelector(".customerCustomField");
+    $root.setAttribute("data-id", copyId);
+
+    const $button = $copy.querySelector(".btn");
+    $button.addEventListener("click", () => {
+      $root.remove();
+    });
+
+    $fieldsWrapper.append($copy);
+    const $retval = $fieldsWrapper.querySelector(`[data-id="${copyId}"]`);
+    $retval.scrollIntoView();
+    return $retval;
+  }
+
+  // sets up add field link
+  const $addLink = $modal.querySelector(".link");
+  $addLink.addEventListener("click", (event) => {
+    event.preventDefault();
+    createCopy();
+  });
+
+  const $submit = $modal.querySelector("[data-action=submit]");
+  $submit.addEventListener("click", async () => {
+    // validate for empty value
+    const $inputs = $modal.querySelectorAll("[data-key]");
+    for (let index = 0; index < $inputs.length; index++) {
+      const $input = $inputs[index];
+      const value = $input.value.trim();
+
+      if (!value.length) {
+        $input.focus();
+        return;
+      }
+    }
+
+    const $customFields = $modal.querySelectorAll(".customerCustomField");
+    const payload = [];
+    $customFields.forEach(($field) => {
+      const field = {};
+      const $inputs = $field.querySelectorAll("[data-key]");
+      $inputs.forEach(($input) => {
+        field[$input.dataset.key] = $input.value.trim();
+      });
+
+      payload.push(field);
+    });
+
+    const result = await window.helpers.submitBtn($submit, () => {
+      return Promise.all([
+        window.api.saveCustomerCustomFields(customer.prof_id, { fields: payload }), // prettier-ignore
+        initPlaceholders(customer),
+      ]);
+    });
+
+    const [{ data }] = result;
+    customFields = data;
+    $($modal).modal("hide");
+  });
+
+  // set up advance customer link
+  const $link = $modal.querySelector("[data-base-url]");
+  const url = `${$link.dataset.baseUrl}/${customer.prof_id}?section=custom_field`;
+  $link.setAttribute("href", url);
+
+  $($modal).on("show.bs.modal", () => {
+    $fieldsWrapper.innerHTML = "";
+    customFields.forEach((field) => {
+      const $copy = createCopy();
+      const $inputs = $copy.querySelectorAll("[data-key]");
+      $inputs.forEach(($input) => {
+        $input.value = field[$input.dataset.key];
+      });
+    });
+  });
 }
