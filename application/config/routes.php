@@ -208,6 +208,7 @@ $route['survey/add'] = 'survey/addSurvey';
 $route['survey/upload/custombackgroundimage/(:any)'] = 'survey/uploadCustomBackgroundImage/$1';
 $route['survey/home'] = 'survey/index';
 $route['survey/question/(:any)/(:num)/(:num)'] = 'survey/addQuestionSettings/$1/$2/$3';
+$route['survey/_load_survey_questions'] = 'Survey/ajax_load_survey_questions';
 
 // survey logic
 $route['survey/logic/list/(:any)'] = "survey/surveyLogicList/$1";
@@ -516,8 +517,8 @@ $route['import/customer'] = 'accounting/import_customers';
 $route['accounting/products-and-services'] = 'accounting_controllers/products_and_services/index';
 $route['accounting/products-and-services/load']['post'] = 'accounting_controllers/products_and_services/load';
 $route['accounting/products-and-services/item-form/(:any)'] = 'accounting_controllers/products_and_services/get_item_form/$1';
-$route['accounting/products-and-services/inactive/(:any)']['DELETE'] = "accounting_controllers/products_and_services/inactive/$1";
-$route['accounting/products-and-services/active/(:any)'] = "accounting_controllers/products_and_services/active/$1";
+$route['accounting/products-and-services/inactive/(:any)/(:any)']['DELETE'] = "accounting_controllers/products_and_services/inactive/$1/$2";
+$route['accounting/products-and-services/active/(:any)/(:any)'] = "accounting_controllers/products_and_services/active/$1/$2";
 $route['accounting/products-and-services/(:any)/create']['post'] = 'accounting_controllers/products_and_services/create/$1';
 $route['accounting/products-and-services/update/(:any)/(:any)']['post'] = 'accounting_controllers/products_and_services/update/$1/$2';
 $route['accounting/products-and-services/assign-category/(:any)']['post'] = 'accounting_controllers/products_and_services/assign_category/$1';

@@ -185,12 +185,12 @@ class Survey_model extends MY_Model {
 	public function getQuestions($id){
 		$this->db->select('*');
 		$this->db->where('survey_id', $id);
-			$this->db->order_by('order', 'ASC');
+		$this->db->order_by('order', 'ASC');
 		$query = $this->db->get('survey_questions');
 
 			$check = array_map( function($data){
 				$this->db->select('*');
-				$this->db->where('survey_template_id', $data->survey_id);
+				$this->db->where('survey_template_id', $data->id);
 				$query = $this->db->get('survey_template_answer');
 				$data->questions = $query->result();
 
@@ -439,7 +439,7 @@ class Survey_model extends MY_Model {
 				</div>';
 		}elseif($tid == 15){
 			$test = '<div class="form-group">
-					<input name="choices_label_'.$insert_id.'" type="text" class="form-control"  value="">
+					<input name="choices_label_'.$insert_id.'" type="text" class="form-control" value="">
 				 </div>';
 		}else {
 			$test = '<div class="input-group mb-2">
@@ -456,13 +456,15 @@ class Survey_model extends MY_Model {
 	}
 
 	public function orderUpdate($data){
-		foreach($data as $key => $id){
-			$data = array(
-				'order' => $key
-			);
-			$this->db->where('id', $id);
-			$this->db->update('survey_questions', $data);
-		}
+		if( $data ){
+			foreach($data as $key => $id){
+				$data = array(
+					'order' => $key
+				);
+				$this->db->where('id', $id);
+				$this->db->update('survey_questions', $data);
+			}
+		}		
 		return TRUE;
 	}
 
@@ -482,6 +484,13 @@ class Survey_model extends MY_Model {
 		}else{	
 			return $this->db->get('survey_themes')->result(); 
 		}
+	}
+
+	public function getThemesByCompanyIdAndIsDefault($company_id){
+		$this->db->select("*");		
+		$this->db->where('company_id', $company_id);
+		$this->db->or_where('company_id', 0);
+		return $this->db->get('survey_themes')->row();
 	}
 
 	public function addTheme($data){
@@ -506,6 +515,24 @@ class Survey_model extends MY_Model {
 		}
 
 		
+		$query = $this->db->get('survey_workspaces');
+		foreach($query->result() as $q){
+			
+			$this->db->select('*');
+			$this->db->where('workspace_id',$q->id);
+			$query2 = $this->db->get('survey');
+			$q->surveys = $query2->result();
+
+			foreach($q->surveys as $q2){
+				$q2->survey_theme = $this->getThemes($q2->theme_id);
+			}
+		}
+		return $query->result();
+	}
+
+	public function getWorkspacesByCompanyId($company_id){
+		$this->db->select('*');
+		$this->db->where('company_id', $company_id);
 		$query = $this->db->get('survey_workspaces');
 		foreach($query->result() as $q){
 			

@@ -1275,7 +1275,7 @@ a.nsm-button{
 	padding: unset;
 	list-style: none;
 	position: relative;
-	overflow: hidden;
+	/* overflow: hidden; */
 }
 
 .nsm-page-nav > ul > li{
@@ -1320,10 +1320,10 @@ a.nsm-button{
 }
 
 .nsm-page-nav .dropdown > .dropdown-menu{
-	min-width: calc(100% + .55rem);
-	border-radius: 0 0 .25rem .25rem;
-	transform: translate(-4px, 17px) !important;
-	border-top: unset;
+	min-width: calc(100% + 0.7rem);
+    border-radius: 0 0 0.25rem 0.25rem;
+    transform: translate(-5px, 10px) !important;
+    border-top: unset;
 }
 
 .nsm-page-nav .dropdown > .dropdown-toggle > .dropdown-icon{
@@ -1339,14 +1339,9 @@ a.nsm-button{
 	color: #686666;
 }
 
-.nsm-page-nav > ul > li:last-child::after{
-	content: '';
-    border-bottom: 1px solid #d3d3d3 !important;
-    position: absolute;
-    width: 5000px;
-	right: -5000px;
-    bottom: -1px;
-    height: 0;
+.nsm-page-nav > ul > li:last-child{
+	float: none;
+	overflow: hidden;
 }
 
 .nsm-page-nav .dropdown > .dropdown-menu .dropdown-item{

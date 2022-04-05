@@ -344,10 +344,10 @@ $(document).on('click', '#products-services-table .make-inactive', function(e) {
     }).then((result) => {
         if(result.isConfirmed) {
             $.ajax({
-				url: `/accounting/products-and-services/inactive/${rowData.id}`,
+				url: `/accounting/products-and-services/inactive/${rowData.type.toLowerCase()}/${rowData.id}`,
 				type: 'DELETE',
 				success: function(result) {
-					location.reload();
+					// location.reload();
 				}
 			});
         }
@@ -373,10 +373,10 @@ $(document).on('click', '#products-services-table .make-active', function(e) {
     }).then((result) => {
         if(result.isConfirmed) {
             $.ajax({
-				url: `/accounting/products-and-services/active/${rowData.id}`,
+				url: `/accounting/products-and-services/active/${rowData.type.toLowerCase()}/${rowData.id}`,
 				type: 'GET',
 				success: function(result) {
-					location.reload();
+					// location.reload();
 				}
 			});
         }

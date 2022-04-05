@@ -197,6 +197,70 @@
         text-align: center;
         margin-top: 45px;
     }
+
+    .paypal_existed {
+        width: 50%;
+    }
+
+    button#another-account-paypal {
+        background: transparent;
+        border: solid 1px;
+        border-radius: 9px;
+        padding: 4px 26px;
+        transition: 0.5s;
+    }
+
+    button#new-account-paypal {
+        background: transparent;
+        border: solid 1px;
+        border-radius: 9px;
+        padding: 4px 26px;
+        transition: 0.5s;
+    }
+
+    button#back-paypal {
+        background: transparent;
+        border: solid 1px;
+        border-radius: 9px;
+        padding: 4px 26px;
+        transition: 0.5s;
+    }
+
+    button#back-paypal:hover {
+        background: #e8e8e8;
+    }
+
+    button#another-account-paypal:hover {
+        background: #e8e8e8;
+    }
+
+    button#new-account-paypal:hover {
+        background: #e8e8e8;
+    }
+
+    button.button-paypal {
+        background: transparent;
+        border: solid black 1px;
+        border-radius: 7px;
+        padding: 0 6px;
+        transition: 0.5s;
+    }
+
+    button.button-paypal:hover {
+        background: #e8e8e8;
+    }
+
+    button#back-exist-paypal {
+        background: transparent;
+        border: solid 1px;
+        border-radius: 9px;
+        padding: 4px 26px;
+        transition: 0.5s;
+    }
+
+    button#back-exist-paypal:hover {
+        background: #e8e8e8;
+    }
 </style>
 <div id="overlay">
     <div>
@@ -490,12 +554,12 @@
                                                 <div class="row">
                                                     <div class="col-md-12">
                                                         <div class="fdx-entity-container">
-                                                            <center><a href="javascript:void;">
-                                                                    <img style="width: 57%;margin:0 auto;margin-bottom: 10px;" class="fdx-provider-logo" src="<?php echo base_url('assets/img/paypal-logo.png') ?>" title="Paypal" alt="Stripe">
-                                                                    <div class="fdx-recommended-entity-desc-container">
-                                                                        <label class="fdx-recommended-entity-desc">https://www.paypal.com</label>
-                                                                    </div>
-                                                                </a></center>
+                                                            <a href="javascript:void;">
+                                                                <img style="width: 57%;margin:0 auto;margin-bottom: 10px;" class="fdx-provider-logo" src="<?php echo base_url('assets/img/paypal-logo.png') ?>" title="Paypal" alt="Stripe">
+                                                                <div class="fdx-recommended-entity-desc-container">
+                                                                    <label class="fdx-recommended-entity-desc">https://www.paypal.com</label>
+                                                                </div>
+                                                            </a>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -505,7 +569,11 @@
                                             </div>
                                         </div>
                                         <div class="row justify-content-md-center align-items-center pb-5">
-                                            <form method="post" id="paypal_form">
+                                            <form method="post" id="paypal_form" style="display: none;">
+                                            <div class="col-md-12 form-group">
+                                                    <label for=""><b>Account Name</b></label><br>
+                                                    <input type="text" class="form-control" name="account_name" id="" required="" placeholder="" autofocus="">
+                                                </div>
                                                 <div class="col-md-12 form-group">
                                                     <label for=""><b>Client ID</b></label><br>
                                                     <input type="text" class="form-control" name="paypal_client_id" id="" required="" placeholder="" autofocus="">
@@ -521,6 +589,41 @@
                                                     </div>
                                                 </div>
                                             </form>
+                                            <form method="post" id="paypal_form_edit" style="display: none;">
+                                                <div class="col-md-12 form-group">
+                                                    <label for=""><b>Account Name</b></label><br>
+                                                    <input type="text" class="form-control" name="account_name" id="" required="" placeholder="" autofocus="">
+                                                    <input type="text" class="form-control" name="id" id="" style="display: none;">
+                                                </div>
+                                                <div class="col-md-12 form-group">
+                                                    <label for=""><b>Client ID</b></label><br>
+                                                    <input type="text" class="form-control" name="paypal_client_id" id="" required="" placeholder="" autofocus="">
+                                                </div>
+                                                <div class="col-md-12 form-group">
+                                                    <label for=""><b>Secret Key</b></label><br>
+                                                    <input type="text" class="form-control" name="paypal_secret_key" id="" required="" placeholder="" autofocus="">
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <div class="modal-footer close-modal-footer">
+                                                        <button type="button" class="btn btn-default btn-block close-paypal-container">Back</button>
+                                                        <button type="submit" class="btn btn-success btn-block">Save</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                            <div class="paypal_existed" style="display: none;">
+                                                <div id="paypal_accounts"></div>
+                                                <div class="col-md-12 justify-content-md-center">
+                                                    <button id="another-account-paypal"><i class="fa fa-plus" aria-hidden="true"></i> add another account</button><br><br>
+                                                    <button id="back-paypal"><i class="fa fa-arrow-left" aria-hidden="true"></i> back</button>
+                                                </div>
+                                            </div>
+                                            <div id="existed_accounts" style="display: none;">
+                                                <div id="paypal_accounts"></div>
+                                                <div class="col-md-12 justify-content-md-center">
+                                                    <button id="new-account-paypal"><i class="fa fa-plus" aria-hidden="true"></i> add new account</button><br><br>
+                                                    <button id="back-exist-paypal"><i class="fa fa-arrow-left" aria-hidden="true"></i> back</button>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -886,6 +989,74 @@
             }
         }, 1000);
     });
+    $('#another-account-paypal').click(function() {
+        $.ajax({
+            url: "<?= base_url() ?>api/get_paypal_acc",
+            type: "POST",
+            dataType: "json",
+            data: {},
+            success: function(data) {
+                console.log(data.paypalAcc.length);
+                var html = "";
+                var confirm = 0;
+                if (data.paypalAcc.length != 0) {
+                    for (var index = 0; index < data.paypalAcc.length; index++) {
+                        if (data.paypalAcc[index]['paypal_client_id'] == "") {
+                           
+                            html += `
+                            <div class="col-md-12">
+                                <hr>
+                                   <button class="button-paypal" id="` + data.paypalAcc[index]['id'] + `" >
+                                   <div class="row">
+                                        <div class="col-md-3">
+                                            <img style="width: 106%;margin:0 auto;margin-bottom: 10px;" class="fdx-provider-logo" src="<?php echo base_url('assets/img/paypal-logo.png') ?>" title="Paypal" alt="Stripe">
+                                        </div>
+                                        <div class="col-md-5">
+                                            <h6>` + data.paypalAcc[index]['account_name'] + `</h6>
+                                        </div>
+                                    </div>
+                                   </button>
+                                <hr>
+                            </div>`;
+                        }else{
+                            confirm+=1;
+                        }
+                    }
+                    $('.paypal-container #existed_accounts #paypal_accounts').html(html);
+                    $('.accounts-list').hide();
+                    $('.paypal-container').show();
+                    $('.bankOfAmerica-container').hide();
+                    $('.paypal-container .paypal_existed').hide();
+                    $('.paypal-container #existed_accounts').show();
+
+                    if(confirm == data.paypalAcc.length){
+                        html += `<h4>There's no available accounts to be linked.</h4>`
+                    $('.paypal-container #existed_accounts #paypal_accounts').html(html);
+                    $('.accounts-list').hide();
+                    $('.paypal-container').show();
+                    $('.bankOfAmerica-container').hide();
+                    $('.paypal-container .paypal_existed').hide();
+                    $('.paypal-container #existed_accounts').show();
+                    }
+
+                    console.log(confirm);
+                }
+
+
+
+
+            }
+        });
+    })
+    $('#paypal_back').click(function() {
+        $('.paypal-container #paypal_form').hide();
+        $('.paypal-container #existed_accounts').show();
+
+    })
+    $('#new-account-paypal').click(function() {
+        $('.paypal-container #existed_accounts').hide();
+        $('.paypal-container #paypal_form').show();
+    });
     $('#another-account').click(function() {
         $("#stripe_form input[name='account_name']").val("");
         $("#stripe_form input[name='stripe_publish_key']").val("");
@@ -949,6 +1120,25 @@
 
 
     });
+    $(document).on("click", "#existed_accounts .button-paypal", function() {
+        console.log($(this).attr("id"));
+        var id = $(this).attr("id");
+        $.ajax({
+            url: "<?= base_url() ?>api/get_paypal_acc_cond",
+            type: "POST",
+            dataType: "json",
+            data: {id:id},
+            success: function(data) {
+                $('#paypal_form_edit input[name="id"]').val(data.paypalAcc[0]["id"]);
+                $('#paypal_form_edit input[name="account_name"]').val(data.paypalAcc[0]["account_name"]);
+                $('#paypal_form_edit input[name="paypal_client_id"]').val(data.paypalAcc[0]["paypal_client_id"]);
+                $('#paypal_form_edit input[name="paypal_secret_key"]').val(data.paypalAcc[0]["paypal_secret_key"]);
+            }
+        });
+        $('.paypal-container #existed_accounts').hide();
+        $('.paypal-container #paypal_form_edit').show();
+    })
+
     $(document).on("click", "#list-linked-accounts #accounts .dbutton", function() {
         var id = $(this).attr("id");
         console.log(id);
@@ -961,7 +1151,7 @@
                 id: id
             },
             success: function(data) {
-                
+
             }
         });
     });
@@ -1033,20 +1223,62 @@
             dataType: "json",
             data: {},
             success: function(data) {
-                $("#paypal_form input[name='paypal_client_id']").val(data.paypalAcc[0]['paypal_client_id']);
-                $("#paypal_form input[name='paypal_secret_key']").val(data.paypalAcc[0]['paypal_secret_key']);
+
+                var html = "";
+                if (data.paypalAcc.length != 0) {
+                    for (var index = 0; index < data.paypalAcc.length; index++) {
+                        if (data.paypalAcc[index]['paypal_client_id'] != "") {
+                            html += `
+                            <div class="col-md-12">
+                                <hr>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <img style="width: 106%;margin:0 auto;margin-bottom: 10px;" class="fdx-provider-logo" src="<?php echo base_url('assets/img/paypal-logo.png') ?>" title="Paypal" alt="Stripe">
+                                        </div>
+                                        <div class="col-md-5">
+                                            <h6>` + data.paypalAcc[index]['account_name'] + `</h6>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <button class="style ebutton" id="` + data.paypalAcc[index]['id'] + `">edit</button>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <button class="style dbutton"id="` + data.paypalAcc[index]['id'] + `">delete</button>
+                                        </div>
+                                    </div>
+                                <hr>
+                            </div>`;
+                        }
+                    }
+                    $('.paypal-container .paypal_existed #paypal_accounts').html(html);
+                    $('.accounts-list').hide();
+                    $('.paypal-container').show();
+                    $('.bankOfAmerica-container').hide();
+                    $('.paypal-container .paypal_existed').show();
+                }
 
 
-                $('.accounts-list').hide();
-                $('.paypal-container').show();
+
+
             }
         });
 
+
+
     });
     $('.close-paypal-container').click(function() {
-        $('.paypal-container').hide();
-        $('.accounts-list').show();
+        $('.paypal-container #paypal_form').hide();
+        $('.paypal-container #paypal_form_edit  ').hide();
+        $('.paypal-container #existed_accounts').show();
     });
+    $('#back-exist-paypal').click(function() {
+        $('.paypal-container #existed_accounts').hide();
+        $('.paypal-container .paypal_existed').show();
+    })
+    $('#back-paypal').click(function() {
+        $('.paypal-container .paypal_existed').hide();
+        $('.accounts-list').show();
+        $('.paypal-container').hide();
+    })
 </script>
 <script type="text/javascript">
     $(document).ready(function() {
@@ -1071,6 +1303,28 @@
                 }
             });
         });
+        $("#paypal_form_edit").submit(function(e) {
+            e.preventDefault(); // avoid to execute the actual submit of the form.
+            var form = $(this);
+            $.ajax({
+                type: "POST",
+                url: "<?= base_url() ?>api/update_paypal_acc",
+                data: form.serialize(), // serializes the form's elements.
+                beforeSend: function() {
+                    $("#overlay_message").text('Saving credentials...');
+                    document.getElementById('overlay').style.display = "flex";
+                },
+                success: function(data) {
+                   
+                    nsmartrac_alert('Nice!', 'Paypal crendentials saved!', 'success');
+                    document.getElementById('overlay').style.display = "none";
+                    $('.paypal-container').hide();
+                    $("#paypal_form_edit").hide();
+                    $('.accounts-list').show();
+                }
+            });
+        });
+        
 
         $("#stripe_form").submit(function(e) {
             e.preventDefault(); // avoid to execute the actual submit of the form.

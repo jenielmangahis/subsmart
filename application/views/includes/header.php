@@ -341,6 +341,7 @@ if ($this->session->userdata('usertimezone') == null) {
 </head>
 <script>
     var baseURL = '<?= base_url() ?>';
+    var surveyBaseUrl = '<?= base_url() ?>';
 </script>
 
 

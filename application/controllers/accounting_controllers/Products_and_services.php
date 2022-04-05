@@ -291,7 +291,7 @@ class Products_and_services extends MY_Controller {
             }
         }
 
-        $packages = $this->items_model->get_company_packages(logged('company_id'));
+        $packages = $this->items_model->get_company_packages(logged('company_id'), $filters);
         foreach($packages as $package) {
             $packageItems = $this->items_model->get_package_items($package->id);
 
@@ -347,7 +347,7 @@ class Products_and_services extends MY_Controller {
                         'sales_tax_cat' => '',
                         'display_on_print' => !is_null($accountingDetails) ? $accountingDetails->display_on_print : '',
                         'bundle_items' => $bundleItems,
-                        'status' => "1"
+                        'status' => $package->status
                     ];
                 }
             } else {
@@ -380,7 +380,7 @@ class Products_and_services extends MY_Controller {
                     'sales_tax_cat' => '',
                     'display_on_print' => !is_null($accountingDetails) ? $accountingDetails->display_on_print : '',
                     'bundle_items' => $bundleItems,
-                    'status' => "1"
+                    'status' => $package->status
                 ];
             }
         }
@@ -573,9 +573,38 @@ class Products_and_services extends MY_Controller {
         }
     }
 
-    public function inactive($id)
+    public function inactive($type, $id)
     {
-        $inactive = $this->items_model->inactiveItem($id);
+        if($type === 'bundle') {
+            $package = $this->items_model->get_package_by_id($id);
+        } else {
+            $item = $this->items_model->getItemById($id)[0];
+        }
+
+        $attempt = 0;
+        do {
+            if($type === 'bundle') {
+                $name = $attempt > 0 ? "$package->name (deleted - $attempt)" : "$package->name (deleted)";
+                $checkName = $this->items_model->check_package_name(logged('company_id'), $name);
+            } else {
+                $name = $attempt > 0 ? "$item->title (deleted - $attempt)" : "$item->title (deleted)";
+                $checkName = $this->items_model->check_name(logged('company_id'), $name);
+            }
+
+            $attempt++;
+        } while(!is_null($checkName));
+
+        $data = [
+            'id' => $id,
+            'name' => $name,
+            'company_id' => logged('company_id')
+        ];
+
+        if($type === 'bundle') {
+            $inactive = $this->items_model->inactivePackage($data);
+        } else {
+            $inactive = $this->items_model->inactiveItem($data);
+        }
 
         if($inactive) {
             $this->session->set_flashdata('success', "Item is now inactive.");
@@ -584,11 +613,44 @@ class Products_and_services extends MY_Controller {
         }
     }
 
-    public function active($id)
+    public function active($type, $id)
     {
-        $inactive = $this->items_model->activeItem($id);
+        if($type === 'bundle') {
+            $package = $this->items_model->get_package_by_id($id);
+            $explode = explode(' ', $package->name);
+        } else {
+            $item = $this->items_model->getItemById($id)[0];
+            $explode = explode(' ', $item->title);
+        }
+        array_pop($explode);
+        $newName = implode(' ', $explode);
 
-        if($inactive) {
+        $attempt = 0;
+        do {
+            if($type === 'bundle') {
+                $name = $attempt > 0 ? "$newName - $attempt" : $newName;
+            } else {
+                $name = $attempt > 0 ? "$newName - $attempt" : $newName;
+            }
+
+            $checkName = $this->items_model->check_name(logged('company_id'), $name);
+
+            $attempt++;
+        } while(!is_null($checkName));
+
+        $data = [
+            'id' => $id,
+            'name' => $name,
+            'company_id' => logged('company_id')
+        ];
+
+        if($type === 'bundle') {
+            $active = $this->items_model->activePackage($data);
+        } else {
+            $active = $this->items_model->activeItem($data);
+        }
+
+        if($active) {
             $this->session->set_flashdata('success', "Item is now active.");
         } else {
             $this->session->set_flashdata('error', "Please try again!");
@@ -637,6 +699,7 @@ class Products_and_services extends MY_Controller {
                     'package_type'  => '1',
                     'total_price' => $input['price'],
                     'amount_set' => number_format(floatval($amountSet), 2, '.', ','),
+                    'status' => 1,
                     'created_by' => logged('id'),
                     'company_id' => logged('company_id'),
                     'created_at' => date("Y-m-d H:i:s")

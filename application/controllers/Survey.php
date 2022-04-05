@@ -12,8 +12,6 @@ class Survey extends MY_Controller
       $this->page_data['page']->menu = 'Survey';
       $this->load->model('Survey_model', 'survey_model');
 
-
-
       add_css(array(
         'https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css',
         'https://cdn.jsdelivr.net/jquery.jssocials/1.4.0/jssocials-theme-minima.css',
@@ -66,17 +64,17 @@ class Survey extends MY_Controller
       $survey->survey_theme = $this->survey_model->getThemes($survey->theme_id);
     }
     
-    $this->page_data['survey_workspaces'] = $this->survey_model->getWorkspaces();
+    $company_id = logged('company_id');
+    $this->page_data['survey_workspaces'] = $this->survey_model->getWorkspacesByCompanyId($company_id);
     $this->page_data['survey_templates'] = json_decode($templates);
     $this->page_data['survey_question_templates'] = $this->survey_model->getTemplateQuestions();
     $this->page_data['template_categories'] = array_unique(array_column(json_decode($templates), 'category'));
-    $this->page_data["survey_themes"] = $this->survey_model->getThemes();
+    $this->page_data["survey_themes"] = $this->survey_model->getThemesByCompanyIdAndIsDefault($company_id);
     // $this->load->view('survey/index.php', $this->page_data);
     $this->load->view('v2/pages/survey/index.php', $this->page_data);
   }
 
-  public function add($settings = null){
-    
+  public function add($settings = null){    
     $data = array(
       'created_by' => $_SESSION['uid'],
       'title' => $this->input->post('title'),
@@ -184,6 +182,7 @@ class Survey extends MY_Controller
     $result = array(
       'success' => 1,
       'data' => $data,
+      'sid' => $id,
     );
     // add_footer_js(array(
     //     'assets/js/survey.js',
@@ -198,6 +197,7 @@ class Survey extends MY_Controller
     $result = array(
       'success' => 1,
       'data' => $data,
+      'sid' => $id
     );
     // add_footer_js(array(
     //     'assets/js/survey.js',
@@ -263,7 +263,8 @@ class Survey extends MY_Controller
     $data = $this->survey_model->addQuestionChoice($id, $tid);
     $result = array(
       'success' => 1,
-      'data' => $data
+      'data' => $data,
+      'tid' => $tid
     );
     echo json_encode($result);
     exit;
@@ -435,14 +436,25 @@ class Survey extends MY_Controller
 
   public function addTheme(){
     
-    $filename = $_POST["sth_theme_name"];
-    $path = 'uploads/survey/themes';
+    //$filename   = $_POST["sth_theme_name"];
+    $filename   = 'theme_image_'.time();
+    $company_id = logged('company_id');
+
+    //$path = 'uploads/survey/themes';
+    $path = "./uploads/survey/themes/$company_id/";
+      
+    if(!file_exists($path)) {
+      mkdir($path, 0777, true);
+    }
+
     $config = [
       'file_name' => strtolower($filename),
       'upload_path' 		=> $path,
       'allowed_types' 	=> '*',
       'overwrite' 		=> false,
     ];
+
+    $_POST['company_id'] = $company_id;
     $_POST["sth_primary_image"] = strtolower($filename).".jpg";
     $test = $this->upload->initialize($config);
     $this->upload->do_upload('filePrimaryImage');
@@ -483,7 +495,9 @@ class Survey extends MY_Controller
     
     $data = array(
       "name" => $this->input->post('txtWorkspaceName'),
-      "users" => json_encode(array(0))
+      "users" => '',
+      "company_id" => logged('company_id')
+
     );
     $this->survey_model->addWorkspace($data);
     $result = array(
@@ -492,7 +506,8 @@ class Survey extends MY_Controller
     );
     echo json_encode($result);
     if(isset($_GET['redirect'])){
-      redirect('survey/workspace');
+      //redirect('survey/workspace');
+      redirect('survey');
     }
   }
 
@@ -542,9 +557,11 @@ class Survey extends MY_Controller
     exit;
   }
 
-  
-
-
-
-
+  public function ajax_load_survey_questions()
+  {
+    $post       = $this->input->post();
+    $survey_id = $post['survey_id'];
+    $this->page_data['questions'] = $this->survey_model->getQuestions($survey_id);
+    $this->load->view('survey/ajax_load_survey_questions', $this->page_data);
+  }
 }

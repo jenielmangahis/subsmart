@@ -113,9 +113,9 @@
                                                             <label class="nsm-subtitle d-block"><?= count($workspace->surveys) ?> survey<?= (count($workspace->surveys) > 1) ? "s" : "" ?> in this workspace</label>
                                                         </div>
                                                         <div class="col-12 col-md-6 text-end">
-                                                            <button type="button" class="nsm-button primary" onclick="location.href='<?php echo url('survey/themes/create') ?>'">
+                                                            <button type="button" class="nsm-button primary" onclick="location.href='<?php echo url('survey/add?ws='.$workspace->id) ?>'">
                                                                 <i class='bx bx-fw bx-plus'></i>
-                                                            </button>
+                                                            </button>                                                            
                                                             <button type="button" class="nsm-button edit-workspace" data-id="<?= $workspace->id ?>" data-name="<?= $workspace->name ?>">
                                                                 <i class='bx bx-fw bx-edit'></i>
                                                             </button>

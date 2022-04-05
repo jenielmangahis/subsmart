@@ -1,6 +1,6 @@
 // global settings
 // const surveyBaseUrl = "/nsmartrac/"; // local
-const surveyBaseUrl = `${window.location.origin}/` ; // online
+//const surveyBaseUrl = `${window.location.origin}/` ; // online
 
 $(document).ready(function(){
   $(document).on('submit', '#frm-add-survey', function(e){
@@ -90,7 +90,6 @@ $(document).ready(function(){
 
   $(document).on('click', '#btn-question-delete', function(e){
     e.preventDefault();
-
     var id = $(this).data('id');
     $.ajax({
       url: surveyBaseUrl + '/survey/delete/question/' +id,
@@ -214,74 +213,20 @@ $(document).ready(function(){
             // var data = res.data.data;
             var data = ``;
           }
-        var append = `<div id="container-${res.data.id}" class="col-sm-12">
-            <div class="card">
-                <div class="card-body p-0">
-                <form action="${surveyBaseUrl}/survey/update/question/${res.data.id}" id="frm-update-question" method="post" accept-charset="utf-8">
-                    <div class="d-flex justify-content-between">
-                      
-                      <h5 class="card-title">
-                      ${res.data.template_title}
-                      </h5>
-                      <div class="dropleft">
-                        <button  class="btn dropdown-toggle" type="button"  id="dropdownMenuButton" name="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                          <i class="text-dark fa fa-ellipsis-h"></i>
-                        </button>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                          <a class="dropdown-item" href="#" id=""  data-id="${res.data.id}">Settings</a>
-                          <a class="dropdown-item" href="#" id="btn-question-delete"  data-id="${res.data.id}">Delete</a>
-                        </div>
-                      </div>
-                        </div>
-                    <input type="hidden" name="survey_id" value="${res.data.id}">
-                    <div class="form-group">
-                        <input type="text" class="form-control" name="question" value="${res.data.question}" placeholder="Enter your question"/>
-                      </div>
-                      <div id="choices">
-                      ${data}
-                    </div>
-                      <div class="d-flex justify-content-end">
-                        ${choice_btn}
-                      </div>
-                      <div class="btn-group justify-content-right">
-                        <a class="dropdown-item btn " type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent<?= $question->id ?>" aria-controls="navbarToggleExternalContent<?= $question->id ?>" aria-expanded="false" aria-label="Toggle navigation"><span class="text-info">More Options</span></a>
-                        <a class="dropdown-item btn" type="button" href="<?php echo base_url()?>survey/<?= $survey->id?>" id="btn-question-delete"  data-id="<?= $question->id ?>"><span class="text-danger">Delete</span></a>
-                      </div>
-                    </form>
-                    <div class="dropdown btn-add-question-bottom"><button id="btn-add-question-bottom" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      <i class="fa fa-plus"></i>
-                      </button>
-                      <div class="dropdown-menu" aria-labelledby="btn-add-question-bottom">
-                        <a href="<?= base_url() ?>survey/add/question/<?= $this->uri->segment(2) ?>/9" class="dropdown-item" id="add-question-bottom">Welcome Screen</a>
-                        <a href="<?= base_url() ?>survey/add/question/<?= $this->uri->segment(2) ?>/1" class="dropdown-item" id="add-question-bottom">Short Text</a>
-                        <a href="<?= base_url() ?>survey/add/question/<?= $this->uri->segment(2) ?>/2" class="dropdown-item" id="add-question-bottom">Long Text</a>
-                        <a href="<?= base_url() ?>survey/add/question/<?= $this->uri->segment(2) ?>/3" class="dropdown-item" id="add-question-bottom">Single Choice Answer</a>
-                        <a href="<?= base_url() ?>survey/add/question/<?= $this->uri->segment(2) ?>/4" class="dropdown-item" id="add-question-bottom">Multiple Choice Answer</a>
-                        <a href="<?= base_url() ?>survey/add/question/<?= $this->uri->segment(2) ?>/5" class="dropdown-item" id="add-question-bottom">Email Type</a>
-                        <a href="<?= base_url() ?>survey/add/question/<?= $this->uri->segment(2) ?>/6" class="dropdown-item" id="add-question-bottom">Number Type</a>
-                        <a href="<?= base_url() ?>survey/add/question/<?= $this->uri->segment(2) ?>/7" class="dropdown-item" id="add-question-bottom">Image Type</a>
-                        <a href="<?= base_url() ?>survey/add/question/<?= $this->uri->segment(2) ?>/8" class="dropdown-item" id="add-question-bottom">Phone Number Type</a>
-                      </div>
-                    </div>
-                </div>
-              </div>
-          </div>`;
-        if(res.data.tid == 1){
-          $('#add-question').remove();
-          $('#card-list').prepend(append);
-        }else{
-          $('#card-list').append(append);
-        }
+
+        load_questions_list(res.sid);
         var number = [];
         $.each($('#card-list .col-sm-12'), function(key, value){
           number.push(value.id.split("-")[1]);
         });
+
         $.ajax({
           url: surveyBaseUrl + '/survey/order/question',
           data: { 'id': number },
           dataType: 'json',
           type: 'POST',
-          success: function(res){
+          success: function(res){            
+            //location.reload();
           }
         })
       }
@@ -332,10 +277,10 @@ $(document).ready(function(){
       type: 'GET',
       dataType: 'json',
       success: function(res){
-
+        var survey_option = '<div class="d-flex w-100 justify-content-between choice-container" style="margin:10px 0px; height:44px;">' + res.data + '<button id="btn-delete-option" data-id="'+res.tid+'" class="btn btn-outline-danger" type="button" name="button"><i class="fa fa-trash"></i></button>';
         if(res.success == 1){
           toastr["success"]("Successfully Added!");
-          $('#container-'+id+' #choices').append(res.data);
+          $('#container-'+id+' #choices').append(survey_option);
         }
       }
     });
@@ -1008,8 +953,17 @@ $("#shared").jsSocials({
 
 tribute.attach(document.getElementsByClassName('questions'));
 
-
-
+function load_questions_list(survey_id){
+  var url =  surveyBaseUrl + 'survey/_load_survey_questions';
+  $.ajax({
+    url: url,
+    data: {survey_id:survey_id},
+    type: 'POST',
+    success: function(res){
+      $('#card-order-list').html(res);
+    }
+  });
+}
 
   function delay(callback, ms) {
     var timer = 0;

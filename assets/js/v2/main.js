@@ -70,18 +70,18 @@ $(document).ready(function () {
 		});
 	});
 
-	$(".nsm-img-upload").on("click", function(){
+	$(".nsm-img-upload").on("click", function () {
 		let fileInput = $(this).find("input[type=file]");
 
 	});
 
-	$(".nsm-img-upload .nsm-upload").on("change", function(e){
+	$(".nsm-img-upload .nsm-upload").on("change", function (e) {
 		let _this = $(this);
-		let reader = new FileReader(); 
+		let reader = new FileReader();
 
-		reader.onload = function(){
+		reader.onload = function () {
 			let imgPreview = _this.closest(".nsm-img-upload");
-			imgPreview.css("background-image", "url('"+ reader.result +"')");
+			imgPreview.css("background-image", "url('" + reader.result + "')");
 		};
 		reader.readAsDataURL(e.target.files[0]);
 	});
@@ -182,13 +182,13 @@ function debounce(func, wait, immediate) {
 	};
 };
 
-function showLoader(_elem){
-	let loader = '<div class="row">'+
-                        '<div class="col-12">'+
-                            '<div class="nsm-loader">'+
-                                '<i class="bx bx-loader-alt bx-spin"></i>'+
-                            '</div>'+
-                        '</div>'+
-                    '</div>';
+function showLoader(_elem) {
+	let loader = '<div class="row">' +
+		'<div class="col-12">' +
+		'<div class="nsm-loader">' +
+		'<i class="bx bx-loader-alt bx-spin"></i>' +
+		'</div>' +
+		'</div>' +
+		'</div>';
 	_elem.html(loader);
 }

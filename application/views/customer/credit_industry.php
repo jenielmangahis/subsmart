@@ -159,22 +159,22 @@
                                       </div>
                                     </div>
 
-                                    <!-- Modal Delete Dispute -->
+                                    <!-- Modal Edit Dispute -->
                                     <div class="modal fade bd-example-modal-md" id="modal-edit-dispute" tabindex="-1" role="dialog" aria-labelledby="modalDeleteWorkorderTypeTitle" aria-hidden="true">
-                                      <div class="modal-dialog modal-md" role="document">
+                                      <div class="modal-dialog modal-xl" role="document">
                                         <div class="modal-content">
                                           <div class="modal-header">
-                                            <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-trash"></i> Edit</h5>
+                                            <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-pencil"></i> Edit Dispute</h5>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                               <span aria-hidden="true">&times;</span>
                                             </button>
                                           </div>
-                                          <?php echo form_open_multipart('', ['class' => 'form-validate', 'id' => 'frm-delete-dispute', 'autocomplete' => 'off' ]); ?>
-                                          <?php echo form_input(array('name' => 'did', 'type' => 'hidden', 'value' => '', 'id' => 'did'));?>
-                                          <div class="modal-body"></div>
+                                          <?php echo form_open_multipart('', ['class' => 'form-validate', 'id' => 'frm-update-dispute', 'autocomplete' => 'off' ]); ?>
+                                          <?php echo form_input(array('name' => 'did', 'type' => 'hidden', 'value' => '', 'id' => 'editdid'));?>
+                                          <div class="modal-body" style="overflow-y: scroll;max-height: 800px;"></div>
                                           <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                            <button type="submit" class="btn btn-danger btn-delete-dispute">Save</button>
+                                            <button type="submit" class="btn btn-primary btn-update-dispute">Save</button>
                                           </div>
                                           <?php echo form_close(); ?>
                                         </div>
@@ -211,21 +211,19 @@ $(document).ready(function () {
     });
 
     $(document).on('click', '.edit-dispute', function(){
+        var did = $(this).attr('data-id');
         var url = base_url + 'customer/_edit_dispute_item';
+
+        $('#editdid').val(did);
 
         $('#modal-edit-dispute').modal('show');
         $("#modal-edit-dispute .modal-body").html('<span class="spinner-border spinner-border-sm m-0"></span>');
 
-        var formData = new FormData($("#frm-delete-dispute")[0]);   
-
         setTimeout(function () {
           $.ajax({
              type: "POST",
-             url: url,             
-             contentType: false,
-             cache: false,
-             processData:false,
-             data: formData,
+             url: url,   
+             data: {did:did},
              success: function(o)
              {  
                 $("#modal-edit-dispute .modal-body").html(o);
@@ -276,6 +274,52 @@ $(document).ready(function () {
                   });
                 } 
                 $(".btn-delete-dispute").html('Delete');
+             }
+          });
+        }, 800);
+    });
+
+    $("#frm-update-dispute").submit(function(e){
+        e.preventDefault();
+        var url = base_url + 'customer/_update_customer_dispute';
+        $(".btn-update-dispute").html('<span class="spinner-border spinner-border-sm m-0"></span>');
+
+        var formData = new FormData($("#frm-update-dispute")[0]);   
+
+        setTimeout(function () {
+          $.ajax({
+             type: "POST",
+             url: url,
+             dataType: 'json',
+             contentType: false,
+             cache: false,
+             processData:false,
+             data: formData,
+             success: function(o)
+             {  
+                $("#modal-edit-dispute").modal('hide');
+
+                if( o.is_success == 1 ){
+                  Swal.fire({
+                      title: 'Great!',
+                      text: 'Dispute was successfully updated.',
+                      icon: 'success',
+                      showCancelButton: false,
+                      confirmButtonColor: '#32243d',
+                      cancelButtonColor: '#d33',
+                      confirmButtonText: 'Ok'
+                  }).then((result) => {
+                      location.reload();
+                  });
+                }else{                      
+                  Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    confirmButtonColor: '#32243d',
+                    html: o.msg
+                  });
+                } 
+                $(".btn-update-dispute").html('Save');
              }
           });
         }, 800);

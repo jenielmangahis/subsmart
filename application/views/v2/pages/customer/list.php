@@ -92,84 +92,84 @@
 
                                     $image = userProfilePicture($customer->id);
                                 ?>
-                                        <?php if (in_array('name', $enabled_table_headers)) : ?>
-                                            <td>
-                                                <?php if (is_null($image)) : ?>
-                                                    <div class="nsm-profile">
-                                                        <span><?php echo getLoggedNameInitials($customer->id); ?></span>
-                                                    </div>
-                                                <?php else : ?>
-                                                    <div class="nsm-profile" style="background-image: url('<?php echo $image; ?>');"></div>
-                                                <?php endif; ?>
-                                            </td>
-                                            <td class="nsm-text-primary" onclick="location.href='<?= base_url('/customer/preview_/' . $customer->prof_id); ?>'">
-                                                <label class="nsm-link default d-block fw-bold"><?= ($customer) ? $customer->first_name . ' ' . $customer->last_name : ''; ?></label>
-                                                <label class="nsm-link default content-subtitle fst-italic d-block"><?php echo $customer->email; ?></label>
-                                            </td>
-                                        <?php endif; ?>
-                                        <?php if (in_array('city', $enabled_table_headers)) : ?>
-                                            <td><?php echo $customer->city; ?></td>
-                                        <?php endif; ?>
-                                        <?php if (in_array('state', $enabled_table_headers)) : ?>
-                                            <td><?php echo $customer->state; ?></td>
-                                        <?php endif; ?>
-                                        <?php if (in_array('source', $enabled_table_headers)) : ?>
-                                            <td><?= $customer->lead_source != "" ? $customer->lead_source : 'n/a'; ?></td>
-                                        <?php endif; ?>
-                                        <?php if (in_array('added', $enabled_table_headers)) : ?>
-                                            <td><?php echo $customer->entered_by; ?></td>
-                                        <?php endif; ?>
-                                        <?php if (in_array('sales_rep', $enabled_table_headers)) : ?>
-                                            <td><?php echo ($customer) ? $customer->FName . ' ' . $customer->LName : ''; ?></td>
-                                        <?php endif; ?>
-                                        <?php if (in_array('tech', $enabled_table_headers)) : ?>
-                                            <td><?= $customer->technician != null ? $customer->technician : 'Not Assigned'; ?></td>
-                                        <?php endif; ?>
-                                        <?php if (in_array('plan_type', $enabled_table_headers)) : ?>
-                                            <td><?php echo $customer->system_type; ?></td>
-                                        <?php endif; ?>
-                                        <?php if (in_array('subscription_amount', $enabled_table_headers)) : ?>
-                                            <td>$<?= $customer->total_amount; ?></td>
-                                        <?php endif; ?>
-                                        <?php if (in_array('phone', $enabled_table_headers)) : ?>
-                                            <td><?php echo $customer->phone_m; ?></td>
-                                        <?php endif; ?>
-                                        <?php if (in_array('status', $enabled_table_headers)) : ?>
-                                            <td><span class="nsm-badge <?= $badge ?>"><?= $customer->status != null ? $customer->status : 'Pending'; ?></span></td>
-                                        <?php endif; ?>
+                                    <?php if (in_array('name', $enabled_table_headers)) : ?>
                                         <td>
-                                            <div class="dropdown table-management">
-                                                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-                                                    <i class='bx bx-fw bx-dots-vertical-rounded'></i>
-                                                </a>
-                                                <ul class="dropdown-menu dropdown-menu-end">
-                                                    <li>
-                                                        <a class="dropdown-item" href="<?php echo base_url('customer/preview_/' . $customer->prof_id); ?>">Preview</a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item" href="<?php echo base_url('customer/add_advance/' . $customer->prof_id); ?>">Edit</a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item" href="mailto:<?= $customer->email; ?>">Email</a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item call-item" href="javascript:void(0);" data-id="<?= $customer->phone_m; ?>">Call</a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item" href="<?= base_url('invoice/add/'); ?>">Invoice</a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item" href="<?= base_url('customer/module/' . $customer->prof_id); ?>">Dashboard</a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item" href="<?= base_url('job/new_job1/'); ?>">Schedule</a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item" href="#">Message</a>
-                                                    </li>
-                                                </ul>
-                                            </div>
+                                            <?php if (is_null($image)) : ?>
+                                                <div class="nsm-profile">
+                                                    <span><?php echo getLoggedNameInitials($customer->id); ?></span>
+                                                </div>
+                                            <?php else : ?>
+                                                <div class="nsm-profile" style="background-image: url('<?php echo $image; ?>');"></div>
+                                            <?php endif; ?>
                                         </td>
+                                        <td class="nsm-text-primary">
+                                            <label class="nsm-link default d-block fw-bold" onclick="location.href='<?= base_url('/customer/preview_/' . $customer->prof_id); ?>'"><?= ($customer) ? $customer->first_name . ' ' . $customer->last_name : ''; ?></label>
+                                            <label class="nsm-link default content-subtitle fst-italic d-block"><?php echo $customer->email; ?></label>
+                                        </td>
+                                    <?php endif; ?>
+                                    <?php if (in_array('city', $enabled_table_headers)) : ?>
+                                        <td><?php echo $customer->city; ?></td>
+                                    <?php endif; ?>
+                                    <?php if (in_array('state', $enabled_table_headers)) : ?>
+                                        <td><?php echo $customer->state; ?></td>
+                                    <?php endif; ?>
+                                    <?php if (in_array('source', $enabled_table_headers)) : ?>
+                                        <td><?= $customer->lead_source != "" ? $customer->lead_source : 'n/a'; ?></td>
+                                    <?php endif; ?>
+                                    <?php if (in_array('added', $enabled_table_headers)) : ?>
+                                        <td><?php echo $customer->entered_by; ?></td>
+                                    <?php endif; ?>
+                                    <?php if (in_array('sales_rep', $enabled_table_headers)) : ?>
+                                        <td><?php echo ($customer) ? $customer->FName . ' ' . $customer->LName : ''; ?></td>
+                                    <?php endif; ?>
+                                    <?php if (in_array('tech', $enabled_table_headers)) : ?>
+                                        <td><?= $customer->technician != null ? $customer->technician : 'Not Assigned'; ?></td>
+                                    <?php endif; ?>
+                                    <?php if (in_array('plan_type', $enabled_table_headers)) : ?>
+                                        <td><?php echo $customer->system_type; ?></td>
+                                    <?php endif; ?>
+                                    <?php if (in_array('subscription_amount', $enabled_table_headers)) : ?>
+                                        <td>$<?= $customer->total_amount; ?></td>
+                                    <?php endif; ?>
+                                    <?php if (in_array('phone', $enabled_table_headers)) : ?>
+                                        <td><?php echo $customer->phone_m; ?></td>
+                                    <?php endif; ?>
+                                    <?php if (in_array('status', $enabled_table_headers)) : ?>
+                                        <td><span class="nsm-badge <?= $badge ?>"><?= $customer->status != null ? $customer->status : 'Pending'; ?></span></td>
+                                    <?php endif; ?>
+                                    <td>
+                                        <div class="dropdown table-management">
+                                            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                                <i class='bx bx-fw bx-dots-vertical-rounded'></i>
+                                            </a>
+                                            <ul class="dropdown-menu dropdown-menu-end">
+                                                <li>
+                                                    <a class="dropdown-item" href="<?php echo base_url('customer/preview_/' . $customer->prof_id); ?>">Preview</a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item" href="<?php echo base_url('customer/add_advance/' . $customer->prof_id); ?>">Edit</a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item" href="mailto:<?= $customer->email; ?>">Email</a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item call-item" href="javascript:void(0);" data-id="<?= $customer->phone_m; ?>">Call</a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item" href="<?= base_url('invoice/add/'); ?>">Invoice</a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item" href="<?= base_url('customer/module/' . $customer->prof_id); ?>">Dashboard</a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item" href="<?= base_url('job/new_job1/'); ?>">Schedule</a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item" href="#">Message</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
                                     </tr>
                                 <?php
                                 endforeach;
@@ -244,8 +244,8 @@
                                                 <div class="nsm-profile" style="background-image: url('<?php echo $image; ?>');"></div>
                                             <?php endif; ?>
                                         </td>
-                                        <td class="nsm-text-primary" onclick="location.href='<?= base_url('/customer/preview_/' . $customer->prof_id); ?>'">
-                                            <label class="nsm-link default d-block fw-bold"><?= ($customer) ? $customer->first_name . ' ' . $customer->last_name : ''; ?></label>
+                                        <td class="nsm-text-primary">
+                                            <label class="nsm-link default d-block fw-bold" onclick="location.href='<?= base_url('/customer/preview_/' . $customer->prof_id); ?>'"><?= ($customer) ? $customer->first_name . ' ' . $customer->last_name : ''; ?></label>
                                             <label class="nsm-link default content-subtitle fst-italic d-block"><?php echo $customer->email; ?></label>
                                         </td>
                                         <td><?php echo $customer->city; ?></td>
@@ -327,7 +327,7 @@
             window.open('tel:' + phone);
         });
 
-        $("#btn_print_customer_list").on("click", function(){
+        $("#btn_print_customer_list").on("click", function() {
             $("#customer_table_print").printThis();
         });
     });

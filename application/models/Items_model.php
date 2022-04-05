@@ -144,19 +144,35 @@ class Items_model extends MY_Model
         return $query->result();
     }
 
-    public function inactiveItem($id)
+    public function inactiveItem($data)
     {
-        $this->db->where('company_id', getLoggedCompanyID());
-        $this->db->where('id', $id);
-        $inactive = $this->db->update($this->table, ['is_active' => 0]);
+        $this->db->where('company_id', $data['company_id']);
+        $this->db->where('id', $data['id']);
+        $inactive = $this->db->update($this->table, ['is_active' => 0, 'title' => $data['name']]);
         return $inactive ? true : false;
     }
 
-    public function activeItem($id)
+    public function inactivePackage($data)
     {
-        $this->db->where('company_id', getLoggedCompanyID());
-        $this->db->where('id', $id);
-        $inactive = $this->db->update($this->table, ['is_active' => 1]);
+        $this->db->where('company_id', $data['company_id']);
+        $this->db->where('id', $data['id']);
+        $inactive = $this->db->update('package_details', ['status' => 0, 'name' => $data['name']]);
+        return $inactive ? true : false;
+    }
+
+    public function activeItem($data)
+    {
+        $this->db->where('company_id', $data['company_id']);
+        $this->db->where('id', $data['id']);
+        $inactive = $this->db->update($this->table, ['is_active' => 1, 'title' => $data['name']]);
+        return $inactive ? true : false;
+    }
+
+    public function activePackage($data)
+    {
+        $this->db->where('company_id', $data['company_id']);
+        $this->db->where('id', $data['id']);
+        $inactive = $this->db->update('package_details', ['status' => 1, 'name' => $data['name']]);
         return $inactive ? true : false;
     }
 
@@ -499,11 +515,28 @@ class Items_model extends MY_Model
         return $update;
     }
 
-    public function get_company_packages($companyId)
+    public function get_company_packages($companyId, $filters = [])
     {
         $this->db->where('company_id', $companyId);
+        $this->db->where_in('status', $filters['status']);
         $query = $this->db->get('package_details');
         return $query->result();
+    }
+
+    public function check_name($companyId, $itemName)
+    {
+        $this->db->where('company_id', $companyId);
+        $this->db->where('title', $itemName);
+        $query = $this->db->get($this->table);
+        return $query->row();
+    }
+
+    public function check_package_name($companyId, $packageName)
+    {
+        $this->db->where('company_id', $companyId);
+        $this->db->where('name', $packageName);
+        $query = $this->db->get('package_details');
+        return $query->row();
     }
 }
 

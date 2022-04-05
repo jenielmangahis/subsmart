@@ -26,7 +26,8 @@
         display: flex;
         overflow: none;
         padding: 10px 0;
-        height: 100%: 
+        height: 100%;
+        width: 100%;
     }
 
     .theme-sample-content{
@@ -37,7 +38,7 @@
 
     .theme-image{
         width: 100%;
-        height: 350pt;
+        /*height: 350pt;*/
         object-fit: cover;
     }
     .theme-image{
@@ -61,8 +62,8 @@
                         <h2>Create a new theme</h2>
                         <p>Pick colors for your theme.</p>
                         <div class="row">
-                            <button id="btnPreview" class="btn btn-secondary " type="button">Preview</button>
-                            <button id="btnSubmit" class="btn btn-success " type="submit">Submit</button>
+                            <button id="btnPreview" class="btn btn-secondary " type="button" style="margin:5px;">Preview</button>
+                            <button id="btnSubmit" class="btn btn-success " type="submit" style="margin:5px;">Submit</button>
                         </div>
                         <hr/>
 
@@ -83,8 +84,8 @@
                                             <h1 id="sampleHeaderText">Lorem Ipsum</h1>
                                             <div id="sampleLineSeparator" class="line-separator"></div>
                                             <p id="sampleParagraph">This is where the text will be placed. Another sentence to fill in the spaces of your survey.</p>
-                                            <button id="samplePrimaryButton" type="button" class="btn ">Button</button>
-                                            <button id="sampleSecondaryButton" type="button" class="btn ">Button</button>
+                                            <button id="samplePrimaryButton" type="button" class="btn ">Primary Button</button>
+                                            <button id="sampleSecondaryButton" type="button" class="btn ">Secondary Button</button>
                                         </div>
                                     
                                     </div>
@@ -107,11 +108,11 @@
                                     <div class="form-row row">
                                         <div class="form-group col-xs-6 col-sm-4 col-md-1 text-center">
                                             <input class="form-control" type="color" name="sth_primary_color" id="colPrimary" value="#9D344B" data-toggle="tooltip" data-placement="top" title="Primary Color">
-                                            <small>Primary</small>
+                                            <small>Primary Button</small>
                                         </div>
                                         <div class="form-group col-xs-6 col-sm-4 col-md-1 text-center">
                                             <input class="form-control" type="color" name="sth_secondary_color" id="colSecondary" value="#257059" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
-                                            <small>Secondary</small>
+                                            <small>Secondary Button</small>
                                         </div>
                                         <div class="form-group col-xs-6 col-sm-4 col-md-1 text-center">
                                             <input class="form-control" type="color" name="sth_tertiary_color" id="colTertiary" value="#8AA236" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
