@@ -429,27 +429,31 @@ class Survey_model extends MY_Model {
 		$query = $this->db->insert('survey_template_answer', $update_data);
 		$insert_id = $this->db->insert_id();
 		if($tid == 4){
-			$test = '<div class="input-group mb-3">
+			$test = '<div class="d-flex w-100 justify-content-between choice-container q-choice-container-'.$insert_id.'" style="margin:10px 0px; height:44px;">
+			<div class="input-group mb-3">
 					<div class="input-group-prepend">
 						<div class="input-group-text">
 							<input type="checkbox" aria-label="Checkbox for following text input">
 						</div>
 					</div>
-					<input name="choices_label_'.$insert_id.'" type="text" class="form-control"  value="">
-				</div>';
+					<input name="choices_label_'.$insert_id.'" type="text" class="form-control"  value="">					
+				</div><button id="btn-delete-option" data-id="'.$insert_id.'" class="btn btn-outline-danger btn-delete-choice" type="button" name="button"><i class="fa fa-trash"></i></button></div>';
 		}elseif($tid == 15){
-			$test = '<div class="form-group">
-					<input name="choices_label_'.$insert_id.'" type="text" class="form-control" value="">
-				 </div>';
+			$test = '
+			<div class="d-flex w-100 justify-content-between choice-container q-choice-container-'.$insert_id.'" style="margin:10px 0px; height:44px;">
+			<div class="form-group">
+					<input name="choices_label_'.$insert_id.'" type="text" class="form-control" value="">					
+				 </div><button id="btn-delete-option" data-id="'.$insert_id.'" class="btn btn-outline-danger btn-delete-choice" type="button" name="button"><i class="fa fa-trash"></i></button></div>';
 		}else {
-			$test = '<div class="input-group mb-2">
+			$test = '<div class="d-flex w-100 justify-content-between choice-container q-choice-container-'.$insert_id.'" style="margin:10px 0px; height:44px;">
+			<div class="input-group mb-2">
 					 <div class="input-group-prepend">
 						<div class="input-group-text">
 						<input name="options" type="radio" aria-label="Radio button for following text input">
 						</div>
 					</div>
 					<input name="choices_label_'.$insert_id.'" type="text" class="form-control">
-				</div>';
+				</div><button id="btn-delete-option" data-id="'.$insert_id.'" class="btn btn-outline-danger btn-delete-choice" type="button" name="button"><i class="fa fa-trash"></i></button></div>';
 		}
 
 		return $test;
@@ -555,6 +559,10 @@ class Survey_model extends MY_Model {
 
 	public function deleteWorkspace($id){
 		return $this->db->delete('survey_workspaces', array('id'=>$id));
+	}
+
+	public function deleteSurveyTemplateAnswer($id){
+		return $this->db->delete('survey_template_answer', array('id'=>$id));
 	}
 
 	public function editWorkspace($id, $data){

@@ -64,9 +64,9 @@
 								<?php if($question->template_id == 3 || $question->template_id == 4 || $question->template_id == 15){
 										foreach($question->questions as $option){
 											?>
-												<div class="d-flex w-100 justify-content-between choice-container" style="margin:10px 0px; height:44px;">
+												<div class="d-flex w-100 justify-content-between choice-container q-choice-container-<?= $option->id; ?>" style="margin:10px 0px; height:44px;">
 													<?php echo $option->survey_template_choice; ?>
-													<button id="btn-delete-option" data-id="<?= $option->id?>" class="btn btn-outline-danger" type="button" name="button"><i class="fa fa-trash"></i></button>
+													<button id="btn-delete-option" data-id="<?= $option->id?>" class="btn btn-outline-danger btn-delete-choice" type="button" name="button"><i class="fa fa-trash"></i></button>
 												</div>
 											<?php
 										}

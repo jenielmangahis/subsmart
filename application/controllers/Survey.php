@@ -564,4 +564,17 @@ class Survey extends MY_Controller
     $this->page_data['questions'] = $this->survey_model->getQuestions($survey_id);
     $this->load->view('survey/ajax_load_survey_questions', $this->page_data);
   }
+
+  public function ajax_delete_template_answer()
+  {
+    $post = $this->input->post();    
+    $this->survey_model->deleteSurveyTemplateAnswer($post['staid']);
+
+    $result = array(
+      'success' => 1
+    );
+
+    echo json_encode($result);
+    exit;
+  }
 }

@@ -209,6 +209,7 @@ $route['survey/upload/custombackgroundimage/(:any)'] = 'survey/uploadCustomBackg
 $route['survey/home'] = 'survey/index';
 $route['survey/question/(:any)/(:num)/(:num)'] = 'survey/addQuestionSettings/$1/$2/$3';
 $route['survey/_load_survey_questions'] = 'Survey/ajax_load_survey_questions';
+$route['survey/_delete_template_answer'] = 'Survey/ajax_delete_template_answer';
 
 // survey logic
 $route['survey/logic/list/(:any)'] = "survey/surveyLogicList/$1";
