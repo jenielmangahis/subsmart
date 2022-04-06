@@ -665,7 +665,8 @@
     }
 
     &--verified,
-    &--negative {
+    &--negative,
+    &--positive {
       .status__logo {
         background-color: #e4251b;
         color: #fff;
@@ -683,6 +684,17 @@
 
         .fa::before {
           content: "\f017";
+        }
+      }
+    }
+
+    &--positive {
+      .status__logo {
+        background-color: #00a650;
+        color: #fff;
+
+        .fa::before {
+          content: "\f00c";
         }
       }
     }
@@ -727,6 +739,34 @@
 
 #selecteddisputeitemstable {
   width: 100% !important;
+}
+
+.part2 {
+  &--withdispute {
+    .note-editor.note-frame {
+      border: 1px solid #dee2e6;
+      border-top: 0;
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+    }
+
+    [role="tabpanel"] {
+      border: 1px solid #dee2e6;
+      border-top: 0;
+      padding: 1rem;
+    }
+
+    .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
+      background-color: transparent;
+    }
+
+  }
+
+  &:not(.part2--withdispute) {
+    .disputetab {
+      display: none ;
+    }
+  }
 }
 
 .btn-ghost {

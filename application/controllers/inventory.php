@@ -757,7 +757,19 @@ class Inventory extends MY_Controller
         $ids = explode(",",$this->input->post('ids'));
         
         foreach($ids as $id) {
-            $this->items_model->delete($id);
+            $item = $this->items_model->getItemById($id)[0];
+
+            $attempt = 0;
+            do {
+                $name = $attempt > 0 ? "$item->title (deleted - $attempt)" : "$item->title (deleted)";
+                $checkName = $this->items_model->check_name(logged('company_id'), $name);
+
+                $attempt++;
+            } while(!is_null($checkName));
+
+            $condition = ['id' => $id, 'company_id' => logged('company_id')];
+            $update = $this->items_model->update($data, $condition);
+            // $this->items_model->delete($id);
         }
 
         echo json_encode(true);

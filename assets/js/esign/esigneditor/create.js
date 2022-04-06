@@ -3,9 +3,7 @@ window.document.addEventListener("DOMContentLoaded", async () => {
   window.helpers = await import("./helpers.js");
 
   window.isEditing = window.location.pathname.endsWith("edit");
-  const params = new Proxy(new URLSearchParams(window.location.search), {
-    get: (searchParams, prop) => searchParams.get(prop),
-  });
+  const params = window.helpers.getParams();
 
   let letter = null;
   if (window.isEditing) {

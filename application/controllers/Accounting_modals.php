@@ -5279,12 +5279,17 @@ class Accounting_modals extends MY_Controller
                 foreach($data['item'] as $key => $input) {
                     $explode = explode('-', $input);
 
+                    if($explode[0] === 'package') {
+                        $packageItems = $this->items_model->get_package_items($explode[1]);
+                    }
+
                     $invoiceItem = [
                         'invoice_id' => $invoiceId,
                         'items_id' => $explode[0] === 'item' ? $explode[1] : '',
                         'location_id' => $data['location'][$key],
                         'qty' => $data['quantity'][$key],
                         'package_id' => $explode[0] === 'package' ? $explode[1] : '',
+                        'package_item_details' => $explode[0] === 'package' ? json_encode($packageItems) : null,
                         'cost' => $data['item_amount'][$key],
                         'tax' => $data['item_tax'][$key],
                         'discount' => $data['discount'][$key],
@@ -5338,7 +5343,6 @@ class Accounting_modals extends MY_Controller
                             }
                         } else {
                             $package = $this->items_model->get_package_by_id($explode[1]);
-                            $packageItems = $this->items_model->get_package_items($explode[1]);
 
                             foreach($packageItems as $packageItem) {
                                 $item = $this->items_model->getItemById($packageItem->item_id)[0];
@@ -5818,11 +5822,16 @@ class Accounting_modals extends MY_Controller
                 foreach($data['item'] as $key => $input) {
                     $explode = explode('-', $input);
 
+                    if($explode[0] === 'package') {
+                        $packageItems = $this->items_model->get_package_items($explode[1]);
+                    }
+
                     $items[] = [
                         'transaction_type' => 'Credit Memo',
                         'transaction_id' => $creditMemoId,
                         'item_id' => $explode[0] === 'item' ? $explode[1] : null,
                         'package_id' => $explode[0] === 'package' ? $explode[1] : null,
+                        'package_item_details' => $explode[0] === 'package' ? json_encode($packageItems) : null,
                         'location_id' => $data['location'][$key],
                         'quantity' => $data['quantity'][$key],
                         'price' => $data['item_amount'][$key],
@@ -5875,7 +5884,6 @@ class Accounting_modals extends MY_Controller
                             }
                         } else {
                             $package = $this->items_model->get_package_by_id($explode[1]);
-                            $packageItems = $this->items_model->get_package_items($explode[1]);
 
                             foreach($packageItems as $packageItem) {
                                 $item = $this->items_model->getItemById($packageItem->item_id)[0];
@@ -6153,11 +6161,16 @@ class Accounting_modals extends MY_Controller
                 foreach($data['item'] as $key => $input) {
                     $explode = explode('-', $input);
 
+                    if($explode[0] === 'package') {
+                        $packageItems = $this->items_model->get_package_items($explode[1]);
+                    }
+
                     $items[] = [
                         'transaction_type' => 'Sales Receipt',
                         'transaction_id' => $salesReceiptId,
                         'item_id' => $explode[0] === 'item' ? $explode[1] : null,
                         'package_id' => $explode[0] === 'package' ? $explode[1] : null,
+                        'package_item_details' => $explode[0] === 'package' ? json_encode($packageItems) : null,
                         'location_id' => $data['location'][$key],
                         'quantity' => $data['quantity'][$key],
                         'price' => $data['item_amount'][$key],
@@ -6210,7 +6223,6 @@ class Accounting_modals extends MY_Controller
                             }
                         } else {
                             $package = $this->items_model->get_package_by_id($explode[1]);
-                            $packageItems = $this->items_model->get_package_items($explode[1]);
 
                             foreach($packageItems as $packageItem) {
                                 $item = $this->items_model->getItemById($packageItem->item_id)[0];
@@ -6486,11 +6498,16 @@ class Accounting_modals extends MY_Controller
                 foreach($data['item'] as $key => $input) {
                     $explode = explode('-', $input);
 
+                    if($explode[0] === 'package') {
+                        $packageItems = $this->items_model->get_package_items($explode[1]);
+                    }
+
                     $items[] = [
                         'transaction_type' => 'Refund Receipt',
                         'transaction_id' => $refundReceiptId,
                         'item_id' => $explode[0] === 'item' ? $explode[1] : null,
                         'package_id' => $explode[0] === 'package' ? $explode[1] : null,
+                        'package_item_details' => $explode[0] === 'package' ? json_encode($packageItems) : null,
                         'location_id' => $data['location'][$key],
                         'quantity' => $data['quantity'][$key],
                         'price' => $data['item_amount'][$key],
@@ -6543,7 +6560,6 @@ class Accounting_modals extends MY_Controller
                             }
                         } else {
                             $package = $this->items_model->get_package_by_id($explode[1]);
-                            $packageItems = $this->items_model->get_package_items($explode[1]);
 
                             foreach($packageItems as $packageItem) {
                                 $item = $this->items_model->getItemById($packageItem->item_id)[0];
@@ -6791,11 +6807,16 @@ class Accounting_modals extends MY_Controller
                 foreach($data['item'] as $key => $input) {
                     $explode = explode('-', $input);
 
+                    if($explode[0] === 'package') {
+                        $packageItems = $this->items_model->get_package_items($explode[1]);
+                    }
+
                     $items[] = [
                         'transaction_type' => 'Delayed Credit',
                         'transaction_id' => $delayedCreditId,
                         'item_id' => $explode[0] === 'item' ? $explode[1] : null,
                         'package_id' => $explode[0] === 'package' ? $explode[1] : null,
+                        'package_item_details' => $explode[0] === 'package' ? json_encode($packageItems) : null,
                         'location_id' => $data['location'][$key],
                         'quantity' => $data['quantity'][$key],
                         'price' => $data['item_amount'][$key],
@@ -7002,11 +7023,16 @@ class Accounting_modals extends MY_Controller
                 foreach($data['item'] as $key => $input) {
                     $explode = explode('-', $input);
 
+                    if($explode[0] === 'package') {
+                        $packageItems = $this->items_model->get_package_items($explode[1]);
+                    }
+
                     $items[] = [
                         'transaction_type' => 'Delayed Charge',
                         'transaction_id' => $delayedChargeId,
                         'item_id' => $explode[0] === 'item' ? $explode[1] : null,
                         'package_id' => $explode[0] === 'package' ? $explode[1] : null,
+                        'package_item_details' => $explode[0] === 'package' ? json_encode($packageItems) : null,
                         'location_id' => $data['location'][$key],
                         'quantity' => $data['quantity'][$key],
                         'price' => $data['item_amount'][$key],
@@ -10103,7 +10129,7 @@ class Accounting_modals extends MY_Controller
                 $items[$key]->locations = $this->items_model->getLocationByItemId($item->item_id);
             } else {
                 $items[$key]->packageDetails = $this->items_model->get_package_by_id($item->package_id);
-                $items[$key]->packageItems = $this->items_model->get_package_items($item->package_id);
+                $items[$key]->packageItems = json_decode($item->package_item_details);
             }
         }
 
@@ -10135,7 +10161,7 @@ class Accounting_modals extends MY_Controller
                 $items[$key]->locations = $this->items_model->getLocationByItemId($item->item_id);
             } else {
                 $items[$key]->packageDetails = $this->items_model->get_package_by_id($item->package_id);
-                $items[$key]->packageItems = $this->items_model->get_package_items($item->package_id);
+                $items[$key]->packageItems = json_decode($item->package_item_details);
             }
         }
 
@@ -10157,7 +10183,7 @@ class Accounting_modals extends MY_Controller
                 $items[$key]->locations = $this->items_model->getLocationByItemId($item->item_id);
             } else {
                 $items[$key]->packageDetails = $this->items_model->get_package_by_id($item->package_id);
-                $items[$key]->packageItems = $this->items_model->get_package_items($item->package_id);
+                $items[$key]->packageItems = json_decode($item->package_item_details);
             }
         }
 
@@ -10179,7 +10205,7 @@ class Accounting_modals extends MY_Controller
                 $items[$key]->locations = $this->items_model->getLocationByItemId($item->item_id);
             } else {
                 $items[$key]->packageDetails = $this->items_model->get_package_by_id($item->package_id);
-                $items[$key]->packageItems = $this->items_model->get_package_items($item->package_id);
+                $items[$key]->packageItems = json_decode($item->package_item_details);
             }
         }
 
@@ -10200,7 +10226,7 @@ class Accounting_modals extends MY_Controller
                 $items[$key]->locations = $this->items_model->getLocationByItemId($item->item_id);
             } else {
                 $items[$key]->packageDetails = $this->items_model->get_package_by_id($item->package_id);
-                $items[$key]->packageItems = $this->items_model->get_package_items($item->package_id);
+                $items[$key]->packageItems = json_decode($item->package_item_details);
             }
         }
 
@@ -10231,7 +10257,7 @@ class Accounting_modals extends MY_Controller
                 $invoiceItems[$key]->locations = $this->items_model->getLocationByItemId($invoiceItem->items_id);
             } else {
                 $invoiceItems[$key]->packageDetails = $this->items_model->get_package_by_id($invoiceItem->package_id);
-                $invoiceItems[$key]->packageItems = $this->items_model->get_package_items($invoiceItem->package_id);
+                $invoiceItems[$key]->packageItems = json_decode($invoiceItem->package_item_details);
             }
         }
 
@@ -14247,12 +14273,17 @@ class Accounting_modals extends MY_Controller
             foreach($data['item'] as $key => $input) {
                 $explode = explode('-', $input);
 
+                if($explode[0] === 'package') {
+                    $packageItems = $this->items_model->get_package_items($explode[1]);
+                }
+
                 $invoiceItem = [
                     'invoice_id' => $invoice->id,
                     'items_id' => $explode[0] === 'item' ? $explode[1] : '',
                     'location_id' => $data['location'][$key],
                     'qty' => $data['quantity'][$key],
                     'package_id' => $explode[0] === 'package' ? $explode[1] : '',
+                    'package_item_details' => $explode[0] === 'package' ? json_encode($packageItems) : null,
                     'cost' => $data['item_amount'][$key],
                     'tax' => $data['item_tax'][$key],
                     'discount' => $data['discount'][$key],
@@ -14309,7 +14340,6 @@ class Accounting_modals extends MY_Controller
                     }
                 } else {
                     $package = $this->items_model->get_package_by_id($explode[1]);
-                    $packageItems = $this->items_model->get_package_items($explode[1]);
 
                     foreach($packageItems as $packageItem) {
                         $item = $this->items_model->getItemById($packageItem->item_id)[0];
@@ -14403,7 +14433,7 @@ class Accounting_modals extends MY_Controller
                     }
                 } else {
                     $package = $this->items_model->get_package_by_id($invoiceItem->package_id);
-                    $packageItems = $this->items_model->get_package_items($invoiceItem->package_id);
+                    $packageItems = json_decode($invoiceItem->package_item_details);
 
                     foreach($packageItems as $packageItem) {
                         $item = $this->items_model->getItemById($packageItem->item_id)[0];
@@ -14471,11 +14501,16 @@ class Accounting_modals extends MY_Controller
             foreach($data['item'] as $key => $input) {
                 $explode = explode('-', $input);
 
+                if($explode[0] === 'package') {
+                    $packageItems = $this->items_model->get_package_items($explode[1]);
+                }
+
                 $itemData = [
                     'transaction_type' => $transactionType,
                     'transaction_id' => $transactionId,
                     'item_id' => $explode[0] === 'item' ? $explode[1] : null,
                     'package_id' => $explode[0] === 'package' ? $explode[1] : null,
+                    'package_item_details' => $explode[0] === 'package' ? json_encode($packageItems) : null,
                     'location_id' => $data['location'][$key],
                     'quantity' => $data['quantity'][$key],
                     'price' => $data['item_amount'][$key],
@@ -14564,7 +14599,6 @@ class Accounting_modals extends MY_Controller
                         }
                     } else {
                         $package = $this->items_model->get_package_by_id($explode[1]);
-                        $packageItems = $this->items_model->get_package_items($explode[1]);
     
                         foreach($packageItems as $packageItem) {
                             $item = $this->items_model->getItemById($packageItem->item_id)[0];
@@ -14725,7 +14759,7 @@ class Accounting_modals extends MY_Controller
                     }
                 } else {
                     $package = $this->items_model->get_package_by_id($transactionItem->package_id);
-                    $packageItems = $this->items_model->get_package_items($transactionItem->package_id);
+                    $packageItems = json_decode($transactionItem->package_item_details);
     
                     foreach($packageItems as $packageItem) {
                         $item = $this->items_model->getItemById($packageItem->item_id)[0];
@@ -17255,83 +17289,163 @@ class Accounting_modals extends MY_Controller
     {
         $items = $this->accounting_credit_memo_model->get_customer_transaction_items($transactionType, $transactionId);
 
-        foreach($items as $transacItem) {
-            $item = $this->items_model->getItemById($transacItem->item_id)[0];
-            $itemAccDetails = $this->items_model->getItemAccountingDetails($transacItem->item_id);
-
+        foreach($items as $transactionItem) {
             if($transactionType !== 'Delayed Credit' && $transactionType !== 'Delayed Charge') {
-                if ($itemAccDetails) {
-                    if(strtolower($item->type) === 'product' || strtolower($item->type) === 'inventory') {
-                        $location = $this->items_model->getItemLocation($transacItem->location_id, $transacItem->item_id);
-                        $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
-    
-                        switch($transactionType) {
-                            case 'Credit Memo' :
-                                $newQty = intval($location->qty) - intval($transacItem->quantity);
-                                $newBalance = floatval($invAssetAcc->balance) - floatval($transacItem->total);
-                            break;
-                            case 'Sales Receipt' :
-                                $newQty = intval($location->qty) + intval($transacItem->quantity);
-                                $newBalance = floatval($invAssetAcc->balance) + floatval($transacItem->total);
-                            break;
-                            case 'Refund Receipt' :
-                                $newQty = intval($location->qty) - intval($transacItem->quantity);
-                                $newBalance = floatval($invAssetAcc->balance) + floatval($transacItem->total);
-                            break;
-                        }
-                        $newBalance = number_format($newBalance, 2, '.', ',');
-    
-                        $invAssetAccData = [
-                            'id' => $invAssetAcc->id,
-                            'company_id' => logged('company_id'),
-                            'balance' => $newBalance
-                        ];
-    
-                        $this->items_model->updateLocationQty($transacItem->location_id, $transacItem->item_id, $newQty);
-                        $this->chart_of_accounts_model->updateBalance($invAssetAccData);
-                    } else {
-                        if(strtolower($item->type) !== 'bundle') {
+                if(!in_array($transactionItem->item_id, ['0', null, '']) && in_array($transactionItem->package_id, ['0', null, ''])) {
+                    $item = $this->items_model->getItemById($transactionItem->item_id)[0];
+                    $itemAccDetails = $this->items_model->getItemAccountingDetails($transactionItem->item_id);
+
+                    if ($itemAccDetails) {
+                        if(strtolower($item->type) === 'product' || strtolower($item->type) === 'inventory') {
+                            $location = $this->items_model->getItemLocation($transactionItem->location_id, $transactionItem->item_id);
+                            $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+
+                            switch($transactionType) {
+                                case 'Credit Memo' :
+                                    $newQty = intval($location->qty) - intval($transactionItem->quantity);
+                                    $newBalance = floatval($invAssetAcc->balance) - floatval($item->cost);
+                                break;
+                                case 'Sales Receipt' :
+                                    $newQty = intval($location->qty) + intval($transactionItem->quantity);
+                                    $newBalance = floatval($invAssetAcc->balance) + floatval($item->cost);
+                                break;
+                                case 'Refund Receipt' :
+                                    $newQty = intval($location->qty) - intval($transactionItem->quantity);
+                                    $newBalance = floatval($invAssetAcc->balance) - floatval($item->cost);
+                                break;
+                            }
+
+                            $newBalance = number_format($newBalance, 2, '.', ',');
+
+                            $invAssetAccData = [
+                                'id' => $invAssetAcc->id,
+                                'company_id' => logged('company_id'),
+                                'balance' => $newBalance
+                            ];
+
+                            $this->items_model->updateLocationQty($transactionItem->location_id, $transactionItem->item_id, $newQty);
+                            $this->chart_of_accounts_model->updateBalance($invAssetAccData);
+                        } else {
                             $incomeAcc = $this->chart_of_accounts_model->getById($itemAccDetails->income_account_id);
                             $incomeAccType = $this->account_model->getById($incomeAcc->account_id);
-    
+
                             switch($transactionType) {
                                 case 'Credit Memo' :
                                     if ($incomeAccType->account_name === 'Credit Card') {
-                                        $newBalance = floatval($incomeAcc->balance) - floatval($transacItem->total);
+                                        $newBalance = floatval($incomeAcc->balance) - floatval($transactionItem->total);
                                     } else {
-                                        $newBalance = floatval($incomeAcc->balance) + floatval($transacItem->total);
+                                        $newBalance = floatval($incomeAcc->balance) + floatval($transactionItem->total);
                                     }
                                 break;
                                 case 'Sales Receipt' :
                                     if ($incomeAccType->account_name === 'Credit Card') {
-                                        $newBalance = floatval($incomeAcc->balance) - floatval($transacItem->total);
+                                        $newBalance = floatval($incomeAcc->balance) - floatval($transactionItem->total);
                                     } else {
-                                        $newBalance = floatval($incomeAcc->balance) + floatval($transacItem->total);
+                                        $newBalance = floatval($incomeAcc->balance) + floatval($transactionItem->total);
                                     }
                                 break;
                                 case 'Refund Receipt' :
                                     if ($incomeAccType->account_name === 'Credit Card') {
-                                        $newBalance = floatval($incomeAcc->balance) + floatval($transacItem->total);
+                                        $newBalance = floatval($incomeAcc->balance) + floatval($transactionItem->total);
                                     } else {
-                                        $newBalance = floatval($incomeAcc->balance) - floatval($transacItem->total);
+                                        $newBalance = floatval($incomeAcc->balance) - floatval($transactionItem->total);
                                     }
                                 break;
                             }
                             $newBalance = number_format($newBalance, 2, '.', ',');
-    
+
                             $incomeAccData = [
                                 'id' => $incomeAcc->id,
                                 'company_id' => logged('company_id'),
                                 'balance' => $newBalance
                             ];
-    
+
                             $this->chart_of_accounts_model->updateBalance($incomeAccData);
+                        }
+                    }
+                } else {
+                    $package = $this->items_model->get_package_by_id($transactionItem->package_id);
+                    $packageItems = json_decode($transactionItem->package_item_details);
+
+                    foreach($packageItems as $packageItem) {
+                        $item = $this->items_model->getItemById($packageItem->item_id)[0];
+                        $itemAccDetails = $this->items_model->getItemAccountingDetails($packageItem->item_id);
+                        $totalQty = intval($packageItem->quantity) * intval($transactionItem->quantity);
+
+                        if ($itemAccDetails) {
+                            if(strtolower($item->type) === 'product' || strtolower($item->type) === 'inventory') {
+                                $location = $this->items_model->get_first_location($packageItem->item_id);
+                                $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+                                $totalAmount = floatval($item->cost) * floatval($totalQty);
+
+                                switch($transactionType) {
+                                    case 'Credit Memo' :
+                                        $newQty = intval($location->qty) - intval($totalQty);
+                                        $newBalance = floatval($invAssetAcc->balance) - floatval($totalAmount);
+                                    break;
+                                    case 'Sales Receipt' :
+                                        $newQty = intval($location->qty) + intval($totalQty);
+                                        $newBalance = floatval($invAssetAcc->balance) + floatval($totalAmount);
+                                    break;
+                                    case 'Refund Receipt' :
+                                        $newQty = intval($location->qty) - intval($totalQty);
+                                        $newBalance = floatval($invAssetAcc->balance) - floatval($totalAmount);
+                                    break;
+                                }
+                                $newBalance = number_format($newBalance, 2, '.', ',');
+
+                                $invAssetAccData = [
+                                    'id' => $invAssetAcc->id,
+                                    'company_id' => logged('company_id'),
+                                    'balance' => $newBalance
+                                ];
+
+                                $this->items_model->updateLocationQty($location->id, $packageItem->item_id, $newQty);
+                                $this->chart_of_accounts_model->updateBalance($invAssetAccData);
+                            } else {
+                                $incomeAcc = $this->chart_of_accounts_model->getById($itemAccDetails->income_account_id);
+                                $incomeAccType = $this->account_model->getById($incomeAcc->account_id);
+                                $totalAmount = floatval($item->price) * floatval($totalQty);
+
+                                switch($transactionType) {
+                                    case 'Credit Memo' :
+                                        if ($incomeAccType->account_name === 'Credit Card') {
+                                            $newBalance = floatval($incomeAcc->balance) - floatval($totalAmount);
+                                        } else {
+                                            $newBalance = floatval($incomeAcc->balance) + floatval($totalAmount);
+                                        }
+                                    break;
+                                    case 'Sales Receipt' :
+                                        if ($incomeAccType->account_name === 'Credit Card') {
+                                            $newBalance = floatval($incomeAcc->balance) - floatval($totalAmount);
+                                        } else {
+                                            $newBalance = floatval($incomeAcc->balance) + floatval($totalAmount);
+                                        }
+                                    break;
+                                    case 'Refund Receipt' :
+                                        if ($incomeAccType->account_name === 'Credit Card') {
+                                            $newBalance = floatval($incomeAcc->balance) + floatval($totalAmount);
+                                        } else {
+                                            $newBalance = floatval($incomeAcc->balance) - floatval($totalAmount);
+                                        }
+                                    break;
+                                }
+                                $newBalance = number_format($newBalance, 2, '.', ',');
+
+                                $incomeAccData = [
+                                    'id' => $incomeAcc->id,
+                                    'company_id' => logged('company_id'),
+                                    'balance' => $newBalance
+                                ];
+
+                                $this->chart_of_accounts_model->updateBalance($incomeAccData);
+                            }
                         }
                     }
                 }
             }
 
-            $transacItemData = [
+            $transactionItemData = [
                 'quantity' => 0,
                 'price' => 0.00,
                 'discount' => 0.00,
@@ -17339,7 +17453,7 @@ class Accounting_modals extends MY_Controller
                 'total' => 0.00
             ];
 
-            $this->accounting_credit_memo_model->update_customer_transaction_item($transacItem->id, $transacItemData);
+            $this->accounting_credit_memo_model->update_customer_transaction_item($transactionItem->id, $transactionItemData);
         }
     }
 

@@ -3,10 +3,7 @@ window.document.addEventListener("DOMContentLoaded", async () => {
   window.helpers = await import("./helpers.js");
   window.jsPDF = window.jspdf.jsPDF;
 
-  const params = new Proxy(new URLSearchParams(window.location.search), {
-    get: (searchParams, prop) => searchParams.get(prop),
-  });
-
+  const params = window.helpers.getParams();
   const { data: customer } = await window.api.getCustomer(params.customer_id);
   const $customerName = document.querySelector(".esigneditor__title span");
   $customerName.textContent = `${customer.first_name} ${customer.last_name}`;

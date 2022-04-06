@@ -629,11 +629,11 @@ class Products_and_services extends MY_Controller {
         do {
             if($type === 'bundle') {
                 $name = $attempt > 0 ? "$newName - $attempt" : $newName;
+                $checkName = $this->items_model->check_package_name(logged('company_id'), $name);
             } else {
                 $name = $attempt > 0 ? "$newName - $attempt" : $newName;
+                $checkName = $this->items_model->check_name(logged('company_id'), $name);
             }
-
-            $checkName = $this->items_model->check_name(logged('company_id'), $name);
 
             $attempt++;
         } while(!is_null($checkName));
@@ -683,7 +683,20 @@ class Products_and_services extends MY_Controller {
 
             $attachmentId = $this->uploadFile($files);
         }
-        
+
+        $attempt = 0;
+        do {
+            if($type === 'bundle') {
+                $name = $attempt > 0 ? "$name - $attempt" : $name;
+                $checkName = $this->items_model->check_package_name(logged('company_id'), $name);
+            } else {
+                $name = $attempt > 0 ? "$name - $attempt" : $name;
+                $checkName = $this->items_model->check_name(logged('company_id'), $name);
+            }
+
+            $attempt++;
+        } while(!is_null($checkName));
+
         switch($type) {
             case 'bundle' :
                 $amountSet = 0.00;
@@ -861,6 +874,19 @@ class Products_and_services extends MY_Controller {
         $input = $this->input->post();
         $name = $input['name'];
 
+        $attempt = 0;
+        do {
+            if($type === 'bundle') {
+                $name = $attempt > 0 ? "$name - $attempt" : $name;
+                $checkName = $this->items_model->check_package_name(logged('company_id'), $name);
+            } else {
+                $name = $attempt > 0 ? "$name - $attempt" : $name;
+                $checkName = $this->items_model->check_name(logged('company_id'), $name);
+            }
+
+            $attempt++;
+        } while(!is_null($checkName));
+
         switch($type) {
             case 'bundle' :
                 $amountSet = 0.00;
@@ -1030,15 +1056,26 @@ class Products_and_services extends MY_Controller {
         $items = json_decode($this->input->post('items'));
         $data = [];
 
-        foreach($items as $item) {
+        foreach($items as $itemId) {
             if($action === 'make-inactive') {
+                $item = $this->items_model->getItemById($itemId)[0];
+
+                $attempt = 0;
+                do {
+                    $name = $attempt > 0 ? "$item->title (deleted - $attempt)" : "$item->title (deleted)";
+                    $checkName = $this->items_model->check_name(logged('company_id'), $name);
+
+                    $attempt++;
+                } while(!is_null($checkName));
+
                 $data[] = [
-                    'id' => $item,
+                    'id' => $itemId,
+                    'title' => $name,
                     'is_active' => 0
                 ];
             } else {
                 $data[] = [
-                    'id' => $item,
+                    'id' => $itemId,
                     'type' => str_replace('make-', '', $action)
                 ];
             }
