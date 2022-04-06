@@ -1,6 +1,7 @@
 import * as api from "../api.js";
 import * as common from "./common.js";
 import * as selected from "./selecteditemsdatatable.js";
+import * as helpers from "../helpers.js";
 
 export class Table {
   static tableId = "customerdisputestable";
@@ -21,7 +22,8 @@ export class Table {
   }
 
   async initTable() {
-    const { data } = await api.getCustomerDisputeItems(1);
+    const params = helpers.getParams();
+    const { data } = await api.getCustomerDisputeItems(params.customer_id);
 
     const table = this.$$table.DataTable({
       data,

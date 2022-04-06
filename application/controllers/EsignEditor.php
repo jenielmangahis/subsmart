@@ -1134,198 +1134,62 @@ SQL;
 
     public function apiGetCustomerDisputeItems($customerId)
     {
-        $retval = [
-            [
-                'creditor' => 'Bank of America Mortgage',
-                'account_numbers' => [
-                    'equifax' => null,
-                    'experian' => '12312412',
-                    'transunion' => '12312412',
-                ],
-                'reason' => 'The following personal information is incorrect',
-                'is_disputed' => false,
-                'equifax' => 'verified',
-                'experian' => 'negative',
-                'transunion' => 'in_dispute',
-            ],
-            [
-                'creditor' => 'Sears Card',
-                'account_numbers' => [
-                    'equifax' => null,
-                    'experian' => null,
-                    'transunion' => null,
-                ],
-                'reason' => 'The inquiry was not authorized',
-                'is_disputed' => false,
-                'equifax' => 'verified',
-                'experian' => 'negative',
-                'transunion' => null,
-            ],
-            [
-                'creditor' => 'Bank of America Mortgage',
-                'account_numbers' => [
-                    'equifax' => null,
-                    'experian' => '000000456',
-                    'transunion' => '000000465',
-                ],
-                'reason' => 'This is a duplicate account',
-                'is_disputed' => false,
-                'equifax' => 'verified',
-                'experian' => null,
-                'transunion' => null,
-            ],
-            [
-                'creditor' => 'Bank of America Mortgage',
-                'account_numbers' => [
-                    'equifax' => null,
-                    'experian' => '000000456',
-                    'transunion' => null,
-                ],
-                'reason' => 'The following account was a Bankruptcy/Charge-off. Balance should be $0',
-                'is_disputed' => false,
-                'equifax' => 'verified',
-                'experian' => 'negative',
-                'transunion' => null,
-            ],
-            [
-                'creditor' => 'Bank of America Mortgage',
-                'account_numbers' => [
-                    'equifax' => '000000789',
-                    'experian' => '000000789',
-                    'transunion' => null,
-                ],
-                'reason' => 'Other information I would like changed',
-                'is_disputed' => false,
-                'equifax' => 'verified',
-                'experian' => 'negative',
-                'transunion' => 'in_dispute',
-            ],
-            [
-                'creditor' => 'Bank of America Mortgage',
-                'account_numbers' => [
-                    'equifax' => null,
-                    'experian' => '000000456',
-                    'transunion' => '000000465',
-                ],
-                'reason' => 'This is a duplicate account',
-                'is_disputed' => false,
-                'equifax' => 'verified',
-                'experian' => null,
-                'transunion' => null,
-            ],
-            [
-                'creditor' => 'Bank of America Mortgage',
-                'account_numbers' => [
-                    'equifax' => null,
-                    'experian' => '000000456',
-                    'transunion' => null,
-                ],
-                'reason' => 'The following account was a Bankruptcy/Charge-off. Balance should be $0',
-                'is_disputed' => false,
-                'equifax' => 'verified',
-                'experian' => 'negative',
-                'transunion' => null,
-            ],
-            [
-                'creditor' => 'Bank of America Mortgage',
-                'account_numbers' => [
-                    'equifax' => '000000789',
-                    'experian' => '000000789',
-                    'transunion' => null,
-                ],
-                'reason' => 'Other information I would like changed',
-                'is_disputed' => false,
-                'equifax' => 'verified',
-                'experian' => 'negative',
-                'transunion' => 'in_dispute',
-            ],
-            [
-                'creditor' => 'Bank of America Mortgage',
-                'account_numbers' => [
-                    'equifax' => null,
-                    'experian' => '000000456',
-                    'transunion' => '000000465',
-                ],
-                'reason' => 'This is a duplicate account',
-                'is_disputed' => false,
-                'equifax' => 'verified',
-                'experian' => null,
-                'transunion' => null,
-            ],
-            [
-                'creditor' => 'Bank of America Mortgage',
-                'account_numbers' => [
-                    'equifax' => null,
-                    'experian' => '000000456',
-                    'transunion' => null,
-                ],
-                'reason' => 'The following account was a Bankruptcy/Charge-off. Balance should be $0',
-                'is_disputed' => false,
-                'equifax' => 'verified',
-                'experian' => 'negative',
-                'transunion' => null,
-            ],
-            [
-                'creditor' => 'Bank of America Mortgage',
-                'account_numbers' => [
-                    'equifax' => '000000789',
-                    'experian' => '000000789',
-                    'transunion' => null,
-                ],
-                'reason' => 'Other information I would like changed',
-                'is_disputed' => false,
-                'equifax' => 'verified',
-                'experian' => 'negative',
-                'transunion' => 'in_dispute',
-            ],
-            [
-                'creditor' => 'Bank of America Mortgage',
-                'account_numbers' => [
-                    'equifax' => null,
-                    'experian' => '000000456',
-                    'transunion' => '000000465',
-                ],
-                'reason' => 'This is a duplicate account',
-                'is_disputed' => false,
-                'equifax' => 'verified',
-                'experian' => null,
-                'transunion' => null,
-            ],
-            [
-                'creditor' => 'Bank of America Mortgage',
-                'account_numbers' => [
-                    'equifax' => null,
-                    'experian' => '000000456',
-                    'transunion' => null,
-                ],
-                'reason' => 'The following account was a Bankruptcy/Charge-off. Balance should be $0',
-                'is_disputed' => false,
-                'equifax' => 'verified',
-                'experian' => 'negative',
-                'transunion' => null,
-            ],
-            [
-                'creditor' => 'Bank of America Mortgage',
-                'account_numbers' => [
-                    'equifax' => '000000789',
-                    'experian' => '000000789',
-                    'transunion' => null,
-                ],
-                'reason' => 'Other information I would like changed',
-                'is_disputed' => false,
-                'equifax' => 'verified',
-                'experian' => 'negative',
-                'transunion' => 'in_dispute',
-            ],
-        ];
+        $this->db->where('prof_id', $customerId);
+        $disputes = $this->db->get('customer_disputes')->result();
 
-        $retval = array_map(function ($item, $key) {
-            $item['id'] = $key;
-            return $item;
-        }, $retval, array_keys($retval));
+        $furnishersMap = [];
+        $creditBureauMap = [];
 
-        // sleep(3);
+        $data = [];
+        foreach ($disputes as $dispute) {
+            if (!array_key_exists($dispute->furnisher_id, $furnishersMap)) {
+                $this->db->where('id', $dispute->furnisher_id);
+                $furnishersMap[$dispute->furnisher_id] = $this->db->get('furnishers')->row();
+            }
+
+            $currData = [];
+            $currData['id'] = (int) $dispute->id;
+            $currData['reason'] = $dispute->instruction;
+            $currData['creditor'] = $furnishersMap[$dispute->furnisher_id]->name;
+            $currData['creditor_id'] = (int) $furnishersMap[$dispute->furnisher_id]->id;
+            $currData['is_disputed'] = false;
+
+            $this->db->where('customer_dispute_id', $dispute->id);
+            $items = $this->db->get('customer_dispute_items')->result();
+            foreach ($items as $item) {
+                if (!array_key_exists($item->credit_bureau_id, $creditBureauMap)) {
+                    $this->db->where('id', $item->credit_bureau_id);
+                    $creditBureauMap[$item->credit_bureau_id] = $this->db->get('credit_bureau')->row();
+                }
+
+                $bureau = $creditBureauMap[$item->credit_bureau_id];
+                $currData['items'][] = [
+                    'bureau' => $bureau->name,
+                    'account_number' => $item->account_number,
+                    'status' => $item->status,
+                ];
+            }
+
+            array_push($data, $currData);
+        }
+
         header('content-type: application/json');
-        echo json_encode(['data' => $retval]);
+        echo json_encode(['data' => $data]);
+    }
+
+    public function apiGetCreditorByIds()
+    {
+        header('content-type: application/json');
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['success' => false]);
+            return;
+        }
+
+        $payload = json_decode(file_get_contents('php://input'), true);
+        ['ids' => $ids] = $payload;
+
+        $this->db->where_in('id', $ids);
+        $creditors = $this->db->get('furnishers')->result();
+        echo json_encode(['data' => $creditors]);
     }
 }

@@ -158,3 +158,9 @@ export async function generatePDF(html) {
   const docs = await Promise.all(docPromises);
   return mergePdfs(docs);
 }
+
+export function getParams() {
+  return new Proxy(new URLSearchParams(window.location.search), {
+    get: (searchParams, prop) => searchParams.get(prop),
+  });
+}

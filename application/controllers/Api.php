@@ -240,7 +240,7 @@ class Api extends MYF_Controller
             $str = $this->db->insert("accounting_bank_accounts", $data);
             $id = $this->db->insert_id();
             $data2 = array('company_id'=>$company_id);
-            $update = $this->db->update('accounting_bank_accounts', $data2, array("id" => $id));
+            $update = $this->db->update('accounting_bank_accounts', $data2, array("id" => $id));    
        
     }
 

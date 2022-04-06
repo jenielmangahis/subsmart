@@ -141,6 +141,10 @@ export function getCustomerDisputeItems(customerId) {
   );
 }
 
+export function getCreditorByIds(payload) {
+  return http.post(`${prefixURL}/EsignEditor/apiGetCreditorByIds`, payload);
+}
+
 const http = {
   post: sendPost,
   delete: sendDelete,

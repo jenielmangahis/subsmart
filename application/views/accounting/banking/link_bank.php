@@ -541,6 +541,13 @@
                                                         <button id="back"><i class="fa fa-arrow-left" aria-hidden="true"></i> back</button>
                                                     </div>
                                                 </div>
+                                                <div id="stripe_existed_accounts" style="display: none;">
+                                                    <div id="stripe_accounts"></div>
+                                                    <div class="col-md-12 justify-content-md-center">
+                                                        <button class="new-account-stripe" id="new-account-paypal"><i class="fa fa-plus" aria-hidden="true"></i> add new account</button><br><br>
+                                                        <button class="back-exist-stripe" id="back-exist-paypal"><i class="fa fa-arrow-left" aria-hidden="true"></i> back</button>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -570,7 +577,7 @@
                                         </div>
                                         <div class="row justify-content-md-center align-items-center pb-5">
                                             <form method="post" id="paypal_form" style="display: none;">
-                                            <div class="col-md-12 form-group">
+                                                <div class="col-md-12 form-group">
                                                     <label for=""><b>Account Name</b></label><br>
                                                     <input type="text" class="form-control" name="account_name" id="" required="" placeholder="" autofocus="">
                                                 </div>
@@ -606,6 +613,7 @@
                                                 <div class="col-md-12">
                                                     <div class="modal-footer close-modal-footer">
                                                         <button type="button" class="btn btn-default btn-block close-paypal-container">Back</button>
+
                                                         <button type="submit" class="btn btn-success btn-block">Save</button>
                                                     </div>
                                                 </div>
@@ -621,7 +629,7 @@
                                                 <div id="paypal_accounts"></div>
                                                 <div class="col-md-12 justify-content-md-center">
                                                     <button id="new-account-paypal"><i class="fa fa-plus" aria-hidden="true"></i> add new account</button><br><br>
-                                                    <button id="back-exist-paypal"><i class="fa fa-arrow-left" aria-hidden="true"></i> back</button>
+                                                    <button class="back-exist-paypal" id="back-exist-paypal"><i class="fa fa-arrow-left" aria-hidden="true"></i> back</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -1002,7 +1010,7 @@
                 if (data.paypalAcc.length != 0) {
                     for (var index = 0; index < data.paypalAcc.length; index++) {
                         if (data.paypalAcc[index]['paypal_client_id'] == "") {
-                           
+
                             html += `
                             <div class="col-md-12">
                                 <hr>
@@ -1018,8 +1026,8 @@
                                    </button>
                                 <hr>
                             </div>`;
-                        }else{
-                            confirm+=1;
+                        } else {
+                            confirm += 1;
                         }
                     }
                     $('.paypal-container #existed_accounts #paypal_accounts').html(html);
@@ -1029,14 +1037,14 @@
                     $('.paypal-container .paypal_existed').hide();
                     $('.paypal-container #existed_accounts').show();
 
-                    if(confirm == data.paypalAcc.length){
+                    if (confirm == data.paypalAcc.length) {
                         html += `<h4>There's no available accounts to be linked.</h4>`
-                    $('.paypal-container #existed_accounts #paypal_accounts').html(html);
-                    $('.accounts-list').hide();
-                    $('.paypal-container').show();
-                    $('.bankOfAmerica-container').hide();
-                    $('.paypal-container .paypal_existed').hide();
-                    $('.paypal-container #existed_accounts').show();
+                        $('.paypal-container #existed_accounts #paypal_accounts').html(html);
+                        $('.accounts-list').hide();
+                        $('.paypal-container').show();
+                        $('.bankOfAmerica-container').hide();
+                        $('.paypal-container .paypal_existed').hide();
+                        $('.paypal-container #existed_accounts').show();
                     }
 
                     console.log(confirm);
@@ -1058,11 +1066,43 @@
         $('.paypal-container #paypal_form').show();
     });
     $('#another-account').click(function() {
-        $("#stripe_form input[name='account_name']").val("");
-        $("#stripe_form input[name='stripe_publish_key']").val("");
-        $("#stripe_form input[name='stripe_secret_key']").val("");
-        $('.stripe-container #list-linked-accounts').hide();
-        $('.stripe-container #stripe_form').show();
+        $.ajax({
+            url: "<?= base_url() ?>api/get_stripe_acc",
+            type: "POST",
+            dataType: "json",
+            data: {},
+            success: function(data) {
+                var html = "";
+                if (data.stripeAcc.length != 0) {
+                    for (var index = 0; index < data.stripeAcc.length; index++) {
+                        if (data.stripeAcc[index]['stripe_publish_key'] == null) {
+                            console.log(data.stripeAcc[index]['account_name']);
+                            html += `
+                            <div class="col-md-12">
+                                <hr>
+                                   <button class="button-paypal button-stripe" id="` + data.stripeAcc[index]['id'] + `" >
+                                   <div class="row">
+                                        <div class="col-md-3">
+                                        <img class="fdx-provider-logo" src="<?php echo base_url('assets/img/accounting/stripe.png') ?>" title="Stripe" alt="Stripe">
+                                        </div>
+                                        <div class="col-md-5">
+                                            <h6>` + data.stripeAcc[index]['account_name'] + `</h6>
+                                        </div>
+                                    </div>
+                                   </button>
+                                <hr>
+                            </div>`;
+                        }
+                        $('.stripe-container #list-linked-accounts').hide();
+                        $('#stripe_existed_accounts #stripe_accounts').html(html);
+
+                        $('.stripe-container #stripe_existed_accounts').show();
+
+                    }
+                }
+
+            }
+        });
 
     })
     $('#back').click(function() {
@@ -1084,7 +1124,9 @@
                 var html = "";
                 if (data.stripeAcc.length != 0) {
                     for (var index = 0; index < data.stripeAcc.length; index++) {
-                        html += `
+                        if (data.stripeAcc[index]['stripe_publish_key'] != null) {
+                            console.log(data.stripeAcc[index]['stripe_publish_key']);
+                            html += `
                             <div class="col-md-12">
                                 <hr>
                                     <div class="row">
@@ -1103,6 +1145,8 @@
                                     </div>
                                 <hr>
                             </div>`;
+                        }
+
                     }
                     $('.stripe-container #list-linked-accounts #accounts').html(html);
                     $('.accounts-list').hide();
@@ -1127,7 +1171,9 @@
             url: "<?= base_url() ?>api/get_paypal_acc_cond",
             type: "POST",
             dataType: "json",
-            data: {id:id},
+            data: {
+                id: id
+            },
             success: function(data) {
                 $('#paypal_form_edit input[name="id"]').val(data.paypalAcc[0]["id"]);
                 $('#paypal_form_edit input[name="account_name"]').val(data.paypalAcc[0]["account_name"]);
@@ -1137,6 +1183,33 @@
         });
         $('.paypal-container #existed_accounts').hide();
         $('.paypal-container #paypal_form_edit').show();
+    })
+    $(document).on("click", "#stripe_existed_accounts .button-stripe", function() {
+        var id = $(this).attr("id");
+        $.ajax({
+            url: "<?= base_url() ?>api/get_stripe_acc_cond",
+            type: "POST",
+            dataType: "json",
+            data: {
+                id: id
+            },
+            success: function(data) {
+                $("#stripe_form_edit input[name='id']").val(data.account[0]['id']);
+                $("#stripe_form_edit input[name='account_name']").val(data.account[0]['account_name']);
+                $("#stripe_form_edit input[name='stripe_publish_key']").val(data.account[0]['stripe_publish_key']);
+                $("#stripe_form_edit input[name='stripe_secret_key']").val(data.account[0]['stripe_secret_key']);
+            }
+        });
+        $('.stripe-container #stripe_existed_accounts').hide();
+        $('.stripe-container #stripe_form_edit').show();
+    })
+    $(".new-account-stripe").on("click",function(){
+        $("#stripe_form").fadeIn();
+        $("#stripe_existed_accounts").hide();
+    })
+    $(".back-exist-stripe").on("click",function(){
+        $("#list-linked-accounts").fadeIn();
+        $("#stripe_existed_accounts").hide();
     })
 
     $(document).on("click", "#list-linked-accounts #accounts .dbutton", function() {
@@ -1214,7 +1287,35 @@
         $('.paypal-container').hide();
         $('.accounts-list').show();
     });
+    $(document).on('click', '.paypal-ebutton', function() {
+        var id = $(this).attr("id");
+        console.log($(this).attr("id"));
+        $.ajax({
+            url: "<?= base_url() ?>api/get_paypal_acc_cond",
+            type: "POST",
+            dataType: "json",
+            data: {
+                id: id
+            },
+            success: function(data) {
+                $('#paypal_form_edit input[name="id"]').val(data.paypalAcc[0]["id"]);
+                $('#paypal_form_edit input[name="account_name"]').val(data.paypalAcc[0]["account_name"]);
+                $('#paypal_form_edit input[name="paypal_client_id"]').val(data.paypalAcc[0]["paypal_client_id"]);
+                $('#paypal_form_edit input[name="paypal_secret_key"]').val(data.paypalAcc[0]["paypal_secret_key"]);
+            }
+        });
+        $('.paypal-container .paypal_existed').hide();
+        $('.paypal-container #paypal_form_edit').show();
+    })
+    $(document).on('click', '.paypal-dbutton', function() {
+        var id = $(this).attr("id");
+        console.log($(this).attr("id"));
+    })
 
+
+    // $('.paypal-ebutton').on("click",function(){
+    //     console.log($('.paypal-ebutton').attr("id"));
+    // })
     $('.click-paypal').click(function() {
 
         $.ajax({
@@ -1239,10 +1340,10 @@
                                             <h6>` + data.paypalAcc[index]['account_name'] + `</h6>
                                         </div>
                                         <div class="col-md-2">
-                                            <button class="style ebutton" id="` + data.paypalAcc[index]['id'] + `">edit</button>
+                                            <button class="style paypal-ebutton" id="` + data.paypalAcc[index]['id'] + `">edit</button>
                                         </div>
                                         <div class="col-md-2">
-                                            <button class="style dbutton"id="` + data.paypalAcc[index]['id'] + `">delete</button>
+                                            <button class="style paypal-dbutton"id="` + data.paypalAcc[index]['id'] + `">delete</button>
                                         </div>
                                     </div>
                                 <hr>
@@ -1270,7 +1371,7 @@
         $('.paypal-container #paypal_form_edit  ').hide();
         $('.paypal-container #existed_accounts').show();
     });
-    $('#back-exist-paypal').click(function() {
+    $('.back-exist-paypal').click(function() {
         $('.paypal-container #existed_accounts').hide();
         $('.paypal-container .paypal_existed').show();
     })
@@ -1315,7 +1416,7 @@
                     document.getElementById('overlay').style.display = "flex";
                 },
                 success: function(data) {
-                   
+
                     nsmartrac_alert('Nice!', 'Paypal crendentials saved!', 'success');
                     document.getElementById('overlay').style.display = "none";
                     $('.paypal-container').hide();
@@ -1324,7 +1425,7 @@
                 }
             });
         });
-        
+
 
         $("#stripe_form").submit(function(e) {
             e.preventDefault(); // avoid to execute the actual submit of the form.

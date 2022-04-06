@@ -1,5 +1,5 @@
 function clean(string) {
-  return string.split("_").join(" ");
+  return string.split("_").join(" ").toLowerCase();
 }
 
 export const tableColumns = {
@@ -10,9 +10,10 @@ export const tableColumns = {
     return row.creditor;
   },
   accountNumber: (_, __, row) => {
-    const accounts = Object.entries(row.account_numbers);
-    const elements = accounts.map(([key, value]) => {
-      return `<div class="accountnum">${key}: ${value || ""}</div>`;
+    const elements = row.items.map((item) => {
+      return `<div class="accountnum">
+        ${item.bureau}: ${item.account_number || ""}
+      </div>`;
     });
 
     return elements.join("");
@@ -24,28 +25,43 @@ export const tableColumns = {
     const value = row.is_disputed ? "Yes" : "No";
     return `<div>${value}</div>`;
   },
-  equifax: (_, __, { equifax }) => {
+  equifax: (_, __, row) => {
+    const equifax = row.items.find((item) => {
+      return item.bureau === "Equifax";
+    });
+
     if (!equifax) return "";
+    const status = clean(equifax.status);
 
-    return `<div class="status status--${equifax}">
+    return `<div class="status status--${status}">
         <span class="status__logo"><i class="fa fa-clock"></i></span>
-        <span class="text-muted text-capitalize">${clean(equifax)}</span>
+        <span class="text-muted text-capitalize">${status}</span>
     </div>`;
   },
-  experian: (_, __, { experian }) => {
+  experian: (_, __, row) => {
+    const experian = row.items.find((item) => {
+      return item.bureau === "Experian";
+    });
+
     if (!experian) return "";
+    const status = clean(experian.status);
 
-    return `<div class="status status--${experian}">
+    return `<div class="status status--${status}">
         <span class="status__logo"><i class="fa fa-clock"></i></span>
-        <span class="text-muted text-capitalize">${clean(experian)}</span>
+        <span class="text-muted text-capitalize">${status}</span>
     </div>`;
   },
-  transunion: (_, __, { transunion }) => {
-    if (!transunion) return "";
+  transunion: (_, __, row) => {
+    const transunion = row.items.find((item) => {
+      return item.bureau === "Trans Union";
+    });
 
-    return `<div class="status status--${transunion}">
+    if (!transunion) return "";
+    const status = clean(transunion.status);
+
+    return `<div class="status status--${status}">
         <span class="status__logo"><i class="fa fa-clock"></i></span>
-        <span class="text-muted text-capitalize">${clean(transunion)}</span>
+        <span class="text-muted text-capitalize">${status}</span>
     </div>`;
   },
   remove: () => {

@@ -2,10 +2,7 @@ window.document.addEventListener("DOMContentLoaded", async () => {
   window.api = await import("../api.js");
   window.helpers = await import("../helpers.js");
 
-  const params = new Proxy(new URLSearchParams(window.location.search), {
-    get: (searchParams, prop) => searchParams.get(prop),
-  });
-
+  const params = window.helpers.getParams();
   const { data: customer } = await window.api.getCustomer(params.customer_id);
   const $customerName = document.querySelector(".esigneditor__title span");
   $customerName.textContent = `${customer.first_name} ${customer.last_name}`;
@@ -28,6 +25,7 @@ window.document.addEventListener("DOMContentLoaded", async () => {
     on_add_to_dispute: addToDispute,
     on_no_dispute_next: onNoDisputeNext,
     on_back_to_part1: onBackToPart1,
+    step2_generate_letter: step2GenerateLetter,
     on_export_pdf: () => onExportPDF(customer),
   };
 
@@ -200,6 +198,28 @@ function step2SaveContinue() {
   $step2.classList.remove("step--active");
   $step3.classList.remove("step--disabled");
   $step3.classList.add("step--active");
+}
+
+async function step2GenerateLetter() {
+  const $table = document.getElementById("selecteddisputeitemstable");
+  if (!$.fn.DataTable.isDataTable($table)) return;
+
+  const { Table } = await import("./selecteditemsdatatable.js");
+  const rows = Table.getRowsData();
+  if (!rows.length) return;
+
+  const $button = document.querySelector("[data-action=step2_generate_letter]");
+  const result = await window.helpers.submitBtn($button, () => {
+    const ids = rows.map((row) => row.id);
+    return window.api.getCreditorByIds({ ids });
+  });
+
+  const $part1 = document.querySelector(".part1");
+  const $part2 = document.querySelector(".part2");
+
+  $part1.classList.add("d-none");
+  $part2.classList.remove("d-none");
+  $part2.classList.add("part2--withdispute");
 }
 
 async function displayCustomerDisputeItems(event) {
