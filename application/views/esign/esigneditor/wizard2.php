@@ -187,58 +187,31 @@ ini_set('max_input_vars', 30000);
                 <div class="disputetab">
                     <nav>
                         <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                            <a class="nav-item nav-link active" id="part2equifaxtab" data-toggle="tab" href="#part2equifaxtabpane" role="tab" aria-controls="part2equifaxtabpane" aria-selected="true">
+                            <a class="nav-item nav-link active" id="part2equifaxtab" data-bureau="equifax" data-toggle="tab" href="#part2equifaxtabpane" role="tab" aria-controls="part2equifaxtabpane" aria-selected="true">
                                 <img alt="" src="<?=base_url('/assets/img/customer/images/equifax.png');?>"/>
                             </a>
-                            <a class="nav-item nav-link" id="part2experiantab" data-toggle="tab" href="#part2experiantabpane" role="tab" aria-controls="part2experiantabpane" aria-selected="false">
+                            <a class="nav-item nav-link" id="part2experiantab" data-bureau="experian" data-toggle="tab" href="#part2experiantabpane" role="tab" aria-controls="part2experiantabpane" aria-selected="false">
                                 <img alt="" src="<?=base_url('/assets/img/customer/images/experian.png');?>"/>
                             </a>
-                            <a class="nav-item nav-link" id="part2transuniontab" data-toggle="tab" href="#part2transuniontabpane" role="tab" aria-controls="part2transuniontabpane" aria-selected="false">
+                            <a class="nav-item nav-link" id="part2transuniontab" data-bureau="trans_union" data-toggle="tab" href="#part2transuniontabpane" role="tab" aria-controls="part2transuniontabpane" aria-selected="false">
                                 <img alt="" src="<?=base_url('/assets/img/customer/images/trans_union.png');?>"/>
                             </a>
                         </div>
                     </nav>
                     <div class="tab-content">
-                        <div class="tab-pane show active" id="part2equifaxtabpane" role="tabpanel" aria-labelledby="part2equifaxtab">
-                            <div class="row">
-                                <div class="col">
-                                    <div>Send From Address:</div>
-                                    <strong>
-                                        <div>Sample Client</div>
-                                        <div>1234 Main Street</div>
-                                        <div>Santa Monica, California 90401</div>
-                                    </strong>
-                                </div>
-                                <div class="col">
-                                    <div>Send To Address:</div>
-                                    <strong>
-                                        <div>Equifax Information Services LLC</div>
-                                        <div>P.O. Box 740256</div>
-                                        <div>Atlanta, GA 30374-0256</div>
-                                    </strong>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="tab-pane" id="part2experiantabpane" role="tabpanel" aria-labelledby="part2experiantab">...</div>
-                        <div class="tab-pane" id="part2transuniontabpane" role="tabpanel" aria-labelledby="part2transuniontab">...</div>
+                        <div class="tab-pane show active" id="part2equifaxtabpane" role="tabpanel" aria-labelledby="part2equifaxtab"></div>
+                        <div class="tab-pane" id="part2experiantabpane" role="tabpanel" aria-labelledby="part2experiantab"></div>
+                        <div class="tab-pane" id="part2transuniontabpane" role="tabpanel" aria-labelledby="part2transuniontab"></div>
 
                         <template>
                             <div class="row">
                                 <div class="col">
                                     <div>Send From Address:</div>
-                                    <strong>
-                                        <div>Sample Client</div>
-                                        <div>1234 Main Street</div>
-                                        <div>Santa Monica, California 90401</div>
-                                    </strong>
+                                    <strong data-detail="customer"></strong>
                                 </div>
                                 <div class="col">
                                     <div>Send To Address:</div>
-                                    <strong>
-                                        <div>Equifax Information Services LLC</div>
-                                        <div>P.O. Box 740256</div>
-                                        <div>Atlanta, GA 30374-0256</div>
-                                    </strong>
+                                    <strong data-detail="bureau"></strong>
                                 </div>
                             </div>
                         </template>

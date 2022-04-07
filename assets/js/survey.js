@@ -276,11 +276,10 @@ $(document).ready(function(){
       url: surveyBaseUrl + '/survey/add/question/choice/'+id+'/'+template_id,
       type: 'GET',
       dataType: 'json',
-      success: function(res){
-        var survey_option = '<div class="d-flex w-100 justify-content-between choice-container" style="margin:10px 0px; height:44px;">' + res.data + '<button id="btn-delete-option" data-id="'+res.tid+'" class="btn btn-outline-danger" type="button" name="button"><i class="fa fa-trash"></i></button>';
+      success: function(res){        
         if(res.success == 1){
           toastr["success"]("Successfully Added!");
-          $('#container-'+id+' #choices').append(survey_option);
+          $('#container-'+id+' #choices').append(res.data);
         }
       }
     });
@@ -994,5 +993,20 @@ function load_questions_list(survey_id){
     "showMethod": "fadeIn",
     "hideMethod": "fadeOut"
   }
+
+  $(document).on('click','.btn-delete-choice', function(e){
+    var staid = $(this).attr('data-id');
+    $.ajax({
+      url: surveyBaseUrl + '/survey/_delete_template_answer',
+      type: 'POST',
+      data:{staid:staid},
+      dataType: 'json',
+      success: function(res){ 
+        $('.q-choice-container-'+staid).fadeOut("normal", function() {
+            $(this).remove();
+        });     
+      }
+    });
+  });  
 
 });

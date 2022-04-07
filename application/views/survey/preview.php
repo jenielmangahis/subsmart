@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css"/>
     <link href="https://cdn.jsdelivr.net/jquery.jssocials/1.4.0/jssocials.css">
     <link href="<?= base_url()?>/assets/css/survey.css" rel="stylesheet">
+    <script src="<?= base_url() ?>/assets/dashboard/js/jquery.min.js"></script>
     <style>
         html, body {
           height: 100%;
@@ -186,7 +187,12 @@
         if($survey_theme !== null){
           if($survey->backgroundImage == null){
             ?>
-              <img class="theme-image" src="<?= base_url() ?>uploads/survey/themes/<?= $survey_theme->sth_primary_image ?>" alt="<?= substr($survey_theme->sth_primary_image, 0, 4)?>-image" style="<?= $survey_theme->sth_primary_image_class?>">
+              <?php if( $survey_theme->company_id > 0 ){ ?>
+                <img class="theme-image" src="<?= base_url() ?>uploads/survey/themes/<?= $survey_theme->company_id; ?>/<?= $survey_theme->sth_primary_image ?>" alt="<?= substr($survey_theme->sth_primary_image, 0, 4)?>-image" style="<?= $survey_theme->sth_primary_image_class?>">
+              <?php }else{ ?>
+                <img class="theme-image" src="<?= base_url() ?>uploads/survey/themes/<?= $survey_theme->sth_primary_image ?>" alt="<?= substr($survey_theme->sth_primary_image, 0, 4)?>-image" style="<?= $survey_theme->sth_primary_image_class?>">
+              <?php } ?>
+              
             <?php
           }else{
             ?>
@@ -266,7 +272,7 @@
                                     break;
                                   case 12:
                                     ?>
-                                      <img class="image-set-half-image" src="https://picsum.photos/id/1005/5760/3840">  
+                                      <!-- <img class="image-set-half-image" src="https://picsum.photos/id/1005/5760/3840">   -->
                                     <?php
                                     break;
                                   default:
@@ -293,12 +299,13 @@
 
                                 <!-- input -->
                                 <?php if($question->template_id == 15){ ?>
-                                  <select name="answer-<?=$question->id?>" class="form-control input-content " id="exampleFormControlSelect1">
+                                  
                                 <?php }; ?>
 
                                 
                                 <?php //foreach ($question->questions as $key1 => $quest):?>
                                   <?php
+                                    $type = '';
                                     switch($question->template_id){
                                       case 2; // long text
                                       
@@ -336,14 +343,18 @@
                                         break;
                                       case 5: //email
                                         ?>
+                                        <?php $type = 'email'; ?>
                                         <div class="form-group input-content">
-                                          <input type="email" class="form-control" name="answer-<?=$question->id?>" id="for_email" placeholder="name@example.com">
+                                          <div class="form-survery-item-error-<?= $question->id; ?>"></div>
+                                          <input type="email" class="form-control survey-item-<?= $question->id; ?>" name="answer-<?=$question->id?>" id="for_email" placeholder="name@example.com">
                                         </div>
                                         <?php
                                         break;
                                       case 6: //number
                                         ?>
+                                          <?php $type = 'number'; ?>
                                           <div class="form-group input-content">
+                                            <div class="form-survery-item-error-<?= $question->id; ?>"></div>
                                             <input type="number" class="form-control" name="answer-<?=$question->id?>" value="" placeholder="Enter your answer">
                                           </div>
                                         <?php
@@ -365,15 +376,19 @@
                                         break;
                                       case 8: // Phone Number
                                         ?>
+                                          <?php $type = 'phone'; ?>
                                           <div class="form-group input-content">
-                                            <input type="text" class="form-control valid" name="answer-<?=$question->id?>" id="contact_phone" placeholder="(555) 555-5555" aria-invalid="false">
+                                            <div class="form-survery-item-error-<?= $question->id; ?>"></div>
+                                            <input type="text" class="form-control valid survey-item-<?= $question->id; ?>" name="answer-<?=$question->id?>" id="contact_phone" placeholder="(555) 555-5555" aria-invalid="false">
                                           </div>
                                         <?php
                                         break;
                                       case 9:  // short text
                                         ?>
+                                          <?php $type = 'short_text'; ?>
                                           <div class="form-group input-content">
-                                            <input type="text" class="form-control" name="answer-<?=$question->id?>" value="" placeholder="Enter your answer">
+                                            <div class="form-survery-item-error-<?= $question->id; ?>"></div>
+                                            <input type="text" class="form-control survey-item-<?= $question->id; ?>" name="answer-<?=$question->id?>" value="" placeholder="Enter your answer">
                                           </div>
                                         <?php
                                         break;
@@ -412,20 +427,26 @@
                                         break;
                                       case 13: // statement
                                         ?>
+                                          <?php $type = 'statement'; ?>
                                           <div class="form-group input-content">
+                                            <div class="form-survery-item-error-<?= $question->id; ?>"></div>
                                             <textarea class="form-control" name="answer-<?=$question->id?>" rows="5" placeholder="Enter your answer"></textarea>
                                           </div>
                                         <?php
                                         break;
                                       case 14: // website
                                         ?>
+                                          <?php $type = 'website'; ?>
                                           <div class="form-group input-content">
-                                            <input type="url" class="form-control" name="answer-<?=$question->id?>" id="for_email" placeholder="name@example.com">
+                                            <div class="form-survery-item-error-<?= $question->id; ?>"></div>
+                                            <input type="url" class="form-control survey-item-<?= $question->id; ?>" name="answer-<?=$question->id?>" id="for_email" placeholder="www.yourdomain.com/">
                                           </div>
                                         <?php
                                         break;
                                       case 15: //dropdown
                                         ?>
+                                          <select name="answer-<?=$question->id?>" class="form-control input-content " id="exampleFormControlSelect1">
+                                            <option value="">Please Select</option>
                                             <?php
                                               foreach ($question->questions as $key1 => $quest){
                                                 ?>
@@ -434,6 +455,7 @@
                                                 <?php
                                               }
                                             ?>
+                                          </select>
                                         <?php
                                         break;
                                       case 16: //payment
@@ -482,7 +504,8 @@
                                       case 17: //date
                                         ?>
                                           <div class="form-group input-content">
-                                            <input type="date" class="form-control" name="answer-<?=$question->id?>" value="" placeholder="Enter your answer">
+                                            <div class="form-survery-item-error-<?= $question->id; ?>"></div>
+                                            <input type="date" class="form-control survey-item-<?= $question->id; ?>" name="answer-<?=$question->id?>" value="" placeholder="Enter your answer">
                                           </div>
                                         <?php
                                         break;
@@ -519,11 +542,11 @@
                                     </script>
                                   <?php endif; ?>
                                 <?php if($question->template_id == 15){ ?>
-                                </select>
+                                <!-- </select> -->
                                 <?php }; ?>
 
                                 <!-- next button -->
-                                <button id="btn-next" data-id="<?= $key ?>" data-temp-id="<?=$question->template_id?>" data-is-required="<?=$question->required?>" data-correct-answer="<?=$question->correctAnswer?>" class="btn btn-md btn-primary mt-3" style="background-color: <?= $survey_theme !== null ? $survey_theme->sth_primary_color : ""?>; color: <?= $survey_theme !== null ? $survey_theme->sth_text_color : ""?>"><?= ($question->custom_button_text == "" || $question->custom_button_text == null) ? "Next" : $question->custom_button_text ?></button>
+                                <button id="btn-next" data-survey-item-type="<?= $type; ?>" data-survery-item="<?=$question->id?>" data-id="<?= $key ?>" data-temp-id="<?=$question->template_id?>" data-is-required="<?=$question->required?>" data-correct-answer="<?=$question->correctAnswer?>" class="btn btn-md btn-primary mt-3" style="background-color: <?= $survey_theme !== null ? $survey_theme->sth_primary_color : ""?>; color: <?= $survey_theme !== null ? $survey_theme->sth_text_color : ""?>"><?= ($question->custom_button_text == "" || $question->custom_button_text == null) ? "Next" : $question->custom_button_text ?></button>
                                 <?php if($key >= 1){
                                   ?>
                                     <button id="btn-back" data-id="<?= $key ?>"  class="btn btn-md btn-outline-light mt-3">Go back</button>
@@ -620,11 +643,6 @@
       </style>
 
     </div>
-
-    <script>
-      
-    </script>
-    <script src="<?= base_url() ?>/assets/dashboard/js/jquery.min.js"></script>
     <script src="<?= base_url() ?>/assets/js/survey.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
 
@@ -638,6 +656,7 @@
     <script>
       const urlParams = new URLSearchParams(window.location.search);
       const sessionId = Math.floor(100000000 + Math.random() * 900000000);
+      let elm;
       let pageNumber = 1;
       let numQuestions = <?=$question_length?>;
       let answeredFields = 0;
@@ -650,6 +669,15 @@
         $("#t").timer({action:'start', seconds:0, });
         $('#page-current-number').html(pageNumber);
         $('#page-end-number').html('<?= count($questions) + 1?>');
+
+        function validateEmail(email) {
+          var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+          return emailReg.test( email );
+        }
+
+        function is_valid_url(url) {
+            return /^(http(s)?:\/\/)?(www\.)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/.test(url);
+        }
 
         $(document).on('click', '#btn-submit', function(e){
           e.preventDefault();
@@ -752,6 +780,8 @@
 
           var id = $(this).data('id');
           var tempid = $(this).data('temp-id');
+          var survey_type = $(this).attr('data-survey-item-type');
+          var survery_item_id = $(this).attr('data-survery-item');
           var next_id = id+1;
           var isRequired = $(this).data('is-required')
           var data =  $(this).serializeArray();
@@ -780,19 +810,44 @@
             }
           ?>
 
-
-          
           if(value){
             answeredFields = (tempid === 12 || tempid === 1) ? null :  answeredFields++;
           }
         
 
-          if(urlParams.get('mode') != 'preview'){
+          //if(urlParams.get('mode') != 'preview'){
             if(isRequired && $('#question-'+id+' [name*="answer"]').val() == ""){
-              window.alert('This field should not be empty');
+             // toastr["error"]("This field should not be empty");
+              $('.form-survery-item-error-'+survery_item_id).fadeIn("normal", function() {
+                $(this).html('<div class="alert alert-danger" role="alert">This field is required</div>');
+              });     
+              //window.alert('This field should not be empty');
               return;
             }
-          }
+
+            var input_val = $('.survey-item-'+survery_item_id).val();
+            if( survey_type == 'email' ){      
+              if( !validateEmail(input_val) ){
+                $('.form-survery-item-error-'+survery_item_id).fadeIn("normal", function() {
+                  $(this).html('<div class="alert alert-danger" role="alert">Not a valid email</div>');
+                });
+                return;
+              }else{
+                $('.form-survery-item-error-'+survery_item_id).hide();
+              }
+            }else if( survey_type == 'website' ){
+              if( !is_valid_url(input_val) ){
+                $('.form-survery-item-error-'+survery_item_id).fadeIn("normal", function() {
+                  $(this).html('<div class="alert alert-danger" role="alert">Not a valid url</div>');
+                });
+                return;
+              }else{
+                $('.form-survery-item-error-'+survery_item_id).hide();
+              }
+            }else{
+              $('.form-survery-item-error-'+survery_item_id).hide();
+            }
+          //}
 
           if(pageNumber === <?= count($questions)?>){
             $('#question-'+id+'').removeClass('d-none');
@@ -994,8 +1049,7 @@
                 $form.append("<input type='hidden' name='stripeToken' value='" + token + "'/>");
                 //  $form.get(0).submit();
             }
-        }
-          
+      }
     });
     </script>
   </body>

@@ -141,8 +141,8 @@ export function getCustomerDisputeItems(customerId) {
   );
 }
 
-export function getCreditorByIds(payload) {
-  return http.post(`${prefixURL}/EsignEditor/apiGetCreditorByIds`, payload);
+export function generateBasicDispute(payload) {
+  return http.post(`${prefixURL}/EsignEditor/apiGenerateBasicDispute`, payload);
 }
 
 const http = {
