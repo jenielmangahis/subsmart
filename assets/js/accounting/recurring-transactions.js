@@ -290,6 +290,36 @@ $(document).on('click', '#recurring_transactions .edit-recurring', function(e) {
             modal = 'credit_card_credit';
             modalName = 'creditCardCreditModal';
         break;
+        case 'Invoice' :
+            transactionType = 'invoice';
+            modal = 'invoice';
+            modalName = 'invoiceModal';
+        break;
+        case 'Credit Memo' :
+            transactionType = 'credit-memo';
+            modal = 'credit_memo';
+            modalName = 'creditMemoModal';
+        break;
+        case 'Sales Receipt' :
+            transactionType = 'sales-receipt';
+            modal = 'sales_receipt';
+            modalName = 'salesReceiptModal';
+        break;
+        case 'Refund' :
+            transactionType = 'refund-receipt';
+            modal = 'refund_receipt';
+            modalName = 'refundReceiptModal';
+        break;
+        case 'Credit' :
+            transactionType = 'delayed-credit';
+            modal = 'delayed_credit';
+            modalName = 'delayedCreditModal';
+        break;
+        case 'Charge' :
+            transactionType = 'delayed-charge';
+            modal = 'delayed_charge';
+            modalName = 'delayedChargeModal';
+        break;
     }
 
     var transactionData = {

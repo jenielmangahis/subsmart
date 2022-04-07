@@ -83,7 +83,7 @@ export class Table {
       this.onCheckboxStateChange();
     });
 
-    table.on("click", "tr", (event) => {
+    table.on("click", "tbody tr", (event) => {
       const $tr = $(event.target).closest("tr");
       const $checkbox = $tr.find("input[type=checkbox]");
       $checkbox.prop("checked", !$checkbox.prop("checked"));

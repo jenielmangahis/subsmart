@@ -131,6 +131,7 @@
     }
   }
 }
+
 .esigneditor__loader {
   position: absolute;
   left: 0;
@@ -398,6 +399,7 @@
     padding: 0 1rem;
   }
 }
+
 .customerCustomField {
   --input-height: 35px;
 
@@ -477,6 +479,7 @@
   overflow: auto;
   padding: 0 0.5rem;
 }
+
 .customer {
   display: flex;
   gap: 1rem;
@@ -558,6 +561,7 @@
     height: 1rem;
   }
 }
+
 #newdisputemodal .newdisputemodal {
   &__title {
     font-size: 1.3rem;
@@ -624,6 +628,11 @@
 
   #customerdisputestable {
     width: 100% !important;
+
+    th img {
+      margin: auto;
+      min-width: 60px;
+    }
   }
 
   .table-wraper {
@@ -635,6 +644,7 @@
   td.accountnum {
     width: 100px !important;
   }
+
   div.accountnum {
     white-space: nowrap;
     overflow: hidden;
@@ -739,6 +749,11 @@
 
 #selecteddisputeitemstable {
   width: 100% !important;
+
+  th img {
+    margin: auto;
+    min-width: 60px;
+  }
 }
 
 .part2 {
@@ -756,15 +771,29 @@
       padding: 1rem;
     }
 
-    .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
+    .nav-tabs .nav-item.show .nav-link,
+    .nav-tabs .nav-link.active {
       background-color: transparent;
     }
-
   }
 
   &:not(.part2--withdispute) {
     .disputetab {
-      display: none ;
+      display: none;
+    }
+  }
+
+  #part2equifaxtab,
+  #part2experiantab,
+  #part2transuniontab {
+    display: none;
+  }
+
+  .disputetab {
+    &--equifax #part2equifaxtab,
+    &--experian #part2experiantab,
+    &--trans_union #part2transuniontab {
+      display: block;
     }
   }
 }
@@ -779,5 +808,28 @@
   &:focus {
     border-color: var(--color) !important;
     color: var(--color) !important;
+  }
+}
+
+.note-editable {
+  ul,
+  ul li {
+    list-style: disc !important;
+  }
+
+  ol,
+  ol li {
+    list-style: decimal !important;
+    list-style-position: inside !important;
+  }
+
+  ul,
+  ol {
+    list-style-position: inside !important;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    padding-inline-start: 40px;
   }
 }
