@@ -4144,7 +4144,7 @@ $(function() {
             $.get('/accounting/get-add-vendor-details-modal', function(result) {
                 $('#modal-container').append(result);
 
-                var attachments = new Dropzone(`#vendAtt`, {
+                var vendorAttachment = new Dropzone(`#vendAtt`, {
                     url: '/accounting/attachments/attach',
                     maxFilesize: 20,
                     uploadMultiple: true,
@@ -4226,7 +4226,7 @@ $(function() {
             $.get('/accounting/get-add-customer-details-modal', function(result) {
                 $('#modal-container').append(result);
 
-                var attachments = new Dropzone(`#custAttachment`, {
+                var customerAttachment = new Dropzone(`#customerAttachment`, {
                     url: '/accounting/attachments/attach',
                     maxFilesize: 20,
                     uploadMultiple: true,
@@ -5589,6 +5589,33 @@ $(function() {
         $('#modal-form').submit();
     });
 
+    $(document).on('change', '#invoiceModal #customer', function() {
+        $.get(`/accounting/get-customer-details/${$(this).val()}`, function(result) {
+            var customer = JSON.parse(result);
+
+            if (customer.business_name !== "" && customer.business_name !== null) {
+                $('#invoiceModal #billing-address').append(customer.business_name);
+                $('#invoiceModal #billing-address').append('\n');
+            } else {
+                var customerName = '';
+                customerName += customer.first_name !== "" ? customer.first_name + " " : "";
+                customerName += customer.middle_name !== "" ? customer.middle_name + " " : "";
+                customerName += customer.last_name !== "" ? customer.last_name : "";
+                $('#invoiceModal #billing-address').html(customerName.trim());
+                $('#invoiceModal #billing-address').append('\n');
+            }
+            var address = '';
+            address += customer.mail_add !== "" ? customer.mail_add : "";
+            address += customer.city !== "" ? '\n' + customer.city : "";
+            address += customer.state !== "" ? ', ' + customer.state : "";
+            address += customer.zip_code !== "" ? ' ' + customer.zip_code : "";
+            address += customer.country !== "" ? ' ' + customer.country : "";
+
+            $('#invoiceModal #billing-address').append(address.trim());
+            $('#invoiceModal #customer-email').val(customer.email);
+        });
+    });
+
     $(document).on('keyup', '#receivePaymentModal #invoice-no', function(e) {
         $('#receivePaymentModal #invoice-no').removeClass('border-danger');
     });
@@ -5934,14 +5961,15 @@ $(function() {
         $.get(`/accounting/get-customer-details/${$(this).val()}`, function(result) {
             var customer = JSON.parse(result);
 
-            var customerName = '';
-            customerName += customer.first_name !== "" ? customer.first_name + " " : "";
-            customerName += customer.middle_name !== "" ? customer.middle_name + " " : "";
-            customerName += customer.last_name !== "" ? customer.last_name : "";
-            $('#creditMemoModal #billing-address').html(customerName.trim());
-            $('#creditMemoModal #billing-address').append('\n');
             if (customer.business_name !== "" && customer.business_name !== null) {
                 $('#creditMemoModal #billing-address').append(customer.business_name);
+                $('#creditMemoModal #billing-address').append('\n');
+            } else {
+                var customerName = '';
+                customerName += customer.first_name !== "" ? customer.first_name + " " : "";
+                customerName += customer.middle_name !== "" ? customer.middle_name + " " : "";
+                customerName += customer.last_name !== "" ? customer.last_name : "";
+                $('#creditMemoModal #billing-address').html(customerName.trim());
                 $('#creditMemoModal #billing-address').append('\n');
             }
             var address = '';
@@ -6394,14 +6422,15 @@ $(function() {
         $.get(`/accounting/get-customer-details/${$(this).val()}`, function(result) {
             var customer = JSON.parse(result);
 
-            var customerName = '';
-            customerName += customer.first_name !== "" ? customer.first_name + " " : "";
-            customerName += customer.middle_name !== "" ? customer.middle_name + " " : "";
-            customerName += customer.last_name !== "" ? customer.last_name : "";
-            $('#salesReceiptModal #billing-address').html(customerName.trim());
-            $('#salesReceiptModal #billing-address').append('\n');
             if (customer.business_name !== "" && customer.business_name !== null) {
                 $('#salesReceiptModal #billing-address').append(customer.business_name);
+                $('#salesReceiptModal #billing-address').append('\n');
+            } else {
+                var customerName = '';
+                customerName += customer.first_name !== "" ? customer.first_name + " " : "";
+                customerName += customer.middle_name !== "" ? customer.middle_name + " " : "";
+                customerName += customer.last_name !== "" ? customer.last_name : "";
+                $('#salesReceiptModal #billing-address').html(customerName.trim());
                 $('#salesReceiptModal #billing-address').append('\n');
             }
             var address = '';
@@ -6448,14 +6477,15 @@ $(function() {
         $.get(`/accounting/get-customer-details/${$(this).val()}`, function(result) {
             var customer = JSON.parse(result);
 
-            var customerName = '';
-            customerName += customer.first_name !== "" ? customer.first_name + " " : "";
-            customerName += customer.middle_name !== "" ? customer.middle_name + " " : "";
-            customerName += customer.last_name !== "" ? customer.last_name : "";
-            $('#refundReceiptModal #billing-address').html(customerName.trim());
-            $('#refundReceiptModal #billing-address').append('\n');
             if (customer.business_name !== "" && customer.business_name !== null) {
                 $('#refundReceiptModal #billing-address').append(customer.business_name);
+                $('#refundReceiptModal #billing-address').append('\n');
+            } else {
+                var customerName = '';
+                customerName += customer.first_name !== "" ? customer.first_name + " " : "";
+                customerName += customer.middle_name !== "" ? customer.middle_name + " " : "";
+                customerName += customer.last_name !== "" ? customer.last_name : "";
+                $('#refundReceiptModal #billing-address').html(customerName.trim());
                 $('#refundReceiptModal #billing-address').append('\n');
             }
             var address = '';
@@ -7883,6 +7913,7 @@ const makeRecurring = (modalName) => {
             $(intervalFields).insertAfter($(`#${modalId} div.modal-body div.row.customer-details`));
             $(`div#${modalId} div.modal-body div.row.customer-details`).children('.col-md-4').remove();
             $(`div#${modalId} div.modal-body div.row.date-row`).remove();
+            $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Invoice');
             $(`div#${modalId} div.modal-body #shipping-date`).parent().parent().remove();
             $(`div#${modalId} div.modal-body #invoice-no`).parent().parent().remove();
         break;

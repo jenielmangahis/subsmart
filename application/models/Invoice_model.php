@@ -961,6 +961,8 @@ class Invoice_model extends MY_Model
     public function get_last_invoice_number($company_id, $invoicePrefix)
     {
         $this->db->where('company_id', $company_id);
+        $this->db->where('is_recurring !=', 1);
+        $this->db->where('invoice_number !=', '');
         $this->db->order_by('date_created', 'desc');
         $query = $this->db->get('invoices');
         $last = $query->row();

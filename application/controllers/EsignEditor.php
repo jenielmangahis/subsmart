@@ -431,19 +431,7 @@ SQL;
                 'code' => 'client_address',
                 'description' => 'Address of client',
                 'get' => function (PlaceholderGetParam $param) {
-                    $customer = $this->getCustomer($param->customerId);
-                    $address = [
-                        $customer->mail_add,
-                        $customer->city,
-                        $customer->state,
-                        $customer->zip_code,
-                    ];
-
-                    $address = array_filter($address, function ($data) {
-                        return !is_null($data) && !empty($data);
-                    });
-
-                    return empty($address) ? null : implode(', ', $address);
+                    return $this->getCustomerAddress($param->customerId);
                 },
             ],
             [
@@ -513,6 +501,13 @@ SQL;
             [
                 'code' => 'bureau_address',
                 'description' => 'Credit bureau name and address',
+                'get' => function (PlaceholderGetParam $param) {
+                    if (empty($param->bureau)) {
+                        return null;
+                    }
+
+                    return $this->getBureauAddressHTML($param->bureau);
+                },
             ],
             [
                 'code' => 'account_number',
@@ -521,6 +516,36 @@ SQL;
             [
                 'code' => 'dispute_item_and_explanation',
                 'description' => 'Dispute items and explanation',
+                'get' => function (PlaceholderGetParam $param) {
+                    if (empty($param->disputeItemIds)) {
+                        return null;
+                    }
+
+                    $template = '<li>{reason}<br>{creditor}<br>Account Number: {account_number}<br><div></div></li>';
+                    $listItems = array_map(function ($itemId) use ($template) {
+                        $this->db->where('id', $itemId);
+                        $item = $this->db->get('customer_dispute_items')->row();
+
+                        $this->db->select('instruction, furnisher_id');
+                        $this->db->where('id', $item->customer_dispute_id);
+                        $dispute = $this->db->get('customer_disputes')->row();
+                        if (empty($dispute->instruction)) {
+                            $dispute->instruction = 'N/A';
+                        }
+
+                        $this->db->select('name');
+                        $this->db->where('id', $dispute->furnisher_id);
+                        $creditor = $this->db->get('furnishers')->row();
+
+                        $retval = str_replace('{reason}', $dispute->instruction, $template);
+                        $retval = str_replace('{creditor}', $creditor->name, $retval);
+                        $retval = str_replace('{account_number}', $item->account_number, $retval);
+                        return $retval;
+
+                    }, $param->disputeItemIds);
+
+                    return str_replace('{items}', implode('', $listItems), '<ol>{items}</ol>');
+                },
             ],
             [
                 'code' => 'creditor_name',
@@ -763,13 +788,17 @@ SQL;
         ]]);
     }
 
-    private function generateCustomerLetter($customerLetter)
+    private function generateCustomerLetter($customerLetter, array $additionalProps = [])
     {
         $placeholders = $this->getPlaceholders((int) $customerLetter->customer_id);
         $placeholderParam = new PlaceholderGetParam(
             (int) $customerLetter->customer_id,
             (int) logged('company_id')
         );
+
+        foreach ($additionalProps as $key => $value) {
+            $placeholderParam->$key = $value;
+        }
 
         $letterContent = $customerLetter->content;
         foreach ($placeholders as $placeholder) {
@@ -1137,6 +1166,12 @@ SQL;
         $this->db->where('prof_id', $customerId);
         $disputes = $this->db->get('customer_disputes')->result();
 
+        header('content-type: application/json');
+        echo json_encode(['data' => $this->getDisputeData($disputes)]);
+    }
+
+    private function getDisputeData(array $disputes)
+    {
         $furnishersMap = [];
         $creditBureauMap = [];
 
@@ -1164,6 +1199,7 @@ SQL;
 
                 $bureau = $creditBureauMap[$item->credit_bureau_id];
                 $currData['items'][] = [
+                    'id' => (int) $item->id,
                     'bureau' => $bureau->name,
                     'account_number' => $item->account_number,
                     'status' => $item->status,
@@ -1173,11 +1209,10 @@ SQL;
             array_push($data, $currData);
         }
 
-        header('content-type: application/json');
-        echo json_encode(['data' => $data]);
+        return $data;
     }
 
-    public function apiGetCreditorByIds()
+    public function apiGenerateBasicDispute()
     {
         header('content-type: application/json');
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -1186,10 +1221,99 @@ SQL;
         }
 
         $payload = json_decode(file_get_contents('php://input'), true);
-        ['ids' => $ids] = $payload;
+        ['customer_id' => $customerId, 'dispute_ids' => $disputeIds] = $payload;
 
-        $this->db->where_in('id', $ids);
-        $creditors = $this->db->get('furnishers')->result();
-        echo json_encode(['data' => $creditors]);
+        $this->db->where_in('id', $disputeIds);
+        $this->db->where('prof_id', $customerId);
+        $disputes = $this->db->get('customer_disputes')->result();
+        $disputeData = $this->getDisputeData($disputes);
+
+        $bureauItemIdsMap = [];
+        foreach ($disputeData as $data) {
+            foreach ($data['items'] as $item) {
+                $bureau = $this->underscoreCase($item['bureau']);
+                if (!array_key_exists($bureau, $bureauItemIdsMap)) {
+                    $bureauItemIdsMap[$bureau] = [];
+                }
+
+                $bureauItemIdsMap[$bureau][] = $item['id'];
+            }
+        }
+
+        $letterName = 'Default Round 1 (Dispute Credit Report Items)';
+        $this->db->where('title', $letterName);
+        $letter = $this->db->get('esign_editor_letters')->row();
+        $letter->customer_id = $customerId;
+
+        $retval = [];
+        $bureauAddressMap = [];
+        foreach ($bureauItemIdsMap as $key => $ids) {
+            $additionalProps = ['bureau' => $key, 'disputeItemIds' => $ids];
+            $retval[$key] = $this->generateCustomerLetter($letter, $additionalProps);
+            $bureauAddressMap[$key] = $this->getBureauAddressHTML($key);
+        }
+
+        $customer = $this->getCustomer($customerId);
+        echo json_encode([
+            'data' => $retval,
+            'letter_id' => $letter->id,
+            'bureau_address' => $bureauAddressMap,
+            'customer' => [
+                'name' => $customer->first_name . ' ' . $customer->last_name,
+                'address' => $this->getCustomerAddress($customerId),
+            ],
+        ]);
+    }
+
+    private function underscoreCase(string $string)
+    {
+        return str_replace(' ', '_', strtolower($string));
+    }
+
+    private function getCustomerAddress($customerId)
+    {
+        $customer = $this->getCustomer($customerId);
+        $address = [
+            $customer->mail_add,
+            $customer->city,
+            $customer->state,
+            $customer->zip_code,
+        ];
+
+        $address = array_filter($address, function ($data) {
+            return !is_null($data) && !empty($data);
+        });
+
+        return empty($address) ? null : implode(', ', $address);
+    }
+
+    private function getBureauAddressHTML(string $bureau)
+    {
+        if ($this->underscoreCase($bureau) === 'equifax') {
+            $retval = '<div>';
+            $retval .= '<div>Equifax Information Services LLC</div>';
+            $retval .= '<div>P.O. Box 740256</div>';
+            $retval .= '<div>Atlanta, GA 30374-0256</div>';
+            $retval .= '</div>';
+            return $retval;
+        }
+
+        if ($this->underscoreCase($bureau) === 'experian') {
+            $retval = '<div>';
+            $retval .= '<div>Experian</div>';
+            $retval .= '<div>P.O. Box 4500</div>';
+            $retval .= '<div>Allen, TX 75013</div>';
+            $retval .= '</div>';
+            return $retval;
+        }
+
+        if ($this->underscoreCase($bureau) === 'trans_union') {
+            $retval = '<div>';
+            $retval .= '<div>TransUnion LLC Consumer Dispute Center</div>';
+            $retval .= '<div>PO Box 2000</div>';
+            $retval .= '<div>Chester, PA 19016</div>';
+            $retval .= '</div>';
+            return $retval;
+        }
     }
 }

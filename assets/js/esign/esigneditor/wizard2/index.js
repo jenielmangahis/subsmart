@@ -25,7 +25,7 @@ window.document.addEventListener("DOMContentLoaded", async () => {
     on_add_to_dispute: addToDispute,
     on_no_dispute_next: onNoDisputeNext,
     on_back_to_part1: onBackToPart1,
-    step2_generate_letter: step2GenerateLetter,
+    step2_generate_letter: () => step2GenerateLetter(customer),
     on_export_pdf: () => onExportPDF(customer),
   };
 
@@ -157,17 +157,23 @@ async function onNoDisputeNext() {
 
 function onBackToPart1() {
   document.querySelector(".part1").classList.remove("d-none");
-  document.querySelector(".part2").classList.add("d-none");
   document.querySelector(".letterInfo").classList.remove("d-none");
+
+  const $part2 = document.querySelector(".part2");
+  $part2.classList.add("d-none");
+  $part2.classList.remove("part2--withdispute");
 }
 
 async function onExportPDF(customer) {
   if (window.__wizardIsExporting) return;
 
-  const $letterSelect = document.getElementById("chooseLetter_letter");
-  const letterId = Number($letterSelect.value);
-  if (Number.isNaN(letterId) || letterId <= 0) {
-    return;
+  let letterId = window.__wizardLetterId;
+  if (!letterId) {
+    const $letterSelect = document.getElementById("chooseLetter_letter");
+    letterId = Number($letterSelect.value);
+    if (Number.isNaN(letterId) || letterId <= 0) {
+      return;
+    }
   }
 
   const $button = document.querySelector("[data-action=on_export_pdf]");
@@ -200,7 +206,7 @@ function step2SaveContinue() {
   $step3.classList.add("step--active");
 }
 
-async function step2GenerateLetter() {
+async function step2GenerateLetter(customer) {
   const $table = document.getElementById("selecteddisputeitemstable");
   if (!$.fn.DataTable.isDataTable($table)) return;
 
@@ -209,13 +215,62 @@ async function step2GenerateLetter() {
   if (!rows.length) return;
 
   const $button = document.querySelector("[data-action=step2_generate_letter]");
-  const result = await window.helpers.submitBtn($button, () => {
-    const ids = rows.map((row) => row.id);
-    return window.api.getCreditorByIds({ ids });
+  const { data, ...rest } = await window.helpers.submitBtn($button, () => {
+    return window.api.generateBasicDispute({
+      customer_id: customer.prof_id,
+      dispute_ids: rows.map((row) => row.id),
+    });
   });
+
+  if (!Object.keys(data).length) {
+    return; // handle error
+  }
+
+  // set letter id to export
+  window.__wizardLetterId = rest.letter_id;
+
+  const $disputetab = document.querySelector(".disputetab");
+  $disputetab.setAttribute("class", "disputetab");
+
+  const displayTabContent = (bureau) => {
+    const $target = $disputetab.querySelector(`[data-bureau=${bureau}]`);
+    if (!$target) return;
+
+    const $tabPanel = $disputetab.querySelector($target.getAttribute("href"));
+    if ($tabPanel.innerHTML !== "") return;
+
+    const $template = $disputetab.querySelector("template");
+    const $copy = document.importNode($template.content, true);
+    const $customer = $copy.querySelector("[data-detail=customer]");
+    const $bureau = $copy.querySelector("[data-detail=bureau]");
+
+    $customer.innerHTML = `
+      <div>${rest.customer.name}</div>
+      <div>${rest.customer.address}</div>
+    `;
+    $bureau.innerHTML = rest.bureau_address[bureau];
+    $tabPanel.appendChild($copy);
+  };
 
   const $part1 = document.querySelector(".part1");
   const $part2 = document.querySelector(".part2");
+  const $letter = $("#letterContent");
+
+  Object.keys(data).forEach((key, index) => {
+    displayTabContent(key);
+    $disputetab.classList.add(`disputetab--${key}`);
+
+    if (index === 0) {
+      window.helpers.wysiwygEditor($letter, data[key]);
+    }
+  });
+
+  const $tabLinks = $($disputetab).find('a[data-toggle="tab"]');
+  $tabLinks.off("shown.bs.tab");
+  $tabLinks.on("shown.bs.tab", (event) => {
+    const { bureau } = event.target.dataset;
+    window.helpers.wysiwygEditor($letter, data[bureau]);
+  });
 
   $part1.classList.add("d-none");
   $part2.classList.remove("d-none");

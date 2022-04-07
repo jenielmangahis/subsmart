@@ -248,19 +248,25 @@ $(document).on('change', '#products-services-table td:first-child input[type="ch
 		$('#products-services-table thead input[type="checkbox"]').prop('checked', flag);
 	}
 
-	var hasChecked = false;
+	var hasChecked = $('#products-services-table tbody td:first-child input[type="checkbox"]:checked').length > 0;
 	var checkedType = [];
 
-	$('#products-services-table tbody td:first-child input[type="checkbox"]').each(function() {
+	$('#products-services-table tbody td:first-child input[type="checkbox"]:checked').each(function() {
 		var row = $(this).parent().parent().parent().parent();
 		rowData = $('#products-services-table').DataTable().row(row).data();
 
-		if($(this).prop('checked')) {
-			hasChecked = true;
+		if(!checkedType.includes(rowData.type.toLowerCase())) {
+			checkedType.push(rowData.type.toLowerCase());
+		}
+	});
 
-			if(!checkedType.includes(rowData.type.toLowerCase())) {
-				checkedType.push(rowData.type.toLowerCase());
-			}
+	$('#products-services-table tbody td:first-child input[type="checkbox"]:checked').each(function() {
+		var row = $(this).parent().parent().parent().parent();
+		rowData = $('#products-services-table').DataTable().row(row).data();
+
+		if(rowData.status === "0") {
+			hasChecked = false;
+			checkedType = [];
 		}
 	});
 

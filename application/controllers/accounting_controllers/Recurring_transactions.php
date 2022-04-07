@@ -26,6 +26,16 @@ class Recurring_transactions extends MY_Controller {
         $this->load->model('accounting_sales_receipt_model');
         $this->load->model('accounting_credit_memo_model');
         $this->load->model('accounting_statements_model');
+        $this->load->model('accounting_receive_payment_model');
+        $this->load->model('payment_records_model');
+        $this->load->model('accounting_credit_memo_model');
+        $this->load->model('accounting_sales_receipt_model');
+        $this->load->model('accounting_refund_receipt_model');
+        $this->load->model('accounting_delayed_credit_model');
+        $this->load->model('accounting_delayed_charge_model');
+        $this->load->model('invoice_model');
+        $this->load->model('workorder_model');
+        $this->load->model('invoice_settings_model');
 
         add_css(array(
             "assets/css/accounting/banking.css?v='rand()'",
@@ -259,6 +269,42 @@ class Recurring_transactions extends MY_Controller {
                         $total = '0.00';
                         $payeeName = '';
                     break;
+                    case 'npcharge' :
+                        $charge = $this->accounting_delayed_charge_model->getDelayedChargeDetails($item['txn_id']);
+                        $payee = $this->accounting_customers_model->get_by_id($charge->customer_id);
+                        $payeeName = $payee->first_name . ' ' . $payee->last_name;
+                        $total = number_format($charge->total_amount, 2, '.', ',');
+                    break;
+                    case 'npcredit' :
+                        $credit = $this->accounting_delayed_credit_model->getDelayedCreditDetails($item['txn_id']);
+                        $payee = $this->accounting_customers_model->get_by_id($credit->customer_id);
+                        $payeeName = $payee->first_name . ' ' . $payee->last_name;
+                        $total = number_format($credit->total_amount, 2, '.', ',');
+                    break;
+                    case 'credit memo' :
+                        $creditMemo = $this->accounting_credit_memo_model->getCreditMemoDetails($item['txn_id']);
+                        $payee = $this->accounting_customers_model->get_by_id($creditMemo->customer_id);
+                        $payeeName = $payee->first_name . ' ' . $payee->last_name;
+                        $total = number_format($creditMemo->total_amount, 2, '.', ',');
+                    break;
+                    case 'invoice' :
+                        $invoice = $this->invoice_model->getinvoice($item['txn_id']);
+                        $payee = $this->accounting_customers_model->get_by_id($invoice->customer_id);
+                        $payeeName = $payee->first_name . ' ' . $payee->last_name;
+                        $total = number_format($invoice->grand_total, 2, '.', ',');
+                    break;
+                    case 'refund' :
+                        $refundReceipt = $this->accounting_refund_receipt_model->getRefundReceiptDetails_by_id($item['txn_id']);
+                        $payee = $this->accounting_customers_model->get_by_id($refundReceipt->customer_id);
+                        $payeeName = $payee->first_name . ' ' . $payee->last_name;
+                        $total = number_format($refundReceipt->total_amount, 2, '.', ',');
+                    break;
+                    case 'sales receipt' :
+                        $salesReceipt = $this->accounting_sales_receipt_model->getSalesReceiptDetails_by_id($item['txn_id']);
+                        $payee = $this->accounting_customers_model->get_by_id($salesReceipt->customer_id);
+                        $payeeName = $payee->first_name . ' ' . $payee->last_name;
+                        $total = number_format($salesReceipt->total_amount, 2, '.', ',');
+                    break;
                 }
 
                 $previous = !is_null($item['previous_date']) && $item['previous_date'] !== '' ? date("m/d/Y", strtotime($item['previous_date'])) : null;
@@ -303,7 +349,7 @@ class Recurring_transactions extends MY_Controller {
                             'id' => $item['id'],
                             'template_name' => $item['template_name'],
                             'recurring_type' => ucfirst($item['recurring_type']),
-                            'txn_type' => ucwords($item['txn_type']),
+                            'txn_type' => ucwords(str_replace('np', '', $item['txn_type'])),
                             'txn_id' => $item['txn_id'],
                             'recurring_interval' => $interval,
                             'previous_date' => $previous,
@@ -318,7 +364,7 @@ class Recurring_transactions extends MY_Controller {
                         'id' => $item['id'],
                         'template_name' => $item['template_name'],
                         'recurring_type' => ucfirst($item['recurring_type']),
-                        'txn_type' => ucwords($item['txn_type']),
+                        'txn_type' => ucwords(str_replace('np', '', $item['txn_type'])),
                         'txn_id' => $item['txn_id'],
                         'recurring_interval' => $interval,
                         'previous_date' => $previous,
