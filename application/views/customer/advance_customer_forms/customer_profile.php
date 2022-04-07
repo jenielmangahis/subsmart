@@ -202,7 +202,7 @@
                 Date Of Birth 
             </div>
             <div class="col-md-8">
-                <input type="text" class="form-control datepicker" placeholder="" name="date_of_birth" id="datepicker" value="<?php if(isset($profile_info)){ echo $profile_info->date_of_birth; } ?>"/>
+                <input type="text" class="form-control datepicker" placeholder="" name="date_of_birth" id="datepicker" value="<?php if(isset($profile_info)){ echo date("m/d/Y", strtotime($profile_info->date_of_birth)); } ?>"/>
             </div>
         </div>
 

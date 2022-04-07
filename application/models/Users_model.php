@@ -789,6 +789,27 @@ class Users_model extends MY_Model
 
         $this->activity_model->add($row->FName.' ('.$row->username.') Logged in', $row->id);
     }
+
+    public function generate_verification_token( $id )
+    {
+        $length = 6;
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+        return $randomString . $id;
+    }
+
+    public function getResetToken($token)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('reset_token', $token);
+        $query = $this->db->get();
+        return $query->row();
+    }
 }
 
 

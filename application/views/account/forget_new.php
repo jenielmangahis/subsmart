@@ -108,61 +108,74 @@ background-color:#27ae60;
 <form id="frm-forgot-pw">
   <div class="col-md-12 center-fix">
     <ul class="progressbar">
-      <li class="step-1 active">ENTER USER ID</li>
-      <li class="step-2"><span>SELECT PASSWORD</span></li>
-      <li class="step-3">LOGIN</li>
+      <?php if( $is_with_token > 0 ){ ?>
+        <?php $show_step_1 = 0; ?>
+        <li class="step-1 active">USERNAME / EMAIL</li>
+        <li class="step-2 active"><span>PASSWORD</span></li>
+        <li class="step-3">LOGIN</li>
+      <?php }else{ ?>
+        <?php $show_step_1 = 1; ?>
+        <li class="step-1 active">USERNAME / EMAIL</li>
+        <li class="step-2"><span>PASSWORD</span></li>
+        <li class="step-3">LOGIN</li>
+      <?php } ?>      
     </ul>
   </div>
   <div class="divider-box"></div>
-  <div class="box-step-1">
-    <div style="display:block;width:70%;margin:0 auto;">
-      <div class="stp1-msg"></div>
-      <div class="input-group">
-        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-        <input id="user_id" type="text" class="form-control" name="user_id" placeholder="User ID">
-      </div>
-      <br />
-      <div class="input-group">
-        <span class="input-group-addon"><i class="glyphicon glyphicon-map-marker"></i></span>
-        <input id="user_zipcode" type="text" class="form-control" name="user_zipcode" placeholder="Zip Code">
-      </div>
-    </div>
-    <br class="clear" />
-    <div style="display:block;width:70%;margin:0 auto;text-align:center;">
-      <a class="btn btn-info btn-step1-next" href="javascript:void(0);" style="width: 100%;margin-bottom: 10px;">CONTINUE</a>
-      <br class="clear" />
-      <a class="btn-cancel" href="javascript:void(0);" style="width: 100%;margin-bottom: 10px;">CANCEL</a>
-    </div>
-  </div>
-
-  <div class="box-step-2" style="display: none;">
-      <div class="stp2-msg"></div><br />
+    <div class="box-step-1" <?= $show_step_1 == 0 ? 'style="display:none;"' : '';  ?>>
       <div style="display:block;width:70%;margin:0 auto;">
-          <label for="">New Password</label>
-          <input type="password" name="new_password" id="new_password" required="" class="form-control">
-          <i class="fa fa-eye view-password showPass" id="" title="Show password" data-toggle="tooltip"></i>
-          <span class="old-password-error"></span>
-      </div>
-      <br class="clear" />
-      <div style="display:block;width:70%;margin:0 auto;">
-          <label for="">Retype Password</label>
-          <input type="password" name="re_password" id="re_password" required="" class="form-control">
-          <i class="fa fa-eye view-password showPass" id="" title="Show password" data-toggle="tooltip"></i>
+        <div class="stp1-msg"></div>
+        <div class="input-group">
+          <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+          <input id="user_id" type="text" class="form-control" name="user_id" placeholder="Username / Email">
+        </div>
+        <!-- <br />
+        <div class="input-group">
+          <span class="input-group-addon"><i class="glyphicon glyphicon-map-marker"></i></span>
+          <input id="user_zipcode" type="text" class="form-control" name="user_zipcode" placeholder="Zip Code">
+        </div> -->
       </div>
       <br class="clear" />
       <div style="display:block;width:70%;margin:0 auto;text-align:center;">
-        <a class="btn btn-info btn-step2-next" href="javascript:void(0);" style="width: 100%;margin-bottom: 10px;">CONTINUE</a>
+        <a class="btn btn-info btn-step1-next" href="javascript:void(0);" style="width: 100%;margin-bottom: 10px;">CONTINUE</a>
         <br class="clear" />
         <a class="btn-cancel" href="javascript:void(0);" style="width: 100%;margin-bottom: 10px;">CANCEL</a>
       </div>
-  </div>
-
-  <div class="box-step-3" style="display: none;">
-    <div style="display:block;width:70%;margin:0 auto;">
-      <div class="stp3-msg"></div>
     </div>
-    
-  </div>
+
+    <div class="box-step-2" <?= $show_step_1 == 1 ? 'style="display:none;"' : '';  ?>>        
+        <?php if($is_with_token == 1){ ?>
+          <div class="stp2-msg"></div><br />
+          <input type="hidden" id="reset-token" name="reset_token" value="<?= $reset_token; ?>">
+          <div style="display:block;width:70%;margin:0 auto;">
+              <label for="">New Password</label>
+              <input type="password" name="new_password" id="new_password" required="" class="form-control">
+              <i class="fa fa-eye view-password showPass" id="" title="Show password" data-toggle="tooltip"></i>
+              <span class="old-password-error"></span>
+          </div>
+          <br class="clear" />
+          <div style="display:block;width:70%;margin:0 auto;">
+              <label for="">Retype Password</label>
+              <input type="password" name="re_password" id="re_password" required="" class="form-control">
+              <i class="fa fa-eye view-password showPass" id="" title="Show password" data-toggle="tooltip"></i>
+          </div>
+          <br class="clear" />
+          <div style="display:block;width:70%;margin:0 auto;text-align:center;">
+            <a class="btn btn-info btn-step2-next" href="javascript:void(0);" style="width: 100%;margin-bottom: 10px;">CONTINUE</a>
+            <br class="clear" />
+            <a class="btn-cancel" href="javascript:void(0);" style="width: 100%;margin-bottom: 10px;">CANCEL</a>
+          </div>
+        <?php }else{ ?>
+          <div class="stp2-msg"><p class='alert alert-danger'>Invalid reset token</p></div>
+        <?php } ?>
+    </div>
+
+    <div class="box-step-3" style="display: none;">
+      <div style="display:block;width:70%;margin:0 auto;">
+        <div class="stp3-msg"></div>
+      </div>
+      
+    </div>
 
   <br class="clear" /><br class="clear" />
 </form>
@@ -194,13 +207,14 @@ $(function(){
            success: function(o)
            {
               if( o.is_success == 1 ){
-                  $(".stp1-msg").html("");
+                  $('.stp1-msg').hide().html("<p class='alert alert-success'>Password reset link was sent to your email. Please check your email.</p>").fadeIn(500);
+                  /*$(".stp1-msg").html("");
 
                   $(".box-step-1").css("display", "none");
                   //$(".box-step-1").fadeOut();
                   $(".box-step-2").fadeIn();
 
-                  $(".step-2").addClass('active');
+                  $(".step-2").addClass('active');*/
               }else{
                   $('.stp1-msg').hide().html("<p class='alert alert-danger'>"+o.msg+"</p>").fadeIn(500);
                   $(".btn-step1-next").html('CONTINUE');
