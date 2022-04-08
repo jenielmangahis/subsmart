@@ -247,6 +247,20 @@ class Login extends CI_Controller
 
     public function forget()
     {
+        $is_with_token = 0;
+        $reset_token   = '';
+        if (!empty(get('token'))) {
+            $isTokenExists = $this->users_model->getResetToken(get('token'));
+            if( $isTokenExists ){
+                $is_with_token = 1;
+                $reset_token   = get('token');
+            }else{
+                $is_with_token = 2;
+            }
+        } 
+
+        $this->data['reset_token'] = $reset_token;
+        $this->data['is_with_token'] = $is_with_token;
         $this->load->view('account/forget_new', $this->data, false);
         //$this->load->view('account/forget', $this->data, FALSE);
     }
@@ -331,12 +345,42 @@ class Login extends CI_Controller
         $is_success = 0;
         $user = $this->users_model->getUserByUsernname(post('user_id'));
         if ($user) {
-            if ($user->postal_code == post('user_zipcode')) {
+            /*if ($user->postal_code == post('user_zipcode')) {
                 $is_success = 1;
                 $msg = '';
             } else {
                 $msg = 'User ID not found';
-            }
+            }*/
+
+            //Save token
+            $token = $this->users_model->generate_verification_token($user->id);
+            $this->users_model->update($user->id, [
+                'reset_token'  =>  $token
+            ]);
+
+            //Send email            
+            $url   = url('login/forget?token=' . $token);
+            $subject = 'nSmarTrac : Password Reset';
+            $to   = $user->email;
+            $body = "<p>Hi <b>".$user->FName."</b></p>";
+            $body .= "<p>Please click link below to reset your password.</p>";
+            $body .= "<p><a href='".$url."'>Reset Your Password</a></p><br />";
+            $body .= "<p>Thank you</p>";
+            $body .= "<p>nSmarTrac Team</p>";
+
+            $data = [
+                'to' => $to, 
+                'subject' => $subject, 
+                'body' => $body,
+                'cc' => '',
+                'bcc' => '',
+                'attachment' => ''
+            ];
+
+            $isSent = sendEmail($data);
+
+            $is_success = 1;
+            $msg = '';
         } else {
             $msg = 'User ID not found';
         }
@@ -352,9 +396,9 @@ class Login extends CI_Controller
         if (post('new_password') != post('re_password')) {
             $msg = 'Password not match';
         } else {
-            $user = $this->users_model->getUserByUsernname(post('user_id'));
+            $user = $this->users_model->getResetToken(post('reset_token'));
             if ($user) {
-                if ($user->postal_code == post('user_zipcode')) {
+                /*if ($user->postal_code == post('user_zipcode')) {
                     $this->users_model->update($user->id, [
                         'password'	=>	hash("sha256", post('new_password')),
                         'password_plain' => post('new_password'),
@@ -364,15 +408,92 @@ class Login extends CI_Controller
                     $msg = 'You password was successfully changed. Redirecting to login page...';
                 } else {
                     $msg = 'User ID not found';
-                }
+                }*/
+                $this->users_model->update($user->id, [
+                    'password'  =>  hash("sha256", post('new_password')),
+                    'password_plain' => post('new_password'),
+                    'reset_token'   =>  ''
+                ]);
+                $is_success = 1;
+                $msg = 'You password was successfully changed. Redirecting to login page...';
+
+                //Send email
+                $subject = 'nSmarTrac : Password Reset';
+                $to   = $user->email;
+                $body = "<p>Hi <b>".$user->FName."</b></p>";
+                $body .= "<p>Your password has been changed. Below is your new password.</p>";
+                $body .= "<p>New Password : ".post('new_password')."</p><br />";
+                $body .= "<p>Thank you</p>";
+                $body .= "<p>nSmarTrac Team</p>";
+
+                $data = [
+                    'to' => $to, 
+                    'subject' => $subject, 
+                    'body' => $body,
+                    'cc' => '',
+                    'bcc' => '',
+                    'attachment' => ''
+                ];
+
+                $isSent = sendEmail($data);
+                                
             } else {
-                $msg = 'User ID not found';
+                $msg = 'User not found';
             }
         }
 
         $json_data = ['is_success' => $is_success, 'msg' => $msg];
         echo json_encode($json_data);
         exit;
+    }
+
+    public function customer(){
+        $this->load->view('customer/login/index', $this->data, false);
+    }
+
+    public function customer_check()
+    {
+        $this->load->model('AcsAccess_model');
+        $this->load->model('AcsProfile_model');
+
+        $username = post('username');
+        $password = post('password');
+        
+
+        $isExists = $this->AcsAccess_model->getByUsernamePassword($username, $password);
+
+        if ( $isExists ) {
+            if( $isExists->portal_status == 1 ){
+                $customer = $this->AcsProfile_model->getByProfId($isExists->fk_prof_id);
+                if( $customer ){
+                    $customer_data = [
+                        'prof_id' => $customer->prof_id,
+                        'customer_type' => $customer->customer_type,
+                        'company_id' => $customer->company_id,
+                        'first_name' => $customer->first_name,
+                        'middle_name' => $customer->middle_name,
+                        'last_name' => $customer->last_name,
+                        'email' => $customer->email
+                    ];
+                    $this->session->set_userdata('customer_data', $customer_data);
+                    redirect('acs_access/dashboard');
+                }else{
+
+                }                
+            }else{
+                $this->data['message'] = 'Invalid Password';
+                $this->data['message_type'] = 'danger';
+
+                $this->customer();
+                return;
+            }            
+        } else {
+            $this->data['message'] = 'Invalid Password';
+            $this->data['message_type'] = 'danger';
+
+            $this->customer();
+            return;
+        }
     }
 }
 

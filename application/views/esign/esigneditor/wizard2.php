@@ -61,7 +61,7 @@ ini_set('max_input_vars', 30000);
                         <div class="wizardForm__step1">
                             <div class="form-group">
                                 <label for="chooseLetter_category">Letter Category</label>
-                                <select class="form-control" id="chooseLetter_category" data-name="category_id"></select>
+                                <select class="form-control" id="chooseLetter_category" data-name="category_id" data-letter="#chooseLetter_letter"></select>
                             </div>
 
                             <div class="form-group">
@@ -84,7 +84,7 @@ ini_set('max_input_vars', 30000);
                         </div>
                     </div>
 
-                    <div class="step__letterRecipient d-none">
+                    <div class="step__letterRecipient d-none" style="display: none !important;">
                         <h2 class="step__title mb-3">
                             Letter Recipient
                         </h2>
@@ -147,7 +147,9 @@ ini_set('max_input_vars', 30000);
                                 </div>
                                 Next: Generate Letter
                             </button>
-                            <button class="btn btn-primary" type="button" data-action="step2_save_and_continue">Save and Continue</button>
+                            <button class="btn btn-primary" type="button" data-action="step2_save_and_continue">
+                                Next: Choose Letter
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -159,7 +161,7 @@ ini_set('max_input_vars', 30000);
                         <div class="wizardForm__step1">
                             <div class="form-group">
                                 <label for="step3_category">Letter Category</label>
-                                <select class="form-control" id="step3_category" data-name="category_id"></select>
+                                <select class="form-control" id="step3_category" data-name="category_id" data-letter="#step3_letter"></select>
                             </div>
 
                             <div class="form-group">
@@ -171,7 +173,7 @@ ini_set('max_input_vars', 30000);
                             </div>
 
                             <div class="d-flex justify-content-end">
-                                <button class="btn btn-primary esigneditor__btn" type="button">
+                                <button class="btn btn-primary esigneditor__btn" type="button" data-action="step3_generate_letter">
                                     <div class="spinner-border spinner-border-sm" role="status">
                                         <span class="sr-only">Loading...</span>
                                     </div>
@@ -235,11 +237,11 @@ ini_set('max_input_vars', 30000);
                         </button>
                     </div>
                     <div>
-                        <button class="btn btn-secondary" type="button">
+                        <button class="btn btn-secondary" type="button" data-action="save_for_later">
                             Save For Later
                         </button>
 
-                        <button class="btn btn-primary" type="button">
+                        <button class="btn btn-primary" type="button" data-action="save_and_print">
                             Save & Continue To Print
                         </button>
                     </div>
@@ -455,6 +457,35 @@ ini_set('max_input_vars', 30000);
             </div>
             Save
         </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" tabindex="-1" role="dialog" id="saveLetterModal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Save Letter</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+            <div class="form-group">
+                <label>Name of this letter</label>
+                <input data-name="name" class="form-control">
+            </div>
+            <div class="d-flex justify-content-end">
+                <button type="button" class="btn btn-primary esigneditor__btn">
+                    <div class="spinner-border spinner-border-sm" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                    Save Letter
+                </button>
+            </div>
+        </form>
       </div>
     </div>
   </div>

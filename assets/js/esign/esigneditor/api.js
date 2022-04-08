@@ -141,8 +141,11 @@ export function getCustomerDisputeItems(customerId) {
   );
 }
 
-export function generateBasicDispute(payload) {
-  return http.post(`${prefixURL}/EsignEditor/apiGenerateBasicDispute`, payload);
+export function generateDisputeLetter(payload) {
+  return http.post(
+    `${prefixURL}/EsignEditor/apiGenerateDisputeLetter`,
+    payload
+  );
 }
 
 const http = {

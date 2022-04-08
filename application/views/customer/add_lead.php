@@ -111,7 +111,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <div class="row">
                     <div class="col-md-3">
                         <label for=""><b>Address</b><span class="required_field">*</span></label>
-                        <input type="text" class="form-control" name="address" id="address" value="<?php if(isset($leads_data)){ echo $leads_data->address; } ?>" required/>
+                        <input type="text" class="form-control" name="address" id="customer_address" value="<?php if(isset($leads_data)){ echo $leads_data->address; } ?>" required/>
                     </div>
                     <div class="col-md-3">
                         <label for=""><b>State</b><span class="required_field">*</span></label>
@@ -214,7 +214,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <br>
                 <div class="row">
                     <div class="col-md-3">
-                    <button type="submit" name="convert_customer" class="btn btn-primary"><span class="fa fa-exchange"></span>  Convert to Customer </button>
+                    <button type="button" name="convert_customer" class="btn btn-primary btn-convert-customer"><span class="fa fa-exchange"></span>  Convert to Customer </button>
                     </div>
                 </div>
 
@@ -242,14 +242,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
 </div>
 
 <?php include viewPath('includes/footer'); ?>
-<?php
-    // JS to add only Customer module
-    add_footer_js(array(
-        'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js',
-        'https://code.jquery.com/ui/1.12.1/jquery-ui.js',
-    ));
-?>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-timepicker/0.5.2/js/bootstrap-timepicker.min.js" integrity="sha512-2xXe2z/uA+2SyT/sTSt9Uq4jDKsT0lV4evd3eoE/oxKih8DSAsOF6LUb+ncafMJPAimWAXdu9W+yMXGrCVOzQA==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
 <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=<?= google_credentials()['api_key'] ?>&callback=initMap&libraries=places&v=weekly&sensor=false"></script>
 <script src="https://momentjs.com/downloads/moment-with-locales.js"></script>
@@ -267,6 +261,24 @@ defined('BASEPATH') or exit('No direct script access allowed');
                  if(data === "Saved"){
                     sucess_add('Good Job!','Successfully Added!','success');
                  }else{
+                    sucess_add('Sorry!', data.msg,'error');
+                }
+            }
+        });
+    });
+
+    $(document).on('click', '.btn-convert-customer', function(){
+        var form = $('#new_lead_form');
+        $.ajax({
+            type: "POST",
+            url: "<?= base_url()?>customer/convert_to_customer",
+            dataType:'json',
+            data: form.serialize(), // serializes the form's elements.
+            success: function(data)
+            {
+                if( data.is_success == 1 ){
+                    sucess_add('Good Job!','Successfully Added to Customer!','success');
+                }else{
                     sucess_add('Sorry!','Something Goes Wrong!','error');
                 }
             }
@@ -330,11 +342,17 @@ defined('BASEPATH') or exit('No direct script access allowed');
         }
         console.log(place);
     }
+    
+    var date = new Date();
+    date.setFullYear(date.getFullYear() - 10);
+    date.setMonth(0);
+    date.setDate(1);
 
-    $("#date_of_birth").datetimepicker({
-        format: "L",
-        //minDate: new Date(),
-    });
+
+    $('#date_of_birth').datepicker({
+          //format: 'yyyy-mm-dd',
+        autoclose: true,
+    }).datepicker("setDate", date);
 
     $(function () {
         $('#sss_num').keydown(function (e) {

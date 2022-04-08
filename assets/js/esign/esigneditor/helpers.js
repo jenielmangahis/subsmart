@@ -164,3 +164,24 @@ export function getParams() {
     get: (searchParams, prop) => searchParams.get(prop),
   });
 }
+
+export function showError(message) {
+  const currErrors = document.querySelectorAll(".esignError");
+  currErrors.forEach(($currError) => $currError.remove());
+
+  const $error = window.helpers.htmlToElement(`
+    <div class="esignError">
+      <div class="esignError__message">${message}</div>
+      <button class="esignError__btn">
+        <i class="fa fa-times"></i>
+      </button>
+    </div>
+  `);
+
+  document.body.appendChild($error);
+
+  const $close = $error.querySelector(".esignError__btn");
+  $close.addEventListener("click", () => $error.remove());
+
+  window.setTimeout(() => $error.remove(), 1500);
+}

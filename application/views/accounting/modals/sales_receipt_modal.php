@@ -96,6 +96,15 @@
                                     </div>
 
                                     <div class="row">
+                                        <?php if($is_copy) : ?>
+                                        <div class="col-md-12">
+                                            <div class="alert alert-info alert-dismissible mb-4" role="alert">
+                                                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                                <h6 class="mt-0">This is a copy</h6>
+                                                <span>This is a copy of a sales receipt. Revise as needed and save the sales receipt.</span>
+                                            </div>
+                                        </div>
+                                        <?php endif; ?>
                                         <div class="col-md-2">
                                             <div class="form-group">
                                                 <label for="billing-address">Billing address</label>
