@@ -11,6 +11,7 @@ window.document.addEventListener("DOMContentLoaded", async () => {
     initCategories(),
     initPlaceholders(customer),
     initCustomerCustomFields(customer),
+    initSaveForm(customer),
   ]).then(() => {
     document.querySelector(".wrapper").classList.remove("wrapper--loading");
   });
@@ -27,6 +28,7 @@ window.document.addEventListener("DOMContentLoaded", async () => {
     on_back_to_part1: onBackToPart1,
     step2_generate_letter: () => step2GenerateLetter(customer),
     on_export_pdf: () => onExportPDF(customer),
+    step3_generate_letter: () => step3GenerateLetter(customer),
   };
 
   $actions.forEach(($action) => {
@@ -139,6 +141,7 @@ async function onNoDisputeNext() {
   const $letterSelect = document.getElementById("chooseLetter_letter");
   const letterId = Number($letterSelect.value);
   if (Number.isNaN(letterId) || letterId <= 0) {
+    window.helpers.showError("Choose letter name");
     return;
   }
 
@@ -149,6 +152,7 @@ async function onNoDisputeNext() {
 
   const $letter = $("#letterContent");
   window.helpers.wysiwygEditor($letter, letter.content);
+  window.__wizardLetterId = letter.id;
 
   document.querySelector(".part1").classList.add("d-none");
   document.querySelector(".part2").classList.remove("d-none");
@@ -172,6 +176,7 @@ async function onExportPDF(customer) {
     const $letterSelect = document.getElementById("chooseLetter_letter");
     letterId = Number($letterSelect.value);
     if (Number.isNaN(letterId) || letterId <= 0) {
+      window.helpers.showError("Choose letter name");
       return;
     }
   }
@@ -195,7 +200,12 @@ async function onExportPDF(customer) {
   window.__wizardIsExporting = false;
 }
 
-function step2SaveContinue() {
+async function step2SaveContinue() {
+  if (!(await getSelectedDisputeItemRows()).length) {
+    window.helpers.showError("Please select at least one dispute item.");
+    return;
+  }
+
   const $step1 = document.querySelector(".step-1");
   const $step2 = document.querySelector(".step-2");
   const $step3 = document.querySelector(".step-3");
@@ -206,22 +216,63 @@ function step2SaveContinue() {
   $step3.classList.add("step--active");
 }
 
-async function step2GenerateLetter(customer) {
+async function getSelectedDisputeItemRows() {
   const $table = document.getElementById("selecteddisputeitemstable");
-  if (!$.fn.DataTable.isDataTable($table)) return;
+  if (!$.fn.DataTable.isDataTable($table)) return [];
 
   const { Table } = await import("./selecteditemsdatatable.js");
   const rows = Table.getRowsData();
-  if (!rows.length) return;
+  return rows;
+}
+
+async function step2GenerateLetter(customer) {
+  const rows = await getSelectedDisputeItemRows();
+  if (!rows.length) {
+    window.helpers.showError("Please select at least one dispute item.");
+    return;
+  }
 
   const $button = document.querySelector("[data-action=step2_generate_letter]");
-  const { data, ...rest } = await window.helpers.submitBtn($button, () => {
-    return window.api.generateBasicDispute({
+  const response = await window.helpers.submitBtn($button, () => {
+    return window.api.generateDisputeLetter({
       customer_id: customer.prof_id,
       dispute_ids: rows.map((row) => row.id),
     });
   });
 
+  window.__wizardLetterId = response.letter_id;
+  displayGeneratedDisputeLetter(response);
+}
+
+async function step3GenerateLetter(customer) {
+  const rows = await getSelectedDisputeItemRows();
+  if (!rows.length) {
+    window.helpers.showError("Please select at least one dispute item.");
+    return;
+  }
+
+  const $letterSelect = document.getElementById("step3_letter");
+  const letterId = Number($letterSelect.value);
+  if (Number.isNaN(letterId) || letterId <= 0) {
+    window.helpers.showError("Choose letter name");
+    return;
+  }
+
+  const $button = document.querySelector("[data-action=step3_generate_letter]");
+  const response = await window.helpers.submitBtn($button, () => {
+    return window.api.generateDisputeLetter({
+      customer_id: customer.prof_id,
+      dispute_ids: rows.map((row) => row.id),
+      letter_id: letterId,
+    });
+  });
+
+  window.__wizardLetterId = response.letter_id;
+  displayGeneratedDisputeLetter(response);
+}
+
+function displayGeneratedDisputeLetter(response) {
+  const { data, ...rest } = response;
   if (!Object.keys(data).length) {
     return; // handle error
   }
@@ -289,42 +340,60 @@ async function displayCustomerDisputeItems(event) {
 
 async function addToDispute() {
   const pending = await import("./pendingitemsdatatable.js");
-  if (pending.Table.getSelectedRowsData().length) {
-    const selected = await import("./selecteditemsdatatable.js");
-    $("#additemmodal").modal("hide");
-    new selected.Table();
+  if (!pending.Table.getSelectedRowsData().length) {
+    window.helpers.showError("Please select at least one dispute item.");
+    return;
   }
+
+  const selected = await import("./selecteditemsdatatable.js");
+  $("#additemmodal").modal("hide");
+  const table = new selected.Table();
+  table.onRemoveRow = () => {
+    if (!selected.Table.getRowsData().length) {
+      const $step2 = document.querySelector(".step-2");
+      $step2.classList.add("step--active");
+
+      const $step3 = document.querySelector(".step-3");
+      $step3.classList.add("step--disabled");
+      $step3.classList.remove("step--active");
+    }
+  };
 }
 
 async function initCategories() {
   const { data: categories } = await window.api.getCategories();
-  const $select = document.getElementById("chooseLetter_category");
 
-  categories.forEach((category) => {
-    const $option = window.helpers.htmlToElement(
-      `<option value="${category.id}">${category.name}</option>`
+  const selects = [...document.querySelectorAll("[data-name=category_id]")];
+
+  selects.forEach(($select) => {
+    categories.forEach((category) => {
+      const $option = window.helpers.htmlToElement(
+        `<option value="${category.id}">${category.name}</option>`
+      );
+      $select.appendChild($option);
+    });
+
+    $select.appendChild(
+      window.helpers.htmlToElement(
+        `<option value="favorite">Favorites</option>`
+      )
     );
-    $select.appendChild($option);
-  });
 
-  $select.appendChild(
-    window.helpers.htmlToElement(`<option value="favorite">Favorites</option>`)
-  );
+    const $letterSelect = document.querySelector($select.dataset.letter);
+    if (categories.length) {
+      const $option = $select.querySelector("option");
+      initLetters($option.value, $letterSelect);
+    }
 
-  if (categories.length) {
-    const $option = $select.querySelector("option");
-    initLetters($option.value);
-  }
-
-  $select.addEventListener("change", (event) => {
-    initLetters(event.target.value);
+    $select.addEventListener("change", (event) => {
+      initLetters(event.target.value, $letterSelect);
+    });
   });
 }
 
-async function initLetters(categoryId) {
+async function initLetters(categoryId, $select) {
   if (categoryId === undefined) return;
 
-  const $select = document.getElementById("chooseLetter_letter");
   $select.innerHTML = "";
   $($select).select2({
     placeholder: "Select letter",
@@ -462,5 +531,47 @@ async function initCustomerCustomFields(customer) {
         $input.value = field[$input.dataset.key];
       });
     });
+  });
+}
+
+function initSaveForm(customer) {
+  const $modal = document.getElementById("saveLetterModal");
+  const $name = $modal.querySelector("[data-name=name]");
+  const $saveButton = $modal.querySelector(".btn");
+  const $toggleButtons = $("[data-action=save_for_later], [data-action=save_and_print]"); // prettier-ignore
+  const $letter = $("#letterContent");
+
+  $toggleButtons.on("click", (event) => {
+    $modal.setAttribute("data-action", event.target.dataset.action);
+    $($modal).modal("show");
+  });
+
+  $saveButton.addEventListener("click", async () => {
+    const name = $name.value.trim();
+    if (!name.length) {
+      $name.focus();
+      return;
+    }
+
+    const payload = {
+      name,
+      customer_id: customer.prof_id,
+      letter_id: window.__wizardLetterId,
+      content: $letter.summernote("code"),
+    };
+
+    await window.helpers.submitBtn($saveButton, () =>
+      window.api.createCustomerLetter(payload)
+    );
+
+    if ($modal.dataset.action === "save_and_print") {
+      window.location.href = `${window.api.prefixURL}/EsignEditor/customers/${customer.prof_id}`;
+    } else {
+      $($modal).modal("hide");
+    }
+  });
+
+  $($modal).on("show.bs.modal", () => {
+    $name.value = "";
   });
 }

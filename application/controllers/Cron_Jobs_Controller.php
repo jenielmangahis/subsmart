@@ -12,6 +12,8 @@ class Cron_Jobs_Controller extends CI_Controller
         parent::__construct();
         $this->load->model('timesheet_model');
         $this->load->model('invoice_model');
+        $this->load->model('accounting_credit_memo_model');
+
         include APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
     }
     public function get_time_sheet_storage($company_id, $timezone, $timesheet_report_timezone_id)
@@ -941,6 +943,24 @@ class Cron_Jobs_Controller extends CI_Controller
                     break;
                 case 'credit card credit':
                     $success = $this->occur_credit_card_credit($transaction->txn_id);
+                    break;
+                case 'invoice' :
+                    $success = $this->occur_invoice($transaction->txn_id);
+                    break;
+                case 'credit memo' :
+                    $success = $this->occur_credit_memo($transaction->txn_id);
+                    break;
+                case 'sales receipt' :
+                    $success = $this->occur_sales_receipt($transaction->txn_id);
+                    break;
+                case 'refund' :
+                    $success = $this->occur_refund_receipt($transaction->txn_id);
+                    break;
+                case 'npcredit' :
+                    $success = $this->occur_delayed_credit($transaction->txn_id);
+                    break;
+                case 'npcharge' :
+                    $success = $this->occur_delayed_charge($transaction->txn_id);
                     break;
             }
 
@@ -1923,6 +1943,40 @@ class Cron_Jobs_Controller extends CI_Controller
         }
 
         $this->expenses_model->insert_vendor_transaction_items($itemDetails);
+    }
+
+    private function occur_invoice($invoiceId)
+    {
+        $invoice = $this->invoice_model->getinvoice($invoiceId);
+    }
+
+    private function occur_credit_memo($creditMemoId)
+    {
+        $creditMemo = $this->accounting_credit_memo_model->getCreditMemoDetails($creditMemoId);
+    }
+
+    private function occur_sales_receipt($salesReceiptId)
+    {
+        $this->load->model('accounting_sales_receipt_model');
+        $salesReceipt = $this->accounting_sales_receipt_model->getSalesReceiptDetails_by_id($salesReceiptId);
+    }
+    
+    private function occur_refund_receipt($refundReceiptId)
+    {
+        $this->load->model('accounting_refund_receipt_model');
+        $refundReceipt = $this->accounting_refund_receipt_model->getRefundReceiptDetails_by_id($refundReceiptId);
+    }
+
+    private function occur_delayed_credit($delayedCreditId)
+    {
+        $this->load->model('accounting_delayed_credit_model');
+        $delayedCredit = $this->accounting_delayed_credit_model->getDelayedCreditDetails($delayedCreditId);
+    }
+
+    private function occur_delayed_charge($delayedChargeId)
+    {
+        $this->load->model('accounting_delayed_charge_model');
+        $delayedCharge = $this->accounting_delayed_charge_model->getDelayedChargeDetails($delayedChargeId);
     }
 
     public function get_data_from_cashflow_planned($company_id)

@@ -429,6 +429,60 @@ $(document).on('click', '#recurring_transactions .use-transaction', function(e) 
             centerFooter = `<a href="#" class="text-white m-auto" onclick="makeRecurring('credit_card_credit')">Make Recurring</a>`;
             modalName = 'creditCardCreditModal';
         break;
+        case 'Invoice' :
+            transactionType = 'invoice';
+            centerFooter = `<div class="row h-100">
+                <div class="col-md-12 d-flex align-items-center justify-content-center">
+                    <span><a href="#" class="text-white" id="save-and-print">Print or Preview</a></span>
+                    <span class="mx-3 divider"></span>
+                    <span><a href="#" class="text-white" onclick="makeRecurring('invoice')">Make Recurring</a></span>
+                </div>
+            </div>`;
+            modalName = 'invoiceModal';
+        break;
+        case 'Credit Memo' :
+            transactionType = 'credit-memo';
+            centerFooter = `<div class="row h-100">
+                <div class="col-md-12 d-flex align-items-center justify-content-center">
+                    <span><a href="#" class="text-white" id="save-and-print">Print or Preview</a></span>
+                    <span class="mx-3 divider"></span>
+                    <span><a href="#" class="text-white" onclick="makeRecurring('credit_memo')">Make Recurring</a></span>
+                </div>
+            </div>`;
+            modalName = 'creditMemoModal';
+        break;
+        case 'Sales Receipt' :
+            transactionType = 'sales-receipt';
+            centerFooter = `<div class="row h-100">
+                <div class="col-md-12 d-flex align-items-center justify-content-center">
+                    <span><a href="#" class="text-white" id="save-and-print">Print or Preview</a></span>
+                    <span class="mx-3 divider"></span>
+                    <span><a href="#" class="text-white" onclick="makeRecurring('sales_receipt')">Make Recurring</a></span>
+                </div>
+            </div>`;
+            modalName = 'salesReceiptModal';
+        break;
+        case 'Refund' :
+            transactionType = 'refund-receipt';
+            centerFooter = `<div class="row h-100">
+                <div class="col-md-12 d-flex align-items-center justify-content-center">
+                    <span><a href="#" class="text-white" id="save-and-print">Print or Preview</a></span>
+                    <span class="mx-3 divider"></span>
+                    <span><a href="#" class="text-white" onclick="makeRecurring('refund_receipt')">Make Recurring</a></span>
+                </div>
+            </div>`;
+            modalName = 'refundReceiptModal';
+        break;
+        case 'Credit' :
+            transactionType = 'delayed-credit';
+            centerFooter = `<a href="#" class="text-white m-auto" onclick="makeRecurring('delayed_credit')">Make Recurring</a>`;
+            modalName = 'delayedCreditModal';
+        break;
+        case 'Charge' :
+            transactionType = 'delayed-charge';
+            centerFooter = `<a href="#" class="text-white m-auto" onclick="makeRecurring('delayed_charge')">Make Recurring</a>`;
+            modalName = 'delayedChargeModal';
+        break;
     }
 
     var transactionData = {
@@ -515,6 +569,36 @@ $(document).on('click', '#recurring_transactions .duplicate-transaction', functi
             transactionType = 'cc-credit';
             modal = 'credit_card_credit';
             modalName = 'creditCardCreditModal';
+        break;
+        case 'Invoice' :
+            transactionType = 'invoice';
+            modal = 'invoice';
+            modalName = 'invoiceModal';
+        break;
+        case 'Credit Memo' :
+            transactionType = 'credit-memo';
+            modal = 'credit_memo';
+            modalName = 'creditMemoModal';
+        break;
+        case 'Sales Receipt' :
+            transactionType = 'sales-receipt';
+            modal = 'sales_receipt';
+            modalName = 'salesReceiptModal';
+        break;
+        case 'Refund' :
+            transactionType = 'refund-receipt';
+            modal = 'refund_receipt';
+            modalName = 'refundReceiptModal';
+        break;
+        case 'Credit' :
+            transactionType = 'delayed-credit';
+            modal = 'delayed_credit';
+            modalName = 'delayedCreditModal';
+        break;
+        case 'Charge' :
+            transactionType = 'delayed-charge';
+            modal = 'delayed_charge';
+            modalName = 'delayedChargeModal';
         break;
     }
 

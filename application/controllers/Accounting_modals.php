@@ -17714,7 +17714,6 @@ class Accounting_modals extends MY_Controller
                 $this->page_data['account'] = $account;
                 $this->page_data['balance'] = $balance;
                 $this->page_data['cash_back_account'] = $cashBackAccount;
-                $this->page_data['is_copy'] = true;
 
                 $view = 'bank_deposit_modal';
             break;
@@ -17724,7 +17723,6 @@ class Accounting_modals extends MY_Controller
                 $transfer->transfer_to = $this->chart_of_accounts_model->getById($transfer->transfer_to_account_id);
         
                 $this->page_data['transfer'] = $transfer;
-                $this->page_data['is_copy'] = true;
 
                 $view = 'transfer_modal';
             break;
@@ -17755,7 +17753,6 @@ class Accounting_modals extends MY_Controller
                 $this->page_data['journal_date'] = $journalEntry->journal_date !== "" && !is_null($journalEntry->journal_date) ? date("m/d/Y", strtotime($journalEntry->journal_date)) : "";
                 $this->page_data['entries'] = $entries;
                 $this->page_data['journal_entry'] = $journalEntry;
-                $this->page_data['is_copy'] = true;
 
                 $view = 'journal_entry_modal';
             break;
@@ -17803,7 +17800,6 @@ class Accounting_modals extends MY_Controller
                 $this->page_data['categories'] = $categories;
                 $this->page_data['items'] = $items;
                 $this->page_data['balance'] = $selectedBalance;
-                $this->page_data['is_copy'] = true;
 
                 $view = 'expense_modal';
             break;
@@ -17848,7 +17844,6 @@ class Accounting_modals extends MY_Controller
                 $this->page_data['categories'] = $categories;
                 $this->page_data['items'] = $items;
                 $this->page_data['balance'] = $selectedBalance;
-                $this->page_data['is_copy'] = true;
 
                 $view = 'check_modal';
             break;
@@ -17866,7 +17861,6 @@ class Accounting_modals extends MY_Controller
                 $this->page_data['bill'] = $bill;
                 $this->page_data['categories'] = $categories;
                 $this->page_data['items'] = $items;
-                $this->page_data['is_copy'] = true;
 
                 $view = 'bill_modal';
             break;
@@ -17880,7 +17874,6 @@ class Accounting_modals extends MY_Controller
                 $this->page_data['purchaseOrder'] = $purchaseOrder;
                 $this->page_data['categories'] = $categories;
                 $this->page_data['items'] = $items;
-                $this->page_data['is_copy'] = true;
 
                 $view = 'purchase_order_modal';
             break;
@@ -17894,7 +17887,6 @@ class Accounting_modals extends MY_Controller
                 $this->page_data['vendorCredit'] = $vendorCredit;
                 $this->page_data['categories'] = $categories;
                 $this->page_data['items'] = $items;
-                $this->page_data['is_copy'] = true;
 
                 $view = 'vendor_credit_modal';
             break;
@@ -17919,11 +17911,159 @@ class Accounting_modals extends MY_Controller
                 $this->page_data['categories'] = $categories;
                 $this->page_data['items'] = $items;
                 $this->page_data['balance'] = $selectedBalance;
-                $this->page_data['is_copy'] = true;
 
                 $view = 'credit_card_credit_modal';
             break;
+            case 'invoice' :
+                $invoice = $this->invoice_model->getinvoice($transactionId);
+                $invoiceItems = $this->invoice_model->get_invoice_items($transactionId);
+                $paymentRecords = $this->accounting_invoices_model->get_invoice_payment_records($invoice->invoice_number);
+                $term = $this->accounting_terms_model->getById($invoice->terms);
+                $paymentMethods = explode(',', $invoice->payment_methods);
+                $invoiceSettings = $this->invoice_settings_model->getAllByCompany(logged('company_id'));
+
+                $discount = floatval($invoice->grand_total) - floatval($invoice->sub_total);
+                $discount += floatval($invoice->taxes);
+                $discount += floatval($invoice->adjustment_value);
+
+                $invoice->discount_total = $discount;
+
+                foreach($invoiceItems as $key => $invoiceItem) {
+                    if(!in_array($invoiceItem->items_id, ['0', null, '']) && in_array($invoiceItem->package_id, ['0', null, ''])) {
+                        $invoiceItems[$key]->itemDetails = $this->items_model->getItemById($invoiceItem->items_id)[0];
+                        $invoiceItems[$key]->locations = $this->items_model->getLocationByItemId($invoiceItem->items_id);
+                    } else {
+                        $invoiceItems[$key]->packageDetails = $this->items_model->get_package_by_id($invoiceItem->package_id);
+                        $invoiceItems[$key]->packageItems = json_decode($invoiceItem->package_item_details);
+                    }
+                }
+
+                $this->page_data['invoice_prefix'] = $invoiceSettings->invoice_num_prefix;
+                $this->page_data['paymentMethods'] = $paymentMethods;
+                $this->page_data['invoice'] = $invoice;
+                $this->page_data['items'] = $invoiceItems;
+                $this->page_data['payments'] = $paymentRecords;
+                $this->page_data['term'] = $term;
+                $this->page_data['tags'] = $this->tags_model->get_transaction_tags('Invoice', $transactionId);
+
+                $view = 'invoice_modal';
+            break;
+            case 'credit-memo' :
+                $creditMemo = $this->accounting_credit_memo_model->getCreditMemoDetails($transactionId);
+                $items = $this->accounting_credit_memo_model->get_customer_transaction_items('Credit Memo', $transactionId);
+                $payments = $this->accounting_credit_memo_model->get_credit_memo_payments($transactionId);
+
+                foreach($items as $key => $item) {
+                    if(!in_array($item->item_id, ['0', null, '']) && in_array($item->package_id, ['0', null, ''])) {
+                        $items[$key]->itemDetails = $this->items_model->getItemById($item->item_id)[0];
+                        $items[$key]->locations = $this->items_model->getLocationByItemId($item->item_id);
+                    } else {
+                        $items[$key]->packageDetails = $this->items_model->get_package_by_id($item->package_id);
+                        $items[$key]->packageItems = json_decode($item->package_item_details);
+                    }
+                }
+
+                $paymentAmounts = array_column($payments, 'payment_amount');
+                $totalPayment = array_sum($paymentAmounts);
+
+                foreach($payments as $key => $payment) {
+                    $receivePayment = $this->accounting_receive_payment_model->getReceivePaymentDetails($payment->receive_payment_id);
+                    $payments[$key]->receive_payment = $receivePayment;
+                }
+
+                $this->page_data['creditMemo'] = $creditMemo;
+                $this->page_data['items'] = $items;
+                $this->page_data['payments'] = $payments;
+                $this->page_data['totalPayment'] = $totalPayment;
+                $this->page_data['tags'] = $this->tags_model->get_transaction_tags('Credit Memo', $transactionId);
+
+                $view = 'credit_memo_modal';
+            break;
+            case 'sales-receipt' :
+                $salesReceipt = $this->accounting_sales_receipt_model->getSalesReceiptDetails_by_id($transactionId);
+                $items = $this->accounting_credit_memo_model->get_customer_transaction_items('Sales Receipt', $transactionId);
+        
+                foreach($items as $key => $item) {
+                    if(!in_array($item->item_id, ['0', null, '']) && in_array($item->package_id, ['0', null, ''])) {
+                        $items[$key]->itemDetails = $this->items_model->getItemById($item->item_id)[0];
+                        $items[$key]->locations = $this->items_model->getLocationByItemId($item->item_id);
+                    } else {
+                        $items[$key]->packageDetails = $this->items_model->get_package_by_id($item->package_id);
+                        $items[$key]->packageItems = json_decode($item->package_item_details);
+                    }
+                }
+
+                $this->page_data['receipt'] = $salesReceipt;
+                $this->page_data['items'] = $items;
+                $this->page_data['tags'] = $this->tags_model->get_transaction_tags('Sales Receipt', $transactionId);
+
+                $view = 'sales_receipt_modal';
+            break;
+            case 'refund-receipt' :
+                $refundReceipt = $this->accounting_refund_receipt_model->getRefundReceiptDetails_by_id($transactionId);
+                $items = $this->accounting_credit_memo_model->get_customer_transaction_items('Refund Receipt', $transactionId);
+                $refundAcc = $this->chart_of_accounts_model->getById($refundReceipt->refund_from_account);
+        
+                foreach($items as $key => $item) {
+                    if(!in_array($item->item_id, ['0', null, '']) && in_array($item->package_id, ['0', null, ''])) {
+                        $items[$key]->itemDetails = $this->items_model->getItemById($item->item_id)[0];
+                        $items[$key]->locations = $this->items_model->getLocationByItemId($item->item_id);
+                    } else {
+                        $items[$key]->packageDetails = $this->items_model->get_package_by_id($item->package_id);
+                        $items[$key]->packageItems = json_decode($item->package_item_details);
+                    }
+                }
+
+                $this->page_data['receipt'] = $refundReceipt;
+                $this->page_data['items'] = $items;
+                $this->page_data['tags'] = $this->tags_model->get_transaction_tags('Refund Receipt', $transactionId);
+                $this->page_data['refundAcc'] = $refundAcc;
+
+                $view = 'refund_receipt_modal';
+            break;
+            case 'delayed-credit' :
+                $delayedCredit = $this->accounting_delayed_credit_model->getDelayedCreditDetails($transactionId);
+                $items = $this->accounting_credit_memo_model->get_customer_transaction_items('Delayed Credit', $transactionId);
+        
+                foreach($items as $key => $item) {
+                    if(!in_array($item->item_id, ['0', null, '']) && in_array($item->package_id, ['0', null, ''])) {
+                        $items[$key]->itemDetails = $this->items_model->getItemById($item->item_id)[0];
+                        $items[$key]->locations = $this->items_model->getLocationByItemId($item->item_id);
+                    } else {
+                        $items[$key]->packageDetails = $this->items_model->get_package_by_id($item->package_id);
+                        $items[$key]->packageItems = json_decode($item->package_item_details);
+                    }
+                }
+
+                $this->page_data['credit'] = $delayedCredit;
+                $this->page_data['items'] = $items;
+                $this->page_data['tags'] = $this->tags_model->get_transaction_tags('Delayed Credit', $transactionId);
+
+                $view = 'delayed_credit_modal';
+            break;
+            case 'delayed-charge' :
+                $delayedCharge = $this->accounting_delayed_charge_model->getDelayedChargeDetails($transactionId);
+                $items = $this->accounting_credit_memo_model->get_customer_transaction_items('Delayed Charge', $transactionId);
+        
+                foreach($items as $key => $item) {
+                    if(!in_array($item->item_id, ['0', null, '']) && in_array($item->package_id, ['0', null, ''])) {
+                        $items[$key]->itemDetails = $this->items_model->getItemById($item->item_id)[0];
+                        $items[$key]->locations = $this->items_model->getLocationByItemId($item->item_id);
+                    } else {
+                        $items[$key]->packageDetails = $this->items_model->get_package_by_id($item->package_id);
+                        $items[$key]->packageItems = json_decode($item->package_item_details);
+                    }
+                }
+
+                $this->page_data['charge'] = $delayedCharge;
+                $this->page_data['items'] = $items;
+                $this->page_data['tags'] = $this->tags_model->get_transaction_tags('Delayed Charge', $transactionId);
+
+                $view = 'delayed_charge_modal';
+            break;
         }
+
+        $this->page_data['is_copy'] = true;
 
         $this->load->view("accounting/modals/$view", $this->page_data);
     }

@@ -1212,7 +1212,7 @@ SQL;
         return $data;
     }
 
-    public function apiGenerateBasicDispute()
+    public function apiGenerateDisputeLetter()
     {
         header('content-type: application/json');
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -1240,9 +1240,21 @@ SQL;
             }
         }
 
-        $letterName = 'Default Round 1 (Dispute Credit Report Items)';
-        $this->db->where('title', $letterName);
-        $letter = $this->db->get('esign_editor_letters')->row();
+        $letter = null;
+        if (array_key_exists('letter_id', $payload)) {
+            $this->db->where('id', $payload['letter_id']);
+            $letter = $this->db->get('esign_editor_letters')->row();
+        } else {
+            $letterName = 'Default Round 1 (Dispute Credit Report Items)';
+            $this->db->where('title', $letterName);
+            $letter = $this->db->get('esign_editor_letters')->row();
+        }
+
+        if (is_null($letter)) {
+            echo json_encode(['success' => false]);
+            return;
+        }
+
         $letter->customer_id = $customerId;
 
         $retval = [];

@@ -18,7 +18,12 @@ export class Table {
   get actions() {
     return {
       remove: (letter, table) => {
+        if (!letter) return;
         table.row(`#row${letter.id}`).remove().draw();
+
+        if (typeof this.onRemoveRow === "function") {
+          this.onRemoveRow(letter);
+        }
       },
     };
   }

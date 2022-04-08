@@ -833,3 +833,36 @@
     padding-inline-start: 40px;
   }
 }
+
+.esignError {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 50px;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0 1rem;
+  background-color: #e4251b;
+  color: #fff;
+  border-radius: 5px;
+  box-sizing: border-box;
+  z-index: 1051;
+
+  &__message {
+    margin-right: 100px;
+  }
+
+  &__btn {
+    padding: 0;
+    border: 0;
+    outline: 0;
+    background-color: transparent;
+    width: 40px;
+    height: 40px;
+    color: #fff;
+    position: absolute;
+    right: 0;
+  }
+}
