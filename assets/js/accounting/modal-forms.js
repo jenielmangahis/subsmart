@@ -1770,13 +1770,13 @@ $(function() {
                 locs += `<option value="${locations[i].id}" data-quantity="${locations[i].qty === "null" ? 0 : locations[i].qty}">${locations[i].name}</option>`;
             }
 
-            if ($('#modal-container form#modal-form .modal').attr('id') === 'creditCardCreditModal' || $('#modal-container form#modal-form .modal').attr('id') === 'vendorCreditModal') {
+            if ($('#modal-container form .modal').attr('id') === 'creditCardCreditModal' || $('#modal-container form .modal').attr('id') === 'vendorCreditModal') {
                 var qtyField = `<input type="number" name="quantity[]" class="form-control text-right" required value="0" max="${locations[0].qty}" min="0">`;
             } else {
                 var qtyField = `<input type="number" name="quantity[]" class="form-control text-right" required value="0" min="0">`;
             }
 
-            if ($('#modal-container form#modal-form .modal').attr('id') === 'purchaseOrderModal' && $('#modal-container #item-details-table thead th').length > 9) {
+            if ($('#modal-container form .modal').attr('id') === 'purchaseOrderModal' && $('#modal-container #item-details-table thead th').length > 9) {
                 var fields = `
                     <td>${item.title}<input type="hidden" name="item[]" value="${item.id}"></td>
                     <td>Product</td>
@@ -1816,13 +1816,13 @@ $(function() {
                 `;
             }
 
-            $('#modal-container form#modal-form .modal #item-details-table tbody').append(`<tr></tr>`);
-            $('#modal-container form#modal-form .modal #item-details-table tbody tr:last-child').append(fields);
+            $('#modal-container form .modal #item-details-table tbody').append(`<tr></tr>`);
+            $('#modal-container form .modal #item-details-table tbody tr:last-child').append(fields);
             if ($('#modal-container #item-details-table thead tr th').length > $('#modal-container #item-details-table tbody tr:last-child td')) {
                 $(`<td></td>`).insertBefore($('#modal-container .modal table#item-details-table tbody tr:last-child td:last-child'));
             }
 
-            $('#modal-container form#modal-form .modal #item-details-table tbody tr:last-child select').each(function() {
+            $('#modal-container form .modal #item-details-table tbody tr:last-child select').each(function() {
                 if($(this).find('option').length > 10) {
                     $(this).select2();
                 } else {
@@ -6043,11 +6043,19 @@ $(function() {
                 </td>
             `;
 
-            $('#modal-container form#modal-form .modal #item-table tbody:not(#package-items-table)').append(`<tr>${fields}</tr>`);
+            if($('#modal-container form#modal-form').length > 0) {
+                $('#modal-container form#modal-form .modal #item-table tbody:not(#package-items-table)').append(`<tr>${fields}</tr>`);
 
-            $('#modal-container form#modal-form .modal #item-table tbody:not(#package-items-table) tr:last-child select').select2({
-                minimumResultsForSearch: -1
-            });
+                $('#modal-container form#modal-form .modal #item-table tbody:not(#package-items-table) tr:last-child select').select2({
+                    minimumResultsForSearch: -1
+                });
+            } else {
+                $('#modal-container form#update-recurring-form .modal #item-table tbody:not(#package-items-table)').append(`<tr>${fields}</tr>`);
+
+                $('#modal-container form#update-recurring-form .modal #item-table tbody:not(#package-items-table) tr:last-child select').select2({
+                    minimumResultsForSearch: -1
+                });
+            }
         });
     });
 
@@ -6125,11 +6133,19 @@ $(function() {
                     </td>
                 `;
 
-                $('#modal-container form#modal-form .modal #item-table tbody:not(#package-items-table)').append(`<tr>${fields}</tr>`);
+                if($('#modal-container form#modal-form').length > 0) {
+                    $('#modal-container form#modal-form .modal #item-table tbody:not(#package-items-table)').append(`<tr>${fields}</tr>`);
 
-                $('#modal-container form#modal-form .modal #item-table tbody:not(#package-items-table) tr:last-child select').select2({
-                    minimumResultsForSearch: -1
-                });
+                    $('#modal-container form#modal-form .modal #item-table tbody:not(#package-items-table) tr:last-child select').select2({
+                        minimumResultsForSearch: -1
+                    });
+                } else {
+                    $('#modal-container form#update-recurring-form .modal #item-table tbody:not(#package-items-table)').append(`<tr>${fields}</tr>`);
+
+                    $('#modal-container form#update-recurring-form .modal #item-table tbody:not(#package-items-table) tr:last-child select').select2({
+                        minimumResultsForSearch: -1
+                    });
+                }
             }
         });
     });
@@ -6159,7 +6175,11 @@ $(function() {
                 </td>
             `;
 
-            $('#modal-container form#modal-form .modal #item-table tbody:not(#package-items-table)').append(`<tr class="package">${fields}</tr>`);
+            if($('#modal-container form#modal-form').length > 0) {
+                $('#modal-container form#modal-form .modal #item-table tbody:not(#package-items-table)').append(`<tr class="package">${fields}</tr>`);
+            } else {
+                $('#modal-container form#update-recurring-form .modal #item-table tbody:not(#package-items-table)').append(`<tr class="package">${fields}</tr>`);
+            }
 
             var packageItems = `
                 <td colspan="3">
@@ -6189,7 +6209,11 @@ $(function() {
                 <td></td>
             `;
 
-            $('#modal-container form#modal-form .modal #item-table tbody:not(#package-items-table)').append(`<tr class="package-items">${packageItems}</tr>`);
+            if($('#modal-container form#modal-form').length > 0) {
+                $('#modal-container form#modal-form .modal #item-table tbody:not(#package-items-table)').append(`<tr class="package-items">${packageItems}</tr>`);
+            } else {
+                $('#modal-container form#update-recurring-form .modal #item-table tbody:not(#package-items-table)').append(`<tr class="package-items">${packageItems}</tr>`);
+            }
         });
     });
 
@@ -6333,7 +6357,7 @@ $(function() {
         $('#modal-container #package_list #package_price').val(parseFloat(total).toFixed(2));
     });
 
-    $(document).on('change', '#modal-container #modal-form .modal #item-table tbody tr input', function() {
+    $(document).on('change', '#modal-container form .modal #item-table tbody tr input', function() {
         var quantityEl = $(this).parent().parent().find('input[name="quantity[]"]');
         var quantity = quantityEl.length > 0 ? quantityEl.val() : 0.00;
         var amountEl = $(this).parent().parent().find('input[name="item_amount[]"]');
@@ -6352,7 +6376,7 @@ $(function() {
         var subtotal = 0.00;
         var taxes = 0.00;
         var discounts = 0.00;
-        $('#modal-container #modal-form .modal #item-table tbody tr:not(.package-items, .package-item, .package-item-header)').each(function() {
+        $('#modal-container form .modal #item-table tbody tr:not(.package-items, .package-item, .package-item-header)').each(function() {
             var itemAmount = $(this).find('input[name="item_amount[]"]').length > 0 ? $(this).find('input[name="item_amount[]"]').val() : $(this).find('span.item-amount').html();
             var itemQty = $(this).find('input[name="quantity[]"]').length > 0 ? $(this).find('input[name="quantity[]"]').val() : 0;
             var itemDisc = $(this).find('input[name="discount[]"]').length > 0 ? $(this).find('input[name="discount[]"]').val() : 0.00;
@@ -6366,30 +6390,30 @@ $(function() {
             discounts = parseFloat(discounts) + parseFloat(itemDisc);
         });
 
-        $('#modal-container #modal-form .modal span.transaction-subtotal').html(formatter.format(parseFloat(subtotal)));
-        $('#modal-container #modal-form .modal span.transaction-taxes').html(formatter.format(parseFloat(taxes)));
-        $('#modal-container #modal-form .modal span.transaction-discounts').html(formatter.format(parseFloat(discounts)));
-        $('#modal-container #modal-form .modal #adjustment_input_cm').trigger('change');
+        $('#modal-container form .modal span.transaction-subtotal').html(formatter.format(parseFloat(subtotal)));
+        $('#modal-container form .modal span.transaction-taxes').html(formatter.format(parseFloat(taxes)));
+        $('#modal-container form .modal span.transaction-discounts').html(formatter.format(parseFloat(discounts)));
+        $('#modal-container form .modal #adjustment_input_cm').trigger('change');
     });
 
-    $(document).on('change', '#modal-container #modal-form .modal #adjustment_input_cm', function() {
+    $(document).on('change', '#modal-container form .modal #adjustment_input_cm', function() {
         var value = $(this).val();
-        var subtotal = $('#modal-container #modal-form .modal span.transaction-subtotal').html().replace('$', '').replaceAll(',', '');
-        var taxes = $('#modal-container #modal-form .modal span.transaction-taxes').html().replace('$', '').replaceAll(',', '');
-        var discounts = $('#modal-container #modal-form .modal span.transaction-discounts').html().replace('$', '').replaceAll(',', '');
+        var subtotal = $('#modal-container form .modal span.transaction-subtotal').html().replace('$', '').replaceAll(',', '');
+        var taxes = $('#modal-container form .modal span.transaction-taxes').html().replace('$', '').replaceAll(',', '');
+        var discounts = $('#modal-container form .modal span.transaction-discounts').html().replace('$', '').replaceAll(',', '');
 
         var grandTotal = parseFloat(subtotal) + parseFloat(taxes);
         grandTotal -= parseFloat(discounts);
         grandTotal -= parseFloat(value);
-        if($('#modal-container #modal-form .modal').attr('id') === 'creditMemoModal' && $('#creditMemoModal #total-payment-amount').length > 0) {
+        if($('#modal-container form .modal').attr('id') === 'creditMemoModal' && $('#creditMemoModal #total-payment-amount').length > 0) {
             grandTotal -= parseFloat($('#creditMemoModal #total-payment-amount').html().replace('$', '').replaceAll(',', ''));
         }
 
-        $('#modal-container #modal-form .modal span.transaction-adjustment').html(formatter.format(parseFloat(value)));
-        $('#modal-container #modal-form .modal span.transaction-grand-total').html(formatter.format(parseFloat(grandTotal)));
+        $('#modal-container form .modal span.transaction-adjustment').html(formatter.format(parseFloat(value)));
+        $('#modal-container form .modal span.transaction-grand-total').html(formatter.format(parseFloat(grandTotal)));
     });
 
-    $(document).on('click', '#modal-container #modal-form .modal #item-table .deleteRow', function() {
+    $(document).on('click', '#modal-container form .modal #item-table .deleteRow', function() {
         if($(this).parent().parent().parent().hasClass('package')) {
             $(this).parent().parent().parent().next().remove();
         }
@@ -6398,7 +6422,7 @@ $(function() {
         var subtotal = 0.00;
         var taxes = 0.00;
         var discounts = 0.00;
-        $('#modal-container #modal-form .modal #item-table tbody tr').each(function() {
+        $('#modal-container form .modal #item-table tbody tr').each(function() {
             var itemAmount = $(this).parent().parent().find('input[name="item_amount[]"]').val();
             var itemQty = $(this).parent().parent().find('input[name="quantity[]"]').val();
             var itemDisc = $(this).parent().parent().find('input[name="discount[]"]').val();
@@ -6412,10 +6436,10 @@ $(function() {
             discounts = parseFloat(discounts) + parseFloat(itemDisc);
         });
 
-        $('#modal-container #modal-form .modal span.transaction-subtotal').html(formatter.format(parseFloat(subtotal)));
-        $('#modal-container #modal-form .modal span.transaction-taxes').html(formatter.format(parseFloat(taxes)));
-        $('#modal-container #modal-form .modal span.transaction-discounts').html(formatter.format(parseFloat(discounts)));
-        $('#modal-container #modal-form .modal #adjustment_input_cm').trigger('change');
+        $('#modal-container form .modal span.transaction-subtotal').html(formatter.format(parseFloat(subtotal)));
+        $('#modal-container form .modal span.transaction-taxes').html(formatter.format(parseFloat(taxes)));
+        $('#modal-container form .modal span.transaction-discounts').html(formatter.format(parseFloat(discounts)));
+        $('#modal-container form .modal #adjustment_input_cm').trigger('change');
     });
 
     $(document).on('change', '#salesReceiptModal #customer', function() {

@@ -5135,12 +5135,12 @@ class Accounting_modals extends MY_Controller
                 'balance' => $data['total_amount'],
                 'deposit_request' => $data['deposit_amount'],
                 'deposit_request_type' => $data['deposit_request_type'],
-                'payment_methods'           => $credit_card.','.$bank_transfer.','.$instapay.','.$check.','.$cash.','.$deposit,
+                'payment_methods' => $credit_card.','.$bank_transfer.','.$instapay.','.$check.','.$cash.','.$deposit,
                 'message_to_customer' => $data['message_to_customer'],
                 'terms_and_conditions' => $data['terms_and_conditions'],
                 'company_id' => logged('company_id'),
                 'is_recurring' => isset($data['template_name']) ? 1 : 0,
-                'user_id' => logged('company_id'),
+                'user_id' => logged('id'),
                 'sub_total' => $data['subtotal'],
                 'taxes' => $data['tax_total'],
                 'adjustment_name' => $data['adjustment_name'],
@@ -10245,12 +10245,7 @@ class Accounting_modals extends MY_Controller
         $paymentMethods = explode(',', $invoice->payment_methods);
         $invoiceSettings = $this->invoice_settings_model->getAllByCompany(logged('company_id'));
 
-        $discount = floatval($invoice->grand_total) - floatval($invoice->sub_total);
-        $discount += floatval($invoice->taxes);
-        $discount += floatval($invoice->adjustment_value);
-
-        $invoice->discount_total = $discount;
-
+        $discount = 0.00;
         foreach($invoiceItems as $key => $invoiceItem) {
             if(!in_array($invoiceItem->items_id, ['0', null, '']) && in_array($invoiceItem->package_id, ['0', null, ''])) {
                 $invoiceItems[$key]->itemDetails = $this->items_model->getItemById($invoiceItem->items_id)[0];
@@ -10259,7 +10254,11 @@ class Accounting_modals extends MY_Controller
                 $invoiceItems[$key]->packageDetails = $this->items_model->get_package_by_id($invoiceItem->package_id);
                 $invoiceItems[$key]->packageItems = json_decode($invoiceItem->package_item_details);
             }
+
+            $discount += floatval($invoiceItem->discount);
         }
+
+        $invoice->discount_total = $discount;
 
         $this->page_data['invoice_prefix'] = $invoiceSettings->invoice_num_prefix;
         $this->page_data['paymentMethods'] = $paymentMethods;

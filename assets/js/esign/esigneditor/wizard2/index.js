@@ -12,6 +12,8 @@ window.document.addEventListener("DOMContentLoaded", async () => {
     initPlaceholders(customer),
     initCustomerCustomFields(customer),
     initSaveForm(customer),
+    initAddCreditorForm(),
+    initDisputeForm(),
   ]).then(() => {
     document.querySelector(".wrapper").classList.remove("wrapper--loading");
   });
@@ -29,6 +31,13 @@ window.document.addEventListener("DOMContentLoaded", async () => {
     step2_generate_letter: () => step2GenerateLetter(customer),
     on_export_pdf: () => onExportPDF(customer),
     step3_generate_letter: () => step3GenerateLetter(customer),
+    show_creditor_modal: showCreditorModal,
+    show_manage_reasons_modal: showManageReasonsModal,
+    back_to_add_dispute_modal: backToAddDisputeModal,
+    toggle_add_creaditor_modal_optional_inputs: toggleAddCreaditorModalOptionalInputs, // prettier-ignore
+    add_new_reasons: addNewReasons,
+    hide_reason_form: hideReasonForm,
+    toggle_instructions: toggleInstructions,
   };
 
   $actions.forEach(($action) => {
@@ -574,4 +583,184 @@ function initSaveForm(customer) {
   $($modal).on("show.bs.modal", () => {
     $name.value = "";
   });
+}
+
+function showCreditorModal() {
+  $("#newdisputemodal").modal("hide");
+  $("#addCreditorModal").modal("show");
+}
+
+function showManageReasonsModal() {
+  $("#newdisputemodal").modal("hide");
+  $("#manageReasonModal").modal("show");
+}
+
+function backToAddDisputeModal() {
+  $("#newdisputemodal").modal("show");
+  $("#manageReasonModal").modal("hide");
+  $("#addCreditorModal").modal("hide");
+}
+
+function toggleAddCreaditorModalOptionalInputs() {
+  const $modal = document.getElementById("addCreditorModal");
+  const $button = $modal.querySelector("[data-action=toggle_add_creaditor_modal_optional_inputs]"); // prettier-ignore
+
+  if ($modal.classList.contains("addCreditorModal--showOptional")) {
+    $button.textContent = "+More Details (optional)";
+    $modal.classList.remove("addCreditorModal--showOptional");
+  } else {
+    $button.textContent = "-Less Details (optional)";
+    $modal.classList.add("addCreditorModal--showOptional");
+  }
+}
+
+function addNewReasons() {
+  const $table = document.getElementById("reasonsTable");
+  $table.classList.add("reasonsTable--showForm");
+}
+
+function hideReasonForm() {
+  const $table = document.getElementById("reasonsTable");
+  $table.classList.remove("reasonsTable--showForm");
+}
+
+function initAddCreditorForm() {
+  const $modal = document.getElementById("addCreditorModal");
+  const $select = $modal.querySelector("#addCreditorModal__state");
+  const states = [
+    "AL",
+    "AK",
+    "AS",
+    "AZ",
+    "AR",
+    "CA",
+    "CO",
+    "CT",
+    "DE",
+    "DC",
+    "FM",
+    "FL",
+    "GA",
+    "GU",
+    "HI",
+    "ID",
+    "IL",
+    "IN",
+    "IA",
+    "KS",
+    "KY",
+    "LA",
+    "ME",
+    "MH",
+    "MD",
+    "MA",
+    "MI",
+    "MN",
+    "MS",
+    "MO",
+    "MT",
+    "NE",
+    "NV",
+    "NH",
+    "NJ",
+    "NM",
+    "NY",
+    "NC",
+    "ND",
+    "MP",
+    "OH",
+    "OK",
+    "OR",
+    "PW",
+    "PA",
+    "PR",
+    "RI",
+    "SC",
+    "SD",
+    "TN",
+    "TX",
+    "UT",
+    "VT",
+    "VI",
+    "VA",
+    "WA",
+    "WV",
+    "WI",
+    "WY",
+    "AE",
+    "AA",
+    "AP",
+  ];
+
+  $($select).select2({
+    placeholder: "Select state",
+    data: states,
+  });
+}
+
+function initDisputeForm() {
+  const $modal = document.getElementById("newdisputemodal");
+
+  const $creditorSelect = $modal.querySelector("#newdisputemodal_creditor");
+  $($creditorSelect).select2({
+    placeholder: "Add Creditor/Furnisher",
+    ajax: {
+      url: `${window.api.prefixURL}/autocomplete/_company_furnishers`,
+      dataType: "json",
+      data: (params) => {
+        return { q: params.term, page: params.page };
+      },
+      processResults: (data, params) => {
+        params.page = params.page || 1;
+        return { results: data };
+      },
+    },
+    templateResult: (repo) => {
+      if (repo.loading) {
+        return repo.text;
+      }
+
+      return $(
+        `<div><b>${repo.text}</b></div><div class="autocomplete-right"><small>${repo.address}</small></div>`
+      );
+    },
+  });
+
+  const $reasonSelect = $modal.querySelector("#newdisputemodal_reason");
+  $($reasonSelect).select2({
+    placeholder: "Select a reason for your dispute",
+    ajax: {
+      url: `${window.api.prefixURL}/autocomplete/_company_reasons`,
+      dataType: "json",
+      data: (params) => {
+        return { q: params.term, page: params.page };
+      },
+      processResults: (data, params) => {
+        params.page = params.page || 1;
+        return { results: data };
+      },
+    },
+  });
+
+  const $instructionsSelect = $modal.querySelector("#newdisputemodal_instruction"); // prettier-ignore
+  $($instructionsSelect).select2({
+    placeholder: "Choose instructions",
+    ajax: {
+      url: `${window.api.prefixURL}/autocomplete/_company_instructions`,
+      dataType: "json",
+      data: (params) => {
+        return { q: params.term, page: params.page };
+      },
+      processResults: (data, params) => {
+        params.page = params.page || 1;
+        return { results: data };
+      },
+    },
+  });
+}
+
+function toggleInstructions() {
+  const $modal = document.getElementById("newdisputemodal");
+  const $instructions = $modal.querySelector(".instructions");
+  $instructions.classList.toggle("instructions--showInput");
 }
