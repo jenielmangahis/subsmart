@@ -134,6 +134,34 @@
 	.choice-container .input-group{
 		width: 90% !important;
 	}
+	#builder-box .alert-dark{
+		background-color : none !important;
+	}
+	.nav-tabs .nav-item{
+		margin: 2px;
+		width: 193px;
+		text-align: center;
+	}
+	.nav-tabs .nav-item a.nav-link{
+		background-color: #32243d;
+		color: #ffffff;		
+	}
+	.nav-tabs .nav-item a{
+		color: #ffffff;
+	}
+	.nav-tabs .nav-item a.active{
+		background-color: #45a73c;
+		color: #ffffff;
+	}
+	.settings-label{
+		width: 16%;
+	}
+	.form-check{
+		margin-left: 3px;
+	}
+	.list-group-item{
+		border: none !important;
+	}
 </style>
 <script>
 
@@ -166,8 +194,7 @@
 				<div class="col-xl-12">
 					<div class="card">
 						<!-- header -->
-						<div class="container-fluid mb-3">
-							<a href="<?= base_url()?>survey">Back to survey list</a>
+						<div class="container-fluid mb-3">							
 							<div class="row">
 
 								<div class="col">
@@ -199,18 +226,19 @@
 								<!-- buttons -->
 								<div class="col-auto">
 									<div class="h1-spacer">
+										<a href="<?= base_url()?>survey" class="btn btn-primary">Back to survey list</a>
 										<?php if(count($questions) !== 0){?>
-											<a href="<?= base_url() ?>survey/preview/<?= $survey->id ?>?mode=preview" target="_blank" class="btn btn-info btn-md text-light" type="button" name="button">Preview</a>
+											<!-- <a href="<?= base_url() ?>survey/preview/<?= $survey->id ?>?mode=preview" target="_blank" class="btn btn-info btn-md text-light" type="button" name="button">Preview</a> -->
 										<?php } ?>
 										
-										<div class="btn-group">
+										<!-- <div class="btn-group">
 											<button id="btnPublish" class="btn btn-dark btn-md text-light " disabled></button>
 											<button class="btn btn-dark btn-md text-light dropdown-toggle" data-toggle="dropdown"></button>
 											<div class="dropdown-menu dropdown-menu-right">
 												<button id="btnToggleAutoPublish" type="button" class="dropdown-item"><i class="fa fa-check-circle" style="color="rgb(0,255,0)"></i> Publishing autimatically on change </button>
 												<button id="btnRestoreSettings" type="button" class="dropdown-item">Restore last changes</button>
 											</div>
-										</div>
+										</div> -->
 										
 									</div>
 								</div>
@@ -236,7 +264,7 @@
 								<li class="nav-item">
 									<a class="nav-link" data-toggle="list" href="#settings-box"><i class="fa fa-cog"></i> Settings</a>
 								</li>
-								<li class="nav-item">
+								<li class="nav-item" style="display: none;">
 									<a class="nav-link" data-toggle="list" href="#ra-box"><i class="fa fa-lock"></i> Respondent Access</a>
 								</li>
 							</ul>
@@ -266,7 +294,7 @@
 														<div>
 															<!-- dropdown menu for adding new questions -->
 															<div class="btn-group dropleft">
-																<button class="btn btn-primary btn-sm text-light dropdown-toggle " type="button" id="dropdownAddQuestion" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Add New Question</button>
+																<button class="btn btn-primary btn-sm text-light dropdown-toggle " type="button" id="dropdownAddQuestion" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Add New Question</button>
 																<div class="dropdown-menu dropdown-menu-left"  style="width: 450px" aria-labelledby="dropdownAddQuestion">
 																	<div class="row align-items-start">
 																		<?php foreach ($qTemplate as $template){?>
@@ -295,8 +323,8 @@
 													<?php } ?>
 												</div>
 												<div class="col-xs-12 col-sm-12 col-md-6 px-3">
-													<iframe src="<?php echo base_url()?>survey/preview/<?php echo $survey->id?>?mode=preview&src=results" frameborder="0" style="width: 100%; height: 600px"></iframe>
-													<a href="<?php echo base_url()?>survey/preview/<?php echo $survey->id?>?mode=preview" class="btn btn-outline-primary btn-block text-center" target="_blank"><i class="fa fa-eye"></i> Preview on another page</a>
+													<iframe src="<?php echo base_url()?>survey/preview/<?php echo $survey->id?>?mode=preview&src=results" frameborder="0" style="width: 100%; height: 87%;"></iframe>
+													<a href="<?php echo base_url()?>survey/preview/<?php echo $survey->id?>?mode=preview" class="btn btn-primary btn-block text-center" target="_blank"><i class="fa fa-eye"></i> Preview on another page</a>
 												</div>
 											</div>
 									</div>
@@ -516,82 +544,108 @@
 									<!-- settings tab -->
 									<div class="tab-pane fade " id="settings-box">
 										<h2>Survey Settings</h2>
+										<form id="survery-settings">
+										<input type="hidden" name="sid" id="settings-sid" value="<?= $survey->id; ?>">
 										<ul class="list-group">
 											<li class="list-group-item">
-												<div class="d-flex w-100 justify-content-between">
-													<span>Survey Name</span>
-													<input type="text" name="txtSurveyTitle" class="form-control" id="txtSurveyTitle" data-id="<?=$survey->id?>" value="<?= $survey->title?>">
-												</div>
-											</li>
-											<li class="list-group-item">
-												<div class="d-flex w-100 justify-content-between">
-													<span>Survey Workspace</span>
-													<select name="selWorkspace" id="selWorkspace" class="custom-select">
-
-														<?php
-															if($survey->workspace_id == 0 || $survey->workspace_id == ""){
-																?>
-																	<option disabled selected value="0">Select workspace</option>
-																<?php
-															}
-															foreach($survey_workspaces as $key => $workspace){
-																?>
-																	<option onclick="selectWorkspace(<?=$workspace->id?>)" <?= ($survey->workspace_id === $workspace->id)?"selected":""?> value="<?=$workspace->id?>"><?=$workspace->name?></option>
-																<?php
-															}
-														?>
-													</select>
-												</div>
-											</li>
-											<li class="list-group-item">
-												<div class="d-flex w-100 justify-content-between">
-													<span>Show Progress</span>
-													<div class="form-check">
-														<input 	<?= ($survey->hasProgressBar == 1) ? "checked" : ""; ?> type="checkbox" class="form-check-input" value="hasProgressBar" data-id="<?= $survey->id ?>" id="hasProgressBar<?= $survey->id ?>">
+												<div class="row">
+													<div class="col-2">
+														<span class="settings-label">Survey Name</span>
+													</div>
+													<div class="col-5" style="padding-left: 0px;">
+														<input type="text" name="txtSurveyTitle" class="form-control" id="txtSurveyTitle" data-id="<?=$survey->id?>" value="<?= $survey->title?>">
 													</div>
 												</div>
 											</li>
 											<li class="list-group-item">
-												<div class="d-flex w-100 justify-content-between">
-													<span>Redirect on complete</span>
-													<div class="form-check">
-														<input <?= ($survey->canRedirectOnComplete == 1) ? "checked" : ""; ?> type="checkbox" class="form-check-input" value="canRedirectOnComplete" data-id="<?= $survey->id ?>" id="canRedirectOnComplete<?= $survey->id ?>">
+												<div class="row">
+													<div class="col-2">
+														<span>Survey Workspace</span>
+													</div>
+													<div class="col-5" style="padding-left: 0px;">
+														<select name="selWorkspace" id="selWorkspace" class="custom-select">
+															<?php
+																if($survey->workspace_id == 0 || $survey->workspace_id == ""){
+																	?>
+																		<option disabled selected value="0">Select workspace</option>
+																	<?php
+																}
+																foreach($survey_workspaces as $key => $workspace){
+																	?>
+																		<option onclick="selectWorkspace(<?=$workspace->id?>)" <?= ($survey->workspace_id === $workspace->id)?"selected":""?> value="<?=$workspace->id?>"><?=$workspace->name?></option>
+																	<?php
+																}
+															?>
+														</select>
 													</div>
 												</div>
 											</li>
 											<li class="list-group-item">
+												<div class="row">
+													<div class="col-2">
+														<span>Show Progress</span>
+													</div>
+													<div class="col-5" style="padding-left: 0px;">
+														<div class="form-check">
+															<input 	<?= ($survey->hasProgressBar == 1) ? "checked" : ""; ?> name="show_progress" type="checkbox" class="form-check-input" value="hasProgressBar" data-id="<?= $survey->id ?>" id="hasProgressBar<?= $survey->id ?>">
+														</div>
+													</div>
+												</div>												
+											</li>
+											<li class="list-group-item">
+												<div class="row">
+													<div class="col-2">
+														<span>Redirect on complete</span>	
+													</div>
+													<div class="col-5" style="padding-left: 0px;">
+														<div class="form-check">
+															<input <?= ($survey->canRedirectOnComplete == 1) ? "checked" : ""; ?> type="checkbox" class="form-check-input chk-redirect-oncomplete" data-id="<?= $survey->id; ?>" name="can_redirect_oncomplete" value="canRedirectOnComplete" data-id="<?= $survey->id ?>" id="canRedirectOnComplete<?= $survey->id ?>">
+														</div>
+													</div>
+												</div>
+											</li>
+											<li class="list-group-item" style="display: none;">												
 												<div class="d-flex w-100 justify-content-between">
-													<span>Use Background Image <em class="text-muted"><small>NOTE: This works when a custom image is uploaded and existing</small></em></span>
+													<span class="settings-label">Use Background Image <em class="text-muted"><small>NOTE: This works when a custom image is uploaded and existing</small></em></span>
 													<div class="form-check">
 														<input <?= ($survey->useBackgroundImage == 1) ? "checked" : ""; ?> type="checkbox" class="form-check-input" value="useBackgroundImage" data-id="<?= $survey->id ?>" id="useBackgroundImage<?= $survey->id ?>">
 													</div>
 												</div>
 											</li>
-											<li class="list-group-item">
+											<li class="list-group-item" style="display:none;">
 												<div class="d-flex w-100 justify-content-between">
-													<span>Background Image: <strong id="customImageBackgroundName"><?= ($survey->backgroundImage === "") ? "none" : $survey->backgroundImage?></strong></span>
+													<span class="settings-label">Background Image: <strong id="customImageBackgroundName"><?= ($survey->backgroundImage === "") ? "none" : $survey->backgroundImage?></strong></span>
 													<?= form_open('survey/upload/custombackgroundimage/'.$survey->id, array('id' => 'form-upload-custom-image-background'))?>
 														<input type="file" value="useCustomBackgroundImage" name="useCustomBackgroundImage" data-id="<?= $survey->id ?>" id="useCustomBackgroundImage<?= $survey->id ?>">
 													<?= form_close();?>
 												</div>
 											</li>
 											<li class="list-group-item">
-												<div class="d-flex w-100 justify-content-between">
-													<span>Redirection Link</span>
-													<input type="text" <?= ($survey->canRedirectOnComplete == 0) ? "disabled" : "" ?> name="txtRedirectionLink" class="form-control" id="txtRedirectionLink" data-id="<?=$survey->id?>" value="<?= $survey->redirectionLink?>" placeholder="https://..">
+												<div class="row">
+													<div class="col-2">
+														<span>Redirection Link</span>
+													</div>
+													<div class="col-5" style="padding-left:0px;">
+														<input type="text" <?= ($survey->canRedirectOnComplete == 0) ? "disabled" : "" ?> name="txtRedirectionLink" class="form-control" id="txtRedirectionLink" data-id="<?=$survey->id?>" value="<?= $survey->redirectionLink?>" placeholder="https://..">
+													</div>
 												</div>
 											</li>
 											
 											<li class="list-group-item">
-												<div class="d-flex w-100 justify-content-between">
-													<span>Count Scores</span>
-													<div class="form-check">
-														<input <?= ($survey->isScoreMonitored == 1) ? "checked" : ""; ?> type="checkbox" name="isScoreMonitored" id="isScoreMonitored<?=$survey->id?>" class="form-check-input" value="isScoreMonitored"  data-id="<?=$survey->id?>" value="<?= $survey->isScoreMonitored?>">
+												<div class="row">
+													<div class="col-2">
+														<span>Count Scores</span>
+													</div>
+													<div class="col-5" style="padding-left:0px;">
+														<div class="form-check">
+															<input <?= ($survey->isScoreMonitored == 1) ? "checked" : ""; ?> type="checkbox" name="isScoreMonitored" id="isScoreMonitored<?=$survey->id?>" class="form-check-input" value="isScoreMonitored"  data-id="<?=$survey->id?>" value="<?= $survey->isScoreMonitored?>">
+														</div>
 													</div>
 												</div>
-												<!-- <button class="btn btn-success btn-block">Save Changes</button> -->
+												<button class="btn btn-primary btn-block btn-survey-update-settings" type="button" style="margin-top:39px;width: 57%;">Save Changes</button>
 											</li>
 										</ul>
+										</form>
 									</div>
 									
 									<!-- respondent access tab -->

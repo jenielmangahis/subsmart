@@ -86,7 +86,7 @@
 							<div class="collapse" id="navbarToggleExternalContent<?= $question->id ?>">
 								<ul class="list-group">
 									<!-- image upload field -->
-									<li class="list-group-item d-flex-justify-content-between">
+									<!-- <li class="list-group-item d-flex-justify-content-between">
 										<div class="d-flex w-100 justify-content-between">
 											<div class="custom-file">
 												<input type="file" class="custom-file-input" id="image_background" name="image_background" data-id="<?=$question->id?>">
@@ -95,7 +95,7 @@
 												</label>
 											</div>
 										</div>
-									</li>
+									</li> -->
 
 									<!-- custom button text field -->
 									<li class="list-group-item">
@@ -103,11 +103,10 @@
 											<input class="form-control" type="text" name="txtCustomButtonText" id="txtCustomButtonText" placeholder="Custom button text" data-id="<?=$question->id?>" value="<?= ($question->custom_button_text == null || $question->custom_button_text == "") ? "" : $question->custom_button_text ?>">
 										</div>
 									</li>
-
 									<!-- character limits -->
+									<?php if($question->template_id == 6 || $question->template_id == 8 ||$question->template_id == 9 || $question->template_id == 13){ ?>
 									<li class="list-group-item d-flex-justify-content-between">
 										<div class="d-flex w-100 justify-content-between">
-											<?php if($question->template_id == 6 || $question->template_id == 8 ||$question->template_id == 9 || $question->template_id == 13){ ?>
 												<!-- <button id="add-question-choice" data-id="<?= $question->id ?>" data-template-id="<?= $question->template_id ?>" class="btn btn-dark btn-block" type="button" name="button">Add Choice</button> -->
 												<div>
 													<label for="maxcharacters"> Max. characters</label>
@@ -116,10 +115,10 @@
 												<div>
 													<label for="mincharacters"> Min. characters</label>
 													<input type="number" class="form-control questions" data-id="<?=$question->id?>" id="mincharacters" name="mincharacters" value="<?= $question->mincharacters?>">
-												</div>
-											<?php } ?>
+												</div>											
 										</div>
 									</li>
+									<?php } ?>
 									
 									<!-- required checkbox -->
 									<li class="list-group-item">
