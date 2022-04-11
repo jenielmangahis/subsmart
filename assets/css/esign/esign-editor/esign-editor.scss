@@ -616,6 +616,31 @@
       margin-top: 10px;
     }
   }
+
+  &__accnumber {
+    margin-top: 150px;
+  }
+}
+#newdisputemodal {
+  .instructions {
+    .selectgroup {
+      display: block;
+    }
+
+    .inputgroup {
+      display: none;
+    }
+
+    &--showInput {
+      .selectgroup {
+        display: none;
+      }
+
+      .inputgroup {
+        display: block;
+      }
+    }
+  }
 }
 
 #additemmodal,
@@ -864,5 +889,56 @@
     color: #fff;
     position: absolute;
     right: 0;
+  }
+}
+
+.info {
+  display: flex;
+  gap: 1rem;
+  border: solid 1px #dedede;
+  border-radius: 8px;
+  padding: 1rem;
+  box-sizing: border-box;
+
+  &__logo {
+    font-size: 1.5rem;
+    color: grey;
+  }
+
+  &__msg {
+    position: relative;
+    top: -5px;
+    margin-bottom: 0;
+  }
+}
+
+#manageReasonModal {
+  .lock {
+    color: grey;
+    font-size: 1.3rem;
+  }
+}
+
+#addCreditorModal {
+  .optional {
+    display: none;
+  }
+
+  &.addCreditorModal--showOptional {
+    .optional {
+      display: block;
+    }
+  }
+}
+
+#reasonsTable {
+  .form {
+    display: none;
+  }
+
+  &.reasonsTable--showForm {
+    .form {
+      display: table-row;
+    }
   }
 }

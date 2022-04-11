@@ -16,44 +16,84 @@ $('#transaction_type_modal .modal-footer .btn-success').on('click', function(e) 
 
     var modal = '';
     var view = '';
-    var modalName = $('select#type').val();
+    var transaction = $('select#type').val();
+    var modalName = '';
 
-    switch(modalName) {
-        case 'depositModal' : 
+    switch(transaction) {
+        case 'deposit' : 
             modal = 'bank_deposit';
             view = 'bank_deposit_modal';
+            modalName = 'depositModal';
         break;
-        case 'journalEntryModal' :
+        case 'journal-entry' :
             modal = 'journal_entry';
             view = 'journal_entry_modal';
+            modalName = 'journalEntryModal';
         break;
-        case 'transferModal' : 
+        case 'transfer' : 
             modal ='transfer';
             view = 'transfer_modal';
+            modalName = 'transferModal';
         break;
-        case 'expenseModal' :
+        case 'expense' :
             modal ='expense';
             view = 'expense_modal';
+            modalName = 'expenseModal';
         break;
-        case 'checkModal' :
+        case 'check' :
             modal ='check';
             view = 'check_modal';
+            modalName = 'checkModal';
         break;
-        case 'billModal' :
+        case 'bill' :
             modal ='bill';
             view = 'bill_modal';
+            modalName = 'billModal';
         break;
-        case 'purchaseOrderModal' :
+        case 'purchase-order' :
             modal ='purchase_order';
             view = 'purchase_order_modal';
+            modalName = 'purchaseOrderModal';
         break;
-        case 'vendorCreditModal' :
+        case 'vendor-credit' :
             modal ='vendor_credit';
             view = 'vendor_credit_modal';
+            modalName = 'vendorCreditModal';
         break;
-        case 'creditCardCreditModal' :
+        case 'credit-card-credit' :
             modal ='credit_card_credit';
             view = 'credit_card_credit_modal';
+            modalName = 'creditCardCreditModal';
+        break;
+        case 'invoice' :
+            modal ='invoice';
+            view = 'invoice_modal';
+            modalName = 'invoiceModal';
+        break;
+        case 'credit-memo' :
+            modal ='credit_memo';
+            view = 'credit_memo_modal';
+            modalName = 'creditMemoModal';
+        break;
+        case 'sales-receipt' :
+            modal ='sales_receipt';
+            view = 'sales_receipt_modal';
+            modalName = 'salesReceiptModal';
+        break;
+        case 'refund-receipt' :
+            modal ='refund_receipt';
+            view = 'refund_receipt_modal';
+            modalName = 'refundReceiptModal';
+        break;
+        case 'non-posting-credit' :
+            modal ='delayed_credit';
+            view = 'delayed_credit_modal';
+            modalName = 'delayedCreditModal';
+        break;
+        case 'non-posting-charge' :
+            modal ='delayed_charge';
+            view = 'delayed_charge_modal';
+            modalName = 'delayedChargeModal';
         break;
     }
 

@@ -296,7 +296,7 @@ ini_set('max_input_vars', 30000);
                     </div>
                 </div>
 
-                <div class="mt-auto newdisputemodal__accnumber">
+                <div class="newdisputemodal__accnumber">
                     <div class="mb-2">Account Number (optional)</div>
                     <div>
                         <div class="form-check mb-1">
@@ -318,26 +318,36 @@ ini_set('max_input_vars', 30000);
                 <div class="newdisputemodal__selects">
                     <div class="form-group">
                         <label for="newdisputemodal_creditor">Creditor/Furnisher</label>
-                        <select class="form-control" id="newdisputemodal_creditor">
-                            <option>Select a Creditor/Furnisher</option>
-                        </select>
-                        <a href="" class="link">Add Creditor/Furnisher</a>
+                        <select class="form-control" id="newdisputemodal_creditor"></select>
+                        <a href="javascript:void(0);" class="link" data-action="show_creditor_modal">Add Creditor/Furnisher</a>
                     </div>
 
                     <div class="form-group">
                         <label for="newdisputemodal_reason">Reason <span class="text-danger">*</span></label>
-                        <select class="form-control" id="newdisputemodal_reason">
-                            <option>Select a reason for your dispute</option>
-                        </select>
-                        <a href="" class="link">Manage Reasons</a>
+                        <select class="form-control" id="newdisputemodal_reason"></select>
+                        <a href="javascript:void(0);" class="link" data-action="show_manage_reasons_modal">Manage Reasons</a>
                     </div>
 
-                    <div class="form-group">
-                        <label for="newdisputemodal_instruction">Instruction</label>
-                        <select class="form-control" id="newdisputemodal_instruction">
-                            <option>Choose instructions</option>
-                        </select>
-                        <a href="" class="link">Add a New Instruction</a>
+                    <div class="instructions">
+                        <div class="form-group selectgroup">
+                            <label for="newdisputemodal_instruction">Instruction</label>
+                            <select class="form-control" id="newdisputemodal_instruction"></select>
+                            <a href="javascript:void(0);" class="link" data-action="toggle_instructions">Add a New Instruction</a>
+                        </div>
+
+                        <div class="form-group inputgroup">
+                            <label for="newdisputemodal_instruction_input">Instruction</label>
+                            <input class="form-control" id="newdisputemodal_instruction_input">
+                            <a href="javascript:void(0);" class="link" data-action="toggle_instructions">Choose from list</a>
+
+                            <span class="d-block text-muted mt-2">(i.e: "This is not my account. Please remove")</span>
+                            <div class="form-check mt-2">
+                                <input type="checkbox" class="form-check-input" id="newdisputemodal_instruction_save_explanation">
+                                <label class="form-check-label" for="newdisputemodal_instruction_save_explanation">
+                                    Save "explanation" for future use
+                                </label>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -486,6 +496,186 @@ ini_set('max_input_vars', 30000);
                 </button>
             </div>
         </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" tabindex="-1" role="dialog" id="addCreditorModal">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <a href="javascript:void(0);" class="link" data-action="back_to_add_dispute_modal">< Back to Add New Dispute Item</a>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h5 class="modal-title mb-3">Add Creditor/Furnisher</h5>
+
+        <div class="info">
+            <i class="fa fa-info-circle info__logo"></i>
+            <p class="info__msg">Creditors/Furnishers may have multiple addresses. Always double check that the company’s mailing address is correct for your client’s account.</p>
+        </div>
+
+        <form class="pt-3 pb-3">
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <label for="addCreditorModal__company_name">Company name <span class="text-danger">*</span></label>
+                        <input class="form-control" id="addCreditorModal__company_name">
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group optional">
+                        <label for="addCreditorModal__address">Address</label>
+                        <input class="form-control" id="addCreditorModal__address">
+                    </div>
+                </div>
+            </div>
+
+            <div class="optional">
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="addCreditorModal__company_name">City</label>
+                            <input class="form-control" id="addCreditorModal__city">
+                        </div>
+                        <div class="d-flex">
+                            <div class="form-group mr-2 w-100">
+                                <label for="addCreditorModal__phone">Phone</label>
+                                <input type="number" class="form-control" id="addCreditorModal__phone">
+                            </div>
+                            <div class="form-group">
+                                <label for="addCreditorModal__phone_ext">&nbsp;</label>
+                                <input class="form-control text-muted" id="addCreditorModal__phone_ext" placeholder="Ext.">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="d-flex">
+                            <div class="form-group mr-2 w-100">
+                                <label for="addCreditorModal__state">State</label>
+                                <select class="form-control" id="addCreditorModal__state">
+                                    <option>Select State</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="addCreditorModal__zip">Zip Code</label>
+                                <input class="form-control" id="addCreditorModal__zip">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr>
+
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="addCreditorModal__acc_type">Account type</label>
+                            <input class="form-control" id="addCreditorModal__acc_type">
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="addCreditorModal__notes">Notes</label>
+                            <input class="form-control" id="addCreditorModal__notes">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <a href="javascript:void(0);" class="link" data-action="toggle_add_creaditor_modal_optional_inputs">
+                +More Details (optional)
+            </a>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-action="back_to_add_dispute_modal">
+            Cancel
+        </button>
+        <button type="button" class="btn btn-primary">
+            Save
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" tabindex="-1" role="dialog" id="manageReasonModal">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <a href="javascript:void(0);" class="link" data-action="back_to_add_dispute_modal">< Back to Add New Dispute Item</a>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h5 class="modal-title mb-3">Manage Reason</h5>
+
+        <div class="d-flex justify-content-end">
+            <button type="button" class="btn btn-primary mb-3" data-action="add_new_reasons">
+                + Add New Reasons
+            </button>
+        </div>
+
+        <table class="table" id="reasonsTable">
+            <thead>
+                <tr>
+                    <th>Reasons</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="form">
+                    <td>
+                        <input class="form-control">
+                    </td>
+                    <td>
+                        <div class="d-flex">
+                            <button class="btn btn-primary mr-2">
+                                Save
+                            </button>
+                            <button class="btn btn-secondary" data-action="hide_reason_form">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Sample Reason</td>
+                    <td class="text-right">
+                        <span class="lock"><i class="fa fa-lock"></i></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>The following personal information is incorrect</td>
+                    <td class="text-right">
+                        <span class="lock"><i class="fa fa-lock"></i></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>The following account is not mine</td>
+                    <td class="text-right">
+                        <span class="lock"><i class="fa fa-lock"></i></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>The status is incorrect for the following account</td>
+                    <td class="text-right">
+                        <span class="lock"><i class="fa fa-lock"></i></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>The following information is outdated. I would like it removed from my credit history report</td>
+                    <td class="text-right">
+                        <span class="lock"><i class="fa fa-lock"></i></span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
       </div>
     </div>
   </div>
