@@ -3256,11 +3256,11 @@ $(function() {
         $('#modal-container form#modal-form').submit();
     });
 
-    $(document).on('click', '#purchaseOrderModal .modal-footer #print-purchase-order', function(e) {
-        e.preventDefault();
+    // $(document).on('click', '#purchaseOrderModal .modal-footer #print-purchase-order', function(e) {
+    //     e.preventDefault();
 
-        printPurchaseOrder();
-    });
+    //     printPurchaseOrder();
+    // });
 
     $(document).on('click', '#modal-container #modal-form .modal .modal-footer #save', function(e) {
         e.preventDefault();
@@ -5581,7 +5581,7 @@ $(function() {
         });
     });
 
-    $(document).on('click', '#modal-container #modal-form .modal .modal-footer #save-template', function(e) {
+    $(document).on('click', '#modal-container form .modal .modal-footer #save-template', function(e) {
         e.preventDefault();
 
         submitType = 'save-and-close';
@@ -7356,77 +7356,293 @@ const submitModalForm = (event, el) => {
             toast(res.success, res.message);
 
             if(res.success === true) {
-                switch($(el).children().attr('id')) {
-                    case 'expenseModal' :
-                        var type = 'expense';
-                    break;
-                    case 'checkModal' :
-                        var type = 'check';
-                    break;
-                    case 'billModal' :
-                        var type = 'bill';
-                    break;
-                    case 'purchaseOrderModal' :
-                        var type = 'purchase-order';
-                    break;
-                    case 'vendorCreditModal' :
-                        var type = 'vendor-credit';
-                    break;
-                    case 'creditCardCreditModal' :
-                        var type = 'credit-card-credit';
-                    break;
-                    case 'singleTimeModal' :
-                        var type = 'time-activity';
-                    break;
-                    case 'journalEntryModal' :
-                        var type = 'journal';
-                    break;
-                    case 'inventoryModal' :
-                        var type = 'inventory-qty-adjust';
-                    break;
-                    case 'payDownCreditModal' :
-                        var type = 'credit-card-payment';
-                    break;
-                    case 'receivePaymentModal' :
-                        var type = 'receive-payment';
-                    break;
-                    case 'invoiceModal' :
-                        var type = 'invoice';
-                    break;
-                    case 'weeklyTimesheetModal' :
-                        var type = 'weekly-timesheet';
-                    break;
-                    case 'creditMemoModal' :
-                        var type = 'credit-memo';
-                    break;
-                    case 'salesReceiptModal' :
-                        var type = 'sales-receipt';
-                    break;
-                    case 'refundReceiptModal' :
-                        var type = 'refund-receipt';
-                    break;
-                }
-
                 if(submitType === 'save-and-close' || submitType === 'save-and-void') {
                     $(el).children().modal('hide');
                 }
 
-                if(submitType === 'save' && modalId !== '#payBillsModal' && modalId !== '#weeklyTimesheetModal') {
+                if(submitType !== 'save-and-close' && submitType !== 'save-and-new' && modalId !== '#payBillsModal') {
+                    switch($(el).children().attr('id')) {
+                        case 'expenseModal' :
+                            var type = 'expense';
+
+                            $('#expenseModal .modal-footer div.row.w-100 div:nth-child(2)').removeClass('d-flex');
+                            $('#expenseModal .modal-footer div.row.w-100 div:nth-child(2)').html(`
+                            <div class="row h-100">
+                                <div class="col-md-12 d-flex align-items-center justify-content-center">
+                                    <span><a href="#" class="text-white" onclick="makeRecurring('expense')">Make Recurring</a></span>
+                                    <span class="mx-3 divider"></span>
+                                    <span>
+                                        <div class="dropup">
+                                            <a href="javascript:void(0);" class="text-white" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
+                                            <div class="dropdown-menu">
+                                                <a class="dropdown-item" href="#" id="copy-expense">Copy</a>
+                                                <a class="dropdown-item" href="#" id="void-expense">Void</a>
+                                                <a class="dropdown-item" href="#" id="delete-expense">Delete</a>
+                                                <a class="dropdown-item" href="#">Transaction journal</a>
+                                                <a class="dropdown-item" href="#">Audit history</a>
+                                            </div>
+                                        </div>
+                                    </span>
+                                </div>
+                            </div>`);
+                        break;
+                        case 'checkModal' :
+                            var type = 'check';
+
+                            $('#checkModal .modal-footer div.row.w-100 div:nth-child(2) div.row div.dropup div.dropdown-menu').html(`
+                            <a class="dropdown-item" href="#" id="copy-check">Copy</a>
+                            <a class="dropdown-item" href="#" id="void-check">Void</a>
+                            <a class="dropdown-item" href="#" id="delete-check">Delete</a>
+                            <a class="dropdown-item" href="#">Transaction journal</a>
+                            <a class="dropdown-item" href="#">Audit history</a>`);
+                        break;
+                        case 'billModal' :
+                            var type = 'bill';
+
+                            $('#billModal .modal-footer div.row.w-100 div:nth-child(2)').removeClass('d-flex');
+                            $('#billModal .modal-footer div.row.w-100 div:nth-child(2)').html(`
+                            <div class="row h-100">
+                                <div class="col-md-12 d-flex align-items-center justify-content-center">
+                                    <span><a href="#" class="text-white" onclick="makeRecurring('bill')">Make Recurring</a></span>
+                                    <span class="mx-3 divider"></span>
+                                    <span>
+                                        <div class="dropup">
+                                            <a href="javascript:void(0);" class="text-white" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
+                                            <div class="dropdown-menu">
+                                                <a class="dropdown-item" href="#" id="copy-bill">Copy</a>
+                                                <a class="dropdown-item" href="#" id="delete-bill">Delete</a>
+                                                <a class="dropdown-item" href="#">Transaction journal</a>
+                                                <a class="dropdown-item" href="#">Audit history</a>
+                                            </div>
+                                        </div>
+                                    </span>
+                                </div>
+                            </div>`);
+                        break;
+                        case 'purchaseOrderModal' :
+                            var type = 'purchase-order';
+
+                            $('#purchaseOrderModal .modal-footer div.row.w-100 div:nth-child(2) div.row div.dropup div.dropdown-menu').append(`
+                            <span class="mx-3 divider"></span>
+                            <span>
+                                <div class="dropup">
+                                    <a href="javascript:void(0);" class="text-white" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="#" id="copy-purchase-order">Copy</a>
+                                        <a class="dropdown-item" href="#" id="delete-purchase-order">Delete</a>
+                                        <a class="dropdown-item" href="#">Audit history</a>
+                                    </div>
+                                </div>
+                            </span>`);
+                        break;
+                        case 'vendorCreditModal' :
+                            var type = 'vendor-credit';
+
+                            $('#vendorCreditModal .modal-footer div.row.w-100 div:nth-child(2)').removeClass('d-flex');
+                            $('#vendorCreditModal .modal-footer div.row.w-100 div:nth-child(2)').html(`
+                            <div class="row h-100">
+                                <div class="col-md-12 d-flex align-items-center justify-content-center">
+                                    <span><a href="#" class="text-white" onclick="makeRecurring('vendor_credit')">Make Recurring</a></span>
+                                    <span class="mx-3 divider"></span>
+                                    <span>
+                                        <div class="dropup">
+                                            <a href="javascript:void(0);" class="text-white" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
+                                            <div class="dropdown-menu">
+                                                <a class="dropdown-item" href="#" id="copy-vendor-credit">Copy</a>
+                                                <a class="dropdown-item" href="#" id="delete-vendor-credit">Delete</a>
+                                                <a class="dropdown-item" href="#">Transaction journal</a>
+                                                <a class="dropdown-item" href="#">Audit history</a>
+                                            </div>
+                                        </div>
+                                    </span>
+                                </div>
+                            </div>`);
+                        break;
+                        case 'creditCardCreditModal' :
+                            var type = 'credit-card-credit';
+
+                            $('#creditCardCreditModal .modal-footer div.row.w-100 div:nth-child(2)').removeClass('d-flex');
+                            $('#creditCardCreditModal .modal-footer div.row.w-100 div:nth-child(2)').html(`
+                            <div class="row h-100">
+                                <div class="col-md-12 d-flex align-items-center justify-content-center">
+                                    <span><a href="#" class="text-white" onclick="makeRecurring('credit_card_credit')">Make Recurring</a></span>
+                                    <span class="mx-3 divider"></span>
+                                    <span>
+                                        <div class="dropup">
+                                            <a href="javascript:void(0);" class="text-white" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
+                                            <div class="dropdown-menu">
+                                                <a class="dropdown-item" href="#" id="copy-cc-credit">Copy</a>
+                                                <a class="dropdown-item" href="#" id="void-cc-credit">Void</a>
+                                                <a class="dropdown-item" href="#" id="delete-cc-credit">Delete</a>
+                                                <a class="dropdown-item" href="#">Transaction journal</a>
+                                                <a class="dropdown-item" href="#">Audit history</a>
+                                            </div>
+                                        </div>
+                                    </span>
+                                </div>
+                            </div>`);
+                        break;
+                        case 'singleTimeModal' :
+                            var type = 'time-activity';
+
+                            $('#singleTimeModal .modal-footer div.row.w-100 div:nth-child(2)').html(`<a href="#" class="text-white m-auto" id="delete-time-activity">Delete</a>`);
+                        break;
+                        case 'journalEntryModal' :
+                            var type = 'journal';
+
+                            $('#journalEntryModal .modal-footer div.row.w-100 div:nth-child(2)').removeClass('d-flex');
+                            $('#journalEntryModal .modal-footer div.row.w-100 div:nth-child(2)').html(`
+                            <div class="row h-100">
+                                <div class="col-md-12 d-flex align-items-center justify-content-center">
+                                    <span><a href="#" class="text-white">Reverse</a></span>
+                                    <span class="mx-3 divider"></span>
+                                    <span><a href="#" class="text-white" onclick="makeRecurring('journal_entry')">Make Recurring</a></span>
+                                    <span class="mx-3 divider"></span>
+                                    <span>
+                                        <div class="dropup">
+                                            <a href="javascript:void(0);" class="text-white" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
+                                            <div class="dropdown-menu">
+                                                <a class="dropdown-item" href="#" id="copy-journal-entry">Copy</a>
+                                                <a class="dropdown-item" href="#" id="delete-journal-entry">Delete</a>
+                                                <a class="dropdown-item" href="#">Transaction journal</a>
+                                                <a class="dropdown-item" href="#">Audit history</a>
+                                            </div>
+                                        </div>
+                                    </span>
+                                </div>
+                            </div>`);
+                        break;
+                        case 'inventoryModal' :
+                            var type = 'inventory-qty-adjust';
+                        break;
+                        case 'payDownCreditModal' :
+                            var type = 'credit-card-payment';
+
+                            $('#payDownCreditModal .modal-footer div.row.w-100 div:nth-child(2)').html(`
+                            <div class="dropup m-auto">
+                                <a href="javascript:void(0);" class="text-white" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="#" id="void-credit-card-payment">Void</a>
+                                    <a class="dropdown-item" href="#" id="delete-credit-card-payment">Delete</a>
+                                    <a class="dropdown-item" href="#">Transaction journal</a>
+                                    <a class="dropdown-item" href="#">Audit history</a>
+                                </div>
+                            </div>`);
+                        break;
+                        case 'receivePaymentModal' :
+                            var type = 'receive-payment';
+
+                            $('#receivePaymentModal .modal-footer div.row.w-100 div:nth-child(2)').removeClass('d-flex');
+                            $('#receivePaymentModal .modal-footer div.row.w-100 div:nth-child(2)').html(`
+                            <div class="row h-100">
+                                <div class="col-md-12 d-flex align-items-center justify-content-center">
+                                    <span><a href="#" class="text-white" id="save-and-print">Print</a></span>
+                                    <span class="mx-3 divider"></span>
+                                    <span>
+                                        <div class="dropup">
+                                            <a href="javascript:void(0);" class="text-white" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
+                                            <div class="dropdown-menu">
+                                                <a class="dropdown-item" href="#" id="void-payment">Void</a>
+                                                <a class="dropdown-item" href="#" id="delete-payment">Delete</a>
+                                                <a class="dropdown-item" href="#">Transaction journal</a>
+                                                <a class="dropdown-item" href="#">Audit history</a>
+                                            </div>
+                                        </div>
+                                    </span>
+                                </div>
+                            </div>`);
+                        break;
+                        case 'invoiceModal' :
+                            var type = 'invoice';
+
+                            $('#invoiceModal .modal-footer div.row.w-100 div:nth-child(2) div.row div').append(`
+                            <span class="mx-3 divider"></span>
+                            <span>
+                                <div class="dropup">
+                                    <a href="javascript:void(0);" class="text-white" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="#" id="copy-invoice">Copy</a>
+                                        <a class="dropdown-item" href="#" id="void-invoice">Void</a>
+                                        <a class="dropdown-item" href="#" id="delete-invoice">Delete</a>
+                                        <a class="dropdown-item" href="#">Transaction journal</a>
+                                        <a class="dropdown-item" href="#">Audit history</a>
+                                    </div>
+                                </div>
+                            </span>`);
+                        break;
+                        case 'weeklyTimesheetModal' :
+                            var type = 'weekly-timesheet';
+                        break;
+                        case 'creditMemoModal' :
+                            var type = 'credit-memo';
+
+                            $('#creditMemoModal .modal-footer div.row.w-100 div:nth-child(2) div.row div').append(`
+                            <span class="mx-3 divider"></span>
+                            <span>
+                                <div class="dropup">
+                                    <a href="javascript:void(0);" class="text-white" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="#" id="copy-credit-memo">Copy</a>
+                                        <a class="dropdown-item" href="#" id="void-credit-memo">Void</a>
+                                        <a class="dropdown-item" href="#" id="delete-credit-memo">Delete</a>
+                                        <a class="dropdown-item" href="#">Transaction journal</a>
+                                        <a class="dropdown-item" href="#">Audit history</a>
+                                    </div>
+                                </div>
+                            </span>`);
+                        break;
+                        case 'salesReceiptModal' :
+                            var type = 'sales-receipt';
+
+                            $('#salesReceiptModal .modal-footer div.row.w-100 div:nth-child(2) div.row div').append(`
+                            <span class="mx-3 divider"></span>
+                            <span>
+                                <div class="dropup">
+                                    <a href="javascript:void(0);" class="text-white" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="#" id="copy-sales-receipt">Copy</a>
+                                        <a class="dropdown-item" href="#" id="void-sales-receipt">Void</a>
+                                        <a class="dropdown-item" href="#" id="delete-sales-receipt">Delete</a>
+                                        <a class="dropdown-item" href="#">Transaction journal</a>
+                                        <a class="dropdown-item" href="#">Audit history</a>
+                                    </div>
+                                </div>
+                            </span>`);
+                        break;
+                        case 'refundReceiptModal' :
+                            var type = 'refund-receipt';
+
+                            $('#refundReceiptModal .modal-footer div.row.w-100 div:nth-child(2) div.row div').prepend(`
+                            <span><a href="#" class="text-white">Order checks</a></span>
+                            <span class="mx-3 divider"></span>`);
+                            $('#refundReceiptModal .modal-footer div.row.w-100 div:nth-child(2) div.row div').append(`
+                            <span class="mx-3 divider"></span>
+                            <span>
+                                <div class="dropup">
+                                    <a href="javascript:void(0);" class="text-white" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="#" id="copy-refund-receipt">Copy</a>
+                                        <?php if($receipt->status !== "4") : ?>
+                                        <a class="dropdown-item" href="#" id="void-refund-receipt">Void</a>
+                                        <?php endif; ?>
+                                        <a class="dropdown-item" href="#" id="delete-refund-receipt">Delete</a>
+                                        <a class="dropdown-item" href="#">Transaction journal</a>
+                                        <a class="dropdown-item" href="#">Audit history</a>
+                                    </div>
+                                </div>
+                            </span>`);
+                        break;
+                    }
+
                     $('#modal-container #modal-form').attr('data-href', `/accounting/update-transaction/${type}/${res.data}`);
                     $('#modal-container #modal-form').attr('onsubmit', 'updateTransaction(event, this)');
                 }
 
                 if(submitType === 'save-and-send' && modalId === '#purchaseOrderModal') {
-                    $('#modal-container #modal-form').attr('data-href', `/accounting/update-transaction/${type}/${res.data}`);
-                    $('#modal-container #modal-form').attr('onsubmit', 'updateTransaction(event, this)');
-
                     sendPurchaseOrder(res.data);
                 }
 
                 if(submitType === 'save-and-print') {
-                    $('#modal-container #modal-form').attr('data-href', `/accounting/update-transaction/${type}/${res.data}`);
-                    $('#modal-container #modal-form').attr('onsubmit', 'updateTransaction(event, this)');
-
                     switch(type) {
                         case 'purchase-order' :
                             printPurchaseOrder();

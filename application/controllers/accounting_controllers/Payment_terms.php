@@ -197,7 +197,7 @@ class Payment_terms extends MY_Controller {
         $result = [];
 
         $delete = $this->accounting_terms_model->delete($id);
-        $name = $this->accounting_terms_model->getById($id)->name;
+        $name = $this->accounting_terms_model->get_by_id($id, logged('company_id'))->name;
 
         if($delete) {
             $this->session->set_flashdata('success', "$name is now inactive!");
@@ -211,7 +211,7 @@ class Payment_terms extends MY_Controller {
         $result = [];
 
         $activate = $this->accounting_terms_model->activate($id);
-        $name = $this->accounting_terms_model->getById($id)->name;
+        $name = $this->accounting_terms_model->get_by_id($id, logged('company_id'))->name;
 
         if($activate) {
             $this->session->set_flashdata('success', "$name is now active!");
@@ -222,7 +222,7 @@ class Payment_terms extends MY_Controller {
 
     public function edit($id)
     {
-        $this->page_data['term'] = $this->accounting_terms_model->getById($id);
+        $this->page_data['term'] = $this->accounting_terms_model->get_by_id($id, logged('company_id'));
 
         $this->load->view('accounting/modals/term_modal', $this->page_data);
     }

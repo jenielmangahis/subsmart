@@ -148,6 +148,26 @@ export function generateDisputeLetter(payload) {
   );
 }
 
+export function saveFurnisher(payload) {
+  return http.post(`${prefixURL}/EsignEditor/apiSaveFurnisher`, payload);
+}
+
+export function fetchReasons() {
+  return http.get(`${prefixURL}/EsignEditor/apiFetchReasons`);
+}
+
+export function saveReason(payload) {
+  return http.post(`${prefixURL}/EsignEditor/apiSaveReason`, payload);
+}
+
+export function deleteReason(id) {
+  return http.delete(`${prefixURL}/EsignEditor/apiDeleteReason/${id}`);
+}
+
+export function editReason(id, payload) {
+  return http.post(`${prefixURL}/EsignEditor/apiEditReason/${id}`, payload);
+}
+
 const http = {
   post: sendPost,
   delete: sendDelete,

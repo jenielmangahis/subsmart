@@ -107,6 +107,10 @@
     font-size: 17px;
     font-weight: bold;
   }
+  .custom-spinner{
+    position: relative;
+    top: -3px;
+  }
 </style>
 <div class="wrapper" role="wrapper">
   <?php include viewPath('includes/sidebars/marketing'); ?>
@@ -185,7 +189,7 @@
             </div> -->
           </div>
           <div class="text-center" style="margin-top: 20px;">
-            <button type="button" id="#btnSubmitSurvey" style="width:100%;" onclick="submitSurvey(event)" class="btn btn-primary my-3 text-center px-5"><strong><i class="fa fa-plus-square-o"></i> Create Survey</strong></button>            
+            <button type="button" id="btnSubmitSurvey" style="width:100%;" onclick="submitSurvey(event)" class="btn btn-primary my-3 text-center px-5"><strong><i class="fa fa-plus-square-o"></i> Create Survey</strong></button>            
           </div>
         </div>
         <!-- <div class="form-group">
@@ -706,7 +710,9 @@
     }
 
     if(errors === false){
-      e.target.innerHTML = '<span class="spinner-border spinner-border-sm m-0" role="status" aria-hidden="true"></span> <strong>Submitting </strong>';
+      $('#btnSubmitSurvey').html('<span class="spinner-border custom-spinner spinner-border-sm m-0" role="status" aria-hidden="true"></span> <strong> Creating Survey</strong>');
+      //e.target.innerHTML = '';
+      //e.target.innerHTML = '<span class="spinner-border custom-spinner spinner-border-sm m-0" role="status" aria-hidden="true"></span> <strong> Creating Survey</strong>';
   
       setTimeout(() => {
         // add survey
@@ -722,7 +728,8 @@
             }else{
               toastr["success"]("Survey added!");
             }
-            e.target.innerHTML = '<strong><i class="fa fa-plus-square-o"></i> Create Survey</strong>';
+            $('#btnSubmitSurvey').html('<strong><i class="fa fa-plus-square-o"></i> Create Survey</strong>');
+            //e.target.innerHTML = '<strong><i class="fa fa-plus-square-o"></i> Create Survey</strong>';
             window.location = '<?php echo base_url();?>survey/edit/'+payload.data.id;
           }
         })

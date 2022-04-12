@@ -145,6 +145,7 @@
   <body>
       <script>
         console.log(<?= json_encode($questions)?>);
+        var surveyBaseUrl = '<?= base_url() ?>';
       </script>
     <?php
       $image_half = null;
@@ -367,7 +368,7 @@
                                                 <span class="input-group-text">Upload</span>
                                               </div>
                                               <div class="custom-file">
-                                                <input name="answer-<?=$question->id?>" type="file" class="custom-file-input form-control" id="inputGroupFile01">
+                                                <input name="answer-<?=$question->id?>" data-id="<?=$question->id?>" type="file" class="custom-file-input form-control" id="inputGroupFile01">
                                                 <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
                                               </div>
                                             </div>
@@ -388,7 +389,7 @@
                                           <?php $type = 'short_text'; ?>
                                           <div class="form-group input-content">
                                             <div class="form-survery-item-error-<?= $question->id; ?>"></div>
-                                            <input type="text" class="form-control survey-item-<?= $question->id; ?>" name="answer-<?=$question->id?>" value="" placeholder="Enter your answer">
+                                            <input type="text" class="form-control survey-item-<?= $question->id; ?>" <?= $question->mincharacters > 0 ? 'minlength="'.$question->mincharacters.'"' : ''; ?> <?= $question->maxcharacters > 0 ? 'maxlength="'.$question->maxcharacters.'"' : ''; ?> name="answer-<?=$question->id?>" value="" placeholder="Enter your answer">
                                           </div>
                                         <?php
                                         break;
@@ -430,7 +431,7 @@
                                           <?php $type = 'statement'; ?>
                                           <div class="form-group input-content">
                                             <div class="form-survery-item-error-<?= $question->id; ?>"></div>
-                                            <textarea class="form-control" name="answer-<?=$question->id?>" rows="5" placeholder="Enter your answer"></textarea>
+                                            <textarea class="form-control" <?= $question->mincharacters > 0 ? 'minlength="'.$question->mincharacters.'"' : ''; ?> <?= $question->maxcharacters > 0 ? 'maxlength="'.$question->maxcharacters.'"' : ''; ?> name="answer-<?=$question->id?>" rows="5" placeholder="Enter your answer"></textarea>
                                           </div>
                                         <?php
                                         break;
@@ -517,7 +518,7 @@
                                                 <span class="input-group-text">Upload</span>
                                               </div>
                                               <div class="custom-file">
-                                                <input name="answer-<?=$question->id?>" type="file" class="custom-file-input" id="inputGroupFile01">
+                                                <input name="answer-<?=$question->id?>" data-id="<?=$question->id?>" type="file" class="custom-file-input" id="inputGroupFile01">
                                                 <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
                                               </div>
                                             </div>
@@ -568,7 +569,7 @@
                             <div class="line-separator" style="background-color: <?=  $survey_theme !== null ? $survey_theme->sth_secondary_color : "" ?>"></div>
                             
                             <!-- <button id="from-top" data-id="<?= count($questions) ?>"  class="btn btn-md  btn-outline-secondary" type="submit" style="background-color: <?= $survey_theme !== null ?  $survey_theme->sth_secondary_color : ""?>; color: <?= $survey_theme !== null ? $survey_theme->sth_text_color : ""?>">Back to Top</button> -->
-                            <?php
+                            <?php                            
                               if(strpos(uri_string(), 'preview') !== false){
                                 if(isset($_GET["src"])){
                                   ?>
@@ -704,7 +705,7 @@
                   if(isset($_GET['st'])){
                     if($survey->redirectionLink != '' || $survey->redirectionLink != null ){
                       ?>
-                        window.location="<?=$survey->redirectionLink?>"
+                        location.href ="<?=$survey->redirectionLink; ?>"
                       <?php
                     }else{
                       ?>
@@ -732,6 +733,14 @@
           var next_id = 0;
           pageNumber = 1;
           surveyScore = 0;
+
+          answeredFields = 0;
+          progress = answeredFields / numQuestions * 100;
+          $('#survey-progress-bar').css("width", progress+"%");
+
+          pageNumber = 1
+          $('#page-current-number').html(pageNumber);
+
           $('#question-'+id+'').addClass('d-none');
           $('#question-'+ next_id +'').removeClass('d-none');
           $('#preview-end-note').addClass('d-none');
@@ -769,6 +778,10 @@
             $('#question-'+prev_id+' #question').html(question);
           }
 
+          answeredFields = answeredFields - 1;
+          progress = answeredFields / numQuestions * 100;
+          $('#survey-progress-bar').css("width", progress+"%");
+
           pageNumber = prev_id + 1
           $('#page-current-number').html(pageNumber);
           $('#question-'+id+'').addClass('d-none');
@@ -790,8 +803,8 @@
           var value = $('#question-'+id+' [name*="answer"]').val();
           let correctAnswer = $(this).data('correct-answer');
 
-          console.log(value);
-          console.log(correctAnswer);
+          /*console.log(value);
+          console.log(correctAnswer);*/
           <?php
             if(!isset($_GET["src"])){
               if($survey->isScoreMonitored == 1){
@@ -810,10 +823,9 @@
             }
           ?>
 
-          if(value){
-            answeredFields = (tempid === 12 || tempid === 1) ? null :  answeredFields++;
-          }
-        
+          /*if(value){
+            answeredFields = (tempid === 12 || tempid === 1) ? null :  answeredFields++;            
+          }*/        
 
           //if(urlParams.get('mode') != 'preview'){
             if(isRequired && $('#question-'+id+' [name*="answer"]').val() == ""){
@@ -878,8 +890,9 @@
             
             $('#question-'+next_id+' #question').html(question);
           }
-          
-          progress = answeredFields / numQuestions * 100;
+            
+          answeredFields = answeredFields + 1;
+          progress       = answeredFields / numQuestions * 100;
           $('#survey-progress-bar').css("width", progress+"%");
           pageNumber = next_id + 1;
           $('#page-current-number').html(pageNumber);

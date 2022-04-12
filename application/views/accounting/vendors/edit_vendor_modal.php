@@ -205,7 +205,7 @@
                                                         <label for="terms">Terms</label>
                                                         <select class="form-control" name="terms" id="terms">
                                                             <?php if(!in_array($vendorDetails->terms, [null, '', '0'])) : ?>
-                                                            <option value="<?=$vendorDetails->terms?>"><?=$this->accounting_terms_model->getById($vendorDetails->terms)->name?></option>
+                                                            <option value="<?=$vendorDetails->terms?>"><?=$this->accounting_terms_model->get_by_id($vendorDetails->terms, logged('company_id'))->name?></option>
                                                             <?php endif; ?>
                                                         </select>
                                                     </div>

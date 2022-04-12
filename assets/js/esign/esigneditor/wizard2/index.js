@@ -38,6 +38,8 @@ window.document.addEventListener("DOMContentLoaded", async () => {
     add_new_reasons: addNewReasons,
     hide_reason_form: hideReasonForm,
     toggle_instructions: toggleInstructions,
+    save_creditor: saveCreditor,
+    save_reason: saveReason,
   };
 
   $actions.forEach(($action) => {
@@ -50,6 +52,9 @@ window.document.addEventListener("DOMContentLoaded", async () => {
 
   const $addItemModal = document.getElementById("additemmodal");
   $($addItemModal).on("show.bs.modal", displayCustomerDisputeItems);
+
+  const $reasonsModal = document.getElementById("manageReasonModal");
+  $($reasonsModal).on("show.bs.modal", displayReasons);
 });
 
 function onNoDispute() {
@@ -763,4 +768,131 @@ function toggleInstructions() {
   const $modal = document.getElementById("newdisputemodal");
   const $instructions = $modal.querySelector(".instructions");
   $instructions.classList.toggle("instructions--showInput");
+}
+
+async function saveCreditor() {
+  const $modal = document.getElementById("addCreditorModal");
+  const $dataTypes = $modal.querySelectorAll("[data-type]");
+  const $button = $modal.querySelector("[data-action=save_creditor]");
+  const payload = {};
+
+  for (let index = 0; index < $dataTypes.length; index++) {
+    const $input = $dataTypes[index];
+    const key = $input.dataset.type;
+    const value = $input.value.trim();
+
+    if (!value.length && $input.hasAttribute("required")) {
+      $input.focus();
+      return;
+    }
+
+    if (value.length) {
+      payload[key] = value;
+    }
+  }
+
+  await window.helpers.submitBtn($button, () => {
+    return window.api.saveFurnisher(payload);
+  });
+
+  [...$dataTypes].forEach(($input) => {
+    $input.value = "";
+  });
+
+  backToAddDisputeModal();
+}
+
+async function displayReasons() {
+  const $modal = document.getElementById("manageReasonModal");
+  const $table = $modal.querySelector("table");
+
+  if ($table.classList.contains("loaded")) {
+    return;
+  }
+
+  const { data } = await window.api.fetchReasons();
+  const $fragment = document.createDocumentFragment();
+  data.forEach((currData) => {
+    $fragment.appendChild(createReasonRow(currData));
+  });
+
+  $table.querySelector("tbody").appendChild($fragment);
+  $table.classList.add("loaded");
+}
+
+function createReasonRow(data) {
+  const $modal = document.getElementById("manageReasonModal");
+  const $template = $modal.querySelector("template");
+
+  const $copy = document.importNode($template.content, true);
+  const $name = $copy.querySelector("[data-detail=name]");
+  $name.textContent = data.reason;
+
+  const $actions = $copy.querySelector("[data-detail=actions]");
+  const $locked = $copy.querySelector("[data-detail=locked]");
+  if (data.company_id == 0) {
+    $actions.classList.remove("d-inline-flex");
+    $actions.classList.add("d-none");
+    $locked.classList.remove("d-none");
+  } else {
+    $locked.classList.add("d-none");
+  }
+
+  const actions = {
+    delete: async () => {
+      if (!confirm("Are you sure you want to delete this reason?")) return;
+      await window.api.deleteReason(data.id);
+      const $row = $modal.querySelector(`[data-id="${data.id}"]`);
+      if ($row) {
+        $row.remove();
+      }
+    },
+    edit: async () => {
+      const newReason = prompt("Enter name:", data.reason);
+      if (newReason && newReason.trim().length) {
+        const response = await window.api.editReason(data.id, {
+          reason: newReason,
+        });
+
+        const $row = $modal.querySelector(`[data-id="${data.id}"]`);
+        if ($row) {
+          $row.querySelector("[data-detail=name]").textContent =
+            response.data.reason;
+        }
+      }
+    },
+  };
+
+  const $buttons = $actions.querySelectorAll("[data-action]");
+  $buttons.forEach(($button) => {
+    const action = $button.dataset.action;
+    if (typeof actions[action] === "function") {
+      $button.addEventListener("click", actions[action]);
+    }
+  });
+
+  const $retval = $copy.firstElementChild;
+  $retval.dataset.id = data.id;
+  return $retval;
+}
+
+async function saveReason() {
+  const $modal = document.getElementById("manageReasonModal");
+  const $input = $modal.querySelector("[data-type=reason]");
+
+  const value = $input.value.trim();
+  if (!value.length) {
+    $input.focus();
+    return;
+  }
+
+  const $button = $modal.querySelector("[data-action=save_reason]");
+  const { data } = await window.helpers.submitBtn($button, () => {
+    return window.api.saveReason({ reason: value });
+  });
+
+  const $table = $modal.querySelector("table");
+  const $row = createReasonRow(data);
+  $table.querySelector("tbody").appendChild($row);
+  $input.value = "";
 }

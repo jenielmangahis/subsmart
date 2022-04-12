@@ -1328,4 +1328,94 @@ SQL;
             return $retval;
         }
     }
+
+    public function apiSaveFurnisher()
+    {
+        header('content-type: application/json');
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['success' => false]);
+            return;
+        }
+
+        $payload = json_decode(file_get_contents('php://input'), true);
+        $now = date('Y-m-d H:i:s');
+
+        $this->db->insert('furnishers', array_merge($payload, [
+            'company_id' => logged('company_id'),
+            'date_created' => $now,
+            'date_modified' => $now,
+        ]));
+
+        $this->db->where('id', $this->db->insert_id());
+        $furnisher = $this->db->get('furnishers')->row();
+        echo json_encode(['data' => $furnisher]);
+    }
+
+    public function apiFetchReasons()
+    {
+        $this->db->where('company_id', logged('company_id'));
+        $this->db->or_group_start();
+        $this->db->where('company_id', 0);
+        $this->db->group_end();
+        $reasons = $this->db->get('company_reasons')->result();
+
+        header('content-type: application/json');
+        echo json_encode(['data' => $reasons]);
+    }
+
+    public function apiSaveReason()
+    {
+        header('content-type: application/json');
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['success' => false]);
+            return;
+        }
+
+        $payload = json_decode(file_get_contents('php://input'), true);
+        $now = date('Y-m-d H:i:s');
+
+        $this->db->insert('company_reasons', array_merge($payload, [
+            'company_id' => logged('company_id'),
+            'date_created' => $now,
+            'date_modified' => $now,
+        ]));
+
+        $this->db->where('id', $this->db->insert_id());
+        $reason = $this->db->get('company_reasons')->row();
+        echo json_encode(['data' => $reason]);
+    }
+
+    public function apiDeleteReason($id)
+    {
+        header('content-type: application/json');
+        if ($_SERVER['REQUEST_METHOD'] !== 'DELETE') {
+            echo json_encode(['success' => false]);
+            return;
+        }
+
+        $this->db->where('id', $id);
+        $this->db->delete('company_reasons');
+        echo json_encode(['data' => $id]);
+    }
+
+    public function apiEditReason($id)
+    {
+        header('content-type: application/json');
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['success' => false]);
+            return;
+        }
+
+        $payload = json_decode(file_get_contents('php://input'), true);
+
+        $this->db->where('id', $id);
+        $this->db->update('company_reasons', [
+            'reason' => $payload['reason'],
+            'date_modified' => date('Y-m-d H:i:s'),
+        ]);
+
+        $this->db->where('id', $id);
+        $reason = $this->db->get('company_reasons')->row();
+        echo json_encode(['data' => $reason]);
+    }
 }

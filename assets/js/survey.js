@@ -747,7 +747,11 @@ $(document).ready(function(){
           }
           break;
         default:
-          var data = new FormData($(this).parent().parent().parent().parent().parent().parent().parent()[0]);
+
+          //var data = new FormData($(this).parent().parent().parent().parent().parent().parent().parent()[0]);
+          var data = new FormData();
+          data.append( 'file', $(this)[0].files[0]);
+          
           $('.custom-file-label').html(fileName);
           $.ajax({
             url: surveyBaseUrl + 'survey/question/upload/'+ id,
@@ -1007,6 +1011,61 @@ function load_questions_list(survey_id){
         });     
       }
     });
-  });  
+  }); 
+
+  $(document).on('change', '.chk-redirect-oncomplete', function(){
+    if( $(this).is(':checked') ){      
+      $("#txtRedirectionLink").prop("disabled", false);      
+    }else{      
+      $("#txtRedirectionLink").val('');
+      $("#txtRedirectionLink").prop("disabled", true);
+    }
+  }); 
+
+  $(document).on('click', '.btn-survey-update-settings', function(){
+    var setting_sid = $('#settings-sid').val();
+    var is_valid = false;
+    var err_msg  = '';
+    if( $('#canRedirectOnComplete'+setting_sid).is(':checked') ){
+      var redirectLink = $('#txtRedirectionLink').val();
+      if( redirectLink !== '' ){
+        if( settings_is_valid_url(redirectLink) ){
+          is_valid = true;
+        }else{
+          err_msg = 'Not a valid url. Please follow format https://www.yourdomain.com';
+        }
+      }else{
+        err_msg = 'Please specify redirection url';
+      }
+    }else{
+      is_valid = true;
+    }
+
+    if( is_valid ){
+      $(".btn-survey-update-settings").html('<span class="spinner-border spinner-border-sm m-0"></span> Saving');
+      $.ajax({
+        url: surveyBaseUrl + '/survey/_update_settings',
+        type: 'POST',
+        data:$("#survery-settings").serialize(),
+        dataType: 'json',
+        success: function(res){ 
+          if( res.is_success ){
+            $(".btn-survey-update-settings").html('Save Changes');
+            toastr["success"]("Settings updated!");
+          }else{
+            $(".btn-survey-update-settings").html('Save Changes');
+            toastr["error"]("Cannot update settings!");
+          }
+          
+        }
+      });
+    }else{
+      toastr["error"](err_msg);
+    }    
+  });
+
+  function settings_is_valid_url(url) {
+      return /^(http(s)?:\/\/)?(www\.)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/.test(url);
+  }
 
 });

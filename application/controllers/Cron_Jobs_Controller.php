@@ -1931,6 +1931,7 @@ class Cron_Jobs_Controller extends CI_Controller
     private function occur_invoice($invoiceId)
     {
         $this->load->model('invoice_settings_model');
+        $this->load->model('accounting_terms_model');
         $invoice = $this->invoice_model->getinvoice($invoiceId);
         $attachments = $this->accounting_attachments_model->get_attachments('Invoice', $invoiceId);
         $tags = $this->tags_model->get_transaction_tags('Invoice', $invoiceId);
@@ -1940,6 +1941,29 @@ class Cron_Jobs_Controller extends CI_Controller
         $lastNumber = $this->invoice_model->get_last_invoice_number($invoice->company_id, $invoiceSettings->invoice_num_prefix);
         $invoiceNo = "$invoiceSettings->invoice_num_prefix".str_pad(intval($lastNumber) + 1, 9, "0", STR_PAD_LEFT);
 
+        $date = date("Y-m-d");
+        $term = $this->accounting_terms_model->get_by_id($invoice->terms, $invoice->company_id);
+
+        if($term->type === "1") {
+            $dueDate = date("Y-m-d", strtotime("$date + $term->net_due_days days"));
+        } else {
+            if(in_array($term->minimum_days_to_pay, ['', "0", null])) {
+                $dueDate = date("Y-m-$term->day_of_month_due");
+                if(intval(date("d")) > intval($term->day_of_month_due)) {
+                    $dueDate = date("Y-m-d", strtotime("$dueDate + 1 month"));
+                }
+            } else {
+                $expectedDate = intval($term->day_of_month_due) - intval($term->minimum_days_to_pay);
+                $expectedDue = date("Y-m-$expectedDate");
+
+                if(intval(date("d")) > $expectedDate) {
+                    $dueDate = date("Y-m-$term->day_of_month_due");
+                } else {
+                    $dueDate = date("Y-m-d", strtotime("+ $term->day_of_month_due days"));
+                }
+            }
+        }
+
         $invoiceData = [
             'customer_id' => $invoice->customer_id,
             'job_location' => $invoice->job_location,
@@ -1947,8 +1971,8 @@ class Cron_Jobs_Controller extends CI_Controller
             'work_order_number' => $invoice->work_order_number,
             'po_number' => $invoice->po_number,
             'invoice_number' => $invoiceNo,
-            'date_issued' => date("Y-m-d"),
-            'due_date' => date("Y-m-d", strtotime($invoice->due_date)),
+            'date_issued' => $date,
+            'due_date' => date("Y-m-d", strtotime($dueDate)),
             'status' => 'Schedule',
             'customer_email' => $invoice->customer_email,
             'billing_address' => nl2br($invoice->billing_address),

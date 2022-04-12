@@ -302,7 +302,6 @@ class Survey extends MY_Controller
     exit;
   }
   public function preview($id){
-
     add_css(array(
         'assets/dashboard/css/bootstrap.min.css',
     ));
@@ -576,5 +575,50 @@ class Survey extends MY_Controller
 
     echo json_encode($result);
     exit;
+  }
+
+  public function ajax_update_settings()
+  {
+      $is_success = false;
+      $post = $this->input->post();   
+
+      if( $post['sid'] > 0 ){
+        $survey = $this->survey_model->view($post['sid']);
+        if( $survey ){
+
+          $isScoreMonitored = 0;
+          if( isset($post['isScoreMonitored']) ){
+            $isScoreMonitored = 1;
+          }
+
+          $canRedirectOnComplete = 0;
+          $redirectionLink = '';
+          if( isset($post['can_redirect_oncomplete']) ){
+            $canRedirectOnComplete = 1;
+            $redirectionLink = $post['txtRedirectionLink'];
+          }
+
+          $hasProgressBar = 0;
+          if( isset($post['show_progress']) ){
+            $hasProgressBar = 1;
+          }
+
+          $data = [
+            'title' => $post['txtSurveyTitle'],
+            'workspace_id' => $post['selWorkspace'],
+            'isScoreMonitored' => $isScoreMonitored,
+            'hasProgressBar' => $hasProgressBar,
+            'canRedirectOnComplete' => $canRedirectOnComplete,
+            'redirectionLink' => $redirectionLink,
+          ];
+
+          $this->survey_model->update($post['sid'], $data);
+
+          $is_success = true;
+        }
+      }
+
+      $json_data = ['is_success' => $is_success];
+      echo json_encode($json_data);
   }
 }
