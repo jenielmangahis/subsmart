@@ -151,11 +151,18 @@
       $image_half = null;
       $question_length = count($questions);
       $scored_question_length = 0;
+      $score_counted_questions = 0;
+      foreach( $questions as $q ){
+        if( $q->isScoreCounted == 1 ){
+          $score_counted_questions++;
+        } 
+      }
 
 
       foreach($questions as $question){
         if($question->isScoreCounted == 1 ){
           $scored_question_length++;
+          $score_counted_questions++;
         }
         if($question->template_id == 1 || $question->template_id == 19){
           $question_length--;
@@ -169,7 +176,7 @@
             if(isset($_GET['src'])){
               if($_GET['src'] == "results" ){
                 ?>
-                  <a type="button" class="btn btn-outline-light btn-sm" onclick="window.location.reload()" href="#">Refresh</a>
+                  <a type="button" class="btn btn-outline-light btn-sm" onclick="window.location.reload()" href="javascript:void(0);">Refresh</a>
                 <?php
               }
             }else{
@@ -311,30 +318,37 @@
                                       case 2; // long text
                                       
                                         ?>
+                                          <div class="form-survery-item-error-<?= $question->id; ?>"></div>
                                           <div class="inp ut-content form-group">
                                             <textarea class="form-control" name="answer-<?=$question->id?>" rows="5" placeholder="Enter your answer"></textarea>
                                           </div>
                                         <?php
                                         break;
                                       case 3: // single choice
-                                        foreach ($question->questions as $key1 => $quest){
+                                      ?>
+                                      <?php $type = 'single_choice'; ?>
+                                      <div class="form-survery-item-error-<?= $question->id; ?>"></div>
+                                      <?php foreach ($question->questions as $key1 => $quest){
                                           ?>
                                             <div class="input-group input-content mb-1">
                                               <div class="input-group-prepend">
                                                 <div class="input-group-text">
-                                                <input name="options" type="radio" aria-label="Radio button for following text input" >
+                                                <input name="answer-<?=$question->id?>" type="radio" class="chk-survey-<?=$question->id?>" value="<?=$quest->choices_label?>" aria-label="Radio button for following text input" >
                                                 </div>
                                               </div>
-                                              <input type="text" class="form-control" name="choices_label[]" value="<?=$quest->choices_label?>">
+                                              <input type="text" class="form-control" name="choices_label[]" value="<?=$quest->choices_label?>" readonly disabled>
                                             </div>
                                           <?php
                                         }
                                         break;
                                       case 4: //checkboxes
-                                        foreach ($question->questions as $key1 => $quest){
+                                      ?>
+                                      <?php $type = 'checkboxes'; ?>
+                                      <div class="form-survery-item-error-<?= $question->id; ?>"></div>
+                                      <?php foreach ($question->questions as $key1 => $quest){
                                           ?>
                                             <div class="form-check mb-1">
-                                              <input name="answer-<?=$question->id?>" type="checkbox" aria-label="Checkbox for following text input" value="<?=$quest->choices_label?>">
+                                              <input name="multiple-<?=$question->id?>[]" class="chk-survey-<?=$question->id?>" type="checkbox" aria-label="Checkbox for following text input" value="<?=$quest->choices_label?>">
                                               <label for="" class="form-check-label">
                                                 <?=$quest->choices_label?>
                                               </label>
@@ -566,6 +580,9 @@
 
                           <div class="result-survey">
                             <h1 class="font-weight-bold" style="color: <?= $survey_theme !== null ? $survey_theme->sth_text_color : ""?>">Survey completed!</h1>
+                            <?php if($survey->isScoreMonitored == 1){ ?>
+                              <div class="survey-score"></div>
+                            <?php } ?>
                             <div class="line-separator" style="background-color: <?=  $survey_theme !== null ? $survey_theme->sth_secondary_color : "" ?>"></div>
                             
                             <!-- <button id="from-top" data-id="<?= count($questions) ?>"  class="btn btn-md  btn-outline-secondary" type="submit" style="background-color: <?= $survey_theme !== null ?  $survey_theme->sth_secondary_color : ""?>; color: <?= $survey_theme !== null ? $survey_theme->sth_text_color : ""?>">Back to Top</button> -->
@@ -585,8 +602,8 @@
                                 ?>
                                   <div class="result-survey">
                                     <p style="color: <?= $survey_theme !== null ? $survey_theme->sth_text_color : ""?>">Before submitting, make sure you have answered all of the questions given. You can go back and review your answers, or submit your answers fully. </p>
-                                    <button id="btn-submit" type="submit" class="btn btn-md btn-primary" style="background-color: <?= $survey_theme !== null ? $survey_theme->sth_primary_color : ""?>; color: <?= $survey_theme !== null ? $survey_theme->sth_text_color : ""?>">Submit Answers</button><br/>
-                                    <a id="from-top" style="color: <?= $survey_theme->sth_text_color?>" href="#">I would like to check my answers once more</a>
+                                    <button id="btn-submit" type="submit" class="btn btn-md btn-primary" style="background-color: <?= $survey_theme !== null ? $survey_theme->sth_primary_color : ""?>; color: <?= $survey_theme !== null ? $survey_theme->sth_text_color : ""?>">Submit Answers</button><br />
+                                    <a id="from-top" style="color: <?= $survey_theme->sth_text_color?>;margin-top: 20px; display: block;" href="#">I would like to check my answers once more</a>
                                   </div>
                                 <?php
                               }
@@ -745,6 +762,7 @@
           $('#question-'+ next_id +'').removeClass('d-none');
           $('#preview-end-note').addClass('d-none');
           $('.result-survey').addClass('d-none');
+          $('.survey-score').html('');
         });
         
         $(document).on('click', '#btn-back', function(e){
@@ -803,25 +821,18 @@
           var value = $('#question-'+id+' [name*="answer"]').val();
           let correctAnswer = $(this).data('correct-answer');
 
-          /*console.log(value);
-          console.log(correctAnswer);*/
-          <?php
-            if(!isset($_GET["src"])){
-              if($survey->isScoreMonitored == 1){
-                ?>
-                  if(pageNumber == <?= count($questions)?>){
-                    setTimeout(() => {
-                      window.alert(`Your score is ${surveyScore} out of <?= $scored_question_length?>`)
-                    }, 1000);
-                  }else{
-                    if(value == correctAnswer){
-                      surveyScore++;
-                    }
-                  }
-                <?php
-              }
-            }
-          ?>
+          //Count correct answer
+          if( survey_type == 'checkboxes' || survey_type == 'single_choice' ){
+            $('.chk-survey-'+survery_item_id).each(function () {
+                if( $(this).val() == correctAnswer && $(this).is(':checked') ){
+                  surveyScore++;
+                }
+            });
+          }else{
+            if(value === correctAnswer){
+              surveyScore++;
+            }  
+          }
 
           /*if(value){
             answeredFields = (tempid === 12 || tempid === 1) ? null :  answeredFields++;            
@@ -835,6 +846,24 @@
               });     
               //window.alert('This field should not be empty');
               return;
+            }else{
+              if( isRequired && (survey_type == 'checkboxes' || survey_type == 'single_choice') ){
+                var selected = 0;
+                $('.chk-survey-'+survery_item_id).each(function () {
+                    if( $(this).is(':checked') ){
+                      selected++;
+                    }
+                });
+
+                if( selected == 0 ){
+                  $('.form-survery-item-error-'+survery_item_id).fadeIn("normal", function() {
+                    $(this).html('<div class="alert alert-danger" role="alert">This field is required</div>');
+                  });  
+
+                  return;
+
+                }
+              }
             }
 
             var input_val = $('.survey-item-'+survery_item_id).val();
@@ -860,6 +889,24 @@
               $('.form-survery-item-error-'+survery_item_id).hide();
             }
           //}
+
+          <?php
+            if(!isset($_GET["src"])){
+              if($survey->isScoreMonitored == 1){
+                ?>
+                  if(pageNumber == <?= count($questions)?>){
+                    $('.survey-score').html('<span class="spinner-border spinner-border-sm m-0"></span>');
+                    setTimeout(() => {
+                      $('.survey-score').fadeIn("normal", function() {
+                        $(this).html('<div class="alert alert-success" role="alert">Your score is '+surveyScore+' out of '+scoredQuestionLength+'</div>');
+                      });
+                      //window.alert(`Your score is ${surveyScore} out of <?= $scored_question_length?>`)
+                    }, 1000);
+                  }
+                <?php
+              }
+            }
+          ?>
 
           if(pageNumber === <?= count($questions)?>){
             $('#question-'+id+'').removeClass('d-none');

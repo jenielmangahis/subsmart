@@ -37,6 +37,14 @@ class Survey_model extends MY_Model {
 		return $query->row();
 	}
 
+	public function getSurveyQuestionById($id){
+		$this->db->select('*');
+		$this->db->where('id', $id);
+		$query = $this->db->get('survey_questions');
+
+		return $query->row();
+	}
+
 	public function update($id, $data){
 		// $this->db->select('*');
 		$this->db->set($data);
@@ -315,7 +323,6 @@ class Survey_model extends MY_Model {
 		$this->load->helper('file');
 		$this->load->library('upload');
 		foreach ($post as $key => $value) {
-			
 				if($key == 'timer'){
 					$this->db->select('*');
 					$this->db->where('id', $id);
@@ -329,15 +336,45 @@ class Survey_model extends MY_Model {
 					$this->db->where('id', $id);
 					$this->db->update('survey', $timer);
 				}else{
-					if(isset(explode('-', $key)[1])){
-						$question_id = explode('-', $key)[1];
-						$datas = array(
-							'answer' => $value,
-							'survey_id' => $id,
-							'question_id' => (int)$question_id,
-							'session_id' => $post["session"]
-						);
-						$this->db->insert('survey_answer',$datas);
+					$survey_type = explode('-', $key);
+					if( $survey_type[0] == 'multiple' ){
+						foreach( $value as $subValue ){
+							$question_id = $survey_type[1];
+							$surveyQuestion  = $this->getSurveyQuestionById($question_id);
+							$isCorrectAnswer = 0;
+							if( $surveyQuestion ){
+								if( (strtolower($surveyQuestion->correctAnswer) == strtolower($subValue)) && $surveyQuestion->correctAnswer != '' ){
+									$isCorrectAnswer = 1;
+								}
+							}  
+							$datas = array(
+								'answer' => $subValue,
+								'survey_id' => $id,
+								'question_id' => (int)$question_id,
+								'session_id' => $post["session"],
+								'isCorrectAnswer' => $isCorrectAnswer
+							);
+							$this->db->insert('survey_answer',$datas);
+						}
+					}else{
+						if(isset(explode('-', $key)[1])){						
+							$question_id = explode('-', $key)[1];
+							$surveyQuestion  = $this->getSurveyQuestionById($question_id);
+							$isCorrectAnswer = 0;
+							if( $surveyQuestion ){
+								if( (strtolower($surveyQuestion->correctAnswer) == strtolower($value)) && $surveyQuestion->correctAnswer != '' ){
+									$isCorrectAnswer = 1;
+								}
+							}  
+							$datas = array(
+								'answer' => $value,
+								'survey_id' => $id,
+								'question_id' => (int)$question_id,
+								'session_id' => $post["session"],
+								'isCorrectAnswer' => $isCorrectAnswer
+							);
+							$this->db->insert('survey_answer',$datas);
+						}
 					}
 				}
 		}
@@ -398,6 +435,13 @@ class Survey_model extends MY_Model {
 
 	public function getTemplateQuestions(){
 		$this->db->select('*');
+		$query = $this->db->get('survey_template_questions');
+		return $query->result();
+	}
+
+	public function getEnabledTemplateQuestions(){
+		$this->db->select('*');
+		$this->db->where('is_enabled', 1);
 		$query = $this->db->get('survey_template_questions');
 		return $query->result();
 	}
