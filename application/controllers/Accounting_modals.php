@@ -4343,7 +4343,7 @@ class Accounting_modals extends MY_Controller
 
     public function get_term_details($termId)
     {
-        $term = $this->accounting_terms_model->getById($termId);
+        $term = $this->accounting_terms_model->get_by_id($termId, logged('company_id'));
 
         echo json_encode($term);
     }
@@ -9203,7 +9203,7 @@ class Accounting_modals extends MY_Controller
         ];
 
         $termId = $this->accounting_terms_model->create($data);
-        $term = $this->accounting_terms_model->getById($termId);
+        $term = $this->accounting_terms_model->get_by_id($termId, logged('company_id'));
 
         $return = [
             'data' => $termId ? $term : null,
@@ -9794,7 +9794,7 @@ class Accounting_modals extends MY_Controller
     private function view_bill($billId)
     {
         $bill = $this->vendors_model->get_bill_by_id($billId, logged('company_id'));
-        $term = $this->accounting_terms_model->getById($bill->term_id);
+        $term = $this->accounting_terms_model->get_by_id($bill->term_id, logged('company_id'));
 
         $billPayments = $this->vendors_model->get_bill_payments_by_bill_id($billId);
 
@@ -10241,7 +10241,7 @@ class Accounting_modals extends MY_Controller
         $invoice = $this->invoice_model->getinvoice($invoiceId);
         $invoiceItems = $this->invoice_model->get_invoice_items($invoiceId);
         $paymentRecords = $this->accounting_invoices_model->get_invoice_payment_records($invoice->invoice_number);
-        $term = $this->accounting_terms_model->getById($invoice->terms);
+        $term = $this->accounting_terms_model->get_by_id($invoice->terms, logged('company_id'));
         $paymentMethods = explode(',', $invoice->payment_methods);
         $invoiceSettings = $this->invoice_settings_model->getAllByCompany(logged('company_id'));
 
@@ -17917,7 +17917,7 @@ class Accounting_modals extends MY_Controller
                 $invoice = $this->invoice_model->getinvoice($transactionId);
                 $invoiceItems = $this->invoice_model->get_invoice_items($transactionId);
                 $paymentRecords = $this->accounting_invoices_model->get_invoice_payment_records($invoice->invoice_number);
-                $term = $this->accounting_terms_model->getById($invoice->terms);
+                $term = $this->accounting_terms_model->get_by_id($invoice->terms, logged('company_id'));
                 $paymentMethods = explode(',', $invoice->payment_methods);
                 $invoiceSettings = $this->invoice_settings_model->getAllByCompany(logged('company_id'));
 

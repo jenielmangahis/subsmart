@@ -523,13 +523,13 @@ ini_set('max_input_vars', 30000);
                 <div class="col">
                     <div class="form-group">
                         <label for="addCreditorModal__company_name">Company name <span class="text-danger">*</span></label>
-                        <input class="form-control" id="addCreditorModal__company_name">
+                        <input class="form-control" id="addCreditorModal__company_name" data-type="name" required>
                     </div>
                 </div>
                 <div class="col">
                     <div class="form-group optional">
                         <label for="addCreditorModal__address">Address</label>
-                        <input class="form-control" id="addCreditorModal__address">
+                        <input class="form-control" id="addCreditorModal__address" data-type="address">
                     </div>
                 </div>
             </div>
@@ -539,16 +539,16 @@ ini_set('max_input_vars', 30000);
                     <div class="col">
                         <div class="form-group">
                             <label for="addCreditorModal__company_name">City</label>
-                            <input class="form-control" id="addCreditorModal__city">
+                            <input class="form-control" id="addCreditorModal__city" data-type="city">
                         </div>
                         <div class="d-flex">
                             <div class="form-group mr-2 w-100">
                                 <label for="addCreditorModal__phone">Phone</label>
-                                <input type="number" class="form-control" id="addCreditorModal__phone">
+                                <input type="number" class="form-control" id="addCreditorModal__phone" data-type="phone">
                             </div>
                             <div class="form-group">
                                 <label for="addCreditorModal__phone_ext">&nbsp;</label>
-                                <input class="form-control text-muted" id="addCreditorModal__phone_ext" placeholder="Ext.">
+                                <input class="form-control text-muted" id="addCreditorModal__phone_ext" placeholder="Ext." data-type="ext">
                             </div>
                         </div>
                     </div>
@@ -556,13 +556,13 @@ ini_set('max_input_vars', 30000);
                         <div class="d-flex">
                             <div class="form-group mr-2 w-100">
                                 <label for="addCreditorModal__state">State</label>
-                                <select class="form-control" id="addCreditorModal__state">
-                                    <option>Select State</option>
+                                <select class="form-control" id="addCreditorModal__state" data-type="state">
+                                    <option value=""></option>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label for="addCreditorModal__zip">Zip Code</label>
-                                <input class="form-control" id="addCreditorModal__zip">
+                                <input class="form-control" id="addCreditorModal__zip" data-type="zip_code">
                             </div>
                         </div>
                     </div>
@@ -574,13 +574,13 @@ ini_set('max_input_vars', 30000);
                     <div class="col">
                         <div class="form-group">
                             <label for="addCreditorModal__acc_type">Account type</label>
-                            <input class="form-control" id="addCreditorModal__acc_type">
+                            <input class="form-control" id="addCreditorModal__acc_type" data-type="account_type">
                         </div>
                     </div>
                     <div class="col">
                         <div class="form-group">
                             <label for="addCreditorModal__notes">Notes</label>
-                            <input class="form-control" id="addCreditorModal__notes">
+                            <input class="form-control" id="addCreditorModal__notes" data-type="note">
                         </div>
                     </div>
                 </div>
@@ -595,7 +595,7 @@ ini_set('max_input_vars', 30000);
         <button type="button" class="btn btn-secondary" data-action="back_to_add_dispute_modal">
             Cancel
         </button>
-        <button type="button" class="btn btn-primary">
+        <button type="button" class="btn btn-primary" data-action="save_creditor">
             Save
         </button>
       </div>
@@ -621,61 +621,52 @@ ini_set('max_input_vars', 30000);
             </button>
         </div>
 
-        <table class="table" id="reasonsTable">
-            <thead>
-                <tr>
-                    <th>Reasons</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr class="form">
-                    <td>
-                        <input class="form-control">
-                    </td>
-                    <td>
-                        <div class="d-flex">
-                            <button class="btn btn-primary mr-2">
-                                Save
-                            </button>
-                            <button class="btn btn-secondary" data-action="hide_reason_form">
-                                <i class="fa fa-trash"></i>
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Sample Reason</td>
-                    <td class="text-right">
-                        <span class="lock"><i class="fa fa-lock"></i></span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>The following personal information is incorrect</td>
-                    <td class="text-right">
-                        <span class="lock"><i class="fa fa-lock"></i></span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>The following account is not mine</td>
-                    <td class="text-right">
-                        <span class="lock"><i class="fa fa-lock"></i></span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>The status is incorrect for the following account</td>
-                    <td class="text-right">
-                        <span class="lock"><i class="fa fa-lock"></i></span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>The following information is outdated. I would like it removed from my credit history report</td>
-                    <td class="text-right">
-                        <span class="lock"><i class="fa fa-lock"></i></span>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <template>
+            <tr>
+                <td data-detail="name"></td>
+                <td class="text-right actions">
+                    <span class="lock" data-detail="locked">
+                        <i class="fa fa-lock"></i>
+                    </span>
+                    <div class="d-inline-flex align-items-center" data-detail="actions">
+                        <button class="btn-action mr-2" data-action="edit">
+                            <i class="fa fa-pencil"></i>
+                        </button>
+                        <button class="btn-action" data-action="delete">
+                            <i class="fa fa-times"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        </template>
+
+        <div class="tableWrapper">
+            <table class="table" id="reasonsTable">
+                <thead>
+                    <tr>
+                        <th>Reasons</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="form">
+                        <td>
+                            <input class="form-control" data-type="reason">
+                        </td>
+                        <td>
+                            <div class="d-flex">
+                                <button class="btn btn-primary mr-2" data-action="save_reason">
+                                    Save
+                                </button>
+                                <button class="btn btn-secondary" data-action="hide_reason_form">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
       </div>
     </div>
   </div>

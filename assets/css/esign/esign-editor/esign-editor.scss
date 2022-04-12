@@ -917,6 +917,23 @@
     color: grey;
     font-size: 1.3rem;
   }
+
+  .tableWrapper {
+    max-height: 500px;
+    overflow: auto;
+  }
+
+  .btn-action {
+    border: 0;
+    background-color: transparent;
+    outline: 0;
+    height: 25px;
+    width: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+  }
 }
 
 #addCreditorModal {
