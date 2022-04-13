@@ -516,7 +516,7 @@ $(document).ready(function(){
         }
         break;
       case "isScoreCounted":
-        if(localStorage.getItem('cls_as')){
+        //if(localStorage.getItem('cls_as')){
           if($(this).is(":checked")){
             $.ajax({
               url: surveyBaseUrl + 'survey/question/'+value+'/'+id+'/1',
@@ -536,7 +536,7 @@ $(document).ready(function(){
               }
             });
           }
-        }
+        //}
         break;
       case "hasProgressBar":
         if(localStorage.getItem('cls_as')){
@@ -901,6 +901,8 @@ $("#shared").jsSocials({
     href: url,
     showLabel: false,
     showCount: false,
+    shareIn: "popup",
+    text: "nSmarTrac : Survey",
     shares: ["email", "twitter", "facebook", "linkedin", "pinterest"]
 });
 // var return_first = function () {
@@ -1042,18 +1044,17 @@ function load_questions_list(survey_id){
     }
 
     if( is_valid ){
-      $(".btn-survey-update-settings").html('<span class="spinner-border spinner-border-sm m-0"></span> Saving');
+      $(".btn-survey-update-settings").html('<span class="spinner-border spinner-border-sm m-0"></span>');
       $.ajax({
         url: surveyBaseUrl + '/survey/_update_settings',
         type: 'POST',
         data:$("#survery-settings").serialize(),
         dataType: 'json',
         success: function(res){ 
+          $(".btn-survey-update-settings").html('Save Changes');
           if( res.is_success ){
-            $(".btn-survey-update-settings").html('Save Changes');
             toastr["success"]("Settings updated!");
-          }else{
-            $(".btn-survey-update-settings").html('Save Changes');
+          }else{          
             toastr["error"]("Cannot update settings!");
           }
           
@@ -1065,7 +1066,8 @@ function load_questions_list(survey_id){
   });
 
   function settings_is_valid_url(url) {
-      return /^(http(s)?:\/\/)?(www\.)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/.test(url);
+    var res = url.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g);
+      return (res !== null);
   }
 
 });

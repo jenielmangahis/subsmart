@@ -162,6 +162,9 @@
 	.list-group-item{
 		border: none !important;
 	}
+	#add-question-choice{
+		margin-bottom: 10px;
+	}
 </style>
 <script>
 
@@ -255,9 +258,9 @@
 								<li class="nav-item">
 									<a class="nav-link active" data-toggle="list" href="#builder-box"><i class="fa fa-wrench"></i> Builder</a>
 								</li>
-								<li class="nav-item">
+								<!-- <li class="nav-item">
 									<a class="nav-link" data-toggle="list" href="#logic-box"><i class="fa fa-link"></i> Logic</a>
-								</li>
+								</li> -->
 								<li class="nav-item">
 									<a class="nav-link" data-toggle="list" href="#themes-box"><i class="fa fa-paint-brush"></i> Themes</a>
 								</li>
@@ -323,7 +326,7 @@
 													<?php } ?>
 												</div>
 												<div class="col-xs-12 col-sm-12 col-md-6 px-3">
-													<iframe src="<?php echo base_url()?>survey/preview/<?php echo $survey->id?>?mode=preview&src=results" frameborder="0" style="width: 100%; height: 87%;"></iframe>
+													<iframe src="<?php echo base_url()?>survey/preview/<?php echo $survey->id?>?mode=preview&src=results" frameborder="0" style="width: 100%; height: 400px;"></iframe>
 													<a href="<?php echo base_url()?>survey/preview/<?php echo $survey->id?>?mode=preview" class="btn btn-primary btn-block text-center" target="_blank"><i class="fa fa-eye"></i> Preview on another page</a>
 												</div>
 											</div>

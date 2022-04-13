@@ -40,6 +40,8 @@ window.document.addEventListener("DOMContentLoaded", async () => {
     toggle_instructions: toggleInstructions,
     save_creditor: saveCreditor,
     save_reason: saveReason,
+    save_dispute_item: saveDisputeItem,
+    to_customer_dashboard: () => toDustomerDashboard(customer),
   };
 
   $actions.forEach(($action) => {
@@ -762,12 +764,54 @@ function initDisputeForm() {
       },
     },
   });
+
+  const $accNumRadio = $($modal).find("[name=newdisputemodal_accnum]");
+  const $accNums = $modal.querySelector(".accnums");
+  $accNumRadio.change(function () {
+    const $all = $accNums.querySelector("[data-for=all]");
+    const $bureaus = $accNums.querySelectorAll('[data-for^="#"]');
+
+    if (this.value === "same") {
+      $all.classList.remove("d-none");
+      $bureaus.forEach(($node) => {
+        $node.classList.add("d-none");
+      });
+    } else {
+      $all.classList.add("d-none");
+      $bureaus.forEach(($node) => {
+        const $bureauCheckbox = $modal.querySelector($node.dataset.for);
+        if ($bureauCheckbox.checked) {
+          $node.classList.remove("d-none");
+        } else {
+          $node.classList.add("d-none");
+        }
+      });
+    }
+  });
+
+  const $bureaus = $($modal).find("[name=bureau]");
+  $bureaus.change(function () {
+    const $radio = $modal.querySelector("#newdisputemodal_diffbureaus");
+    if (!$radio.checked) return;
+
+    const id = this.getAttribute("id");
+    $input = $modal.querySelector(`[data-for="#${id}"]`);
+    $input.classList[this.checked ? "remove" : "add"]("d-none");
+  });
 }
 
 function toggleInstructions() {
   const $modal = document.getElementById("newdisputemodal");
   const $instructions = $modal.querySelector(".instructions");
   $instructions.classList.toggle("instructions--showInput");
+
+  if ($instructions.classList.contains("instructions--showInput")) {
+    const $select = $modal.querySelector("#newdisputemodal_instruction");
+    $($select).empty().trigger("change");
+  } else {
+    const $input = $modal.querySelector("#newdisputemodal_instruction_input");
+    $input.value = "";
+  }
 }
 
 async function saveCreditor() {
@@ -895,4 +939,79 @@ async function saveReason() {
   const $row = createReasonRow(data);
   $table.querySelector("tbody").appendChild($row);
   $input.value = "";
+}
+
+async function saveDisputeItem() {
+  const $modal = document.getElementById("newdisputemodal");
+  const $dataTypes = $modal.querySelectorAll("[data-type]");
+  const payload = { bureaus: [] };
+
+  const $bureaus = $modal.querySelectorAll("[name=bureau]");
+  $bureaus.forEach(($bureau) => {
+    if ($bureau.checked) {
+      payload.bureaus.push($bureau.getAttribute("value"));
+    }
+  });
+
+  if (!payload.bureaus.length) {
+    window.helpers.showError("Please select bureau");
+    return;
+  }
+
+  $dataTypes.forEach(($input) => {
+    if ($($input).is(":radio") || $($input).is(":checkbox")) {
+      payload[$input.dataset.type] = $input.checked;
+      return;
+    }
+
+    const value = $input.value;
+    if (value.trim().length) {
+      payload[$input.dataset.type] = value;
+    }
+  });
+
+  if (payload.company_reason_id === undefined) {
+    window.helpers.showError("Please select reason");
+    return;
+  }
+
+  // stores account number
+  const $sameAccNum = $modal.querySelector("#newdisputemodal_samebureaus");
+  if ($sameAccNum.checked) {
+    const $accNumInput = $modal.querySelector("[data-for=all] input");
+    if ($accNumInput.value.trim().length) {
+      payload.account_number = $accNumInput.value.trim();
+    }
+  } else {
+    const $diffAccNum = $modal.querySelector("#newdisputemodal_diffbureaus");
+    if ($diffAccNum.checked) {
+      const $accNums = $modal.querySelectorAll('[data-for^="#"] input');
+      $accNums.forEach(($input) => {
+        const $parent = $input.closest(".form-group");
+        const $bureau = $modal.querySelector($parent.dataset.for);
+        if (!$bureau.checked) return;
+
+        // if bureau is selected, save bureau account number value
+        // if not empty
+
+        if (!payload.account_numbers) {
+          payload.account_numbers = {};
+        }
+
+        if ($input.value.trim().length) {
+          const bureau = $bureau.getAttribute("value");
+          payload.account_numbers[bureau] = $input.value.trim();
+        }
+      });
+    }
+  }
+
+  const $button = document.querySelector("[data-action=save_dispute_item]");
+  await window.helpers.submitBtn($button, () =>
+    window.api.saveDisputeItem(payload)
+  );
+}
+
+function toDustomerDashboard(customer) {
+  window.location = `${window.api.prefixURL}/customer/add_dispute_item/${customer.prof_id}`;
 }

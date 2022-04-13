@@ -218,12 +218,30 @@
         transition: 0.5s;
     }
 
+    div#title-des {
+        justify-content: center;
+        margin-bottom: 36px;
+    }
+
     button#back-paypal {
         background: transparent;
         border: solid 1px;
         border-radius: 9px;
         padding: 4px 26px;
         transition: 0.5s;
+    }
+
+    button.style-confirm {
+        background: transparent;
+        border: solid 1px;
+        border-radius: 9px;
+        padding: 4px 26px;
+        transition: 0.5s;
+        margin: 0 37px;
+    }
+
+    button.style-confirm:hover {
+        background: #d5d5d5;
     }
 
     button#back-paypal:hover {
@@ -355,20 +373,19 @@
 
                                                         <div class="col-md-12">
                                                             <div class="fdx-entity-container">
-                                                                <a href="#">
-                                                                    <button tabindex="0" class="fdx-entity-container-button" data-di-id="di-id-e786b9cc-bb63c05f" disabled>
-                                                                        <div class="fdx-provider-logo-container fdx-provider-logo-container-small fdx-provider-logo-container-fade fdx-provider-image-loaded fdx-provider-logo-container-outline">
-                                                                            <div class="fdx-provider-logo-wrapper fdx-provider-logo-wrapper-small fdx-provider-logo-wrapper-circular fdx-reimagine-entity-logo">
-                                                                                <img class="fdx-provider-logo" src="<?php echo base_url('assets/img/accounting/co-1200.png') ?>" title="Capital One" alt="Capital One">
-                                                                            </div>
-                                                                            <div class=""></div>
+
+                                                                <button tabindex="0" class="fdx-entity-container-button click-capital-one" data-di-id="di-id-e786b9cc-bb63c05f">
+                                                                    <div class="fdx-provider-logo-container fdx-provider-logo-container-small fdx-provider-logo-container-fade fdx-provider-image-loaded fdx-provider-logo-container-outline">
+                                                                        <div class="fdx-provider-logo-wrapper fdx-provider-logo-wrapper-small fdx-provider-logo-wrapper-circular fdx-reimagine-entity-logo">
+                                                                            <img class="fdx-provider-logo" src="<?php echo base_url('assets/img/accounting/co-1200.png') ?>" title="Capital One" alt="Capital One">
                                                                         </div>
-                                                                        <div class="fdx-recommended-entity-desc-container">
-                                                                            <label class="fdx-recommended-entity-name" title="Capital One">Capital One</label>
-                                                                            <label class="fdx-recommended-entity-desc">From your transactions</label>
-                                                                        </div>
-                                                                    </button>
-                                                                </a>
+                                                                        <div class=""></div>
+                                                                    </div>
+                                                                    <div class="fdx-recommended-entity-desc-container">
+                                                                        <label class="fdx-recommended-entity-name" title="Capital One">Capital One</label>
+                                                                        <label class="fdx-recommended-entity-desc">From your transactions</label>
+                                                                    </div>
+                                                                </button>
                                                             </div>
                                                         </div>
 
@@ -548,6 +565,98 @@
                                                         <button class="back-exist-stripe" id="back-exist-paypal"><i class="fa fa-arrow-left" aria-hidden="true"></i> back</button>
                                                     </div>
                                                 </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="container modal-container capital-one-container" style="display:none">
+                                        <div class="row justify-content-md-center align-items-center pt-3">
+                                            <div class="col-md-5 col-sm-6 col-xs-12">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div class="fdx-entity-container">
+                                                            <a href="javascript:void;">
+                                                                <button tabindex="0" class="fdx-entity-container-button click-capital-one" data-di-id="di-id-e786b9cc-bb63c05f">
+                                                                    <div class="fdx-provider-logo-container fdx-provider-logo-container-small fdx-provider-logo-container-fade fdx-provider-image-loaded fdx-provider-logo-container-outline">
+                                                                        <div class="fdx-provider-logo-wrapper fdx-provider-logo-wrapper-small fdx-provider-logo-wrapper-circular fdx-reimagine-entity-logo">
+                                                                            <img class="fdx-provider-logo" src="<?php echo base_url('assets/img/accounting/co-1200.png') ?>" title="Capital One" alt="Capital One">
+                                                                        </div>
+                                                                        <div class=""></div>
+                                                                    </div>
+                                                                    <div class="fdx-recommended-entity-desc-container">
+                                                                        <label class="fdx-recommended-entity-name" title="Capital One">Capital One</label>
+                                                                        <label class="fdx-recommended-entity-desc">From your transactions</label>
+                                                                    </div>
+                                                                </button>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <form method="post" id="capital_one_form" style="display:none;">
+                                                    <div class="col-md-12 form-group">
+                                                        <label for=""><b>Account Name</b></label><br>
+                                                        <input type="text" class="form-control" name="account_name" id="account_name" required="">
+                                                    </div>
+                                                    <div class="col-md-12 form-group">
+                                                        <label for=""><b>Publish Key</b></label><br>
+                                                        <input type="text" class="form-control" name="capital_one_client_id" id="stripe_publish" required="">
+                                                    </div>
+                                                    <div class="col-md-12 form-group">
+                                                        <label for=""><b>Secret Key</b></label><br>
+                                                        <input type="text" class="form-control" name="capital_one_secret_key" id="" required="">
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="modal-footer close-modal-footer">
+                                                            <button type="button" class="btn btn-default btn-block close-capital-one-container">Back</button>
+                                                            <button type="submit" class="btn btn-success btn-block" id="">Save</button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                                <form method="post" id="capital_one_form_edit" style="display:none;">
+                                                    <div class="col-md-12 form-group">
+                                                        <label for=""><b>Account Name</b></label><br>
+                                                        <input type="text" class="form-control" name="account_name" id="account_name" required="">
+                                                        <input type="text" class="form-control" name="id" id="id" style="display: none;">
+                                                    </div>
+                                                    <div class="col-md-12 form-group">
+                                                        <label for=""><b>Publish Key</b></label><br>
+                                                        <input type="text" class="form-control" name="capital_one_client_id" id="stripe_publish" required="">
+                                                    </div>
+                                                    <div class="col-md-12 form-group">
+                                                        <label for=""><b>Secret Key</b></label><br>
+                                                        <input type="text" class="form-control" name="capital_one_secret_key" id="" required="">
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="modal-footer close-modal-footer">
+                                                            <button type="button" class="btn btn-default btn-block close-capital-one-container">Back</button>
+                                                            <button type="submit" class="btn btn-success btn-block" id="">Save</button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                                <div id="capital-one-list-linked-accounts" style="display:none;">
+                                                    <div id="accounts"></div>
+                                                    <div class="col-md-12 justify-content-md-center">
+                                                        <button id="another-account"><i class="fa fa-plus" aria-hidden="true"></i> add another account</button><br><br>
+                                                        <button id="back" class="capital_one_back"><i class="fa fa-arrow-left" aria-hidden="true"></i> back</button>
+                                                    </div>
+                                                </div>
+                                                <div id="capital_one_existed_accounts" style="display: none;">
+                                                    <div id="capital_one_accounts"></div>
+                                                    <div class="col-md-12 justify-content-md-center">
+                                                        <button class="new-account-capital-one" id="new-account-paypal"><i class="fa fa-plus" aria-hidden="true"></i> add new account</button><br><br>
+                                                        <button class="back-exist-capital-one" id="back-exist-paypal"><i class="fa fa-arrow-left" aria-hidden="true"></i> back</button>
+                                                    </div>
+                                                </div>
+                                                <div id="modal-confirm" style="display:none;">
+                                                    <div class="row" id="title-des">
+                                                        <h6>WHICH ONE DO YOU WANT TO DELETE?</h6>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-6"><button class="style-confirm" id="accounts-confirm">ACCOUNT</button></div>
+                                                        <div class="col-6"><button class="style-confirm" id="accounts-credential">CREDENTIAL</button></div>
+                                                    </div>
+                                                </div>
+
                                             </div>
                                         </div>
                                     </div>
@@ -982,6 +1091,260 @@
 </script>
 <script src="https://checkout.stripe.com/checkout.js"></script>
 <script>
+    $('.click-capital-one').click(function() {
+
+        $.ajax({
+            url: "<?= base_url() ?>api/get_capital_one_acc",
+            type: "POST",
+            dataType: "json",
+            data: {},
+            success: function(data) {
+                var html = "";
+                console.log(data.capital_one.length);
+                var count = 0;
+                if (data.capital_one.length != 0) {
+                    for (var x = 0; x < data.capital_one.length; x++) {
+                        if (data.capital_one[x]["capital_one_client_id"] != "") {
+                            count++;
+                        }
+                    }
+                    if (count != 0) {
+                        for (var x = 0; x < data.capital_one.length; x++) {
+                            if (data.capital_one[x]["capital_one_client_id"] != "") {
+                                html += `
+                            <div class="col-md-12">
+                                <hr>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <img class="fdx-provider-logo" src="<?php echo base_url('assets/img/accounting/co-1200.png') ?>" title="Capital One" alt="Capital One">
+                                        </div>
+                                        <div class="col-md-5">
+                                            <h6>` + data.capital_one[x]['account_name'] + `</h6>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <button class="style capital-ebutton" id="` + data.capital_one[x]['id'] + `">edit</button>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <button class="style capital-dbutton"id="` + data.capital_one[x]['id'] + `">delete</button>
+                                        </div>
+                                    </div>
+                                <hr>
+                            </div>`;
+
+
+                                $('.capital-one-container').fadeIn();
+                                $('#capital-one-list-linked-accounts').fadeIn();
+                                $('#capital-one-list-linked-accounts #accounts').html(html);
+                                $('.accounts-list').hide();
+                            }
+                        }
+                    } else {
+                        $.ajax({
+                            url: "<?= base_url() ?>api/get_capital_one_acc",
+                            type: "POST",
+                            dataType: "json",
+                            data: {},
+                            success: function(data) {
+                                var html = "";
+                                for (var x = 0; x < data.capital_one.length; x++) {
+                                    if (data.capital_one.length != 0 && data.capital_one[x]['capital_one_client_id'] == "") {
+
+                                        html += `
+                            <div class="col-md-12">
+                                <hr>
+                                <button class="button-paypal button-capital-one" id="` + data.capital_one[x]['id'] + `" >
+                                <div class="row">
+                                        <div class="col-md-3">
+                                            <img class="fdx-provider-logo" src="<?php echo base_url('assets/img/accounting/co-1200.png') ?>" title="Capital One" alt="Capital One">
+                                        </div>
+                                        <div class="col-md-5">
+                                            <h6>` + data.capital_one[x]['account_name'] + `</h6>
+                                        </div>
+                                    </div>
+                                </button>
+                                <hr>
+                            </div>`;
+
+                                        $('.capital-one-container').fadeIn();
+                                        $('#capital-one-list-linked-accounts').fadeOut();
+                                        $('#capital_one_existed_accounts').fadeIn();
+                                        $('#capital_one_existed_accounts #capital_one_accounts').html(html);
+                                        $('.accounts-list').hide();
+                                    }
+                                }
+
+                            }
+                        });
+                    }
+
+                } else {
+                    $('.capital-one-container').fadeIn();
+                    $('#capital_one_form').fadeIn();
+                    $('.accounts-list').hide();
+                }
+
+
+            }
+        });
+
+    })
+    $(document).on('click', '.capital-ebutton', function() {
+        var id = $(this).attr('id');
+
+        $.ajax({
+            url: "<?= base_url() ?>api/get_capital_one_acc_cond",
+            type: "POST",
+            dataType: "json",
+            data: {
+                id: id
+            },
+            success: function(data) {
+                console.log('pasok');
+                $('#capital_one_form_edit input[name="id"]').val(data.capital_one_Acc[0]['id']);
+                $('#capital_one_form_edit input[name="account_name"]').val(data.capital_one_Acc[0]['account_name']);
+                $('#capital_one_form_edit input[name="capital_one_client_id"]').val(data.capital_one_Acc[0]['capital_one_client_id']);
+                $('#capital_one_form_edit input[name="capital_one_secret_key"]').val(data.capital_one_Acc[0]['capital_one_secret_key']);
+
+                $('#capital-one-list-linked-accounts').hide();
+                $('#capital_one_form_edit').show();
+            }
+        });
+    })
+
+    $('#capital-one-list-linked-accounts #another-account').on('click', function() {
+        $.ajax({
+            url: "<?= base_url() ?>api/get_capital_one_acc",
+            type: "POST",
+            dataType: "json",
+            data: {},
+            success: function(data) {
+                var html = "";
+                for (var x = 0; x < data.capital_one.length; x++) {
+                    if (data.capital_one.length != 0 && data.capital_one[x]['capital_one_client_id'] == "") {
+
+                        html += `
+                            <div class="col-md-12">
+                                <hr>
+                                <button class="button-paypal button-capital-one" id="` + data.capital_one[x]['id'] + `" >
+                                <div class="row">
+                                        <div class="col-md-3">
+                                            <img class="fdx-provider-logo" src="<?php echo base_url('assets/img/accounting/co-1200.png') ?>" title="Capital One" alt="Capital One">
+                                        </div>
+                                        <div class="col-md-5">
+                                            <h6>` + data.capital_one[x]['account_name'] + `</h6>
+                                        </div>
+                                    </div>
+                                </button>
+                                <hr>
+                            </div>`;
+
+                        $('.capital-one-container').fadeIn();
+                        $('#capital-one-list-linked-accounts').fadeOut();
+                        $('#capital_one_existed_accounts').fadeIn();
+                        $('#capital_one_existed_accounts #capital_one_accounts').html(html);
+                        $('.accounts-list').hide();
+                    }
+                }
+
+            }
+        });
+    })
+    $('#modal-confirm #accounts-credential').on('click',function(){
+        console.log("click");
+        $.ajax({
+            url: "<?= base_url() ?>api/delete_capital_acc",
+            type: "POST",
+            dataType: "json",
+            data: {
+                id: capID
+            },
+            success: function(data) {
+                
+                
+            }
+        });
+        nsmartrac_alert('Nice!', 'Capita One Crendentials Deleted!', 'success');
+        $('.capital-one-container').hide();
+                $('#modal-confirm').hide();
+                $('.accounts-list').show();
+    })
+    $('#modal-confirm #accounts-confirm').on('click',function(){
+        console.log("click");
+        $.ajax({
+            url: "<?= base_url() ?>api/delete_cOne_acc",
+            type: "POST",
+            dataType: "json",
+            data: {
+                id: capID
+            },
+            success: function(data) {
+                
+                
+            }
+        });
+        nsmartrac_alert('Nice!', 'Capita One Crendentials Deleted!', 'success');
+        $('.capital-one-container').hide();
+                $('#modal-confirm').hide();
+                $('.accounts-list').show();
+    })
+    var capID = "";
+    
+    $(document).on('click', '.capital-dbutton', function() {
+        capID = $(this).attr('id');
+        $('#capital-one-list-linked-accounts').hide();
+        $('#modal-confirm').fadeIn();
+
+
+    })
+
+    $(document).on('click', '.button-paypal.button-capital-one', function() {
+        var id = $(this).attr('id');
+        $.ajax({
+            url: "<?= base_url() ?>api/get_capital_one_acc_cond",
+            type: "POST",
+            dataType: "json",
+            data: {
+                id: id
+            },
+            success: function(data) {
+                console.log(data.capital_one_Acc[0]['id'])
+                $('#capital_one_form_edit input[name="id"]').val(data.capital_one_Acc[0]['id']);
+                $('#capital_one_form_edit input[name="account_name"]').val(data.capital_one_Acc[0]['account_name']);
+                $('#capital_one_form_edit input[name="capital_one_client_id"]').val(data.capital_one_Acc[0]['capital_one_client_id']);
+                $('#capital_one_form_edit input[name="capital_one_secret_key"]').val(data.capital_one_Acc[0]['capital_one_secret_key']);
+
+                $('#capital_one_existed_accounts').hide();
+                $('#capital_one_form_edit').show();
+
+            }
+        });
+    })
+
+
+    $('.capital_one_back').on('click', function() {
+        $('#capital-one-list-linked-accounts').hide();
+        $('.capital-one-container').hide();
+        $('.accounts-list').show();
+    })
+
+
+
+
+    $('.new-account-capital-one').on('click', function() {
+        console.log('click');
+        $('#capital_one_existed_accounts').fadeOut();
+        $('#capital_one_form').fadeIn();
+    })
+    $('.back-exist-capital-one').on('click', function() {
+        console.log('click');
+        $('#capital_one_existed_accounts').hide();
+        $('#capital-one-list-linked-accounts').fadeIn();
+    })
+    // $(document).on('click', '.new-account-capital-one',function(){
+    //     console.log('click');
+    //     $('#capital_one_existed_accounts').fadeOut();
+    //     $('#capital_one_form').fadeIn();
+    // })
     $('open_stripe').click(function() {
         const openWin = window.open('https://connect.stripe.com/oauth/v2/authorize?response_type=code&client_id=ca_KBQqImsoRKsn8QTIvr9DdP0dH37hPQ3Y&scope=read_write', 'Ratting', 'width=550,height=650,left=450,top=200,toolbar=0,status=0');
         var timer = setInterval(function() {
@@ -1061,6 +1424,8 @@
         $('.paypal-container #existed_accounts').show();
 
     })
+
+
     $('#new-account-paypal').click(function() {
         $('.paypal-container #existed_accounts').hide();
         $('.paypal-container #paypal_form').show();
@@ -1203,11 +1568,11 @@
         $('.stripe-container #stripe_existed_accounts').hide();
         $('.stripe-container #stripe_form_edit').show();
     })
-    $(".new-account-stripe").on("click",function(){
+    $(".new-account-stripe").on("click", function() {
         $("#stripe_form").fadeIn();
         $("#stripe_existed_accounts").hide();
     })
-    $(".back-exist-stripe").on("click",function(){
+    $(".back-exist-stripe").on("click", function() {
         $("#list-linked-accounts").fadeIn();
         $("#stripe_existed_accounts").hide();
     })
@@ -1380,6 +1745,12 @@
         $('.accounts-list').show();
         $('.paypal-container').hide();
     })
+
+    $('.close-capital-one-container').click(function() {
+        $('#capital_one_existed_accounts').show();
+        $('#capital_one_form').hide();
+        $('#capital_one_form_edit').hide();
+    })
 </script>
 <script type="text/javascript">
     $(document).ready(function() {
@@ -1474,6 +1845,55 @@
                 }
             });
         });
+
+        $("#capital_one_form").submit(function(e) {
+            e.preventDefault(); // avoid to execute the actual submit of the form.
+            var form = $(this);
+            $.ajax({
+                type: "POST",
+                url: "<?= base_url() ?>api/if_capitalone_of_company_exist",
+                data: form.serialize(), // serializes the form's elements.
+                beforeSend: function() {
+                    $("#overlay_message").text('Capita One Credentials...');
+                    document.getElementById('overlay').style.display = "flex";
+                },
+                success: function(data) {
+
+
+                    nsmartrac_alert('Nice!', 'Capita One Credentials Have Been Saved!', 'success');
+                    document.getElementById('overlay').style.display = "none";
+                    $('.capital-one-container').hide();
+                    $('.accounts-list').show();
+                    $('.capital-one-container #capital_one_form').hide();
+
+                }
+            });
+        });
+        $("#capital_one_form_edit").submit(function(e) {
+            e.preventDefault(); // avoid to execute the actual submit of the form.
+            var form = $(this);
+            $.ajax({
+                type: "POST",
+                url: "<?= base_url() ?>api/update_capital_one",
+                data: form.serialize(), // serializes the form's elements.
+                beforeSend: function() {
+                    $("#overlay_message").text('Capital One Credentials...');
+                    document.getElementById('overlay').style.display = "flex";
+                },
+                success: function(data) {
+
+
+                    nsmartrac_alert('Nice!', 'Capita One Credentials Have Been Saved!', 'success');
+                    document.getElementById('overlay').style.display = "none";
+                    $('.capital-one-container').hide();
+                    $('.accounts-list').show();
+                    $('.capital-one-container #capital_one_form_edit').hide();
+
+                }
+            });
+        });
+
+
         $("#bankOfAmerica").submit(function(e) {
             e.preventDefault(); // avoid to execute the actual submit of the form.
             var form = $(this);

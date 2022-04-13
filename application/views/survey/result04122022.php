@@ -1,6 +1,7 @@
 <?php
    defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
 <div class="wrapper" role="wrapper">
   <style>
@@ -52,11 +53,6 @@
     
     .data-section{
       display: none;
-    }
-
-    .jssocials-share-logo {
-        width: 3em;     
-        font-size: 2.5em;
     }
   </style>
    <?php include viewPath('includes/sidebars/marketing'); ?>
@@ -118,8 +114,17 @@
               <div class="card">
                 <div class="row mb-5">
                   <div class="col-sm-12">
+                    
+                    
+                    <nav aria-label="breadcrumb">
+                      <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="<?php echo base_url()?>survey">Surveys</a></li>
+                        <li class="breadcrumb-item"><a href="<?php echo base_url()?>survey/workspace">Workspace</a></li>
+                        <li class="breadcrumb-item active" aria-current="page"><?=$survey->title?></li>
+                      </ol>
+                    </nav>
 
-                    <div class="d-flex flex-row mb-10">
+                    <div class="d-flex flex-row justify-content-center">
                         <h2 class="font-weight-normal text-gray">Survey Title: <span class="font-weight-bold"><?= $survey->title ?></span> </h2>
                     </div>
 
@@ -179,10 +184,10 @@
                             <a href="<?php echo base_url()?>survey/edit/<?php echo $survey->id?>" class="btn-block btn btn-success"><i class="fa fa-edit"></i> Edit</a>
                           </div>
                           <div class="col-xs-12 col-sm-6 col-md-4">
-                            <a href="javascript:void(0);" class="btn-block btn btn-info btn-share-survey"><i class="fa fa-share"></i> Share</a>
+                            <a href="<?php echo base_url()?>survey/share/<?php echo $survey->id?>" class="btn-block btn btn-info"><i class="fa fa-share"></i> Share</a>
                           </div>
                           <div class="col-xs-12 col-sm-6 col-md-4">
-                            <a href="javascript:void(0);" class="btn-block btn btn-danger btn-delete-survey" data-id="<?= $survey->id; ?>"><i class="fa fa-trash"></i> Delete</a>
+                            <a href="<?php echo base_url()?>survey/delete/<?php echo $survey->id?>" class="btn-block btn btn-danger btn-delete-survey"><i class="fa fa-trash"></i> Delete</a>
                           </div>
                         </div>
 
@@ -305,8 +310,7 @@
                                                             scales: {
                                                               yAxes: [{
                                                                   ticks: {
-                                                                      beginAtZero: true,
-                                                                      precision: 0
+                                                                      beginAtZero: true
                                                                   }
                                                               }]
                                                             }
@@ -357,8 +361,7 @@
                                                             scales: {
                                                               yAxes: [{
                                                                   ticks: {
-                                                                      beginAtZero: true,
-                                                                      precision: 0
+                                                                      beginAtZero: true
                                                                   }
                                                               }]
                                                             }
@@ -663,8 +666,8 @@
 
                       <!-- preview section of the survey -->
                       <div class="col-sm-12 col-md-6">
-                        <iframe src="<?php echo base_url()?>survey/preview/<?php echo $survey->id?>?mode=preview&src=results" frameborder="0" style="width: 100%; height: 500px"></iframe>
-                        <a href="<?php echo base_url()?>survey/preview/<?php echo $survey->id?>?mode=preview" class="btn btn-primary btn-block text-center" target="_blank"><i class="fa fa-eye"></i> Preview on another page</a>
+                        <iframe src="<?php echo base_url()?>survey/preview/<?php echo $survey->id?>?mode=preview&src=results" frameborder="0" style="width: 100%; height: 600px"></iframe>
+                        <a href="<?php echo base_url()?>survey/preview/<?php echo $survey->id?>?mode=preview" class="btn btn-outline-primary btn-block text-center" target="_blank"><i class="fa fa-eye"></i> Preview on another page</a>
                       </div>
                     </div>                      
                     </div>
@@ -674,31 +677,6 @@
               </div>
             </div>
             <!-- end card -->
-
-            <!-- Modal Share  -->
-            <div class="modal fade bd-example-modal-sm" id="modal-share-survey" tabindex="-1" role="dialog" aria-labelledby="modalShareSurveyTitle" aria-hidden="true">
-              <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-share"></i> Share</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                    </button>
-                  </div>
-                  <?php echo form_open_multipart('plan_headings/delete_plan_heading', ['class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
-                  <?php echo form_input(array('name' => 'phid', 'type' => 'hidden', 'value' => '', 'id' => 'phid'));?>
-                  <div class="modal-body">        
-                      <div class=" col-12">
-                        <h5 class="font-weight-normal">More Ways to Share</h5>
-                        <div id="shared" class=" d-flex"></div>
-                      </div>
-                  </div>
-                  <?php echo form_close(); ?>
-                </div>
-              </div>
-            </div>
-
-
         </div>
       </div>
       <!-- end row -->
@@ -772,50 +750,22 @@
   }
 
   $(document).on('click', '.btn-delete-survey', function(){
-    var survey_id = $(this).attr('data-id');
-
-    Swal.fire({
-        title: 'Delete Survey',
-        text: "Are you sure you want to delete this survey?",
-        icon: 'question',
-        confirmButtonText: 'Proceed',
-        showCancelButton: true,
-        cancelButtonText: "Cancel"
-    }).then((result) => {
-        if (result.value) {
-            $.ajax({
-                type: 'POST',
-                url: "<?php echo base_url(); ?>survey/_delete",
-                dataType:'json',
-                data:{ survey_id:survey_id },
-                success: function(result) {
-                    if( result.is_success == 1 ){
-                      Swal.fire({
-                          title: 'Good job!',
-                          text: "Survey was successfully deleted!",
-                          icon: 'success',
-                          showCancelButton: false,
-                          confirmButtonText: 'Okay'
-                      }).then((result) => {
-                          location.href = surveyBaseUrl + '/survey';
-                      });
-                    }else{
-                      Swal.fire({
-                          title: 'Error',
-                          text: 'Cannot find data',
-                          icon: 'error',
-                          showCancelButton: false,
-                          confirmButtonText: 'Okay'
-                      });
-                    }                    
-                },
-            });
+    $(".btn-delete-survey").html('<span class="spinner-border spinner-border-sm m-0"></span> Saving');
+    $.ajax({
+      url: surveyBaseUrl + '/survey/_update_settings',
+      type: 'POST',
+      data:$("#survery-settings").serialize(),
+      dataType: 'json',
+      success: function(res){ 
+        $(".btn-delete-survey").html('Delete');
+        if( res.is_success ){          
+          toastr["success"]("Settings updated!");
+        }else{          
+          toastr["error"]("Cannot update settings!");
         }
+        
+      }
     });
-  });
-
-  $(document).on('click', '.btn-share-survey', function(){
-    $('#modal-share-survey').modal('show');
   });
 
 </script>
