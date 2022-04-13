@@ -168,6 +168,10 @@ export function editReason(id, payload) {
   return http.post(`${prefixURL}/EsignEditor/apiEditReason/${id}`, payload);
 }
 
+export function saveDisputeItem(payload) {
+  return http.post(`${prefixURL}/EsignEditor/apiSaveDisputeItem`, payload);
+}
+
 const http = {
   post: sendPost,
   delete: sendDelete,

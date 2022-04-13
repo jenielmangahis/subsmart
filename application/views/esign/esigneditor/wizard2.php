@@ -277,19 +277,19 @@ ini_set('max_input_vars', 30000);
 
                 <div class="newdisputemodal__bureaus">
                     <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="newdisputemodal_equifax">
+                        <input type="checkbox" name="bureau" value="equifax" class="form-check-input" id="newdisputemodal_equifax">
                         <label class="form-check-label" for="newdisputemodal_equifax">
                             <img alt="" src="<?=base_url('/assets/img/customer/images/equifax.png');?>"/>
                         </label>
                     </div>
                     <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="newdisputemodal_experian">
+                        <input type="checkbox" name="bureau" value="experian" class="form-check-input" id="newdisputemodal_experian">
                         <label class="form-check-label" for="newdisputemodal_experian">
                             <img alt="" src="<?=base_url('/assets/img/customer/images/experian.png');?>"/>
                         </label>
                     </div>
                     <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="newdisputemodal_transunion">
+                        <input type="checkbox" name="bureau" value="transunion" class="form-check-input" id="newdisputemodal_transunion">
                         <label class="form-check-label" for="newdisputemodal_transunion">
                             <img alt="" src="<?=base_url('/assets/img/customer/images/trans_union.png');?>"/>
                         </label>
@@ -300,16 +300,35 @@ ini_set('max_input_vars', 30000);
                     <div class="mb-2">Account Number (optional)</div>
                     <div>
                         <div class="form-check mb-1">
-                            <input class="form-check-input" type="radio" id="newdisputemodal_samebureaus" name="newdisputemodal_accnum">
+                            <input class="form-check-input" type="radio" id="newdisputemodal_samebureaus" name="newdisputemodal_accnum" value="same">
                             <label class="form-check-label" for="newdisputemodal_samebureaus">
                                 Same for all bureaus
                             </label>
                         </div>
                         <div class="form-check mb-1">
-                            <input class="form-check-input" type="radio" id="newdisputemodal_diffbureaus" name="newdisputemodal_accnum">
+                            <input class="form-check-input" type="radio" id="newdisputemodal_diffbureaus" name="newdisputemodal_accnum" value="different">
                             <label class="form-check-label" for="newdisputemodal_diffbureaus">
                                 Different for each bureau
                             </label>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 accnums">
+                        <div class="form-group d-none" data-for="all">
+                            <input class="form-control">
+                        </div>
+
+                        <div class="form-group d-none" data-for="#newdisputemodal_equifax">
+                            <label>Equifax</label>
+                            <input class="form-control">
+                        </div>
+                        <div class="form-group d-none" data-for="#newdisputemodal_experian">
+                            <label>Experian</label>
+                            <input class="form-control">
+                        </div>
+                        <div class="form-group d-none" data-for="#newdisputemodal_transunion">
+                            <label>Transunion</label>
+                            <input class="form-control">
                         </div>
                     </div>
                 </div>
@@ -318,31 +337,31 @@ ini_set('max_input_vars', 30000);
                 <div class="newdisputemodal__selects">
                     <div class="form-group">
                         <label for="newdisputemodal_creditor">Creditor/Furnisher</label>
-                        <select class="form-control" id="newdisputemodal_creditor"></select>
+                        <select class="form-control" id="newdisputemodal_creditor" data-type="furnisher_id"></select>
                         <a href="javascript:void(0);" class="link" data-action="show_creditor_modal">Add Creditor/Furnisher</a>
                     </div>
 
                     <div class="form-group">
                         <label for="newdisputemodal_reason">Reason <span class="text-danger">*</span></label>
-                        <select class="form-control" id="newdisputemodal_reason"></select>
+                        <select class="form-control" id="newdisputemodal_reason" data-type="company_reason_id"></select>
                         <a href="javascript:void(0);" class="link" data-action="show_manage_reasons_modal">Manage Reasons</a>
                     </div>
 
                     <div class="instructions">
                         <div class="form-group selectgroup">
                             <label for="newdisputemodal_instruction">Instruction</label>
-                            <select class="form-control" id="newdisputemodal_instruction"></select>
+                            <select class="form-control" id="newdisputemodal_instruction" data-type="instruction_id"></select>
                             <a href="javascript:void(0);" class="link" data-action="toggle_instructions">Add a New Instruction</a>
                         </div>
 
                         <div class="form-group inputgroup">
                             <label for="newdisputemodal_instruction_input">Instruction</label>
-                            <input class="form-control" id="newdisputemodal_instruction_input">
+                            <input class="form-control" id="newdisputemodal_instruction_input" data-type="instruction_value">
                             <a href="javascript:void(0);" class="link" data-action="toggle_instructions">Choose from list</a>
 
                             <span class="d-block text-muted mt-2">(i.e: "This is not my account. Please remove")</span>
                             <div class="form-check mt-2">
-                                <input type="checkbox" class="form-check-input" id="newdisputemodal_instruction_save_explanation">
+                                <input type="checkbox" class="form-check-input" id="newdisputemodal_instruction_save_explanation" data-type="save_instruction">
                                 <label class="form-check-label" for="newdisputemodal_instruction_save_explanation">
                                     Save "explanation" for future use
                                 </label>
@@ -353,17 +372,20 @@ ini_set('max_input_vars', 30000);
             </div>
         </div>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">
-            Cancel
-        </button>
+      <div class="modal-footer justify-content-between">
+        <a href="javascript:void(0);" class="link" data-action="to_customer_dashboard">Add Dispute In Customer Dashboard</a>
+        <div class="d-flex">
+            <button type="button" class="btn btn-secondary mr-2" data-dismiss="modal">
+                Cancel
+            </button>
 
-        <button type="button" class="btn btn-primary esigneditor__btn">
-            <div class="spinner-border spinner-border-sm" role="status">
-                <span class="sr-only">Loading...</span>
-            </div>
-            Save
-        </button>
+            <button type="button" class="btn btn-primary esigneditor__btn" data-action="save_dispute_item">
+                <div class="spinner-border spinner-border-sm" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+                Save
+            </button>
+        </div>
       </div>
     </div>
   </div>

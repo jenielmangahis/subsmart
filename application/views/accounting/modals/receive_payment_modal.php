@@ -431,7 +431,9 @@
                                         <div class="dropup">
                                             <a href="javascript:void(0);" class="text-white" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
                                             <div class="dropdown-menu">
-                                                <a class="dropdown-item" href="#" id="void-payment">Void</a>
+                                                <?php if($payment->status !== "4") : ?>
+                                                    <a class="dropdown-item" href="#" id="void-payment">Void</a>
+                                                <?php endif; ?>
                                                 <a class="dropdown-item" href="#" id="delete-payment">Delete</a>
                                                 <a class="dropdown-item" href="#">Transaction journal</a>
                                                 <a class="dropdown-item" href="#">Audit history</a>

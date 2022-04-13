@@ -177,6 +177,16 @@ class Api extends MYF_Controller
         echo json_encode($data);
     }
 
+    public function get_capital_one_acc(){
+        $company_id = logged('company_id');
+        $query = $this->db->get_where('accounting_bank_accounts', array('company_id'=> $company_id));
+        
+
+        $data = new stdClass();
+        $data->capital_one = $query->result();
+        echo json_encode($data);
+    }
+
     public function get_stripe_acc(){
         
         $company_id = logged('company_id');
@@ -194,6 +204,35 @@ class Api extends MYF_Controller
         $data = new stdClass();
         $data->account = $query->result();
         echo json_encode($data);
+    }
+    public function get_capital_one_acc_cond(){
+        $id = $this->input->post("id");
+        $query = $this->db->get_where('accounting_bank_accounts', array('id' => $id)); 
+
+        $data = new stdClass();
+        $data->capital_one_Acc = $query->result();
+        echo json_encode($data);
+    }
+    public function update_capital_one(){
+        $data = $this->input->post();
+        echo json_encode($data['id']);
+        $id = $data['id'];
+        $update = $this->db->update('accounting_bank_accounts', $data, array("id" => $id));
+    }
+
+    public function delete_capital_acc(){
+        $id = $this->input->post("id");
+        $getId = $this->db->where('id', $id);
+        $data = array(
+            'capital_one_client_id' => "",
+            'capital_one_secret_key' => ""
+        );
+		$removeID = $this->db->update('accounting_bank_accounts', $data);	
+    }
+    public function delete_cOne_acc(){
+        $id = $this->input->post("id");
+        $getId = $this->db->where('id', $id);
+		$removeID = $this->db->delete('accounting_bank_accounts');	
     }
 
     public function delete_stripe_acc(){
@@ -230,6 +269,22 @@ class Api extends MYF_Controller
             $update = $this->db->update('accounting_bank_accounts', $data2, array("id" => $id));
         
     }
+
+    public function if_capitalone_of_company_exist(){
+        $company_id = logged('company_id');
+        $query = $this->db->get_where('accounting_bank_accounts', array('company_id'=> $company_id));
+        $result = $query->result();
+            
+           
+            $data = $this->input->post();
+            $str = $this->db->insert("accounting_bank_accounts", $data);
+            $id = $this->db->insert_id();
+            $data2 = array('company_id'=>$company_id);
+            $update = $this->db->update('accounting_bank_accounts', $data2, array("id" => $id));
+        
+    }
+
+
     public function if_paypalAcc_of_company_exist(){
         $company_id = logged('company_id');
         $query = $this->db->get_where('accounting_bank_accounts', array('company_id'=> $company_id));

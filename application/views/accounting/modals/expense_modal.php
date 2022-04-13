@@ -461,7 +461,9 @@
                                             <a href="javascript:void(0);" class="text-white" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
                                             <div class="dropdown-menu">
                                                 <a class="dropdown-item" href="#" id="copy-expense">Copy</a>
-                                                <a class="dropdown-item" href="#" id="void-expense">Void</a>
+                                                <?php if($expense->status !== "4") : ?>
+                                                    <a class="dropdown-item" href="#" id="void-expense">Void</a>
+                                                <?php endif; ?>
                                                 <a class="dropdown-item" href="#" id="delete-expense">Delete</a>
                                                 <a class="dropdown-item" href="#">Transaction journal</a>
                                                 <a class="dropdown-item" href="#">Audit history</a>

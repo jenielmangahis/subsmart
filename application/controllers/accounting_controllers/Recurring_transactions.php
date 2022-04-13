@@ -578,6 +578,30 @@ class Recurring_transactions extends MY_Controller {
                     $this->form_validation->set_rules('item_amount[]', 'Item quantity', 'required');
                 }
             break;
+            case 'invoice' :
+                $this->form_validation->set_rules('customer', 'Customer', 'required');
+                $this->form_validation->set_rules('item[]', 'Item', 'required');
+                $this->form_validation->set_rules('quantity[]', 'Item total', 'required');
+                $this->form_validation->set_rules('item_amount[]', 'Item total', 'required');
+                $this->form_validation->set_rules('item_total[]', 'Item total', 'required');
+            break;
+            case 'credit-memo' :
+                $this->form_validation->set_rules('item[]', 'Item', 'required');
+            break;
+            case 'sales-receipt' :
+                $this->form_validation->set_rules('item[]', 'Item', 'required');
+            break;
+            case 'refund' :
+                $this->form_validation->set_rules('item[]', 'Item', 'required');
+            break;
+            case 'npcharge' :
+                $this->form_validation->set_rules('item[]', 'Item', 'required');
+                $this->form_validation->set_rules('customer', 'Customer', 'required');
+            break;
+            case 'npcredit' :
+                $this->form_validation->set_rules('item[]', 'Item', 'required');
+                $this->form_validation->set_rules('customer', 'Customer', 'required');
+            break;
         }
 
         $this->form_validation->set_rules('template_name', 'Template Name', 'required');
@@ -751,6 +775,24 @@ class Recurring_transactions extends MY_Controller {
                     break;
                     case 'credit-card-credit' :
                         $transactionUpdate = $this->update_credit_card_credit($data, $recurringData);
+                    break;
+                    case 'invoice' :
+                        $transactionUpdate = $this->update_invoice($data, $recurringData);
+                    break;
+                    case 'credit-memo' :
+                        $transactionUpdate = $this->update_credit_memo($data, $recurringData);
+                    break;
+                    case 'sales-receipt' :
+                        $transactionUpdate = $this->update_sales_receipt($data, $recurringData);
+                    break;
+                    case 'refund' :
+                        $transactionUpdate = $this->update_refund_receipt($data, $recurringData);
+                    break;
+                    case 'npcharge' :
+                        $transactionUpdate = $this->update_delayed_charge($data, $recurringData);
+                    break;
+                    case 'npcredit' :
+                        $transactionUpdate = $this->update_delayed_credit($data, $recurringData);
                     break;
                 }
             }
@@ -1587,6 +1629,689 @@ class Recurring_transactions extends MY_Controller {
         return $transactionUpdate;
     }
 
+    private function update_invoice($data, $recurringData)
+    {
+        if ($data['credit_card_payments'] == 1) {
+            $credit_card = 'Credit Card';
+        } else {
+            $credit_card = '0';
+        }
+
+        if ($data['bank_transfer'] == 1) {
+            $bank_transfer = 'Bank Transfer';
+        } else {
+            $bank_transfer = '0';
+        }
+
+        if ($data['instapay'] == 1) {
+            $instapay = 'Instapay';
+        } else {
+            $instapay = '0';
+        }
+
+        if ($data['check'] == 1) {
+            $check = 'Check';
+        } else {
+            $check = '0';
+        }
+
+        if ($data['cash'] == 1) {
+            $cash = 'Cash';
+        } else {
+            $cash = '0';
+        }
+
+        if ($data['deposit'] == 1) {
+            $deposit = 'Deposit';
+        } else {
+            $deposit = '0';
+        }
+
+        $invoiceData = [
+            'customer_id' => $data['customer'],
+            'job_location' => $data['job_location'],
+            'job_name' => $data['job_name'],
+            'work_order_number' => $data['job_no'],
+            'po_number' => $data['purchase_order_no'],
+            'invoice_number' => $data['invoice_no'],
+            'date_issued' => date("Y-m-d", strtotime($data['date_issued'])),
+            'due_date' => date("Y-m-d", strtotime($data['due_date'])),
+            'status' => $data['status'],
+            'customer_email' => $data['customer_email'],
+            'billing_address' => nl2br($data['billing_address']),
+            'shipping_to_address' => nl2br($data['shipping_to']),
+            'ship_via' => $data['ship_via'],
+            'shipping_date' => date("Y-m-d", strtotime($data['shipping_date'])),
+            'tracking_number' => $data['tracking_no'],
+            'terms' => $data['terms'],
+            'location_scale' => $data['location_of_sale'],
+            'attachments' => json_encode($data['attachments']),
+            'tags' => json_encode($data['tags']),
+            'total_due' => $data['total_amount'],
+            'balance' => $data['total_amount'],
+            'deposit_request' => $data['deposit_amount'],
+            'deposit_request_type' => $data['deposit_request_type'],
+            'payment_methods' => $credit_card.','.$bank_transfer.','.$instapay.','.$check.','.$cash.','.$deposit,
+            'message_to_customer' => $data['message_to_customer'],
+            'terms_and_conditions' => $data['terms_and_conditions'],
+            'sub_total' => $data['subtotal'],
+            'taxes' => $data['tax_total'],
+            'adjustment_name' => $data['adjustment_name'],
+            'adjustment_value' => $data['adjustment_value'],
+            'grand_total' => $data['total_amount']
+        ];
+
+        $transactionUpdate = $this->invoice_model->update_invoice($recurringData->txn_id, $invoiceData);
+
+        if($transactionUpdate) {
+            $attachments = $this->accounting_attachments_model->get_attachments('Invoice', $recurringData->txn_id);
+            $tags = $this->tags_model->get_transaction_tags('Invoice', $recurringData->txn_id);
+
+            if(count($attachments) > 0) {
+                foreach($attachments as $attachment) {
+                    if(!isset($data['attachments']) || !in_array($attachment->id, $data['attachments'])) {
+                        $attachmentLink = $this->accounting_attachments_model->get_attachment_link(['type' => 'Invoice', 'attachment_id' => $attachment->id, 'linked_id' => $recurringData->txn_id]);
+                        $this->accounting_attachments_model->unlink_attachment($attachmentLink->id);
+                    }
+                }
+            }
+
+            if(count($tags) > 0) {
+                foreach($tags as $key => $tag) {
+                    if(!isset($data['tags']) || !isset($data['tags'][$key])) {
+                        $this->tags_model->unlink_tag(['transaction_type' => 'Invoice', 'tag_id' => $tag->id, 'transaction_id' => $recurringData->txn_id]);
+                    }
+                }
+            }
+
+            if (isset($data['attachments']) && is_array($data['attachments'])) {
+                $order = 1;
+                foreach ($data['attachments'] as $attachmentId) {
+                    $link = array_filter($attachments, function($v, $k) use ($attachmentId) {
+                        return $v->id === $attachmentId;
+                    }, ARRAY_FILTER_USE_BOTH);
+
+                    if(count($link) > 0) {
+                        $attachmentData = [
+                            'type' => 'Invoice',
+                            'attachment_id' => $attachmentId,
+                            'linked_id' => $recurringData->txn_id,
+                            'order_no' => $order
+                        ];
+
+                        $updateOrder = $this->accounting_attachments_model->update_order($attachmentData);
+                    } else {
+                        $linkAttachmentData = [
+                            'type' => 'Invoice',
+                            'attachment_id' => $attachmentId,
+                            'linked_id' => $recurringData->txn_id,
+                            'order_no' => $order
+                        ];
+    
+                        $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
+                    }
+
+                    $order++;
+                }
+            }
+
+            if(isset($data['tags']) && is_array($data['tags'])) {
+                $order = 1;
+                foreach($data['tags'] as $key => $tagId) {
+                    $linkTagData = [
+                        'transaction_type' => 'Invoice',
+                        'transaction_id' => $recurringData->txn_id,
+                        'tag_id' => $tagId,
+                        'order_no' => $order
+                    ];
+
+                    if($tags[$key] === null) {
+                        $linkTagId = $this->tags_model->link_tag($linkTagData);
+                    } else {
+                        $updateOrder = $this->tags_model->update_link($linkTagData);
+                    }
+
+                    $order++;
+                }
+            }
+
+            $invoiceItems = $this->invoice_model->get_invoice_items($recurringData->txn_id);
+            $this->invoice_model->delete_items($recurringData->txn_id);
+
+            foreach($data['item'] as $key => $input) {
+                $explode = explode('-', $input);
+
+                if($explode[0] === 'package') {
+                    $packageItems = $this->items_model->get_package_items($explode[1]);
+                }
+
+                $invoiceItem = [
+                    'invoice_id' => $recurringData->txn_id,
+                    'items_id' => $explode[0] === 'item' ? $explode[1] : '',
+                    'location_id' => $data['location'][$key],
+                    'qty' => $data['quantity'][$key],
+                    'package_id' => $explode[0] === 'package' ? $explode[1] : '',
+                    'package_item_details' => $explode[0] === 'package' ? json_encode($packageItems) : null,
+                    'cost' => $data['item_amount'][$key],
+                    'tax' => $data['item_tax'][$key],
+                    'discount' => $data['discount'][$key],
+                    'total' => $data['item_total'][$key],
+                    'tax_rate_used' => $data['item_tax'][$key]
+                ];
+
+                if(!is_null($invoiceItems[$key])) {
+                    $invoiceItem['date_craeted'] = date("Y-m-d H:i:s" , strtotime($invoiceItems->date_craeted));
+                }
+
+                $addInvoiceItem = $this->invoice_model->add_invoice_items($invoiceItem);
+            }
+        }
+
+        return $transactionUpdate;
+    }
+
+    private function update_credit_memo($data, $recurringData)
+    {
+        $creditMemoData = [
+            'customer_id' => $data['customer'],
+            'email' => $data['email'],
+            'send_later' => !isset($data['template_name']) ? $data['send_later'] : null,
+            'credit_memo_date' => !isset($data['template_name']) ? date("Y-m-d", strtotime($data['credit_memo_date'])) : null,
+            'billing_address' => nl2br($data['billing_address']),
+            'location_of_sale' => $data['location_of_sale'],
+            'po_number' => $data['purchase_order_no'],
+            'sales_rep' => $data['sales_rep'],
+            'message_credit_memo' => $data['message_credit_memo'],
+            'message_on_statement' => $data['message_on_statement'],
+            'adjustment_name' => $data['adjustment_name'],
+            'adjustment_value' => $data['adjustment_value'],
+            'balance' => $data['total_amount'],
+            'total_amount' => $data['total_amount'],
+            'subtotal' => $data['subtotal'],
+            'tax_total' => $data['tax_total'],
+            'discount_total' => $data['discount_total'],
+        ];
+
+        $transactionUpdate = $this->accounting_credit_memo_model->updateCreditMemo($recurringData->txn_id, $creditMemoData);
+
+        if($transactionUpdate) {
+            $attachments = $this->accounting_attachments_model->get_attachments('Credit Memo', $recurringData->txn_id);
+            $tags = $this->tags_model->get_transaction_tags('Credit Memo', $recurringData->txn_id);
+
+            if(count($attachments) > 0) {
+                foreach($attachments as $attachment) {
+                    if(!isset($data['attachments']) || !in_array($attachment->id, $data['attachments'])) {
+                        $attachmentLink = $this->accounting_attachments_model->get_attachment_link(['type' => 'Credit Memo', 'attachment_id' => $attachment->id, 'linked_id' => $recurringData->txn_id]);
+                        $this->accounting_attachments_model->unlink_attachment($attachmentLink->id);
+                    }
+                }
+            }
+
+            if(count($tags) > 0) {
+                foreach($tags as $key => $tag) {
+                    if(!isset($data['tags']) || !isset($data['tags'][$key])) {
+                        $this->tags_model->unlink_tag(['transaction_type' => 'Credit Memo', 'tag_id' => $tag->id, 'transaction_id' => $recurringData->txn_id]);
+                    }
+                }
+            }
+
+            // NEW
+            if (isset($data['attachments']) && is_array($data['attachments'])) {
+                $order = 1;
+                foreach ($data['attachments'] as $attachmentId) {
+                    $link = array_filter($attachments, function($v, $k) use ($attachmentId) {
+                        return $v->id === $attachmentId;
+                    }, ARRAY_FILTER_USE_BOTH);
+
+                    if(count($link) > 0) {
+                        $attachmentData = [
+                            'type' => 'Credit Memo',
+                            'attachment_id' => $attachmentId,
+                            'linked_id' => $recurringData->txn_id,
+                            'order_no' => $order
+                        ];
+
+                        $updateOrder = $this->accounting_attachments_model->update_order($attachmentData);
+                    } else {
+                        $linkAttachmentData = [
+                            'type' => 'Credit Memo',
+                            'attachment_id' => $attachmentId,
+                            'linked_id' => $recurringData->txn_id,
+                            'order_no' => $order
+                        ];
+    
+                        $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
+                    }
+
+                    $order++;
+                }
+            }
+
+            if(isset($data['tags']) && is_array($data['tags'])) {
+                $order = 1;
+                foreach($data['tags'] as $key => $tagId) {
+                    $linkTagData = [
+                        'transaction_type' => 'Credit Memo',
+                        'transaction_id' => $recurringData->txn_id,
+                        'tag_id' => $tagId,
+                        'order_no' => $order
+                    ];
+
+                    if($tags[$key] === null) {
+                        $linkTagId = $this->tags_model->link_tag($linkTagData);
+                    } else {
+                        $updateOrder = $this->tags_model->update_link($linkTagData);
+                    }
+
+                    $order++;
+                }
+            }
+
+            $this->update_customer_transaction_items('Credit Memo', $recurringData->txn_id, $data);
+        }
+
+        return $transactionUpdate;
+    }
+
+    private function update_sales_receipt($data, $recurringData)
+    {
+        $salesReceiptdata = [
+            'customer_id' => $data['customer'],
+            'email' => $data['email'],
+            'billing_address' => nl2br($data['billing_address']),
+            'location_of_sale' => $data['location_of_sale'],
+            'po_number' => $data['purchase_order_no'],
+            'sales_rep' => $data['sales_rep'],
+            'payment_method' => $data['payment_method'],
+            'reference_no' => $data['ref_no'],
+            'deposit_to_account' => $data['deposit_to_account'],
+            'message_sales_receipt' => $data['message_sales_receipt'],
+            'message_on_statement' => $data['message_on_statement'],
+            'adjustment_name' => $data['adjustment_name'],
+            'adjustment_value' => $data['adjustment_value'],
+            'total_amount' => $data['total_amount'],
+            'subtotal' => $data['subtotal'],
+            'tax_total' => $data['tax_total'],
+            'discount_total' => $data['discount_total']
+        ];
+
+        $transactionUpdate = $this->accounting_sales_receipt_model->updateSalesReceipt($recurringData->txn_id, $salesReceiptdata);
+
+        if($transactionUpdate) {
+            $attachments = $this->accounting_attachments_model->get_attachments('Sales Receipt', $recurringData->txn_id);
+            $tags = $this->tags_model->get_transaction_tags('Sales Receipt', $recurringData->txn_id);
+
+            // OLD
+            if(count($attachments) > 0) {
+                foreach($attachments as $attachment) {
+                    if(!isset($data['attachments']) || !in_array($attachment->id, $data['attachments'])) {
+                        $attachmentLink = $this->accounting_attachments_model->get_attachment_link(['type' => 'Sales Receipt', 'attachment_id' => $attachment->id, 'linked_id' => $recurringData->txn_id]);
+                        $this->accounting_attachments_model->unlink_attachment($attachmentLink->id);
+                    }
+                }
+            }
+
+            if(count($tags) > 0) {
+                foreach($tags as $key => $tag) {
+                    if(!isset($data['tags']) || !isset($data['tags'][$key])) {
+                        $this->tags_model->unlink_tag(['transaction_type' => 'Sales Receipt', 'tag_id' => $tag->id, 'transaction_id' => $recurringData->txn_id]);
+                    }
+                }
+            }
+
+            // NEW
+            if (isset($data['attachments']) && is_array($data['attachments'])) {
+                $order = 1;
+                foreach ($data['attachments'] as $attachmentId) {
+                    $link = array_filter($attachments, function($v, $k) use ($attachmentId) {
+                        return $v->id === $attachmentId;
+                    }, ARRAY_FILTER_USE_BOTH);
+
+                    if(count($link) > 0) {
+                        $attachmentData = [
+                            'type' => 'Sales Receipt',
+                            'attachment_id' => $attachmentId,
+                            'linked_id' => $recurringData->txn_id,
+                            'order_no' => $order
+                        ];
+
+                        $updateOrder = $this->accounting_attachments_model->update_order($attachmentData);
+                    } else {
+                        $linkAttachmentData = [
+                            'type' => 'Sales Receipt',
+                            'attachment_id' => $attachmentId,
+                            'linked_id' => $recurringData->txn_id,
+                            'order_no' => $order
+                        ];
+    
+                        $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
+                    }
+
+                    $order++;
+                }
+            }
+
+            if(isset($data['tags']) && is_array($data['tags'])) {
+                $order = 1;
+                foreach($data['tags'] as $key => $tagId) {
+                    $linkTagData = [
+                        'transaction_type' => 'Sales Receipt',
+                        'transaction_id' => $recurringData->txn_id,
+                        'tag_id' => $tagId,
+                        'order_no' => $order
+                    ];
+
+                    if($tags[$key] === null) {
+                        $linkTagId = $this->tags_model->link_tag($linkTagData);
+                    } else {
+                        $updateOrder = $this->tags_model->update_link($linkTagData);
+                    }
+
+                    $order++;
+                }
+            }
+
+            $this->update_customer_transaction_items('Sales Receipt', $recurringData->txn_id, $data);
+        }
+
+        return $transactionUpdate;
+    }
+
+    private function update_refund_receipt($data, $recurringData)
+    {
+        $refundReceiptData = [
+            'customer_id' => $data['customer'],
+            'email' => $data['email'],
+            'billing_address' => nl2br($data['billing_address']),
+            'location_of_sale' => $data['location_of_sale'],
+            'po_number' => $data['purchase_order_no'],
+            'sales_rep' => $data['sales_rep'],
+            'payment_method' => $data['payment_method'],
+            'refund_from_account' => $data['refund_from_account'],
+            'check_no' => !is_null($data['print_later']) ? null : $data['check_no'],
+            'print_later' => $data['print_later'],
+            'message_refund_receipt' => $data['message_refund_receipt'],
+            'message_on_statement' => $data['message_on_statement'],
+            'adjustment_name' => $data['adjustment_name'],
+            'adjustment_value' => $data['adjustment_value'],
+            'total_amount' => $data['total_amount'],
+            'subtotal' => $data['subtotal'],
+            'tax_total' => $data['tax_total'],
+            'discount_total' => $data['discount_total']
+        ];
+
+        $transactionUpdate = $this->accounting_refund_receipt_model->updateRefundReceipt($recurringData->txn_id, $refundReceiptData);
+
+        if($transactionUpdate) {
+            $attachments = $this->accounting_attachments_model->get_attachments('Refund Receipt', $recurringData->txn_id);
+            $tags = $this->tags_model->get_transaction_tags('Refund Receipt', $recurringData->txn_id);
+
+            // OLD
+            if(count($attachments) > 0) {
+                foreach($attachments as $attachment) {
+                    if(!isset($data['attachments']) || !in_array($attachment->id, $data['attachments'])) {
+                        $attachmentLink = $this->accounting_attachments_model->get_attachment_link(['type' => 'Refund Receipt', 'attachment_id' => $attachment->id, 'linked_id' => $recurringData->txn_id]);
+                        $this->accounting_attachments_model->unlink_attachment($attachmentLink->id);
+                    }
+                }
+            }
+
+            if(count($tags) > 0) {
+                foreach($tags as $key => $tag) {
+                    if(!isset($data['tags']) || !isset($data['tags'][$key])) {
+                        $this->tags_model->unlink_tag(['transaction_type' => 'Refund Receipt', 'tag_id' => $tag->id, 'transaction_id' => $recurringData->txn_id]);
+                    }
+                }
+            }
+
+            // NEW
+            if (isset($data['attachments']) && is_array($data['attachments'])) {
+                $order = 1;
+                foreach ($data['attachments'] as $attachmentId) {
+                    $link = array_filter($attachments, function($v, $k) use ($attachmentId) {
+                        return $v->id === $attachmentId;
+                    }, ARRAY_FILTER_USE_BOTH);
+
+                    if(count($link) > 0) {
+                        $attachmentData = [
+                            'type' => 'Refund Receipt',
+                            'attachment_id' => $attachmentId,
+                            'linked_id' => $recurringData->txn_id,
+                            'order_no' => $order
+                        ];
+
+                        $updateOrder = $this->accounting_attachments_model->update_order($attachmentData);
+                    } else {
+                        $linkAttachmentData = [
+                            'type' => 'Refund Receipt',
+                            'attachment_id' => $attachmentId,
+                            'linked_id' => $recurringData->txn_id,
+                            'order_no' => $order
+                        ];
+    
+                        $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
+                    }
+
+                    $order++;
+                }
+            }
+
+            if(isset($data['tags']) && is_array($data['tags'])) {
+                $order = 1;
+                foreach($data['tags'] as $key => $tagId) {
+                    $linkTagData = [
+                        'transaction_type' => 'Refund Receipt',
+                        'transaction_id' => $recurringData->txn_id,
+                        'tag_id' => $tagId,
+                        'order_no' => $order
+                    ];
+
+                    if($tags[$key] === null) {
+                        $linkTagId = $this->tags_model->link_tag($linkTagData);
+                    } else {
+                        $updateOrder = $this->tags_model->update_link($linkTagData);
+                    }
+
+                    $order++;
+                }
+            }
+
+            $this->update_customer_transaction_items('Refund Receipt', $recurringData->txn_id, $data);
+        }
+
+        return $transactionUpdate;
+    }
+
+    private function update_delayed_credit($data, $recurringData)
+    {
+        $delayedCreditData = [
+            'customer_id' => $data['customer'],
+            'memo' => $data['memo'],
+            'adjustment_name' => $data['adjustment_name'],
+            'adjustment_value' => $data['adjustment_value'],
+            'total_amount' => $data['total_amount'],
+            'subtotal' => $data['subtotal'],
+            'tax_total' => $data['tax_total'],
+            'discount_total' => $data['discount_total']
+        ];
+
+        $transactionUpdate = $this->accounting_delayed_credit_model->updateDelayedCredit($recurringData->txn_id, $delayedCreditData);
+
+        if($transactionUpdate) {
+            $attachments = $this->accounting_attachments_model->get_attachments('Delayed Credit', $recurringData->txn_id);
+            $tags = $this->tags_model->get_transaction_tags('Delayed Credit', $recurringData->txn_id);
+
+            // OLD
+            if(count($attachments) > 0) {
+                foreach($attachments as $attachment) {
+                    if(!isset($data['attachments']) || !in_array($attachment->id, $data['attachments'])) {
+                        $attachmentLink = $this->accounting_attachments_model->get_attachment_link(['type' => 'Delayed Credit', 'attachment_id' => $attachment->id, 'linked_id' => $recurringData->txn_id]);
+                        $this->accounting_attachments_model->unlink_attachment($attachmentLink->id);
+                    }
+                }
+            }
+
+            if(count($tags) > 0) {
+                foreach($tags as $key => $tag) {
+                    if(!isset($data['tags']) || !isset($data['tags'][$key])) {
+                        $this->tags_model->unlink_tag(['transaction_type' => 'Delayed Credit', 'tag_id' => $tag->id, 'transaction_id' => $recurringData->txn_id]);
+                    }
+                }
+            }
+
+            // NEW
+            if (isset($data['attachments']) && is_array($data['attachments'])) {
+                $order = 1;
+                foreach ($data['attachments'] as $attachmentId) {
+                    $link = array_filter($attachments, function($v, $k) use ($attachmentId) {
+                        return $v->id === $attachmentId;
+                    }, ARRAY_FILTER_USE_BOTH);
+
+                    if(count($link) > 0) {
+                        $attachmentData = [
+                            'type' => 'Delayed Credit',
+                            'attachment_id' => $attachmentId,
+                            'linked_id' => $recurringData->txn_id,
+                            'order_no' => $order
+                        ];
+
+                        $updateOrder = $this->accounting_attachments_model->update_order($attachmentData);
+                    } else {
+                        $linkAttachmentData = [
+                            'type' => 'Delayed Credit',
+                            'attachment_id' => $attachmentId,
+                            'linked_id' => $recurringData->txn_id,
+                            'order_no' => $order
+                        ];
+    
+                        $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
+                    }
+
+                    $order++;
+                }
+            }
+
+            if(isset($data['tags']) && is_array($data['tags'])) {
+                $order = 1;
+                foreach($data['tags'] as $key => $tagId) {
+                    $linkTagData = [
+                        'transaction_type' => 'Delayed Credit',
+                        'transaction_id' => $recurringData->txn_id,
+                        'tag_id' => $tagId,
+                        'order_no' => $order
+                    ];
+
+                    if($tags[$key] === null) {
+                        $linkTagId = $this->tags_model->link_tag($linkTagData);
+                    } else {
+                        $updateOrder = $this->tags_model->update_link($linkTagData);
+                    }
+
+                    $order++;
+                }
+            }
+
+            $this->update_customer_transaction_items('Delayed Credit', $recurringData->txn_id, $data);
+        }
+
+        return $transactionUpdate;
+    }
+
+    private function update_delayed_charge($data, $recurringData)
+    {
+        $delayedChargeData = [
+            'customer_id' => $data['customer'],
+            'memo' => $data['memo'],
+            'adjustment_name' => $data['adjustment_name'],
+            'adjustment_value' => $data['adjustment_value'],
+            'total_amount' => $data['total_amount'],
+            'subtotal' => $data['subtotal'],
+            'tax_total' => $data['tax_total'],
+            'discount_total' => $data['discount_total'],
+        ];
+
+        $transactionUpdate = $this->accounting_delayed_charge_model->updateDelayedCharge($recurringData->txn_id, $delayedChargeData);
+
+        if($transactionUpdate) {
+            $attachments = $this->accounting_attachments_model->get_attachments('Delayed Charge', $recurringData->txn_id);
+            $tags = $this->tags_model->get_transaction_tags('Delayed Charge', $recurringData->txn_id);
+
+            // OLD
+            if(count($attachments) > 0) {
+                foreach($attachments as $attachment) {
+                    if(!isset($data['attachments']) || !in_array($attachment->id, $data['attachments'])) {
+                        $attachmentLink = $this->accounting_attachments_model->get_attachment_link(['type' => 'Delayed Charge', 'attachment_id' => $attachment->id, 'linked_id' => $recurringData->txn_id]);
+                        $this->accounting_attachments_model->unlink_attachment($attachmentLink->id);
+                    }
+                }
+            }
+
+            if(count($tags) > 0) {
+                foreach($tags as $key => $tag) {
+                    if(!isset($data['tags']) || !isset($data['tags'][$key])) {
+                        $this->tags_model->unlink_tag(['transaction_type' => 'Delayed Charge', 'tag_id' => $tag->id, 'transaction_id' => $recurringData->txn_id]);
+                    }
+                }
+            }
+
+            // NEW
+            if (isset($data['attachments']) && is_array($data['attachments'])) {
+                $order = 1;
+                foreach ($data['attachments'] as $attachmentId) {
+                    $link = array_filter($attachments, function($v, $k) use ($attachmentId) {
+                        return $v->id === $attachmentId;
+                    }, ARRAY_FILTER_USE_BOTH);
+
+                    if(count($link) > 0) {
+                        $attachmentData = [
+                            'type' => 'Delayed Charge',
+                            'attachment_id' => $attachmentId,
+                            'linked_id' => $recurringData->txn_id,
+                            'order_no' => $order
+                        ];
+
+                        $updateOrder = $this->accounting_attachments_model->update_order($attachmentData);
+                    } else {
+                        $linkAttachmentData = [
+                            'type' => 'Delayed Charge',
+                            'attachment_id' => $attachmentId,
+                            'linked_id' => $recurringData->txn_id,
+                            'order_no' => $order
+                        ];
+    
+                        $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
+                    }
+
+                    $order++;
+                }
+            }
+
+            if(isset($data['tags']) && is_array($data['tags'])) {
+                $order = 1;
+                foreach($data['tags'] as $key => $tagId) {
+                    $linkTagData = [
+                        'transaction_type' => 'Delayed Charge',
+                        'transaction_id' => $recurringData->txn_id,
+                        'tag_id' => $tagId,
+                        'order_no' => $order
+                    ];
+
+                    if($tags[$key] === null) {
+                        $linkTagId = $this->tags_model->link_tag($linkTagData);
+                    } else {
+                        $updateOrder = $this->tags_model->update_link($linkTagData);
+                    }
+
+                    $order++;
+                }
+            }
+
+            $this->update_customer_transaction_items('Delayed Charge', $recurringData->txn_id, $data);
+        }
+
+        return $transactionUpdate;
+    }
+
     private function update_categories($transactionType, $transactionId, $data)
     {
         $categories = $this->expenses_model->get_transaction_categories($transactionId, $transactionType);
@@ -1666,6 +2391,43 @@ class Recurring_transactions extends MY_Controller {
                 }
             }
         }
+    }
+
+    private function update_customer_transaction_items($transactionType, $transactionId, $data)
+    {
+        $items = $this->accounting_credit_memo_model->get_customer_transaction_items($transactionType, $transactionId);
+        $this->accounting_credit_memo_model->delete_customer_transaction_items($transactionType, $transactionId);
+
+        $newItems = [];
+        foreach($data['item'] as $key => $input) {
+            $explode = explode('-', $input);
+
+            if($explode[0] === 'package') {
+                $packageItems = $this->items_model->get_package_items($explode[1]);
+            }
+
+            $itemData = [
+                'transaction_type' => $transactionType,
+                'transaction_id' => $transactionId,
+                'item_id' => $explode[0] === 'item' ? $explode[1] : null,
+                'package_id' => $explode[0] === 'package' ? $explode[1] : null,
+                'package_item_details' => $explode[0] === 'package' ? json_encode($packageItems) : null,
+                'location_id' => $data['location'][$key],
+                'quantity' => $data['quantity'][$key],
+                'price' => $data['item_amount'][$key],
+                'discount' => $data['discount'][$key],
+                'tax' => $data['item_tax'][$key],
+                'total' => $data['item_total'][$key]
+            ];
+
+            if(!is_null($items[$key])) {
+                $itemData['created_at'] = date("Y-m-d H:i:s", strtotime($items[$key]->created_at));
+            }
+
+            $newItems[] = $itemData;
+        }
+
+        $this->accounting_credit_memo_model->insert_transaction_items($newItems);
     }
 
     public function print()
