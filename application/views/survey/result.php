@@ -413,6 +413,15 @@
                                                       }
                                                     break;
                                                     case 7: //images
+                                                      echo '<div class="alert alert-dark">';
+                                                      foreach($question->survey_answer as $answers){
+                                                        if($answers->answer !== ''){
+                                                          ?>
+                                                          <img src="<?= base_url('uploads/survey/files/'.$survey->id.'/'.$answers->answer); ?>" class="img img-fluid" style="width:22%;display: inline-block;margin:5px;">
+                                                          <?php
+                                                        }
+                                                      }
+                                                      echo '</div>';
                                                     break;
                                                     case 8: // phone number
                                                       foreach($question->survey_answer as $answers){
@@ -456,7 +465,8 @@
                                                             scales: {
                                                               yAxes: [{
                                                                   ticks: {
-                                                                      beginAtZero: true
+                                                                      beginAtZero: true,
+                                                                      precision: 0
                                                                   }
                                                               }]
                                                             }
@@ -466,76 +476,44 @@
                                                             data: chartData_<?=$question->id?>,
                                                             options: chartOptions_<?=$question->id?>
                                                           });
-                                                          <?php
-                                                            foreach($question->questions as $choices){
-                                                              ?>
-                                                                chartData_<?=$question->id?>.labels.push('<?= $choices->choices_label?>');
-                                                              <?php
+                                                          <?php $choices = [0 => 'Yes', 1 => 'No']; ?>
+                                                          <?php foreach( $choices as $value ){ ?>
+                                                            chartData_<?=$question->id?>.labels.push('<?= $value; ?>');                                                            
+                                                            <?php 
                                                               $count = 0;
                                                               foreach($question->survey_answer as $answers){
                                                                 
-                                                                if($answers->answer == $choices->choices_label){
+                                                                if($answers->answer == $value){
                                                                   $count++;
                                                                 }
                                                               }
-                                                              ?>
-                                                                chartData_<?=$question->id?>.datasets[0].data.push(<?= $count ?>);
-                                                              <?php
-                                                            }
                                                             ?>
-                                                            checkboxChart_<?=$question->id?>.update();
+                                                            chartData_<?=$question->id?>.datasets[0].data.push(<?= $count ?>);
+                                                          <?php } ?>
+                                                          checkboxChart_<?=$question->id?>.update();
                                                         </script>
                                                       <?php
                                                     break;
                                                     case 12: //rating //to be checked
                                                       ?>
-                                                        <canvas id="rating-canvas-<?= $question->template_id?>-<?= $question->id?>" height="50"></canvas>
-                                                        <script>
-                                                          let ctx_<?=$question->id?> = document.querySelector('#rating-canvas-<?= $question->template_id?>-<?= $question->id?>')
-                                                          let chartData_<?=$question->id?> = {
-                                                            labels: [],
-                                                            datasets: [
-                                                              {
-                                                                label: ['Question: <?= $question->question?>'],
-                                                                data: [],
-                                                                
-                                                                borderWidth: 1
-                                                              }
-                                                            ]
-                                                          }
-                                                          let chartOptions_<?=$question->id?> = {
-                                                            scales: {
-                                                              yAxes: [{
-                                                                  ticks: {
-                                                                      beginAtZero: true
-                                                                  }
-                                                              }]
-                                                            }
-                                                          }
-                                                          const checkboxChart_<?=$question->id?> = new Chart(ctx_<?=$question->id?>,{
-                                                            type: 'bar',
-                                                            data: chartData_<?=$question->id?>,
-                                                            options: chartOptions_<?=$question->id?>
-                                                          });
-                                                          <?php
-                                                            foreach($question->questions as $choices){
-                                                              ?>
-                                                                chartData_<?=$question->id?>.labels.push('<?= $choices->choices_label?>');
-                                                              <?php
-                                                              $count = 0;
-                                                              foreach($question->survey_answer as $answers){
-                                                                
-                                                                if($answers->answer == $choices->choices_label){
-                                                                  $count++;
-                                                                }
-                                                              }
-                                                              ?>
-                                                                chartData_<?=$question->id?>.datasets[0].data.push(<?= $count ?>);
-                                                              <?php
-                                                            }
-                                                            ?>
-                                                            checkboxChart_<?=$question->id?>.update();
-                                                        </script>
+                                                        <?php foreach($question->survey_answer as $answers){ ?>
+                                                          <div class="alert alert-dark">
+                                                            <?php for($x = 1; $x <= $answers->answer; $x++){ ?>
+                                                              <button type="button" class="btnrating btn btn-warning btn-lg" data-attr="1" id="rating-star-1">
+                                                                  <i class="fa fa-star" aria-hidden="true"></i>
+                                                              </button>
+                                                            <?php } ?>
+
+                                                            <?php for($x = $answers->answer; $x < 5; $x++){ ?>
+                                                              <button type="button" class="btnrating btn btn-default btn-lg" data-attr="1" id="rating-star-1">
+                                                                  <i class="fa fa-star" aria-hidden="true"></i>
+                                                              </button>
+                                                            <?php } ?>
+                                                            <h2 class="bold rating-header" style="display: inline-block;font-size: 21px;margin-left: 19px;">
+                                                              <span class="selected-rating"><?= $answers->answer; ?></span><small> / 5</small>
+                                                            </h2>                                                            
+                                                          </div>
+                                                        <?php } ?>                                                        
                                                       <?php
                                                     break;
                                                     case 13: // statement
@@ -633,7 +611,16 @@
                                                         }
                                                       }
                                                     break;
-                                                    case 18:
+                                                    case 18: //File
+                                                      echo '<div class="alert alert-dark">';
+                                                      foreach($question->survey_answer as $answers){
+                                                        if($answers->answer !== ''){
+                                                          ?>
+                                                          <a target="_blank" class="btn btn-sm btn-primary" href="<?= base_url('uploads/survey/files/'.$survey->id.'/'.$answers->answer); ?>"><i class="fa fa-file"></i> <?= $answers->answer; ?></a>
+                                                          <?php
+                                                        }
+                                                      }
+                                                      echo '</div>';
                                                     break;
                                                     case 19:
                                                     break;
@@ -814,9 +801,9 @@
     });
   });
 
-  $(document).on('click', '.btn-share-survey', function(){
+  /*$(document).on('click', '.btn-share-survey', function(){
     $('#modal-share-survey').modal('show');
-  });
+  });*/
 
 </script>
 <?php echo put_footer_assets(); ?>

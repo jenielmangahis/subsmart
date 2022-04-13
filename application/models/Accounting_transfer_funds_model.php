@@ -45,4 +45,10 @@ class Accounting_transfer_funds_model extends MY_Model {
         $query = $this->db->get($this->table);
         return $query->result();
     }
+
+	public function delete_transfer($id)
+	{
+		$this->db->where('id', $id);
+		return $this->db->delete($this->table);
+	}
 }

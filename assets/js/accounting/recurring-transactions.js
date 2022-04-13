@@ -829,12 +829,94 @@ $(document).on('submit', '#update-recurring-form', function(e) {
 
     var data = new FormData(this);
 
+    switch($(this).children('.modal').attr('id')) {
+        case 'journalEntryModal' :
+            data.delete('names[]');
+
+            $('#journalEntryModal #journal-table tbody tr select[name="names[]"]').each(function() {
+                if(data.has('names[]') === false) {
+                    data.set('names[]', $(this).val() === null ? '' : $(this).val());
+                } else {
+                    data.append('names[]', $(this).val() === null ? '' : $(this).val());
+                }
+            });
+        break;
+        case 'depositModal' :
+            data.delete('received_from[]');
+            data.delete('payment_method[]');
+    
+            $('#depositModal #bank-deposit-table tbody tr select[name="received_from[]"]').each(function() {
+                if(data.has('received_from[]') === false) {
+                    data.set('received_from[]', $(this).val() === null ? '' : $(this).val());
+                } else {
+                    data.append('received_from[]', $(this).val() === null ? '' : $(this).val());
+                }
+            });
+    
+            $('#depositModal #bank-deposit-table tbody tr select[name="payment_method[]"]').each(function() {
+                if(data.has('payment_method[]') === false) {
+                    data.set('payment_method[]', $(this).val() === null ? '' : $(this).val());
+                } else {
+                    data.append('payment_method[]', $(this).val() === null ? '' : $(this).val());
+                }
+            });
+        break;
+    }
+
+    if(customerModals.includes('#'+$(this).children('.modal').attr('id'))) {
+        data.delete('item[]');
+        data.delete('package[]');
+        data.delete('location[]');
+        data.delete('quantity[]');
+        data.delete('item_amount[]');
+        data.delete('discount[]');
+        data.delete('item_tax[]');
+        $(this).children('.modal').find(`table#item-table tbody:not(#package-items-table) tr:not(.package-items, .package-item, .package-item-header)`).each(function() {
+            if(data.has('item_total[]')) {
+                if($(this).hasClass('package')) {
+                    data.append('item[]', 'package-'+$(this).find('input[name="package[]"]').val());
+                    data.append('location[]', null);
+                    data.append('item_amount[]', $(this).find('span.item-amount').html());
+                    data.append('discount[]', null);
+                } else {
+                    data.append('item[]', 'item-'+$(this).find('input[name="item[]"]').val());
+                    data.append('location[]', $(this).find('select[name="location[]"]').val());
+                    data.append('item_amount[]', $(this).find('input[name="item_amount[]"]').val());
+                    data.append('discount[]', $(this).find('input[name="discount[]"]').val());
+                }
+                data.append('item_tax[]', $(this).find('input[name="item_tax[]"]').val());
+                data.append('quantity[]', $(this).find('input[name="quantity[]"]').val());
+                data.append('item_total[]', $(this).find('span.row-total').html().replace('$', ''));
+            } else {
+                if($(this).hasClass('package')) {
+                    data.set('item[]', 'package-'+$(this).find('input[name="package[]"]').val());
+                    data.set('location[]', null);
+                    data.set('item_amount[]', $(this).find('span.item-amount').html());
+                    data.set('discount[]', null);
+                } else {
+                    data.set('item[]', 'item-'+$(this).find('input[name="item[]"]').val());
+                    data.set('location[]', $(this).find('select[name="location[]"]').val());
+                    data.set('item_amount[]', $(this).find('input[name="item_amount[]"]').val());
+                    data.set('discount[]', $(this).find('input[name="discount[]"]').val());
+                }
+                data.set('item_tax[]', $(this).find('input[name="item_tax[]"]').val());
+                data.set('quantity[]', $(this).find('input[name="quantity[]"]').val());
+                data.set('item_total[]', $(this).find('span.row-total').html().replace('$', ''));
+            }
+        });
+
+        data.set('total_amount', $(this).children('.modal').find(`.transaction-grand-total:first-child`).html().replace('$', '').trim());
+        data.set('subtotal', $(this).children('.modal').find(`.transaction-subtotal:first-child`).html().replace('$', '').trim());
+        data.set('tax_total', $(this).children('.modal').find(`.transaction-taxes:first-child`).html().replace('$', '').trim());
+        data.set('discount_total', $(this).children('.modal').find(`.transaction-discounts:first-child`).html().replace('$', '').trim());
+    }
+
     if(vendorModals.includes('#'+$(this).children('.modal').attr('id'))) {
         var count = 0;
-        var totalAmount = $(`#update-recurring-form .modal span.transaction-total-amount`).html().replace('$', '');
+        var totalAmount = $(this).children('.modal').find(`span.transaction-total-amount`).html().replace('$', '');
         data.append('total_amount', totalAmount);
 
-        $(`#update-recurring-form .modal table#category-details-table tbody tr`).each(function() {
+        $(this).children('.modal').find(`table#category-details-table tbody tr`).each(function() {
             var billable = $(this).find('input[name="category_billable[]"]');
             var tax = $(this).find('input[name="category_tax[]"]');
 
@@ -854,7 +936,7 @@ $(document).on('submit', '#update-recurring-form', function(e) {
         });
 
         count = 0;
-        $(`#update-recurring-form .modal table#item-details-table tbody tr`).each(function() {
+        $(this).children('.modal').find(`table#item-details-table tbody tr`).each(function() {
             if(count === 0) {
                 data.set('item_total[]', $(this).find('td span.row-total').html().replace('$', ''));
                 data.set('item_linked[]', $(this).find('i.fa.fa-link').length > 0);

@@ -1096,4 +1096,42 @@ class Pages extends MYF_Controller {
     	}
     }
 
+    public function front_survey($id)
+    {
+    	$this->load->model('Survey_model', 'survey_model');
+
+	    add_css(array(
+	        'assets/dashboard/css/bootstrap.min.css',
+	    ));
+
+	    $this->page_data['survey'] = $this->survey_model->view($id);
+	    $this->page_data['questions'] = $this->survey_model->getQuestions($id);
+	    $this->page_data['survey_theme'] = $this->survey_model->getThemes($this->page_data['survey']->theme_id);
+	    $this->load->view('survey/preview', $this->page_data);
+	}
+
+	public function survey_answer($id)
+	{
+		$this->load->model('Survey_model', 'survey_model');
+	    $answered = $this->survey_model->saveAnswer($_POST, $_FILES,$id);
+	    echo json_encode($answered);
+	    exit;
+  	}
+
+  	public function surveyImageUploadedFile( $survey_id ) {
+      if(isset($_FILES['file']) && $_FILES['file']['tmp_name'] != '') {
+          $target_dir = "./uploads/survey/image_db/" . $survey_id . "/";
+          if(!file_exists($target_dir)) {
+              mkdir($target_dir, 0777, true);
+          }
+
+          $tmp_name = str_replace(" ", "-",$_FILES['file']['tmp_name']);
+          $extension = strtolower(end(explode('.',$_FILES['file']['name'])));
+          $name = 'attached_image_'.time().".".$extension;
+          move_uploaded_file($tmp_name, $target_dir . $tmp_name);
+
+          return $tmp_name;
+      }
+  }
+
 }

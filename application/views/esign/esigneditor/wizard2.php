@@ -336,8 +336,8 @@ ini_set('max_input_vars', 30000);
             <div class="col-6">
                 <div class="newdisputemodal__selects">
                     <div class="form-group">
-                        <label for="newdisputemodal_creditor">Creditor/Furnisher</label>
-                        <select class="form-control" id="newdisputemodal_creditor" data-type="furnisher_id"></select>
+                        <label for="newdisputemodal_creditor">Creditor/Furnisher <span class="text-danger">*</span></label>
+                        <select required class="form-control" id="newdisputemodal_creditor" data-type="furnisher_id"></select>
                         <a href="javascript:void(0);" class="link" data-action="show_creditor_modal">Add Creditor/Furnisher</a>
                     </div>
 

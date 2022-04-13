@@ -999,6 +999,13 @@ class Invoice_model extends MY_Model
         $update = $this->db->update('invoices_items', $data);
         return $update ? true : false;
     }
+
+    public function delete_invoice($id)
+    {
+        $this->db->where('id', $id);
+        $delete = $this->db->delete('invoices');
+        return $delete;
+    }
 }
 
 /* End of file Invoice_model.php */

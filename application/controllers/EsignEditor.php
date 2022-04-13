@@ -1428,6 +1428,88 @@ SQL;
         }
 
         $payload = json_decode(file_get_contents('php://input'), true);
-        echo json_encode(['data' => $payload]);
+
+        if (!array_key_exists('bureaus', $payload) || !is_array($payload['bureaus'])) {
+            echo json_encode(['success' => false]);
+            return;
+        }
+
+        $instruction = null;
+        $now = date('Y-m-d H:i:s');
+
+        // determine instruction
+        if (array_key_exists('instruction_id', $payload)) {
+            $this->db->where('id', $payload['instruction_id']);
+            $instruction = $this->db->get('company_dispute_instructions')->row();
+            $instruction = $instruction->instructions;
+        } else if (array_key_exists('instruction_value', $payload)) {
+            $instruction = $payload['instruction_value'];
+
+            if (array_key_exists('save_instruction', $payload) && $payload['save_instruction']) {
+                $this->db->insert('company_dispute_instructions', [
+                    'company_id' => logged('company_id'),
+                    'instructions' => $instruction,
+                    'date_created' => $now,
+                ]);
+            }
+        }
+
+        $this->db->insert('customer_disputes', [
+            'company_id' => logged('company_id'),
+            'prof_id' => $payload['customer_id'],
+            'furnisher_id' => $payload['furnisher_id'],
+            'company_reason_id' => $payload['company_reason_id'],
+            'instruction' => is_null($instruction) ? '' : $instruction,
+            'date_dispute' => $now,
+            'date_created' => $now,
+            'date_modified' => $now,
+        ]);
+        $customerDisputeId = $this->db->insert_id();
+
+        $creditBureauMap = [
+            'equifax' => 'Equifax',
+            'experian' => 'Experian',
+            'transunion' => 'Trans Union',
+        ];
+
+        $accountNumbers = [];
+        if (array_key_exists('account_numbers', $payload)) {
+            $accountNumbers = $payload['account_numbers'];
+
+        } else if (array_key_exists('account_number', $payload)) {
+            foreach ($creditBureauMap as $key => $_) {
+                $accountNumbers[$key] = $payload['account_number'];
+            }
+        }
+
+        foreach ($payload['bureaus'] as $bureau) {
+            if (!array_key_exists($bureau, $creditBureauMap)) {
+                continue;
+            }
+
+            $this->db->where('name', $creditBureauMap[$bureau]);
+            $bureauRecord = $this->db->get('credit_bureau')->row();
+
+            $accountNumber = '';
+            if (array_key_exists($bureau, $accountNumbers)) {
+                $accountNumber = $accountNumbers[$bureau];
+            }
+
+            $this->db->insert('customer_dispute_items', [
+                'customer_dispute_id' => $customerDisputeId,
+                'credit_bureau_id' => $bureauRecord->id,
+                'account_number' => $accountNumber,
+                'status' => 'Positive',
+                'date_created' => $now,
+                'date_modified' => $now,
+            ]);
+        }
+
+        $this->db->where('id', $customerDisputeId);
+        $dispute = $this->db->get('customer_disputes')->row();
+        [$disputeData] = $this->getDisputeData([$dispute]);
+
+        header('content-type: application/json');
+        echo json_encode(['data' => $disputeData]);
     }
 }

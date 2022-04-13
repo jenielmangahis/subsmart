@@ -1035,19 +1035,19 @@ class Accounting_modals extends MY_Controller
         try {
             switch ($modalName) {
                 case 'transferModal':
-                    $this->result = $this->transfer_funds($data, $files);
+                    $this->result = $this->transfer_funds($data);
                 break;
                 case 'payDownCreditModal':
-                    $this->result = $this->pay_down_credit_card($data, $files);
+                    $this->result = $this->pay_down_credit_card($data);
                 break;
                 case 'singleTimeModal':
                     $this->result = $this->single_time_activity($data);
                 break;
                 case 'journalEntryModal':
-                    $this->result = $this->journal_entry($data, $files);
+                    $this->result = $this->journal_entry($data);
                 break;
                 case 'depositModal':
-                    $this->result = $this->bank_deposit($data, $files);
+                    $this->result = $this->bank_deposit($data);
                 break;
                 case 'inventoryModal':
                     $this->result = $this->inventory_qty_adjustment($data);
@@ -1121,7 +1121,7 @@ class Accounting_modals extends MY_Controller
         exit;
     }
 
-    private function transfer_funds($data, $files)
+    private function transfer_funds($data)
     {
         $this->form_validation->set_rules('transfer_from_account', 'Transfer From Account', 'required');
         $this->form_validation->set_rules('transfer_to_account', 'Transfer To Account', 'required|differs[transfer_from_account]');
@@ -1318,7 +1318,7 @@ class Accounting_modals extends MY_Controller
         return $return;
     }
 
-    private function pay_down_credit_card($data, $files)
+    private function pay_down_credit_card($data)
     {
         $this->form_validation->set_rules('credit_card_account', 'Credit Card', 'required');
         $this->form_validation->set_rules('amount', 'Amount', 'required');
@@ -1484,7 +1484,7 @@ class Accounting_modals extends MY_Controller
         return $return;
     }
 
-    private function journal_entry($data, $files)
+    private function journal_entry($data)
     {
         if (isset($data['template_name'])) {
             $this->form_validation->set_rules('template_name', 'Template Name', 'required');
@@ -1703,7 +1703,7 @@ class Accounting_modals extends MY_Controller
         return $return;
     }
 
-    private function bank_deposit($data, $files)
+    private function bank_deposit($data)
     {
         $this->form_validation->set_rules('bank_account', 'Bank Account', 'required');
 
