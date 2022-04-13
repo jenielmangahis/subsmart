@@ -381,23 +381,21 @@ class Survey_model extends MY_Model {
 		if($files){
 			foreach ($files as $key => $value) {
 				$question_id = explode('-', $key)[1];
-				$path = 'uploads/survey';
-			$config = [
-				'upload_path' 		=> $path,
-				'allowed_types' 	=> '*',
-				'overwrite' 		=> false
-			];
-			$test = $this->upload->initialize($config);
-			if ( ! $this->upload->do_upload('answer-'.$question_id.'') ){
+				$target_dir  = "./uploads/survey/files/" . $id . "/";
+		        if(!file_exists($target_dir)) {
+		            mkdir($target_dir, 0777, true);
+		        }
 
-				}else{
-				$upload_data = $this->upload->data();
-			}
-			$datas = array(
-				'answer' => $value['name'],
-				'survey_id' => $id,
-				'question_id' => $question_id
-			);
+		        $tmp_name  = str_replace(" ", "-",$value['tmp_name']);
+		        $extension = strtolower(end(explode('.',$value['name'])));
+		        $file_name      = 'attached_'.time().".".$extension;
+		        move_uploaded_file($tmp_name, $target_dir . $file_name);
+
+				$datas = array(
+					'answer' => $file_name,
+					'survey_id' => $id,
+					'question_id' => $question_id
+				);
 				$this->db->insert('survey_answer',$datas);
 			}
 		}

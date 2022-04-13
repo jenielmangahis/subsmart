@@ -199,7 +199,8 @@ $route['terms-and-conditions/create'] = 'TermsAndConditionsController/create';
 
 //survey module
 $route['vault/(:num)'] = 'vault/index/$1';
-$route['survey/(:num)']['GET'] = 'survey/preview/$1';
+//$route['survey/(:num)']['GET'] = 'survey/preview/$1';
+$route['survey/(:num)']['GET'] = 'pages/front_survey/$1';
 $route['survey/edit/(:num)'] = 'survey/edit/$1';
 $route['survey/delete/(:num)']['GET'] = 'survey/delete/$1';
 $route['survey/preview/(:num)']['GET'] = 'survey/preview/$1';
@@ -230,7 +231,8 @@ $route['survey/themes/select/(:any)/(:any)'] = 'survey/selectTheme/$1/$2';
 $route['survey/update/(:num)/(:any)/(:num)'] = 'survey/updateSurvey/$1/$2/$3';
 $route['survey/update/question'] = 'survey/updateQuestion';
 $route['survey/update/(:any)'] = 'survey/updateSurvey/$1';
-$route['survey/question/upload/(:num)'] = 'survey/addQuestionUpload/$1';
+//$route['survey/question/upload/(:num)'] = 'survey/addQuestionUpload/$1';
+$route['survey/question/upload/(:num)'] = 'pages/surveyAddQuestionUpload/$1';
 $route['survey/add/questions/choices/(:num)/(:num)'] = 'survey/addAndUpdateQuestionChoices/$1/$2';
 $route['survey/add/questions/(:num)/(:num)'] = 'survey/addAndUpdateQuestion/$1/$2';
 $route['survey/add/question/(:num)/(:num)'] = 'survey/addQuestion/$1/$2';
@@ -249,6 +251,7 @@ $route['survey/tribue'] = 'survey/getQuestions';
 $route['survey/result/$1'] = 'survey/result/$1';
 $route['survey/share/$1'] = 'survey/share/$1';
 $route['survey/answer/$1'] = 'survey/answer/$1';
+$route['survey/submit_answer/(:num)'] = 'pages/survey_answer/$1';
 
 
 $route['survey/add/question/choice/(:num)/(:num)'] = 'survey/addQuestionChoice/$1/$2';

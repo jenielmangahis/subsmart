@@ -747,31 +747,32 @@ $(document).ready(function(){
           }
           break;
         default:
-
-          //var data = new FormData($(this).parent().parent().parent().parent().parent().parent().parent()[0]);
+          //var data = new FormData($(this).parent().parent().parent().parent().parent().parent().parent()[0]);          
           var data = new FormData();
           data.append( 'file', $(this)[0].files[0]);
-          
-          $('.custom-file-label').html(fileName);
-          $.ajax({
-            url: surveyBaseUrl + 'survey/question/upload/'+ id,
-            type:'POST',
-            data: data,
-            dataType: 'json',
-            cache:false,
-            contentType: false,
-            processData: false,
-            success: function(res){
-              if(value == "description"){
-                var input = ``;
-                $('#container-'+id+' #description-container').html(input);
-                toastr["success"]("Settings Successfully Removed");
-              }else{
-                $('#required-asterisk-'+id+'').remove();
-                toastr["success"]("Settings Successfully Removed!");
+          $(this).next('.custom-file-label').html(fileName);
+
+          if( $(this).hasClass('survey-file-upload') ){                        
+            $.ajax({
+              url: surveyBaseUrl + 'survey/question/upload/'+ id,
+              type:'POST',
+              data: data,
+              dataType: 'json',
+              cache:false,
+              contentType: false,
+              processData: false,
+              success: function(res){
+                if(value == "description"){
+                  var input = ``;
+                  $('#container-'+id+' #description-container').html(input);
+                  toastr["success"]("Settings Successfully Removed");
+                }else{
+                  $('#required-asterisk-'+id+'').remove();
+                  toastr["success"]("Settings Successfully Removed!");
+                }
               }
-            }
-          });
+            });
+          }          
           break;
       }
 
