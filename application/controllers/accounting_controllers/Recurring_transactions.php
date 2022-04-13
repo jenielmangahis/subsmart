@@ -423,8 +423,78 @@ class Recurring_transactions extends MY_Controller {
     public function delete($id)
     {
         $result = [];
+        $recurringData = $this->accounting_recurring_transactions_model->getRecurringTransaction($id);
+
+        switch($recurringData->txn_type) {
+            case 'invoice' :
+                $deleteTransac = $this->invoice_model->delete_invoice($recurringData->txn_id);
+                $this->invoice_model->delete_items($recurringData->txn_id);
+            break;
+            case 'credit memo' :
+                $deleteTransac = $this->accounting_credit_memo_model->deleteCreditMemo($recurringData->txn_id);
+                $this->accounting_credit_memo_model->delete_customer_transaction_items('Credit Memo', $recurringData->txn_id);
+            break;
+            case 'sales receipt' :
+                $deleteTransac = $this->accounting_sales_receipt_model->deleteSalesReceipt($recurringData->txn_id);
+                $this->accounting_credit_memo_model->delete_customer_transaction_items('Sales Receipt', $recurringData->txn_id);
+            break;
+            case 'refund' :
+                $deleteTransac = $this->accounting_refund_receipt_model->deleteRefundReceipt($recurringData->txn_id);
+                $this->accounting_credit_memo_model->delete_customer_transaction_items('Refund Receipt', $recurringData->txn_id);
+            break;
+            case 'npcharge' :
+                $deleteTransac = $this->accounting_delayed_charge_model->deleteDelayedCharge($recurringData->txn_id);
+                $this->accounting_credit_memo_model->delete_customer_transaction_items('Delayed Charge', $recurringData->txn_id);
+            break;
+            case 'npcredit' :
+                $deleteTransac = $this->accounting_delayed_credit_model->deleteDelayedCredit($recurringData->txn_id);
+                $this->accounting_credit_memo_model->delete_customer_transaction_items('Delayed Credit', $recurringData->txn_id);
+            break;
+            case 'expense' :
+                $deleteTransac = $this->expenses_model->delete_expense($recurringData->txn_id);
+                $this->expenses_model->delete_vendor_transaction_categories('Expense', $recurringData->txn_id);
+                $this->expenses_model->delete_vendor_transaction_items('Expense', $recurringData->txn_id);
+            break;
+            case 'check' :
+                $deleteTransac = $this->expenses_model->delete_check($recurringData->txn_id);
+                $this->expenses_model->delete_vendor_transaction_categories('Check', $recurringData->txn_id);
+                $this->expenses_model->delete_vendor_transaction_items('Check', $recurringData->txn_id);
+            break;
+            case 'bill' :
+                $deleteTransac = $this->expenses_model->delete_bill($recurringData->txn_id);
+                $this->expenses_model->delete_vendor_transaction_categories('Bill', $recurringData->txn_id);
+                $this->expenses_model->delete_vendor_transaction_items('Bill', $recurringData->txn_id);
+            break;
+            case 'purchase order' :
+                $deleteTransac = $this->expenses_model->delete_purchase_order($recurringData->txn_id);
+                $this->expenses_model->delete_vendor_transaction_categories('Purchase Order', $recurringData->txn_id);
+                $this->expenses_model->delete_vendor_transaction_items('Purchase Order', $recurringData->txn_id);
+            break;
+            case 'vendor credit' :
+                $deleteTransac = $this->expenses_model->delete_vendor_credit($recurringData->txn_id);
+                $this->expenses_model->delete_vendor_transaction_categories('Vendor Credit', $recurringData->txn_id);
+                $this->expenses_model->delete_vendor_transaction_items('Vendor Credit', $recurringData->txn_id);
+            break;
+            case 'credit card credit' :
+                $deleteTransac = $this->expenses_model->delete_credit_card_credit($recurringData->txn_id);
+                $this->expenses_model->delete_vendor_transaction_categories('Credit Card Credit', $recurringData->txn_id);
+                $this->expenses_model->delete_vendor_transaction_items('Credit Card Credit', $recurringData->txn_id);
+            break;
+            case 'deposit' :
+                $deleteTransac = $this->accounting_bank_deposit_model->delete_deposit($recurringData->txn_id);
+                $this->accounting_bank_deposit_model->deleteFunds($recurringData->txn_id);
+            break;
+            case 'transfer' :
+                $deleteTransac = $this->accounting_transfer_funds_model->delete_transfer($recurringData->txn_id);
+            break;
+            case 'journal entry' :
+                $deleteTransac = $this->accounting_journal_entries_model->delete_entry($recurringData->txn_id);
+                $this->accounting_journal_entries_model->deleteEntries($recurringData->txn_id);
+            break;
+        }
 
         $delete = $this->accounting_recurring_transactions_model->delete($id);
+
         $result['success'] = $delete;
         $result['message'] = $delete ? 'Successfully Deleted' : 'Failed to Delete';
 
@@ -669,6 +739,7 @@ class Recurring_transactions extends MY_Controller {
             if($data['recurring_type'] !== 'unscheduled') {
                 $currentDate = date("m/d/Y", strtotime($recurringData->previous_date));
                 $startDate = !is_null($recurringData->previous_date) ? $currentDate : date("m/d/Y", strtotime($data['start_date']));
+                $startDate = $data['start_date'] === '' ? date("m/d/Y") : $startDate;
                 $every = $data['recurr_every'];
 
                 switch($data['recurring_interval']) {

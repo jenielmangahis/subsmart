@@ -40,7 +40,7 @@ window.document.addEventListener("DOMContentLoaded", async () => {
     toggle_instructions: toggleInstructions,
     save_creditor: saveCreditor,
     save_reason: saveReason,
-    save_dispute_item: saveDisputeItem,
+    save_dispute_item: () => saveDisputeItem(customer),
     to_customer_dashboard: () => toDustomerDashboard(customer),
   };
 
@@ -941,10 +941,10 @@ async function saveReason() {
   $input.value = "";
 }
 
-async function saveDisputeItem() {
+async function saveDisputeItem(customer) {
   const $modal = document.getElementById("newdisputemodal");
   const $dataTypes = $modal.querySelectorAll("[data-type]");
-  const payload = { bureaus: [] };
+  const payload = { bureaus: [], customer_id: customer.prof_id };
 
   const $bureaus = $modal.querySelectorAll("[name=bureau]");
   $bureaus.forEach(($bureau) => {
@@ -1006,10 +1006,23 @@ async function saveDisputeItem() {
     }
   }
 
+  if (!payload.furnisher_id) {
+    window.helpers.showError("Please select creditor/furnisher");
+    return;
+  }
+
   const $button = document.querySelector("[data-action=save_dispute_item]");
-  await window.helpers.submitBtn($button, () =>
+  const { data } = await window.helpers.submitBtn($button, () =>
     window.api.saveDisputeItem(payload)
   );
+
+  const $table = document.getElementById("customerdisputestable");
+  if ($.fn.DataTable.isDataTable($table)) {
+    const table = $($table).DataTable();
+    table.row.add(data).draw();
+  }
+
+  $($modal).modal("hide");
 }
 
 function toDustomerDashboard(customer) {

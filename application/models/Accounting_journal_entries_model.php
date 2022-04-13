@@ -76,4 +76,10 @@ class Accounting_journal_entries_model extends MY_Model {
 		$query = $this->db->get($this->table);
 		return $query->result();
 	}
+
+	public function delete_entry($id)
+	{
+		$this->db->where('id', $id);
+		return $this->db->delete($this->table);
+	}
 }

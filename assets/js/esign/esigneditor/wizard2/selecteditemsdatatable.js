@@ -38,6 +38,10 @@ export class Table {
       filter: false,
       bInfo: false,
       bDestroy: true,
+      bLengthChange: false,
+      bPaginate: false,
+      bFilter: false,
+      bInfo: false,
       columns: [
         {
           render: this.columns.creditor,

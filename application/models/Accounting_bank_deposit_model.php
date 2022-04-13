@@ -47,6 +47,12 @@ class Accounting_bank_deposit_model extends MY_Model {
 		}
 	}
 
+	public function delete_deposit($id)
+	{
+		$this->db->where('id', $id);
+		return $this->db->delete($this->table);
+	}
+
 	function deleteFunds($deposit_id) {
 		return $this->db->where('bank_deposit_id', $deposit_id)->delete('accounting_bank_deposit_funds');
 	}

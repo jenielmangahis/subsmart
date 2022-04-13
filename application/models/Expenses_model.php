@@ -972,4 +972,62 @@ class Expenses_model extends MY_Model
         $query = $this->db->get('accounting_bill_payments');
         return $query->result();
     }
+
+    public function delete_expense($id)
+    {
+        $this->db->where('id', $id);
+        $delete = $this->db->delete('accounting_expense');
+        return $delete;
+    }
+
+    public function delete_check($id)
+    {
+        $this->db->where('id', $id);
+        $delete = $this->db->delete('accounting_check');
+        return $delete;
+    }
+
+    public function delete_bill($id)
+    {
+        $this->db->where('id', $id);
+        $delete = $this->db->delete('accounting_bill');
+        return $delete;
+    }
+
+    public function delete_purchase_order($id)
+    {
+        $this->db->where('id', $id);
+        $delete = $this->db->delete('accounting_purchase_order');
+        return $delete;
+    }
+
+    public function delete_vendor_credit($id)
+    {
+        $this->db->where('id', $id);
+        $delete = $this->db->delete('accounting_vendor_credit');
+        return $delete;
+    }
+
+    public function delete_credit_card_credit($id)
+    {
+        $this->db->where('id', $id);
+        $delete = $this->db->delete('accounting_credit_card_credits');
+        return $delete;
+    }
+
+    public function delete_vendor_transaction_categories($transactionType, $transactionId)
+    {
+        $this->db->where('transaction_type', $transactionType);
+        $this->db->where('transaction_id', $transactionId);
+        $delete = $this->db->delete('accounting_vendor_transaction_categories');
+        return $delete;
+    }
+
+    public function delete_vendor_transaction_items($transactionType, $transactionId)
+    {
+        $this->db->where('transaction_type', $transactionType);
+        $this->db->where('transaction_id', $transactionId);
+        $delete = $this->db->delete('accounting_vendor_transaction_items');
+        return $delete;
+    }
 }
