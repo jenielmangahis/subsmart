@@ -5586,7 +5586,11 @@ $(function() {
 
         submitType = 'save-and-close';
 
-        $('#modal-form').submit();
+        if($('#modal-container #modal-form').length > 0) {
+            $('#modal-form').submit();
+        } else {
+            $('#update-recurring-form').submit();
+        }
     });
 
     $(document).on('change', '#invoiceModal #customer', function() {

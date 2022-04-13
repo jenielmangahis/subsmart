@@ -1418,4 +1418,16 @@ SQL;
         $reason = $this->db->get('company_reasons')->row();
         echo json_encode(['data' => $reason]);
     }
+
+    public function apiSaveDisputeItem()
+    {
+        header('content-type: application/json');
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['success' => false]);
+            return;
+        }
+
+        $payload = json_decode(file_get_contents('php://input'), true);
+        echo json_encode(['data' => $payload]);
+    }
 }

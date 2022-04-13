@@ -13512,8 +13512,8 @@ class Accounting_modals extends MY_Controller
             'message_on_statement' => $data['message_on_statement'],
             'adjustment_name' => $data['adjustment_name'],
             'adjustment_value' => $data['adjustment_value'],
-            'balance' => $data['total_amount'],
-            'total_amount' => number_format(floatval($diff) + floatval($data['total_amount']), 2, '.', ','),
+            'total_amount' => $data['total_amount'],
+            'balance' => number_format(floatval($diff) + floatval($data['total_amount']), 2, '.', ','),
             'subtotal' => $data['subtotal'],
             'tax_total' => $data['tax_total'],
             'discount_total' => $data['discount_total'],
@@ -13782,7 +13782,6 @@ class Accounting_modals extends MY_Controller
         ];
 
         $update = $this->accounting_refund_receipt_model->updateRefundReceipt($refundReceipt->id, $refundReceiptData);
-        // $update = true;
 
         if($update) {
             $attachments = $this->accounting_attachments_model->get_attachments('Refund Receipt', $refundReceipt->id);
@@ -14180,9 +14179,6 @@ class Accounting_modals extends MY_Controller
             'payment_methods' => $credit_card.','.$bank_transfer.','.$instapay.','.$check.','.$cash.','.$deposit,
             'message_to_customer' => $data['message_to_customer'],
             'terms_and_conditions' => $data['terms_and_conditions'],
-            'company_id' => logged('company_id'),
-            'is_recurring' => isset($data['template_name']) ? 1 : 0,
-            'user_id' => logged('company_id'),
             'sub_total' => $data['subtotal'],
             'taxes' => $data['tax_total'],
             'adjustment_name' => $data['adjustment_name'],
