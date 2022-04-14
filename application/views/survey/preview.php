@@ -418,24 +418,24 @@
                                       case 12: // rating
                                         ?>
                                           <div class="form-group input-content" id="rating-ability-wrapper">
-                                            <input type="hidden" id="selected_rating" name="answer-<?=$question->id?>" value="" required="required">
+                                            <input type="hidden" id="selected_rating_<?= $question->id; ?>" name="answer-<?=$question->id?>" value="" required="required">
                                             </label>
                                             <h2 class="bold rating-header" style="">
-                                            <span class="selected-rating">0</span><small> / 5</small>
+                                              <span class="selected-rating selected-rating-<?= $question->id; ?>">0</span><small> / 5</small>
                                             </h2>
-                                            <button type="button" class="btnrating btn btn-default btn-lg" data-attr="1" id="rating-star-1">
+                                            <button type="button" class="btnrating btn btn-default btn-lg" data-id="<?= $question->id; ?>" data-attr="1" id="<?= $question->id; ?>-rating-star-1">
                                                 <i class="fa fa-star" aria-hidden="true"></i>
                                             </button>
-                                            <button type="button" class="btnrating btn btn-default btn-lg" data-attr="2" id="rating-star-2">
+                                            <button type="button" class="btnrating btn btn-default btn-lg" data-id="<?= $question->id; ?>" data-attr="2" id="<?= $question->id; ?>-rating-star-2">
                                                 <i class="fa fa-star" aria-hidden="true"></i>
                                             </button>
-                                            <button type="button" class="btnrating btn btn-default btn-lg" data-attr="3" id="rating-star-3">
+                                            <button type="button" class="btnrating btn btn-default btn-lg" data-id="<?= $question->id; ?>" data-attr="3" id="<?= $question->id; ?>-rating-star-3">
                                                 <i class="fa fa-star" aria-hidden="true"></i>
                                             </button>
-                                            <button type="button" class="btnrating btn btn-default btn-lg" data-attr="4" id="rating-star-4">
+                                            <button type="button" class="btnrating btn btn-default btn-lg" data-id="<?= $question->id; ?>" data-attr="4" id="<?= $question->id; ?>-rating-star-4">
                                                 <i class="fa fa-star" aria-hidden="true"></i>
                                             </button>
-                                            <button type="button" class="btnrating btn btn-default btn-lg" data-attr="5" id="rating-star-5">
+                                            <button type="button" class="btnrating btn btn-default btn-lg" data-id="<?= $question->id; ?>" data-attr="5" id="<?= $question->id; ?>-rating-star-5">
                                                 <i class="fa fa-star" aria-hidden="true"></i>
                                             </button>
                                           </div>
@@ -1044,27 +1044,29 @@
       
       $(".btnrating").on('click',(function(e) {
 
-      var previous_value = $("#selected_rating").val();
+      var previous_value = $("#selected_rating_"+qid).val();
       var isSelected = false;
       var selected_value = $(this).attr("data-attr");
+      var qid = $(this).attr('data-id');
       
       if(previous_value == ''){
         answeredFields++;
       }
 
-      $("#selected_rating").val(selected_value);
+      $("#selected_rating_"+qid).val(selected_value);
 
-      $(".selected-rating").empty();
-      $(".selected-rating").html(selected_value);
+      $(".selected-rating-"+qid).empty();
+      $(".selected-rating-"+qid).html(selected_value);
 
       for (i = 1; i <= selected_value; ++i) {
-        $("#rating-star-"+i).toggleClass('btn-warning');
-        $("#rating-star-"+i).toggleClass('btn-default');
+        $("#"+qid+"-rating-star-"+i).addClass('btn-warning');
+        //$("#"+qid+"-rating-star-"+i).toggleClass('btn-default');
       }
-
-      for (ix = 1; ix <= previous_value; ++ix) {
-        $("#rating-star-"+ix).toggleClass('btn-warning');
-        $("#rating-star-"+ix).toggleClass('btn-default');
+      
+      selected_value++;
+      for (ix = selected_value; ix <= 5; ix++) {        
+        //$("#"+qid+"-rating-star-"+ix).toggleClass('btn-warning');
+        $("#"+qid+"-rating-star-"+ix).removeClass('btn-warning');
       }
 
     }));

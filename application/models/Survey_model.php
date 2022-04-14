@@ -504,8 +504,9 @@ class Survey_model extends MY_Model {
 	public function orderUpdate($data){
 		if( $data ){
 			foreach($data as $key => $id){
+				$order = $key + 1;
 				$data = array(
-					'order' => $key
+					'order' => $order
 				);
 				$this->db->where('id', $id);
 				$this->db->update('survey_questions', $data);

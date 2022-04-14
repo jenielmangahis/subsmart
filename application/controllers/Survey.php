@@ -348,7 +348,8 @@ class Survey extends MY_Controller
 
   public function orderUpdate(){
 
-    $data = $this->survey_model->orderUpdate($_POST['id']);
+    $data = array_unique($_POST['id']);
+    $data = $this->survey_model->orderUpdate($data);
     $result = array(
       'success' => 1
     );
