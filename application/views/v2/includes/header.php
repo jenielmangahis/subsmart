@@ -35,6 +35,10 @@ if ($this->session->userdata('usertimezone') == null) {
 
     <!-- Jquery JS -->
     <script src="<?= base_url("assets/js/v2/jquery-3.6.0.min.js") ?>"></script>
+    <script>
+        var base_url = '<?= base_url() ?>';
+        var surveyBaseUrl = '<?= base_url() ?>';
+    </script>
 </head>
 
 <body>

@@ -21,7 +21,7 @@
       border: 0;
   }
 
-  div.theme-card:hover{
+  div.theme-card:hover, div.survey-card:hover{
       transition-duration: 300ms;
       transform: scale(1.05);
       box-shadow: 0px 0px 10px #000000;
@@ -139,7 +139,7 @@
                 </div>
             </div>
           </div>
-          <div class="alert alert-warning mt-1 mb-0" role="alert">
+          <div class="alert alert-warning mt-1 mb-0" role="alert" style="width: 100%;">
               <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">By creating this survey, you can either use a pre-made template or make your own.
               </span>
           </div>
@@ -303,7 +303,7 @@
                       ?>
 
                         <div class="card m-0 p-0">
-                          <div class="card-header d-flex justify-content-between" id="headingOne" data-toggle="collapse" data-target="#collapse-<?=$key?>" aria-expanded="true" aria-controls="collapse-<?=$key?>">
+                          <div class="card-header d-flex justify-content-between" id="headingOne" data-toggle="collapse" data-target="#collapse-<?=$key?>" aria-expanded="true" aria-controls="collapse-<?=$key?>" style="background-color: #32243D; color:#ffffff;margin-bottom: 3px;">
                               <span>
                                 <?=$category?> 
                               </span>
@@ -557,6 +557,10 @@ $(document).on('click', '.btn-set-survey-name', function(){
   statusSurveyNameIcon.classList.add("text-success");
 
 });
+
+$('#modalViewTemplate').on('hidden.bs.modal', function () {
+    $('#modalSelectTemplate').modal('hide');
+});
 </script>
 
 <script>
@@ -735,15 +739,16 @@ $(document).on('click', '.btn-set-survey-name', function(){
     statusTemplateIcon.classList.add("text-success");
     selectedTemplate = viewingTemplate;
     document.querySelector('#selected-template-text').innerHTML = "Selected Template: <strong>"+selectedTemplate.name+"</strong>";
+    document.querySelector('#status-template-content').innerHTML = "<strong>"+ selectedTemplate.name +"</strong>";
     
     selectedTheme = surveyThemes.filter(theme=>{
       return theme.sth_rec_no == selectedTemplate.theme_id;
     })[0];
-    document.querySelector('#theme-text').innerHTML = "Selected theme: <strong>"+ selectedTheme.sth_theme_name +"</strong>";
-
+    /*document.querySelector('#theme-text').innerHTML = "Selected theme: <strong>"+ selectedTheme.sth_theme_name +"</strong>";
     document.querySelector('#imgSelectedTheme').src = `<?=base_url()?>uploads/survey/themes/${surveyThemes[id].sth_primary_image}`;
     document.querySelector('#imgSelectedTheme').alt = surveyThemes[id].sth_primary_image;
-    document.querySelector('#imgSelectedTheme').style.display = "block";
+    document.querySelector('#imgSelectedTheme').style.display = "block";*/
+    //document.querySelector('#modalViewTemplate').style.display = "none";
   }
 
   document.querySelector('#templateToggleSwitch').addEventListener('click',(e)=>{

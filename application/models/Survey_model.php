@@ -531,7 +531,13 @@ class Survey_model extends MY_Model {
 		}else{	
 			return $this->db->get('survey_themes')->result(); 
 		}
-	}
+	}	
+
+	public function getThemesByCompanyId($company_id = null){
+		$this->db->select("*");		
+		$this->db->where('company_id', $company_id);
+		return $this->db->get('survey_themes')->result(); 
+	}	
 
 	public function getThemesByCompanyIdAndIsDefault($company_id){
 		$this->db->select("*");		
@@ -606,6 +612,10 @@ class Survey_model extends MY_Model {
 
 	public function deleteSurveyTemplateAnswer($id){
 		return $this->db->delete('survey_template_answer', array('id'=>$id));
+	}
+
+	public function deleteThemeBySthRecNo($sth_rec_no){
+		return $this->db->delete('survey_themes', array('sth_rec_no'=>$sth_rec_no));
 	}
 
 	public function editWorkspace($id, $data){

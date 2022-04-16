@@ -409,7 +409,8 @@ class Survey extends MY_Controller
   /* THEMES */
   public function themeIndex(){
     
-    $this->page_data['themes'] = $this->survey_model->getThemes();
+    $company_id = logged('company_id');
+    $this->page_data['themes'] = $this->survey_model->getThemesByCompanyId($company_id);
     $this->load->view('survey/themes/list', $this->page_data);
   }
   
@@ -642,6 +643,29 @@ class Survey extends MY_Controller
     $json_data = ['is_success' => $is_success];
 
     echo json_encode($json_data);
+  }
+
+  public function ajax_delete_theme()
+  {
+    $is_success = 0;
+
+    $post = $this->input->post();    
+    $theme      = $this->survey_model->getThemes($post['tid']);
+    $company_id = logged('company_id');
+
+    if( $theme ){
+      if( $theme->company_id == $company_id ){
+        $this->survey_model->deleteThemeBySthRecNo($post['tid']); 
+        $is_success = 1;   
+      }
+    }    
+
+    $result = array(
+      'success' => $is_success
+    );
+
+    echo json_encode($result);
+    exit;
   }
 
 }
