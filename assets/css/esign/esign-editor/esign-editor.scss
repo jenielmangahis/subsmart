@@ -317,6 +317,7 @@
   &__item {
     background-color: #fff;
     padding: 2.5rem;
+    min-height: 1000px;
 
     &:not(:last-child) {
       margin-bottom: 2rem;
@@ -498,6 +499,7 @@
     width: var(--size);
     height: var(--size);
     border-radius: var(--size);
+    object-fit: cover;
   }
 
   &__name {
@@ -966,5 +968,18 @@
   #selecteddisputeitemstable_info,
   #selecteddisputeitemstable_paginate {
     display: none !important;
+  }
+}
+
+.modal-body {
+  position: relative;
+
+  &.wrapper--loading {
+    width: 100%;
+    height: 100%;
+  }
+
+  &:not(.wrapper--loading) .esigneditor__loader {
+    display: none;
   }
 }

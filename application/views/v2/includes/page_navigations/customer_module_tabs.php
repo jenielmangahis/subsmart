@@ -50,7 +50,7 @@
         </li>
         <li class="<?php if($page->title == ''): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="javascript:void(0);">
-                <i class='bx bx-fw bx-money-withdraw'></i>
+                <i class='bx bx-fw bx-dollar-circle'></i>
                 <span>Payment</span>
             </a>
         </li>

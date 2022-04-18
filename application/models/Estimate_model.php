@@ -609,6 +609,21 @@ class Estimate_model extends MY_Model
         return $query2->result();
     }
 
+    public function getItemOption($id)
+    {
+        $where = array(
+            'estimates_id'      => $id,
+            ''
+          );
+
+        $this->db->select('*');
+		$this->db->from('estimates_option_items');
+        $this->db->join('items', 'estimates_option_items.items_id  = items.id');
+        $this->db->where($where);
+        $query2 = $this->db->get();
+        return $query2->result();
+    }
+
     public function getItemlistByIDOption2($id)
     {
         $where = array(

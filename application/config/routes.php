@@ -479,6 +479,9 @@ $route['accounting/recurring-transactions/print-recurring-transactions']['post']
 $route['accounting/recurring-transactions/skip-next-date/(:any)'] = "accounting_controllers/recurring_transactions/skip_next_date/$1";
 $route['accounting/recurring-transactions/pause/(:any)'] = "accounting_controllers/recurring_transactions/pause/$1";
 $route['accounting/recurring-transactions/resume/(:any)'] = "accounting_controllers/recurring_transactions/resume/$1";
+$route['accounting/recurring-transactions/reminders-list'] = "accounting_controllers/recurring_transactions/reminders_list";
+$route['accounting/recurring-transactions/load-reminders-list']['post'] = "accounting_controllers/recurring_transactions/load_reminders_list";
+$route['accounting/recurring-transactions/skip-batch']['post'] = "accounting_controllers/recurring_transactions/skip_batch";
 
 // Accounting payment terms
 $route['accounting/terms'] = "accounting_controllers/payment_terms/index";

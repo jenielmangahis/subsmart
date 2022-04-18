@@ -243,7 +243,7 @@ if ($this->session->userdata('usertimezone') == null) {
                                 <i class='bx bx-fw bx-group'></i> Affiliates
                             </a>
                         </li>
-                        <li>
+                        <li class="<?php if($page->title == 'Inventory' || $page->title == 'Services' || $page->title == 'Fees' || $page->title == 'Vendors' || $page->title == 'Item Categories'): echo 'selected'; endif; ?>">
                             <a href="<?= base_url("inventory") ?>">
                                 <i class='bx bx-fw bx-box'></i> Inventory
                             </a>

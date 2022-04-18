@@ -67,8 +67,8 @@ class EstimatePublic extends MY_P_Controller
 
             // $this->page_data['items_data'] = $this->estimate_model->getItems($id);
             $this->page_data['items_data'] = $this->estimate_model->getEstimatesItems($id);
-            $this->page_data['items_dataOP1'] = $this->estimate_model->getItemlistByIDOption1($id);
-            $this->page_data['items_dataOP2'] = $this->estimate_model->getItemlistByIDOption2($id);
+            $this->page_data['items_options'] = $this->estimate_model->getItemOption($id);
+            // $this->page_data['items_dataOP2'] = $this->estimate_model->getItemlistByIDOption2($id);
 
             $this->page_data['items_dataBD1'] = $this->estimate_model->getItemlistByIDBundle1($id);
             $this->page_data['items_dataBD2'] = $this->estimate_model->getItemlistByIDBundle2($id);

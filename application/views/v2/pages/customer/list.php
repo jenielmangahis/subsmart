@@ -89,21 +89,15 @@
                                             $badge = "";
                                             break;
                                     endswitch;
-
-                                    $image = userProfilePicture($customer->id);
                                 ?>
                                     <?php if (in_array('name', $enabled_table_headers)) : ?>
                                         <td>
-                                            <?php if (is_null($image)) : ?>
-                                                <div class="nsm-profile">
-                                                    <span><?php echo getLoggedNameInitials($customer->id); ?></span>
-                                                </div>
-                                            <?php else : ?>
-                                                <div class="nsm-profile" style="background-image: url('<?php echo $image; ?>');"></div>
-                                            <?php endif; ?>
+                                            <div class="nsm-profile">
+                                                <span><?= ucwords($customer->first_name[0]) . ucwords($customer->last_name[0]) ?></span>
+                                            </div>
                                         </td>
                                         <td class="nsm-text-primary">
-                                            <label class="nsm-link default d-block fw-bold" onclick="location.href='<?= base_url('/customer/preview_/' . $customer->prof_id); ?>'"><?= ($customer) ? $customer->first_name . ' ' . $customer->last_name : ''; ?></label>
+                                            <label class="nsm-link default d-block fw-bold" onclick="location.href='<?= base_url('/customer/module/' . $customer->prof_id); ?>'"><?= ($customer) ? $customer->first_name . ' ' . $customer->last_name : ''; ?></label>
                                             <label class="nsm-link default content-subtitle fst-italic d-block"><?php echo $customer->email; ?></label>
                                         </td>
                                     <?php endif; ?>
@@ -231,18 +225,12 @@
                                             $badge = "";
                                             break;
                                     endswitch;
-
-                                    $image = userProfilePicture($customer->id);
                                 ?>
                                     <tr>
                                         <td>
-                                            <?php if (is_null($image)) : ?>
-                                                <div class="nsm-profile">
-                                                    <span><?php echo getLoggedNameInitials($customer->id); ?></span>
-                                                </div>
-                                            <?php else : ?>
-                                                <div class="nsm-profile" style="background-image: url('<?php echo $image; ?>');"></div>
-                                            <?php endif; ?>
+                                            <div class="nsm-profile">
+                                                <span><?= ucwords($customer->first_name[0]) . ucwords($customer->last_name[0]) ?></span>
+                                            </div>
                                         </td>
                                         <td class="nsm-text-primary">
                                             <label class="nsm-link default d-block fw-bold" onclick="location.href='<?= base_url('/customer/preview_/' . $customer->prof_id); ?>'"><?= ($customer) ? $customer->first_name . ' ' . $customer->last_name : ''; ?></label>
