@@ -58,7 +58,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <div class="float-right d-none d-md-block">
                                         <div class="dropdown show">
                                             <div class="btn-group mr-2">
-                                                <a href="#" class="btn btn-secondary d-flex align-items-center justify-content-center">
+                                                <a href="/accounting/recurring-transactions/reminders-list" class="btn btn-secondary d-flex align-items-center justify-content-center">
                                                     Reminder List
                                                 </a>
                                                 <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -257,42 +257,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <button type="button" class="btn btn-secondary btn-rounded border" data-dismiss="modal">Close</button>
                     </div>
                     <div class="col-sm-6">
-                        <button type="button" class="btn btn-success btn-rounded border float-right">Save</button>
+                        <button type="button" class="btn btn-success btn-rounded border float-right">OK</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <div class="modal fade" id="delete_recurring_transaction" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered m-auto w-25" role="document">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-xl-12">
-                            <div class="card p-0 m-0">
-                                <div class="card-body" style="max-height: 650px;">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <p>Are you sure you want to delete this?</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- end card -->
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <div class="col-sm-6">
-                        <button type="button" class="btn btn-secondary btn-rounded border" data-dismiss="modal">No</button>
-                    </div>
-                    <div class="col-sm-6">
-                        <button type="button" class="btn btn-success btn-rounded border float-right">Yes</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 <?php include viewPath('includes/footer_accounting'); ?>

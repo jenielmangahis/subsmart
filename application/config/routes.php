@@ -213,6 +213,7 @@ $route['survey/_load_survey_questions'] = 'Survey/ajax_load_survey_questions';
 $route['survey/_delete_template_answer'] = 'Survey/ajax_delete_template_answer';
 $route['survey/_update_settings'] = 'Survey/ajax_update_settings';
 $route['survey/_delete'] = 'Survey/ajax_delete_survey';
+$route['survey/_delete_theme'] = 'Survey/ajax_delete_theme';
 
 // survey logic
 $route['survey/logic/list/(:any)'] = "survey/surveyLogicList/$1";
@@ -478,6 +479,9 @@ $route['accounting/recurring-transactions/print-recurring-transactions']['post']
 $route['accounting/recurring-transactions/skip-next-date/(:any)'] = "accounting_controllers/recurring_transactions/skip_next_date/$1";
 $route['accounting/recurring-transactions/pause/(:any)'] = "accounting_controllers/recurring_transactions/pause/$1";
 $route['accounting/recurring-transactions/resume/(:any)'] = "accounting_controllers/recurring_transactions/resume/$1";
+$route['accounting/recurring-transactions/reminders-list'] = "accounting_controllers/recurring_transactions/reminders_list";
+$route['accounting/recurring-transactions/load-reminders-list']['post'] = "accounting_controllers/recurring_transactions/load_reminders_list";
+$route['accounting/recurring-transactions/skip-batch']['post'] = "accounting_controllers/recurring_transactions/skip_batch";
 
 // Accounting payment terms
 $route['accounting/terms'] = "accounting_controllers/payment_terms/index";

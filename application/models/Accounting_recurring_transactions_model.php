@@ -28,7 +28,7 @@ class Accounting_recurring_transactions_model extends MY_Model
     public function delete($id)
     {
         return $this->db->where(['company_id' => getLoggedCompanyID(), 'id' => $id])
-                ->update($this->table, ['status' => 0, 'updated_at' => date('Y-m-d h:i:s')]);
+                ->delete($this->table);
     }
 
     public function updateRecurringTransaction($id, $data)
@@ -71,8 +71,22 @@ class Accounting_recurring_transactions_model extends MY_Model
 
     public function get_by_next_date($nextDate)
     {
+        $this->db->where('recurring_type', 'scheduled');
         $this->db->where('next_date', $nextDate);
         $this->db->where('status', 1);
+        $query = $this->db->get($this->table);
+        return $query->result();
+    }
+
+    public function update_by_batch($data)
+    {
+        return $this->db->update_batch($this->table, $data, 'id');
+    }
+
+    public function get_transactions_by_ids($ids = [])
+    {
+        $this->db->where('company_id', logged('company_id'));
+        $this->db->where_in('id', $ids);
         $query = $this->db->get($this->table);
         return $query->result();
     }

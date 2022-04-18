@@ -736,8 +736,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dragula/3.7.2/dragula.min.js"></script>
 <script>
 	$(function(){
-	  questions_list('<?= $survey->id; ?>');
-	  function questions_list(survey_id){
+	   questions_list('<?= $survey->id; ?>');
+	   function questions_list(survey_id){
 		  var url =  surveyBaseUrl + 'survey/_load_survey_questions';
 		  $.ajax({
 		    url: url,
@@ -747,6 +747,29 @@
 		      $('#card-order-list').html(res);
 		    }
 		  });
+		}
+
+		dragula([document.getElementById('card-order-list')])
+		  .on('drag', function (el, target,source,sibling) {
+		  }).on('drop', function (el, target,source,sibling) {
+		    saveQuestionOrder();
+		});
+
+		// saves the order of the questions
+		saveQuestionOrder = () => {
+			var number = [];
+	    $.each($('#card-order-list .col-sm-12'), function(key, value){
+				number.push(value.id.split("-")[1]);
+	    });
+	    $.ajax({
+	      url: base_url + '/survey/order/question',
+	      data: { 'id': number },
+	      dataType: 'json',
+	      type: 'POST',
+	      success: function(res){
+	        toastr["success"]("Order Successfully Update!");
+	      }
+	    })
 		}
 	}); 
 	currentOrder = document.querySelector('#card-order-list').innerHTML;
@@ -814,23 +837,6 @@
 			saveAllSettings();
 		}, 1500);
 	})
-
-	// saves the order of the questions
-	saveQuestionOrder = () => {
-		var number = [];
-    $.each($('#card-order-list .col-sm-12'), function(key, value){
-			number.push(value.id.split("-")[1]);
-    });
-    $.ajax({
-      url: base_url + '/survey/order/question',
-      data: { 'id': number },
-      dataType: 'json',
-      type: 'POST',
-      success: function(res){
-        toastr["success"]("Order Successfully Update!");
-      }
-    })
-	}
 	
 	$(document).on('click', '#btnRestoreSettings', function(e){
 		document.querySelector('#card-order-list').innerHTML = currentOrder;
@@ -914,12 +920,6 @@
 	// dragula([].slice.apply(document.querySelectorAll('.card-order-list')),{
 	// 		direction: 'vertical'
 	// });
-
-  dragula([document.getElementById('card-order-list')])
-  .on('drag', function (el, target,source,sibling) {
-  }).on('drop', function (el, target,source,sibling) {
-    saveQuestionOrder();
-  });
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <!-- <script type="text/javascript" src="<?=base_url()?>/assets/js/survey.js"></script> -->

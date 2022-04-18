@@ -2844,4 +2844,385 @@ class Recurring_transactions extends MY_Controller {
             'success' => $update ? true : false
         ]);
     }
+
+    public function reminders_list()
+    {
+        add_footer_js(array(
+            "assets/js/accounting/reminders-list.js"
+        ));
+        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->load->view('accounting/reminders_list', $this->page_data);
+    }
+
+    public function load_reminders_list()
+    {
+        $post = json_decode(file_get_contents('php://input'), true);
+        $column = $post['order'][0]['column'];
+        $order = $post['order'][0]['dir'];
+        $columnName = $post['columns'][$column]['name'];
+        $start = $post['start'];
+        $limit = $post['length'];
+
+        $where = [
+            'company_id' => getLoggedCompanyID(),
+            'recurring_type' => 'reminder'
+        ];
+
+        if($post['transaction_type'] !== "all") {
+            $where['txn_type'] = $post['transaction_type'];
+        }
+
+        $items = $this->accounting_recurring_transactions_model->getCompanyRecurringTransactions($where, $columnName, $order);
+
+        $data = [];
+        $search = $post['columns'][0]['search']['value'];
+
+        if(count($items) > 0) {
+            foreach($items as $item) {
+                switch($item['txn_type']) {
+                    case 'expense' :
+                        $expense = $this->vendors_model->get_expense_by_id($item['txn_id']);
+                        $total = number_format($expense->total_amount, 2, '.', ',');
+
+                        switch($expense->payee_type) {
+                            case 'vendor':
+                                $payee = $this->vendors_model->get_vendor_by_id($expense->payee_id);
+                                $payeeName = $payee->display_name;
+                            break;
+                            case 'customer':
+                                $payee = $this->accounting_customers_model->get_by_id($expense->payee_id);
+                                $payeeName = $payee->first_name . ' ' . $payee->last_name;
+                            break;
+                            case 'employee':
+                                $payee = $this->users_model->getUser($expense->payee_id);
+                                $payeeName = $payee->FName . ' ' . $payee->LName;
+                            break;
+                        }
+                    break;
+                    case 'check' :
+                        $check = $this->vendors_model->get_check_by_id($item['txn_id'], logged('company_id'));
+                        $total = number_format($check->total_amount, 2, '.', ',');
+
+                        switch($check->payee_type) {
+                            case 'vendor':
+                                $payee = $this->vendors_model->get_vendor_by_id($check->payee_id);
+                                $payeeName = $payee->display_name;
+                            break;
+                            case 'customer':
+                                $payee = $this->accounting_customers_model->get_by_id($check->payee_id);
+                                $payeeName = $payee->first_name . ' ' . $payee->last_name;
+                            break;
+                            case 'employee':
+                                $payee = $this->users_model->getUser($check->payee_id);
+                                $payeeName = $payee->FName . ' ' . $payee->LName;
+                            break;
+                        }
+                    break;
+                    case 'bill' :
+                        $bill = $this->vendors_model->get_bill_by_id($item['txn_id'], logged('company_id'));
+                        $total = number_format($bill->total_amount, 2, '.', ',');
+                        $payee = $this->vendors_model->get_vendor_by_id($bill->vendor_id);
+                        $payeeName = $payee->display_name;
+                    break;
+                    case 'purchase order' :
+                        $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($item['txn_id'], logged('company_id'));
+                        $total = number_format($purchaseOrder->total_amount, 2, '.', ',');
+                        $payee = $this->vendors_model->get_vendor_by_id($purchaseOrder->payee_id);
+                        $payeeName = $payee->display_name;
+                    break;
+                    case 'vendor credit' :
+                        $vCredit = $this->vendors_model->get_vendor_credit_by_id($item['txn_id'], logged('company_id'));
+                        $total = number_format($vCredit->total_amount, 2, '.', ',');
+                        $payee = $this->vendors_model->get_vendor_by_id($vCredit->payee_id);
+                        $payeeName = $payee->display_name;
+                    break;
+                    case 'credit card credit' :
+                        $ccCredit = $this->vendors_model->get_credit_card_credit_by_id($item['txn_id'], logged('company_id'));
+                        $total = number_format($ccCredit->total_amount, 2, '.', ',');
+
+                        switch($ccCredit->payee_type) {
+                            case 'vendor':
+                                $payee = $this->vendors_model->get_vendor_by_id($ccCredit->payee_id);
+                                $payeeName = $payee->display_name;
+                            break;
+                            case 'customer':
+                                $payee = $this->accounting_customers_model->get_by_id($ccCredit->payee_id);
+                                $payeeName = $payee->first_name . ' ' . $payee->last_name;
+                            break;
+                            case 'employee':
+                                $payee = $this->users_model->getUser($ccCredit->payee_id);
+                                $payeeName = $payee->FName . ' ' . $payee->LName;
+                            break;
+                        }
+                    break;
+                    case 'deposit' :
+                        $deposit = $this->accounting_bank_deposit_model->getById($item['txn_id'], logged('company_id'));
+                        $total = number_format($deposit->total_amount, 2, '.', ',');
+                        $funds = $this->accounting_bank_deposit_model->getFunds($deposit->id);
+                        $flag = true;
+
+                        foreach($funds as $fund) {
+                            if($fund->received_from_key !== $funds[0]->received_from_key && $fund->received_from_id !== $funds[0]->received_from_id) {
+                                $flag = false;
+                                break;
+                            }
+                        }
+
+                        if($flag) {
+                            switch($funds[0]->received_from_key) {
+                                case 'vendor':
+                                    $payee = $this->vendors_model->get_vendor_by_id($funds[0]->received_from_id);
+                                    $payeeName = $payee->display_name;
+                                break;
+                                case 'customer':
+                                    $payee = $this->accounting_customers_model->get_by_id($funds[0]->received_from_id);
+                                    $payeeName = $payee->first_name . ' ' . $payee->last_name;
+                                break;
+                                case 'employee':
+                                    $payee = $this->users_model->getUser($funds[0]->received_from_id);
+                                    $payeeName = $payee->FName . ' ' . $payee->LName;
+                                break;
+                            }
+                        } else {
+                            $payeeName = '';
+                        }
+                    break;
+                    case 'transfer' :
+                        $transfer = $this->accounting_transfer_funds_model->getById($item['txn_id'], logged('company_id'));
+                        $total = number_format($transfer->transfer_amount, 2, '.', ',');
+                        $payeeName = '';
+                    break;
+                    case 'journal entry' :
+                        $total = '0.00';
+                        $payeeName = '';
+                    break;
+                    case 'npcharge' :
+                        $charge = $this->accounting_delayed_charge_model->getDelayedChargeDetails($item['txn_id']);
+                        $payee = $this->accounting_customers_model->get_by_id($charge->customer_id);
+                        $payeeName = $payee->first_name . ' ' . $payee->last_name;
+                        $total = number_format($charge->total_amount, 2, '.', ',');
+                    break;
+                    case 'npcredit' :
+                        $credit = $this->accounting_delayed_credit_model->getDelayedCreditDetails($item['txn_id']);
+                        $payee = $this->accounting_customers_model->get_by_id($credit->customer_id);
+                        $payeeName = $payee->first_name . ' ' . $payee->last_name;
+                        $total = number_format($credit->total_amount, 2, '.', ',');
+                    break;
+                    case 'credit memo' :
+                        $creditMemo = $this->accounting_credit_memo_model->getCreditMemoDetails($item['txn_id']);
+                        $payee = $this->accounting_customers_model->get_by_id($creditMemo->customer_id);
+                        $payeeName = $payee->first_name . ' ' . $payee->last_name;
+                        $total = number_format($creditMemo->total_amount, 2, '.', ',');
+                    break;
+                    case 'invoice' :
+                        $invoice = $this->invoice_model->getinvoice($item['txn_id']);
+                        $payee = $this->accounting_customers_model->get_by_id($invoice->customer_id);
+                        $payeeName = $payee->first_name . ' ' . $payee->last_name;
+                        $total = number_format($invoice->grand_total, 2, '.', ',');
+                    break;
+                    case 'refund' :
+                        $refundReceipt = $this->accounting_refund_receipt_model->getRefundReceiptDetails_by_id($item['txn_id']);
+                        $payee = $this->accounting_customers_model->get_by_id($refundReceipt->customer_id);
+                        $payeeName = $payee->first_name . ' ' . $payee->last_name;
+                        $total = number_format($refundReceipt->total_amount, 2, '.', ',');
+                    break;
+                    case 'sales receipt' :
+                        $salesReceipt = $this->accounting_sales_receipt_model->getSalesReceiptDetails_by_id($item['txn_id']);
+                        $payee = $this->accounting_customers_model->get_by_id($salesReceipt->customer_id);
+                        $payeeName = $payee->first_name . ' ' . $payee->last_name;
+                        $total = number_format($salesReceipt->total_amount, 2, '.', ',');
+                    break;
+                }
+
+                $previous = !is_null($item['previous_date']) && $item['previous_date'] !== '' ? date("m/d/Y", strtotime($item['previous_date'])) : null;
+                $next = date("m/d/Y", strtotime($item['next_date']));
+
+                $every = $item['recurr_every'];
+                switch ($item['recurring_interval']) {
+                    case 'daily' :
+                        $interval = 'Every Day';
+
+                        if(intval($every) > 1) {
+                            $interval = "Every $every Days";
+                        }
+                    break;
+                    case 'weekly' :
+                        $interval = 'Every Week';
+
+                        if(intval($every) > 1) {
+                            $interval = "Every $every Weeks";
+                        }
+                    break;
+                    case 'monthly' :
+                        $interval = 'Every Month';
+
+                        if(intval($every) > 1) {
+                            $interval = "Every $every Months";
+                        }
+                    break;
+                    case 'yearly' :
+                        $interval = 'Every Year';
+                    break;
+                    default :
+                        $interval = '';
+                        $previous = '';
+                        $next = '';
+                    break;
+                }
+
+                if($search !== "") {
+                    if(stripos($item['template_name'], $search) !== false) {
+                        $data[] = [
+                            'id' => $item['id'],
+                            'template_name' => $item['template_name'],
+                            'recurring_type' => ucfirst($item['recurring_type']),
+                            'txn_type' => ucwords(str_replace('np', '', $item['txn_type'])),
+                            'txn_id' => $item['txn_id'],
+                            'recurring_interval' => $interval,
+                            'previous_date' => $previous,
+                            'next_date' => $item['status'] === "2" ? "Paused" : $next,
+                            'customer_vendor' => $payeeName,
+                            'amount' => $total,
+                            'status' => $item['status']
+                        ];
+                    }
+                } else {
+                    $data[] = [
+                        'id' => $item['id'],
+                        'template_name' => $item['template_name'],
+                        'recurring_type' => ucfirst($item['recurring_type']),
+                        'txn_type' => ucwords(str_replace('np', '', $item['txn_type'])),
+                        'txn_id' => $item['txn_id'],
+                        'recurring_interval' => $interval,
+                        'previous_date' => $previous,
+                        'next_date' => $item['status'] === "2" ? "Paused" : $next,
+                        'customer_vendor' => $payeeName,
+                        'amount' => $total,
+                        'status' => $item['status']
+                    ];
+                }
+            }
+        }
+
+        usort($data, function($a, $b) use ($columnName, $order) {
+            switch($columnName) {
+                case 'template_name' :
+                    if($order === 'asc') {
+                        return strcmp($a['template_name'], $b['template_name']);
+                    } else {
+                        return strcmp($b['template_name'], $a['template_name']);
+                    }
+                break;
+                case 'txn_type' :
+                    if($order === 'asc') {
+                        return strcmp($a['txn_type'], $b['txn_type']);
+                    } else {
+                        return strcmp($b['txn_type'], $a['txn_type']);
+                    }
+                break;
+                case 'previous_date' :
+                    if($order === 'asc') {
+                        return strtotime($a['previous_date']) > strtotime($b['previous_date']);
+                    } else {
+                        return strtotime($a['previous_date']) < strtotime($b['previous_date']);
+                    }
+                break;
+                case 'next_date' :
+                    if($order === 'asc') {
+                        return strtotime($a['next_date']) > strtotime($b['next_date']);
+                    } else {
+                        return strtotime($a['next_date']) < strtotime($b['next_date']);
+                    }
+                break;
+            }
+        });
+
+        $result = [
+            'draw' => $post['draw'],
+            'recordsTotal' => count($items),
+            'recordsFiltered' => count($data),
+            'data' => array_slice($data, $start, $limit)
+        ];
+
+        echo json_encode($result);
+    }
+
+    public function skip_batch()
+    {
+        $post = $this->input->post();
+        $transactions = $this->accounting_recurring_transactions_model->get_transactions_by_ids($post['transaction_ids']);
+
+        $updateData = [];
+        foreach($post['transaction_ids'] as $id) {
+            $transaction = $this->accounting_recurring_transactions_model->getRecurringTransaction($id);
+
+            $currentOccurrence = intval($transaction->current_occurrence) + 1;
+            $every = $transaction->recurr_every;
+            $nextDate = date("m/d/Y", strtotime($transaction->next_date));
+            switch($transaction->recurring_interval) {
+                case 'daily' :
+                    $nextDate = date("Y-m-d", strtotime("$nextDate +$every days"));
+                break;
+                case 'weekly' :
+                    $nextDate = date("Y-m-d", strtotime("$nextDate +$every weeks"));
+                break;
+                case 'monthly' :
+                    if($transaction->recurring_week === 'day') {
+                        $day = $transaction->recurring_day === 'last' ? 't' : $transaction->recurring_day;
+                        $nextDate = date("Y-m-$day", strtotime("$nextDate +$every months"));
+                    } else {
+                        $week = $transaction->recurring_week;
+                        $day = $transaction->recurring_day;
+                        $nextDate = date("Y-m-d", strtotime("$week $day ".date("Y-m", strtotime("$nextDate +$every months"))));
+                    }
+                break;
+                case 'yearly' :
+                    $month = $transaction->recurring_month;
+                    $day = $transaction->recurring_day;
+
+                    $nextDate = date("Y-$month-$day", strtotime("$nextDate +1 year"));
+                break;
+            }
+
+            if($transaction->end_type === 'after') {
+                if($currentOccurrence === intval($transaction->max_occurrences)) {
+                    $nextDate = null;
+                }
+            } else {
+                if($transaction->end_type !== 'none') {
+                    if(strtotime($nextDate) > strtotime($transaction->end_date)) {
+                        $nextDate = null;
+                    }
+                }
+            }
+
+            $updateData[] = [
+                'id' => $transaction->id,
+                'previous_date' => $transaction->next_date,
+                'next_date' => $nextDate,
+                'current_occurrence' => $currentOccurrence
+            ];
+        }
+
+        $update = $this->accounting_recurring_transactions_model->update_by_batch($updateData);
+
+        if($update !== count($post['transaction_ids'])) {
+            $revertData = [];
+            foreach($transactions as $transaction) {
+                $revertData[] = [
+                    'id' => $transaction->id,
+                    'previous_date' => $transaction->previous_date,
+                    'next_date' => $transaction->next_date,
+                    'current_occurrence' => $transaction->current_occurence,
+                    'updated_at' => $transaction->updated_at
+                ];
+            }
+
+            $revert = $this->accounting_recurring_transactions_model->update_by_batch($revertData);
+        }
+
+        echo json_encode([
+            'success' => $update === count($post['transaction_ids'])
+        ]);
+    }
 }

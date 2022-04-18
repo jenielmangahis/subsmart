@@ -145,6 +145,12 @@
         background: #e8e8e8;
     }
 
+    img.image {
+        margin-top: 42px;
+        width: 152px;
+        margin-right: 0;
+    }
+
     button.style:hover {
         font-size: 18px;
     }
@@ -184,6 +190,19 @@
         margin: auto;
     }
 
+    .description {
+        margin-left: 32px;
+        /* text-decoration: dotted; */
+        /* list-style: upper-armenian; */
+    }
+
+    .li-style {
+        /* list-style: upper-armenin; */
+        list-style: initial;
+        color: black;
+        font-size: 13px;
+    }
+
     .disableds {
         background-color: #1b1e21;
     }
@@ -219,8 +238,9 @@
     }
 
     div#title-des {
-        justify-content: center;
+        justify-content: left;
         margin-bottom: 36px;
+        color: red;
     }
 
     button#back-paypal {
@@ -237,7 +257,11 @@
         border-radius: 9px;
         padding: 4px 26px;
         transition: 0.5s;
-        margin: 0 37px;
+        margin: 0 4px;
+    }
+
+    .row.modal-buttons {
+        justify-content: right;
     }
 
     button.style-confirm:hover {
@@ -565,6 +589,28 @@
                                                         <button class="back-exist-stripe" id="back-exist-paypal"><i class="fa fa-arrow-left" aria-hidden="true"></i> back</button>
                                                     </div>
                                                 </div>
+                                                
+                                                <div id="modal-confirm-stripe" style="display:none;">
+                                                    <div class="row">
+                                                        <div class="col-4">
+                                                            <img class="image" src="../assets/img/accounting/customers/delete.jpg" alt="wow">
+
+                                                        </div>
+                                                        <div class="col">
+                                                            <div class="row" id="title-des">
+                                                                <h5> WHICH ONE DO YOU WANT TO DELETE?</h5>
+                                                                <ul class="description">
+                                                                    <li class="li-style">If you select account, the account and all credentials within it will also be deleted.</li>
+                                                                    <li class="li-style">If you select credentials, only the stripe credentials will be deleted.</li>
+                                                                </ul>
+                                                            </div>
+                                                            <div class="row modal-buttons">
+                                                                <button class="style-confirm" id="accounts-confirm-stripe">ACCOUNT</button>
+                                                                <button class="style-confirm" id="accounts-credential-stripe">CREDENTIAL</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -648,12 +694,24 @@
                                                     </div>
                                                 </div>
                                                 <div id="modal-confirm" style="display:none;">
-                                                    <div class="row" id="title-des">
-                                                        <h6>WHICH ONE DO YOU WANT TO DELETE?</h6>
-                                                    </div>
                                                     <div class="row">
-                                                        <div class="col-6"><button class="style-confirm" id="accounts-confirm">ACCOUNT</button></div>
-                                                        <div class="col-6"><button class="style-confirm" id="accounts-credential">CREDENTIAL</button></div>
+                                                        <div class="col-4">
+                                                            <img class="image" src="../assets/img/accounting/customers/delete.jpg" alt="wow">
+
+                                                        </div>
+                                                        <div class="col">
+                                                            <div class="row" id="title-des">
+                                                                <h5> WHICH ONE DO YOU WANT TO DELETE?</h5>
+                                                                <ul class="description">
+                                                                    <li class="li-style">If you select account, the account and all credentials within it will also be deleted.</li>
+                                                                    <li class="li-style">If you select credentials, only the stripe credentials will be deleted.</li>
+                                                                </ul>
+                                                            </div>
+                                                            <div class="row modal-buttons">
+                                                                <button class="style-confirm" id="accounts-confirm">ACCOUNT</button>
+                                                                <button class="style-confirm" id="accounts-credential">CREDENTIAL</button>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
 
@@ -1249,7 +1307,7 @@
             }
         });
     })
-    $('#modal-confirm #accounts-credential').on('click',function(){
+    $('#modal-confirm #accounts-credential').on('click', function() {
         console.log("click");
         $.ajax({
             url: "<?= base_url() ?>api/delete_capital_acc",
@@ -1259,16 +1317,16 @@
                 id: capID
             },
             success: function(data) {
-                
-                
+
+
             }
         });
         nsmartrac_alert('Nice!', 'Capita One Crendentials Deleted!', 'success');
         $('.capital-one-container').hide();
-                $('#modal-confirm').hide();
-                $('.accounts-list').show();
+        $('#modal-confirm').hide();
+        $('.accounts-list').show();
     })
-    $('#modal-confirm #accounts-confirm').on('click',function(){
+    $('#modal-confirm #accounts-confirm').on('click', function() {
         console.log("click");
         $.ajax({
             url: "<?= base_url() ?>api/delete_cOne_acc",
@@ -1278,17 +1336,17 @@
                 id: capID
             },
             success: function(data) {
-                
-                
+
+
             }
         });
         nsmartrac_alert('Nice!', 'Capita One Crendentials Deleted!', 'success');
         $('.capital-one-container').hide();
-                $('#modal-confirm').hide();
-                $('.accounts-list').show();
+        $('#modal-confirm').hide();
+        $('.accounts-list').show();
     })
     var capID = "";
-    
+
     $(document).on('click', '.capital-dbutton', function() {
         capID = $(this).attr('id');
         $('#capital-one-list-linked-accounts').hide();
@@ -1440,7 +1498,7 @@
                 var html = "";
                 if (data.stripeAcc.length != 0) {
                     for (var index = 0; index < data.stripeAcc.length; index++) {
-                        if (data.stripeAcc[index]['stripe_publish_key'] == null) {
+                        if (data.stripeAcc[index]['stripe_publish_key'] = !"") {
                             console.log(data.stripeAcc[index]['account_name']);
                             html += `
                             <div class="col-md-12">
@@ -1485,40 +1543,79 @@
             dataType: "json",
             data: {},
             success: function(data) {
-
+                var count = 0;
                 var html = "";
                 if (data.stripeAcc.length != 0) {
-                    for (var index = 0; index < data.stripeAcc.length; index++) {
-                        if (data.stripeAcc[index]['stripe_publish_key'] != null) {
-                            console.log(data.stripeAcc[index]['stripe_publish_key']);
-                            html += `
+                    for (var x = 0; x < data.stripeAcc.length; x++) {
+                        if (data.stripeAcc[x]["stripe_publish_key"] != "") {
+                            count++;
+                        }
+                    }
+                    if (count != 0) {
+                        for (var x = 0; x < data.stripeAcc.length; x++) {
+                            if (data.stripeAcc[x]["stripe_publish_key"] != "") {
+                                html += `
                             <div class="col-md-12">
                                 <hr>
                                     <div class="row">
                                         <div class="col-md-3">
-                                            <img class="fdx-provider-logo" src="<?php echo base_url('assets/img/accounting/stripe.png') ?>" title="Stripe" alt="Stripe">
+                                        <img class="fdx-provider-logo" src="<?php echo base_url('assets/img/accounting/stripe.png') ?>" title="Stripe" alt="Stripe">
                                         </div>
                                         <div class="col-md-5">
-                                            <h6>` + data.stripeAcc[index]['account_name'] + `</h6>
+                                            <h6>` + data.stripeAcc[x]['account_name'] + `</h6>
                                         </div>
                                         <div class="col-md-2">
-                                            <button class="style ebutton" id="` + data.stripeAcc[index]['id'] + `">edit</button>
+                                            <button class="style ebutton" id="` + data.stripeAcc[x]['id'] + `">edit</button>
                                         </div>
                                         <div class="col-md-2">
-                                            <button class="style dbutton"id="` + data.stripeAcc[index]['id'] + `">delete</button>
+                                            <button class="style dbutton"id="` + data.stripeAcc[x]['id'] + `">delete</button>
                                         </div>
                                     </div>
                                 <hr>
                             </div>`;
-                        }
 
+
+                                $('.stripe-container #list-linked-accounts #accounts').html(html);
+                                $('.accounts-list').hide();
+                                $('.stripe-container').show();
+                                $('.bankOfAmerica-container').hide();
+                                $('.stripe-container #list-linked-accounts').show();
+                            }
+                        }
                     }
-                    $('.stripe-container #list-linked-accounts #accounts').html(html);
-                    $('.accounts-list').hide();
-                    $('.stripe-container').show();
-                    $('.bankOfAmerica-container').hide();
-                    $('.stripe-container #list-linked-accounts').show();
                 }
+                // if (data.stripeAcc.length != 0) {
+                //     for (var index = 0; index < data.stripeAcc.length; index++) {
+                //         if (data.stripeAcc[index]['stripe_publish_key'] != null) {
+                //             console.log(data.stripeAcc[index]['stripe_publish_key']);
+                //             html += `
+                //             <div class="col-md-12">
+                //                 <hr>
+                //                     <div class="row">
+                //                         <div class="col-md-3">
+                //                             <img class="fdx-provider-logo" src="<?php echo base_url('assets/img/accounting/stripe.png') ?>" title="Stripe" alt="Stripe">
+                //                         </div>
+                //                         <div class="col-md-5">
+                //                             <h6>` + data.stripeAcc[index]['account_name'] + `</h6>
+                //                         </div>
+                //                         <div class="col-md-2">
+                //                             <button class="style ebutton" id="` + data.stripeAcc[index]['id'] + `">edit</button>
+                //                         </div>
+                //                         <div class="col-md-2">
+                //                             <button class="style dbutton"id="` + data.stripeAcc[index]['id'] + `">delete</button>
+                //                         </div>
+                //                     </div>
+                //                 <hr>
+                //             </div>`;
+                //         }
+
+                //     }
+                //     $('.stripe-container #list-linked-accounts #accounts').html(html);
+                //     $('.accounts-list').hide();
+                //     $('.stripe-container').show();
+                //     $('.bankOfAmerica-container').hide();
+                //     $('.stripe-container #list-linked-accounts').show();
+                // }
 
 
 
@@ -1576,22 +1673,51 @@
         $("#list-linked-accounts").fadeIn();
         $("#stripe_existed_accounts").hide();
     })
+    $('#modal-confirm-stripe #accounts-credential-stripe').on('click', function() {
+        console.log("click");
+        $.ajax({
+            url: "<?= base_url() ?>api/delete_stripe_credential",
+            type: "POST",
+            dataType: "json",
+            data: {
+                id: stripeID
+            },
+            success: function(data) {
 
-    $(document).on("click", "#list-linked-accounts #accounts .dbutton", function() {
-        var id = $(this).attr("id");
-        console.log(id);
-        location.reload();
+
+            }
+        });
+        nsmartrac_alert('Nice!', 'Capita One Crendentials Deleted!', 'success');
+        $('.stripe-container').hide();
+        $('#modal-confirm-stripe').hide();
+        $('.accounts-list').show();
+    })
+    $('#modal-confirm-stripe #accounts-confirm-stripe').on('click', function() {
+        console.log("click");
         $.ajax({
             url: "<?= base_url() ?>api/delete_stripe_acc",
             type: "POST",
             dataType: "json",
             data: {
-                id: id
+                id: stripeID
             },
             success: function(data) {
 
+
             }
         });
+        nsmartrac_alert('Nice!', 'Capita One Crendentials Deleted!', 'success');
+        $('.stripe-container').hide();
+        $('#modal-confirm-stripe').hide();
+        $('.accounts-list').show();
+    })
+    var stripeID = "";
+    $(document).on("click", "#list-linked-accounts #accounts .dbutton", function() {
+        stripeID = $(this).attr("id");
+        $('#modal-confirm-stripe').fadeIn();
+        $('#list-linked-accounts').hide();
+
+
     });
 
 
@@ -1872,6 +1998,7 @@
         $("#capital_one_form_edit").submit(function(e) {
             e.preventDefault(); // avoid to execute the actual submit of the form.
             var form = $(this);
+
             $.ajax({
                 type: "POST",
                 url: "<?= base_url() ?>api/update_capital_one",

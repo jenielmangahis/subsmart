@@ -74,7 +74,7 @@ class EsignEditor extends MY_Controller
         $this->load->view('esign/esigneditor/create', $this->page_data);
     }
 
-    public function wizard()
+    public function wizard_v1()
     {
         $customerId = $this->input->get('customer_id', true);
         if (is_null($this->getCustomer($customerId))) {
@@ -102,7 +102,7 @@ class EsignEditor extends MY_Controller
         $this->load->view('esign/esigneditor/wizard', $this->page_data);
     }
 
-    public function wizard2()
+    public function wizard()
     {
         $customerId = $this->input->get('customer_id', true);
         if (is_null($this->getCustomer($customerId))) {

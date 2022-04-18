@@ -215,6 +215,7 @@ class Api extends MYF_Controller
     }
     public function update_capital_one(){
         $data = $this->input->post();
+        var_dump($data);
         echo json_encode($data['id']);
         $id = $data['id'];
         $update = $this->db->update('accounting_bank_accounts', $data, array("id" => $id));
@@ -233,6 +234,16 @@ class Api extends MYF_Controller
         $id = $this->input->post("id");
         $getId = $this->db->where('id', $id);
 		$removeID = $this->db->delete('accounting_bank_accounts');	
+    }
+
+    public function delete_stripe_credential(){
+        $id = $this->input->post("id");
+        $getId = $this->db->where('id', $id);
+        $data = array(
+            'stripe_publish_key' => "",
+            'stripe_secret_key' => ""
+        );
+		$removeID = $this->db->update('accounting_bank_accounts', $data);	
     }
 
     public function delete_stripe_acc(){
@@ -299,28 +310,7 @@ class Api extends MYF_Controller
        
     }
 
-    public function on_save_stripe_crendetials()
-    {
-        $comp_id = logged('company_id');
-        $check_user= array(
-            'table' => 'accounting_bank_accounts',
-            'where' => array('company_id' => $comp_id,),
-            'select' => 'id',
-        );
-        $is_exist = $this->general_model->get_data_with_param($check_user);
-
-        $input = $this->input->post();
-        if($input){
-            if(empty($is_exist)){
-                $input['company_id'] = $comp_id;
-                $this->general_model->add_($input, 'accounting_bank_accounts');
-                echo "0";
-            }else{
-                $this->general_model->update_with_key($input,$is_exist->id, 'accounting_bank_accounts');
-                echo "1";
-            }
-        }
-    }
+    
 
     public function get_paypal_access_token($auth_code)
     {

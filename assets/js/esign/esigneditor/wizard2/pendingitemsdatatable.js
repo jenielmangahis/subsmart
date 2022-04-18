@@ -96,6 +96,9 @@ export class Table {
 
       this.onCheckboxStateChange();
     });
+
+    const $loader = this.$modal.querySelector(".wrapper--loading");
+    $loader.classList.remove("wrapper--loading");
   }
 
   onCheckboxStateChange() {

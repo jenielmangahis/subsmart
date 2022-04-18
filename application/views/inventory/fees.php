@@ -99,7 +99,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             </tbody>
                                         </table>
                                     </div>
-                                <div class="col-md-10" id="newFeesInventory" style="display:none;">
+                                <div class="col-md-10" id="newFeesInventory" style="display: none;">
                                     <div class="row col-md-12 pt-4 pl-0">
                                         <h4 class="col-md-10 pl-0 text-left" for="exampleFormControlSelect1">New Fee</h4>
                                     </div>

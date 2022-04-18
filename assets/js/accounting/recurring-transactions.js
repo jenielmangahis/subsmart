@@ -241,37 +241,24 @@ $(document).on('click', '#recurring_transactions .delete-recurring', function(e)
     var row = $(this).parent().parent().parent();
     var rowData = table.row(row).data();
 
-    $('#delete_recurring_transaction .modal-footer .btn-success').attr('data-id', rowData.id);
-
-    $('#delete_recurring_transaction').modal('show');
-});
-
-$(document).on('click', '#delete_recurring_transaction .modal-footer .btn-success', function(e) {
-    e.preventDefault();
-
-    var id = e.currentTarget.dataset.id;
-
-    $.ajax({
-        url: `/accounting/recurring-transactions/delete/${id}`,
-        type:"DELETE",
-        success:function (result) {
-            var res = JSON.parse(result);
-
-            $.toast({
-                icon: res.success ? 'success' : 'error',
-                heading: res.success ? 'Success' : 'Error',
-                text: res.message,
-                showHideTransition: 'fade',
-                hideAfter: 3000,
-                allowToastClose: true,
-                position: 'top-center',
-                stack: false,
-                loader: false,
-            });
-
-            $('#delete_recurring_transaction').modal('hide');
-
-            $('#recurring_transactions').DataTable().ajax.reload();
+    Swal.fire({
+        title: 'Are you sure you want to delete this?',
+        icon: 'warning',
+        showCloseButton: false,
+        confirmButtonColor: '#2ca01c',
+        confirmButtonText: 'Yes',
+        showCancelButton: true,
+        cancelButtonText: 'No',
+        cancelButtonColor: '#d33'
+    }).then((result) => {
+        if(result.isConfirmed) {
+            $.ajax({
+				url: `/accounting/recurring-transactions/delete/${rowData.id}`,
+				type: 'DELETE',
+				success: function(result) {
+                    $('#recurring_transactions').DataTable().ajax.reload();
+				}
+			});
         }
     });
 });

@@ -35,6 +35,10 @@ if ($this->session->userdata('usertimezone') == null) {
 
     <!-- Jquery JS -->
     <script src="<?= base_url("assets/js/v2/jquery-3.6.0.min.js") ?>"></script>
+    <script>
+        var base_url = '<?= base_url() ?>';
+        var surveyBaseUrl = '<?= base_url() ?>';
+    </script>
 </head>
 
 <body>
@@ -239,7 +243,7 @@ if ($this->session->userdata('usertimezone') == null) {
                                 <i class='bx bx-fw bx-group'></i> Affiliates
                             </a>
                         </li>
-                        <li>
+                        <li class="<?php if($page->title == 'Inventory' || $page->title == 'Services' || $page->title == 'Fees' || $page->title == 'Vendors' || $page->title == 'Item Categories'): echo 'selected'; endif; ?>">
                             <a href="<?= base_url("inventory") ?>">
                                 <i class='bx bx-fw bx-box'></i> Inventory
                             </a>

@@ -38,6 +38,9 @@ class Inventory extends MY_Controller
 
     public function index()
     {
+        $this->page_data['page']->title = 'Inventory';
+        $this->page_data['page']->parent = 'Tools';
+
         $get = $this->input->get();
         $this->page_data['items'] = $this->items_model->get();
         $comp_id = logged('company_id');
@@ -64,11 +67,14 @@ class Inventory extends MY_Controller
             'company_id' => $comp_id
         );
         $this->page_data['items_categories'] = $this->db->get_where($this->items_model->table_categories, $comp)->result();
-        $this->load->view('inventory/list', $this->page_data);
+        $this->load->view('v2/pages/inventory/list', $this->page_data);
     }
 
     public function services($page = null)
     {
+        $this->page_data['page']->title = 'Services';
+        $this->page_data['page']->parent = 'Tools';
+
         $get = $this->input->get();
         $this->page_data['items'] = $this->items_model->get();
         $comp_id = logged('company_id');
@@ -100,7 +106,7 @@ class Inventory extends MY_Controller
         $this->page_data['items_categories'] = $this->db->get_where($this->items_model->table_categories, $comp)->result();
 
         if($page == null){
-            $this->load->view('inventory/services', $this->page_data);
+            $this->load->view('v2/pages/inventory/services', $this->page_data);
         }else if ($page == 'add'){
             $this->load->view('inventory/services_add', $this->page_data);
         }
@@ -118,6 +124,9 @@ class Inventory extends MY_Controller
 
     public function fees($page = null)
     {
+        $this->page_data['page']->title = 'Fees';
+        $this->page_data['page']->parent = 'Tools';
+
         $get = $this->input->get();
         $this->page_data['items'] = $this->items_model->get();
         $comp_id = logged('company_id');
@@ -145,7 +154,7 @@ class Inventory extends MY_Controller
         $this->page_data['items'] = $this->categorizeNameAlphabetically($items);
 
         if($page == null){
-            $this->load->view('inventory/fees', $this->page_data);
+            $this->load->view('v2/pages/inventory/fees', $this->page_data);
         }else if ($page == 'add'){
             $this->load->view('inventory/fees_add', $this->page_data);
         }
@@ -153,6 +162,9 @@ class Inventory extends MY_Controller
 
     public function item_groups($page = null)
     {
+        $this->page_data['page']->title = 'Item Categories';
+        $this->page_data['page']->parent = 'Tools';
+
         $comp_id = logged('company_id');
 
         $get_items_categories = array(
@@ -163,7 +175,7 @@ class Inventory extends MY_Controller
         $this->page_data['item_categories'] = $this->general->get_data_with_param($get_items_categories);
 
         if($page == null){
-            $this->load->view('inventory/item_groups', $this->page_data);
+            $this->load->view('v2/pages/inventory/item_groups', $this->page_data);
         }else if ($page == 'add'){
             $this->load->view('inventory/item_groups_add', $this->page_data);
         }
@@ -195,6 +207,9 @@ class Inventory extends MY_Controller
 
     public function vendors($page = null)
     {
+        $this->page_data['page']->title = 'Vendors';
+        $this->page_data['page']->parent = 'Tools';
+
         $get_vendors = array(
             'where' => array('company_id' => logged('company_id')),
             'table' => 'vendor',
@@ -202,7 +217,7 @@ class Inventory extends MY_Controller
         );
         $this->page_data['vendors'] = $this->general->get_data_with_param($get_vendors);
         if($page == null){
-            $this->load->view('inventory/vendors', $this->page_data);
+            $this->load->view('v2/pages/inventory/vendors', $this->page_data);
         }else if ($page == 'add'){
             $this->load->view('inventory/plans_add', $this->page_data);
         }

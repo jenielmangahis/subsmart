@@ -1,4 +1,5 @@
 <?php include viewPath('v2/includes/header'); ?>
+<?php include viewPath('v2/includes/estimate/estimate_modals'); ?>
 <?php include viewPath('v2/includes/customer/customer_modals'); ?>
 
 <div class="row page-content g-0">

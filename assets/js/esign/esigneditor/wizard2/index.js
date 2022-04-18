@@ -42,6 +42,7 @@ window.document.addEventListener("DOMContentLoaded", async () => {
     save_reason: saveReason,
     save_dispute_item: () => saveDisputeItem(customer),
     to_customer_dashboard: () => toDustomerDashboard(customer),
+    to_customer_dispute_items: () => toCustomerDisputeItems(customer),
   };
 
   $actions.forEach(($action) => {
@@ -862,6 +863,9 @@ async function displayReasons() {
 
   $table.querySelector("tbody").appendChild($fragment);
   $table.classList.add("loaded");
+
+  const $loader = $modal.querySelector(".wrapper--loading");
+  $loader.classList.remove("wrapper--loading");
 }
 
 function createReasonRow(data) {
@@ -1027,4 +1031,8 @@ async function saveDisputeItem(customer) {
 
 function toDustomerDashboard(customer) {
   window.location = `${window.api.prefixURL}/customer/add_dispute_item/${customer.prof_id}`;
+}
+
+function toCustomerDisputeItems(customer) {
+  window.location = `${window.api.prefixURL}/customer/credit_industry/${customer.prof_id}`;
 }

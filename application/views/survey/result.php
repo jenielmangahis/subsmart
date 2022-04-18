@@ -102,7 +102,12 @@
         $length--;
       }
     }
-    $survey_completion_rate = $total_score / $length;
+
+    if( $total_score > 0 && $survey_completion_rate > 0){
+      $survey_completion_rate = $total_score / $length;
+    }else{
+      $survey_completion_rate = 0;
+    }
     
   }
   
@@ -538,11 +543,11 @@
                                                         }
                                                       }
                                                     break;
-                                                    case 15: //radial
+                                                    case 15: //Dropdown
                                                       ?>
-                                                        <canvas id="radial-canvas-<?= $question->template_id?>-<?= $question->id?>" height="50"></canvas>
+                                                        <canvas id="drop-down-canvas-<?= $question->template_id?>-<?= $question->id?>" height="50"></canvas>
                                                         <script>
-                                                          let ctx_<?=$question->id?> = document.querySelector('#checkbox-canvas-<?= $question->template_id?>-<?= $question->id?>')
+                                                          let ctx_<?=$question->id?> = document.querySelector('#drop-down-canvas-<?= $question->template_id?>-<?= $question->id?>')
                                                           let chartData_<?=$question->id?> = {
                                                             labels: [],
                                                             datasets: [
@@ -558,7 +563,8 @@
                                                             scales: {
                                                               yAxes: [{
                                                                   ticks: {
-                                                                      beginAtZero: true
+                                                                      beginAtZero: true,
+                                                                      precision: 0
                                                                   }
                                                               }]
                                                             }
@@ -581,11 +587,11 @@
                                                                 }
                                                               }
                                                               ?>
-                                                                chartData.datasets[0].data.push(<?= $count ?>);
+                                                                chartData_<?=$question->id?>.datasets[0].data.push(<?= $count ?>);
                                                               <?php
                                                             }
                                                             ?>
-                                                            checkboxChart.update();
+                                                            checkboxChart_<?=$question->id?>.update();
                                                         </script>
                                                       <?php
                                                     break;

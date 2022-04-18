@@ -195,10 +195,6 @@
                     </tbody>
                 </table>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="nsm-button primary" id="btn_print_affiliates">Print</button>
-            </div>
         </div>
     </div>
 </div>

@@ -400,9 +400,18 @@ ini_set('max_input_vars', 30000);
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body">
+      <div class="modal-body wrapper--loading">
+        <div class="esigneditor__loader">
+            <div class="esigneditor__loaderInner">
+                <div class="spinner-border" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+                Loading...
+            </div>
+        </div>
+
         <p>
-            These are the negative items from your client's credit report. To see a list of all credit items and status, view the <a class="link" href="">dispute items tab</a> on the My Clients page.
+            These are the negative items from your client's credit report. To see a list of all credit items and status, view the <a class="link" href="javascript:void(0);" data-action="to_customer_dispute_items">dispute items tab</a> on the My Clients page.
         </p>
 
         <p>
@@ -634,7 +643,16 @@ ini_set('max_input_vars', 30000);
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body">
+      <div class="modal-body wrapper--loading">
+        <div class="esigneditor__loader">
+            <div class="esigneditor__loaderInner">
+                <div class="spinner-border" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+                Loading...
+            </div>
+        </div>
+
         <h5 class="modal-title mb-3">Manage Reason</h5>
 
         <div class="d-flex justify-content-end">
