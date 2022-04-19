@@ -220,6 +220,20 @@ class Api extends MYF_Controller
         $id = $data['id'];
         $update = $this->db->update('accounting_bank_accounts', $data, array("id" => $id));
     }
+    public function delete_paypal_acc(){
+        $id = $this->input->post("id");
+        $getId = $this->db->where('id', $id);
+        $data = array(
+            'paypal_client_id' => "",
+            'paypal_secret_key' => ""
+        );
+		$removeID = $this->db->update('accounting_bank_accounts', $data);	
+    }
+    public function delete_paypal1_acc(){
+        $id = $this->input->post("id");
+        $getId = $this->db->where('id', $id);
+		$removeID = $this->db->delete('accounting_bank_accounts');	
+    }
 
     public function delete_capital_acc(){
         $id = $this->input->post("id");

@@ -506,33 +506,6 @@ class Recurring_transactions extends MY_Controller {
     {
         $data = $this->accounting_recurring_transactions_model->getRecurringTransaction($id);
 
-        switch($data->txn_type) {
-            case 'deposit' :
-                $data->transaction = $this->accounting_bank_deposit_model->getById($data->txn_id, logged('company_id'));
-
-                $tags = [];
-                if($data->transaction->tags !== null) {
-                    foreach(json_decode($data->transaction->tags, true) as $tag) {
-                        $t = $this->tags_model->getTagById($tag);
-                        $tags[] = [
-                            'id' => $tag,
-                            'name' => $t->name
-                        ];
-                    }
-                }
-
-                $data->transaction->tags = json_encode($tags);
-                $data->transaction->items = $this->accounting_bank_deposit_model->getFunds($data->transaction->id);
-            break;
-            case 'transfer' :
-                $data->transaction = $this->accounting_transfer_funds_model->getById($data->txn_id, logged('company_id'));
-            break;
-            case 'journal entry' :
-                $data->transaction = $this->accounting_journal_entries_model->getById($data->txn_id, logged('company_id'));
-                $data->transaction->items = $this->accounting_journal_entries_model->getEntries($data->transaction->id);
-            break;
-        }
-
         $result = [
             'data' => $data,
             'success' => $data ? true : false,
@@ -2619,13 +2592,52 @@ class Recurring_transactions extends MY_Controller {
                 case 'deposit' :
                     $deposit = $this->accounting_bank_deposit_model->getById($item['txn_id'], logged('company_id'));
                     $total = number_format($deposit->total_amount, 2, '.', ',');
+                    $payeeName = '';
                 break;
                 case 'transfer' :
                     $transfer = $this->accounting_transfer_funds_model->getById($item['txn_id'], logged('company_id'));
                     $total = number_format($transfer->transfer_amount, 2, '.', ',');
+                    $payeeName = '';
                 break;
                 case 'journal entry' :
                     $total = '0.00';
+                    $payeeName = '';
+                break;
+                case 'npcharge' :
+                    $charge = $this->accounting_delayed_charge_model->getDelayedChargeDetails($item['txn_id']);
+                    $payee = $this->accounting_customers_model->get_by_id($charge->customer_id);
+                    $payeeName = $payee->first_name . ' ' . $payee->last_name;
+                    $total = number_format($charge->total_amount, 2, '.', ',');
+                break;
+                case 'npcredit' :
+                    $credit = $this->accounting_delayed_credit_model->getDelayedCreditDetails($item['txn_id']);
+                    $payee = $this->accounting_customers_model->get_by_id($credit->customer_id);
+                    $payeeName = $payee->first_name . ' ' . $payee->last_name;
+                    $total = number_format($credit->total_amount, 2, '.', ',');
+                break;
+                case 'credit memo' :
+                    $creditMemo = $this->accounting_credit_memo_model->getCreditMemoDetails($item['txn_id']);
+                    $payee = $this->accounting_customers_model->get_by_id($creditMemo->customer_id);
+                    $payeeName = $payee->first_name . ' ' . $payee->last_name;
+                    $total = number_format($creditMemo->total_amount, 2, '.', ',');
+                break;
+                case 'invoice' :
+                    $invoice = $this->invoice_model->getinvoice($item['txn_id']);
+                    $payee = $this->accounting_customers_model->get_by_id($invoice->customer_id);
+                    $payeeName = $payee->first_name . ' ' . $payee->last_name;
+                    $total = number_format($invoice->grand_total, 2, '.', ',');
+                break;
+                case 'refund' :
+                    $refundReceipt = $this->accounting_refund_receipt_model->getRefundReceiptDetails_by_id($item['txn_id']);
+                    $payee = $this->accounting_customers_model->get_by_id($refundReceipt->customer_id);
+                    $payeeName = $payee->first_name . ' ' . $payee->last_name;
+                    $total = number_format($refundReceipt->total_amount, 2, '.', ',');
+                break;
+                case 'sales receipt' :
+                    $salesReceipt = $this->accounting_sales_receipt_model->getSalesReceiptDetails_by_id($item['txn_id']);
+                    $payee = $this->accounting_customers_model->get_by_id($salesReceipt->customer_id);
+                    $payeeName = $payee->first_name . ' ' . $payee->last_name;
+                    $total = number_format($salesReceipt->total_amount, 2, '.', ',');
                 break;
             }
 
@@ -3034,9 +3046,6 @@ class Recurring_transactions extends MY_Controller {
                     break;
                 }
 
-                $previous = !is_null($item['previous_date']) && $item['previous_date'] !== '' ? date("m/d/Y", strtotime($item['previous_date'])) : null;
-                $next = date("m/d/Y", strtotime($item['next_date']));
-
                 $every = $item['recurr_every'];
                 switch ($item['recurring_interval']) {
                     case 'daily' :
@@ -3065,8 +3074,6 @@ class Recurring_transactions extends MY_Controller {
                     break;
                     default :
                         $interval = '';
-                        $previous = '';
-                        $next = '';
                     break;
                 }
 
@@ -3079,8 +3086,7 @@ class Recurring_transactions extends MY_Controller {
                             'txn_type' => ucwords(str_replace('np', '', $item['txn_type'])),
                             'txn_id' => $item['txn_id'],
                             'recurring_interval' => $interval,
-                            'previous_date' => $previous,
-                            'next_date' => $item['status'] === "2" ? "Paused" : $next,
+                            'txn_date' => '',
                             'customer_vendor' => $payeeName,
                             'amount' => $total,
                             'status' => $item['status']
@@ -3094,8 +3100,7 @@ class Recurring_transactions extends MY_Controller {
                         'txn_type' => ucwords(str_replace('np', '', $item['txn_type'])),
                         'txn_id' => $item['txn_id'],
                         'recurring_interval' => $interval,
-                        'previous_date' => $previous,
-                        'next_date' => $item['status'] === "2" ? "Paused" : $next,
+                        'txn_date' => '',
                         'customer_vendor' => $payeeName,
                         'amount' => $total,
                         'status' => $item['status']

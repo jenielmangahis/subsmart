@@ -152,20 +152,16 @@ const columns = [
         name: 'recurring_interval'
     },
     {
-        data: 'previous_date',
-        name: 'previous_date'
-    },
-    {
-        data: 'next_date',
-        name: 'next_date'
-    },
-    {
-        data: 'customer_vendor',
-        name: 'customer_vendor'
+        data: 'txn_date',
+        name: 'txn_date'
     },
     {
         data: 'amount',
         name: 'amount'
+    },
+    {
+        data: 'customer_vendor',
+        name: 'customer_vendor'
     },
     {
         data: null,
@@ -173,40 +169,7 @@ const columns = [
         orderable: false,
         searchable: false,
         fnCreatedCell: function(td, cellData, rowData, row, col) {
-            if(rowData.status === "2") {
-                $(td).html(`
-                <div class="btn-group float-right">
-                    <a href="#" class="edit-recurring btn text-primary d-flex align-items-center justify-content-center">Edit</a>
-
-                    <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span class="sr-only">Toggle Dropdown</span>
-                    </button>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item use-transaction" href="#">Use</a>
-                        <a class="dropdown-item duplicate-transaction" href="#">Duplicate</a>
-                        <a class="dropdown-item resume-recurring" href="#">Resume</a>
-                        <a class="dropdown-item delete-recurring" href="#">Delete</a>
-                    </div>
-                </div>
-                `);
-            } else {
-                $(td).html(`
-                <div class="btn-group float-right">
-                    <a href="#" class="edit-recurring btn text-primary d-flex align-items-center justify-content-center">Edit</a>
-
-                    <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span class="sr-only">Toggle Dropdown</span>
-                    </button>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item use-transaction" href="#">Use</a>
-                        <a class="dropdown-item duplicate-transaction" href="#">Duplicate</a>
-                        <a class="dropdown-item pause-recurring" href="#">Pause</a>
-                        <a class="dropdown-item skip-next-date" href="#">Skip next date</a>
-                        <a class="dropdown-item delete-recurring" href="#">Delete</a>
-                    </div>
-                </div>
-                `);
-            }
+            $(td).html('');
         }
     }
 ];

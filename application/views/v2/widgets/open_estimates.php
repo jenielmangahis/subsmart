@@ -48,10 +48,10 @@
                 }
             endforeach;
 
-            $draft_percent = number_format((float)$draft/count($estimate_draft),2,'.','') * 100;
-            $accepted_percent = number_format((float)$accepted/count($estimate_draft),2,'.','') * 100;
-            $invoiced_percent = number_format((float)$invoiced/count($estimate_draft),2,'.','') * 100;
-            $other_percent = number_format((float)$other/count($estimate_draft),2,'.','') * 100;
+            $draft_percent = number_format((float)$draft/ (count($estimate_draft) ?: 1) ,2,'.','') * 100;
+            $accepted_percent = number_format((float)$accepted/ (count($estimate_draft) ?: 1) ,2,'.','') * 100;
+            $invoiced_percent = number_format((float)$invoiced/ (count($estimate_draft) ?: 1) ,2,'.','') * 100;
+            $other_percent = number_format((float)$other/ (count($estimate_draft) ?: 1) ,2,'.','') * 100;
         ?>
         <canvas id="estimates_chart" class="nsm-chart" data-chart-type="estimates"></canvas>
     </div>
