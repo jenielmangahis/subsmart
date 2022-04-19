@@ -25,7 +25,7 @@
                 Sales Date
             </div>
             <div class="col-md-6">
-                <input type="text" class="form-control date_picker" name="sales_date" id="" value="<?php if(isset($office_info)){ echo  $office_info->sales_date; } ?>"/>
+                <input data-type="office_info_sales_date" type="text" class="form-control date_picker" name="sales_date" id="" value="<?php if(isset($office_info)){ echo  $office_info->sales_date; } ?>"/>
             </div>
         </div>
         <div class="row form_line">
@@ -89,7 +89,7 @@
                 Install Date
             </div>
             <div class="col-md-6">
-                <input type="text" class="form-control date_picker" name="install_date" id="" value="<?php if(isset($office_info)){ echo  $office_info->install_date; } ?>"/>
+                <input data-type="office_info_install_date" type="text" class="form-control date_picker" name="install_date" id="" value="<?php if(isset($office_info)){ echo  $office_info->install_date; } ?>"/>
             </div>
         </div>
         <div class="row form_line">
@@ -153,7 +153,7 @@
                 Cancel Date
             </div>
             <div class="col-md-6">
-                <input type="text" class="form-control date_picker" name="cancel_date" id="date_picker" value="<?php if(isset($office_info)){ echo  $office_info->cancel_date; } ?>" />
+                <input data-type="office_info_cancel_date" type="text" class="form-control date_picker" name="cancel_date" id="date_picker" value="<?php if(isset($office_info)){ echo  $office_info->cancel_date; } ?>" />
             </div>
         </div>
         <div class="row form_line">
@@ -197,7 +197,7 @@
                 Collection Date
             </div>
             <div class="col-md-6">
-                <input type="text" class="form-control date_picker" name="collect_date" id="date_picker" value="<?php if(isset($office_info)){ echo $office_info->collect_date; } ?>" />
+                <input data-type="office_info_collection_date" type="text" class="form-control date_picker" name="collect_date" id="date_picker" value="<?php if(isset($office_info)){ echo $office_info->collect_date; } ?>" />
             </div>
         </div>
         <div class="row form_line">
@@ -646,7 +646,7 @@
                 </div>
             </div>
         </div>
-        <div class="row form_line">
+        <div class="row form_line d-none">
             <div class="col-md-12">
                 Customer Shareable Link
             </div>

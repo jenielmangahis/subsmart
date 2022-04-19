@@ -806,7 +806,7 @@ class Accounting extends MY_Controller
             
         }
             $this->accounting_customers_model->import_customers_to_database($tableArr,$selCol);
-
+           var_dump($selCol);
         
 
 

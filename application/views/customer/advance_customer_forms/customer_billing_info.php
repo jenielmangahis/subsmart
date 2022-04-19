@@ -21,10 +21,18 @@
     </div>
     <div class="row form_line">
         <div class="col-md-6">
+            <label for="use_customer_address"><span>Use Customer Address</span>
+        </label></div>
+        <div class="col-md-6">
+            <input type="checkbox" name="use_customer_address" class="form-controls" id="use_customer_address">
+        </div>
+    </div>
+    <div class="row form_line">
+        <div class="col-md-6">
             Card Address 
         </div>
         <div class="col-md-6">
-            <input type="text" class="form-control" name="card_address" id="card_address" value="<?php if(isset($billing_info)){ echo $billing_info->card_address; } ?>"/>
+            <input data-type="billing_address" type="text" class="form-control" name="card_address" id="card_address" value="<?php if(isset($billing_info)){ echo $billing_info->card_address; } ?>"/>
         </div>
     </div>
     <div class="row form_line">
@@ -33,7 +41,7 @@
         </div>
 
         <div class="col-md-6">
-            <input type="text" class="form-control" name="billing_city" id="billing_city" value="<?php if(isset($billing_info)){ echo $billing_info->city; } ?>" />
+            <input data-type="billing_address_city" type="text" class="form-control" name="billing_city" id="billing_city" value="<?php if(isset($billing_info)){ echo $billing_info->city; } ?>" />
         </div>
     </div>
     <div class="row form_line">
@@ -41,7 +49,7 @@
             State
         </div>
         <div class="col-md-6">
-             <input type="text" class="form-control" name="billing_state" id="billing_state" value="<?php if(isset($billing_info)){ echo $billing_info->state; } ?>"/>
+             <input data-type="billing_address_state" type="text" class="form-control" name="billing_state" id="billing_state" value="<?php if(isset($billing_info)){ echo $billing_info->state; } ?>"/>
         </div>
     </div>
     <div class="row form_line">
@@ -49,7 +57,7 @@
             ZIP
         </div>
         <div class="col-md-6">
-            <input type="text" class="form-control" name="billing_zip" id="billing_zip" value="<?php if(isset($billing_info)){ echo $billing_info->zip; } ?>"/>
+            <input data-type="billing_address_zip" type="text" class="form-control" name="billing_zip" id="billing_zip" value="<?php if(isset($billing_info)){ echo $billing_info->zip; } ?>"/>
         </div>
     </div>
     <div class="row form_line">
@@ -104,7 +112,7 @@
             Billing Frequency
         </div>
         <div class="col-md-6">
-            <select id="bill_freq" name="bill_freq" data-customer-source="dropdown" class="input_select searchable-dropdown">
+            <select data-type="billing_frequency" id="bill_freq" name="bill_freq" data-customer-source="dropdown" class="input_select searchable-dropdown">
                 <option <?php if(isset($billing_info)){ if($billing_info->bill_freq == ""){echo "selected";} } ?> value="">- Select -</option>
                 <option <?php if(isset($billing_info)){ if($billing_info->bill_freq == "One Time Only"){echo "selected";} } ?> value="One Time Only">One Time Only</option>
                 <option <?php if(isset($billing_info)){ if($billing_info->bill_freq == "Every 1 Month"){echo "selected";} } ?> value="Every 1 Month">Every 1 Month</option>
@@ -381,7 +389,7 @@
             Billing Frequency
         </div>
         <div class="col-md-6">
-            <select id="frequency" name="frequency" data-customer-source="dropdown" class="input_select" >
+            <select data-type="subscription_frequency" id="frequency" name="frequency" data-customer-source="dropdown" class="input_select" >
                 <option  value="">Select</option>
                 <option <?php if(isset($billing_info)){ if($billing_info->frequency == ""){echo "selected";} } ?> value="">- Select -</option>
                 <option <?php if(isset($billing_info)){ if($billing_info->frequency == "0"){echo "selected";} } ?> value="0">One Time Only</option>

@@ -66,4 +66,14 @@ class Accounting_delayed_credit_model extends MY_Model
         $query = $this->db->get($this->table);
         return $query->result();
     }
+
+    public function get_customer_delayed_credits($customerId, $companyId)
+    {
+        $this->db->where('company_id', $companyId);
+        $this->db->where('customer_id', $customerId);
+		$this->db->where('recurring', null);
+        $this->db->where('status !=', 0);
+        $query = $this->db->get($this->table);
+        return $query->result();
+    }
 }

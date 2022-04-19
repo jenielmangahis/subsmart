@@ -216,48 +216,55 @@ class Accounting_customers_model extends MY_Model
         $indicator = 0;
         $columns = "";
         $values = "";
+        $last_id = "";
 
         
         //progress report
+        for ($index = 0; $index < count($selCol); $index++) { //for the database columns
+            if($index == count($selCol)-1){
+                $columns .= $data[$index][0];
+            }else{
+                $columns .= $data[$index][0] . ",";
+            }
+        }
+        // for ($index = 0; $index < count($column_names); $index++) { //for the database columns
+        //     for ($x = 0; $x < count($data); $x++) { //for the first index of the array 2times lang
+        //         if ($data[$x][$indicator] == $column_names[$index]) { //for the second index of the array
+        //             for ($y = 0; $y < count($data[$x]); $y++) {
+        //                 if ($y == count($data[$x]) - 1) {
+        //                     if ($x == count($data) - 1) {
+        //                         $columns .= $column_names[$index];
+        //                     } else {
+        //                         $columns .= $column_names[$index] . ",";
+        //                     }
+        //                     break;
+        //                 }
+        //                 // if($y==count($data[$x])-2){
+        //                 //     $values.= "'".$data[$x][$y + 1]."'";
+        //                 // }else{
+        //                 //     $values.= "'".$data[$x][$y + 1]."',";
+        //                 // }
 
-        for ($index = 0; $index < count($column_names); $index++) { //for the database columns
-            for ($x = 0; $x < count($data); $x++) { //for the first index of the array 2times lang
-                if ($data[$x][$indicator] == $column_names[$index]) { //for the second index of the array
-                    for ($y = 0; $y < count($data[$x]); $y++) {
-                        if ($y == count($data[$x]) - 1) {
-                            if ($x == count($data) - 1) {
-                                $columns .= $column_names[$index];
-                            } else {
-                                $columns .= $column_names[$index] . ",";
-                            }
-                            break;
-                        }
-                        // if($y==count($data[$x])-2){
-                        //     $values.= "'".$data[$x][$y + 1]."'";
-                        // }else{
-                        //     $values.= "'".$data[$x][$y + 1]."',";
-                        // }
-
-                    }
-                };
-            };
-        };
+        //             }
+        //         };
+        //     };
+        // };
 
         for ($x = 0; $x < count($data[0]); $x++) {
             for ($y = 0 ; $y < count($data); $y++) {
                 if ($y == 0) {
-                    $values .= "('" . $data[$y][$x] . "',";
+                    $values .= "('" . $data[$y][$x+1] . "',";
                 } else if ($y == count($data) - 1) {
                     if ($x == count($data[0]) - 1) {
                         $values .= "'" . $data[$y][$x] . "')";
                     } else {
-                        $values .= "'" . $data[$y][$x] . "')";
+                        $values .= "'" . $data[$y][$x+1] . "')";
                     }
                 } else {
                     $values .= "'" . $data[$y][$x] . "'";
                 }
             }
-
+           
             $query = $this->db->query("INSERT INTO acs_profile ($columns) VALUES  $values ");
             $id = $this->db->insert_id();
             $cId = logged("company_id");
@@ -266,13 +273,16 @@ class Accounting_customers_model extends MY_Model
              set company_id=$cId ,fk_user_id=$fk_id
              where prof_id=$id");
              $values ="";
+            $last_id = $id;
         }
 
         //progress report
         
        
-       
-        var_dump($cId, $fk_id);
+        $this->db->where('prof_id', $last_id);
+        $this->db->delete('acs_profile');
+        echo $values;
+        // var_dump($cId, $fk_id);
         echo "<br>";
         echo "<br>";
         var_dump("INSERT INTO customers ($columns ) VALUES  $values ");

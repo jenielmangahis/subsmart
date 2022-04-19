@@ -5594,30 +5594,116 @@ $(function() {
     });
 
     $(document).on('change', '#invoiceModal #customer', function() {
-        $.get(`/accounting/get-customer-details/${$(this).val()}`, function(result) {
-            var customer = JSON.parse(result);
+        if ($(this).val() !== '' && $(this).val() !== null && $(this).val() !== 'add-new') {
+            $.get(`/accounting/get-customer-details/${$(this).val()}`, function(result) {
+                var customer = JSON.parse(result);
+    
+                if (customer.business_name !== "" && customer.business_name !== null) {
+                    $('#invoiceModal #billing-address').append(customer.business_name);
+                    $('#invoiceModal #billing-address').append('\n');
+                } else {
+                    var customerName = '';
+                    customerName += customer.first_name !== "" ? customer.first_name + " " : "";
+                    customerName += customer.middle_name !== "" ? customer.middle_name + " " : "";
+                    customerName += customer.last_name !== "" ? customer.last_name : "";
+                    $('#invoiceModal #billing-address').html(customerName.trim());
+                    $('#invoiceModal #billing-address').append('\n');
+                }
+                var address = '';
+                address += customer.mail_add !== "" ? customer.mail_add : "";
+                address += customer.city !== "" ? '\n' + customer.city : "";
+                address += customer.state !== "" ? ', ' + customer.state : "";
+                address += customer.zip_code !== "" ? ' ' + customer.zip_code : "";
+                address += customer.country !== "" ? ' ' + customer.country : "";
+    
+                $('#invoiceModal #billing-address').append(address.trim());
+                $('#invoiceModal #customer-email').val(customer.email);
+            });
 
-            if (customer.business_name !== "" && customer.business_name !== null) {
-                $('#invoiceModal #billing-address').append(customer.business_name);
-                $('#invoiceModal #billing-address').append('\n');
-            } else {
-                var customerName = '';
-                customerName += customer.first_name !== "" ? customer.first_name + " " : "";
-                customerName += customer.middle_name !== "" ? customer.middle_name + " " : "";
-                customerName += customer.last_name !== "" ? customer.last_name : "";
-                $('#invoiceModal #billing-address').html(customerName.trim());
-                $('#invoiceModal #billing-address').append('\n');
-            }
-            var address = '';
-            address += customer.mail_add !== "" ? customer.mail_add : "";
-            address += customer.city !== "" ? '\n' + customer.city : "";
-            address += customer.state !== "" ? ', ' + customer.state : "";
-            address += customer.zip_code !== "" ? ' ' + customer.zip_code : "";
-            address += customer.country !== "" ? ' ' + customer.country : "";
+            $.get('/accounting/get-linkable-transactions/invoice/' + $(this).val(), function(res) {
+                var transactions = JSON.parse(res);
 
-            $('#invoiceModal #billing-address').append(address.trim());
-            $('#invoiceModal #customer-email').val(customer.email);
-        });
+                if (transactions.length > 0) {
+                    if($('#invoiceModal .attachments-container').length > 0) {
+                        $('#invoiceModal .attachments-container').parent().parent().remove();
+                    }
+
+                    if ($('#invoiceModal .transactions-container').length > 0) {
+                        $('#invoiceModal .transactions-container').parent().remove();
+                        $('#invoiceModal a.close-transactions-container').parent().remove();
+                        $('#invoiceModal a.open-transactions-container').parent().remove();
+                    }
+
+                    $('#invoiceModal .modal-body .row .col .card .card-body').children('.row:first-child').prepend(`
+                        <div class="col-md-12 px-0 pb-2">
+                            <a href="#" class="float-right btn btn-transparent rounded-0 close-transactions-container" style="padding:12px 15px !important">
+                                <i class="fa fa-chevron-right"></i>
+                            </a>
+                        </div>
+                    `);
+
+                    $('#invoiceModal .modal-body').children('.row').append(`
+                        <div class="col-xl-2">
+                            <div class="transactions-container bg-white h-100" style="padding: 15px">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <h4>Add to Invoice</h4>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label for="">Filter by</label>
+                                            <select class="form-control" id="transaction-type">
+                                                <option value="all">All types</option>
+                                                <option value="charges">Charges</option>
+                                                <option value="credits">Credits</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <select class="form-control" id="transaction-date">
+                                                <option value="all">All dates</option>
+                                                <option value="this-month">This month</option>
+                                                <option value="last-month">Last month</option>
+                                                <option value="custom">Custom...</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `);
+
+                    $.each(transactions, function(index, transaction) {
+                        var title = transaction.type;
+                        title += transaction.number !== '' ? '#' + transaction.number : '';
+                        $('#invoiceModal .modal-body .row .col-xl-2 .transactions-container .row').append(`
+                            <div class="col-12">
+                                <div class="card border">
+                                    <div class="card-body p-0">
+                                        <h5 class="card-title">${title}</h5>
+                                        <p class="card-subtitle">${transaction.formatted_date}</p>
+                                        <p class="card-text">
+                                            ${transaction.total}
+                                        </p>
+                                        <ul class="d-flex justify-content-around">
+                                            <li><a href="#" class="text-info add-transaction" data-id="${transaction.id}" data-type="${transaction.data_type}"><strong>Add</strong></a></li>
+                                            <li><a href="#" class="text-info open-transaction" data-id="${transaction.id}" data-type="${transaction.data_type}">Open</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        `);
+                    });
+                } else {
+                    $('#invoiceModal .transactions-container').parent().remove();
+                    $('#invoiceModal a.close-transactions-container').parent().remove();
+                    $('#invoiceModal a.open-transactions-container').parent().remove();
+                }
+            });
+        } else {
+            $('#invoiceModal .transactions-container').parent().remove();
+            $('#invoiceModal a.close-transactions-container').parent().remove();
+            $('#invoiceModal a.open-transactions-container').parent().remove();
+        }
     });
 
     $(document).on('keyup', '#receivePaymentModal #invoice-no', function(e) {

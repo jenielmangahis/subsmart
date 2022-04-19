@@ -1,0 +1,43 @@
+const $addressToggle = document.getElementById("use_customer_address");
+const $customerInputs = document.querySelectorAll("[data-type^='customer_address']"); // prettier-ignore
+const $addressInputs = document.querySelectorAll("[data-type^='billing_address']"); // prettier-ignore
+
+function getAddressKey($input) {
+  return $input.dataset.type.split("_").at(-1);
+}
+
+function autopopulateBillingAddress($customerInput) {
+  const key = getAddressKey($customerInput);
+  const $billingInput = [...$addressInputs].find(($input) => {
+    return getAddressKey($input) === key;
+  });
+
+  if ($billingInput) {
+    $billingInput.value = $customerInput.value;
+  }
+
+  return $billingInput;
+}
+
+$addressToggle.addEventListener("change", function () {
+  if (!this.checked) {
+    $addressInputs.forEach(($input) => {
+      $input.removeAttribute("readonly", true);
+    });
+    return;
+  }
+
+  $customerInputs.forEach(($input) => {
+    const $billingInput = autopopulateBillingAddress($input);
+    if ($billingInput) {
+      $billingInput.setAttribute("readonly", true);
+    }
+  });
+});
+
+$customerInputs.forEach(($input) => {
+  $input.addEventListener("input", function () {
+    if (!$addressToggle.checked) return;
+    autopopulateBillingAddress(this);
+  });
+});
