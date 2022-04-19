@@ -282,7 +282,14 @@
                     Password
                 </div>
                 <div class="col-md-6">
-                    <input type="text" class="form-control" name="access_password" id="password" value="<?php if(isset($access_info)){ echo $access_info->access_password; } ?>"/>
+                    <div class="input-group">
+                        <input data-type="access_info_pass" type="text" class="form-control" name="access_password" id="password" value="<?php if(isset($access_info)){ echo $access_info->access_password; } ?>"/>
+                        <div class="input-group-append">
+                            <button data-action="access_info_generate_pass" class="btn btn-primary" type="button" style="padding: 0;width: 35px;">
+                                <i class="fa fa-refresh"></i>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

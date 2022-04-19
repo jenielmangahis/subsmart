@@ -119,6 +119,10 @@
         border: 0;
     }
 
+    div#modal-confirm-paypal {
+    width: 417px;
+}
+
     .fdx img {
         background: transparent !important;
     }
@@ -799,6 +803,28 @@
                                                     <button class="back-exist-paypal" id="back-exist-paypal"><i class="fa fa-arrow-left" aria-hidden="true"></i> back</button>
                                                 </div>
                                             </div>
+                                            <div id="modal-confirm-paypal" style="display:none;">
+                                                    <div class="row">
+                                                        <div class="col-4">
+                                                            <img class="image" src="../assets/img/accounting/customers/delete.jpg" alt="wow">
+
+                                                        </div>
+                                                        <div class="col">
+                                                            <div class="row" id="title-des">
+                                                                <h5> WHICH ONE DO YOU WANT TO DELETE?</h5>
+                                                                <ul class="description">
+                                                                    <li class="li-style">If you select account, the account and all credentials within it will also be deleted.</li>
+                                                                    <li class="li-style">If you select credentials, only the stripe credentials will be deleted.</li>
+                                                                </ul>
+                                                            </div>
+                                                            <div class="row modal-buttons">
+                                                                <button class="style-confirm" id="accounts-confirm-paypal">ACCOUNT</button>
+                                                                <button class="style-confirm" id="accounts-credential-paypal">CREDENTIAL</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            
                                         </div>
                                     </div>
                                 </div>
@@ -1158,7 +1184,6 @@
             data: {},
             success: function(data) {
                 var html = "";
-                console.log(data.capital_one.length);
                 var count = 0;
                 if (data.capital_one.length != 0) {
                     for (var x = 0; x < data.capital_one.length; x++) {
@@ -1798,9 +1823,57 @@
         $('.paypal-container .paypal_existed').hide();
         $('.paypal-container #paypal_form_edit').show();
     })
+    $('#modal-confirm-paypal #accounts-confirm-paypal').on('click', function() {
+        console.log("click");
+        $.ajax({
+            url: "<?= base_url() ?>api/delete_paypal1_acc",
+            type: "POST",
+            dataType: "json",
+            data: {
+                id: paypalId
+            },
+            success: function(data) {
+
+
+            }
+        });
+        nsmartrac_alert('Nice!', 'Paypal Crendentials Deleted!', 'success');
+        $('.stripe-container').hide();
+        $('#modal-confirm-paypal').hide();
+        $('.accounts-list').show();
+    })
+
+    $('#modal-confirm-paypal #accounts-credential-paypal').on('click', function() {
+        console.log("click");
+        $.ajax({
+            url: "<?= base_url() ?>api/delete_paypal_acc",
+            type: "POST",
+            dataType: "json",
+            data: {
+                id: paypalId
+            },
+            success: function(data) {
+
+
+            }
+        });
+        nsmartrac_alert('Nice!', 'Paypal Crendentials Deleted!', 'success');
+        $('.paypal-container').hide();
+        $('#modal-confirm-paypal').hide();
+        $('.accounts-list').show();
+    })
+
+    var paypalId = "";
     $(document).on('click', '.paypal-dbutton', function() {
-        var id = $(this).attr("id");
-        console.log($(this).attr("id"));
+        paypalId = $(this).attr("id");
+        $('#modal-confirm-paypal').fadeIn();
+        $('.paypal_existed').hide();
+    })
+
+    $(document).on('click','#new-account-paypal', function(){
+        $('#paypal_form').fadeIn();
+        $('#existed_accounts').hide();
+       
     })
 
 
@@ -1898,6 +1971,7 @@
                     document.getElementById('overlay').style.display = "none";
                     $('.paypal-container').hide();
                     $('.accounts-list').show();
+                    $('#paypal_form').hide();
                 }
             });
         });

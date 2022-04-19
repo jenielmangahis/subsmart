@@ -102,7 +102,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     <option value="credit card credit">Credit Card Credit</option>
                                                     <option value="credit memo">Credit Memo</option>
                                                     <option value="deposit">Deposit</option>
-                                                    <option value="estimate">Estimate</option>
                                                     <option value="expense">Expense</option>
                                                     <option value="invoice">Invoice</option>
                                                     <option value="journal entry">Journal Entry</option>
@@ -177,10 +176,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <th>TEMPLATE NAME</th>
                                             <th>TXN TYPE</th>
                                             <th>INTERVAL</th>
-                                            <th>PREVIOUS DATE</th>
-                                            <th>NEXT DATE</th>
-                                            <th>CUSTOMER/VENDOR</th>
+                                            <th>TXN DATE</th>
                                             <th>AMOUNT</th>
+                                            <th>CUSTOMER/VENDOR</th>
                                             <th>ACTION</th>
                                         </tr>
 									</thead>
@@ -198,7 +196,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     </div>
 
     <div class="modal fade" id="transaction_type_modal" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered m-auto w-50" role="document">
+        <div class="modal-dialog modal-dialog-centered m-auto w-50" role="document" style="max-width: 500px !important;">
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title">Select Transaction Type</h4>
@@ -208,9 +206,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <div class="row">
                         <div class="col-xl-12">
                             <div class="card p-0 m-0">
-                                <div class="card-body" style="max-height: 650px;">
+                                <div class="card-body pb-0" style="max-height: 650px;">
                                     <div class="row">
-                                        <div class="col-md-6">
+                                        <div class="col">
                                             <p>Select the type of template to create</p>
                                             <div class="form-group">
                                                 <label for="type">Transaction Type</label>
@@ -222,7 +220,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     <option value="credit-card-credit">Credit Card Credit</option>
                                                     <option value="credit-memo">Credit Memo</option>
                                                     <option value="deposit">Deposit</option>
-                                                    <option value="estimate">Estimate</option>
                                                     <option value="expense">Expense</option>
                                                     <option value="invoice">Invoice</option>
                                                     <option value="journal-entry">Journal Entry</option>

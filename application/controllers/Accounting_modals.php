@@ -7053,25 +7053,29 @@ class Accounting_modals extends MY_Controller
         return $return;
     }
 
-    public function get_linkable_transactions($transactionType, $vendorId)
+    public function get_linkable_transactions($transactionType, $id)
     {
         switch ($transactionType) {
             case 'expense':
-                $purchaseOrders = $this->expenses_model->get_vendor_open_purchase_orders($vendorId);
-                $bills = $this->expenses_model->get_vendor_open_bills($vendorId);
-                $vendorCredits = $this->expenses_model->get_vendor_unapplied_vendor_credits($vendorId);
+                $purchaseOrders = $this->expenses_model->get_vendor_open_purchase_orders($id);
+                $bills = $this->expenses_model->get_vendor_open_bills($id);
+                $vendorCredits = $this->expenses_model->get_vendor_unapplied_vendor_credits($id);
             break;
             case 'check':
-                $purchaseOrders = $this->expenses_model->get_vendor_open_purchase_orders($vendorId);
-                $bills = $this->expenses_model->get_vendor_open_bills($vendorId);
-                $vendorCredits = $this->expenses_model->get_vendor_unapplied_vendor_credits($vendorId);
+                $purchaseOrders = $this->expenses_model->get_vendor_open_purchase_orders($id);
+                $bills = $this->expenses_model->get_vendor_open_bills($id);
+                $vendorCredits = $this->expenses_model->get_vendor_unapplied_vendor_credits($id);
             break;
             case 'bill':
-                $purchaseOrders = $this->expenses_model->get_vendor_open_purchase_orders($vendorId);
+                $purchaseOrders = $this->expenses_model->get_vendor_open_purchase_orders($id);
             break;
             case 'bill-payment':
-                $bills = $this->expenses_model->get_vendor_open_bills($vendorId);
-                $vendorCredits = $this->expenses_model->get_vendor_unapplied_vendor_credits($vendorId);
+                $bills = $this->expenses_model->get_vendor_open_bills($id);
+                $vendorCredits = $this->expenses_model->get_vendor_unapplied_vendor_credits($id);
+            break;
+            case 'invoice' :
+                $credits = $this->accounting_delayed_credit_model->get_customer_delayed_credits($id, logged('company_id'));
+                $charges = $this->accounting_delayed_charge_model->get_customer_delayed_charges($id, logged('company_id'));
             break;
         }
 
@@ -7118,6 +7122,36 @@ class Accounting_modals extends MY_Controller
                     'formatted_date' => date("F j", strtotime($vendorCredit->payment_date)),
                     'total' => '$'.number_format(floatval($vendorCredit->total_amount), 2, '.', ','),
                     'balance' => '$'.number_format(floatval($vendorCredit->remaining_balance), 2, '.', ',')
+                ];
+            }
+        }
+
+        if(isset($credits) && count($credits)) {
+            foreach($credits as $credit) {
+                $transactions[] = [
+                    'type' => 'Credit',
+                    'data_type' => 'delayed-credit',
+                    'id' => $credit->id,
+                    'number' => $credit->ref_no === null || $credit->ref_no === '' ? '' : $credit->ref_no,
+                    'date' => date("m/d/Y", strtotime($credit->delayed_credit_date)),
+                    'formatted_date' => date("F j", strtotime($credit->delayed_credit_date)),
+                    'total' => '$'.number_format(floatval($credit->total_amount), 2, '.', ','),
+                    'balance' => '$'.number_format(floatval($credit->total_amount), 2, '.', ',')
+                ];
+            }
+        }
+
+        if(isset($charges) && count($charges)) {
+            foreach($charges as $charge) {
+                $transactions[] = [
+                    'type' => 'Charge',
+                    'data_type' => 'delayed-charge',
+                    'id' => $charge->id,
+                    'number' => $charge->ref_no === null || $charge->ref_no === '' ? '' : $charge->ref_no,
+                    'date' => date("m/d/Y", strtotime($charge->delayed_charge_date)),
+                    'formatted_date' => date("F j", strtotime($charge->delayed_charge_date)),
+                    'total' => '$'.number_format(floatval($charge->total_amount), 2, '.', ','),
+                    'balance' => '$'.number_format(floatval($charge->total_amount), 2, '.', ',')
                 ];
             }
         }

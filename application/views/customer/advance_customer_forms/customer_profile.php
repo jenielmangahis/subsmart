@@ -137,7 +137,7 @@
                 Address <span class="required"> *</span>
             </div>
             <div class="col-md-8">
-                <input type="text" class="form-control" name="mail_add" id="mail_address" value="<?php if(isset($profile_info->mail_add)){ echo $profile_info->mail_add; } ?>" required/>
+                <input data-type="customer_address" type="text" class="form-control" name="mail_add" id="mail_address" value="<?php if(isset($profile_info->mail_add)){ echo $profile_info->mail_add; } ?>" required/>
             </div>
         </div>
         <div class="row form_line">
@@ -145,7 +145,7 @@
                 City <span class="required"> *</span>
             </div>
             <div class="col-md-8">
-                <input type="text" class="form-control" name="city" id="city" value="<?php if(isset($profile_info->city)){ echo $profile_info->city; } ?>" required/>
+                <input data-type="customer_address_city" type="text" class="form-control" name="city" id="city" value="<?php if(isset($profile_info->city)){ echo $profile_info->city; } ?>" required/>
             </div>
         </div>
         <div class="row form_line">
@@ -153,7 +153,7 @@
                 State <span class="required"> *</span>
             </div>
             <div class="col-md-8">
-                <input type="text" class="form-control" name="state" id="state" value="<?php if(isset($profile_info->state)){ echo $profile_info->state; } ?>" required/>
+                <input data-type="customer_address_state" type="text" class="form-control" name="state" id="state" value="<?php if(isset($profile_info->state)){ echo $profile_info->state; } ?>" required/>
             </div>
         </div>
 
@@ -162,7 +162,7 @@
                 Zip Code
             </div>
             <div class="col-md-8">
-                <input type="text" class="form-control" name="zip_code" id="zip_code" value="<?php if(isset($profile_info->zip_code)){ echo $profile_info->zip_code; } ?>"/>
+                <input data-type="customer_address_zip" type="text" class="form-control" name="zip_code" id="zip_code" value="<?php if(isset($profile_info->zip_code)){ echo $profile_info->zip_code; } ?>"/>
             </div>
         </div>
         <div class="row form_line">
@@ -170,7 +170,7 @@
                 Cross Street
             </div>
             <div class="col-md-8">
-                <input type="text" class="form-control" name="cross_street" id="cross_street" value="<?php if(isset($profile_info->cross_street)){ echo $profile_info->cross_street; } ?>"/>
+                <input data-type="customer_address_street" type="text" class="form-control" name="cross_street" id="cross_street" value="<?php if(isset($profile_info->cross_street)){ echo $profile_info->cross_street; } ?>"/>
             </div>
         </div>
         <div class="row form_line">
@@ -178,7 +178,7 @@
                 County
             </div>
             <div class="col-md-8">
-                <input type="text" class="form-control" name="country" id="country" value="<?php if(isset($profile_info->country)){ echo $profile_info->country; } ?> " />
+                <input data-type="customer_address_country" type="text" class="form-control" name="country" id="country" value="<?php if(isset($profile_info->country)){ echo $profile_info->country; } ?> " />
             </div>
         </div>
         <div class="row form_line">
@@ -186,7 +186,7 @@
                 Subdivision
             </div>
             <div class="col-md-8">
-                <input type="text" class="form-control" name="subdivision" id="subdivision" value="<?php if(isset($profile_info->subdivision)){ echo $profile_info->subdivision; } ?>" />
+                <input data-type="customer_address_subdivision" type="text" class="form-control" name="subdivision" id="subdivision" value="<?php if(isset($profile_info->subdivision)){ echo $profile_info->subdivision; } ?>" />
             </div>
         </div>
         <div class="row form_line">
