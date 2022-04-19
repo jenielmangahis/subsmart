@@ -807,9 +807,9 @@
     });
   });
 
-  /*$(document).on('click', '.btn-share-survey', function(){
+  $(document).on('click', '.btn-share-survey', function(){
     $('#modal-share-survey').modal('show');
-  });*/
+  });
 
 </script>
 <?php echo put_footer_assets(); ?>

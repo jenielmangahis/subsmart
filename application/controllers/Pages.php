@@ -1118,7 +1118,8 @@ class Pages extends MYF_Controller {
 	    exit;
   	}
 
-  	public function surveyImageUploadedFile( $survey_id ) {
+  	public function surveyImageUploadedFile( $survey_id )
+  	{
       if(isset($_FILES['file']) && $_FILES['file']['tmp_name'] != '') {
           $target_dir = "./uploads/survey/image_db/" . $survey_id . "/";
           if(!file_exists($target_dir)) {
@@ -1132,6 +1133,57 @@ class Pages extends MYF_Controller {
 
           return $tmp_name;
       }
+  }
+
+  public function ajax_survey_question_logic_jump()
+  {
+  	$this->load->model('Survey_model', 'survey_model');
+
+  	$post = $this->input->post();
+  	$logicJumps = $this->survey_model->getSurveyLogicByQuestionIdFrom($post['survey_item_id']);
+  	$surveyQuestions = $this->survey_model->getSurveyQuestionsBySurveyId($post['sid']);
+
+  	$answer = strtolower($post['value']);
+  	$jump_question_id = 0;
+
+  	foreach( $logicJumps as $lj ){
+  		$logic_value = strtolower($lj->sl_value);
+  		switch ($lj->sl_condition) {
+  			case 'is-equal-to':
+  				if( $lj->sl_value == $answer ){
+  					$jump_question_id = $lj->sl_question_id_to;
+  					break 2;
+  				}  				
+  				break;
+  			case 'not-equal-to':
+  				if( $lj->sl_value <> $answer ){
+  					$jump_question_id = $lj->sl_question_id_to;	
+  				}
+  				break 2;
+  			default:  				
+  				break;
+  		}
+  	}
+
+  	$next = false;
+  	$next_question_id = 0;
+  	foreach($surveyQuestions as $sq){
+
+  		if( $next == true ){
+  			$next_question_id = $sq->id;
+  			break;
+  		}
+
+  		if( $post['survey_item_id'] == $sq->id ){
+  			$next = true;
+  		}
+  	}
+
+
+
+  	$json_data = ['jump_id' => $jump_question_id, 'next_question_id' => $next_question_id];
+  	echo json_encode($json_data);
+
   }
 
 }

@@ -262,7 +262,7 @@
                         <?php foreach($questions as $key => $question){ ?>        
 
                           <!-- <img class="image-set-background-image" src="https://picsum.photos/id/1005/5760/3840"> -->
-                          <div id="question-<?= $key ?>" class="col-sm-3 <?= ($key != 0) ? "d-none" : "" ?> animate__animated animate__fadeIn" style="<?=($question->template_id != null && $question->template_id == 1)?"text-align: center;" :""?>">
+                          <div id="question-<?= $key ?>" class="col-sm-3 <?= ($key != 0) ? "d-none" : "" ?> srv-<?= $question->id; ?> animate__animated animate__fadeIn" style="<?=($question->template_id != null && $question->template_id == 1)?"text-align: center;" :""?>">
 
                             <!-- image for welcome screen -->
                             <?php
@@ -563,10 +563,10 @@
                                 <?php }; ?>
 
                                 <!-- next button -->
-                                <button id="btn-next" data-survey-item-type="<?= $type; ?>" data-survey-item="<?=$question->id?>" data-id="<?= $key ?>" data-temp-id="<?=$question->template_id?>" data-is-required="<?=$question->required?>" data-correct-answer="<?=$question->correctAnswer?>" class="btn btn-md btn-primary mt-3" style="background-color: <?= $survey_theme !== null ? $survey_theme->sth_primary_color : ""?>; color: <?= $survey_theme !== null ? $survey_theme->sth_text_color : ""?>"><?= ($question->custom_button_text == "" || $question->custom_button_text == null) ? "Next" : $question->custom_button_text ?></button>
+                                <button id="btn-next" data-sid="<?= $survey->id; ?>" data-survey-item-type="<?= $type; ?>" data-survey-item="<?=$question->id?>" data-id="<?= $key ?>" data-temp-id="<?=$question->template_id?>" data-is-required="<?=$question->required?>" data-correct-answer="<?=$question->correctAnswer?>" class="btn btn-md btn-primary mt-3 btn-srv-<?=$question->id?>" style="background-color: <?= $survey_theme !== null ? $survey_theme->sth_primary_color : ""?>; color: <?= $survey_theme !== null ? $survey_theme->sth_text_color : ""?>"><?= ($question->custom_button_text == "" || $question->custom_button_text == null) ? "Next" : $question->custom_button_text ?></button>
                                 <?php if($key >= 1){
                                   ?>
-                                    <button id="btn-back" data-id="<?= $key ?>"  class="btn btn-md btn-outline-light mt-3">Go back</button>
+                                    <button id="btn-back" data-id="<?= $key ?>" data-prev="<?= $key ?>" class="btn-back-<?=$question->id?> btn btn-md btn-outline-light mt-3">Go back</button>
                                   <?php
                                 }?>
                               </div>
@@ -683,6 +683,7 @@
       let progress = 0;
       let surveyScore = 0;
       let scoredQuestionLength = <?=$scored_question_length?>;
+      let previous_question_id  = 0;
 
 
       $(document).ready(function(){
@@ -770,8 +771,15 @@
         $(document).on('click', '#btn-back', function(e){
           e.preventDefault();
 
-          var id = $(this).data('id');
-          var prev_id = id-1;
+          var id = $(this).data('id');          
+          var data_prev = $(this).attr('data-prev');
+          //
+          if( data_prev > 0 ){
+            var prev_id = parseInt(data_prev);
+          }else{
+            var prev_id = id-1;
+          }
+          
           // var data =  $(this).serializeArray();
           var regex = /\[[^\]]*\]/g;
           // var str = $('#question-'+next_id+' #question').html();
@@ -812,6 +820,7 @@
           e.preventDefault()
 
           var id = $(this).data('id');
+          var sid = $(this).data('sid');
           var tempid = $(this).data('temp-id');
           var survey_type = $(this).attr('data-survey-item-type');
           var survey_item_id = $(this).attr('data-survey-item');
@@ -822,6 +831,10 @@
           // var str = $('#question-'+next_id+' #question').html();
           var value = $('#question-'+id+' [name*="answer"]').val();
           let correctAnswer = $(this).data('correct-answer');
+
+          if(document.getElementById('toggle-yesno-'+survey_item_id) != null) {
+            value = $('#toggle-yesno-'+survey_item_id).val();
+          }
 
           //Count correct answer
           if( survey_type == 'checkboxes' || survey_type == 'single_choice' ){
@@ -935,8 +948,8 @@
           }
 
           if(str.match(regex) == null){
-          }else{
 
+          }else{
             var question = ``;
             $.each( str.split(regex), function(key, value){
               if(str.match(regex)[key] != undefined){
@@ -947,20 +960,36 @@
                 question += value;
               }
             });
-            
             $('#question-'+next_id+' #question').html(question);
           }
             
           answeredFields = answeredFields + 1;
           progress       = answeredFields / numQuestions * 100;
-          $('#survey-progress-bar').css("width", progress+"%");
-          pageNumber = next_id + 1;
-          $('#page-current-number').html(pageNumber);
-          $('#question-'+id+'').addClass('d-none');
-          $('#question-'+ next_id +'').removeClass('d-none');
+          $('#survey-progress-bar').css("width", progress+"%");          
 
+          $.ajax({
+            type: "POST",
+            url: surveyBaseUrl + 'survey/_question_logic_jump',
+            dataType: 'json',
+            data: {sid:sid,survey_item_id:survey_item_id,value:value},       
+            success: function(res){              
+              if( res.jump_id > 0 ){
+                $('#question-'+id+'').addClass('d-none');
+                $('.srv-'+ res.jump_id).removeClass('d-none');
+                $('.btn-back-'+res.jump_id).attr('data-prev', id);
+                pageNumber = parseInt($('.btn-srv-'+res.jump_id).attr('data-id')) + 1;
+              }else{
+                $('#question-'+id+'').addClass('d-none');
+                $('#question-'+ next_id +'').removeClass('d-none');
+                $('.btn-back-'+res.next_question_id).attr('data-prev', 'origin');
+                pageNumber = next_id + 1;                
+              }
+              $('#page-current-number').html(pageNumber);
+
+            }
+          });
         });
-        
+
         $(document).on('click', '#page-back-button', function(e){
           e.preventDefault();
           var id = $(this).data('id');

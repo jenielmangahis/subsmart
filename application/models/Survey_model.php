@@ -606,8 +606,17 @@ class Survey_model extends MY_Model {
 		return $this->db->insert_id();
 	}
 
+	public function addSurveyLogic($data){
+		$this->db->insert('survey_logic', $data);
+		return $this->db->insert_id();
+	}
+
 	public function deleteWorkspace($id){
 		return $this->db->delete('survey_workspaces', array('id'=>$id));
+	}
+
+	public function deleteAllSurveyLogicBySurveyId($survey_id){
+		return $this->db->delete('survey_logic', array('sl_survey_id'=>$survey_id));
 	}
 
 	public function deleteSurveyTemplateAnswer($id){
@@ -630,6 +639,23 @@ class Survey_model extends MY_Model {
 	public function getSurveyLogics($survey_id){
 		$this->db->select('*');
 		$this->db->where('sl_survey_id', $survey_id);
+		$query = $this->db->get('survey_logic');
+		return $query->result();
+		
+	}
+
+	public function getSurveyQuestionsBySurveyId($survey_id){
+		$this->db->select('*');
+		$this->db->where('survey_id', $survey_id);
+		$this->db->order_by('order', 'ASC');
+		$query = $this->db->get('survey_questions');
+		return $query->result();
+		
+	}
+
+	public function getSurveyLogicByQuestionIdFrom($sl_question_id_from){
+		$this->db->select('*');
+		$this->db->where('sl_question_id_from', $sl_question_id_from);
 		$query = $this->db->get('survey_logic');
 		return $query->result();
 		
