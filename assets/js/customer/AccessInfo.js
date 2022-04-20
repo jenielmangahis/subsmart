@@ -41,3 +41,9 @@ function setPassword() {
 
 setPassword();
 $passwordBtn.addEventListener("click", setPassword);
+
+const $customerEmail = document.querySelector("[data-type=customer_email]");
+const $username = document.querySelector("[data-type=access_info_user]");
+$customerEmail.addEventListener("input", function () {
+  $username.value = this.value;
+});

@@ -274,7 +274,7 @@
                     Login
                 </div>
                 <div class="col-md-6">
-                    <input type="text" class="form-control" name="access_login" id="login" value="<?php if(isset($access_info)){ echo $access_info->access_login; } ?>"/>
+                    <input data-type="access_info_user" type="text" class="form-control" name="access_login" id="login" value="<?php if(isset($access_info)){ echo $access_info->access_login; } ?>"/>
                 </div>
             </div>
             <div class="row form_line">
@@ -392,7 +392,9 @@
                 Relationship
             </div>
             <div class="col-md-8">
-                <input type="text" class="form-control" name="relationship1" id="relationship1" value="<?php if(isset($profile_info)){ echo $profile_info->contact_name1; } ?>"/>
+                <select data-type="emergency_contact_relationship" class="form-control">
+                    <option></option>
+                </select>
             </div>
         </div>
         <div class="row form_line">
@@ -416,7 +418,9 @@
                 Relationship
             </div>
             <div class="col-md-8">
-                <input type="text" class="form-control" name="relationship2" id="relationship2" value="<?php if(isset($profile_info)){ echo $profile_info->contact_name1; } ?>"/>
+                <select data-type="emergency_contact_relationship" class="form-control">
+                    <option></option>
+                </select>
             </div>
         </div>
         <div class="row form_line">
@@ -440,7 +444,9 @@
                 Relationship
             </div>
             <div class="col-md-8">
-                <input type="text" class="form-control" name="relationship3" id="relationship3" value="<?php if(isset($profile_info)){ echo $profile_info->contact_name1; } ?>"/>
+                <select data-type="emergency_contact_relationship" class="form-control">
+                    <option></option>
+                </select>
             </div>
         </div>
         <div class="row form_line">

@@ -148,68 +148,70 @@
                 </select>
             </div>
         </div>
-        <div class="row form_line">
-            <div class="col-md-6">
-                Cancel Date
+        <div class="office_info-optional">
+            <div class="row form_line">
+                <div class="col-md-6">
+                    Cancel Date
+                </div>
+                <div class="col-md-6">
+                    <input data-type="office_info_cancel_date" type="text" class="form-control date_picker" name="cancel_date" id="date_picker" value="<?php if(isset($office_info)){ echo  $office_info->cancel_date; } ?>" />
+                </div>
             </div>
-            <div class="col-md-6">
-                <input data-type="office_info_cancel_date" type="text" class="form-control date_picker" name="cancel_date" id="date_picker" value="<?php if(isset($office_info)){ echo  $office_info->cancel_date; } ?>" />
+            <div class="row form_line">
+                <div class="col-md-6">
+                    Cancel Reason
+                </div>
+                <div class="col-md-6">
+                    <select id="cancel_reason" name="cancel_reason" data-customer-source="dropdown" class="input_select" >
+                        <option <?php if(isset($office_info)){ if($office_info->cancel_reason == ""){ echo 'selected'; } } ?> value="">Select</option>
+                        <option <?php if(isset($office_info)){ if($office_info->cancel_reason == 'DS'){ echo 'selected'; } } ?> value="DS">Dissatisfied with Service</option>
+                        <option <?php if(isset($office_info)){ if($office_info->cancel_reason == 'FH'){ echo 'selected'; } } ?> value="FH">Financial Hardship</option>
+                        <option <?php if(isset($office_info)){ if($office_info->cancel_reason == 'FC'){ echo 'selected'; } } ?> value="FC">Fulfilled Contract</option>
+                        <option <?php if(isset($office_info)){ if($office_info->cancel_reason == 'Moving'){ echo 'selected'; } } ?> value="Moving">Moving</option>
+                        <option <?php if(isset($office_info)){ if($office_info->cancel_reason == 'NP'){ echo 'selected'; } } ?> value="NP">Non-Payment</option>
+                        <option <?php if(isset($office_info)){ if($office_info->cancel_reason == 'Paid BOC'){ echo 'selected'; } } ?> value="Paid BOC">Paid BOC</option>
+                        <option <?php if(isset($office_info)){ if($office_info->cancel_reason == 'PA'){ echo 'selected'; } } ?> value="PA">Passed Away</option>
+                        <option <?php if(isset($office_info)){ if($office_info->cancel_reason == 'SUC'){ echo 'selected'; } } ?> value="SUC">Still Under Contruct</option>
+                    </select>
+                </div>
             </div>
-        </div>
-        <div class="row form_line">
-            <div class="col-md-6">
-                Cancel Reason
-            </div>
-            <div class="col-md-6">
-                <select id="cancel_reason" name="cancel_reason" data-customer-source="dropdown" class="input_select" >
-                    <option <?php if(isset($office_info)){ if($office_info->cancel_reason == ""){ echo 'selected'; } } ?> value="">Select</option>
-                    <option <?php if(isset($office_info)){ if($office_info->cancel_reason == 'DS'){ echo 'selected'; } } ?> value="DS">Dissatisfied with Service</option>
-                    <option <?php if(isset($office_info)){ if($office_info->cancel_reason == 'FH'){ echo 'selected'; } } ?> value="FH">Financial Hardship</option>
-                    <option <?php if(isset($office_info)){ if($office_info->cancel_reason == 'FC'){ echo 'selected'; } } ?> value="FC">Fulfilled Contract</option>
-                    <option <?php if(isset($office_info)){ if($office_info->cancel_reason == 'Moving'){ echo 'selected'; } } ?> value="Moving">Moving</option>
-                    <option <?php if(isset($office_info)){ if($office_info->cancel_reason == 'NP'){ echo 'selected'; } } ?> value="NP">Non-Payment</option>
-                    <option <?php if(isset($office_info)){ if($office_info->cancel_reason == 'Paid BOC'){ echo 'selected'; } } ?> value="Paid BOC">Paid BOC</option>
-                    <option <?php if(isset($office_info)){ if($office_info->cancel_reason == 'PA'){ echo 'selected'; } } ?> value="PA">Passed Away</option>
-                    <option <?php if(isset($office_info)){ if($office_info->cancel_reason == 'SUC'){ echo 'selected'; } } ?> value="SUC">Still Under Contruct</option>
-                </select>
-            </div>
-        </div>
 
-        <div class="row form_line">
-            <div class="col-md-6">
-                <label>Collections
+            <div class="row form_line">
+                <div class="col-md-6">
+                    <label>Collections
+                </div>
+                <div class="col-md-6">
+                    <select id="collections" name="collections" data-customer-source="dropdown" class="form-controls input_select">
+                        <option value=""></option>
+                        <option <?= isset($alarm_info) && $alarm_info->collections == 'In Process' ?  'selected' : '';?> value="In Process">In Process</option>
+                        <option <?= isset($alarm_info) && $alarm_info->collections == 'Sent' ?  'selected' : '';?> value="Sent">Sent</option>
+                        <option <?= isset($alarm_info) && $alarm_info->collections == 'None Collectable' ?  'selected' : '';?> value="None Collectable">None Collectable</option>
+                        <option <?= isset($alarm_info) && $alarm_info->collections == 'In Collections' ?  'selected' : '';?> value="In Collections">In Collection</option>
+                        <option <?= isset($alarm_info) && $alarm_info->collections == 'Civil Suit' ?  'selected' : '';?> value="Civil Suit">Civil Suit</option>
+                        <option <?= isset($alarm_info) && $alarm_info->collections == 'Taken Action' ?  'selected' : '';?> value="Taken Action">Taken Action</option>
+                    </select>
+                </div>
             </div>
-            <div class="col-md-6">
-                <select id="collections" name="collections" data-customer-source="dropdown" class="form-controls input_select">
-                    <option value=""></option>
-                    <option <?= isset($alarm_info) && $alarm_info->collections == 'In Process' ?  'selected' : '';?> value="In Process">In Process</option>
-                    <option <?= isset($alarm_info) && $alarm_info->collections == 'Sent' ?  'selected' : '';?> value="Sent">Sent</option>
-                    <option <?= isset($alarm_info) && $alarm_info->collections == 'None Collectable' ?  'selected' : '';?> value="None Collectable">None Collectable</option>
-                    <option <?= isset($alarm_info) && $alarm_info->collections == 'In Collections' ?  'selected' : '';?> value="In Collections">In Collection</option>
-                    <option <?= isset($alarm_info) && $alarm_info->collections == 'Civil Suit' ?  'selected' : '';?> value="Civil Suit">Civil Suit</option>
-                    <option <?= isset($alarm_info) && $alarm_info->collections == 'Taken Action' ?  'selected' : '';?> value="Taken Action">Taken Action</option>
-                </select>
-            </div>
-        </div>
 
-        <div class="row form_line">
-            <div class="col-md-6">
-                Collection Date
+            <div class="row form_line">
+                <div class="col-md-6">
+                    Collection Date
+                </div>
+                <div class="col-md-6">
+                    <input data-type="office_info_collection_date" type="text" class="form-control date_picker" name="collect_date" id="date_picker" value="<?php if(isset($office_info)){ echo $office_info->collect_date; } ?>" />
+                </div>
             </div>
-            <div class="col-md-6">
-                <input data-type="office_info_collection_date" type="text" class="form-control date_picker" name="collect_date" id="date_picker" value="<?php if(isset($office_info)){ echo $office_info->collect_date; } ?>" />
-            </div>
-        </div>
-        <div class="row form_line">
-            <div class="col-md-6">
-                Collection Amount
-            </div>
-            <div class="col-md-6">
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text" id="basic-addon1">$</span>
+            <div class="row form_line">
+                <div class="col-md-6">
+                    Collection Amount
+                </div>
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">$</span>
+                        </div>
+                        <input type="number" class="form-control input_select" name="collect_amount" value="<?php if(isset($office_info)){ echo $office_info->collect_amount; } ?>">
                     </div>
-                    <input type="number" class="form-control input_select" name="collect_amount" value="<?php if(isset($office_info)){ echo $office_info->collect_amount; } ?>">
                 </div>
             </div>
         </div>

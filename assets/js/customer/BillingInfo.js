@@ -1,3 +1,5 @@
+import * as api from "./api.js";
+
 const $addressToggle = document.getElementById("use_customer_address");
 const $customerInputs = document.querySelectorAll("[data-type^='customer_address']"); // prettier-ignore
 const $addressInputs = document.querySelectorAll("[data-type^='billing_address']"); // prettier-ignore
@@ -41,3 +43,26 @@ $customerInputs.forEach(($input) => {
     autopopulateBillingAddress(this);
   });
 });
+
+const $ratePlan = document.querySelector("[data-type=billing_rate_plan]");
+$($ratePlan).select2({
+  placeholder: "Select Rate Plan",
+  ajax: {
+    url: `${api.prefixURL}/Customer_Form/apiGetRatePlans`,
+    dataType: "json",
+    data: (params) => {
+      return { search: params.term };
+    },
+    processResults: (response) => {
+      return {
+        results: response.data.map((item) => ({
+          id: item.amount,
+          text: item.amount,
+        })),
+      };
+    },
+  },
+});
+if ($ratePlan.dataset.value) {
+  $($ratePlan).val($ratePlan.dataset.value).trigger("change");
+}

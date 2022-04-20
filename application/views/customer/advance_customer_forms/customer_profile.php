@@ -9,7 +9,7 @@
                 Status
             </div>
             <div class="col-md-8">
-                <select id="status" name="status" data-customer-source="dropdown" class="input_select" >
+                <select data-type="customer_status" id="status" name="status" data-customer-source="dropdown" class="input_select" >
                     <option  value=""></option>
                     <option  value="Draft">Draft</option>
                     <option <?php if(isset($profile_info)){ if($profile_info->status == 'Charge Back'){ echo 'selected'; } } ?> value="Charge Back">Charge Back</option>
@@ -58,10 +58,8 @@
                 Sales Area <span class="required"> *</span>
             </div>
             <div class="col-md-8">
-                <select id="fk_sa_id" name="fk_sa_id" data-customer-source="dropdown" class="input_select searchable-dropdown" required>
-                    <?php foreach ($sales_area as $sa): ?>
-                        <option <?php if(isset($profile_info)){ if($profile_info->fk_sa_id == $sa->sa_id){ echo 'selected'; } } ?> value="<?= $sa->sa_id; ?>"><?= $sa->sa_name; ?></option>
-                    <?php endforeach ?>
+                <select data-value="<?=$profile_info->fk_sa_id?>" name="fk_sa_id" data-type="customer_sales_area" class="form-control" required>
+                    <option></option>
                 </select>
                 <a href="<?= base_url() ?>customer/settings/salesArea" target="_blank"  style="color:#58bc4f;font-size: 10px;"><span class="fa fa-plus"></span> Manage Sales Area</a>&nbsp;&nbsp;
             </div>
@@ -211,7 +209,7 @@
                 Email 
             </div>
             <div class="col-md-8">
-                <input type="email" class="form-control" name="email" id="email" value="<?php if(isset($profile_info)){ echo $profile_info->email; } ?>" />
+                <input data-type="customer_email" type="email" class="form-control" name="email" id="email" value="<?php if(isset($profile_info)){ echo $profile_info->email; } ?>" />
             </div>
         </div>
 
