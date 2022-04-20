@@ -6674,6 +6674,7 @@ class Accounting_modals extends MY_Controller
                 'memo' => $data['memo'],
                 'adjustment_name' => $data['adjustment_name'],
                 'adjustment_value' => $data['adjustment_value'],
+                'remaining_balance' => $data['total_amount'],
                 'total_amount' => $data['total_amount'],
                 'subtotal' => $data['subtotal'],
                 'tax_total' => $data['tax_total'],
@@ -6890,6 +6891,7 @@ class Accounting_modals extends MY_Controller
                 'memo' => $data['memo'],
                 'adjustment_name' => $data['adjustment_name'],
                 'adjustment_value' => $data['adjustment_value'],
+                'remaining_balance' => $data['total_amount'],
                 'total_amount' => $data['total_amount'],
                 'subtotal' => $data['subtotal'],
                 'tax_total' => $data['tax_total'],
@@ -7136,7 +7138,7 @@ class Accounting_modals extends MY_Controller
                     'date' => date("m/d/Y", strtotime($credit->delayed_credit_date)),
                     'formatted_date' => date("F j", strtotime($credit->delayed_credit_date)),
                     'total' => '$'.number_format(floatval($credit->total_amount), 2, '.', ','),
-                    'balance' => '$'.number_format(floatval($credit->total_amount), 2, '.', ',')
+                    'balance' => '$'.number_format(floatval($credit->remaining_balance), 2, '.', ',')
                 ];
             }
         }
@@ -7151,7 +7153,7 @@ class Accounting_modals extends MY_Controller
                     'date' => date("m/d/Y", strtotime($charge->delayed_charge_date)),
                     'formatted_date' => date("F j", strtotime($charge->delayed_charge_date)),
                     'total' => '$'.number_format(floatval($charge->total_amount), 2, '.', ','),
-                    'balance' => '$'.number_format(floatval($charge->total_amount), 2, '.', ',')
+                    'balance' => '$'.number_format(floatval($charge->remaining_balance), 2, '.', ',')
                 ];
             }
         }

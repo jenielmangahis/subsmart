@@ -258,9 +258,9 @@
 								<li class="nav-item">
 									<a class="nav-link active" data-toggle="list" href="#builder-box"><i class="fa fa-wrench"></i> Builder</a>
 								</li>
-								<!-- <li class="nav-item">
-									<a class="nav-link" data-toggle="list" href="#logic-box"><i class="fa fa-link"></i> Logic</a>
-								</li> -->
+								<li class="nav-item">
+									<a class="nav-link tab-logic" data-id="<?= $survey->id; ?>" data-toggle="list" href="#logic-box"><i class="fa fa-link"></i> Logic Jump</a>
+								</li>
 								<li class="nav-item">
 									<a class="nav-link" data-toggle="list" href="#themes-box"><i class="fa fa-paint-brush"></i> Themes</a>
 								</li>
@@ -333,169 +333,7 @@
 									</div>
 
 									<!-- logic tab -->
-									<div class="tab-pane fade" id="logic-box">
-										<h2>Logic settings</h2>
-										<div class="row">
-
-											<div class="col-xs-12 col-md-6">
-
-														<!-- title of the question selected -->
-														<div class="card">
-															<div class="card-content">
-																<h5 class="card-title d-flex">
-																	<i class="icon-design fa fa-cog" style="background-color: #ff5555;"><strong class="px-1">1</strong></i> question text here
-																	
-																		<label class="text-danger" id="required-asterisk-<?= $question->id ?>">*</label>
-																	
-																</h5>
-															</div>
-														</div>
-
-														<!-- if question has no logic -->
-														<div class="card">
-															<div class="card-content">
-																<div class="d-flex w-100 justify-content-between">
-																	<h6 class="card-title">
-																		Show different questions based on people's answers.
-																	</h6>
-																	<button id="btn-add-logic-jump" class="btn btn-primary">Add Logic jump</button>
-																</div>
-															</div>
-														</div>
-														<script>
-															document.querySelector("#btn-add-logic-jump").addEventListener('click', () => {
-																console.log("sending data");
-																let data = {
-																	'surveyId': <?=$survey->id?>
-																}
-																$.ajax({
-																	url: surveyBaseUrl + 'survey/logic/add',
-																	data: data,
-																	type: 'POST',
-																	dataType: 'json',
-																	success: function(res){
-																		window.alert("Logic added to this question");
-																	}
-																});
-															})
-														</script>
-														<!-- end if -->
-
-														<!-- if question has logic -->
-														<div class="card">
-															<div class="card-content">
-																<span>When someone answers this question:</span>
-																<hr/>
-																<!-- <div class="justify-content-between"> -->
-
-																	<div class="d-flex w-100 ">
-																		<h5 class="card-title">if</h5>
-																		<select class="custom-select" name="selectIfQuestionFrom" id="selectIfQuestionFrom">
-																			<option value="asdf"><i class="icon-design fa fa-cog" style="background-color: #ff5555;"><strong class="px-1">1</strong></i> question text here</option>
-																			<option value="asdf"><i class="icon-design fa fa-cog" style="background-color: #ff5555;"><strong class="px-1">1</strong></i> question text here</option>
-																			<option value="asdf"><i class="icon-design fa fa-cog" style="background-color: #ff5555;"><strong class="px-1">1</strong></i> question text here</option>
-																		</select>
-																		
-																		<select class="custom-select" name="selectCondition" id="selectCondition">
-																			<option value="asdf">is equal to </option>
-																			<option value="asdf">is not equal to </option>
-																			<option value="asdf">begins with</option>
-																			<option value="asdf">ends with</option>
-																			<option value="asdf">contains</option>
-																			<option value="asdf">does not contain</option>
-																		</select>
-																	</div>
-
-																	<div class="d-flex w-100 justify-content-left">
-																		<select name="selectifQuestionTo" id="selectIfQuestionTo" class="custom-select">
-																			<option value="asdf"><i class="icon-design fa fa-cog" style="background-color: #ff5555;"><strong class="px-1">1</strong></i> question text here</option>
-																			<option value="asdf"><i class="icon-design fa fa-cog" style="background-color: #ff5555;"><strong class="px-1">1</strong></i> question text here</option>
-																			<option value="asdf"><i class="icon-design fa fa-cog" style="background-color: #ff5555;"><strong class="px-1">1</strong></i> question text here</option>
-																		</select>
-																		<button class="btn btn-secondary btn-sm">+</button>
-																	</div>
-																	<hr/>
-																	<div class="d-flex w-100 justify-content-left">
-																		<span>Then jump to</span>
-																		<select class="custom-select" name="selectJumpToQuestion" id="selectJumpToQuestion">
-																			<option value="asdf"><i class="icon-design fa fa-cog" style="background-color: #ff5555;"><strong class="px-1">1</strong></i> question text here</option>
-																			<option value="asdf"><i class="icon-design fa fa-cog" style="background-color: #ff5555;"><strong class="px-1">1</strong></i> question text here</option>
-																			<option value="asdf"><i class="icon-design fa fa-cog" style="background-color: #ff5555;"><strong class="px-1">1</strong></i> question text here</option>
-																		</select>
-																	</div>
-																	
-																<!-- </div> -->
-															</div>
-														</div>
-
-
-														<div class="card">
-															<div class="card-content">
-																<div class="d-flex w-100 justify-content-between">
-																	<p>Always jump to</p>
-																	<select name="selectJumpToQuestion" id="selectJumpToQuestion" class="custom-select">
-																		<option value="keme">root</option>
-																		<option value="keme">root</option>
-																		<option value="keme">root</option>
-																		<option value="keme">root</option>
-																		<option value="keme">root</option>
-																	</select>
-																</div>
-															</div>
-														</div>
-											</div>
-
-											<div class="col-xs-12 col-md-6">
-												<div class="row" id="card-order-list">
-													<?php foreach($questions as $key =>  $question){ 
-														if($question->template_id == 20){
-															?>
-															<div id="container-<?=$question->id?> card-group-questions-list" class="col-sm-12">
-																<div class="card">
-																	<div class="card-body p-0">
-																	drag here	
-																	</div>
-																</div>
-															</div>
-															<?php
-														}else{
-															?>
-																<div id="container-<?= $question->id ?>" class="col-sm-12">
-																	<div class="card" onclick="selectQuestion(<?=$question->id?>)">
-																		<div class="card-body p-0">
-																				<span>
-																					<h5 class="card-title d-flex">
-																						<i class="icon-design <?= $question->template_icon ?>" style="background-color:<?= $question->template_color ?>;"><strong class="px-1"><?=$key?></strong></i> <?= $question->template_title ?>
-																						<?php if($question->required == 1){ ?>
-																							<label class="text-danger" id="required-asterisk-<?= $question->id ?>">*</label>
-																						<?php }; ?>:
-																					</h5>
-																					<?= $question->question ?>
-																				</span>
-																				<hr/>
-																		</div>
-																	</div>
-																</div>
-																
-															<?php
-														}
-
-														?>
-
-														<script>
-															selectQuestion = question_id => {
-																console.log(question_id);
-															}
-														</script>
-														
-														
-													<?php };?>
-												</div>
-											</div>
-										</div>
-										<script>
-										</script>
-									</div>
+									<div class="tab-pane fade" id="logic-box"></div>
 
 									<!-- themes tab -->
 									<div class="tab-pane fade" id="themes-box">
@@ -772,6 +610,23 @@
 	    })
 		}
 	}); 
+	
+	$(document).on('click', '.tab-logic', function(e){
+		var survey_id = $(this).attr('data-id');
+		var url =  surveyBaseUrl + 'survey/_load_survey_logic_jump';
+
+		$("#logic-box").html('<span class="spinner-border spinner-border-sm m-0"></span>');
+
+		  $.ajax({
+		    url: url,
+		    data: {survey_id:survey_id},
+		    type: 'POST',
+		    success: function(res){
+		      $('#logic-box').html(res);
+		    }
+		  });
+	});
+
 	currentOrder = document.querySelector('#card-order-list').innerHTML;
 	currentSettings = {
 		settings: {

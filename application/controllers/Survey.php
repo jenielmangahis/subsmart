@@ -668,4 +668,61 @@ class Survey extends MY_Controller
     exit;
   }
 
+  public function ajax_load_survey_logic_jump()
+  {
+    $post = $this->input->post();    
+
+    $id = $post['survey_id'];    
+    $this->page_data['survey'] = $this->survey_model->view($id);
+    $this->page_data['survey_logic'] = $this->survey_model->getSurveyLogics($id);
+    $this->page_data['questions'] = $this->survey_model->getQuestions($id);
+    $this->load->view('survey/ajax_load_survey_logic_jump', $this->page_data);
+  }
+
+  public function ajax_logic_add()
+  {
+    $post = $this->input->post();    
+
+    $id = $post['survey_id'];    
+    $this->page_data['survey'] = $this->survey_model->view($id);
+    $this->page_data['questions'] = $this->survey_model->getQuestions($id);
+    $this->load->view('survey/ajax_logic_add', $this->page_data);
+  }
+
+  public function ajax_update_survey_logic()
+  {
+    $is_success = 0;
+    $msg        = '';
+
+    $post = $this->input->post();
+
+    foreach( $post['selectIfQuestionFrom'] as $key => $value ){
+      if( $post['selectCondition'][$key] != '' && $post['selectAnswer'][$key] != '' && $post['selectAnswer'][$key] != '' ){
+        $data[] = [
+          'sl_survey_id' => $post['survey_id'],
+          'sl_question_id_from' => $value,
+          'sl_question_id_to' => $post['selectJumpQuestion'][$key],
+          'sl_value' => $post['selectAnswer'][$key],
+          'sl_condition' => $post['selectCondition'][$key]
+        ];
+
+      }else{
+        $msg = 'Please check your entries and try again.';
+        break;
+      }
+    }
+
+    if( $msg == '' ){
+      $this->survey_model->deleteAllSurveyLogicBySurveyId($post['survey_id']);
+      foreach($data as $values){
+        $this->survey_model->addSurveyLogic($values);
+        $is_success = 1;
+      }  
+    }
+
+    $json_data = ['is_success' => $is_success, 'msg' => $msg];
+    echo json_encode($json_data);
+
+  }
+
 }

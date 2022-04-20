@@ -2515,7 +2515,7 @@ $(function() {
 
                     button.remove();
                 });
-                break;
+            break;
             case 'bill':
                 if ($('#modal-container .modal').attr('id') !== 'billPaymentModal') {
                     var modalId = $('#modal-container .modal').attr('id');
@@ -2570,7 +2570,7 @@ $(function() {
                         $('#billPaymentModal a.open-transactions-container').parent().remove();
                     }
                 }
-                break;
+            break;
             case 'vendor-credit':
                 if ($('#modal-container .modal').attr('id') === 'billPaymentModal') {
                     $('#billPaymentModal .card-body').children('.row:first-child').prepend(`<input type="hidden" name="credits[]" value="${data.id}">`);
@@ -2592,7 +2592,13 @@ $(function() {
                 } else {
 
                 }
-                break;
+            break;
+            case 'delayed-credit' :
+
+            break;
+            case 'delayed-charge' :
+
+            break;
         }
     });
 
@@ -5672,6 +5678,10 @@ $(function() {
                         </div>
                     `);
 
+                    $('#invoiceModal #transaction-type, #invoiceModal #transaction-date').select2({
+                        minimumResultsForSearch: -1
+                    });
+
                     $.each(transactions, function(index, transaction) {
                         var title = transaction.type;
                         title += transaction.number !== '' ? '#' + transaction.number : '';
@@ -5682,7 +5692,7 @@ $(function() {
                                         <h5 class="card-title">${title}</h5>
                                         <p class="card-subtitle">${transaction.formatted_date}</p>
                                         <p class="card-text">
-                                            ${transaction.total}
+                                            ${transaction.balance}
                                         </p>
                                         <ul class="d-flex justify-content-around">
                                             <li><a href="#" class="text-info add-transaction" data-id="${transaction.id}" data-type="${transaction.data_type}"><strong>Add</strong></a></li>
@@ -5703,6 +5713,176 @@ $(function() {
             $('#invoiceModal .transactions-container').parent().remove();
             $('#invoiceModal a.close-transactions-container').parent().remove();
             $('#invoiceModal a.open-transactions-container').parent().remove();
+        }
+    });
+
+    $(document).on('change', '#invoiceModal #transaction-type, #invoiceModal #transaction-date', function() {
+        var transactionType = $('#invoiceModal #transaction-type').val();
+        var transactionDate = $('#invoiceModal #transaction-date').val();
+
+        if($(this).attr('id') === 'transaction-type' || $(this).attr('id') === 'transaction-date' && $(this).val() !== 'custom') {
+            $('#invoiceModal .transactions-container .row').children('div.col-12:not(:first-child, :nth-child(2))').remove();
+
+            $.get('/accounting/get-linkable-transactions/invoice/' + $('#invoiceModal #customer').val(), function(res) {
+                var transactions = JSON.parse(res);
+    
+                $.each(transactions, function(index, transaction) {
+                    var title = transaction.type;
+                    title += transaction.number !== '' ? '#' + transaction.number : '';
+    
+                    var flag = false;
+                    if(transactionDate !== 'custom') {
+                        switch(transactionType) {
+                            case 'all' :
+                                switch(transactionDate) {
+                                    case 'all' :
+                                        flag = true;
+                                    break;
+                                    case 'this-month' :
+                                        var date = new Date();
+                                        var month = date.getMonth() + 1;
+                                        
+                                        var transacDate = new Date(transaction.date);
+                                        var transacMonth = transacDate.getMonth() + 1;
+                                        if(month === transacMonth) {
+                                            flag = true;
+                                        }
+                                    break;
+                                    case 'last-month' :
+                                        var date = new Date();
+                                        var month = date.getMonth();
+    
+                                        var transacDate = new Date(transaction.date);
+                                        var transacMonth = transacDate.getMonth() + 1;
+    
+                                        if(month === transacMonth) {
+                                            flag = true;
+                                        }
+                                    break;
+                                }
+                            break;
+                            case 'charges' :
+                                if(transaction.data_type === 'delayed-charge') {
+                                    switch(transactionDate) {
+                                        case 'all' :
+                                            flag = true;
+                                        break;
+                                        case 'this-month' :
+                                            var date = new Date();
+                                            var month = date.getMonth() + 1;
+                                            
+                                            var transacDate = new Date(transaction.date);
+                                            var transacMonth = transacDate.getMonth() + 1;
+                                            if(month === transacMonth) {
+                                                flag = true;
+                                            }
+                                        break;
+                                        case 'last-month' :
+                                            var date = new Date();
+                                            var month = date.getMonth();
+        
+                                            var transacDate = new Date(transaction.date);
+                                            var transacMonth = transacDate.getMonth() + 1;
+        
+                                            if(month === transacMonth) {
+                                                flag = true;
+                                            }
+                                        break;
+                                    }
+                                }
+                            break;
+                            case 'credits' :
+                                if(transaction.data_type === 'delayed-credit') {
+                                    switch(transactionDate) {
+                                        case 'all' :
+                                            flag = true;
+                                        break;
+                                        case 'this-month' :
+                                            var date = new Date();
+                                            var month = date.getMonth() + 1;
+                                            
+                                            var transacDate = new Date(transaction.date);
+                                            var transacMonth = transacDate.getMonth() + 1;
+                                            if(month === transacMonth) {
+                                                flag = true;
+                                            }
+                                        break;
+                                        case 'last-month' :
+                                            var date = new Date();
+                                            var month = date.getMonth();
+        
+                                            var transacDate = new Date(transaction.date);
+                                            var transacMonth = transacDate.getMonth() + 1;
+        
+                                            if(month === transacMonth) {
+                                                flag = true;
+                                            }
+                                        break;
+                                    }
+                                }
+                            break;
+                        }
+    
+                        if(flag) {
+                            $('#invoiceModal .modal-body .row .col-xl-2 .transactions-container .row').append(`
+                                <div class="col-12">
+                                    <div class="card border">
+                                        <div class="card-body p-0">
+                                            <h5 class="card-title">${title}</h5>
+                                            <p class="card-subtitle">${transaction.formatted_date}</p>
+                                            <p class="card-text">
+                                                ${transaction.balance}
+                                            </p>
+                                            <ul class="d-flex justify-content-around">
+                                                <li><a href="#" class="text-info add-transaction" data-id="${transaction.id}" data-type="${transaction.data_type}"><strong>Add</strong></a></li>
+                                                <li><a href="#" class="text-info open-transaction" data-id="${transaction.id}" data-type="${transaction.data_type}">Open</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            `);
+                        }
+                    } else {
+                        
+                    }
+                });
+            });
+        } else {
+            var alertHtml = `<div class="row">
+                <div class="col-6">
+                    <div class="form-group" style="margin: 0 !important">
+                        <label for="start-date" class="text-left">Start date</label>
+                        <input type="text" id="start-date" class="form-control date" placeholder="MM/dd/yyyy">
+                    </div>
+                </div>
+                <div class="cold-6">
+                    <div class="form-group" style="margin: 0 !important">
+                        <label for="end-date" class="text-left">End date</label>
+                        <input type="text" id="end-date" class="form-control date" placeholder="MM/dd/yyyy">
+                    </div>
+                </div>
+            </div>`;
+
+            Swal.fire({
+                title: 'Custom date range',
+                html: alertHtml,
+                showCloseButton: true,
+                confirmButtonColor: '#2ca01c',
+                confirmButtonText: 'Done',
+                showCancelButton: false,
+                onOpen: function() {
+                    $('#swal2-content .date').each(function() {
+                        $(this).datepicker({
+                            uiLibrary: 'bootstrap'
+                        });
+                    });
+                }
+            }).then((result) => {
+                if(result.isConfirmed) {
+                    var startDate = $('#swal2-content #start-date').val();
+                    var endDate = $('#swal2-content #end-date').val();
+                }
+            });
         }
     });
 

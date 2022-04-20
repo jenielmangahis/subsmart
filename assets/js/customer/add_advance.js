@@ -3,4 +3,6 @@ window.document.addEventListener("DOMContentLoaded", () => {
   import("./SubscriptionPayPlan.js");
   import("./OfficeUseInfo.js");
   import("./AccessInfo.js");
+  import("./EmergencyContacts.js");
+  import("./CustomerProfle.js");
 });

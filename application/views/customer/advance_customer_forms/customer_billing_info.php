@@ -93,11 +93,8 @@
         <div class="col-md-6">
             <div class="row">
                 <div class="col-md-12">
-                    <select id="mmr" name="mmr" data-customer-source="dropdown" class="input_select searchable-dropdown" required>
-                        <option value="0.00">0.00</option>
-                        <?php foreach($rate_plans as $rate_plan): ?>
-                            <option <?= isset($billing_info->mmr) ? 'selected' : ''; ?> value="<?= $rate_plan->amount; ?>"><?= $rate_plan->amount; ?></option>
-                        <?php endforeach; ?>
+                    <select data-value="<?=$billing_info->mmr?>" name="mmr" data-type="billing_rate_plan" class="form-control" required>
+                        <option></option>
                     </select>
                 </div>
                 <div class="col-md-12">
@@ -341,7 +338,7 @@
             Recurring Start Date
         </div>
         <div class="col-md-6">
-            <input type="text" class="form-control datepicker" name="recurring_start_date" id="recurring_start_date" value="<?= isset($billing_info) ? $billing_info->recurring_start_date : ''; ?>" />
+            <input data-type="subscription_start_date" type="text" class="form-control datepicker" name="recurring_start_date" id="recurring_start_date" value="<?= isset($billing_info) ? $billing_info->recurring_start_date : ''; ?>" />
         </div>
     </div>
     <div class="row form_line">
@@ -349,7 +346,7 @@
             Recurring End Date
         </div>
         <div class="col-md-6">
-            <input type="text" class="form-control datepicker" name="recurring_end_date" id="recurring_end_date" value="<?= isset($billing_info) ? $billing_info->recurring_end_date : ''; ?>" />
+            <input data-type="subscription_end_date" type="text" class="form-control datepicker" name="recurring_end_date" id="recurring_end_date" value="<?= isset($billing_info) ? $billing_info->recurring_end_date : ''; ?>" />
         </div>
     </div>
     <div class="row form_line">
@@ -361,7 +358,7 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text" id="basic-addon1">$</span>
                 </div>
-                <input type="number" step="0.01" class="form-control input_select" name="transaction_amount" value="<?= isset($billing_info) ? $billing_info->transaction_amount : ''; ?>">
+                <input data-type="subscription_amount" type="number" step="0.01" class="form-control input_select" name="transaction_amount" value="<?= isset($billing_info) ? $billing_info->transaction_amount : ''; ?>">
             </div>
         </div>
     </div>

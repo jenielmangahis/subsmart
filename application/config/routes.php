@@ -214,6 +214,10 @@ $route['survey/_delete_template_answer'] = 'Survey/ajax_delete_template_answer';
 $route['survey/_update_settings'] = 'Survey/ajax_update_settings';
 $route['survey/_delete'] = 'Survey/ajax_delete_survey';
 $route['survey/_delete_theme'] = 'Survey/ajax_delete_theme';
+$route['survey/_load_survey_logic_jump'] = 'Survey/ajax_load_survey_logic_jump';
+$route['survey/_logic_add'] = 'Survey/ajax_logic_add';
+$route['survey/_update_survey_logic'] = 'Survey/ajax_update_survey_logic';
+$route['survey/_question_logic_jump'] = 'Pages/ajax_survey_question_logic_jump'; //Front
 
 // survey logic
 $route['survey/logic/list/(:any)'] = "survey/surveyLogicList/$1";
