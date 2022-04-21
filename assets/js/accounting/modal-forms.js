@@ -40,6 +40,9 @@ const formatter = new Intl.NumberFormat('en-US', {
     currency: 'USD'
 });
 
+var startDate = null;
+var endDate = null;
+
 const dropdownFields = [
     'customer',
     'employee',
@@ -2064,7 +2067,7 @@ $(function() {
     });
 
     $(document).on('change', '#expenseModal #payee', function() {
-        if ($(this).val() !== '' && $(this).val() !== null && $(this).val() !== 'add-new') {
+        if ($(this).val() !== '' && $(this).val() !== null && $(this).val() !== 'add-new' && $('#expenseModal #templateName').length < 1) {
             var split = $(this).val().split('-');
             unlinkTransaction();
 
@@ -2140,7 +2143,7 @@ $(function() {
     });
 
     $(document).on('change', '#checkModal #payee', function() {
-        if ($(this).val() !== '' && $(this).val() !== null) {
+        if ($(this).val() !== '' && $(this).val() !== null && $(this).val() !== 'add-new' && $('#checkModal #templateName').length < 1) {
             var split = $(this).val().split('-');
             unlinkTransaction();
 
@@ -2216,7 +2219,7 @@ $(function() {
     });
 
     $(document).on('change', '#billModal #vendor', function() {
-        if ($(this).val() !== '' && $(this).val() !== null) {
+        if ($(this).val() !== '' && $(this).val() !== null && $(this).val() !== 'add-new' && $('#billModal #templateName').length < 1) {
             unlinkTransaction();
 
             $.get('/accounting/get-linkable-transactions/bill/' + $(this).val(), function(res) {
@@ -2594,10 +2597,24 @@ $(function() {
                 }
             break;
             case 'delayed-credit' :
+                $.get(`/accounting/get-transaction-details/${data.type}/${data.id}`, function(res) {
+                    var result = JSON.parse(res);
+                    var details = result.details;
+                    var items = result.items;
 
+                    if (items.length > 0) {
+                        $.each(items, function(index, item) {
+                            
+                        });
+                    }
+                });
             break;
             case 'delayed-charge' :
-
+                $.get(`/accounting/get-transaction-details/${data.type}/${data.id}`, function(res) {
+                    var result = JSON.parse(res);
+                    var details = result.details;
+                    var items = result.items;
+                });
             break;
         }
     });
@@ -5626,204 +5643,66 @@ $(function() {
                 $('#invoiceModal #customer-email').val(customer.email);
             });
 
-            $.get('/accounting/get-linkable-transactions/invoice/' + $(this).val(), function(res) {
-                var transactions = JSON.parse(res);
+            if($('#invoiceModal #templateName').length < 1) {
+                $.get('/accounting/get-linkable-transactions/invoice/' + $(this).val(), function(res) {
+                    var transactions = JSON.parse(res);
 
-                if (transactions.length > 0) {
-                    if($('#invoiceModal .attachments-container').length > 0) {
-                        $('#invoiceModal .attachments-container').parent().parent().remove();
-                    }
+                    if (transactions.length > 0) {
+                        if($('#invoiceModal .attachments-container').length > 0) {
+                            $('#invoiceModal .attachments-container').parent().parent().remove();
+                        }
 
-                    if ($('#invoiceModal .transactions-container').length > 0) {
-                        $('#invoiceModal .transactions-container').parent().remove();
-                        $('#invoiceModal a.close-transactions-container').parent().remove();
-                        $('#invoiceModal a.open-transactions-container').parent().remove();
-                    }
+                        if ($('#invoiceModal .transactions-container').length > 0) {
+                            $('#invoiceModal .transactions-container').parent().remove();
+                            $('#invoiceModal a.close-transactions-container').parent().remove();
+                            $('#invoiceModal a.open-transactions-container').parent().remove();
+                        }
 
-                    $('#invoiceModal .modal-body .row .col .card .card-body').children('.row:first-child').prepend(`
-                        <div class="col-md-12 px-0 pb-2">
-                            <a href="#" class="float-right btn btn-transparent rounded-0 close-transactions-container" style="padding:12px 15px !important">
-                                <i class="fa fa-chevron-right"></i>
-                            </a>
-                        </div>
-                    `);
-
-                    $('#invoiceModal .modal-body').children('.row').append(`
-                        <div class="col-xl-2">
-                            <div class="transactions-container bg-white h-100" style="padding: 15px">
-                                <div class="row">
-                                    <div class="col-12">
-                                        <h4>Add to Invoice</h4>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="form-group">
-                                            <label for="">Filter by</label>
-                                            <select class="form-control" id="transaction-type">
-                                                <option value="all">All types</option>
-                                                <option value="charges">Charges</option>
-                                                <option value="credits">Credits</option>
-                                            </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <select class="form-control" id="transaction-date">
-                                                <option value="all">All dates</option>
-                                                <option value="this-month">This month</option>
-                                                <option value="last-month">Last month</option>
-                                                <option value="custom">Custom...</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
+                        $('#invoiceModal .modal-body .row .col .card .card-body').children('.row:first-child').prepend(`
+                            <div class="col-md-12 px-0 pb-2">
+                                <a href="#" class="float-right btn btn-transparent rounded-0 close-transactions-container" style="padding:12px 15px !important">
+                                    <i class="fa fa-chevron-right"></i>
+                                </a>
                             </div>
-                        </div>
-                    `);
+                        `);
 
-                    $('#invoiceModal #transaction-type, #invoiceModal #transaction-date').select2({
-                        minimumResultsForSearch: -1
-                    });
-
-                    $.each(transactions, function(index, transaction) {
-                        var title = transaction.type;
-                        title += transaction.number !== '' ? '#' + transaction.number : '';
-                        $('#invoiceModal .modal-body .row .col-xl-2 .transactions-container .row').append(`
-                            <div class="col-12">
-                                <div class="card border">
-                                    <div class="card-body p-0">
-                                        <h5 class="card-title">${title}</h5>
-                                        <p class="card-subtitle">${transaction.formatted_date}</p>
-                                        <p class="card-text">
-                                            ${transaction.balance}
-                                        </p>
-                                        <ul class="d-flex justify-content-around">
-                                            <li><a href="#" class="text-info add-transaction" data-id="${transaction.id}" data-type="${transaction.data_type}"><strong>Add</strong></a></li>
-                                            <li><a href="#" class="text-info open-transaction" data-id="${transaction.id}" data-type="${transaction.data_type}">Open</a></li>
-                                        </ul>
+                        $('#invoiceModal .modal-body').children('.row').append(`
+                            <div class="col-xl-2">
+                                <div class="transactions-container bg-white h-100" style="padding: 15px">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <h4>Add to Invoice</h4>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="form-group">
+                                                <label for="">Filter by</label>
+                                                <select class="form-control" id="transaction-type">
+                                                    <option value="all">All types</option>
+                                                    <option value="charges">Charges</option>
+                                                    <option value="credits">Credits</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <select class="form-control" id="transaction-date">
+                                                    <option value="all">All dates</option>
+                                                    <option value="this-month">This month</option>
+                                                    <option value="last-month">Last month</option>
+                                                    <option value="custom">Custom...</option>
+                                                </select>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         `);
-                    });
-                } else {
-                    $('#invoiceModal .transactions-container').parent().remove();
-                    $('#invoiceModal a.close-transactions-container').parent().remove();
-                    $('#invoiceModal a.open-transactions-container').parent().remove();
-                }
-            });
-        } else {
-            $('#invoiceModal .transactions-container').parent().remove();
-            $('#invoiceModal a.close-transactions-container').parent().remove();
-            $('#invoiceModal a.open-transactions-container').parent().remove();
-        }
-    });
-
-    $(document).on('change', '#invoiceModal #transaction-type, #invoiceModal #transaction-date', function() {
-        var transactionType = $('#invoiceModal #transaction-type').val();
-        var transactionDate = $('#invoiceModal #transaction-date').val();
-
-        if($(this).attr('id') === 'transaction-type' || $(this).attr('id') === 'transaction-date' && $(this).val() !== 'custom') {
-            $('#invoiceModal .transactions-container .row').children('div.col-12:not(:first-child, :nth-child(2))').remove();
-
-            $.get('/accounting/get-linkable-transactions/invoice/' + $('#invoiceModal #customer').val(), function(res) {
-                var transactions = JSON.parse(res);
     
-                $.each(transactions, function(index, transaction) {
-                    var title = transaction.type;
-                    title += transaction.number !== '' ? '#' + transaction.number : '';
+                        $('#invoiceModal #transaction-type, #invoiceModal #transaction-date').select2({
+                            minimumResultsForSearch: -1
+                        });
     
-                    var flag = false;
-                    if(transactionDate !== 'custom') {
-                        switch(transactionType) {
-                            case 'all' :
-                                switch(transactionDate) {
-                                    case 'all' :
-                                        flag = true;
-                                    break;
-                                    case 'this-month' :
-                                        var date = new Date();
-                                        var month = date.getMonth() + 1;
-                                        
-                                        var transacDate = new Date(transaction.date);
-                                        var transacMonth = transacDate.getMonth() + 1;
-                                        if(month === transacMonth) {
-                                            flag = true;
-                                        }
-                                    break;
-                                    case 'last-month' :
-                                        var date = new Date();
-                                        var month = date.getMonth();
-    
-                                        var transacDate = new Date(transaction.date);
-                                        var transacMonth = transacDate.getMonth() + 1;
-    
-                                        if(month === transacMonth) {
-                                            flag = true;
-                                        }
-                                    break;
-                                }
-                            break;
-                            case 'charges' :
-                                if(transaction.data_type === 'delayed-charge') {
-                                    switch(transactionDate) {
-                                        case 'all' :
-                                            flag = true;
-                                        break;
-                                        case 'this-month' :
-                                            var date = new Date();
-                                            var month = date.getMonth() + 1;
-                                            
-                                            var transacDate = new Date(transaction.date);
-                                            var transacMonth = transacDate.getMonth() + 1;
-                                            if(month === transacMonth) {
-                                                flag = true;
-                                            }
-                                        break;
-                                        case 'last-month' :
-                                            var date = new Date();
-                                            var month = date.getMonth();
-        
-                                            var transacDate = new Date(transaction.date);
-                                            var transacMonth = transacDate.getMonth() + 1;
-        
-                                            if(month === transacMonth) {
-                                                flag = true;
-                                            }
-                                        break;
-                                    }
-                                }
-                            break;
-                            case 'credits' :
-                                if(transaction.data_type === 'delayed-credit') {
-                                    switch(transactionDate) {
-                                        case 'all' :
-                                            flag = true;
-                                        break;
-                                        case 'this-month' :
-                                            var date = new Date();
-                                            var month = date.getMonth() + 1;
-                                            
-                                            var transacDate = new Date(transaction.date);
-                                            var transacMonth = transacDate.getMonth() + 1;
-                                            if(month === transacMonth) {
-                                                flag = true;
-                                            }
-                                        break;
-                                        case 'last-month' :
-                                            var date = new Date();
-                                            var month = date.getMonth();
-        
-                                            var transacDate = new Date(transaction.date);
-                                            var transacMonth = transacDate.getMonth() + 1;
-        
-                                            if(month === transacMonth) {
-                                                flag = true;
-                                            }
-                                        break;
-                                    }
-                                }
-                            break;
-                        }
-    
-                        if(flag) {
+                        $.each(transactions, function(index, transaction) {
+                            var title = transaction.type;
+                            title += transaction.number !== '' ? '#' + transaction.number : '';
                             $('#invoiceModal .modal-body .row .col-xl-2 .transactions-container .row').append(`
                                 <div class="col-12">
                                     <div class="card border">
@@ -5841,13 +5720,26 @@ $(function() {
                                     </div>
                                 </div>
                             `);
-                        }
+                        });
                     } else {
-                        
+                        $('#invoiceModal .transactions-container').parent().remove();
+                        $('#invoiceModal a.close-transactions-container').parent().remove();
+                        $('#invoiceModal a.open-transactions-container').parent().remove();
                     }
                 });
-            });
+            }
         } else {
+            $('#invoiceModal .transactions-container').parent().remove();
+            $('#invoiceModal a.close-transactions-container').parent().remove();
+            $('#invoiceModal a.open-transactions-container').parent().remove();
+        }
+    });
+
+    $(document).on('change', '#invoiceModal #transaction-type, #invoiceModal #transaction-date', function() {
+        var transactionType = $('#invoiceModal #transaction-type').val();
+        var transactionDate = $('#invoiceModal #transaction-date').val();
+
+        if($(this).attr('id') === 'transaction-date' && $(this).val() === 'custom') {
             var alertHtml = `<div class="row">
                 <div class="col-6">
                     <div class="form-group" style="margin: 0 !important">
@@ -5879,11 +5771,17 @@ $(function() {
                 }
             }).then((result) => {
                 if(result.isConfirmed) {
-                    var startDate = $('#swal2-content #start-date').val();
-                    var endDate = $('#swal2-content #end-date').val();
+                    startDate = new Date($('#swal2-content #start-date').val());
+                    endDate = new Date($('#swal2-content #end-date').val());
+
+                    getInvoiceLinkableTransactions(transactionType, transactionDate);
                 }
             });
         }
+
+        $('#invoiceModal .transactions-container .row').children('div.col-12:not(:first-child, :nth-child(2))').remove();
+
+        getInvoiceLinkableTransactions(transactionType, transactionDate);
     });
 
     $(document).on('keyup', '#receivePaymentModal #invoice-no', function(e) {
@@ -10693,5 +10591,125 @@ const printPreviewRefundReceipt = () => {
         $('div#modal-container').append(result);
 
         $('#viewPrintRefundReceiptModal').modal('show');
+    });
+}
+
+const getInvoiceLinkableTransactions = (transactionType, transactionDate) => {
+    $.get('/accounting/get-linkable-transactions/invoice/' + $('#invoiceModal #customer').val(), function(res) {
+        var transactions = JSON.parse(res);
+
+        $.each(transactions, function(index, transaction) {
+            var title = transaction.type;
+            title += transaction.number !== '' ? '#' + transaction.number : '';
+            var transacDate = new Date(transaction.date);
+            var transacMonth = transacDate.getMonth() + 1;
+            var date = new Date();
+
+            var flag = false;
+            switch(transactionType) {
+                case 'all' :
+                    switch(transactionDate) {
+                        case 'all' :
+                            flag = true;
+                        break;
+                        case 'this-month' :
+                            var month = date.getMonth() + 1;
+                            
+                            if(month === transacMonth) {
+                                flag = true;
+                            }
+                        break;
+                        case 'last-month' :
+                            var month = date.getMonth();
+
+                            if(month === transacMonth) {
+                                flag = true;
+                            }
+                        break;
+                        case 'custom' :
+                            if(transacDate >= startDate && transacDate <= endDate) {
+                                flag = true;
+                            }
+                        break;
+                    }
+                break;
+                case 'charges' :
+                    if(transaction.data_type === 'delayed-charge') {
+                        switch(transactionDate) {
+                            case 'all' :
+                                flag = true;
+                            break;
+                            case 'this-month' :
+                                var month = date.getMonth() + 1;
+                            
+                                if(month === transacMonth) {
+                                    flag = true;
+                                }
+                            break;
+                            case 'last-month' :
+                                var month = date.getMonth();
+
+                                if(month === transacMonth) {
+                                    flag = true;
+                                }
+                            break;
+                            case 'custom' :
+                                if(transacDate >= startDate && transacDate <= endDate) {
+                                    flag = true;
+                                }
+                            break;
+                        }
+                    }
+                break;
+                case 'credits' :
+                    if(transaction.data_type === 'delayed-credit') {
+                        switch(transactionDate) {
+                            case 'all' :
+                                flag = true;
+                            break;
+                            case 'this-month' :
+                                var month = date.getMonth() + 1;
+                            
+                                if(month === transacMonth) {
+                                    flag = true;
+                                }
+                            break;
+                            case 'last-month' :
+                                var month = date.getMonth();
+
+                                if(month === transacMonth) {
+                                    flag = true;
+                                }
+                            break;
+                            case 'custom' :
+                                if(transacDate >= startDate && transacDate <= endDate) {
+                                    flag = true;
+                                }
+                            break;
+                        }
+                    }
+                break;
+            }
+
+            if(flag) {
+                $('#invoiceModal .modal-body .row .col-xl-2 .transactions-container .row').append(`
+                    <div class="col-12">
+                        <div class="card border">
+                            <div class="card-body p-0">
+                                <h5 class="card-title">${title}</h5>
+                                <p class="card-subtitle">${transaction.formatted_date}</p>
+                                <p class="card-text">
+                                    ${transaction.balance}
+                                </p>
+                                <ul class="d-flex justify-content-around">
+                                    <li><a href="#" class="text-info add-transaction" data-id="${transaction.id}" data-type="${transaction.data_type}"><strong>Add</strong></a></li>
+                                    <li><a href="#" class="text-info open-transaction" data-id="${transaction.id}" data-type="${transaction.data_type}">Open</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                `);
+            }
+        });
     });
 }

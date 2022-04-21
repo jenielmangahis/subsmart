@@ -7172,24 +7172,51 @@ class Accounting_modals extends MY_Controller
                 $type = 'Bill';
                 $transaction = $this->vendors_model->get_bill_by_id($transactionId, logged('company_id'));
             break;
+            case 'delayed-credit' :
+                $type = 'Delayed Credit';
+                $transaction = $this->accounting_delayed_credit_model->getDelayedCreditDetails($transactionId);
+            break;
+            case 'delayed-charge' :
+                $type = 'Delayed Charge';
+                $transaction = $this->accounting_delayed_charge_model->getDelayedChargeDetails($transactionId);
+            break;
         }
 
-        $categories = $this->expenses_model->get_transaction_categories($transactionId, $type);
-        $items = $this->expenses_model->get_transaction_items($transactionId, $type);
+        $return = [
+            'details' => $transaction
+        ];
 
-        foreach ($items as $index => $item) {
-            $details = $this->items_model->getItemById($item->item_id);
-            $locations = $this->items_model->getLocationByItemId($item->item_id);
+        if($transactionType === 'purchase-order' || $transactionType === 'bill') {
+            $categories = $this->expenses_model->get_transaction_categories($transactionId, $type);
+            $items = $this->expenses_model->get_transaction_items($transactionId, $type);
 
-            $items[$index]->details = $details[0];
-            $items[$index]->locations = $locations;
+            foreach ($items as $index => $item) {
+                $details = $this->items_model->getItemById($item->item_id);
+                $locations = $this->items_model->getLocationByItemId($item->item_id);
+
+                $items[$index]->details = $details[0];
+                $items[$index]->locations = $locations;
+            }
+
+            $return['categories'] = $categories;
+            $return['items'] = $items;
+        } else {
+            $items = $this->accounting_credit_memo_model->get_customer_transaction_items($type, $transactionId);
+
+            foreach($items as $index => $item) {
+                if(!in_array($item->item_id, ['0', null, '']) && in_array($item->package_id, ['0', null, ''])) {
+                    $items[$index]->itemDetails = $this->items_model->getItemById($item->item_id)[0];
+                    $items[$index]->locations = $this->items_model->getLocationByItemId($item->item_id);
+                } else {
+                    $items[$index]->packageDetails = $this->items_model->get_package_by_id($item->package_id);
+                    $items[$index]->packageItems = json_decode($item->package_item_details);
+                }
+            }
+
+            $return['items'] = $items;
         }
 
-        echo json_encode([
-            'details' => $transaction,
-            'categories' => $categories,
-            'items' => $items
-        ]);
+        echo json_encode($return);
     }
 
     public function bill_payment_form($billId)

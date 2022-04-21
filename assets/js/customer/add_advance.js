@@ -5,4 +5,6 @@ window.document.addEventListener("DOMContentLoaded", () => {
   import("./AccessInfo.js");
   import("./EmergencyContacts.js");
   import("./CustomerProfle.js");
+  import("./FundingInfo.js");
+  import("./AlarmInfo.js");
 });

@@ -4,7 +4,7 @@ const $salesArea = document.querySelector("[data-type=customer_sales_area]");
 $($salesArea).select2({
   placeholder: "Select Sales Area",
   ajax: {
-    url: `${api.prefixURL}/Customer_Form/apiGetSalesArea`,
+    url: `${api.prefixURL}/Customer_Form/apiGetSalesAreas`,
     dataType: "json",
     data: (params) => {
       return { search: params.term };
