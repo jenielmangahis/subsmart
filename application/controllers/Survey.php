@@ -467,20 +467,33 @@ class Survey extends MY_Controller
   }
 
   public function updateTheme($id){
-    $filename = $_POST["sth_theme_name"];
-    $path = 'uploads/survey/themes';
-    if($_FILES["filePrimaryImage"]["name"] !== "" || $_FILES["filePrimaryImage"]["size"] !== 0){
-      unlink($path.'/'.strtolower($filename).'.jpg');
+
+    $theme = $this->survey_model->getThemes($id);
+
+    $filename   = 'theme_image_'.time();
+    $company_id = logged('company_id');
+
+    $path = "./uploads/survey/themes/$company_id/";
+    if(!file_exists($path)) {
+      mkdir($path, 0777, true);
     }
-    $config = [
-      'file_name' => strtolower($filename),
-      'upload_path' 		=> $path,
-      'allowed_types' 	=> '*',
-      'overwrite' 		=> false,
-    ];
-    $_POST["sth_primary_image"] = strtolower($filename).".jpg";
-    $test = $this->upload->initialize($config);
-    $this->upload->do_upload('filePrimaryImage');
+
+    if($_FILES["filePrimaryImage"]["name"] !== "" || $_FILES["filePrimaryImage"]["size"] !== 0){
+      $config = [
+        'file_name' => strtolower($filename),
+        'upload_path'     => $path,
+        'allowed_types'   => '*',
+        'overwrite'     => false,
+      ];
+
+      $_POST['company_id'] = $company_id;
+      $_POST["sth_primary_image"] = strtolower($filename).".jpg";
+      $test = $this->upload->initialize($config);
+      $this->upload->do_upload('filePrimaryImage');
+    }else{
+      $_POST["sth_primary_image"] = $theme->sth_primary_image;
+    }
+
     $this->survey_model->updateTheme($id, $_POST);
     redirect('survey/themes');
   }  
