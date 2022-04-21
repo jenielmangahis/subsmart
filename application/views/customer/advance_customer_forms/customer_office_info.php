@@ -359,11 +359,8 @@
                 Activation Fee
             </div>
             <div class="col-md-5">
-                <select id="activation_fee" name="activation_fee" data-customer-source="dropdown" class="input_select">
-                    <option value="0.00">0.00</option>
-                    <?php foreach($activation_fees as $activation_fee): ?>
-                        <option <?= isset($activation_fee->activation_fee) ? 'selected' : ''; ?> value="<?= $activation_fee->amount; ?>"><?= $activation_fee->amount; ?></option>
-                    <?php endforeach; ?>
+                <select data-value="<?=$activation_fee->activation_fee?>" name="activation_fee" data-type="funding_info_activation_fee" class="form-control" required>
+                    <option></option>
                 </select>
                 <a href="<?= base_url() ?>customer/settings/activationFee" target="_blank"  style="color:#58bc4f;font-size: 10px;"><span class="fa fa-plus"></span> Manage Fee</a>&nbsp;&nbsp;
             </div>

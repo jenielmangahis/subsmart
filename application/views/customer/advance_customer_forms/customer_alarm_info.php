@@ -159,7 +159,10 @@
                 System Package Type
             </div>
             <div class="col-md-6">
-                <select name="system_type" id="system_type" class="input_select">
+                <select data-value="<?=$alarm_info->system_type?>" name="system_type" data-type="alarm_info_system_type" class="form-control" required>
+                    <option></option>
+                </select>
+                <!-- <select name="system_type" id="system_type" class="input_select">
                     <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == ''){echo "selected";} } ?> value=""></option>
                     <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'Landline'){echo "selected";} } ?> value="Landline">Landline</option>
                     <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'Landline W/ 2-Way'){echo "selected";} } ?> value="Landline W/ 2-Way">Landline W/ 2-Way</option>
@@ -182,7 +185,7 @@
                     <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'Cell Primary w/Access Control'){echo "selected";} } ?> value="Cell Primary w/Access Control">Cell Primary w/Access Control</option>
                     <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'Interactive w/Access Control'){echo "selected";} } ?> value="Interactive w/Access Control">Interactive w/Access Control</option>
                     <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'Interactive w/Access Control w/Automn'){echo "selected";} } ?> value="Interactive w/Access Control w/Automn">Interactive w/Access Control w/Automn</option>
-                </select>
+                </select> -->
                 <a href="<?= base_url() ?>customer/settings/spt" target="_blank"  style="color:#58bc4f;font-size: 10px;"><span class="fa fa-plus"></span> Manage System Type</a>&nbsp;&nbsp;
             </div>
         </div>
