@@ -93,11 +93,26 @@
                                     <?php if (in_array('name', $enabled_table_headers)) : ?>
                                         <td>
                                             <div class="nsm-profile">
-                                                <span><?= ucwords($customer->first_name[0]) . ucwords($customer->last_name[0]) ?></span>
+                                                <?php if ($customer->customer_type === 'Business'): ?>
+                                                    <span>
+                                                    <?php 
+                                                        $parts = explode(' ', strtoupper(trim($customer->business_name)));
+                                                        echo count($parts) > 1 ? $parts[0][0] . end($parts)[0] : $parts[0][0];
+                                                    ?>
+                                                    </span>
+                                                <?php else: ?>
+                                                    <span><?= ucwords($customer->first_name[0]) . ucwords($customer->last_name[0]) ?></span>
+                                                <?php endif; ?>
                                             </div>
                                         </td>
                                         <td class="nsm-text-primary">
-                                            <label class="nsm-link default d-block fw-bold" onclick="location.href='<?= base_url('/customer/module/' . $customer->prof_id); ?>'"><?= ($customer) ? $customer->first_name . ' ' . $customer->last_name : ''; ?></label>
+                                            <label class="nsm-link default d-block fw-bold" onclick="location.href='<?= base_url('/customer/module/' . $customer->prof_id); ?>'">
+                                                <?php if ($customer->customer_type === 'Business'): ?>
+                                                    <?= $customer->business_name ?>
+                                                <?php else: ?>
+                                                    <?= ($customer) ? $customer->first_name . ' ' . $customer->last_name : ''; ?>
+                                                <?php endif; ?>
+                                            </label>
                                             <label class="nsm-link default content-subtitle fst-italic d-block"><?php echo $customer->email; ?></label>
                                         </td>
                                     <?php endif; ?>
@@ -229,11 +244,26 @@
                                     <tr>
                                         <td>
                                             <div class="nsm-profile">
-                                                <span><?= ucwords($customer->first_name[0]) . ucwords($customer->last_name[0]) ?></span>
+                                                <?php if ($customer->customer_type === 'Business'): ?>
+                                                    <span>
+                                                    <?php 
+                                                        $parts = explode(' ', strtoupper(trim($customer->business_name)));
+                                                        echo count($parts) > 1 ? $parts[0][0] . end($parts)[0] : $parts[0][0];
+                                                    ?>
+                                                    </span>
+                                                <?php else: ?>
+                                                    <span><?= ucwords($customer->first_name[0]) . ucwords($customer->last_name[0]) ?></span>
+                                                <?php endif; ?>
                                             </div>
                                         </td>
                                         <td class="nsm-text-primary">
-                                            <label class="nsm-link default d-block fw-bold" onclick="location.href='<?= base_url('/customer/preview_/' . $customer->prof_id); ?>'"><?= ($customer) ? $customer->first_name . ' ' . $customer->last_name : ''; ?></label>
+                                            <label class="nsm-link default d-block fw-bold" onclick="location.href='<?= base_url('/customer/preview_/' . $customer->prof_id); ?>'">
+                                                <?php if ($customer->customer_type === 'Business'): ?>
+                                                    <?= $customer->business_name ?>
+                                                <?php else: ?>
+                                                    <?= ($customer) ? $customer->first_name . ' ' . $customer->last_name : ''; ?>
+                                                <?php endif; ?>
+                                            </label>
                                             <label class="nsm-link default content-subtitle fst-italic d-block"><?php echo $customer->email; ?></label>
                                         </td>
                                         <td><?php echo $customer->city; ?></td>

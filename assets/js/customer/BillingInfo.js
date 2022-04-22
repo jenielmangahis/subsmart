@@ -66,3 +66,42 @@ $($ratePlan).select2({
 if ($ratePlan.dataset.value) {
   $($ratePlan).val($ratePlan.dataset.value).trigger("change");
 }
+
+const $contractTerm = document.querySelector("[data-type=billing_contract_term]"); // prettier-ignore
+const $startDate = document.querySelector("[data-type=billing_start_date]");
+const $endDate = document.querySelector("[data-type=billing_end_date]");
+$($contractTerm).on("change", function () {
+  const billingStart = moment().add(Number(this.value), "months");
+  const billingEnd = billingStart.clone().add(Number(this.value), "months");
+  $($startDate).datepicker("setDate", billingStart.toDate());
+  $($endDate).datepicker("setDate", billingEnd.toDate());
+});
+
+const $subStartDate = document.querySelector("[data-type=subscription_start_date]"); // prettier-ignore
+$($startDate)
+  .datepicker()
+  .on("changeDate", function () {
+    const date = moment(this.value).subtract(1, "months");
+    $($subStartDate).datepicker("setDate", date.toDate());
+  });
+
+const $subEndDate = document.querySelector("[data-type=subscription_end_date]"); // prettier-ignore
+$($endDate)
+  .datepicker()
+  .on("changeDate", function () {
+    const date = moment(this.value).subtract(1, "months");
+    $($subEndDate).datepicker("setDate", date.toDate());
+  });
+
+const $monthDay = document.querySelector("[data-type=billing_month_day]");
+$($monthDay).on("change", function () {
+  if ($subStartDate.value) {
+    const start = moment($subStartDate.value).set("date", this.value);
+    $($subStartDate).datepicker("setDate", start.toDate());
+  }
+
+  if ($subEndDate.value) {
+    const end = moment($subEndDate.value).set("date", this.value);
+    $($subEndDate).datepicker("setDate", end.toDate());
+  }
+});

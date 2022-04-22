@@ -85,8 +85,16 @@
 
             foreach ($main_widgets as $wids) :
                 if ($wids->wu_is_main) :
-                    echo '<div class="col-12 col-lg-6">';
-                    $data['class'] = 'nsm-card nsm-grid';
+                    if($wids->wu_widget_id == 26){
+                        echo '<div class="col-12" id="droppable">';
+                        $data['class'] = 'nsm-card nsm-grid large';
+                        
+                    }else{
+                        $data['class'] = 'nsm-card nsm-grid med';
+                        echo '<div class="col-12 col-lg-6" id="droppable">';
+                        
+                    }
+                    
                     $data['isMain'] = True;
                     $data['id'] = $wids->w_id;
                     $data['isGlobal'] = ($wids->wu_company_id == '0' ? false : true);

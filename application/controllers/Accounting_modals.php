@@ -5277,6 +5277,8 @@ class Accounting_modals extends MY_Controller
                 }
 
                 foreach($data['item'] as $key => $input) {
+                    $linkedTransaction = !is_null($input['linked_transaction'][$key]) ? explode('-', $data['linked_transaction'][$key]) : null;
+
                     $explode = explode('-', $input);
 
                     if($explode[0] === 'package') {
@@ -5294,7 +5296,9 @@ class Accounting_modals extends MY_Controller
                         'tax' => $data['item_tax'][$key],
                         'discount' => $data['discount'][$key],
                         'total' => $data['item_total'][$key],
-                        'tax_rate_used' => $data['item_tax'][$key]
+                        'tax_rate_used' => $data['item_tax'][$key],
+                        'linked_transaction_type' => !is_null($linkedTransaction) ? $linkedTransaction[0] : null,
+                        'linked_transaction_id' => !is_null($linkedTransaction) ? $linkedTransaction[1] : null
                     ];
 
                     $addInvoiceItem = $this->invoice_model->add_invoice_items($invoiceItem);
@@ -7085,6 +7089,9 @@ class Accounting_modals extends MY_Controller
 
         if (isset($purchaseOrders) && count($purchaseOrders) > 0) {
             foreach ($purchaseOrders as $purchaseOrder) {
+                $balance = '$'.number_format(floatval($purchaseOrder->remaining_balance), 2, '.', ',');
+                $total = '$'.number_format(floatval($purchaseOrder->total_amount), 2, '.', ',');
+
                 $transactions[] = [
                     'type' => 'Purchase Order',
                     'data_type' => 'purchase-order',
@@ -7092,14 +7099,17 @@ class Accounting_modals extends MY_Controller
                     'number' => $purchaseOrder->purchase_order_no === null || $purchaseOrder->purchase_order_no === '' ? '' : $purchaseOrder->purchase_order_no,
                     'date' => date("m/d/Y", strtotime($purchaseOrder->purchase_order_date)),
                     'formatted_date' => date("F j", strtotime($purchaseOrder->purchase_order_date)),
-                    'total' => '$'.number_format(floatval($purchaseOrder->total_amount), 2, '.', ','),
-                    'balance' => '$'.number_format(floatval($purchaseOrder->remaining_balance), 2, '.', ',')
+                    'total' => str_replace('$-', '-$', $total),
+                    'balance' => str_replace('$-', '-$', $balance)
                 ];
             }
         }
 
         if (isset($bills) && count($bills) > 0) {
             foreach ($bills as $bill) {
+                $balance = '$'.number_format(floatval($bill->remaining_balance), 2, '.', ',');
+                $total = '$'.number_format(floatval($bill->total_amount), 2, '.', ',');
+
                 $transactions[] = [
                     'type' => 'Bill',
                     'data_type' => 'bill',
@@ -7107,14 +7117,17 @@ class Accounting_modals extends MY_Controller
                     'number' => $bill->bill_no === null || $bill->bill_no === '' ? '' : $bill->bill_no,
                     'date' => date("m/d/Y", strtotime($bill->due_date)),
                     'formatted_date' => date("F j", strtotime($bill->due_date)),
-                    'total' => '$'.number_format(floatval($bill->total_amount), 2, '.', ','),
-                    'balance' => '$'.number_format(floatval($bill->remaining_balance), 2, '.', ',')
+                    'total' => str_replace('$-', '-$', $total),
+                    'balance' => str_replace('$-', '-$', $balance)
                 ];
             }
         }
 
         if (isset($vendorCredits) && count($vendorCredits) > 0) {
             foreach ($vendorCredits as $vendorCredit) {
+                $balance = '$'.number_format(floatval($vendorCredit->remaining_balance), 2, '.', ',');
+                $total = '$'.number_format(floatval($vendorCredit->total_amount), 2, '.', ',');
+
                 $transactions[] = [
                     'type' => 'Vendor Credit',
                     'data_type' => 'vendor-credit',
@@ -7122,14 +7135,17 @@ class Accounting_modals extends MY_Controller
                     'number' => $vendorCredit->ref_no === null || $vendorCredit->ref_no === '' ? '' : $vendorCredit->ref_no,
                     'date' => date("m/d/Y", strtotime($vendorCredit->payment_date)),
                     'formatted_date' => date("F j", strtotime($vendorCredit->payment_date)),
-                    'total' => '$'.number_format(floatval($vendorCredit->total_amount), 2, '.', ','),
-                    'balance' => '$'.number_format(floatval($vendorCredit->remaining_balance), 2, '.', ',')
+                    'total' => str_replace('$-', '-$', $total),
+                    'balance' => str_replace('$-', '-$', $balance)
                 ];
             }
         }
 
         if(isset($credits) && count($credits)) {
             foreach($credits as $credit) {
+                $balance = '$'.number_format(floatval($credit->remaining_balance), 2, '.', ',');
+                $total = '$'.number_format(floatval($credit->total_amount), 2, '.', ',');
+
                 $transactions[] = [
                     'type' => 'Credit',
                     'data_type' => 'delayed-credit',
@@ -7137,14 +7153,17 @@ class Accounting_modals extends MY_Controller
                     'number' => $credit->ref_no === null || $credit->ref_no === '' ? '' : $credit->ref_no,
                     'date' => date("m/d/Y", strtotime($credit->delayed_credit_date)),
                     'formatted_date' => date("F j", strtotime($credit->delayed_credit_date)),
-                    'total' => '$'.number_format(floatval($credit->total_amount), 2, '.', ','),
-                    'balance' => '$'.number_format(floatval($credit->remaining_balance), 2, '.', ',')
+                    'total' => str_replace('$-', '-$', $total),
+                    'balance' => str_replace('$-', '-$', $balance)
                 ];
             }
         }
 
         if(isset($charges) && count($charges)) {
             foreach($charges as $charge) {
+                $balance = '-$'.number_format(floatval($charge->remaining_balance), 2, '.', ',');
+                $total = '$'.number_format(floatval($charge->total_amount), 2, '.', ',');
+
                 $transactions[] = [
                     'type' => 'Charge',
                     'data_type' => 'delayed-charge',
@@ -7152,8 +7171,8 @@ class Accounting_modals extends MY_Controller
                     'number' => $charge->ref_no === null || $charge->ref_no === '' ? '' : $charge->ref_no,
                     'date' => date("m/d/Y", strtotime($charge->delayed_charge_date)),
                     'formatted_date' => date("F j", strtotime($charge->delayed_charge_date)),
-                    'total' => '$'.number_format(floatval($charge->total_amount), 2, '.', ','),
-                    'balance' => '$'.number_format(floatval($charge->remaining_balance), 2, '.', ',')
+                    'total' => str_replace('$-', '-$', $total),
+                    'balance' => str_replace('$-', '-$', $balance)
                 ];
             }
         }

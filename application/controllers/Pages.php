@@ -1150,13 +1150,13 @@ class Pages extends MYF_Controller {
   		$logic_value = strtolower($lj->sl_value);
   		switch ($lj->sl_condition) {
   			case 'is-equal-to':
-  				if( $lj->sl_value == $answer ){
+  				if( $logic_value == $answer ){
   					$jump_question_id = $lj->sl_question_id_to;
   					break 2;
   				}  				
   				break;
   			case 'not-equal-to':
-  				if( $lj->sl_value <> $answer ){
+  				if( $logic_value <> $answer ){
   					$jump_question_id = $lj->sl_question_id_to;	
   				}
   				break 2;

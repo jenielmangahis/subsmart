@@ -2392,6 +2392,7 @@ $(function() {
                     var dataType = data.type.replace('-', ' ').replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); });
                     var date = new Date(details.purchase_order_date);
                     var dateString = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
+                    var remainingBalance = '$'+parseFloat(details.remaining_balance).toFixed(2);
 
                     var link = `
                     <td>
@@ -2405,7 +2406,7 @@ $(function() {
                                     <div class="col-3"></div>
                                     <div class="col-3 d-flex align-items-center"><a class="text-info open-transaction" href="#" data-id="${data.id}" data-type="${data.type}">${dataType}</a></div>
                                     <div class="col-3 d-flex align-items-center">${dateString}</div>
-                                    <div class="col-3 d-flex align-items-center">$${parseFloat(details.remaining_balance).toFixed(2)}</div>
+                                    <div class="col-3 d-flex align-items-center">${remainingBalance.replace('$-', '-$')}</div>
                                     <div class="col-3 d-flex align-items-center"><button class="btn btn-transparent unlink-transaction" style="font-size: 13px !important">Remove</button></div>
                                 </div>
                             </div>
@@ -2603,18 +2604,317 @@ $(function() {
                     var items = result.items;
 
                     if (items.length > 0) {
+                        $('#modal-container form#modal-form .modal #item-table thead tr').append('<th width="3%"></th>');
+
+                        var dataType = data.type.replace('-', ' ').replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); });
+                        var date = new Date(details.delayed_credit_date);
+                        var dateString = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
+                        var remainingBalance = '$'+parseFloat(details.remaining_balance).toFixed(2);
+
+                        var link = `
+                        <td>
+                            <div class="dropdown">
+                                <a href="#" class="text-info" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-link"></i></a>
+                                <div class="dropdown-menu dropdown-menu-right p-2" aria-labelledby="linked-transaction" style="min-width: 500px; font-size: 13px">
+                                    <div class="row">
+                                        <div class="col-3"><strong>Type</strong></div>
+                                        <div class="col-3"><strong>Date</strong></div>
+                                        <div class="col-3"><strong>Amount</strong></div>
+                                        <div class="col-3"></div>
+                                        <div class="col-3 d-flex align-items-center"><a class="text-info open-transaction" href="#" data-id="${data.id}" data-type="${data.type}">${dataType}</a></div>
+                                        <div class="col-3 d-flex align-items-center">${dateString}</div>
+                                        <div class="col-3 d-flex align-items-center">${remainingBalance.replace('$-', '-$')}</div>
+                                        <div class="col-3 d-flex align-items-center"><button class="btn btn-transparent unlink-transaction" style="font-size: 13px !important">Remove</button></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="hidden" value="${data.type.replace('-', '_')+'-'+details.id}" name="linked_transaction[]">
+                        </td>
+                        `;
+
                         $.each(items, function(index, item) {
-                            
+                            if(item.hasOwnProperty('itemDetails')) {
+                                var itemDetails = item.itemDetails;
+                                var locs = '';
+                                if(itemDetails.type.toLowerCase() === 'product' || itemDetails.type.toLowerCase() === 'inventory') {
+                                    locs += '<select name="location[]" class="form-control" required>';
+                                    for (var i in locations) {
+                                        locs += `<option value="${locations[i].id}">${locations[i].name}</option>`;
+                                    }
+                                    locs += '</select>';
+                                }
+    
+                                var type = itemDetails.type;
+
+                                var fields = `
+                                    <td>${itemDetails.title}<input type="hidden" name="item[]" value="${itemDetails.id}"></td>
+                                    <td>${type.charAt(0).toUpperCase() + type.slice(1)}</td>
+                                    <td>${locs}</td>
+                                    <td><input type="number" name="quantity[]" class="form-control text-right" required value="0" min="0"></td>
+                                    <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${itemDetails.price}"></td>
+                                    <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="0.00"></td>
+                                    <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="7.50"></td>
+                                    <td><span class="row-total">$0.00</span></td>
+                                    ${link}
+                                    <td>
+                                        <div class="d-flex align-items-center justify-content-center">
+                                            <a href="#" class="deleteRow"><i class="fa fa-trash"></i></a>
+                                        </div>
+                                    </td>
+                                `;
+    
+                                $('#modal-container form#modal-form .modal #item-table tbody:not(#package-items-table)').append(`<tr>${fields}</tr>`);
+                
+                                $('#modal-container form#modal-form .modal #item-table tbody:not(#package-items-table) tr:last-child select').select2({
+                                    minimumResultsForSearch: -1
+                                });
+                            } else {
+                                var packageDetails = item.packageDetails;
+                                var packageContents = item.packageItems;
+
+                                var fields = `
+                                    <td>${packageDetails.name}<input type="hidden" name="package[]" value="${packageDetails.id}"></td>
+                                    <td>Package</td>
+                                    <td></td>
+                                    <td><input type="number" name="quantity[]" class="form-control text-right" required value="0" min="0"></td>
+                                    <td><span class="item-amount">${parseFloat(packageDetails.amount_set).toFixed(2)}</span></td>
+                                    <td></td>
+                                    <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="7.50"></td>
+                                    <td><span class="row-total">$0.00</span></td>
+                                    ${link}
+                                    <td>
+                                        <div class="d-flex align-items-center justify-content-center">
+                                            <a href="#" class="deleteRow"><i class="fa fa-trash"></i></a>
+                                        </div>
+                                    </td>
+                                `;
+
+                                $('#modal-container form#modal-form .modal #item-table tbody:not(#package-items-table)').append(`<tr class="package">${fields}</tr>`);
+
+                                var packageItems = `
+                                    <td colspan="3">
+                                        <table class="table m-0 bg-white">
+                                            <thead>
+                                                <tr class="package-item-header">
+                                                    <th>Item Name</th>
+                                                    <th>Quantity</th>
+                                                    <th>Price</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="package-items-table">`;
+
+                                for(var i in packageContents) {
+                                    packageItems += `<tr class="package-item"><td>${packageContents[i].details.title}</td><td>${packageContents[i].quantity}</td><td>${parseFloat(packageContents[i].price).toFixed(2)}</td></tr>`;
+                                }
+                    
+                                packageItems += `
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                `;
+                    
+                                $('#modal-container form#modal-form .modal #item-table tbody:not(#package-items-table)').append(`<tr class="package-items">${packageItems}</tr>`);
+                            }
                         });
                     }
+
+                    if ($('#modal-container .modal a.close-transactions-container').length > 0) {
+                        var button = $('#modal-container .modal a.close-transactions-container');
+                    } else {
+                        var button = $('#modal-container .modal a.open-transactions-container');
+                    }
+
+                    button.parent().removeClass('px-0');
+                    button.parent().append(`
+                        <div class="dropdown">
+                            <a href="#" class="text-info" id="linked-transaction" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">1 linked ${dataType}</a>
+                            <div class="dropdown-menu p-2" aria-labelledby="linked-transaction" style="min-width: 500px; font-size: 13px">
+                                <div class="row">
+                                    <div class="col-3"><strong>Type</strong></div>
+                                    <div class="col-3"><strong>Date</strong></div>
+                                    <div class="col-3"><strong>Amount</strong></div>
+                                    <div class="col-3"></div>
+                                    <div class="col-3 d-flex align-items-center"><a class="text-info open-transaction" href="#" data-id="${data.id}" data-type="${data.type}">${dataType}</a></div>
+                                    <div class="col-3 d-flex align-items-center">${dateString}</div>
+                                    <div class="col-3 d-flex align-items-center">$${parseFloat(details.remaining_balance).toFixed(2)}</div>
+                                    <div class="col-3 d-flex align-items-center"><button class="btn btn-transparent unlink-transaction" style="font-size: 13px !important">Remove</button></div>
+                                </div>
+                            </div>
+                        </div>
+                    `);
                 });
+
+                $(this).parent().parent().parent().parent().parent().remove();
             break;
             case 'delayed-charge' :
                 $.get(`/accounting/get-transaction-details/${data.type}/${data.id}`, function(res) {
                     var result = JSON.parse(res);
                     var details = result.details;
                     var items = result.items;
+
+                    if (items.length > 0) {
+                        $('#modal-container form#modal-form .modal #item-table thead tr').append('<th width="3%"></th>');
+
+                        var dataType = data.type.replace('-', ' ').replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); });
+                        var date = new Date(details.delayed_credit_date);
+                        var dateString = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
+                        var remainingBalance = '$'+parseFloat(details.remaining_balance).toFixed(2);
+
+                        var link = `
+                        <td>
+                            <div class="dropdown">
+                                <a href="#" class="text-info" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-link"></i></a>
+                                <div class="dropdown-menu dropdown-menu-right p-2" aria-labelledby="linked-transaction" style="min-width: 500px; font-size: 13px">
+                                    <div class="row">
+                                        <div class="col-3"><strong>Type</strong></div>
+                                        <div class="col-3"><strong>Date</strong></div>
+                                        <div class="col-3"><strong>Amount</strong></div>
+                                        <div class="col-3"></div>
+                                        <div class="col-3 d-flex align-items-center"><a class="text-info open-transaction" href="#" data-id="${data.id}" data-type="${data.type}">${dataType}</a></div>
+                                        <div class="col-3 d-flex align-items-center">${dateString}</div>
+                                        <div class="col-3 d-flex align-items-center">${remainingBalance.replace('$-', '-$')}</div>
+                                        <div class="col-3 d-flex align-items-center"><button class="btn btn-transparent unlink-transaction" style="font-size: 13px !important">Remove</button></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="hidden" value="${data.type.replace('-', '_')+'-'+details.id}" name="linked_transaction[]">
+                        </td>
+                        `;
+
+                        $.each(items, function(index, item) {
+                            if(item.hasOwnProperty('itemDetails')) {
+                                var itemDetails = item.itemDetails;
+                                var locs = '';
+                                if(itemDetails.type.toLowerCase() === 'product' || itemDetails.type.toLowerCase() === 'inventory') {
+                                    locs += '<select name="location[]" class="form-control" required>';
+                                    for (var i in locations) {
+                                        locs += `<option value="${locations[i].id}">${locations[i].name}</option>`;
+                                    }
+                                    locs += '</select>';
+                                }
+    
+                                var type = itemDetails.type;
+
+                                var fields = `
+                                    <td>${itemDetails.title}<input type="hidden" name="item[]" value="${itemDetails.id}"></td>
+                                    <td>${type.charAt(0).toUpperCase() + type.slice(1)}</td>
+                                    <td>${locs}</td>
+                                    <td><input type="number" name="quantity[]" class="form-control text-right" required value="0" min="0"></td>
+                                    <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${itemDetails.price}"></td>
+                                    <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="0.00"></td>
+                                    <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="7.50"></td>
+                                    <td><span class="row-total">$0.00</span></td>
+                                    ${link}
+                                    <td>
+                                        <div class="d-flex align-items-center justify-content-center">
+                                            <a href="#" class="deleteRow"><i class="fa fa-trash"></i></a>
+                                        </div>
+                                    </td>
+                                `;
+    
+                                $('#modal-container form#modal-form .modal #item-table tbody:not(#package-items-table)').append(`<tr>${fields}</tr>`);
+                
+                                $('#modal-container form#modal-form .modal #item-table tbody:not(#package-items-table) tr:last-child select').select2({
+                                    minimumResultsForSearch: -1
+                                });
+                            } else {
+                                var packageDetails = item.packageDetails;
+                                var packageContents = item.packageItems;
+
+                                var fields = `
+                                    <td>${packageDetails.name}<input type="hidden" name="package[]" value="${packageDetails.id}"></td>
+                                    <td>Package</td>
+                                    <td></td>
+                                    <td><input type="number" name="quantity[]" class="form-control text-right" required value="0" min="0"></td>
+                                    <td><span class="item-amount">${parseFloat(packageDetails.amount_set).toFixed(2)}</span></td>
+                                    <td></td>
+                                    <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="7.50"></td>
+                                    <td><span class="row-total">$0.00</span></td>
+                                    ${link}
+                                    <td>
+                                        <div class="d-flex align-items-center justify-content-center">
+                                            <a href="#" class="deleteRow"><i class="fa fa-trash"></i></a>
+                                        </div>
+                                    </td>
+                                `;
+
+                                $('#modal-container form#modal-form .modal #item-table tbody:not(#package-items-table)').append(`<tr class="package">${fields}</tr>`);
+
+                                var packageItems = `
+                                    <td colspan="3">
+                                        <table class="table m-0 bg-white">
+                                            <thead>
+                                                <tr class="package-item-header">
+                                                    <th>Item Name</th>
+                                                    <th>Quantity</th>
+                                                    <th>Price</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="package-items-table">`;
+
+                                for(var i in packageContents) {
+                                    packageItems += `<tr class="package-item"><td>${packageContents[i].details.title}</td><td>${packageContents[i].quantity}</td><td>${parseFloat(packageContents[i].price).toFixed(2)}</td></tr>`;
+                                }
+                    
+                                packageItems += `
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                `;
+                    
+                                $('#modal-container form#modal-form .modal #item-table tbody:not(#package-items-table)').append(`<tr class="package-items">${packageItems}</tr>`);
+                            }
+                        });
+                    }
+
+                    if ($('#modal-container .modal a.close-transactions-container').length > 0) {
+                        var button = $('#modal-container .modal a.close-transactions-container');
+                    } else {
+                        var button = $('#modal-container .modal a.open-transactions-container');
+                    }
+
+                    button.parent().removeClass('px-0');
+                    if($('#invoiceModal a#linked-transaction').length > 0) {
+                        $('#invoiceModal a#linked-transaction').next().find('row').append(`
+                        <div class="col-3 d-flex align-items-center"><a class="text-info open-transaction" href="#" data-id="${data.id}" data-type="${data.type}">${dataType.replace('Delayed ', '')}</a></div>
+                        <div class="col-3 d-flex align-items-center">${dateString}</div>
+                        <div class="col-3 d-flex align-items-center">$${parseFloat(details.remaining_balance).toFixed(2)}</div>
+                        <div class="col-3 d-flex align-items-center"><button class="btn btn-transparent unlink-transaction" style="font-size: 13px !important">Remove</button></div>
+                        `);
+                    } else {
+                        button.parent().append(`
+                        <div class="dropdown">
+                            <a href="#" class="text-info" id="linked-transaction" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">1 linked ${dataType.replace('Delayed ', '')}</a>
+                            <div class="dropdown-menu p-2" aria-labelledby="linked-transaction" style="min-width: 500px; font-size: 13px">
+                                <div class="row">
+                                    <div class="col-3"><strong>Type</strong></div>
+                                    <div class="col-3"><strong>Date</strong></div>
+                                    <div class="col-3"><strong>Amount</strong></div>
+                                    <div class="col-3"></div>
+                                    <div class="col-3 d-flex align-items-center"><a class="text-info open-transaction" href="#" data-id="${data.id}" data-type="${data.type}">${dataType.replace('Delayed ', '')}</a></div>
+                                    <div class="col-3 d-flex align-items-center">${dateString}</div>
+                                    <div class="col-3 d-flex align-items-center">$${parseFloat(details.remaining_balance).toFixed(2)}</div>
+                                    <div class="col-3 d-flex align-items-center"><button class="btn btn-transparent unlink-transaction" style="font-size: 13px !important">Remove</button></div>
+                                </div>
+                            </div>
+                        </div>
+                    `);
+                    }
                 });
+
+                $(this).parent().parent().parent().parent().parent().remove();
             break;
         }
     });
@@ -2626,6 +2926,7 @@ $(function() {
 
         $('#modal-container .modal #payee').trigger('change');
         $('#modal-container .modal #vendor').trigger('change');
+        $('#modal-container .modal #customer').trigger('change');
     });
 
     $(document).on('click', '#modal-container .modal a.open-transaction', function(e) {
@@ -7449,6 +7750,7 @@ const submitModalForm = (event, el) => {
                 data.append('item_tax[]', $(this).find('input[name="item_tax[]"]').val());
                 data.append('quantity[]', $(this).find('input[name="quantity[]"]').val());
                 data.append('item_total[]', $(this).find('span.row-total').html().replace('$', ''));
+                data.append('item_linked[]', $(this).find('input[name="linked_transaction[]"]').length > 0 ? $(this).find('input[name="linked_transaction[]"]').val() : null);
             } else {
                 if($(this).hasClass('package')) {
                     data.set('item[]', 'package-'+$(this).find('input[name="package[]"]').val());
@@ -7464,6 +7766,7 @@ const submitModalForm = (event, el) => {
                 data.set('item_tax[]', $(this).find('input[name="item_tax[]"]').val());
                 data.set('quantity[]', $(this).find('input[name="quantity[]"]').val());
                 data.set('item_total[]', $(this).find('span.row-total').html().replace('$', ''));
+                data.set('item_linked[]', $(this).find('input[name="linked_transaction[]"]').length > 0 ? $(this).find('input[name="linked_transaction[]"]').val() : null);
             }
         });
 

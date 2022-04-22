@@ -125,7 +125,7 @@
             Contract Term
         </div>
         <div class="col-md-6">
-            <select id="contract_term" name="contract_term" data-customer-source="dropdown" class="input_select searchable-dropdown" >
+            <select data-type="billing_contract_term" id="contract_term" name="contract_term" data-customer-source="dropdown" class="input_select searchable-dropdown" >
                 <option <?php if(isset($billing_info)){ if($billing_info->contract_term == 0){echo "selected";} } ?> value="0"></option>
                 <option <?php if(isset($billing_info)){ if($billing_info->contract_term == 1){echo "selected";} } ?> value="1">1 month</option>
                 <option <?php if(isset($billing_info)){ if($billing_info->contract_term == 6){echo "selected";} } ?> value="6">6 months</option>
@@ -145,7 +145,7 @@
             Billing Start Date
         </div>
         <div class="col-md-6">
-            <input type="text" class="form-control " name="bill_start_date" id="bill_start_date" value="<?php if(isset($billing_info)){ echo $billing_info->bill_start_date; } ?>" />
+            <input data-type="billing_start_date" type="text" class="form-control " name="bill_start_date" id="bill_start_date" value="<?php if(isset($billing_info)){ echo $billing_info->bill_start_date; } ?>" />
         </div>
     </div>
     <div class="row form_line">
@@ -153,7 +153,7 @@
             Billing End Date
         </div>
         <div class="col-md-6">
-            <input type="text" class="form-control " name="bill_end_date" id="bill_end_date" value="<?php if(isset($billing_info)){ echo $billing_info->bill_end_date; } ?>"/>
+            <input data-type="billing_end_date" type="text" class="form-control " name="bill_end_date" id="bill_end_date" value="<?php if(isset($billing_info)){ echo $billing_info->bill_end_date; } ?>"/>
         </div>
     </div>
     <div class="row form_line">
@@ -161,7 +161,7 @@
             Billing Day of Month
         </div>
         <div class="col-md-6">
-            <select id="bill_day" name="bill_day" data-customer-source="dropdown" class="input_select searchable-dropdown">
+            <select data-type="billing_month_day" id="bill_day" name="bill_day" data-customer-source="dropdown" class="input_select searchable-dropdown">
                 <option selected value="0">Select Day</option>
                 <?php
                 for ($days=0;$days<32;$days++){

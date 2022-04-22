@@ -79,6 +79,10 @@ class Customer extends MY_Controller
         if( $customer_settings[0] ){
             $enabled_table_headers = unserialize($customer_settings[0]->headers);
         }
+
+        add_footer_js([
+            'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js',
+        ]);
         
         $this->page_data['enabled_table_headers'] = $enabled_table_headers;
         $this->load->view('v2/pages/customer/list', $this->page_data);
