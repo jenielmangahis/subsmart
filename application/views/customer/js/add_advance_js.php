@@ -174,12 +174,10 @@
             console.log(e.date);
             var selected_data = moment(e.date).format('L');
             var contract = $('#contract_term').val();
-            console.log(contract);
             var plus_date = moment.utc(selected_data).add(contract,'months');
-            console.log( moment(plus_date).format('l'));
-            console.log( moment(plus_date).format('D'));
-            $('#bill_end_date').val(moment(plus_date).format('L'));
-            $('#bill_day').val(moment(plus_date).format('D'));
+
+            $('#bill_end_date').datepicker("setDate", plus_date.toDate());
+            $('#bill_day').val(plus_date.format('D')).trigger("change");
         });
 
         $("#contract_term").change(function(){
