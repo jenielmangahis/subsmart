@@ -5277,7 +5277,7 @@ class Accounting_modals extends MY_Controller
                 }
 
                 foreach($data['item'] as $key => $input) {
-                    $linkedTransaction = !is_null($input['linked_transaction'][$key]) ? explode('-', $data['linked_transaction'][$key]) : null;
+                    $linkedTransaction = $input['linked_transaction'][$key] !== '' ? explode('-', $data['linked_transaction'][$key]) : null;
 
                     $explode = explode('-', $input);
 
@@ -5302,6 +5302,26 @@ class Accounting_modals extends MY_Controller
                     ];
 
                     $addInvoiceItem = $this->invoice_model->add_invoice_items($invoiceItem);
+
+                    if(!is_null($linkedTransaction)) {
+                        if($linkedTransaction[0] === 'delayed_credit') {
+                            $delayedCredit = $this->accounting_delayed_credit_model->getDelayedCreditDetails($linkedTransaction[1]);
+
+                            $data = [
+                                'remaining_balance' => floatval($delayedCredit->remaining_balance) - floatval($data['item_total'][$key])
+                            ];
+
+                            $balUpdate = $this->accounting_delayed_credit_model->updateDelayedCredit($delayedCredit->id, $data);
+                        } else {
+                            $delayedCharge = $this->accounting_delayed_charge_model->getDelayedChargeDetails($linkedTransaction[1]);
+
+                            $data = [
+                                'remaining_balance' => floatval($delayedCharge->remaining_balance) - floatval($data['item_total'][$key])
+                            ];
+
+                            $balUpdate = $this->accounting_delayed_charge_model->updateDelayedCharge($delayedCharge->id, $data);
+                        }
+                    }
 
                     if(!isset($data['template_name'])) {
                         if($explode[0] === 'item') {
@@ -7161,7 +7181,7 @@ class Accounting_modals extends MY_Controller
 
         if(isset($charges) && count($charges)) {
             foreach($charges as $charge) {
-                $balance = '-$'.number_format(floatval($charge->remaining_balance), 2, '.', ',');
+                $balance = '$'.number_format(floatval($charge->remaining_balance), 2, '.', ',');
                 $total = '$'.number_format(floatval($charge->total_amount), 2, '.', ',');
 
                 $transactions[] = [

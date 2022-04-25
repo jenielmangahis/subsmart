@@ -395,7 +395,7 @@
                 Relationship
             </div>
             <div class="col-md-8">
-                <select data-type="emergency_contact_relationship" class="form-control">
+                <select data-type="emergency_contact_relationship" class="form-control" name="contact_relationship1">
                     <option></option>
                 </select>
             </div>
@@ -421,7 +421,7 @@
                 Relationship
             </div>
             <div class="col-md-8">
-                <select data-type="emergency_contact_relationship" class="form-control">
+                <select data-type="emergency_contact_relationship" class="form-control" name="contact_relationship2">
                     <option></option>
                 </select>
             </div>
@@ -447,7 +447,7 @@
                 Relationship
             </div>
             <div class="col-md-8">
-                <select data-type="emergency_contact_relationship" class="form-control">
+                <select data-type="emergency_contact_relationship" class="form-control" name="contact_relationship2">
                     <option></option>
                 </select>
             </div>

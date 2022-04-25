@@ -12,17 +12,15 @@
                 <table class="nsm-table">
                     <thead>
                         <tr>
-                            <td data-name="Notes">Notes</td>
+                            <td colspan="2" data-name="Notes">Notes</td>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php if (!empty($profiles)) : ?>
+                        <?php if (!empty($customer_notes)) : ?>
                             <?php foreach ($customer_notes as $note) : ?>
                                 <tr>
-                                    <td class="fw-bold nsm-text-primary"><?= $note->datetime; ?></td>
-                                </tr>
-                                <tr>
-                                    <td><?= $note->note; ?></td>
+                                    <td class="fw-bold nsm-text-primary"><?= $note->note; ?></td>
+                                    <td style="text-align: right;"><?= $note->datetime; ?></td>
                                 </tr>
                             <?php endforeach; ?>
                         <?php else : ?>
