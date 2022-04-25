@@ -141,30 +141,27 @@
             </div>
         </div>
         <div class="row g-1 mb-5">
-            <div class="col-12 col-md-6">
-                <label class="content-subtitle fw-bold">Custom Field 1</label>
-            </div>
-            <div class="col-12 col-md-6">
-                <label class="content-subtitle">---</label>
-            </div>
-            <div class="col-12 col-md-6">
-                <label class="content-subtitle fw-bold">Custom Field 2</label>
-            </div>
-            <div class="col-12 col-md-6">
-                <label class="content-subtitle">---</label>
-            </div>
-            <div class="col-12 col-md-6">
-                <label class="content-subtitle fw-bold">Custom Field 3</label>
-            </div>
-            <div class="col-12 col-md-6">
-                <label class="content-subtitle">---</label>
-            </div>
-            <div class="col-12 col-md-6">
-                <label class="content-subtitle fw-bold">Custom Field 4</label>
-            </div>
-            <div class="col-12 col-md-6">
-                <label class="content-subtitle">---</label>
-            </div>
+            <?php
+                $fields = [];
+                if (!empty($profile_info->custom_fields)) {
+                    $fields = json_decode($profile_info->custom_fields, true);
+                    $fields = is_array($fields) ? $fields : [];
+                }
+            ?>
+            <?php if (!empty($fields) && is_array($fields)): ?>
+                <?php foreach ($fields as $key => $field): ?>
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle fw-bold"><?=$field['name'];?></label>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle"><?=$field['value'];?></label>
+                    </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <div class="col-12 col-md-12">
+                    <label class="content-subtitle">No custom field found.</label>
+                </div>
+            <?php endif; ?>
         </div>
 
         <div class="row mb-3">

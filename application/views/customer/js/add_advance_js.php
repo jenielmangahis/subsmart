@@ -382,9 +382,40 @@
 </script>
 <script>
     $(document).ready(function() {
-        $("#customer_form").submit(function(e) {
+        $("#customer_form").submit(async function(e) {
             e.preventDefault(); // avoid to execute the actual submit of the form.
             var form = $(this);
+
+            const formArray = form.serializeArray();
+            const payload = {};
+            formArray.forEach(({ name, value }) => payload[name] = value);
+            
+            const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
+            const response = await fetch(`${prefixURL}/Customer_Form/apiCheckDuplicate`, { 
+                method: "post", 
+                body: JSON.stringify(payload),
+                headers: { 
+                    accept: "application/json", 
+                    "content-type": "application/json"
+                }
+            });
+            const json = await response.json();
+            if (json.data && json.message) {
+                const duplicateConfirmation = await Swal.fire({
+                    title: 'Possible duplicate customer',
+                    html: json.message,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#32243d',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Save anyway'
+                });
+
+                if (!duplicateConfirmation.isConfirmed) {
+                    return;
+                }
+            }
+
             //var url = form.attr('action');
             $.ajax({
                 type: "POST",
