@@ -141,6 +141,10 @@ class Customer extends MY_Controller
                 ),
                 'table' => 'contacts',
                 'select' => '*',
+                'order' => array(
+                    'order_by' => 'id',
+                    'ordering' => 'asc'
+                ),
             );
             $this->page_data['contacts'] = $this->general->get_data_with_param($customer_contacts);
         }
@@ -1499,7 +1503,10 @@ class Customer extends MY_Controller
         if(isset($input['customer_id']) AND !empty($input['customer_id']) ){
             $check_customer='';
         }else{
-            $check_customer = $this->customer_ad_model->check_customer($input);
+            // $check_customer = $this->customer_ad_model->check_customer($input);
+
+            // duplicate checking is implemented on Customer_Form apiCheckDuplicate
+            $check_customer = [];
         }
 
         $custom_fields_array = [];
@@ -1586,6 +1593,8 @@ class Customer extends MY_Controller
                 $save_alarm = $this->save_alarm_information($input,$profile_id);
                 $save_access = $this->save_access_information($input,$profile_id);
                 $save_papers = $this->save_papers_information($input,$profile_id);
+                $save_contacts = $this->save_contacts($input,$profile_id);
+
                 if($save_billing == 0 || $save_office == 0 || $save_alarm == 0 || $save_access == 0 || $save_papers == 0){
                     echo 'Error Occured on Saving Billing Information';
                     $data_arr = array("success" => FALSE,"message" => 'Error on saving information');
@@ -1717,6 +1726,39 @@ class Customer extends MY_Controller
         }else{
             return $this->general->add_($input_billing, 'acs_billing');
         }
+    }
+
+    public function save_contacts($postData, $customerId)
+    {
+        $payload = [];
+        $saveToPayload = function ($customerNumber) use (&$payload, $postData, $customerId) {
+            if (empty(trim($postData['contact_name' . $customerNumber]))) {
+                return; // ignore empty contact with empty name
+            }
+
+            array_push($payload, [
+                'name' => trim($postData['contact_name' . $customerNumber]),
+                'relation' => $postData['contact_relationship' . $customerNumber],
+                'phone' => $postData['contact_phone' . $customerNumber],
+                'customer_id' => $customerId,
+                'phone_type' => 'mobile',
+            ]);
+        };
+
+        $saveToPayload(1);
+        $saveToPayload(2);
+        $saveToPayload(3);
+
+        if (!empty($payload)) {
+            $this->db->where('customer_id', $customerId);
+            $this->db->delete('contacts');
+
+            $this->db->insert_batch('contacts', $payload);
+        }
+
+        $this->db->where('customer_id', $customerId);
+        $contacts = $this->db->get('contacts')->result();
+        return $contacts;
     }
 
     public function save_office_information($input,$id){

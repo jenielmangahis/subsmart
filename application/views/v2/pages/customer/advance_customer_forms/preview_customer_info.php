@@ -158,27 +158,28 @@
         </div>
         <div class="row g-1 mb-5">
             <?php if (!empty($contacts)) : ?>
-                <?php foreach ($contacts as $contact) : $x = 1; ?>
-                    <div class="col-12 col-md-6">
-                        <label class="content-subtitle fw-bold">Contact Name <?= $x; ?></label>
-                    </div>
-                    <div class="col-12 col-md-6">
-                        <label class="content-subtitle"><?= $contact->name; ?></label>
-                    </div>
-                    <div class="col-12 col-md-6">
-                        <label class="content-subtitle fw-bold">Contact Phone <?= $x; ?></label>
-                    </div>
-                    <div class="col-12 col-md-6">
-                        <label class="content-subtitle"><?= $contact->phone; ?></label>
-                    </div>
-                    <div class="col-12 col-md-6">
-                        <label class="content-subtitle fw-bold">Relationship</label>
-                    </div>
-                    <div class="col-12 col-md-6">
-                        <label class="content-subtitle"><?= $contact->relation; ?></label>
-                    </div>
-                <?php endforeach;
-                $x++; ?>
+                <?php foreach ($contacts as $key => $contact): ?>
+                    <?php if (!empty(trim($contact->name))): ?>
+                        <div class="col-12 col-md-6">
+                            <label class="content-subtitle fw-bold">Contact Name <?= $key + 1; ?></label>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label class="content-subtitle"><?= $contact->name; ?></label>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label class="content-subtitle fw-bold">Contact Phone <?= $key + 1; ?></label>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label class="content-subtitle"><?= empty($contact->phone) ? '---' : $contact->phone; ?></label>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label class="content-subtitle fw-bold">Relationship <?= $key + 1; ?></label>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label class="content-subtitle"><?= empty($contact->relation) ? '---' : $contact->relation; ?></label>
+                        </div>
+                    <?php endif; ?>
+                <?php endforeach; ?>
             <?php else : ?>
                 <div class="col-12">
                     <label class="content-subtitle">No emergency contacts found.</label>
