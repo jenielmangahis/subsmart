@@ -55,7 +55,7 @@ class Customer extends MY_Controller
     {
         $this->page_data['page']->title = 'Customers';
         $this->page_data['page']->parent = 'Customers';
-
+        
         $this->hasAccessModule(9);
 
         $this->load->library('wizardlib');        

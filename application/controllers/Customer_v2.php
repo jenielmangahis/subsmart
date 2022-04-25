@@ -47,7 +47,6 @@ class Customer_v2 extends MY_Controller
     public function index()
     {
         $this->hasAccessModule(9);
-
         $this->load->library('wizardlib');        
         $input = $this->input->post();
         if($input){
