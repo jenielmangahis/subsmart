@@ -322,6 +322,28 @@
                 console.log(err);
             }
         }
+
+        <?php if( logged('user_type') == 1 || isAdminBypass() ){ ?>
+        $(document).on('click', '.btn-admin-switch', function(){
+            $.ajax({
+                url: '<?php echo base_url(); ?>user/_admin_switch',
+                dataType: 'json',
+                success: function (e) {
+                    if( e.is_valid == 1 ){
+                        location.href = '<?= base_url('admin/users'); ?>'
+                    }else{
+                        Swal.fire({
+                          icon: 'error',
+                          title: 'Error!',
+                          confirmButtonColor: '#32243d',
+                          html: e.msg
+                        });
+                    }
+                    
+                }
+            });
+        });
+        <?php } ?>
     </script>
   </body>
 

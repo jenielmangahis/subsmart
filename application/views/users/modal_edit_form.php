@@ -203,7 +203,7 @@ $(function(){
     });
 
     $('.edit-select2-role').select2({
-        placeholder: 'Select Title',
+        placeholder: 'Select Title',        
         allowClear: true,
         width: 'resolve'            
     });
