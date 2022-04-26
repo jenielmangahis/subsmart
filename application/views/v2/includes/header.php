@@ -91,6 +91,15 @@ if ($this->session->userdata('usertimezone') == null) {
                                 <i class='bx bx-fw bx-support'></i> Support
                             </a>
                         </li>
+
+                        <?php if( logged('user_type') == 1 || isAdminBypass() ){ ?>
+                        <li class="btn-admin-switch">
+                            <a href="javascript:void(0);">
+                                <i class='bx bx-fw bx-refresh'></i> Switch to Admin
+                            </a>
+                        </li>
+                        <?php } ?>
+                        
                     </ul>
                 </li>
                 <li>
@@ -248,7 +257,7 @@ if ($this->session->userdata('usertimezone') == null) {
                                 <i class='bx bx-fw bx-box'></i> Inventory
                             </a>
                         </li>
-                        <li>
+                        <li class="<?php if($page->title == 'My Forms'): echo 'selected'; endif; ?>">
                             <a href="<?= base_url("fb") ?>">
                                 <i class='bx bx-fw bx-add-to-queue'></i> Form Builder
                             </a>
@@ -270,7 +279,7 @@ if ($this->session->userdata('usertimezone') == null) {
                         </li>
                     </ul>
                 </li>
-                <li>
+                <li class="<?php if($page->title == 'Company'): echo 'selected '; endif; if($page->parent == 'Company'): echo 'active'; endif; ?>">
                     <a href="#">
                         <i class='bx bx-fw bx-buildings'></i> Company <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
                     </a>
@@ -280,7 +289,7 @@ if ($this->session->userdata('usertimezone') == null) {
                                 <i class='bx bx-fw bx-building-house'></i> My Business
                             </a>
                         </li>
-                        <li>
+                        <li class="<?php if($page->title == 'Email Templates'): echo 'selected'; endif; ?>">
                             <a href="<?= base_url("settings/email_templates") ?>">
                                 <i class='bx bx-fw bx-cog'></i> Settings
                             </a>

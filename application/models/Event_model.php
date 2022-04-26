@@ -173,6 +173,17 @@ class Event_model extends MY_Model
             return false;
         }
     }
+
+    public function getAllInvoices(){
+        $query = $this->db->get('invoices');
+
+        if ( $query ) {
+            return $query->result();
+
+        }else{
+            return false;
+        }
+    }
     public function getAllJobsByCompanyId($company_id){
         $query = $this->db->get_where('job_status', array('comp_id' => $company_id));
 

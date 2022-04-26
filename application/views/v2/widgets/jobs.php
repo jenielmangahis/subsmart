@@ -37,10 +37,10 @@
         new Chart(jobs, {
             type: 'line',
             data: {
-                labels: ['January', 'February', 'March'],
+                labels: ['January', 'February', 'March', 'April'],
                 datasets: [{
                         label: 'Job Count',
-                        data: [500, 700, 1300],
+                        data: [500, 700, 1300, 1400],
                         backgroundColor: [
                             'rgba(255, 99, 132, 0.2)',
                             'rgba(54, 162, 235, 0.2)',
@@ -64,7 +64,7 @@
                     },
                     {
                         label: 'Job Value',
-                        data: [1000, 2550, 3000],
+                        data: [1000, 2550, 3000, 4000],
                         backgroundColor: [
                             'rgba(255, 99, 132, 1)',
                             'rgba(54, 162, 235, 1)',

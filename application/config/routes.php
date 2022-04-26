@@ -981,6 +981,7 @@ $route['users/_update_payscale'] = 'Users/ajax_update_payscale';
 $route['users/_delete_payscale'] = 'Users/ajax_delete_payscale';
 $route['users/export_list'] = 'Users/user_export';
 $route['users/_delete_user'] = 'Users/ajax_delete_user';
+$route['user/_admin_switch'] = 'Users/ajax_admin_switch'; //Switch to admin
 
 //Jobs
 $route['job/details/(:any)'] = 'job/details/$1';

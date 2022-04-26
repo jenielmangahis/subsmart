@@ -131,4 +131,11 @@ class Accounting_credit_memo_model extends MY_Model {
 		$delete = $this->db->delete('accounting_customer_transaction_items');
 		return $delete;
 	}
+
+	public function get_transaction_item_by_id($id)
+	{
+		$this->db->where('id', $id);
+		$query = $this->db->get('accounting_customer_transaction_items');
+		return $query->row();
+	}
 }

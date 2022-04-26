@@ -5277,7 +5277,7 @@ class Accounting_modals extends MY_Controller
                 }
 
                 foreach($data['item'] as $key => $input) {
-                    $linkedTransaction = $input['linked_transaction'][$key] !== '' ? explode('-', $data['linked_transaction'][$key]) : null;
+                    $linkedTransaction = $data['item_linked'][$key] !== '' ? explode('-', $data['item_linked'][$key]) : null;
 
                     $explode = explode('-', $input);
 
@@ -5305,18 +5305,32 @@ class Accounting_modals extends MY_Controller
 
                     if(!is_null($linkedTransaction)) {
                         if($linkedTransaction[0] === 'delayed_credit') {
+                            $transactionItem = $this->accounting_credit_memo_model->get_transaction_item_by_id($data['transac_item_id'][$key]);
                             $delayedCredit = $this->accounting_delayed_credit_model->getDelayedCreditDetails($linkedTransaction[1]);
 
+                            if(floatval(str_replace('-', '', $data['item_total'][$key])) > floatval($transactionItem->total)) {
+                                $amount = floatval($transactionItem->total);
+                            } else {
+                                $amount = floatval(str_replace('-', '', $data['item_total'][$key]));
+                            }
+
                             $data = [
-                                'remaining_balance' => floatval($delayedCredit->remaining_balance) - floatval($data['item_total'][$key])
+                                'remaining_balance' => floatval($delayedCredit->remaining_balance) - $amount
                             ];
 
                             $balUpdate = $this->accounting_delayed_credit_model->updateDelayedCredit($delayedCredit->id, $data);
                         } else {
+                            $transactionItem = $this->accounting_credit_memo_model->get_transaction_item_by_id($data['transac_item_id'][$key]);
                             $delayedCharge = $this->accounting_delayed_charge_model->getDelayedChargeDetails($linkedTransaction[1]);
 
+                            if(floatval($data['item_total'][$key]) > floatval($transactionItem->total)) {
+                                $amount = floatval($transactionItem->total);
+                            } else {
+                                $amount = floatval($data['item_total'][$key]);
+                            }
+
                             $data = [
-                                'remaining_balance' => floatval($delayedCharge->remaining_balance) - floatval($data['item_total'][$key])
+                                'remaining_balance' => floatval($delayedCharge->remaining_balance) - $amount
                             ];
 
                             $balUpdate = $this->accounting_delayed_charge_model->updateDelayedCharge($delayedCharge->id, $data);

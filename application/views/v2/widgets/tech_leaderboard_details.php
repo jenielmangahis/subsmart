@@ -31,10 +31,10 @@ if (count($tech_leaderboard) > 0) :
     endforeach;
 else :
     ?>
-    <!-- <div class="nsm-empty">
+    <div class="nsm-empty">
         <i class='bx bx-meh-blank'></i>
         <span>Tech leaderboard is empty.</span>
-    </div> -->
+    </div>
 <?php
 endif;
 ?>

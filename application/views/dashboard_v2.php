@@ -86,12 +86,12 @@
             foreach ($main_widgets as $wids) :
                 if ($wids->wu_is_main) :
                     if($wids->wu_widget_id == 26){
-                        echo '<div class="col-12" id="droppable">';
+                        echo '<div class="col-12 col-lg-4" id="droppable">';
                         $data['class'] = 'nsm-card nsm-grid large';
                         
                     }else{
                         $data['class'] = 'nsm-card nsm-grid med';
-                        echo '<div class="col-12 col-lg-6" id="droppable">';
+                        echo '<div class="col-12 col-lg-4" id="droppable">';
                         
                     }
                     

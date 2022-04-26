@@ -1774,9 +1774,9 @@ $(function() {
             }
 
             if ($('#modal-container form .modal').attr('id') === 'creditCardCreditModal' || $('#modal-container form .modal').attr('id') === 'vendorCreditModal') {
-                var qtyField = `<input type="number" name="quantity[]" class="form-control text-right" required value="0" max="${locations[0].qty}" min="0">`;
+                var qtyField = `<input type="number" name="quantity[]" class="form-control text-right" required value="0" max="${locations[0].qty}">`;
             } else {
-                var qtyField = `<input type="number" name="quantity[]" class="form-control text-right" required value="0" min="0">`;
+                var qtyField = `<input type="number" name="quantity[]" class="form-control text-right" required value="0">`;
             }
 
             if ($('#modal-container form .modal').attr('id') === 'purchaseOrderModal' && $('#modal-container #item-details-table thead th').length > 9) {
@@ -2473,7 +2473,7 @@ $(function() {
                                     <td>${item.details.title}<input type="hidden" name="item[]" value="${item.item_id}"></td>
                                     <td>Product</td>
                                     <td><select name="location[]" class="form-control" required>${locs}</select></td>
-                                    <td><input type="number" name="quantity[]" class="form-control text-right" required value="${item.quantity}" min="0"></td>
+                                    <td><input type="number" name="quantity[]" class="form-control text-right" required value="${item.quantity}"></td>
                                     <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${parseFloat(item.rate).toFixed(2)}"></td>
                                     <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${parseFloat(item.discount).toFixed(2)}"></td>
                                     <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${parseFloat(item.tax).toFixed(2)}"></td>
@@ -2613,28 +2613,29 @@ $(function() {
                         var dateString = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
                         var remainingBalance = '$'+parseFloat(details.remaining_balance).toFixed(2);
 
-                        var link = `
-                        <td>
-                            <div class="dropdown">
-                                <a href="#" class="text-info" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-link"></i></a>
-                                <div class="dropdown-menu dropdown-menu-right p-2" aria-labelledby="linked-transaction" style="min-width: 500px; font-size: 13px">
-                                    <div class="row">
-                                        <div class="col-3"><strong>Type</strong></div>
-                                        <div class="col-3"><strong>Date</strong></div>
-                                        <div class="col-3"><strong>Amount</strong></div>
-                                        <div class="col-3"></div>
-                                        <div class="col-3 d-flex align-items-center"><a class="text-info open-transaction" href="#" data-id="${data.id}" data-type="${data.type}">${dataType}</a></div>
-                                        <div class="col-3 d-flex align-items-center">${dateString}</div>
-                                        <div class="col-3 d-flex align-items-center">${remainingBalance.replace('$-', '-$')}</div>
-                                        <div class="col-3 d-flex align-items-center"><button class="btn btn-transparent unlink-transaction" data-type="${data.type}" data-id="${data.id}" style="font-size: 13px !important">Remove</button></div>
+                        $.each(items, function(index, item) {
+                            var link = `
+                            <td>
+                                <div class="dropdown">
+                                    <a href="#" class="text-info" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-link"></i></a>
+                                    <div class="dropdown-menu dropdown-menu-right p-2" aria-labelledby="linked-transaction" style="min-width: 500px; font-size: 13px">
+                                        <div class="row">
+                                            <div class="col-3"><strong>Type</strong></div>
+                                            <div class="col-3"><strong>Date</strong></div>
+                                            <div class="col-3"><strong>Amount</strong></div>
+                                            <div class="col-3"></div>
+                                            <div class="col-3 d-flex align-items-center"><a class="text-info open-transaction" href="#" data-id="${data.id}" data-type="${data.type}">${dataType}</a></div>
+                                            <div class="col-3 d-flex align-items-center">${dateString}</div>
+                                            <div class="col-3 d-flex align-items-center">${remainingBalance.replace('$-', '-$')}</div>
+                                            <div class="col-3 d-flex align-items-center"><button class="btn btn-transparent unlink-transaction" data-type="${data.type}" data-id="${data.id}" style="font-size: 13px !important">Remove</button></div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <input type="hidden" value="${data.type.replace('-', '_')+'-'+details.id}" name="item_linked_transaction[]">
-                        </td>
-                        `;
+                                <input type="hidden" value="${data.type.replace('-', '_')+'-'+details.id}" name="item_linked_transaction[]">
+                                <input type="hidden" value="${item.id}" name="transaction_item_id[]">
+                            </td>
+                            `;
 
-                        $.each(items, function(index, item) {
                             if(item.hasOwnProperty('itemDetails')) {
                                 var itemDetails = item.itemDetails;
                                 var locations = item.locations;
@@ -2649,14 +2650,6 @@ $(function() {
     
                                 var type = itemDetails.type;
 
-                                var price = item.price;
-
-                                if(price.includes('-')) {
-                                    price.replace('-', '');
-                                } else {
-                                    price = '-'+price;
-                                }
-
                                 var total = item.total;
                                 if(total.includes('-')) {
                                     total.replace('-', '');
@@ -2669,8 +2662,8 @@ $(function() {
                                     <td>${itemDetails.title}<input type="hidden" name="item[]" value="${itemDetails.id}"></td>
                                     <td>${type.charAt(0).toUpperCase() + type.slice(1)}</td>
                                     <td>${locs}</td>
-                                    <td><input type="number" name="quantity[]" class="form-control text-right" required value="${item.quantity}" min="0"></td>
-                                    <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${parseFloat(price).toFixed(2)}"></td>
+                                    <td><input type="number" name="quantity[]" class="form-control text-right" required value="-${item.quantity}"></td>
+                                    <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${parseFloat(item.price).toFixed(2)}"></td>
                                     <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${parseFloat(item.discount).toFixed(2)}"></td>
                                     <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${parseFloat(item.tax).toFixed(2)}"></td>
                                     <td><span class="row-total">${total.replace('$-', '-$')}</span></td>
@@ -2691,14 +2684,6 @@ $(function() {
                                 var packageDetails = item.packageDetails;
                                 var packageContents = item.packageItems;
 
-                                var price = item.price;
-
-                                if(price.includes('-')) {
-                                    price.replace('-', '');
-                                } else {
-                                    price = '-'+price;
-                                }
-
                                 var total = item.total;
                                 if(total.includes('-')) {
                                     total.replace('-', '');
@@ -2711,8 +2696,8 @@ $(function() {
                                     <td>${packageDetails.name}<input type="hidden" name="package[]" value="${packageDetails.id}"></td>
                                     <td>Package</td>
                                     <td></td>
-                                    <td><input type="number" name="quantity[]" class="form-control text-right" required value="${item.quantity}" min="0"></td>
-                                    <td><span class="item-amount">${parseFloat(price).toFixed(2)}</span></td>
+                                    <td><input type="number" name="quantity[]" class="form-control text-right" required value="-${item.quantity}"></td>
+                                    <td><span class="item-amount">${parseFloat(item.price).toFixed(2)}</span></td>
                                     <td></td>
                                     <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${parseFloat(item.tax).toFixed(2)}"></td>
                                     <td><span class="row-total">${total.replace('$-', '-$')}</span></td>
@@ -2823,28 +2808,29 @@ $(function() {
                         var dateString = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
                         var remainingBalance = '$'+parseFloat(details.remaining_balance).toFixed(2);
 
-                        var link = `
-                        <td>
-                            <div class="dropdown">
-                                <a href="#" class="text-info" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-link"></i></a>
-                                <div class="dropdown-menu dropdown-menu-right p-2" aria-labelledby="linked-transaction" style="min-width: 500px; font-size: 13px">
-                                    <div class="row">
-                                        <div class="col-3"><strong>Type</strong></div>
-                                        <div class="col-3"><strong>Date</strong></div>
-                                        <div class="col-3"><strong>Amount</strong></div>
-                                        <div class="col-3"></div>
-                                        <div class="col-3 d-flex align-items-center"><a class="text-info open-transaction" href="#" data-id="${data.id}" data-type="${data.type}">${dataType}</a></div>
-                                        <div class="col-3 d-flex align-items-center">${dateString}</div>
-                                        <div class="col-3 d-flex align-items-center">${remainingBalance.replace('$-', '-$')}</div>
-                                        <div class="col-3 d-flex align-items-center"><button class="btn btn-transparent unlink-transaction" data-type="${data.type}" data-id="${data.id}" style="font-size: 13px !important">Remove</button></div>
+                        $.each(items, function(index, item) {
+                            var link = `
+                            <td>
+                                <div class="dropdown">
+                                    <a href="#" class="text-info" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-link"></i></a>
+                                    <div class="dropdown-menu dropdown-menu-right p-2" aria-labelledby="linked-transaction" style="min-width: 500px; font-size: 13px">
+                                        <div class="row">
+                                            <div class="col-3"><strong>Type</strong></div>
+                                            <div class="col-3"><strong>Date</strong></div>
+                                            <div class="col-3"><strong>Amount</strong></div>
+                                            <div class="col-3"></div>
+                                            <div class="col-3 d-flex align-items-center"><a class="text-info open-transaction" href="#" data-id="${data.id}" data-type="${data.type}">${dataType}</a></div>
+                                            <div class="col-3 d-flex align-items-center">${dateString}</div>
+                                            <div class="col-3 d-flex align-items-center">${remainingBalance.replace('$-', '-$')}</div>
+                                            <div class="col-3 d-flex align-items-center"><button class="btn btn-transparent unlink-transaction" data-type="${data.type}" data-id="${data.id}" style="font-size: 13px !important">Remove</button></div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <input type="hidden" value="${data.type.replace('-', '_')+'-'+details.id}" name="item_linked_transaction[]">
-                        </td>
-                        `;
+                                <input type="hidden" value="${data.type.replace('-', '_')+'-'+details.id}" name="item_linked_transaction[]">
+                                <input type="hidden" value="${item.id}" name="transaction_item_id[]">
+                            </td>
+                            `;
 
-                        $.each(items, function(index, item) {
                             if(item.hasOwnProperty('itemDetails')) {
                                 var itemDetails = item.itemDetails;
                                 var locations = item.locations;
@@ -2868,7 +2854,7 @@ $(function() {
                                     <td>${itemDetails.title}<input type="hidden" name="item[]" value="${itemDetails.id}"></td>
                                     <td>${type.charAt(0).toUpperCase() + type.slice(1)}</td>
                                     <td>${locs}</td>
-                                    <td><input type="number" name="quantity[]" class="form-control text-right" required value="${item.quantity}" min="0"></td>
+                                    <td><input type="number" name="quantity[]" class="form-control text-right" required value="${item.quantity}"></td>
                                     <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${parseFloat(price).toFixed(2)}"></td>
                                     <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${parseFloat(item.discount).toFixed(2)}"></td>
                                     <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${parseFloat(item.tax).toFixed(2)}"></td>
@@ -2905,7 +2891,7 @@ $(function() {
                                     <td>${packageDetails.name}<input type="hidden" name="package[]" value="${packageDetails.id}"></td>
                                     <td>Package</td>
                                     <td></td>
-                                    <td><input type="number" name="quantity[]" class="form-control text-right" required value="${item.quantity}" min="0"></td>
+                                    <td><input type="number" name="quantity[]" class="form-control text-right" required value="${item.quantity}"></td>
                                     <td><span class="item-amount">${parseFloat(price).toFixed(2)}</span></td>
                                     <td></td>
                                     <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${parseFloat(item.tax).toFixed(2)}"></td>
@@ -6642,7 +6628,7 @@ $(function() {
                 <td>${item.title}<input type="hidden" name="item[]" value="${item.id}"></td>
                 <td>${type.charAt(0).toUpperCase() + type.slice(1)}</td>
                 <td>${locs}</td>
-                <td><input type="number" name="quantity[]" class="form-control text-right" required value="0" min="0"></td>
+                <td><input type="number" name="quantity[]" class="form-control text-right" required value="0"></td>
                 <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${item.price}"></td>
                 <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="0.00"></td>
                 <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="7.50"></td>
@@ -6736,7 +6722,7 @@ $(function() {
                     <td>${items[i].title}<input type="hidden" name="item[]" value="${items[i].id}"></td>
                     <td>${type.charAt(0).toUpperCase() + type.slice(1)}</td>
                     <td>${locs}</td>
-                    <td><input type="number" name="quantity[]" class="form-control text-right" required value="0" min="0"></td>
+                    <td><input type="number" name="quantity[]" class="form-control text-right" required value="0"></td>
                     <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${items[i].price}"></td>
                     <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="0.00"></td>
                     <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="7.50"></td>
@@ -6782,7 +6768,7 @@ $(function() {
                 <td>${details.name}<input type="hidden" name="package[]" value="${details.id}"></td>
                 <td>Package</td>
                 <td></td>
-                <td><input type="number" name="quantity[]" class="form-control text-right" required value="0" min="0"></td>
+                <td><input type="number" name="quantity[]" class="form-control text-right" required value="0"></td>
                 <td><span class="item-amount">${parseFloat(details.amount_set).toFixed(2)}</span></td>
                 <td></td>
                 <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="7.50"></td>
@@ -7892,6 +7878,8 @@ const submitModalForm = (event, el) => {
         data.delete('item_amount[]');
         data.delete('discount[]');
         data.delete('item_tax[]');
+        data.delete('item_linked_transaction[]');
+        data.delete('transaction_item_id[]');
         $(`${modalId} table#item-table tbody:not(#package-items-table) tr:not(.package-items, .package-item, .package-item-header)`).each(function() {
             if(data.has('item_total[]')) {
                 if($(this).hasClass('package')) {
@@ -7909,6 +7897,7 @@ const submitModalForm = (event, el) => {
                 data.append('quantity[]', $(this).find('input[name="quantity[]"]').val());
                 data.append('item_total[]', $(this).find('span.row-total').html().replace('$', ''));
                 data.append('item_linked[]', $(this).find('input[name="item_linked_transaction[]"]').length > 0 ? $(this).find('input[name="item_linked_transaction[]"]').val() : '');
+                data.append('transac_item_id[]', $(this).find('input[name="transaction_item_id[]"]').length > 0 ? $(this).find('input[name="transaction_item_id[]"]').val() : '');
             } else {
                 if($(this).hasClass('package')) {
                     data.set('item[]', 'package-'+$(this).find('input[name="package[]"]').val());
@@ -7925,6 +7914,7 @@ const submitModalForm = (event, el) => {
                 data.set('quantity[]', $(this).find('input[name="quantity[]"]').val());
                 data.set('item_total[]', $(this).find('span.row-total').html().replace('$', ''));
                 data.set('item_linked[]', $(this).find('input[name="item_linked_transaction[]"]').length > 0 ? $(this).find('input[name="item_linked_transaction[]"]').val() : '');
+                data.set('transac_item_id[]', $(this).find('input[name="transaction_item_id[]"]').length > 0 ? $(this).find('input[name="transaction_item_id[]"]').val() : '');
             }
         });
 

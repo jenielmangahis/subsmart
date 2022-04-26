@@ -10,7 +10,7 @@ class Admin extends CI_Controller
 
         date_default_timezone_set(setting('timezone'));
 
-        add_css(array(
+        /*add_css(array(
            // 'https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css',
             "assets/css/accounting/accounting.css",
             'assets/css/dashboard.css',
@@ -35,7 +35,7 @@ class Admin extends CI_Controller
             'assets/ringcentral/pubnub.4.20.1.js',
             'assets/ringcentral/ringcentral.js',
             'assets/ringcentral/rc_authentication.js'
-        ));
+        ));*/
         
         if (is_admin_logged()) {
             redirect('admin/dashboard', 'refresh');
@@ -64,7 +64,7 @@ class Admin extends CI_Controller
 
         $attempt = $this->users_model->admin_attempt(compact('username', 'password'));
 
-        if ($attempt == 'valid') {
+        if ($attempt == 'valid') {            
             $user = $this->db->where('username', $username)->or_where('email', $username)->get($this->users_model->table)->row();
             $this->users_model->admin_login($user, post('remember_me'));
 
@@ -88,7 +88,6 @@ class Admin extends CI_Controller
             $this->login();
             return;
         }
-
         $this->load->model('Activity_model', 'activity');
         $activity['activityName'] = "User Login";
         $activity['activity'] = " User " . logged('username') . " is loggedin";
@@ -102,9 +101,23 @@ class Admin extends CI_Controller
         $this->load->model('Users_model');
         $this->load->model('PayScale_model');
         $this->load->model('Business_model');
+        $this->load->model('Clients_model');
+        $cid_search = 'All Companies';
+        if( get('cid') ){
+            $users   = $this->Users_model->getCompanyUsers(get('cid'));
+            $company = $this->Business_model->getByCompanyId(get('cid'));
+            $cid_search = $company->business_name;
+        }else{
+            $users = $this->Users_model->getAllUsers();
+        }
 
+        $this->page_data['page_title'] = 'Users';
+        $this->page_data['page_parent'] = 'Users';
+        $this->page_data['cid_search']  = $cid_search;
+        $this->page_data['rolesList'] = $this->users_model->userRolesList();
+        $this->page_data['roles']     = $this->users_model->getRoles();
         $this->page_data['companies'] = $this->Business_model->getAll();
-        $this->page_data['users'] = $this->Users_model->getAllUsers();
+        $this->page_data['users']    = $users;
         $this->page_data['payscale'] = $this->PayScale_model->getAll();
         $this->load->view('admin/users/list', $this->page_data);
     }
@@ -112,95 +125,86 @@ class Admin extends CI_Controller
     public function logout(){
         if(is_admin_logged()){
             $this->load->model('Activity_model', 'activity');
-            $activity['activityName'] = "User Logout";
+            $activity['activityName'] = "Admin User Logout";
             $activity['activity'] = " User ".logged('username')." is logged out";
             $activity['user_id'] = logged('id');
             $this->activity->addEsignActivity($activity);
         }
 
-        $this->activity_model->add("User: ".getLoggedFullName(logged('id')).' Logged Out'); 
+        $this->activity_model->add("User: ".getLoggedFullName(logged('id')).' Admin Logged Out'); 
 
         $this->users_model->admin_logout();
+        $this->users_model->logout();
+
+        $this->session->unset_userdata('admin_bypass');
 
         redirect('admin/login','refresh');
     }
 
-    public function create_employee(){
-        $this->load->model('IndustryType_model');
+    public function ajaxCreateUser(){
+        $this->load->model('Users_model');
 
-        $company_id = $this->input->post('values[company_id]');
-        $fname = $this->input->post('values[firstname]');
-        $lname = $this->input->post('values[lastname]');
-        $email = $this->input->post('values[email]');
-        $username = $this->input->post('values[username]');
-        $password = $this->input->post('values[password]');
-        $address = $this->input->post('values[address]');
+        $post = $this->input->post();
 
-        $city  = $this->input->post('values[city]');
-        $state  = $this->input->post('values[state]');
-        $postal_code  = $this->input->post('values[postal_code]');
+        $is_success = 0;
+        $msg = '';
 
-        $user_type = $this->input->post('values[user_type]');
-        $role = $this->input->post('values[role]');
-        $status = $this->input->post('values[status]');
-        $web_access = $this->input->post('values[web_access]');
-        $app_access = $this->input->post('values[app_access]');
-        $profile_img = $this->input->post('values[profile_photo]');
-        $payscale_id = $this->input->post('values[empPayscale]');
-        $emp_number  = $this->input->post('values[emp_number]');
-        $cid=logged('company_id');
-        $add = array(
-            'company_id' => $company_id,
-            'FName' => $fname,
-            'LName' => $lname,
-            'username' => $username,
-            'email' => $username,
-            'password' => hash("sha256",$password),
-            'password_plain' => $password,
-            'role' => $role,
-            'user_type' => $user_type,
-            'status' => $status,
-            'company_id' => $cid,
-            'profile_img' => $profile_img,
-            'address' => $address,
-            'state' => $state,
-            'city' => $city,
-            'postal_code' => $postal_code,
-            'payscale_id' => $payscale_id,
-            'employee_number' => $emp_number
-        );
-        $last_id = $this->users_model->addNewEmployee($add);
-
-        //Create timesheet record
-        $this->load->model('TimesheetTeamMember_model');
-        $this->TimesheetTeamMember_model->create([
-            'user_id' => $last_id,
-            'name' => $fname . ' ' . $lname,
-            'email' => $username,
-            'role' => 'Employee',
-            'department_id' => 0,
-            'department_role' => 'Member',
-            'will_track_location' => 1,
-            'status' => 1,
-            'company_id' => $cid
-        ]);
-        //End Timesheet     
-
-        //Create Trac360 record
-        $this->load->model('Trac360_model');
-        $data = [
-            'user_id' => $last_id,
-            'name' => $fname . ' ' . $lname,
-            'company_id' => $cid
-        ];
-        $this->Trac360_model->add('trac360_people', $data);
-        //End Trac360
-
-        if ($last_id > 0 ){
-            echo json_encode(1);
+        $isUsernameExists = $this->Users_model->getUserByEmail($post['user_email']);
+        if( $isUsernameExists ){
+            $msg = 'Email already taken';
         }else{
-            echo json_encode(0);
+            $add = array(
+                'company_id' => $post['company_id'],
+                'FName' => $post['firstname'],
+                'LName' => $post['lastname'],
+                'username' => $post['user_email'],
+                'email' => $post['user_email'],
+                'password' => hash("sha256",$post['user_password']),
+                'password_plain' => $post['user_password'],
+                'role' => $post['role'],
+                'user_type' => $post['user_type'],
+                'status' => $post['status'],
+                'address' => $post['address'],
+                'state' => $post['state'],
+                'city' => $post['city'],
+                'postal_code' => $post['postal_code'],
+                'payscale_id' => 0,
+                'employee_number' => $post['emp_number']
+            );
+
+            $last_id = $this->users_model->addNewEmployee($add);
+
+            //Create timesheet record
+            $this->load->model('TimesheetTeamMember_model');
+            $this->TimesheetTeamMember_model->create([
+                'user_id' => $last_id,
+                'name' => $post['firstname'] . ' ' . $post['lastname'],
+                'email' => $post['user_email'],
+                'role' => 'Employee',
+                'department_id' => 0,
+                'department_role' => 'Member',
+                'will_track_location' => 1,
+                'status' => 1,
+                'company_id' => $post['company_id']
+            ]);
+            //End Timesheet     
+
+            //Create Trac360 record
+            $this->load->model('Trac360_model');
+            $data = [
+                'user_id' => $last_id,
+                'name' => $post['firstname'] . ' ' . $post['lastname'],
+                'company_id' => $post['company_id']
+            ];
+            $this->Trac360_model->add('trac360_people', $data);
+            //End Trac360
+
+            $is_success = 1;
         }
+        
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($json_data);
     }
 
     public function getRoles(){
@@ -265,21 +269,15 @@ class Admin extends CI_Controller
         $this->load->model('Users_model');
         $this->load->model('PayScale_model');
         $this->load->model('Business_model');
-        $this->load->model('Business_model');
 
-        $user_id = $this->input->post('user_id');
+        $user_id  = $this->input->post('user_id');
         $get_user = $this->Users_model->getUser($user_id);
         $get_role = $this->db->get_where('roles',array('id' => $get_user->role));
 
-        $cid   = logged('company_id');      
-        $roles = $this->users_model->getRoles($cid);
+        $roles = $this->users_model->getRoles();
 
-        if( $role_id == 1 || $role_id == 2 ){
-            $this->page_data['payscale'] = $this->PayScale_model->getAll();
-        }else{
-            $this->page_data['payscale'] = $this->PayScale_model->getAllByCompanyId($cid);
-        }
-
+        $this->page_data['payscale'] = $this->PayScale_model->getAll();
+        $this->page_data['rolesList'] = $this->users_model->userRolesList();
         $this->page_data['companies'] = $this->Business_model->getAll();
         $this->page_data['roles'] = $roles;
         $this->page_data['user'] = $get_user;
@@ -287,56 +285,46 @@ class Admin extends CI_Controller
         $this->load->view('admin/users/modal_edit_form', $this->page_data);
     }
 
-    public function ajaxUpdateEmployee(){
+    public function ajaxUpdateUser(){
         $this->load->model('Users_model');
-        $company_id = $this->input->post('values[company_id]');
-        $user_id = $this->input->post('values[user_id]');
-        $fname = $this->input->post('values[firstname]');
-        $lname = $this->input->post('values[lastname]');
-        $email = $this->input->post('values[email]');
-        $username = $this->input->post('values[username]');
-        $password = $this->input->post('values[password]');
-        $address = $this->input->post('values[address]');
+        
+        $post = $this->input->post();
 
-        $city  = $this->input->post('values[city]');
-        $state  = $this->input->post('values[state]');
-        $postal_code  = $this->input->post('values[postal_code]');
+        $is_success = 0;
+        $msg = '';
 
-        $role = $this->input->post('values[role]');
-        $status = $this->input->post('values[status]');
-        $web_access = $this->input->post('values[web_access]');
-        $app_access = $this->input->post('values[app_access]');
-        $profile_img = $this->input->post('values[profile_photo]');
-        $payscale_id = $this->input->post('values[empPayscale]');
-        $emp_number  = $this->input->post('values[emp_number]');
-        $user_type   = $this->input->post('values[user_type]');
-        $user = $this->Users_model->getUser($user_id);
-
-        if( $profile_img == '' ){
-            $profile_img = $user->profile_img;
+        if( $post['company_id'] == '' ){
+            $msg = 'Please select company';
         }
 
-        $data = array(
-            'company_id' => $company_id,
-            'FName' => $fname,
-            'LName' => $lname,
-            'username' => $username,
-            'email' => $email,
-            'role' => $role,
-            'status' => $status,            
-            'profile_img' => $profile_img,
-            'address' => $address,
-            'state' => $state,
-            'city' => $city,
-            'postal_code' => $postal_code,
-            'payscale_id' => $payscale_id,
-            'user_type' => $user_type,
-            'employee_number' => $emp_number
-        );
+        if( $post['emp_number'] == '' ){
+            $msg = 'Please specify employee number';
+        }
 
-        $user = $this->Users_model->update($user_id,$data);
+        if( $msg == '' ){
+            $data = array(
+                'company_id' => $post['company_id'],
+                'FName' => $post['firstname'],
+                'LName' => $post['lastname'],
+                'role' => $post['role'],
+                'status' => $post['status'],
+                'address' => $post['address'],
+                'state' => $post['state'],
+                'city' => $post['city'],
+                'postal_code' => $post['postal_code'],
+                //'payscale_id' => $post['empPayscale'],
+                'user_type' => $post['user_type'],
+                'employee_number' => $post['emp_number']
+            );
 
-        echo json_encode(1);
+            $user = $this->Users_model->update($user_id,$data);
+
+            $is_success = 1;
+        }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+
+        echo json_encode($json_data);
     }
 
     public function removeProfilePhoto(){
@@ -356,9 +344,11 @@ class Admin extends CI_Controller
         $is_success = false;
         $msg = "";
 
-        $new_password = $this->input->post('values[new_password]');
-        $re_password  = $this->input->post('values[re_password]');
-        $user_id = $this->input->post('values[change_password_user_id]');
+        $post = $this->input->post();
+
+        $new_password = $post['new_password'];
+        $re_password  = $post['re_password'];
+        $user_id      = $post['eid'];
 
         if( $new_password != $re_password ){
             $msg = "Password not same";
@@ -410,8 +400,10 @@ class Admin extends CI_Controller
         $is_success = true;
         $msg = "";
 
-        $company_id = $this->input->post('status_company_id');
-        $status  = $this->input->post('status_company_status');
+        $post = $this->input->post();
+
+        $company_id = $post['cid'];
+        $status     = $post['status'];
 
         $data = array(            
             'is_plan_active' => $status
@@ -427,7 +419,7 @@ class Admin extends CI_Controller
         echo json_encode($json_data);
     }
 
-    public function delete(){
+    public function ajaxDeleteUser(){
         $this->load->model('Users_model');
         
         $id = post('delete_user_id');
@@ -441,13 +433,39 @@ class Admin extends CI_Controller
         $this->Trac360_model->deleteUser('trac360_people', $id);
 
         $this->activity_model->add("User #$id Deleted by User:".logged('name'));
-
-        $this->session->set_flashdata('alert-type', 'success');
-
-        $this->session->set_flashdata('alert', 'User has been Deleted Successfully');
         
         $return = ['is_success' => 1];
         echo json_encode($return);
+    }
+
+    public function ajaxDeleteCompany(){
+        $this->load->model('Users_model');
+        $this->load->model('Clients_model');
+        $this->load->model('Business_model');
+        
+        $is_success = 0;
+        $msg = "";
+
+        $post = $this->input->post();
+
+        $company = $this->Clients_model->getById($post['cid']);
+        if( $company ){
+            $this->Users_model->deleteAllByCompanyId($post['cid']);
+            $this->Business_model->deleteByCompanyId($post['cid']);
+            $this->Clients_model->deleteClient($post['cid']);
+
+            $is_success = 1;
+
+        }else{
+            $msg = 'Cannot find data';
+        }
+
+        $json_data = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($json_data);
     }
 
     public function ajaxUpdateEmployeeProfilePhoto(){
@@ -1552,7 +1570,7 @@ class Admin extends CI_Controller
         $this->page_data['templateModules'] = $templateModules;
         $this->page_data['subscriber'] = $subscriber;
         $this->page_data['upgrades']   = $upgrades;
-        $this->load->view('admin/subscribers/ajax_subscriber_details', $this->page_data);
+        $this->load->view('admin/companies/ajax_subscriber_details', $this->page_data);
     }
 
     public function ajax_load_company_module_details() 
@@ -1699,9 +1717,28 @@ class Admin extends CI_Controller
     {
         $this->load->model('Clients_model');
 
-        $companies = $this->Clients_model->getAll();
+        $cid_search = 'All Companies';
+        if( get('status') != '' ){
+            if( get('status') == 'expired' ){
+                $cid_search = 'Status : Expired';
+                $status = 0;
+            }elseif( get('status') == 'deactivated' ){
+                $cid_search = 'Status : Deactivated';
+                $status = 3;
+            }else{
+                $cid_search = 'Status : Active';
+                $status = 1;
+            }
 
+            $companies = $this->Clients_model->getAllByStatus($status);
+        }else{
+            $companies = $this->Clients_model->getAll();
+        }
+
+        $this->page_data['cid_search'] = $cid_search;
         $this->page_data['companies'] = $companies;
+        $this->page_data['page_title'] = 'Companies';
+        $this->page_data['page_parent'] = 'Companies';
         $this->load->view('admin/companies/list', $this->page_data);
     }
 
@@ -2101,6 +2138,272 @@ class Admin extends CI_Controller
 
         $json_data = ['is_success' => 1];
 
+        echo json_encode($json_data);
+    }
+
+    public function export_users_list()
+    {
+        $this->load->model('users_model');
+        $this->load->model('roles_model');
+        
+        $users   = $this->users_model->getAllUsers();
+
+        $delimiter = ",";
+        $time      = time();
+        $filename  = "users_list_".$time.".csv";
+
+        $f = fopen('php://memory', 'w');
+
+        $fields = array('Company Name', 'Last Name', 'First Name', 'Role', 'Title', 'Email', 'Phone', 'Mobile', 'Address', 'City', 'State');
+        fputcsv($f, $fields, $delimiter);
+
+        if (!empty($users)) {
+            foreach ($users as $u) {
+                $csvData = array(
+                    $u->business_name,
+                    $u->LName,
+                    $u->FName,
+                    getUserType($u->user_type),
+                    ucfirst($this->roles_model->getById($u->role)->title),
+                    $u->email,
+                    $u->phone,
+                    $u->mobile,
+                    $u->address,
+                    $u->city,
+                    $u->state
+                );
+                fputcsv($f, $csvData, $delimiter);
+            }
+        } else {
+            $csvData = array('');
+            fputcsv($f, $csvData, $delimiter);
+        }
+
+        fseek($f, 0);
+
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="' . $filename . '";');
+
+        fpassthru($f);
+    }
+
+    public function export_company_list()
+    {
+        $this->load->model('Business_model');
+        $this->load->model('Clients_model');
+        
+        $clients   = $this->Clients_model->getAll();
+
+        $delimiter = ",";
+        $time      = time();
+        $filename  = "company_list_".$time.".csv";
+
+        $f = fopen('php://memory', 'w');
+
+        $fields = array('Company Name', 'Contact Name', 'Industry', 'Plan', 'Number of License', 'Status');
+        fputcsv($f, $fields, $delimiter);
+
+        if (!empty($clients)) {
+            foreach ($clients as $c) {
+                if($c->bp_business_name != ''){
+                    $status = "-";
+                    if( $c->is_plan_active == 1 ){
+                        $status = "Active";
+                    }elseif( $c->is_plan_active == 3 ){
+                        $status = "Deactivated";
+                    }else{
+                        $status = "Expire";
+                    }
+
+                    if( $c->bp_contact_name != '' ){
+                        $contact_name = $c->bp_contact_name;
+                    }else{
+                        $contact_name = "---";
+                    }
+
+                    $plan = $c->plan_name.' / '.$c->price;
+
+                    $csvData = array(
+                        $c->bp_business_name,
+                        $contact_name,
+                        $c->industry_type_name,
+                        $plan,
+                        $c->number_of_license,
+                        $status
+                    );
+                    fputcsv($f, $csvData, $delimiter);
+                }                
+            }
+        } else {
+            $csvData = array('');
+            fputcsv($f, $csvData, $delimiter);
+        }
+
+        fseek($f, 0);
+
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="' . $filename . '";');
+
+        fpassthru($f);
+    }
+
+    public function ajax_switch_to_company_user()
+    {
+        $this->load->model('Users_model');
+        $this->load->model('Clients_model');
+        $this->load->model('IndustryType_model');
+        $this->load->model('IndustryTemplateModules_model');
+        $this->load->model('CompanyDeactivatedModule_model');
+
+
+        $is_valid = 0;
+        $msg      = 'Invalid account type';
+
+        $uid  = adminLogged('id');
+        $user = $this->Users_model->getUserByID($uid);
+        $data = ['username' => $user->username, 'password' => $user->password_plain];
+        $attempt = $this->Users_model->attempt($data);
+
+        if ($attempt == 'valid') {
+            $this->Users_model->login($user);
+
+            $client = $this->Clients_model->getById($user->company_id);
+            // Get all access modules
+            if ($user->role == 1 || $user->role == 2) { //Admin and nsmart tech
+                $access_modules = array(0 => 'all');
+            } else {                
+                if ($client) {
+                    $industryType = $this->IndustryType_model->getById($client->industry_type_id);
+                    if ($industryType) {
+                        $industryModules = $this->IndustryTemplateModules_model->getAllByTemplateId($industryType->industry_template_id);
+                        foreach ($industryModules as $im) {
+                            $access_modules[] = $im->industry_module_id;
+                        }
+                    }
+                }
+            }
+
+            //Get company deactivated modules
+            $deactivatedModules  = $this->CompanyDeactivatedModule_model->getAllByCompanyId($client->id);
+            $deactivated_modules = array();
+
+            foreach( $deactivatedModules as $dm ){
+                $deactivated_modules[$dm->industry_module_id] = $dm->industry_module_id;
+            } 
+
+            $this->session->set_userdata('deactivated_modules', $deactivated_modules);
+            $this->session->set_userdata('userAccessModules', $access_modules);
+            $this->session->set_userdata('is_plan_active', $client->is_plan_active);      
+
+            $this->load->model('Activity_model', 'activity');
+            $activity['activityName'] = "Admin User Logout";
+            $activity['activity'] = " User ".logged('username')." is logged out";
+            $activity['user_id'] = adminLogged('id');
+            $this->activity->addEsignActivity($activity);
+
+            $this->activity_model->add("User: ".getLoggedFullName(logged('id')).' Admin Logged Out'); 
+            $this->users_model->admin_logout();
+
+            $is_valid = 1;    
+            $msg = '';  
+
+            $this->session->unset_userdata('admin_bypass');
+        }
+
+        $json_data = ['is_valid' => $is_valid, 'msg' => $msg];
+        echo json_encode($json_data);
+    }
+
+    public function ajaxLoginCompanyUser()
+    {
+        $this->load->model('Users_model');
+        $this->load->model('Clients_model');
+        $this->load->model('IndustryType_model');
+        $this->load->model('IndustryTemplateModules_model');
+        $this->load->model('CompanyDeactivatedModule_model');
+        $this->load->model('Customer_advance_model');
+
+        $is_valid = 0;
+        $msg      = 'Invalid account';
+        $redirect_url = '';
+
+        $post = $this->input->post();
+
+        $uid  = $post['uid'];
+        $user = $this->Users_model->getUserByID($uid);
+        $data = ['username' => $user->username, 'password' => $user->password_plain];
+        $attempt = $this->Users_model->attempt($data, true);
+
+        if ($attempt == 'valid') {
+            $this->users_model->login($user);
+
+            $client = $this->Clients_model->getById($user->company_id);
+            if( $client->is_plan_active == 3 ){
+                $msg = 'Company account is currently disabled. Cannot login.';                
+            }else{
+                // Get all access modules
+                if ($user->role == 1 || $user->role == 2) { //Admin and nsmart tech
+                    $access_modules = array(0 => 'all');
+                } else {                
+                    if ($client) {
+                        $industryType = $this->IndustryType_model->getById($client->industry_type_id);
+                        if ($industryType) {
+                            $industryModules = $this->IndustryTemplateModules_model->getAllByTemplateId($industryType->industry_template_id);
+                            foreach ($industryModules as $im) {
+                                $access_modules[] = $im->industry_module_id;
+                            }
+                        }
+                    }
+                }
+
+                //Get company deactivated modules
+                $deactivatedModules  = $this->CompanyDeactivatedModule_model->getAllByCompanyId($client->id);
+                $deactivated_modules = array();
+
+                foreach( $deactivatedModules as $dm ){
+                    $deactivated_modules[$dm->industry_module_id] = $dm->industry_module_id;
+                } 
+
+                $this->session->set_userdata('deactivated_modules', $deactivated_modules);
+                $this->session->set_userdata('userAccessModules', $access_modules);
+                $this->session->set_userdata('is_plan_active', $client->is_plan_active);
+
+                 $is_valid = 1;
+                 $msg = '';
+
+                 $this->session->set_userdata('admin_bypass', true);
+            }
+
+            /*$this->load->model('Activity_model', 'activity');
+            $activity['activityName'] = "User Login";
+            $activity['activity'] = " User " . logged('username') . " is loggedin";
+            $activity['user_id'] = logged('id');
+
+            $isUserInserted = $this->activity->addEsignActivity($activity);*/
+
+            if( $client->is_plan_active == 1 ){
+                $billingErrors = $this->Customer_advance_model->get_customer_billing_errors($client->id);
+                if( $billingErrors ){
+                   $redirect_url = base_url('customer/billing_errors');
+                }else{
+                   $redirect_url = base_url('dashboard');
+                }      
+            }else{
+                if( $client->id == 1 ){
+                    $redirect_url = base_url('dashboard');
+                }else{
+                    $exempted_company_ids = exempted_company_ids();
+                    if( !in_array($client->id, $exempted_company_ids) ){
+                        $redirect_url = base_url('mycrm/renew_plan');  
+                    }else{
+                        $redirect_url = base_url('dashboard');
+                    }
+                    
+                }
+            }
+        }
+
+        $json_data = ['is_valid' => $is_valid, 'msg' => $msg, 'redirect_url' => $redirect_url];
         echo json_encode($json_data);
     }
 }
