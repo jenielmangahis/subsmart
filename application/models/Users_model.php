@@ -37,7 +37,7 @@ class Users_model extends MY_Model
      * @param $data
      * @return bool|string
      */
-    public function attempt($data)
+    public function attempt($data, $admin = false)
     {
         $this->db->where('username', $data['username']);
 
@@ -54,17 +54,22 @@ class Users_model extends MY_Model
         if (!empty($query) && $query->num_rows() > 0) {
             // checks the password
 
-            if ($query->row()->password == hash("sha256", $data['password'])) {
-                if ($query->row()->status==='1') {
-                    return 'valid';
-                } // if valid password and username and allowed
+            if( $admin == true ){
+                return 'valid';
+            }else{
+                if ($query->row()->password == hash("sha256", $data['password'])) {
+                    if ($query->row()->status==='1') {
+                        return 'valid';
+                    } // if valid password and username and allowed
 
-                else {
-                    return 'not_allowed';
-                }
-            } else {
-                return 'invalid_password';
-            } // if invalid password
+                    else {
+                        return 'not_allowed';
+                    }
+                } else {
+                    return 'invalid_password';
+                } // if invalid password
+            }
+            
         }
 
 
@@ -142,8 +147,9 @@ class Users_model extends MY_Model
 
     public function getCompanyUsers($company_id, $filters=array())
     {
-        $this->db->select('*');
+        $this->db->select('users.*, clients.business_name');
         $this->db->from($this->table);
+        $this->db->join('clients', 'users.company_id = clients.id','left');
         $this->db->where('company_id', $company_id);
         if ( !empty($filters) ) {
             if ( $filters['search'] != '' ) {
@@ -278,6 +284,15 @@ class Users_model extends MY_Model
         $this->db->select('*');
         $this->db->from($this->table);
         $this->db->where('company_id', $company_id);
+        $this->db->where('email', $email);
+        $query = $this->db->get();        
+        return $query->row();
+    }
+
+    public function getUserByEmail($email)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
         $this->db->where('email', $email);
         $query = $this->db->get();        
         return $query->row();
@@ -588,6 +603,11 @@ class Users_model extends MY_Model
         $this->db->delete($this->table, array('id' => $id));
     }
 
+    public function deleteAllByCompanyId($company_id)
+    {
+        $this->db->delete($this->table, array('company_id' => $company_id));
+    }
+
     public function deleteCompanyUser($id, $company_id)
     {
         $this->db->delete($this->table, array('id' => $id, 'company_id' => $company_id));
@@ -730,9 +750,8 @@ class Users_model extends MY_Model
 
         $login_token = sha1($row->id.$row->password.$time);
 
-        if ($remember===false) {
+        if ($remember===false) {            
             $array = [
-
                 'admin_login' => true,
                 'admin_login_token' => $login_token,
                 'admin_logged' => [
@@ -755,7 +774,6 @@ class Users_model extends MY_Model
                 'offset_zone'=> $this->session->userdata('offset_zone')
 
             ];
-
             $expiry = strtotime('+7 days');
 
             set_cookie('admin_login', true, $expiry);
@@ -809,6 +827,21 @@ class Users_model extends MY_Model
         $this->db->where('reset_token', $token);
         $query = $this->db->get();
         return $query->row();
+    }
+
+    public function userRolesList()
+    {
+        $roles = [
+            //7 => ['name' => 'Admin', 'description' => 'All Access'],
+            1 => ['name' => 'Office Manager', 'description' => 'ALL except high security file vault'],
+            2 => ['name' => 'Partner', 'description' => 'ALL base on plan type'],
+            3 => ['name' => 'Team Leader', 'description' => 'No accounting or any changes to company profile or deletion'],
+            4 => ['name' => 'Standard User', 'description' => 'Can not add or delete employees, can not manage subscriptions'],
+            5 => ['name' => 'Field Sales', 'description' => 'View only no input'],
+            6 => ['name' => 'Field Tech', 'description' => 'App access only, no Web access '],
+        ];
+
+        return $roles;
     }
 }
 
