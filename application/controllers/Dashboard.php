@@ -156,6 +156,7 @@ class Dashboard extends Widgets {
         $this->page_data['events'] = $this->event_model->get_all_events(5);
         $this->page_data['upcomingEvents'] = $this->event_model->getAllUpComingEventsByCompanyId(logged('company_id'));
         $this->page_data['jobsStatus']=$this->event_model->getAllJobsByCompanyId(logged('company_id'));
+        $this->page_data['upcomingInvoice']=$this->event_model->getAllInvoices();
         $this->page_data['widgets'] = $this->widgets_model->getWidgetListPerUser($user_id);
         $this->page_data['main_widgets'] = array_filter($this->page_data['widgets'], function($widget){
             return $widget->wu_is_main == true;

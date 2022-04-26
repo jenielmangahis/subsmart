@@ -1425,7 +1425,12 @@ class Customer extends MY_Controller
         $this->page_data['users'] = $this->users_model->getUsers();
 
         add_footer_js([
-            'assets/js/customer/add_advance.js',
+            'assets/js/customer/add_advance/add_advance.js',
+            'assets/js/customer/lib/bday-picker.js',
+        ]);
+
+        add_css([
+            'assets/css/customer/add_advance/add_advance.css',
         ]);
 
         $this->load->view('customer/add_advance', $this->page_data);

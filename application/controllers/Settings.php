@@ -101,6 +101,9 @@ class Settings extends MY_Controller {
 
     public function email_templates()
     {
+		$this->page_data['page']->title = 'Email Templates';
+        $this->page_data['page']->parent = 'Company';
+
         $company_id = logged('company_id');
 
         $get_invoice_template = array(
@@ -112,7 +115,8 @@ class Settings extends MY_Controller {
         $emailTemplates = $this->general_model->get_all_with_keys($get_invoice_template,'settings_email_template');
         $this->page_data['invoice_templates'] = $emailTemplates;
         $this->page_data['page']->menu = 'email_templates';
-        $this->load->view('settings/email_templates', $this->page_data);
+        // $this->load->view('settings/email_templates', $this->page_data);
+        $this->load->view('v2/pages/settings/email_templates', $this->page_data);
     }
 
     public function email_templates_edit($id=null)
@@ -223,6 +227,9 @@ class Settings extends MY_Controller {
 
     public function sms_templates()
     {   
+		$this->page_data['page']->title = 'SMS Templates';
+        $this->page_data['page']->parent = 'Company';
+
         $this->load->model('SmsTemplate_model');
 
         $company_id = logged('company_id');
@@ -243,11 +250,15 @@ class Settings extends MY_Controller {
 
         $this->page_data['data_sms_templates'] = $data_sms_templates;
         $this->page_data['page']->menu = 'sms_templates';
-        $this->load->view('settings/sms_templates', $this->page_data);
+        // $this->load->view('settings/sms_templates', $this->page_data);
+        $this->load->view('v2/pages/settings/sms_templates', $this->page_data);
     }
 
     public function email_branding()
     {
+		$this->page_data['page']->title = 'Email Branding';
+        $this->page_data['page']->parent = 'Company';
+
         $this->load->model('SettingEmailBranding_model');
 
         $user = $this->session->userdata('logged');
@@ -272,11 +283,15 @@ class Settings extends MY_Controller {
 
         $this->page_data['page']->menu   = 'email_branding';
         $this->page_data['setting_data'] = $setting_data;
-        $this->load->view('settings/email_branding', $this->page_data);
+        // $this->load->view('settings/email_branding', $this->page_data);
+        $this->load->view('v2/pages/settings/email_branding', $this->page_data);
     }
 
 	public function notifications()
 	{
+		$this->page_data['page']->title = 'Notifications';
+        $this->page_data['page']->parent = 'Company';
+
         $this->load->model('SettingNotification_model');
         $setting_data = "";
         $user = $this->session->userdata('logged');
@@ -296,7 +311,8 @@ class Settings extends MY_Controller {
 
 		$this->page_data['page']->menu = 'notifications';
         $this->page_data['setting_data'] = $setting_data;
-		$this->load->view('settings/notifications', $this->page_data);
+		// $this->load->view('settings/notifications', $this->page_data);
+		$this->load->view('v2/pages/settings/notifications', $this->page_data);
 	}
 
     public function online_payments()

@@ -25,8 +25,26 @@
         <canvas id="invoice_chart" class="nsm-chart" data-chart-type="invoices"></canvas>
     </div>
 </div>
+<?php 
 
-<script type="text/javascript">
+    if($upcomingInvoice){
+        $partially_paid = 0;
+        $due = 0;
+        $Approved = 0;
+        $status = "";
+        foreach($upcomingInvoice as $UI){
+            if($UI->status == "Due" || $UI->status == 'Approved' || $UI->status == 'Partially Paid'){
+                $status = $UI->status;
+                if($status == "Due"){
+                    $due += $UI->total_due;
+
+                }else if($status == 'Approved'){
+                    $Approved += $UI->total_due;
+                }else{
+                    $partially_paid += $UI->total_due;
+                }
+                ?>
+                    <script type="text/javascript">
     $(document).ready(function() {
         initializeInvoiceChart();
     });
@@ -37,10 +55,10 @@
         new Chart(invoices, {
             type: 'bar',
             data: {
-                labels: ['PAST DUE', 'DUE', 'UNSENT'],
+                labels: ['DUE', 'APPROVED', 'PARTIALLY PAID'],
                 datasets: [{
                     label: 'Open Invoices',
-                    data: [150000, 50000, 20000],
+                    data: [<?php echo $due ?>, <?php echo $Approved ?>, <?php echo $partially_paid?>],
                     backgroundColor: [
                         'rgba(255, 99, 132, 0.2)',
                         'rgba(54, 162, 235, 0.2)',
@@ -77,6 +95,12 @@
         });
     }
 </script>
+                <?php
+            }
+        }
+    }
+?>
+
 
 <?php
     if(!is_null($dynamic_load) && $dynamic_load == true):

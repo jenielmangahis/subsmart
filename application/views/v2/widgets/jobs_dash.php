@@ -15,16 +15,15 @@ endif;
         border-radius: 16px;
     }
 
-    .table-container {
-        font-weight: bold;
-        text-align: -webkit-center;
-    }
+
 
     .js-table {
         padding: 0 4%;
         font-size: 12px;
         width: 100%;
         text-align: center;
+        position: absolute;
+        top: 58px;
     }
 
     .row.js-row.js-row-margin {
@@ -43,6 +42,124 @@ endif;
     .col-2 {
         text-align: left !important;
     }
+
+    .row.js-row-dash {
+        background-color: #f6ebff;
+        margin-bottom: 3%;
+        border-radius: 10px;
+        margin: 1% 0%;
+        box-shadow: 2px 2px 2px #dfdfdf;
+        padding: 0;
+    }
+
+
+    .stat_content {
+
+        padding: 0 2%;
+    }
+
+    .col-9.marg-top {
+        display: flex;
+        margin: 2% 0;
+        font-weight: bold;
+    }
+
+    .col-3.col-center {
+        margin-top: 1%;
+        font-size: 15px;
+        text-align: center;
+    }
+
+    .stat-item {
+        font-weight: bold;
+        color: white;
+        background-color: #e373e3;
+        width: 46%;
+        font-size: 10px;
+        border-radius: 18px;
+    }
+
+    .col.col-align {
+        text-align: -webkit-center;
+    }
+
+    .prof {
+        background-size: cover;
+        background-image: url("<?php echo base_Url() ?>assets/dashboard/images/prof.jpg");
+        width: 30px;
+        height: 30px;
+        border-radius: 15px;
+    }
+
+    .jname {
+        margin-top: 3px;
+        margin-left: 9px;
+    }
+
+    .title-modal h5 {
+        font-weight: bold;
+        font-size: 23px;
+    }
+
+    .table-container {
+        font-weight: bold;
+        text-align: -webkit-center;
+        background-color: white;
+        height: 548px;
+        width: 1129px;
+        position: relative;
+        top: 21%;
+        left: 20%;
+        border-radius: 26px;
+        padding-top: 16px;
+    }
+
+    .close-modal-table {
+        position: absolute;
+        top: 492px;
+        left: 920px;
+    }
+
+    .modal-table {
+        position: fixed;
+        top: 0;
+        z-index: 1059;
+        width: 100%;
+        height: 100%;
+
+        display: none;
+        left: 0;
+        right: 0;
+        background: #2929297a;
+    }
+
+    button.cl {
+        background: #ff0f48bf;
+        border: none;
+        width: 80px;
+        height: 35px;
+        border-radius: 9px;
+        color: white;
+        font-weight: bold;
+    }
+
+    button.cl-edit {
+        background: #00b4359e;
+        border: none;
+        width: 80px;
+        height: 35px;
+        border-radius: 9px;
+        color: white;
+        font-weight: bold;
+        margin-right: 10px;
+    }
+
+    @media only screen and (max-width: 1521px) {
+        .table-container {
+            top: 14%;
+            left: 13%;
+        }
+    }
 </style>
 
 <div class="<?= $class ?>" data-id="<?= $id ?>" id="widget_<?= $id ?>" draggable="true">
@@ -51,7 +168,7 @@ endif;
             <span>Jobs Status</span>
         </div>
         <div class="nsm-card-controls">
-            <a role="button" class="nsm-button btn-sm m-0 me-2" href="<?= base_url() ?>job">
+            <a role="button" class="nsm-button btn-sm m-0 me-2" id="table-modal">
                 See More
             </a>
             <div class="dropdown">
@@ -68,155 +185,204 @@ endif;
     <div class="nsm-card-content jobs_stat">
         <div class="nsm-widget-table">
 
-            <div class="table-container">
-                <div class="js-table">
-                    <div class="js-header">
-                        <div class="row js-row">
-                            <div class="col-2">Job Name</div>
-                            <div class="col">Draft</div>
-                            <div class="col">Schedule</div>
-                            <div class="col">Arrival</div>
-                            <div class="col">Start</div>
-                            <div class="col">Approved</div>
-                            <div class="col">Finish</div>
-                            <div class="col">Invoice</div>
-                            <div class="col">Complete</div>
+            <div class="stat_content">
+                <div class="row row-pad">
+                    <div class="col">
+                        <div class="row">
+                            <div class="col-9">
+                                <h6>JOB NAME</h6>
+                            </div>
+                            <div class="col-3" style="text-align: center;">
+                                <h6>STATUS</h6>
+                            </div>
                         </div>
                     </div>
-                    <div class="js-body">
 
-                        <?php
+                    <?php
+                    if ($jobsStatus) {
+                        $limit = 5;
+                        $count = 0;
 
-                        if ($jobsStatus) {
-                            $limit = 4;
-                            $count = 0;
-
-                            foreach ($jobsStatus as $jobs) {
-                                if ($count < $limit) {
-                        ?>
-                                    <div class="row js-row">
-                                        <div class="col-2"><?php echo $jobs->job_name ?></div>
-                                        <div class="col">
-                                            <?php if($jobs->draft != " "){if($jobs->status == "draft"){ ?> Mon<br> <?php echo $jobs->draft; }else{?> <div class="cent"><i class="bx bx-check-circle" style="color: #4f7514; font-size: 15px;"></i></div> <?php echo $jobs->draft; }} ?>
-                                        </div>
-                                        <div class="col">
-                                        <?php if($jobs->schedule != ""){if($jobs->status == "schedule"){ ?> Mon<br> <?php echo $jobs->schedule; }else{?> <div class="cent"><i class="bx bx-check-circle" style="color: #4f7514; font-size: 15px;"></i></div> <?php echo $jobs->schedule; }} ?>
-                                        </div>
-                                        <div class="col">
-                                        <?php if($jobs->arrival != ""){if($jobs->status == "arrival"){ ?> Mon<br> <?php echo $jobs->arrival; }else{?> <div class="cent"><i class="bx bx-check-circle" style="color: #4f7514; font-size: 15px;"></i></div> <?php echo $jobs->arrival; }} ?>
-                                        </div>
-                                        <div class="col"><?php if($jobs->start != ""){if($jobs->status == "start"){ ?> Mon <br> <?php echo $jobs->start; }else{?> <div class="cent"><i class="bx bx-check-circle" style="color: #4f7514; font-size: 15px;"></i></div> <?php echo $jobs->start; }} ?></div>
-                                        <div class="col">
-                                        <?php if($jobs->approved != ""){if($jobs->status == "approved"){ ?> Mon<br> <?php echo $jobs->approved; }else{?> <div class="cent"><i class="bx bx-check-circle" style="color: #4f7514; font-size: 15px;"></i></div> <?php echo $jobs->approved; }} ?>
-                                        </div>
-                                        <div class="col">
-                                        <?php if($jobs->finish != ""){if($jobs->status == "finish"){ ?> Mon<br> <?php echo $jobs->finish; }else{?> <div class="cent"><i class="bx bx-check-circle" style="color: #4f7514; font-size: 15px;"></i></div> <?php echo $jobs->finish; }} ?>
-                                        </div>
-                                        <div class="col">
-                                        <?php if($jobs->invoice != ""){if($jobs->status == "invoice"){ ?> Mon<br> <?php echo $jobs->invoice; }else{?> <div class="cent"><i class="bx bx-check-circle" style="color: #4f7514; font-size: 15px;"></i></div> <?php echo $jobs->invoice; }} ?>
-                                        </div>
-                                        <div class="col">
-                                        <?php if($jobs->complete != ""){if($jobs->status == "complete"){ ?> Mon<br>  <?php echo $jobs->complete; }else{?> <div class="cent"><i class="bx bx-check-circle" style="color: #4f7514; font-size: 15px;"></i></div> <?php echo $jobs->complete; }} ?>
+                        foreach ($jobsStatus as $jobs) {
+                            if ($count < $limit) {
+                    ?>
+                                <div class="row js-row-dash">
+                                    <div class="col">
+                                        <div class="row">
+                                            <div class="col-9 marg-top">
+                                                <div class="prof"></div>
+                                                <div class="jname"> <?php echo $jobs->job_name; ?></div>
+                                            </div>
+                                            <div class="col-3 col-center">
+                                                <div class="row">
+                                                    <div class="col col-align">
+                                                        <div class="stat-item"> <?php echo $jobs->status; ?></div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <?php $date = $jobs->status;
+                                                        echo $jobs->$date; ?>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                        <?php
-                                }
+                                </div>
+                    <?php
                             }
                         }
+                    }
+                    ?>
 
-                        ?>
 
-
-                        <!-- <div class="row js-row">
-                            <div class="col-2">Programmer</div>
-                            <div class="col">
-                                <div class="cent"><i class="bx bx-check-circle" style="color: #4f7514; font-size: 15px;"></i></div> 02-11-22
-                            </div>
-                            <div class="col">
-                                <div class="cent"><i class="bx bx-check-circle" style="color: #4f7514; font-size: 15px;"></i></div> 02-13-22
-                            </div>
-                            <div class="col">
-                                <div class="cent"><i class="bx bx-check-circle" style="color: #4f7514; font-size: 15px;"></i></div> 02-17-22
-                            </div>
-                            <div class="col">Mon<br> 02-22-22</div>
-                            <div class="col"></div>
-                            <div class="col"></div>
-                            <div class="col"></div>
-                            <div class="col"></div>
-                        </div> -->
-                        <!-- <div class="row js-row js-row-margin">
-                            <div class="col-2">System Analyst</div>
-                            <div class="col">
-                                <div class="cent"><i class="bx bx-check-circle" style="color: #4f7514; font-size: 15px;"></i></div> 02-11-22
-                            </div>
-                            <div class="col">
-                                <div class="cent"><i class="bx bx-check-circle" style="color: #4f7514; font-size: 15px;"></i></div> 02-13-22
-                            </div>
-                            <div class="col">Tues<br> 02-17-22</div>
-                            <div class="col"></div>
-                            <div class="col"></div>
-                            <div class="col"></div>
-                            <div class="col"></div>
-                            <div class="col"></div>
-                        </div>
-                        <div class="row js-row js-row-margin">
-                            <div class="col-2">Manager</div>
-                            <div class="col">
-                                <div class="cent"><i class="bx bx-check-circle" style="color: #4f7514; font-size: 15px;"></i></div> 02-11-22
-                            </div>
-                            <div class="col">
-                                <div class="cent"><i class="bx bx-check-circle" style="color: #4f7514; font-size: 15px;"></i></div> 02-13-22
-                            </div>
-                            <div class="col">
-                                <div class="cent"><i class="bx bx-check-circle" style="color: #4f7514; font-size: 15px;"></i></div> 02-17-22
-                            </div>
-                            <div class="col">
-                                <div class="cent"><i class="bx bx-check-circle" style="color: #4f7514; font-size: 15px;"></i></div> 02-18-22
-                            </div>
-                            <div class="col">
-                                <div class="cent"><i class="bx bx-check-circle" style="color: #4f7514; font-size: 15px;"></i></div> 02-18-22
-                            </div>
-                            <div class="col">Thu<br> 02-28-22</div>
-                            <div class="col"></div>
-                            <div class="col"></div>
-                        </div>
-                        <div class="row js-row js-row-margin js-margin-bot">
-                            <div class="col-2">Boss Amo Manager</div>
-                            <div class="col">
-                                <div class="cent"><i class="bx bx-check-circle" style="color: #4f7514; font-size: 15px;"></i></div> 02-11-22
-                            </div>
-                            <div class="col">
-                                <div class="cent"><i class="bx bx-check-circle" style="color: #4f7514; font-size: 15px;"></i></div></i> 02-13-22
-                            </div>
-                            <div class="col">
-                                <div class="cent"><i class="bx bx-check-circle" style="color: #4f7514; font-size: 15px;"></i></div> 02-17-22
-                            </div>
-                            <div class="col">
-                                <div class="cent"><i class="bx bx-check-circle" style="color: #4f7514; font-size: 15px;"></i></div> 02-19-22
-                            </div>
-                            <div class="col">
-                                <div class="cent"><i class="bx bx-check-circle" style="color: #4f7514; font-size: 15px;"></i></div> 02-19-22
-                            </div>
-                            <div class="col">
-                                <div class="cent"><i class="bx bx-check-circle" style="color: #4f7514; font-size: 15px;"></i></div> 02-21-22
-                            </div>
-                            <div class="col">Fri<br> 02-29-22</div>
-                            <div class="col"></div>
-                        </div> -->
-                    </div>
                 </div>
             </div>
 
+
+
+
+
+
+
+        </div>
+    </div>
+</div>
+
+<div class="modal-table">
+    <div class="table-container" style="display: none;">
+        <div class="title-modal">
+            <h5>JOB TABLE</h5>
+        </div>
+        <div>
+            <hr>
+        </div>
+        <div class="js-table">
+            <div class="js-header">
+                <div class="row js-row">
+                    <div class="col-2">Job Name</div>
+                    <div class="col">Draft</div>
+                    <div class="col">Schedule</div>
+                    <div class="col">Arrival</div>
+                    <div class="col">Start</div>
+                    <div class="col">Approved</div>
+                    <div class="col">Finish</div>
+                    <div class="col">Invoice</div>
+                    <div class="col">Complete</div>
+                </div>
+            </div>
+            <div class="js-body">
+
+                <?php
+
+                if ($jobsStatus) {
+                    $limit = 4;
+                    $count = 0;
+
+                    foreach ($jobsStatus as $jobs) {
+                        if ($count < $limit) {
+                            $count++;
+                ?>
+                            <div class="row js-row">
+                                <div class="col-2"><?php echo $jobs->job_name ?></div>
+                                <div class="col">
+                                    <?php if ($jobs->draft != " ") {
+                                        if ($jobs->status == "draft") { ?> <?php $timestamp = strtotime($jobs->draft);
+                                                                            $day = date('D', $timestamp);
+                                                                            echo $day ?><br> <?php echo $jobs->draft;
+                                                                                            } else { ?> <div class="cent"><i class="bx bx-check-circle" style="color: #4f7514; font-size: 15px;"></i></div> <?php echo $jobs->draft;
+                                                                                                                                                                                                        }
+                                                                                                                                                                                                    } ?>
+                                </div>
+                                <div class="col">
+                                    <?php if ($jobs->schedule != "") {
+                                        if ($jobs->status == "schedule") { ?> <?php $timestamp = strtotime($jobs->schedule);
+                                                                                $day = date('D', $timestamp);
+                                                                                echo $day ?><br> <?php echo $jobs->schedule;
+                                                                                                } else { ?> <div class="cent"><i class="bx bx-check-circle" style="color: #4f7514; font-size: 15px;"></i></div> <?php echo $jobs->schedule;
+                                                                                                                                                                                                            }
+                                                                                                                                                                                                        } ?>
+                                </div>
+                                <div class="col">
+                                    <?php if ($jobs->arrival != "") {
+                                        if ($jobs->status == "arrival") { ?> <?php $timestamp = strtotime($jobs->arrival);
+                                                                                $day = date('D', $timestamp);
+                                                                                echo $day ?><br> <?php echo $jobs->arrival;
+                                                                                                } else { ?> <div class="cent"><i class="bx bx-check-circle" style="color: #4f7514; font-size: 15px;"></i></div> <?php echo $jobs->arrival;
+                                                                                                                                                                                                            }
+                                                                                                                                                                                                        } ?>
+                                </div>
+                                <div class="col"><?php if ($jobs->start != "") {
+                                                        if ($jobs->status == "start") { ?> <?php $timestamp = strtotime($jobs->start);
+                                                                                            $day = date('D', $timestamp);
+                                                                                            echo $day ?> <br> <?php echo $jobs->start;
+                                                                                                            } else { ?> <div class="cent"><i class="bx bx-check-circle" style="color: #4f7514; font-size: 15px;"></i></div> <?php echo $jobs->start;
+                                                                                                                                                                                                                        }
+                                                                                                                                                                                                                    } ?></div>
+                                <div class="col">
+                                    <?php if ($jobs->approved != "") {
+                                        if ($jobs->status == "approved") { ?> <?php $timestamp = strtotime($jobs->approved);
+                                                                                $day = date('D', $timestamp);
+                                                                                echo $day ?><br> <?php echo $jobs->approved;
+                                                                                                } else { ?> <div class="cent"><i class="bx bx-check-circle" style="color: #4f7514; font-size: 15px;"></i></div> <?php echo $jobs->approved;
+                                                                                                                                                                                                            }
+                                                                                                                                                                                                        } ?>
+                                </div>
+                                <div class="col">
+                                    <?php if ($jobs->finish != "") {
+                                        if ($jobs->status == "finish") { ?> <?php $timestamp = strtotime($jobs->finish);
+                                                                            $day = date('D', $timestamp);
+                                                                            echo $day ?><br> <?php echo $jobs->finish;
+                                                                                            } else { ?> <div class="cent"><i class="bx bx-check-circle" style="color: #4f7514; font-size: 15px;"></i></div> <?php echo $jobs->finish;
+                                                                                                                                                                                                        }
+                                                                                                                                                                                                    } ?>
+                                </div>
+                                <div class="col">
+                                    <?php if ($jobs->invoice != "") {
+                                        if ($jobs->status == "invoice") { ?> <?php $timestamp = strtotime($jobs->invoice);
+                                                                                $day = date('D', $timestamp);
+                                                                                echo $day ?><br> <?php echo $jobs->invoice;
+                                                                                                } else { ?> <div class="cent"><i class="bx bx-check-circle" style="color: #4f7514; font-size: 15px;"></i></div> <?php echo $jobs->invoice;
+                                                                                                                                                                                                            }
+                                                                                                                                                                                                        } ?>
+                                </div>
+                                <div class="col">
+                                    <?php if ($jobs->complete != "") {
+                                        if ($jobs->status == "complete") { ?><?php $timestamp = strtotime($jobs->complete);
+                                                                                $day = date('D', $timestamp);
+                                                                                echo $day ?><br> <?php echo $jobs->complete;
+                                                                                                } else { ?> <div class="cent"><i class="bx bx-check-circle" style="color: #4f7514; font-size: 15px;"></i></div> <?php echo $jobs->complete;
+                                                                                                                                                                                                            }
+                                                                                                                                                                                                        } ?>
+                                </div>
+                            </div>
+                <?php
+                        }
+                    }
+                }
+
+                ?>
+
+            </div>
+        </div>
+        <div class="close-modal-table">
+            <button class="cl-edit">EDIT</button><button class="cl">CLOSE</button>
         </div>
     </div>
 </div>
 
 <script>
     $(document).ready(function() {
-        console.log($(".jobs_stat").parent().attr('class'));
-        $('body').delegate('draggable', '.jobs_stat', function() {
+        $("#table-modal").on("click", function() {
+            $(".modal-table").fadeIn();
+            $(".table-container").fadeIn();
 
         })
+        $(".cl").on("click", function() {
+            $(".modal-table").fadeOut();
+            $(".table-container").fadeOut();
+        })
+
     })
 </script>
 

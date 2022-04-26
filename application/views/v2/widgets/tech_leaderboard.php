@@ -41,6 +41,7 @@
             method: 'get',
             data: {},
             success: function (response) {
+                console.log(response);
                 $('.techleaderboard-container').html(response);
             }
         });

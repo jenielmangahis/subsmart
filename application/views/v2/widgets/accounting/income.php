@@ -30,7 +30,7 @@
                             <i class='bx bx-receipt'></i>
                         </div>
                         <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
-                            <h2><?= $invoice_draft->total; ?></h2>
+                            <h2><?php $total = 0; foreach($upcomingInvoice as $UI){ if($UI->status == "Due" || $UI->status == 'Approved' || $UI->status == 'Partially Paid'){ $total++; }} echo $total; ?></h2>
                             <span>Open Invoices</span>
                         </div>
                     </div>
