@@ -157,6 +157,10 @@ class Dashboard extends Widgets {
         $this->page_data['upcomingEvents'] = $this->event_model->getAllUpComingEventsByCompanyId(logged('company_id'));
         $this->page_data['jobsStatus']=$this->event_model->getAllJobsByCompanyId(logged('company_id'));
         $this->page_data['upcomingInvoice']=$this->event_model->getAllInvoices();
+        $this->page_data['subs']=$this->event_model->getAllsubs();
+        $this->page_data['payment']=$this->event_model->getAllPayment();
+        $this->page_data['paymentInvoices']=$this->event_model->getAllPInvoices();
+        $this->page_data['jobsDone']=$this->event_model->getAllJobs();
         $this->page_data['widgets'] = $this->widgets_model->getWidgetListPerUser($user_id);
         $this->page_data['main_widgets'] = array_filter($this->page_data['widgets'], function($widget){
             return $widget->wu_is_main == true;

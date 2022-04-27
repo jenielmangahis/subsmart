@@ -1,7 +1,7 @@
 <div class="card">
     <div class="card-header">
         <span style="position: absolute;right: 0;margin-right: 25px;font-size: 20px;padding-top:10px;" class="fa fa-ellipsis-v"></span>
-        <h6 ><span class="fa fa-user"></span>&nbsp; &nbsp;Customer Profle</h6>
+        <h6 ><span class="fa fa-user"></span>&nbsp; &nbsp;Customer Profile</h6>
     </div>
     <div class="card-body">
         <div class="row form_line">
@@ -35,7 +35,13 @@
                 Customer Type
             </div>
             <div class="col-md-8">
-                <select id="customer_type" name="customer_type" data-customer-source="dropdown" class="form-controls input_select">
+                <select 
+                    id="customer_type" 
+                    name="customer_type" 
+                    data-customer-source="dropdown" 
+                    class="form-controls input_select"
+                    data-value="<?php if(isset($profile_info)) { echo $profile_info->customer_type; } ?>" 
+                >
                     <option value="Residential">Residential</option>
                     <option value="Business">Business</option>
                 </select>
@@ -58,8 +64,8 @@
                 Sales Area <span class="required"> *</span>
             </div>
             <div class="col-md-8">
-                <select data-value="<?=$profile_info->fk_sa_id?>" name="fk_sa_id" data-type="customer_sales_area" class="form-control" required>
-                    <option></option>
+                <select data-value="<?=$profile_info->fk_sa_text?>" name="fk_sa_id" data-type="customer_sales_area" class="form-control" required>
+                    <option><?=$profile_info->fk_sa_text?></option>
                 </select>
                 <a href="<?= base_url() ?>customer/settings/salesArea" target="_blank"  style="color:#58bc4f;font-size: 10px;"><span class="fa fa-plus"></span> Manage Sales Area</a>&nbsp;&nbsp;
             </div>

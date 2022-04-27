@@ -475,7 +475,6 @@ if (!function_exists('logged')) {
 
         $CI = &get_instance();
 
-
         if (!is_logged())
 
             return false;
@@ -487,6 +486,29 @@ if (!function_exists('logged')) {
         if (!$logged) {
 
             $logged = $CI->users_model->getById(json_decode(get_cookie('logged'))->id);
+        }
+
+        //print_r($logged);die;
+
+        return (!$key) ? $logged : $logged->{$key};
+    }
+}
+
+if (!function_exists('adminLogged')) {
+
+
+    function adminLogged($key = false)
+
+    {
+
+        $CI = &get_instance();
+        
+        $logged = !empty($CI->session->userdata('admin_login')) ? $CI->users_model->getById($CI->session->userdata('admin_logged')['id']) : false;
+
+
+        if (!$logged) {
+
+            $logged = $CI->users_model->getById(json_decode(get_cookie('admin_logged'))->id);
         }
 
         //print_r($logged);die;
@@ -4261,8 +4283,18 @@ if (!function_exists('is_admin_logged')) {
             $login_token_match = (sha1($user->id . $user->password . $isLogged->time) == $_token);
         }
 
-
         return $isLogged && $login_token_match;
+    }
+
+    function isAdminBypass(){
+        $CI = &get_instance();
+
+        $bypass = false;
+        if( $CI->session->userdata('admin_bypass') ){
+            $bypass = true;
+        }
+
+        return $bypass;
     }
 
     function customerQrCode($profile_id){

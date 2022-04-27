@@ -7027,32 +7027,99 @@ $(function() {
     });
 
     $(document).on('click', '#modal-container form .modal #item-table .deleteRow', function() {
-        if($(this).parent().parent().parent().hasClass('package')) {
-            $(this).parent().parent().parent().next().remove();
+        var el = $(this);
+        if($(this).parent().parent().parent().find('input[name="item_linked_transaction[]"]').length < 1) {
+            if($(this).parent().parent().parent().hasClass('package')) {
+                $(this).parent().parent().parent().next().remove();
+            }
+            $(this).parent().parent().parent().remove();
+    
+            var subtotal = 0.00;
+            var taxes = 0.00;
+            var discounts = 0.00;
+            $('#modal-container form .modal #item-table tbody tr').each(function() {
+                var itemAmount = $(this).parent().parent().find('input[name="item_amount[]"]').val();
+                var itemQty = $(this).parent().parent().find('input[name="quantity[]"]').val();
+                var itemDisc = $(this).parent().parent().find('input[name="discount[]"]').val();
+                var itemTax = $(this).parent().parent().find('input[name="item_tax[]"]').val();
+    
+                var itemTotal = parseFloat(itemAmount) * parseFloat(itemQty);
+                var taxAmount = parseFloat(itemTax) * itemTotal / 100;
+    
+                subtotal = parseFloat(subtotal) + parseFloat(itemTotal);
+                taxes = parseFloat(taxes) + parseFloat(taxAmount);
+                discounts = parseFloat(discounts) + parseFloat(itemDisc);
+            });
+    
+            $('#modal-container form .modal span.transaction-subtotal').html(formatter.format(parseFloat(subtotal)));
+            $('#modal-container form .modal span.transaction-taxes').html(formatter.format(parseFloat(taxes)));
+            $('#modal-container form .modal span.transaction-discounts').html(formatter.format(parseFloat(discounts)));
+            $('#modal-container form .modal #adjustment_input_cm').trigger('change');
+        } else {
+            var linkedTransac = $(this).parent().parent().parent().find('input[name="item_linked_transaction[]"]').val();
+            var linkedTransacType = linkedTransac.split('-')[0].replace('delayed_');
+            var type = linkedTransacType.charAt(0).toUpperCase() + linkedTransacType.slice(1);
+            if($(`#modal-container form .modal #item-table input[name="item_linked_transaction[]"][value="${linkedTransac}"]`).length > 1) {
+                var message = `There are multiple lines for ${type}. Would you like to remove this line from the invoice or unlink the whole transaction?`;
+                var confirmButtonText = 'Unlink it';
+                var cancelButtonText = 'Remove it';
+            } else {
+                var message = `Would you also like to unlink ${type}`;
+                var confirmButtonText = 'Yes, unlink it';
+                var cancelButtonText = 'No, keep it';
+            }
+
+            Swal.fire({
+                title: message,
+                icon: 'warning',
+                showCloseButton: false,
+                confirmButtonColor: '#2ca01c',
+                confirmButtonText: confirmButtonText,
+                showCancelButton: true,
+                cancelButtonText: cancelButtonText,
+                cancelButtonColor: '#d33'
+            }).then((result) => {
+                if(result.isConfirmed) {
+                    el.parent().parent().parent().find('.unlink-transaction').trigger('click');
+                } else {
+                    if($(`#modal-container form .modal #item-table input[name="item_linked_transaction[]"][value="${linkedTransac}"]`).length > 1) {
+                        $(`#modal-container form .modal #item-table input[name="item_linked_transaction[]"][value="${linkedTransac}"]`).each(function() {
+                            if($(this).parent().parent().hasClass('package')) {
+                                $(this).parent().parent().next().remove();
+                            }
+                            $(this).parent().parent().remove();
+                        });
+                    } else {
+                        if(el.parent().parent().parent().hasClass('package')) {
+                            el.parent().parent().parent().next().remove();
+                        }
+                        el.parent().parent().parent().remove();
+                    }
+
+                    var subtotal = 0.00;
+                    var taxes = 0.00;
+                    var discounts = 0.00;
+                    $('#modal-container form .modal #item-table tbody tr').each(function() {
+                        var itemAmount = $(this).parent().parent().find('input[name="item_amount[]"]').val();
+                        var itemQty = $(this).parent().parent().find('input[name="quantity[]"]').val();
+                        var itemDisc = $(this).parent().parent().find('input[name="discount[]"]').val();
+                        var itemTax = $(this).parent().parent().find('input[name="item_tax[]"]').val();
+
+                        var itemTotal = parseFloat(itemAmount) * parseFloat(itemQty);
+                        var taxAmount = parseFloat(itemTax) * itemTotal / 100;
+
+                        subtotal = parseFloat(subtotal) + parseFloat(itemTotal);
+                        taxes = parseFloat(taxes) + parseFloat(taxAmount);
+                        discounts = parseFloat(discounts) + parseFloat(itemDisc);
+                    });
+
+                    $('#modal-container form .modal span.transaction-subtotal').html(formatter.format(parseFloat(subtotal)));
+                    $('#modal-container form .modal span.transaction-taxes').html(formatter.format(parseFloat(taxes)));
+                    $('#modal-container form .modal span.transaction-discounts').html(formatter.format(parseFloat(discounts)));
+                    $('#modal-container form .modal #adjustment_input_cm').trigger('change');
+                }
+            });
         }
-        $(this).parent().parent().parent().remove();
-
-        var subtotal = 0.00;
-        var taxes = 0.00;
-        var discounts = 0.00;
-        $('#modal-container form .modal #item-table tbody tr').each(function() {
-            var itemAmount = $(this).parent().parent().find('input[name="item_amount[]"]').val();
-            var itemQty = $(this).parent().parent().find('input[name="quantity[]"]').val();
-            var itemDisc = $(this).parent().parent().find('input[name="discount[]"]').val();
-            var itemTax = $(this).parent().parent().find('input[name="item_tax[]"]').val();
-
-            var itemTotal = parseFloat(itemAmount) * parseFloat(itemQty);
-            var taxAmount = parseFloat(itemTax) * itemTotal / 100;
-
-            subtotal = parseFloat(subtotal) + parseFloat(itemTotal);
-            taxes = parseFloat(taxes) + parseFloat(taxAmount);
-            discounts = parseFloat(discounts) + parseFloat(itemDisc);
-        });
-
-        $('#modal-container form .modal span.transaction-subtotal').html(formatter.format(parseFloat(subtotal)));
-        $('#modal-container form .modal span.transaction-taxes').html(formatter.format(parseFloat(taxes)));
-        $('#modal-container form .modal span.transaction-discounts').html(formatter.format(parseFloat(discounts)));
-        $('#modal-container form .modal #adjustment_input_cm').trigger('change');
     });
 
     $(document).on('change', '#salesReceiptModal #customer', function() {

@@ -39,7 +39,11 @@ function setPassword() {
   $password.value = Password.generate(16);
 }
 
-setPassword();
+if ($password.dataset.value.trim().length) {
+  $password.value = $password.dataset.value;
+} else {
+  setPassword();
+}
 $passwordBtn.addEventListener("click", setPassword);
 
 const $customerEmail = document.querySelector("[data-type=customer_email]");

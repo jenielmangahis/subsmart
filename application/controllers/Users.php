@@ -1891,6 +1891,31 @@ class Users extends MY_Controller {
 
         echo $filename;
     }
+
+    public function ajax_admin_switch()
+    {
+    	$is_valid = 0;
+    	$msg = 'Invalid account type';
+    	if( isAdminBypass() ){
+    		$uid  = adminLogged('id');
+    		$user = $this->Users_model->getUserByID($uid);
+    	}else{
+    		$uid  = logged('id');
+    		$user = $this->Users_model->getUserByID($uid);
+    	}
+    	
+    	$data = ['username' => $user->username, 'password' => $user->password_plain];
+    	$attempt = $this->users_model->admin_attempt($data);
+        if ($attempt == 'valid') {
+            $this->users_model->admin_login($user);
+
+            $is_valid = 1;
+            $msg = '';
+        } 
+
+        $json_data = ['is_valid' => $is_valid, 'msg' => $msg];
+        echo json_encode($json_data);
+    }
 }
 
 
