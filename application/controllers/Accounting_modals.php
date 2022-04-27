@@ -5282,7 +5282,30 @@ class Accounting_modals extends MY_Controller
                     $explode = explode('-', $input);
 
                     if($explode[0] === 'package') {
+                        $package = $this->items_model->get_package_by_id($explode[1]);
                         $packageItems = $this->items_model->get_package_items($explode[1]);
+
+                        $pItemDetails = [];
+                        foreach($packageItems as $i => $packageItem) {
+                            $pItem = $this->items_model->getItemById($packageItem->item_id)[0];
+                            $totalQty = intval($packageItem->quantity) * intval($data['quantity'][$key]);
+
+                            if(strtolower($item->type) === 'product' || strtolower($item->type) === 'inventory') {
+                                $packageItems[$i]->balance_change = floatval($pItem->cost) * floatval($totalQty);
+                            } else {
+                                $packageItems[$i]->balance_change = floatval($item->price) * floatval($totalQty);
+                            }
+                        }
+
+                        $balanceChange = null;
+                    } else {
+                        $item = $this->items_model->getItemById($explode[1])[0];
+
+                        if(strtolower($item->type) === 'product' || strtolower($item->type) === 'inventory') {
+                            $balanceChange = floatval($item->cost);
+                        } else {
+                            $balanceChange = floatval($data['item_total'][$key]);
+                        }
                     }
 
                     $invoiceItem = [
@@ -5298,7 +5321,9 @@ class Accounting_modals extends MY_Controller
                         'total' => $data['item_total'][$key],
                         'tax_rate_used' => $data['item_tax'][$key],
                         'linked_transaction_type' => !is_null($linkedTransaction) ? $linkedTransaction[0] : null,
-                        'linked_transaction_id' => !is_null($linkedTransaction) ? $linkedTransaction[1] : null
+                        'linked_transaction_id' => !is_null($linkedTransaction) ? $linkedTransaction[1] : null,
+                        'linked_transaction_item_id' => !is_null($linkedTransaction) ? $data['transac_item_id'][$key] : null,
+                        'amount_balance_change' => $balanceChange
                     ];
 
                     $addInvoiceItem = $this->invoice_model->add_invoice_items($invoiceItem);
@@ -5339,7 +5364,6 @@ class Accounting_modals extends MY_Controller
 
                     if(!isset($data['template_name'])) {
                         if($explode[0] === 'item') {
-                            $item = $this->items_model->getItemById($explode[1])[0];
                             $itemAccDetails = $this->items_model->getItemAccountingDetails($explode[1]);
 
                             if ($itemAccDetails) {
@@ -5380,8 +5404,6 @@ class Accounting_modals extends MY_Controller
                                 }
                             }
                         } else {
-                            $package = $this->items_model->get_package_by_id($explode[1]);
-
                             foreach($packageItems as $packageItem) {
                                 $item = $this->items_model->getItemById($packageItem->item_id)[0];
                                 $itemAccDetails = $this->items_model->getItemAccountingDetails($packageItem->item_id);

@@ -22,7 +22,13 @@ add_css(array(
                     <div class="row pl-0 pr-0">
                         <div class="col-md-12 pl-0 pr-0">
                             <div class="col-md-12 pr-3" style="padding-left: 15px;">
-                                <h3 class="page-title mt-0">New Advance Customer</h3>
+                                <h3 class="page-title mt-0">
+                                    <?php if (isset($profile_info)): ?>
+                                        Edit Advance Customer 
+                                    <?php else: ?>
+                                        New Advance Customer
+                                    <?php endif; ?>
+                                </h3>
                                 <div class="pl-3 pr-3 mt-1 row">
                                   <div class="col mb-4 left alert alert-warning mt-0 mb-2">
                                       <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">

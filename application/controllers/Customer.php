@@ -1424,6 +1424,14 @@ class Customer extends MY_Controller
         $this->page_data['employees'] = $this->customer_ad_model->get_all(FALSE,"","ASC","users","id");
         $this->page_data['users'] = $this->users_model->getUsers();
 
+        if (isset($this->page_data['profile_info']->fk_sa_id)) {
+            foreach ($this->page_data['sales_area'] as $area) {
+                if ($area->sa_id == $this->page_data['profile_info']->fk_sa_id) {
+                    $this->page_data['profile_info']->fk_sa_text = $area->sa_name;
+                }
+            }
+        }
+
         add_footer_js([
             'assets/js/customer/add_advance/add_advance.js',
             'assets/js/customer/lib/bday-picker.js',

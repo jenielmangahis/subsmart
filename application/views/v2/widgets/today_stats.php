@@ -1,9 +1,14 @@
 <?php
-    if(!is_null($dynamic_load) && $dynamic_load == true):
-        echo '<div class="col-12 col-lg-4">';
-    endif;
+if (!is_null($dynamic_load) && $dynamic_load == true) :
+    echo '<div class="col-12 col-lg-4">';
+endif;
 ?>
-
+ <style>
+     .nsm-counter h3 {
+    margin: unset;
+    font-weight: bold;
+}
+ </style>
 <div class="<?= $class ?>" data-id="<?= $id ?>" id="widget_<?= $id ?>" draggable="true">
     <div class="nsm-card-header">
         <div class="nsm-card-title">
@@ -15,7 +20,7 @@
                     <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end">
-                    <li><a class="dropdown-item" href="#" onclick="addToMain('<?= $id ?>',<?php echo ($isMain?'1':'0') ?>,'<?= $isGlobal ?>' )"><?php echo ($isMain?'Remove From Main':'Add to Main') ?></a></li>
+                    <li><a class="dropdown-item" href="#" onclick="addToMain('<?= $id ?>',<?php echo ($isMain ? '1' : '0') ?>,'<?= $isGlobal ?>' )"><?php echo ($isMain ? 'Remove From Main' : 'Add to Main') ?></a></li>
                     <li><a class="dropdown-item" href="#" onclick="removeWidget('<?= $id ?>');">Remove Widget</a></li>
                 </ul>
             </div>
@@ -30,7 +35,15 @@
                             <i class='bx bx-wallet'></i>
                         </div>
                         <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
-                            <h2>$0</h2>
+                            <h3>$<?php $totalPayments = 0;
+                                    foreach ($payment as $p) {
+                                        $totalPayments += $p->amount;
+                                    }
+                                    foreach ($paymentInvoices as $PI) {
+                                        $totalPayments += $PI->payment_amount;
+                                    }
+                                    echo $totalPayments;
+                                    ?></h3>
                             <span>Earned</span>
                         </div>
                     </div>
@@ -43,7 +56,15 @@
                             <i class='bx bx-box'></i>
                         </div>
                         <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
-                            <h2>$0</h2>
+                            <h3>$<?php $totalPayments = 0;
+                                    foreach ($payment as $p) {
+                                        $totalPayments += $p->amount;
+                                    }
+                                    foreach ($paymentInvoices as $PI) {
+                                        $totalPayments += $PI->payment_amount;
+                                    }
+                                    echo $totalPayments;
+                                    ?></h3>
                             <span>Collected</span>
                         </div>
                     </div>
@@ -56,7 +77,14 @@
                             <i class='bx bx-list-check'></i>
                         </div>
                         <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
-                            <h2>4</h2>
+                            <h2><?php $totalJobsComplete = 0;
+                                foreach($jobsDone as $JD){
+                                    if($JD->status == "Completed"){
+                                        $totalJobsComplete++;
+                                    }
+                                }
+                                echo $totalJobsComplete;
+                            ?></h2>
                             <span>Jobs Completed</span>
                         </div>
                     </div>
@@ -69,7 +97,14 @@
                             <i class='bx bx-bookmarks'></i>
                         </div>
                         <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
-                            <h2>4</h2>
+                            <h2><?php $totalJobsAdded = 0;
+                                foreach($jobsDone as $JD){
+                                    if($JD->status == "New"){
+                                        $totalJobsAdded++;
+                                    }
+                                }
+                                echo $totalJobsAdded;
+                            ?></h2>
                             <span>New Jobs Booked Online</span>
                         </div>
                     </div>
@@ -106,7 +141,7 @@
 </div>
 
 <?php
-    if(!is_null($dynamic_load) && $dynamic_load == true):
-        echo '</div>';
-    endif;
+if (!is_null($dynamic_load) && $dynamic_load == true) :
+    echo '</div>';
+endif;
 ?>

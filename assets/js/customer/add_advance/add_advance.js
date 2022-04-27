@@ -9,4 +9,11 @@ window.document.addEventListener("DOMContentLoaded", () => {
   import("./AlarmInfo.js");
 
   import("./Header.js");
+
+  const selects = document.querySelectorAll("select[data-value]");
+  selects.forEach(($select) => {
+    if ($select.dataset.value.trim().length) {
+      $($select).val($select.dataset.value).trigger("change");
+    }
+  });
 });
