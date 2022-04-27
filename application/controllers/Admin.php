@@ -832,9 +832,16 @@ class Admin extends CI_Controller
     public function nsmart_addons() {
         $this->load->model('NsmartAddons_model');
 
+        $search = '';
+        $cid_search = 'All Addons';
         $nSmartAddons   = $this->NsmartAddons_model->getAll();
         
         $this->page_data['nSmartAddons'] = $nSmartAddons;
+        $this->page_data['search'] = $search;
+        $this->page_data['cid_search'] = $cid_search;
+        $this->page_data['industryTemplate'] = $industryTemplate;
+        $this->page_data['page_title'] = 'Settings : Addons';
+        $this->page_data['page_parent'] = 'Settings';
         $this->load->view('admin/nsmart_addons/list', $this->page_data);
     }
 
@@ -1062,10 +1069,44 @@ class Admin extends CI_Controller
     {
         $this->load->model('IndustryModules_model');
 
-        $industryModules   = $this->IndustryModules_model->getAll();
-        
+        $cid_search = 'All Industry Modules';
+        $search = '';
+        if( get('status') != '' ){
+            if( get('status') == 'active' ){
+                $cid_search = 'Status Active';
+                $status = 1;
+            }else{
+                $cid_search = 'Status Inactive';
+                $status = 0;
+            }
+
+            $industryModules = $this->IndustryModules_model->getAllByStatus($status);
+        }elseif( get('search') != '' ){
+            $search  = get('search');
+            $filters = ['search' => $search];
+            $industryModules = $this->IndustryModules_model->getAll($filters);
+        }else{
+            $industryModules   = $this->IndustryModules_model->getAll();
+        }
+            
+        $this->page_data['search'] = $search;
+        $this->page_data['cid_search'] = $cid_search;
         $this->page_data['industryModules'] = $industryModules;
+        $this->page_data['page_title'] = 'Settings : Industry Modules';
+        $this->page_data['page_parent'] = 'Settings';
         $this->load->view('admin/industry_modules/list', $this->page_data);
+    }
+
+    public function ajax_edit_industry_module()
+    {
+        $this->load->model('IndustryModules_model');
+
+        $post = $this->input->post();
+
+        $industryModule = $this->IndustryModules_model->getById($post['mid']);
+
+        $this->page_data['industryModule'] = $industryModule;
+        $this->load->view('admin/industry_modules/ajax_edit_industry_module', $this->page_data);
     }
 
     public function add_new_industry_module()
@@ -1172,13 +1213,39 @@ class Admin extends CI_Controller
         redirect('admin/industry_modules');
     }
 
-    public function industry_template() 
+    public function industry_templates() 
     {
         $this->load->model('IndustryTemplate_model');
+        $this->load->model('IndustryModules_model');
 
-        $industryTemplate   = $this->IndustryTemplate_model->getAll();
+        $cid_search = 'All Industry Templates';
+        $search = '';
+        if( get('status') != '' ){
+            if( get('status') == 'active' ){
+                $cid_search = 'Status Active';
+                $status = 1;
+            }else{
+                $cid_search = 'Status Inactive';
+                $status = 0;
+            }
+
+            $industryTemplate = $this->IndustryTemplate_model->getAllByStatus($status);
+        }elseif( get('search') != '' ){
+            $search  = get('search');
+            $filters = ['search' => $search];
+            $industryTemplate   = $this->IndustryTemplate_model->getAll($filters);
+        }else{
+            $industryTemplate   = $this->IndustryTemplate_model->getAll();
+        }
         
+        $industryModules = $this->IndustryModules_model->getAll();
+
+        $this->page_data['search'] = $search;
+        $this->page_data['cid_search'] = $cid_search;
+        $this->page_data['industryModules'] = $industryModules;
         $this->page_data['industryTemplate'] = $industryTemplate;
+        $this->page_data['page_title'] = 'Settings : Industry Templates';
+        $this->page_data['page_parent'] = 'Settings';
         $this->load->view('admin/industry_template/list', $this->page_data);
     }
 
@@ -1352,54 +1419,176 @@ class Admin extends CI_Controller
         redirect('admin/industry_template');
     }
 
-    public function industry_type() 
+    public function industry_types() 
     {
         $this->load->model('IndustryTemplate_model');
         $this->load->model('IndustryType_model');
 
-        $this->load->library('pagination');
-        //$offset = ($page-1)*$config["per_page"];
+        $cid_search = 'All Industry Types';
+        $search = '';
+        if( get('status') != '' ){
+            if( get('status') == 'active' ){
+                $cid_search = 'Status Active';
+                $status = 1;
+            }else{
+                $cid_search = 'Status Inactive';
+                $status = 0;
+            }
+
+            $industryTypes = $this->IndustryModules_model->getAllByStatus($status);
+        }elseif( get('search') != '' ){
+            $search  = get('search');
+            $filters = ['search' => $search];
+            $industryTypes   = $this->IndustryType_model->getAll($filters);                    
+        }else{
+            $industryTypes   = $this->IndustryType_model->getAll();        
+        }
+        
         $industryTemplate   = $this->IndustryTemplate_model->getAll();
 
-        $total_records = $this->IndustryType_model->countAllRecords();
-        $uri_segment   = $this->uri->segment(3);
-        $per_page      = 10;
-        if($uri_segment == 0 || empty($uri_segment)){
-            $uri_segment = 5;
+        $businessTypes = [ 
+          'Building Contractors' => 'Building Contractors',
+          'Financial Services' => 'Financial Services',
+          'Technical Services' => 'Technical Services',
+          'Health And Beauty' => 'Health And Beauty',
+          'Transportation' => 'Transportation',
+          'Organization / Cleaning' => 'Organization / Cleaning',
+          'Entertainment Services' => 'Entertainment Services',
+          'Design Services' => 'Design Services',
+          'Other' => 'Other',
+        ];
+        $industryTemplate   = $this->IndustryTemplate_model->getAll();
+
+        $this->page_data['businessTypes'] = $businessTypes;          
+        $this->page_data['search'] = $search;
+        $this->page_data['cid_search'] = $cid_search;
+        $this->page_data['industryTypes']    = $industryTypes;
+        $this->page_data['industryTemplate'] = $industryTemplate;
+        $this->page_data['page_title'] = 'Settings : Industry Types';
+        $this->page_data['page_parent'] = 'Settings';
+        $this->load->view('admin/industry_type/list', $this->page_data);
+    }
+
+    public function ajaxSaveIndustryType() 
+    {
+        $this->load->model('IndustryType_model');
+
+        $is_success = 0;
+        $msg = '';
+
+        $post = $this->input->post();
+
+        if( $post['industry_type_name'] != '' ){
+            if( $this->IndustryType_model->getByName($post['industry_type_name']) ){
+                $msg = 'Industry type name already exists';                
+            }else{
+                $data = [
+                    'name' => $post['industry_type_name'],
+                    'business_type_name' => $post['business_type_name'],
+                    'industry_template_id' => $post['industry_template_id'],
+                    'status' => $post['status'],
+                    'date_created' => date("Y-m-d H:i:s")
+                ];
+
+                $industryType = $this->IndustryType_model->create($data);
+
+
+                $is_success = 1;
+                $msg = '';                
+            }
         }else{
-            $uri_segment = $uri_segment + $per_page;
+            $msg = 'Please enter industry type name';            
         }
 
-        $industryTypes   = $this->IndustryType_model->getAll(array('limit_perpage' => $per_page, 'offset' => $uri_segment));        
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
 
-        $config['total_rows']  = $total_records;
-        $config['per_page']    = $per_page;
-        $config['base_url']    = base_url(). 'admin/industry_type';
-        $config['total_rows']  = $total_records;
-        $config['num_links']   = 1;
+        echo json_encode($json_data);
+    }
 
-        $config['full_tag_open'] = '<ul class="pagination">';
-        $config['full_tag_close'] = '</ul>';
-        $config['num_tag_open'] = '<li class="page-item">';
-        $config['num_tag_close'] = '</li>';
-        $config['cur_tag_open'] = '<li class="page-item active"><a class="page-link" href="#">';
-        $config['cur_tag_close'] = '</a></li>';
-        $config['next_tag_open'] = '<li class="page-item">';
-        $config['next_tagl_close'] = '</a></li>';
-        $config['prev_tag_open'] = '<li class="page-item">';
-        $config['prev_tagl_close'] = '</li>';
-        $config['first_tag_open'] = '<li class="page-item disabled">';
-        $config['first_tagl_close'] = '</li>';
-        $config['last_tag_open'] = '<li class="page-item">';
-        $config['last_tagl_close'] = '</a></li>';
-        $config['attributes'] = array('class' => 'page-link');
+    public function ajax_edit_industry_type()
+    {
+        $this->load->model('IndustryType_model');
+        $this->load->model('IndustryTemplate_model');
 
-        $this->pagination->initialize($config);
+        $post = $this->input->post();
 
-        $this->page_data['pagination']    = $this->pagination->create_links();
-        $this->page_data['industryTypes'] = $industryTypes;
+        $industryType = $this->IndustryType_model->getById($post['tid']);
+        $industryTemplate   = $this->IndustryTemplate_model->getAll();
+        $businessTypes = [ 
+                      'Building Contractors' => 'Building Contractors',
+                      'Financial Services' => 'Financial Services',
+                      'Technical Services' => 'Technical Services',
+                      'Health And Beauty' => 'Health And Beauty',
+                      'Transportation' => 'Transportation',
+                      'Organization / Cleaning' => 'Organization / Cleaning',
+                      'Entertainment Services' => 'Entertainment Services',
+                      'Design Services' => 'Design Services',
+                      'Other' => 'Other',
+                    ];
+
+        $this->page_data['businessTypes'] = $businessTypes;
+        $this->page_data['industryType']  = $industryType;
         $this->page_data['industryTemplate'] = $industryTemplate;
-        $this->load->view('admin/industry_type/list', $this->page_data);
+        $this->load->view('admin/industry_type/ajax_edit_industry_type', $this->page_data);
+    }
+
+    public function ajaxUpdateIndustryType() 
+    {
+        $this->load->model('IndustryType_model');
+        $this->load->model('IndustryTemplate_model');
+
+        $post = $this->input->post();
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $industryTemplate = $this->IndustryType_model->getById($post['tid']);
+
+        if( $industryTemplate ){
+            if( $post['industry_type_name'] != '' ){
+                $data = [
+                    'name' => $post['industry_type_name'],
+                    'business_type_name' => $post['business_type_name'],
+                    'industry_template_id' => $post['industry_template_id'],
+                    'status' => $post['status'],
+                    'date_modified' => date("Y-m-d H:i:s")
+                ];
+                
+                $industryTemplateUpdate = $this->IndustryType_model->updateIndustryType($post['tid'],$data);
+
+                $is_success = 1;
+                $msg = '';
+
+            }else{
+                $msg = 'Please enter industry type name';                
+            }
+        }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+
+        echo json_encode($json_data);
+    }
+
+    public function ajaxDeleteIndustryType()
+    {
+        $this->load->model('IndustryType_model');
+
+        $post = $this->input->post();
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $industryType = $this->IndustryType_model->getById($post['tid']);
+        if( $industryType ){
+
+            $this->IndustryType_model->deleteIndustryType($post['tid']);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($json_data);
     }
 
     public function add_new_industry_type() 
@@ -1582,7 +1771,7 @@ class Admin extends CI_Controller
         $this->load->model('CompanyDeactivatedModule_model');
 
         $post = $this->input->post();
-        $sid  = $post['sid'];
+        $sid  = $post['cid'];
 
         $subscriber   = $this->Clients_model->getById($sid);
         $industryType = $this->IndustryType_model->getById($subscriber->industry_type_id);
@@ -1718,23 +1907,29 @@ class Admin extends CI_Controller
         $this->load->model('Clients_model');
 
         $cid_search = 'All Companies';
+        $search = '';
         if( get('status') != '' ){
             if( get('status') == 'expired' ){
-                $cid_search = 'Status : Expired';
+                $cid_search = 'Status Expired';
                 $status = 0;
             }elseif( get('status') == 'deactivated' ){
-                $cid_search = 'Status : Deactivated';
+                $cid_search = 'Status Deactivated';
                 $status = 3;
             }else{
-                $cid_search = 'Status : Active';
+                $cid_search = 'Status Active';
                 $status = 1;
             }
 
             $companies = $this->Clients_model->getAllByStatus($status);
+        }elseif( get('search') != '' ){
+            $search  = get('search');
+            $filters = ['search' => $search];
+            $companies = $this->Clients_model->getAll($filters);
         }else{
             $companies = $this->Clients_model->getAll();
         }
 
+        $this->page_data['search'] = $search;
         $this->page_data['cid_search'] = $cid_search;
         $this->page_data['companies'] = $companies;
         $this->page_data['page_title'] = 'Companies';
@@ -2138,6 +2333,231 @@ class Admin extends CI_Controller
 
         $json_data = ['is_success' => 1];
 
+        echo json_encode($json_data);
+    }
+
+    public function ajaxSaveIndustryModule()
+    {
+        $this->load->model('IndustryModules_model');
+
+        $is_success = 0;
+        $msg = '';
+
+        $post = $this->input->post();
+
+        if( $post['module_name'] != '' ){
+            if( $this->IndustryModules_model->getByName($post['module_name']) ){
+                $msg = 'Module name already exists';                
+            }else{
+                $data = [
+                    'name' => $post['module_name'],
+                    'description' => $post['module_description'],
+                    'status' => 1,
+                    'date_created' => date("Y-m-d H:i:s")
+                ];
+
+                $industry_modules = $this->IndustryModules_model->create($data);
+
+                $is_success = 1;
+                $msg = '';
+            }
+        }else{
+            $msg = 'Please enter module name';            
+        }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+
+        echo json_encode($json_data);
+    }
+
+    public function ajaxUpdateIndustryModule()
+    {
+        $this->load->model('IndustryModules_model');
+        
+        $post = $this->input->post();
+
+        $is_success = 0;
+        $msg = '';
+
+        $industryModule = $this->IndustryModules_model->getById($post['mid']);
+
+        if( $industryModule ){
+            if( $post['module_name'] != '' ){
+                $data = [
+                    'name' => $post['module_name'],
+                    'description' => $post['module_description'],
+                    'status' => $post['status'],
+                    'date_modified' => date("Y-m-d H:i:s")
+                ];
+                $industryModulesUpdate = $this->IndustryModules_model->update($post['mid'],$data);
+
+                $is_success = 1;
+                $msg = '';
+
+            }else{
+                $msg = 'Please enter module name';  
+            }
+
+        }else{
+            $msg = 'Cannot find data';  
+        }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+
+        echo json_encode($json_data);
+    }
+
+    public function ajaxDeleteIndustryModule()
+    {
+        $this->load->model('IndustryModules_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $post = $this->input->post();        
+
+        $industryModule = $this->IndustryModules_model->getById($post['mid']);
+        if( $industryModule ){
+            $this->IndustryModules_model->deleteIndustryModules($post['mid']);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($json_data);
+    }
+
+    public function ajaxSaveIndustryTemplate() 
+    {
+        $this->load->model('IndustryTemplate_model');
+        $this->load->model('IndustryTemplateModules_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $post = $this->input->post();        
+
+        if( $post['template_name'] != '' ){
+            if( $this->IndustryTemplate_model->getByName($post['template_name']) ){
+                $msg = 'Template name already exists';
+            }else{
+                $data = [
+                    'name' => $post['template_name'],
+                    'status' => $post['status'],
+                    'date_created' => date("Y-m-d H:i:s")
+                ];
+
+                $industryTemplateId = $this->IndustryTemplate_model->create($data);
+
+                if(is_array($post['modules'])){
+                    foreach ($post['modules'] as $key => $module_id) {
+                        $data = [
+                            'industry_template_id' => $industryTemplateId,
+                            'industry_module_id ' => $module_id,
+                            'status' => 1,   
+                            'date_created' => date("Y-m-d H:i:s"),
+                            'date_modified' => date("Y-m-d H:i:s")
+                        ];
+                        $industryTemplateModules = $this->IndustryTemplateModules_model->create($data);
+                    }   
+                }
+
+                $is_success = 1;
+                $msg = '';
+            }
+        }else{
+            $msg = 'Please enter template name';
+        }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($json_data);
+    }
+
+    public function ajax_edit_industry_template()
+    {
+        $this->load->model('IndustryTemplate_model');
+        $this->load->model('IndustryModules_model');
+        $this->load->model('IndustryTemplateModules_model');
+
+
+        $post = $this->input->post();
+
+        $industryTemplate = $this->IndustryTemplate_model->getById($post['tid']);
+        $industryTemplateModules = $this->IndustryTemplateModules_model->getAllByTemplateId($post['tid']);
+        $industryModules = $this->IndustryModules_model->getAll();
+
+        $this->page_data['industryTemplate'] = $industryTemplate;
+        $this->page_data['industryModules']  = $industryModules;
+        $this->page_data['industryTemplateModules'] = $industryTemplateModules;
+        $this->load->view('admin/industry_template/ajax_edit_industry_template', $this->page_data);
+    }
+
+    public function ajaxUpdateIndustryTemplate() 
+    {
+        $this->load->model('IndustryTemplate_model');
+        $this->load->model('IndustryTemplateModules_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $post = $this->input->post();      
+
+        $industryTemplate = $this->IndustryTemplate_model->getById($post['tid']);
+
+        if( $industryTemplate ){
+            if( $post['template_name'] != '' ){
+                $data = [
+                    'name' => $post['template_name'],
+                    'status' => $post['status'],
+                    'date_modified' => date("Y-m-d H:i:s")
+                ];
+                $industryTemplateUpdate = $this->IndustryTemplate_model->updateIndustryTemplate($post['tid'],$data);
+
+                if(is_array($post['modules'])){
+                    $this->IndustryTemplateModules_model->deleteIndustryTemplateModulesByTemplateId($industryTemplate->id);
+                    foreach ($post['modules'] as $key => $module_id) {
+                        $data = [
+                            'industry_template_id' => $industryTemplate->id,
+                            'industry_module_id ' => $module_id,
+                            'status' => 1,   
+                            'date_created' => date("Y-m-d H:i:s"),
+                            'date_modified' => date("Y-m-d H:i:s")
+                        ];
+                        $industryTemplateModules = $this->IndustryTemplateModules_model->create($data);
+                    }   
+                }
+
+                $is_success = 1;
+                $msg = '';
+
+            }else{
+                $msg = 'Please enter template name';
+            }            
+        }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($json_data);
+    }
+
+    public function ajaxDeleteIndustryTemplate()
+    {
+        $this->load->model('IndustryTemplate_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $post = $this->input->post();        
+
+        $industryTemplate = $this->IndustryTemplate_model->getById($post['tid']);
+        if( $industryTemplate ){
+            $this->IndustryTemplate_model->deleteIndustryTemplate($post['tid']);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
         echo json_encode($json_data);
     }
 

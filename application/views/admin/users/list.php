@@ -1,1431 +1,547 @@
-<?php
-defined('BASEPATH') or exit('No direct script access allowed'); ?>
-<?php include viewPath('includes/admin_header'); ?>
-<script src="https://rawgit.com/enyo/dropzone/master/dist/dropzone.js"></script>
-<link rel="stylesheet" href="https://rawgit.com/enyo/dropzone/master/dist/dropzone.css">
-<style>
-    /* Tooltip container */
-    .tooltip {
-      position: relative;
-      display: inline-block;
-      border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
-    }
-
-    /* Tooltip text */
-    .tooltip .tooltiptext {
-      visibility: hidden;
-      width: 120px;
-      background-color: black;
-      color: #fff;
-      text-align: center;
-      padding: 5px 0;
-      border-radius: 6px;
-     
-      /* Position the tooltip text - see examples below! */
-      position: absolute;
-      z-index: 1;
-    }
-
-    /* Show the tooltip text when you mouse over the tooltip container */
-    .tooltip:hover .tooltiptext {
-      visibility: visible;
-    }
-    label>input {
-      visibility: initial !important;
-      position: initial !important; 
-    }
-
-    .btn-success {
-        background-color: #46a83d;
-    }
-
-    .center {
-        text-align: center;
-    }
-
-    .img-center {
-        horiz-align: center;
-        border-radius: 50%;
-    }
-
-    .header-title {
-        font-size: 22px;
-        position: relative;
-        top: 5px;
-    }
-
-    #employeeTable tr>th {
-        text-align: center;
-    }
-
-    .add-employee {
-        float: right;
-    }
-
-    #modalAddEmployee .modal-dialog {
-        max-width: 800px;
-    }
-
-    #modalAddEmployee .modal-content {
-        width: 100%;
-    }
-
-    #modalAddEmployee .modal-body,
-    #modalEditEmployee .modal-body {
-        padding: 20px !important;
-        max-height: 550px;
-        overflow-y: auto;
-    }
-
-    #modalAddEmployee .section-title,
-    #modalEditEmployee .section-title {
-        font-size: 20px;
-        font-weight: bold;
-        color: grey;
-    }
-
-    #modalAddEmployee label,
-    #modalEditEmployee label {
-        font-weight: bold;
-    }
-
-    .view-password {
-        position: absolute;
-        bottom: 2px;
-        right: 15px;
-        width: 24px;
-        height: 24px;
-        cursor: pointer;
-    }
-
-    .input-switch {
-        display: inline-block;
-        margin-right: 20px;
-    }
-
-    .check-if-exist,
-    #employeeEmail,
-    #employeeUsername {
-        display: inline;
-    }
-
-    .check-if-exist {
-        margin-left: 10px;
-    }
-
-    .check-if-exist:hover {
-        color: #0b62a4;
-    }
-
-    .email-error,
-    .username-error {
-        visibility: hidden;
-        display: block;
-        font-style: italic;
-        color: red;
-    }
-
-    .password-error {
-        visibility: hidden;
-        position: absolute;
-        font-style: italic;
-        color: red;
-    }
-
-    .profile-container {
-        width: 150px;
-        height: 150px;
-        position: absolute;
-        bottom: 0;
-        display: none;
-    }
-
-    .profile-container img {
-        width: 100%;
-        height: 100%;
-        border-radius: 3%;
-        border: 1px solid grey;
-        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-    }
-
-    .new-password-container,
-    .change-password {
-        display: none;
-    }
-
-    .change-password {
-        margin-top: 20px;
-        color: #0b97c4;
-        font-weight: bold;
-    }
-
-    .change-password:hover {
-        text-decoration: underline;
-        color: grey;
-    }
-
-    #shareEmployeeForm {
-        float: right;
-        margin-right: 10px;
-    }
-
-    .section-title {
-        background-color: #38a4f8;
-        color: #ffffff !important;
-        padding: 10px;
-        margin-bottom: 27px;
-    }
-
-    .page-title,
-    .box-title {
-        font-family: Sarabun, sans-serif !important;
-        font-size: 1.75rem !important;
-        font-weight: 600 !important;
-        padding-top: 5px;
-    }
-
-    .pr-b10 {
-        position: relative;
-        bottom: 10px;
-    }
-
-    .left {
-        float: left;
-    }
-
-    .p-40 {
-        padding-left: 15px !important;
-        padding-top: 40px !important;
-    }
-
-    a.btn-primary.btn-md {
-        height: 38px;
-        display: inline-block;
-        border: 0px;
-        padding-top: 7px;
-        position: relative;
-        top: 0px;
-    }
-
-    .card.p-20 {
-        padding-top: 18px !important;
-    }
-
-    .col.col-4.pd-17.left.alert.alert-warning.mt-0.mb-2 {
-        position: relative;
-        left: 13px;
-    }
-
-    .fr-right {
-        float: right;
-        justify-content: flex-end;
-    }
-
-    .p-20 {
-        padding-top: 25px !important;
-        padding-bottom: 25px !important;
-        padding-right: 20px !important;
-        padding-left: 20px !important;
-    }
-
-    .pd-17 {
-        position: relative;
-        left: 17px;
-    }
-
-    @media only screen and (max-width: 1300px) {
-        .card-deck-upgrades div a {
-            min-height: 440px;
-        }
-    }
-
-    @media only screen and (max-width: 1250px) {
-        .card-deck-upgrades div a {
-            min-height: 480px;
-        }
-
-        .card-deck-upgrades div {
-            padding: 10px !important;
-        }
-    }
-
-    @media only screen and (max-width: 600px) {
-        .p-40 {
-            padding-top: 0px !important;
-        }
-
-        .pr-b10 {
-            position: relative;
-            bottom: 0px;
-        }
-    }
-    .actions-col a{
-        margin:5px;
-    }
-</style>
-<div class="wrapper" role="wrapper">
-    <?php include viewPath('includes/sidebars/admin/employee'); ?>
-    <!-- page wrapper start -->
-    <div wrapper__section>
-        <div class="container-fluid p-40">
-            <!-- end row -->
-            <div class="row">
-                <div class="col-xl-12">
-                    <div class="card">
-                        <div class="row align-items-center">
-                            <div class="col-sm-12">
-                                <h3 class="page-title" style="margin-top: 5px;margin-bottom:10px;">Employees</h3>
-                            </div>
-                        </div>
-                        <div class="pl-3 pr-3 mt-0 row">
-                            <div class="col mb-4 left alert alert-warning mt-0 mb-2">
-                                <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Manage Employees.</span>
-                            </div>
-                        </div>
-                        <div class="card-body" style="padding:0px !important;">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <h4 class="mt-0 header-title mb-5">Employee list</h4>
-                                </div>
-                                <div class="col-md-6">
-                                    <button class="btn btn-info add-employee" id="addEmployeeData"><i class="fa fa-user-plus"></i> Add Employee</button>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-12 table-responsive">
-                                    <table id="employeeTable" data-page-length='25' class="table table-bordered table-striped">
-                                        <thead>
-                                            <tr>
-                                                <th>User</th>
-                                                <th>Company</th>
-                                                <th>Email</th>
-                                                <th>Password</th>
-                                                <th>Title</th>
-                                                <th>Rights</th>
-                                                <th>Last Login</th>
-                                                <th>Status</th>
-                                                <th>App Access</th>
-                                                <th>Web Access</th>
-                                                <th>Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php foreach ($users as $cnt => $row) : ?>
-                                                <tr>
-                                                    <td class="center">
-                                                        <a href="javascript:void(0)" data-id="<?php echo $row->id ?>" id="editEmployeeProfile" title="Edit User Profile" data-toggle="tooltip">
-                                                            <span>
-                                                                <img src="<?php echo userProfileImage($row->id); ?>" width="40" height="40" alt="" class="img-avatar img-center" style="display:inline;" />
-                                                                <i class="fa fa-pencil"></i>
-                                                            </span>
-                                                        </a>
-                                                        <div><?php echo $row->FName . ' ' . $row->LName ?></div>
-                                                        <div>
-                                                            <?php
-                                                            if ($row->employee_number) {
-                                                                $employee_number = $row->employee_number;
-                                                            } else {
-                                                                $employee_number = '---';
-                                                            }
-                                                            ?>
-                                                            Employee ID: <?php echo $employee_number; ?>
-                                                        </div>
-                                                    </td>
-                                                    <td class="center"><?php echo $row->business_name; ?></td>
-                                                    <td class="center"><?php echo $row->email ?></td>
-                                                    <td class="center pw-row-<?= $row->id; ?>"><?php echo $row->password_plain ?></td>
-                                                    <td class="center"><?php echo ($row->role) ? ucfirst($this->roles_model->getById($row->role)->title) : '' ?></td>
-                                                    <td class="center"><?php echo getUserType($row->user_type); ?></td>
-                                                    <td class="center"><?php echo date('M d,Y', strtotime($row->last_login)); ?></td>
-                                                    <td class="center">
-                                                        <?php //if (logged('id') !== $row->id): 
-                                                        ?>
-                                                        <!-- <input type="checkbox" class="js-switch"
-                                                               onchange="updateUserStatus('<?php //echo $row->id 
-                                                                                            ?>', $(this).is(':checked') )" <?php //echo ($row->status) ? 'checked' : '' 
-                                                                                                                            ?> /> -->
-                                                        <?php if ($row->status == 1) : ?>
-                                                            <span>Active</span>
-                                                        <?php else : ?>
-                                                            <span>Inactive</span>
-                                                        <?php endif; ?>
-                                                        <?php //endif 
-                                                        ?>
-                                                    </td>
-                                                    <td class="text-center"><span class="fa fa-lg fa-mobile"></span></td>
-                                                    <td class="text-center"><span class="fa fa-lg fa-desktop"></span></td>
-                                                    <td class="center actions-col">
-                                                        <a href="javascript:void(0)" data-id="<?php echo $row->id ?>" id="editEmployee" title="Edit User" data-toggle="tooltip"><i class="fa fa-edit"></i></a>
-                                                        <a href="javascript:void(0)" data-name="<?php echo $row->FName . ' ' . $row->LName; ?>" data-id="<?php echo $row->id ?>" id="changePassword" title="Change Password" data-toggle="tooltip"><i class="fa fa-lock"></i></a>
-                                                        <?php if ($row->id != 1 && logged('id') != $row->id) : ?>
-                                                            <a href="javascript:void(0);" title="Delete User" class="delete-user" data-name="<?= $row->FName . ' ' . $row->LName; ?>" data-id="<?= $row->id; ?>" data-toggle="tooltip"><i class="fa fa-trash"></i></a>
-                                                        <?php else : ?>
-                                                            <a href="javascript:void (0)" title="You cannot Delete this User" data-toggle="tooltip" disabled><i class="fa fa-trash"></i></a>
-                                                        <?php endif ?>
-                                                        <?php if( $row->status == 1 ){ ?>
-                                                            <a href="javascript:void(0)" data-name="<?= $row->FName . ' ' . $row->LName; ?>" data-id="<?php echo $row->id ?>" class="deactivateEmployee" title="Deactivate Employee" data-toggle="tooltip"><i class="fa fa-close"></i></a>
-                                                        <?php }else{ ?>
-                                                            <a href="javascript:void(0)" data-name="<?= $row->FName . ' ' . $row->LName; ?>" data-id="<?php echo $row->id ?>" class="activateEmployee" title="Activate Employee" data-toggle="tooltip"><i class="fa fa-check"></i></a>
-                                                        <?php } ?>
-                                                    </td>
-                                                </tr>
-                                            <?php endforeach ?>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                            <!-- end row -->
+<?php include viewPath('v2/includes/header_admin'); ?>
+<div class="row page-content g-0">
+    <div class="col-12">
+        <div class="nsm-page">
+            <div class="nsm-page-content">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="nsm-callout primary">
+                            <button><i class='bx bx-x'></i></button>
+                            Listing of all users.
                         </div>
                     </div>
-                    <!-- end card -->
                 </div>
-            </div>
-            <!-- end row -->
-        </div>
-        <!-- end container-fluid -->
-    </div>
-    <!-- page wrapper end -->
-</div>
-<!--Edit Employee modal-->
-<div class="modal fade" id="modalEditEmployee">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <!-- Modal Header -->
-            <div class="modal-header">
-                <h4 class="modal-title"><i class="fa fa-edit"></i> Edit Employee</h4>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
-            <!-- Modal body -->
-            <form action="" id="editEmployeeForm">
-                <div class="modal-body modal-edit-employee"></div>
-                <!-- Modal footer -->
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" id="closeEditEmployeeModal">Cancel</button>
-                    <button type="button" class="btn btn-success" id="updateEmployee">Save</button>
+                <div class="row">
+                    <div class="col-12 grid-mb text-end">
+                        <div class="dropdown d-inline-block">
+                            <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
+                                <span>Filter by Company: <?= $cid_search; ?></span> <i class='bx bx-fw bx-chevron-down'></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end select-filter">
+                                <li><a class="dropdown-item" data-id="filter_all" href="<?= base_url('admin/users'); ?>">All Companies</a></li>
+                                <?php foreach( $companies as $c ){ ?>
+                                    <li><a class="dropdown-item" data-id="filter_all" href="<?= base_url('admin/users?cid='.$c->company_id); ?>"><?= $c->business_name; ?></a></li>
+                                <?php } ?>
+                            </ul>
+                        </div>
+                        <div class="nsm-page-buttons page-button-container">
+                            <a class="nsm-button primary btn-export-list" href="<?= base_url('admin/export_users_list') ?>" style="margin-left: 10px;"><i class="bx bx-fw bx-file"></i> Export List</a>
+                            <a class="nsm-button primary btn-add-user" href="javascript:void(0);"><i class='bx bx-fw bx-user'></i> Create User</a>                            
+                        </div>
+                    </div>
                 </div>
-            </form>
+                <table class="nsm-table">
+                    <thead>
+                        <tr>
+                            <td data-name="Photo"></td>
+                            <td data-name="User">User</td>
+                            <td data-name="Company">Company</td>
+                            <td data-name="Email">Email</td>
+                            <td data-name="Password">Password</td>
+                            <td data-name="Title">Title</td>
+                            <td data-name="Rights">Rights</td>
+                            <td data-name="Last Login">Last Login</td>
+                            <td data-name="Status">Status</td>
+                            <td data-name="App Access">App Access</td>
+                            <td data-name="Web Access">Web Access</td>
+                            <td data-name="Manage">Action</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <?php foreach ($users as $cnt => $row) : ?>
+                        <tr>
+                            <td class="center">
+                                <a href="javascript:void(0)" data-id="<?php echo $row->id ?>" id="editEmployeeProfile" title="Edit User Profile" data-toggle="tooltip">
+                                    <span>
+                                        <img src="<?php echo userProfileImage($row->id); ?>" width="40" height="40" alt="" class="img-avatar img-center" style="display:inline;" />
+                                        <i class="fa fa-pencil"></i>
+                                    </span>
+                                </a>                                
+                            </td>
+                            <td>
+                                <div><?php echo $row->FName . ' ' . $row->LName ?></div>
+                                <div>
+                                    <?php
+                                    if ($row->employee_number) {
+                                        $employee_number = $row->employee_number;
+                                    } else {
+                                        $employee_number = '---';
+                                    }
+                                    ?>
+                                    Employee ID: <?php echo $employee_number; ?>
+                                </div>
+                            </td>
+                            <td class="center"><?php echo $row->business_name; ?></td>
+                            <td class="center"><?php echo $row->email ?></td>
+                            <td class="center pw-row-<?= $row->id; ?>"><?php echo $row->password_plain ?></td>
+                            <td class="center"><?php echo ($row->role) ? ucfirst($this->roles_model->getById($row->role)->title) : '' ?></td>
+                            <td class="center"><?php echo getUserType($row->user_type); ?></td>
+                            <td class="center"><?php echo date('M d,Y', strtotime($row->last_login)); ?></td>
+                            <td class="center">                                
+                                <?php if ($row->status == 1) : ?>
+                                    <span class="badge" style="background-color: #6a4a86; color: #ffffff;display: block; margin: 5px;">Active</span>
+                                <?php else : ?>
+                                    <span class="badge" style="background-color: #dc3545; color: #ffffff;display: block; margin: 5px;">Inactive</span>
+                                <?php endif; ?>
+                            </td>
+                            <td class="text-center">
+                                <?php if( $row->has_app_access == 1 ){ ?>
+                                    <a class="btn btn-success btn-md" href="javascript:void(0);" title="Has mobile app access" data-toggle="tooltip" style="width: 83%;"><i class='bx bx-fw bxs-check-square' style="color:#ffffff;"></i> Has Mobile Access</a>
+                                <?php }else{ ?>
+                                    <a class="btn btn-danger btn-md" href="javascript:void(0);" title="Has no mobile app access" data-toggle="tooltip" style="width:83%;">
+                                        <i class='bx bx-fw bxs-x-square' style="color:#ffffff;"></i> Has no Mobile Access
+                                    </a>
+                                <?php } ?>    
+                            </td>
+                            <td class="text-center">
+                                <?php if( $row->has_web_access == 1 ){ ?>
+                                    <a class="btn btn-success btn-md" href="javascript:void(0);" title="Has mobile app access" data-toggle="tooltip" style="width: 83%;"><i class='bx bx-fw bxs-check-square' style="color:#ffffff;"></i> Has Web Access</a>
+                                <?php }else{ ?>
+                                    <a class="btn btn-danger btn-md" href="javascript:void(0);" title="Has no mobile app access" data-toggle="tooltip" style="width: 83%;">
+                                        <i class='bx bx-fw bxs-x-square' style="color:#ffffff;"></i> Has no Web Access
+                                    </a>
+                                <?php } ?>
+                            </td>
+                            <td class="center actions-col">
+                                <div class="dropdown table-management">
+                                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                        <i class='bx bx-fw bx-dots-vertical-rounded'></i>
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        <li>
+                                            <a class="dropdown-item editEmployee" href="javascript:void(0)" data-id="<?php echo $row->id ?>"><i class="bx bx-fw bx-edit"></i> Edit</a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item change-password" href="javascript:void(0);" data-name="<?= $row->FName . ' ' . $row->LName; ?>" data-email="<?= $row->email; ?>" data-id="<?= $row->id; ?>"><i class='bx bx-fw bxs-lock'></i>Change Password</a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item login-user" href="javascript:void(0);" data-name="<?= $row->FName . ' ' . $row->LName; ?>" data-id="<?= $row->id; ?>"><i class="bx bx-fw bx-refresh"></i> Login as User</a>
+                                        </li>                                        
+                                        <li>
+                                            <?php if( $row->status == 1 ){ ?>
+                                                <a href="javascript:void(0)" data-name="<?= $row->FName . ' ' . $row->LName; ?>" data-id="<?php echo $row->id ?>" class="deactivate-user dropdown-item"><i class="bx bx-fw bxs-x-square"></i> Deactivate</a>
+                                            <?php }else{ ?>
+                                                <a href="javascript:void(0)" data-name="<?= $row->FName . ' ' . $row->LName; ?>" data-id="<?php echo $row->id ?>" class="activate-user dropdown-item"><i class="bx bx-fw bxs-check-square"></i> Activate</a>
+                                            <?php } ?>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item delete-user" href="javascript:void(0);" data-name="<?= $row->FName . ' ' . $row->LName; ?>" data-id="<?= $row->id; ?>"><i class="bx bx-fw bx-trash"></i> Delete</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                    <?php endforeach ?>
+                </tbody>
+                </table>
 
+                <!--Add Employee modal-->
+                <div class="modal fade nsm-modal fade" id="modalAddEmployee" tabindex="-1" aria-labelledby="modalAddEmployeeLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <span class="modal-title content-title" id="new_feed_modal_label">Add Employee</span>
+                                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                            </div>
+                            <form action="" id="frm-add-employee">
+                            <div class="modal-body" style="max-height:600px; overflow-y: auto;">
+                                <?= include_once('add_form.php'); ?>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="nsm-button primary btn-add-employee">Save</button>
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!--Edit Employee modal-->
+                <div class="modal fade nsm-modal fade" id="modalEditEmployee" tabindex="-1" aria-labelledby="modalEditEmployeeLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <span class="modal-title content-title" id="new_feed_modal_label">Edit Employee</span>
+                                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                            </div>
+                            <form action="" id="frm-edit-employee">
+                            <div class="modal-body modal-edit-employee" style="max-height:600px; overflow-y: auto;"></div>
+                            <div class="modal-footer">
+                                <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="nsm-button primary btn-update-employee">Save</button>
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!--Change Password modal-->
+                <div class="modal fade nsm-modal fade" id="modalChangePassword" tabindex="-1" aria-labelledby="modalChangePasswordLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <span class="modal-title content-title" id="change_password_label">Change Password</span>
+                                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                            </div>
+                            <form action="" id="frm-employee-change-password">
+                            <input type="hidden" name="eid" value="" id="change-pw-eid">
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="">Employee Name</label>
+                                        <input type="text" id="change-pw-name" class="form-control" readonly="" disabled="">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="">Employee Email</label>
+                                        <input type="text" id="change-pw-email" class="form-control" readonly="" disabled="">
+                                    </div>
+                                </div>
+                                <br />
+                                <hr />
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="">New Password</label>
+                                        <input type="password" name="new_password" id="newPassword" required="" class="form-control">
+                                        <i class="fa fa-eye view-password showPass" id="" title="Show password" data-toggle="tooltip"></i>
+                                        <span class="old-password-error"></span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="">Retype Password</label>
+                                        <input type="password" name="re_password" id="rePassword" required="" class="form-control">
+                                        <i class="fa fa-eye view-password showPass" id="" title="Show password" data-toggle="tooltip"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="nsm-button primary btn-change-password">Save</button>
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
         </div>
     </div>
 </div>
-<!--Delete Employee modal-->
-<div class="modal fade" id="modalDeleteEmployee">
-    <div class="modal-dialog modal-md">
-        <div class="modal-content">
-            <!-- Modal Header -->
-            <div class="modal-header">
-                <h4 class="modal-title"><i class="fa fa-trash"></i> Delete Employee</h4>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
-            <!-- Modal body -->
-            <form action="" id="deleteEmployeeForm">
-                <input type="hidden" id="delete-user-id" name="delete_user_id" value="" />
-                <div class="modal-body">Are you sure you want to delete <span class="delete-user-name"></span></div>
-                <!-- Modal footer -->
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
-                    <button type="submit" class="btn btn-danger">Yes</button>
-                </div>
-            </form>
+<script type="text/javascript">
+$(document).ready(function() {
+    $(".nsm-table").nsmPagination();
 
-        </div>
-    </div>
-</div>
-
-<!--Activate/Deactivate Employee modal-->
-<div class="modal fade" id="modalUpdateStatus">
-    <div class="modal-dialog modal-md">
-        <div class="modal-content">
-            <!-- Modal Header -->
-            <div class="modal-header">
-                <h4 class="modal-title"><i class="fa fa-trash"></i> Update Status</h4>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
-            <!-- Modal body -->
-            <form action="" id="updateEmployeeStataus">
-                <input type="hidden" id="status-user-id" name="status_user_id" value="" />
-                <input type="hidden" id="status-user-status" name="status_user_status" value="" />
-                <div class="modal-body">Are you sure you want to <span class="status-name"></span> employee <span class="status-employee-name"></span></div>
-                <!-- Modal footer -->
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
-                    <button type="submit" class="btn btn-danger">Yes</button>
-                </div>
-            </form>
-
-        </div>
-    </div>
-</div>
-
-<!--Change Employee Profile modal-->
-<div class="modal fade" id="modalEditEmployeeProfile">
-    <div class="modal-dialog modal-md">
-        <div class="modal-content">
-            <!-- Modal Header -->
-            <div class="modal-header">
-                <h4 class="modal-title"><i class="fa fa-pencil"></i> Edit Employee Profile</h4>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
-            <!-- Modal body -->
-            <form action="" id="editEmployeeProfileForm">
-                <div class="modal-body modal-edit-employee-profile">
-                    <div class="form-group">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <label for="">Profile Image</label>
-                                <div id="employeeProfilePhotoUpdate" class="dropzone" style="border: 1px solid #e1e2e3;background: #ffffff;width: 100%;">
-                                    <div class="dz-message" style="margin: 20px;border">
-                                        <span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
-                                        <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
-                                    </div>
-                                </div>
-                                <input type="hidden" name="user_id_prof" id="user_id_prof">
-                                <input type="hidden" name="img_id" id="photoId">
-                                <input type="hidden" name="profile_img" id="photoName">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Modal footer -->
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" id="closeEditEmployeeModalProfilePhoto">Close</button>
-                    <button type="button" class="btn btn-success" id="updateEmployeeProfilePhoto">Save & exit</button>
-                </div>
-            </form>
-
-        </div>
-    </div>
-</div>
-<!--Change Password modal-->
-<div class="modal fade" id="modalChangePassword">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <!-- Modal Header -->
-            <div class="modal-header">
-                <h4 class="modal-title"><i class="fa fa-lock"></i> Change Password</h4>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
-            <!-- Modal body -->
-            <form action="" id="changePasswordForm">
-                <input type="hidden" name="change_password_user_id" id="changePasswordUserId">
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <label for="">Employee Name</label>
-                            <input type="text" id="changePasswordEmployeeName" class="form-control" readonly="" disabled="">
-                        </div>
-                    </div>
-                    <br />
-                    <hr />
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label for="">New Password</label>
-                            <input type="password" name="new_password" id="newPassword" required="" class="form-control">
-                            <i class="fa fa-eye view-password showPass" id="" title="Show password" data-toggle="tooltip"></i>
-                            <span class="old-password-error"></span>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="">Retype Password</label>
-                            <input type="password" name="re_password" id="rePassword" required="" class="form-control">
-                            <i class="fa fa-eye view-password showPass" id="" title="Show password" data-toggle="tooltip"></i>
-                        </div>
-                    </div>
-                </div>
-                <!-- Modal footer -->
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" id="closedChangePasswordModal">Close</button>
-                    <button type="button" class="btn btn-success" id="updatePassword">Save & exit</button>
-                </div>
-            </form>
-
-        </div>
-    </div>
-</div>
-
-<!--Adding Employee modal-->
-<div class="modal fade" id="modalAddEmployee">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <!-- Modal Header -->
-            <div class="modal-header">
-                <h4 class="modal-title"><i class="fa fa-user-plus"></i> Add Employee</h4>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
-            <!-- Modal body -->
-            <form action="" id="addEmployeeForm">
-                <input type="hidden" name="user_id" id="userID">
-                <div class="modal-body">
-                    <div class="section-title" style="">Basic Details</div>
-                    <div class="form-group">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <label for="">Company</label>
-                                <select class="form-control select2-company">
-                                    <option value="">-Select Company-</option>
-                                    <?php foreach($companies as $c){ ?>
-                                        <option value="<?= $c->id; ?>"><?= $c->business_name; ?></option>
-                                    <?php } ?>
-                                </select>                                
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <label for="">Employee Number</label>
-                                <input type="text" name="emp_number" class="form-control" id="emp_number" placeholder="Enter Employee Number">
-                            </div>
-                        </div>
-                        <br />
-                        <div class="row">
-                            <div class="col-md-6">
-                                <label for="">First Name</label>
-                                <input type="text" name="firstname" class="form-control" placeholder="Enter First Name">
-                            </div>
-                            <div class="col-md-6">
-                                <label for="">Last Name</label>
-                                <input type="text" name="lastname" class="form-control" placeholder="Enter Last Name">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="section-title">Login Details</div>
-                    <div class="form-group">
-                        <div class="row">
-                            <!-- <div class="col-md-6">
-                                <label for="" style="display: block">Email</label>
-                                <input type="text" name="email" class="form-control" id="employeeEmail" placeholder="e.g: email@mail.com" style="width: 90%">
-                                <i class="fa fa-sync-alt check-if-exist" title="Check if Email is already exist" data-toggle="tooltip"></i>
-                                <span class="email-error"></span>
-                            </div> -->
-                            <div class="col-md-7">
-                                <label for="" style="display: block">Email <small>(Will be use as your username)</small></label>
-                                <input type="email" name="username" class="form-control" id="employeeUsername" placeholder="e.g: nsmartrac" style="width: 90%">
-                                <i class="fa fa-sync-alt check-if-exist" title="Check if Username already exist" data-toggle="tooltip"></i>
-                                <span class="username-error"></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="password-container">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <label for="">Password</label>
-                                    <input type="password" name="addnew_password" id="employeePass" class="form-control">
-                                    <i class="fa fa-eye view-password showPass" id="" title="Show password" data-toggle="tooltip"></i>
-                                    <span class="password-error"></span>
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="">Confirm Password</label>
-                                    <input type="password" name="confirm_password" id="employeeConfirmPass" class="form-control">
-                                    <i class="fa fa-eye view-password showConfirmPass" id="" title="Show password" data-toggle="tooltip"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <a href="javascript:void (0)" class="change-password" id="changePassword">Want to change password?</a>
-                        <div class="new-password-container">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <label for="">Old Password</label>
-                                    <input type="password" name="password" id="oldPassword" class="form-control">
-                                    <i class="fa fa-eye view-password showPass" id="" title="Show password" data-toggle="tooltip"></i>
-                                    <span class="old-password-error"></span>
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="">New Password</label>
-                                    <input type="password" name="password" id="newPassword" class="form-control">
-                                    <i class="fa fa-eye view-password showPass" id="" title="Show password" data-toggle="tooltip"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="section-title">Other Details</div>
-                    <div class="form-group">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <label for="">Address</label>
-                                <input type="text" name="address" class="form-control">
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <label for="">State</label>
-                                <input type="text" name="state" value="" class="form-control">
-                            </div>
-                            <div class="col-md-6">
-                                <label for="">Zip Code</label>
-                                <input type="text" name="postal_code" value="" class="form-control">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <label for="">Title</label>
-                                <select name="role" id="employeeRole" class="form-control select2-role"></select>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <label for="">Status</label>
-                                <select name="status" id="" class="form-control">
-                                    <option value="1">Active</option>
-                                    <option value="0">Inactive</option>
-                                </select>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="input-switch">
-                                    <label for="">App Access</label><br>
-                                    <input type="checkbox" name="app_access" class="js-switch" checked />
-                                </div>
-                                <div class="input-switch">
-                                    <label for="">Web Access</label><br>
-                                    <input type="checkbox" name="web_access" class="js-switch" checked />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="section-title">Profile Image</div>
-                    <div class="form-group">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <label for="">Image</label>
-                                <div id="employeeProfilePhoto" class="dropzone" style="border: 1px solid #e1e2e3;background: #ffffff;width: 100%;">
-                                    <div class="dz-message" style="margin: 20px;border">
-                                        <span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
-                                        <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
-                                    </div>
-                                </div>
-                                <input type="hidden" name="img_id" id="photoIdAdd">
-                                <input type="hidden" name="profile_photo" id="photoNameAdd">
-
-                                <div>
-                                    <label for="">Payscale</label>
-                                    <select name="empPayscale" id="empPayscale" class="form-control select2-payscale">
-                                        <option value="">Select payscale</option>
-                                        <?php foreach ($payscale as $p) { ?>
-                                            <option value="<?= $p->id; ?>"><?= $p->payscale_name; ?></option>
-                                        <?php } ?>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="profile-container">
-                                    <img src="/uploads/users/default.png" alt="Profile photo">
-                                </div>
-                                <label>Rights and Permissions</label>
-                                <div class="help help-sm help-block">Select employee role</div>
-                                <div>
-                                    <div class="checkbox checkbox-sec margin-right">
-                                        <input type="radio" name="user_type" value="7" id="role_7">
-                                        <label for="role_7"><span>Admin</span></label>
-                                    </div>
-                                    <div class="help help-sm help-block">
-                                        ALL Access<br>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div class="checkbox checkbox-sec margin-right">
-                                        <input type="radio" name="user_type" value="1" id="role_1">
-                                        <label for="role_1"><span>Office Manager</span></label>
-                                    </div>
-                                    <div class="help help-sm help-block">
-                                        ALL except high security file vault<br>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div class="checkbox checkbox-sec margin-right">
-                                        <input type="radio" name="user_type" value="2" id="role_2">
-                                        <label for="role_2"><span>Partner</span></label>
-                                    </div>
-                                    <div class="help help-sm help-block">
-                                        ALL base on plan type
-                                    </div>
-                                </div>
-                                <div>
-                                    <div class="checkbox checkbox-sec margin-right">
-                                        <input type="radio" name="user_type" value="3" id="role_3">
-                                        <label for="role_3"><span>Team Leader</span></label>
-                                    </div>
-                                    <div class="help help-sm help-block">
-                                        No accounting or any changes to company profile or deletion
-                                    </div>
-                                </div>
-                                <div>
-                                    <div class="checkbox checkbox-sec margin-right">
-                                        <input type="radio" name="user_type" value="4" id="role_4">
-                                        <label for="role_4"><span>Standard User</span></label>
-                                    </div>
-                                    <div class="help help-sm help-block">
-                                        Can not add or delete employees, can not manage subscriptions
-                                    </div>
-                                </div>
-                                <div>
-                                    <div class="checkbox checkbox-sec margin-right">
-                                        <input type="radio" name="user_type" value="5" id="role_5">
-                                        <label for="role_5"><span>Field Sales</span></label>
-                                    </div>
-                                    <div class="help help-sm help-block">
-                                        View only no input
-                                    </div>
-                                </div>
-                                <div>
-                                    <div class="checkbox checkbox-sec margin-right">
-                                        <input type="radio" name="user_type" value="6" id="role_6">
-                                        <label for="role_6"><span>Field Tech</span></label>
-                                    </div>
-                                    <div class="help help-sm help-block">
-                                        App access only, no Web access
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Modal footer -->
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" id="closedEmployeeModal">Cancel</button>
-                    <button type="button" class="btn btn-success" id="savedNewEmployee">Save</button>
-                </div>
-            </form>
-
-        </div>
-    </div>
-</div>
-<!--end of modal-->
-<?php include viewPath('includes/admin_footer'); ?>
-<script>
-    $(function () {
-        $("[rel='tooltip']").tooltip();
+    $(document).on('click', '.btn-add-user', function(e) {
+        var user_id = $(this).attr('data-id');
+        $("#modalAddEmployee").modal("show");
     });
 
-    $(document).ready(function() {
-        $('#employeeTable').DataTable({
-            "searching": true,
-            "sort": false
-        });
-
-        $(document).on('click', '#addEmployeeData', function() {
-            $('#modalAddEmployee').modal({
-                backdrop: 'static',
-                keyboard: false
-            });
-        });
-
-        $(document).on('click', '.deactivateEmployee', function(){
-            var user_id = $(this).attr('data-id');
-            var user_name = $(this).attr('data-name');
-            $("#status-user-id").val(user_id);
-            $("#status-user-status").val(0);
-
-            $(".status-name").html("<b>Deactivate</b>");
-            $(".status-employee-name").html("<b>" + user_name + "</b>");
-            $("#modalUpdateStatus").modal('show');
-        });
-
-        $(document).on('click', '.activateEmployee', function(){
-            var user_id = $(this).attr('data-id');
-            var user_name = $(this).attr('data-name');
-            $("#status-user-id").val(user_id);
-            $("#status-user-status").val(1);
-
-            $(".status-name").html("<b>Activate</b>");
-            $(".status-employee-name").html("<b>" + user_name + "</b>");
-            $("#modalUpdateStatus").modal('show');
-        });
-
-        $(document).on('click', '#editEmployeeProfile', function() {
-            $('#modalEditEmployeeProfile').modal({
-                backdrop: 'static',
-                keyboard: false
-            });
-        });
-        $('.showPass').click(function() {
-            $(this).toggleClass('fa-eye-slash');
-            if ($(this).prev('input[type="password"]').length == 1) {
-                $(this).prev('input[type="password"]').attr('type', 'text');
-                $(this).attr('title', 'Hide password').attr('data-original-title', 'Hide password').tooltip('update').tooltip('show');
-            } else {
-                $(this).prev('input[type="text"]').attr('type', 'password');
-                $(this).attr('title', 'Show password').attr('data-original-title', 'Show password').tooltip('update').tooltip('show');
-            }
-        });
-        $('.showConfirmPass').click(function() {
-            $(this).toggleClass('fa-eye-slash');
-            if ($(this).prev('input[type="password"]').length == 1) {
-                $(this).prev('input[type="password"]').attr('type', 'text');
-                $(this).attr('title', 'Hide password').attr('data-original-title', 'Hide password').tooltip('update').tooltip('show');
-            } else {
-                $(this).prev('input[type="text"]').attr('type', 'password');
-                $(this).attr('title', 'Show password').attr('data-original-title', 'Show password').tooltip('update').tooltip('show');
-            }
-        });
-
-        // Switch button
-        var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
-
-        elems.forEach(function(html) {
-            var switchery = new Switchery(html, {
-                size: 'small'
-            });
-        });
-        //Select2 initialization
-        $('.select2-role').select2({
-            placeholder: 'Select Title',
-            allowClear: true,
-            width: 'resolve',
-            delay: 250,
-            ajax: {
-                url: base_url + 'admin/getRoles',
-                type: "GET",
-                dataType: "json",
-                data: function(params) {
-                    var query = {
-                        search: params.term
-                    };
-                    return query;
-                },
-                processResults: function(response) {
-                    return {
-                        results: response
-                    };
-                },
-                cache: true
-            }
-        });
-        $('.select2-payscale').select2({
-            placeholder: 'Select Payscale',
-            allowClear: true,
-            width: 'resolve'
-        });
-        $('.select2-company').select2({
-            placeholder: 'Select Company',
-            allowClear: true,
-            width: 'resolve'
-        });
-        $(document).on('change', '#employeeEmail', function() {
-            var email = $(this).val();
-            var selected = this;
-            var status = $(this).next('i');
-            if (!validateEmail(email)) {
-                $(this).css('border-color', 'red');
-                $('.email-error').text('*Email format invalid').css('visibility', 'visible');
-            } else {
-                $(this).css('border-color', '#e0e0e0');
-                $('.email-error').css('visibility', 'hidden');
-                $.ajax({
-                    url: base_url + "users/checkEmailExist",
-                    type: "GET",
-                    data: {
-                        email: email
-                    },
-                    dataType: 'json',
-                    success: function(data) {
-                        if (data > 0) {
-                            $(selected).css('border-color', 'red');
-                            status.removeClass('fa-sync-alt').addClass('fa-times-circle').css('color', 'red');
-                            status.attr('title', 'Input another email').attr('data-original-title', 'Input another email').tooltip('update').tooltip('show');
-                            $('.email-error').text('*Email already exist').css('visibility', 'visible');
-                        } else {
-                            $(selected).css('border-color', '#e0e0e0');
-                            status.removeClass('fa-sync-alt').removeClass('fa-times-circle').addClass('fa-check').css('color', 'greenyellow');
-                            status.attr('title', 'Email is unique. Ready to go.').attr('data-original-title', 'Email is unique. Ready to go.').tooltip('update').tooltip('show');
-                            $('.email-error').css('visibility', 'hidden');
-                        }
-                    }
-                });
-            }
-        });
-
-        function validateEmail($email) {
-            var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
-            return emailReg.test($email);
-        }
-
-        $(document).on('change', '#employeeUsername', function() {
-            var username = $(this).val();
-            var selected = this;
-            var status = $(this).next('i');
-            $.ajax({
-                url: base_url + "users/checkUsername",
-                type: "GET",
-                dataType: 'json',
-                data: {
-                    username: username
-                },
-                success: function(data) {
-                    if (data > 0) {
-                        $(selected).css('border-color', 'red');
-                        status.removeClass('fa-sync-alt').addClass('fa-times-circle').css('color', 'red');
-                        status.attr('title', 'Input another username').attr('data-original-title', 'Input another username').tooltip('update').tooltip('show');
-                        $('.username-error').text('*Username already exist').css('visibility', 'visible');
-                    } else {
-                        $(selected).css('border-color', '#e0e0e0');
-                        status.removeClass('fa-sync-alt').removeClass('fa-times-circle').addClass('fa-check').css('color', 'greenyellow');
-                        status.attr('title', 'Username is unique. Ready to go.').attr('data-original-title', 'Username is unique. Ready to go.').tooltip('update').tooltip('show');
-                        $('.username-error').css('visibility', 'hidden');
-                    }
-                }
-            });
-
-        });
-
-
-        //Delete user modal
-        $(document).on('click', '.delete-user', function(){
-            var user_id   = $(this).attr("data-id");
-            var user_name = $(this).attr("data-name");
-            $("#delete-user-id").val(user_id);
-            $(".delete-user-name").html('<b>' + user_name + '</b>');
-            $("#modalDeleteEmployee").modal('show'); 
-        });
-
-        $(document).on('submit', '#deleteEmployeeForm', function(e){
-            e.preventDefault();
-            $.ajax({
-                url: base_url + 'admin/_delete_employee',
-                type: "POST",
-                dataType: "json",
-                data: $('#deleteEmployeeForm').serialize(),
-                success: function(data) {
-                    if (data.is_success == 1) {
-                        $("#modalDeleteEmployee").modal('hide');
-                        Swal.fire({
-                            showConfirmButton: false,
-                            timer: 2000,
-                            title: 'Success',
-                            text: "User has been deleted",
-                            icon: 'success'
-                        });
-                        location.reload();
-                    } else {
-                        Swal.fire({
-                            showConfirmButton: false,
-                            timer: 2000,
-                            title: 'Failed',
-                            text: "Something is wrong in the process",
-                            icon: 'warning'
-                        });
-                    }
-                }
-            });
-        });
-
-        $(document).on('submit', '#updateEmployeeStataus', function(e){
-            e.preventDefault();
-            $.ajax({
-                url: base_url + 'admin/_update_employee_status',
-                type: "POST",
-                dataType: "json",
-                data: $('#updateEmployeeStataus').serialize(),
-                success: function(data) {
-                    $("#modalUpdateStatus").modal('hide');
-                    if (data.is_success == 1) {
-                        Swal.fire({
-                            showConfirmButton: false,
-                            timer: 2000,
-                            title: 'Success',
-                            text: "User status has been updated",
-                            icon: 'success'
-                        });
-                        location.reload();
-                    } else {
-                        Swal.fire({
-                            showConfirmButton: false,
-                            timer: 2000,
-                            title: 'Failed',
-                            text: "Something is wrong in the process",
-                            icon: 'warning'
-                        });
-                    }
-                }
-            });
-        });
-
-        // Password and Confirm Password Validation
-        $(document).on('change', '#employeeConfirmPass', function() {
-            var con_pass = $(this).val();
-            var pass = $('#employeePass').val();
-            if (con_pass != pass) {
-                $('.password-error').text('*Password field and Confirm password does not match.').css('visibility', 'visible');
-                $(this).css('border-color', 'red');
-                $('#employeePass').css('border-color', 'red');
-            } else {
-                $('.password-error').css('visibility', 'hidden');
-                $(this).css('border-color', '#e0e0e0');
-                $('#employeePass').css('border-color', '#e0e0e0');
-            }
-        });
-        $(document).on('click', '#closedEmployeeModal', function() {
-            $('#employeeProfilePhoto').next().next($('.dz-preview').remove());
-            $('#employeeProfilePhoto').next($('.dz-message').css({
-                "display": "inherit"
-            }));
-            var image_id = $('#photoId').val();
-            var image = $('#photoName').val();
-            $.ajax({
-                url: base_url + 'admin/removeTemporaryImg',
-                type: 'POST',
-                dataType: 'json',
-                data: {
-                    image_id: image_id,
-                    image: image
-                },
-                success: function(data) {
-
-                }
-            });
-            $('#addEmployeeForm')[0].reset();
-            if ($('.check-if-exist').hasClass('fa-check') == true || $('.check-if-exist').hasClass('fa-times-circle') == true) {
-                $('.check-if-exist').removeClass('fa-check').removeClass('fa-times-circle').addClass('fa-sync-alt').css('color', '#111111');
-                $('.username-error').css('visibility', 'hidden');
-                $('.email-error').css('visibility', 'hidden');
-                $('#employeeUsername').css('border-color', '#e0e0e0');
-                $('#employeeEmail').css('border-color', '#e0e0e0');
-            }
-            $(".select2-role").select2('val', 'All');
-            $("#modalAddEmployee").modal('hide');
-        });
-        $(document).on('click', '#savedNewEmployee', function() {
-            let values = {};
-            $.each($('#addEmployeeForm').serializeArray(), function(i, field) {
-                values[field.name] = field.value;
-            });
-            if (values['addnew_password'] != '') {
-                values['password'] = values['addnew_password'];
-            }
-            //if(values['firstname'] && values['lastname'] && values['email'] && values['username'] && values['password'] && values['role']){
-            if (values['firstname'] && values['lastname'] && values['username'] && values['password'] && values['role']) {
-                $.ajax({
-                    url: base_url + 'admin/create_employee',
-                    type: "POST",
-                    dataType: "json",
-                    data: {
-                        values: values
-                    },
-                    success: function(data) {
-                        if (data == 1) {
-                            $("#modalAddEmployee").modal('hide');
-                            Swal.fire({
-                                showConfirmButton: false,
-                                timer: 2000,
-                                title: 'Success',
-                                text: "New Employee has been Added",
-                                icon: 'success'
-                            });
-                            location.reload();
-                        } else {
-                            Swal.fire({
-                                showConfirmButton: false,
-                                timer: 2000,
-                                title: 'Failed',
-                                text: "Something is wrong in the process",
-                                icon: 'warning'
-                            });
-                        }
-                    }
-                });
-            } else {
-                Swal.fire({
-                    showConfirmButton: false,
-                    timer: 2000,
-                    title: 'Failed',
-                    text: "Something is wrong in the process",
-                    icon: 'warning'
-                });
-            }
-        });
-        $(document).on('click', '#updateEmployee', function() {
-            let values = {};
-            $.each($('#editEmployeeForm').serializeArray(), function(i, field) {
-                values[field.name] = field.value;
-            });
-            if (values['firstname'] && values['lastname'] && values['email'] && values['username'] && values['role']) {
-                $.ajax({
-                    url: base_url + 'admin/_update_employee',
-                    type: "POST",
-                    dataType: "json",
-                    data: {
-                        values: values
-                    },
-                    success: function(data) {
-                        if (data == 1) {
-                            $("#modalEditEmployee").modal('hide');
-                            Swal.fire({
-                                showConfirmButton: false,
-                                timer: 2000,
-                                title: 'Success',
-                                text: "Employee record has been Updated",
-                                icon: 'success'
-                            });
-                            location.reload();
-                        } else {
-                            Swal.fire({
-                                showConfirmButton: false,
-                                timer: 2000,
-                                title: 'Failed',
-                                text: "Something is wrong in the process",
-                                icon: 'warning'
-                            });
-                        }
-                    }
-                });
-            } else {
-                Swal.fire({
-                    showConfirmButton: false,
-                    timer: 2000,
-                    title: 'Failed',
-                    text: "Something is wrong in the process",
-                    icon: 'warning'
-                });
-            }
-        });
-
-        $(document).on('click', '#updateEmployeeProfilePhoto', function() {
-            let values = {};
-            $.each($('#editEmployeeProfileForm').serializeArray(), function(i, field) {
-                values[field.name] = field.value;
-            });
-            if (values['profile_img']) {
-                $.ajax({
-                    url: base_url + 'admin/_update_employee_profile_photo',
-                    type: "POST",
-                    dataType: "json",
-                    data: {
-                        values: values
-                    },
-                    success: function(data) {
-                        if (data == 1) {
-                            $("#modalEditEmployeeProfile").modal('hide');
-                            Swal.fire({
-                                showConfirmButton: false,
-                                timer: 2000,
-                                title: 'Success',
-                                text: "Employee record has been Updated",
-                                icon: 'success'
-                            });
-                            location.reload();
-                        } else {
-                            Swal.fire({
-                                showConfirmButton: false,
-                                timer: 2000,
-                                title: 'Failed',
-                                text: "Something is wrong in the process",
-                                icon: 'warning'
-                            });
-                        }
-                    }
-                });
-            } else {
-                Swal.fire({
-                    showConfirmButton: false,
-                    timer: 2000,
-                    title: 'Failed',
-                    text: "Something is wrong in the process",
-                    icon: 'warning'
-                });
-            }
-        });
-
-        $(document).on('click', '#updatePassword', function() {
-            let values = {};
-            $.each($('#changePasswordForm').serializeArray(), function(i, field) {
-                values[field.name] = field.value;
-            });
-            if (values['new_password'] && values['re_password']) {
-                $.ajax({
-                    url: base_url + 'admin/_update_employee_password',
-                    type: "POST",
-                    dataType: "json",
-                    data: {
-                        values: values
-                    },
-                    success: function(data) {
-                        if (data.is_success) {
-                            $("#modalChangePassword").modal('hide');
-                            Swal.fire({
-                                showConfirmButton: false,
-                                timer: 2000,
-                                title: 'Success',
-                                text: "Employee password has been Updated",
-                                icon: 'success'
-                            });
-
-                            $(".pw-row-" + $("#changePasswordUserId").val()).html(values['new_password']);
-                        } else {
-                            Swal.fire({
-                                showConfirmButton: false,
-                                timer: 2000,
-                                title: 'Failed',
-                                text: data.msg,
-                                icon: 'warning'
-                            });
-                        }
-                    }
-                });
-            } else {
-                Swal.fire({
-                    showConfirmButton: false,
-                    timer: 2000,
-                    title: 'Failed',
-                    text: "Please fillup form entries",
-                    icon: 'warning'
-                });
-            }
-        });
-
-        $(document).on('click', '#editEmployee', function() {
-            var user_id = $(this).attr('data-id');
-            $('#modalEditEmployee').modal({
-                backdrop: 'static',
-                keyboard: false
-            });
-            $.ajax({
-                url: base_url + "admin/ajax_edit_employee",
-                type: "POST",
-                dataType: "html",
-                data: {
-                    user_id: user_id
-                },
-                success: function(data) {
-                    $(".modal-edit-employee").html(data);
-                }
-            });
-        });
-
-        $(document).on('click', '#editEmployeeProfile', function() {
-            var user_id = $(this).attr('data-id');
-            $('#user_id_prof').val(user_id);
-        });
-
-        $(document).on('click', '#closeEditEmployeeModal', function() {
-            $("#modalEditEmployee").modal('hide');
-        });
-
-        $(document).on('click', '#closeEditEmployeeModalProfilePhoto', function() {
-            $("#modalEditEmployeeProfile").modal('hide');
-        });
-
-        $(document).on('click', '#closedChangePasswordModal', function() {
-            $("#modalChangePassword").modal('hide');
-        });
-
-        $(document).on('click', '#changePassword', function() {
-            var user_id = $(this).attr('data-id');
-            var employee_name = $(this).attr('data-name');
-            $("#changePasswordUserId").val(user_id);
-            $("#changePasswordEmployeeName").val(employee_name);
-            $("#modalChangePassword").modal('show');
-        });
-
-        /*Old Edit*/
-        /*$(document).on('click','#editEmployee',function () {
-            var user_id = $(this).attr('data-id');
-            $('#modalAddEmployee').modal({backdrop: 'static', keyboard: false});
-            var form = $('#modalAddEmployee').find('form');
-            $.ajax({
-                url: base_url + "users/getEmployeeData",
-                type:"GET",
-                dataType:'json',
-                data:{user_id:user_id},
-                success:function (data) {
-                    form.find($('input[name="firstname"]')).val(data.fname);
-                    form.find($('input[name="lastname"]')).val(data.lname);
-                    form.find($('input[name="email"]')).val(data.email);
-                    form.find($('input[name="username"]')).val(data.username);
-                    form.find($('input[name="status"]')).val(data.status);
-                    $('div.password-container').hide();
-                    $('#changePassword').show();
-                    $("#employeeRole option[value='" + data.role_id +"']").attr('selected',true);
-                    $('#employeeRole').next($('#select2-employeeRole-container').attr('title',data.role).html(data.role));
-                }
-            });
-        });*/
-    });
-    /*$('#changePassword').click(function () {
-        $('div.new-password-container').toggle();
-        var text =  $(this).text();
-        $(this).text(text == "Want to change password?" ? "I changed my mind. Maybe later." : "Want to change password?").css('color','#0b97c4');
-    });*/
-    Dropzone.autoDiscover = false;
-    $(document).ready(function() {
-        var fname = [];
-        var selected = [];
-        var profilePhoto = new Dropzone('#employeeProfilePhoto', {
-            url: base_url + 'admin/profilePhoto',
-            acceptedFiles: "image/*",
-            maxFilesize: 20,
-            maxFiles: 1,
-            addRemoveLinks: true,
-            init: function() {
-                this.on("success", function(file, response) {
-                    var file_name = JSON.parse(response)['photo'];
-                    fname.push(file_name.replace(/\"/g, ""));
-                    selected.push(file);
-                    $('#photoIdAdd').val(JSON.parse(response)['id']);
-                    $('#photoNameAdd').val(JSON.parse(response)['photo']);
-                });
+    $(document).on('click', '.editEmployee', function(e) {
+        var user_id = $(this).attr('data-id');
+        $("#modalEditEmployee").modal("show");
+        $.ajax({
+            url: base_url + "admin/ajax_edit_employee",
+            type: "POST",
+            dataType: "html",
+            data: {
+                user_id: user_id
             },
-            removedfile: function(file) {
-                var name = fname;
-                var index = selected.map(function(d, index) {
-                    if (d == file) return index;
-                }).filter(isFinite)[0];
-                $.ajax({
-                    type: "POST",
-                    url: base_url + 'users/removeProfilePhoto',
-                    dataType: 'json',
-                    data: {
-                        name: name,
-                        index: index
-                    },
-                    success: function(data) {
-                        if (data == 1) {
-                            $('#photoId').val(null);
-                        }
-                    }
-                });
-                //remove thumbnail
-                var previewElement;
-                return (previewElement = file.previewElement) != null ? (previewElement.parentNode.removeChild(file.previewElement)) : (void 0);
-            }
-        });
-
-        var profilePhoto = new Dropzone('#employeeProfilePhotoUpdate', {
-            url: base_url + 'admin/profilePhoto',
-            acceptedFiles: "image/*",
-            maxFilesize: 20,
-            maxFiles: 1,
-            addRemoveLinks: true,
-            init: function() {
-                this.on("success", function(file, response) {
-                    var file_name = JSON.parse(response)['photo'];
-                    fname.push(file_name.replace(/\"/g, ""));
-                    selected.push(file);
-                    $('#photoId').val(JSON.parse(response)['id']);
-                    $('#photoName').val(JSON.parse(response)['photo']);
-                });
-            },
-            removedfile: function(file) {
-                var name = fname;
-                var index = selected.map(function(d, index) {
-                    if (d == file) return index;
-                }).filter(isFinite)[0];
-                $.ajax({
-                    type: "POST",
-                    url: base_url + 'admin/removeProfilePhoto',
-                    dataType: 'json',
-                    data: {
-                        name: name,
-                        index: index
-                    },
-                    success: function(data) {
-                        if (data == 1) {
-                            $('#photoId').val(null);
-                        }
-                    }
-                });
-                //remove thumbnail
-                var previewElement;
-                return (previewElement = file.previewElement) != null ? (previewElement.parentNode.removeChild(file.previewElement)) : (void 0);
+            success: function(data) {
+                $(".modal-edit-employee").html(data);
             }
         });
     });
+
+    $(document).on('click', '.change-password', function(e) {
+        var eid = $(this).attr('data-id');
+        var ename = $(this).attr('data-name');
+        var eemail = $(this).attr('data-email');
+
+        $('#change-pw-name').val(ename);
+        $('#change-pw-email').val(eemail);
+        $('#change-pw-eid').val(eid);
+
+        $("#modalChangePassword").modal("show");
+    });
+
+    $(document).on('submit', '#frm-add-employee', function(e){
+        e.preventDefault();
+        var url = base_url + 'admin/ajaxCreateUser';
+        $(".btn-add-employee").html('<span class="bx bx-loader bx-spin"></span>');
+
+        var formData = new FormData($("#frm-add-employee")[0]);   
+
+        setTimeout(function () {
+          $.ajax({
+             type: "POST",
+             url: url,
+             dataType: 'json',
+             contentType: false,
+             cache: false,
+             processData:false,
+             data: formData,
+             success: function(o)
+             {          
+                if( o.is_success == 1 ){   
+                    $("#modalAddEmployee").modal("hide");         
+                    Swal.fire({
+                        title: 'Save Successful!',
+                        text: "Employee was successfully created.",
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        //if (result.value) {
+                        location.reload();
+                        //}
+                    });
+                }else{
+                  Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    html: o.msg
+                  });
+                } 
+
+                $(".btn-add-employee").html('Save');
+             }
+          });
+        }, 800);
+    });
+
+    $(document).on('submit', '#frm-edit-employee', function(e){
+        e.preventDefault();
+        var url = base_url + 'admin/ajaxUpdateUser';
+        $(".btn-update-employee").html('<span class="bx bx-loader bx-spin"></span>');
+
+        var formData = new FormData($("#frm-edit-employee")[0]);   
+
+        setTimeout(function () {
+          $.ajax({
+             type: "POST",
+             url: url,
+             dataType: 'json',
+             contentType: false,
+             cache: false,
+             processData:false,
+             data: formData,
+             success: function(o)
+             {          
+                if( o.is_success == 1 ){   
+                    $("#modalEditEmployee").modal("hide");               
+                    Swal.fire({
+                        title: 'Update Successful!',
+                        text: "Employee details has been updated successfully.",
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        //if (result.value) {
+                        location.reload();
+                        //}
+                    });
+                }else{
+                  Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    html: o.msg
+                  });
+                } 
+
+                $(".btn-update-employee").html('Save');
+             }
+          });
+        }, 800);
+    });
+
+    $(document).on('submit', '#frm-employee-change-password', function(e){
+        e.preventDefault();
+        var url = base_url + 'admin/ajaxUpdateEmployeePassword';
+        $(".btn-change-password").html('<span class="bx bx-loader bx-spin"></span>');
+
+        var formData = new FormData($("#frm-employee-change-password")[0]);   
+
+        setTimeout(function () {
+          $.ajax({
+             type: "POST",
+             url: url,
+             dataType: 'json',
+             contentType: false,
+             cache: false,
+             processData:false,
+             data: formData,
+             success: function(o)
+             {          
+                if( o.is_success == 1 ){
+                    $("#modalChangePassword").modal("hide");
+                    Swal.fire({
+                        title: 'Update Successful!',
+                        text: "Employee password has been updated successfully.",
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        //if (result.value) {
+                        location.reload();
+                        //}
+                    });
+                }else{
+                  Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    html: o.msg
+                  });
+                } 
+
+                $(".btn-change-password").html('Save');
+             }
+          });
+        }, 800);
+    });
+
+    $(document).on("click", ".delete-user", function(e) {
+        var delete_user_id = $(this).attr("data-id");
+        var emp_name = $(this).attr('data-name');
+        var url = base_url + 'admin/ajaxDeleteUser';
+
+        Swal.fire({
+            title: 'Delete User',
+            html: "Are you sure you want to delete employee <b>"+emp_name+"</b>?",
+            icon: 'question',
+            confirmButtonText: 'Proceed',
+            showCancelButton: true,
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    data: {delete_user_id:delete_user_id},
+                    success: function(result) {
+                        Swal.fire({
+                            title: 'Delete Successful!',
+                            text: "Employee Data Deleted Successfully!",
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            //if (result.value) {
+                                location.reload();
+                            //}
+                        });
+                    },
+                });
+            }
+        });
+    });
+
+    $(document).on("click", ".deactivate-user", function(e) {
+        var status_user_id = $(this).attr("data-id");
+        var emp_name = $(this).attr('data-name');
+        var status_user_status = 0;
+        var url = base_url + 'admin/ajaxUpdateEmployeeStatus';
+
+        Swal.fire({
+            title: 'Deactivate User',
+            html: "Are you sure you want to deactivate (will not be able to access application) employee <b>"+emp_name+"</b>?",
+            icon: 'question',
+            confirmButtonText: 'Proceed',
+            showCancelButton: true,
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    data: {status_user_id:status_user_id, status_user_status:status_user_status},
+                    success: function(result) {
+                        Swal.fire({
+                            title: 'Update Successful!',
+                            text: "Employee Data Updated Successfully!",
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            //if (result.value) {
+                                location.reload();
+                            //}
+                        });
+                    },
+                });
+            }
+        });
+    });
+
+    $(document).on('click', '.login-user', function(e){
+        var uid = $(this).attr("data-id");
+        var emp_name = $(this).attr('data-name');
+        var url = base_url + 'admin/ajaxLoginCompanyUser';
+
+        Swal.fire({
+            title: 'Login User',
+            html: "Login as employee <b>"+emp_name+"</b>?",
+            icon: 'question',
+            confirmButtonText: 'Login',
+            showCancelButton: true,
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    data: {uid:uid},
+                    dataType: 'json',
+                    success: function(result) {
+                        if( result.is_valid == 1 ){
+                            location.href = result.redirect_url;
+                        }else{
+                            Swal.fire({
+                              icon: 'error',
+                              title: 'Error!',
+                              confirmButtonColor: '#32243d',
+                              html: result.msg
+                            });
+                        }
+                    },
+                });
+            }
+        });
+    });
+
+    $(document).on("click", ".activate-user", function(e) {
+        var status_user_id = $(this).attr("data-id");
+        var emp_name = $(this).attr('data-name');
+        var status_user_status = 1;
+        var url = base_url + 'admin/ajaxUpdateEmployeeStatus';
+
+        Swal.fire({
+            title: 'Activate User',
+            html: "Are you sure you want to activate (will be able to access application) employee <b>"+emp_name+"</b>?",
+            icon: 'question',
+            confirmButtonText: 'Proceed',
+            showCancelButton: true,
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    data: {status_user_id:status_user_id, status_user_status:status_user_status},
+                    success: function(result) {
+                        Swal.fire({
+                            title: 'Update Successful!',
+                            text: "Employee Data Updated Successfully!",
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            //if (result.value) {
+                                location.reload();
+                            //}
+                        });
+                    },
+                });
+            }
+        });
+    });
+});
 </script>
+<?php include viewPath('v2/includes/footer_admin'); ?>
