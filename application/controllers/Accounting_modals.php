@@ -5276,6 +5276,28 @@ class Accounting_modals extends MY_Controller
                     }
                 }
 
+                foreach($data['linked_transaction'] as $linkedTransac) {
+                    $explode = explode('-', $linkedTransac);
+
+                    if($explode[0] === 'delayed_credit') {
+                        $delayedCredit = $this->accounting_delayed_credit_model->getDelayedCreditDetails($explode[1]);
+
+                        $creditData = [
+                            'status' => 2
+                        ];
+
+                        $creditUpdate = $this->accounting_delayed_credit_model->updateDelayedCredit($delayedCredit->id, $creditData);
+                    } else {
+                        $delayedCharge = $this->accounting_delayed_charge_model->getDelayedChargeDetails($explode[1]);
+
+                        $chargeData = [
+                            'status' => 2
+                        ];
+
+                        $chargeUpdate = $this->accounting_delayed_charge_model->updateDelayedCharge($delayedCharge->id, $chargeData);
+                    }
+                }
+
                 foreach($data['item'] as $key => $input) {
                     $linkedTransaction = $data['item_linked'][$key] !== '' ? explode('-', $data['item_linked'][$key]) : null;
 
@@ -5328,39 +5350,39 @@ class Accounting_modals extends MY_Controller
 
                     $addInvoiceItem = $this->invoice_model->add_invoice_items($invoiceItem);
 
-                    if(!is_null($linkedTransaction)) {
-                        if($linkedTransaction[0] === 'delayed_credit') {
-                            $transactionItem = $this->accounting_credit_memo_model->get_transaction_item_by_id($data['transac_item_id'][$key]);
-                            $delayedCredit = $this->accounting_delayed_credit_model->getDelayedCreditDetails($linkedTransaction[1]);
+                    // if(!is_null($linkedTransaction)) {
+                    //     if($linkedTransaction[0] === 'delayed_credit') {
+                    //         $transactionItem = $this->accounting_credit_memo_model->get_transaction_item_by_id($data['transac_item_id'][$key]);
+                    //         $delayedCredit = $this->accounting_delayed_credit_model->getDelayedCreditDetails($linkedTransaction[1]);
 
-                            if(floatval(str_replace('-', '', $data['item_total'][$key])) > floatval($transactionItem->total)) {
-                                $amount = floatval($transactionItem->total);
-                            } else {
-                                $amount = floatval(str_replace('-', '', $data['item_total'][$key]));
-                            }
+                    //         if(floatval(str_replace('-', '', $data['item_total'][$key])) > floatval($transactionItem->total)) {
+                    //             $amount = floatval($transactionItem->total);
+                    //         } else {
+                    //             $amount = floatval(str_replace('-', '', $data['item_total'][$key]));
+                    //         }
 
-                            $data = [
-                                'remaining_balance' => floatval($delayedCredit->remaining_balance) - $amount
-                            ];
+                    //         $creditData = [
+                    //             'remaining_balance' => floatval($delayedCredit->remaining_balance) - $amount
+                    //         ];
 
-                            $balUpdate = $this->accounting_delayed_credit_model->updateDelayedCredit($delayedCredit->id, $data);
-                        } else {
-                            $transactionItem = $this->accounting_credit_memo_model->get_transaction_item_by_id($data['transac_item_id'][$key]);
-                            $delayedCharge = $this->accounting_delayed_charge_model->getDelayedChargeDetails($linkedTransaction[1]);
+                    //         $balUpdate = $this->accounting_delayed_credit_model->updateDelayedCredit($delayedCredit->id, $creditData);
+                    //     } else {
+                    //         $transactionItem = $this->accounting_credit_memo_model->get_transaction_item_by_id($data['transac_item_id'][$key]);
+                    //         $delayedCharge = $this->accounting_delayed_charge_model->getDelayedChargeDetails($linkedTransaction[1]);
 
-                            if(floatval($data['item_total'][$key]) > floatval($transactionItem->total)) {
-                                $amount = floatval($transactionItem->total);
-                            } else {
-                                $amount = floatval($data['item_total'][$key]);
-                            }
+                    //         if(floatval($data['item_total'][$key]) > floatval($transactionItem->total)) {
+                    //             $amount = floatval($transactionItem->total);
+                    //         } else {
+                    //             $amount = floatval($data['item_total'][$key]);
+                    //         }
 
-                            $data = [
-                                'remaining_balance' => floatval($delayedCharge->remaining_balance) - $amount
-                            ];
+                    //         $chargeData = [
+                    //             'remaining_balance' => floatval($delayedCharge->remaining_balance) - $amount
+                    //         ];
 
-                            $balUpdate = $this->accounting_delayed_charge_model->updateDelayedCharge($delayedCharge->id, $data);
-                        }
-                    }
+                    //         $balUpdate = $this->accounting_delayed_charge_model->updateDelayedCharge($delayedCharge->id, $chargeData);
+                    //     }
+                    // }
 
                     if(!isset($data['template_name'])) {
                         if($explode[0] === 'item') {
@@ -6883,7 +6905,8 @@ class Accounting_modals extends MY_Controller
                         'price' => $data['item_amount'][$key],
                         'discount' => $data['discount'][$key],
                         'tax' => $data['item_tax'][$key],
-                        'total' => $data['item_total'][$key]
+                        'total' => $data['item_total'][$key],
+                        'remaining_balance' => $data['item_total'][$key]
                     ];
                 }
 
@@ -7100,7 +7123,8 @@ class Accounting_modals extends MY_Controller
                         'price' => $data['item_amount'][$key],
                         'discount' => $data['discount'][$key],
                         'tax' => $data['item_tax'][$key],
-                        'total' => $data['item_total'][$key]
+                        'total' => $data['item_total'][$key],
+                        'remaining_balance' => $data['item_total'][$key]
                     ];
                 }
 
@@ -7202,16 +7226,18 @@ class Accounting_modals extends MY_Controller
                 $balance = '$'.number_format(floatval($credit->remaining_balance), 2, '.', ',');
                 $total = '$'.number_format(floatval($credit->total_amount), 2, '.', ',');
 
-                $transactions[] = [
-                    'type' => 'Credit',
-                    'data_type' => 'delayed-credit',
-                    'id' => $credit->id,
-                    'number' => $credit->ref_no === null || $credit->ref_no === '' ? '' : $credit->ref_no,
-                    'date' => date("m/d/Y", strtotime($credit->delayed_credit_date)),
-                    'formatted_date' => date("F j", strtotime($credit->delayed_credit_date)),
-                    'total' => str_replace('$-', '-$', $total),
-                    'balance' => str_replace('$-', '-$', $balance)
-                ];
+                if($credit->status === "1") {
+                    $transactions[] = [
+                        'type' => 'Credit',
+                        'data_type' => 'delayed-credit',
+                        'id' => $credit->id,
+                        'number' => $credit->ref_no === null || $credit->ref_no === '' ? '' : $credit->ref_no,
+                        'date' => date("m/d/Y", strtotime($credit->delayed_credit_date)),
+                        'formatted_date' => date("F j", strtotime($credit->delayed_credit_date)),
+                        'total' => str_replace('$-', '-$', $total),
+                        'balance' => str_replace('$-', '-$', $balance)
+                    ];
+                }
             }
         }
 
@@ -7220,16 +7246,18 @@ class Accounting_modals extends MY_Controller
                 $balance = '$'.number_format(floatval($charge->remaining_balance), 2, '.', ',');
                 $total = '$'.number_format(floatval($charge->total_amount), 2, '.', ',');
 
-                $transactions[] = [
-                    'type' => 'Charge',
-                    'data_type' => 'delayed-charge',
-                    'id' => $charge->id,
-                    'number' => $charge->ref_no === null || $charge->ref_no === '' ? '' : $charge->ref_no,
-                    'date' => date("m/d/Y", strtotime($charge->delayed_charge_date)),
-                    'formatted_date' => date("F j", strtotime($charge->delayed_charge_date)),
-                    'total' => str_replace('$-', '-$', $total),
-                    'balance' => str_replace('$-', '-$', $balance)
-                ];
+                if($charge->status === "1") {
+                    $transactions[] = [
+                        'type' => 'Charge',
+                        'data_type' => 'delayed-charge',
+                        'id' => $charge->id,
+                        'number' => $charge->ref_no === null || $charge->ref_no === '' ? '' : $charge->ref_no,
+                        'date' => date("m/d/Y", strtotime($charge->delayed_charge_date)),
+                        'formatted_date' => date("F j", strtotime($charge->delayed_charge_date)),
+                        'total' => str_replace('$-', '-$', $total),
+                        'balance' => str_replace('$-', '-$', $balance)
+                    ];
+                }
             }
         }
 
@@ -14046,6 +14074,7 @@ class Accounting_modals extends MY_Controller
     private function update_delayed_credit($delayedCreditId, $data)
     {
         $delayedCredit = $this->accounting_delayed_credit_model->getDelayedCreditDetails($delayedCreditId);
+        $diff = floatval($delayedCredit->total_amount) - floatval($delayedCredit->remaining_balance);
 
         $delayedCreditData = [
             'customer_id' => $data['customer'],
@@ -14056,7 +14085,8 @@ class Accounting_modals extends MY_Controller
             'total_amount' => $data['total_amount'],
             'subtotal' => $data['subtotal'],
             'tax_total' => $data['tax_total'],
-            'discount_total' => $data['discount_total']
+            'discount_total' => $data['discount_total'],
+            'remaining_balance' => floatval($data['total_amount']) - $diff
         ];
 
         $update = $this->accounting_delayed_credit_model->updateDelayedCredit($delayedCredit->id, $delayedCreditData);
@@ -14148,6 +14178,7 @@ class Accounting_modals extends MY_Controller
     private function update_delayed_charge($delayedChargeId, $data)
     {
         $delayedCharge = $this->accounting_delayed_charge_model->getDelayedChargeDetails($delayedChargeId);
+        $diff = floatval($delayedCharge->total_amount) - floatval($delayedCharge->remaining_balance);
 
         $delayedChargeData = [
             'customer_id' => $data['customer'],
@@ -14159,6 +14190,7 @@ class Accounting_modals extends MY_Controller
             'subtotal' => $data['subtotal'],
             'tax_total' => $data['tax_total'],
             'discount_total' => $data['discount_total'],
+            'remaining_balance' => floatval($data['total_amount']) - $diff
         ];
 
         $update = $this->accounting_delayed_charge_model->updateDelayedCharge($delayedCharge->id, $delayedChargeData);
@@ -14662,12 +14694,12 @@ class Accounting_modals extends MY_Controller
                     if($explode[0] === 'item') {
                         $item = $this->items_model->getItemById($explode[1])[0];
                         $itemAccDetails = $this->items_model->getItemAccountingDetails($explode[1]);
-    
+
                         if ($itemAccDetails) {
                             if(strtolower($item->type) === 'product' || strtolower($item->type) === 'inventory') {
                                 $location = $this->items_model->getItemLocation($data['location'][$key], $explode[1]);
                                 $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
-    
+
                                 switch($transactionType) {
                                     case 'Credit Memo' :
                                         $newQty = intval($location->qty) + intval($data['quantity'][$key]);
@@ -14683,7 +14715,7 @@ class Accounting_modals extends MY_Controller
                                     break;
                                 }
                                 $newBalance = number_format($newBalance, 2, '.', ',');
-    
+
                                 $invAssetAccData = [
                                     'id' => $invAssetAcc->id,
                                     'company_id' => logged('company_id'),

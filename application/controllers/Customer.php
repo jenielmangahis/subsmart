@@ -1378,6 +1378,19 @@ class Customer extends MY_Controller
             );
             $this->page_data['customer_notes'] = $this->general->get_data_with_param($get_customer_notes);
             //$this->page_data['device_info'] = $this->customer_ad_model->get_all_by_id('fk_prof_id',$userid,"acs_devices");
+        
+            $customer_contacts = array(
+                'where' => array(
+                    'customer_id' => $userid
+                ),
+                'table' => 'contacts',
+                'select' => '*',
+                'order' => array(
+                    'order_by' => 'id',
+                    'ordering' => 'asc'
+                ),
+            );
+            $this->page_data['contacts'] = $this->general->get_data_with_param($customer_contacts);
         }
 
         $get_customer_groups = array(

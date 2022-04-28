@@ -94,7 +94,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <select data-value="<?=$billing_info->mmr?>" name="mmr" data-type="billing_rate_plan" class="form-control" required>
-                        <option></option>
+                        <option><?=isset($billing_info) ? $billing_info->mmr : ""?></option>
                     </select>
                 </div>
                 <div class="col-md-12">

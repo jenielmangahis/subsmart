@@ -56,7 +56,7 @@ if ($this->session->userdata('usertimezone') == null) {
 
             <ul class="nsm-sidebar-menu">
                 <li class="<?php if($page->title == 'Dashboard'): echo 'selected '; endif; if($page->parent == 'Dashboard'): echo 'active'; endif; ?>">
-                    <a href="<?= base_url("dashboard") ?>">
+                    <a href="#">
                         <i class='bx bx-fw bx-tachometer'></i> Dashboard 
                         <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
                     </a>
@@ -93,11 +93,11 @@ if ($this->session->userdata('usertimezone') == null) {
                         </li>
 
                         <?php if( logged('user_type') == 1 || isAdminBypass() ){ ?>
-                        <li class="btn-admin-switch">
+                        <!-- <li class="btn-admin-switch">
                             <a href="javascript:void(0);">
                                 <i class='bx bx-fw bx-refresh'></i> Switch to Admin
                             </a>
-                        </li>
+                        </li> -->
                         <?php } ?>
                         
                     </ul>

@@ -72,7 +72,7 @@ class Accounting_delayed_credit_model extends MY_Model
         $this->db->where('company_id', $companyId);
         $this->db->where('customer_id', $customerId);
 		$this->db->where('recurring', null);
-        $this->db->where('status !=', 0);
+        $this->db->where_not_in('status', [0, 2]);
         $query = $this->db->get($this->table);
         return $query->result();
     }

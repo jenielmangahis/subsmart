@@ -76,7 +76,7 @@
                 Technician
             </div>
             <div class="col-md-6">
-                <select id="technician" name="technician"  class="input_select">
+                <select id="technician" name="technician"  class="input_select" data-value="<?= isset($office_info->technician) ? $office_info->technician : "" ?>">
                     <option value="">Select</option>
                     <?php foreach ($users as $user): ?>
                         <option <?php if(isset($office_info)){ if($office_info->technician == $user->FName.' '.$user->LName){ echo 'selected'; } } ?> value="<?= $user->FName.' '.$user->LName; ?>"><?= $user->FName.' '.$user->LName; ?></option>
@@ -359,8 +359,8 @@
                 Activation Fee
             </div>
             <div class="col-md-5">
-                <select data-value="<?=$activation_fee->activation_fee?>" name="activation_fee" data-type="funding_info_activation_fee" class="form-control" required>
-                    <option></option>
+                <select data-value="<?= isset($office_info) ? $office_info->activation_fee : "" ?>" name="activation_fee" data-type="funding_info_activation_fee" class="form-control" required>
+                    <option><?= isset($office_info) ? $office_info->activation_fee : "" ?></option>
                 </select>
                 <a href="<?= base_url() ?>customer/settings/activationFee" target="_blank"  style="color:#58bc4f;font-size: 10px;"><span class="fa fa-plus"></span> Manage Fee</a>&nbsp;&nbsp;
             </div>
