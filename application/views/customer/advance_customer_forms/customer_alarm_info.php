@@ -122,7 +122,7 @@
                 Panel Type
             </div>
             <div class="col-md-6">
-                <select name="panel_type" id="panel_type" class="input_select">
+                <select name="panel_type" id="panel_type" class="input_select" data-value="<?= isset($alarm_info) ? $alarm_info->panel_type : "" ?>">
                     <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == ''){echo "selected";} } ?> value=""></option>
                     <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'AERIONICS'){echo "selected";} } ?> value="AERIONICS">AERIONICS</option>
                     <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'AlarmNet'){echo "selected";} } ?> value="AlarmNet">AlarmNet</option>
@@ -159,8 +159,8 @@
                 System Package Type
             </div>
             <div class="col-md-6">
-                <select data-value="<?=$alarm_info->system_type?>" name="system_type" data-type="alarm_info_system_type" class="form-control" required>
-                    <option></option>
+                <select data-value="<?= isset($alarm_info) ? $alarm_info->system_type : "" ?>" name="system_type" data-type="alarm_info_system_type" class="form-control" required>
+                    <option><?= isset($alarm_info) ? $alarm_info->system_type : "" ?></option>
                 </select>
                 <!-- <select name="system_type" id="system_type" class="input_select">
                     <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == ''){echo "selected";} } ?> value=""></option>
@@ -377,6 +377,25 @@
                 </div>
         </div>
     <?php endif; ?>
+    <?php 
+        $contact1 = null;
+        $contact2 = null;
+        $contact3 = null;
+
+        if (isset($contacts)) {
+            if (isset($contacts[0])) {
+                $contact1 = $contacts[0];
+            }
+
+            if (isset($contacts[1])) {
+                $contact2 = $contacts[1];
+            }
+
+            if (isset($contacts[2])) {
+                $contact3 = $contacts[2];
+            }
+        }
+    ?>
     <div class="card-header">
         <span style="position: absolute;right: 0;margin-right: 25px;font-size: 20px;padding-top:10px;" class="fa fa-ellipsis-v"></span>
         <h6 ><span class="fa fa-user"></span>&nbsp; &nbsp;Emergency Contacts</h6>
@@ -387,7 +406,7 @@
                 Contact Name 1
             </div>
             <div class="col-md-8">
-                <input type="text" class="form-control" name="contact_name1" id="contact_name1" value="<?php if(isset($profile_info)){ echo $profile_info->contact_name1; } ?>"/>
+                <input type="text" class="form-control" name="contact_name1" id="contact_name1" value="<?= isset($contact1) ? $contact1->name : "" ?>"/>
             </div>
         </div>
         <div class="row form_line">
@@ -396,7 +415,7 @@
             </div>
             <div class="col-md-8">
                 <select data-type="emergency_contact_relationship" class="form-control" name="contact_relationship1">
-                    <option></option>
+                    <option><?= isset($contact1) ? $contact1->relation : "" ?></option>
                 </select>
             </div>
         </div>
@@ -405,7 +424,7 @@
                 Phone Number
             </div>
             <div class="col-md-8">
-                <input type="text" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="contact_phone1" id="contact_phone1" value="<?php if(isset($profile_info)){ echo $profile_info->contact_phone1; } ?>"/>
+                <input type="text" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="contact_phone1" id="contact_phone1" value="<?= isset($contact1) ? $contact1->phone : "" ?>"/>
             </div>
         </div>
         <div class="row form_line">
@@ -413,7 +432,7 @@
                 Contact Name 2
             </div>
             <div class="col-md-8">
-                <input type="text" class="form-control" name="contact_name2" id="contact_name2" value="<?php if(isset($profile_info)){ echo $profile_info->contact_name2; } ?>"/>
+                <input type="text" class="form-control" name="contact_name2" id="contact_name2" value="<?= isset($contact2) ? $contact2->name : "" ?>"/>
             </div>
         </div>
         <div class="row form_line">
@@ -422,7 +441,7 @@
             </div>
             <div class="col-md-8">
                 <select data-type="emergency_contact_relationship" class="form-control" name="contact_relationship2">
-                    <option></option>
+                    <option><?= isset($contact2) ? $contact2->relation : "" ?></option>
                 </select>
             </div>
         </div>
@@ -431,7 +450,7 @@
                 Phone Number
             </div>
             <div class="col-md-8">
-                <input type="text" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="contact_phone2" id="contact_phone2" value="<?php if(isset($profile_info)){ echo $profile_info->contact_phone2; } ?>"/>
+                <input type="text" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="contact_phone2" id="contact_phone2" value="<?= isset($contact2) ? $contact2->phone : "" ?>"/>
             </div>
         </div>
         <div class="row form_line">
@@ -439,7 +458,7 @@
                 Contact Name 3
             </div>
             <div class="col-md-8">
-                <input type="text" class="form-control" name="contact_name3" id="contact_name3" value="<?php if(isset($profile_info)){ echo $profile_info->contact_name3; } ?>" />
+                <input type="text" class="form-control" name="contact_name3" id="contact_name3" value="<?= isset($contact3) ? $contact3->name : "" ?>" />
             </div>
         </div>
         <div class="row form_line">
@@ -448,7 +467,7 @@
             </div>
             <div class="col-md-8">
                 <select data-type="emergency_contact_relationship" class="form-control" name="contact_relationship2">
-                    <option></option>
+                    <option><?= isset($contact3) ? $contact3->relation : "" ?></option>
                 </select>
             </div>
         </div>
@@ -457,7 +476,7 @@
                 Phone Number
             </div>
             <div class="col-md-8">
-                <input type="text" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="contact_phone3" id="contact_phone3" value="<?php if(isset($profile_info)){ echo $profile_info->contact_phone3; } ?>"/>
+                <input type="text" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="contact_phone3" id="contact_phone3" value="<?= isset($contact3) ? $contact3->phone : "" ?>"/>
             </div>
         </div>
     </div>

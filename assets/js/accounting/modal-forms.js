@@ -2614,133 +2614,135 @@ $(function() {
                         var remainingBalance = '$'+parseFloat(details.remaining_balance).toFixed(2);
 
                         $.each(items, function(index, item) {
-                            var link = `
-                            <td>
-                                <div class="dropdown">
-                                    <a href="#" class="text-info" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-link"></i></a>
-                                    <div class="dropdown-menu dropdown-menu-right p-2" aria-labelledby="linked-transaction" style="min-width: 500px; font-size: 13px">
-                                        <div class="row">
-                                            <div class="col-3"><strong>Type</strong></div>
-                                            <div class="col-3"><strong>Date</strong></div>
-                                            <div class="col-3"><strong>Amount</strong></div>
-                                            <div class="col-3"></div>
-                                            <div class="col-3 d-flex align-items-center"><a class="text-info open-transaction" href="#" data-id="${data.id}" data-type="${data.type}">${dataType}</a></div>
-                                            <div class="col-3 d-flex align-items-center">${dateString}</div>
-                                            <div class="col-3 d-flex align-items-center">${remainingBalance.replace('$-', '-$')}</div>
-                                            <div class="col-3 d-flex align-items-center"><button class="btn btn-transparent unlink-transaction" data-type="${data.type}" data-id="${data.id}" style="font-size: 13px !important">Remove</button></div>
+                            if(parseFloat(item.remaining_balance) > 0) {
+                                var link = `
+                                <td>
+                                    <div class="dropdown">
+                                        <a href="#" class="text-info" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-link"></i></a>
+                                        <div class="dropdown-menu dropdown-menu-right p-2" aria-labelledby="linked-transaction" style="min-width: 500px; font-size: 13px">
+                                            <div class="row">
+                                                <div class="col-3"><strong>Type</strong></div>
+                                                <div class="col-3"><strong>Date</strong></div>
+                                                <div class="col-3"><strong>Amount</strong></div>
+                                                <div class="col-3"></div>
+                                                <div class="col-3 d-flex align-items-center"><a class="text-info open-transaction" href="#" data-id="${data.id}" data-type="${data.type}">${dataType}</a></div>
+                                                <div class="col-3 d-flex align-items-center">${dateString}</div>
+                                                <div class="col-3 d-flex align-items-center">${remainingBalance.replace('$-', '-$')}</div>
+                                                <div class="col-3 d-flex align-items-center"><button class="btn btn-transparent unlink-transaction" data-type="${data.type}" data-id="${data.id}" style="font-size: 13px !important">Remove</button></div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <input type="hidden" value="${data.type.replace('-', '_')+'-'+details.id}" name="item_linked_transaction[]">
-                                <input type="hidden" value="${item.id}" name="transaction_item_id[]">
-                            </td>
-                            `;
+                                    <input type="hidden" value="${data.type.replace('-', '_')+'-'+details.id}" name="item_linked_transaction[]">
+                                    <input type="hidden" value="${item.id}" name="transaction_item_id[]">
+                                </td>
+                                `;
 
-                            if(item.hasOwnProperty('itemDetails')) {
-                                var itemDetails = item.itemDetails;
-                                var locations = item.locations;
-                                var locs = '';
-                                if(itemDetails.type.toLowerCase() === 'product' || itemDetails.type.toLowerCase() === 'inventory') {
-                                    locs += '<select name="location[]" class="form-control" required>';
-                                    for (var i in locations) {
-                                        locs += `<option value="${locations[i].id}">${locations[i].name}</option>`;
+                                if(item.hasOwnProperty('itemDetails')) {
+                                    var itemDetails = item.itemDetails;
+                                    var locations = item.locations;
+                                    var locs = '';
+                                    if(itemDetails.type.toLowerCase() === 'product' || itemDetails.type.toLowerCase() === 'inventory') {
+                                        locs += '<select name="location[]" class="form-control" required>';
+                                        for (var i in locations) {
+                                            locs += `<option value="${locations[i].id}">${locations[i].name}</option>`;
+                                        }
+                                        locs += '</select>';
                                     }
-                                    locs += '</select>';
-                                }
-    
-                                var type = itemDetails.type;
+        
+                                    var type = itemDetails.type;
 
-                                var total = item.total;
-                                if(total.includes('-')) {
-                                    total.replace('-', '');
-                                } else {
-                                    total = '-'+total;
-                                }
-                                total = '$'+parseFloat(total).toFixed(2);
+                                    var total = item.total;
+                                    if(total.includes('-')) {
+                                        total.replace('-', '');
+                                    } else {
+                                        total = '-'+total;
+                                    }
+                                    total = '$'+parseFloat(total).toFixed(2);
 
-                                var fields = `
-                                    <td>${itemDetails.title}<input type="hidden" name="item[]" value="${itemDetails.id}"></td>
-                                    <td>${type.charAt(0).toUpperCase() + type.slice(1)}</td>
-                                    <td>${locs}</td>
-                                    <td><input type="number" name="quantity[]" class="form-control text-right" required value="-${item.quantity}"></td>
-                                    <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${parseFloat(item.price).toFixed(2)}"></td>
-                                    <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${parseFloat(item.discount).toFixed(2)}"></td>
-                                    <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${parseFloat(item.tax).toFixed(2)}"></td>
-                                    <td><span class="row-total">${total.replace('$-', '-$')}</span></td>
-                                    ${link}
-                                    <td>
-                                        <div class="d-flex align-items-center justify-content-center">
-                                            <a href="#" class="deleteRow"><i class="fa fa-trash"></i></a>
-                                        </div>
-                                    </td>
-                                `;
-    
-                                $('#modal-container form#modal-form .modal #item-table tbody:not(#package-items-table)').append(`<tr>${fields}</tr>`);
-                
-                                $('#modal-container form#modal-form .modal #item-table tbody:not(#package-items-table) tr:last-child select').select2({
-                                    minimumResultsForSearch: -1
-                                });
-                            } else {
-                                var packageDetails = item.packageDetails;
-                                var packageContents = item.packageItems;
-
-                                var total = item.total;
-                                if(total.includes('-')) {
-                                    total.replace('-', '');
-                                } else {
-                                    total = '-'+total;
-                                }
-                                total = '$'+parseFloat(total).toFixed(2);
-
-                                var fields = `
-                                    <td>${packageDetails.name}<input type="hidden" name="package[]" value="${packageDetails.id}"></td>
-                                    <td>Package</td>
-                                    <td></td>
-                                    <td><input type="number" name="quantity[]" class="form-control text-right" required value="-${item.quantity}"></td>
-                                    <td><span class="item-amount">${parseFloat(item.price).toFixed(2)}</span></td>
-                                    <td></td>
-                                    <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${parseFloat(item.tax).toFixed(2)}"></td>
-                                    <td><span class="row-total">${total.replace('$-', '-$')}</span></td>
-                                    ${link}
-                                    <td>
-                                        <div class="d-flex align-items-center justify-content-center">
-                                            <a href="#" class="deleteRow"><i class="fa fa-trash"></i></a>
-                                        </div>
-                                    </td>
-                                `;
-
-                                $('#modal-container form#modal-form .modal #item-table tbody:not(#package-items-table)').append(`<tr class="package">${fields}</tr>`);
-
-                                var packageItems = `
-                                    <td colspan="3">
-                                        <table class="table m-0 bg-white">
-                                            <thead>
-                                                <tr class="package-item-header">
-                                                    <th>Item Name</th>
-                                                    <th>Quantity</th>
-                                                    <th>Price</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="package-items-table">`;
-
-                                for(var i in packageContents) {
-                                    packageItems += `<tr class="package-item"><td>${packageContents[i].details.title}</td><td>${packageContents[i].quantity}</td><td>${parseFloat(packageContents[i].price).toFixed(2)}</td></tr>`;
-                                }
-
-                                packageItems += `
-                                            </tbody>
-                                        </table>
-                                    </td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                `;
+                                    var fields = `
+                                        <td>${itemDetails.title}<input type="hidden" name="item[]" value="${itemDetails.id}"></td>
+                                        <td>${type.charAt(0).toUpperCase() + type.slice(1)}</td>
+                                        <td>${locs}</td>
+                                        <td><input type="number" name="quantity[]" class="form-control text-right" required value="-${item.quantity}"></td>
+                                        <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${parseFloat(item.price).toFixed(2)}"></td>
+                                        <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${parseFloat(item.discount).toFixed(2)}"></td>
+                                        <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${parseFloat(item.tax).toFixed(2)}"></td>
+                                        <td><span class="row-total">${total.replace('$-', '-$')}</span></td>
+                                        ${link}
+                                        <td>
+                                            <div class="d-flex align-items-center justify-content-center">
+                                                <a href="#" class="deleteRow"><i class="fa fa-trash"></i></a>
+                                            </div>
+                                        </td>
+                                    `;
+        
+                                    $('#modal-container form#modal-form .modal #item-table tbody:not(#package-items-table)').append(`<tr>${fields}</tr>`);
                     
-                                $('#modal-container form#modal-form .modal #item-table tbody:not(#package-items-table)').append(`<tr class="package-items">${packageItems}</tr>`);
+                                    $('#modal-container form#modal-form .modal #item-table tbody:not(#package-items-table) tr:last-child select').select2({
+                                        minimumResultsForSearch: -1
+                                    });
+                                } else {
+                                    var packageDetails = item.packageDetails;
+                                    var packageContents = item.packageItems;
+
+                                    var total = item.total;
+                                    if(total.includes('-')) {
+                                        total.replace('-', '');
+                                    } else {
+                                        total = '-'+total;
+                                    }
+                                    total = '$'+parseFloat(total).toFixed(2);
+
+                                    var fields = `
+                                        <td>${packageDetails.name}<input type="hidden" name="package[]" value="${packageDetails.id}"></td>
+                                        <td>Package</td>
+                                        <td></td>
+                                        <td><input type="number" name="quantity[]" class="form-control text-right" required value="-${item.quantity}"></td>
+                                        <td><span class="item-amount">${parseFloat(item.price).toFixed(2)}</span></td>
+                                        <td></td>
+                                        <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${parseFloat(item.tax).toFixed(2)}"></td>
+                                        <td><span class="row-total">${total.replace('$-', '-$')}</span></td>
+                                        ${link}
+                                        <td>
+                                            <div class="d-flex align-items-center justify-content-center">
+                                                <a href="#" class="deleteRow"><i class="fa fa-trash"></i></a>
+                                            </div>
+                                        </td>
+                                    `;
+
+                                    $('#modal-container form#modal-form .modal #item-table tbody:not(#package-items-table)').append(`<tr class="package">${fields}</tr>`);
+
+                                    var packageItems = `
+                                        <td colspan="3">
+                                            <table class="table m-0 bg-white">
+                                                <thead>
+                                                    <tr class="package-item-header">
+                                                        <th>Item Name</th>
+                                                        <th>Quantity</th>
+                                                        <th>Price</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="package-items-table">`;
+
+                                    for(var i in packageContents) {
+                                        packageItems += `<tr class="package-item"><td>${packageContents[i].details.title}</td><td>${packageContents[i].quantity}</td><td>${parseFloat(packageContents[i].price).toFixed(2)}</td></tr>`;
+                                    }
+
+                                    packageItems += `
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    `;
+                        
+                                    $('#modal-container form#modal-form .modal #item-table tbody:not(#package-items-table)').append(`<tr class="package-items">${packageItems}</tr>`);
+                                }
                             }
                         });
 
@@ -2809,133 +2811,135 @@ $(function() {
                         var remainingBalance = '$'+parseFloat(details.remaining_balance).toFixed(2);
 
                         $.each(items, function(index, item) {
-                            var link = `
-                            <td>
-                                <div class="dropdown">
-                                    <a href="#" class="text-info" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-link"></i></a>
-                                    <div class="dropdown-menu dropdown-menu-right p-2" aria-labelledby="linked-transaction" style="min-width: 500px; font-size: 13px">
-                                        <div class="row">
-                                            <div class="col-3"><strong>Type</strong></div>
-                                            <div class="col-3"><strong>Date</strong></div>
-                                            <div class="col-3"><strong>Amount</strong></div>
-                                            <div class="col-3"></div>
-                                            <div class="col-3 d-flex align-items-center"><a class="text-info open-transaction" href="#" data-id="${data.id}" data-type="${data.type}">${dataType}</a></div>
-                                            <div class="col-3 d-flex align-items-center">${dateString}</div>
-                                            <div class="col-3 d-flex align-items-center">${remainingBalance.replace('$-', '-$')}</div>
-                                            <div class="col-3 d-flex align-items-center"><button class="btn btn-transparent unlink-transaction" data-type="${data.type}" data-id="${data.id}" style="font-size: 13px !important">Remove</button></div>
+                            if(parseFloat(item.remaining_balance) > 0) {
+                                var link = `
+                                <td>
+                                    <div class="dropdown">
+                                        <a href="#" class="text-info" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-link"></i></a>
+                                        <div class="dropdown-menu dropdown-menu-right p-2" aria-labelledby="linked-transaction" style="min-width: 500px; font-size: 13px">
+                                            <div class="row">
+                                                <div class="col-3"><strong>Type</strong></div>
+                                                <div class="col-3"><strong>Date</strong></div>
+                                                <div class="col-3"><strong>Amount</strong></div>
+                                                <div class="col-3"></div>
+                                                <div class="col-3 d-flex align-items-center"><a class="text-info open-transaction" href="#" data-id="${data.id}" data-type="${data.type}">${dataType}</a></div>
+                                                <div class="col-3 d-flex align-items-center">${dateString}</div>
+                                                <div class="col-3 d-flex align-items-center">${remainingBalance.replace('$-', '-$')}</div>
+                                                <div class="col-3 d-flex align-items-center"><button class="btn btn-transparent unlink-transaction" data-type="${data.type}" data-id="${data.id}" style="font-size: 13px !important">Remove</button></div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <input type="hidden" value="${data.type.replace('-', '_')+'-'+details.id}" name="item_linked_transaction[]">
-                                <input type="hidden" value="${item.id}" name="transaction_item_id[]">
-                            </td>
-                            `;
+                                    <input type="hidden" value="${data.type.replace('-', '_')+'-'+details.id}" name="item_linked_transaction[]">
+                                    <input type="hidden" value="${item.id}" name="transaction_item_id[]">
+                                </td>
+                                `;
 
-                            if(item.hasOwnProperty('itemDetails')) {
-                                var itemDetails = item.itemDetails;
-                                var locations = item.locations;
-                                var locs = '';
-                                if(itemDetails.type.toLowerCase() === 'product' || itemDetails.type.toLowerCase() === 'inventory') {
-                                    locs += '<select name="location[]" class="form-control" required>';
-                                    for (var i in locations) {
-                                        locs += `<option value="${locations[i].id}">${locations[i].name}</option>`;
+                                if(item.hasOwnProperty('itemDetails')) {
+                                    var itemDetails = item.itemDetails;
+                                    var locations = item.locations;
+                                    var locs = '';
+                                    if(itemDetails.type.toLowerCase() === 'product' || itemDetails.type.toLowerCase() === 'inventory') {
+                                        locs += '<select name="location[]" class="form-control" required>';
+                                        for (var i in locations) {
+                                            locs += `<option value="${locations[i].id}">${locations[i].name}</option>`;
+                                        }
+                                        locs += '</select>';
                                     }
-                                    locs += '</select>';
-                                }
-    
-                                var type = itemDetails.type;
+        
+                                    var type = itemDetails.type;
 
-                                var price = item.price;
+                                    var price = item.price;
 
-                                var total = item.total;
-                                total = '$'+parseFloat(total).toFixed(2);
+                                    var total = item.total;
+                                    total = '$'+parseFloat(total).toFixed(2);
 
-                                var fields = `
-                                    <td>${itemDetails.title}<input type="hidden" name="item[]" value="${itemDetails.id}"></td>
-                                    <td>${type.charAt(0).toUpperCase() + type.slice(1)}</td>
-                                    <td>${locs}</td>
-                                    <td><input type="number" name="quantity[]" class="form-control text-right" required value="${item.quantity}"></td>
-                                    <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${parseFloat(price).toFixed(2)}"></td>
-                                    <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${parseFloat(item.discount).toFixed(2)}"></td>
-                                    <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${parseFloat(item.tax).toFixed(2)}"></td>
-                                    <td><span class="row-total">${total.replace('$-', '-$')}</span></td>
-                                    ${link}
-                                    <td>
-                                        <div class="d-flex align-items-center justify-content-center">
-                                            <a href="#" class="deleteRow"><i class="fa fa-trash"></i></a>
-                                        </div>
-                                    </td>
-                                `;
-    
-                                $('#modal-container form#modal-form .modal #item-table tbody:not(#package-items-table)').append(`<tr>${fields}</tr>`);
-                
-                                $('#modal-container form#modal-form .modal #item-table tbody:not(#package-items-table) tr:last-child select').select2({
-                                    minimumResultsForSearch: -1
-                                });
-                            } else {
-                                var packageDetails = item.packageDetails;
-                                var packageContents = item.packageItems;
-
-                                var price = item.price;
-
-                                if(price.includes('-')) {
-                                    price.replace('-', '');
+                                    var fields = `
+                                        <td>${itemDetails.title}<input type="hidden" name="item[]" value="${itemDetails.id}"></td>
+                                        <td>${type.charAt(0).toUpperCase() + type.slice(1)}</td>
+                                        <td>${locs}</td>
+                                        <td><input type="number" name="quantity[]" class="form-control text-right" required value="${item.quantity}"></td>
+                                        <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${parseFloat(price).toFixed(2)}"></td>
+                                        <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${parseFloat(item.discount).toFixed(2)}"></td>
+                                        <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${parseFloat(item.tax).toFixed(2)}"></td>
+                                        <td><span class="row-total">${total.replace('$-', '-$')}</span></td>
+                                        ${link}
+                                        <td>
+                                            <div class="d-flex align-items-center justify-content-center">
+                                                <a href="#" class="deleteRow"><i class="fa fa-trash"></i></a>
+                                            </div>
+                                        </td>
+                                    `;
+        
+                                    $('#modal-container form#modal-form .modal #item-table tbody:not(#package-items-table)').append(`<tr>${fields}</tr>`);
+                    
+                                    $('#modal-container form#modal-form .modal #item-table tbody:not(#package-items-table) tr:last-child select').select2({
+                                        minimumResultsForSearch: -1
+                                    });
                                 } else {
-                                    price = '-'+price;
+                                    var packageDetails = item.packageDetails;
+                                    var packageContents = item.packageItems;
+
+                                    var price = item.price;
+
+                                    if(price.includes('-')) {
+                                        price.replace('-', '');
+                                    } else {
+                                        price = '-'+price;
+                                    }
+
+                                    var total = item.total;
+                                    total = '$'+parseFloat(total).toFixed(2);
+
+                                    var fields = `
+                                        <td>${packageDetails.name}<input type="hidden" name="package[]" value="${packageDetails.id}"></td>
+                                        <td>Package</td>
+                                        <td></td>
+                                        <td><input type="number" name="quantity[]" class="form-control text-right" required value="${item.quantity}"></td>
+                                        <td><span class="item-amount">${parseFloat(price).toFixed(2)}</span></td>
+                                        <td></td>
+                                        <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${parseFloat(item.tax).toFixed(2)}"></td>
+                                        <td><span class="row-total">${total.replace('$-', '-$')}</span></td>
+                                        ${link}
+                                        <td>
+                                            <div class="d-flex align-items-center justify-content-center">
+                                                <a href="#" class="deleteRow"><i class="fa fa-trash"></i></a>
+                                            </div>
+                                        </td>
+                                    `;
+
+                                    $('#modal-container form#modal-form .modal #item-table tbody:not(#package-items-table)').append(`<tr class="package">${fields}</tr>`);
+
+                                    var packageItems = `
+                                        <td colspan="3">
+                                            <table class="table m-0 bg-white">
+                                                <thead>
+                                                    <tr class="package-item-header">
+                                                        <th>Item Name</th>
+                                                        <th>Quantity</th>
+                                                        <th>Price</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="package-items-table">`;
+
+                                    for(var i in packageContents) {
+                                        packageItems += `<tr class="package-item"><td>${packageContents[i].details.title}</td><td>${packageContents[i].quantity}</td><td>${parseFloat(packageContents[i].price).toFixed(2)}</td></tr>`;
+                                    }
+                        
+                                    packageItems += `
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    `;
+                        
+                                    $('#modal-container form#modal-form .modal #item-table tbody:not(#package-items-table)').append(`<tr class="package-items">${packageItems}</tr>`);
                                 }
-
-                                var total = item.total;
-                                total = '$'+parseFloat(total).toFixed(2);
-
-                                var fields = `
-                                    <td>${packageDetails.name}<input type="hidden" name="package[]" value="${packageDetails.id}"></td>
-                                    <td>Package</td>
-                                    <td></td>
-                                    <td><input type="number" name="quantity[]" class="form-control text-right" required value="${item.quantity}"></td>
-                                    <td><span class="item-amount">${parseFloat(price).toFixed(2)}</span></td>
-                                    <td></td>
-                                    <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${parseFloat(item.tax).toFixed(2)}"></td>
-                                    <td><span class="row-total">${total.replace('$-', '-$')}</span></td>
-                                    ${link}
-                                    <td>
-                                        <div class="d-flex align-items-center justify-content-center">
-                                            <a href="#" class="deleteRow"><i class="fa fa-trash"></i></a>
-                                        </div>
-                                    </td>
-                                `;
-
-                                $('#modal-container form#modal-form .modal #item-table tbody:not(#package-items-table)').append(`<tr class="package">${fields}</tr>`);
-
-                                var packageItems = `
-                                    <td colspan="3">
-                                        <table class="table m-0 bg-white">
-                                            <thead>
-                                                <tr class="package-item-header">
-                                                    <th>Item Name</th>
-                                                    <th>Quantity</th>
-                                                    <th>Price</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="package-items-table">`;
-
-                                for(var i in packageContents) {
-                                    packageItems += `<tr class="package-item"><td>${packageContents[i].details.title}</td><td>${packageContents[i].quantity}</td><td>${parseFloat(packageContents[i].price).toFixed(2)}</td></tr>`;
-                                }
-                    
-                                packageItems += `
-                                            </tbody>
-                                        </table>
-                                    </td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                `;
-                    
-                                $('#modal-container form#modal-form .modal #item-table tbody:not(#package-items-table)').append(`<tr class="package-items">${packageItems}</tr>`);
                             }
                         });
 
