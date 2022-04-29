@@ -4,7 +4,7 @@
             <div class="nsm-card-title">
                 <span>Customizable</span>
             </div>
-            <label class="nsm-subtitle">Set the prefix and the next auto-generated number.</label>
+            <label class="nsm-subtitle d-none">Set the prefix and the next auto-generated number.</label>
         </div>
         <div class="nsm-card-content">
             <div class="row g-3">
@@ -17,24 +17,20 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <?php if (!empty($affiliates)) : ?>
-                                <?php $custom_fields = json_decode($profile_info->custom_fields); ?>
-                                <?php if (!empty($custom_fields)) : ?>
-                                    <?php foreach ($affiliates as $affiliate) : ?>
-                                        <tr>
-                                            <td class="fw-bold nsm-text-primary"><?=  $field->name ?></td>
-                                            <td><?=  $field->value ?></td>
-                                        </tr>
-                                    <?php endforeach; ?>
-                                <?php else : ?>
+                            <?php
+                                $fields = [];
+                                if (!empty($profile_info->custom_fields)) {
+                                    $fields = json_decode($profile_info->custom_fields, true);
+                                    $fields = is_array($fields) ? $fields : [];
+                                }
+                            ?>
+                            <?php if (!empty($fields)) : ?>
+                                <?php foreach ($fields as $field) : ?>
                                     <tr>
-                                        <td colspan="2">
-                                            <div class="nsm-empty">
-                                                <span>No results found.</span>
-                                            </div>
-                                        </td>
+                                        <td class="fw-bold nsm-text-primary"><?=$field['name'];?></td>
+                                        <td><?=$field['value'];?></td>
                                     </tr>
-                                <?php endif; ?>
+                                <?php endforeach; ?>
                             <?php else : ?>
                                 <tr>
                                     <td colspan="2">

@@ -66,27 +66,27 @@
                                         <label class="content-subtitle fw-bold mb-2">Rep Paper</label>
                                         <div class="input-group">
                                             <div class="input-group-text">
-                                                <input class="form-check-input mt-0" type="checkbox" value="rep_paper_date" id="rep_paper">
+                                                <input <?= isset($papers->rep_paper_date) ? "checked" : "" ?> class="form-check-input mt-0" type="checkbox" value="rep_paper_date" id="rep_paper" disabled>
                                             </div>
-                                            <input type="text" class="form-control nsm-field" name="rep_paper_date" id="rep_paper_date" disabled>
+                                            <input value="<?= isset($papers->rep_paper_date) ? $papers->rep_paper_date : "" ?>" type="text" class="form-control nsm-field" name="rep_paper_date" id="rep_paper_date" disabled>
                                         </div>
                                     </div>
                                     <div class="col-12 col-md">
                                         <label class="content-subtitle fw-bold mb-2">Tech Paper</label>
                                         <div class="input-group">
                                             <div class="input-group-text">
-                                                <input class="form-check-input mt-0" type="checkbox" value="tech_paper_date">
+                                                <input <?= isset($papers->tech_paper_date) ? "checked" : "" ?> class="form-check-input mt-0" type="checkbox" value="tech_paper_date" disabled>
                                             </div>
-                                            <input type="text" class="form-control nsm-field" name="tech_paper_date" id="tech_paper_date" disabled>
+                                            <input value="<?= isset($papers->tech_paper_date) ? $papers->tech_paper_date : "" ?>" type="text" class="form-control nsm-field" name="tech_paper_date" id="tech_paper_date" disabled>
                                         </div>
                                     </div>
                                     <div class="col-12 col-md">
                                         <label class="content-subtitle fw-bold mb-2">Scanned</label>
                                         <div class="input-group">
                                             <div class="input-group-text">
-                                                <input class="form-check-input mt-0" type="checkbox" value="scanned_date">
+                                                <input <?= isset($papers->scanned_date) ? "checked" : "" ?> class="form-check-input mt-0" type="checkbox" value="scanned_date" disabled>
                                             </div>
-                                            <input type="text" class="form-control nsm-field" name="scanned_date" id="scanned_date" disabled>
+                                            <input value="<?= isset($papers->scanned_date) ? $papers->scanned_date : "" ?>" type="text" class="form-control nsm-field" name="scanned_date" id="scanned_date" disabled>
                                         </div>
                                     </div>
                                     <div class="col-12 col-md">
@@ -109,9 +109,9 @@
                                         <label class="content-subtitle fw-bold mb-2">Submitted</label>
                                         <div class="input-group">
                                             <div class="input-group-text">
-                                                <input class="form-check-input mt-0" type="checkbox" value="submitted">
+                                                <input <?= isset($papers->submitted) ? "checked" : "" ?> class="form-check-input mt-0" type="checkbox" value="submitted" disabled>
                                             </div>
-                                            <input type="text" class="form-control nsm-field" name="submitted" id="submitted" disabled>
+                                            <input value="<?= isset($papers->submitted) ? $papers->submitted : "" ?>" type="text" class="form-control nsm-field" name="submitted" id="submitted" disabled>
                                         </div>
                                     </div>
                                     <div class="col-12 col-md">
@@ -132,18 +132,18 @@
                                         <label class="content-subtitle fw-bold mb-2">Funded</label>
                                         <div class="input-group">
                                             <div class="input-group-text">
-                                                <input class="form-check-input mt-0" type="checkbox" value="funded">
+                                                <input <?= isset($papers->funded) ? "checked" : "" ?> class="form-check-input mt-0" type="checkbox" value="funded" disabled>
                                             </div>
-                                            <input type="text" class="form-control nsm-field" name="funded" id="funded" disabled>
+                                            <input value="<?= isset($papers->funded) ? $papers->funded : "" ?>" type="text" class="form-control nsm-field" name="funded" id="funded" disabled>
                                         </div>
                                     </div>
                                     <div class="col-12 col-md">
                                         <label class="content-subtitle fw-bold mb-2">Charged Back</label>
                                         <div class="input-group">
                                             <div class="input-group-text">
-                                                <input class="form-check-input mt-0" type="checkbox" value="charged_back">
+                                                <input <?= isset($papers->charged_back) ? "checked" : "" ?> class="form-check-input mt-0" type="checkbox" value="charged_back" disabled>
                                             </div>
-                                            <input type="text" class="form-control nsm-field" name="charged_back" id="charged_back" disabled>
+                                            <input value="<?= isset($papers->charged_back) ? $papers->charged_back : "" ?>" type="text" class="form-control nsm-field" name="charged_back" id="charged_back" disabled>
                                         </div>
                                     </div>
                                 </div>

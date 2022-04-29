@@ -127,6 +127,11 @@ class Customer_Form extends MY_Controller
             }
         }
 
+        if ($profile->prof_id == $payload['prof_id']) {
+            $profile = null;
+            $message = null;
+        }
+
         header('content-type: application/json');
         echo json_encode(['data' => $profile, 'message' => $message]);
     }

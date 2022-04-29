@@ -14,7 +14,7 @@ class PublicView extends MY_P_Controller
 		$this->page_data['page']->title = 'Estimates';
         $this->page_data['page']->parent = 'Sales';
         $this->load->model('Estimate_model', 'estimate_model');
-        $this->load->model('Jobs_model', 'jobs_model');
+        $this->load->model('Customer_model', 'customer_model');
         $this->load->model('items_model');
         $this->load->model('accounting_invoices_model');
         
@@ -40,6 +40,16 @@ class PublicView extends MY_P_Controller
 
     public function employee_ibiz($id)
     {        
-        echo $id;
+        // echo $id; 
+        $uIbiz = $this->customer_model->getuserIbiz($id);
+        $this->page_data['uIbiz'] = $uIbiz;
+        // foreach($uIbiz as $ub)
+        // {
+        //     $ubID = $ub->user_id;
+        // }
+        $this->page_data['userIbiz'] = $this->customer_model->getuserIB($uIbiz->user_id);
+        // dd($uIbiz->user_id);
+
+        $this->load->view('customer/customer_ibiz', $this->page_data);
     }
 }

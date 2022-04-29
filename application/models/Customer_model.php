@@ -448,6 +448,26 @@ class Customer_model extends MY_Model
         }
         return false;
     }
+
+    public function getuserIbiz($id)
+    {
+        $this->db->select('*');
+        $this->db->from('user_ibiz');
+        $this->db->where('id', $id);
+
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    public function getuserIB($uid)
+    {
+        $this->db->select('*');
+        $this->db->from('users');
+        $this->db->where('id', $uid);
+
+        $query = $this->db->get();
+        return $query->row();
+    }
 }
 
 /* End of file Customer_model.php */
