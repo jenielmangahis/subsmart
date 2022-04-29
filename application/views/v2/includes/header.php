@@ -289,7 +289,7 @@ if ($this->session->userdata('usertimezone') == null) {
                                 <i class='bx bx-fw bx-building-house'></i> My Business
                             </a>
                         </li>
-                        <li class="<?php if($page->title == 'Email Templates'): echo 'selected'; endif; ?>">
+                        <li class="<?php if($page->title == 'Email Templates' | $page->title == 'SMS Templates' | $page->title == 'Email Branding' | $page->title == 'Notifications'): echo 'selected'; endif; ?>">
                             <a href="<?= base_url("settings/email_templates") ?>">
                                 <i class='bx bx-fw bx-cog'></i> Settings
                             </a>
@@ -299,7 +299,7 @@ if ($this->session->userdata('usertimezone') == null) {
                                 <i class='bx bx-fw bx-user-pin'></i> Employees
                             </a>
                         </li>
-                        <li>
+                        <li class="<?php if($page->title == 'My CRM' | $page->title == 'Cards File'): echo 'selected'; endif; ?>">
                             <a href="<?= base_url("mycrm") ?>">
                                 <i class='bx bx-fw bx-book-content'></i> My CRM
                             </a>

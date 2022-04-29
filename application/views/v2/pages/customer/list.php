@@ -72,7 +72,7 @@
                             ?>
                                 <?php
                                 foreach ($profiles as $customer) :
-                                    switch ($customer->status):
+                                    switch (strtoupper($customer->status)):
                                         case "INSTALLED":
                                             $badge = "success";
                                             break;
@@ -223,7 +223,7 @@
                             ?>
                                 <?php
                                 foreach ($profiles as $customer) :
-                                    switch ($customer->status):
+                                    switch (strtoupper($customer->status)):
                                         case "INSTALLED":
                                             $badge = "success";
                                             break;

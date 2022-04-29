@@ -2,35 +2,40 @@
     <div class="nsm-card nsm-grid">
         <div class="nsm-card-header d-block">
             <div class="nsm-card-title">
-                <span>Profile</span>
+                <span>Profilex</span>
             </div>
         </div>
         <div class="nsm-card-content">
             <div class="row g-3">
                 <div class="col-12">
                     <div class="d-flex align-items-center">
-                        <?php
-                        $image = userProfilePicture($profile_info->fk_user_id);
-                        if (is_null($image)) {
-                        ?>
-                            <div class="nsm-profile me-3">
-                                <span><?php echo getLoggedNameInitials($profile_info->fk_user_id); ?></span>
-                            </div>
-                        <?php
-                        } else {
-                        ?>
-                            <div class="nsm-profile me-3" style="background-image: url('<?php echo $image; ?>');"></div>
-                        <?php
-                        }
-                        ?>
+                        <div class="nsm-profile me-3">
+                            <?php if ($profile_info->customer_type === 'Business'): ?>
+                                <span>
+                                <?php 
+                                    $parts = explode(' ', strtoupper(trim($profile_info->business_name)));
+                                    echo count($parts) > 1 ? $parts[0][0] . end($parts)[0] : $parts[0][0];
+                                ?>
+                                </span>
+                            <?php else: ?>
+                                <span><?= ucwords($profile_info->first_name[0]) . ucwords($profile_info->last_name[0]) ?></span>
+                            <?php endif; ?>
+                        </div>
+
                         <div class="row w-100">
                             <div class="col-12 col-md-6">
-                                <span class="content-title"><?= $profile_info->first_name . ' ' . $profile_info->last_name ?></span>
+                                <span class="content-title">
+                                    <?php if ($profile_info->customer_type === 'Business'): ?>
+                                        <?= $profile_info->business_name ?>
+                                    <?php else: ?>
+                                        <?= ($customer) ? $profile_info->first_name . ' ' . $profile_info->last_name : ''; ?>
+                                    <?php endif; ?>    
+                                </span>
                                 <span class="content-subtitle d-block"><?= $profile_info->email ?></span>
                             </div>
                             <div class="col-12 col-md-6 text-end">
                                 <?php
-                                switch ($profile_info->status):
+                                switch (strtoupper($profile_info->status)):
                                     case "INSTALLED":
                                         $badge = "success";
                                         $status = $profile_info->status;
@@ -85,9 +90,9 @@
                     <button role="button" class="nsm-button w-100 ms-0">
                         <i class='bx bx-fw bx-import'></i> 1-Click Import and Audit, Pull reports & Create audit
                     </button>
-                    <button role="button" class="nsm-button w-100 ms-0">
+                    <a href="<?=base_url('EsignEditor/wizard?customer_id=' . $profile_info->prof_id)?>" role="button" class="nsm-button d-flex justify-content-center align-items-center w-100 ms-0">
                         <i class='bx bx-fw bxs-magic-wand'></i> Run Dispute Wizard, Create letters/correct errors
-                    </button>
+                    </a>
                     <button role="button" class="nsm-button w-100 ms-0">
                         <i class='bx bx-fw bx-message-rounded-check'></i> Send Secure Message, Via Client Portal
                     </button>
