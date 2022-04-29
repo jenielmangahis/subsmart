@@ -37,7 +37,7 @@ class Sms_Campaigns extends MY_Controller
     }
 
     public function index()
-    {
+    {        
         $this->page_data['page']->title = 'SMS Blast';
         $this->page_data['page']->parent = 'Marketing';
 

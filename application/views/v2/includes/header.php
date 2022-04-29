@@ -93,11 +93,11 @@ if ($this->session->userdata('usertimezone') == null) {
                         </li>
 
                         <?php if( logged('user_type') == 1 || isAdminBypass() ){ ?>
-                        <!-- <li class="btn-admin-switch">
+                        <li class="btn-admin-switch">
                             <a href="javascript:void(0);">
                                 <i class='bx bx-fw bx-refresh'></i> Switch to Admin
                             </a>
-                        </li> -->
+                        </li>
                         <?php } ?>
                         
                     </ul>
