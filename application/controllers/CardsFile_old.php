@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 
 
-class CardsFile extends MY_Controller {
+class CardsFile_old extends MY_Controller {
 
 
 
@@ -33,16 +33,13 @@ class CardsFile extends MY_Controller {
 
 	public function index()
 	{	
-		$this->page_data['page']->title = 'Cards File';
-        $this->page_data['page']->parent = 'Company';
-
 
 		$company_id = logged('company_id');
 		$cardsFile  = $this->CardsFile_model->getAllByCompanyId($company_id);
 
 		$this->page_data['cardsFile'] = $cardsFile;
-		// $this->load->view('cards_file/index', $this->page_data);
-		$this->load->view('v2/pages/cards_file/index', $this->page_data);
+		$this->load->view('cards_file/index', $this->page_data);
+
 	}
 
 	public function add_new_card()

@@ -134,6 +134,9 @@ class Customer extends MY_Controller
                 'select' => '*',
             );
             $this->page_data['papers'] = $this->general->get_data_with_param($customer_papers_query);
+            if (count($this->page_data['papers'])) {
+                $this->page_data['papers'] = $this->page_data['papers'][0];
+            }
 
             $customer_contacts = array(
                 'where' => array(

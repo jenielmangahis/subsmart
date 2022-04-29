@@ -203,6 +203,16 @@ class Event_model extends MY_Model
             return false;
         }
     }
+    
+    public function getAllSales(){
+        $query = $this->db->get('accounting_sales_receipt');
+
+        if ($query) {
+            return $query->result();
+        } else {
+            return false;
+        }
+    }
 
     public function getAllPInvoices()
     {
