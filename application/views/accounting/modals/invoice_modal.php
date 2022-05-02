@@ -36,6 +36,50 @@
                             <div class="card p-0 m-0" style="min-height: 100%">
                                 <div class="card-body" style="padding-bottom: 1.25rem">
                                     <div class="row customer-details">
+                                        <?php if(isset($invoice) && !is_null($invoice->linked_transactions)) : ?>
+                                        <div class="col-md-12">
+                                            <a href="#" class="float-right btn btn-transparent rounded-0 open-transactions-container" style="padding:12px 15px !important">
+                                                <i class="fa fa-chevron-left"></i>
+                                            </a>
+
+                                            <div class="dropdown">
+                                                <a href="#" class="text-info" id="linked-transaction" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <?php if(count($invoice->linked_transacs) > 1) : ?>
+                                                        <?=count($invoice->linked_transacs)?> linked transactions
+                                                    <?php else : ?>
+                                                        1 linked <?=$invoice->linked_transacs[0]['type']?>
+                                                    <?php endif; ?>
+                                                </a>
+                                                <div class="dropdown-menu p-2" aria-labelledby="linked-transaction" style="min-width: 500px; font-size: 13px">
+                                                    <div class="row">
+                                                        <div class="col-3"><strong>Type</strong></div>
+                                                        <div class="col-3"><strong>Date</strong></div>
+                                                        <div class="col-3"><strong>Amount</strong></div>
+                                                        <div class="col-3"></div>
+                                                    </div>
+                                                    <?php foreach($invoice->linked_transacs as $linkedTransac) : ?>
+                                                    <div class="row my-1">
+                                                        <div class="col-3 d-flex align-items-center"><a class="text-info open-transaction" href="#" data-id="<?=$linkedTransac['transaction']->id?>" data-type="<?=strtolower(str_replace(' ', '-', $linkedTransac['type']))?>"><?=$linkedTransac['type']?></a></div>
+                                                        <div class="col-3 d-flex align-items-center"><?=$linkedTransac['type'] === 'Delayed Credit' ? date("m/d/Y", strtotime($linkedTransac['transaction']->delayed_credit_date)) : date("m/d/Y", strtotime($linkedTransac['transaction']->delayed_charge_date))?></div>
+                                                        <div class="col-3 d-flex align-items-center">
+                                                            <?php
+                                                            $transacAmount = $linkedTransac['transaction']->total_amount;
+                                                            $transacAmount = '$'.number_format(floatval($transacAmount), 2, '.', ',');
+
+                                                            echo str_replace('$-', '-$', $transacAmount);
+                                                            ?>
+                                                        </div>
+                                                        <div class="col-3 d-flex align-items-center"><button class="btn btn-transparent unlink-transaction" data-type="<?=strtolower(str_replace(' ', '-', $linkedTransac['type']))?>" data-id="<?=$linkedTransac['transaction']->id?>" style="font-size: 13px !important">Remove</button></div>
+                                                    </div>
+                                                    <?php endforeach; ?>
+                                                </div>
+                                            </div>
+
+                                            <?php foreach($invoice->linked_transacs as $linkedTransac) : ?>
+                                                <input type="hidden" value="<?=str_replace(' ', '_', strtolower($linkedTransac['type']))?>-<?=$linkedTransac['transaction']->id?>" name="linked_transaction[]">
+                                            <?php endforeach; ?>
+                                        </div>
+                                        <?php endif; ?>
                                         <div class="col-md-8">
                                             <div class="row">
                                                 <div class="col-md-5">
@@ -181,7 +225,7 @@
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="shipping-date">Shipping date</label>
-                                                <input type="text" class="form-control date" id="shipping-date" name="shipping_date" value="<?=isset($invoice) ? date("m/d/Y", strtotime($invoice->shipping_date)) : ''?>">
+                                                <input type="text" class="form-control date" id="shipping-date" name="shipping_date" value="<?=isset($invoice) && $invoice->shipping_date !== '' ? date("m/d/Y", strtotime($invoice->shipping_date)) : ''?>">
                                             </div>
                                         </div>
                                         <div class="col-md-3">
@@ -289,6 +333,9 @@
                                                             <th width="10%">DISCOUNT</th>
                                                             <th width="10%">TAX (CHANGE IN %)</th>
                                                             <th>TOTAL</th>
+                                                            <?php if(isset($invoice) && !is_null($invoice->linked_transactions)) : ?>
+                                                            <th widht="3%"></th>
+                                                            <?php endif; ?>
                                                             <th width="3%"></th>
                                                         </thead>
                                                         <tbody>
@@ -322,6 +369,36 @@
                                                                                 ?>
                                                                             </span>
                                                                         </td>
+                                                                        <?php if(isset($invoice) && !is_null($invoice->linked_transactions)) : ?>
+                                                                        <td>
+                                                                        <?php if(!is_null($item->linked_transaction_type) && !is_null($item->linked_transaction_id)) : ?>
+                                                                            <div class="dropdown">
+                                                                                <a href="#" class="text-info" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-link"></i></a>
+                                                                                <div class="dropdown-menu dropdown-menu-right p-2" aria-labelledby="linked-transaction" style="min-width: 500px; font-size: 13px">
+                                                                                    <div class="row">
+                                                                                        <div class="col-3"><strong>Type</strong></div>
+                                                                                        <div class="col-3"><strong>Date</strong></div>
+                                                                                        <div class="col-3"><strong>Amount</strong></div>
+                                                                                        <div class="col-3"></div>
+                                                                                        <div class="col-3 d-flex align-items-center"><a class="text-info open-transaction" href="#" data-id="<?=$item->linked_transaction_id?>" data-type="<?=str_replace('_', '-', $item->linked_transaction_type)?>"><?=ucwords(str_replace('_', ' ', $item->linked_transaction_type))?></a></div>
+                                                                                        <div class="col-3 d-flex align-items-center"><?=$item->linked_transaction_type === 'delayed_credit' ? date("m/d/Y", strtotime($item->linked_transac->delayed_credit_date)) : date("m/d/Y", strtotime($item->linked_transac->delayed_charge_date))?></div>
+                                                                                        <div class="col-3 d-flex align-items-center">
+                                                                                            <?php
+                                                                                            $transacAmount = $item->linked_transac->total_amount;
+                                                                                            $transacAmount = '$'.number_format(floatval($transacAmount), 2, '.', ',');
+
+                                                                                            echo str_replace('$-', '-$', $transacAmount);
+                                                                                            ?>
+                                                                                        </div>
+                                                                                        <div class="col-3 d-flex align-items-center"><button class="btn btn-transparent unlink-transaction" data-type="<?=str_replace('_', '-', $item->linked_transaction_type)?>" data-id="<?=$item->linked_transaction_id?>" style="font-size: 13px !important">Remove</button></div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <input type="hidden" value="<?=$item->linked_transaction_type?>-<?=$item->linked_transaction_id?>" name="item_linked_transaction[]">
+                                                                            <input type="hidden" value="<?=$item->linked_transaction_item_id?>" name="transaction_item_id[]">
+                                                                        <?php endif; ?>
+                                                                        </td>
+                                                                        <?php endif; ?>
                                                                         <td>
                                                                             <div class="d-flex align-items-center justify-content-center">
                                                                                 <a href="#" class="deleteRow"><i class="fa fa-trash"></i></a>
@@ -348,6 +425,36 @@
                                                                                 ?>
                                                                             </span>
                                                                         </td>
+                                                                        <?php if(isset($invoice) && !is_null($invoice->linked_transactions)) : ?>
+                                                                        <td>
+                                                                        <?php if(!is_null($item->linked_transaction_type) && !is_null($item->linked_transaction_id)) : ?>
+                                                                            <div class="dropdown">
+                                                                                <a href="#" class="text-info" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-link"></i></a>
+                                                                                <div class="dropdown-menu dropdown-menu-right p-2" aria-labelledby="linked-transaction" style="min-width: 500px; font-size: 13px">
+                                                                                    <div class="row">
+                                                                                        <div class="col-3"><strong>Type</strong></div>
+                                                                                        <div class="col-3"><strong>Date</strong></div>
+                                                                                        <div class="col-3"><strong>Amount</strong></div>
+                                                                                        <div class="col-3"></div>
+                                                                                        <div class="col-3 d-flex align-items-center"><a class="text-info open-transaction" href="#" data-id="<?=$item->linked_transaction_id?>" data-type="<?=str_replace('_', '-', $item->linked_transaction_type)?>"><?=ucwords(str_replace('_', ' ', $item->linked_transaction_type))?></a></div>
+                                                                                        <div class="col-3 d-flex align-items-center"><?=$item->linked_transaction_type === 'delayed_credit' ? date("m/d/Y", strtotime($item->linked_transac->delayed_credit_date)) : date("m/d/Y", strtotime($item->linked_transac->delayed_charge_date))?></div>
+                                                                                        <div class="col-3 d-flex align-items-center">
+                                                                                            <?php
+                                                                                            $transacAmount = $item->linked_transac->total_amount;
+                                                                                            $transacAmount = '$'.number_format(floatval($transacAmount), 2, '.', ',');
+
+                                                                                            echo str_replace('$-', '-$', $transacAmount);
+                                                                                            ?>
+                                                                                        </div>
+                                                                                        <div class="col-3 d-flex align-items-center"><button class="btn btn-transparent unlink-transaction" data-type="<?=str_replace('_', '-', $item->linked_transaction_type)?>" data-id="<?=$item->linked_transaction_id?>" style="font-size: 13px !important">Remove</button></div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <input type="hidden" value="<?=$item->linked_transaction_type?>-<?=$item->linked_transaction_id?>" name="item_linked_transaction[]">
+                                                                            <input type="hidden" value="<?=$item->linked_transaction_item_id?>" name="transaction_item_id[]">
+                                                                        <?php endif; ?>
+                                                                        </td>
+                                                                        <?php endif; ?>
                                                                         <td>
                                                                             <div class="d-flex align-items-center justify-content-center">
                                                                                 <a href="#" class="deleteRow"><i class="fa fa-trash"></i></a>
@@ -381,6 +488,9 @@
                                                                         <td></td>
                                                                         <td></td>
                                                                         <td></td>
+                                                                        <?php if(isset($invoice) && !is_null($invoice->linked_transactions)) : ?>
+                                                                        <td></td>
+                                                                        <?php endif; ?>
                                                                         <td></td>
                                                                     </tr>
                                                                     <?php endif; ?>
@@ -603,6 +713,55 @@
                                 </div>
                             </div>
                         </div>
+
+                        <?php if(isset($invoice) && !is_null($invoice->linked_transactions)) : ?>
+                        <div class="col-xl-2" style="display: none">
+                            <div class="transactions-container bg-white h-100" style="padding: 15px">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <h4>Add to Invoice</h4>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label for="">Filter by</label>
+                                            <select class="form-control" id="transaction-type">
+                                                <option value="all" selected>All types</option>
+                                                <option value="charges">Charges</option>
+                                                <option value="credits">Credits</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <select class="form-control" id="transaction-date">
+                                                <option value="all" selected>All dates</option>
+                                                <option value="this-month">This month</option>
+                                                <option value="last-month">Last month</option>
+                                                <option value="custom">Custom...</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <?php foreach($linkableTransactions as $linkableTransac) : ?>
+                                    <?php
+                                    $title = $linkableTransac['type'];
+                                    $title .= $linkableTransac['number'] !== '' ? '#' + $linkableTransac['number'] : '';
+                                    ?>
+                                    <div class="col-12">
+                                        <div class="card border">
+                                            <div class="card-body p-0">
+                                                <h5 class="card-title"><?=$title?></h5>
+                                                <p class="card-subtitle"><?=$linkableTransac['formatted_date']?></p>
+                                                <p class="card-text"><?=$linkableTransac['balance']?></p>
+                                                <ul class="d-flex justify-content-around">
+                                                    <li><a href="#" class="text-info add-transaction" data-id="<?=$linkableTransac['id']?>" data-type="<?=$linkableTransac['data_type']?>"><strong>Add</strong></a></li>
+                                                    <li><a href="#" class="text-info open-transaction" data-id="<?=$linkableTransac['id']?>" data-type="<?=$linkableTransac['data_type']?>">Open</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <?php endforeach; ?>
+                                </div>
+                            </div>
+                        </div>
+                        <?php endif; ?>
                     </div>
                 </div>
 
