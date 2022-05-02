@@ -2591,6 +2591,9 @@ class Workorder extends MY_Controller
 
         $this->page_data['fields'] = $this->workorder_model->getCustomByID();
         $this->page_data['headers'] = $this->workorder_model->getheaderByID();
+        $this->page_data['terms'] = $this->workorder_model->getWOtermsByID();
+
+        // dd($this->workorder_model->getWOtermsByID());
 
         $this->load->view('v2/pages/workorder/settings', $this->page_data);
     }
@@ -2643,6 +2646,80 @@ class Workorder extends MY_Controller
         // else{
         //     echo json_encode(0);
         // }
+    }
+
+    public function addTerms()
+    {
+        $company_id  = getLoggedCompanyID();
+        $user_id  = getLoggedUserID();
+
+        $header_data = array(
+            
+            'content' => $this->input->post('add_terms'),
+            'company_id' => $company_id,
+            'date_created' => date("Y-m-d H:i:s"),
+            'date_updated' => date("Y-m-d H:i:s")
+        );
+
+        $custom_dataQuery = $this->workorder_model->save_terms($header_data);
+
+
+        if($custom_dataQuery > 0){
+
+           redirect('workorder/settings');
+        }
+        else{
+            echo json_encode(0);
+        }
+    }
+
+    public function addWOTermsCond()
+    {
+        $company_id  = getLoggedCompanyID();
+        $user_id  = getLoggedUserID();
+
+        $header_data = array(
+            'content' => $this->input->post('add_terms_content'),
+            'company_id' => $company_id,
+            'date_created' => date("Y-m-d H:i:s"),
+            'date_updated' => date("Y-m-d H:i:s")
+        );
+
+        $custom_dataQuery = $this->workorder_model->save_termsCond($header_data);
+
+
+        if($custom_dataQuery > 0){
+
+           redirect('workorder/settings');
+        }
+        else{
+            echo json_encode(0);
+        }
+    }
+
+    public function updateWOTermsCond()
+    {
+        $company_id  = getLoggedCompanyID();
+        $user_id  = getLoggedUserID();
+
+        $header_data = array(
+            'id' => $this->input->post('wo_tc'),
+            'content' => $this->input->post('update_terms_content'),
+            'company_id' => $company_id,
+            'date_created' => date("Y-m-d H:i:s"),
+            'date_updated' => date("Y-m-d H:i:s")
+        );
+
+        $custom_dataQuery = $this->workorder_model->updateWOTermsCond($header_data);
+
+
+        if($custom_dataQuery > 0){
+
+           redirect('workorder/settings');
+        }
+        else{
+            echo json_encode(0);
+        }
     }
 
     public function updatecustomField()
@@ -3194,14 +3271,23 @@ class Workorder extends MY_Controller
         // $this->page_data['number'] = $this->estimate_model->getlastInsert();
         $this->page_data['number'] = $this->workorder_model->getlastInsert($company_id);
 
-        $termsCondi = $this->workorder_model->getTerms($company_id);
+        // $termsCondi = $this->workorder_model->getTerms($company_id);
+        // if($termsCondi){
+        //     // $this->page_data['terms_conditions'] = $this->workorder_model->getTermsDefault();
+        //     $this->page_data['terms_conditions'] = $this->workorder_model->getTermsbyID();
+        // }else{
+        //     // $this->page_data['terms_conditions'] = $this->workorder_model->getTermsbyID();
+        //     $this->page_data['terms_conditions'] = $this->workorder_model->getTermsDefault();
+        // }
+
+        $termsCondi = $this->workorder_model->getWOTerms($company_id);
         if($termsCondi){
-            // $this->page_data['terms_conditions'] = $this->workorder_model->getTermsDefault();
-            $this->page_data['terms_conditions'] = $this->workorder_model->getTermsbyID();
+            $this->page_data['terms_conditions'] = $this->workorder_model->getWOtermsByID();
         }else{
-            // $this->page_data['terms_conditions'] = $this->workorder_model->getTermsbyID();
             $this->page_data['terms_conditions'] = $this->workorder_model->getTermsDefault();
         }
+
+        // $this->workorder_model->getWOtermsByID();
 
         $termsUse = $this->workorder_model->getTermsUse($company_id);
         if($termsUse){

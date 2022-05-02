@@ -804,11 +804,31 @@ class Workorder_model extends MY_Model
 		return $query->row();
     }
 
+    public function getWOTerms($comp_id){
+
+        $this->db->select('*');
+		$this->db->from('work_order_terms_conditions');
+		$this->db->where('company_id', $comp_id);
+		$query = $this->db->get();
+		return $query->row();
+    }
+
     public function getTermsbyID(){
         $cid = getLoggedCompanyID();
 
         $this->db->select('*');
 		$this->db->from('terms_and_conditions');
+		$this->db->where('company_id', $cid);
+		$query = $this->db->get();
+		return $query->row();
+    }
+
+    public function getWOtermsByID()
+    {
+        $cid = getLoggedCompanyID();
+
+        $this->db->select('*');
+		$this->db->from('work_order_terms_conditions');
 		$this->db->where('company_id', $cid);
 		$query = $this->db->get();
 		return $query->row();
@@ -882,6 +902,28 @@ class Workorder_model extends MY_Model
         $vendor = $this->db->insert('work_order_headers', $data);
 	    $insert = $this->db->insert_id();
 		return  $insert;
+    }
+
+    public function save_terms($data)
+    {
+        $vendor = $this->db->insert('work_order_headers', $data);
+	    $insert = $this->db->insert_id();
+		return  $insert;
+    }
+
+    public function save_termsCond($data)
+    {
+        $vendor = $this->db->insert('work_order_terms_conditions', $data);
+	    $insert = $this->db->insert_id();
+		return  $insert;
+    }
+
+    public function updateWOTermsCond($data)
+    {
+        extract($data);
+        $this->db->where('company_id', $company_id);
+        $this->db->update('work_order_terms_conditions', array('content' => $content));
+        return true;
     }
 
     public function update_header($data){

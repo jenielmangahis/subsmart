@@ -1394,6 +1394,18 @@ class Customer extends MY_Controller
                 ),
             );
             $this->page_data['contacts'] = $this->general->get_data_with_param($customer_contacts);
+
+            $customer_papers_query = array(
+                'where' => array(
+                    'customer_id' => $userid
+                ),
+                'table' => 'acs_papers',
+                'select' => '*',
+            );
+            $this->page_data['papers'] = $this->general->get_data_with_param($customer_papers_query);
+            if (count($this->page_data['papers'])) {
+                $this->page_data['papers'] = $this->page_data['papers'][0];
+            }
         }
 
         $get_customer_groups = array(

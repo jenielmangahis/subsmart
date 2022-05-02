@@ -128,6 +128,64 @@
                             </div>
                             <?php echo form_close(); ?>
                         <?php endif; ?>
+
+                    <br><br>
+                    <div class="col-12 col-md-12">
+                        <?php if ($terms) : ?>
+                            <?php echo form_open_multipart('workorder/updateWOTermsCond', ['class' => 'form-validate', 'autocomplete' => 'off']); ?>
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <div class="nsm-card">
+                                        <div class="nsm-card-header d-block">
+                                            <div class="nsm-card-title">
+                                                <span>Work Order Terms and Conditions</span>
+                                            </div>
+                                        </div>
+                                        <div class="nsm-card-content">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <input type="hidden" name="wo_tc" value="<?php echo $terms->id; ?>">
+                                                    <textarea id="updateheader2" name="update_terms_content" class="form-control" style="height:400px">
+                                                <?php echo $terms->content; ?>
+                                            </textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 text-end">
+                                    <button type="submit" class="nsm-button primary">Update Terms and Conditions</button>
+                                </div>
+                            </div>
+                            <?php echo form_close(); ?>
+                        <?php else : ?>
+                            <?php echo form_open_multipart('workorder/addWOTermsCond', ['class' => 'form-validate', 'autocomplete' => 'off']); ?>
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <div class="nsm-card">
+                                        <div class="nsm-card-header d-block">
+                                            <div class="nsm-card-title">
+                                                <span>Work Order Terms and Conditions</span>
+                                            </div>
+                                        </div>
+                                        <div class="nsm-card-content">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <textarea id="updateheader2" name="add_terms_content" class="form-control" style="height:400px"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 text-end">
+                                    <button type="submit" class="nsm-button primary">Add Terms and Conditions</button>
+                                </div>
+                            </div>
+                            <?php echo form_close(); ?>
+                        <?php endif; ?>
+                        <br><br>
+
+                        <h4>Work Order Custom Fields</h4>
                         <div class="row g-3 mt-1">
                             <div class="col-12">
                                 <table class="nsm-table">
@@ -167,17 +225,22 @@
                             </div>
                         </div>
                     </div>
+
+                    </div>
                 </div>
                 <?php echo form_close(); ?>
+                
             </div>
         </div>
     </div>
 </div>
 
+
 <script type="text/javascript" src="<?php echo $url->assets ?>ckeditor/ckeditor.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
         CKEDITOR.replace('updateheader');
+        CKEDITOR.replace('updateheader2');
         $(".nsm-table").nsmPagination();
 
         $(".btn-update-workorder-settings").on("click", function(e) {
