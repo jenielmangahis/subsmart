@@ -1,18 +1,27 @@
 window.document.addEventListener("DOMContentLoaded", async () => {
   const api = await import("./api.js");
-  window.__qaapi = api;
+  window.__customermodule_api = api;
 
   const customerId = getCustomerId();
   const response = await api.getCustomerActions(customerId);
   const { data: customerActions } = response;
+
+  const customer = await api.getCustomerById(customerId);
+  window.__customermodule_customer = customer.data;
 
   const $fragment = document.createDocumentFragment();
   customerActions.forEach((action) => {
     $fragment.appendChild(createActionButton(action));
   });
 
-  const $wrapper = document.getElementById("customerquickactions");
-  $wrapper.appendChild($fragment);
+  if ($fragment.childElementCount) {
+    const $container = document.getElementById("customerquickactions");
+    const $emptyMessage = $container.querySelector(".empty-message");
+    const $wrapper = $container.querySelector(".actions-wrapper");
+
+    $emptyMessage.classList.add("d-none");
+    $wrapper.appendChild($fragment);
+  }
 
   const $link = document.getElementById("managequickactions");
   const $modal = document.getElementById("managequickactionsmodal");
@@ -70,26 +79,39 @@ function createActionItem(action) {
 
 async function handleSwitchChange(event, action) {
   const customerId = getCustomerId();
-  const $wrapper = document.getElementById("customerquickactions");
+  const $container = document.getElementById("customerquickactions");
+  const $wrapper = $container.querySelector(".actions-wrapper");
+  const $emptyMessage = $container.querySelector(".empty-message");
+
   let $button = $wrapper.querySelector(`[data-id="${action.id}"]`);
 
-  if (event.target.checked === false) {
-    $button && $button.remove();
-    window.__qaapi.deleteAction({
+  if (!event.target.checked) {
+    window.__customermodule_api.deleteAction({
       customer_id: customerId,
       acs_dashboard_quick_actions_id: action.id,
     });
+
+    if ($button) {
+      $button.remove();
+    }
+
+    if (!$wrapper.childElementCount) {
+      $emptyMessage.classList.remove("d-none");
+    }
+
     return;
   }
 
   if (!$button) {
     $button = createActionButton(action);
     $wrapper.appendChild($button);
-    window.__qaapi.createAction({
-      customer_id: customerId,
-      acs_dashboard_quick_actions_id: action.id,
-    });
   }
+
+  $emptyMessage.classList.add("d-none");
+  window.__customermodule_api.createAction({
+    customer_id: customerId,
+    acs_dashboard_quick_actions_id: action.id,
+  });
 }
 
 function createActionButton(action) {
@@ -100,19 +122,39 @@ function createActionButton(action) {
   }
 
   $button = document.createElement("button");
-  $button.classList.add("nsm-button", "w-100", "ms-0");
+  $button.classList.add("nsm-button", "w-100", "ms-0", "mb-0");
   $button.textContent = action.text;
   $button.setAttribute("data-id", action.id);
+  $button.setAttribute("title", action.text);
+  $button.style.cssText = `
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  `;
 
   if (action.icon_class) {
     $icon = document.createElement("i");
     $icon.classList.add(...action.icon_class.split(" "));
+    $icon.style.marginRight = "5px";
     $button.prepend($icon);
   }
 
-  $button.addEventListener("click", () => {
+  $button.addEventListener("click", (event) => {
     if (!action.url || !action.url.trim().length) return;
-    window.location = `${action.url}`.replace(":customerid", getCustomerId());
+
+    if (isSelectorValid(action.url)) {
+      const $element = document.querySelector(action.url);
+      if ($($element).modal) {
+        event.preventDefault();
+        $($element).modal("show");
+        return;
+      }
+    }
+
+    const { prof_id, email } = window.__customermodule_customer;
+    let location = `${action.url}`.replace(":customerid", prof_id);
+    location = location.replace(":customeremail", email);
+    window.location = location;
   });
 
   return $button;
@@ -120,4 +162,23 @@ function createActionButton(action) {
 
 function getCustomerId() {
   return window.location.pathname.split("/").at(-1);
+}
+
+// https://stackoverflow.com/a/43467144/8062659
+function isValidHttpUrl(string) {
+  try {
+    const url = new URL(string);
+    return url.protocol === "http:" || url.protocol === "https:";
+  } catch (_) {
+    return false;
+  }
+}
+
+function isSelectorValid(selector) {
+  try {
+    document.createDocumentFragment().querySelector(selector);
+    return true;
+  } catch {
+    return false;
+  }
 }

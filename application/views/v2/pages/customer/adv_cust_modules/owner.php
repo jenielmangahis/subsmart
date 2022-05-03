@@ -78,17 +78,21 @@
                     </div>
                 </div>
                 <div class="col-12 col-md-4">
-                    <button role="button" class="nsm-button w-100 ms-0 mt-3" onclick="window.open('<?= base_url('job_checklists/list'); ?>', '_blank', 'location=yes,height=1080,width=1500,scrollbars=yes,status=yes');">
-                        <i class='bx bx-fw bx-send'></i> Send SMS
-                    </button>
+                    <a href="sms:<?=  $profile_info->phone_h ?>">
+                        <button role="button" class="nsm-button w-100 ms-0 mt-3" >
+                            <i class='bx bx-fw bx-send'></i> Send SMS
+                        </button>
+                    </a>
                 </div>
                 <div class="col-12 col-md-4">
-                    <button role="button" class="nsm-button w-100 ms-0 mt-3">
-                        <i class='bx bx-fw bx-mail-send'></i> Send Email
-                    </button>
+                    <a href="mailto:<?=  $profile_info->email ?>">
+                        <button role="button" class="nsm-button w-100 ms-0 mt-3">
+                            <i class='bx bx-fw bx-mail-send'></i> Send Email
+                        </button>
+                    </a>
                 </div>
                 <div class="col-12 col-md-4">
-                    <button role="button" class="nsm-button w-100 ms-0 mt-3" onclick="window.open('<?= base_url('survey'); ?>', '_blank', 'location=yes,height=1080,width=1500,scrollbars=yes,status=yes');">
+                    <button role="button" class="nsm-button w-100 ms-0 mt-3" id="<?=  $profile_info->phone_h ?>" onclick='call(this.id);return false;'>
                         <i class='bx bx-fw bx-phone-call'></i> Call Customer
                     </button>
                 </div>
@@ -96,3 +100,9 @@
         </div>
     </div>
 </div>
+<script type="text/javascript">
+    function call(data) {
+        console.log(data);
+        window.open('tel:' + data);
+    }
+</script>

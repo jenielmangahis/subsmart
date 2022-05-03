@@ -24,23 +24,23 @@ class CustomerDashboardQuickActions extends MY_Controller
         $actions = [
             [
                 'text' => 'Create Job',
-                'url' => '',
+                'url' => base_url('/job/new_job1?cus_id=:customerid'),
             ],
             [
                 'text' => 'Submit Service Ticket',
-                'url' => '',
+                'url' => base_url('/customer/addTicket?cus_id=:customerid'),
             ],
             [
                 'text' => 'Create Estimate',
-                'url' => '',
+                'url' => '#new_estimate_modal',
             ],
             [
                 'text' => 'Add Credit Industry Item',
-                'url' => '',
+                'url' => base_url('/customer/add_dispute_item/:customerid'),
             ],
             [
                 'text' => 'Call Customer',
-                'url' => '',
+                'url' => base_url('/customer/call/:customerid'),
             ],
             [
                 'text' => 'Send Secure Message, Via Client Portal',
@@ -50,11 +50,11 @@ class CustomerDashboardQuickActions extends MY_Controller
             ],
             [
                 'text' => 'Show Customer Activites',
-                'url' => '',
+                'url' => base_url('/customer/activities/:customerid'),
             ],
             [
                 'text' => 'Run Dispute Wizard, Create letters/correct errors',
-                'url' => '',
+                'url' => base_url('/EsignEditor/wizard?customer_id=:customerid'),
                 'icon_class' => 'bx bx-fw bxs-magic-wand',
                 'is_default' => true,
             ],
@@ -70,7 +70,7 @@ class CustomerDashboardQuickActions extends MY_Controller
             ],
             [
                 'text' => 'Edit Customer',
-                'url' => '',
+                'url' => base_url('/customer/add_advance/:customerid'),
             ],
             [
                 'text' => 'Create Invoice',
@@ -78,7 +78,7 @@ class CustomerDashboardQuickActions extends MY_Controller
             ],
             [
                 'text' => 'Send email',
-                'url' => '',
+                'url' => 'mailto::customeremail',
             ],
         ];
 
@@ -170,5 +170,12 @@ class CustomerDashboardQuickActions extends MY_Controller
         $query = $this->db->get();
         $actions = $query->result();
         $this->respond(['data' => $actions]);
+    }
+
+    public function getCustomerById($customerId)
+    {
+        $this->db->where('prof_id', $customerId);
+        $customer = $this->db->get('acs_profile')->row();
+        $this->respond(['data' => $customer]);
     }
 }
