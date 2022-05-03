@@ -13,13 +13,13 @@
             </a>
         </li>
         <li class="<?php if($page->title == ''): echo 'active'; endif; ?>">
-            <a class="nsm-page-link" href="javascript:void(0);" onclick="window.open('<?= base_url('job/new_job1?cus_id='.$cus_id); ?>', '_blank', 'location=yes,height=1080,width=1500,scrollbars=yes,status=yes');">
+            <a class="nsm-page-link" href="javascript:void(0);" onclick="window.open('<?= base_url('job/new_job1?cus_id='.$cus_id); ?>');">
                 <i class='bx bx-fw bx-message-square-error'></i>
                 <span>Jobs</span>
             </a>
         </li>
         <li class="<?php if($page->title == ''): echo 'active'; endif; ?>">
-            <a class="nsm-page-link" href="javascript:void(0);" onclick="window.open('<?= base_url('customer/addTicket?cus_id='.$cus_id); ?>', '_blank', 'location=yes,height=1080,width=1500,scrollbars=yes,status=yes');">
+            <a class="nsm-page-link" href="javascript:void(0);" onclick="window.open('<?= base_url('customer/addTicket?cus_id='.$cus_id); ?>');">
                 <i class='bx bx-fw bx-wrench'></i>
                 <span>Services</span>
             </a>

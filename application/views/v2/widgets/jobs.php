@@ -31,16 +31,36 @@
         initializeJobsChart();
     });
 
+
+    var today = new Date();
+
+    var month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Nov", "Dec"];
+
+    var currentMonth = month[today.getMonth()];
+    var secMonth = month[today.getMonth()-1];
+    var firstMonth = month[today.getMonth()-2];
+
+    <?php $currJobCount = 0; $prevJobCount = 0;  $previousJobCount=0; $prevMonthDate = date("Y-m-d", strtotime("-1 month")); $firstprevMonth = date("Y", strtotime("-60 days"));  foreach($jobsDone as $jD){ 
+        if(date("M")==date("M",strtotime($jD->date_created)) && date("Y")==date("Y",strtotime($jD->date_created))){
+            $currJobCount++;
+        }else if(date("M", strtotime("-1 month"))==date("M",strtotime($jD->date_created)) && date("Y",strtotime($prevMonthDate))==date("Y",strtotime($jD->date_created))){
+            $prevJobCount++;
+        }else if(date("M", strtotime("-60 days"))==date("M",strtotime($jD->date_created)) && $firstprevMonth==date("Y",strtotime($jD->date_created))){
+            $previousJobCount++;
+        }
+        ?>
+        var currJobCount = 0; var secJobCount = 0; var firstJobCount = 0;
+       
     function initializeJobsChart() {
         var jobs = $("#jobs_chart");
 
         new Chart(jobs, {
             type: 'line',
             data: {
-                labels: ['January', 'February', 'March', 'April'],
+                labels: [firstMonth,secMonth, currentMonth],
                 datasets: [{
                         label: 'Job Count',
-                        data: [500, 700, 1300, 1400],
+                        data: [ <?php echo $previousJobCount; ?>, <?php echo $prevJobCount; ?>, <?php echo $currJobCount; ?>],
                         backgroundColor: [
                             'rgba(255, 99, 132, 0.2)',
                             'rgba(54, 162, 235, 0.2)',
@@ -64,7 +84,7 @@
                     },
                     {
                         label: 'Job Value',
-                        data: [1000, 2550, 3000, 4000],
+                        data: [<?php echo $previousJobCount; ?>, <?php echo $prevJobCount; ?>, <?php echo $currJobCount; ?>],
                         backgroundColor: [
                             'rgba(255, 99, 132, 1)',
                             'rgba(54, 162, 235, 1)',
@@ -133,6 +153,7 @@
             }
         });
     }
+    <?php }?>
 </script>
 
 <?php

@@ -2,7 +2,7 @@
     <div class="nsm-card nsm-grid">
         <div class="nsm-card-header d-block">
             <div class="nsm-card-title">
-                <span>Profilex</span>
+                <span>Profile</span>
             </div>
         </div>
         <div class="nsm-card-content">
@@ -28,7 +28,7 @@
                                     <?php if ($profile_info->customer_type === 'Business'): ?>
                                         <?= $profile_info->business_name ?>
                                     <?php else: ?>
-                                        <?= ($customer) ? $profile_info->first_name . ' ' . $profile_info->last_name : ''; ?>
+                                        <?= $profile_info->first_name . ' ' . $profile_info->last_name ?>
                                     <?php endif; ?>    
                                 </span>
                                 <span class="content-subtitle d-block"><?= $profile_info->email ?></span>
@@ -38,27 +38,22 @@
                                 switch (strtoupper($profile_info->status)):
                                     case "INSTALLED":
                                         $badge = "success";
-                                        $status = $profile_info->status;
                                         break;
                                     case "CANCELLED":
                                         $badge = "error";
-                                        $status = $profile_info->status;
                                         break;
                                     case "COLLECTIONS":
                                         $badge = "secondary";
-                                        $status = $profile_info->status;
                                         break;
                                     case "CHARGED BACK":
                                         $badge = "primary";
-                                        $status = $profile_info->status;
                                         break;
                                     default:
                                         $badge = "";
-                                        $status = "N/A";
                                         break;
                                 endswitch;
                                 ?>
-                                <span class="nsm-badge <?= $badge ?>"><?= $status ?></span>
+                                <span class="nsm-badge <?= $badge ?>"><?= !is_null($profile_info->status) ? $profile_info->status : 'Pending'; ?></span>
                                 <span class="content-subtitle d-block"><?= $profile_info->phone_h ?></span>
                             </div>
                         </div>
@@ -86,18 +81,74 @@
                         </label>
                     </div>
                 </div>
-                <div class="col-12">
-                    <button role="button" class="nsm-button w-100 ms-0">
-                        <i class='bx bx-fw bx-import'></i> 1-Click Import and Audit, Pull reports & Create audit
-                    </button>
-                    <a href="<?=base_url('EsignEditor/wizard?customer_id=' . $profile_info->prof_id)?>" role="button" class="nsm-button d-flex justify-content-center align-items-center w-100 ms-0">
-                        <i class='bx bx-fw bxs-magic-wand'></i> Run Dispute Wizard, Create letters/correct errors
-                    </a>
-                    <button role="button" class="nsm-button w-100 ms-0">
-                        <i class='bx bx-fw bx-message-rounded-check'></i> Send Secure Message, Via Client Portal
-                    </button>
+                <div class="col-12" id="customerquickactions">
+                    <div class="d-flex justify-content-end mb-3">
+                        <a href="#" class="nsm-link" id="managequickactions">Manage Quick Actions</a>
+                    </div>
+
+                    <div class="nsm-empty empty-message">
+                        Click Manage Quick Actions to view available shortcuts for this customer.
+                    </div>
+
+                    <div class="actions-wrapper" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 8px;"></div>
+                    
+                    <div class="d-none">
+                        <!-- Actions will come from database -->
+                        <button role="button" class="nsm-button w-100 ms-0">
+                            <i class='bx bx-fw bx-import'></i> 1-Click Import and Audit, Pull reports & Create audit
+                        </button>
+                        <a href="<?=base_url('EsignEditor/wizard?customer_id=' . $profile_info->prof_id)?>" role="button" class="nsm-button d-flex justify-content-center align-items-center w-100 ms-0">
+                            <i class='bx bx-fw bxs-magic-wand'></i> Run Dispute Wizard, Create letters/correct errors
+                        </a>
+                        <button role="button" class="nsm-button w-100 ms-0">
+                            <i class='bx bx-fw bx-message-rounded-check'></i> Send Secure Message, Via Client Portal
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
+
+<div class="modal fade nsm-modal" tabindex="-1" role="dialog" id="managequickactionsmodal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Customer Quick Actions</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Select the actions you would like to display in this customer's profile</p>
+
+        <div>
+            <div class="actions-loader d-flex align-items-center justify-content-center" style="min-height: 300px;">
+                <div class="spinner-border" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </div>
+            <div class="actions-wrapper"></div>
+        </div>
+
+        <template>
+            <div class="nsm-card mb-2 h-auto">
+                <div class="nsm-card-content">
+                    <div class="d-flex">
+                        <div class="d-flex align-items-baseline" style="gap: 8px;">
+                            <i class="icon d-none" style="position: relative; top: 3px;"></i>
+                            <span class="content-title d-block mb-1"></span>
+                        </div>
+                        <div class="d-flex justify-content-end align-items-center" style="margin-left: auto;">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input ms-0" type="checkbox" checked="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </template>
+      </div>
+    </div>
+  </div>
 </div>

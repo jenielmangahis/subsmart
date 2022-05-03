@@ -165,9 +165,11 @@
                     </button>
                 </div>
                 <div class="col-12 col-md-4">
-                    <button role="button" class="nsm-button w-100 ms-0 mt-3">
-                        <i class='bx bx-fw bx-link-external'></i> Website Url
-                    </button>
+                    <a href="https://nsmartrac.com/" target="_blank">
+                        <button role="button" class="nsm-button w-100 ms-0 mt-3">
+                            <i class='bx bx-fw bx-link-external'></i> Website Url
+                        </button>
+                    </a>
                 </div>
                 <div class="col-12 col-md-4">
                     <button role="button" class="nsm-button primary w-100 ms-0 mt-3">

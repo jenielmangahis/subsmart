@@ -21,13 +21,13 @@
                                 <input type="file" name="upload_document" class="position-absolute invisible" id="upload_document_1">
                             </div>
                             <div class="col-12 col-md-6 text-end">
-                                <button role="button" class="nsm-button btn-sm">
+                                <button role="button" class="nsm-button btn-sm" disabled>
                                     Upload
                                 </button>
-                                <button role="button" class="nsm-button btn-sm">
+                                <button role="button" class="nsm-button btn-sm" disabled>
                                     Download
                                 </button>
-                                <button role="button" class="nsm-button error btn-sm">
+                                <button role="button" class="nsm-button error btn-sm" disabled>
                                     Delete
                                 </button>
                             </div>
@@ -47,13 +47,13 @@
                                 <input type="file" name="upload_document" class="position-absolute invisible" id="upload_document_4">
                             </div>
                             <div class="col-12 col-md-6 text-end">
-                                <button role="button" class="nsm-button btn-sm">
+                                <button role="button" class="nsm-button btn-sm" disabled>
                                     Upload
                                 </button>
-                                <button role="button" class="nsm-button btn-sm">
+                                <button role="button" class="nsm-button btn-sm" disabled>
                                     Download
                                 </button>
-                                <button role="button" class="nsm-button error btn-sm">
+                                <button role="button" class="nsm-button error btn-sm" disabled>
                                     Delete
                                 </button>
                             </div>
@@ -73,13 +73,13 @@
                                 <input type="file" name="upload_document" class="position-absolute invisible" id="upload_document_6">
                             </div>
                             <div class="col-12 col-md-6 text-end">
-                                <button role="button" class="nsm-button btn-sm">
+                                <button role="button" class="nsm-button btn-sm" disabled>
                                     Upload
                                 </button>
-                                <button role="button" class="nsm-button btn-sm">
+                                <button role="button" class="nsm-button btn-sm" disabled >
                                     Download
                                 </button>
-                                <button role="button" class="nsm-button error btn-sm">
+                                <button role="button" class="nsm-button error btn-sm" disabled>
                                     Delete
                                 </button>
                             </div>
@@ -99,13 +99,13 @@
                                 <input type="file" name="upload_document" class="position-absolute invisible" id="upload_document_6">
                             </div>
                             <div class="col-12 col-md-6 text-end">
-                                <button role="button" class="nsm-button btn-sm">
+                                <button role="button" class="nsm-button btn-sm" disabled>
                                     Upload
                                 </button>
-                                <button role="button" class="nsm-button btn-sm">
+                                <button role="button" class="nsm-button btn-sm" disabled>
                                     Download
                                 </button>
-                                <button role="button" class="nsm-button error btn-sm">
+                                <button role="button" class="nsm-button error btn-sm" disabled>
                                     Delete
                                 </button>
                             </div>
@@ -113,7 +113,7 @@
                     </form>
                 </div>
                 <div class="col-12">
-                    <button role="button" class="nsm-button primary w-100 ms-0 mt-3">
+                    <button role="button" class="nsm-button primary w-100 ms-0 mt-3" disabled>
                         <i class='bx bx-fw bx-list-minus'></i> Customize List
                     </button>
                 </div>

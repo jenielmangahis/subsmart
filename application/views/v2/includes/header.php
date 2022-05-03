@@ -180,6 +180,13 @@ if ($this->session->userdata('usertimezone') == null) {
                     <ul>
                     </ul>
                 </li>
+                <li>
+                    <a href="<?= base_url("vault/beforeafter") ?>">
+                        <i class='bx bx-fw bx-camera'></i> Photos Gallery
+                    </a>
+                    <ul>
+                    </ul>
+                </li>
                 <li class="<?php if($page->title == 'Marketing Features' || $page->title == 'Survey Wizard' || $page->title == 'SMS Automation' || $page->title == 'Email Blast' || $page->title == 'Email Automation' || $page->title == 'Deals & Steals' || $page->title == 'My Inquiry List' || $page->title == 'Campaign 360'): echo 'selected '; endif; if($page->parent == 'Marketing'): echo 'active'; endif; ?>">
                     <a href="<?= base_url("marketing") ?>">
                         <i class='bx bx-fw bx-bar-chart-square'></i> Marketing <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>

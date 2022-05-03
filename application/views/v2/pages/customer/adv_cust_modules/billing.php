@@ -128,9 +128,11 @@
                     </div>
                 </div>
                 <div class="col-12">
-                    <button role="button" class="nsm-button primary w-100 ms-0 mt-3" onclick="location.href='<?= base_url('/customer/add_advance/' . $profile_info->prof_id);?>'">
-                        <i class='bx bx-fw bx-message-square-edit'></i> View/Edit Module
-                    </button>
+                    <a href="<?= base_url('/customer/add_advance/' . $profile_info->prof_id);?>" target="_blank">
+                        <button role="button" class="nsm-button primary w-100 ms-0 mt-3">
+                            <i class='bx bx-fw bx-message-square-edit'></i> View/Edit Module
+                        </button>
+                    </a>
                 </div>
             </div>
         </div>

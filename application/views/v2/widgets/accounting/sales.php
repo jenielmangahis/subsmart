@@ -78,6 +78,8 @@ endif;
         $amountThird = 0;
         $amountFourth = 0;
         $amountFifth = 0;
+
+        
         foreach($sales as $s){
             if(date("Y-m-d", strtotime("-30 days"))<=date("Y-m-d", strtotime($s->date_created)) && date("Y-m-d", strtotime("-25 days"))>=date("Y-m-d", strtotime($s->date_created))){
                 $amountFirst += $s->grand_total;
