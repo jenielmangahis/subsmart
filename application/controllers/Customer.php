@@ -822,8 +822,10 @@ class Customer extends MY_Controller
             $this->page_data['audit_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$id,"acs_audit_import");
             //$this->page_data['minitab'] = $this->uri->segment(5);
             $this->page_data['task_info'] = $this->taskhub_model->getAllNotCompletedTasksByCustomerId($id);
+            $this->page_data['item_details'] = $this->customer_ad_model->get_customer_item_details($id);
             //$this->page_data['task_info'] = $this->customer_ad_model->get_all_by_id("fk_prof_id",$id,"acs_tasks");
             $this->page_data['module_sort'] = $this->customer_ad_model->get_data_by_id('fk_user_id',$user_id,"ac_module_sort");
+            $this->page_data['tasks'] = $this->customer_ad_model->get_data_by_id('prof_id',$user_id,"tasks");
             $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
             $this->page_data['cus_id'] = $id;
 
@@ -2697,7 +2699,7 @@ class Customer extends MY_Controller
         }
     }
 
-    public function send_qr($id=null){
+    public function send_qr($id=null) {
         
         $customer = $this->customer_ad_model->get_data_by_id('prof_id',$id,"acs_profile");
         //Email Sending
@@ -2714,7 +2716,6 @@ class Customer extends MY_Controller
         $params['customer_id'] = ["id"=>$id,"firstname"=>$customer->first_name,"lastname"=>$customer->last_name];
 
         include APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
-        
         $mail = new PHPMailer;
         $mail->isSMTP();
         $mail->getSMTPInstance()->Timelimit = 5;
@@ -2732,6 +2733,50 @@ class Customer extends MY_Controller
         //$mail->addAttachment($attachment);
 
         $content = $this->load->view('customer/email_template/customer_qr_template', $params, true);
+
+        $mail->MsgHTML($content);
+        $mail->addAddress($recipient);
+        if($mail->send()){
+            echo json_encode(['success' => true]);
+        }else{
+            echo json_encode(['success' => false]);
+        }
+        $mail->ClearAllRecipients();
+        
+    }
+
+    public function send_welcome_email() {
+        
+        //Email Sending
+        $server    = MAIL_SERVER;
+        $port      = MAIL_PORT ;
+        $username  = MAIL_USERNAME;
+        $password  = MAIL_PASSWORD;
+        $from      = MAIL_FROM;
+        $recipient = $_POST['email_address'];
+        $subject = 'Welcome to nSmaTrac';
+
+        $params = array();
+        
+        include APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
+        $mail = new PHPMailer;
+        $mail->isSMTP();
+        $mail->getSMTPInstance()->Timelimit = 5;
+        $mail->Host = $server;
+        $mail->SMTPAuth = true;
+        $mail->Username = $username;
+        $mail->Password = $password;
+        $mail->SMTPSecure = 'ssl';
+        $mail->Timeout = 10; // seconds
+        $mail->Port = $port;
+        $mail->From = $from;
+        $mail->FromName = 'nSmarTrac';
+        $mail->Subject = $subject;
+        $mail->Body    = 'Welcome to nSmaTrac';
+        //$mail->addAttachment($attachment);
+
+        //$content = $this->load->view('customer/email_template/customer_qr_template', $params, true);
+        $content = '<h1>Welcome to nSmarTrac!</h1>';
 
         $mail->MsgHTML($content);
         $mail->addAddress($recipient);

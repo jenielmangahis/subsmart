@@ -59,7 +59,6 @@ class Taskhub_model extends MY_Model {
 
     public function getAllNotCompletedTasksByCustomerId($customer_id)
     {
-        $id = $user_id;
         $this->db->select('tasks.*, tasks_status.status_text, tasks_status.status_color');
         $this->db->join('tasks_status','tasks.status_id = tasks_status.status_id','left');
         $this->db->from($this->table);

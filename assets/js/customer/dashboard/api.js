@@ -24,6 +24,12 @@ export function getCustomerActions(customerId) {
   );
 }
 
+export function getCustomerById(customerId) {
+  return http.get(
+    `${prefixURL}/CustomerDashboardQuickActions/getCustomerById/${customerId}`
+  );
+}
+
 const http = {
   post: sendPost,
   delete: sendDelete,

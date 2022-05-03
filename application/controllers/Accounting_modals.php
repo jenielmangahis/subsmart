@@ -57,6 +57,7 @@ class Accounting_modals extends MY_Controller
         $this->load->model('invoice_model');
         $this->load->model('workorder_model');
         $this->load->model('invoice_settings_model');
+        $this->load->model('accounting_linked_transactions_model');
         $this->load->library('form_validation');
     }
 
@@ -5252,6 +5253,40 @@ class Accounting_modals extends MY_Controller
                         "note" => "First status"
                     );
                     $this->invoice_model->new_invoice_status($new_status_data);
+
+                    if(!is_null($data['linked_transaction'])) {
+                        $linkedTransacsData = [];
+                        foreach($data['linked_transaction'] as $linkedTransac) {
+                            $explode = explode('-', $linkedTransac);
+        
+                            if($explode[0] === 'delayed_credit') {
+                                $delayedCredit = $this->accounting_delayed_credit_model->getDelayedCreditDetails($explode[1]);
+        
+                                $creditData = [
+                                    'status' => 2
+                                ];
+        
+                                $creditUpdate = $this->accounting_delayed_credit_model->updateDelayedCredit($delayedCredit->id, $creditData);
+                            } else {
+                                $delayedCharge = $this->accounting_delayed_charge_model->getDelayedChargeDetails($explode[1]);
+        
+                                $chargeData = [
+                                    'status' => 2
+                                ];
+        
+                                $chargeUpdate = $this->accounting_delayed_charge_model->updateDelayedCharge($delayedCharge->id, $chargeData);
+                            }
+
+                            $linkedTransacsData[] = [
+                                'linked_to_type' => 'invoice',
+                                'linked_to_id' => $invoiceId,
+                                'linked_transaction_type' => str_replace('_', '-', $explode[0]),
+                                'linked_transaction_id' => $explode[1]
+                            ];
+                        }
+
+                        $this->accounting_linked_transactions_model->insert_by_batch($linkedTransacsData);
+                    }
                 }
 
                 if (isset($data['attachments']) && is_array($data['attachments'])) {
@@ -5283,30 +5318,6 @@ class Accounting_modals extends MY_Controller
                         $linkTagId = $this->tags_model->link_tag($linkTagData);
 
                         $order++;
-                    }
-                }
-
-                if(!is_null($data['linked_transaction'])) {
-                    foreach($data['linked_transaction'] as $linkedTransac) {
-                        $explode = explode('-', $linkedTransac);
-    
-                        if($explode[0] === 'delayed_credit') {
-                            $delayedCredit = $this->accounting_delayed_credit_model->getDelayedCreditDetails($explode[1]);
-    
-                            $creditData = [
-                                'status' => 2
-                            ];
-    
-                            $creditUpdate = $this->accounting_delayed_credit_model->updateDelayedCredit($delayedCredit->id, $creditData);
-                        } else {
-                            $delayedCharge = $this->accounting_delayed_charge_model->getDelayedChargeDetails($explode[1]);
-    
-                            $chargeData = [
-                                'status' => 2
-                            ];
-    
-                            $chargeUpdate = $this->accounting_delayed_charge_model->updateDelayedCharge($delayedCharge->id, $chargeData);
-                        }
                     }
                 }
 
@@ -10377,6 +10388,8 @@ class Accounting_modals extends MY_Controller
         $delayedCredit = $this->accounting_delayed_credit_model->getDelayedCreditDetails($delayedCreditId);
         $items = $this->accounting_credit_memo_model->get_customer_transaction_items('Delayed Credit', $delayedCreditId);
 
+        $linkedTo = $this->accounting_linked_transactions_model->get_linked_to_transaction('delayed-credit', $delayedCreditId);
+
         foreach($items as $key => $item) {
             if(!in_array($item->item_id, ['0', null, '']) && in_array($item->package_id, ['0', null, ''])) {
                 $items[$key]->itemDetails = $this->items_model->getItemById($item->item_id)[0];
@@ -10397,6 +10410,8 @@ class Accounting_modals extends MY_Controller
     {
         $delayedCharge = $this->accounting_delayed_charge_model->getDelayedChargeDetails($delayedChargeId);
         $items = $this->accounting_credit_memo_model->get_customer_transaction_items('Delayed Charge', $delayedChargeId);
+
+        $linkedTo = $this->accounting_linked_transactions_model->get_linked_to_transaction('delayed-charge', $delayedChargeId);
 
         foreach($items as $key => $item) {
             if(!in_array($item->item_id, ['0', null, '']) && in_array($item->package_id, ['0', null, ''])) {
@@ -10423,21 +10438,19 @@ class Accounting_modals extends MY_Controller
         $paymentMethods = explode(',', $invoice->payment_methods);
         $invoiceSettings = $this->invoice_settings_model->getAllByCompany(logged('company_id'));
 
-        $discount = 0.00;
-        if(!is_null($invoice->linked_transactions)) {
-            $linkedTransacs = json_decode($invoice->linked_transactions, true);
-
+        $linkedTransactions = $this->accounting_linked_transactions_model->get_linked_transactions('invoice', $invoiceId);
+        if(count($linkedTransactions) > 0) {
             $linked = [];
-            foreach($linkedTransacs as $linkedData) {
-                if($linkedData['type'] === 'delayed_credit') {
+            foreach($linkedTransactions as $linkedData) {
+                if($linkedData->linked_transaction_type === 'delayed-credit') {
                     $linked[] = [
                         'type' => 'Delayed Credit',
-                        'transaction' => $this->accounting_delayed_credit_model->getDelayedCreditDetails($linkedData['id'])
+                        'transaction' => $this->accounting_delayed_credit_model->getDelayedCreditDetails($linkedData->linked_transaction_id)
                     ];
                 } else {
                     $linked[] = [
                         'type' => 'Delayed Charge',
-                        'transaction' => $this->accounting_delayed_charge_model->getDelayedChargeDetails($linkedData['id'])
+                        'transaction' => $this->accounting_delayed_charge_model->getDelayedChargeDetails($linkedData->linked_transaction_id)
                     ];
                 }
             }
@@ -10445,6 +10458,7 @@ class Accounting_modals extends MY_Controller
             $invoice->linked_transacs = $linked;
         }
 
+        $discount = 0.00;
         foreach($invoiceItems as $key => $invoiceItem) {
             if(!in_array($invoiceItem->items_id, ['0', null, '']) && in_array($invoiceItem->package_id, ['0', null, ''])) {
                 $invoiceItems[$key]->itemDetails = $this->items_model->getItemById($invoiceItem->items_id)[0];
@@ -14453,6 +14467,7 @@ class Accounting_modals extends MY_Controller
         if($update) {
             $attachments = $this->accounting_attachments_model->get_attachments('Invoice', $invoice->id);
             $tags = $this->tags_model->get_transaction_tags('Invoice', $invoice->id);
+            $linkedTransactions = $this->accounting_linked_transactions_model->get_linked_transactions('invoice', $invoiceId);
 
             // OLD
             if(count($attachments) > 0) {
@@ -14469,6 +14484,26 @@ class Accounting_modals extends MY_Controller
                     if(!isset($data['tags']) || !isset($data['tags'][$key])) {
                         $this->tags_model->unlink_tag(['transaction_type' => 'Invoice', 'tag_id' => $tag->id, 'transaction_id' => $invoice->id]);
                     }
+                }
+            }
+
+            if(count($linkedTransactions) > 0) {
+                foreach($linkedTransactions as $linkedData) {
+                    if($linkedData->linked_transaction_type === 'delayed-credit') {
+                        $creditData = [
+                            'status' => 1
+                        ];
+
+                        $creditUpdate = $this->accounting_delayed_credit_model->updateDelayedCredit($linkedData->linked_transaction_id, $creditData);
+                    } else {
+                        $chargeData = [
+                            'status' => 1
+                        ];
+
+                        $chargeUpdate = $this->accounting_delayed_charge_model->updateDelayedCharge($linkedData->linked_transaction_id, $chargeData);
+                    }
+
+                    $this->accounting_linked_transactions_model->unlink($linkedData->id);
                 }
             }
 
@@ -14527,27 +14562,8 @@ class Accounting_modals extends MY_Controller
             $invoiceItems = $this->invoice_model->get_invoice_items($invoice->id);
             $this->invoice_model->delete_items($invoice->id);
 
-            if(!is_null($invoice->linked_transactions)) {
-                $linkedTransactions = json_decode($invoice->linked_transactions, true);
-
-                foreach($linkedTransactions as $linkedData) {
-                    if($linkedData['type'] === 'delayed_credit') {
-                        $creditData = [
-                            'status' => 1
-                        ];
-
-                        $creditUpdate = $this->accounting_delayed_credit_model->updateDelayedCredit($linkedData['id'], $creditData);
-                    } else {
-                        $chargeData = [
-                            'status' => 1
-                        ];
-
-                        $chargeUpdate = $this->accounting_delayed_charge_model->updateDelayedCharge($linkedData['id'], $chargeData);
-                    }
-                }
-            }
-
             if(!is_null($data['linked_transaction'])) {
+                $linkedTransacsData = [];
                 foreach($data['linked_transaction'] as $linkedTransac) {
                     $explode = explode('-', $linkedTransac);
     
@@ -14568,7 +14584,16 @@ class Accounting_modals extends MY_Controller
     
                         $chargeUpdate = $this->accounting_delayed_charge_model->updateDelayedCharge($delayedCharge->id, $chargeData);
                     }
+
+                    $linkedTransacsData[] = [
+                        'linked_to_type' => 'invoice',
+                        'linked_to_id' => $invoiceId,
+                        'linked_transaction_type' => str_replace('_', '-', $explode[0]),
+                        'linked_transaction_id' => $explode[1]
+                    ];
                 }
+
+                $this->accounting_linked_transactions_model->insert_by_batch($linkedTransacsData);
             }
 
             foreach($data['item'] as $key => $input) {

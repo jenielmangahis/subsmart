@@ -64,7 +64,7 @@
                     </div>
                 </div>
                 <div class="col-12">
-                    <button role="button" class="nsm-button primary w-100 ms-0 mt-3">
+                    <button class="nsm-button light w-100 ms-0 mt-3" disabled>
                         <i class='bx bx-fw bx-link-external'></i> Send Link Reset Password
                     </button>
                 </div>

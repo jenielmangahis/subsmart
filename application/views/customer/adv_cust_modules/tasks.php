@@ -24,7 +24,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <?php if(isset($task_info)) : ?>
                                         <?php foreach ($task_info as $task) : ?>
                                             <tr class="gridrow1" id="reminder_35" >                                                
-                                                <td height="15" width="27%" class="" align="left" valign="top" style="padding:1px 2px 1px 2px; line-height:17px!important;  ">
+                                                <td height="15" width="27%" class=
+                                                "" align="left" valign="top" style="padding:1px 2px 1px 2px; line-height:17px!important;  ">
                                                     <?= $task->subject; ?>
                                                 </td>
                                                 <td height="15" align="left" valign="top" class="normaltext1" width="30%" style="padding:1px 2px 1px 2px; line-height:17px!important;  ">

@@ -112,21 +112,39 @@
                     </div>
                 </div>
                 <div class="col-12 col-md-4">
-                    <button role="button" class="nsm-button w-100 ms-0 mt-3" onclick="window.open('<?= base_url('job_checklists/list'); ?>', '_blank', 'location=yes,height=1080,width=1500,scrollbars=yes,status=yes');">
-                        <i class='bx bx-fw bx-list-check'></i> Checklists
-                    </button>
+                    <a href="<?= base_url('job_checklists/list'); ?>" target="_blank">
+                        <button role="button" class="nsm-button w-100 ms-0 mt-3">
+                            <i class='bx bx-fw bx-list-check'></i> Checklists
+                        </button>
+                    </a>
                 </div>
                 <div class="col-12 col-md-4">
-                    <button role="button" class="nsm-button w-100 ms-0 mt-3">
+                    <button role="button" class="nsm-button w-100 ms-0 mt-3 sendWelcomeEmail">
                         <i class='bx bx-fw bx-history'></i> Welcome Email
                     </button>
                 </div>
                 <div class="col-12 col-md-4">
-                    <button role="button" class="nsm-button w-100 ms-0 mt-3" onclick="window.open('<?= base_url('survey'); ?>', '_blank', 'location=yes,height=1080,width=1500,scrollbars=yes,status=yes');">
-                        <i class='bx bx-fw bx-question-mark'></i> Survey
-                    </button>
+                    <a href="<?= base_url('survey'); ?>" target="_blank">
+                        <button role="button" class="nsm-button w-100 ms-0 mt-3">
+                            <i class='bx bx-fw bx-question-mark'></i> Survey
+                        </button>
+                    </a>
                 </div>
             </div>
         </div>
     </div>
 </div>
+<script>
+$(function(){
+    $(document).on('click', '.sendWelcomeEmail', function(){
+        $.ajax({
+            type: "POST",
+            url: "<?= base_url() ?>/customer/send_welcome_email",
+            data: { email_address: <?= $profile_info->email; ?>}, // serializes the form's elements.
+            success: function (data){
+                alert('Email Sent!');
+            }
+        });
+    });
+});
+</script>

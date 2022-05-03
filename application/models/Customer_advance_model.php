@@ -52,6 +52,18 @@ class Customer_advance_model extends MY_Model {
         return $query->row();
     }
 
+    public function get_customer_item_details($id){
+        $this->db->from("job_items");
+        $this->db->select('items.title,job_items.qty,items.type');
+        $this->db->join('jobs', 'jobs.id = job_items.job_id','left');
+        $this->db->join('items', 'job_items.items_id = items.id','left');
+        $this->db->where("jobs.customer_id", $id);
+        $this->db->order_by('jobs.id', "DESC");
+        $this->db->limit(10);
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function get_leads_data(){
         $cid=logged('company_id');
         $this->db->from("ac_leads");

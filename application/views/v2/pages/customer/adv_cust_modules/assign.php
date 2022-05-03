@@ -45,7 +45,7 @@
                     </button>
                 </div>
                 <div class="col-12">
-                    <button class="nsm-button w-100 ms-0">
+                    <button class="nsm-button w-100 ms-0 sendResetPass">
                         <i class='bx bx-fw bx-history'></i> Send Reset Password
                     </button>
                 </div>
@@ -53,3 +53,17 @@
         </div>
     </div>
 </div>
+<script>
+$(function(){
+    $(document).on('click', '.sendResetPass', function(){
+        $.ajax({
+            type: "POST",
+            url: "<?= base_url() ?>/customer/send_welcome_email",
+            data: { email_address: <?= $profile_info->email; ?>}, // serializes the form's elements.
+            success: function (data){
+                alert('Password Reset Sent!');
+            }
+        });
+    });
+});
+</script>
