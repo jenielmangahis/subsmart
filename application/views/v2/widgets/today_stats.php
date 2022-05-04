@@ -3,12 +3,12 @@ if (!is_null($dynamic_load) && $dynamic_load == true) :
     echo '<div class="col-12 col-lg-4">';
 endif;
 ?>
- <style>
-     .nsm-counter h3 {
-    margin: unset;
-    font-weight: bold;
-}
- </style>
+<style>
+    .nsm-counter h3 {
+        margin: unset;
+        font-weight: bold;
+    }
+</style>
 <div class="<?= $class ?>" data-id="<?= $id ?>" id="widget_<?= $id ?>" draggable="true">
     <div class="nsm-card-header">
         <div class="nsm-card-title">
@@ -78,13 +78,13 @@ endif;
                         </div>
                         <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
                             <h2><?php $totalJobsComplete = 0;
-                                foreach($jobsDone as $JD){
-                                    if($JD->status == "Completed"){
+                                foreach ($jobsDone as $JD) {
+                                    if ($JD->status == "Completed") {
                                         $totalJobsComplete++;
                                     }
                                 }
                                 echo $totalJobsComplete;
-                            ?></h2>
+                                ?></h2>
                             <span>Jobs Completed</span>
                         </div>
                     </div>
@@ -98,13 +98,13 @@ endif;
                         </div>
                         <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
                             <h2><?php $totalJobsAdded = 0;
-                                foreach($jobsDone as $JD){
-                                    if($JD->status == "New"){
+                                foreach ($jobsDone as $JD) {
+                                    if ($JD->status == "New" || $JD->status == "Scheduled") {
                                         $totalJobsAdded++;
                                     }
                                 }
                                 echo $totalJobsAdded;
-                            ?></h2>
+                                ?></h2>
                             <span>New Jobs Booked Online</span>
                         </div>
                     </div>
@@ -117,7 +117,8 @@ endif;
                             <i class='bx bx-task-x'></i>
                         </div>
                         <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
-                            <h2>0</h2>
+                            <h2>0
+                            </h2>
                             <span>Lost Accounts</span>
                         </div>
                     </div>
@@ -130,7 +131,20 @@ endif;
                             <i class='bx bx-box'></i>
                         </div>
                         <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
-                            <h2>0</h2>
+                            <h2>
+                                <?php
+                                $totalInvoices = 0;
+
+                                foreach ($upcomingInvoice as $UI) {
+                                    if ($UI->status == "Partially Paid" || $UI->status == "Due" || $UI->status == "Approved") {
+                                        $totalInvoices++;
+                                    }
+                                }
+
+                                echo $totalInvoices;
+
+                                ?>
+                            </h2>
                             <span>Collections</span>
                         </div>
                     </div>

@@ -334,7 +334,7 @@
                                                             <th width="10%">TAX (CHANGE IN %)</th>
                                                             <th>TOTAL</th>
                                                             <?php if(isset($invoice) && !is_null($invoice->linked_transactions)) : ?>
-                                                            <th widht="3%"></th>
+                                                            <th width="3%"></th>
                                                             <?php endif; ?>
                                                             <th width="3%"></th>
                                                         </thead>

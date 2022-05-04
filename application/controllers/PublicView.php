@@ -47,7 +47,10 @@ class PublicView extends MY_P_Controller
         // {
         //     $ubID = $ub->user_id;
         // }
-        $this->page_data['userIbiz'] = $this->customer_model->getuserIB($uIbiz->user_id);
+        $this->page_data['userIbiz'] = $this->customer_model->getuserIB($id);
+        $this->page_data['ibizDetailsAdd'] = $this->customer_model->getibizDetailsAdd($id);
+        $this->page_data['ibizDetailsPh'] = $this->customer_model->getibizDetailsPh($id);
+        $this->page_data['ibizDetailsEmail'] = $this->customer_model->ibizDetailsEmail($id);
         // dd($uIbiz->user_id);
 
         $this->load->view('customer/customer_ibiz', $this->page_data);

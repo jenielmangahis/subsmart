@@ -2431,17 +2431,41 @@ $(function() {
                             $('#modal-container .modal table#category-details-table tbody').append(`<tr>${catDetailsInputs}</tr>`);
                             $('#modal-container .modal table#category-details-table tbody tr:last-child td:nth-child(2)').html(count);
                             $(link).insertBefore($('#modal-container .modal table#category-details-table tbody tr:last-child td:last-child'));
-                            $('#modal-container .modal table#category-details-table tbody tr:last-child select[name="expense_name[]"]').val(category.expense_account_id);
+                            $('#modal-container .modal table#category-details-table tbody tr:last-child select[name="expense_account[]"]').append(`<option value="${category.expense_account_id}">${category.expense_account}</option>`);
                             $('#modal-container .modal table#category-details-table tbody tr:last-child select[name="category[]"]').val(category.category);
                             $('#modal-container .modal table#category-details-table tbody tr:last-child input[name="description[]"]').val(category.description);
                             $('#modal-container .modal table#category-details-table tbody tr:last-child input[name="category_amount[]"]').val(parseFloat(category.amount).toFixed(2));
                             $('#modal-container .modal table#category-details-table tbody tr:last-child input[name="category_billable[]"]').prop('checked', category.billable === "1");
                             $('#modal-container .modal table#category-details-table tbody tr:last-child input[name="category_markup[]"]').val(parseFloat(category.markup_percentage).toFixed(2));
                             $('#modal-container .modal table#category-details-table tbody tr:last-child input[name="category_tax[]"]').prop('checked', category.tax === "1");
-                            $('#modal-container .modal table#category-details-table tbody tr:last-child select[name="category_customer[]"]').val(category.customer_id);
+                            $('#modal-container .modal table#category-details-table tbody tr:last-child select[name="category_customer[]"]').append(`<option value="${category.customer_id}">${category.customer_name}</option>`);
                         });
 
                         $('#modal-container .modal table#category-details-table tbody select').select2();
+
+                        $('#modal-container .modal table#category-details-table tbody tr:last-child select').each(function() {
+                            var field = $(this).attr('name').replace('[]', '');
+
+                            $(this).select2({
+                                ajax: {
+                                    url: '/accounting/get-dropdown-choices',
+                                    dataType: 'json',
+                                    data: function(params) {
+                                        var query = {
+                                            search: params.term,
+                                            type: 'public',
+                                            field: field,
+                                            modal: $('#modal-container .modal').attr('id')
+                                        }
+        
+                                        // Query parameters will be ?search=[term]&type=public&field=[type]
+                                        return query;
+                                    }
+                                },
+                                templateResult: formatResult,
+                                templateSelection: optionSelect
+                            });
+                        });
                     }
 
                     if (count === 1) {
@@ -3070,6 +3094,9 @@ $(function() {
             case 'delayed-charge' :
                 var modalName = 'delayedChargeModal';
             break;
+            case 'invoice' :
+                var modalName = 'invoiceModal';
+            break;
         }
 
         $.get(`/accounting/view-transaction/${type}/${id}`, function(res) {
@@ -3086,6 +3113,7 @@ $(function() {
             initModalFields(modalName, { id: id, type: type });
 
             $(`#${modalName} #payee`).trigger('change');
+            $(`#${modalName} #customer`).trigger('change');
 
             $(`#${modalName}`).modal('show');
         });

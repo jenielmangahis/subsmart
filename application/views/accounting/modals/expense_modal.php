@@ -189,7 +189,7 @@
                                                                     <th width="10%">MARKUP %</th>
                                                                     <th width="3%">TAX</th>
                                                                     <th width="15%">CUSTOMER</th>
-                                                                    <th></th>
+                                                                    <th width="3%"></th>
                                                                 </thead>
                                                                 <tbody class="cursor-pointer">
                                                                     <tr>

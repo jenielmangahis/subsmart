@@ -11,18 +11,9 @@ endif;
         </div>
         <div class="nsm-card-controls">
             <div class="dropdown">
-                <button type="button" class="dropdown-toggle nsm-button btn-sm m-0 me-2" data-bs-toggle="dropdown">
-                    <span>Filter by Last 30 days</span> <i class='bx bx-fw bx-chevron-down'></i>
-                </button>
-                <ul class="dropdown-menu dropdown-menu-end">
-                    <li><a class="dropdown-item" href="#">Last 30 days</a></li>
-                    <li><a class="dropdown-item" href="#">This month</a></li>
-                    <li><a class="dropdown-item" href="#">This quarter</a></li>
-                    <li><a class="dropdown-item" href="#">Last year</a></li>
-                    <li><a class="dropdown-item" href="#">Last month</a></li>
-                    <li><a class="dropdown-item" href="#">Last quarter</a></li>
-                    <li><a class="dropdown-item" href="#">Last year</a></li>
-                </ul>
+            <a role="button" class="nsm-button btn-sm m-0 me-2" href="<?php echo base_url('accounting/allsales') ?>">
+                See More
+            </a>
             </div>
             <div class="dropdown">
                 <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
@@ -73,33 +64,33 @@ endif;
 
 
     <?php
-        $amountFirst = 0;
-        $amountSecond = 0;
-        $amountThird = 0;
-        $amountFourth = 0;
-        $amountFifth = 0;
+    $amountFirst = 0;
+    $amountSecond = 0;
+    $amountThird = 0;
+    $amountFourth = 0;
+    $amountFifth = 0;
 
-        
-        foreach($sales as $s){
-            if(date("Y-m-d", strtotime("-30 days"))<=date("Y-m-d", strtotime($s->date_created)) && date("Y-m-d", strtotime("-25 days"))>=date("Y-m-d", strtotime($s->date_created))){
-                $amountFirst += $s->grand_total;
-            }else if(date("Y-m-d", strtotime("-24 days"))<=date("Y-m-d", strtotime($s->date_created)) && date("Y-m-d", strtotime("-18 days"))>=date("Y-m-d", strtotime($s->date_created))){
-                $amountSecond += $s->grand_total;
-            }else if(date("Y-m-d", strtotime("-17 days"))<=date("Y-m-d", strtotime($s->date_created)) && date("Y-m-d", strtotime("-12 days"))>=date("Y-m-d", strtotime($s->date_created))){
-                $amountThird+= $s->grand_total;
-            }else if(date("Y-m-d", strtotime("-11 days"))<=date("Y-m-d", strtotime($s->date_created)) && date("Y-m-d", strtotime("-6 days"))>=date("Y-m-d", strtotime($s->date_created))){
-                $amountFourth+= $s->grand_total;
-            }else if(date("Y-m-d", strtotime("-5 days"))<=date("Y-m-d", strtotime($s->date_created)) && date("Y-m-d")>=date("Y-m-d", strtotime($s->date_created))){
-                $amountFifth+= $s->grand_total;
-            }
+
+    foreach ($sales as $s) {
+        if (date("Y-m-d", strtotime("-30 days")) <= date("Y-m-d", strtotime($s->date_created)) && date("Y-m-d", strtotime("-25 days")) >= date("Y-m-d", strtotime($s->date_created))) {
+            $amountFirst += $s->grand_total;
+        } else if (date("Y-m-d", strtotime("-24 days")) <= date("Y-m-d", strtotime($s->date_created)) && date("Y-m-d", strtotime("-18 days")) >= date("Y-m-d", strtotime($s->date_created))) {
+            $amountSecond += $s->grand_total;
+        } else if (date("Y-m-d", strtotime("-17 days")) <= date("Y-m-d", strtotime($s->date_created)) && date("Y-m-d", strtotime("-12 days")) >= date("Y-m-d", strtotime($s->date_created))) {
+            $amountThird += $s->grand_total;
+        } else if (date("Y-m-d", strtotime("-11 days")) <= date("Y-m-d", strtotime($s->date_created)) && date("Y-m-d", strtotime("-6 days")) >= date("Y-m-d", strtotime($s->date_created))) {
+            $amountFourth += $s->grand_total;
+        } else if (date("Y-m-d", strtotime("-5 days")) <= date("Y-m-d", strtotime($s->date_created)) && date("Y-m-d") >= date("Y-m-d", strtotime($s->date_created))) {
+            $amountFifth += $s->grand_total;
         }
-    
+    }
+
     ?>
 
 
     function initializeSalesChart() {
         var sales = $('#sales_chart');
-        
+
         const sales_labels = [
             firstDate + " - " + secondDate,
             secondDate2 + " - " + thirdDate,
@@ -113,7 +104,7 @@ endif;
                 label: 'Sales',
                 backgroundColor: 'rgb(106, 74, 134)',
                 borderColor: 'rgb(106, 74, 134)',
-                data: [<?php echo $amountFirst ?>,<?php echo $amountSecond; ?>,<?php echo $amountThird; ?>,<?php echo $amountFourth; ?>,<?php echo $amountFifth; ?>],
+                data: [<?php echo $amountFirst ?>, <?php echo $amountSecond; ?>, <?php echo $amountThird; ?>, <?php echo $amountFourth; ?>, <?php echo $amountFifth; ?>],
             }, ]
         };
 

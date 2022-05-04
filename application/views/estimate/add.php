@@ -1448,3 +1448,23 @@ $.ajax({
 // cal_total_due();
 });
 </script>
+
+<script>
+    window.document.addEventListener("DOMContentLoaded", async () => {
+        const params = new Proxy(new URLSearchParams(window.location.search), {
+            get: (searchParams, prop) => searchParams.get(prop),
+        });
+
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        if (!params.customer || !params.customer.length) return;
+
+        const $customer = document.querySelector("[name=customer_id]");
+        if (!$customer) return;
+
+        await sleep(300);
+        $($customer).val(params.customer).trigger("change");
+    });
+</script>

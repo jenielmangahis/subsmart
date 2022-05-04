@@ -57,10 +57,9 @@ function createActionItem(action) {
   const $title = $copy.querySelector(".content-title");
   const $switch = $copy.querySelector("[type=checkbox]");
 
-  if (action.icon_class) {
-    const $icon = $copy.querySelector(".icon");
-    $icon.classList.remove("d-none");
-    $icon.classList.add(...action.icon_class.split(" "));
+  if (action.sub_text) {
+    const $subTitle = $copy.querySelector(".content-subtitle");
+    $subTitle.textContent = action.sub_text;
   }
 
   if (action.is_checked === true) {
@@ -132,13 +131,6 @@ function createActionButton(action) {
     text-overflow: ellipsis;
   `;
 
-  if (action.icon_class) {
-    $icon = document.createElement("i");
-    $icon.classList.add(...action.icon_class.split(" "));
-    $icon.style.marginRight = "5px";
-    $button.prepend($icon);
-  }
-
   $button.addEventListener("click", (event) => {
     if (!action.url || !action.url.trim().length) return;
 
@@ -154,7 +146,8 @@ function createActionButton(action) {
     const { prof_id, email } = window.__customermodule_customer;
     let location = `${action.url}`.replace(":customerid", prof_id);
     location = location.replace(":customeremail", email);
-    window.location = location;
+    // window.location = location;
+    window.open(location, "_blank");
   });
 
   return $button;
