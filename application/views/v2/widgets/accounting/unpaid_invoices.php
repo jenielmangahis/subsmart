@@ -24,28 +24,44 @@ endif;
     <div class="nsm-card-content">
         <div class="nsm-widget-table">
             <?php
-            foreach ($upcomingInvoice as $Invoice) {
-                if ($Invoice->due_date >= date("Y-m-d")) {
-                    if ($Invoice->status == "Approved") {
+            $count =0;
+            foreach($upcomingInvoice as $invoice){
+                if ($Invoice->due_date >= date("Y-m-d")){
+                    $count++;
+                }
+            }
+
+            if ($count!=0) {
+                foreach ($upcomingInvoice as $Invoice) {
+                    if ($Invoice->due_date >= date("Y-m-d")) {
+                        if ($Invoice->status == "Approved") {
             ?>
-                        <div class="widget-item">
-                            <div class="nsm-profile" style="background-image: url(<?php base_url() ?>assets/images/v2/operator.png); background-size: 29px; background-color: #aedbf9;">
-                                <span></span>
-                            </div>
-                            <div class="content">
-                                <div class="details">
-                                    <span class="content-title"><?php echo $Invoice->customer_email; ?></span>
-                                    <span class="content-subtitle d-block"><?php echo $Invoice->invoice_number; ?></span>
+                            <div class="widget-item">
+                                <div class="nsm-profile" style="background-image: url(<?php base_url() ?>assets/images/v2/operator.png); background-size: 29px; background-color: #aedbf9;">
+                                    <span></span>
                                 </div>
-                                <div class="controls">
-                                    <span class="nsm-badge success">Due in <?php echo $Invoice->due_date; ?></span>
-                                    <span class="content-subtitle d-block mt-1 fw-bold">$ <?php echo $Invoice->grand_total; ?></span>
+                                <div class="content">
+                                    <div class="details">
+                                        <span class="content-title"><?php echo $Invoice->customer_email; ?></span>
+                                        <span class="content-subtitle d-block"><?php echo $Invoice->invoice_number; ?></span>
+                                    </div>
+                                    <div class="controls">
+                                        <span class="nsm-badge success">Due in <?php echo $Invoice->due_date; ?></span>
+                                        <span class="content-subtitle d-block mt-1 fw-bold">$ <?php echo $Invoice->grand_total; ?></span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-            <?php
+                <?php
+                        }
                     }
                 }
+            } else {
+                ?>
+                <div class="nsm-empty">
+                    <i class='bx bx-meh-blank'></i>
+                    <span>Unpaid Invoices is empty.</span>
+                </div>
+            <?php
             }
             ?>
 

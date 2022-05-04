@@ -3658,3 +3658,53 @@ $('.image-upload-wrap').bind('dragover', function () {
         $('.image-upload-wrap').removeClass('image-dropping');
 });
 </script>
+
+
+<script>
+    window.document.addEventListener("DOMContentLoaded", async () => {
+        const isLocalhost = ["localhost", "127.0.0.1"].includes(location.hostname);
+        if (isLocalhost) {
+            $.ajaxSetup({
+                beforeSend: function (_, settings) {
+                    if (settings.url.startsWith("/accounting/")) {
+                        settings.url = settings.url.replace(
+                            "/accounting/",
+                            "/nsmartrac/accounting/"
+                        );
+                    }
+                },
+            });
+        }
+
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        const params = new Proxy(new URLSearchParams(window.location.search), {
+            get: (searchParams, prop) => searchParams.get(prop),
+        });
+
+        if (!params.customer || !params.customer.length) return;
+        if (!params.action || !params.action.length) return;
+
+        const $modalTrigger = document.querySelector(`[data-target="#${params.action}"]`);
+        if (!$modalTrigger) return;
+
+        await sleep(300);
+        $modalTrigger.click();
+
+        const api = await import((isLocalhost ? "/nsmartrac" : "") + "/assets/js/customer/dashboard/api.js");
+        const { data: customer } = await api.getCustomerById(params.customer);
+
+        if (!customer) return;
+        const customerName = `${customer.first_name} ${customer.last_name}`;
+
+        await sleep(300);
+        const $modalContainer = document.getElementById('modal-container');
+        const $customer = $modalContainer.querySelector("#customer");
+        if (!$customer) return;
+        
+        const option = new Option(customerName, params.customer, true, true);
+        $($customer).append(option).trigger('change');
+    });
+</script>

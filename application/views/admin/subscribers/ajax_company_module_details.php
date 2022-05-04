@@ -18,8 +18,12 @@
 }
 .toggle.ios, .toggle-on.ios, .toggle-off.ios { border-radius: 20rem !important; }
 .toggle.ios .toggle-handle { border-radius: 20rem !important; }
+.toggle.android { border-radius: 0px;}
+.toggle.android .toggle-handle { border-radius: 0px;}
+.toggle-handle {
+    background-color: #ffffff;
+}
 </style>
-<div style="height: 600px; overflow: auto; width: 100%;">
 <ul class="modules-list">
     <?php foreach( $templateModules as $t ){ ?>
         <?php if( $t->industry_module_name != '' ){ ?>
@@ -34,13 +38,12 @@
                     $is_checked = '';
                 }
             ?>
-            <input type="checkbox" class="b-toggle" data-id="<?= $t->id; ?>" data-cid="<?= $subscriber->id; ?>" <?= $is_checked; ?> data-toggle="toggle" data-width="250" data-on="Activated" data-off="Deactivated" data-onstyle="success" data-offstyle="danger" data-style="ios">
+            <input type="checkbox" class="b-toggle" data-id="<?= $t->id; ?>" data-cid="<?= $subscriber->id; ?>" <?= $is_checked; ?> data-toggle="toggle" data-width="200" data-on="Activated" data-off="Deactivated" data-onstyle="success" data-offstyle="danger">
             </div>
         </li>
         <?php } ?>
     <?php } ?>
 </ul>
-</div> 
 <script>
 $(function(){
     $(".b-toggle").bootstrapToggle();

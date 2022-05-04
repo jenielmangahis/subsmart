@@ -32,27 +32,31 @@ endif;
                 $jobs_limit = 4;
                 $jobs_count = 0;
                 foreach ($upcomingJobs as $jb) :
-                    if ($jobs_count < $jobs_limit) {
+                    
+                        if ($jb->status == "Scheduled") {
+                            if ($jobs_count < $jobs_limit) {
+                                $jobs_count++;
             ?>
-                        <div class="widget-item cursor-pointer" onclick="location.href='<?php echo base_url('job/new_job1/' . $jb->id); ?>'">
-                            <div class="nsm-list-icon">
-                                <i class='bx bx-calendar'></i>
-                            </div>
-                            <div class="content ms-2">
-                                <div class="details">
-                                    <span class="content-title"><?php echo $jb->job_type . ' - ' . $jb->tags_name; ?></span>
-                                    <span class="content-subtitle d-block mb-1"><?= ucfirst($jb->first_name) . ' ' . ucfirst($jb->last_name); ?></span>
-                                    <span class="content-subtitle d-block"><?= $jb->mail_add . ' ' . $jb->cust_city . ' ' . $jb->cust_state . ' ' . $jb->cust_zip_code; ?></span>
+                            <div class="widget-item cursor-pointer" onclick="location.href='<?php echo base_url('job/new_job1/' . $jb->id); ?>'">
+                                <div class="nsm-list-icon">
+                                    <i class='bx bx-calendar'></i>
                                 </div>
-                                <div class="controls">
-                                    <span class="nsm-badge primary"><?php echo ucfirst($jb->status); ?></span>
-                                    <span class="content-subtitle d-block mt-1"><?= date('F d, Y', strtotime($jb->start_date)) ?> <?php echo date('g:i A', strtotime($jb->start_time)); ?>-<?php echo date('g:i A', strtotime($jb->end_time)); ?></span>
+                                <div class="content ms-2">
+                                    <div class="details">
+                                        <span class="content-title"><?php echo $jb->job_type . ' - ' . $jb->tags_name; ?></span>
+                                        <span class="content-subtitle d-block mb-1"><?= ucfirst($jb->first_name) . ' ' . ucfirst($jb->last_name); ?></span>
+                                        <span class="content-subtitle d-block"><?= $jb->mail_add . ' ' . $jb->cust_city . ' ' . $jb->cust_state . ' ' . $jb->cust_zip_code; ?></span>
+                                    </div>
+                                    <div class="controls">
+                                        <span class="nsm-badge primary"><?php echo ucfirst($jb->status);?></span>
+                                        <span class="content-subtitle d-block mt-1"><?= date('F d, Y', strtotime($jb->start_date)) ?> <?php echo date('g:i A', strtotime($jb->start_time)); ?>-<?php echo date('g:i A', strtotime($jb->end_time)); ?></span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
                 <?php
+                        }
                     }
-                    $jobs_count++;
+                    
                 endforeach;
             } else {
                 ?>

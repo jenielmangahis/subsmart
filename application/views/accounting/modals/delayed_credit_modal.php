@@ -36,6 +36,25 @@
                             <div class="card p-0 m-0" style="min-height: 100%">
                                 <div class="card-body" style="padding-bottom: 1.25rem">
                                     <div class="row customer-details">
+                                        <?php if(isset($invoice)) : ?>
+                                        <div class="col-md-12">
+                                            <div class="dropdown">
+                                                <a href="#" class="text-info" id="linked-transaction" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    Linked Invoice
+                                                </a>
+                                                <div class="dropdown-menu p-2" aria-labelledby="linked-transaction" style="min-width: 500px; font-size: 13px">
+                                                    <div class="row">
+                                                        <div class="col-6"><strong>Invoice date</strong></div>
+                                                        <div class="col-6"><strong>Invoice no.</strong></div>
+                                                    </div>
+                                                    <div class="row my-1">
+                                                        <div class="col-6 d-flex align-items-center"><a class="text-info open-transaction" href="#" data-id="<?=$invoice->id?>" data-type="invoice"><?=date("m/d/Y", strtotime($invoice->date_issued))?></a></div>
+                                                        <div class="col-6 d-flex align-items-center"><?=str_replace($invoiceSetting->invoice_num_prefix, '', $invoice->invoice_number)?></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <?php endif; ?>
                                         <div class="col-md-8">
                                             <div class="row">
                                                 <div class="col-md-5">

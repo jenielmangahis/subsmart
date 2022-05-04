@@ -80,9 +80,19 @@ if ($this->session->userdata('usertimezone') == null) {
                         <i class='bx bx-fw bx-user'></i> Users
                     </a>
                 </li>
-                <li class="<?= $page_title == 'Companies' ? 'selected' : ''; ?>">
-                    <a href="<?= base_url("admin/companies") ?>">
-                        <i class='bx bx-fw bxs-buildings'></i> Companies
+                <!-- <li class="<?= $page_title == 'Offer Codes' ? 'selected' : ''; ?>">
+                    <a href="<?= base_url("admin/offer_codes") ?>">
+                        <i class='bx bx-fw bxs-coupon'></i> Offer Codes
+                    </a>
+                </li>
+                <li class="<?= $page_title == 'Events' ? 'selected' : ''; ?>">
+                    <a href="<?= base_url("admin/events") ?>">
+                        <i class='bx bx-fw bx-calendar'></i> Events
+                    </a>
+                </li> -->
+                <li class="<?= $page_title == 'Nsmart Plans' ? 'selected' : ''; ?>">
+                    <a href="<?= base_url("admin/nsmart_plans") ?>">
+                        <i class='bx bx-fw bx-list-ul'></i> nSmart Plans
                     </a>
                 </li>
                 <li>
@@ -116,6 +126,11 @@ if ($this->session->userdata('usertimezone') == null) {
                                 <i class='bx bx-fw bx-buildings'></i> Industry Types
                             </a>
                         </li>
+                        <!-- <li class="<?php if($page_title == 'Settings : Addons'): echo 'selected'; endif; ?>">
+                            <a href="<?= base_url("admin/nsmart_addons") ?>">
+                                <i class='bx bx-fw bx-list-ul'></i> Event Types
+                            </a>
+                        </li> -->
                     </ul>
                 </li>
             </ul>

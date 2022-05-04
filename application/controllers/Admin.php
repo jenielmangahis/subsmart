@@ -491,14 +491,153 @@ class Admin extends CI_Controller
     public function nsmart_plans() {
         $this->load->model('NsmartPlan_model');
 
-        $nSmartPlans   = $this->NsmartPlan_model->getAll();
+        $cid_search = 'All nSmart Plans';
+        $search = '';
+
+        if( get('status') != '' ){
+            if( get('status') == 'active' ){
+                $cid_search = 'Status Active';
+                $status = 1;
+            }else{
+                $cid_search = 'Status Inactive';
+                $status = 0;
+            }
+
+            $nSmartPlans = $this->NsmartPlan_model->getAllByStatus($status);
+        }elseif( get('search') != '' ){
+            $search  = get('search');
+            $filters = ['search' => $search];
+            $nSmartPlans = $this->NsmartPlan_model->getAll($filters);
+        }else{
+            $nSmartPlans   = $this->NsmartPlan_model->getAll();            
+        }
+
         $option_status = $this->NsmartPlan_model->getPlanStatus();
         $option_discount_types = $this->NsmartPlan_model->getDiscountTypes();
 
         $this->page_data['option_status'] = $option_status;
         $this->page_data['option_discount_types'] = $option_discount_types;
         $this->page_data['nSmartPlans'] = $nSmartPlans;
+
+        $this->page_data['search'] = $search;
+        $this->page_data['cid_search'] = $cid_search;
+        $this->page_data['page_title'] = 'nSmart Plans';
+        $this->page_data['page_parent'] = 'nSmart Plans';
+
         $this->load->view('admin/nsmart_plans/list', $this->page_data);
+    }
+
+    public function ajaxSaveNsmartPlan(){
+        $this->load->model('NsmartPlan_model');
+
+        $is_success = 0;
+        $msg = '';
+
+        $post = $this->input->post();
+
+        if( $post['plan_name'] != '' ){
+            if( $this->NsmartPlan_model->isPlanNameExists($post['plan_name']) ){
+                $msg = 'Plan name already exists';                
+            }else{
+                $data = [
+                    'plan_name' => $post['plan_name'],
+                    'plan_description' => $post['plan_description'],
+                    'num_license' => $post['num_license'],
+                    'price_per_license' => $post['price_per_license'],
+                    'price' => $post['plan_price'],
+                    'discount' => $post['plan_discount'],
+                    'discount_type' => $post['plan_discount_type'],
+                    'status' => $post['plan_status'],
+                    'date_created' => date("Y-m-d H:i:s")
+                ];
+
+                $this->NsmartPlan_model->create($data);
+
+                $is_success = 1;
+                $msg = '';      
+            }
+        }else{
+            $msg = 'Please enter plan name';
+        }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+
+        echo json_encode($json_data);
+    }
+
+    public function ajaxUpdateNsmartPlan(){
+        $this->load->model('NsmartPlan_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $post = $this->input->post();
+
+        $nSmartPlan = $this->NsmartPlan_model->getById($post['nspid']);
+
+        if( $nSmartPlan ){
+            if( $post['plan_name'] != '' ){
+                $data = [
+                    'plan_name' => $post['plan_name'],
+                    'plan_description' => $post['plan_description'],
+                    'price' => $post['plan_price'],
+                    'num_license' => $post['num_license'],
+                    'price_per_license' => $post['price_per_license'],
+                    'discount' => $post['plan_discount'],
+                    'discount_type' => $post['plan_discount_type'],
+                    'status' => $post['plan_status'],
+                    'date_updated' => date("Y-m-d H:i:s")
+                ];
+
+                $this->NsmartPlan_model->updatePlan($post['nspid'],$data);
+
+                $is_success = 1;
+                $msg = '';
+
+            }else{
+                $msg = 'Please enter plan name';                
+            }
+        }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+
+        echo json_encode($json_data);
+    }
+
+    public function ajaxDeleteNsmartPlan(){
+        $this->load->model('NsmartPlan_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $post = $this->input->post();
+
+        $nsmartPlan = $this->NsmartPlan_model->getById($post['nspid']);
+        if( $nsmartPlan ){
+            $this->NsmartPlan_model->deletePlan(post('nspid'));
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+
+        echo json_encode($json_data);
+    }
+
+    public function ajax_edit_nsmart_plan(){
+        $this->load->model('NsmartPlan_model');
+
+        $post = $this->input->post();
+        $nSmartPlan = $this->NsmartPlan_model->getById($post['nspid']);
+
+        $option_status = $this->NsmartPlan_model->getPlanStatus();
+        $option_discount_types = $this->NsmartPlan_model->getDiscountTypes();
+
+        $this->page_data['nSmartPlan'] = $nSmartPlan;
+        $this->page_data['option_status'] = $option_status;
+        $this->page_data['option_discount_types'] = $option_discount_types;
+        $this->load->view('admin/nsmart_plans/ajax_edit_nsmart_plan', $this->page_data);
     }
 
     public function add_new_plan() {
@@ -834,15 +973,131 @@ class Admin extends CI_Controller
 
         $search = '';
         $cid_search = 'All Addons';
-        $nSmartAddons   = $this->NsmartAddons_model->getAll();
+
+        if( get('status') != '' ){
+            if( get('status') == 'active' ){
+                $cid_search = 'Status Active';
+                $status = 1;
+            }else{
+                $cid_search = 'Status Inactive';
+                $status = 0;
+            }
+
+            $nSmartAddons = $this->NsmartAddons_model->getAllByStatus($status);
+        }elseif( get('search') != '' ){
+            $search  = get('search');
+            $filters = ['search' => $search];
+            $nSmartAddons = $this->NsmartAddons_model->getAll($filters);
+        }else{
+            $nSmartAddons   = $this->NsmartAddons_model->getAll();
+        }
         
         $this->page_data['nSmartAddons'] = $nSmartAddons;
         $this->page_data['search'] = $search;
         $this->page_data['cid_search'] = $cid_search;
-        $this->page_data['industryTemplate'] = $industryTemplate;
         $this->page_data['page_title'] = 'Settings : Addons';
         $this->page_data['page_parent'] = 'Settings';
         $this->load->view('admin/nsmart_addons/list', $this->page_data);
+    }
+
+    public function ajaxSaveAddon() {
+        $this->load->model('NsmartAddons_model');
+
+        $is_success = 0;
+        $msg = '';
+
+        $post = $this->input->post();
+        
+        if( $post['addon_name'] != '' ){
+            if( $this->NsmartAddons_model->isAddonNameExists($post['addon_name']) ){
+                $msg = 'Addon name already exists';
+            }else{
+                $data = [
+                    'name' => $post['addon_name'],
+                    'description' => $post['addon_description'],
+                    'price' => $post['addon_price'],
+                    'status' => $post['addon_status'],
+                    'date_created' => date("Y-m-d H:i:s")
+                ];
+
+                $this->NsmartAddons_model->create($data);
+
+                $is_success = 1;
+                $msg = '';
+            }
+        }else{
+            $msg = 'Please enter addon name';
+        }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($json_data);
+    }
+
+    public function ajax_edit_addon()
+    {
+        $this->load->model('NsmartAddons_model');
+
+        $post = $this->input->post();
+
+        $addon = $this->NsmartAddons_model->getById($post['aid']);
+
+        $this->page_data['addon'] = $addon;
+        $this->load->view('admin/nsmart_addons/ajax_edit_addon', $this->page_data);
+    }
+
+    public function ajaxUpdateAddon() {
+        $this->load->model('NsmartAddons_model');
+
+        $post = $this->input->post();
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $nSmartAddon = $this->NsmartAddons_model->getById($post['aid']);
+
+        if( $nSmartAddon ){
+            if( $post['addon_name'] != '' ){
+                $data = [
+                    'name' => $post['addon_name'],
+                    'description' => $post['addon_description'],
+                    'price' => $post['addon_price'],
+                    'status' => $post['addon_status'],
+                    'date_updated' => date("Y-m-d H:i:s")
+                ];
+                $nsAddon = $this->NsmartAddons_model->updateAddon($post['aid'],$data);
+
+                $is_success = 1;
+                $msg = '';
+
+            }else{
+                $msg = 'Please enter addon name';
+            }
+        }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+
+        echo json_encode($json_data);
+    }
+
+    public function ajaxDeleteAddon(){
+        $this->load->model('NsmartAddons_model');
+        
+        $post = $this->input->post();
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $addon = $this->NsmartAddons_model->getById($post['aid']);
+        if( $addon ){
+            $this->NsmartAddons_model->deleteAddon($post['aid']);
+
+            $is_success = 1;
+            $msg = '';            
+        }
+        
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+
+        echo json_encode($json_data);
     }
 
     public function add_new_addon(){
@@ -1792,10 +2047,138 @@ class Admin extends CI_Controller
     public function offer_codes() 
     {   
         $this->load->model('OfferCodes_model');
-        $offerCodes   = $this->OfferCodes_model->getAll();
+
+        $search = '';
+        $cid_search = 'All Offer Codes';
+
+        if( get('status') != '' ){
+            if( get('status') == 'used' ){
+                $cid_search = 'Status Used';
+                $status = 1;
+            }else{
+                $cid_search = 'Status Unused';
+                $status = 0;
+            }
+
+            $offerCodes = $this->OfferCodes_model->getAllByStatus($status);
+        }elseif( get('search') != '' ){
+            $search  = get('search');
+            $filters = ['search' => $search];
+            $offerCodes = $this->OfferCodes_model->getAll($filters);
+        }else{
+            $offerCodes   = $this->OfferCodes_model->getAll();
+        }
         
         $this->page_data['offerCodes'] = $offerCodes;
+        $this->page_data['search'] = $search;
+        $this->page_data['cid_search'] = $cid_search;
+        $this->page_data['page_title'] = 'Offer Codes';
+        $this->page_data['page_parent'] = 'Offer Codes';
         $this->load->view('admin/offer_codes/list', $this->page_data);
+    }
+
+    public function ajaxSaveOfferCode() 
+    {
+        $this->load->model('OfferCodes_model');
+
+        $is_success = 0;
+        $msg = '';
+
+        $post = $this->input->post();
+
+        if( $post['offer_code'] != '' ){
+            if( $this->OfferCodes_model->getByOfferCodes($post['offer_code']) ){
+                $msg = 'Offer Code already exists';                
+            }else{
+                $data = [
+                    'offer_code' => $post['offer_code'],
+                    'trial_days' => $post['trial_days'],
+                    'status' => 0,
+                    'date_created' => date("Y-m-d H:i:s")
+                ];
+
+                $this->OfferCodes_model->create($data);
+
+                $msg = '';
+                $is_success = 1;
+            }
+        }else{
+            $msg = 'Please enter Offer Code';            
+        }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+
+        echo json_encode($json_data);
+    }
+
+    public function ajax_edit_offer_code() 
+    {
+        $this->load->model('OfferCodes_model');
+
+        $post = $this->input->post();
+        $offerCode = $this->OfferCodes_model->getById($post['oid']);
+
+        if( $offerCode ){
+            $this->page_data['offerCode'] = $offerCode;
+            $this->load->view('admin/offer_codes/ajax_edit_offer_code', $this->page_data);
+        }
+    }
+
+    public function ajaxUpdateOfferCode() 
+    {
+        $this->load->model('OfferCodes_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $post = $this->input->post();
+
+        $offerCode = $this->OfferCodes_model->getById($post['oid']);
+
+        if( $offerCode ){
+            if( $post['offer_code'] != '' ){
+                $data = [
+                    'offer_code' => $post['offer_code'],
+                    'trial_days' => $post['trial_days'],
+                    'status' => $post['status'],
+                    'date_modified' => date("Y-m-d H:i:s")
+                ];
+                
+                $this->OfferCodes_model->updateOfferCodes($post['oid'],$data);
+
+                $msg = '';
+                $is_success = 1;
+
+            }else{
+                $msg = 'Please enter Offer code';
+            }
+        }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+
+        echo json_encode($json_data);
+    }
+
+    public function ajaxDeleteOfferCode()
+    {
+        $this->load->model('OfferCodes_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $post = $this->input->post();
+
+        $offerCode = $this->OfferCodes_model->getById($post['oid']);
+        if( $offerCode ){
+            $this->OfferCodes_model->deleteOfferCodes(post('oid'));
+
+            $msg = '';
+            $is_success = 1;
+        }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+
+        echo json_encode($json_data);
     }
 
     public function add_new_offer() 
@@ -1940,9 +2323,129 @@ class Admin extends CI_Controller
     public function events() 
     {
         $this->load->model('Event_model');
-        $this->page_data['events'] = $this->Event_model->admin_get_all_events();
-        $this->page_data['title'] = 'Events';
+
+        $cid_search = 'All Events';
+        $search = '';
+        if( get('status') != '' ){
+            $cid_search = ucwords(get('status'));
+            $status = ucwords(get('status'));
+            $events = $this->Event_model->getAllByStatus($status);
+        }elseif( get('search') != '' ){
+            $search  = trim(get('search'));
+            $filters = ['search' => $search];
+            $events = $this->Event_model->getAllEventsAdmin($filters);
+        }else{
+            $events   = $this->Event_model->getAllEventsAdmin();
+        }
+
+        $this->page_data['search'] = $search;
+        $this->page_data['cid_search'] = $cid_search;
+        $this->page_data['events'] = $events;
+        $this->page_data['page_title'] = 'Events';
+        $this->page_data['page_parent'] = 'Events';
         $this->load->view('admin/events/list', $this->page_data);
+    }
+
+    public function export_events()
+    {
+        $this->load->model('Event_model');
+
+        $events   = $this->Event_model->getAllEventsAdmin();
+
+        $delimiter = ",";
+        $time      = time();
+        $filename  = "events_list_".$time.".csv";
+
+        $f = fopen('php://memory', 'w');
+
+        $fields = array('Company Name', 'Event Number', 'Customer Name', 'Start Date', 'End Date', 'Event Address', 'Event Type', 'Event Tags', 'Status');
+        fputcsv($f, $fields, $delimiter);
+
+        if (!empty($events)) {
+            foreach ($events as $event) {
+                $csvData = array(
+                    $event->business_name,
+                    $event->event_number,
+                    $event->first_name . ' ' . $event->last_name,
+                    date('F g, Y g:i A',strtotime($event->start_date . ' ' .  $event->start_time)),
+                    date('F g, Y g:i A',strtotime($event->end_date . ' ' .  $event->end_time)),
+                    $event->event_address . ' ' . $event->event_zip_code,
+                    $event->event_type,
+                    $event->event_tag,
+                    $event->status
+                );
+                fputcsv($f, $csvData, $delimiter);
+            }
+        } else {
+            $csvData = array('');
+            fputcsv($f, $csvData, $delimiter);
+        }
+
+        fseek($f, 0);
+
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="' . $filename . '";');
+
+        fpassthru($f);
+    }
+
+    public function ajax_view_event()
+    {
+        $this->load->model('Event_model');
+        $this->load->model('Business_model');
+        $this->load->helper('functions');
+
+        $post = $this->input->post();
+
+        $get_company_info = array(
+            'where' => array(
+                'company_id' => $post['eid'],
+            ),
+            'table' => 'business_profile',
+            'select' => 'business_phone,business_name,business_image',
+        );
+
+        $event = $this->Event_model->get_specific_event($post['eid']);
+        $company_info = $this->Business_model->getByCompanyId($event->company_id);
+        /*echo "<pre>";
+        print_r($company_info);
+        exit;*/
+        $event_items  = $this->Event_model->get_specific_event_items($post['eid']);
+
+        $this->page_data['event'] = $event;
+        $this->page_data['company_info'] = $company_info;        
+        $this->page_data['event_items']  = $event_items;
+        $this->load->view('admin/events/ajax_view_event', $this->page_data);
+    }
+
+    public function ajaxDeleteEvent()
+    {
+        $this->load->model('General_model', 'general');
+
+        $post = $this->input->post();
+        
+        $remove_event = array(
+            'where' => array(
+                'id' => $post['eid']
+            ),
+            'table' => 'events'
+        );
+        $this->general->delete_($remove_event);
+
+        $remove_event_items = array(
+            'where' => array(
+                'event_id' => $post['eid']
+            ),
+            'table' => 'event_items'
+        );
+        $this->general->delete_($remove_event_items);
+
+        $json_data = [
+            'is_success' => 1,
+            'msg' => ''
+        ];
+
+        echo json_encode($json_data);
     }
 
     public function new_event($id=null) 

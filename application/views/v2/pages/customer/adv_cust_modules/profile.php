@@ -135,9 +135,9 @@
             <div class="nsm-card mb-2 h-auto">
                 <div class="nsm-card-content">
                     <div class="d-flex">
-                        <div class="d-flex align-items-baseline" style="gap: 8px;">
-                            <i class="icon d-none" style="position: relative; top: 3px;"></i>
+                        <div>
                             <span class="content-title d-block mb-1"></span>
+                            <span class="content-subtitle d-block"></span>
                         </div>
                         <div class="d-flex justify-content-end align-items-center" style="margin-left: auto;">
                             <div class="form-check form-switch">

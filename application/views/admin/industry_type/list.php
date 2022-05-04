@@ -1,139 +1,328 @@
-<?php
-defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-<?php include viewPath('includes/admin_header'); ?>
+<?php include viewPath('v2/includes/header_admin'); ?>
 <style>
-.cell-active{
-    background-color: #53b94a;
-    color: white;
-    padding: 4px 0px;
-    width: 75px;
-    display: block;
-    text-align: center;
-    border-radius: 20px;
-}
-.cell-inactive{
-    background-color: #585858;
-    color: white;
-    padding: 4px 0px;
-    width: 75px;
-    display: block;
-    text-align: center;
-    border-radius: 20px;
-}
-.cell-active{
-    background-color: #5bc0de;
-}
-.cell-inactive{
-    background-color: #d9534f;
-}
-.btn{
-    border-radius: 0px !important;
+.badge{
+    padding: 10px;
+    font-size: 14px;
 }
 </style>
-<div class="wrapper" role="wrapper">
-    <?php include viewPath('includes/sidebars/admin/nsmart_plans'); ?>
-    <!-- page wrapper start -->
-    <div wrapper__section>
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-xl-12">
-                    <div class="card" style="min-height: 400px !important;">
-                        <div class="row align-items-center">
-                            <div class="col-sm-12">
-                                <h3 class="page-title" style="margin-top: 5px;margin-bottom:10px;">Industry Types</h3>
-                            </div>
-                        </div>
-                        <div class="pl-3 pr-3 mt-0 row">
-                            <div class="col mb-4 left alert alert-warning mt-0 mb-2">
-                                <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Manage Industry Types</span>
-                            </div>
-                        </div>
-                        <div class="row dashboard-container-1">
-                            <div class="col-md-12 text-right">
-                                <a class="btn btn-primary" href="<?php echo base_url('admin/add_new_industry_type'); ?>"><i class="fa fa-file"></i> New Industry Type</a>
-                            </div>
-                        </div>       
-                        <hr />
-                        <?php include viewPath('flash'); ?>
-                        <table class="table table-hover" data-id="coupons">
-                            <thead>
-                                <tr>
-                                    <th style="width: 40%;">Industry Type Name</th>
-                                    <th style="width: 20%;">Business Type Name</th>
-                                    <th style="width: 10%;">Status</th>
-                                    <th style="width: 15%;"></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach( $industryTypes as $industryType){ ?>
-                                    <?php 
-                                        if( $industryType->status == 1 ){
-                                            $cell = 'cell-active';
-                                            $status = "Active";
-                                        }else{
-                                            $cell = 'cell-inactive';
-                                            $status = "Inactive";
-                                        }
-                                    ?>
-                                    <tr>
-                                        <td><?= $industryType->name; ?></td>
-                                        <td><?= $industryType->business_type_name; ?></td>
-                                        <td class="<?= $cell; ?>" style="text-align: center;color:#ffffff;"><?= $status; ?></td>
-                                        <td>
-                                            <a class="btn btn-primary btn-sm" href="<?php echo base_url('admin/edit_industry_type/'.$industryType->id); ?>"><i class="fa fa-edit"></i> Edit</a>
-                                            <a class="btn btn-sm btn-primary btn-delete-type" href="javascript:void(0);" data-name="<?= $industryType->name;?>" data-id="<?= $industryType->id; ?>"><i class="fa fa-trash"></i> Delete</a>
-                                        </td>
-                                    </tr>
-                                <?php } ?>
-                            </tbody>
-                        </table>
-                        <div style="margin: 0 auto; margin-top: 45px;">
-                            <?= $pagination; ?>
+<div class="row page-content g-0">
+    <div class="col-12">
+        <div class="nsm-page">
+            <div class="nsm-page-content">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="nsm-callout primary">
+                            <button><i class='bx bx-x'></i></button>
+                            Listing of all industry types.
                         </div>
                     </div>
-                    <!-- end card -->
-
-                    <div class="modal fade bd-example-modal-sm" id="modalDeleteIndustryType" tabindex="-1" role="dialog" aria-labelledby="modalDeletePlanTitle" aria-hidden="true">
-                      <div class="modal-dialog modal-md" role="document">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-trash"></i> Delete</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                              <span aria-hidden="true">&times;</span>
+                </div>
+                <div class="row">
+                    <div class="col-12 col-md-4">
+                        <form action="<?php echo base_url('admin/industry_templates') ?>" method="GET">
+                            <div class="nsm-field-group search">
+                                <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" name="search" placeholder="Search Industry Types" value="<?php echo (!empty($search)) ? $search : '' ?>">                                
+                            </div>
+                            <button type="submit" class="nsm-button primary" style="margin:0px;">Search</button>
+                            <button type="button" class="nsm-button primary btn-reset-list" style="margin:0px;">Reset</a>
+                        </form>
+                    </div>
+                    <div class="col-12 col-md-8 grid-mb text-end">
+                        <div class="dropdown d-inline-block">
+                            <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
+                                <span>Filter by : <?= $cid_search; ?></span> <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
-                          </div>
-                          <?php echo form_open_multipart('admin/delete_industry_type', ['class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
-                          <?php echo form_input(array('name' => 'tid', 'type' => 'hidden', 'value' => '', 'id' => 'type_id'));?>
-                          <div class="modal-body">        
-                              <p>Are you sure you want to delete selected industry type <span class="delete-industry-type-name" style="font-weight: bold;"></span></p>
-                          </div>
-                          <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                            <button type="submit" class="btn btn-danger">Yes</button>
-                          </div>
-                          <?php echo form_close(); ?>
+                            <ul class="dropdown-menu dropdown-menu-end select-filter">
+                                <li><a class="dropdown-item" data-id="filter_all" href="<?= base_url('admin/industry_types'); ?>">All Industry Templates</a></li>
+                                <li><a class="dropdown-item" data-id="filter_all" href="<?= base_url('admin/industry_types?status=active'); ?>">Status Active</a></li>
+                                <li><a class="dropdown-item" data-id="filter_all" href="<?= base_url('admin/industry_types?status=deactivated'); ?>">Status Inactive</a></li>
+                            </ul>
                         </div>
-                      </div>
+                        <div class="nsm-page-buttons page-button-container">
+                            <a class="nsm-button primary btn-add-new-type" href="javascript:void(0);" style="margin-left: 10px;"><i class='bx bx-fw bx-plus-circle' ></i> New Industry Type</a>                            
+                        </div>
+                    </div>
+                </div>
+                <table class="nsm-table">
+                    <thead>
+                        <tr>
+                            <td data-name="Industry Type Name">Industry Type Name</td>
+                            <td data-name="Business Type Name">Business Type Name</td>
+                            <td data-name="Status" style="width:10%;">Status</td>
+                            <td data-name="Manage" style="width: 10%;">Action</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach( $industryTypes as $industryType){ ?>               
+                            <tr>
+                                <td class="center"><?= $industryType->name; ?></td>
+                                <td class="center"><?= $industryType->business_type_name; ?></td>
+                                <td class="center">
+                                    <?php if($industryType->status == 1) { ?>
+                                        <span class="badge" style="background-color: #6a4a86; color: #ffffff;display: block; margin: 5px;">Active</span>
+                                    <?php }else{ ?>
+                                        <span class="badge" style="background-color: #dc3545; color: #ffffff;display: block; margin: 5px;">Inactive</span>
+                                    <?php } ?>
+                                </td>
+                                <td class="center actions-col">
+                                    <div class="dropdown table-management">
+                                        <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                            <i class='bx bx-fw bx-dots-vertical-rounded'></i>
+                                        </a>
+                                        <ul class="dropdown-menu dropdown-menu-end">
+                                            <li>
+                                                <a class="dropdown-item btn-edit-type" href="javascript:void(0)" data-id="<?php echo $industryType->id ?>"><i class='bx bx-fw bxs-edit'></i> Edit</a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item delete-type" href="javascript:void(0);" data-name="<?= $industryType->name; ?>" data-id="<?= $industryType->id; ?>"><i class="bx bx-fw bx-trash"></i> Delete</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </td>
+
+                        <?php } ?>
+                    </tbody>
+                </table>
+            </div>
+
+            <!--Add New Industry Type modal-->
+            <div class="modal fade nsm-modal fade" id="modalAddNewIndustryType" tabindex="-1" aria-labelledby="modalAddNewIndustryTypeLabel" aria-hidden="true">
+                <div class="modal-dialog modal-md">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span class="modal-title content-title" id="new_feed_modal_label">Add New Industry Template</span>
+                            <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                        </div>
+                        <form action="" id="frm-add-new-industry-type">
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label for="">Industry Type Name</label>
+                                    <input type="text" name="industry_type_name" id="template-name" class="form-control" required="">
+                                </div>
+                                <div class="col-md-12 mt-3">
+                                    <label for="">Business Type</label>
+                                    <select class="form-control" id="business_type_name" name="business_type_name" required="">
+                                        <?php foreach( $businessTypes as $businessType ){ ?>
+                                              <option value="<?php echo $businessType; ?>"><?php echo $businessType; ?></option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+                                <div class="col-md-12 mt-3">
+                                    <label for="">Industry Template</label>
+                                    <select class="form-control" id="industry_template_id" name="industry_template_id" required="">
+                                        <?php foreach( $industryTemplate as $indTemplate ){ ?>
+                                            <option value="<?php echo $indTemplate->id; ?>"><?php echo $indTemplate->name; ?></option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+                                <div class="col-md-12 mt-3">
+                                    <label for="">Status</label>
+                                    <select name="status" class="form-control" autocomplete="off">
+                                        <option value="1" selected="">Active</option>
+                                        <option value="0">Inactive</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="nsm-button primary btn-add-type">Save</button>
+                        </div>
+                        </form>                      
                     </div>
                 </div>
             </div>
-            <!-- end row -->
+
+            <!--Edit Industry Type modal-->
+            <div class="modal fade nsm-modal fade" id="modalEditIndustryType" tabindex="-1" aria-labelledby="modalEditIndustryTypeLabel" aria-hidden="true">
+                <div class="modal-dialog modal-md">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span class="modal-title content-title" id="new_feed_modal_label">Edit Industry Type</span>
+                            <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                        </div>
+                        <form action="" id="frm-edit-industry-type">
+                        <div class="modal-body modal-edit-type-container"></div>
+                        <div class="modal-footer">
+                            <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="nsm-button primary btn-update-type">Save</button>
+                        </div>
+                        </form>                      
+                    </div>
+                </div>
+            </div>
+
         </div>
-        <!-- end container-fluid -->
     </div>
-    <!-- page wrapper end -->
 </div>
-<?php include viewPath('includes/admin_footer'); ?>
+<script type="text/javascript">
+$(document).ready(function() {
+    $(".nsm-table").nsmPagination();
 
-<script type="text/javascript">  
-$(function(){
-    $(".btn-delete-type").click(function(){
-        var type_id  = $(this).attr("data-id");
-        var type_name = $(this).attr("data-name");
-        $("#type_id").val(type_id);
-        $(".delete-industry-type-name").html(type_name);
+    $(document).on('click', '.btn-reset-list', function(){
+        location.href = base_url + 'admin/industry_types';
+    });
 
-        $("#modalDeleteIndustryType").modal("show");
+    $(document).on('click','.btn-add-new-type',function(){
+        $('#modalAddNewIndustryType').modal('show');
+    });
+
+    $(document).on('submit', '#frm-add-new-industry-type', function(e){
+        e.preventDefault();
+        var url = base_url + 'admin/ajaxSaveIndustryType';
+        $(".btn-add-type").html('<span class="bx bx-loader bx-spin"></span>');
+
+        var formData = new FormData($("#frm-add-new-industry-type")[0]);   
+
+        setTimeout(function () {
+          $.ajax({
+             type: "POST",
+             url: url,
+             dataType: 'json',
+             contentType: false,
+             cache: false,
+             processData:false,
+             data: formData,
+             success: function(o)
+             {          
+                if( o.is_success == 1 ){   
+                    $("#modalAddNewIndustryType").modal("hide");         
+                    Swal.fire({
+                        title: 'Save Successful!',
+                        text: "Industry Type was successfully created.",
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        //if (result.value) {
+                        location.reload();
+                        //}
+                    });
+                }else{
+                  Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    html: o.msg
+                  });
+                } 
+
+                $(".btn-add-type").html('Save');
+             }
+          });
+        }, 800);
+    });
+
+    $(document).on('click','.btn-edit-type', function(){
+        var tid = $(this).attr('data-id');
+        var url = base_url + 'admin/ajax_edit_industry_type';
+
+        $('#modalEditIndustryType').modal('show');
+        $(".modal-edit-type-container").html('<span class="bx bx-loader bx-spin"></span>');
+
+        setTimeout(function () {
+          $.ajax({
+             type: "POST",
+             url: url,
+             data: {tid:tid},
+             success: function(o)
+             {          
+                $('.modal-edit-type-container').html(o);
+             }
+          });
+        }, 800);
+    });
+
+    $(document).on('submit','#frm-edit-industry-type', function(e){
+        e.preventDefault();
+
+        var url = base_url + 'admin/ajaxUpdateIndustryType';
+        $(".btn-update-type").html('<span class="bx bx-loader bx-spin"></span>');
+
+        var formData = new FormData($("#frm-edit-industry-type")[0]);   
+
+        setTimeout(function () {
+          $.ajax({
+             type: "POST",
+             url: url,
+             dataType: 'json',
+             contentType: false,
+             cache: false,
+             processData:false,
+             data: formData,
+             success: function(o)
+             {          
+                if( o.is_success == 1 ){   
+                    $("#modalEditIndustryType").modal("hide");         
+                    Swal.fire({
+                        title: 'Save Successful!',
+                        text: "Industry Type was successfully updated.",
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        //if (result.value) {
+                        location.reload();
+                        //}
+                    });
+                }else{
+                  Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    html: o.msg
+                  });
+                } 
+
+                $(".btn-update-type").html('Save');
+             }
+          });
+        }, 800);
+    });
+
+    $(document).on("click", ".delete-type", function(e) {
+        var tid = $(this).attr("data-id");
+        var type_name = $(this).attr('data-name');
+        var url = base_url + 'admin/ajaxDeleteIndustryType';
+
+        Swal.fire({
+            title: 'Delete Industry Type',
+            html: "Are you sure you want to delete industry type <b>"+type_name+"</b>?",
+            icon: 'question',
+            confirmButtonText: 'Proceed',
+            showCancelButton: true,
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    dataType: 'json',
+                    data: {tid:tid},
+                    success: function(o) {
+                        if( o.is_success == 1 ){   
+                            Swal.fire({
+                                title: 'Delete Successful!',
+                                text: "Industry Type Data Deleted Successfully!",
+                                icon: 'success',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            }).then((result) => {
+                                //if (result.value) {
+                                    location.reload();
+                                //}
+                            });
+                        }else{
+                          Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            html: o.msg
+                          });
+                        }
+                    },
+                });
+            }
+        });
     });
 });
 </script>
+<?php include viewPath('v2/includes/footer_admin'); ?>

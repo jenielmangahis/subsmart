@@ -468,6 +468,48 @@ class Customer_model extends MY_Model
         $query = $this->db->get();
         return $query->row();
     }
+
+    public function getibizDetailsAdd($id)
+    {
+        $where = array(
+            'ibiz_id'       => $id,
+            'name'          => 'address'
+          );
+
+        $this->db->select('*');
+        $this->db->from('user_ibiz_items');
+        $this->db->where($where);
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    public function getibizDetailsPh($id)
+    {
+        $where = array(
+            'ibiz_id'       => $id,
+            'name'          => 'phone'
+          );
+
+        $this->db->select('*');
+        $this->db->from('user_ibiz_items');
+        $this->db->where($where);
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    public function ibizDetailsEmail($id)
+    {
+        $where = array(
+            'ibiz_id'       => $id,
+            'name'          => 'email'
+          );
+
+        $this->db->select('*');
+        $this->db->from('user_ibiz_items');
+        $this->db->where($where);
+        $query = $this->db->get();
+        return $query->row();
+    }
 }
 
 /* End of file Customer_model.php */

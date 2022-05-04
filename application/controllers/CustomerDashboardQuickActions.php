@@ -25,60 +25,96 @@ class CustomerDashboardQuickActions extends MY_Controller
             [
                 'text' => 'Create Job',
                 'url' => base_url('/job/new_job1?cus_id=:customerid'),
+                'sub_text' => 'Jobs',
             ],
             [
                 'text' => 'Submit Service Ticket',
                 'url' => base_url('/customer/addTicket?cus_id=:customerid'),
+                'sub_text' => 'Tickets',
             ],
             [
                 'text' => 'Create Estimate',
                 'url' => '#new_estimate_modal',
+                'sub_text' => 'Estimates',
             ],
             [
                 'text' => 'Add Credit Industry Item',
                 'url' => base_url('/customer/add_dispute_item/:customerid'),
+                'sub_text' => 'Credit Industry',
             ],
             [
                 'text' => 'Call Customer',
                 'url' => base_url('/customer/call/:customerid'),
+                'sub_text' => 'Customers',
             ],
             [
                 'text' => 'Send Secure Message, Via Client Portal',
                 'url' => '',
-                'icon_class' => 'bx bx-fw bx-message-rounded-check',
-                'is_default' => true,
+                'sub_text' => 'Customers',
             ],
             [
                 'text' => 'Show Customer Activites',
                 'url' => base_url('/customer/activities/:customerid'),
+                'sub_text' => 'Customers',
             ],
             [
                 'text' => 'Run Dispute Wizard, Create letters/correct errors',
                 'url' => base_url('/EsignEditor/wizard?customer_id=:customerid'),
-                'icon_class' => 'bx bx-fw bxs-magic-wand',
-                'is_default' => true,
+                'sub_text' => 'Esign Editor',
             ],
             [
                 'text' => '1-Click Import and Audit, Pull reports & Create audit',
                 'url' => '',
-                'icon_class' => 'bx bx-fw bx-import',
-                'is_default' => true,
             ],
             [
                 'text' => 'Send Link Reset Password',
                 'url' => '',
+                'sub_text' => 'Customers',
             ],
             [
                 'text' => 'Edit Customer',
                 'url' => base_url('/customer/add_advance/:customerid'),
+                'sub_text' => 'Customers',
             ],
             [
                 'text' => 'Create Invoice',
-                'url' => '',
+                'url' => base_url('/accounting/banking?action=invoiceModal&customer=:customerid'),
+                'sub_text' => 'Accounting',
+            ],
+            [
+                'text' => 'Receive Payment',
+                'url' => base_url('/accounting/banking?action=receivePaymentModal&customer=:customerid'),
+                'sub_text' => 'Accounting',
+            ],
+            [
+                'text' => 'Create Credit Memo',
+                'url' => base_url('/accounting/banking?action=creditMemoModal&customer=:customerid'),
+                'sub_text' => 'Accounting',
+            ],
+            [
+                'text' => 'Create Sales Receipt',
+                'url' => base_url('/accounting/banking?action=salesReceiptModal&customer=:customerid'),
+                'sub_text' => 'Accounting',
+            ],
+            [
+                'text' => 'Create Refund Receipt',
+                'url' => base_url('/accounting/banking?action=refundReceiptModal&customer=:customerid'),
+                'sub_text' => 'Accounting',
+            ],
+            [
+                'text' => 'Create Delayed Credit',
+                'url' => base_url('/accounting/banking?action=delayedCreditModal&customer=:customerid'),
+                'sub_text' => 'Accounting',
+            ],
+            [
+                'text' => 'Create Delayed Charge',
+                'url' => base_url('/accounting/banking?action=delayedChargeModal&customer=:customerid'),
+                'sub_text' => 'Accounting',
             ],
             [
                 'text' => 'Send email',
                 'url' => 'mailto::customeremail',
+                'sub_text' => 'Customers',
             ],
         ];
 
@@ -94,9 +130,19 @@ class CustomerDashboardQuickActions extends MY_Controller
     public function seed()
     {
         $actions = $this->getActions(true);
-        $actions = array_map(function ($action) {
-            $action['icon_class'] = $action['icon_class'] ?? null;
-            $action['is_default'] = $action['is_default'] ?? null;
+        $fields = [];
+
+        foreach ($actions as $action) {
+            $fields = array_unique(array_merge($fields, array_keys($action)));
+        }
+
+        $actions = array_map(function ($action) use ($fields) {
+            foreach ($fields as $field) {
+                if (!array_key_exists($field, $action)) {
+                    $action[$field] = null;
+                }
+            }
+
             return $action;
         }, $actions);
 
@@ -115,6 +161,8 @@ class CustomerDashboardQuickActions extends MY_Controller
 
     private function getSavedActions()
     {
+        $this->db->order_by('sub_text', 'ASC');
+        $this->db->order_by('text', 'ASC');
         return $this->db->get('acs_dashboard_quick_actions')->result();
     }
 
@@ -167,6 +215,7 @@ class CustomerDashboardQuickActions extends MY_Controller
         $this->db->from('acs_customer_dashboard_quick_actions dqa');
         $this->db->where('customer_id', $customerId);
         $this->db->join('acs_dashboard_quick_actions qa', 'dqa.acs_dashboard_quick_actions_id = qa.id', 'left');
+        $this->db->order_by('dqa.id', 'ASC');
         $query = $this->db->get();
         $actions = $query->result();
         $this->respond(['data' => $actions]);
