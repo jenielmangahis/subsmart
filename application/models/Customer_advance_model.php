@@ -105,13 +105,14 @@ class Customer_advance_model extends MY_Model {
         //$this->db->where("fk_user_id", $user_id);
         $this->db->select('users.id,acs_profile.prof_id,acs_profile.first_name,acs_profile.last_name,acs_profile.email,acs_profile.phone_m,acs_profile.status,acs_b.mmr,
         acs_alarm.system_type,acs_office.entered_by,acs_office.lead_source,acs_profile.city,acs_profile.state,users.LName,users.FName,acs_profile.customer_type,
-        acs_profile.business_name,acs_office.technician,acs_b.transaction_amount as total_amount');
+        acs_profile.business_name,acs_office.technician,acs_b.transaction_amount as total_amount,industry_type.name AS industry_type, acs_profile.industry_type_id');
         $this->db->join('users', 'users.id = acs_profile.fk_user_id','left');
         $this->db->join('acs_billing as acs_b', 'acs_b.fk_prof_id = acs_profile.prof_id','left');
         $this->db->join('acs_subscriptions as acs_s', 'acs_s.customer_id = acs_profile.prof_id','left');
         $this->db->join('acs_alarm', 'acs_alarm.fk_prof_id = acs_profile.prof_id','left');
         $this->db->join('acs_office', 'acs_office.fk_prof_id = acs_profile.prof_id','left');
         $this->db->join('acs_office as ao', 'ao.fk_prof_id = users.id','left');
+        $this->db->join('industry_type', 'acs_profile.industry_type_id = industry_type.id','left');
 
         if(!empty($search)){
             if($search['monitoring_id'] != ""){

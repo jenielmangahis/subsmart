@@ -3329,6 +3329,106 @@ class Admin extends CI_Controller
         $json_data = ['is_valid' => $is_valid, 'msg' => $msg, 'redirect_url' => $redirect_url];
         echo json_encode($json_data);
     }
+
+    public function event_types()
+    {
+        $this->load->model('EventType_model');
+        $this->load->model('Business_model');
+
+        $search = '';
+        if( get('search') != '' ){
+            $search  = get('search');
+            $filters = ['search' => $search];
+            $eventTypes = $this->EventType_model->getAll($filters);
+        }else{
+            $eventTypes = $this->EventType_model->getAll();
+        }
+            
+        $this->page_data['search'] = $search;
+        $this->page_data['eventTypes']  = $eventTypes;
+        $this->page_data['companies']   = $this->Business_model->getAll();
+        $this->page_data['page_title']  = 'Event Types';
+        $this->page_data['page_parent'] = 'Events';
+        $this->load->view('admin/event_types/list', $this->page_data);
+    }
+
+    public function ajaxSaveEventType()
+    {
+        $this->load->model('EventType_model');
+
+        $is_success = 0;
+        $msg = 'Cannot save data.';
+
+        $post = $this->input->post();
+
+        if( $post['event_name'] != ''){
+            $marker_icon = $this->eventTypeMoveUploadedFile($post['company_id']);
+            $data_event_type = [
+                'company_id' => $post['company_id'],
+                'user_id' => 0,
+                'title' => $post['event_name'],
+                'icon_marker' => $marker_icon,
+                'is_marker_icon_default_list' => 0,
+                'created' => date("Y-m-d H:i:s"),
+                'modified' => date("Y-m-d H:i:s")
+            ];
+
+            $this->EventType_model->create($data_event_type);
+
+            $msg = '';
+            $is_success = 1;
+
+        }else{
+            $msg = 'Please specify event type name';
+        }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+
+        echo json_encode($json_data);
+    }
+
+    public function eventTypeMoveUploadedFile( $company_id ) {
+        if(isset($_FILES['image_marker']) && $_FILES['image_marker']['tmp_name'] != '') {
+            $target_dir = "./uploads/event_types/" . $company_id . "/"; 
+            if(!file_exists($target_dir)) {
+                mkdir($target_dir, 0777, true);
+            }
+
+            $tmp_name = $_FILES['image_marker']['tmp_name'];
+            $extension = strtolower(end(explode('.',$_FILES['image_marker']['name'])));
+            // basename() may prevent filesystem traversal attacks;
+            // further validation/sanitation of the filename may be appropriate
+            $name = trim(basename($_FILES["image_marker"]["name"]));
+            move_uploaded_file($tmp_name, $target_dir . $name);
+
+            return $name;
+        }
+    }
+
+    public function ajaxDeleteEventType()
+    {
+        $this->load->model('EventType_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $post = $this->input->post();
+
+        $eventType = $this->EventType_model->getById($post['eid']);
+        if( $eventType ){
+            $this->EventType_model->deleteById($post['eid']);
+
+            $msg = '';
+            $is_success = 1;
+        }
+
+        $json_data = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($json_data);
+    }
 }
 
 /* End of file Admin.php */

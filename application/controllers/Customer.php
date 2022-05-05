@@ -62,7 +62,7 @@ class Customer extends MY_Controller
         $input = $this->input->post();
         if($input){
             $this->page_data['profiles'] = $this->customer_ad_model->get_customer_data($input);
-        }else {
+        }else {            
             $this->page_data['profiles'] = $this->customer_ad_model->get_customer_data();
         }
         $this->page_data['affiliates'] = $this->customer_ad_model->get_all(FALSE,"","","affiliates","id");
@@ -89,6 +89,8 @@ class Customer extends MY_Controller
     }
 
     public function preview_($id=null){
+        $this->load->model('IndustryType_model');
+
         $this->page_data['page']->title = 'Customer Preview';
         $this->page_data['page']->parent = 'Customers';
 
@@ -102,7 +104,9 @@ class Customer extends MY_Controller
         $userid = $id;
         $user_id = logged('id');
         if(isset($userid) || !empty($userid)){
-            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
+            $customer = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
+            $this->page_data['industryType'] = $this->IndustryType_model->getById($customer->industry_type_id);
+            $this->page_data['profile_info'] = $customer;
             $this->page_data['access_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_access");
             $this->page_data['office_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_office");
             $this->page_data['billing_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_billing");
@@ -1363,6 +1367,8 @@ class Customer extends MY_Controller
 
     public function add_advance($id=null)
     {
+        $this->load->model('IndustryType_model');
+
         $this->hasAccessModule(9);
 
         $userid = $id;
@@ -1470,6 +1476,8 @@ class Customer extends MY_Controller
         add_css([
             'assets/css/customer/add_advance/add_advance.css',
         ]);
+
+        $this->page_data['industryTypes'] = $this->IndustryType_model->getAll(); 
 
         $this->load->view('customer/add_advance', $this->page_data);
     }
@@ -1583,6 +1591,7 @@ class Customer extends MY_Controller
             $input_profile['city'] = $input['city'];
             $input_profile['state'] = $input['state'];
             $input_profile['country'] = $input['country'];
+            $input_profile['industry_type_id'] = $input['industry_type'];
             $input_profile['zip_code'] = $input['zip_code'];
             $input_profile['cross_street'] = $input['cross_street'];
             $input_profile['subdivision'] = $input['subdivision'];

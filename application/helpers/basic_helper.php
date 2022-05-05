@@ -4334,6 +4334,7 @@ if (!function_exists('is_admin_logged')) {
     function customer_list_headers(){
         $headers = [
             'name' => 'Name',
+            'industry' => 'Industry',
             'city' => 'City',
             'state' => 'State',
             'source' => 'Source',
