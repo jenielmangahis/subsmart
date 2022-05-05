@@ -2938,6 +2938,10 @@ class Accounting_modals extends MY_Controller
                             ];
 
                             $this->chart_of_accounts_model->updateBalance($expenseAccData);
+
+                            if(isset($data['linked_transaction'])) {
+
+                            }
                         }
                     }
     
@@ -9986,6 +9990,19 @@ class Accounting_modals extends MY_Controller
 
         $categories = $this->expenses_model->get_transaction_categories($expenseId, 'Expense');
         $items = $this->expenses_model->get_transaction_items($expenseId, 'Expense');
+
+        $linkedTransactions = $this->accounting_linked_transactions_model->get_linked_transactions('expense', $expenseId);
+        if(count($linkedTransactions) > 0) {
+            $linked = [];
+            foreach($linkedTransactions as $linkedData) {
+                $linked[] = [
+                    'type' => 'Purchase Order',
+                    'transaction' => $this->vendors_model->get_purchase_order_by_id($linkedData->linked_transaction_id, logged('company_id'))
+                ];
+            }
+
+            $expense->linked_transacs = $linked;
+        }
 
         $this->page_data['tags'] = $this->tags_model->get_transaction_tags('Expense', $expenseId);
         $this->page_data['expense'] = $expense;

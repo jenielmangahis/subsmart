@@ -2,6 +2,8 @@ window.document.addEventListener("DOMContentLoaded", async () => {
   const api = await import("./api.js");
   window.__customermodule_api = api;
 
+  import("./docu.js");
+
   const customerId = getCustomerId();
   const response = await api.getCustomerActions(customerId);
   const { data: customerActions } = response;
