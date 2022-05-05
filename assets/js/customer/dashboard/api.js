@@ -30,6 +30,31 @@ export function getCustomerById(customerId) {
   );
 }
 
+export async function uploadCustomerDocument(payload) {
+  const formData = new FormData();
+  Object.entries(payload).forEach(([key, value]) => {
+    formData.append(key, value);
+  });
+
+  const endpoint = `${prefixURL}/CustomerDashboardQuickActions/uploadCustomerDocument`;
+  const response = await fetch(endpoint, {
+    method: "POST",
+    body: formData,
+    headers: {
+      accepts: "application/json",
+    },
+  });
+
+  return response.json();
+}
+
+export function deleteCustomerDocument(payload) {
+  return http.post(
+    `${prefixURL}/CustomerDashboardQuickActions/deleteCustomerDocument`,
+    payload
+  );
+}
+
 const http = {
   post: sendPost,
   delete: sendDelete,

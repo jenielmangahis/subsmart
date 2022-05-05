@@ -14,6 +14,8 @@ class Action
 
 class CustomerDashboardQuickActions extends MY_Controller
 {
+    const ONE_MB = 1048576;
+
     public function __construct()
     {
         parent::__construct();
@@ -115,6 +117,11 @@ class CustomerDashboardQuickActions extends MY_Controller
                 'text' => 'Send email',
                 'url' => 'mailto::customeremail',
                 'sub_text' => 'Customers',
+            ],
+            [
+                'text' => 'Add task',
+                'url' => '#estimates_import',
+                'sub_text' => 'Tasks',
             ],
         ];
 
@@ -226,5 +233,127 @@ class CustomerDashboardQuickActions extends MY_Controller
         $this->db->where('prof_id', $customerId);
         $customer = $this->db->get('acs_profile')->row();
         $this->respond(['data' => $customer]);
+    }
+
+    private function getCustomerDocumentPath()
+    {
+        $filePath = FCPATH . 'uploads/customerdocuments/';
+        if (!file_exists($filePath)) {
+            mkdir($filePath, 0777, true);
+        }
+
+        return $filePath;
+    }
+
+    public function uploadCustomerDocument()
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->respond(['success' => false]);
+        }
+
+        $filePath = $this->getCustomerDocumentPath();
+
+        $document = $_FILES['document'];
+        ['document_type' => $documentType, 'customer_id' => $customerId, 'document_label' => $documentLabel] = $this->input->post();
+
+        if ($document['size'] > self::ONE_MB * 8) {
+            $this->respond([
+                'success' => false,
+                'reason' => 'Maximum file size is less than 8MB',
+            ]);
+        }
+
+        $tempName = $document['tmp_name'];
+        $fileName = $document['name'];
+        $fileExtension = pathinfo($fileName, PATHINFO_EXTENSION);
+        $fileName = uniqid($customerId) . str_replace('.tmp', '', basename($tempName)) . '.' . $fileExtension;
+
+        $this->db->where('customer_id', $customerId);
+        $this->db->where('document_type', $documentType);
+        $currDocument = $this->db->get('acs_customer_documents')->row();
+        $documentId = null;
+
+        if (!is_null($currDocument)) {
+            if (file_exists($filePath . $currDocument->file_name)) {
+                unlink($filePath . $currDocument->file_name);
+            }
+
+            $this->db->where('id', $currDocument->id);
+            $this->db->update('acs_customer_documents', ['file_name' => $fileName]);
+            $documentId = $currDocument->id;
+        } else {
+            $row = [
+                'file_name' => $fileName,
+                'customer_id' => $customerId,
+                'document_type' => $documentType,
+                'document_label' => $documentLabel,
+            ];
+
+            $this->db->insert('acs_customer_documents', $row);
+            $documentId = $this->db->insert_id();
+        }
+
+        move_uploaded_file($tempName, $filePath . $fileName);
+
+        $this->db->where('id', $documentId);
+        $this->respond(['data' => $this->db->get('acs_customer_documents')->row()]);
+    }
+
+    public function deleteCustomerDocument()
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->respond(['success' => false]);
+        }
+
+        $filePath = $this->getCustomerDocumentPath();
+
+        $payload = json_decode(file_get_contents('php://input'), true);
+        ['document_type' => $documentType, 'customer_id' => $customerId] = $payload;
+
+        $this->db->where('customer_id', $customerId);
+        $this->db->where('document_type', $documentType);
+        $currDocument = $this->db->get('acs_customer_documents')->row();
+
+        if (!is_null($currDocument)) {
+            if (file_exists($filePath . $currDocument->file_name)) {
+                unlink($filePath . $currDocument->file_name);
+            }
+        }
+
+        $this->db->where('customer_id', $payload['customer_id']);
+        $this->db->where('document_type', $payload['document_type']);
+        $this->db->delete('acs_customer_documents');
+        $this->respond(['data' => null]);
+    }
+
+    public function downloadCustomerDocument()
+    {
+
+        $filePath = $this->getCustomerDocumentPath();
+
+        $customerId = $this->input->get('customer_id', true);
+        $documentType = $this->input->get('document_type', true);
+
+        $this->db->where('customer_id', $customerId);
+        $this->db->where('document_type', $documentType);
+        $currDocument = $this->db->get('acs_customer_documents')->row();
+
+        if (is_null($currDocument)) {
+            $this->respond(['message' => 'Database file not found']);
+        }
+
+        if (!file_exists($filePath . $currDocument->file_name)) {
+            $this->respond(['message' => 'Local file not found']);
+        }
+
+        $document = $filePath . $currDocument->file_name;
+        header('Content-type: application/octet-stream');
+        header("Content-Type: " . mime_content_type($document));
+        header("Content-Disposition: attachment; filename=" . $currDocument->file_name);
+        while (ob_get_level()) {
+            ob_end_clean();
+        }
+
+        readfile($document);
     }
 }
