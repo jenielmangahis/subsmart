@@ -83,7 +83,7 @@
                     </div>
                 </div>
                 <div class="col-12">
-                    <a href="<?= base_url('timesheet/notification') ?>" target="_blank">
+                    <a href="<?= base_url('customer/activities/'.$profile_info->prof_id) ?>" target="_blank">
                         <button role="button" class="nsm-button primary w-100 ms-0 mt-3" >
                             <i class='bx bx-fw bx-history'></i> History Log
                         </button>

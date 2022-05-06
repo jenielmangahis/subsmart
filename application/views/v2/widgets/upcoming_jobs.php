@@ -8,6 +8,8 @@ endif;
 $widget_name = "";
 if ($var == 1) {
     $widget_name = "Companies";
+}else{
+    $widget_name = "Upcoming Jobs";
 }
 
 ?>

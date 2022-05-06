@@ -99,7 +99,10 @@ endif;
                         <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
                             <h2>$<?php $totalAmount = 0;
                                 foreach($subs as $s){
-                                    $totalAmount += $s->subtotal;
+                                    if($s->next_billing_date>=date("Y-m-d")){
+                                        $totalAmount += $s->mmr;
+                                    }
+                                    
                                 }
                                 echo $totalAmount;
                             ?></h2>

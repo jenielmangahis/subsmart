@@ -2712,7 +2712,9 @@ class Customer extends MY_Controller
         }
     }
 
-    public function send_qr($id=null) {
+    public function send_qr() {
+
+        $id = $_POST['custId'];
         
         $customer = $this->customer_ad_model->get_data_by_id('prof_id',$id,"acs_profile");
         //Email Sending

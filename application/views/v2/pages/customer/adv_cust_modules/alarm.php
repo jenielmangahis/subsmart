@@ -41,14 +41,7 @@
                                 <?php if(isset($alarm_info)){ echo $alarm_info->passcode; } ?>
                             </span>
                         </div>
-                        <div class="col-12 col-md-6">
-                            <label class="content-title">Panel Type</label>
-                        </div>
-                        <div class="col-12 col-md-6">
-                            <span class="content-subtitle">
-                                <?php if(isset($alarm_info)){ echo $alarm_info->panel_type; } ?>
-                            </span>
-                        </div>
+                        
                         <div class="col-12 col-md-6">
                             <label class="content-title">Mon. Waived</label>
                         </div>
