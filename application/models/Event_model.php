@@ -28,17 +28,44 @@ class Event_model extends MY_Model
         return $query->result();
     }
 
-    public function admin_get_all_events($limit = 0)
+    public function getAllEventsAdmin($filters=array(), $limit = 0)
     {
         $this->db->from($this->table);
-        $this->db->select('events.*,LName,FName,acs_profile.first_name,acs_profile.last_name,users.profile_img,clients.business_name');
+        $this->db->select('events.*,LName,FName,acs_profile.first_name,acs_profile.last_name,users.profile_img,business_profile.business_name');
         $this->db->join('acs_profile', 'acs_profile.prof_id = events.customer_id', 'left');
-        $this->db->join('clients', 'clients.id = events.company_id', 'left');
+        $this->db->join('business_profile', 'business_profile.company_id = events.company_id', 'left');
         $this->db->join('users', 'users.id = events.employee_id', 'left');
         $this->db->order_by('id', "DESC");
+
+        if ( !empty($filters) ) {
+            if ( !empty($filters['search']) ) {
+                $this->db->like('event_number', $filters['search'], 'both');
+                $this->db->or_like('business_profile.business_name', $filters['search'], 'both');
+            }
+        }
+
         if ($limit > 0) {
             $this->db->limit($limit);
         }
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function getAllByStatus($status)
+    {
+        $this->db->from($this->table);
+        $this->db->select('events.*,LName,FName,acs_profile.first_name,acs_profile.last_name,users.profile_img,business_profile.business_name');
+        $this->db->join('acs_profile', 'acs_profile.prof_id = events.customer_id', 'left');
+        $this->db->join('business_profile', 'business_profile.company_id = events.company_id', 'left');
+        $this->db->join('users', 'users.id = events.employee_id', 'left');
+        $this->db->order_by('id', "DESC");
+        $this->db->where('events.status', $status);        
+
+        if ($limit > 0) {
+            $this->db->limit($limit);
+        }
+
         $query = $this->db->get();
         return $query->result();
     }
@@ -48,9 +75,10 @@ class Event_model extends MY_Model
         $this->db->from($this->table);
         $this->db->select('events.*,events.id as job_unique_id,LName,FName,
         acs_profile.first_name,acs_profile.last_name,acs_profile.mail_add,acs_profile.city as cust_city,acs_profile.state as cust_state,
-        acs_profile.zip_code as cust_zip_code,acs_profile.phone_h,acs_profile.phone_m,acs_profile.email as cust_email');
+        acs_profile.zip_code as cust_zip_code,acs_profile.phone_h,acs_profile.phone_m,acs_profile.email as cust_email,business_profile.business_name');
         $this->db->join('acs_profile', 'acs_profile.prof_id = events.customer_id', 'left');
         $this->db->join('users', 'users.id = events.employee_id', 'left');
+        $this->db->join('business_profile', 'events.company_id = business_profile.id', 'left');
         $this->db->where("events.id", $id);
         $query = $this->db->get();
         return $query->row();
