@@ -227,7 +227,7 @@ class Event_model extends MY_Model
 
     public function getAllsubs()
     {
-        $query = $this->db->get('acs_transaction_history');
+        $query = $this->db->get('acs_billing');
 
         if ($query) {
             return $query->result();

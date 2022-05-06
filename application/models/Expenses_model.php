@@ -1030,4 +1030,18 @@ class Expenses_model extends MY_Model
         $delete = $this->db->delete('accounting_vendor_transaction_items');
         return $delete;
     }
+
+    public function get_vendor_transaction_category_by_id($id)
+    {
+        $this->db->where('id', $id);
+        $query = $this->db->get('accounting_vendor_transaction_categories');
+        return $query->row();
+    }
+
+    public function get_vendor_transaction_item_by_id($id)
+    {
+        $this->db->where('id', $id);
+        $query = $this->db->get('accounting_vendor_transaction_items');
+        return $query->row();
+    }
 }

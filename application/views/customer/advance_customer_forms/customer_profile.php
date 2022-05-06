@@ -61,6 +61,34 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4">
+                Industry Type
+            </div>
+            <div class="col-md-8">
+                <select 
+                    id="industry_type" 
+                    name="industry_type" 
+                    data-customer-source="dropdown" 
+                    class="form-controls input_select"
+                >
+                    <option>Select your Industry</option>
+                    <?php $businessTypeName  = "";
+                        foreach($industryTypes  as $industryType ){ ?>
+                           <?php if ($businessTypeName!== $industryType->business_type_name ) { ?> 
+                                    <optgroup label="<?php echo $industryType->business_type_name; ?>">
+                           <?php  $businessTypeName =  $industryType->business_type_name; }      ?>  
+                           <?php 
+                            $selected_industry_type = 0;
+                            if( isset($profile_info) ){
+                                $selected_industry_type = $profile_info->industry_type_id;
+                            }
+                           ?>
+                            <option <?= $selected_industry_type == $industryType->id ? 'selected="selected"' : ''; ?> value="<?php echo $industryType->id; ?>"><?php echo $industryType->name; ?></option>
+                        <?php  }   ?>
+                </select>
+            </div>
+        </div>
+        <div class="row form_line">
+            <div class="col-md-4">
                 Sales Area <span class="required"> *</span>
             </div>
             <div class="col-md-8">

@@ -53,6 +53,7 @@
                             <tr>
                                 <td class="table-icon"></td>
                                 <?php if (in_array('name', $enabled_table_headers)) : ?><td data-name="Name">Name</td><?php endif; ?>
+                                <?php if (in_array('industry', $enabled_table_headers)) : ?><td data-name="Name">Industry</td><?php endif; ?>
                                 <?php if (in_array('city', $enabled_table_headers)) : ?><td data-name="City">City</td><?php endif; ?>
                                 <?php if (in_array('state', $enabled_table_headers)) : ?><td data-name="State">State</td><?php endif; ?>
                                 <?php if (in_array('source', $enabled_table_headers)) : ?><td data-name="Source">Source</td><?php endif; ?>
@@ -114,6 +115,17 @@
                                                 <?php endif; ?>
                                             </label>
                                             <label class="nsm-link default content-subtitle fst-italic d-block"><?php echo $customer->email; ?></label>
+                                        </td>
+                                    <?php endif; ?>
+                                    <?php if (in_array('industry', $enabled_table_headers)) : ?>
+                                        <td>
+                                            <?php 
+                                                if( $customer->industry_type_id > 0 ){
+                                                    echo $customer->industry_type;
+                                                }else{
+                                                    echo 'Not Specified';                                                    
+                                                }
+                                            ?>
                                         </td>
                                     <?php endif; ?>
                                     <?php if (in_array('city', $enabled_table_headers)) : ?>
@@ -204,6 +216,7 @@
                             <tr>
                                 <td class="table-icon"></td>
                                 <td data-name="Name">Name</td>
+                                <td data-name="Name">Industry</td>
                                 <td data-name="City">City</td>
                                 <td data-name="State">State</td>
                                 <td data-name="Source">Source</td>
@@ -266,6 +279,7 @@
                                             </label>
                                             <label class="nsm-link default content-subtitle fst-italic d-block"><?php echo $customer->email; ?></label>
                                         </td>
+                                        <td>test</td>
                                         <td><?php echo $customer->city; ?></td>
                                         <td><?php echo $customer->state; ?></td>
                                         <td><?= $customer->lead_source != "" ? $customer->lead_source : 'n/a'; ?></td>

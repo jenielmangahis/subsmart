@@ -84,6 +84,9 @@
         $("#customer_group").select2({
             placeholder: "Select Customer Group"
         });
+        $("#industry_type").select2({
+            placeholder: "Select Industry Type"
+        });
         $("#pay_method").select2({
             placeholder: "Select Payment Type"
         });

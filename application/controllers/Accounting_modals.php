@@ -2681,7 +2681,6 @@ class Accounting_modals extends MY_Controller
             $return['message'] = 'Please enter at least one line item.';
         } else {
             $payee = explode('-', $data['payee']);
-            // $linkedTransaction = isset($data['linked_transaction']) ? explode('-', $data['linked_transaction']) : null;
 
             $expenseData = [
                 'company_id' => logged('company_id'),
@@ -2694,7 +2693,6 @@ class Accounting_modals extends MY_Controller
                 'permit_no' => $data['permit_number'] === "" ? null : $data['permit_number'],
                 'memo' => $data['memo'],
                 'total_amount' => $data['total_amount'],
-                // 'linked_purchase_order_id' => !is_null($linkedTransaction) ? $linkedTransaction[1] : null,
                 'recurring' => isset($data['template_name']) ? 1 : null,
                 'status' => 1
             ];
@@ -2787,24 +2785,6 @@ class Accounting_modals extends MY_Controller
                         $linkedTransacsData = [];
                         foreach($data['linked_transaction'] as $linkedTransac) {
                             $explode = explode('-', $linkedTransac);
-        
-                            // if($explode[0] === 'delayed_credit') {
-                            //     $delayedCredit = $this->accounting_delayed_credit_model->getDelayedCreditDetails($explode[1]);
-        
-                            //     $creditData = [
-                            //         'status' => 2
-                            //     ];
-        
-                            //     $creditUpdate = $this->accounting_delayed_credit_model->updateDelayedCredit($delayedCredit->id, $creditData);
-                            // } else {
-                            //     $delayedCharge = $this->accounting_delayed_charge_model->getDelayedChargeDetails($explode[1]);
-        
-                            //     $chargeData = [
-                            //         'status' => 2
-                            //     ];
-        
-                            //     $chargeUpdate = $this->accounting_delayed_charge_model->updateDelayedCharge($delayedCharge->id, $chargeData);
-                            // }
 
                             $linkedTransacsData[] = [
                                 'linked_to_type' => 'expense',
@@ -2905,6 +2885,8 @@ class Accounting_modals extends MY_Controller
                 if (isset($data['expense_account'])) {
                     $categoryDetails = [];
                     foreach ($data['expense_account'] as $index => $value) {
+                        $linkedTransacCat = $data['category_linked'][$index] !== '' ? explode('-', $data['category_linked'][$index]) : null;
+
                         $categoryDetails[] = [
                             'transaction_type' => 'Expense',
                             'transaction_id' => $expenseId,
@@ -2916,8 +2898,9 @@ class Accounting_modals extends MY_Controller
                             'markup_percentage' => $data['category_markup'][$index],
                             'tax' => $data['category_tax'][$index],
                             'customer_id' => $data['category_customer'][$index],
-                            'linked_transaction_type' => $data['category_linked'][$index] ? $linkedTransaction[0] : null,
-                            'linked_transaction_id' => $data['category_linked'][$index] ? $linkedTransaction[1] : null
+                            'linked_transaction_type' => !is_null($linkedTransacCat) ? $linkedTransacCat[0] : null,
+                            'linked_transaction_id' => !is_null($linkedTransacCat) ? $linkedTransacCat[1] : null,
+                            'linked_transaction_category_id' => !is_null($linkedTransacCat) ? $data['transac_category_id'][$index] : null
                         ];
 
                         if(!isset($data['template_name'])) {
@@ -2939,8 +2922,24 @@ class Accounting_modals extends MY_Controller
 
                             $this->chart_of_accounts_model->updateBalance($expenseAccData);
 
-                            if(isset($data['linked_transaction'])) {
+                            if(isset($data['linked_transaction']) && $data['category_linked'][$index] !== '') {
+                                $linkedCat = $this->expenses_model->get_vendor_transaction_category_by_id($data['transac_category_id'][$index]);
 
+                                $received = floatval($linkedCat->received) + floatval($data['category_amount'][$index]);
+
+                                $categoryDetail = [
+                                    'received' => number_format($received, 2, '.', ',')
+                                ];
+
+                                $this->vendors_model->update_transaction_category_details($data['transac_category_id'][$index], $categoryDetail);
+
+                                $purchOrder = $this->vendors_model->get_purchase_order_by_id($linkedTransacCat[1], logged('company_id'));
+
+                                $purchOrderData = [
+                                    'remaining_balance' => floatval($purchOrder->remaining_balance) - floatval($data['category_amount'][$index])
+                                ];
+
+                                $this->vendors_model->update_purchase_order($purchOrder->id, $purchOrderData);
                             }
                         }
                     }
@@ -2951,6 +2950,8 @@ class Accounting_modals extends MY_Controller
                 if (isset($data['item'])) {
                     $itemDetails = [];
                     foreach ($data['item'] as $index => $value) {
+                        $linkedTransacItem = $data['item_linked'][$index] !== '' ? explode('-', $data['item_linked'][$index]) : null;
+
                         $itemDetails[] = [
                             'transaction_type' => 'Expense',
                             'transaction_id' => $expenseId,
@@ -2961,8 +2962,9 @@ class Accounting_modals extends MY_Controller
                             'discount' => $data['discount'][$index],
                             'tax' => $data['item_tax'][$index],
                             'total' => $data['item_total'][$index],
-                            'linked_transaction_type' => $data['item_linked'][$index] ? $linkedTransaction[0] : null,
-                            'linked_transaction_id' => $data['item_linked'][$index] ? $linkedTransaction[1] : null
+                            'linked_transaction_type' => !is_null($linkedTransacItem) ? $linkedTransacItem[0] : null,
+                            'linked_transaction_id' => !is_null($linkedTransacItem) ? $linkedTransacItem[1] : null,
+                            'linked_transaction_item_id' => !is_null($linkedTransacItem) ? $data['transac_item_id'][$index] : null
                         ];
     
                         if(!isset($data['template_name'])) {
@@ -2986,6 +2988,26 @@ class Accounting_modals extends MY_Controller
                                 ];
         
                                 $this->chart_of_accounts_model->updateBalance($invAssetAccData);
+                            }
+
+                            if(isset($data['linked_transaction']) && $data['category_linked'][$index] !== '') {
+                                $linkedItem = $this->expenses_model->get_vendor_transaction_item_by_id($data['transac_item_id'][$index]);
+    
+                                $received = floatval($linkedCat->received) + floatval($data['item_total'][$index]);
+    
+                                $itemDetail = [
+                                    'received' => number_format($received, 2, '.', ',')
+                                ];
+    
+                                $this->vendors_model->update_transaction_item($data['transac_item_id'][$index], $itemDetail);
+
+                                $purchOrder = $this->vendors_model->get_purchase_order_by_id($linkedTransacCat[1], logged('company_id'));
+
+                                $purchOrderData = [
+                                    'remaining_balance' => floatval($purchOrder->remaining_balance) - floatval($data['item_total'][$index])
+                                ];
+
+                                $this->vendors_model->update_purchase_order($purchOrder->id, $purchOrderData);
                             }
                         }
                     }
@@ -3287,6 +3309,18 @@ class Accounting_modals extends MY_Controller
                             ];
 
                             $this->chart_of_accounts_model->updateBalance($expenseAccData);
+
+                            if(isset($data['linked_transaction'])) {
+                                $linkedCat = $this->expenses_model->get_vendor_transaction_category_by_id($data['transac_category_id'][$index]);
+
+                                $received = floatval($linkedCat->received) + floatval($data['category_amount'][$index]);
+
+                                $categoryDetail = [
+                                    'received' => number_format($received, 2, '.', ',')
+                                ];
+
+                                $this->vendors_model->update_transaction_category_details($data['transac_category_id'][$index], $categoryDetail);
+                            }
                         }
                     }
     
@@ -3331,6 +3365,18 @@ class Accounting_modals extends MY_Controller
                                 ];
         
                                 $this->chart_of_accounts_model->updateBalance($invAssetAccData);
+                            }
+
+                            if(isset($data['linked_transaction'])) {
+                                $linkedItem = $this->expenses_model->get_vendor_transaction_item_by_id($data['transac_item_id'][$index]);
+    
+                                $received = floatval($linkedCat->received) + floatval($data['item_total'][$index]);
+    
+                                $itemDetail = [
+                                    'received' => number_format($received, 2, '.', ',')
+                                ];
+    
+                                $this->vendors_model->update_transaction_item($data['transac_item_id'][$index], $itemDetail);
                             }
                         }
                     }

@@ -135,11 +135,145 @@
                 </div>
 
                 <div class="col-12">
-                    <button type="button" class="nsm-button primary w-100 ms-0 mt-3" disabled>
+                    <button type="button" class="nsm-button primary w-100 ms-0 mt-3" id="managecustomerdocumentsbtn">
                         <i class='bx bx-fw bx-list-minus'></i> Customize List
                     </button>
                 </div>
             </div>
         </div>
     </div>
+</div>
+
+<div class="modal fade nsm-modal" tabindex="-1" role="dialog" id="managecustomerdocuments">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Customer Documents</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div>
+            <div class="documents-loader d-flex align-items-center justify-content-center d-none" style="min-height: 300px;">
+                <div class="spinner-border" role="status"></div>
+            </div>
+            <div class="documents-wrapper">
+
+                <form class="mb-3">
+                    <style>
+                        .document-form {
+                            display: flex;
+                            flex-direction: row;
+                            align-items: center;
+                            gap: 8px;
+                        }
+                        .document-form input {
+                            border-radius: .25rem !important;
+                        }
+                        .document-form button {
+                            border-radius: 5px !important;
+                            margin-bottom: 0 !important;
+                        }
+                    </style>
+                    <div class="col-12 col-md">
+                        <label class="content-subtitle fw-bold mb-2">Document Label</label>
+                        <div class="input-group document-form">
+                            <input placeholder="Enter document label" class="form-control nsm-field" >
+                            <button type="button" class="nsm-button primary">
+                                Create
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="nsm-card mb-2 h-auto" data-document-type="client_agreement">
+                    <div class="nsm-card-content">
+                        <div class="d-flex">
+                            <div>
+                                <span class="content-title d-block">
+                                    Client Agreement
+                                </span>
+                            </div>
+                            <div class="d-flex justify-content-end align-items-center" style="margin-left: auto;">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input ms-0" type="checkbox" checked="">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="nsm-card mb-2 h-auto" data-document-type="photo_id_copy">
+                    <div class="nsm-card-content">
+                        <div class="d-flex">
+                            <div>
+                                <span class="content-title d-block">
+                                    Photo ID Copy
+                                </span>
+                            </div>
+                            <div class="d-flex justify-content-end align-items-center" style="margin-left: auto;">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input ms-0" type="checkbox" checked="">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="nsm-card mb-2 h-auto" data-document-type="proof_of_residency">
+                    <div class="nsm-card-content">
+                        <div class="d-flex">
+                            <div>
+                                <span class="content-title d-block">
+                                    Proof of Residency
+                                </span>
+                            </div>
+                            <div class="d-flex justify-content-end align-items-center" style="margin-left: auto;">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input ms-0" type="checkbox" checked="">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="nsm-card mb-2 h-auto" data-document-type="personal_guarantee">
+                    <div class="nsm-card-content">
+                        <div class="d-flex">
+                            <div>
+                                <span class="content-title d-block">
+                                    Personal Guarantee
+                                </span>
+                            </div>
+                            <div class="d-flex justify-content-end align-items-center" style="margin-left: auto;">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input ms-0" type="checkbox" checked="">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <template>
+            <div class="nsm-card mb-2 h-auto">
+                <div class="nsm-card-content">
+                    <div class="d-flex">
+                        <div>
+                            <span class="content-title d-block"></span>
+                        </div>
+                        <div class="d-flex justify-content-end align-items-center" style="margin-left: auto;">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input ms-0" type="checkbox" checked="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </template>
+      </div>
+    </div>
+  </div>
 </div>
