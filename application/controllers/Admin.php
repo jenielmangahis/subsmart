@@ -3429,6 +3429,395 @@ class Admin extends CI_Controller
 
         echo json_encode($json_data);
     }
+
+    public function event_icons()
+    {
+        $this->load->model('Icons_model');
+        
+        $search = '';
+        if( get('search') != '' ){
+            $search  = get('search');
+            $filters = ['search' => $search];
+            $icons = $this->Icons_model->getAll($filters);
+        }else{
+            $icons   = $this->Icons_model->getAll();
+        }
+            
+        $this->page_data['search'] = $search;
+        $this->page_data['icons']  = $icons;
+        $this->page_data['page_title'] = 'Settings : Event Icons';
+        $this->page_data['page_parent'] = 'Settings';
+        $this->load->view('admin/event_icons/list', $this->page_data);
+    }
+
+    public function ajaxSaveEventIcon()
+    {
+        $this->load->model('Icons_model');
+
+        $is_success = 0;
+        $msg = 'Cannot save data.';
+
+        $post = $this->input->post();
+
+        if( $post['icon_name'] != ''){
+            $marker_icon = $this->eventIconMoveUploadedFile();
+            $data_event_icon = [
+                'name' => $post['icon_name'],
+                'image' => $marker_icon
+            ];
+
+            $this->Icons_model->create($data_event_icon);
+
+            $msg = '';
+            $is_success = 1;
+
+        }else{
+            $msg = 'Please specify event type name';
+        }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+
+        echo json_encode($json_data);
+    }
+
+    public function eventIconMoveUploadedFile() 
+    {
+        if(isset($_FILES['image_marker']) && $_FILES['image_marker']['tmp_name'] != '') {
+            $target_dir = "./uploads/icons/"; 
+            if(!file_exists($target_dir)) {
+                mkdir($target_dir, 0777, true);
+            }
+
+            $tmp_name = $_FILES['image_marker']['tmp_name'];
+            $extension = strtolower(end(explode('.',$_FILES['image_marker']['name'])));
+            // basename() may prevent filesystem traversal attacks;
+            // further validation/sanitation of the filename may be appropriate
+            $name = trim(basename($_FILES["image_marker"]["name"]));
+            move_uploaded_file($tmp_name, $target_dir . $name);
+
+            return $name;
+        }
+    }
+
+    public function ajax_edit_event_icon()
+    {
+        $this->load->model('Icons_model');
+
+        $post = $this->input->post();
+
+        $eventIcon = $this->Icons_model->getById($post['eiid']);
+
+        $this->page_data['eventIcon'] = $eventIcon;
+        $this->load->view('admin/event_icons/ajax_edit_event_icon', $this->page_data);
+    }
+
+    public function ajaxUpdateEventIcon()
+    {
+        $this->load->model('Icons_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find data.';
+
+        $post = $this->input->post();
+
+        $eventIcon = $this->Icons_model->getById($post['eiid']);
+        if( $eventIcon ){
+            if( $post['icon_name'] != ''){
+                $marker_icon = $eventIcon->image;
+                if(isset($_FILES['image_marker']) && $_FILES['image_marker']['tmp_name'] != '') {
+                    $marker_icon = $this->eventIconMoveUploadedFile();
+                }
+                
+                $data_event_icon = [
+                    'name' => $post['icon_name'],
+                    'image' => $marker_icon
+                ];
+
+                $this->Icons_model->update($eventIcon->id, $data_event_icon);
+
+                $msg = '';
+                $is_success = 1;
+
+            }else{
+                $msg = 'Please specify event type name';
+            }
+        }        
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+
+        echo json_encode($json_data);
+    }
+
+    public function ajaxDeleteEventIcon()
+    {
+        $this->load->model('Icons_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $post = $this->input->post();   
+        $eventIcon = $this->Icons_model->getById($post['eiid']);
+        if( $eventIcon ){
+            $file = "uploads/icons/" . $eventIcon->image;
+            $this->Icons_model->delete($eventIcon->id);
+
+            $is_success = 1;
+            $msg = '';
+
+            unlink($file);
+        }        
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+
+        echo json_encode($json_data);     
+    }
+
+    public function event_tags()
+    {
+        $this->load->model('EventTags_model');
+        $this->load->model('Business_model');
+        
+        $search = '';
+        if( get('search') != '' ){
+            $search  = trim(get('search'));
+            $filters = ['search' => $search];
+            $eventTags = $this->EventTags_model->getAll($filters);
+        }else{
+            $eventTags = $this->EventTags_model->getAll();
+        }
+            
+        $this->page_data['search'] = $search;
+        $this->page_data['eventTags']  = $eventTags;
+        $this->page_data['companies']  = $this->Business_model->getAll();
+        $this->page_data['page_title'] = 'Event Tags';
+        $this->page_data['page_parent'] = 'Events';
+        $this->load->view('admin/event_tags/list', $this->page_data);
+    }
+
+    public function ajaxSaveEventTag()
+    {
+        $this->load->model('EventTags_model');
+
+        $is_success = 0;
+        $msg = 'Cannot save data.';
+
+        $post = $this->input->post();
+
+        if( $post['event_tag_name'] != ''){
+            $marker_icon = $this->eventTagMoveUploadedFile($post['company_id']);
+            $data_event_type = [
+                'company_id' => $post['company_id'],
+                'name' => $post['event_tag_name'],
+                'marker_icon' => $marker_icon,
+                'is_marker_icon_default_list' => 0
+            ];
+
+            $this->EventTags_model->create($data_event_type);
+
+            $msg = '';
+            $is_success = 1;
+
+        }else{
+            $msg = 'Please specify event tag name';
+        }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+
+        echo json_encode($json_data);
+    }
+
+    public function eventTagMoveUploadedFile( $company_id ) {
+        if(isset($_FILES['image_marker']) && $_FILES['image_marker']['tmp_name'] != '') {
+            $target_dir = "./uploads/event_tags/" . $company_id . "/"; 
+            if(!file_exists($target_dir)) {
+                mkdir($target_dir, 0777, true);
+            }
+
+            $tmp_name = $_FILES['image_marker']['tmp_name'];
+            $extension = strtolower(end(explode('.',$_FILES['image_marker']['name'])));
+            // basename() may prevent filesystem traversal attacks;
+            // further validation/sanitation of the filename may be appropriate
+            $name = trim(basename($_FILES["image_marker"]["name"]));
+            move_uploaded_file($tmp_name, $target_dir . $name);
+
+            return $name;
+        }
+    }
+
+    public function ajax_edit_event_tag()
+    {
+        $this->load->model('EventTags_model');
+        $this->load->model('Business_model');
+
+        $post = $this->input->post();
+
+        $eventTag = $this->EventTags_model->getById($post['etid']);
+
+        $this->page_data['companies'] = $this->Business_model->getAll();
+        $this->page_data['eventTag']  = $eventTag;
+        $this->load->view('admin/event_tags/ajax_edit_event_tag', $this->page_data);
+    }
+
+    public function ajaxUpdateEventTag()
+    {
+        $this->load->model('EventTags_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find data.';
+
+        $post = $this->input->post();
+        $eventTag = $this->EventTags_model->getById($post['etid']);
+        if( $eventTag ){
+            if( $post['event_tag_name'] != ''){
+                $marker_icon = $eventTag->marker_icon;
+                if(isset($_FILES['image_marker']) && $_FILES['image_marker']['tmp_name'] != '') {
+                    $marker_icon = $this->eventTagMoveUploadedFile($post['company_id']);
+                }
+                
+                $data_event_type = [
+                    'company_id' => $post['company_id'],
+                    'name' => $post['event_tag_name'],
+                    'marker_icon' => $marker_icon
+                ];
+
+                $this->EventTags_model->update($eventTag->id, $data_event_type);
+
+                $msg = '';
+                $is_success = 1;
+
+            }else{
+                $msg = 'Please specify event tag name';
+            }
+        }        
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+
+        echo json_encode($json_data);
+    }
+
+    public function ajaxDeleteEventTag()
+    {
+        $this->load->model('EventTags_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $post = $this->input->post();   
+        $eventTag = $this->EventTags_model->getById($post['etid']);
+        if( $eventTag ){
+            if( $eventTag->is_marker_icon_default_list == 0 ){
+                $file = "uploads/event_tags/" . $eventTag->company_id . "/" . $eventTag->marker_icon;    
+                unlink($file);
+            }
+            
+            $this->EventTags_model->delete($eventTag->id);
+
+            $is_success = 1;
+            $msg = '';            
+        }        
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+
+        echo json_encode($json_data);     
+    }
+
+    public function taskhub()
+    {
+        $this->load->model('Taskhub_model');
+        $this->load->model('Business_model');
+        $this->load->model('Taskhub_status_model');       
+
+        $search = '';
+        if( get('search') != '' ){
+            $search  = trim(get('search'));
+            $filters = ['search' => $search];
+            $tasksHub = $this->Taskhub_model->getAll($filters);
+        }else{
+            $tasksHub = $this->Taskhub_model->getAll();
+        }
+            
+        $this->page_data['search']  = $search;
+        $this->page_data['taskStatus'] = $this->Taskhub_status_model->get();
+        $this->page_data['tasksHub'] = $tasksHub;
+        $this->page_data['companies']  = $this->Business_model->getAll();
+        $this->page_data['page_title'] = 'Taskhub';
+        $this->page_data['page_parent'] = 'Taskhub';
+        $this->load->view('admin/taskhub/list', $this->page_data);
+    }
+
+    public function ajax_load_taskhub_company_fields()
+    {
+        $this->load->model('Users_model');
+        $this->load->model('AcsProfile_model');
+
+        $post = $this->input->post();
+
+        $companyCustomers = $this->AcsProfile_model->getAllByCompanyId($post['cid']);
+        $companyUsers     = $this->Users_model->getCompanyUsers($post['cid']);
+
+        $this->page_data['companyCustomers'] = $companyCustomers;
+        $this->page_data['companyUsers'] = $companyUsers;
+        $this->load->view('admin/taskhub/ajax_load_taskhub_company_fields', $this->page_data);
+    }
+
+    public function ajaxSaveTaskHub()
+    {
+        $this->load->model('Taskhub_model');
+        $this->load->model('Taskhub_participants_model');
+        $this->load->model('Taskhub_status_model');   
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $post = $this->input->post();  
+
+        if( $post['subject'] != '' ){
+            $taskStatus = $this->Taskhub_status_model->getById($post['status']);
+            $task_data = [
+                'prof_id' => $post['customer_id'],
+                'subject' => $post['subject'],
+                'description' => $post['description'],
+                'created_by' => 'Admin',
+                'date_created' => date('Y-m-d h:i:s'),
+                'estimated_date_complete' => date('Y-m-d', strtotime($post['estimated_date_complete'])),
+                'actual_date_complete' => '',
+                'task_color' => $taskStatus->status_color,
+                'status_id' => $taskStatus->status_id,
+                'priority' => 'low',
+                'company_id' => $post['company_id'],
+                'view_count' => 0
+            ];
+
+            $result = $this->Taskhub_model->create($task_data);
+
+            $is_success = 1;
+            $msg = '';
+
+        }else{
+            $msg = 'Please enter subject';
+        }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+
+        echo json_encode($json_data);   
+    }
+
+    public function ajax_edit_taskhub()
+    {
+        $this->load->model('Business_model');
+        $this->load->model('Taskhub_model');
+        $this->load->model('Taskhub_participants_model');
+        $this->load->model('Taskhub_status_model');   
+
+        $post = $this->input->post();
+
+        $task = $this->Taskhub_model->getById($post['thid']);
+
+        $this->page_data['task']  = $task;
+        $this->page_data['taskStatus'] = $this->Taskhub_status_model->get();
+        $this->page_data['companies']  = $this->Business_model->getAll();
+        $this->load->view('admin/taskhub/ajax_edit_taskhub', $this->page_data);
+    }
 }
 
 /* End of file Admin.php */

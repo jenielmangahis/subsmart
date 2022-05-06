@@ -5,4 +5,14 @@ class Taskhub_status_model extends MY_Model {
 	public function __construct(){
 		parent::__construct();
 	}
+
+	public function getById($id)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('status_id', $id);
+        
+        $query = $this->db->get()->row();
+        return $query;
+    }
 }
