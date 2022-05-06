@@ -52,9 +52,11 @@
                     </a>
                 </div>
                 <div class="col-12 col-md-6">
-                    <button role="button" class="nsm-button primary w-100 ms-0 mt-3 newTask">
-                        <i class='bx bx-fw bx-list-plus'></i> Add Task
-                    </button>
+                    <a href="<?= base_url('taskhub/entry'); ?>" target="_blank">
+                        <button role="button" class="nsm-button primary w-100 ms-0 mt-3 newTaskk">
+                            <i class='bx bx-fw bx-list-plus'></i> Add Task
+                        </button>
+                    </a>
                 </div>
             </div>
         </div>

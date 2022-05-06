@@ -37,10 +37,16 @@ endif;
                         <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
                             <h3>$<?php $totalPayments = 0;
                                     foreach ($payment as $p) {
-                                        $totalPayments += $p->amount;
+                                        if(date("Y-m-d")==date("Y-m-d",strtotime($p->created_at))){
+                                            $totalPayments += $p->amount;
+                                        }
+                                        
                                     }
                                     foreach ($paymentInvoices as $PI) {
-                                        $totalPayments += $PI->payment_amount;
+                                        if(date("Y-m-d")==date("Y-m-d",strtotime($PI->created_at))){
+                                            $totalPayments += $PI->payment_amount;
+                                        }
+                                        
                                     }
                                     echo $totalPayments;
                                     ?></h3>
@@ -58,10 +64,16 @@ endif;
                         <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
                             <h3>$<?php $totalPayments = 0;
                                     foreach ($payment as $p) {
-                                        $totalPayments += $p->amount;
+                                        if(date("Y-m-d")==date("Y-m-d",strtotime($p->created_at))){
+                                            $totalPayments += $p->amount;
+                                        }
+                                        
                                     }
                                     foreach ($paymentInvoices as $PI) {
-                                        $totalPayments += $PI->payment_amount;
+                                        if(date("Y-m-d")==date("Y-m-d",strtotime($PI->created_at))){
+                                            $totalPayments += $PI->payment_amount;
+                                        }
+                                        
                                     }
                                     echo $totalPayments;
                                     ?></h3>
@@ -80,7 +92,10 @@ endif;
                             <h2><?php $totalJobsComplete = 0;
                                 foreach ($jobsDone as $JD) {
                                     if ($JD->status == "Completed") {
-                                        $totalJobsComplete++;
+                                        if(date("Y-m-d") == date("Y-m-d",strtotime($JD->date_issued))) {
+                                            $totalJobsComplete++;
+                                        }
+                                        
                                     }
                                 }
                                 echo $totalJobsComplete;
@@ -100,7 +115,10 @@ endif;
                             <h2><?php $totalJobsAdded = 0;
                                 foreach ($jobsDone as $JD) {
                                     if ($JD->status == "New" || $JD->status == "Scheduled") {
-                                        $totalJobsAdded++;
+                                        if(date("Y-m-d") == date("Y-m-d",strtotime($JD->date_issued))) {
+                                            $totalJobsAdded++;
+                                        }
+                                        
                                     }
                                 }
                                 echo $totalJobsAdded;
@@ -136,8 +154,11 @@ endif;
                                 $totalInvoices = 0;
 
                                 foreach ($upcomingInvoice as $UI) {
-                                    if ($UI->status == "Partially Paid" || $UI->status == "Due" || $UI->status == "Approved") {
-                                        $totalInvoices++;
+                                    if ($UI->status == "Due"){
+                                        if(date("Y-m-d") == date("Y-m-d", strtotime($UI->due_date))){
+                                            $totalInvoices++;
+                                        }
+                                        
                                     }
                                 }
 

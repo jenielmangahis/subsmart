@@ -67,7 +67,7 @@
                 </div>
                 <?php endif; ?>
                 <div class="col-12">
-                    <button role="button" class="nsm-button primary w-100 ms-0 mt-3" onclick="window.open('<?= base_url('/customer/send_qr/'.$profile_info->prof_id) ?>')">
+                    <button role="button" class="nsm-button primary w-100 ms-0 mt-3" id="sendQr">
                         <i class='bx bx-fw bx-qr'></i> Send QR
                     </button>
                 </div>
@@ -75,3 +75,17 @@
         </div>
     </div>
 </div>
+<script>
+$(document).ready(function() {
+    $("#sendQr").click(function () {
+        $.ajax({
+            type: "POST",
+            url: "<?= base_url() ?>/customer/send_qr",
+            data: { custId: "<?= $profile_info->prof_id; ?>"}, // serializes the form's elements.
+            success: function (data){
+                alert('QR Sent!');
+            }
+        });
+    });
+});
+</script>

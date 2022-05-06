@@ -645,7 +645,7 @@
                 </div>
             </div>
         </div>
-        <div class="row form_line d-none">
+        <div class="row form_line">
             <div class="col-md-12">
                 Customer Shareable Link
             </div>

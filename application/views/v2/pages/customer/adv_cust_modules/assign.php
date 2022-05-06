@@ -40,12 +40,14 @@
                     </button>
                 </div>
                 <div class="col-12 col-md-6">
-                    <button class="nsm-button primary w-100 ms-0" onclick="location.href='https://nsmartrac.com/">
-                        <i class='bx bx-fw bx-eraser'></i> Visit Website
-                    </button>
+                    <a href="#" target="_blank">
+                        <button class="nsm-button primary w-100 ms-0">
+                            <i class='bx bx-fw bx-eraser'></i> Visit Website
+                        </button>
+                    </a>
                 </div>
                 <div class="col-12">
-                    <button class="nsm-button w-100 ms-0 sendResetPass">
+                    <button class="nsm-button w-100 ms-0 ">
                         <i class='bx bx-fw bx-history'></i> Send Reset Password
                     </button>
                 </div>
@@ -55,11 +57,11 @@
 </div>
 <script>
 $(function(){
-    $(document).on('click', '.sendResetPass', function(){
+    $(document).on('click', '.sendResetPass', function sendResetPass(){
         $.ajax({
             type: "POST",
             url: "<?= base_url() ?>/customer/send_welcome_email",
-            data: { email_address: <?= $profile_info->email; ?>}, // serializes the form's elements.
+            data: { email_address: '<?= $profile_info->email; ?>'}, // serializes the form's elements.
             success: function (data){
                 alert('Password Reset Sent!');
             }

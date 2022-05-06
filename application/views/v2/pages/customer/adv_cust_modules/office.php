@@ -57,6 +57,12 @@
                                 <?php if(isset($office_info)){ echo $office_info->tech_upfront_pay; }; ?>
                             </span>
                         </div>
+                        <div class="col-12 col-md-6">
+                            <label class="content-title">Panel Type</label>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <span class="content-subtitle"><?= $alarm_info->panel_type;  ?></span>
+                        </div>
                     </div>
                 </div>
                 <div class="col-12 col-md-6">
@@ -119,7 +125,7 @@
                     </a>
                 </div>
                 <div class="col-12 col-md-4">
-                    <button role="button" class="nsm-button w-100 ms-0 mt-3 sendWelcomeEmail">
+                    <button type="button" id="sendWelcomeEmail" class="nsm-button w-100 ms-0 mt-3 ">
                         <i class='bx bx-fw bx-history'></i> Welcome Email
                     </button>
                 </div>
@@ -135,12 +141,13 @@
     </div>
 </div>
 <script>
-$(function(){
-    $(document).on('click', '.sendWelcomeEmail', function(){
+$(document).ready(function() {
+    $("#sendWelcomeEmail").click(function () {
+        alert('asdfasdf');
         $.ajax({
             type: "POST",
             url: "<?= base_url() ?>/customer/send_welcome_email",
-            data: { email_address: <?= $profile_info->email; ?>}, // serializes the form's elements.
+            data: { email_address: "<?= $profile_info->email; ?>"}, // serializes the form's elements.
             success: function (data){
                 alert('Email Sent!');
             }
