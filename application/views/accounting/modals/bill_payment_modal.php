@@ -38,7 +38,7 @@
                                         </div>
                                         <div class="col-md-4">
                                             <h6 class="text-right">AMOUNT PAID</h6>
-                                            <h2 class="text-right"><span class="payment-total-amount"><?=number_format(str_replace('$-', '-$', '$'.$bill->remaining_balance), 2, '.', ',')?></span></h2>
+                                            <h2 class="text-right"><span class="payment-total-amount"><?=str_replace('$-', '-$', '$'.number_format(floatval($bill->remaining_balance), 2, '.', ','))?></span></h2>
                                         </div>
                                         <div class="col-md-2">
                                             <div class="form-group">

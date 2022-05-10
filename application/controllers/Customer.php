@@ -3030,17 +3030,23 @@ class Customer extends MY_Controller
 
         $f = fopen('php://memory', 'w');
 
-        $fields = array('MonitoringID', 'LastName', 'FirstName', 'Company', 'PanelType', 'AccountType', 'InstallDate', 'SaleDate', 'MonthlyMonitoringRate', 'SalesRep', 'Status', 'EquipmentStatus',
+        $fields = array('MonitoringID', 'LastName', 'FirstName', 'Company', 'Industry', 'PanelType', 'AccountType', 'InstallDate', 'SaleDate', 'MonthlyMonitoringRate', 'SalesRep', 'Status', 'EquipmentStatus',
                         'AbortCode','Address','Address1','Area','City','State','Zip','ContractTerm','CreditScore','CreditScore2','Email','MonitoringCompany','StatusID','Technician');
         fputcsv($f, $fields, $delimiter);
 
         if (!empty($items)) {
             foreach ($items as $item) {
+                $industry_type = 'Not Specified';
+                if( $item->industry_type_id > 0 ){
+                    $industry_type = $item->industry_type;
+                }
+
                 $csvData = array(
                     $item->monitor_id,
                     $item->last_name,
                     $item->first_name,
                     $item->business_name,
+                    $industry_type,
                     $item->panel_type,
                     $item->acct_type,
                     $item->install_date,

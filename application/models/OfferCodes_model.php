@@ -16,7 +16,7 @@ class OfferCodes_model extends MY_Model
 
         if ( !empty($filters) ) {
             if ( !empty($filters['search']) ) {
-                $this->db->like('offer_codes', $filters['search'], 'both');
+                $this->db->like('offer_code', $filters['search'], 'both');
             }
         }
 
@@ -108,6 +108,16 @@ class OfferCodes_model extends MY_Model
     public function isInactive()
     {
         return $this->status_inactive;
+    }
+
+    public function getAllByStatus($status_id)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('status', $status_id);
+        $this->db->order_by('id', 'DESC');
+        $query = $this->db->get();
+        return $query->result();
     }
 
 }

@@ -823,7 +823,46 @@ $(function() {
     });
 
     $(document).on('click', '#modal-container #item-details-table tbody tr td a.deleteRow', function() {
-        $(this).parent().parent().parent().remove();
+        var el = $(this);
+        if($(this).parent().parent().parent().find('input[name="item_linked_transaction[]"]').length < 1) {
+            $(this).parent().parent().parent().remove();
+        } else {
+            var linkedTransac = $(this).parent().parent().parent().find('input[name="item_linked_transaction[]"]').val();
+            var linkedTransacType = linkedTransac.split('-')[0].replace('_', ' ');
+            var type = linkedTransacType.charAt(0).toUpperCase() + linkedTransacType.slice(1);
+            if($(`#modal-container form .modal #item-details-table input[name="item_linked_transaction[]"][value="${linkedTransac}"]`).length > 1) {
+                var message = `There are multiple lines for ${type}. Would you like to remove this line from the invoice or unlink the whole transaction?`;
+                var confirmButtonText = 'Unlink it';
+                var cancelButtonText = 'Remove it';
+            } else {
+                var message = `Would you also like to unlink ${type}`;
+                var confirmButtonText = 'Yes, unlink it';
+                var cancelButtonText = 'No, keep it';
+            }
+
+            Swal.fire({
+                title: message,
+                icon: 'warning',
+                showCloseButton: false,
+                confirmButtonColor: '#2ca01c',
+                confirmButtonText: confirmButtonText,
+                showCancelButton: true,
+                cancelButtonText: cancelButtonText,
+                cancelButtonColor: '#d33'
+            }).then((result) => {
+                if(result.isConfirmed) {
+                    el.parent().parent().parent().find('.unlink-transaction').trigger('click');
+                } else {
+                    if($(`#modal-container form .modal #item-details-table input[name="item_linked_transaction[]"][value="${linkedTransac}"]`).length > 1) {
+                        $(`#modal-container form .modal #item-details-table input[name="item_linked_transaction[]"][value="${linkedTransac}"]`).each(function() {
+                            $(this).parent().parent().remove();
+                        });
+                    } else {
+                        el.parent().parent().parent().remove();
+                    }
+                }
+            });
+        }
 
         computeTransactionTotal();
     });
@@ -1834,6 +1873,10 @@ $(function() {
 					});
                 }
             });
+
+            if($('#modal-container form#modal-form #linked-transaction').length > 0) {
+                $('<td></td>').insertBefore('#modal-container form#modal-form .modal #item-details-table tbody tr:last-child td:last-child');
+            }
         });
     });
 
@@ -2072,6 +2115,100 @@ $(function() {
             unlinkTransaction();
 
             if (split[0] === 'vendor') {
+                // if($('#invoiceModal #templateName').length < 1) {
+                //     $.get('/accounting/get-linkable-transactions/invoice/' + $(this).val(), function(res) {
+                //         var transactions = JSON.parse(res);
+    
+                //         if (transactions.length > 0) {
+                //             if($('#invoiceModal .attachments-container').length > 0) {
+                //                 $('#invoiceModal .attachments-container').parent().parent().remove();
+                //             }
+    
+                //             if ($('#invoiceModal .transactions-container').length > 0) {
+                //                 $('#invoiceModal .transactions-container #transaction-type').trigger('change');
+                //             } else {
+                //                 $('#invoiceModal .transactions-container').parent().remove();
+    
+                //                 $('#invoiceModal .modal-body').children('.row').append(`
+                //                     <div class="col-xl-2">
+                //                         <div class="transactions-container bg-white h-100" style="padding: 15px">
+                //                             <div class="row">
+                //                                 <div class="col-12">
+                //                                     <h4>Add to Invoice</h4>
+                //                                 </div>
+                //                                 <div class="col-12">
+                //                                     <div class="form-group">
+                //                                         <label for="">Filter by</label>
+                //                                         <select class="form-control" id="transaction-type">
+                //                                             <option value="all">All types</option>
+                //                                             <option value="charges">Charges</option>
+                //                                             <option value="credits">Credits</option>
+                //                                         </select>
+                //                                     </div>
+                //                                     <div class="form-group">
+                //                                         <select class="form-control" id="transaction-date">
+                //                                             <option value="all">All dates</option>
+                //                                             <option value="this-month">This month</option>
+                //                                             <option value="last-month">Last month</option>
+                //                                             <option value="custom">Custom...</option>
+                //                                         </select>
+                //                                     </div>
+                //                                 </div>
+                //                             </div>
+                //                         </div>
+                //                     </div>
+                //                 `);
+            
+                //                 $('#invoiceModal #transaction-type, #invoiceModal #transaction-date').select2({
+                //                     minimumResultsForSearch: -1
+                //                 });
+    
+                //                 $.each(transactions, function(index, transaction) {
+                //                     var title = transaction.type;
+                //                     title += transaction.number !== '' ? '#' + transaction.number : '';
+        
+                //                     if($(`#invoiceModal input[name="linked_transaction[]"][value="${transaction.data_type.replace('-', '_')}-${transaction.id}"]`).length < 1) {
+                //                         $('#invoiceModal .modal-body .row .col-xl-2 .transactions-container .row').append(`
+                //                         <div class="col-12">
+                //                             <div class="card border">
+                //                                 <div class="card-body p-0">
+                //                                     <h5 class="card-title">${title}</h5>
+                //                                     <p class="card-subtitle">${transaction.formatted_date}</p>
+                //                                     <p class="card-text">
+                //                                         ${transaction.balance}
+                //                                     </p>
+                //                                     <ul class="d-flex justify-content-around">
+                //                                         <li><a href="#" class="text-info add-transaction" data-id="${transaction.id}" data-type="${transaction.data_type}"><strong>Add</strong></a></li>
+                //                                         <li><a href="#" class="text-info open-transaction" data-id="${transaction.id}" data-type="${transaction.data_type}">Open</a></li>
+                //                                     </ul>
+                //                                 </div>
+                //                             </div>
+                //                         </div>
+                //                     `);
+                //                     }
+                //                 });
+                //             }
+    
+                //             if($('#invoiceModal input[name="linked_transaction[]"]').length < 1) {
+                //                 $('#invoiceModal a.close-transactions-container').parent().remove();
+                //                 $('#invoiceModal a.open-transactions-container').parent().remove();
+    
+                //                 $('#invoiceModal .modal-body .row .col .card .card-body').children('.row:first-child').prepend(`
+                //                     <div class="col-md-12 px-0 pb-2">
+                //                         <a href="#" class="float-right btn btn-transparent rounded-0 close-transactions-container" style="padding:12px 15px !important">
+                //                             <i class="fa fa-chevron-right"></i>
+                //                         </a>
+                //                     </div>
+                //                 `);
+                //             }
+                //         } else {
+                //             $('#invoiceModal .transactions-container').parent().remove();
+                //             $('#invoiceModal a.close-transactions-container').parent().remove();
+                //             $('#invoiceModal a.open-transactions-container').parent().remove();
+                //         }
+                //     });
+                // }
+
                 $.get('/accounting/get-linkable-transactions/expense/' + split[1], function(res) {
                     var transactions = JSON.parse(res);
 
@@ -2394,16 +2531,19 @@ $(function() {
                     var dateString = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
                     var remainingBalance = '$'+parseFloat(details.remaining_balance).toFixed(2);
 
-                    $('#modal-container .modal table#category-details-table thead tr').append('<th></th>');
-                    $('#modal-container .modal table#category-details-table tbody tr').each(function() {
-                        if ($(this).find('select').length === 0) {
-                            $(this).remove();
-                        } else {
-                            $(this).find('td:last-child').html('');
-                            $(this).append('<td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>');
-                            count++;
-                        }
-                    });
+                    if($('#modal-container .modal #linked-transaction').length < 1) {
+                        $('#modal-container .modal table#category-details-table thead tr').append('<th></th>');
+
+                        $('#modal-container .modal table#category-details-table tbody tr').each(function() {
+                            if ($(this).find('select').length === 0) {
+                                $(this).remove();
+                            } else {
+                                $(this).find('td:last-child').html('');
+                                $(this).append('<td><div class="d-flex align-items-center justify-content-center"><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></div></td>');
+                                count++;
+                            }
+                        });
+                    }
 
                     if (categories.length > 0) {
                         $.each(categories, function(index, category) {
@@ -2491,7 +2631,19 @@ $(function() {
                         $(`<td></td>`).insertBefore($('#modal-container .modal table#category-details-table tbody tr:last-child td:last-child'));
                     }
 
-                    $('#modal-container .modal table#item-details-table thead tr').append('<th></th>');
+                    if($('#modal-container .modal #linked-transaction').length < 1) {
+                        $('#modal-container .modal table#item-details-table thead tr').append('<th></th>');
+
+                        $('#modal-container .modal table#item-details-table tbody tr').each(function() {
+                            if ($(this).find('select').length === 0) {
+                                $(this).remove();
+                            } else {
+                                $(this).find('td:last-child').html('');
+                                $(this).append('<td><div class="d-flex align-items-center justify-content-center"><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></div></td>');
+                                count++;
+                            }
+                        });
+                    }
                     if (items.length > 0) {
                         if ($('#modal-container .modal #item-details').hasClass('show') === false) {
                             $('#modal-container .modal button[data-target="#item-details"]').trigger('click');
@@ -2526,7 +2678,7 @@ $(function() {
                                         </div>
                                     </div>
                                 </div>
-                                <input type="hidden" value="${data.type.replace('-', '_')+'-'+details.id}" name="category_linked_transaction[]">
+                                <input type="hidden" value="${data.type.replace('-', '_')+'-'+details.id}" name="item_linked_transaction[]">
                                 <input type="hidden" value="${item.id}" name="transaction_item_id[]">
                             </td>
                             `;
@@ -2542,7 +2694,7 @@ $(function() {
                                     <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${parseFloat(item.tax).toFixed(2)}"></td>
                                     <td><span class="row-total">${formatter.format(parseFloat(item.total))}</span></td>
                                     ${link}
-                                    <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
+                                    <td><div class="d-flex align-items-center justify-content-center"><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></div></td>
                                 </tr>
                             `);
                         });
@@ -2568,14 +2720,14 @@ $(function() {
                             <div class="col-3 d-flex align-items-center"><button class="btn btn-transparent unlink-transaction" style="font-size: 13px !important">Remove</button></div>
                         </div>`);
 
-                        var linkedCount = $('#modal-container .modal #linked-transaction').next().find('div.row').length - 1;
+                        var linkedCount = $('#modal-container .modal input[name="linked_transaction[]"]').length;
 
-                        $('#modal-container .modal #linked-transaction').html(`${linkedCount} linked transactions`);
+                        $('#modal-container .modal #linked-transaction').html(`${linkedCount} linked Purchase Orders`);
                     } else {
                         button.parent().removeClass('px-0');
                         button.parent().append(`
                         <div class="dropdown">
-                            <a href="#" class="text-info" id="linked-transaction" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">1 linked ${dataType}</a>
+                            <a href="#" class="text-info" id="linked-transaction" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">1 linked Purchase Order</a>
                             <div class="dropdown-menu p-2" aria-labelledby="linked-transaction" style="min-width: 500px; font-size: 13px">
                                 <div class="row">
                                     <div class="col-3"><strong>Type</strong></div>
@@ -2844,7 +2996,7 @@ $(function() {
                             <div class="col-3 d-flex align-items-center"><button class="btn btn-transparent unlink-transaction" data-type="${data.type}" data-id="${data.id}" style="font-size: 13px !important">Remove</button></div>
                         </div>`);
 
-                        var linkedCount = $('#modal-container .modal #linked-transaction').next().find('div.row').length - 1;
+                        var linkedCount = $('#modal-container .modal input[name="linked_transaction[]"]').length;
 
                         $('#modal-container .modal #linked-transaction').html(`${linkedCount} linked transactions`);
                     } else {
@@ -3041,7 +3193,7 @@ $(function() {
                             <div class="col-3 d-flex align-items-center"><button class="btn btn-transparent unlink-transaction" data-type="${data.type}" data-id="${data.id}" style="font-size: 13px !important">Remove</button></div>
                         </div>`);
 
-                        var linkedCount = $('#modal-container .modal #linked-transaction').next().find('div.row').length - 1;
+                        var linkedCount = $('#modal-container .modal input[name="linked_transaction[]"]').length;
 
                         $('#modal-container .modal #linked-transaction').html(`${linkedCount} linked transactions`);
                     } else {
@@ -3080,48 +3232,177 @@ $(function() {
         if(data.hasOwnProperty('type') === false) {
             unlinkTransaction();
         } else {
-            if($('#modal-container .modal').attr('id') === 'invoiceModal') {
-                $(`#invoiceModal #item-table input[name="item_linked_transaction[]"][value="${data.type.replace('-', '_')}-${data.id}"]`).each(function() {
-                    $(this).parent().parent().remove();
-                });
-
-                if($(`#invoiceModal input[name="linked_transaction[]"]`).length > 1) {
-                    $(`#invoiceModal #linked-transaction`).next().find(`.unlink-transaction[data-type="${data.type}"][data-id="${data.id}"]`).parent().parent().remove();
-                } else {
-                    $('#invoiceModal #linked-transaction').parent().remove();
-
-                    $('#invoiceModal #item-table thead tr th:nth-child(9), #invoiceModal #item-table tbody tr td:nth-child(9)').remove();
-                }
-
-                $(`#invoiceModal input[name="linked_transaction[]"][value="${data.type.replace('-', '_')}-${data.id}"]`).remove();
-
-                if($('#invoiceModal input[name="linked_transaction[]"]').length > 0) {
-                    if($('#invoiceModal input[name="linked_transaction[]"]').length > 1) {
-                        var linkedCount = $('#invoiceModal input[name="linked_transaction[]"]').length;
-
-                        $('#invoiceModal #linked-transaction').html(`${linkedCount} linked transactions`);
+            switch($('#modal-container .modal').attr('id')) {
+                case 'invoiceModal' :
+                    $(`#invoiceModal #item-table input[name="item_linked_transaction[]"][value="${data.type.replace('-', '_')}-${data.id}"]`).each(function() {
+                        $(this).parent().parent().remove();
+                    });
+    
+                    if($(`#invoiceModal input[name="linked_transaction[]"]`).length > 1) {
+                        $(`#invoiceModal #linked-transaction`).next().find(`.unlink-transaction[data-type="${data.type}"][data-id="${data.id}"]`).parent().parent().remove();
                     } else {
-                        var linked = $('#invoiceModal input[name="linked_transaction[]"]').val().split('-');
-                        var linkedType = linked[0].split('_');
-
-                        var text = '1 linked ';
-                        for(i in linkedType) {
-                            text += `${linkedType[i].charAt(0).toUpperCase() + linkedType[i].slice(1).toLowerCase()} `;
-                        }
-
-                        $('#invoiceModal #linked-transaction').html(`${text.trim()}`);
+                        $('#invoiceModal #linked-transaction').parent().remove();
+    
+                        $('#invoiceModal #item-table thead tr th:nth-child(9), #invoiceModal #item-table tbody tr td:nth-child(9)').remove();
                     }
-                }
+    
+                    $(`#invoiceModal input[name="linked_transaction[]"][value="${data.type.replace('-', '_')}-${data.id}"]`).remove();
+    
+                    if($('#invoiceModal input[name="linked_transaction[]"]').length > 0) {
+                        if($('#invoiceModal input[name="linked_transaction[]"]').length > 1) {
+                            var linkedCount = $('#invoiceModal input[name="linked_transaction[]"]').length;
+    
+                            $('#invoiceModal #linked-transaction').html(`${linkedCount} linked transactions`);
+                        } else {
+                            var linked = $('#invoiceModal input[name="linked_transaction[]"]').val().split('-');
+                            var linkedType = linked[0].split('_');
+    
+                            var text = '1 linked ';
+                            for(i in linkedType) {
+                                text += `${linkedType[i].charAt(0).toUpperCase() + linkedType[i].slice(1).toLowerCase()} `;
+                            }
+    
+                            $('#invoiceModal #linked-transaction').html(`${text.trim()}`);
+                        }
+                    }
+    
+                    if($('#invoiceModal #item-table tbody tr').length > 0) {
+                        $('#invoiceModal #item-table tbody input[name="quantity[]"]:first-child').trigger('change');
+                    } else {
+                        $('#invoiceModal .transaction-grand-total').html('$0.00')
+                    }
+                break;
+                case 'expenseModal' :
+                    $(`#expenseModal #category-details-table input[name="category_linked_transaction[]"][value="${data.type.replace('-', '_')}-${data.id}"]`).each(function() {
+                        $(this).parent().parent().remove();
+                    });
 
-                if($('#invoiceModal #item-table tbody tr').length > 0) {
-                    $('#invoiceModal #item-table tbody input[name="quantity[]"]:first-child').trigger('change');
-                } else {
-                    $('#invoiceModal .transaction-grand-total').html('$0.00')
-                }
+                    $(`#expenseModal #item-details-table input[name="item_linked_transaction[]"][value="${data.type.replace('-', '_')}-${data.id}"]`).each(function() {
+                        $(this).parent().parent().remove();
+                    });
+
+                    if($(`#expenseModal input[name="linked_transaction[]"]`).length > 1) {
+                        $(`#expenseModal #linked-transaction`).next().find(`.unlink-transaction[data-type="${data.type}"][data-id="${data.id}"]`).parent().parent().remove();
+                    } else {
+                        $('#expenseModal #linked-transaction').parent().remove();
+    
+                        $('#expenseModal #item-table thead tr th:nth-child(9), #expenseModal #item-details-table tbody tr td:nth-child(9)').remove();
+                    }
+
+                    $(`#expenseModal input[name="linked_transaction[]"][value="${data.type.replace('-', '_')}-${data.id}"]`).remove();
+
+                    if($('#expenseModal input[name="linked_transaction[]"]').length > 0) {
+                        if($('#expenseModal input[name="linked_transaction[]"]').length > 1) {
+                            var linkedCount = $('#expenseModal input[name="linked_transaction[]"]').length;
+    
+                            $('#expenseModal #linked-transaction').html(`${linkedCount} linked Purchase Orders`);
+                        } else {
+                            $('#expenseModal #linked-transaction').html(`1 linked Purchase Order`);
+                        }
+                    }
+
+                    computeTransactionTotal();
+
+                    // var payee = $('#expenseModal #payee').val().split('-');
+
+                    // $.get('/accounting/get-linkable-transactions/expense/' + payee[1], function(res) {
+                    //     var transactions = JSON.parse(res);
+
+                    //     if (transactions.length > 0) {
+                    //         if($('#expenseModal .attachments-container').length > 0) {
+                    //             $('#expenseModal .attachments-container').parent().parent().remove();
+                    //         }
+    
+                    //         if ($('#expenseModal .transactions-container').length > 0) {
+                    //             $('#expenseModal .transactions-container').parent().remove();
+                    //             $('#expenseModal a.close-transactions-container').parent().remove();
+                    //             $('#expenseModal a.open-transactions-container').parent().remove();
+                    //         }
+    
+                    //         $('#expenseModal .modal-body .row .col .card .card-body').children('.row:first-child').prepend(`
+                    //             <div class="col-md-12 px-0 pb-2">
+                    //                 <a href="#" class="float-right btn btn-transparent rounded-0 close-transactions-container" style="padding:12px 15px !important">
+                    //                     <i class="fa fa-chevron-right"></i>
+                    //                 </a>
+                    //             </div>
+                    //         `);
+    
+                    //         $('#expenseModal .modal-body').children('.row').append(`
+                    //             <div class="col-xl-2">
+                    //                 <div class="transactions-container bg-white h-100" style="padding: 15px">
+                    //                     <div class="row">
+                    //                         <div class="col-12">
+                    //                             <h4>Add to Expense</h4>
+                    //                         </div>
+                    //                     </div>
+                    //                 </div>
+                    //             </div>
+                    //         `);
+    
+                    //         $.each(transactions, function(index, transaction) {
+                    //             var title = transaction.type;
+                    //             title += transaction.number !== '' ? '#' + transaction.number : '';
+                    //             $('#expenseModal .modal-body .row .col-xl-2 .transactions-container .row').append(`
+                    //                 <div class="col-12">
+                    //                     <div class="card border">
+                    //                         <div class="card-body p-0">
+                    //                             <h5 class="card-title">${title}</h5>
+                    //                             <p class="card-subtitle">${transaction.formatted_date}</p>
+                    //                             <p class="card-text">
+                    //                                 <strong>Total</strong> ${transaction.total}
+                    //                                 ${transaction.type === 'Purchase Order' ? '<br><strong>Balance</strong> '+transaction.balance : ''}
+                    //                             </p>
+                    //                             <ul class="d-flex justify-content-around">
+                    //                                 <li><a href="#" class="text-info add-transaction" data-id="${transaction.id}" data-type="${transaction.data_type}"><strong>Add</strong></a></li>
+                    //                                 <li><a href="#" class="text-info open-transaction" data-id="${transaction.id}" data-type="${transaction.data_type}">Open</a></li>
+                    //                             </ul>
+                    //                         </div>
+                    //                     </div>
+                    //                 </div>
+                    //             `);
+                    //         });
+                    //     } else {
+                    //         $('#expenseModal .transactions-container').parent().remove();
+                    //         $('#expenseModal a.close-transactions-container').parent().remove();
+                    //         $('#expenseModal a.open-transactions-container').parent().remove();
+                    //     }
+                    // });
+                break;
+                case 'checkModal' :
+                    $(`#checkModal #category-details-table input[name="category_linked_transaction[]"][value="${data.type.replace('-', '_')}-${data.id}"]`).each(function() {
+                        $(this).parent().parent().remove();
+                    });
+
+                    $(`#checkModal #item-details-table input[name="item_linked_transaction[]"][value="${data.type.replace('-', '_')}-${data.id}"]`).each(function() {
+                        $(this).parent().parent().remove();
+                    });
+
+                    if($(`#checkModal input[name="linked_transaction[]"]`).length > 1) {
+                        $(`#checkModal #linked-transaction`).next().find(`.unlink-transaction[data-type="${data.type}"][data-id="${data.id}"]`).parent().parent().remove();
+                    } else {
+                        $('#checkModal #linked-transaction').parent().remove();
+    
+                        $('#checkModal #item-table thead tr th:nth-child(9), #checkModal #item-details-table tbody tr td:nth-child(9)').remove();
+                    }
+
+                    $(`#checkModal input[name="linked_transaction[]"][value="${data.type.replace('-', '_')}-${data.id}"]`).remove();
+
+                    if($('#checkModal input[name="linked_transaction[]"]').length > 0) {
+                        if($('#checkModal input[name="linked_transaction[]"]').length > 1) {
+                            var linkedCount = $('#checkModal input[name="linked_transaction[]"]').length;
+    
+                            $('#checkModal #linked-transaction').html(`${linkedCount} linked Purchase Orders`);
+                        } else {
+                            $('#checkModal #linked-transaction').html(`1 linked Purchase Order`);
+                        }
+                    }
+
+                    computeTransactionTotal();
+                break;
             }
         }
 
-        $('#modal-container .modal #payee').trigger('change');
+        // $('#modal-container .modal #payee').trigger('change');
         $('#modal-container .modal #vendor').trigger('change');
         $('#modal-container .modal #customer').trigger('change');
     });
@@ -10437,8 +10718,6 @@ const viewTransaction = (el) => {
         switch(type) {
             case 'expense' :
                 initModalFields('expenseModal', data);
-
-                $('#expenseModal #payee').trigger('change');
 
                 $('#expenseModal').modal('show');
             break;

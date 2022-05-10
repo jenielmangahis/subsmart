@@ -161,6 +161,7 @@ class Dashboard extends Widgets {
         $this->page_data['payment']=$this->event_model->getAllPayment();
         $this->page_data['paymentInvoices']=$this->event_model->getAllPInvoices();
         $this->page_data['jobsDone']=$this->event_model->getAllJobs();
+        $this->page_data['salesLeaderboard']=$this->event_model->getSalesLeaderboard();
         $this->page_data['sales']=$this->event_model->getAllSales();
 
         $this->page_data['widgets'] = $this->widgets_model->getWidgetListPerUser($user_id);

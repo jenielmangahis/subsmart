@@ -130,5 +130,26 @@ class Taskhub_model extends MY_Model {
 
         return  $insert_id;
     }
+
+    public function getAll($filters=array())
+    {
+        $id = $user_id;
+        $this->db->select('tasks.*, tasks_status.status_text, tasks_status.status_color, CONCAT(acs_profile.first_name," ",acs_profile.last_name)AS customer_name,business_profile.business_name');
+        $this->db->join('tasks_status','tasks.status_id = tasks_status.status_id','LEFT');
+        $this->db->join('acs_profile','tasks.prof_id = acs_profile.prof_id', 'LEFT');
+        $this->db->join('business_profile', 'tasks.company_id = business_profile.company_id', 'LEFT'); 
+        $this->db->from($this->table);
+
+        if ( !empty($filters) ) {
+            if ( !empty($filters['search']) ) {
+                $this->db->like('tasks.subject', $filters['search'], 'both');
+                $this->db->or_like('business_profile.business_name', $filters['search'], 'both');
+            }
+        }
+
+        $this->db->order_by('tasks.date_created','DESC');
+        $query = $this->db->get();
+        return $query->result();
+    }
         
 }
