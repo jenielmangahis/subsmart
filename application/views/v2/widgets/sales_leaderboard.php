@@ -4,6 +4,13 @@ if (!is_null($dynamic_load) && $dynamic_load == true) :
 endif;
 ?>
 
+<style>
+    .nsm-card .nsm-card-content.wow {
+    display: block;
+    height: 50px;
+}
+</style>
+
 <div class="<?= $class ?>" data-id="<?= $id ?>" id="widget_<?= $id ?>" draggable="true">
     <div class="nsm-card-header">
         <div class="nsm-card-title">
@@ -21,24 +28,36 @@ endif;
             </div>
         </div>
     </div>
-    <div class="nsm-card-content">
-        <div class="nsm-widget-table">
-            <div class="widget-item">
-                <div class="nsm-profile">
-                    <span>TN</span>
-                </div>
-                <div class="content">
-                    <div class="details">
-                        <span class="content-title">Tommy Nguyen</span>
-                        <span class="content-subtitle d-block">Owner</span>
+    <?php
+
+
+    for ($x = 0; $x < count($salesLeaderboard); $x++) {
+
+    ?>
+        <div class="nsm-card-content wow">
+            <div class="nsm-widget-table">
+                <div class="widget-item">
+                    <div class="nsm-profile">
+                        <span><?php echo $salesLeaderboard[$x][0];  ?></span>
                     </div>
-                    <div class="controls">
-                        <span class="content-subtitle d-block nsm-text-success fw-bold">+1 Sale</span>
+                    <div class="content">
+                        <div class="details">
+                            <span class="content-title"><?php echo $salesLeaderboard[$x][1];  ?></span>
+                            <span class="content-subtitle d-block"><?php echo $salesLeaderboard[$x][2];  ?></span>
+                        </div>
+                        <div class="controls">
+                            <span class="content-subtitle d-block nsm-text-success fw-bold">+<?php echo $salesLeaderboard[$x][3];  ?> Sale</span>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    <?php
+
+
+    }
+    ?>
+
 </div>
 
 <?php
