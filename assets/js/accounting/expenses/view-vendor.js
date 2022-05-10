@@ -1322,7 +1322,7 @@ function viewBillPayment(data) {
             e.stopPropagation();
         });
 
-        $('#billPaymentModal #payee').trigger('change');
+        // $('#billPaymentModal #payee').trigger('change');
 
         $('#billPaymentModal').modal('show');
     });

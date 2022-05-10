@@ -74,7 +74,7 @@ endif;
         font-weight: bold;
         color: white;
         background-color: #e373e3;
-        width: 46%;
+        width: 100%;
         font-size: 10px;
         border-radius: 18px;
     }
@@ -199,11 +199,11 @@ endif;
                     </div>
 
                     <?php
-                    if ($jobsStatus) {
-                        $limit = 5;
+                    if ($jobsDone) {
+                        $limit = 4;
                         $count = 0;
 
-                        foreach ($jobsStatus as $jobs) {
+                        foreach ($jobsDone as $jobs) {
                             if ($count < $limit) {
                     ?>
                                 <div class="row js-row-dash">
@@ -211,7 +211,7 @@ endif;
                                         <div class="row">
                                             <div class="col-9 marg-top">
                                                 <div class="prof"></div>
-                                                <div class="jname"> <?php echo $jobs->job_name; ?></div>
+                                                <div class="jname"> <?php echo $jobs->job_number; ?></div>
                                             </div>
                                             <div class="col-3 col-center">
                                                 <div class="row">
@@ -222,7 +222,7 @@ endif;
                                                 <div class="row">
                                                     <div class="col">
                                                         <?php $date = $jobs->status;
-                                                        echo $jobs->$date; ?>
+                                                        echo $jobs->end_date; ?>
                                                     </div>
                                                 </div>
                                             </div>
@@ -230,6 +230,7 @@ endif;
                                     </div>
                                 </div>
                     <?php
+                        $count++;
                             }
                         }
                     }
@@ -290,7 +291,7 @@ endif;
                                         if ($jobs->status == "draft") { ?> <?php $timestamp = strtotime($jobs->draft);
                                                                             $day = date('D', $timestamp);
                                                                             echo $day ?><br> <?php echo $jobs->draft;
-                                                                                            } else { ?> <div class="cent"><i class="bx bx-check-circle" style="color: #4f7514; font-size: 15px;"></i></div> <?php echo $jobs->draft;
+                                                                                            } else { ?> <div class="cent"><i class="bx bx-check-circle" style="color: #4f7514; font-size: 15px;"></i></div><div>Complete</div> <?php 
                                                                                                                                                                                                         }
                                                                                                                                                                                                     } ?>
                                 </div>

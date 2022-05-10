@@ -2934,9 +2934,11 @@ class Accounting_modals extends MY_Controller
                                 $this->vendors_model->update_transaction_category_details($data['transac_category_id'][$index], $categoryDetail);
 
                                 $purchOrder = $this->vendors_model->get_purchase_order_by_id($linkedTransacCat[1], logged('company_id'));
+                                $remainingBal = floatval($purchOrder->remaining_balance) - floatval($data['category_amount'][$index]);
 
                                 $purchOrderData = [
-                                    'remaining_balance' => floatval($purchOrder->remaining_balance) - floatval($data['category_amount'][$index])
+                                    'remaining_balance' => $remainingBal,
+                                    'status' => $remainingBal > 0 ? 1 : 2
                                 ];
 
                                 $this->vendors_model->update_purchase_order($purchOrder->id, $purchOrderData);
@@ -3002,9 +3004,11 @@ class Accounting_modals extends MY_Controller
                                 $this->vendors_model->update_transaction_item($data['transac_item_id'][$index], $itemDetail);
 
                                 $purchOrder = $this->vendors_model->get_purchase_order_by_id($linkedTransacCat[1], logged('company_id'));
+                                $remainingBal = floatval($purchOrder->remaining_balance) - floatval($data['item_total'][$index]);
 
                                 $purchOrderData = [
-                                    'remaining_balance' => floatval($purchOrder->remaining_balance) - floatval($data['item_total'][$index])
+                                    'remaining_balance' => $remainingBal,
+                                    'status' => $remainingBal > 0 ? 1 : 2
                                 ];
 
                                 $this->vendors_model->update_purchase_order($purchOrder->id, $purchOrderData);
@@ -5196,15 +5200,6 @@ class Accounting_modals extends MY_Controller
                 $deposit = '0';
             }
 
-            // if(!is_null($data['linked_transaction'])) {
-            //     $linked = [];
-            //     foreach($data['linked_transaction'] as $linkedTransac) {
-            //         $explode = explode('-', $linkedTransac);
-
-            //         $linked[] = ['type' => $explode[0], 'id' => $explode[1]];
-            //     }
-            // }
-
             $invoiceData = [
                 'customer_id' => $data['customer'],
                 'job_location' => $data['job_location'],
@@ -5240,7 +5235,6 @@ class Accounting_modals extends MY_Controller
                 'adjustment_name' => $data['adjustment_name'],
                 'adjustment_value' => $data['adjustment_value'],
                 'grand_total' => $data['total_amount'],
-                // 'linked_transactions' => !is_null($data['linked_transaction']) ? json_encode($linked) : null
             ];
 
             $invoiceId = $this->invoice_model->createInvoice($invoiceData);
@@ -10037,6 +10031,18 @@ class Accounting_modals extends MY_Controller
         $categories = $this->expenses_model->get_transaction_categories($expenseId, 'Expense');
         $items = $this->expenses_model->get_transaction_items($expenseId, 'Expense');
 
+        foreach($categories as $key => $expenseCat) {
+            if(!is_null($expenseCat->linked_transaction_type) && !is_null($expenseCat->linked_transaction_id)) {
+                $categories[$key]->linked_transac = $this->vendors_model->get_purchase_order_by_id($expenseCat->linked_transaction_id, logged('company_id'));
+            }
+        }
+
+        foreach($items as $key => $expenseItem) {
+            if(!is_null($expenseItem->linked_transaction_type) && !is_null($expenseItem->linked_transaction_id)) {
+                $items[$key]->linked_transac = $this->vendors_model->get_purchase_order_by_id($expenseItem->linked_transaction_id, logged('company_id'));
+            }
+        }
+
         $linkedTransactions = $this->accounting_linked_transactions_model->get_linked_transactions('expense', $expenseId);
         if(count($linkedTransactions) > 0) {
             $linked = [];
@@ -10050,6 +10056,29 @@ class Accounting_modals extends MY_Controller
             $expense->linked_transacs = $linked;
         }
 
+        $linkableTransactions = [];
+
+        if($expense->payee_type === 'vendor') {
+            $purchaseOrders = $this->expenses_model->get_vendor_open_purchase_orders($expense->payee_id);
+
+            foreach ($purchaseOrders as $purchaseOrder) {
+                $balance = '$'.number_format(floatval($purchaseOrder->remaining_balance), 2, '.', ',');
+                $total = '$'.number_format(floatval($purchaseOrder->total_amount), 2, '.', ',');
+
+                $linkableTransactions[] = [
+                    'type' => 'Purchase Order',
+                    'data_type' => 'purchase-order',
+                    'id' => $purchaseOrder->id,
+                    'number' => $purchaseOrder->purchase_order_no === null || $purchaseOrder->purchase_order_no === '' ? '' : $purchaseOrder->purchase_order_no,
+                    'date' => date("m/d/Y", strtotime($purchaseOrder->purchase_order_date)),
+                    'formatted_date' => date("F j", strtotime($purchaseOrder->purchase_order_date)),
+                    'total' => str_replace('$-', '-$', $total),
+                    'balance' => str_replace('$-', '-$', $balance)
+                ];
+            }
+        }
+
+        $this->page_data['linkableTransactions'] = $linkableTransactions;
         $this->page_data['tags'] = $this->tags_model->get_transaction_tags('Expense', $expenseId);
         $this->page_data['expense'] = $expense;
         $this->page_data['categories'] = $categories;
@@ -14535,15 +14564,6 @@ class Accounting_modals extends MY_Controller
         $diff = floatval($invoice->grand_total) - floatval($invoice->balance);
         $balance = floatval($data['total_amount']) - floatval($diff);
 
-        // if(!is_null($data['linked_transaction'])) {
-        //     $linked = [];
-        //     foreach($data['linked_transaction'] as $linkedTransac) {
-        //         $explode = explode('-', $linkedTransac);
-
-        //         $linked[] = ['type' => $explode[0], 'id' => $explode[1]];
-        //     }
-        // }
-
         $invoiceData = [
             'customer_id' => $data['customer'],
             'job_location' => $data['job_location'],
@@ -14576,7 +14596,6 @@ class Accounting_modals extends MY_Controller
             'adjustment_name' => $data['adjustment_name'],
             'adjustment_value' => $data['adjustment_value'],
             'grand_total' => $data['total_amount'],
-            // 'linked_transaction' => !is_null($data['linked_transaction']) ? json_encode($linked) : null
         ];
 
         $update = $this->invoice_model->update_invoice($invoiceId, $invoiceData);
@@ -14678,6 +14697,32 @@ class Accounting_modals extends MY_Controller
 
             $invoiceItems = $this->invoice_model->get_invoice_items($invoice->id);
             $this->invoice_model->delete_items($invoice->id);
+
+            $linkedTransactions = $this->accounting_linked_transactions_model->get_linked_transactions('invoice', $invoice->id);
+
+            if(count($linkedTransactions) > 0) {
+                foreach($linkedTransactions as $linkedTransac) {
+                    if($linkedTransac->linked_transaction_type === 'delayed_credit') {
+                        $delayedCredit = $this->accounting_delayed_credit_model->getDelayedCreditDetails($linkedTransac->linked_transaction_id);
+
+                        $creditData = [
+                            'status' => 1
+                        ];
+
+                        $creditUpdate = $this->accounting_delayed_credit_model->updateDelayedCredit($delayedCredit->id, $creditData);
+                    } else {
+                        $delayedCharge = $this->accounting_delayed_charge_model->getDelayedChargeDetails($linkedTransac->linked_transaction_id);
+
+                        $chargeData = [
+                            'status' => 1
+                        ];
+
+                        $chargeUpdate = $this->accounting_delayed_charge_model->updateDelayedCharge($delayedCharge->id, $chargeData);
+                    }
+
+                    $this->accounting_linked_transactions_model->unlink($linkedTransac->id);
+                }
+            }
 
             if(!is_null($data['linked_transaction'])) {
                 $linkedTransacsData = [];
@@ -16935,6 +16980,32 @@ class Accounting_modals extends MY_Controller
         $update = $this->invoice_model->update_invoice($invoiceId, $invoiceData);
 
         if($update) {
+            $linkedTransactions = $this->accounting_linked_transactions_model->get_linked_transactions('invoice', $invoice->id);
+
+            if(count($linkedTransactions) > 0) {
+                foreach($linkedTransactions as $linkedTransac) {
+                    if($linkedTransac->linked_transaction_type === 'delayed_credit') {
+                        $delayedCredit = $this->accounting_delayed_credit_model->getDelayedCreditDetails($linkedTransac->linked_transaction_id);
+
+                        $creditData = [
+                            'status' => 1
+                        ];
+
+                        $creditUpdate = $this->accounting_delayed_credit_model->updateDelayedCredit($delayedCredit->id, $creditData);
+                    } else {
+                        $delayedCharge = $this->accounting_delayed_charge_model->getDelayedChargeDetails($linkedTransac->linked_transaction_id);
+
+                        $chargeData = [
+                            'status' => 1
+                        ];
+
+                        $chargeUpdate = $this->accounting_delayed_charge_model->updateDelayedCharge($delayedCharge->id, $chargeData);
+                    }
+
+                    $this->accounting_linked_transactions_model->unlink($linkedTransac->id);
+                }
+            }
+
             $invoiceItems = $this->invoice_model->get_invoice_items($invoice->id);
 
             foreach($invoiceItems as $invoiceItem) {

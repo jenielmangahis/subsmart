@@ -48,9 +48,31 @@ export async function uploadCustomerDocument(payload) {
   return response.json();
 }
 
-export function deleteCustomerDocument(payload) {
+export function deleteCustomerDocument(payload, urlGetParams = null) {
+  let endpoint = `${prefixURL}/CustomerDashboardQuickActions/deleteCustomerDocument`;
+  if (urlGetParams !== null) {
+    endpoint = `${endpoint}?` + new URLSearchParams(urlGetParams).toString();
+  }
+
+  return http.post(endpoint, payload);
+}
+
+export function createCustomerDocumentLabel(payload) {
   return http.post(
-    `${prefixURL}/CustomerDashboardQuickActions/deleteCustomerDocument`,
+    `${prefixURL}/CustomerDashboardQuickActions/createCustomerDocumentLabel`,
+    payload
+  );
+}
+
+export function getCustomerDocuments(customerId) {
+  return http.get(
+    `${prefixURL}/CustomerDashboardQuickActions/getCustomerDocuments/${customerId}`
+  );
+}
+
+export function updateCustomerDocument(payload) {
+  return http.post(
+    `${prefixURL}/CustomerDashboardQuickActions/updateCustomerDocument`,
     payload
   );
 }

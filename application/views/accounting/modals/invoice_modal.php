@@ -36,7 +36,7 @@
                             <div class="card p-0 m-0" style="min-height: 100%">
                                 <div class="card-body" style="padding-bottom: 1.25rem">
                                     <div class="row customer-details">
-                                        <?php if(isset($invoice) && !is_null($invoice->linked_transactions)) : ?>
+                                        <?php if(isset($invoice) && !is_null($invoice->linked_transacs)) : ?>
                                         <div class="col-md-12">
                                             <a href="#" class="float-right btn btn-transparent rounded-0 open-transactions-container" style="padding:12px 15px !important">
                                                 <i class="fa fa-chevron-left"></i>
@@ -333,7 +333,7 @@
                                                             <th width="10%">DISCOUNT</th>
                                                             <th width="10%">TAX (CHANGE IN %)</th>
                                                             <th>TOTAL</th>
-                                                            <?php if(isset($invoice) && !is_null($invoice->linked_transactions)) : ?>
+                                                            <?php if(isset($invoice) && !is_null($invoice->linked_transacs)) : ?>
                                                             <th width="3%"></th>
                                                             <?php endif; ?>
                                                             <th width="3%"></th>
@@ -369,7 +369,7 @@
                                                                                 ?>
                                                                             </span>
                                                                         </td>
-                                                                        <?php if(isset($invoice) && !is_null($invoice->linked_transactions)) : ?>
+                                                                        <?php if(isset($invoice) && !is_null($invoice->linked_transacs)) : ?>
                                                                         <td>
                                                                         <?php if(!is_null($item->linked_transaction_type) && !is_null($item->linked_transaction_id)) : ?>
                                                                             <div class="dropdown">
@@ -425,7 +425,7 @@
                                                                                 ?>
                                                                             </span>
                                                                         </td>
-                                                                        <?php if(isset($invoice) && !is_null($invoice->linked_transactions)) : ?>
+                                                                        <?php if(isset($invoice) && !is_null($invoice->linked_transacs)) : ?>
                                                                         <td>
                                                                         <?php if(!is_null($item->linked_transaction_type) && !is_null($item->linked_transaction_id)) : ?>
                                                                             <div class="dropdown">
@@ -488,7 +488,7 @@
                                                                         <td></td>
                                                                         <td></td>
                                                                         <td></td>
-                                                                        <?php if(isset($invoice) && !is_null($invoice->linked_transactions)) : ?>
+                                                                        <?php if(isset($invoice) && !is_null($invoice->linked_transacs)) : ?>
                                                                         <td></td>
                                                                         <?php endif; ?>
                                                                         <td></td>
@@ -714,7 +714,7 @@
                             </div>
                         </div>
 
-                        <?php if(isset($invoice) && !is_null($invoice->linked_transactions)) : ?>
+                        <?php if(isset($invoice) && !is_null($invoice->linked_transacs)) : ?>
                         <div class="col-xl-2" style="display: none">
                             <div class="transactions-container bg-white h-100" style="padding: 15px">
                                 <div class="row">

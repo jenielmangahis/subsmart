@@ -222,7 +222,113 @@ class Event_model extends MY_Model
             return false;
         }
     }
-    public function getAllJobs(){
+
+
+
+    public function getSalesLeaderboardItems($company_id)
+    {
+        $this->db->select('*');
+        $this->db->from('acs_profile');
+        $this->db->where('company_id =', $company_id);
+        $query = $this->db->get();
+
+        if ($query) {
+            return $query->result();
+        } else {
+            return false;
+        }
+    }
+
+    public function getSalesinOffice($prof_id)
+    {
+        $this->db->select('*');
+        $this->db->from('acs_office');
+        $this->db->where('fk_prof_id =', $prof_id);
+        $query = $this->db->get();
+
+        if ($query) {
+            return $query->result();
+        } else {
+            return false;
+        }
+    }
+
+    public function getUser($user)
+    {
+        $this->db->select('*');
+        $this->db->from('users');
+        $this->db->where('id =', $user);
+        $query = $this->db->get();
+
+        if ($query) {
+            return $query->result();
+        } else {
+            return false;
+        }
+    }
+
+    public function getRoles($roles)
+    {
+        $this->db->select('*');
+        $this->db->from('roles');
+        $this->db->where('id =', $roles);
+        $query = $this->db->get();
+
+        if ($query) {
+            return $query->result();
+        } else {
+            return false;
+        }
+        // $data = new stdClass();
+        // // $data->class = $qu
+    }
+
+    public function getSalesLeaderboard()
+    {
+        $sales [][] = "";
+        $salesItems = $this->getSalesLeaderboardItems(logged('company_id'));
+
+        $z =1;
+        //  var_dump($salesItems[0]->prof_id);
+        
+        for ($k = 0; $k < count($salesItems);$k++) {
+            $salesOffice = $this->getSalesinOffice($salesItems[$k]->prof_id);
+            $userName = $this->getUser($salesOffice[$k]->fk_sales_rep_office);
+            $roles = $this->getRoles($userName[$k]->role);
+            $x = 0;
+            
+            if ($sales[0][0] == "") {
+                $sales[$x][0] = $userName[$k]->FName[0] . $userName[$k]->LName[0];
+                $sales[$x][1] = $userName[$k]->FName . " " . $userName[$k]->LName;
+                $sales[$x][2] = $roles[$k]->title;
+                $sales[$x][3] = 1;
+                
+            } else {
+
+                $name = $userName[$k]->FName . " " . $userName[$k]->LName;
+                for ($y = 0; $y < count($sales); $y++) {
+                    if ($sales[$y][1] == $name) {
+                        $sales[$y][3]++;
+                    } else {
+                        if($y==0){
+                            $y++;
+                        }
+                        $sales[$y][0] = $userName[$k]->FName[0] . $userName[$k]->LName[0];
+                        $sales[$y][1] = $userName[$k]->FName . " " . $userName[$k]->LName;
+                        $sales[$y][2] = $roles[$k]->title;
+                        $sales[$y][3] = 1;
+                        
+                    }
+                }
+            }
+        }
+       
+        return $sales;
+       
+    }
+
+    public function getAllJobs()
+    {
         $query = $this->db->get('jobs');
 
         if ($query) {
@@ -231,8 +337,9 @@ class Event_model extends MY_Model
             return false;
         }
     }
-    
-    public function getAllSales(){
+
+    public function getAllSales()
+    {
         $query = $this->db->get('accounting_sales_receipt');
 
         if ($query) {
@@ -265,7 +372,7 @@ class Event_model extends MY_Model
     }
     public function getAllJobsByCompanyId($company_id)
     {
-        $query = $this->db->get_where('job_status', array('comp_id' => $company_id));
+        $query = $this->db->get_where('jobs', array('company_id' => $company_id));
 
         if ($query) {
             return $query->result();

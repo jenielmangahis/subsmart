@@ -1050,8 +1050,6 @@ $(document).on('click', '#transactions-table .view-edit-expense', function() {
         modalName = '#expenseModal';
         initModalFields('expenseModal', data);
 
-        $('#expenseModal #payee').trigger('change');
-
         $('#expenseModal').modal('show');
     });
 });
@@ -1073,8 +1071,6 @@ $(document).on('click', '#transactions-table .view-edit-check', function() {
 
         modalName = '#checkModal';
         initModalFields('checkModal', data);
-
-        $('#checkModal #payee').trigger('change');
 
         $('#checkModal').modal('show');
     });
@@ -1218,7 +1214,7 @@ function viewBillPayment(data) {
             e.stopPropagation();
         });
 
-        $('#billPaymentModal #payee').trigger('change');
+        // $('#billPaymentModal #payee').trigger('change');
 
         $('#billPaymentModal').modal('show');
     });

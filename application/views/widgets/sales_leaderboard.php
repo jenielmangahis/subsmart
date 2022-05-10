@@ -19,6 +19,7 @@
         <div style="border: 5px solid #30233d; margin-top:0; border-radius: 40px; box-shadow: 1px 0 15px 5px rgb(48, 35, 61);">
             <div class="card-body mt-2" style="padding:5px 10px; height: 363px; overflow: hidden">
                 <div class="row" id="salesLeaderboardBody" style="<?= $height; ?> overflow-y: scroll; padding:10px;">
+               
                     <div class="col-md-12 col-sm-12">
                         <div class="insl-bx">
                             <h5>Top Techs</h5>

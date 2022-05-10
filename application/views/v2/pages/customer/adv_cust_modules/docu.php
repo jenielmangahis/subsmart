@@ -38,105 +38,150 @@
 
             <div class="row g-3">
 
-                <div class="col-12" data-document-type="client_agreement">
-                    <div class="row g-2 align-items-center">
-                        <div class="col-12 col-md-6 position-relative">
-                            <div class="form-check d-inline-block">
-                                <input class="form-check-input" type="checkbox" value="1" id="client_agreement" name="client_agreement">
-                                <label class="form-check-label" for="client_agreement" data-type="document_label">
-                                    Client Agreement
-                                </label>
+                <div class="nsm-callout error d-none"></div>
+
+                <div class="upload-wrapper">
+                    <div class="col-12" data-document-type="client_agreement">
+                        <div class="row g-2 align-items-center">
+                            <div class="col-12 col-md-6 position-relative">
+                                <div class="form-check d-inline-block">
+                                    <input class="form-check-input" type="checkbox" value="1" id="client_agreement" name="client_agreement">
+                                    <label class="form-check-label" for="client_agreement" data-type="document_label">
+                                        Client Agreement
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6 text-end buttons <?= $__documentExists('client_agreement') ? 'has-document' : ''; ?>">
+                                <button type="button" class="nsm-button btn-sm" data-action="upload">
+                                    Upload
+                                </button>
+                                <button type="button" class="nsm-button btn-sm" data-action="download">
+                                    Download
+                                </button>
+                                <button type="button" class="nsm-button error btn-sm" data-action="delete">
+                                    Delete
+                                </button>
                             </div>
                         </div>
-                        <div class="col-12 col-md-6 text-end buttons <?= $__documentExists('client_agreement') ? 'has-document' : ''; ?>">
-                            <button type="button" class="nsm-button btn-sm" data-action="upload">
-                                Upload
-                            </button>
-                            <button type="button" class="nsm-button btn-sm" data-action="download">
-                                Download
-                            </button>
-                            <button type="button" class="nsm-button error btn-sm" data-action="delete">
-                                Delete
-                            </button>
-                        </div>
                     </div>
-                </div>
 
-                <div class="col-12" data-document-type="photo_id_copy">
-                    <div class="row g-2 align-items-center">
-                        <div class="col-12 col-md-6 position-relative">
-                            <div class="form-check d-inline-block">
-                                <input class="form-check-input" type="checkbox" value="1" id="photo_copy_id" name="photo_copy_id">
-                                <label class="form-check-label" for="photo_copy_id" data-type="document_label">
-                                    Photo ID Copy
-                                </label>
+                    <div class="col-12" data-document-type="photo_id_copy">
+                        <div class="row g-2 align-items-center">
+                            <div class="col-12 col-md-6 position-relative">
+                                <div class="form-check d-inline-block">
+                                    <input class="form-check-input" type="checkbox" value="1" id="photo_id_copy" name="photo_id_copy">
+                                    <label class="form-check-label" for="photo_id_copy" data-type="document_label">
+                                        Photo ID Copy
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6 text-end buttons <?= $__documentExists('photo_id_copy') ? 'has-document' : ''; ?>">
+                                <button type="button" class="nsm-button btn-sm" data-action="upload">
+                                    Upload
+                                </button>
+                                <button type="button" class="nsm-button btn-sm" data-action="download">
+                                    Download
+                                </button>
+                                <button type="button" class="nsm-button error btn-sm" data-action="delete">
+                                    Delete
+                                </button>
                             </div>
                         </div>
-                        <div class="col-12 col-md-6 text-end buttons <?= $__documentExists('photo_id_copy') ? 'has-document' : ''; ?>">
-                            <button type="button" class="nsm-button btn-sm" data-action="upload">
-                                Upload
-                            </button>
-                            <button type="button" class="nsm-button btn-sm" data-action="download">
-                                Download
-                            </button>
-                            <button type="button" class="nsm-button error btn-sm" data-action="delete">
-                                Delete
-                            </button>
-                        </div>
                     </div>
-                </div>
 
-                <div class="col-12" data-document-type="proof_of_residency">
-                    <div class="row g-2 align-items-center">
-                        <div class="col-12 col-md-6 position-relative">
-                            <div class="form-check d-inline-block">
-                                <input class="form-check-input" type="checkbox" value="1" id="residency_proof" name="residency_proof">
-                                <label class="form-check-label" for="residency_proof" data-type="document_label">
-                                    Proof of Residency
-                                </label>
+                    <div class="col-12" data-document-type="proof_of_residency">
+                        <div class="row g-2 align-items-center">
+                            <div class="col-12 col-md-6 position-relative">
+                                <div class="form-check d-inline-block">
+                                    <input class="form-check-input" type="checkbox" value="1" id="proof_of_residency" name="proof_of_residency">
+                                    <label class="form-check-label" for="proof_of_residency" data-type="document_label">
+                                        Proof of Residency
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6 text-end buttons <?= $__documentExists('proof_of_residency') ? 'has-document' : ''; ?>">
+                                <button type="button" class="nsm-button btn-sm" data-action="upload">
+                                    Upload
+                                </button>
+                                <button type="button" class="nsm-button btn-sm" data-action="download">
+                                    Download
+                                </button>
+                                <button type="button" class="nsm-button error btn-sm" data-action="delete">
+                                    Delete
+                                </button>
                             </div>
                         </div>
-                        <div class="col-12 col-md-6 text-end buttons <?= $__documentExists('proof_of_residency') ? 'has-document' : ''; ?>">
-                            <button type="button" class="nsm-button btn-sm" data-action="upload">
-                                Upload
-                            </button>
-                            <button type="button" class="nsm-button btn-sm" data-action="download">
-                                Download
-                            </button>
-                            <button type="button" class="nsm-button error btn-sm" data-action="delete">
-                                Delete
-                            </button>
-                        </div>
                     </div>
-                </div>
 
-                <div class="col-12" data-document-type="personal_guarantee">
-                    <div class="row g-2 align-items-center">
-                        <div class="col-12 col-md-6 position-relative">
-                            <div class="form-check d-inline-block">
-                                <input class="form-check-input" type="checkbox" value="1" id="personal_guarantee" name="personal_guarantee">
-                                <label class="form-check-label" for="personal_guarantee" data-type="document_label">
-                                    Personal Guarantee
-                                </label>
+                    <div class="col-12" data-document-type="personal_guarantee">
+                        <div class="row g-2 align-items-center">
+                            <div class="col-12 col-md-6 position-relative">
+                                <div class="form-check d-inline-block">
+                                    <input class="form-check-input" type="checkbox" value="1" id="personal_guarantee" name="personal_guarantee">
+                                    <label class="form-check-label" for="personal_guarantee" data-type="document_label">
+                                        Personal Guarantee
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6 text-end buttons <?= $__documentExists('personal_guarantee') ? 'has-document' : ''; ?>">
+                                <button type="button" class="nsm-button btn-sm" data-action="upload">
+                                    Upload
+                                </button>
+                                <button type="button" class="nsm-button btn-sm" data-action="download">
+                                    Download
+                                </button>
+                                <button type="button" class="nsm-button error btn-sm" data-action="delete">
+                                    Delete
+                                </button>
                             </div>
                         </div>
-                        <div class="col-12 col-md-6 text-end buttons <?= $__documentExists('personal_guarantee') ? 'has-document' : ''; ?>">
-                            <button type="button" class="nsm-button btn-sm" data-action="upload">
-                                Upload
-                            </button>
-                            <button type="button" class="nsm-button btn-sm" data-action="download">
-                                Download
-                            </button>
-                            <button type="button" class="nsm-button error btn-sm" data-action="delete">
-                                Delete
-                            </button>
-                        </div>
                     </div>
+
+                    <div class="documents-loader d-flex align-items-center justify-content-center" style="padding-top: 1rem;">
+                        <div class="spinner-border" role="status"></div>
+                    </div>
+
+                    <template>
+                        <div class="col-12">
+                            <div class="row g-2 align-items-center">
+                                <div class="col-12 col-md-6 position-relative">
+                                    <div class="form-check d-inline-block">
+                                        <input class="form-check-input" type="checkbox" value="1">
+                                        <label class="form-check-label" data-type="document_label"></label>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6 text-end buttons">
+                                    <button type="button" class="nsm-button btn-sm" data-action="upload">
+                                        Upload
+                                    </button>
+                                    <button type="button" class="nsm-button btn-sm" data-action="download">
+                                        Download
+                                    </button>
+                                    <button type="button" class="nsm-button error btn-sm" data-action="delete">
+                                        Delete
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
                 </div>
 
-                <div class="col-12">
+                <div class="col-12 col-md-4">
                     <button type="button" class="nsm-button primary w-100 ms-0 mt-3" id="managecustomerdocumentsbtn">
                         <i class='bx bx-fw bx-list-minus'></i> Customize List
+                    </button>
+                </div>
+
+                <div class="col-12 col-md-4">
+                    <button type="button" class="nsm-button w-100 ms-0 mt-3" id="managecustomerdocumentsbtn--download">
+                        <i class='bx bx-fw bx-import'></i> Download Selected
+                    </button>
+                </div>
+
+                <div class="col-12 col-md-4">
+                    <button type="button" class="nsm-button w-100 ms-0 mt-3" id="managecustomerdocumentsbtn--delete">
+                        <i class='bx bx-fw bx-trash'></i>
+                        <span class="text">Delete Selected</span>
                     </button>
                 </div>
             </div>
@@ -149,16 +194,14 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Customer Documents</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
+        <button type="button" data-bs-dismiss="modal" aria-label="Close">
+            <i class="bx bx-fw bx-x m-0"></i>
         </button>
       </div>
       <div class="modal-body">
         <div>
-            <div class="documents-loader d-flex align-items-center justify-content-center d-none" style="min-height: 300px;">
-                <div class="spinner-border" role="status"></div>
-            </div>
             <div class="documents-wrapper">
+                <div class="nsm-callout error d-none"></div>
 
                 <form class="mb-3">
                     <style>
@@ -180,7 +223,7 @@
                         <label class="content-subtitle fw-bold mb-2">Document Label</label>
                         <div class="input-group document-form">
                             <input placeholder="Enter document label" class="form-control nsm-field" >
-                            <button type="button" class="nsm-button primary">
+                            <button type="submit" class="nsm-button primary">
                                 Create
                             </button>
                         </div>
@@ -197,7 +240,7 @@
                             </div>
                             <div class="d-flex justify-content-end align-items-center" style="margin-left: auto;">
                                 <div class="form-check form-switch">
-                                    <input class="form-check-input ms-0" type="checkbox" checked="">
+                                    <input checked disabled class="form-check-input ms-0" type="checkbox">
                                 </div>
                             </div>
                         </div>
@@ -214,7 +257,7 @@
                             </div>
                             <div class="d-flex justify-content-end align-items-center" style="margin-left: auto;">
                                 <div class="form-check form-switch">
-                                    <input class="form-check-input ms-0" type="checkbox" checked="">
+                                    <input checked disabled class="form-check-input ms-0" type="checkbox">
                                 </div>
                             </div>
                         </div>
@@ -231,7 +274,7 @@
                             </div>
                             <div class="d-flex justify-content-end align-items-center" style="margin-left: auto;">
                                 <div class="form-check form-switch">
-                                    <input class="form-check-input ms-0" type="checkbox" checked="">
+                                    <input checked disabled class="form-check-input ms-0" type="checkbox">
                                 </div>
                             </div>
                         </div>
@@ -248,17 +291,36 @@
                             </div>
                             <div class="d-flex justify-content-end align-items-center" style="margin-left: auto;">
                                 <div class="form-check form-switch">
-                                    <input class="form-check-input ms-0" type="checkbox" checked="">
+                                    <input checked disabled class="form-check-input ms-0" type="checkbox">
                                 </div>
                             </div>
                         </div>
                     </div>
+                </div>
+
+                <div class="documents-loader d-flex align-items-center justify-content-center" style="padding: 1rem 0;">
+                    <div class="spinner-border" role="status"></div>
                 </div>
             </div>
         </div>
 
         <template>
             <div class="nsm-card mb-2 h-auto">
+                <style>
+                    .switch-btn {
+                        --size: 20px;
+                        padding: 0;
+                        border: 0;
+                        outline: 0;
+                        background-color: transparent;
+                        width: var(--size);
+                        height: var(--size);
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        margin-left: 8px;
+                    }
+                </style>
                 <div class="nsm-card-content">
                     <div class="d-flex">
                         <div>
@@ -268,6 +330,9 @@
                             <div class="form-check form-switch">
                                 <input class="form-check-input ms-0" type="checkbox" checked="">
                             </div>
+                            <button class="switch-btn delete text-danger">
+                                <i class="bx bx-fw bx-x"></i>
+                            </button>
                         </div>
                     </div>
                 </div>
