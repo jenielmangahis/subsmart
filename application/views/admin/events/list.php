@@ -1,178 +1,189 @@
-<?php
-defined('BASEPATH') or exit('No direct script access allowed');
-// CSS to add only Customer module
-add_css(array(
-    'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css',
-    'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
-    'https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css',
-    //"assets/css/accounting/sidebar.css",
-    'assets/textEditor/summernote-bs4.css',
-));
-?>
+<?php include viewPath('v2/includes/header_admin'); ?>
 <style>
-label>input {
-     visibility: initial !important;
-     position: initial !important;
-    /* position: absolute; */
+.badge{
+    padding: 10px;
+    font-size: 14px;
 }
 </style>
-<!-- load page css -->
-<?php include viewPath('events/css/list'); ?>
-
-<?php include viewPath('includes/admin_header'); ?>
-<div class="wrapper" role="wrapper">
-    <?php include viewPath('includes/sidebars/admin/events'); ?>
-    <!-- page wrapper start -->
-    <div wrapper__section>
-        <div class="container-fluid p-40">
-            <div class="row custom__border">
-                <div class="col-xl-12">
-                    <div class="card">
-                        <div class="card-body hid-desk pt-0" style="padding-bottom:0px; padding-left:0px; padding-right:0px;">
-                            <div class="row margin-bottom-ter mb-2 align-items-center" style="background-color:white; padding:0px;">
-                                <div class="col-auto pl-0">
-                                    <h5 class="page-title pt-0 mb-0 mt-0" style="position:relative;top:2px;">Events</h5>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="pl-3 pr-3 mt-0 row">
-                            <div class="col mb-4 left alert alert-warning mt-0 mb-2">
-                                  <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">
-                                      This is where you will create, view, and edit your events and all event-related records,
-                                    go to the Events work area where you can create a new event and—working from this single event
-                                    record—add most of the other types of records and information that you need to plan, publish,
-                                    promote, and analyze it.  Like many of our sales items the event record provides a customizable
-                                    business process workflow that helps guide you through each step of the process.
-                                   </span>
-                            </div>
-                        </div>
-                        <div class="tab-content" id="myTabContent">
-                            <div class="tabs">
-                                <ul class="clearfix work__order" id="myTab" role="tablist">
-                                    <li class="active">
-                                        <a class="nav-link active"  href="#"  aria-controls="tab1" aria-selected="true">All (0)</a>
-                                    </li>
-                                    <li>
-                                        <a class="nav-link active" href="#" aria-controls="tab1" aria-selected="true">Scheduled 0)</a>
-                                    </li>
-                                    <li>
-                                        <a class="nav-link active" href="#" aria-controls="tab1" aria-selected="true">Started (0)</a>
-                                    </li>
-                                    <li>
-                                        <a class="nav-link active" href="#" aria-controls="tab1" aria-selected="true">Finished (0)</a>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1">
-                                <?php if (!empty($events)) { ?>
-                                    <table class="table table-hover table-bordered table-striped" id="jobListTable">
-                                        <thead>
-                                        <tr>
-                                            <!--<th class="text-center"><input type="checkbox" class="form-control" id="jobCheckbox" value=""></th>-->
-                                            <th scope="col"><strong>Company Name</strong></th>
-                                            <th scope="col"><strong>Job Number</strong></th>
-                                            <th scope="col"><strong>Date</strong></th>
-                                            <!-- <th scope="col"><strong>Customer</strong></th>-->
-                                            <th scope="col"><strong>Employee</strong></th>
-                                            <th scope="col"><strong>Amount</strong></th>
-                                            <th scope="col"><strong>Event Type</strong></th>
-                                            <th scope="col"><strong>Event Tag</strong></th>
-                                            <th scope="col"><strong>Manage</strong></th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <?php foreach($events as $event) : ?>
-                                            <tr>
-                                                <td class="pl-3"><?= $event->business_name; ?></td>
-                                                <td class="pl-3"><?= $event->event_number; ?></td>
-                                                <td class="pl-3"><?php echo date_format(date_create($event->date_created),"m/d/Y"); ?></td>
-                                                <!--<td class="pl-3"><?= $event->first_name.' '.$event->last_name ; ?></td>-->
-                                                <td class="pl-3"><?= $event->FName.' '.$event->LName ; ?></td>
-                                                <td class="pl-3">$<?= number_format((float)$event->amount,2,'.',',') ; ?></td>
-                                                <td class="pl-3"><?= $event->event_type; ?></td>
-                                                <td class="pl-3"><?= $event->event_tag; ?></td>
-                                                <td class="pl-3">
-                                                    <a href="<?= base_url('admin/new_event/').$event->id; ?>" class="editJobTypeBtn btn btn-default btn-sm">
-                                                        <span class="fa fa-edit"></span> Edit</a>&nbsp;
-                                                    <a href="javascript:void(0)" id="<?= $event->id; ?>"  class="delete_event btn btn-default btn-sm">
-                                                        <span class="fa fa-trash"></span> Delete
-                                                    </a>
-                                                    <a href="<?= base_url('admin/event_preview/').$event->id; ?>"  class=" btn btn-default btn-sm">
-                                                        <span class="fa fa-search-plus"></span> Preview
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                        <?php endforeach; ?>
-                                        </tbody>
-                                    </table>
-                                <?php } else { ?>
-                                    <hr>
-                                    <div class="page-empty-container" style="text-align:center; margin-top:50px;">
-                                        <h5 class="page-empty-header">You haven't yet added Events yet</h5>
-                                        <p class="text-ter margin-bottom">Manage your Events.</p>
-                                    </div>
-                                <?php } ?>
-                            </div>
+<div class="row page-content g-0">
+    <div class="col-12 mb-3">
+        <?php include viewPath('v2/includes/page_navigations/admin_event_tabs'); ?>
+    </div>
+    <div class="col-12">
+        <div class="nsm-page">
+            <div class="nsm-page-content">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="nsm-callout primary">
+                            <button><i class='bx bx-x'></i></button>
+                            Listing of all companies events.
                         </div>
                     </div>
-                    <!-- end card -->
+                </div>
+                <div class="row">
+                    <div class="col-12 col-md-4">
+                        <form action="<?php echo base_url('admin/events') ?>" method="GET">
+                            <div class="nsm-field-group search">
+                                <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" name="search" placeholder="Search Events" value="<?php echo (!empty($search)) ? $search : '' ?>">                                
+                            </div>
+                            <button type="submit" class="nsm-button primary" style="margin:0px;">Search</button>
+                            <button type="button" class="nsm-button primary btn-reset-list" style="margin:0px;">Reset</a>
+                        </form>
+                    </div>
+                    <div class="col-12 col-md-8 grid-mb text-end">
+                        <div class="dropdown d-inline-block">
+                            <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
+                                <span>Filter by : <?= $cid_search; ?></span> <i class='bx bx-fw bx-chevron-down'></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end select-filter">
+                                <li><a class="dropdown-item" data-id="filter_all" href="<?= base_url('admin/events'); ?>">All Events</a></li>
+                                <li><a class="dropdown-item" data-id="filter_all" href="<?= base_url('admin/events?status=draft'); ?>">Draft</a></li>
+                                <li><a class="dropdown-item" data-id="filter_all" href="<?= base_url('admin/events?status=scheduled'); ?>">Scheduled</a></li>
+                                <li><a class="dropdown-item" data-id="filter_all" href="<?= base_url('admin/events?status=started'); ?>">Started</a></li>
+                                <li><a class="dropdown-item" data-id="filter_all" href="<?= base_url('admin/events?status=finished'); ?>">Finished</a></li>
+                            </ul>
+                        </div>
+                        <div class="nsm-page-buttons page-button-container">
+                            <!-- <a class="nsm-button primary btn-add-new-type" href="javascript:void(0);" style="margin-left: 10px;"><i class='bx bx-fw bx-plus-circle' ></i> New Event</a> -->                            
+                            <a class="nsm-button primary btn-export-list" href="<?= base_url('admin/export_events') ?>" style="margin-left: 10px;"><i class="bx bx-fw bx-file"></i> Export List</a>
+                        </div>
+                    </div>
+                </div>
+                <table class="nsm-table">
+                    <thead>
+                        <tr>
+                            <td data-name="Company Name">Company Name</td>
+                            <td data-name="Customer Name">Customer Name</td>
+                            <td data-name="Job Number">Job Number</td>
+                            <td data-name="Date" style="width:10%;">Date</td>                            
+                            <td data-name="Event Type" style="width:10%;">Event Type</td>
+                            <td data-name="Event Tag" style="width:10%;">Event Tag</td>
+                            <td data-name="Event Tag" style="width:10%;">Status</td>
+                            <td data-name="Manage" style="width: 10%;">Action</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach($events as $event){ ?>    
+                            <tr>
+                                <td class="center"><?= $event->business_name; ?></td>
+                                <td class="center"><?= $event->first_name . ' ' . $event->last_name; ?></td>
+                                <td class="center"><?= $event->event_number; ?></td>
+                                <td class="center"><?php echo date_format(date_create($event->date_created),"m/d/Y"); ?></td>
+                                <td class="center"><?= $event->event_type; ?></td>
+                                <td class="center"><?= $event->event_tag; ?></td>
+                                <td class="center"><?= $event->status; ?></td>
+                                <td class="center actions-col">
+                                    <div class="dropdown table-management">
+                                        <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                            <i class='bx bx-fw bx-dots-vertical-rounded'></i>
+                                        </a>
+                                        <ul class="dropdown-menu dropdown-menu-end">
+                                            <!-- <li>
+                                                <a class="dropdown-item btn-edit-type" href="javascript:void(0)" data-id="<?php echo $event->id ?>"><i class='bx bx-fw bxs-edit'></i> Edit</a>
+                                            </li> -->
+                                            <li>
+                                                <a class="dropdown-item btn-view-event" href="javascript:void(0)" data-id="<?php echo $event->id ?>"><i class='bx bx-fw bx-show'></i> View</a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item delete-event" href="javascript:void(0);" data-name="<?= $event->event_number; ?>" data-id="<?= $event->id; ?>"><i class="bx bx-fw bx-trash"></i> Delete</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </td>
+
+                        <?php } ?>
+                    </tbody>
+                </table>
+            </div>
+
+            <!--View Event modal-->
+            <div class="modal fade nsm-modal fade" id="modalViewEvent" tabindex="-1" aria-labelledby="modalViewEventLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span class="modal-title content-title" id="new_feed_modal_label">View Event</span>
+                            <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                        </div>
+                        <div class="modal-body modal-view-event-container"></div>
+                    </div>
                 </div>
             </div>
-        </div>
-     </div>
-    <!-- page wrapper end -->
-</div>
-<?php
-// JS to add only Job module
-add_footer_js(array(
-    'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js',
-    'https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js',
-    'https://code.jquery.com/ui/1.12.1/jquery-ui.js',
-    'https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js',
-));
-?>
-<?php include viewPath('includes/admin_footer'); ?>
-<link href="https://nightly.datatables.net/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
-<script src="https://nightly.datatables.net/js/jquery.dataTables.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-<script>
-    $(document).ready(function () {
-        $('#jobListTable').DataTable({
-            "lengthChange": true,
-            "searching" : true,
-            "pageLength": 10,
-            "order": [],
-        });
 
-        $(".delete_event").on( "click", function( event ) {
-            var ID=this.id;
-            // alert(ID);
-            Swal.fire({
-                title: 'Continue to REMOVE this Event?',
-                text: "",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#32243d',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes',
-                cancelButtonText: 'No',
-            }).then((result) => {
-                if (result.value) {
-                    $.ajax({
-                        type: "POST",
-                        url: "<?= base_url('admin/delete_event') ?>",
-                        data: {job_id : ID}, // serializes the form's elements.
-                        success: function(data)
-                        {
-                            if(data === "1"){
-                                window.location.reload();
-                            }else{
-                                alert(data);
-                            }
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+$(document).ready(function() {
+    $(".nsm-table").nsmPagination();
+
+    $(document).on('click', '.btn-view-event', function(){
+        var eid = $(this).attr('data-id');
+        var url = base_url + 'admin/ajax_view_event';
+
+        $('#modalViewEvent').modal('show');
+        $(".modal-view-event-container").html('<span class="bx bx-loader bx-spin"></span>');
+
+        setTimeout(function () {
+          $.ajax({
+             type: "POST",
+             url: url,
+             data: {eid:eid},
+             success: function(o)
+             {          
+                $('.modal-view-event-container').html(o);
+             }
+          });
+        }, 800);
+    });
+
+    $(document).on('click', '.btn-reset-list', function(){
+        location.href = base_url + 'admin/events';
+    });    
+
+    $(document).on("click", ".delete-event", function(e) {
+        var eid = $(this).attr("data-id");
+        var event_number = $(this).attr('data-name');
+        var url = base_url + 'admin/ajaxDeleteEvent';
+
+        Swal.fire({
+            title: 'Delete Event',
+            html: "Are you sure you want to delete event number <b>"+event_number+"</b>?",
+            icon: 'question',
+            confirmButtonText: 'Proceed',
+            showCancelButton: true,
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    dataType: 'json',
+                    data: {eid:eid},
+                    success: function(o) {
+                        if( o.is_success == 1 ){   
+                            Swal.fire({
+                                title: 'Delete Successful!',
+                                text: "Event Data Deleted Successfully!",
+                                icon: 'success',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            }).then((result) => {
+                                //if (result.value) {
+                                    location.reload();
+                                //}
+                            });
+                        }else{
+                          Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            html: o.msg
+                          });
                         }
-                    });
-                }
-            });
+                    },
+                });
+            }
         });
     });
+});
 </script>
+<?php include viewPath('v2/includes/footer_admin'); ?>

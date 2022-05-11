@@ -3728,7 +3728,12 @@ class Admin extends CI_Controller
         $this->load->model('Taskhub_status_model');       
 
         $search = '';
-        if( get('search') != '' ){
+        $cid_search = 'All Status';
+        if( get('status') != '' ){            
+            $taskStatus = $this->Taskhub_status_model->getById(get('status'));
+            $cid_search = 'Status ' . $taskStatus->status_text;
+            $tasksHub = $this->Taskhub_model->getAllByStatusId($taskStatus->status_id);
+        }elseif( get('search') != '' ){
             $search  = trim(get('search'));
             $filters = ['search' => $search];
             $tasksHub = $this->Taskhub_model->getAll($filters);
@@ -3737,6 +3742,7 @@ class Admin extends CI_Controller
         }
             
         $this->page_data['search']  = $search;
+        $this->page_data['cid_search'] = $cid_search;
         $this->page_data['taskStatus'] = $this->Taskhub_status_model->get();
         $this->page_data['tasksHub'] = $tasksHub;
         $this->page_data['companies']  = $this->Business_model->getAll();
@@ -3777,7 +3783,7 @@ class Admin extends CI_Controller
                 'prof_id' => $post['customer_id'],
                 'subject' => $post['subject'],
                 'description' => $post['description'],
-                'created_by' => 'Admin',
+                'created_by' => adminLogged('id'),
                 'date_created' => date('Y-m-d h:i:s'),
                 'estimated_date_complete' => date('Y-m-d', strtotime($post['estimated_date_complete'])),
                 'actual_date_complete' => '',
@@ -3788,7 +3794,15 @@ class Admin extends CI_Controller
                 'view_count' => 0
             ];
 
-            $result = $this->Taskhub_model->create($task_data);
+            $taskId = $this->Taskhub_model->create($task_data);
+
+            $data_participant = [
+                'task_id' => $taskId,
+                'user_id' => $post['user_id'],
+                'is_assigned' => 1
+            ];
+
+            $this->Taskhub_participants_model->create($data_participant);
 
             $is_success = 1;
             $msg = '';
@@ -3807,16 +3821,116 @@ class Admin extends CI_Controller
         $this->load->model('Business_model');
         $this->load->model('Taskhub_model');
         $this->load->model('Taskhub_participants_model');
-        $this->load->model('Taskhub_status_model');   
+        $this->load->model('Taskhub_status_model');
+        $this->load->model('Users_model');
+        $this->load->model('AcsProfile_model');
 
         $post = $this->input->post();
 
         $task = $this->Taskhub_model->getById($post['thid']);
 
+        $companyCustomers = $this->AcsProfile_model->getAllByCompanyId($task->company_id);
+        $companyUsers     = $this->Users_model->getCompanyUsers($task->company_id);
+        $assignedUser     = $this->Taskhub_participants_model->getIsAssignedByTaskId($task->task_id);
+
         $this->page_data['task']  = $task;
         $this->page_data['taskStatus'] = $this->Taskhub_status_model->get();
         $this->page_data['companies']  = $this->Business_model->getAll();
+        $this->page_data['companyCustomers'] = $companyCustomers;
+        $this->page_data['companyUsers'] = $companyUsers;
+        $this->page_data['assignedUser'] = $assignedUser;
         $this->load->view('admin/taskhub/ajax_edit_taskhub', $this->page_data);
+    }
+
+    public function ajaxUpdateTaskHub()
+    {
+        $this->load->model('Taskhub_model');
+        $this->load->model('Taskhub_participants_model');
+        $this->load->model('Taskhub_status_model');   
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $post = $this->input->post();
+
+        $task = $this->Taskhub_model->getById($post['thid']);
+        if( $task ){
+            if( $post['subject'] != '' ){
+                $taskStatus = $this->Taskhub_status_model->getById($post['status']);
+                $data_task = [
+                    'prof_id' => $post['customer_id'],
+                    'subject' => $post['subject'],
+                    'description' => $post['description'],                    
+                    'estimated_date_complete' => date('Y-m-d', strtotime($post['estimated_date_complete'])),
+                    'task_color' => $taskStatus->status_color,
+                    'status_id' => $taskStatus->status_id,
+                    'company_id' => $post['company_id'],
+                ];
+                $this->Taskhub_model->updateByTaskId($task->task_id, $data_task);
+
+                $this->Taskhub_participants_model->deleteAllByTaskId($task->task_id);
+
+                $data_participant = [
+                    'task_id' => $task->task_id,
+                    'user_id' => $post['user_id'],
+                    'is_assigned' => 1
+                ];
+
+                $this->Taskhub_participants_model->create($data_participant);
+
+                $is_success = 1;
+                $msg = '';
+
+            }else{
+                $msg = 'Please enter subject';
+            }
+        }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+
+        echo json_encode($json_data);
+    }
+
+    public function ajaxDeleteTaskHub()
+    {
+        $this->load->model('Taskhub_model');
+        $this->load->model('Taskhub_participants_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $post = $this->input->post();
+        $task = $this->Taskhub_model->getById($post['thid']);
+        if( $task ){
+            $this->Taskhub_participants_model->deleteAllByTaskId($task->task_id);
+            $this->Taskhub_model->deleteByTaskId($task->task_id);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($json_data);
+    }
+
+    public function taskhub_status()
+    {
+        $this->load->model('Taskhub_status_model');
+
+        $search = '';
+        if( get('search') != '' ){
+            $search  = get('search');
+            $filters = ['search' => $search];
+            $taskStatus = $this->Taskhub_status_model->getAll($filters);
+        }else{
+            $taskStatus = $this->Taskhub_status_model->getAll();
+        }
+            
+        $this->page_data['search'] = $search;
+        $this->page_data['taskStatus']  = $taskStatus;
+        $this->page_data['page_title']  = 'Task Status';
+        $this->page_data['page_parent'] = 'Settings';
+        $this->load->view('admin/taskhub_status/list', $this->page_data);
     }
 }
 
