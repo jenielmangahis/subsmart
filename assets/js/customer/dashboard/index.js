@@ -3,6 +3,7 @@ window.document.addEventListener("DOMContentLoaded", async () => {
   window.__customermodule_api = api;
 
   import("./docu.js");
+  import("./office.js");
 
   const customerId = getCustomerId();
   const response = await api.getCustomerActions(customerId);

@@ -52,88 +52,209 @@ $(document).ready(function() {
         });
     });
     $(document).on("click", "#clockIn", function() {
-        let selected = this;
-        Swal.fire({
-            title: "Clock in?",
-            html: "Are you sure you want to Clock-in?",
-            imageUrl: baseURL + "assets/img/timesheet/work.png",
-            showCancelButton: true,
-            confirmButtonColor: "#2ca01c",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Yes, I want to Clock-in!",
-        }).then((result) => {
-            if (result.value) {
-                $.ajax({
-                    url: baseURL + "timesheet/clockinemployee",
-                    type: "POST",
-                    dataType: "json",
-                    // data:{clock_in:clock_in},
-                    success: function(data) {
-                        if (data != null) {
-                            $(selected).attr("id", "clockOut");
-                            $(".clock").addClass("clock-active");
-                            $("#attendanceId").val(data.attendance_id);
-                            $(".in").text(data.clock_in_time);
-                            $(".out").text(data.clock_out_time);
-                            $("#userClockIn").text(data.clock_in_time);
-                            $("#userClockOut").text("-");
-                            $("#userLunchIn").text("-");
-                            $("#userLunchOut").text("-");
-                            $("#shiftDuration").text("-");
-                            $("#userShiftDuration").text("-");
-                            $("#break-duration").text("00:00:00");
-                            $(".employeeLunch").attr("id", "lunchIn").attr("disabled", false);
-                            Swal.fire({
-                                showConfirmButton: false,
-                                timer: 2000,
-                                title: "Success",
-                                html: "You are now Clock-in",
-                                icon: "success",
-                            });
 
-                            notificationRing();
+        $.ajax({
+            url: baseURL + "timesheet/getShiftSchedule",
+            type: "POST",
+            dataType: "json",
+            // data:{clock_in:clock_in},
+            success: function(data) {
 
-                            Push.Permission.GRANTED; // 'granted'
-                            Push.create(data.FName + " " + data.LName, {
-                                body: "You're now clocked in!",
-                                icon: data.profile_img,
-                                timeout: 20000,
-                                onClick: function() {
-                                    window.focus();
-                                    this.close();
-                                },
-                            });
-                            app_notification(
-                                data.token,
-                                data.body,
-                                data.device_type,
-                                data.company_id,
-                                data.title
-                            );
-                            if (data.send_sms) {
-                                clock_in_clock_out_send_sms("+18506195914", data.FName + " " + data.LName + " " + data.content_notification)
+                if (data != null) {
+                    let day = new Date();
+                    let dayShift = new Date(data[0]["shift_start"]);
+                    let numberOfMinutes = dayShift.getMinutes() - day.getMinutes();
+                    console.log(numberOfMinutes);
+                    if (day.getHours() == dayShift.getHours() && numberOfMinutes <= 5) {
+                        let selected = this;
+                        Swal.fire({
+                            title: "Clock in?",
+                            html: "Are you sure you want to Clock-in?",
+                            imageUrl: baseURL + "assets/img/timesheet/work.png",
+                            showCancelButton: true,
+                            confirmButtonColor: "#2ca01c",
+                            cancelButtonColor: "#d33",
+                            confirmButtonText: "Yes, I want to Clock-in!",
+                        }).then((result) => {
+                            if (result.value) {
+
+                                $.ajax({
+                                    url: baseURL + "timesheet/clockinemployee",
+                                    type: "POST",
+                                    dataType: "json",
+                                    // data:{clock_in:clock_in},
+                                    success: function(data) {
+                                        if (data != null) {
+
+
+                                            $(selected).attr("id", "clockOut");
+                                            $(".clock").addClass("clock-active");
+                                            $("#attendanceId").val(data.attendance_id);
+                                            $(".in").text(data.clock_in_time);
+                                            $(".out").text(data.clock_out_time);
+                                            $("#userClockIn").text(data.clock_in_time);
+                                            $("#userClockOut").text("-");
+                                            $("#userLunchIn").text("-");
+                                            $("#userLunchOut").text("-");
+                                            $("#shiftDuration").text("-");
+                                            $("#userShiftDuration").text("-");
+                                            $("#break-duration").text("00:00:00");
+                                            $(".employeeLunch").attr("id", "lunchIn").attr("disabled", false);
+                                            Swal.fire({
+                                                showConfirmButton: false,
+                                                timer: 2000,
+                                                title: "Success",
+                                                html: "You are now Clock-in",
+                                                icon: "success",
+                                            });
+
+                                            notificationRing();
+
+                                            Push.Permission.GRANTED; // 'granted'
+                                            Push.create(data.FName + " " + data.LName, {
+                                                body: "You're now clocked in!",
+                                                icon: data.profile_img,
+                                                timeout: 20000,
+                                                onClick: function() {
+                                                    window.focus();
+                                                    this.close();
+                                                },
+                                            });
+                                            app_notification(
+                                                data.token,
+                                                data.body,
+                                                data.device_type,
+                                                data.company_id,
+                                                data.title
+                                            );
+                                            if (data.send_sms) {
+                                                clock_in_clock_out_send_sms("+18506195914", data.FName + " " + data.LName + " " + data.content_notification)
+                                            }
+                                            // get_user_current_geo_possition(data.timesheet_logs_id, "timesheet_logs");
+
+                                            location.reload();
+                                        }
+                                    },
+                                    error: function(xhr, status, error) {
+                                        var errorMessage = xhr.status + ': ' + xhr.statusText
+                                            // alert('Error - ' + errorMessage);
+                                            // window.location.replace(baseURL + "mycrm/membership");
+                                        Swal.fire({
+                                            showConfirmButton: false,
+                                            timer: 3000,
+                                            title: "Upgrade your subscription",
+                                            html: "Account can't clockin due to membership limitation.",
+                                            imageUrl: baseURL + "assets/img/timesheet/subscription.png",
+                                        });
+                                        setTimeout(function() { window.location.replace(baseURL + "mycrm/membership"); }, 3000);
+                                    }
+                                });
                             }
-                            // get_user_current_geo_possition(data.timesheet_logs_id, "timesheet_logs");
-
-                            location.reload();
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        var errorMessage = xhr.status + ': ' + xhr.statusText
-                            // alert('Error - ' + errorMessage);
-                            // window.location.replace(baseURL + "mycrm/membership");
+                        });
+                    } else {
                         Swal.fire({
                             showConfirmButton: false,
-                            timer: 3000,
-                            title: "Upgrade your subscription",
-                            html: "Account can't clockin due to membership limitation.",
-                            imageUrl: baseURL + "assets/img/timesheet/subscription.png",
+                            timer: 2000,
+                            title: "NOTICE",
+                            html: "You're " + numberOfMinutes + " minutes early :>",
+                            icon: "info",
                         });
-                        setTimeout(function() { window.location.replace(baseURL + "mycrm/membership"); }, 3000);
                     }
-                });
+                } else {
+                    let selected = this;
+                    Swal.fire({
+                        title: "Clock in?",
+                        html: "Are you sure you want to Clock-in?",
+                        imageUrl: baseURL + "assets/img/timesheet/work.png",
+                        showCancelButton: true,
+                        confirmButtonColor: "#2ca01c",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "Yes, I want to Clock-in!",
+                    }).then((result) => {
+                        if (result.value) {
+
+                            $.ajax({
+                                url: baseURL + "timesheet/clockinemployee",
+                                type: "POST",
+                                dataType: "json",
+                                // data:{clock_in:clock_in},
+                                success: function(data) {
+                                    if (data != null) {
+
+
+                                        $(selected).attr("id", "clockOut");
+                                        $(".clock").addClass("clock-active");
+                                        $("#attendanceId").val(data.attendance_id);
+                                        $(".in").text(data.clock_in_time);
+                                        $(".out").text(data.clock_out_time);
+                                        $("#userClockIn").text(data.clock_in_time);
+                                        $("#userClockOut").text("-");
+                                        $("#userLunchIn").text("-");
+                                        $("#userLunchOut").text("-");
+                                        $("#shiftDuration").text("-");
+                                        $("#userShiftDuration").text("-");
+                                        $("#break-duration").text("00:00:00");
+                                        $(".employeeLunch").attr("id", "lunchIn").attr("disabled", false);
+                                        Swal.fire({
+                                            showConfirmButton: false,
+                                            timer: 2000,
+                                            title: "Success",
+                                            html: "You are now Clock-in",
+                                            icon: "success",
+                                        });
+
+                                        notificationRing();
+
+                                        Push.Permission.GRANTED; // 'granted'
+                                        Push.create(data.FName + " " + data.LName, {
+                                            body: "You're now clocked in!",
+                                            icon: data.profile_img,
+                                            timeout: 20000,
+                                            onClick: function() {
+                                                window.focus();
+                                                this.close();
+                                            },
+                                        });
+                                        app_notification(
+                                            data.token,
+                                            data.body,
+                                            data.device_type,
+                                            data.company_id,
+                                            data.title
+                                        );
+                                        if (data.send_sms) {
+                                            clock_in_clock_out_send_sms("+18506195914", data.FName + " " + data.LName + " " + data.content_notification)
+                                        }
+                                        // get_user_current_geo_possition(data.timesheet_logs_id, "timesheet_logs");
+
+                                        location.reload();
+                                    }
+                                },
+                                error: function(xhr, status, error) {
+                                    var errorMessage = xhr.status + ': ' + xhr.statusText
+                                        // alert('Error - ' + errorMessage);
+                                        // window.location.replace(baseURL + "mycrm/membership");
+                                    Swal.fire({
+                                        showConfirmButton: false,
+                                        timer: 3000,
+                                        title: "Upgrade your subscription",
+                                        html: "Account can't clockin due to membership limitation.",
+                                        imageUrl: baseURL + "assets/img/timesheet/subscription.png",
+                                    });
+                                    setTimeout(function() { window.location.replace(baseURL + "mycrm/membership"); }, 3000);
+                                }
+                            });
+                        }
+                    });
+                }
+
+
+
             }
-        });
+        })
+
+
+
     });
 
 

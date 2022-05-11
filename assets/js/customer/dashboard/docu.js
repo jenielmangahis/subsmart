@@ -1,4 +1,5 @@
 import * as api from "./api.js";
+import * as common from "./common.js";
 
 const $section = document.querySelector("[module-id=profiledocuments]");
 const $fileInput = $section.querySelector("#docufileinput");
@@ -108,7 +109,7 @@ function getButtonDocumentType($button) {
 }
 
 function getCustomerId() {
-  return window.location.pathname.split("/").at(-1);
+  return common.getCustomerId();
 }
 
 (() => {
