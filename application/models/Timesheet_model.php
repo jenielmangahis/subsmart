@@ -1309,6 +1309,16 @@ class Timesheet_model extends MY_Model
             FROM timesheet_attendance JOIN users ON timesheet_attendance.user_id = users.id JOIN roles ON users.role = roles.id WHERE timesheet_attendance.date_created >='" . $date_from . "' AND timesheet_attendance.date_created <='" . $date_to . "' AND timesheet_attendance.user_id = " . $user_id . " order by timesheet_attendance.date_created DESC");
         return $qry->result();
     }
+    public function getShiftSchedule(){
+        $today = date("Y-m-d");
+        $query = $this->db->get_where('timesheet_shift_schedule', array('shift_date'=>$today, 'user_id'=> logged('id')));
+        
+
+       echo json_encode($query->result());
+        
+        return $query->result();
+        
+    }
     public function employee_ot_requested($attn_id)
     {
         $update = array(

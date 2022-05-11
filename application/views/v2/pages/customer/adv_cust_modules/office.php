@@ -140,18 +140,42 @@
         </div>
     </div>
 </div>
-<script>
-$(document).ready(function() {
-    $("#sendWelcomeEmail").click(function () {
-        alert('asdfasdf');
-        $.ajax({
-            type: "POST",
-            url: "<?= base_url() ?>/customer/send_welcome_email",
-            data: { email_address: "<?= $profile_info->email; ?>"}, // serializes the form's elements.
-            success: function (data){
-                alert('Email Sent!');
-            }
-        });
-    });
-});
-</script>
+
+<div class="modal fade nsm-modal" tabindex="-1" role="dialog" id="sendemailmodal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Select & Send Welcome Email</h5>
+        <button type="button" data-bs-dismiss="modal" aria-label="Close">
+            <i class="bx bx-fw bx-x m-0"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div>
+            <div class="letters-wrapper">
+            </div>
+            <button type="button" class="nsm-button primary w-100 ms-0">
+                <i class="bx bx-fw bx-send"></i> Send Welcome Email
+            </button>
+        </div>
+
+        <template>
+            <div class="nsm-card mb-2 h-auto">
+                <div class="nsm-card-content">
+                    <div class="d-flex">
+                        <div>
+                            <span class="content-title d-block"></span>
+                        </div>
+                        <div class="d-flex justify-content-end align-items-center" style="margin-left: auto;">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input ms-0" type="radio" name="selectedemail">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </template>
+      </div>
+    </div>
+  </div>
+</div>

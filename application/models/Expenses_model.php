@@ -882,7 +882,7 @@ class Expenses_model extends MY_Model
     {
         $this->db->where('company_id', logged('company_id'));
         $this->db->where('vendor_id', $vendorId);
-        $this->db->where('status', 1);
+        $this->db->where('status !=', 0);
 		$this->db->where('recurring', null);
         $this->db->order_by('purchase_order_date', 'desc');
         $query = $this->db->get('accounting_purchase_order');
