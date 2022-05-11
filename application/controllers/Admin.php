@@ -3932,6 +3932,98 @@ class Admin extends CI_Controller
         $this->page_data['page_parent'] = 'Settings';
         $this->load->view('admin/taskhub_status/list', $this->page_data);
     }
+
+    public function ajaxSaveTaskhubStatus()
+    {
+        $this->load->model('Taskhub_status_model');
+
+        $is_success = 0;
+        $msg = '';
+
+        $post = $this->input->post();
+        if( $post['status_text'] == '' ){
+            $msg = 'Please enter status name';
+        }elseif( $post['status_color'] == '' ){
+            $msg = 'Please specify task status color';
+        }else{
+            $data = [
+                'status_text' => $post['status_text'],
+                'status_color' => $post['status_color']
+            ];
+
+            $this->Taskhub_status_model->create($data);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+
+        echo json_encode($json_data);
+    }
+
+    public function ajax_edit_taskhub_status()
+    {
+        $this->load->model('Taskhub_status_model');
+
+        $post = $this->input->post();
+        $taskStatus = $this->Taskhub_status_model->getById($post['tsid']);
+
+        $this->page_data['taskStatus'] = $taskStatus;   
+        $this->load->view('admin/taskhub_status/ajax_edit_taskhub_status', $this->page_data);
+    }
+
+    public function ajaxUpdateTaskhubStatus()
+    {
+        $this->load->model('Taskhub_status_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $post = $this->input->post();
+        $taskStatus = $this->Taskhub_status_model->getById($post['tsid']);
+        if( $taskStatus ){
+            $data = [
+                'status_text' => $post['status_text'],
+                'status_color' => $post['status_color']
+            ];
+
+            $this->Taskhub_status_model->updateByStatusId($post['tsid'], $data);
+
+            $is_success = 1;
+            $msg = '';  
+        }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+
+        echo json_encode($json_data);
+    }
+
+    public function ajaxDeleteTaskhubStatus()
+    {
+        $this->load->model('Taskhub_status_model');
+        
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $post = $this->input->post();
+        $taskStatus = $this->Taskhub_status_model->getById($post['tsid']);
+        if( $taskStatus ){
+            $data = [
+                'status_text' => $post['status_text'],
+                'status_color' => $post['status_color']
+            ];
+
+            $this->Taskhub_status_model->updateByStatusId($post['tsid'], $data);
+
+            $is_success = 1;
+            $msg = '';  
+        }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+
+        echo json_encode($json_data);
+    }
 }
 
 /* End of file Admin.php */

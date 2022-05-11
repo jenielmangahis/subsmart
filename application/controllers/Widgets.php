@@ -61,7 +61,9 @@ class Widgets extends MY_Controller
     public function getV2JobTags()
     {
         $this->load->model('widgets_model');
-        $data['tags'] = $this->widgets_model->getTags();
+        //$data['tags'] = $this->widgets_model->getTags();
+        $comp_id = getLoggedCompanyID();
+        $data['tags'] = $this->widgets_model->rawGetTagsWithCount($comp_id);
         $this->load->view('v2/widgets/tags_details', $data);
     }
 

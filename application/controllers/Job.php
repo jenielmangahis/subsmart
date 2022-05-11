@@ -28,7 +28,13 @@ class Job extends MY_Controller
     public function index()
     {
         $this->isAllowedModuleAccess(15);
-        $this->page_data['jobs'] = $this->jobs_model->get_all_jobs();
+        if( get('job_tag') ){
+            $tag_id = get('job_tag');
+            $jobs = $this->jobs_model->get_all_jobs_by_tag($tag_id);
+        }else{
+            $jobs = $this->jobs_model->get_all_jobs();
+        }
+        $this->page_data['jobs'] = $jobs;
         $this->page_data['title'] = 'Jobs';
         $this->load->view('v2/pages/job/list', $this->page_data);
     }

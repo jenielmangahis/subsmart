@@ -29,6 +29,21 @@ class Widgets_model extends MY_Model {
         $this->db->where('company_id' , getLoggedCompanyID());
         return $this->db->get('job_tags')->result();
     }
+
+    function rawGetTagsWithCount($company_id)
+    {
+        $sql = '
+            SELECT jt.`id`,jt.`name`,jt.`company_id`, (
+                SELECT COUNT(*)
+              FROM jobs j 
+              WHERE j.tags = jt.id
+            )AS total_job_tags 
+            FROM job_tags jt 
+            WHERE jt.company_id = '.$company_id.'
+        ';
+        $query = $this->db->query($sql);
+        return $query->result();
+    }
     
     function getLeadSource($comp_id)
     {
