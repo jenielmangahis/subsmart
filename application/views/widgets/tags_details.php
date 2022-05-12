@@ -28,7 +28,7 @@
 
 <ul class="jobTags">
     <?php foreach ($tags as $t): ?>
-        <li><a class="tagsData" href="#"><?= $t->name; ?> (0) </a></li>
+        <li><a class="tagsData" href="javascript:void(0);" onclick="window.open('<?= base_url('job?job_tag='.$t->id) ?>', '_blank', 'location=yes,height=570,width=520,scrollbars=yes,status=yes');"><?= $t->name; ?> (<?= $t->total_job_tags; ?>) </a></li>
     <?php endforeach; ?>
 </ul>
 

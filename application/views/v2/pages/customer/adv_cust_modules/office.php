@@ -150,10 +150,24 @@
             <i class="bx bx-fw bx-x m-0"></i>
         </button>
       </div>
-      <div class="modal-body">
+      <div class="modal-body loading">
+        <style>
+            #sendemailmodal .modal-body.loading .nsm-button,
+            #sendemailmodal .modal-body.loading .letters-wrapper {
+                display: none;
+            }
+            #sendemailmodal .modal-body:not(.loading) .letters-loader {
+                display: none !important;
+            }
+        </style>
         <div>
-            <div class="letters-wrapper">
+            <div class="nsm-callout d-none"></div>
+
+            <div class="letters-wrapper"></div>
+            <div class="letters-loader d-flex align-items-center justify-content-center" style="min-height: 200px;">
+                <div class="spinner-border" role="status"></div>
             </div>
+
             <button type="button" class="nsm-button primary w-100 ms-0">
                 <i class="bx bx-fw bx-send"></i> Send Welcome Email
             </button>

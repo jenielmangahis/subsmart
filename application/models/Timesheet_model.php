@@ -1573,6 +1573,31 @@ class Timesheet_model extends MY_Model
             $this->db->insert('timesheet_report_company_privacy_editor', $insert);
         }
     }
+
+    public function getResClockInPayDate($company_id){
+        $query = $this->db->get_where("timesheet_ClockInRes_PayDate", array('company_id'=> $company_id));
+
+        $data = new stdClass();
+        $data->result = $query->result();
+
+        return $data;
+    }
+
+    public function insertResClockInPayDate2($data){
+        $colum_id = 
+       $insert = [
+           'allow_5min' => $data['allow'],
+           'pay_date'   => $data['paydate'],
+           'company_id'  => logged('company_id'),
+           'date_created' => date("Y-m-d"),
+           'date_updated'  => date("Y-m-d")
+       ];
+
+       echo $insert['allow_5min'];
+        $query = $this->db->insert('timesheet_ClockInRes_PayDate',$insert);
+        
+    }
+
     public function get_timesheet_report_privacy($company_id)
     {
         $this->db->reset_query();

@@ -1972,7 +1972,7 @@ $(function() {
 
                         $('#checkModal #mailing_address').append(address.trim());
                     });
-                    break;
+                break;
                 case 'customer':
                     $.get('/accounting/get-customer-details/' + split[1], function(res) {
                         var customer = JSON.parse(res);
@@ -1996,7 +1996,7 @@ $(function() {
 
                         $('#checkModal #mailing_address').append(address.trim());
                     });
-                    break;
+                break;
                 case 'employee':
                     $.get('/accounting/get-employee-details/' + split[1], function(res) {
                         var employee = JSON.parse(res);
@@ -2014,7 +2014,7 @@ $(function() {
 
                         $('#checkModal #mailing_address').append(address.trim());
                     });
-                    break;
+                break;
             }
         }
     });
@@ -2234,25 +2234,31 @@ $(function() {
                         $.each(transactions, function(index, transaction) {
                             var title = transaction.type;
                             title += transaction.number !== '' ? '#' + transaction.number : '';
-                            $('#checkModal .modal-body .row .col-xl-2 .transactions-container .row').append(`
-                                <div class="col-12">
-                                    <div class="card border">
-                                        <div class="card-body p-0">
-                                            <h5 class="card-title">${title}</h5>
-                                            <p class="card-subtitle">${transaction.formatted_date}</p>
-                                            <p class="card-text">
-                                                <strong>Total</strong> ${transaction.total}
-                                                ${transaction.type === 'Purchase Order' ? '<br><strong>Balance</strong> '+transaction.balance : ''}
-                                            </p>
-                                            <ul class="d-flex justify-content-around">
-                                                <li><a href="#" class="text-info add-transaction" data-id="${transaction.id}" data-type="${transaction.data_type}"><strong>Add</strong></a></li>
-                                                <li><a href="#" class="text-info open-transaction" data-id="${transaction.id}" data-type="${transaction.data_type}">Open</a></li>
-                                            </ul>
+                            if($(`#checkModal input[name="linked_transaction[]"][value="${transaction.data_type.replace('-', '_')}-${transaction.id}"]`).length < 1) {
+                                $('#checkModal .modal-body .row .col-xl-2 .transactions-container .row').append(`
+                                    <div class="col-12">
+                                        <div class="card border">
+                                            <div class="card-body p-0">
+                                                <h5 class="card-title">${title}</h5>
+                                                <p class="card-subtitle">${transaction.formatted_date}</p>
+                                                <p class="card-text">
+                                                    <strong>Total</strong> ${transaction.total}
+                                                    ${transaction.type === 'Purchase Order' ? '<br><strong>Balance</strong> '+transaction.balance : ''}
+                                                </p>
+                                                <ul class="d-flex justify-content-around">
+                                                    <li><a href="#" class="text-info add-transaction" data-id="${transaction.id}" data-type="${transaction.data_type}"><strong>Add</strong></a></li>
+                                                    <li><a href="#" class="text-info open-transaction" data-id="${transaction.id}" data-type="${transaction.data_type}">Open</a></li>
+                                                </ul>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            `);
+                                `);
+                            }
                         });
+
+                        if($('#checkModal .transactions-container .row .col-12').length < 2) {
+                            $('#checkModal a.close-transactions-container').trigger('click');
+                        }
                     } else {
                         $('#checkModal .transactions-container').parent().remove();
                         $('#checkModal a.close-transactions-container').parent().remove();
@@ -2662,6 +2668,10 @@ $(function() {
                 $(this).parent().parent().parent().parent().parent().remove();
 
                 $('#modal-container #modal-form .modal .transactions-container .row div.col-12 .add-transaction[data-type="bill"]').each(function() {
+                    $(this).parent().parent().parent().parent().parent().remove();
+                });
+
+                $('#modal-container #modal-form .modal .transactions-container .row div.col-12 .add-transaction[data-type="vendor-credit"]').each(function() {
                     $(this).parent().parent().parent().parent().parent().remove();
                 });
             break;
@@ -3249,32 +3259,6 @@ $(function() {
                                 $('#expenseModal .attachments-container').parent().parent().remove();
                             }
 
-                            // if ($('#expenseModal .transactions-container').length > 0) {
-                            //     $('#expenseModal .transactions-container').parent().remove();
-                            //     $('#expenseModal a.close-transactions-container').parent().remove();
-                            //     $('#expenseModal a.open-transactions-container').parent().remove();
-                            // }
-
-                            // $('#expenseModal .modal-body .row .col .card .card-body').children('.row:first-child').prepend(`
-                            //     <div class="col-md-12 px-0 pb-2">
-                            //         <a href="#" class="float-right btn btn-transparent rounded-0 close-transactions-container" style="padding:12px 15px !important">
-                            //             <i class="fa fa-chevron-right"></i>
-                            //         </a>
-                            //     </div>
-                            // `);
-
-                            // $('#expenseModal .modal-body').children('.row').append(`
-                            //     <div class="col-xl-2">
-                            //         <div class="transactions-container bg-white h-100" style="padding: 15px">
-                            //             <div class="row">
-                            //                 <div class="col-12">
-                            //                     <h4>Add to Expense</h4>
-                            //                 </div>
-                            //             </div>
-                            //         </div>
-                            //     </div>
-                            // `);
-
                             $('#expenseModal .open-transactions-container').trigger('click');
                             $('#expenseModal .transactions-container .row .col-12:not(:first-child)').remove();
 
@@ -3282,7 +3266,11 @@ $(function() {
                                 var title = transaction.type;
                                 title += transaction.number !== '' ? '#' + transaction.number : '';
 
-                                if($(`#expenseModal input[name="linked_transaction[]"][value="${transaction.data_type.replace('-', '_')}-${transaction.id}"]`).length < 1) {
+                                if($('#expenseModal input[name="linked_transaction[]"]').length === 0 ||
+                                $('#expenseModal input[name="linked_transaction[]"]').length > 0 &&
+                                transaction.data_type !== 'bill' &&
+                                transaction.data_type !== 'vendor-credit' &&
+                                $(`#expenseModal input[name="linked_transaction[]"][value="${transaction.data_type.replace('-', '_')}-${transaction.id}"]`).length < 1) {
                                     $('#expenseModal .modal-body .row .col-xl-2 .transactions-container .row').append(`
                                         <div class="col-12">
                                             <div class="card border">
@@ -3319,6 +3307,27 @@ $(function() {
                         $(this).parent().parent().remove();
                     });
 
+                    if($('#checkModal #category-details-table tbody tr').length < rowCount) {
+                        var currentCount = $('#checkModal #category-details-table tbody tr').length;
+
+                        do {
+                            $('#checkModal #category-details-table tbody').append(`<tr>${catDetailsBlank}</tr>`);
+
+                            if($('#checkModal #linked-transaction').length > 0) {
+                                $('<td></td>').insertBefore('#checkModal #category-details-table tbody tr:last-child td:last-child');
+                            }
+                            
+                            currentCount++;
+                        } while(currentCount < rowCount);
+                    }
+
+                    var i = 1;
+                    $('#checkModal #category-details-table tbody tr').each(function() {
+                        $(this).find('td:nth-child(2)').html(i);
+
+                        i++;
+                    });
+
                     $(`#checkModal #item-details-table input[name="item_linked_transaction[]"][value="${data.type.replace('-', '_')}-${data.id}"]`).each(function() {
                         $(this).parent().parent().remove();
                     });
@@ -3327,8 +3336,9 @@ $(function() {
                         $(`#checkModal #linked-transaction`).next().find(`.unlink-transaction[data-type="${data.type}"][data-id="${data.id}"]`).parent().parent().remove();
                     } else {
                         $('#checkModal #linked-transaction').parent().remove();
-    
-                        $('#checkModal #item-table thead tr th:nth-child(9), #checkModal #item-details-table tbody tr td:nth-child(9)').remove();
+
+                        $('#checkModal #item-details-table thead tr th:nth-child(9), #checkModal #item-details-table tbody tr td:nth-child(9)').remove();
+                        $('#checkModal #category-details-table thead tr th:nth-child(11), #checkModal #category-details-table tbody tr td:nth-child(11)').remove();
                     }
 
                     $(`#checkModal input[name="linked_transaction[]"][value="${data.type.replace('-', '_')}-${data.id}"]`).remove();
@@ -3336,7 +3346,7 @@ $(function() {
                     if($('#checkModal input[name="linked_transaction[]"]').length > 0) {
                         if($('#checkModal input[name="linked_transaction[]"]').length > 1) {
                             var linkedCount = $('#checkModal input[name="linked_transaction[]"]').length;
-    
+
                             $('#checkModal #linked-transaction').html(`${linkedCount} linked Purchase Orders`);
                         } else {
                             $('#checkModal #linked-transaction').html(`1 linked Purchase Order`);
@@ -3344,6 +3354,59 @@ $(function() {
                     }
 
                     computeTransactionTotal();
+
+                    var payee = $('#checkModal #payee').val().split('-');
+
+                    $.get('/accounting/get-linkable-transactions/check/' + payee[1], function(res) {
+                        var transactions = JSON.parse(res);
+
+                        if (transactions.length > 0) {
+                            if($('#checkModal .attachments-container').length > 0) {
+                                $('#checkModal .attachments-container').parent().parent().remove();
+                            }
+
+                            $('#checkModal .open-transactions-container').trigger('click');
+                            $('#checkModal .transactions-container .row .col-12:not(:first-child)').remove();
+
+                            $.each(transactions, function(index, transaction) {
+                                var title = transaction.type;
+                                title += transaction.number !== '' ? '#' + transaction.number : '';
+
+                                if($('#checkModal input[name="linked_transaction[]"]').length === 0 ||
+                                $('#checkModal input[name="linked_transaction[]"]').length > 0 &&
+                                transaction.data_type !== 'bill' &&
+                                transaction.data_type !== 'vendor-credit' &&
+                                $(`#checkModal input[name="linked_transaction[]"][value="${transaction.data_type.replace('-', '_')}-${transaction.id}"]`).length < 1) {
+                                    $('#checkModal .modal-body .row .col-xl-2 .transactions-container .row').append(`
+                                        <div class="col-12">
+                                            <div class="card border">
+                                                <div class="card-body p-0">
+                                                    <h5 class="card-title">${title}</h5>
+                                                    <p class="card-subtitle">${transaction.formatted_date}</p>
+                                                    <p class="card-text">
+                                                        <strong>Total</strong> ${transaction.total}
+                                                        ${transaction.type === 'Purchase Order' ? '<br><strong>Balance</strong> '+transaction.balance : ''}
+                                                    </p>
+                                                    <ul class="d-flex justify-content-around">
+                                                        <li><a href="#" class="text-info add-transaction" data-id="${transaction.id}" data-type="${transaction.data_type}"><strong>Add</strong></a></li>
+                                                        <li><a href="#" class="text-info open-transaction" data-id="${transaction.id}" data-type="${transaction.data_type}">Open</a></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    `);
+                                }
+                            });
+
+                            if($('#checkModal .transactions-container .row .col-12').length < 2) {
+                                $('#checkModal a.close-transactions-container').trigger('click');
+                            }
+                        } else {
+                            $('#checkModal .transactions-container').parent().remove();
+                            $('#checkModal a.close-transactions-container').parent().remove();
+                            $('#checkModal a.open-transactions-container').parent().remove();
+                        }
+                    });
                 break;
             }
         // }
@@ -10669,8 +10732,6 @@ const viewTransaction = (el) => {
             break;
             case 'check' :
                 initModalFields('checkModal', data);
-
-                $('#checkModal #payee').trigger('change');
         
                 $('#checkModal').modal('show');
             break;

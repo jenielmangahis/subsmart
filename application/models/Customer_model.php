@@ -510,6 +510,22 @@ class Customer_model extends MY_Model
         $query = $this->db->get();
         return $query->row();
     }
+
+    public function update_ibiz_details($data)
+    {
+        extract($data);
+        $this->db->where('id', $id);
+        $query = $this->db->update('user_ibiz_items', array('value' => $value));
+        return $query;
+    }
+
+    // public function update_ibiz_phone($data)
+    // {
+    //     extract($data);
+    //     $this->db->where('id', $id);
+    //     $query = $this->db->update('user_ibiz_items', array('value' => $value));
+    //     return $query;
+    // }
 }
 
 /* End of file Customer_model.php */

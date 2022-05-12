@@ -68,11 +68,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
   width: 100%;
   height: 3%;
 }
-
 svg path {
   fill: white;
 }
-
 svg rect {
   fill:yellow;
 } */
@@ -114,18 +112,15 @@ svg rect {
   height:300px;
   margin-top:-60px;
 }
-
 .class2 {
   padding: 10px;
   height:570px;
 }
-
 div {
   font-family: monospace;
   font-size: 1.2rem;
   line-height: 1.2;
 }
-
 .class1 {
   color: white;
   margin: top -100px;;
@@ -803,12 +798,15 @@ filter:progid:DXImageTransform.Microsoft.Blur(PixelRadius='4');
         margin-bottom:300px;
     }
 }
+
 </style>
 <link href="<?php echo $url->assets ?>dashboard/css/bootstrap.min.css" rel="stylesheet" type="text/css">
 <link href="<?php echo $url->assets ?>dashboard/css/style.css" rel="stylesheet" type="text/css">
 <center>
 <div class="wrapperr">
-    
+<input type="text" class="txt_csrfname" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
+
+
     <!-- <div id="divCenter">
         <img class="presenter-print-logo" src="http://nsmartrac.com/assets/dashboard/images/logo.png">
     </div> -->
@@ -884,6 +882,8 @@ filter:progid:DXImageTransform.Microsoft.Blur(PixelRadius='4');
                 </div>
                 <div class="DetailFieldListstyled__DetailFieldList-card__sc-qm7vst-0 ekTSzS">
                     <ul class="list__List-card__sc-lvn7h3-0 DetailFieldListstyled__List-card__sc-qm7vst-4 cRUISb LBdET mdc-list">
+                        
+                    <?php if(!empty($ibizDetailsEmail->value)){ ?>
                         <li tabindex="0" class="mdc-ripple-upgraded list-item__ListItem-card__sc-at3t3c-0 DetailFieldListstyled__ListItem-card__sc-qm7vst-3 dCVzIo ctdqrQ mdc-list-item" style="--mdc-ripple-fg-size:264px; --mdc-ripple-fg-scale:1.72319; --mdc-ripple-fg-translate-start:-4.5px, -92px; --mdc-ripple-fg-translate-end:88px, -99px;">
                         <div class="DetailFieldListstyled__Actions-card__sc-qm7vst-2 ebBFBj">
                             <div class="DetailFieldListstyled__Action-card__sc-qm7vst-1 hAGdGL">
@@ -895,11 +895,15 @@ filter:progid:DXImageTransform.Microsoft.Blur(PixelRadius='4');
                         </div>
                         <span class="list-item-text__ListItemText-card__sc-rsuhfo-0 DetailFieldListstyled__Text-card__sc-qm7vst-7 xOpuC NujKS mdc-list-item__text">
                             <!-- <span class="list-item-primary-text__ListItemPrimaryText-card__sc-12r6697-0 DetailFieldListstyled__PrimaryText-card__sc-qm7vst-5 iXgqFV kShkXS mdc-list-item__primary-text"> -->
-                            <input class="form-control kShkXS" type="text" value="<?php echo $ibizDetailsEmail->value; ?>" style="border: 0px none;margin-bottom: -10px;">
+                            <input class="form-control kShkXS email_update" type="text" value="<?php echo $ibizDetailsEmail->value; ?>" style="border: 0px none;margin-bottom: -10px;">
+                            <input class="email_update_id" type="hidden" value="<?php echo $ibizDetailsEmail->id; ?>">
                             <span class="labelUnder">Email</span>
                             <!-- </span> -->
                         </span>
-                        </li><br>
+                        </li>
+                        <?php } ?>
+                        <?php if(!empty($ibizDetailsPh->value)){ ?>
+                        <br>
                         <li tabindex="0" class="mdc-ripple-upgraded list-item__ListItem-card__sc-at3t3c-0 DetailFieldListstyled__ListItem-card__sc-qm7vst-3 dCVzIo ctdqrQ mdc-list-item">
                             <div class="DetailFieldListstyled__Actions-card__sc-qm7vst-2 ebBFBj">
                                 <div class="DetailFieldListstyled__Action-card__sc-qm7vst-1 hAGdGL">
@@ -912,11 +916,15 @@ filter:progid:DXImageTransform.Microsoft.Blur(PixelRadius='4');
                             </div>
                             <span class="list-item-text__ListItemText-card__sc-rsuhfo-0 DetailFieldListstyled__Text-card__sc-qm7vst-7 xOpuC NujKS mdc-list-item__text">
                                 <!-- <span class="list-item-primary-text__ListItemPrimaryText-card__sc-12r6697-0 DetailFieldListstyled__PrimaryText-card__sc-qm7vst-5 iXgqFV kShkXS mdc-list-item__primary-text"> -->
-                                <input class="form-control kShkXS" type="text" value="<?php echo $ibizDetailsPh->value; ?>" style="border: 0px none;margin-bottom: -10px;">
+                                <input class="form-control kShkXS phone_update" type="text" value="<?php echo $ibizDetailsPh->value; ?>" style="border: 0px none;margin-bottom: -10px;">
+                                <input class="phone_update_id" type="hidden" value="<?php echo $ibizDetailsPh->id; ?>">
                                 <span class="labelUnder">Phone</span>
                                 <!-- </span> -->
                             </span>
-                        </li><br>
+                        </li>
+                        <?php } ?>
+                        <?php if(!empty($ibizDetailsAdd->value)){ ?>
+                        <br>
                         <li tabindex="0" class="mdc-ripple-upgraded list-item__ListItem-card__sc-at3t3c-0 DetailFieldListstyled__ListItem-card__sc-qm7vst-3 dCVzIo ctdqrQ mdc-list-item">
                             <div class="DetailFieldListstyled__Actions-card__sc-qm7vst-2 ebBFBj">
                                 <div class="DetailFieldListstyled__Action-card__sc-qm7vst-1 hAGdGL">
@@ -930,11 +938,13 @@ filter:progid:DXImageTransform.Microsoft.Blur(PixelRadius='4');
                             </div>
                             <span class="list-item-text__ListItemText-card__sc-rsuhfo-0 DetailFieldListstyled__Text-card__sc-qm7vst-7 xOpuC NujKS mdc-list-item__text">
                                 <!-- <textarea class="list-item-primary-text__ListItemPrimaryText-card__sc-12r6697-0 DetailFieldListstyled__PrimaryText-card__sc-qm7vst-5 iXgqFV kShkXS mdc-list-item__primary-text"  style="border: 0px none;"> -->
-                                <input class="form-control kShkXS" type="text" value="<?php echo $ibizDetailsAdd->value; ?>" style="border: 0px none;margin-bottom: -10px;">
+                                <input class="form-control kShkXS address_update" type="text" value="<?php echo $ibizDetailsAdd->value; ?>" style="border: 0px none;margin-bottom: -10px;">
+                                <input class="address_update_id" type="hidden" value="<?php echo $ibizDetailsAdd->id; ?>">
                                 <span class="labelUnder">Address</span>
                                 <!-- </textarea> -->
                             </span>
                         </li>
+                        <?php } ?>
                     </ul>
                     <br>
                 </div>
@@ -1053,4 +1063,89 @@ $(".close").click(function()
 //     $('#closemodal').click(function() {
 //     $('#myModal').modal('hide');
 // });
+var csrfName = $('.txt_csrfname').attr('name'); // Value specified in $config['csrf_token_name']
+var csrfHash = $('.txt_csrfname').val(); // CSRF hash
+
+
+$('.email_update').focusout(function(e) {
+    e.preventDefault();
+    
+var emailID =  $('.email_update_id').val();
+var valueEml = $('.email_update').val();
+
+// alert(valueEml);
+        $.ajax({
+            type : 'POST',
+            url : "<?php echo base_url(); ?>PublicView/update_email",
+            dataType: "json",
+            data : {emailID: emailID, valueEml : valueEml},
+            success: function(result){
+            // $('#res').html('Signature Uploaded successfully');
+            // console.log(dataURL)
+            alert('Successfully Updated the Email!');
+            // console.log(result);
+            // location.reload();
+            
+            },
+            error: (error) => {
+                            console.log(JSON.stringify(error));
+        }
+    });
+
+});
+
+$('.phone_update').focusout(function(e) {
+    e.preventDefault();
+    
+var phoneID =  $('.phone_update_id').val();
+var valuePh = $('.phone_update').val();
+
+// alert(valueEml);
+        $.ajax({
+            type : 'POST',
+            url : "<?php echo base_url(); ?>PublicView/update_phone",
+            dataType: "json",
+            data : {phoneID: phoneID, valuePh : valuePh},
+            success: function(result){
+            // $('#res').html('Signature Uploaded successfully');
+            // console.log(dataURL)
+            alert('Successfully Updated the Phone!');
+            console.log(result);
+            // location.reload();
+            
+            },
+            error: (error) => {
+                            console.log(JSON.stringify(error));
+        }
+    });
+
+});
+
+$('.address_update').focusout(function(e) {
+    e.preventDefault();
+    
+var addressID =  $('.address_update_id').val();
+var valueAdd = $('.address_update').val();
+
+// alert(valueEml);
+        $.ajax({
+            type : 'POST',
+            url : "<?php echo base_url(); ?>PublicView/update_address",
+            dataType: "json",
+            data : {addressID: addressID, valueAdd : valueAdd},
+            success: function(result){
+            // $('#res').html('Signature Uploaded successfully');
+            // console.log(dataURL)
+            alert('Successfully Updated the Address!');
+            console.log(result);
+            // location.reload();
+            
+            },
+            error: (error) => {
+                            console.log(JSON.stringify(error));
+        }
+    });
+
+});
 </script>
+
