@@ -2762,13 +2762,16 @@ class Customer extends MY_Controller
 
     public function send_welcome_email() {
         
+        $payload = json_decode(file_get_contents('php://input'), true);
+        ['customer_email' => $customerEmail, 'letter_id' => $letterId] = $payload;
+ 
         //Email Sending
         $server    = MAIL_SERVER;
         $port      = MAIL_PORT ;
         $username  = MAIL_USERNAME;
         $password  = MAIL_PASSWORD;
         $from      = MAIL_FROM;
-        $recipient = $_POST['email_address'];
+        $recipient = $customerEmail;
         $subject = 'Welcome to nSmaTrac';
 
         $params = array();

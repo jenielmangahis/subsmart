@@ -1512,4 +1512,68 @@ SQL;
         header('content-type: application/json');
         echo json_encode(['data' => $disputeData]);
     }
+
+    public function apiGetEmailTemplates()
+    {
+        header('content-type: application/json');
+
+        $categoryName = 'Email Templates';
+        $companyId = logged('company_id');
+
+        $this->db->select('id');
+        $this->db->where('name', $categoryName);
+        $category = $this->db->get('esign_editor_categories')->row();
+
+        if (!$category) {
+            echo json_encode(['data' => [], 'message' => $categoryName . ' category not found.']);
+            return;
+        }
+
+        $this->db->select('id');
+        $this->db->where('company_id', $companyId);
+        $companyUserIds = $this->db->get('users')->result();
+        $companyUserIds = array_column($companyUserIds, 'id');
+
+        $this->db->select('l.id, l.title, l.category_id, l.user_id, IF(d.letter_id = l.id, 1, 0) AS is_default', false);
+        $this->db->from('esign_editor_letters l');
+        $this->db->where('l.is_active', 1);
+        $this->db->where('c.id', $category->id);
+        $this->db->or_group_start();
+        $this->db->where('l.user_id', null);
+        $this->db->where_in('l.user_id', $companyUserIds);
+        $this->db->group_end();
+        $this->db->join('esign_editor_categories c', 'l.category_id = c.id', 'left');
+        $this->db->join('esign_editor_default_email_letters d', 'd.company_id = ' . $companyId, 'left');
+        $this->db->order_by('l.id', 'ASC');
+        $query = $this->db->get();
+        $letters = $query->result();
+
+        echo json_encode(['data' => $letters]);
+    }
+
+    public function apiSetDefaultEmailTemplate()
+    {
+        header('content-type: application/json');
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['success' => false]);
+            return;
+        }
+
+        $companyId = logged('company_id');
+        $payload = json_decode(file_get_contents('php://input'), true);
+
+        $this->db->where('company_id', $companyId);
+        $currDefault = $this->db->get('esign_editor_default_email_letters')->row();
+
+        if ($currDefault) {
+            $this->db->where('id', $currDefault->id);
+            $this->db->update('esign_editor_default_email_letters', $payload);
+        } else {
+            $this->db->insert('esign_editor_default_email_letters', array_merge(
+                $payload, ['company_id' => $companyId]
+            ));
+        }
+
+        echo json_encode(['data' => $payload]);
+    }
 }

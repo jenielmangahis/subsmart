@@ -7,6 +7,12 @@
         <i class="bx bx-plus"></i>
     </div>
     <ul class="nsm-fab-options">
+        <li onclick="location.href='<?php echo base_url('taskhub/entry') ?>'">
+            <div class="nsm-fab-icon">
+                <i class="bx bx-task"></i>
+            </div>
+            <span class="nsm-fab-label">New Task</span>
+        </li>
         <li onclick="location.href='<?php echo base_url('customer/add_advance') ?>'">
             <div class="nsm-fab-icon">
                 <i class="bx bx-user-plus"></i>
@@ -53,6 +59,9 @@
 </div>
 <div class="row nsm-page-buttons page-content g-0">
     <div class="col-12 grid-mb text-end">
+        <button type="button" class="nsm-button" onclick="location.href='<?php echo base_url('taskhub/entry') ?>'">
+            <i class='bx bx-fw bx-task'></i> New Task
+        </button>
         <button type="button" class="nsm-button" onclick="location.href='<?php echo base_url('customer/add_advance') ?>'">
             <i class='bx bx-fw bx-user-plus'></i> Add Customer
         </button>
@@ -90,7 +99,7 @@
                         $data['class'] = 'nsm-card nsm-grid large';
                         
                     }else{
-                        $data['class'] = 'nsm-card nsm-grid med';
+                        $data['class'] = 'nsm-card nsm-grid med primary';
                         echo '<div class="col-12 col-lg-4" id="droppable">';
                         
                     }

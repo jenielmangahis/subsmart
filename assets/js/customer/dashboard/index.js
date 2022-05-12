@@ -1,16 +1,13 @@
+import * as api from "./api.js";
+import * as common from "./common.js";
+
 window.document.addEventListener("DOMContentLoaded", async () => {
-  const api = await import("./api.js");
-  window.__customermodule_api = api;
-
-  import("./docu.js");
-  import("./office.js");
-
-  const customerId = getCustomerId();
+  const customerId = common.getCustomerId();
   const response = await api.getCustomerActions(customerId);
   const { data: customerActions } = response;
 
-  const customer = await api.getCustomerById(customerId);
-  window.__customermodule_customer = customer.data;
+  import("./docu.js");
+  import("./office.js");
 
   const $fragment = document.createDocumentFragment();
   customerActions.forEach((action) => {
@@ -80,7 +77,7 @@ function createActionItem(action) {
 }
 
 async function handleSwitchChange(event, action) {
-  const customerId = getCustomerId();
+  const customerId = common.getCustomerId();
   const $container = document.getElementById("customerquickactions");
   const $wrapper = $container.querySelector(".actions-wrapper");
   const $emptyMessage = $container.querySelector(".empty-message");
@@ -88,7 +85,7 @@ async function handleSwitchChange(event, action) {
   let $button = $wrapper.querySelector(`[data-id="${action.id}"]`);
 
   if (!event.target.checked) {
-    window.__customermodule_api.deleteAction({
+    api.deleteAction({
       customer_id: customerId,
       acs_dashboard_quick_actions_id: action.id,
     });
@@ -110,7 +107,7 @@ async function handleSwitchChange(event, action) {
   }
 
   $emptyMessage.classList.add("d-none");
-  window.__customermodule_api.createAction({
+  api.createAction({
     customer_id: customerId,
     acs_dashboard_quick_actions_id: action.id,
   });
@@ -134,7 +131,7 @@ function createActionButton(action) {
     text-overflow: ellipsis;
   `;
 
-  $button.addEventListener("click", (event) => {
+  $button.addEventListener("click", async (event) => {
     if (!action.url || !action.url.trim().length) return;
 
     if (isSelectorValid(action.url)) {
@@ -146,7 +143,7 @@ function createActionButton(action) {
       }
     }
 
-    const { prof_id, email } = window.__customermodule_customer;
+    const { prof_id, email } = await common.getCustomerUser();
     let location = `${action.url}`.replace(":customerid", prof_id);
     location = location.replace(":customeremail", email);
     // window.location = location;
@@ -154,10 +151,6 @@ function createActionButton(action) {
   });
 
   return $button;
-}
-
-function getCustomerId() {
-  return window.location.pathname.split("/").at(-1);
 }
 
 // https://stackoverflow.com/a/43467144/8062659

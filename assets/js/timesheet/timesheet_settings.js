@@ -63,6 +63,50 @@ $(document).ready(function() {
         event.preventDefault();
     });
 
+    $("#est_wage_privacy2").change(function() {
+
+
+        if ($("#est_wage_privacy2").is(":checked")) {
+            $("#est_wage_privacy2").val(1);
+        } else {
+            $("#est_wage_privacy2").val(0);
+        }
+
+    })
+    $.ajax({
+        type: "POST",
+        url: baseURL + "/timesheet/getResClockInPayDate",
+        data: {},
+        dataType: "json",
+        success: function(data) {
+            if (data != null) {
+                if (data[0]['allow_5min'] == 0) {
+                    $("#est_wage_privacy2").is(':checked');
+
+                }
+                $(".Payday").val(data[0]['pay_date']);
+            }
+        },
+    });
+
+    $("#submit").on("click", function() {
+        console.log($("#est_wage_privacy2").val());
+        console.log($(".Payday").val());
+
+        $.ajax({
+            type: "POST",
+            url: baseURL + "/timesheet/insertResClockInPayDate",
+            data: {
+                allow: $("#est_wage_privacy2").val(),
+                paydate: $(".Payday").val(),
+            },
+            dataType: "json",
+            success: function(data) {},
+        });
+
+
+    })
+
     $("#tz_display_name").change(function() {
         $("#tz_id_of_tz").val($("#tz_id_" + $("#tz_display_name").val()).val());
         $.ajax({
@@ -182,6 +226,7 @@ $(document).ready(function() {
 
     function subcribe_weekly_report_changed() {
         if ($("#subcribe_weekly_report").is(":checked")) {
+
             $(".report_series_div").show();
         } else {
             $(".report_series_div").hide();

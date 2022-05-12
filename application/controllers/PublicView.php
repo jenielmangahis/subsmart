@@ -55,4 +55,45 @@ class PublicView extends MY_P_Controller
 
         $this->load->view('customer/customer_ibiz', $this->page_data);
     }
+
+    public function update_email()
+    {
+        $emailID = $this->input->post('emailID');
+
+        $update_data = array(
+            'id'          => $this->input->post('emailID'),
+            'value'       => $this->input->post('valueEml'),
+        );
+
+        $addQuery = $this->customer_model->update_ibiz_details($update_data);
+        
+        // echo $emailID;
+        echo json_encode($addQuery);
+    }
+
+    public function update_phone()
+    {
+
+        $update_data = array(
+            'id'          => $this->input->post('phoneID'),
+            'value'       => $this->input->post('valuePh'),
+        );
+
+        $addQuery = $this->customer_model->update_ibiz_details($update_data);
+        
+        echo json_encode($addQuery);
+    }
+
+    public function update_address()
+    {
+
+        $update_data = array(
+            'id'          => $this->input->post('addressID'),
+            'value'       => $this->input->post('valueAdd'),
+        );
+
+        $addQuery = $this->customer_model->update_ibiz_details($update_data);
+        
+        echo json_encode($addQuery);
+    }
 }

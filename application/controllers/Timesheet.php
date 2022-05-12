@@ -241,6 +241,17 @@ class Timesheet extends MY_Controller
 
         $this->load->view('users/tracklocation', $this->page_data);
     }
+    public function getResClockInPayDate(){
+        $this->timesheet_mode->getResClockInPayDate(logged('company_id'));
+    }
+
+    public function insertResClockInPayDate(){
+        $data = $this->input->post();
+        
+        $this->timesheet_model->insertResClockInPayDate2($data);
+       
+        
+    }
 
     public function index()
     {

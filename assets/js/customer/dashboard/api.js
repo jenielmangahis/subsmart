@@ -77,6 +77,21 @@ export function updateCustomerDocument(payload) {
   );
 }
 
+export function getEmailTemplates() {
+  return http.get(`${prefixURL}/EsignEditor/apiGetEmailTemplates`);
+}
+
+export function setDefaultEmailTemplate(payload) {
+  return http.post(
+    `${prefixURL}/EsignEditor/apiSetDefaultEmailTemplate`,
+    payload
+  );
+}
+
+export function sendWelcomeEmail(payload) {
+  return http.post(`${prefixURL}/customer/send_welcome_email`, payload);
+}
+
 const http = {
   post: sendPost,
   delete: sendDelete,
