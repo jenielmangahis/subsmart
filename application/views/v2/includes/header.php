@@ -30,6 +30,8 @@ if ($this->session->userdata('usertimezone') == null) {
     <link href="<?= base_url("assets/css/v2/google-font.css") ?>" rel="stylesheet">
     <!-- Sweet Alert --> 
     <link rel="stylesheet" href="<?= base_url("assets/css/v2/sweetalert2.min.css") ?>">
+    <!-- Select2 -->
+    <link rel="stylesheet" href="<?= base_url("assets/plugins/select2/dist/css/select2.min.css") ?>" />
     <!-- Datepicker -->
     <link rel="stylesheet" href="<?= base_url("assets/css/v2/bootstrap-datepicker.min.css") ?>">
 

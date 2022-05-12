@@ -15,6 +15,7 @@ class Taskhub_model extends MY_Model {
         $this->db->join('tasks_status','tasks.status_id = tasks_status.status_id','right');
         $this->db->where('tasks.company_id', $company_id);
         $this->db->order_by('priority','DESC');
+        $this->db->order_by('tasks.task_id','DESC');
         return $this->db->get('tasks')->result();
     }
 
@@ -38,6 +39,20 @@ class Taskhub_model extends MY_Model {
         $this->db->from($this->table);
 
         $this->db->where('tasks.company_id', $company_id);
+        $this->db->order_by('tasks.date_created','DESC');
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function getAllByStatusId($status_id)
+    {
+        $id = $user_id;
+        $this->db->select('tasks.*, tasks_status.status_text, tasks_status.status_color, CONCAT(acs_profile.first_name," ",acs_profile.last_name)AS customer_name');
+        $this->db->join('tasks_status','tasks.status_id = tasks_status.status_id','left');
+        $this->db->join('acs_profile','tasks.prof_id = acs_profile.prof_id', 'left');
+        $this->db->from($this->table);
+
+        $this->db->where('tasks.status_id', $status_id);
         $this->db->order_by('tasks.date_created','DESC');
         $query = $this->db->get();
         return $query->result();
@@ -150,6 +165,18 @@ class Taskhub_model extends MY_Model {
         $this->db->order_by('tasks.date_created','DESC');
         $query = $this->db->get();
         return $query->result();
+    }
+
+    public function updateByTaskId($task_id, $data)
+    {
+        $this->db->from($this->table);
+        $this->db->set($data);
+        $this->db->where('task_id', $task_id);
+        $this->db->update();
+    }
+
+    public function deleteByTaskId($task_id){
+        $this->db->delete($this->table, array('task_id' => $task_id));
     }
         
 }

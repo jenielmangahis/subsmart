@@ -249,8 +249,7 @@ class Dashboard extends Widgets {
             'table' => 'news',
             'select' => '*',
         );
-        $this->page_data['news'] = $this->general->get_data_with_param($news_query);
-
+        $this->page_data['news'] = $this->general->get_data_with_param($news_query);        
         // $this->load->view('dashboard', $this->page_data);
         $this->load->view('dashboard_v2', $this->page_data);
     }

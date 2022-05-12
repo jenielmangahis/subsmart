@@ -401,5 +401,88 @@ class Taskhub extends MY_Controller {
 
 		echo json_encode($result);
 	}
+
+	public function ajax_load_company_list()
+	{
+		$this->load->model('Taskhub_model');
+        $this->load->model('Business_model');
+        $this->load->model('Taskhub_status_model');       
+
+        $cid = logged('company_id');
+        $tasksHub = $this->Taskhub_model->getAllByCompanyId($cid);
+
+        $this->page_data['taskStatus'] = $this->Taskhub_status_model->get();
+        $this->page_data['tasksHub'] = $tasksHub;                
+        $this->load->view('workcalender/taskhub/ajax_load_company_list', $this->page_data);
+	}
+
+	public function ajax_add_new_task()
+	{
+		$this->load->model('Taskhub_status_model');
+		$this->load->model('Users_model');
+        $this->load->model('AcsProfile_model');
+
+        $cid = logged('company_id');
+		$companyCustomers = $this->AcsProfile_model->getAllByCompanyId($cid);
+        $companyUsers     = $this->Users_model->getCompanyUsers($cid);
+
+        $this->page_data['taskStatus'] = $this->Taskhub_status_model->get();
+        $this->page_data['companyCustomers'] = $companyCustomers;
+        $this->page_data['companyUsers'] = $companyUsers;        
+        $this->load->view('workcalender/taskhub/ajax_add_new_task', $this->page_data);
+	}
+
+	public function ajax_save_task()
+	{
+		$this->load->model('Taskhub_model');
+        $this->load->model('Taskhub_participants_model');
+        $this->load->model('Taskhub_status_model');   
+
+        $cid = logged('company_id');
+        $uid = logged('id');
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $post = $this->input->post();  
+
+        if( $post['subject'] != '' ){
+            $taskStatus = $this->Taskhub_status_model->getById($post['status']);
+            $task_data = [
+                'prof_id' => $post['customer_id'],
+                'subject' => $post['subject'],
+                'description' => $post['description'],
+                'created_by' => $uid,
+                'date_created' => date('Y-m-d h:i:s'),
+                'estimated_date_complete' => date('Y-m-d', strtotime($post['estimated_date_complete'])),
+                'actual_date_complete' => '',
+                'task_color' => $taskStatus->status_color,
+                'status_id' => $taskStatus->status_id,
+                'priority' => 'low',
+                'company_id' => $cid,
+                'view_count' => 0
+            ];
+
+            $taskId = $this->Taskhub_model->create($task_data);
+
+            $data_participant = [
+                'task_id' => $taskId,
+                'user_id' => $post['user_id'],
+                'is_assigned' => 1
+            ];
+
+            $this->Taskhub_participants_model->create($data_participant);
+
+            $is_success = 1;
+            $msg = '';
+
+        }else{
+            $msg = 'Please enter subject';
+        }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+
+        echo json_encode($json_data);  
+	}
 }
 ?>
