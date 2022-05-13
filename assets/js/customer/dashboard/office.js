@@ -70,5 +70,22 @@ $($modal).on("show.bs.modal", async function () {
   });
 
   $wrapper.appendChild($fragment);
+
+  if (!$wrapper.querySelector(".form-check-input:checked")) {
+    $wrapper.querySelector(".form-check-input").checked = true;
+  }
+
+  if ($wrapper.childElementCount) {
+    $submitBtn.classList.remove("d-none");
+  } else {
+    $submitBtn.classList.add("d-none");
+    $wrapper.innerHTML = `
+      <div class="nsm-empty" style="height: 200px;">
+        <i class="bx bx-meh-blank"></i>
+        <span>Your email template is empty, click <a target="_blank" href="${api.prefixURL}/EsignEditor/create">here</a> to create.</span>
+      </div>
+    `;
+  }
+
   $body.classList.remove("loading");
 });
