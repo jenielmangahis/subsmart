@@ -60,12 +60,14 @@ $(document).ready(function() {
             // data:{clock_in:clock_in},
             success: function(data) {
 
-                if (data != null) {
+                if (data != "") {
+                    console.log(data);
                     let day = new Date();
-                    let dayShift = new Date(data[0]["shift_start"]);
+                    let dayShift = new Date(data.attend[0]["shift_start"]);
+                    console.log(day);
                     let numberOfMinutes = dayShift.getMinutes() - day.getMinutes();
                     console.log(numberOfMinutes);
-                    if (day.getHours() == dayShift.getHours() && numberOfMinutes <= 5) {
+                    if (day.getHours() == dayShift.getHours() && numberOfMinutes <= 5 && day == data.attend[0]['shift_date']) {
                         let selected = this;
                         Swal.fire({
                             title: "Clock in?",
@@ -156,7 +158,7 @@ $(document).ready(function() {
                             showConfirmButton: false,
                             timer: 2000,
                             title: "NOTICE",
-                            html: "You're " + numberOfMinutes + " minutes early :>",
+                            html: "You're " + numberOfMinutes + " minutes early <br> Try clocking in 5 minute earlier according to your schedule",
                             icon: "info",
                         });
                     }

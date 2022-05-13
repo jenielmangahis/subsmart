@@ -23,22 +23,24 @@ endif;
     </div>
     <div class="nsm-card-content">
         <div class="nsm-widget-table">
+            <?php foreach($acct_banks as $bank){ ?>
             <div class="widget-item">
                 <div class="nsm-list-icon">
                     <i class='bx bx-building-house'></i>
                 </div>
                 <div class="content ms-2">
                     <div class="details">
-                        <span class="content-title mb-1">Corporate Account (XXXXXX 5850)</span>
-                        <span class="content-subtitle d-block">Bank balance: $5,741.11</span>
-                        <span class="content-subtitle d-block">In nSmartrac: $-7,049.40</span>
+                        <span class="content-title mb-1"><?php echo $bank->account_name; ?></span>
+                        <span class="content-subtitle d-block">Bank balance: $0.00</span>
+                        <span class="content-subtitle d-block">In nSmartrac: $0.00</span>
                     </div>
                     <div class="controls">
-                        <span class="nsm-badge">Updated 1 day ago</span>
+                        <span class="nsm-badge">Updated <!--1 day ago --></span>
                     </div>
                 </div>
             </div>
-            <div class="widget-item">
+            <?php } ?>
+            <!-- <div class="widget-item">
                 <div class="nsm-list-icon">
                     <i class='bx bx-wallet'></i>
                 </div>
@@ -66,7 +68,7 @@ endif;
                     <div class="controls">
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
 </div>

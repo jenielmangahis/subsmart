@@ -1534,7 +1534,7 @@ SQL;
         $companyUserIds = $this->db->get('users')->result();
         $companyUserIds = array_column($companyUserIds, 'id');
 
-        $this->db->select('l.id, l.title, l.category_id, l.user_id, IF(d.letter_id = l.id, 1, 0) AS is_default', false);
+        $this->db->select('l.id, l.title, l.category_id, l.user_id, IF(d.welcome_email_default = l.id, 1, 0) AS is_default', false);
         $this->db->from('esign_editor_letters l');
         $this->db->where('l.is_active', 1);
         $this->db->where('c.id', $category->id);
@@ -1543,10 +1543,22 @@ SQL;
         $this->db->where_in('l.user_id', $companyUserIds);
         $this->db->group_end();
         $this->db->join('esign_editor_categories c', 'l.category_id = c.id', 'left');
-        $this->db->join('esign_editor_default_email_letters d', 'd.company_id = ' . $companyId, 'left');
+        $this->db->join('acs_company_dash_settings d', 'd.comp_id = ' . $companyId, 'left');
         $this->db->order_by('l.id', 'ASC');
         $query = $this->db->get();
         $letters = $query->result();
+
+        $hasDefault = false;
+        foreach ($letters as $letter) {
+            if ($letter->is_default == 1) {
+                $hasDefault = true;
+            }
+        }
+
+        if (!$hasDefault && !empty($letters)) {
+            $this->createOrUpdateDefaultEmailTemplate($letters[0]->id);
+            $letters[0]->is_default = 1;
+        }
 
         echo json_encode(['data' => $letters]);
     }
@@ -1559,21 +1571,29 @@ SQL;
             return;
         }
 
-        $companyId = logged('company_id');
         $payload = json_decode(file_get_contents('php://input'), true);
+        ['letter_id' => $letterId] = $payload;
 
-        $this->db->where('company_id', $companyId);
-        $currDefault = $this->db->get('esign_editor_default_email_letters')->row();
+        $this->createOrUpdateDefaultEmailTemplate($letterId);
+        echo json_encode(['data' => $payload]);
+    }
+
+    private function createOrUpdateDefaultEmailTemplate($letterId)
+    {
+        $companyId = logged('company_id');
+        $this->db->where('comp_id', $companyId);
+        $currDefault = $this->db->get('acs_company_dash_settings')->row();
 
         if ($currDefault) {
             $this->db->where('id', $currDefault->id);
-            $this->db->update('esign_editor_default_email_letters', $payload);
+            $this->db->update('acs_company_dash_settings', [
+                'welcome_email_default' => $letterId,
+            ]);
         } else {
-            $this->db->insert('esign_editor_default_email_letters', array_merge(
-                $payload, ['company_id' => $companyId]
-            ));
+            $this->db->insert('acs_company_dash_settings', [
+                'comp_id' => $companyId,
+                'welcome_email_default' => $letterId,
+            ]);
         }
-
-        echo json_encode(['data' => $payload]);
     }
 }

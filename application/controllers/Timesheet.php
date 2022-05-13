@@ -241,17 +241,96 @@ class Timesheet extends MY_Controller
 
         $this->load->view('users/tracklocation', $this->page_data);
     }
-    public function getResClockInPayDate(){
-        $this->timesheet_mode->getResClockInPayDate(logged('company_id'));
+
+
+    public function getData()
+    {
+        $query = $this->timesheet_model->getData(logged('company_id'));
+        $query2 = $this->timesheet_model->getLastResClockInPayDateLogs_allow(logged('company_id'));
+        $query4 = $this->timesheet_model->getLastResClockInPayDateLogs_payday(logged('company_id'));
+        $query3 = $this->timesheet_model->getUsersAccordingToLogs();
+        foreach($query2 as $res){
+            $last_update = date("M d, Y h:i A",strtotime($this->datetime_zone_converter($res->date_created, "UTC", $this->session->userdata('usertimezone'))));
+        }
+        foreach($query4 as $res2){
+            $last_update2= date("M d, Y h:i A",strtotime($this->datetime_zone_converter($res2->date_created, "UTC", $this->session->userdata('usertimezone'))));
+        }
+        
+        
+        $data = new stdClass();
+        $data->result = $query;
+        $data->recent = $query2;
+        $data->user   = $query3;
+        $data->recent2 = $query4;
+        $data->last_update   = $last_update;
+        $data->last_update2  = $last_update2;
+        echo json_encode($data);
+    }
+    public function getResClockInPayDate()
+    {
+        $query = $this->timesheet_model->getResClockInPayDate(logged('company_id'));
+        // var_dump($query);
+        return $query;
+    }
+   
+    public function insertResClockInPayDate_allow(){
+        $data = $this->input->post();
+
+        $query = $this->getResClockInPayDate();
+
+
+        if($query != null){
+            $this->timesheet_model->updateResClockInPayDate_allow($data);
+            $date_created = $this->timesheet_model->insertResClockInPayDateLogs_allow();
+        }else{
+            $this->timesheet_model->insertResClockInPayDate_allow($data);
+            $date_created= $this->timesheet_model->insertResClockInPayDateLogs_allow();
+        }
+
+        $query2 = $this->timesheet_model->getLastResClockInPayDateLogs_allow(logged('company_id'));
+        $query3 = $this->timesheet_model->getUsersAccordingToLogs();
+        foreach($query2 as $res){
+            $last_update = date("M d, Y h:i A",strtotime($this->datetime_zone_converter($date_created, "UTC", $this->session->userdata('usertimezone'))));
+        }
+        
+        $data= new stdClass();
+        $data->recent = $query2;
+        $data->user   = $query3;
+        $data->last_update   = $last_update;
+
+        echo json_encode($data);
     }
 
-    public function insertResClockInPayDate(){
+    public function insertResClockInPayDate()
+    {
         $data = $this->input->post();
+
+        $query = $this->getResClockInPayDate();
+
+        if ($query != null) {
+            $this->timesheet_model->updateResClockInPayDate($data);
+            $date_created= $this->timesheet_model-> insertResClockInPayDateLogs_paydate();
+        } else {
+            $this->timesheet_model->insertResClockInPayDate_paydate($data);
+            $date_created=$this->timesheet_model-> insertResClockInPayDateLogs_paydate();
+        }
+
+        $query2 = $this->timesheet_model->getLastResClockInPayDateLogs_payday(logged('company_id'));
+        $query3 = $this->timesheet_model->getUsersAccordingToLogs();
+        foreach($query2 as $res){
+            $last_update = date("M d, Y h:i A",strtotime($this->datetime_zone_converter($date_created, "UTC", $this->session->userdata('usertimezone'))));
+        }
         
-        $this->timesheet_model->insertResClockInPayDate2($data);
-       
-        
+        $data= new stdClass();
+        $data->recent = $query2;
+        $data->user   = $query3;
+        $data->last_update   = $last_update;
+
+        echo json_encode($data);
+
     }
+
+
 
     public function index()
     {
@@ -1965,13 +2044,15 @@ class Timesheet extends MY_Controller
         $pusher->trigger('nsmarttrac', 'my-event', $data);
     }
 
-    public function getShiftSchedule(){
-       $query =$this->timesheet_model->getShiftSchedule();
-       
-       $data = new stdClass();
-       $data->attend = $query;
+    public function getShiftSchedule()
+    {
+        $query = $this->timesheet_model->getShiftSchedule();
+        $query2 = $this->timesheet_model->getData(logged('company_id'));
+        $data = new stdClass();
+        $data->attend = $query;
+        $data->resClock = $query2;
 
-       return $data;
+        echo json_encode($data);
     }
 
     public function clockInEmployee()
@@ -3397,9 +3478,9 @@ class Timesheet extends MY_Controller
         $difference += ($interval->i) * 60;
         $difference += $interval->s;
         if ($late_checker) {
-            if($date_start > $date_end){
+            if ($date_start > $date_end) {
                 return 0;
-            }else{
+            } else {
                 return ($difference / 60) / 60;
             }
         } else {
@@ -4181,9 +4262,8 @@ class Timesheet extends MY_Controller
                 if ($expected_hours >= 8) {
                     $expected_break = 60;
                 }
-                
+
                 $expected_work_hours = round((($expected_hours * 60) - $expected_break) / 60, 2);
-                
             }
 
             $display .= '<td class="center">' . $shift_start . '</td>';
@@ -4220,7 +4300,7 @@ class Timesheet extends MY_Controller
             $display .= '<td class="center num_only time-log">' . ($attendance->shift_duration + $attendance->overtime) . '</td>';
             $minutes_late = "";
             if ($shift_start != '') {
-                $minutes_late = $this->get_differenct_of_dates($shift_start, $checkin,true) * 60;
+                $minutes_late = $this->get_differenct_of_dates($shift_start, $checkin, true) * 60;
             }
             $display .= '<td class="center num_only time-log">' . $attendance->break_duration . '</td>';
             $display .= '<td class="center num_only time-log">' . round($minutes_late, 2) . '</td>';
@@ -4538,7 +4618,7 @@ class Timesheet extends MY_Controller
                 }
                 $minutes_late = 0;
                 if ($shift_start != '') {
-                    $minutes_late = $this->get_differenct_of_dates($shift_start, $checkin_time,true) * 60;
+                    $minutes_late = $this->get_differenct_of_dates($shift_start, $checkin_time, true) * 60;
                 }
                 $date_user = date('Y-m-d', strtotime($this->datetime_zone_converter($checkin_time, "UTC", $this->session->userdata('usertimezone'))));
                 $date_found = false;
