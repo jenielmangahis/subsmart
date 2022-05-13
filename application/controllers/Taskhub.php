@@ -91,6 +91,7 @@ class Taskhub extends MY_Controller {
 		$this->form_validation->set_rules('estimated_date_complete', 'Estimated Date of Competion', 'trim|required');
 
 		if($this->form_validation->run() == false){
+			$this->page_data['optionPriority'] = $this->taskhub_model->optionPriority();
 			$this->load->view('workcalender/taskhub/entry', $this->page_data);
 		} else {
 			$assigned_to = $this->input->post('assigned_to');
@@ -165,7 +166,8 @@ class Taskhub extends MY_Controller {
 					'description' => $this->input->post('description'),
 					'prof_id' => $this->input->post('customer_id'),
 					'estimated_date_complete' => $this->input->post('estimated_date_complete'),
-					'status_id' => $status
+					'status_id' => $status,
+					'priority' => $this->input->post('priority')
 				);
 
 				$process_successful = $this->taskhub_model->trans_update($data, array('task_id' => trim($taskid)));
@@ -190,7 +192,8 @@ class Taskhub extends MY_Controller {
 					'date_created' => date('Y-m-d h:i:s'),
 					'estimated_date_complete' => $this->input->post('estimated_date_complete'),
 					'status_id' => $this->input->post('status'),
-					'company_id' => $company_id
+					'company_id' => $company_id,
+					'priority' => $this->input->post('priority')
 				);
 
 				$last_id = $this->taskhub_model->saveTask($data);
@@ -426,6 +429,7 @@ class Taskhub extends MY_Controller {
 		$companyCustomers = $this->AcsProfile_model->getAllByCompanyId($cid);
         $companyUsers     = $this->Users_model->getCompanyUsers($cid);
 
+        $this->page_data['optionPriority'] = $this->taskhub_model->optionPriority();
         $this->page_data['taskStatus'] = $this->Taskhub_status_model->get();
         $this->page_data['companyCustomers'] = $companyCustomers;
         $this->page_data['companyUsers'] = $companyUsers;        
@@ -458,7 +462,7 @@ class Taskhub extends MY_Controller {
                 'actual_date_complete' => '',
                 'task_color' => $taskStatus->status_color,
                 'status_id' => $taskStatus->status_id,
-                'priority' => 'low',
+                'priority' => $post['priority'],
                 'company_id' => $cid,
                 'view_count' => 0
             ];

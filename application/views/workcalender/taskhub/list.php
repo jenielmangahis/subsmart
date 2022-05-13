@@ -39,6 +39,18 @@ label>input {
     padding: 10px;
     font-size: 14px;
 }
+.badge-danger {
+    color: #fff;
+    background-color: #dc3545;
+}
+.badge-primary {
+    color: #fff;
+    background-color: #007bff;
+}
+.badge-secondary {
+    color: #fff;
+    background-color: #6c757d;
+}
 </style>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/schedule'); ?>
@@ -72,11 +84,13 @@ label>input {
                             <table id="dataTable1" class="table table-bordered table-striped tbl-tasks">
                                 <thead>
                                 <tr>
-                                    <th style="width:60%;">Subject</th>
-                                    <th>Customer</th>
+                                    <th style="width:40%;">Subject</th>
+                                    <th>Priority</th>
+                                    <th style="width:15%;">Customer</th>
+                                    <th style="width:15%;">Assigned</th>
                                     <th>Status</th>
-                                    <th>Date Completion</th>
-                                    <th>Date Created</th>
+                                    <th style="width:15%;">Date Completion</th>
+                                    <th style="width:15%;">Date Created</th>
                                     <th>Action</th>
                                 </tr>
                                 </thead>
@@ -86,7 +100,24 @@ label>input {
                                             <td>
                                                <a href="<?php echo url('taskhub/view/' . $row->task_id) ?>"><?php echo $row->subject; ?></a>
                                             </td>
+                                            <td>
+                                                <?php 
+                                                    switch ($row->priority):
+                                                        case 'High':
+                                                            $class_priority = "badge-danger";
+                                                            break;
+                                                        case 'Medium':
+                                                            $class_priority = "badge-primary";
+                                                            break;
+                                                        case 'Low':
+                                                            $class_priority = "badge-secondary";
+                                                            break;
+                                                    endswitch;
+                                                ?>
+                                                <span class="badge <?= $class_priority; ?>"><?php echo ucwords($row->priority); ?></span>
+                                            </td>                                            
                                             <td><?= $row->customer_name; ?></td>
+                                            <td><?= getTaskAssignedUser($row->task_id); ?></td>
                                             <td>
                                                 <span class="badge badge-info" style="background-color: <?php echo $row->status_color; ?>"><?php echo $row->status_text; ?></span>
                                             </td>

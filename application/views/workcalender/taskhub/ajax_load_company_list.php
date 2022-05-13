@@ -1,10 +1,30 @@
+<style>
+.badge-danger {
+    color: #fff;
+    background-color: #dc3545;
+}
+.badge-primary {
+    color: #fff;
+    background-color: #007bff;
+}
+.badge-secondary {
+    color: #fff;
+    background-color: #6c757d;
+}
+.badge{
+    width: 100%;
+    display: block;
+}
+</style>
 <table class="nsm-table">
     <thead>
-        <tr>
+        <tr>            
             <td class="Subject">Subject</td>
             <td data-name="Customer">Customer</td>                            
+            <td data-name="Assigned">Assigned</td>                            
+            <td data-name="Priority" style="width:8%;">Priority</td>
             <td data-name="Status" style="width:8%;">Status</td>
-            <td data-name="Date Completion" style="width:8%;">Date Completion</td>            
+            <td data-name="Date Completion" style="width:15%;">Date Completion</td>            
         </tr>
     </thead>
     <tbody>
@@ -14,12 +34,28 @@
             <?php
             foreach ($tasksHub as $th) :
             ?>
-                <tr>
+                <tr>                    
                     <td><?= $th->subject; ?></td>                                    
                     <td><?= $th->customer_name; ?></td>
-                    <td><span class="badge badge-info" style="background-color: <?= $th->status_color; ?>"><?= $th->status_text; ?></span></td>
+                    <td><?= getTaskAssignedUser($th->task_id); ?></td>
+                    <td><span class="badge badge-info" style="background-color: <?= $th->status_color; ?>;display: block;width:100%;"><?= $th->status_text; ?></span></td>
+                    <td>
+                        <?php 
+                            switch ($th->priority):
+                                case 'High':
+                                    $class_priority = "badge-danger";
+                                    break;
+                                case 'Medium':
+                                    $class_priority = "badge-primary";
+                                    break;
+                                case 'Low':
+                                    $class_priority = "badge-secondary";
+                                    break;
+                            endswitch;
+                        ?>
+                        <span class="badge <?= $class_priority; ?>"><?= ucwords($th->priority); ?></span>
+                    </td>
                     <td><?= date("F d, Y",strtotime($th->estimated_date_complete)); ?></td>
-                    <td><?= date("F d, Y",strtotime($th->date_created)); ?></td>
                 </tr>
             <?php
             endforeach;
