@@ -1,4 +1,29 @@
 $(document).ready(function() {
+    $("#timesheet_report_settings1").on("click", function() {
+        $.ajax({
+            type: "POST",
+            url: baseURL + "/timesheet/getData",
+            data: {},
+            dataType: "json",
+            success: function(data) {
+                if (data != "") {
+                    if (data.result[0]['allow_5min'] != 0) {
+                        $("#est_wage_privacy2").attr('checked', 'checked');
+                    }
+                    var html = data.user[0]['FName'] + " " + data.user[0]['LName'] + ", " + data.last_update;
+                    var html2 = data.user[0]['FName'] + " " + data.user[0]['LName'] + ", " + data.last_update2;
+                    console.log(html2);
+
+                    $(".Payday").val(data.result[0]['pay_date']);
+                    $("#update").html(html);
+                    $("#update2").html(html2);
+                }
+            },
+        });
+    });
+
+
+
     $("#timezone_settings_form").submit(function(event) {
         var report_series = 0;
         if ($("#report_series_1").is(":checked")) {
@@ -73,21 +98,27 @@ $(document).ready(function() {
         }
 
     })
-    $.ajax({
-        type: "POST",
-        url: baseURL + "/timesheet/getResClockInPayDate",
-        data: {},
-        dataType: "json",
-        success: function(data) {
-            if (data != null) {
-                if (data[0]['allow_5min'] == 0) {
-                    $("#est_wage_privacy2").is(':checked');
 
+
+
+    $("#est_wage_privacy2").on("change", function() {
+        $.ajax({
+            type: "POST",
+            url: baseURL + "/timesheet/insertResClockInPayDate_allow",
+            data: {
+                allow: $("#est_wage_privacy2").val(),
+            },
+            dataType: "json",
+            success: function(data) {
+                if (data != null) {
+
+                    var html = data.user[0]['FName'] + " " + data.user[0]['LName'] + ", " + data.last_update;
+                    $("#update").html(html);
                 }
-                $(".Payday").val(data[0]['pay_date']);
-            }
-        },
-    });
+            },
+        });
+    })
+
 
     $("#submit").on("click", function() {
         console.log($("#est_wage_privacy2").val());
@@ -97,12 +128,18 @@ $(document).ready(function() {
             type: "POST",
             url: baseURL + "/timesheet/insertResClockInPayDate",
             data: {
-                allow: $("#est_wage_privacy2").val(),
                 paydate: $(".Payday").val(),
             },
             dataType: "json",
-            success: function(data) {},
+            success: function(data) {
+                if (data != null) {
+
+                    var html = data.user[0]['FName'] + " " + data.user[0]['LName'] + ", " + data.last_update;
+                    $("#update2").html(html);
+                }
+            },
         });
+        location.reload();
 
 
     })

@@ -10,5 +10,15 @@ class Accounting_bank_accounts extends MY_Model {
 		parent::__construct();
 	}
 
+	public function getAllBanks()
+	{
+		$company_id = logged('company_id');
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('company_id', $company_id);
+        $query = $this->db->get();
+        return $query->result();
+	}
+
 	
 }

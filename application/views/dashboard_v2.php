@@ -7,7 +7,7 @@
         <i class="bx bx-plus"></i>
     </div>
     <ul class="nsm-fab-options">
-        <li onclick="location.href='<?php echo base_url('taskhub/entry') ?>'">
+        <li onclick="window.open('<?= base_url('taskhub/entry') ?>', '_blank', 'location=yes,height=1080,width=1280,scrollbars=yes,status=yes');">
             <div class="nsm-fab-icon">
                 <i class="bx bx-task"></i>
             </div>
@@ -59,7 +59,7 @@
 </div>
 <div class="row nsm-page-buttons page-content g-0">
     <div class="col-12 grid-mb text-end">
-        <button type="button" class="nsm-button" onclick="location.href='<?php echo base_url('taskhub/entry') ?>'">
+        <button type="button" class="nsm-button btn-add-task">
             <i class='bx bx-fw bx-task'></i> New Task
         </button>
         <button type="button" class="nsm-button" onclick="location.href='<?php echo base_url('customer/add_advance') ?>'">

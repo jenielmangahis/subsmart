@@ -10049,16 +10049,18 @@ class Accounting_modals extends MY_Controller
                 $balance = '$'.number_format(floatval($purchaseOrder->remaining_balance), 2, '.', ',');
                 $total = '$'.number_format(floatval($purchaseOrder->total_amount), 2, '.', ',');
 
-                $linkableTransactions[] = [
-                    'type' => 'Purchase Order',
-                    'data_type' => 'purchase-order',
-                    'id' => $purchaseOrder->id,
-                    'number' => $purchaseOrder->purchase_order_no === null || $purchaseOrder->purchase_order_no === '' ? '' : $purchaseOrder->purchase_order_no,
-                    'date' => date("m/d/Y", strtotime($purchaseOrder->purchase_order_date)),
-                    'formatted_date' => date("F j", strtotime($purchaseOrder->purchase_order_date)),
-                    'total' => str_replace('$-', '-$', $total),
-                    'balance' => str_replace('$-', '-$', $balance)
-                ];
+                if($purchaseOrder->status === "1" || $purchaseOrder->status === "2" && array_search($purchaseOrder->id, array_column($linkableTransactions, 'id')) === false) {
+                    $linkableTransactions[] = [
+                        'type' => 'Purchase Order',
+                        'data_type' => 'purchase-order',
+                        'id' => $purchaseOrder->id,
+                        'number' => $purchaseOrder->purchase_order_no === null || $purchaseOrder->purchase_order_no === '' ? '' : $purchaseOrder->purchase_order_no,
+                        'date' => date("m/d/Y", strtotime($purchaseOrder->purchase_order_date)),
+                        'formatted_date' => date("F j", strtotime($purchaseOrder->purchase_order_date)),
+                        'total' => str_replace('$-', '-$', $total),
+                        'balance' => str_replace('$-', '-$', $balance)
+                    ];
+                }
             }
         }
 
@@ -10089,6 +10091,56 @@ class Accounting_modals extends MY_Controller
         $categories = $this->expenses_model->get_transaction_categories($checkId, 'Check');
         $items = $this->expenses_model->get_transaction_items($checkId, 'Check');
 
+        foreach($categories as $key => $expenseCat) {
+            if(!is_null($expenseCat->linked_transaction_type) && !is_null($expenseCat->linked_transaction_id)) {
+                $categories[$key]->linked_transac = $this->vendors_model->get_purchase_order_by_id($expenseCat->linked_transaction_id, logged('company_id'));
+            }
+        }
+
+        foreach($items as $key => $expenseItem) {
+            if(!is_null($expenseItem->linked_transaction_type) && !is_null($expenseItem->linked_transaction_id)) {
+                $items[$key]->linked_transac = $this->vendors_model->get_purchase_order_by_id($expenseItem->linked_transaction_id, logged('company_id'));
+            }
+        }
+
+        $linkedTransactions = $this->accounting_linked_transactions_model->get_linked_transactions('check', $checkId);
+        if(count($linkedTransactions) > 0) {
+            $linked = [];
+            foreach($linkedTransactions as $linkedData) {
+                $linked[] = [
+                    'type' => 'Purchase Order',
+                    'transaction' => $this->vendors_model->get_purchase_order_by_id($linkedData->linked_transaction_id, logged('company_id'))
+                ];
+            }
+
+            $check->linked_transacs = $linked;
+        }
+
+        $linkableTransactions = [];
+
+        if($check->payee_type === 'vendor') {
+            $purchaseOrders = $this->expenses_model->get_vendor_open_purchase_orders($check->payee_id);
+
+            foreach ($purchaseOrders as $purchaseOrder) {
+                $balance = '$'.number_format(floatval($purchaseOrder->remaining_balance), 2, '.', ',');
+                $total = '$'.number_format(floatval($purchaseOrder->total_amount), 2, '.', ',');
+
+                if($purchaseOrder->status === "1" || $purchaseOrder->status === "2" && array_search($purchaseOrder->id, array_column($linkableTransactions, 'id')) === false) {
+                    $linkableTransactions[] = [
+                        'type' => 'Purchase Order',
+                        'data_type' => 'purchase-order',
+                        'id' => $purchaseOrder->id,
+                        'number' => $purchaseOrder->purchase_order_no === null || $purchaseOrder->purchase_order_no === '' ? '' : $purchaseOrder->purchase_order_no,
+                        'date' => date("m/d/Y", strtotime($purchaseOrder->purchase_order_date)),
+                        'formatted_date' => date("F j", strtotime($purchaseOrder->purchase_order_date)),
+                        'total' => str_replace('$-', '-$', $total),
+                        'balance' => str_replace('$-', '-$', $balance)
+                    ];
+                }
+            }
+        }
+
+        $this->page_data['linkableTransactions'] = $linkableTransactions;
         $this->page_data['tags'] = $this->tags_model->get_transaction_tags('Check', $checkId);
         $this->page_data['check'] = $check;
         $this->page_data['categories'] = $categories;

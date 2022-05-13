@@ -20,6 +20,10 @@
     <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
     <!-- Datepicker -->
     <script type="text/javascript" src="<?= base_url("assets/js/v2/bootstrap-datepicker.min.js") ?>"></script>
+    <!-- Select2 -->
+    <script src="<?= base_url("assets/plugins/select2/dist/js/select2.full.min.js"); ?>"></script>
+    <!-- Ckeditor -->
+    <script type="text/javascript" src="<?= base_url("assets/ckeditor/ckeditor.js"); ?>"></script>
     <!-- Main Script -->
     <script type="text/javascript" src="<?= base_url("assets/js/v2/main.js") ?>"></script>
     <script type="text/javascript" src="<?= base_url("assets/js/v2/nsm.draggable.js") ?>"></script>

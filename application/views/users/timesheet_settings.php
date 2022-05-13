@@ -112,7 +112,6 @@ foreach ($report_settings as $settings) {
     .table-responsive {
         overflow-x: hidden;
     }
-
 </style>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/employee'); ?>
@@ -174,7 +173,7 @@ foreach ($report_settings as $settings) {
                                             <a class="nav-link timesheet_report_settings active" data-toggle="tab" href="#timesheet_report_settings">Timesheet Report Settings</a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link timesheet_report_settings" data-toggle="tab" href="#timesheet_report_settings2">Settings</a>
+                                            <a class="nav-link timesheet_report_settings" id="timesheet_report_settings1" data-toggle="tab" href="#timesheet_report_settings2">Settings</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -382,13 +381,15 @@ foreach ($report_settings as $settings) {
                                                         <div class="form-group ">
                                                             <div class="custom-control custom-switch">
 
-                                                                <input type="checkbox" value=0  class="custom-control-input allow_clock_in" id="est_wage_privacy2">
+                                                                <input type="checkbox" value=0 class="custom-control-input allow_clock_in" id="est_wage_privacy2">
                                                                 <label class="custom-control-label" for="est_wage_privacy2">Allow cannot clock in if it's not 5 minutes early base on their schedule</label>
                                                                 <?php
                                                                 if ($report_privacy != null) {
                                                                 ?>
-                                                                    <label class="est_wage_privacy_editor" for="est_wage_privacy">Latest
-                                                                        update by
+                                                                    <label class="est_wage_privacy_editor" for="est_wage_privacy">
+                                                                        <p>Latest
+                                                                            update by <span id="update"></span></p>
+                                                                    </label>
                                                                 <?php
                                                                 } ?>
                                                             </div>
@@ -400,11 +401,16 @@ foreach ($report_settings as $settings) {
                                                         <div class="form-group" style="padding-left:1.25rem;">
                                                             <label for="from_date_correction_requests" class="week-label">Select Payday Date</label>
                                                             <br>
-                                                            <input class="Payday" type="date" value="<?php echo date('Y-m-d') ?>" style="text-align: center;padding: 8px 20px;font-weight: bold;width: 183px;letter-spacing: 3px;border-radius: 11px;">
+                                                            <input class="Payday" type="date" value="<?php echo date('Y-m-d') ?>" style="text-align: center;padding: 8px 20px;font-weight: bold;width: 183px;letter-spacing: 3px;border-radius: 11px;"><button id="submit" style="    color: #fff;/* background-color: #2ab363; */background-color: #32243d;  width: 93px;float:right">save</button><br> <label class="est_wage_privacy_editor" for="est_wage_privacy">
+                                                                <p>Latest
+                                                                    update by <span id="update2"></span></p>
+                                                            </label>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <!-- <div class="form-group">
+                                            </form>
+
+                                            <!-- <div class="form-group">
                                         <div class="custom-control custom-switch">
                                             <input type="checkbox" on class="custom-control-input"
                                                 id="subcribe_weekly_report" checked>
@@ -582,9 +588,8 @@ foreach ($report_settings as $settings) {
                                                         Please note that the next timesheet report will be sent <b id="next-timesheet-report"></b>
                                                     </div>
                                     </div> -->
-                                                
-                                            </form>
-                                            <button id="submit">save</button>
+
+
                                         </div>
                                     </div>
                                 </div>

@@ -1283,3 +1283,8 @@ $route['booking/_load_week_schedule'] = 'Pages/ajax_load_week_schedule';
 $route['booking/_set_booking_schedule'] = 'Pages/ajax_user_set_schedule';
 $route['booking/product_booking_form/(:any)'] = 'Pages/front_booking_form/$1';
 $route['booking/save_booking_inquiry'] = 'Pages/save_product_booking';
+
+//Taskhub
+$route['taskhub/_load_taskhub_list'] = 'Taskhub/ajax_load_company_list';
+$route['taskhub/_add_new_task'] = 'Taskhub/ajax_add_new_task';
+$route['taskhub/_save_task'] = 'Taskhub/ajax_save_task';

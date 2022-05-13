@@ -22,6 +22,7 @@ class Dashboard extends Widgets {
         $this->load->model('taskhub_status_model');
         $this->load->model('Activity_model', 'activity');
         $this->load->model('General_model', 'general');
+        $this->load->model('Accounting_bank_accounts', 'accounting_bank_accounts');
 
         add_css(array(
            // 'https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css',
@@ -163,6 +164,7 @@ class Dashboard extends Widgets {
         $this->page_data['jobsDone']=$this->event_model->getAllJobs();
         $this->page_data['salesLeaderboard']=$this->event_model->getSalesLeaderboard();
         $this->page_data['sales']=$this->event_model->getAllSales();
+        $this->page_data['acct_banks']=$this->accounting_bank_accounts->getAllBanks();
 
         $this->page_data['widgets'] = $this->widgets_model->getWidgetListPerUser($user_id);
         $this->page_data['main_widgets'] = array_filter($this->page_data['widgets'], function($widget){
@@ -249,8 +251,7 @@ class Dashboard extends Widgets {
             'table' => 'news',
             'select' => '*',
         );
-        $this->page_data['news'] = $this->general->get_data_with_param($news_query);
-
+        $this->page_data['news'] = $this->general->get_data_with_param($news_query);        
         // $this->load->view('dashboard', $this->page_data);
         $this->load->view('dashboard_v2', $this->page_data);
     }

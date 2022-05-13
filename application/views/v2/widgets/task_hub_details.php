@@ -21,7 +21,7 @@ if ($tasks) :
         if ($task->is_assigned == 1) :
             if ($task_count < $task_limit) :
 ?>
-                <div class="nsm-taskhub-item <?= $class ?>" onclick="location.href='<?= base_url('taskhub/view/' . $task->task_id) ?>'">
+                <div class="nsm-taskhub-item <?= $class ?>" onclick="window.open('<?= base_url('taskhub/view/'.$task->task_id) ?>', '_blank', 'location=yes,height=1080,width=1280,scrollbars=yes,status=yes');">
                     <div class="taskhub-header">
                         <span><?= strtoupper($task->priority . ' priority') ?></span>
                     </div>

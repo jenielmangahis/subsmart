@@ -94,3 +94,36 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade nsm-modal fade" id="modalTaskHubList" tabindex="-1" aria-labelledby="modalTaskHubListLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" id="new_feed_modal_label">Taskhub List</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body modal-taskhub-list-container" style="max-height:500px; overflow-y: auto;overflow-x: hidden;"></div>
+            <div class="modal-footer">
+                <button type="button" class="nsm-button primary btn-add-task"><i class='bx bx-fw bx-task'></i> New Task</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade nsm-modal fade" id="modalAddTaskHub" tabindex="-1" aria-labelledby="modalAddTaskHubLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" id="new_feed_modal_label">Add New Task</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <form action="" id="frm-add-new-task">
+            <div class="modal-body modal-add-new-task-container"></div>
+            <div class="modal-footer">
+                <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="nsm-button primary btn-save-task">Save</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
