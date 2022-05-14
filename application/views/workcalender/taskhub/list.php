@@ -133,6 +133,9 @@ label>input {
                                                             <a role="menuitem" href="<?php echo url('taskhub/entry/'.$row->task_id) ?>"><i class="fa fa-pencil"></i> Edit</a>
                                                         </li>
                                                         <li role="presentation">
+                                                            <a role="menuitem" class="btn-mark-completed" data-subject="<?= $row->subject; ?>" data-id="<?= $row->task_id; ?>" href="javascript:void(0);"><i class="fa fa-check"></i> Mark Completed</a>
+                                                        </li>
+                                                        <li role="presentation">
                                                             <a role="menuitem" href="<?php echo url('taskhub/addupdate/'.$row->task_id) ?>"><i class="fa fa-sticky-note-o"></i> Add Update</a>
                                                         </li>
                                                         <li role="presentation">
@@ -226,7 +229,7 @@ label>input {
 <!-- page wrapper end -->
 <?php include viewPath('includes/footer'); ?>
 <script>
-    $(document).ready(function(){
+    $(document).ready(function(){        
         tasks_table = $('#dataTable1').DataTable({
           "paging": true,
           "lengthChange": true,
@@ -296,4 +299,49 @@ label>input {
             });
         });
     });
+
+    $(document).on('click', '.btn-mark-completed', function(e){
+            var tsid = $(this).attr("data-id");
+            var task_subject = $(this).attr('data-subject');
+            var url = base_url + 'taskhub/_task_mark_completed';
+
+            Swal.fire({
+                title: 'Complete Task',
+                html: "Are you sure you want to mark as completed task <b>"+task_subject+"</b>?",
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        type: 'POST',
+                        url: url,
+                        dataType: 'json',
+                        data: {tsid:tsid},
+                        success: function(o) {
+                            if( o.is_success == 1 ){   
+                                Swal.fire({
+                                    title: 'Update Successful!',
+                                    text: "Taskhub Data Successfully Updated!",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    //if (result.value) {
+                                        location.reload();
+                                    //}
+                                });
+                            }else{
+                              Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                html: o.msg
+                              });
+                            }
+                        },
+                    });
+                }
+            });
+        });
 </script>

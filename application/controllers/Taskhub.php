@@ -488,5 +488,36 @@ class Taskhub extends MY_Controller {
 
         echo json_encode($json_data);  
 	}
+
+	public function ajax_complete_task()
+	{
+		$this->load->model('Taskhub_model');
+        $this->load->model('Taskhub_status_model');   
+
+        $cid = logged('company_id');
+        $uid = logged('id');
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $post = $this->input->post();  
+        $taskHub = $this->Taskhub_model->getById($post['tsid']);
+
+        if( $taskHub && $taskHub->company_id == $cid ){
+        	if( $taskHub->status_id == 6 ){
+        		$msg = 'Task is already completed!';
+        	}else{
+        		$data = ['status_id' => 6];
+	        	$this->Taskhub_model->updateByTaskId($taskHub->task_id, $data);
+
+	        	$msg ='';
+	        	$is_success = 1;
+        	}        	
+        }
+ 
+		$json_data = ['is_success' => $is_success, 'msg' => $msg];
+
+        echo json_encode($json_data);  
+	}
 }
 ?>

@@ -40,6 +40,8 @@ if ($this->session->userdata('usertimezone') == null) {
     <script src="<?= base_url("assets/js/v2/jquery-3.6.0.min.js") ?>"></script>
     <!-- Bootstrap toggle -->
     <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+    <!-- Bootstrap colorpicker -->
+    <link rel="stylesheet" href="<?= base_url("assets/plugins/bootstrap-colorpicker/bootstrap-colorpicker.css") ?>">
 
     <script>
         var base_url = '<?= base_url() ?>';
@@ -80,16 +82,21 @@ if ($this->session->userdata('usertimezone') == null) {
                         <i class='bx bx-fw bx-user'></i> Users
                     </a>
                 </li>
-                <!-- <li class="<?= $page_title == 'Offer Codes' ? 'selected' : ''; ?>">
+                <li class="<?= $page_title == 'Offer Codes' ? 'selected' : ''; ?>">
                     <a href="<?= base_url("admin/offer_codes") ?>">
                         <i class='bx bx-fw bxs-coupon'></i> Offer Codes
                     </a>
                 </li>
-                <li class="<?= $page_title == 'Events' ? 'selected' : ''; ?>">
+                <li class="<?= $page_title == 'Events' || $page_parent == 'Events' ? 'selected' : ''; ?>">
                     <a href="<?= base_url("admin/events") ?>">
                         <i class='bx bx-fw bx-calendar'></i> Events
                     </a>
-                </li> -->
+                </li>
+                <li class="<?= $page_title == 'Taskhub' ? 'selected' : ''; ?>">
+                    <a href="<?= base_url("admin/taskhub") ?>">
+                        <i class='bx bx-fw bx-receipt'></i> Taskhub
+                    </a>
+                </li>
                 <li class="<?= $page_title == 'Nsmart Plans' ? 'selected' : ''; ?>">
                     <a href="<?= base_url("admin/nsmart_plans") ?>">
                         <i class='bx bx-fw bx-list-ul'></i> nSmart Plans
@@ -125,12 +132,17 @@ if ($this->session->userdata('usertimezone') == null) {
                             <a href="<?= base_url("admin/industry_types") ?>">
                                 <i class='bx bx-fw bx-buildings'></i> Industry Types
                             </a>
-                        </li>
-                        <!-- <li class="<?php if($page_title == 'Settings : Addons'): echo 'selected'; endif; ?>">
-                            <a href="<?= base_url("admin/nsmart_addons") ?>">
-                                <i class='bx bx-fw bx-list-ul'></i> Event Types
+                        </li>                        
+                        <li class="<?php if($page_title == 'Settings : Event Icons'): echo 'selected'; endif; ?>">
+                            <a href="<?= base_url("admin/event_icons") ?>">
+                                <i class='bx bx-fw bx-list-ul'></i> Event Icons
                             </a>
-                        </li> -->
+                        </li>
+                        <li class="<?php if($page_title == 'Task Status'): echo 'selected'; endif; ?>">
+                            <a href="<?= base_url("admin/taskhub_status") ?>">
+                                <i class='bx bx-fw bx-list-ul'></i> Taskhub Status
+                            </a>
+                        </li>
                     </ul>
                 </li>
             </ul>
