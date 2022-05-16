@@ -96,7 +96,7 @@
 </div>
 
 <div class="modal fade nsm-modal fade" id="modalTaskHubList" tabindex="-1" aria-labelledby="modalTaskHubListLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
                 <span class="modal-title content-title" id="new_feed_modal_label">Taskhub List</span>

@@ -31,7 +31,30 @@
         </select>
     </div>
 </div>
+<div class="row">    
+    <div class="col-6 mt-3">
+        <label for="">Status</label>
+        <select class="form-control" name="status" id="status">
+            <?php foreach($taskStatus as $ts){ ?>
+                <option value="<?= $ts->status_id; ?>"><?= $ts->status_text; ?></option>
+            <?php } ?>
+        </select>
+    </div>
+    <div class="col-6 mt-3">
+        <label for="">Priority</label>
+        <select class="form-control" name="priority" id="priority">
+            <?php foreach($optionPriority as $key => $value){ ?>
+                <option value="<?= $key; ?>"><?= $value; ?></option>
+            <?php } ?>
+        </select>
+    </div>
+
+</div>
 <div class="row">
+    <div class="col-md-6 mt-3">
+        <label for="">Subject</label>
+        <input type="text" name="subject" id="event-name" class="form-control" required="">
+    </div>
     <div class="col-6 mt-3">
         <label for="">Estimated Date of Completion</label>
         <div class="input-group date" data-provide="datepicker">
@@ -41,18 +64,6 @@
             </div>
         </div>
     </div>
-    <div class="col-6 mt-3">
-        <label for="">Status</label>
-        <select class="form-control" name="status" id="status">
-            <?php foreach($taskStatus as $ts){ ?>
-                <option value="<?= $ts->status_id; ?>"><?= $ts->status_text; ?></option>
-            <?php } ?>
-        </select>
-    </div>
-</div>
-<div class="col-md-12 mt-3">
-    <label for="">Subject</label>
-    <input type="text" name="subject" id="event-name" class="form-control" required="">
 </div>
 <div class="col-md-12 mt-3">
     <label for="">Description</label>

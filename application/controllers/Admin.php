@@ -3733,6 +3733,9 @@ class Admin extends CI_Controller
             $taskStatus = $this->Taskhub_status_model->getById(get('status'));
             $cid_search = 'Status ' . $taskStatus->status_text;
             $tasksHub = $this->Taskhub_model->getAllByStatusId($taskStatus->status_id);
+        }elseif( get('priority') != '' ){
+            $cid_search = 'Priority ' . ucwords(get('priority'));
+            $tasksHub = $this->Taskhub_model->getAllByPriority(get('priority'));
         }elseif( get('search') != '' ){
             $search  = trim(get('search'));
             $filters = ['search' => $search];
@@ -3745,6 +3748,7 @@ class Admin extends CI_Controller
         $this->page_data['cid_search'] = $cid_search;
         $this->page_data['taskStatus'] = $this->Taskhub_status_model->get();
         $this->page_data['tasksHub'] = $tasksHub;
+        $this->page_data['optionPriority'] = $this->Taskhub_model->optionPriority();
         $this->page_data['companies']  = $this->Business_model->getAll();
         $this->page_data['page_title'] = 'Taskhub';
         $this->page_data['page_parent'] = 'Taskhub';
@@ -3789,7 +3793,7 @@ class Admin extends CI_Controller
                 'actual_date_complete' => '',
                 'task_color' => $taskStatus->status_color,
                 'status_id' => $taskStatus->status_id,
-                'priority' => 'low',
+                'priority' => $post['priority'],
                 'company_id' => $post['company_id'],
                 'view_count' => 0
             ];
@@ -3839,6 +3843,7 @@ class Admin extends CI_Controller
         $this->page_data['companyCustomers'] = $companyCustomers;
         $this->page_data['companyUsers'] = $companyUsers;
         $this->page_data['assignedUser'] = $assignedUser;
+        $this->page_data['optionPriority'] = $this->Taskhub_model->optionPriority();
         $this->load->view('admin/taskhub/ajax_edit_taskhub', $this->page_data);
     }
 
@@ -3864,6 +3869,7 @@ class Admin extends CI_Controller
                     'estimated_date_complete' => date('Y-m-d', strtotime($post['estimated_date_complete'])),
                     'task_color' => $taskStatus->status_color,
                     'status_id' => $taskStatus->status_id,
+                    'priority' => $post['priority'],
                     'company_id' => $post['company_id'],
                 ];
                 $this->Taskhub_model->updateByTaskId($task->task_id, $data_task);
@@ -4023,6 +4029,77 @@ class Admin extends CI_Controller
         $json_data = ['is_success' => $is_success, 'msg' => $msg];
 
         echo json_encode($json_data);
+    }
+
+    public function export_taskhub()
+    {
+        $this->load->model('Taskhub_model');
+        $this->load->model('Business_model');
+        $this->load->model('Taskhub_status_model');    
+
+        $tasksHub = $this->Taskhub_model->getAll();
+
+        $delimiter = ",";
+        $time      = time();
+        $filename  = "taskhub_list_".$time.".csv";
+
+        $f = fopen('php://memory', 'w');
+
+        $fields = array('Company', 'Subject', 'Customer', 'Assigned User', 'Priority', 'Status', 'Date Completion');
+        fputcsv($f, $fields, $delimiter);
+
+        if (!empty($tasksHub)) {
+            foreach ($tasksHub as $th) {
+                $csvData = array(
+                    $th->business_name,
+                    $th->subject,
+                    $th->customer_name,
+                    getTaskAssignedUser($th->task_id),
+                    ucwords($th->priority),
+                    $th->status_text,
+                    date("F d, Y",strtotime($th->estimated_date_complete))
+                );
+                fputcsv($f, $csvData, $delimiter);      
+            }
+        } else {
+            $csvData = array('');
+            fputcsv($f, $csvData, $delimiter);
+        }
+
+        fseek($f, 0);
+
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="' . $filename . '";');
+
+        fpassthru($f);
+    }
+
+    public function ajaxTaskhubCompleteTask()
+    {
+        $this->load->model('Taskhub_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $post = $this->input->post();  
+        $taskHub = $this->Taskhub_model->getById($post['thid']);
+
+        if( $taskHub ){
+            if( $taskHub->status_id == 6 ){
+                $msg = 'Task is already completed!';
+            }else{
+                $data = ['status_id' => 6];
+                $this->Taskhub_model->updateByTaskId($taskHub->task_id, $data);
+
+                $msg ='';
+                $is_success = 1;
+            }           
+        }
+ 
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+
+        echo json_encode($json_data);  
+
     }
 }
 

@@ -39,6 +39,18 @@ label>input {
     padding: 10px;
     font-size: 14px;
 }
+.badge-danger {
+    color: #fff;
+    background-color: #dc3545;
+}
+.badge-primary {
+    color: #fff;
+    background-color: #007bff;
+}
+.badge-secondary {
+    color: #fff;
+    background-color: #6c757d;
+}
 </style>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/schedule'); ?>
@@ -72,11 +84,13 @@ label>input {
                             <table id="dataTable1" class="table table-bordered table-striped tbl-tasks">
                                 <thead>
                                 <tr>
-                                    <th style="width:60%;">Subject</th>
-                                    <th>Customer</th>
+                                    <th style="width:40%;">Subject</th>
+                                    <th>Priority</th>
+                                    <th style="width:15%;">Customer</th>
+                                    <th style="width:15%;">Assigned</th>
                                     <th>Status</th>
-                                    <th>Date Completion</th>
-                                    <th>Date Created</th>
+                                    <th style="width:15%;">Date Completion</th>
+                                    <th style="width:15%;">Date Created</th>
                                     <th>Action</th>
                                 </tr>
                                 </thead>
@@ -86,7 +100,24 @@ label>input {
                                             <td>
                                                <a href="<?php echo url('taskhub/view/' . $row->task_id) ?>"><?php echo $row->subject; ?></a>
                                             </td>
+                                            <td>
+                                                <?php 
+                                                    switch ($row->priority):
+                                                        case 'High':
+                                                            $class_priority = "badge-danger";
+                                                            break;
+                                                        case 'Medium':
+                                                            $class_priority = "badge-primary";
+                                                            break;
+                                                        case 'Low':
+                                                            $class_priority = "badge-secondary";
+                                                            break;
+                                                    endswitch;
+                                                ?>
+                                                <span class="badge <?= $class_priority; ?>"><?php echo ucwords($row->priority); ?></span>
+                                            </td>                                            
                                             <td><?= $row->customer_name; ?></td>
+                                            <td><?= getTaskAssignedUser($row->task_id); ?></td>
                                             <td>
                                                 <span class="badge badge-info" style="background-color: <?php echo $row->status_color; ?>"><?php echo $row->status_text; ?></span>
                                             </td>
@@ -100,6 +131,9 @@ label>input {
                                                     <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
                                                         <li role="presentation">
                                                             <a role="menuitem" href="<?php echo url('taskhub/entry/'.$row->task_id) ?>"><i class="fa fa-pencil"></i> Edit</a>
+                                                        </li>
+                                                        <li role="presentation">
+                                                            <a role="menuitem" class="btn-mark-completed" data-subject="<?= $row->subject; ?>" data-id="<?= $row->task_id; ?>" href="javascript:void(0);"><i class="fa fa-check"></i> Mark Completed</a>
                                                         </li>
                                                         <li role="presentation">
                                                             <a role="menuitem" href="<?php echo url('taskhub/addupdate/'.$row->task_id) ?>"><i class="fa fa-sticky-note-o"></i> Add Update</a>
@@ -195,7 +229,7 @@ label>input {
 <!-- page wrapper end -->
 <?php include viewPath('includes/footer'); ?>
 <script>
-    $(document).ready(function(){
+    $(document).ready(function(){        
         tasks_table = $('#dataTable1').DataTable({
           "paging": true,
           "lengthChange": true,
@@ -265,4 +299,49 @@ label>input {
             });
         });
     });
+
+    $(document).on('click', '.btn-mark-completed', function(e){
+            var tsid = $(this).attr("data-id");
+            var task_subject = $(this).attr('data-subject');
+            var url = base_url + 'taskhub/_task_mark_completed';
+
+            Swal.fire({
+                title: 'Complete Task',
+                html: "Are you sure you want to mark as completed task <b>"+task_subject+"</b>?",
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        type: 'POST',
+                        url: url,
+                        dataType: 'json',
+                        data: {tsid:tsid},
+                        success: function(o) {
+                            if( o.is_success == 1 ){   
+                                Swal.fire({
+                                    title: 'Update Successful!',
+                                    text: "Taskhub Data Successfully Updated!",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    //if (result.value) {
+                                        location.reload();
+                                    //}
+                                });
+                            }else{
+                              Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                html: o.msg
+                              });
+                            }
+                        },
+                    });
+                }
+            });
+        });
 </script>

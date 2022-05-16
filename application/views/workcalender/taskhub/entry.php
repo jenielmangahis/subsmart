@@ -105,6 +105,19 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 </select>
                                             </div>
                                         <?php } ?>
+                                        <div class="form-group">
+                                            <label for="status">Priority</label>
+                                            <select class="form-control" name="priority" id="priority">
+                                                <?php foreach($optionPriority as $key => $value){ ?>
+                                                    <?php if($task){ ?>
+                                                        <option <?= $task->priority == $key ? 'selected="selected"' : ''; ?> value="<?= $key; ?>"><?= $value; ?></option>
+                                                    <?php }else{ ?>
+                                                        <option value="<?= $key; ?>"><?= $value; ?></option>
+                                                    <?php } ?>
+                                                    
+                                                <?php } ?>
+                                            </select>
+                                        </div>
 
                                         <div class="form-group">
                                             <label for="description">Description</label>

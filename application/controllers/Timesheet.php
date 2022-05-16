@@ -249,14 +249,14 @@ class Timesheet extends MY_Controller
         $query2 = $this->timesheet_model->getLastResClockInPayDateLogs_allow(logged('company_id'));
         $query4 = $this->timesheet_model->getLastResClockInPayDateLogs_payday(logged('company_id'));
         $query3 = $this->timesheet_model->getUsersAccordingToLogs();
-        foreach($query2 as $res){
-            $last_update = date("M d, Y h:i A",strtotime($this->datetime_zone_converter($res->date_created, "UTC", $this->session->userdata('usertimezone'))));
+        foreach ($query2 as $res) {
+            $last_update = date("M d, Y h:i A", strtotime($this->datetime_zone_converter($res->date_created, "UTC", $this->session->userdata('usertimezone'))));
         }
-        foreach($query4 as $res2){
-            $last_update2= date("M d, Y h:i A",strtotime($this->datetime_zone_converter($res2->date_created, "UTC", $this->session->userdata('usertimezone'))));
+        foreach ($query4 as $res2) {
+            $last_update2 = date("M d, Y h:i A", strtotime($this->datetime_zone_converter($res2->date_created, "UTC", $this->session->userdata('usertimezone'))));
         }
-        
-        
+
+
         $data = new stdClass();
         $data->result = $query;
         $data->recent = $query2;
@@ -272,28 +272,29 @@ class Timesheet extends MY_Controller
         // var_dump($query);
         return $query;
     }
-   
-    public function insertResClockInPayDate_allow(){
+
+    public function insertResClockInPayDate_allow()
+    {
         $data = $this->input->post();
 
         $query = $this->getResClockInPayDate();
 
 
-        if($query != null){
+        if ($query != null) {
             $this->timesheet_model->updateResClockInPayDate_allow($data);
             $date_created = $this->timesheet_model->insertResClockInPayDateLogs_allow();
-        }else{
+        } else {
             $this->timesheet_model->insertResClockInPayDate_allow($data);
-            $date_created= $this->timesheet_model->insertResClockInPayDateLogs_allow();
+            $date_created = $this->timesheet_model->insertResClockInPayDateLogs_allow();
         }
 
         $query2 = $this->timesheet_model->getLastResClockInPayDateLogs_allow(logged('company_id'));
         $query3 = $this->timesheet_model->getUsersAccordingToLogs();
-        foreach($query2 as $res){
-            $last_update = date("M d, Y h:i A",strtotime($this->datetime_zone_converter($date_created, "UTC", $this->session->userdata('usertimezone'))));
+        foreach ($query2 as $res) {
+            $last_update = date("M d, Y h:i A", strtotime($this->datetime_zone_converter($date_created, "UTC", $this->session->userdata('usertimezone'))));
         }
-        
-        $data= new stdClass();
+
+        $data = new stdClass();
         $data->recent = $query2;
         $data->user   = $query3;
         $data->last_update   = $last_update;
@@ -309,25 +310,24 @@ class Timesheet extends MY_Controller
 
         if ($query != null) {
             $this->timesheet_model->updateResClockInPayDate($data);
-            $date_created= $this->timesheet_model-> insertResClockInPayDateLogs_paydate();
+            $date_created = $this->timesheet_model->insertResClockInPayDateLogs_paydate();
         } else {
             $this->timesheet_model->insertResClockInPayDate_paydate($data);
-            $date_created=$this->timesheet_model-> insertResClockInPayDateLogs_paydate();
+            $date_created = $this->timesheet_model->insertResClockInPayDateLogs_paydate();
         }
 
         $query2 = $this->timesheet_model->getLastResClockInPayDateLogs_payday(logged('company_id'));
         $query3 = $this->timesheet_model->getUsersAccordingToLogs();
-        foreach($query2 as $res){
-            $last_update = date("M d, Y h:i A",strtotime($this->datetime_zone_converter($date_created, "UTC", $this->session->userdata('usertimezone'))));
+        foreach ($query2 as $res) {
+            $last_update = date("M d, Y h:i A", strtotime($this->datetime_zone_converter($date_created, "UTC", $this->session->userdata('usertimezone'))));
         }
-        
-        $data= new stdClass();
+
+        $data = new stdClass();
         $data->recent = $query2;
         $data->user   = $query3;
         $data->last_update   = $last_update;
 
         echo json_encode($data);
-
     }
 
 
@@ -1189,7 +1189,7 @@ class Timesheet extends MY_Controller
         $this->page_data['on_unapprovedleave'] = $this->timesheet_model->getLeaveList(date('Y-m-d'), "unapproved");
         $this->page_data['on_pendingleave'] = $this->timesheet_model->getLeaveList(date('Y-m-d'), "pending");
         $this->page_data['on_pendingleave'] = $this->timesheet_model->getLeaveList(date('Y-m-d'), "pending");
-
+        $this->page_data['paydate'] = $this->timesheet_model->getData(logged('company_id'));
         // var_dump($this->page_data['out_now']);
         $this->load->view('users/timesheet_attendance', $this->page_data);
     }
@@ -3504,6 +3504,7 @@ class Timesheet extends MY_Controller
         ));
         $this->load->model('timesheet_model');
         $this->page_data['newforyou'] = $this->timesheet_model->getNewForyouNotifications();
+
         // var_dump($this->page_data['allnotification']);
         $this->load->view('users/timesheet_attendance_logs', $this->page_data);
     }
@@ -4565,9 +4566,59 @@ class Timesheet extends MY_Controller
     }
     public function show_my_attendance_remarks()
     {
+
+        // $pay_day_in_a_week = $this->timesheet_model->getData(logged('company_id'));
+        // $pay_day = date('N', strtotime($pay_day_in_a_week->pay_date))-1;
+        // $today = date('N');
+        // $day = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
+
         $week = $this->input->post("week");
         $user_id = logged("id");
         $week_convert = date('Y-m-d', strtotime($week));
+
+        // $date_this_week = [];
+        // if ($pay_day <= $today) {
+        //     for ($x = $pay_day; $x < count($day); $x++) {
+
+        //         $date_this_week .= ["" . $day[$x] . "" => date("M d", strtotime('' . $day[$x] . ' this week', strtotime($week_convert)))];
+        //     }
+        //     for ($y = 0; $y < $pay_day; $x++) {
+        //         $date_this_week .= ["" . $day[$y] . "" => date("M d", strtotime('' . $day[$y] . ' next week', strtotime($week_convert)))];
+        //     }
+        // }else{
+        //     for ($x = $pay_day; $x < count($day); $x++) {
+
+        //         $date_this_week .= ["" . $day[$x] . "" => date("M d", strtotime('' . $day[$x] . ' last week', strtotime($week_convert)))];
+        //     }
+        //     for ($y = 0; $y < $pay_day; $x++) {
+        //         $date_this_week .= ["" . $day[$y] . "" => date("M d", strtotime('' . $day[$y] . ' this week', strtotime($week_convert)))];
+        //     }
+        // }
+        // $day_sequence = [];
+        // $pay_day_this_week = date("m-d-y", strtotime('monday this week',$pay_day_in_a_week->pay_date));
+
+        // if($week_convert < $pay_day_this_week){ //if yes days frayday last week to this week
+        //     for ($x = $pay_day; $x < count($day); $x++) {
+        //         $day_sequence .= [$day[$x]];
+        //         $date_this_week .= ["" . $day[$x] . "" => date("M d", strtotime('' . $day[$x] . ' last week', strtotime($week_convert)))];
+        //     }
+        //     for ($y = 0; $y < $pay_day; $x++) {
+        //         $day_sequence .= [$day[$x]];
+        //         $date_this_week .= ["" . $day[$y] . "" => date("M d", strtotime('' . $day[$y] . ' this week', strtotime($week_convert)))];
+        //     }
+        // }else{ //pay day this week to next week
+        //     for ($x = $pay_day; $x < count($day); $x++) {
+        //         $day_sequence .= [$day[$x]];
+        //         $date_this_week .= ["" . $day[$x] . "" => date("M d", strtotime('' . $day[$x] . ' this week', strtotime($week_convert)))];
+        //     }
+        //     for ($y = 0; $y < $pay_day; $x++) {
+        //         $day_sequence .= [$day[$x]];
+        //         $date_this_week .= ["" . $day[$y] . "" => date("M d", strtotime('' . $day[$y] . ' next week', strtotime($week_convert)))];
+        //     }
+        // }
+        
+
         $date_this_week = array(
             "Monday" => date("M d", strtotime('monday this week', strtotime($week_convert))),
             "Tuesday" => date("M d", strtotime('tuesday this week', strtotime($week_convert))),
@@ -4577,6 +4628,7 @@ class Timesheet extends MY_Controller
             "Saturday" => date("M d", strtotime('saturday this week', strtotime($week_convert))),
             "Sunday" => date("M d", strtotime('sunday this week', strtotime($week_convert))),
         );
+
         $week_check = array(
             0 => date("Y-m-d", strtotime('monday this week', strtotime($week_convert))),
             1 => date("Y-m-d", strtotime('tuesday this week', strtotime($week_convert))),
@@ -4722,7 +4774,12 @@ class Timesheet extends MY_Controller
         $display = "";
         $display .= '<thead>';
         $display .= '<tr role="row">';
-        $display .= '<th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;"> Monday<br>' . $date_this_week['Monday'] . '</th>';
+
+        // for($x=0;$x < count($day_sequence);$x++){
+        //     $display .= '<th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">'.$day_sequence[$x].'<br>' . $date_this_week[$x] . '</th>';
+        // }
+        // 
+        $display .= '<th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Monday<br>' . $date_this_week['Monday'] . '</th>';
         $display .= '<th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Tuesday<br>' . $date_this_week['Tuesday'] . '</th>';
         $display .= '<th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Wednesday<br>' . $date_this_week['Wednesday'] . '</th>';
         $display .= '<th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Thursday<br>' . $date_this_week['Thursday'] . '</th>';

@@ -11,23 +11,11 @@
             <div class="col-md-8">
                 <select data-type="customer_status" id="status" name="status" data-customer-source="dropdown" class="input_select" >
                     <option  value=""></option>
-                    <option  value="Draft">Draft</option>
-                    <option <?php if(isset($profile_info)){ if($profile_info->status == 'Charge Back'){ echo 'selected'; } } ?> value="Charge Back">Charge Back</option>
-                    <option <?php if(isset($profile_info)){ if($profile_info->status == 'Cancelled'){ echo 'selected'; } } ?> value="Cancelled">Cancelled</option>
-                    <option <?php if(isset($profile_info)){ if($profile_info->status == 'Collection'){ echo 'selected'; } } ?> value="Collection">Collection</option>
-                    <option <?php if(isset($profile_info)){ if($profile_info->status == 'Cancel Pending'){ echo 'selected'; } } ?> value="Cancel Pending">Cancel Pending</option>
-                    <option <?php if(isset($profile_info)){ if($profile_info->status == 'Installed'){ echo 'selected'; } } ?> value="Installed">Installed</option>
-                    <option <?php if(isset($profile_info)){ if($profile_info->status == 'Active'){ echo 'selected'; } } ?> value="Active">Active</option>
-                    <option <?php if(isset($profile_info)){ if($profile_info->status == 'In Active'){ echo 'selected'; } } ?> value="In Active">In Active</option>
-                    <option <?php if(isset($profile_info)){ if($profile_info->status == 'Lead'){ echo 'selected'; } } ?> value="Lead">Lead</option>
-                    <option <?php if(isset($profile_info)){ if($profile_info->status == 'No Show'){ echo 'selected'; } } ?> value="No Show">No Show</option>
-                    <option <?php if(isset($profile_info)){ if($profile_info->status == 'Pending'){ echo 'selected'; } } ?> value="Pending">Pending</option>
-                    <option <?php if(isset($profile_info)){ if($profile_info->status == 'Past Due'){ echo 'selected'; } } ?> value="Past Due">Past Due</option>
-                    <option <?php if(isset($profile_info)){ if($profile_info->status == 'Re-Scheduled'){ echo 'selected'; } } ?> value="Re-Scheduled">Re-Scheduled</option>
-                    <option <?php if(isset($profile_info)){ if($profile_info->status == 'Scheduled'){ echo 'selected'; } } ?> value="Scheduled">Scheduled</option>
-                    <option <?php if(isset($profile_info)){ if($profile_info->status == 'Service Customer'){ echo 'selected'; } } ?> value="Service Customer">Service Customer</option>
-                    <option <?php if(isset($profile_info)){ if($profile_info->status == 'Other'){ echo 'selected'; } } ?> value="Other">Other</option>
+                    <?php foreach ($customer_status as $status): ?>
+                        <option <?= isset($profile_info) ? ($profile_info->status == $status->name ? 'selected' : '') : '' ?> value="<?= $status->name ?>"><?= $status->name ?></option>
+                    <?php endforeach; ?>
                 </select>
+                <a href="javascript:void(0);" onclick="window.open('<?= base_url('customer/settings/customerStatus') ?>', '_blank', 'location=yes,height=1080,width=1500,scrollbars=yes,status=yes');" style="color:#58bc4f;font-size: 10px;"><span class="fa fa-plus"></span> Manage Status</a>&nbsp;&nbsp;
             </div>
         </div>
         <div class="row form_line">

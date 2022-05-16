@@ -1288,3 +1288,4 @@ $route['booking/save_booking_inquiry'] = 'Pages/save_product_booking';
 $route['taskhub/_load_taskhub_list'] = 'Taskhub/ajax_load_company_list';
 $route['taskhub/_add_new_task'] = 'Taskhub/ajax_add_new_task';
 $route['taskhub/_save_task'] = 'Taskhub/ajax_save_task';
+$route['taskhub/_task_mark_completed'] = 'Taskhub/ajax_complete_task';

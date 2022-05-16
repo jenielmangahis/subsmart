@@ -4448,3 +4448,21 @@ if (!function_exists('is_admin_logged')) {
         $CI->CustomerAuditLog_model->create($data_log);
     }
 }
+
+if (!function_exists('getTaskAssignedUser')) {
+
+    function getTaskAssignedUser($task_id)
+    {
+        $CI =& get_instance();
+        $CI->db->select('tasks_participants.*, CONCAT(users.FName, " ", users.LName)AS assigned_user');
+        $CI->db->from('tasks_participants');
+        $CI->db->join('users','tasks_participants.user_id = users.id','left');
+        $CI->db->where('task_id', $task_id);
+        $CI->db->where('is_assigned', 1);
+        $taskAssigned = $CI->db->get()->row();
+
+        if ($taskAssigned) {
+            return ucwords($taskAssigned->assigned_user);
+        }
+    }
+}

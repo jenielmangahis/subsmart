@@ -16,6 +16,12 @@
         "pageLength": 10
     });
 
+    var customer_status = $('#customer_status').DataTable({
+        "lengthChange": false,
+        "searching" : false,
+        "pageLength": 10
+    });
+
     $('#rate_plan').DataTable({
         "lengthChange": false,
         "searching" : false,
@@ -33,6 +39,8 @@
         "searching" : false,
         "pageLength": 10
     });
+
+    
 
     $("#add_ls").on( "click", function( event ) {
         $('#leadSourceForm')[0].reset();
@@ -58,6 +66,28 @@
                 }
                 $('#modal_sales_area').modal('hide');
                 $('#salesAreaForm')[0].reset();
+            }
+        });
+    });
+
+    $("#customerStatusForm").submit(function(e) {
+        e.preventDefault(); // avoid to execute the actual submit of the form.
+        var form = $(this);
+        //var url = form.attr('action');
+        $.ajax({
+            type: "POST",
+            url: base_url + "customer/customer_settings_ajax_process",
+            data: form.serialize(), // serializes the form's elements.
+            success: function(data)
+            {
+                console.log(data);
+                if(data === "Updated"){
+                    sucess_add('Nice!',data,0);
+                }else{
+                    sucess_add('Good Job!','Successfully Added!','customerStatus');
+                }
+                $('#modal_customer_settings').modal('hide');
+                $('#customerStatusForm')[0].reset();0
             }
         });
     });
@@ -165,6 +195,34 @@
                         console.log(data);
                         if(data === '1'){
                             sucess_add('Nice!','Successfully Removed!','salesArea');
+                        }
+                    }
+                });
+            }
+        });
+    });
+
+    $("body").delegate(".deleteCustomerStatus", "click", function(){
+        var ID=this.id;
+        Swal.fire({
+            title: 'Are you sure you want to DELETE this Status?',
+            text: "",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#32243d',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'No',
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    type: "POST",
+                    url: base_url + "customer/customer_settings_delete",
+                    data: { id:ID }, // serializes the form's elements.
+                    success: function(data){
+                        console.log(data);
+                        if(data === '1'){
+                            sucess_add('Nice!','Successfully Removed!','customerStatus');
                         }
                     }
                 });

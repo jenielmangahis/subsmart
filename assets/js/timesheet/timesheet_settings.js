@@ -1,4 +1,6 @@
 $(document).ready(function() {
+
+    var pay = "";
     $("#timesheet_report_settings1").on("click", function() {
         $.ajax({
             type: "POST",
@@ -12,11 +14,18 @@ $(document).ready(function() {
                     }
                     var html = data.user[0]['FName'] + " " + data.user[0]['LName'] + ", " + data.last_update;
                     var html2 = data.user[0]['FName'] + " " + data.user[0]['LName'] + ", " + data.last_update2;
-                    console.log(html2);
 
-                    $(".Payday").val(data.result[0]['pay_date']);
+
+
                     $("#update").html(html);
                     $("#update2").html(html2);
+
+                    $("input[name='payday']").each(function() {
+                        if (this.value == data.result[0]['pay_date']) {
+                            this.checked = true;
+                        }
+                    });
+
                 }
             },
         });
@@ -121,14 +130,14 @@ $(document).ready(function() {
 
 
     $("#submit").on("click", function() {
-        console.log($("#est_wage_privacy2").val());
-        console.log($(".Payday").val());
-
+        $("input[name='payday']:checked").each(function() {
+            pay = this.value;
+        });
         $.ajax({
             type: "POST",
             url: baseURL + "/timesheet/insertResClockInPayDate",
             data: {
-                paydate: $(".Payday").val(),
+                paydate: pay,
             },
             dataType: "json",
             success: function(data) {

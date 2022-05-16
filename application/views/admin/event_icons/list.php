@@ -13,57 +13,42 @@
                     <div class="col-12">
                         <div class="nsm-callout primary">
                             <button><i class='bx bx-x'></i></button>
-                            Listing of all industry modules.
+                            Listing of all event icons.
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-12 col-md-4">
-                        <form action="<?php echo base_url('admin/industry_modules') ?>" method="GET">
+                        <form action="<?php echo base_url('admin/event_icons') ?>" method="GET">
                             <div class="nsm-field-group search">
-                                <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" name="search" placeholder="Search Industry Modules" value="<?php echo (!empty($search)) ? $search : '' ?>">                                
+                                <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" name="search" placeholder="Search Event Icons" value="<?php echo (!empty($search)) ? $search : '' ?>">                                
                             </div>
                             <button type="submit" class="nsm-button primary" style="margin:0px;">Search</button>
                             <button type="button" class="nsm-button primary btn-reset-list" style="margin:0px;">Reset</a>
                         </form>
                     </div>
                     <div class="col-12 col-md-8 grid-mb text-end">
-                        <div class="dropdown d-inline-block">
-                            <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
-                                <span>Filter by : <?= $cid_search; ?></span> <i class='bx bx-fw bx-chevron-down'></i>
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-end select-filter">
-                                <li><a class="dropdown-item" data-id="filter_all" href="<?= base_url('admin/industry_modules'); ?>">All Industry Modules</a></li>
-                                <li><a class="dropdown-item" data-id="filter_all" href="<?= base_url('admin/industry_modules?status=active'); ?>">Status Active</a></li>
-                                <li><a class="dropdown-item" data-id="filter_all" href="<?= base_url('admin/industry_modules?status=deactivated'); ?>">Status Inactive</a></li>
-                            </ul>
-                        </div>
                         <div class="nsm-page-buttons page-button-container">
-                            <a class="nsm-button primary btn-add-new-module" href="javascript:void(0);" style="margin-left: 10px;"><i class='bx bx-fw bx-plus-circle' ></i> New Industry Module</a>                            
+                            <a class="nsm-button primary btn-add-new-icon" href="javascript:void(0);" style="margin-left: 10px;"><i class='bx bx-fw bx-plus-circle' ></i> New Icon</a>                            
                         </div>
                     </div>
                 </div>
                 <table class="nsm-table">
                     <thead>
                         <tr>
-                            <td data-name="Module Name">Module Name</td>
-                            <td data-name="Description">Description</td>
-                            <td data-name="Status" style="width:10%;">Status</td>
+                            <td class="table-icon"></td>
+                            <td data-name="Icon Name">Icon Name</td>                            
                             <td data-name="Manage" style="width: 10%;">Action</td>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach( $industryModules as $industryModule){ ?>                            
+                        <?php foreach( $icons as $i){ ?>               
                             <tr>
-                                <td class="center"><?= $industryModule->name; ?></td>
-                                <td class="center"><?= $industryModule->description; ?></td>
                                 <td class="center">
-                                    <?php if($industryModule->status == 1) { ?>
-                                        <span class="badge" style="background-color: #6a4a86; color: #ffffff;display: block; margin: 5px;">Active</span>
-                                    <?php }else{ ?>
-                                        <span class="badge" style="background-color: #dc3545; color: #ffffff;display: block; margin: 5px;">Inactive</span>
-                                    <?php } ?>
+                                    <?php $marker = base_url("uploads/icons/" . $i->image); ?>
+                                    <div class="table-row-icon img" style="background-image: url('<?php echo $marker ?>')"></div>
                                 </td>
+                                <td class="center"><?= $i->name; ?></td>
                                 <td class="center actions-col">
                                     <div class="dropdown table-management">
                                         <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
@@ -71,10 +56,10 @@
                                         </a>
                                         <ul class="dropdown-menu dropdown-menu-end">
                                             <li>
-                                                <a class="dropdown-item btn-edit-module" href="javascript:void(0)" data-id="<?php echo $industryModule->id ?>"><i class='bx bx-fw bxs-edit'></i> Edit</a>
+                                                <a class="dropdown-item btn-edit-icon" href="javascript:void(0)" data-id="<?php echo $i->id ?>"><i class='bx bx-fw bxs-edit'></i> Edit</a>
                                             </li>
                                             <li>
-                                                <a class="dropdown-item delete-module" href="javascript:void(0);" data-name="<?= $industryModule->name; ?>" data-id="<?= $industryModule->id; ?>"><i class="bx bx-fw bx-trash"></i> Delete</a>
+                                                <a class="dropdown-item delete-icon" href="javascript:void(0);" data-name="<?= $i->name; ?>" data-id="<?= $i->id; ?>"><i class="bx bx-fw bx-trash"></i> Delete</a>
                                             </li>
                                         </ul>
                                     </div>
@@ -85,49 +70,49 @@
                 </table>
             </div>
 
-            <!--Add New Industry Module modal-->
-            <div class="modal fade nsm-modal fade" id="modalAddNewIndustryModule" tabindex="-1" aria-labelledby="modalAddNewIndustryModuleLabel" aria-hidden="true">
+            <!--Add New Event Type modal-->
+            <div class="modal fade nsm-modal fade" id="modalAddNewIcon" tabindex="-1" aria-labelledby="modalAddNewIconLabel" aria-hidden="true">
                 <div class="modal-dialog modal-md">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <span class="modal-title content-title" id="new_feed_modal_label">Add New Industry Module</span>
+                            <span class="modal-title content-title" id="new_feed_modal_label">Add New Event Icon</span>
                             <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
                         </div>
-                        <form action="" id="frm-add-new-industry-module">
+                        <form action="" id="frm-add-new-icon">
                         <div class="modal-body">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <label for="">Name</label>
-                                    <input type="text" name="module_name" id="module-name" class="form-control" required="">
+                            <div class="row">    
+                                <div class="col-md-12 mt-3">
+                                    <label for="">Icon Name</label>
+                                    <input type="text" name="icon_name" id="icon-name" class="form-control" required="">
                                 </div>
-                                <div class="col-md-12">
-                                    <label for="">Description</label>
-                                    <textarea class="form-control" name="module_description" id="module-description" style="height: 150px;"></textarea>
+                                <div class="col-md-12 mt-3">
+                                    <label for="">Icon / Marker</label>
+                                    <input type="file" name="image_marker" class="form-control" required="" />
                                 </div>
                             </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="nsm-button primary btn-add-module">Save</button>
+                            <button type="submit" class="nsm-button primary btn-add-icon">Save</button>
                         </div>
                         </form>                      
                     </div>
                 </div>
             </div>
 
-            <!--Edit Industry Module modal-->
-            <div class="modal fade nsm-modal fade" id="modalEditIndustryModule" tabindex="-1" aria-labelledby="modalEditIndustryModuleLabel" aria-hidden="true">
+            <!--Edit Event Icon modal-->
+            <div class="modal fade nsm-modal fade" id="modalEditIcon" tabindex="-1" aria-labelledby="modalEditIconLabel" aria-hidden="true">
                 <div class="modal-dialog modal-md">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <span class="modal-title content-title" id="new_feed_modal_label">Edit Industry Module</span>
+                            <span class="modal-title content-title" id="new_feed_modal_label">Edit Event Icon</span>
                             <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
                         </div>
-                        <form action="" id="frm-edit-industry-module">
-                        <div class="modal-body modal-edit-module-container"></div>
+                        <form action="" id="frm-edit-icon">
+                        <div class="modal-body modal-edit-icon-container"></div>
                         <div class="modal-footer">
                             <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="nsm-button primary btn-update-module">Save</button>
+                            <button type="submit" class="nsm-button primary btn-update-icon">Save</button>
                         </div>
                         </form>                      
                     </div>
@@ -142,19 +127,19 @@ $(document).ready(function() {
     $(".nsm-table").nsmPagination();
 
     $(document).on('click', '.btn-reset-list', function(){
-        location.href = base_url + 'admin/industry_modules';
+        location.href = base_url + 'admin/event_icons';
     });
 
-    $(document).on('click','.btn-add-new-module',function(){
-        $('#modalAddNewIndustryModule').modal('show');
+    $(document).on('click','.btn-add-new-icon',function(){
+        $('#modalAddNewIcon').modal('show');
     });
 
-    $(document).on('submit', '#frm-add-new-industry-module', function(e){
+    $(document).on('submit', '#frm-add-new-icon', function(e){
         e.preventDefault();
-        var url = base_url + 'admin/ajaxSaveIndustryModule';
-        $(".btn-add-module").html('<span class="bx bx-loader bx-spin"></span>');
+        var url = base_url + 'admin/ajaxSaveEventIcon';
+        $(".btn-add-icon").html('<span class="bx bx-loader bx-spin"></span>');
 
-        var formData = new FormData($("#frm-add-new-industry-module")[0]);   
+        var formData = new FormData($("#frm-add-new-icon")[0]);   
 
         setTimeout(function () {
           $.ajax({
@@ -168,10 +153,10 @@ $(document).ready(function() {
              success: function(o)
              {          
                 if( o.is_success == 1 ){   
-                    $("#modalAddNewIndustryModule").modal("hide");         
+                    $("#modalAddNewIcon").modal("hide");         
                     Swal.fire({
                         title: 'Save Successful!',
-                        text: "Industry Module was successfully created.",
+                        text: "Event Icon was successfully created.",
                         icon: 'success',
                         showCancelButton: false,
                         confirmButtonText: 'Okay'
@@ -188,39 +173,39 @@ $(document).ready(function() {
                   });
                 } 
 
-                $(".btn-add-module").html('Save');
+                $(".btn-add-icon").html('Save');
              }
           });
         }, 800);
     });
 
-    $(document).on('click','.btn-edit-module', function(){
-        var mid = $(this).attr('data-id');
-        var url = base_url + 'admin/ajax_edit_industry_module';
+    $(document).on('click','.btn-edit-icon', function(){
+        var eiid = $(this).attr('data-id');
+        var url  = base_url + 'admin/ajax_edit_event_icon';
 
-        $('#modalEditIndustryModule').modal('show');
-        $(".modal-edit-module-container").html('<span class="bx bx-loader bx-spin"></span>');
+        $('#modalEditIcon').modal('show');
+        $(".modal-edit-icon-container").html('<span class="bx bx-loader bx-spin"></span>');
 
         setTimeout(function () {
           $.ajax({
              type: "POST",
              url: url,
-             data: {mid:mid},
+             data: {eiid:eiid},
              success: function(o)
              {          
-                $('.modal-edit-module-container').html(o);
+                $('.modal-edit-icon-container').html(o);
              }
           });
         }, 800);
     });
 
-    $(document).on('submit','#frm-edit-industry-module', function(e){
+    $(document).on('submit','#frm-edit-icon', function(e){
         e.preventDefault();
 
-        var url = base_url + 'admin/ajaxUpdateIndustryModule';
-        $(".btn-update-module").html('<span class="bx bx-loader bx-spin"></span>');
+        var url = base_url + 'admin/ajaxUpdateEventIcon';
+        $(".btn-update-icon").html('<span class="bx bx-loader bx-spin"></span>');
 
-        var formData = new FormData($("#frm-edit-industry-module")[0]);   
+        var formData = new FormData($("#frm-edit-icon")[0]);   
 
         setTimeout(function () {
           $.ajax({
@@ -234,10 +219,10 @@ $(document).ready(function() {
              success: function(o)
              {          
                 if( o.is_success == 1 ){   
-                    $("#modalEditIndustryModule").modal("hide");         
+                    $("#modalEditIcon").modal("hide");         
                     Swal.fire({
                         title: 'Save Successful!',
-                        text: "Industry Module was successfully updated.",
+                        text: "Event Icon was successfully updated.",
                         icon: 'success',
                         showCancelButton: false,
                         confirmButtonText: 'Okay'
@@ -254,20 +239,20 @@ $(document).ready(function() {
                   });
                 } 
 
-                $(".btn-update-module").html('Save');
+                $(".btn-update-icon").html('Save');
              }
           });
         }, 800);
     });
 
-    $(document).on("click", ".delete-module", function(e) {
-        var mid = $(this).attr("data-id");
-        var module_name = $(this).attr('data-name');
-        var url = base_url + 'admin/ajaxDeleteIndustryModule';
+    $(document).on("click", ".delete-icon", function(e) {
+        var eiid = $(this).attr("data-id");
+        var icon_name = $(this).attr('data-name');
+        var url = base_url + 'admin/ajaxDeleteEventIcon';
 
         Swal.fire({
-            title: 'Delete Industry Module',
-            html: "Are you sure you want to delete industry module <b>"+module_name+"</b>?",
+            title: 'Delete Event Icon',
+            html: "Are you sure you want to delete icon name <b>"+icon_name+"</b>?",
             icon: 'question',
             confirmButtonText: 'Proceed',
             showCancelButton: true,
@@ -278,12 +263,12 @@ $(document).ready(function() {
                     type: 'POST',
                     url: url,
                     dataType: 'json',
-                    data: {mid:mid},
+                    data: {eiid:eiid},
                     success: function(o) {
                         if( o.is_success == 1 ){   
                             Swal.fire({
                                 title: 'Delete Successful!',
-                                text: "Industry Module Data Deleted Successfully!",
+                                text: "Event Icon Data Deleted Successfully!",
                                 icon: 'success',
                                 showCancelButton: false,
                                 confirmButtonText: 'Okay'

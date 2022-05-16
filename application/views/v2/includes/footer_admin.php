@@ -29,6 +29,13 @@
     <script type="text/javascript" src="<?= base_url("assets/js/v2/nsm.table.js") ?>"></script>
     <!-- Bootstrap toggle -->
     <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js"></script> 
+
+    <!-- Bootstrap colorpicker -->
+    <script type="text/javascript" src="<?= base_url("assets/plugins/bootstrap-colorpicker/bootstrap-colorpicker.js") ?>"></script>
+
+    <!-- Ckeditor -->
+    <script type="text/javascript" src="<?= base_url("assets/ckeditor/ckeditor.js"); ?>"></script>
 
     <script type="text/javascript">
         var baseURL = '<?= base_url() ?>';        
