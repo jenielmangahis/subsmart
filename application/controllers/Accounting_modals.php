@@ -2975,7 +2975,7 @@ class Accounting_modals extends MY_Controller
     
                                 $this->vendors_model->update_transaction_item($data['transac_item_id'][$index], $itemDetail);
 
-                                $purchOrder = $this->vendors_model->get_purchase_order_by_id($linkedTransacCat[1], logged('company_id'));
+                                $purchOrder = $this->vendors_model->get_purchase_order_by_id($linkedTransacItem[1], logged('company_id'));
                                 $remainingBal = floatval($purchOrder->remaining_balance) - floatval($data['item_total'][$index]);
 
                                 $purchOrderData = [
@@ -3356,7 +3356,7 @@ class Accounting_modals extends MY_Controller
     
                                 $this->vendors_model->update_transaction_item($data['transac_item_id'][$index], $itemDetail);
 
-                                $purchOrder = $this->vendors_model->get_purchase_order_by_id($linkedTransacCat[1], logged('company_id'));
+                                $purchOrder = $this->vendors_model->get_purchase_order_by_id($linkedTransacItem[1], logged('company_id'));
                                 $remainingBal = floatval($purchOrder->remaining_balance) - floatval($data['item_total'][$index]);
 
                                 $purchOrderData = [
@@ -7231,14 +7231,20 @@ class Accounting_modals extends MY_Controller
                 $purchaseOrders = $this->expenses_model->get_vendor_open_purchase_orders($id);
                 $bills = $this->expenses_model->get_vendor_open_bills($id);
                 $vendorCredits = $this->expenses_model->get_vendor_unapplied_vendor_credits($id);
+
+                $linkedTransactions = $this->accounting_linked_transactions_model->get_linked_transactions('expense', $this->input->get('transaction-id'));
             break;
             case 'check':
                 $purchaseOrders = $this->expenses_model->get_vendor_open_purchase_orders($id);
                 $bills = $this->expenses_model->get_vendor_open_bills($id);
                 $vendorCredits = $this->expenses_model->get_vendor_unapplied_vendor_credits($id);
+
+                $linkedTransactions = $this->accounting_linked_transactions_model->get_linked_transactions('check', $this->input->get('transaction-id'));
             break;
             case 'bill':
                 $purchaseOrders = $this->expenses_model->get_vendor_open_purchase_orders($id);
+
+                $linkedTransactions = $this->accounting_linked_transactions_model->get_linked_transactions('bill', $this->input->get('transaction-id'));
             break;
             case 'bill-payment':
                 $bills = $this->expenses_model->get_vendor_open_bills($id);
@@ -7257,16 +7263,25 @@ class Accounting_modals extends MY_Controller
                 $balance = '$'.number_format(floatval($purchaseOrder->remaining_balance), 2, '.', ',');
                 $total = '$'.number_format(floatval($purchaseOrder->total_amount), 2, '.', ',');
 
-                $transactions[] = [
-                    'type' => 'Purchase Order',
-                    'data_type' => 'purchase-order',
-                    'id' => $purchaseOrder->id,
-                    'number' => $purchaseOrder->purchase_order_no === null || $purchaseOrder->purchase_order_no === '' ? '' : $purchaseOrder->purchase_order_no,
-                    'date' => date("m/d/Y", strtotime($purchaseOrder->purchase_order_date)),
-                    'formatted_date' => date("F j", strtotime($purchaseOrder->purchase_order_date)),
-                    'total' => str_replace('$-', '-$', $total),
-                    'balance' => str_replace('$-', '-$', $balance)
-                ];
+                $flag = true;
+                if(!is_null($this->input->get('transaction-id'))) {
+                    if($purchaseOrder->status === "2" && array_search($purchaseOrder->id, array_column($linkedTransactions, 'linked_transaction_id')) === false) {
+                        $flag = false;
+                    }
+                }
+
+                if($flag) {
+                    $transactions[] = [
+                        'type' => 'Purchase Order',
+                        'data_type' => 'purchase-order',
+                        'id' => $purchaseOrder->id,
+                        'number' => $purchaseOrder->purchase_order_no === null || $purchaseOrder->purchase_order_no === '' ? '' : $purchaseOrder->purchase_order_no,
+                        'date' => date("m/d/Y", strtotime($purchaseOrder->purchase_order_date)),
+                        'formatted_date' => date("F j", strtotime($purchaseOrder->purchase_order_date)),
+                        'total' => str_replace('$-', '-$', $total),
+                        'balance' => str_replace('$-', '-$', $balance)
+                    ];
+                }
             }
         }
 
@@ -10049,7 +10064,7 @@ class Accounting_modals extends MY_Controller
                 $balance = '$'.number_format(floatval($purchaseOrder->remaining_balance), 2, '.', ',');
                 $total = '$'.number_format(floatval($purchaseOrder->total_amount), 2, '.', ',');
 
-                if($purchaseOrder->status === "1" || $purchaseOrder->status === "2" && array_search($purchaseOrder->id, array_column($linkableTransactions, 'id')) === false) {
+                if($purchaseOrder->status === "1" && array_search($purchaseOrder->id, array_column($linkedTransactions, 'linked_transaction_id')) === false) {
                     $linkableTransactions[] = [
                         'type' => 'Purchase Order',
                         'data_type' => 'purchase-order',
@@ -10125,7 +10140,7 @@ class Accounting_modals extends MY_Controller
                 $balance = '$'.number_format(floatval($purchaseOrder->remaining_balance), 2, '.', ',');
                 $total = '$'.number_format(floatval($purchaseOrder->total_amount), 2, '.', ',');
 
-                if($purchaseOrder->status === "1" || $purchaseOrder->status === "2" && array_search($purchaseOrder->id, array_column($linkableTransactions, 'id')) === false) {
+                if($purchaseOrder->status === "1" && array_search($purchaseOrder->id, array_column($linkedTransactions, 'linked_transaction_id')) === false) {
                     $linkableTransactions[] = [
                         'type' => 'Purchase Order',
                         'data_type' => 'purchase-order',

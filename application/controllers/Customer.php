@@ -84,6 +84,7 @@ class Customer extends MY_Controller
             'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js',
         ]);
         
+        $this->page_data['companyId'] = logged('company_id');
         $this->page_data['enabled_table_headers'] = $enabled_table_headers;
         $this->load->view('v2/pages/customer/list', $this->page_data);
     }
@@ -735,6 +736,7 @@ class Customer extends MY_Controller
         $this->page_data['lead_types'] = $this->customer_ad_model->get_all(FALSE,"","","ac_leadtypes","lead_id");
         $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE,"","","ac_salesarea","sa_id");
         $this->page_data['rate_plans'] = $this->customer_ad_model->get_all(FALSE,"","","ac_rateplan","id");
+        $this->page_data['customer_status'] = $this->customer_ad_model->get_all(FALSE,"","","acs_cust_status","id");
 
 
         // get activation fee
@@ -846,6 +848,11 @@ class Customer extends MY_Controller
         }else{
             redirect(base_url('customer/'));
         }
+        // load job checlist model
+        $this->load->model('JobChecklist_model');
+        $jobChecklists = $this->JobChecklist_model->getAllByCompanyId(logged('company_id'));
+        $this->page_data['job_check_lists'] = $jobChecklists;
+
         $this->page_data['cust_tab'] = $this->uri->segment(3);
         $this->page_data['cust_active_tab'] = 'dashboard';
         $this->page_data['users'] = $this->users_model->getUsers();
@@ -1463,6 +1470,9 @@ class Customer extends MY_Controller
         $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE,"","ASC","ac_salesarea","sa_id");
         $this->page_data['employees'] = $this->customer_ad_model->get_all(FALSE,"","ASC","users","id");
         $this->page_data['users'] = $this->users_model->getUsers();
+
+        // fetch customer statuses
+        $this->page_data['customer_status'] = $this->customer_ad_model->get_all(FALSE,"","","acs_cust_status","id");
 
         if (isset($this->page_data['profile_info']->fk_sa_id)) {
             foreach ($this->page_data['sales_area'] as $area) {
@@ -2412,6 +2422,40 @@ class Customer extends MY_Controller
             echo 0;
         }
     }
+
+    public function customer_settings_ajax_process(){
+        $input = $this->input->post();
+        // customer_ad_model
+        if(empty($input['id'])){
+            unset($input['id']);
+            if($this->customer_ad_model->add($input,"acs_cust_status")){
+                echo true;
+            }else{
+                echo "Error";
+            }
+        }else{
+            if($this->customer_ad_model->update_data($input,"acs_cust_status","id")){
+                echo "Updated";
+            }else{
+                echo "Error";
+            }
+        }
+    }
+
+    public function customer_settings_delete(){
+        $deletion_query = array(
+            'where' => array(
+                'id' => $_POST['id']
+            ),
+            'table' => 'acs_cust_status'
+        );
+        if($this->general->delete_($deletion_query)){
+            echo 1;
+        }else{
+            echo 0;
+        }
+    }
+
 
     public function add_salesarea_ajax(){
         $input = $this->input->post();

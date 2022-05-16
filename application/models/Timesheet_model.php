@@ -1639,8 +1639,8 @@ class Timesheet_model extends MY_Model
     {
         $query = $this->db->get_where("timesheet_ClockInRes_PayDate", array('company_id' => $company_id));
 
-        
         return $query->result();
+       
     }
 
     public function getResClockInPayDate($company_id)

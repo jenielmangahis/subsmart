@@ -77,15 +77,22 @@ export function updateCustomerDocument(payload) {
   );
 }
 
-export function getEmailTemplates() {
-  return http.get(`${prefixURL}/EsignEditor/apiGetEmailTemplates`);
+export function getEmailTemplates(urlGetParams = null) {
+  let endpoint = `${prefixURL}/EsignEditor/apiGetEmailTemplates`;
+  if (urlGetParams !== null) {
+    endpoint = `${endpoint}?` + new URLSearchParams(urlGetParams).toString();
+  }
+
+  return http.get(endpoint);
 }
 
-export function setDefaultEmailTemplate(payload) {
-  return http.post(
-    `${prefixURL}/EsignEditor/apiSetDefaultEmailTemplate`,
-    payload
-  );
+export function setDefaultEmailTemplate(payload, urlGetParams = null) {
+  let endpoint = `${prefixURL}/EsignEditor/apiSetDefaultEmailTemplate`;
+  if (urlGetParams !== null) {
+    endpoint = `${endpoint}?` + new URLSearchParams(urlGetParams).toString();
+  }
+
+  return http.post(endpoint, payload);
 }
 
 export function sendWelcomeEmail(payload) {

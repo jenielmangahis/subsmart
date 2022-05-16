@@ -211,7 +211,7 @@
                         </tbody>
                     </table>
                 <?php else : ?>
-                    <table class="nsm-table customer-list">
+                    <table class="nsm-table " id="customer-list">
                         <thead>
                             <tr>
                                 <td class="table-icon"></td>
@@ -222,7 +222,7 @@
                                 <td data-name="Source">Source</td>
                                 <td data-name="Added">Added</td>
                                 <td data-name="Sales Rep">Sales Rep</td>
-                                <td data-name="Tech">Tech</td>
+                                <td data-name="<?= $companyId == 58 ? 'Mentor' : 'Tech'   ?>"><?= $companyId == 58 ? 'Mentor' : 'Tech'   ?></td>
                                 <td data-name="Plan Type">Plan Type</td>
                                 <td data-name="Subscription Amount">Subscription Amount</td>
                                 <td data-name="Phone">Phone</td>
@@ -349,9 +349,17 @@
 </div>
 
 <script src="<?= base_url("assets/js/v2/printThis.js") ?>"></script>
+<link href="https://nightly.datatables.net/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
+<script src="https://nightly.datatables.net/js/jquery.dataTables.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
-        $(".customer-list").nsmPagination();
+       // $(".customer-list").nsmPagination();
+        $('#customer-list').DataTable({
+            "lengthChange": true,
+            "searching" : true,
+            "pageLength": 10,
+            "order": [],
+        });
 
         $(document).on("click", ".call-item", function() {
             let phone = $(this).attr("data-id");

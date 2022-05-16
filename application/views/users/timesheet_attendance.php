@@ -1184,7 +1184,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                                                 <input type="text" name="date_from"
                                                                                     id="week_attendance_remarks"
                                                                                     class="form-control ts_schedule"
-                                                                                    value="<?= date('m/d/Y', strtotime('monday this week')) ?>">
+                                                                                    value="<?php foreach ($paydate as $p) {
+                                                                                      echo date('m/d/Y', strtotime($p->pay_date));
+                                                                                    }?>">
                                                                             </div>
                                                                         </div>
                                                                     </form>

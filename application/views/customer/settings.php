@@ -70,6 +70,9 @@ add_css(array(
                                                         <li class="nav-item">
                                                             <a class="h6 mb-0 nav-link banking-sub-tab <?= $active_tab == 'header' ?   "active" : '';  ?>" data-toggle="tab" href="#header">Header</a>
                                                         </li>
+                                                        <li class="nav-item">
+                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?= $active_tab == 'customerStatus' ?   "active" : '';  ?>" data-toggle="tab" href="#customerStatus">Customer Status</a>
+                                                        </li>
                                                     </ul>
                                                 </div>
                                             </div>
@@ -100,6 +103,10 @@ add_css(array(
 
                                                 <div class="tab-pane <?= $active_tab == 'header' ? "active" : "fade"; ?> standard-accordion" id="header">
                                                     <?php include viewPath('customer/settings/header'); ?>
+                                                </div>
+
+                                                <div class="tab-pane <?= $active_tab == 'customerStatus' ? "active" : "fade"; ?> standard-accordion" id="customerStatus">
+                                                    <?php include viewPath('customer/settings/customer_settings'); ?>
                                                 </div>
 
                                                 <div class="tab-pane <?php if ($minitab == 'mt12') {
@@ -211,6 +218,10 @@ add_css(array(
 
 <!-- Activation Fee Modal -->
 <?php include viewPath('customer/adv_modals/modal_system_package_type'); ?>
+
+<!-- Customer Status Modal -->
+<?php include viewPath('customer/adv_modals/modal_customer_status'); ?>
+
 <!-- End Modals -->
 
 <?php

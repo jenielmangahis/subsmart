@@ -1517,7 +1517,8 @@ SQL;
     {
         header('content-type: application/json');
 
-        $categoryName = 'Email Templates';
+        $categoryParam = $this->getEmailTemplateCategoryFromQueryParam();
+        ['category' => $categoryName, 'default_foreign_column' => $defaultForeignCol] = $categoryParam;
         $companyId = logged('company_id');
 
         $this->db->select('id');
@@ -1534,7 +1535,7 @@ SQL;
         $companyUserIds = $this->db->get('users')->result();
         $companyUserIds = array_column($companyUserIds, 'id');
 
-        $this->db->select('l.id, l.title, l.category_id, l.user_id, IF(d.welcome_email_default = l.id, 1, 0) AS is_default', false);
+        $this->db->select("l.id, l.title, l.category_id, l.user_id, IF(d.{$defaultForeignCol} = l.id, 1, 0) AS is_default", false);
         $this->db->from('esign_editor_letters l');
         $this->db->where('l.is_active', 1);
         $this->db->where('c.id', $category->id);
@@ -1556,11 +1557,36 @@ SQL;
         }
 
         if (!$hasDefault && !empty($letters)) {
-            $this->createOrUpdateDefaultEmailTemplate($letters[0]->id);
+            $this->createOrUpdateDefaultEmailTemplate($letters[0]->id, $defaultForeignCol);
             $letters[0]->is_default = 1;
         }
 
         echo json_encode(['data' => $letters]);
+    }
+
+    private function getEmailTemplateCategoryFromQueryParam()
+    {
+        $param = $this->input->get('category') ?? null;
+
+        $category = 'Email Letters';
+        $defaultForeignColumn = 'welcome_email_default';
+
+        switch (strtolower($param)) {
+            case 'assign':
+                $category = 'Assign Letters';
+                $defaultForeignColumn = 'assign_letter_default';
+                break;
+
+            case 'office':
+            default:
+                break;
+
+        }
+
+        return [
+            'category' => $category,
+            'default_foreign_column' => $defaultForeignColumn,
+        ];
     }
 
     public function apiSetDefaultEmailTemplate()
@@ -1574,11 +1600,14 @@ SQL;
         $payload = json_decode(file_get_contents('php://input'), true);
         ['letter_id' => $letterId] = $payload;
 
-        $this->createOrUpdateDefaultEmailTemplate($letterId);
+        $categoryParam = $this->getEmailTemplateCategoryFromQueryParam();
+        ['default_foreign_column' => $defaultForeignCol] = $categoryParam;
+
+        $this->createOrUpdateDefaultEmailTemplate($letterId, $defaultForeignCol);
         echo json_encode(['data' => $payload]);
     }
 
-    private function createOrUpdateDefaultEmailTemplate($letterId)
+    private function createOrUpdateDefaultEmailTemplate($letterId, $defaultForeignCol)
     {
         $companyId = logged('company_id');
         $this->db->where('comp_id', $companyId);
@@ -1587,12 +1616,12 @@ SQL;
         if ($currDefault) {
             $this->db->where('id', $currDefault->id);
             $this->db->update('acs_company_dash_settings', [
-                'welcome_email_default' => $letterId,
+                $defaultForeignCol => $letterId,
             ]);
         } else {
             $this->db->insert('acs_company_dash_settings', [
                 'comp_id' => $companyId,
-                'welcome_email_default' => $letterId,
+                $defaultForeignCol => $letterId,
             ]);
         }
     }

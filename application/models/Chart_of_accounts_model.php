@@ -598,4 +598,12 @@ class Chart_of_accounts_model extends MY_Model {
 		$query = $this->db->get('accounting_bill_payments');
 		return $query->result();
 	}
+
+	public function get_company_active_accounts($companyId)
+	{
+		$this->db->where('company_id', $companyId);
+		$this->db->where('active', 1);
+		$query = $this->db->get($this->table);
+		return $query->result();
+	}
 }

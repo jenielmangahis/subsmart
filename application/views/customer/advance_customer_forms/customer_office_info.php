@@ -261,6 +261,41 @@
                 </select>
             </div>
         </div>
+        <div class="row form_line">
+            <div class="col-md-6">
+                System Package Type
+            </div>
+            <div class="col-md-6">
+                <select data-value="<?= isset($alarm_info) ? $alarm_info->system_type : "" ?>" name="system_type" data-type="alarm_info_system_type" class="form-control" required>
+                    <option><?= isset($alarm_info) ? $alarm_info->system_type : "" ?></option>
+                </select>
+                <!-- <select name="system_type" id="system_type" class="input_select">
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == ''){echo "selected";} } ?> value=""></option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'Landline'){echo "selected";} } ?> value="Landline">Landline</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'Landline W/ 2-Way'){echo "selected";} } ?> value="Landline W/ 2-Way">Landline W/ 2-Way</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'Landline W/ Cell Backup'){echo "selected";} } ?> value="Landline W/ Cell Backup">Landline W/ Cell Backup</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'Landline W/ 2-Way & Cell Backup'){echo "selected";} } ?> value="Landline W/ 2-Way & Cell Backup">Landline W/ 2-Way & Cell Backup</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'Cell Primary'){echo "selected";} } ?> value="Cell Primary">Cell Primary</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'Cell Primary w/2Way'){echo "selected";} } ?> value="Cell Primary w/2Way">Cell Primary w/2Way</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'Wireless Signal Forwarding'){echo "selected";} } ?> value="Wireless Signal Forwarding">Wireless Signal Forwarding</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'Commercial'){echo "selected";} } ?> value="Commercial">Commercial</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'Commercial Plus'){echo "selected";} } ?> value="Commercial Plus">Commercial Plus</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'Interactive'){echo "selected";} } ?> value="I">Interactive</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'Interactive Gold'){echo "selected";} } ?> value="Interactive Gold">Interactive Gold</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'Interactive Plus Automation'){echo "selected";} } ?> value="Interactive Plus Automation">Interactive Plus Automation</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'Interactive w/DVR'){echo "selected";} } ?> value="Interactive w/DVR">Interactive w/DVR</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'Interactive w/Dbell'){echo "selected";} } ?> value="Interactive w/Dbell">Interactive w/Dbell</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'Interactive w/Dbell & IP Camera'){echo "selected";} } ?> value="Interactive w/Dbell & IP Camera">Interactive w/Dbell & IP Camera</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'PERS'){echo "selected";} } ?> value="PERS">PERS</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'WIFI'){echo "selected";} } ?> value="WIFI">WIFI</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'Cell Primary w/WIFI'){echo "selected";} } ?> value="Cell Primary w/WIFI">Cell Primary w/WIFI</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'Cell Primary w/Access Control'){echo "selected";} } ?> value="Cell Primary w/Access Control">Cell Primary w/Access Control</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'Interactive w/Access Control'){echo "selected";} } ?> value="Interactive w/Access Control">Interactive w/Access Control</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'Interactive w/Access Control w/Automn'){echo "selected";} } ?> value="Interactive w/Access Control w/Automn">Interactive w/Access Control w/Automn</option>
+                </select> -->
+                <a href="<?= base_url() ?>customer/settings/spt" target="_blank"  style="color:#58bc4f;font-size: 10px;"><span class="fa fa-plus"></span> Manage System Type</a>&nbsp;&nbsp;
+            </div>
+        </div>
     </div>
 
         <div class="card-header">

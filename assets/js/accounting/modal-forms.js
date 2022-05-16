@@ -3250,8 +3250,9 @@ $(function() {
                     computeTransactionTotal();
 
                     var payee = $('#expenseModal #payee').val().split('-');
+                    var split = $('#checkModal').parent().attr('data-href').split('/');
 
-                    $.get('/accounting/get-linkable-transactions/expense/' + payee[1], function(res) {
+                    $.get('/accounting/get-linkable-transactions/expense/' + payee[1] + '?transaction-id=' + split[split.length - 1], function(res) {
                         var transactions = JSON.parse(res);
 
                         if (transactions.length > 0) {
@@ -3356,8 +3357,9 @@ $(function() {
                     computeTransactionTotal();
 
                     var payee = $('#checkModal #payee').val().split('-');
+                    var split = $('#checkModal').parent().attr('data-href').split('/');
 
-                    $.get('/accounting/get-linkable-transactions/check/' + payee[1], function(res) {
+                    $.get('/accounting/get-linkable-transactions/check/' + payee[1] + '?transaction-id=' + split[split.length - 1], function(res) {
                         var transactions = JSON.parse(res);
 
                         if (transactions.length > 0) {
@@ -3413,7 +3415,7 @@ $(function() {
 
         // $('#modal-container .modal #payee').trigger('change');
         // $('#modal-container .modal #vendor').trigger('change');
-        // $('#modal-container .modal #customer').trigger('change');
+        $('#modal-container .modal #customer').trigger('change');
     });
 
     $(document).on('click', '#modal-container .modal a.open-transaction', function(e) {

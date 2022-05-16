@@ -1044,4 +1044,11 @@ class Expenses_model extends MY_Model
         $query = $this->db->get('accounting_vendor_transaction_items');
         return $query->row();
     }
+
+    public function get_categories_by_expense_account($accountId)
+    {
+        $this->db->where('expense_account_id', $accountId);
+        $query = $this->db->get('accounting_vendor_transaction_categories');
+        return $query->result();
+    }
 }
