@@ -1482,8 +1482,17 @@ class Users extends MY_Controller {
 
         $role = $this->input->post('values[role]');
         $status = $this->input->post('values[status]');
-        $web_access = $this->input->post('values[web_access]');
-        $app_access = $this->input->post('values[app_access]');
+
+        $has_web_access = 0;        
+        if( $this->input->post('values[web_access]') == 'on' ){
+        	$has_web_access = 1;
+        }
+
+        $has_app_access = 0;
+        if( $this->input->post('values[app_access]') == 'on' ){
+        	$has_app_access = 1;
+        }
+
         $profile_img = $this->input->post('values[profile_photo]');
         $payscale_id = $this->input->post('values[empPayscale]');
         $emp_number  = $this->input->post('values[emp_number]');
@@ -1505,6 +1514,8 @@ class Users extends MY_Controller {
             'address' => $address,
             'state' => $state,
             'city' => $city,
+            'has_web_access' => $has_web_access,
+            'has_app_access' => $has_app_access,
             'postal_code' => $postal_code,
             'payscale_id' => $payscale_id,
             'user_type' => $user_type,

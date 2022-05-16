@@ -81,52 +81,57 @@ class Login extends CI_Controller
         $attempt = $this->users_model->attempt(compact('username', 'password'));
 
         if ($attempt == 'valid') {
-
-            // If Allowed, then retreive user row and login the user
             $user = $this->db->where('username', $username)->or_where('email', $username)->get($this->users_model->table)->row();
-            $this->users_model->login($user, post('remember_me'));
-
-            $client = $this->Clients_model->getById($user->company_id);
-            if( $client->is_plan_active == 3 ){
-                $this->data['message'] = 'Company account is currently disabled. Please contact system administrator.';
+            if( $user->has_web_access == 0 ){
+                $this->data['message'] = 'You do not have web access.';
                 $this->data['message_type'] = 'danger';
 
                 $this->index();
                 return;
             }else{
-                // Get all access modules
-                if ($user->role == 1 || $user->role == 2) { //Admin and nsmart tech
-                    $access_modules = array(0 => 'all');
-                } else {                
-                    if ($client) {
-                        if ($client->is_startup == 1) {
-                            $is_startup = 1;
-                        }
+                // If Allowed, then retreive user row and login the user                
+                $this->users_model->login($user, post('remember_me'));
 
-                        $industryType = $this->IndustryType_model->getById($client->industry_type_id);
-                        if ($industryType) {
-                            $industryModules = $this->IndustryTemplateModules_model->getAllByTemplateId($industryType->industry_template_id);
-                            foreach ($industryModules as $im) {
-                                $access_modules[] = $im->industry_module_id;
+                $client = $this->Clients_model->getById($user->company_id);
+                if( $client->is_plan_active == 3 ){
+                    $this->data['message'] = 'Company account is currently disabled. Please contact system administrator.';
+                    $this->data['message_type'] = 'danger';
+
+                    $this->index();
+                    return;
+                }else{
+                    // Get all access modules
+                    if ($user->role == 1 || $user->role == 2) { //Admin and nsmart tech
+                        $access_modules = array(0 => 'all');
+                    } else {                
+                        if ($client) {
+                            if ($client->is_startup == 1) {
+                                $is_startup = 1;
+                            }
+
+                            $industryType = $this->IndustryType_model->getById($client->industry_type_id);
+                            if ($industryType) {
+                                $industryModules = $this->IndustryTemplateModules_model->getAllByTemplateId($industryType->industry_template_id);
+                                foreach ($industryModules as $im) {
+                                    $access_modules[] = $im->industry_module_id;
+                                }
                             }
                         }
                     }
+
+                    //Get company deactivated modules
+                    $deactivatedModules  = $this->CompanyDeactivatedModule_model->getAllByCompanyId($client->id);
+                    $deactivated_modules = array();
+
+                    foreach( $deactivatedModules as $dm ){
+                        $deactivated_modules[$dm->industry_module_id] = $dm->industry_module_id;
+                    } 
+
+                    $this->session->set_userdata('deactivated_modules', $deactivated_modules);
+                    $this->session->set_userdata('userAccessModules', $access_modules);
+                    $this->session->set_userdata('is_plan_active', $client->is_plan_active);
                 }
-
-                //Get company deactivated modules
-                $deactivatedModules  = $this->CompanyDeactivatedModule_model->getAllByCompanyId($client->id);
-                $deactivated_modules = array();
-
-                foreach( $deactivatedModules as $dm ){
-                    $deactivated_modules[$dm->industry_module_id] = $dm->industry_module_id;
-                } 
-
-                $this->session->set_userdata('deactivated_modules', $deactivated_modules);
-                $this->session->set_userdata('userAccessModules', $access_modules);
-                $this->session->set_userdata('is_plan_active', $client->is_plan_active);
             }
-           
-
         } elseif ($attempt == 'invalid_password') {
 
             // Show Message if invalid password
