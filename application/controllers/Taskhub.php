@@ -22,7 +22,7 @@ class Taskhub extends MY_Controller {
 		function loadV2WidgetContents()
         {
             $company_id = logged('company_id');
-            $data['tasks'] = $this->taskhub_model->getTask($company_id);
+            $data['tasks'] = $this->taskhub_model->getOngoingTasksByCompanyId($company_id);
             $this->load->view('v2/widgets/task_hub_details', $data);
                     
         }
@@ -514,6 +514,24 @@ class Taskhub extends MY_Controller {
 	        	$is_success = 1;
         	}        	
         }
+ 
+		$json_data = ['is_success' => $is_success, 'msg' => $msg];
+
+        echo json_encode($json_data);  
+	}
+
+	public function ajax_company_complete_all_tasks()
+	{
+		$this->load->model('Taskhub_model');
+        $this->load->model('Taskhub_status_model');   
+
+        $cid = logged('company_id');
+        $uid = logged('id');
+
+        $is_success = 1;
+        $msg = '';
+
+        $this->Taskhub_model->completeAllTasksByCompanyId($cid);
  
 		$json_data = ['is_success' => $is_success, 'msg' => $msg];
 

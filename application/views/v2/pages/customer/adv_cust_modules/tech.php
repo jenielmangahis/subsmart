@@ -67,7 +67,7 @@
                 </div>
                 <?php endif; ?>
                 <div class="col-12">
-                    <button role="button" class="nsm-button primary w-100 ms-0 mt-3" id="sendQr">
+                    <button role="button" class="nsm-button primary w-100 ms-0 mt-3" id="emailtemplate-qr--trigger">
                         <i class='bx bx-fw bx-qr'></i> Send QR
                     </button>
                 </div>
@@ -75,17 +75,56 @@
         </div>
     </div>
 </div>
-<script>
-$(document).ready(function() {
-    $("#sendQr").click(function () {
-        $.ajax({
-            type: "POST",
-            url: "<?= base_url() ?>/customer/send_qr",
-            data: { custId: "<?= $profile_info->prof_id; ?>"}, // serializes the form's elements.
-            success: function (data){
-                alert('QR Sent!');
+
+<div class="modal fade nsm-modal" tabindex="-1" role="dialog" id="emailtemplate-qr--modal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">QR Email</h5>
+        <button type="button" data-bs-dismiss="modal" aria-label="Close">
+            <i class="bx bx-fw bx-x m-0"></i>
+        </button>
+      </div>
+      <div class="modal-body loading">
+        <style>
+            #emailtemplate-qr--modal .modal-body.loading .nsm-button,
+            #emailtemplate-qr--modal .modal-body.loading .letters-wrapper {
+                display: none;
             }
-        });
-    });
-});
-</script>
+            #emailtemplate-qr--modal .modal-body:not(.loading) .letters-loader {
+                display: none !important;
+            }
+        </style>
+        <div>
+            <div class="nsm-callout d-none"></div>
+
+            <div class="letters-wrapper"></div>
+            <div class="letters-loader d-flex align-items-center justify-content-center" style="min-height: 200px;">
+                <div class="spinner-border" role="status"></div>
+            </div>
+
+            <button type="button" class="nsm-button primary w-100 ms-0">
+                <i class="bx bx-fw bx-send"></i> Send QR Email
+            </button>
+        </div>
+
+        <template>
+            <div class="nsm-card mb-2 h-auto">
+                <div class="nsm-card-content">
+                    <div class="d-flex">
+                        <div>
+                            <span class="content-title d-block"></span>
+                        </div>
+                        <div class="d-flex justify-content-end align-items-center" style="margin-left: auto;">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input ms-0" type="radio" name="selectedassignemail">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </template>
+      </div>
+    </div>
+  </div>
+</div>

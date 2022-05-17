@@ -1568,7 +1568,7 @@ SQL;
     {
         $param = $this->input->get('category') ?? null;
 
-        $category = 'Email Letters';
+        $category = 'Welcome Letters';
         $defaultForeignColumn = 'welcome_email_default';
 
         switch (strtolower($param)) {
@@ -1576,6 +1576,10 @@ SQL;
                 $category = 'Assign Letters';
                 $defaultForeignColumn = 'assign_letter_default';
                 break;
+
+            case 'qr':
+                $category = 'QR Letters';
+                $defaultForeignColumn = 'qr_letter_default';
 
             case 'office':
             default:

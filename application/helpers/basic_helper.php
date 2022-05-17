@@ -4466,3 +4466,98 @@ if (!function_exists('getTaskAssignedUser')) {
         }
     }
 }
+
+if(!function_exists('set_expense_graph_data')) {
+    
+    function set_expense_graph_data($data)
+    {
+        $CI =& get_instance();
+        $CI->load->model('chart_of_accounts_model');
+        $CI->load->model('expenses_model');
+        $CI->load->model('vendors_model');
+
+        $accounts = $CI->chart_of_accounts_model->get_company_active_accounts(logged('company_id'));
+        $endDate = date("m/d/Y");
+        $startDate = date("m/d/Y", strtotime("$endDate -30 days"));
+
+        foreach($accounts as $key => $account) {
+            $categories = $CI->expenses_model->get_categories_by_expense_account($account->id);
+
+            $expenseAmount = 0.00;
+            foreach($categories as $category) {
+                switch($category->transaction_type) {
+                    case 'Expense' :
+                        $transaction = $CI->vendors_model->get_expense_by_id($category->transaction_id);
+                        $date = date("m/d/Y", strtotime($transaction->payment_date));
+                    break;
+                    case 'Check' :
+                        $transaction = $CI->vendors_model->get_check_by_id($category->transaction_id);
+                        $date = date("m/d/Y", strtotime($transaction->payment_date));
+                    break;
+                    case 'Bill' :
+                        $transaction = $CI->vendors_model->get_bill_by_id($category->transaction_id);
+                        $date = date("m/d/Y", strtotime($transaction->bill_date));
+                    break;
+                    case 'Purchase Order' :
+                        $transaction = $CI->vendors_model->get_purchase_order_by_id($category->transaction_id);
+                        $date = date("m/d/Y", strtotime($transaction->purchase_order_date));
+                    break;
+                    case 'Vendor Credit' :
+                        $transaction = $CI->vendors_model->get_vendor_credit_by_id($category->transaction_id);
+                        $date = date("m/d/Y", strtotime($transaction->payment_date));
+                    break;
+                    case 'Credit Card Credit' :
+                        $transaction = $CI->vendors_model->get_credit_card_credit_by_id($category->transaction_id);
+                        $date = date("m/d/Y", strtotime($transaction->payment_date));
+                    break;
+                }
+
+                if($transaction->recurring !== '1' && $transaction->status !== "0") {
+                    if(strtotime($date) >= strtotime($startDate) && strtotime($date) <= strtotime($endDate)) {
+                        switch($category->transaction_type) {
+                            case 'Expense' :
+                                $expenseAmount += floatval($category->amount);
+                            break;
+                            case 'Check' :
+                                $expenseAmount += floatval($category->amount);
+                            break;
+                            case 'Bill' :
+                                $expenseAmount += floatval($category->amount);
+                            break;
+                            case 'Vendor Credit' :
+                                $expenseAmount -= floatval($category->amount);
+                            break;
+                            case 'Credit Card Credit' :
+                                $expenseAmount -= floatval($category->amount);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            $accounts[$key]->expense_amount = $expenseAmount;
+        }
+
+        usort($accounts, function ($a, $b) {
+            return floatval($a->expense_amount) < floatval($b->expense_amount);
+        });
+
+        $accounts = array_slice($accounts, 0, 10);
+
+        $accountNames = array_column($accounts, 'name');
+        $accountExpenses = array_column($accounts, 'expense_amount');
+
+        $tempNames = array_map(function($value) {
+            return '"' . addcslashes($value, "\0..\37\"\\") . '"';
+        }, $accountNames);
+
+        $tempExpenses = array_map(function($value) {
+            return '"' . addcslashes($value, "\0..\37\"\\") . '"';
+        }, $accountExpenses);
+
+        $data['account_names'] = '[' . implode(',', $tempNames) . ']';
+        $data['account_expenses'] = '[' . implode(',', $tempExpenses) . ']';
+
+        return $data;
+    }
+}

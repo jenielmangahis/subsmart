@@ -8,23 +8,36 @@ $(document).ready(function() {
             data: {},
             dataType: "json",
             success: function(data) {
-                if (data != "") {
+                if (data.result.length > 0) {
                     if (data.result[0]['allow_5min'] != 0) {
                         $("#est_wage_privacy2").attr('checked', 'checked');
                     }
+                    if (data.result[0]['allow_gps'] != 0) {
+                        $("#GPS_Allow").attr('checked', 'checked');
+                        $("#gps_toggle").show();
+                    } else {
+                        $("#gps_toggle").hide();
+                    }
                     var html = data.user[0]['FName'] + " " + data.user[0]['LName'] + ", " + data.last_update;
                     var html2 = data.user[0]['FName'] + " " + data.user[0]['LName'] + ", " + data.last_update2;
-
+                    var html3 = data.user[0]['FName'] + " " + data.user[0]['LName'] + ", " + data.last_update3;
+                    var html4 = data.users2[0]['FName'] + " " + data.users2[0]['LName'] + ", " + data.last_update4;
 
 
                     $("#update").html(html);
                     $("#update2").html(html2);
+                    $("#gps_update").html(html3);
+                    $("#update_locatonCoutCin").html(html4);
+                    $("#cIn_Location").val(data.cInOut[0]['clock_in_location']);
+                    $("#cOut_Location").val(data.cInOut[0]['clock_out_location']);
 
                     $("input[name='payday']").each(function() {
                         if (this.value == data.result[0]['pay_date']) {
                             this.checked = true;
                         }
                     });
+
+
 
                 }
             },
@@ -128,27 +141,115 @@ $(document).ready(function() {
         });
     })
 
+    $("#GPS_Allow").on("change", function() {
 
-    $("#submit").on("click", function() {
-        $("input[name='payday']:checked").each(function() {
-            pay = this.value;
-        });
+        if ($("#GPS_Allow").is(":checked")) {
+            $("#GPS_Allow").val(1);
+            $("#gps_toggle").show();
+        } else {
+            $("#GPS_Allow").val(0);
+            $("#gps_toggle").hide();
+        }
+
+
         $.ajax({
             type: "POST",
-            url: baseURL + "/timesheet/insertResClockInPayDate",
+            url: baseURL + "/timesheet/insertResClockInPayDate_gps",
             data: {
-                paydate: pay,
+                gps: $("#GPS_Allow").val(),
             },
             dataType: "json",
             success: function(data) {
                 if (data != null) {
 
                     var html = data.user[0]['FName'] + " " + data.user[0]['LName'] + ", " + data.last_update;
-                    $("#update2").html(html);
+                    $("#gps_update").html(html);
                 }
             },
         });
-        location.reload();
+    })
+
+
+    $("#submit_location_CIn_COut").on("click", function(event) {
+        event.preventDefault();
+        var clock_In = $("#cIn_Location").val();
+        var clock_Out = $("#cOut_Location").val();
+
+        Swal.fire({
+            html: "Are you sure you want to save changes for the selection of the start day of the week?",
+            imageUrl: baseURL + "/assets/img/question.jpg",
+            showDenyButton: true,
+            confirmButtonColor: "#2ca01c",
+            denyButtonColor: "#d33",
+            confirmButtonText: "Yes",
+            denyButtonText: "Cancel",
+        }).then((result) => {
+            if (result.value) {
+
+                $.ajax({
+                    type: "POST",
+                    url: baseURL + "/timesheet/insert_cOut_cIn_Location",
+                    data: { cIn: clock_In, cOut: clock_Out },
+                    dataType: "json",
+                    success: function(data) {
+                        if (data != null) {
+
+                            var html = data.name[0]['FName'] + " " + data.name[0]['LName'] + ", " + data.last_update;
+                            $("#update_locatonCoutCin").html(html);
+                        }
+                        Swal.fire({
+                            showConfirmButton: false,
+                            timer: 1000,
+                            title: "Saved",
+                            icon: "success",
+                        });
+                    },
+                });
+            }
+        });
+
+    })
+
+
+
+    $("#submit").on("click", function() {
+        $("input[name='payday']:checked").each(function() {
+            pay = this.value;
+        });
+
+        Swal.fire({
+            html: "Are you sure you want to save changes for the selection of the start day of the week?",
+            imageUrl: baseURL + "/assets/img/Ask.jpg",
+            showDenyButton: true,
+            confirmButtonColor: "#2ca01c",
+            denyButtonColor: "#d33",
+            confirmButtonText: "Yes",
+            denyButtonText: "Cancel",
+        }).then((result) => {
+            if (result.value) {
+
+                $.ajax({
+                    type: "POST",
+                    url: baseURL + "/timesheet/insertResClockInPayDate",
+                    data: { paydate: pay },
+                    dataType: "json",
+                    success: function(data) {
+                        if (data != null) {
+
+                            var html = data.user[0]['FName'] + " " + data.user[0]['LName'] + ", " + data.last_update;
+                            $("#update2").html(html);
+                        }
+                        Swal.fire({
+                            showConfirmButton: false,
+                            timer: 1000,
+                            title: "Saved",
+                            icon: "success",
+                        });
+                    },
+                });
+            }
+        });
+
 
 
     })

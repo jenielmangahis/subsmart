@@ -19,6 +19,18 @@ class Taskhub_model extends MY_Model {
         return $this->db->get('tasks')->result();
     }
 
+    public function getOngoingTasksByCompanyId($company_id)
+    {
+        $this->db->join('tasks_participants','tasks.task_id = tasks_participants.task_id', 'left');
+        $this->db->join('users','users.id = tasks_participants.user_id', 'left');
+        $this->db->join('tasks_status','tasks.status_id = tasks_status.status_id','right');
+        $this->db->where('tasks.company_id', $company_id);
+        $this->db->where('tasks.status_id <>', 6);
+        $this->db->order_by('priority','DESC');
+        $this->db->order_by('tasks.task_id','DESC');
+        return $this->db->get('tasks')->result();
+    }
+
     public function getById($id)
     {
         $this->db->select('tasks.*, tasks_status.status_text, tasks_status.status_color, CONCAT(acs_profile.first_name," ",acs_profile.last_name)AS customer_name');
@@ -186,6 +198,14 @@ class Taskhub_model extends MY_Model {
         $this->db->from($this->table);
         $this->db->set($data);
         $this->db->where('task_id', $task_id);
+        $this->db->update();
+    }
+
+    public function completeAllTasksByCompanyId($company_id)
+    {
+        $this->db->from($this->table);
+        $this->db->set(['status_id' => 6]);
+        $this->db->where('company_id', $company_id);
         $this->db->update();
     }
 

@@ -1289,3 +1289,4 @@ $route['taskhub/_load_taskhub_list'] = 'Taskhub/ajax_load_company_list';
 $route['taskhub/_add_new_task'] = 'Taskhub/ajax_add_new_task';
 $route['taskhub/_save_task'] = 'Taskhub/ajax_save_task';
 $route['taskhub/_task_mark_completed'] = 'Taskhub/ajax_complete_task';
+$route['taskhub/_mark_all_completed'] = 'Taskhub/ajax_company_complete_all_tasks';

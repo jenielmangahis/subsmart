@@ -107,6 +107,11 @@
                     $data['isMain'] = True;
                     $data['id'] = $wids->w_id;
                     $data['isGlobal'] = ($wids->wu_company_id == '0' ? false : true);
+
+                    if($wids->w_name === 'Expense') {
+                        $data = set_expense_graph_data($data);
+                    }
+
                     $this->load->view("v2/" . $wids->w_view_link, $data);
                     echo '</div>';
                 endif;
@@ -129,6 +134,11 @@
                     $data['isMain'] = False;
                     $data['id'] = $wids->w_id;
                     $data['isGlobal'] = ($wids->wu_company_id == '0' ? false : true);
+
+                    if($wids->w_name === 'Expense') {
+                        $data = set_expense_graph_data($data);
+                    }
+
                     $this->load->view("v2/" . $wids->w_view_link, $data);
                     echo '</div>';
                 endif;

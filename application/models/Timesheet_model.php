@@ -1345,12 +1345,27 @@ class Timesheet_model extends MY_Model
         $query = $this->db->get();
         return $query->result();
     }
+    public function getLastResClockInPayDateLogs_gps($company_id)
+    {
 
-    public function getUsersAccordingToLogs(){
-        $query =$this->getLastResClockInPayDateLogs_allow(logged('company_id'));
-        
+        $this->db->select("*");
+        $this->db->where('company_id', $company_id);
+        $this->db->where('type', 'gps');
+        $this->db->from("timesheet_ClockInRes_PayDate_logs");
+        $this->db->limit(1);
+        $this->db->order_by('id', "DESC");
+        $query = $this->db->get();
+        return $query->result();
+    }
 
-        $query2 = $this->db->get_where('users', array('id'=>$query[0]->user_id));
+    public function getUsersAccordingToLogs()
+    {
+        $query = $this->getLastResClockInPayDateLogs_allow(logged('company_id'));
+
+
+       foreach($query as $q){
+        $query2 = $this->db->get_where('users', array('id' => $q->user_id));
+       }
         return $query2->result();
     }
 
@@ -1360,6 +1375,19 @@ class Timesheet_model extends MY_Model
         $insert = [
             'date_created' => $date_created,
             'type' => "allow",
+            'company_id'  => logged('company_id'),
+            'user_id'     => logged('id')
+        ];
+
+        $this->db->insert('timesheet_ClockInRes_PayDate_logs', $insert);
+        return $date_created;
+    }
+    public function insertResClockInPayDateLogs_gps()
+    {
+        $date_created = date("Y-m-d H:i:s");
+        $insert = [
+            'date_created' => $date_created,
+            'type' => "gps",
             'company_id'  => logged('company_id'),
             'user_id'     => logged('id')
         ];
@@ -1381,6 +1409,79 @@ class Timesheet_model extends MY_Model
         $this->db->insert('timesheet_ClockInRes_PayDate_logs', $insert);
         return $date_created;
     }
+
+    public function get_cOut_cIn_Location($company_id)
+    {
+        $query = $this->db->get_where('timesheet_location_for_clock_in_out', array('company_id' => $company_id));
+
+        
+        if($query){
+            return $query->result();
+        }else{
+            return false;
+        }
+    }
+
+    public function get_user_according_cIncOut_logs(){
+        $query2=$this->get_logs_cOut_cIn_location(logged('company_id'));
+        foreach($query2 as $q){
+            $query = $this->db->get_where('users', array('id' => $q->user_id));
+        }
+        
+
+        return $query->result();
+    }
+
+    public function get_logs_cOut_cIn_location($company_id){
+        $this->db->select("*");
+        $this->db->where('company_id', $company_id);
+        $this->db->from("timesheet_location_for_clock_in_out_logs");
+        $this->db->limit(1);
+        $this->db->order_by('id', "DESC");
+        $query = $this->db->get();
+
+        return $query->result();
+    }
+
+
+    public function insert_logs_for_cIn_cOut($company_id, $user_id){
+        $insert = [
+            'user_id' => $user_id,
+            'company_id' => $company_id,
+            'date_created' => date("Y-m-d H:i:s")
+        ];
+
+        $this->db->insert('timesheet_location_for_clock_in_out_logs',$insert);
+    }
+
+    public function update_cOut_cIn_Location($data)
+    {
+        $update = [
+            'clock_In_location' =>$data['cIn'],
+            'clock_Out_location' => $data['cOut'],
+            'date_created' => date("Y-m-d")
+        ];
+        $this->db->where('company_id',logged('company_id'));
+        $this->db->update('timesheet_location_for_clock_in_out', $update);
+
+    }
+
+
+    public function insert_cOut_cIn_Location($data)
+    {
+        $insert = [
+            'company_id' => logged('company_id'),
+            'clock_In_location' => $data['cIn'],
+            'clock_Out_location' => $data['cOut'],
+            'date_created' => date("Y-m-d")
+        ];
+
+        $this->db->insert('timesheet_location_for_clock_in_out', $insert);
+        return 'success';
+    }
+
+
+
     public function employee_ot_requested($attn_id)
     {
         $update = array(
@@ -1640,18 +1741,16 @@ class Timesheet_model extends MY_Model
         $query = $this->db->get_where("timesheet_ClockInRes_PayDate", array('company_id' => $company_id));
 
         return $query->result();
-       
     }
 
     public function getResClockInPayDate($company_id)
     {
         $query = $this->db->get_where("timesheet_ClockInRes_PayDate", array('company_id' => $company_id));
-
-        $data = new stdClass();
-        $data->result = $query->result();
-        return $data;
+        
+        return $query->result();
     }
-    public function updateResClockInPayDate_allow($data){
+    public function updateResClockInPayDate_allow($data)
+    {
         $update = [
             'allow_5min'   => $data['allow'],
             'date_updated' => date("Y-m-d")
@@ -1659,6 +1758,17 @@ class Timesheet_model extends MY_Model
         $this->db->where('company_id', logged('company_id'));
         $this->db->update('timesheet_ClockInRes_PayDate', $update);
     }
+
+    public function updateResClockInPayDate_gps($data)
+    {
+        $update = [
+            'allow_gps'   => $data['gps'],
+            'date_updated' => date("Y-m-d")
+        ];
+        $this->db->where('company_id', logged('company_id'));
+        $this->db->update('timesheet_ClockInRes_PayDate', $update);
+    }
+
     public function updateResClockInPayDate($data)
     {
         date_default_timezone_set('UTC');
@@ -1679,6 +1789,21 @@ class Timesheet_model extends MY_Model
         $colum_id =
             $insert = [
                 'allow_5min' => $data['allow'],
+                'company_id'  => logged('company_id'),
+                'date_created' => date("Y-m-d"),
+                'date_updated'  => date("Y-m-d")
+            ];
+
+        echo $insert['allow_5min'];
+        $query = $this->db->insert('timesheet_ClockInRes_PayDate', $insert);
+    }
+
+    public function insertResClockInPayDate_gps($data)
+    {
+        date_default_timezone_set('UTC');
+        $colum_id =
+            $insert = [
+                'allow_gps' => $data['gps'],
                 'company_id'  => logged('company_id'),
                 'date_created' => date("Y-m-d"),
                 'date_updated'  => date("Y-m-d")

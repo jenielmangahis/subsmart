@@ -23,8 +23,10 @@ class Cron_Jobs_Controller extends CI_Controller
     {
         $this->timesheet_report_timezone = $timezone;
         $this->timesheet_report_timezone_id = $timesheet_report_timezone_id;
-        $date_from = date("Y-m-d", strtotime('sunday last week', strtotime(date('Y-m-d'))));
-        $date_to = date("Y-m-d", strtotime('saturday this week', strtotime(date('Y-m-d'))));
+        // $date_from = date("Y-m-d", strtotime('sunday last week', strtotime(date('Y-m-d'))));
+        // $date_to = date("Y-m-d", strtotime('saturday this week', strtotime(date('Y-m-d'))));
+        $date_to = date("Y-m-d");
+        $date_from = date("Y-m-d", strtotime('-6 days', strtotime($date_to)));
         $filename = $date_from . " to " . $date_to . ' ' . $company_id . ' ' . $timesheet_report_timezone_id . '.csv';
         $filename_pdf = $date_from . " to " . $date_to . ' ' . $company_id . ' ' . $timesheet_report_timezone_id . '.pdf';
         $time_sheet_storage = $this->generate_timelogs($date_from, $date_to, $filename, $company_id);
@@ -112,6 +114,7 @@ class Cron_Jobs_Controller extends CI_Controller
                 }
             }
             $all_admin_for_default_report = $this->timesheet_model->get_all_admin_for_default_report($and_query);
+            
             foreach ($all_admin_for_default_report as $admin) {
                 $this->timesheet_model->save_timezone_changes("36", $admin->id, 1, 3, "Sun", "00:00:00", $admin->email);
             }
@@ -119,7 +122,7 @@ class Cron_Jobs_Controller extends CI_Controller
         $admins_subject_for_report = $this->timesheet_model->get_admins_subject_for_report($hour_now);
         $date_hour_now_pst = date('Y-m-d') . " " . $hour_now;
         $admins_for_reports = array();
-        // var_dump($admins_subject_for_report);
+        
         foreach ($admins_subject_for_report as $admin) {
             $date_hour_now_selected_tz = $this->datetime_zone_converter($date_hour_now_pst, 'UTC', $admin->id_of_timezone);
             $week_day = date("D", strtotime($date_hour_now_selected_tz));
@@ -142,7 +145,6 @@ class Cron_Jobs_Controller extends CI_Controller
         $this->auto_clockout();
         $this->delete_old_timesheet_reports_and_notifications();
         $admins_for_reports = $this->get_admin_for_reports();
-        var_dump($admins_for_reports);
         $android_tokens = array();
         $ios_tokens = array();
         for ($i = 0; $i < count($admins_for_reports); $i++) {
@@ -150,8 +152,10 @@ class Cron_Jobs_Controller extends CI_Controller
             if ($admin != null) {
                 $file_info = $this->get_time_sheet_storage($admin->company_id, $admin->id_of_timezone, $admin->timezone_id);
                 $est_wage_privacy = $this->timesheet_model->get_timesheet_report_privacy($admin->company_id)->est_wage_private;
-                $date_from = date("Y-m-d", strtotime('sunday last week', strtotime(date('Y-m-d'))));
-                $date_to = date("Y-m-d", strtotime('saturday this week', strtotime(date('Y-m-d'))));
+                // $date_from = date("Y-m-d", strtotime('sunday last week', strtotime(date('Y-m-d'))));
+                // $date_to = date("Y-m-d", strtotime('saturday this week', strtotime(date('Y-m-d'))));
+                $date_to = date("Y-m-d");
+                $date_from = date("Y-m-d", strtotime('-6 days', strtotime($date_to)));
                 $subscribed = false;
                 if ($admin->subscribed == 1) {
                     $subscribed = true;
@@ -209,8 +213,8 @@ class Cron_Jobs_Controller extends CI_Controller
     }
     public function generate_weekly_timesheet_pdf_report($file_info, $business_name, $est_wage_privacy)
     {
-        $date_from = date("Y-m-d", strtotime('sunday last week', strtotime(date('Y-m-d'))));
-        $date_to = date("Y-m-d", strtotime('saturday this week', strtotime(date('Y-m-d'))));
+        $date_to = date("Y-m-d");
+        $date_from = date("Y-m-d", strtotime('-6 days', strtotime($date_to)));
         $this->page_data['file_info'] = $file_info;
         $this->page_data['date_from'] = $date_from;
         $this->page_data['date_to'] = $date_to;
