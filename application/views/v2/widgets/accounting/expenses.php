@@ -37,10 +37,10 @@
         new Chart(estimates, {
           type: 'doughnut',
           data: {
-            labels: ['Commissions & Fees', 'Reimburstment', 'Subcontractors', 'Bank Charges'],
+            labels: <?=$account_names?>,
             datasets: [{
               label: 'Expenses',
-              data: [74, 19, 7, 2],
+              data: <?=$account_expenses?>,
               backgroundColor: [
                 'rgba(255, 99, 132, 0.2)',
                 'rgba(75, 192, 192, 0.2)',
@@ -48,6 +48,7 @@
                 'rgba(255, 206, 86, 0.2)',
                 'rgb(255, 205, 86, 0.2)',
                 'rgba(255, 159, 64, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
               ],
               borderColor: [
                 'rgba(255, 99, 132, 1)',
@@ -56,6 +57,7 @@
                 'rgba(255, 206, 86, 1)',
                 'rgb(255, 205, 86, 1)',
                 'rgba(255, 159, 64, 1)',
+                'rgba(153, 102, 255, 1)',
               ],
               borderWidth: 1
             }]

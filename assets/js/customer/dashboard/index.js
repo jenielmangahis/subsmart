@@ -6,5 +6,6 @@ window.document.addEventListener("DOMContentLoaded", async () => {
     import("./modules/docu.js");
     import("./modules/office.js");
     import("./modules/assign.js");
+    import("./modules/tech.js");
   });
 });

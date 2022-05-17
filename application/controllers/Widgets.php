@@ -123,6 +123,9 @@ class Widgets extends MY_Controller
                 $data['id'] = $id;
                 $data['class'] = 'col-lg-3 col-md-6 col-sm-12';
                 $data['height'] = 'height: 310px;';
+                if($wids->w_name === 'Expense') {
+                    $data = set_expense_graph_data($data);
+                }
                 $view = $this->load->view($widget->w_view_link, $data);
 
                 return $view;
@@ -158,6 +161,9 @@ class Widgets extends MY_Controller
                     $data['id'] = $id;
                     $data['class'] = 'col-lg-3 col-md-6 col-sm-12';
                     $data['height'] = 'height: 310px;';
+                    if($wids->w_name === 'Expense') {
+                        $data = set_expense_graph_data($data);
+                    }
                     $view = $this->load->view($widget->w_view_link, $data);
                     return $view;
                 endif;
@@ -196,92 +202,13 @@ class Widgets extends MY_Controller
                     $data['dynamic_load'] = true;
 
                     if($widget->w_name === 'Expense') {
-                        $data = $this->set_expense_widget_data($data);
+                        $data = set_expense_graph_data($data);
                     }
 
                     return $this->load->view("v2/" . $widget->w_view_link, $data);
                 endif;
             endif;
         endif;
-    }
-
-    private function set_expense_widget_data($data)
-    {
-        $this->load->model('chart_of_accounts_model');
-        $this->load->model('expenses_model');
-        $this->load->model('vendors_model');
-
-        $accounts = $this->chart_of_accounts_model->get_company_active_accounts(logged('company_id'));
-        $endDate = date("m/d/Y");
-        $startDate = date("m/d/Y", strtotime("$endDate -30 days"));
-
-        foreach($accounts as $key => $account) {
-            $categories = $this->expenses_model->get_categories_by_expense_account($account->id);
-
-            $expenseAmount = 0.00;
-            foreach($categories as $category) {
-                switch($category->transaction_type) {
-                    case 'Expense' :
-                        $transaction = $this->vendors_model->get_expense_by_id($category->transaction_id);
-                        $date = date("m/d/Y", strtotime($transaction->payment_date));
-                    break;
-                    case 'Check' :
-                        $transaction = $this->vendors_model->get_check_by_id($category->transaction_id);
-                        $date = date("m/d/Y", strtotime($transaction->payment_date));
-                    break;
-                    case 'Bill' :
-                        $transaction = $this->vendors_model->get_bill_by_id($category->transaction_id);
-                        $date = date("m/d/Y", strtotime($transaction->bill_date));
-                    break;
-                    case 'Purchase Order' :
-                        $transaction = $this->vendors_model->get_purchase_order_by_id($category->transaction_id);
-                        $date = date("m/d/Y", strtotime($transaction->purchase_order_date));
-                    break;
-                    case 'Vendor Credit' :
-                        $transaction = $this->vendors_model->get_vendor_credit_by_id($category->transaction_id);
-                        $date = date("m/d/Y", strtotime($transaction->payment_date));
-                    break;
-                    case 'Credit Card Credit' :
-                        $transaction = $this->vendors_model->get_credit_card_credit_by_id($category->transaction_id);
-                        $date = date("m/d/Y", strtotime($transaction->payment_date));
-                    break;
-                }
-
-                if($transaction->recurring !== '1' && $transaction->status !== "0") {
-                    if(strtotime($date) >= strtotime($startDate) && strtotime($date) <= strtotime($endDate)) {
-                        switch($category->transaction_type) {
-                            case 'Expense' :
-                                $expenseAmount += floatval($category->amount);
-                            break;
-                            case 'Check' :
-                                $expenseAmount += floatval($category->amount);
-                            break;
-                            case 'Bill' :
-                                $expenseAmount += floatval($category->amount);
-                            break;
-                            case 'Vendor Credit' :
-                                $expenseAmount -= floatval($category->amount);
-                            break;
-                            case 'Credit Card Credit' :
-                                $expenseAmount -= floatval($category->amount);
-                            break;
-                        }
-                    }
-                }
-            }
-
-            $accounts[$key]->expense_amount = $expenseAmount;
-        }
-
-        usort($accounts, function ($a, $b) {
-            return $a->expense_amount > $b->expense_amount;
-        });
-
-        $accounts = array_slice($accounts, 0, 10);
-
-        $data['accounts'] = $accounts;
-
-        return $data;
     }
 
     public function loadTimesheet()
