@@ -1332,6 +1332,17 @@ class Timesheet_model extends MY_Model
 
         return $query->result();
     }
+    public function getLastResClockInPayDateLogs_cOut($company_id)
+    {
+
+        $this->db->select("*");
+        $this->db->where('company_id', $company_id);
+        $this->db->from("timesheet_location_for_clock_in_out_logs");
+        $this->db->limit(1);
+        $this->db->order_by('id', "DESC");
+        $query = $this->db->get();
+        return $query->result();
+    }
 
     public function getLastResClockInPayDateLogs_payday($company_id)
     {
@@ -1345,6 +1356,18 @@ class Timesheet_model extends MY_Model
         $query = $this->db->get();
         return $query->result();
     }
+
+    public function getUsersAccordingToLogs_payday()
+    {
+        $query = $this->getLastResClockInPayDateLogs_payday(logged('company_id'));
+
+
+       foreach($query as $q){
+        $query2 = $this->db->get_where('users', array('id' => $q->user_id));
+       }
+        return $query2->result();
+    }
+
     public function getLastResClockInPayDateLogs_gps($company_id)
     {
 
@@ -1409,17 +1432,18 @@ class Timesheet_model extends MY_Model
         $this->db->insert('timesheet_ClockInRes_PayDate_logs', $insert);
         return $date_created;
     }
-
+    
     public function get_cOut_cIn_Location($company_id)
     {
-        $query = $this->db->get_where('timesheet_location_for_clock_in_out', array('company_id' => $company_id));
-
+        $this->db->select("*");
+        $this->db->where('company_id', $company_id);
+        $this->db->from("timesheet_location_for_clock_in_out_logs");
+        $this->db->limit(1);
+        $this->db->order_by('id', "DESC");
+        $query = $this->db->get();
+        var_dump($query->result() . 'mao ni');
+        return $query->result();
         
-        if($query){
-            return $query->result();
-        }else{
-            return false;
-        }
     }
 
     public function get_user_according_cIncOut_logs(){
@@ -1774,9 +1798,8 @@ class Timesheet_model extends MY_Model
         date_default_timezone_set('UTC');
         $update = [
             'pay_date'   => $data['paydate'],
-            'date_updated' => date("Y-m-d")
+            'date_updated' => date("Y-m-d H:i:s")
         ];
-
 
 
         $this->db->where('company_id', logged('company_id'));

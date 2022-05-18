@@ -6,7 +6,7 @@
             </div>
         </div>
         <div class="nsm-card-content">
-            <div class="row g-3 h-100 align-items-center justify-content-center">
+            <div class="row g-3 align-items-center justify-content-center">
                 <div class="col-12">
                     <?php if(empty($item_details)): ?>
                     <div class="nsm-empty">
@@ -14,7 +14,7 @@
                         <span>Item detail is empty.</span>
                     </div>
                     <?php else: ?>
-                    <div style="overflow-y: scroll; height: 91px;">
+                    <div style="overflow-y: scroll; height: 191px;">
                         <table class="table table-bordered table-striped"  border="1" cellspacing="0" cellpadding="0" style="font-size:12px;">
                             <thead>                                
                             <tr>

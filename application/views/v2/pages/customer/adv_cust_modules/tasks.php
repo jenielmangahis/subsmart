@@ -25,7 +25,7 @@
                                 ?>
                                         <tr>
                                             <td class="fw-bold nsm-text-primary"><?= $task->subject; ?></td>
-                                            <td><?= $task->estimated_date_complete; ?></td>
+                                            <td><?= date("m/d/Y",strtotime($task->estimated_date_complete)); ?></td>
                                             <td><span class="nsm-badge"><?= $task->status_text; ?></span></td>
                                         </tr>
                                     <?php
@@ -45,18 +45,14 @@
                     </div>
                 </div>
                 <div class="col-12 col-md-6">
-                    <a href="<?= base_url('taskhub?status=6&cus_id='.$cus_id); ?>" target="_blank">
-                    <button role="button" class="nsm-button w-100 ms-0 mt-3">
+                    <button role="button" class="nsm-button w-100 ms-0 mt-3" onclick="window.open('<?= base_url('taskhub?status=6&cus_id='.$cus_id) ?>', '_blank', 'location=yes,height=1080,width=1500,scrollbars=yes,status=yes');">
                         <i class='bx bx-fw bx-task'></i> View Completed Tasks
                     </button>
-                    </a>
                 </div>
                 <div class="col-12 col-md-6">
-                    <a href="<?= base_url('taskhub/entry'); ?>" target="_blank">
-                        <button role="button" class="nsm-button primary w-100 ms-0 mt-3 newTaskk">
-                            <i class='bx bx-fw bx-list-plus'></i> Add Task
-                        </button>
-                    </a>
+                    <button role="button" class="nsm-button primary w-100 ms-0 mt-3 newTaskk" onclick="window.open('<?= base_url('taskhub/entry') ?>', '_blank', 'location=yes,height=1080,width=1500,scrollbars=yes,status=yes');">
+                        <i class='bx bx-fw bx-list-plus'></i> Add Task
+                    </button>
                 </div>
             </div>
         </div>

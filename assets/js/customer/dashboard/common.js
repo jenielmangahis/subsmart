@@ -100,9 +100,11 @@ export function setupEmailTemplateModal(category) {
     if (response.success) {
       $callOut.textContent = `Email sent to ${customer.email}.`;
       $callOut.classList.add("success");
+      $callOut.classList.remove("error");
     } else {
       $callOut.textContent = "Something went wrong sending this email.";
       $callOut.classList.add("error");
+      $callOut.classList.remove("success");
     }
 
     $callOut.classList.remove("d-none");

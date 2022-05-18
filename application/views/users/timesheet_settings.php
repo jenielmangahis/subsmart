@@ -148,7 +148,7 @@ foreach ($report_settings as $settings) {
                 <div class="col-xl-12">
                     <div class="card">
                         <div class="col-sm-12">
-                            <h3 class="page-title left">Timesheet Seetings</h3>
+                            <h3 class="page-title left">Timesheet Settings</h3>
                         </div>
 
                         <div class="row" style="padding: 10px 33px 20px 33px;">
@@ -172,9 +172,7 @@ foreach ($report_settings as $settings) {
                                         <li class="nav-item">
                                             <a class="nav-link timesheet_report_settings active" data-toggle="tab" href="#timesheet_report_settings">Timesheet Report Settings</a>
                                         </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link timesheet_report_settings" id="timesheet_report_settings1" data-toggle="tab" href="#timesheet_report_settings2">Settings</a>
-                                        </li>
+                                        
                                     </ul>
                                 </div>
                             </div>
@@ -182,6 +180,80 @@ foreach ($report_settings as $settings) {
 
                                 <div class="tab-pane container active" id="timesheet_report_settings">
                                     <div class="row" style="padding-top: 20px;">
+                                        <div class="col-md-12">
+                                            <form id="timezone_settings_form2" action="">
+                                                <!-- <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group ">
+                                                            <div class="custom-control custom-switch">
+
+                                                                <input type="checkbox" value=0 class="custom-control-input allow_clock_in" id="est_wage_privacy2">
+                                                                <label class="custom-control-label" for="est_wage_privacy2">Allow cannot <span style="font-weight: bold;">Clock In</span> if it's not 5 minutes early base on their schedule</label>
+
+
+                                                                    <label class="est_wage_privacy_editor" for="est_wage_privacy2">
+                                                                        <p>Latest
+                                                                            update by <span id="update"></span></p>
+                                                                    </label>
+
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group ">
+                                                            <div class="custom-control custom-switch">
+
+                                                                <input type="checkbox" value=0 class="custom-control-input allow_gps" id="GPS_Allow">
+                                                                <label class="custom-control-label" for="GPS_Allow">Enable <span style="font-weight: bold;">GPS</span> for all Employee</label><br>
+                                                                <label class="est_wage_privacy_editor" for="est_wage_privacy">
+                                                                    <p>Latest
+                                                                        update by <span id="gps_update"></span></p>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div id="gps_toggle" style="display:none;">
+                                                    <div class="row ml-5 mb-4">
+                                                        <div class="row">
+                                                            <div class="col-12">
+                                                                <p><b>Location For Clock In:</b></p>
+                                                                <input type="text" id="cIn_Location" style="width: 564px;height: 48px;border: none;background-color: #fff8de;border-radius: 18px;padding: 0 20px;">
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-12">
+                                                                <p><b>Location For Clock Out:</b></p>
+                                                                <input type="text" id="cOut_Location" style="width: 564px;height: 48px;border: none;background-color: #fff8de;border-radius: 18px;padding: 0 20px;  ">
+                                                            </div>
+                                                        </div>
+
+
+                                                    </div>
+                                                    <div class="row ml-5 mb-4">
+                                                        <div class="row">
+                                                            <div class="col-8">
+                                                                <label class="est_wage_privacy_editor">
+                                                                    <p>Latest
+                                                                        update by <span id="update_locatonCoutCin"></span></p>
+                                                                </label>
+
+                                                            </div>
+                                                            <div class="col">
+                                                                <button id="submit_location_CIn_COut" style="color: #fff;/* background-color: #2ab363; */    background-color: #6f5ea3d1;    border: none;    border-radius: 18px;  width: 93px;">save</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div> -->
+
+
+
+                                            </form>
+                                           
+                                        </div>
                                         <div class="col-md-12">
                                             <form id="timezone_settings_form" action="">
                                                 <div class="row">
@@ -365,156 +437,76 @@ foreach ($report_settings as $settings) {
                                                     <button type="submit" id="tz_form_submit" class="btn btn-primary " style="float:left;">Save</button><img class="tz-form-img-loader" style="float:left; display:none;" src="<?= base_url(); ?>/assets/css/timesheet/images/ring-loader.svg" alt="">
                                                 </div>
                                             </form>
-                                        </div>
-                                    </div>
-                                </div>
-
-
-
-
-                                <div class="tab-pane container" id="timesheet_report_settings2">
-                                    <div class="row" style="padding-top: 20px;">
-                                        <div class="col-md-12">
-                                            <form id="timezone_settings_form2" action="">
-                                                <div class="row">
-                                                    <div class="col-md-6">
-                                                        <div class="form-group ">
-                                                            <div class="custom-control custom-switch">
-
-                                                                <input type="checkbox" value=0 class="custom-control-input allow_clock_in" id="est_wage_privacy2">
-                                                                <label class="custom-control-label" for="est_wage_privacy2">Allow cannot <span style="font-weight: bold;">Clock In</span> if it's not 5 minutes early base on their schedule</label>
-
-
-                                                                    <label class="est_wage_privacy_editor" for="est_wage_privacy2">
-                                                                        <p>Latest
-                                                                            update by <span id="update"></span></p>
-                                                                    </label>
-
-
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-md-6">
-                                                        <div class="form-group ">
-                                                            <div class="custom-control custom-switch">
-
-                                                                <input type="checkbox" value=0 class="custom-control-input allow_gps" id="GPS_Allow">
-                                                                <label class="custom-control-label" for="GPS_Allow">Enable <span style="font-weight: bold;">GPS</span> for all Employee</label><br>
-                                                                <label class="est_wage_privacy_editor" for="est_wage_privacy">
-                                                                    <p>Latest
-                                                                        update by <span id="gps_update"></span></p>
-                                                                </label>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div id="gps_toggle" style="display:none;">
-                                                    <div class="row ml-5 mb-4">
-                                                        <div class="row">
-                                                            <div class="col-12">
-                                                                <p><b>Location For Clock In:</b></p>
-                                                                <input type="text" id="cIn_Location" style="width: 564px;height: 48px;border: none;background-color: #fff8de;border-radius: 18px;padding: 0 20px;">
-                                                            </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="col-12">
-                                                                <p><b>Location For Clock Out:</b></p>
-                                                                <input type="text" id="cOut_Location" style="width: 564px;height: 48px;border: none;background-color: #fff8de;border-radius: 18px;padding: 0 20px;  ">
-                                                            </div>
-                                                        </div>
-
-
-                                                    </div>
-                                                    <div class="row ml-5 mb-4">
-                                                        <div class="row">
-                                                            <div class="col-8">
-                                                                <label class="est_wage_privacy_editor">
-                                                                    <p>Latest
-                                                                        update by <span id="update_locatonCoutCin"></span></p>
-                                                                </label>
-
-                                                            </div>
-                                                            <div class="col">
-                                                                <button id="submit_location_CIn_COut" style="color: #fff;/* background-color: #2ab363; */    background-color: #6f5ea3d1;    border: none;    border-radius: 18px;  width: 93px;">save</button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-
-                                                <div class="row ">
-                                                    <div class="col-md-12">
-                                                        <div class="form-group" style="padding-left:1.25rem;">
-                                                            <label for="from_date_correction_requests" class="week-label" style="font-weight: bold;">Select Start Day Of The Week</label>
-                                                            <br>
-                                                            <!-- <input class="Payday" type="date" value="<?php echo date('Y-m-d') ?>" style="text-align: center;padding: 8px 20px;font-weight: bold;width: 183px;letter-spacing: 3px;border-radius: 11px;"> -->
-                                                            <div class="row report_schedule">
-                                                                <div class="col-md-1">
-                                                                    <div class="form-group">
-                                                                        <div class="custom-control custom-switch">
-                                                                            <input type="radio" on="" name="payday" value="Sunday" class="custom-control-input" id="Sunday">
-                                                                            <label class="custom-control-label" for="Sunday" style="display:flex;">Sun</label>
-                                                                        </div>
+                                            <div class="row " style="margin-top: 96px;">
+                                                <div class="col-md-12">
+                                                    <div class="form-group" style="padding-left:1.25rem;">
+                                                        <label for="from_date_correction_requests" class="week-label" style="font-weight: bold;">Select Start Day Of The Week</label>
+                                                        <br>
+                                                        <!-- <input class="Payday" type="date" value="<?php echo date('Y-m-d') ?>" style="text-align: center;padding: 8px 20px;font-weight: bold;width: 183px;letter-spacing: 3px;border-radius: 11px;"> -->
+                                                        <div class="row report_schedule">
+                                                            <div class="col-md-1">
+                                                                <div class="form-group">
+                                                                    <div class="custom-control custom-switch">
+                                                                        <input type="radio" on="" name="payday" value="Sunday" class="custom-control-input" id="Sunday">
+                                                                        <label class="custom-control-label" for="Sunday" style="display:flex;">Sun</label>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-md-1">
-                                                                    <div class="form-group">
-                                                                        <div class="custom-control custom-switch">
-                                                                            <input type="radio" on="" name="payday" value="Monday" class="custom-control-input" id="Monday">
-                                                                            <label class="custom-control-label" for="Monday" style="display:flex;">Mon</label>
-                                                                        </div>
+                                                            </div>
+                                                            <div class="col-md-1">
+                                                                <div class="form-group">
+                                                                    <div class="custom-control custom-switch">
+                                                                        <input type="radio" on="" name="payday" value="Monday" class="custom-control-input" id="Monday">
+                                                                        <label class="custom-control-label" for="Monday" style="display:flex;">Mon</label>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-md-1">
-                                                                    <div class="form-group">
-                                                                        <div class="custom-control custom-switch">
-                                                                            <input type="radio" on="" name="payday" value="Tuesday" class="custom-control-input" id="Tuesday">
-                                                                            <label class="custom-control-label" for="Tuesday" style="display:flex;">Tue</label>
-                                                                        </div>
+                                                            </div>
+                                                            <div class="col-md-1">
+                                                                <div class="form-group">
+                                                                    <div class="custom-control custom-switch">
+                                                                        <input type="radio" on="" name="payday" value="Tuesday" class="custom-control-input" id="Tuesday">
+                                                                        <label class="custom-control-label" for="Tuesday" style="display:flex;">Tue</label>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-md-1">
-                                                                    <div class="form-group">
-                                                                        <div class="custom-control custom-switch">
-                                                                            <input type="radio" on="" name="payday" value="Wednesday" class="custom-control-input" id="Wednesday">
-                                                                            <label class="custom-control-label" for="Wednesday" style="display:flex;">Wed</label>
-                                                                        </div>
+                                                            </div>
+                                                            <div class="col-md-1">
+                                                                <div class="form-group">
+                                                                    <div class="custom-control custom-switch">
+                                                                        <input type="radio" on="" name="payday" value="Wednesday" class="custom-control-input" id="Wednesday">
+                                                                        <label class="custom-control-label" for="Wednesday" style="display:flex;">Wed</label>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-md-1">
-                                                                    <div class="form-group">
-                                                                        <div class="custom-control custom-switch">
-                                                                            <input type="radio" on="" name="payday" value="Thursday" class="custom-control-input" id="Thursday">
-                                                                            <label class="custom-control-label" for="Thursday" style="display:flex;">Thu</label>
-                                                                        </div>
+                                                            </div>
+                                                            <div class="col-md-1">
+                                                                <div class="form-group">
+                                                                    <div class="custom-control custom-switch">
+                                                                        <input type="radio" on="" name="payday" value="Thursday" class="custom-control-input" id="Thursday">
+                                                                        <label class="custom-control-label" for="Thursday" style="display:flex;">Thu</label>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-md-1">
-                                                                    <div class="form-group">
-                                                                        <div class="custom-control custom-switch">
-                                                                            <input type="radio" on="" name="payday" value="Friday" class="custom-control-input" id="Friday">
-                                                                            <label class="custom-control-label" for="Friday" style="display:flex;">Fri</label>
-                                                                        </div>
+                                                            </div>
+                                                            <div class="col-md-1">
+                                                                <div class="form-group">
+                                                                    <div class="custom-control custom-switch">
+                                                                        <input type="radio" on="" name="payday" value="Friday" class="custom-control-input" id="Friday">
+                                                                        <label class="custom-control-label" for="Friday" style="display:flex;">Fri</label>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-md-1">
-                                                                    <div class="form-group">
-                                                                        <div class="custom-control custom-switch">
-                                                                            <input type="radio" on="" name="payday" value="Saturday" class="custom-control-input" id="Saturday">
-                                                                            <label class="custom-control-label" for="Saturday" style="display:flex;">Sat</label>
-                                                                        </div>
+                                                            </div>
+                                                            <div class="col-md-1">
+                                                                <div class="form-group">
+                                                                    <div class="custom-control custom-switch">
+                                                                        <input type="radio" on="" name="payday" value="Saturday" class="custom-control-input" id="Saturday">
+                                                                        <label class="custom-control-label" for="Saturday" style="display:flex;">Sat</label>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </form>
-                                            <div class="row">
+                                            </div> <!-- last -->
+                                            <div class="row" >
                                                 <div class="col-3">
-                                                    <label class="est_wage_privacy_editor" for="est_wage_privacy">
+                                                    <label class="est_wage_privacy_editor" for="est_wage_privacy2">
                                                         <p>Latest
                                                             update by <span id="update2"></span></p>
                                                     </label>
@@ -525,6 +517,15 @@ foreach ($report_settings as $settings) {
                                                 </div>
                                             </div>
                                         </div>
+                                    </div>
+                                </div>
+
+
+
+
+                                <div class="tab-pane container" id="timesheet_report_settings2">
+                                    <div class="row" style="padding-top: 20px;">
+
                                     </div>
                                 </div>
                             </div>
