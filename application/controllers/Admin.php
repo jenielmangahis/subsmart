@@ -4101,6 +4101,212 @@ class Admin extends CI_Controller
         echo json_encode($json_data);  
 
     }
+
+    public function ajax_view_task()
+    {
+        $post = $this->input->post(); 
+        $id   = $post['thid'];
+        $this->page_data['task'] = $this->db->query(
+            'select '.
+            'a.*, '.
+            'CONCAT(cus.first_name, " ", cus.last_name)AS customer_name, '.
+            'b.status_text, '.
+            'b.status_color, '.
+            'concat(c.FName, " ", c.LName) as `created_by_name` '.
+            'from tasks a '.
+            'left join tasks_status b on b.status_id = a.status_id '.
+            'left join users c on c.id = a.created_by '.
+            'left join acs_profile cus on a.prof_id = cus.prof_id '.
+            'where a.task_id = '. $id
+        )->row();
+
+        $this->page_data['participants'] = $this->db->query(
+            'select '.
+
+            'a.*, '.
+            'concat(b.FName, " ", b.LName) as `participant_name` '.
+
+            'from tasks_participants a '.
+            'left join users b on b.id = a.user_id '.
+
+            'where a.task_id = ' . $id
+        )->result();
+
+        $this->page_data['updates_and_comments'] = $this->db->query(
+            'select '.
+
+            'a.notes as `text`, '.
+            'a.date_updated as `update_date`, '.
+            'concat(b.FName, " ", b.LName) as `user`, '.
+
+            '1 as `is_update` '.
+
+            'from tasks_updates a '.
+            'left join users b on b.id = a.performed_by '.
+            'where a.task_id = '. $id . ' ' .
+            'union all '.
+
+            'select '.
+
+            'a.comment as `text`, '.
+            'a.comment_date as `update_date`, '.
+            'concat(b.FName, " ", b.LName) as `user`, '.
+
+            '0 as `is_update` '.
+
+            'from comments a '.
+            'left join users b on b.id = a.user_id '.
+            'where a.relation_id = '. $id . ' ' .
+              'and a.type = "task" '.
+
+            'order by `update_date` ASC '
+        )->result();
+
+        $sql = 'update tasks set view_count = view_count + 1 where task_id = ' . $id;
+
+        $this->db->query($sql);
+
+        $this->load->view('admin/taskhub/ajax_view_task', $this->page_data);
+    }
+
+    public function leads()
+    {
+        $this->load->model('Customer_advance_model');
+        $this->load->model('Business_model');
+
+        $this->load->helper('functions');
+
+        $cid_search = 'All Leads';
+        $search = '';
+        if( get('status') != '' ){
+            $cid_search = ucwords(get('status'));
+            $status = ucwords(get('status'));
+            //$events = $this->Event_model->getAllByStatus($status);
+        }elseif( get('search') != '' ){
+            $search  = trim(get('search'));
+            $filters = ['search' => $search];
+            $leads = $this->Customer_advance_model->get_all_leads_data($filters);
+        }else{
+            $leads = $this->Customer_advance_model->get_all_leads_data();
+        }
+        
+        $this->page_data['search'] = $search;
+        $this->page_data['cid_search'] = $cid_search;
+        $this->page_data['leads'] = $leads;
+        $this->page_data['companies']   = $this->Business_model->getAll();
+        $this->page_data['lead_types']  = $this->Customer_advance_model->get_all(FALSE, "", "ASC", "ac_leadtypes", "lead_id");
+        $this->page_data['page_title']  = 'Leads';
+        $this->page_data['page_parent'] = 'Leads';
+        $this->load->view('admin/leads/list', $this->page_data);
+    }
+
+    public function ajax_load_leads_company_fields()
+    {
+        $this->load->model('Users_model');
+
+        $post = $this->input->post();
+        $companyUsers = $this->Users_model->getCompanyUsers($post['cid']);
+
+        $this->page_data['companyUsers'] = $companyUsers;
+        $this->load->view('admin/leads/ajax_load_leads_company_fields', $this->page_data);
+    }
+
+    public function ajaxSaveLead()
+    {
+        $this->load->model('Customer_advance_model');
+
+        $is_success = 0;
+        $msg = 'Cannot save data.';
+
+        $post = $this->input->post();
+
+        if ($this->Customer_advance_model->add($post, "ac_leads")) {
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+
+        echo json_encode($json_data);
+    }
+
+    public function ajaxDeleteLead()
+    {
+        $this->load->model('Customer_advance_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $post = $this->input->post();
+
+        $lead = $this->Customer_advance_model->get_data_by_id('leads_id', $post['lid'],'ac_leads');
+        if( $lead ){
+            $input = array();
+            $input['field_name'] = "leads_id";
+            $input['id'] = $post['lid'];
+            $input['tablename'] = "ac_leads";
+            $this->Customer_advance_model->delete($input);
+
+            $msg = '';
+            $is_success = 1;
+        }
+
+        $json_data = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($json_data);
+    }
+
+    public function export_leads()
+    {
+        $this->load->model('Customer_advance_model'); 
+
+        $leads = $this->Customer_advance_model->get_all_leads_data();
+
+        $delimiter = ",";
+        $time      = time();
+        $filename  = "leads_list_".$time.".csv";
+
+        $f = fopen('php://memory', 'w');
+
+        $fields = array('Company', 'Name', 'City', 'State', 'Assigned to', 'Email', 'SSS Number', 'Phone', 'Status');
+        fputcsv($f, $fields, $delimiter);
+
+        if (!empty($leads)) {
+            foreach ($leads as $lead) {
+                $csvData = array(
+                    $lead->business_name,
+                    $lead->firstname.' '.$lead->lastname,
+                    $lead->city,
+                    $lead->state,
+                    $lead->FName. ' '. $lead->LName,
+                    $lead->email_add,
+                    $lead->sss_num,
+                    $lead->phone_cell,
+                    $lead->status
+                );
+                fputcsv($f, $csvData, $delimiter);      
+            }
+        } else {
+            $csvData = array('');
+            fputcsv($f, $csvData, $delimiter);
+        }
+
+        fseek($f, 0);
+
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="' . $filename . '";');
+
+        fpassthru($f);
+    }
+
+    public function ajax_view_lead()
+    {
+        
+    }
 }
 
 /* End of file Admin.php */

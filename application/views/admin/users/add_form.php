@@ -35,21 +35,21 @@
 <div class="section-title">Basic Details</div>
 <div class="form-group">
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-6 mt-3">
             <label for="">First Name</label>
             <input type="text" name="firstname" class="nsm-field mb-2 form-control" value="" placeholder="Enter First Name" required="">
         </div>
-        <div class="col-md-6">
+        <div class="col-md-6 mt-3">
             <label for="">Last Name</label>
             <input type="text" name="lastname" class="nsm-field mb-2 form-control" value="" placeholder="Enter Last Name" required="">
         </div>
     </div>
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-6 mt-3">
             <label for="">Employee Number</label>
             <input type="text" name="emp_number" class="nsm-field mb-2 form-control" id="emp_number" value="" placeholder="Enter Employee Number" required="">
         </div>
-        <div class="col-md-6">
+        <div class="col-md-6 mt-3">
             <label for="" style="display: block">Company</label>
             <select name="company_id" id="companyList" class="nsm-field mb-2 form-control add-company" required="">     
                 <option value="">Select Company</option>           
@@ -63,11 +63,11 @@
 <div class="section-title mt-2">Login Details</div>
 <div class="form-group">
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-6 mt-3">
             <label for="">Email</label>
             <input type="email" name="user_email" class="nsm-field mb-2 form-control" value="" required="">         
         </div>
-        <div class="col-md-6">
+        <div class="col-md-6 mt-3">
             <label for="">Password</label>
             <input type="password" name="user_password" value="" class="nsm-field mb-2 form-control" required="">   
         </div>
@@ -76,11 +76,11 @@
 <div class="section-title mt-2">Other Details</div>
 <div class="form-group">
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-6 mt-3">
             <label for="">Address</label>
             <textarea name="address" class="nsm-field mb-2 form-control" style="height: 153px;" required=""><?= $user->address; ?></textarea>            
         </div>
-        <div class="col-md-6">
+        <div class="col-md-6 mt-3">
             <label for="">City</label>
             <input type="text" name="city" value="" class="nsm-field mb-2 form-control" required="">            
             <label for="">State</label>
@@ -92,7 +92,7 @@
 </div>
 <div class="form-group mt-3">
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-6 mt-3">
             <label for="">Title</label>
             <select name="role" id="employeeRole" class="nsm-field mb-2 form-control add-select2-role" required="">
                 <option value="">Select Title</option>
@@ -110,7 +110,7 @@
                 <?php } ?>
             </select>
         </div> -->
-        <div class="col-md-6">
+        <div class="col-md-6 mt-3">
             <label for="">Status</label>
             <select name="status" id="" class="nsm-field mb-2 form-control">
                 <option value="1">Active</option>
@@ -121,7 +121,7 @@
 </div>
 <div class="form-group mt-3">
     <div class="row ">        
-        <div class="col-md-6"> 
+        <div class="col-md-6 mt-3"> 
             <div class="input-switch" style="display:inline-block;width: 117px; text-align: center;">
                 <label for="">App Access</label><br>
                 <input type="checkbox" name="app_access" class="add-js-switch" />
@@ -136,7 +136,7 @@
 <div class="section-title mt-3">Access Rights and Permissions</div>
 <div class="form-group">
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-12 mt-3">
             <div class="help help-sm help-block">Select employee role</div>
             <ul class="list-roles">
                 <?php foreach($rolesList as $key => $role){ ?>
