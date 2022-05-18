@@ -128,11 +128,9 @@
                     </button>
                 </div>
                 <div class="col-12 col-md-4">
-                    <a href="<?= base_url('survey'); ?>" target="_blank">
-                        <button role="button" class="nsm-button w-100 ms-0 mt-3">
-                            <i class='bx bx-fw bx-question-mark'></i> Survey
-                        </button>
-                    </a>
+                    <button role="button" class="nsm-button w-100 ms-0 mt-3" onclick="window.open('<?= base_url('survey/') ?>', '_blank', 'location=yes,height=1080,width=1500,scrollbars=yes,status=yes');">
+                        <i class='bx bx-fw bx-question-mark'></i> Survey
+                    </button>
                 </div>
             </div>
         </div>
@@ -173,6 +171,9 @@ $(document).ready(function() {
                 <div class="spinner-border" role="status"></div>
             </div>
 
+            <div class="d-flex justify-content-end mb-3">
+                <a target="_blank" href="<?= base_url('EsignEditor/create') ?>" class="nsm-link">Create Letter</a>
+            </div>
             <button type="button" class="nsm-button primary w-100 ms-0">
                 <i class="bx bx-fw bx-send"></i> Send Welcome Email
             </button>

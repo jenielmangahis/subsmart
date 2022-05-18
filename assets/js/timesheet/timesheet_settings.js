@@ -1,48 +1,7 @@
 $(document).ready(function() {
 
     var pay = "";
-    $("#timesheet_report_settings1").on("click", function() {
-        $.ajax({
-            type: "POST",
-            url: baseURL + "/timesheet/getData",
-            data: {},
-            dataType: "json",
-            success: function(data) {
-                if (data.result.length > 0) {
-                    if (data.result[0]['allow_5min'] != 0) {
-                        $("#est_wage_privacy2").attr('checked', 'checked');
-                    }
-                    if (data.result[0]['allow_gps'] != 0) {
-                        $("#GPS_Allow").attr('checked', 'checked');
-                        $("#gps_toggle").show();
-                    } else {
-                        $("#gps_toggle").hide();
-                    }
-                    var html = data.user[0]['FName'] + " " + data.user[0]['LName'] + ", " + data.last_update;
-                    var html2 = data.user[0]['FName'] + " " + data.user[0]['LName'] + ", " + data.last_update2;
-                    var html3 = data.user[0]['FName'] + " " + data.user[0]['LName'] + ", " + data.last_update3;
-                    var html4 = data.users2[0]['FName'] + " " + data.users2[0]['LName'] + ", " + data.last_update4;
 
-
-                    $("#update").html(html);
-                    $("#update2").html(html2);
-                    $("#gps_update").html(html3);
-                    $("#update_locatonCoutCin").html(html4);
-                    $("#cIn_Location").val(data.cInOut[0]['clock_in_location']);
-                    $("#cOut_Location").val(data.cInOut[0]['clock_out_location']);
-
-                    $("input[name='payday']").each(function() {
-                        if (this.value == data.result[0]['pay_date']) {
-                            this.checked = true;
-                        }
-                    });
-
-
-
-                }
-            },
-        });
-    });
 
 
 
@@ -268,7 +227,22 @@ $(document).ready(function() {
             },
         });
     });
+    $.ajax({
+        url: baseURL + "/timesheet/getData",
+        type: "POST",
+        dataType: "json",
+        data: {},
+        success: function(data) {
+            var html = data.user_payday[0]['FName'] + " " + data.user_payday[0]['LName'] + ", " + data.payday_dateUpdated;
+            $("#update2").html(html);
 
+            $("input[name='payday']").each(function() {
+                if ($(this).val() == data.result[0]['pay_date']) {
+                    $(this).attr('checked', true);
+                }
+            })
+        }
+    });
     set_current_timezone();
 
     function set_current_timezone() {

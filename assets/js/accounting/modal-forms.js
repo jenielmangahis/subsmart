@@ -2314,25 +2314,31 @@ $(function() {
                     $.each(transactions, function(index, transaction) {
                         var title = transaction.type;
                         title += transaction.number !== '' ? '#' + transaction.number : '';
-                        $('#billModal .modal-body .row .col-xl-2 .transactions-container .row').append(`
-                            <div class="col-12">
-                                <div class="card border">
-                                    <div class="card-body p-0">
-                                        <h5 class="card-title">${title}</h5>
-                                        <p class="card-subtitle">${transaction.formatted_date}</p>
-                                        <p class="card-text">
-                                            <strong>Total</strong> ${transaction.total}
-                                            ${transaction.type === 'Purchase Order' ? '<br><strong>Balance</strong> '+transaction.balance : ''}
-                                        </p>
-                                        <ul class="d-flex justify-content-around">
-                                            <li><a href="#" class="text-info add-transaction" data-id="${transaction.id}" data-type="${transaction.data_type}"><strong>Add</strong></a></li>
-                                            <li><a href="#" class="text-info open-transaction" data-id="${transaction.id}" data-type="${transaction.data_type}">Open</a></li>
-                                        </ul>
+                        if($(`#billModal input[name="linked_transaction[]"][value="${transaction.data_type.replace('-', '_')}-${transaction.id}"]`).length < 1) {
+                            $('#billModal .modal-body .row .col-xl-2 .transactions-container .row').append(`
+                                <div class="col-12">
+                                    <div class="card border">
+                                        <div class="card-body p-0">
+                                            <h5 class="card-title">${title}</h5>
+                                            <p class="card-subtitle">${transaction.formatted_date}</p>
+                                            <p class="card-text">
+                                                <strong>Total</strong> ${transaction.total}
+                                                ${transaction.type === 'Purchase Order' ? '<br><strong>Balance</strong> '+transaction.balance : ''}
+                                            </p>
+                                            <ul class="d-flex justify-content-around">
+                                                <li><a href="#" class="text-info add-transaction" data-id="${transaction.id}" data-type="${transaction.data_type}"><strong>Add</strong></a></li>
+                                                <li><a href="#" class="text-info open-transaction" data-id="${transaction.id}" data-type="${transaction.data_type}">Open</a></li>
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        `);
+                            `);
+                        }
                     });
+
+                    if($('#billModal .transactions-container .row .col-12').length < 2) {
+                        $('#billModal a.close-transactions-container').trigger('click');
+                    }
                 } else {
                     $('#billModal .transactions-container').parent().remove();
                     $('#billModal a.close-transactions-container').parent().remove();
@@ -3555,7 +3561,7 @@ $(function() {
 
             initModalFields('billModal', { id: id, type: 'bill' });
 
-            $(`#billModal #payee`).trigger('change');
+            $(`#billModal #vendor`).trigger('change');
 
             $(`#billModal`).modal('show');
         });

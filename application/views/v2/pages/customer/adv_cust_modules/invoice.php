@@ -105,18 +105,14 @@
                     </table>
                 </div>
                 <div class="col-12 col-md-6">
-                    <a href="<?= base_url('invoice/add?cus_id='.$cus_id); ?>" target="_blank">
-                        <button class="nsm-button w-100 ms-0 mt-2" >
-                            <i class='bx bx-fw bx-list-plus'></i> Create Invoice
-                        </button>
-                    </a>
+                   <button class="nsm-button w-100 ms-0 mt-2" onclick="window.open('<?= base_url('invoice/add?cus_id='.$cus_id) ?>', '_blank', 'location=yes,height=1080,width=1500,scrollbars=yes,status=yes');">
+                        <i class='bx bx-fw bx-list-plus'></i> Create Invoice
+                    </button>
                 </div>
                 <div class="col-12 col-md-6">
-                    <a href="<?= base_url('customer/invoice_list/'.$cus_id); ?>" target="_blank">
-                        <button class="nsm-button w-100 ms-0 mt-2 primary">
-                            <i class='bx bx-fw bx-receipt'></i> All Invoices
-                        </button>
-                    </a>
+                    <button class="nsm-button w-100 ms-0 mt-2 primary" onclick="window.open('<?= base_url('customer/invoice_list/'.$cus_id) ?>', '_blank', 'location=yes,height=1080,width=1500,scrollbars=yes,status=yes');">
+                        <i class='bx bx-fw bx-receipt'></i> All Invoices
+                    </button>
                 </div>
             </div>
         </div>

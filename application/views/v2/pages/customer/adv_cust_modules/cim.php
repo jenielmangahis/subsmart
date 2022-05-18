@@ -45,7 +45,7 @@
                 </div>
                 <?php if (isset($profile_info)) : ?>
                     <div class="col-12">
-                        <button class="nsm-button primary w-100 ms-0" onclick="location.href='<?= base_url('/customer/add_advance/' . $profile_info->prof_id . '?section=custom_field'); ?>'">
+                        <button class="nsm-button primary w-100 ms-0" onclick="window.open('<?= base_url('/customer/add_advance/' . $profile_info->prof_id . '?section=custom_field') ?>', '_blank', 'location=yes,height=1080,width=1500,scrollbars=yes,status=yes');">
                             <i class='bx bx-fw bx-edit'></i> View/Edit Fields
                         </button>
                     </div>

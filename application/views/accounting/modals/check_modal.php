@@ -45,7 +45,7 @@
                             <div class="card p-0 m-0" style="min-height: 100%">
                                 <div class="card-body" style="padding-bottom: 1.25rem">
                                     <div class="row payee-details">
-                                    <?php if(isset($check) && !is_null($check->linked_transacs)) : ?>
+                                        <?php if(isset($check) && !is_null($check->linked_transacs)) : ?>
                                         <div class="col-md-12">
                                             <a href="#" class="float-right btn btn-transparent rounded-0 open-transactions-container" style="padding:12px 15px !important">
                                                 <i class="fa fa-chevron-left"></i>

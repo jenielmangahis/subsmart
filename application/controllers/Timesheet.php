@@ -276,18 +276,24 @@ class Timesheet extends MY_Controller
         $query4 = $this->timesheet_model->getLastResClockInPayDateLogs_payday(logged('company_id'));
         $query5 = $this->timesheet_model->getLastResClockInPayDateLogs_gps(logged('company_id'));
         $query3 = $this->timesheet_model->getUsersAccordingToLogs();
-        $query5 = $this->timesheet_model->get_user_according_cIncOut_logs();
-        $cIn_cOut_exist = $this->timesheet_model->get_cOut_cIn_Location(logged('company_id'));
+        $query6 = $this->timesheet_model->get_user_according_cIncOut_logs();
+        $user_payday = $this->timesheet_model->getUsersAccordingToLogs_payday();
+
        
         $query6 = $this->timesheet_model->get_logs_cOut_cIn_location(logged('company_id'));
+        foreach($query as $q){
+            $last_update_for_auto_view = date("M d, Y h:i A", strtotime($this->datetime_zone_converter($q->date_updated, "UTC", $this->session->userdata('usertimezone'))));
+        }
         foreach($query6 as $q){
             $last_update4 = date("M d, Y h:i A", strtotime($this->datetime_zone_converter($q->date_created, "UTC", $this->session->userdata('usertimezone'))));
         }
         foreach ($query2 as $res) {
             $last_update = date("M d, Y h:i A", strtotime($this->datetime_zone_converter($res->date_created, "UTC", $this->session->userdata('usertimezone'))));
+            
         }
         foreach ($query4 as $res2) {
             $last_update2 = date("M d, Y h:i A", strtotime($this->datetime_zone_converter($res2->date_created, "UTC", $this->session->userdata('usertimezone'))));
+            
         }
         foreach ($query5 as $res3) {
             $last_update3 = date("M d, Y h:i A", strtotime($this->datetime_zone_converter($res3->date_created, "UTC", $this->session->userdata('usertimezone'))));
@@ -296,15 +302,16 @@ class Timesheet extends MY_Controller
 
         $data = new stdClass();
         $data->result = $query;
+        $data->payday_dateUpdated = $last_update_for_auto_view;
         $data->recent = $query2;
         $data->user   = $query3;
         $data->recent2 = $query4;
         $data->users2 = $query5;
+        $data->user_payday = $user_payday;
         $data->last_update   = $last_update;
         $data->last_update2  = $last_update2;
         $data->last_update3  = $last_update3;
         $data->last_update4  = $last_update4;
-        $data->cInOut = $cIn_cOut_exist;
         echo json_encode($data);
     }
     public function getResClockInPayDate()
