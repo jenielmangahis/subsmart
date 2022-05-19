@@ -28,62 +28,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     bottom: 0px;
   }
 }
-.small-box h3, .small-box p {
-    z-index: 5;
-}
-.small-box h3 {
-    font-size: 2.2rem;
-    font-weight: 700;
-    margin: 0 0 10px;
-    padding: 0;
-    white-space: nowrap;
-}
-.bg-danger, .bg-info, .bg-info>a {
-    color: #fff!important;
-}
-.small-box {
-    border-radius: 0.25rem;
-    box-shadow: 0 0 1px rgb(0 0 0 / 13%), 0 1px 3px rgb(0 0 0 / 20%);
-    display: block;
-    margin-bottom: 20px;
-    position: relative;
-}
-.small-box>.inner {
-    padding: 10px;
-}
-.small-box>.small-box-footer {
-    background-color: rgba(0,0,0,.1);
-    color: rgba(255,255,255,.8);
-    display: block;
-    padding: 3px 0;
-    position: relative;
-    text-align: center;
-    text-decoration: none;
-    z-index: 10;
-}
-.bg-info, .bg-info>a, .bg-success, .bg-success>a, .bg-warning, .bg-warning>a  {
-    color: #fff!important;
-}
-.small-box .icon {
-    color: rgba(0,0,0,.15);
-    z-index: 0;
-}
-small-box .icon>i.fa, .small-box .icon>i.fab, .small-box .icon>i.fad, .small-box .icon>i.fal, .small-box .icon>i.far, .small-box .icon>i.fas, .small-box .icon>i.ion {
-    font-size: 70px;
-    top: 20px;
-}
-.small-box .icon>i {
-    font-size: 90px;
-    position: absolute;
-    right: 15px;
-    top: 15px;
-    transition: -webkit-transform .3s linear;
-    transition: transform .3s linear;
-    transition: transform .3s linear,-webkit-transform .3s linear;
-}
-.nav{
-    margin-bottom: 14px;
-}
 </style>
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">
@@ -98,76 +42,36 @@ small-box .icon>i.fa, .small-box .icon>i.fab, .small-box .icon>i.fad, .small-box
                         <div class="page-title-box">
                             <div class="row align-items-center">
                                 <div class="col-sm-6">
-                                    <h3 class="page-title">Online Booking</h3>                                    
+                                    <h3 class="page-title">Online Booking</h3>
+                                    <ol class="breadcrumb">
+                                        <li class="breadcrumb-item active">Manage your online booking</li>
+                                    </ol>
                                 </div>
                             </div>
                         </div>
-                        <div class="alert alert-warning mt-0 mb-3" role="alert" style="margin-bottom:47px !important;">
+                        <div class="alert alert-warning mt-0 mb-3" role="alert">
                             <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Online booking system is a software solution that allows potential guests to self-book and pay through your website, and other channels, while giving you the best tools to run and scale your operation, all in one place.</span>
                         </div>
 
                         <?php include viewPath('includes/booking_tabs'); ?>
 
-                        <div class="row dashboard-container-1" style="padding-top: 40px !important;">                            
-                            <div class="col-lg-3 col-6">
-                                <!-- small box -->
-                                <div class="small-box bg-info" style="background-color: #6c757d !important;">
-                                  <div class="inner">
-                                    <h3><?= sprintf("%02d", $total_category); ?></h3>
+                        <div class="row dashboard-container-1" style="padding-top: 40px !important;">
+                            <div class="col-md-8">
+                                <strong>
+                                    <button type="button" class="btn btn-secondary">
+                                        Categories: <span class="badge badge-light"><strong><?= $total_category; ?></strong></span>
+                                    </button>
 
-                                    <p>Total Categories</p>
-                                  </div>
-                                  <div class="icon">
-                                    <i class="fa fa-list"></i>
-                                  </div>
-                                  <a href="<?php echo base_url('/more/addon/booking/products'); ?>" class="small-box-footer">More info <i class="fa fa-arrow-right"></i></a>
-                                </div>
+                                    <button type="button" class="btn btn-success">
+                                        Products: <span class="badge badge-light"><strong><?= $total_products; ?></strong></span>
+                                    </button>
+
+                                    <button type="button" class="btn btn-info">
+                                        Time Slots: <span class="badge badge-light"><strong><?= $total_timeslots; ?></strong></span>
+                                    </button>
+                                </strong>
                             </div>
-
-                            <div class="col-lg-3 col-6">
-                                <!-- small box -->
-                                <div class="small-box bg-success">
-                                  <div class="inner">
-                                    <h3><?= sprintf("%02d", $total_products); ?></h3>
-
-                                    <p>Total Products</p>
-                                  </div>
-                                  <div class="icon">
-                                    <i class="fa fa-list"></i>
-                                  </div>
-                                  <a href="<?php echo base_url('/more/addon/booking/products'); ?>" class="small-box-footer">More info <i class="fa fa-arrow-right"></i></a>
-                                </div>
-                            </div>
-
-                            <div class="col-lg-3 col-6">
-                                <!-- small box -->
-                                <div class="small-box bg-info">
-                                  <div class="inner">
-                                    <h3><?= sprintf("%02d", $total_timeslots); ?></h3>
-
-                                    <p>Total Time Slots</p>
-                                  </div>
-                                  <div class="icon">
-                                    <i class="fa fa-list"></i>
-                                  </div>
-                                  <a href="<?php echo base_url('/more/addon/booking/time'); ?>" class="small-box-footer">More info <i class="fa fa-arrow-right"></i></a>
-                                </div>
-                            </div>
-
-                            <div class="col-lg-3 col-6">
-                                <!-- small box -->
-                                <div class="small-box bg-warning">
-                                  <div class="inner">
-                                    <h3><?= sprintf("%02d", $total_new_inquiry); ?></h3>
-
-                                    <p>Total New Inquiry</p>
-                                  </div>
-                                  <div class="icon">
-                                    <i class="fa fa-list"></i>
-                                  </div>
-                                  <a href="<?php echo base_url('/more/addon/inquiries'); ?>" class="small-box-footer">More info <i class="fa fa-arrow-right"></i></a>
-                                </div>
-                            </div>
+                            <div class="col-md-4 text-right"><a target="_blank" href="<?php echo base_url('/booking/products/' . $eid); ?>" target="_blank"><span class="fa fa-external-link fa-margin-right"></span> View Booking Page</a></div>
                         </div>
                         <hr />
                         <div class="row dashboard-container-2 pl-3 pr-3">
@@ -183,10 +87,7 @@ small-box .icon>i.fa, .small-box .icon>i.fab, .small-box .icon>i.fad, .small-box
 
                         </div>
                         <hr />
-                        <div>
-                            <a href="<?php echo base_url('more/addon/booking/products') ?>" class="btn btn-primary">Edit Booking</a>
-                            <a target="_blank" href="<?php echo base_url('/booking/products/' . $eid); ?>" class="btn btn-primary">View Booking Page</a>
-                        </div>
+                        <div><a href="<?php echo base_url('more/addon/booking/products') ?>" class="btn btn-success"> Edit Booking </a></div>
                     </div>
                     <!-- end card -->
                 </div>

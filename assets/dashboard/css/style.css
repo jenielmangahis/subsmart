@@ -638,8 +638,7 @@ body {
     right: 0;
     left: 0;
     top: 0;
-    /*z-index: 1030;*/
-    z-index: 950;
+    z-index: 1030;
     border: 0;
     -webkit-transition: all 0.5s ease;
     transition: all 0.5s ease;
@@ -5838,7 +5837,7 @@ table.dataTable tbody td {
     position: absolute;
     top: 0;
     left: 0;
-    /* bottom: 0px; */
+    bottom: 0px;
     overflow-x: hidden;
     overflow-y: auto;
 }
@@ -6696,8 +6695,8 @@ input:focus+label {}
 }
 
 .dropdown-menu-align-right {
-    left: auto !important;
-    right: 0 !important;
+    left: auto;
+    right: 0;
 }
 
 /* fa-  font-awesome related */
@@ -7474,7 +7473,7 @@ input:focus+label {}
 .tabs li {
     float: left;
     margin: 0;
-    /* padding: 0px 30px 0px 0px; */
+    padding: 0px 30px 0px 0px;
 }
 
 .tabs li:LAST-CHILD {
@@ -9624,7 +9623,7 @@ p.sinot{font-size: 14px;font-weight: normal;color: #404040;margin: 0 0 15px;padd
     width: 100%;
     margin: 0 auto;
     position: absolute;
-    top:250px;
+    top:120px;
     left: 30px;
 }
 #new-popup .modal-dialog:before{
@@ -10620,17 +10619,17 @@ select#select-employee {
 }
 nav.navbar-side.d-none.d-md-block:not(.closed) ul span svg#svg-sprite-menu-close {
     position: relative !important;
-    top: 120px !important;
+    top: 152px !important;
 }
 nav.navbar-side.d-none.d-md-block:not(.closed) ul span{
     height: 22px !important;
 }
 img.company-logo {
-  width: 170px;
-  height: 70px;
+  width: 200px;
+  height: 100px;
   object-fit: contain;
   margin: 0 auto;
-  margin-top: 8px;
+  margin-top: 10px;
 }
 .progress-fill-card .top-block {
     justify-content: space-between;

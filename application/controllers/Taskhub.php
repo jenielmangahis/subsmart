@@ -19,30 +19,22 @@ class Taskhub extends MY_Controller {
                     
         }
 
-		function loadV2WidgetContents()
-        {
-            $company_id = logged('company_id');
-            $data['tasks'] = $this->taskhub_model->getOngoingTasksByCompanyId($company_id);
-            $this->load->view('v2/widgets/task_hub_details', $data);
-                    
+	public function index(){
+	$is_allowed = true;//$this->isAllowedModuleAccess(6);
+        if( !$is_allowed ){
+            $this->page_data['module'] = 'taskhub';
+            echo $this->load->view('no_access_module', $this->page_data, true);
+            die();
         }
 
-	public function index(){
-		$this->hasAccessModule(6); 
-		$cid = logged('company_id');
-		if( $this->input->get('status') && $this->input->get('cus_id') ){
-			$this->page_data['tasks'] = $this->taskhub_model->getAllTasksByCustomerIdAndStatusId($this->input->get('cus_id'), $this->input->get('status'));
-		}else{
-			$this->page_data['tasks'] = $this->taskhub_model->getAllByCompanyId($cid);	
-		}
-		
+		$this->page_data['tasks'] = getTasks();
 		$this->page_data['status_selection'] = $this->taskhub_status_model->get();
 
 		$this->load->view('workcalender/taskhub/list', $this->page_data);
 	}
 
 	public function entry($id = 0){
-		$this->hasAccessModule(6);
+
 		$uid = logged('id');
 		$company_id = logged('company_id');
 
@@ -68,8 +60,7 @@ class Taskhub extends MY_Controller {
 			if($id > 0){
 				$taskid = $id;
 			}
-			$task = $this->taskhub_model->getById($taskid);
-			$this->page_data['task'] = $task;
+			$this->page_data['task'] = $this->taskhub_model->getById($taskid);
 
 			$this->page_data['selected_participants'] = $this->db->query(
 															'select a.*, concat(b.FName, " ", b.LName) as `name` from tasks_participants a '.
@@ -78,20 +69,11 @@ class Taskhub extends MY_Controller {
 														)->result();
 		}
 
-		$customer = '';
-		if( $this->input->get('cus_id') ){
-			$this->load->model('AcsProfile_model');			
-			$customer = $this->AcsProfile_model->getByProfId($this->input->get('cus_id'));
-		}
-
-		$this->page_data['customer'] = $customer;
-		
 		$this->form_validation->set_rules('subject', 'Subject', 'trim|required');
 		$this->form_validation->set_rules('description', 'Description', 'trim|required');
 		$this->form_validation->set_rules('estimated_date_complete', 'Estimated Date of Competion', 'trim|required');
 
 		if($this->form_validation->run() == false){
-			$this->page_data['optionPriority'] = $this->taskhub_model->optionPriority();
 			$this->load->view('workcalender/taskhub/entry', $this->page_data);
 		} else {
 			$assigned_to = $this->input->post('assigned_to');
@@ -164,10 +146,8 @@ class Taskhub extends MY_Controller {
 				$data = array(
 					'subject' => $this->input->post('subject'),
 					'description' => $this->input->post('description'),
-					'prof_id' => $this->input->post('customer_id'),
 					'estimated_date_complete' => $this->input->post('estimated_date_complete'),
-					'status_id' => $status,
-					'priority' => $this->input->post('priority')
+					'status_id' => $status
 				);
 
 				$process_successful = $this->taskhub_model->trans_update($data, array('task_id' => trim($taskid)));
@@ -180,28 +160,19 @@ class Taskhub extends MY_Controller {
 					);
 
 					$this->taskhub_updates_model->trans_create($data);
-
-					customerAuditLog(logged('id'), $this->input->post('customer_id'), $taskid, 'Taskhub', 'Updated task '.$this->input->post('subject'));
 				}
 			} else {
 				$data = array(
 					'subject' => $this->input->post('subject'),
-					'prof_id' => $this->input->post('customer_id'),
 					'description' => $this->input->post('description'),
 					'created_by' => $uid,
 					'date_created' => date('Y-m-d h:i:s'),
 					'estimated_date_complete' => $this->input->post('estimated_date_complete'),
-					'status_id' => $this->input->post('status'),
-					'company_id' => $company_id,
-					'priority' => $this->input->post('priority')
+					'status_id' => 1,
+					'company_id' => $company_id
 				);
 
-				$last_id = $this->taskhub_model->saveTask($data);
-				if( $last_id > 0 ){
-					$process_successful = 1;
-					customerAuditLog(logged('id'), $this->input->post('customer_id'), $last_id, 'Taskhub', 'Created task '.$this->input->post('subject'));
-				}
-
+				$process_successful = $this->taskhub_model->trans_create($data);
 				if($process_successful){
 					$task = $this->db->query(
 						'select task_id from tasks where created_by = ' . $uid . ' order by date_created DESC limit 1'
@@ -251,15 +222,16 @@ class Taskhub extends MY_Controller {
 	public function view($id){
 		$this->page_data['task'] = $this->db->query(
 			'select '.
+
 			'a.*, '.
-			'CONCAT(cus.first_name, " ", cus.last_name)AS customer_name, '.
 			'b.status_text, '.
 			'b.status_color, '.
 			'concat(c.FName, " ", c.LName) as `created_by_name` '.
+
 			'from tasks a '.
 			'left join tasks_status b on b.status_id = a.status_id '.
 			'left join users c on c.id = a.created_by '.
-			'left join acs_profile cus on a.prof_id = cus.prof_id '.
+
 			'where a.task_id = '. $id
 		)->row();
 
@@ -381,161 +353,21 @@ class Taskhub extends MY_Controller {
 			$keyword = $_POST['keyword'];
 		}
 
-		if(isset($_POST['status'])){
+		if(isset($_POST['statusid'])){
 			$status_id = $_POST['status'];
 		}
 
-		if($_POST['fromdate'] != ''){
-			$from_date = $_POST['fromdate'] . ' 00:00:00';
+		if(isset($_POST['fromdate'])){
+			$from_date = $_POST['fromdate'];
 		}
 
-		if($_POST['todate'] != ''){
-			$to_date = $_POST['todate'] . ' 23:59:59';
+		if(isset($_POST['todate'])){
+			$to_date = $_POST['todate'];
 		}
 
-		$date_range = array();
-		if( $from_date != '' && $to_date != '' ){
-			$date_range = ['from' => $from_date, 'to' => $to_date];
-		}
-
-		$cid = logged('company_id');
-		$result = $this->taskhub_model->getCompanyTasksWithFilter($cid,$keyword, $status_id, $date_range);
-		//$result = getTasks(true, $keyword, $status_id, $from_date, $to_date);
+		$result = getTasks(true, $keyword, $status_id, $from_date, $to_date);
 
 		echo json_encode($result);
-	}
-
-	public function ajax_load_company_list()
-	{
-		$this->load->model('Taskhub_model');
-        $this->load->model('Business_model');
-        $this->load->model('Taskhub_status_model');       
-
-        $cid = logged('company_id');
-        $tasksHub = $this->Taskhub_model->getAllByCompanyId($cid);
-
-        $this->page_data['taskStatus'] = $this->Taskhub_status_model->get();
-        $this->page_data['tasksHub'] = $tasksHub;                
-        $this->load->view('workcalender/taskhub/ajax_load_company_list', $this->page_data);
-	}
-
-	public function ajax_add_new_task()
-	{
-		$this->load->model('Taskhub_status_model');
-		$this->load->model('Users_model');
-        $this->load->model('AcsProfile_model');
-
-        $cid = logged('company_id');
-		$companyCustomers = $this->AcsProfile_model->getAllByCompanyId($cid);
-        $companyUsers     = $this->Users_model->getCompanyUsers($cid);
-
-        $this->page_data['optionPriority'] = $this->taskhub_model->optionPriority();
-        $this->page_data['taskStatus'] = $this->Taskhub_status_model->get();
-        $this->page_data['companyCustomers'] = $companyCustomers;
-        $this->page_data['companyUsers'] = $companyUsers;        
-        $this->load->view('workcalender/taskhub/ajax_add_new_task', $this->page_data);
-	}
-
-	public function ajax_save_task()
-	{
-		$this->load->model('Taskhub_model');
-        $this->load->model('Taskhub_participants_model');
-        $this->load->model('Taskhub_status_model');   
-
-        $cid = logged('company_id');
-        $uid = logged('id');
-
-        $is_success = 0;
-        $msg = 'Cannot find data';
-
-        $post = $this->input->post();  
-
-        if( $post['subject'] != '' ){
-            $taskStatus = $this->Taskhub_status_model->getById($post['status']);
-            $task_data = [
-                'prof_id' => $post['customer_id'],
-                'subject' => $post['subject'],
-                'description' => $post['description'],
-                'created_by' => $uid,
-                'date_created' => date('Y-m-d h:i:s'),
-                'estimated_date_complete' => date('Y-m-d', strtotime($post['estimated_date_complete'])),
-                'actual_date_complete' => '',
-                'task_color' => $taskStatus->status_color,
-                'status_id' => $taskStatus->status_id,
-                'priority' => $post['priority'],
-                'company_id' => $cid,
-                'view_count' => 0
-            ];
-
-            $taskId = $this->Taskhub_model->create($task_data);
-
-            $data_participant = [
-                'task_id' => $taskId,
-                'user_id' => $post['user_id'],
-                'is_assigned' => 1
-            ];
-
-            $this->Taskhub_participants_model->create($data_participant);
-
-            $is_success = 1;
-            $msg = '';
-
-        }else{
-            $msg = 'Please enter subject';
-        }
-
-        $json_data = ['is_success' => $is_success, 'msg' => $msg];
-
-        echo json_encode($json_data);  
-	}
-
-	public function ajax_complete_task()
-	{
-		$this->load->model('Taskhub_model');
-        $this->load->model('Taskhub_status_model');   
-
-        $cid = logged('company_id');
-        $uid = logged('id');
-
-        $is_success = 0;
-        $msg = 'Cannot find data';
-
-        $post = $this->input->post();  
-        $taskHub = $this->Taskhub_model->getById($post['tsid']);
-
-        if( $taskHub && $taskHub->company_id == $cid ){
-        	if( $taskHub->status_id == 6 ){
-        		$msg = 'Task is already completed!';
-        	}else{
-        		$data = ['status_id' => 6];
-	        	$this->Taskhub_model->updateByTaskId($taskHub->task_id, $data);
-
-	        	$msg ='';
-	        	$is_success = 1;
-        	}        	
-        }
- 
-		$json_data = ['is_success' => $is_success, 'msg' => $msg];
-
-        echo json_encode($json_data);  
-	}
-
-	public function ajax_company_complete_all_tasks()
-	{
-		$this->load->model('Taskhub_model');
-        $this->load->model('Taskhub_status_model');   
-
-        $cid = logged('company_id');
-        $uid = logged('id');
-
-        $is_success = 1;
-        $msg = '';
-
-        $this->Taskhub_model->completeAllTasksByCompanyId($cid);
- 
-		$json_data = ['is_success' => $is_success, 'msg' => $msg];
-
-        echo json_encode($json_data);  
 	}
 }
 ?>

@@ -28,13 +28,6 @@ class TaxRates_model extends MY_Model
         return $query->result();
     }
 
-    public function create($data)
-    {
-        $vendor = $this->db->insert('tax_rates', $data);
-        $insert_id = $this->db->insert_id();
-        return  $insert_id;
-    }
-
     public function getById($id)
     {
         $user_id = logged('id');

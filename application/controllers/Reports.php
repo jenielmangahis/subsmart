@@ -72,8 +72,7 @@ class Reports extends MY_Controller {
         $company_id = logged('company_id');  
         $this->page_data['type'] = $id;           
         $this->page_data['estimates'] = $this->estimate_model->getAllByCompany($company_id);           
-        $this->page_data['invoices'] = $this->invoice_model->getAllByCompany($company_id, 0);    
-        $this->page_data['invoicesItems'] = $this->invoice_model->getInvoicesItems(logged('company_id'));       
+        $this->page_data['invoices'] = $this->invoice_model->getAllByCompany($company_id, 0);           
         $this->load->view('report/main/popular_reports', $this->page_data);
     }
     public function preview()
@@ -147,9 +146,6 @@ class Reports extends MY_Controller {
 
             case "customer_source":
                 return $this->setCustomerBySource();
-
-            case "estimates_summary":
-                return $this->setEstimates();
         }
     }
 
@@ -160,15 +156,6 @@ class Reports extends MY_Controller {
     
         $this->page_data['users'] = $this->users_model->getAllUsersByCompany($comp_id, $user_id);			     
 
-    }
-
-    public function setEstimates()
-    {
-        $this->page_data['estimates'] = $this->estimate_model->getAllByCompanynDraft(logged('company_id'));
-
-        // return $this->page_data;
-        echo json_encode($this->page_data);
-        
     }
 
     public function filterReports() {
@@ -208,7 +195,7 @@ class Reports extends MY_Controller {
     }
 
     public function setProfitLoss($startDate, $endDate) {
-        $invoice = get_invoice_amount_by_date('Paid', $startDate, $endDate);
+        $invoice = get_invoice_amount_by_date('paid', $startDate, $endDate);
         $expenses = 0;
         $revenue = $invoice;  
         $net_profit = floatval($invoice) - floatval($expenses);
@@ -247,7 +234,7 @@ class Reports extends MY_Controller {
         $startDate = $this->input->get('startDate');
         $endDate = $this->input->get('endDate');
 
-        $invoice = get_invoice_amount_by_date('Paid', $startDate, $endDate);
+        $invoice = get_invoice_amount_by_date('paid', $startDate, $endDate);
         $expenses = 0;
         $revenue = $invoice;  
         $net_profit = floatval($invoice) - floatval($expenses);
@@ -301,7 +288,7 @@ class Reports extends MY_Controller {
             foreach ($payments as $payment) {
                 if (!$month_counter) {
                     $month_counter = true;
-                    $grand_total += floatval($payment[6]);
+                    $grand_total += floatval($payment[5]);
                     array_push($months, array($dt->format("M, Y"), '', '', '', ''));
                     array_push($months, $payment);
                 } else {
@@ -398,33 +385,6 @@ class Reports extends MY_Controller {
         $endDate = $this->input->get('endDate');
 
         $payments = getPaymentByCustomer($startDate, $endDate);
-
-        echo json_encode($payments);
-    }
-
-    public function expenseByCategory() {
-        $startDate = $this->input->get('startDate');
-        $endDate = $this->input->get('endDate');
-
-        $payments = getExpenseCategory($startDate, $endDate);
-
-        echo json_encode($payments);
-    }
-
-    public function expenseByCategoryMonth() {
-        $startDate = $this->input->get('startDate');
-        $endDate = $this->input->get('endDate');
-
-        $payments = getExpense($startDate, $endDate);
-
-        echo json_encode($payments);
-    }
-
-    public function expenseByCategoryMonthVendor() {
-        $startDate = $this->input->get('startDate');
-        $endDate = $this->input->get('endDate');
-
-        $payments = getExpenseVendor($startDate, $endDate);
 
         echo json_encode($payments);
     }
@@ -561,70 +521,6 @@ class Reports extends MY_Controller {
         $i = 0;
         foreach ($period as $dt) {
             $payments = getInvoiceByDate($startDate, $endDate, $dt->format("m"));
-            $month_counter = false;
-
-            foreach ($payments as $payment) {
-                array_push($months, $payment);
-            }
-        }
-
-        echo json_encode($months);
-    }
-
-    public function workOrderByEmployee() {
-        $startDate = $this->input->get('startDate');
-        $endDate = $this->input->get('endDate');
-
-        $months = [];
-        $month_counter = 0;
-
-        $period = $this->getDateInterval($startDate, $endDate);
-        $i = 0;
-        // foreach ($period as $dt) {
-            $payments = getworkOrderByEmployee($startDate, $endDate);
-            $month_counter = false;
-
-            foreach ($payments as $payment) {
-                array_push($months, $payment);
-            }
-        // }
-
-        echo json_encode($months);
-    }
-    
-    public function workOrderByStatus() {
-        $startDate = $this->input->get('startDate');
-        $endDate = $this->input->get('endDate');
-
-        $months = [];
-        $month_counter = 0;
-
-        $period = $this->getDateInterval($startDate, $endDate);
-        $i = 0;
-        // foreach ($period as $dt) {
-            $payments = getworkOrderByStatus($startDate, $endDate);
-            $month_counter = false;
-
-            foreach ($payments as $payment) {
-                array_push($months, $payment);
-            }
-        // }
-
-        echo json_encode($months);
-    }
-
-    public function customerTaxByMonth()
-    {
-        $startDate = $this->input->get('startDate');
-        $endDate = $this->input->get('endDate');
-
-        $months = [];
-        $month_counter = 0;
-
-        $period = $this->getDateInterval($startDate, $endDate);
-        $i = 0;
-        foreach ($period as $dt) {
-            $payments = getcustomerTaxByMonth($startDate, $endDate, $dt->format("m"));
             $month_counter = false;
 
             foreach ($payments as $payment) {

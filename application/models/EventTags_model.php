@@ -9,14 +9,12 @@ class EventTags_model extends MY_Model
     {
         $id = logged('id');
 
-        $this->db->select('event_tags.*,business_profile.business_name');
+        $this->db->select('*');
         $this->db->from($this->table);
-        $this->db->join('business_profile', 'event_tags.company_id = business_profile.company_id', 'LEFT'); 
 
         if ( !empty($filters) ) {
             if ( !empty($filters['search']) ) {
                 $this->db->like('name', $filters['search'], 'both');
-                $this->db->or_like('business_profile.business_name', $filters['search'], 'both');
             }
         }
 
@@ -26,18 +24,12 @@ class EventTags_model extends MY_Model
         return $query->result();
     }
 
-    public function getAllByCompanyId($company_id, $filters = array())
+    public function getAllByCompanyId($company_id)
     {
 
         $this->db->select('*');
         $this->db->from($this->table);
         $this->db->where('company_id', $company_id);
-
-        if ( !empty($filters) ) {
-            if ( $filters['search'] != '' ) {
-                $this->db->like('name', $filters['search'], 'both');                
-            }
-        }
 
         $query = $this->db->get();
         return $query->result();

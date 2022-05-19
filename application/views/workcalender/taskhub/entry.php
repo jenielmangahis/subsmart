@@ -2,11 +2,6 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 ?>
 <?php include viewPath('includes/header'); ?>
-<style>
-.p-40 {
-  padding-top: 40px !important;
-}
-</style>
 <?php 
     $participants_selected_ids = '';
     $participants_selected_names = '';
@@ -40,15 +35,24 @@ defined('BASEPATH') or exit('No direct script access allowed');
     <!-- page wrapper start -->
     <div wrapper__section>
         <div class="container-fluid">
-            <div class="row p-40">
-                <div class="col">
-                    <h3 class="m-0">
-                        <?php if(isset($task)){ echo 'Edit Task'; }else{echo 'New Task';} ?>
-                    </a>
-                    </h3>
-                </div>
-                <div style="background-color:#fdeac3;padding:.5%;margin-bottom:5px;margin-top:5px;margin-bottom:10px; width:100%;margin-left: 10px;">
-                    <?php if(isset($task)){ echo 'Edit your task.'; }else{ echo 'Create new task.'; } ?>                    
+            <div class="page-title-box">
+                <div class="row align-items-center">
+                    <div class="col-sm-6">
+                        <h1 class="page-title"><?php if(isset($id)){ echo 'Edit Task'; }else{echo 'New Task';} ?></h1>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item active"><?php if(isset($id)){ echo 'Edit your task.'; }else{ echo 'Add your new task.'; } ?></li>
+                        </ol>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="float-right d-none d-md-block">
+                            <div class="dropdown">
+                                <a href="<?php echo base_url('taskhub') ?>" class="btn btn-primary"
+                                   aria-expanded="false">
+                                    <i class="mdi mdi-settings mr-2"></i> Go Back to TaskHub
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <!-- end row -->
@@ -67,152 +71,123 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <div class="card">
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="col-6">
-                                        <div class="form-group">
-                                            <label for="subject">Subject</label>
-                                            <input type="text" class="form-control" name="subject" id="subject"
-                                                   placeholder="Enter Subject" value="<?php 
-                                                    if((set_value('subject') == '') && (isset($task))){
-                                                        echo $task->subject;
-                                                    } else {
-                                                        echo set_value('subject');
-                                                    }
-                                                    ?>"required autofocus/>
-                                        </div>
-
-                                        <?php if(isset($status_selection)){ ?>
-                                            <div class="form-group">
-                                                <label for="status">Status</label>
-                                                <select class="form-control" name="status" id="status">
-                                                    <?php
-                                                      if((empty(set_value('status'))) && (isset($task))){
-                                                        $sel_status = $task->status_id;
-                                                      } else {
-                                                        $sel_status = set_value('status');  
-                                                      }
-                                                      
-                                                      foreach ($status_selection as $row) {
-                                                        $tag = '';
-                                                        $sfx = '';
-                                                        if($row->status_id == $sel_status){
-                                                          $tag = ' selected';
-                                                          $sfx = ' - Current';
-                                                        }
-
-                                                        echo '<option value="'. $row->status_id .'"'. $tag . '>' . $row->status_text . $sfx . '</option>';
-                                                      }
-                                                    ?>
-                                                </select>
-                                            </div>
-                                        <?php } ?>
-                                        <div class="form-group">
-                                            <label for="status">Priority</label>
-                                            <select class="form-control" name="priority" id="priority">
-                                                <?php foreach($optionPriority as $key => $value){ ?>
-                                                    <?php if($task){ ?>
-                                                        <option <?= $task->priority == $key ? 'selected="selected"' : ''; ?> value="<?= $key; ?>"><?= $value; ?></option>
-                                                    <?php }else{ ?>
-                                                        <option value="<?= $key; ?>"><?= $value; ?></option>
-                                                    <?php } ?>
-                                                    
-                                                <?php } ?>
-                                            </select>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label for="description">Description</label>
-                                            <textarea class="form-control ckeditor" name="description" id="description" autocomplete="off" style="height: 300px !important" placeholder="Enter Description"
-                                                required><?php 
-                                                    if((set_value('description') == '') && (isset($task))){
-                                                        echo $task->description;
-                                                    } else {
-                                                        echo set_value('description');
-                                                    }    
-                                                ?></textarea>
-                                        </div>
-
-
+                                    <div class="col-md-12">
+                                        <h3>Task Main Information</h3>
                                     </div>
-                                    <div class="col-6">
-                                            <div class="form-group">
-                                                <label for="assigned_to">Customer</label>                                                
-                                                <select name="customer_id" id="customer-id" class="form-control">
-                                                    <?php if($customer){ ?>
-                                                        <option value="<?= $customer->prof_id; ?>"><?= $customer->first_name . ' ' . $customer->last_name; ?></option>
-                                                    <?php } ?>
 
-                                                    <?php if( $task ){ ?>
-                                                        <option value="<?= $task->prof_id; ?>"><?= $task->customer_name; ?></option>
-                                                    <?php } ?>
-                                                </select>
-                                            </div>
-                                        <?php if(isset($users_selection)){ ?>
-                                            <div class="form-group">
-                                                <label for="assigned_to">Assign To</label>
-                                                <select class="form-control" name="assigned_to" id="assigned_to">
-                                                    <option value="">Myself</option>
-                                                    <?php
-                                                      if(set_value('assigned_to') != ''){
-                                                        $sel_assigned_to = set_value('assigned_to');
-                                                      }
-
-                                                      foreach ($users_selection as $row) {
-                                                        $tag = '';
-                                                        if(($row->id == $sel_assigned_to) || ($row->id == $assigned_to)){
-                                                          $tag = ' selected';
-                                                        }
-
-                                                        $hidden = '';
-                                                        // if(in_array($row->id, $selected_participants_ids)){
-                                                        //     $hidden = ' hidden';
-                                                        // }
-
-                                                        echo '<option value="'. $row->id .'"'. $tag . $hidden . '>' . $row->name .'</option>';
-                                                      }
-                                                    ?>
-                                                </select>
-                                            </div>
-                                        <?php } ?>
-
-                                        <div class="form-group">
-                                            <label for="participants">Participants</label>
-                                            <select class="form-control" name="participants" id="participants">
-                                                <option id="always_selected" value="<?php echo $participants_selected_ids; ?>" hidden>
-                                                    <?php echo $participants_selected_names; ?>
-                                                </option>
+                                    <div class="col-md-6 form-group">
+                                        <label for="subject">Subject</label>
+                                        <input type="text" class="form-control" name="subject" id="subject"
+                                               placeholder="Enter Subject" value="<?php 
+                                                if((set_value('subject') == '') && (isset($task))){
+                                                    echo $task->subject;
+                                                } else {
+                                                    echo set_value('subject');
+                                                }
+                                                ?>"required autofocus/>
+                                    </div>
+                                    <div class="col-md-3 form-group">
+                                        <label for="estimated_date_complete">Estimated Date of Competion</label>
+                                        <input type="date" class="form-control" name="estimated_date_complete" id="estimated_date_complete" value="<?php
+                                            if((set_value('estimated_date_complete') == '') && (isset($task))){
+                                                echo $task->estimated_date_complete;
+                                            } else {
+                                                echo set_value('estimated_date_complete');
+                                            }
+                                        ?>" required>
+                                    </div>
+                                    <?php if(isset($users_selection)){ ?>
+                                        <div class="col-md-3 form-group">
+                                            <label for="assigned_to">Assign To</label>
+                                            <select class="form-control" name="assigned_to" id="assigned_to">
+                                                <option value="">Myself</option>
                                                 <?php
+                                                  if(set_value('assigned_to') != ''){
+                                                    $sel_assigned_to = set_value('assigned_to');
+                                                  }
+
                                                   foreach ($users_selection as $row) {
-                                                    if($row->id != $assigned_to){
-                                                        if(in_array($row->id, $selected_participants_ids)){
-                                                            echo '<option value="'. $row->id .'" class="bg-success">' . $row->name . '</option>';
-                                                        } else {
-                                                            echo '<option value="'. $row->id .'">' . $row->name . '</option>';
-                                                        }
-                                                    } else {
-                                                        echo '<option value="'. $row->id .'" hidden>' . $row->name . '</option>';   
+                                                    $tag = '';
+                                                    if(($row->id == $sel_assigned_to) || ($row->id == $assigned_to)){
+                                                      $tag = ' selected';
                                                     }
+
+                                                    $hidden = '';
+                                                    // if(in_array($row->id, $selected_participants_ids)){
+                                                    //     $hidden = ' hidden';
+                                                    // }
+
+                                                    echo '<option value="'. $row->id .'"'. $tag . $hidden . '>' . $row->name .'</option>';
                                                   }
                                                 ?>
                                             </select>
                                         </div>
-
-                                        <div class="form-group">
-                                            <label for="estimated_date_complete">Estimated Date of Competion</label>
-                                            <input type="date" class="form-control" name="estimated_date_complete" id="estimated_date_complete" value="<?php
-                                                if((set_value('estimated_date_complete') == '') && (isset($task))){
-                                                    echo $task->estimated_date_complete;
+                                    <?php } ?>
+                                    <div class="col-md-6 form-group">
+                                        <label for="description">Description</label>
+                                        <textarea class="form-control" name="description" id="description" autocomplete="off" style="height: 300px !important" placeholder="Enter Description"
+                                            required><?php 
+                                                if((set_value('description') == '') && (isset($task))){
+                                                    echo $task->description;
                                                 } else {
-                                                    echo set_value('estimated_date_complete');
-                                                }
-                                            ?>" required>
-                                        </div>
-
+                                                    echo set_value('description');
+                                                }    
+                                            ?></textarea>
                                     </div>
+                                    <?php if(isset($status_selection)){ ?>
+                                        <div class="col-md-3 form-group">
+                                            <label for="status">Status</label>
+                                            <select class="form-control" name="status" id="status">
+                                                <?php
+                                                  if((empty(set_value('status'))) && (isset($task))){
+                                                    $sel_status = $task->status_id;
+                                                  } else {
+                                                    $sel_status = set_value('status');  
+                                                  }
+                                                  
+                                                  foreach ($status_selection as $row) {
+                                                    $tag = '';
+                                                    $sfx = '';
+                                                    if($row->status_id == $sel_status){
+                                                      $tag = ' selected';
+                                                      $sfx = ' - Current';
+                                                    }
+
+                                                    echo '<option value="'. $row->status_id .'"'. $tag . '>' . $row->status_text . $sfx . '</option>';
+                                                  }
+                                                ?>
+                                            </select>
+                                        </div>
+                                    <?php } ?>
                                 </div>
+                                <div class="row">
+                                    <div class="col-md-9 form-group">
+                                        <label for="participants">Participants</label>
+                                        <select class="form-control" name="participants" id="participants">
+                                            <option id="always_selected" value="<?php echo $participants_selected_ids; ?>" hidden>
+                                                <?php echo $participants_selected_names; ?>
+                                            </option>
+                                            <?php
+                                              foreach ($users_selection as $row) {
+                                                if($row->id != $assigned_to){
+                                                    if(in_array($row->id, $selected_participants_ids)){
+                                                        echo '<option value="'. $row->id .'" class="bg-success">' . $row->name . '</option>';
+                                                    } else {
+                                                        echo '<option value="'. $row->id .'">' . $row->name . '</option>';
+                                                    }
+                                                } else {
+                                                    echo '<option value="'. $row->id .'" hidden>' . $row->name . '</option>';   
+                                                }
+                                              }
+                                            ?>
+                                        </select>
+                                    </div>        
+                                </div>
+
                                 <div class="row">
                                     <div class="col-md-4 form-group">
                                         <button type="submit" class="btn btn-flat btn-primary">Save</button>
-                                        <a href="<?php echo url('taskhub') ?>" class="btn btn-primary">Go Back to TaskHub List</a>
+                                        <a href="<?php echo url('taskhub') ?>" class="btn btn-danger">Cancel this</a>
                                     </div>
                                 </div>
                             </div>
@@ -346,59 +321,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     }
                 }
             });  
-        }
-
-        $('#customer-id').select2({
-            ajax: {
-                url: base_url + 'autocomplete/_company_customer',
-                dataType: 'json',
-                delay: 250,
-                data: function (params) {
-                  return {
-                    q: params.term, // search term
-                    page: params.page
-                  };
-                },
-                processResults: function (data, params) {
-                  // parse the results into the format expected by Select2
-                  // since we are using custom formatting functions we do not need to
-                  // alter the remote JSON data, except to indicate that infinite
-                  // scrolling can be used
-                  params.page = params.page || 1;
-
-                  return {
-                    results: data,
-                    // pagination: {
-                    //   more: (params.page * 30) < data.total_count
-                    // }
-                  };
-                },
-                cache: true
-              },
-              placeholder: 'Select Customer',
-              minimumInputLength: 0,
-              templateResult: formatRepoCustomer,
-              templateSelection: formatRepoCustomerSelection
-        });
-
-        function formatRepoCustomerSelection(repo) {
-            if( repo.first_name != null ){
-                return repo.first_name + ' ' + repo.last_name;      
-            }else{
-                return repo.text;
-            }
-        }
-
-        function formatRepoCustomer(repo) {
-          if (repo.loading) {
-            return repo.text;
-          }
-
-          var $container = $(
-            '<div>'+repo.first_name + ' ' + repo.last_name +'<br /><small>'+repo.phone_h+' / '+repo.email+'</small></div>'
-          );
-
-          return $container;
         }
     });
 </script>

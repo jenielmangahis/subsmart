@@ -1,90 +1,77 @@
 .full-screen-modal .modal {
-    padding: 0 !important;
-    /** override inline padding-right added from js **/
+    padding: 0 !important; /** override inline padding-right added from js **/
 }
-
 .full-screen-modal .modal .modal-dialog {
     width: 100%;
+    max-width: none;
     height: 100%;
     margin: 0;
-    max-width: 100%;
 }
-
 .full-screen-modal .modal .modal-content {
+    height: auto;
     border: 0;
     border-radius: 0;
     background-color: #f4f5f8;
 }
-
 .full-screen-modal .modal .modal-body {
     overflow-y: auto;
 }
 
-.full-screen-modal .modal-container {
+.full-screen-modal .modal-container{
     margin: auto;
-    width: 100%;
-    border: 1px solid gainsboro;
+    width: 60%;
+    border:1px solid gainsboro;
     padding: 10px;
     -moz-box-shadow: 0 4px 4px rgba(0, 0, 0, 0.4);
     -webkit-box-shadow: 0 4px 4px rgba(0, 0, 0, 0.4);
     box-shadow: 0 4px 4px rgba(0, 0, 0, 0.4);
     background: #ffffff;
 }
-
-.bank-img-container {
+.bank-img-container{
     cursor: pointer;
     border: 1px #dcdcdc solid;
     margin-bottom: 20px;
     padding: 15px 1px;
     border-radius: 2px;
 }
-
-.bank-img-container:hover {
+.bank-img-container:hover{
     border: 1px #2ca01c solid;
 }
-
-.bank-img-container .banks-img {
+.bank-img-container .banks-img{
     height: 84px;
     width: 125px;
     margin: 0 auto;
 }
-
-.modal-container .centered-container {
+.modal-container .centered-container{
     display: flex;
     justify-content: center;
     margin: 20px;
 }
-
-.modal-container .centered-container img {
+.modal-container .centered-container img{
     width: 120px;
     height: 130px;
 }
-
-.box-bank-container {
+.box-bank-container{
     padding: 20px;
     min-height: 500px;
     width: 550px;
     margin-bottom: 72px;
 }
-
-#fileUpload .modal-content {
+#fileUpload .modal-content{
     height: 100%;
 }
-
-#fileUpload .modal-footer-upload-file {
+#fileUpload .modal-footer-upload-file{
     padding: 8px 15px;
     background: #393A3D;
     height: 56px;
     text-align: left;
 }
-
-.centered-modal .take-a-tour-box .tat-container {
+.centered-modal .take-a-tour-box .tat-container{
     display: flex;
     justify-content: center;
     margin-top: 20px;
 }
-
-.centered-modal .take-a-tour-box {
+.centered-modal .take-a-tour-box{
     position: relative;
     display: inline-block;
     text-align: center;
@@ -93,30 +80,26 @@
     border: 1px solid #d4d7dc;
     border-radius: 4px;
     background-color: #fff;
-    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .1);
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,.1);
     margin-bottom: 30px;
 }
-
-.centered-modal .modal-dialog .modal-content {
+.centered-modal .modal-dialog .modal-content{
     min-width: 662px;
     border: 1px solid #d4d7dc;
     border-radius: 5px;
     background-color: #fff
 }
-
-.centered-modal .modal-dialog .modal-content .modal-body .path {
+.centered-modal .modal-dialog .modal-content .modal-body .path{
     box-sizing: border-box;
     height: 1px;
     width: 580px;
     border: .5px solid #d4d7dc;
     margin-bottom: 20px;
 }
-
-.centered-modal .modal-dialog .modal-content .modal-body .help-link-container {
+.centered-modal .modal-dialog .modal-content .modal-body .help-link-container{
     margin: 20px 0 40px;
 }
-
-.centered-modal .modal-dialog .modal-content .modal-body .more-info {
+.centered-modal .modal-dialog .modal-content .modal-body .more-info{
     color: #393a3d;
     font-size: 16px;
     font-weight: 500;
@@ -124,8 +107,7 @@
     line-height: 20px;
     padding: 5px 0;
 }
-
-.centered-modal .modal-dialog .modal-content .modal-body .helpLink {
+.centered-modal .modal-dialog .modal-content .modal-body .helpLink{
     display: block;
     margin: 3px 0;
     height: 20px;
@@ -135,31 +117,25 @@
     line-height: 20px;
 }
 
-
 /*Print Checks*/
-
-#print-checks-modal .modal-title {
+#print-checks-modal .modal-title{
     font-size: 2.4rem;
     line-height: 50px;
     color: #393A3D;
     padding-left: 15px;
     vertical-align: middle;
 }
-
-#print-checks-modal .modal-header {
+#print-checks-modal .modal-header{
     border-bottom: 0;
 }
-
-#print-checks-modal .modal-content {
+#print-checks-modal .modal-content{
     height: 100%;
 }
-
-#print-checks-modal .modal-footer-print {
+#print-checks-modal .modal-footer-print{
     padding: 10px;
     background: #393A3D;
 }
-
-#print-checks-modal .footer-links {
+#print-checks-modal .footer-links{
     display: inline-block;
     height: 25px;
     padding: 0 15px;
@@ -170,26 +146,22 @@
     border: 0 none;
     box-shadow: none;
 }
-
-#print-checks-modal .action-bar {
+#print-checks-modal .action-bar{
     height: 60px;
     position: relative;
     margin-bottom: 5px;
 }
-
-#print-checks-modal .batchAction {
+#print-checks-modal .batchAction{
     margin-left: 12px;
     display: inline-block;
 }
-
-#print-checks-modal .icon-arrow {
+#print-checks-modal .icon-arrow{
     color: #BABEC5;
     display: inline-block;
     vertical-align: bottom;
     margin-left: 30px;
 }
-
-#print-checks-modal .remove-button {
+#print-checks-modal .remove-button{
     border-radius: 36px;
     border: 2px solid #393a3d;
     color: #393a3d;
@@ -197,121 +169,97 @@
     font-weight: 600;
     font-size: 16px;
 }
-
-#print-checks-modal .select-sort {
+#print-checks-modal .select-sort{
     display: inline-block;
     border: 0;
     padding: 0;
     vertical-align: middle;
     margin-left: 20px;
 }
-
-#print-checks-modal .labeled-input {
+#print-checks-modal .labeled-input{
     display: inline-block;
     margin-left: 20px;
     border: 0;
     padding: 0;
 }
-
-#print-checks-modal .labeled-input label {
+#print-checks-modal .labeled-input label{
     font-size: 14px;
     font-weight: 600;
     color: #6B6C72;
 }
-
-#print-checks-modal .print-settings {
+#print-checks-modal .print-settings{
     position: absolute;
     right: 0;
     margin-right: 30px;
     margin-top: 30px;
 }
-
-#print-checks-modal .print-settings a i {
+#print-checks-modal .print-settings a i{
     color: #6B6C72;
     display: inline-block;
 }
-
-#print-checks-modal .modal-footer-print .cancel-button {
+#print-checks-modal .modal-footer-print .cancel-button{
     border-radius: 36px;
     background: transparent;
-    border: 1px solid #6B6C72;
+    border:1px solid #6B6C72;
 }
-
-#print-checks-modal .modal-footer-print .print-button {
+#print-checks-modal .modal-footer-print .print-button{
     float: right;
     border-radius: 36px
 }
-
-
 /*Pay Bills*/
-
-#pay-bills-modal .modal-title {
+#pay-bills-modal .modal-title{
     font-size: 2.4rem;
     line-height: 50px;
     color: #393A3D;
     padding-left: 15px;
     vertical-align: middle;
 }
-
-#pay-bills-modal .modal-header {
+#pay-bills-modal .modal-header{
     border-bottom: 0;
 }
-
-#pay-bills-modal .modal-content {
+#pay-bills-modal .modal-content{
     height: 100%;
 }
-
-#pay-bills-modal .modal-footer-print {
+#pay-bills-modal .modal-footer-print{
     padding: 10px;
     background: #393A3D;
 }
-
-#pay-bills-modal .remove-button {
+#pay-bills-modal .remove-button{
     border-radius: 36px;
 }
-
-#pay-bills-modal .modal-footer-print .cancel-button {
+#pay-bills-modal .modal-footer-print .cancel-button{
     border-radius: 36px;
     background: transparent;
-    border: 1px solid #6B6C72;
+    border:1px solid #6B6C72;
 }
-
-#pay-bills-modal .modal-footer-print .print-button {
+#pay-bills-modal .modal-footer-print .print-button{
     float: right;
     border-radius: 36px
 }
-
-#pay-bills-modal .modal-body {
+#pay-bills-modal .modal-body{
     background: #F4F5F8;
 }
-
-#pay-bills-modal .modal-body label {
+#pay-bills-modal .modal-body label{
     font-weight: bolder;
 }
-
-#pay-bills-modal .table-container {
+#pay-bills-modal .table-container{
     background: #ffffff;
     padding-top: 15px;
     position: relative;
 }
-
-#pay-bills-modal .filter-container {
+#pay-bills-modal .filter-container{
     height: 60px;
     position: relative;
     margin-bottom: 5px;
 }
-
-#pay-bills-modal .filter-container button {
+#pay-bills-modal .filter-container button{
     border-radius: 5px;
     border: 1px solid black;
 }
-
-#pay-bills-modal .filter-container ul li {
+#pay-bills-modal .filter-container ul li{
     padding: 20px;
     height: 300px;
 }
-
-
 /*Right side modal*/
 
 .modal-right-side .modal.right .modal-dialog {
@@ -324,12 +272,10 @@
     -o-transform: translate3d(0%, 0, 0);
     transform: translate3d(0%, 0, 0);
 }
-
 .modal-right-side .modal.right .modal-content {
     height: 100%;
     overflow-y: auto;
 }
-
 .modal-right-side .modal.right .modal-body {
     padding: 0 30px 80px;
 }
@@ -345,71 +291,57 @@
 .modal-right-side .modal.right.fade.in .modal-dialog {
     right: 0;
 }
-
 .modal-right-side .modal-content {
     border-radius: 0;
     border: none;
 }
-
 .modal-right-side .modal-header {
     border-bottom: 0;
     background-color: #FAFAFA;
     margin-bottom: 0;
 }
-
 .modal-right-side .modal-footer {
     position: fixed;
     bottom: 0;
     width: 100%;
     background: #ffffff;
 }
-
-.modal-right-side .modal-footer .btn-default {
+.modal-right-side .modal-footer .btn-default{
     border: 2px solid black;
     font-weight: bolder;
     font-size: 16px;
     color: rgb(57, 58, 61);
 }
-
-.modal-right-side .modal-body .subheader {
+.modal-right-side .modal-body .subheader{
     font-size: 14px;
     color: #333333;
     margin-bottom: 22px;
 }
-
-.modal-right-side .modal-body .form-group {
+.modal-right-side .modal-body .form-group{
     margin-bottom: 17px;
 }
-
-.modal-right-side .modal-body .form-group label {
+.modal-right-side .modal-body .form-group label{
     font-size: 16px;
     color: #333333;
     font-weight: 600;
     margin-bottom: 5px;
 }
-
-.modal-right-side .modal-body .form-group input,
-select {
+.modal-right-side .modal-body .form-group input,select{
     border-radius: 3px;
 }
-
-.tab-select {
+.tab-select{
     display: inline-block;
     position: relative;
 }
-
-.modal-right-side .modal-body .form-group .tab-select select {
+.modal-right-side .modal-body .form-group .tab-select select{
     max-width: 250px;
 }
-
 .modal-right-side .modal-body .form-group .selectBox {
     position: relative;
 }
-
 .modal-right-side .modal-body .form-group .selectBox select {
     width: 100%;
 }
-
 .modal-right-side .modal-body .form-group textarea {
     color: #363636;
     font-size: 16px;
@@ -440,29 +372,24 @@ select {
 .modal-right-side .modal-body .form-group #checkboxes label:hover {
     background-color: #afafaf;
 }
-
-.modal-right-side .modal-body .form-group .inline-select {
+.modal-right-side .modal-body .form-group .inline-select{
     position: relative;
     display: inline-block;
     max-width: 150px;
 }
-
-.form-group .action-section {
+.form-group .action-section{
     align-items: center;
     display: flex;
     margin-bottom: 16px;
 }
-
-.form-group .action-section .form-control {
+.form-group .action-section .form-control{
     max-width: 220px;
 }
-
-.form-group .action-section .action-label {
+.form-group .action-section .action-label{
     margin-right: 30px;
     width: 100px;
 }
-
-.form-group .action-section .text-dropdown {
+.form-group .action-section .text-dropdown{
     color: #363636;
     font-size: 16px;
     border-radius: 2px;
@@ -470,95 +397,78 @@ select {
     border: 2px solid #e0e0e0;
     box-shadow: none;
 }
-
 .modal-right-side .modal-body .form-group .custom-control-label {
     font-size: 14px;
     color: #333333;
     font-weight: lighter;
 }
-
 .modal-right-side .modal-footer .btn {
     border-radius: 36px;
 }
-
-.action-section .add-split-container {
+.action-section .add-split-container{
     padding: 10px;
     display: none;
 }
-
-.action-section .add-split-container .split-content {
+.action-section .add-split-container .split-content{
     display: inline-block;
     position: relative;
 }
-
-.action-section .add-split-container .split-content .split-category-text {
+.action-section .add-split-container .split-content .split-category-text{
     display: block;
     font-size: small;
 }
-
-#deleteCondition {
+#deleteCondition{
     float: right;
     padding-top: 15px;
     margin-left: 5px;
 }
-
-#addCondition {
+#addCondition{
     display: inline-block;
     position: relative;
     margin-bottom: 15px;
 }
-
-
 /*Process Steps*/
-
-#importRules .modal-content {
+#importRules .modal-content{
     height: 100%;
 }
-
-#importRules .modal-body .progressSection {
+#importRules .modal-body .progressSection{
     background-color: #f9fafb;
     border-bottom: 1px solid #e3eaf3;
     background-image: -webkit-linear-gradient(bottom, #f6f8fb 0%, #f9fafb 100%);
     background-image: linear-gradient(to top, #f6f8fb 0%, #f9fafb 100%);
 }
-
-#importRules .modal-body .uploadList .step-title {
+#importRules .modal-body .uploadList .step-title{
     margin-top: 30px;
     font-weight: 700;
     font-size: 20px;
 }
-
-#importRules .modal-body .uploadList .sub-title {
+#importRules .modal-body .uploadList .sub-title{
     margin-top: 15px;
     margin-bottom: 45px;
     font-weight: lighter;
     font-size: 14px;
 }
-
-#importRules .modal-body .uploadList .instruction {
+#importRules .modal-body .uploadList .instruction{
     margin-bottom: 10px;
     font-weight: 700;
     font-size: 16px;
 }
-
-#importRules .modal-footer-importRules {
+#importRules .modal-footer-importRules{
     padding: 8px 15px;
     background: #393A3D;
     height: 56px;
     text-align: left;
 }
-
-#importRules .modal-footer-importRules .btn {
+#importRules .modal-footer-importRules .btn{
     border-radius: 36px;
     color: #FFFFFF;
 }
-
-#importRules .modal-footer-importRules .btn-default {
+#importRules .modal-footer-importRules .btn-default{
     background: transparent;
-    border: 1px solid #6B6C72;
+    border:1px solid #6B6C72;
 }
 
-#receiptModal .modal-header {
+#receiptModal .modal-header{
     height: 40px;
     line-height: 50px;
     font-weight: 600;
@@ -567,36 +477,31 @@ select {
     padding: 10px;
     border-radius: 0;
 }
-
-#receiptModal .modal-header h2 {
+#receiptModal .modal-header h2{
     margin-top: 0;
     padding-left: 10px;
     font-weight: 600;
     font-size: 18px;
     color: #fff;
 }
-
-#receiptModal .modal-header .fa {
+#receiptModal .modal-header .fa{
     color: #fff;
     cursor: pointer;
     margin-top: 5px;
 }
-
-#receiptModal .modal-body .viewer-backdrop-container {
+#receiptModal .modal-body .viewer-backdrop-container{
     width: 532px;
     height: 585px;
     margin: 0 auto;
 }
-
-#receiptModal .modal-body .viewer-backdrop-container .viewer-backdrop {
+#receiptModal .modal-body .viewer-backdrop-container .viewer-backdrop{
     width: 532px;
     height: 585px;
-    background-color: rgba(0, 0, 0, .5);
+    background-color: rgba(0,0,0,.5);
     z-index: 0;
     padding-top: 50px;
 }
-
-#receiptModal .modal-body .viewer-backdrop-container .viewer-backdrop img {
+#receiptModal .modal-body .viewer-backdrop-container .viewer-backdrop img{
     min-width: 350px;
     min-height: 250px;
     max-width: 500px;
@@ -607,25 +512,20 @@ select {
     margin: auto;
     overflow: auto;
 }
-
 #receiptModal .modal-body .receiptDetailsContainer {
     max-width: 80%;
 }
-
 #receiptModal .modal-body .step-header {
     font-weight: 500;
     font-size: large;
 }
-
-#receiptModal .modal-body .receiptDetailsContainer label {
+#receiptModal .modal-body .receiptDetailsContainer label{
     font-weight: bolder;
 }
-
 #receiptModal .modal-body .form-element {
     margin-top: 20px;
 }
-
-#receiptModal .modal-body .memo-textarea {
+#receiptModal .modal-body .memo-textarea{
     box-shadow: none;
     border: 2px solid #e0e0e0;
     border-radius: 2px;
@@ -635,8 +535,7 @@ select {
     padding-left: 10px;
     color: #363636;
 }
-
-#receiptModal .modal-footer-uploadedReceipt {
+#receiptModal .modal-footer-uploadedReceipt{
     position: fixed;
     bottom: 0;
     padding: 10px;
@@ -644,46 +543,39 @@ select {
     width: 100%;
     background: #ffffff;
 }
-
-#receiptModal .modal-footer-uploadedReceipt .btn-leftSide {
+#receiptModal .modal-footer-uploadedReceipt .btn-leftSide{
     background-color: transparent;
-    border: 3px solid black;
+    border:3px solid black;
     border-radius: 36px;
     font-weight: bolder;
     color: black;
     float: left;
 }
-
-#receiptModal .modal-footer-uploadedReceipt .btn-rightSide {
+#receiptModal .modal-footer-uploadedReceipt .btn-rightSide{
     border-radius: 36px;
     font-weight: bolder;
     float: right;
 }
-
-
 /*Check Expenses modal*/
-
 #receive-payment .modal-title,
 .all_sales_modal .modal-title,
 #add-invoice .modal-title,
 #add-estimate .modal-title,
-#edit-expensesCheck .modal-title {
+#edit-expensesCheck .modal-title{
     font-size: 24px;
     line-height: 50px;
     color: #393A3D;
     padding-left: 15px;
     vertical-align: middle;
 }
-
 .all_sales_modal .modal-header,
 #add-invoice .modal-header,
 #add-estimate .modal-header,
 #receive-payment .modal-header,
-#edit-expensesCheck .modal-header {
+#edit-expensesCheck .modal-header{
     border-bottom: 0;
 }
-
-.modal-footer-check {
+.modal-footer-check{
     padding: 10px;
     background: #393A3D;
     width: 100%;
@@ -691,38 +583,34 @@ select {
     bottom: 0;
     margin-top: 100px;
 }
-
 #add-estimate .remove-button,
 #add-invoice .remove-button,
 .all_sales_modal .remove-button,
 #receive-payment .remove-button,
-#edit-expensesCheck .remove-button {
+#edit-expensesCheck .remove-button{
     border-radius: 36px;
 }
-
 #add-estimate .modal-footer-check .cancel-button,
 .all_sales_modal .modal-footer-check .cancel-button,
 #add-invoice .modal-footer-check .cancel-button,
 #receive-payment .modal-footer-check .cancel-button,
-#edit-expensesCheck .modal-footer-check .cancel-button {
+#edit-expensesCheck .modal-footer-check .cancel-button{
     border-radius: 36px;
     background: transparent;
-    border: 1px solid #6B6C72;
+    border:1px solid #6B6C72;
 }
-
 #receive-payment label,
 .all_sales_modal label,
 #add-invoice label,
 #add-estimate label,
-#edit-expensesCheck label {
+#edit-expensesCheck label{
     font-weight: 700;
 }
-
 #receive-payment textarea,
 .all_sales_modal textarea,
 #add-invoice textarea,
 #add-estimate textarea,
-#edit-expensesCheck textarea {
+#edit-expensesCheck textarea{
     box-shadow: none;
     border: 2px solid #e0e0e0;
     border-radius: 2px;
@@ -732,22 +620,20 @@ select {
     padding-left: 10px;
     color: #363636;
 }
-
 #receive-payment .table-container,
 .all_sales_modal .table-container,
 #add-invoice .table-container,
 #add-estimate .table-container,
-#edit-expensesCheck .table-container {
+#edit-expensesCheck .table-container{
     background: #ffffff;
     padding-top: 15px;
     position: relative;
 }
-
 #receive-payment .add-remove-line,
 .all_sales_modal .add-remove-line,
 #add-invoice .add-remove-line,
 #add-estimate .add-remove-line,
-#edit-expensesCheck .add-remove-line {
+#edit-expensesCheck .add-remove-line{
     border-radius: 5px;
     display: inline-block;
     position: relative;
@@ -756,88 +642,73 @@ select {
     margin-top: 20px;
     margin-bottom: 20px;
 }
-
-#receive-payment .modal-footer-check .middle-links,
-.all_sales_modal .modal-footer-check .middle-links,
-#add-invoice .modal-footer-check .middle-links,
-#add-estimate .modal-footer-check .middle-links,
-#edit-expensesCheck .modal-footer-check .middle-links {
+#receive-payment .modal-footer-check  .middle-links,
+.all_sales_modal .modal-footer-check  .middle-links,
+#add-invoice .modal-footer-check  .middle-links,
+#add-estimate .modal-footer-check  .middle-links,
+#edit-expensesCheck .modal-footer-check  .middle-links{
     display: inline-block;
     padding: 12px;
     font-size: 17px;
     font-weight: 600;
     border-right: 1px solid whitesmoke;
 }
-
-#receive-payment .modal-footer-check .middle-links a,
-.all_sales_modal .modal-footer-check .middle-links a,
-#add-invoice .modal-footer-check .middle-links a,
-#add-estimate .modal-footer-check .middle-links a,
-#edit-expensesCheck .modal-footer-check .middle-links a {
+#receive-payment .modal-footer-check  .middle-links a,
+.all_sales_modal .modal-footer-check  .middle-links a,
+#add-invoice .modal-footer-check  .middle-links a,
+#add-estimate .modal-footer-check  .middle-links a,
+#edit-expensesCheck .modal-footer-check  .middle-links a{
     color: #ffffff;
 }
-
-#receive-payment .modal-footer-check .middle-links a:hover,
-.all_sales_modal .modal-footer-check .middle-links a:hover,
-#add-invoice .modal-footer-check .middle-links a:hover,
-#add-estimate .modal-footer-check .middle-links a:hover,
-#edit-expensesCheck .modal-footer-check .middle-links a:hover {
+#receive-payment .modal-footer-check  .middle-links a:hover,
+.all_sales_modal .modal-footer-check  .middle-links a:hover,
+#add-invoice .modal-footer-check  .middle-links a:hover,
+#add-estimate .modal-footer-check  .middle-links a:hover,
+#edit-expensesCheck .modal-footer-check  .middle-links a:hover{
     text-decoration: underline;
-    color: #ffffff !important;
-    ;
-    -webkit-box-shadow: 0 10px 6px -6px #afafaf;
-    -moz-box-shadow: 0 10px 6px -6px #afafaf;
-    box-shadow: 0 10px 6px -6px #afafaf;
+    color: #ffffff !important;;
+    -webkit-box-shadow:  0 10px 6px -6px #afafaf;
+    -moz-box-shadow:  0 10px 6px -6px #afafaf;
+    box-shadow:  0 10px 6px -6px #afafaf;
 }
-
-#receive-payment .modal-footer-check .end,
-#add-estimate .modal-footer-check .end,
-.all_sales_modal .modal-footer-check .end,
-#add-invoice .modal-footer-check .end,
-#edit-expensesCheck .modal-footer-check .end {
+#receive-payment .modal-footer-check  .end,
+#add-estimate .modal-footer-check  .end,
+.all_sales_modal .modal-footer-check  .end,
+#add-invoice .modal-footer-check  .end,
+#edit-expensesCheck .modal-footer-check  .end{
     border-right: none;
 }
-
-
 /*Bill modal*/
-
-#bill-modal .modal-title {
+#bill-modal .modal-title{
     font-size: 24px;
     line-height: 50px;
     color: #393A3D;
     padding-left: 15px;
     vertical-align: middle;
 }
-
-#bill-modal .modal-header {
+#bill-modal .modal-header{
     border-bottom: 0;
 }
-
-#bill-modal .modal-body {
+#bill-modal .modal-body{
     height: 100%;
     margin-bottom: 100px;
 }
-
-#bill-modal .modal-footer-check {
+#bill-modal .modal-footer-check{
     padding: 10px;
     background: #393A3D;
 }
-
-#bill-modal.remove-button {
+#bill-modal.remove-button{
     border-radius: 36px;
 }
-
-#bill-modal .modal-footer-check .cancel-button {
+#bill-modal .modal-footer-check .cancel-button{
     border-radius: 36px;
     background: transparent;
-    border: 1px solid #6B6C72;
+    border:1px solid #6B6C72;
 }
-
-#bill-modal label {
+#bill-modal label{
     font-weight: 700;
 }
-
-#bill-modal textarea {
+#bill-modal textarea{
     box-shadow: none;
     border: 2px solid #e0e0e0;
     border-radius: 2px;
@@ -847,14 +718,12 @@ select {
     padding-left: 10px;
     color: #363636;
 }
-
-#bill-modal .table-container {
+#bill-modal .table-container{
     background: #ffffff;
     padding-top: 15px;
     position: relative;
 }
-
-#bill-modal .add-remove-line {
+#bill-modal .add-remove-line{
     border-radius: 5px;
     display: inline-block;
     position: relative;
@@ -863,62 +732,49 @@ select {
     margin-top: 20px;
     margin-bottom: 20px;
 }
-
-#bill-modal .modal-footer-check .middle-links {
+#bill-modal .modal-footer-check  .middle-links{
     display: inline-block;
     padding: 12px;
     font-size: 17px;
     font-weight: 600;
     border-right: 1px solid whitesmoke;
 }
-
-#bill-modal .modal-footer-check .middle-links a {
+#bill-modal .modal-footer-check  .middle-links a{
     color: #ffffff;
 }
-
-#bill-modal .modal-footer-check .middle-links a:hover {
+#bill-modal .modal-footer-check  .middle-links a:hover{
     text-decoration: underline;
-    color: #ffffff !important;
-    ;
-    -webkit-box-shadow: 0 10px 6px -6px #afafaf;
-    -moz-box-shadow: 0 10px 6px -6px #afafaf;
-    box-shadow: 0 10px 6px -6px #afafaf;
+    color: #ffffff !important;;
+    -webkit-box-shadow:  0 10px 6px -6px #afafaf;
+    -moz-box-shadow:  0 10px 6px -6px #afafaf;
+    box-shadow:  0 10px 6px -6px #afafaf;
 }
-
-#bill-modal .modal-footer-check .end {
+#bill-modal .modal-footer-check  .end{
     border-right: none;
 }
-
-
 /*Expense modal*/
-
-#expense-modal .modal-title {
+#expense-modal .modal-title{
     font-size: 24px;
     line-height: 50px;
     color: #393A3D;
     padding-left: 15px;
     vertical-align: middle;
 }
-
-#expense-modal .modal-header {
+#expense-modal .modal-header{
     border-bottom: 0;
 }
-
-#expense-modal.remove-button {
+#expense-modal.remove-button{
     border-radius: 36px;
 }
-
-#expense-modal .modal-footer-check .cancel-button {
+#expense-modal .modal-footer-check .cancel-button{
     border-radius: 36px;
     background: transparent;
-    border: 1px solid #6B6C72;
+    border:1px solid #6B6C72;
 }
-
-#expense-modal label {
+#expense-modal label{
     font-weight: 700;
 }
-
-#expense-modal textarea {
+#expense-modal textarea{
     box-shadow: none;
     border: 2px solid #e0e0e0;
     border-radius: 2px;
@@ -928,14 +784,12 @@ select {
     padding-left: 10px;
     color: #363636;
 }
-
-#expense-modal .table-container {
+#expense-modal .table-container{
     background: #ffffff;
     padding-top: 15px;
     position: relative;
 }
-
-#expense-modal .add-remove-line {
+#expense-modal .add-remove-line{
     border-radius: 5px;
     display: inline-block;
     position: relative;
@@ -944,62 +798,49 @@ select {
     margin-top: 20px;
     margin-bottom: 20px;
 }
-
-#expense-modal .modal-footer-check .middle-links {
+#expense-modal .modal-footer-check  .middle-links{
     display: inline-block;
     padding: 12px;
     font-size: 17px;
     font-weight: 600;
     border-right: 1px solid whitesmoke;
 }
-
-#expense-modal .modal-footer-check .middle-links a {
+#expense-modal .modal-footer-check  .middle-links a{
     color: #ffffff;
 }
-
-#expense-modal .modal-footer-check .middle-links a:hover {
+#expense-modal .modal-footer-check  .middle-links a:hover{
     text-decoration: underline;
-    color: #ffffff !important;
-    ;
-    -webkit-box-shadow: 0 10px 6px -6px #afafaf;
-    -moz-box-shadow: 0 10px 6px -6px #afafaf;
-    box-shadow: 0 10px 6px -6px #afafaf;
+    color: #ffffff !important;;
+    -webkit-box-shadow:  0 10px 6px -6px #afafaf;
+    -moz-box-shadow:  0 10px 6px -6px #afafaf;
+    box-shadow:  0 10px 6px -6px #afafaf;
 }
-
-#expense-modal .modal-footer-check .end {
+#expense-modal .modal-footer-check  .end{
     border-right: none;
 }
-
-
 /*Vendor Credit*/
-
-#vendorCredit-modal .modal-title {
+#vendorCredit-modal .modal-title{
     font-size: 24px;
     line-height: 50px;
     color: #393A3D;
     padding-left: 15px;
     vertical-align: middle;
 }
-
-#vendorCredit-modal .modal-header {
+#vendorCredit-modal .modal-header{
     border-bottom: 0;
 }
-
-#vendorCredit-modal.remove-button {
+#vendorCredit-modal.remove-button{
     border-radius: 36px;
 }
-
-#vendorCredit-modal .modal-footer-check .cancel-button {
+#vendorCredit-modal .modal-footer-check .cancel-button{
     border-radius: 36px;
     background: transparent;
-    border: 1px solid #6B6C72;
+    border:1px solid #6B6C72;
 }
-
-#vendorCredit-modal label {
+#vendorCredit-modal label{
     font-weight: 700;
 }
-
-#vendorCredit-modal textarea {
+#vendorCredit-modal textarea{
     box-shadow: none;
     border: 2px solid #e0e0e0;
     border-radius: 2px;
@@ -1009,14 +850,12 @@ select {
     padding-left: 10px;
     color: #363636;
 }
-
-#vendorCredit-modal .table-container {
+#vendorCredit-modal .table-container{
     background: #ffffff;
     padding-top: 15px;
     position: relative;
 }
-
-#vendorCredit-modal .add-remove-line {
+#vendorCredit-modal .add-remove-line{
     border-radius: 5px;
     display: inline-block;
     position: relative;
@@ -1025,81 +864,66 @@ select {
     margin-top: 20px;
     margin-bottom: 20px;
 }
-
-#vendorCredit-modal .modal-footer-check .middle-links {
+#vendorCredit-modal  .modal-footer-check  .middle-links{
     display: inline-block;
     padding: 12px;
     font-size: 17px;
     font-weight: 600;
     border-right: 1px solid whitesmoke;
 }
-
-#vendorCredit-modal .modal-footer-check .middle-links a {
+#vendorCredit-modal  .modal-footer-check  .middle-links a{
     color: #ffffff;
 }
-
-#vendorCredit-modal .modal-footer-check .middle-links a:hover {
+#vendorCredit-modal  .modal-footer-check  .middle-links a:hover{
     text-decoration: underline;
-    color: #ffffff !important;
-    ;
-    -webkit-box-shadow: 0 10px 6px -6px #afafaf;
-    -moz-box-shadow: 0 10px 6px -6px #afafaf;
-    box-shadow: 0 10px 6px -6px #afafaf;
+    color: #ffffff !important;;
+    -webkit-box-shadow:  0 10px 6px -6px #afafaf;
+    -moz-box-shadow:  0 10px 6px -6px #afafaf;
+    box-shadow:  0 10px 6px -6px #afafaf;
 }
-
-#vendorCredit-modal .modal-footer-check .end {
+#vendorCredit-modal .modal-footer-check  .end{
     border-right: none;
 }
-
-
 /*Paydown modal*/
-
-#payDown-modal .modal-title {
+#payDown-modal .modal-title{
     font-size: 24px;
     color: #393A3D;
     padding-left: 15px;
     vertical-align: middle;
     background: #f4f5f8;
 }
-
-#payDown-modal .modal-body {
+#payDown-modal .modal-body{
     background: #ffffff;
     height: 100%;
 }
-
-#payDown-modal .modal-content {
+#payDown-modal .modal-content{
     height: 100%;
 }
-
-#payDown-modal .modal-header {
+#payDown-modal .modal-header{
     border-bottom: 0;
     height: 56px;
 }
-
-#payDown-modal .remove-button {
+#payDown-modal .remove-button{
     border-radius: 36px;
 }
-
-#payDown-modal label {
+#payDown-modal label{
     color: #6b6c72;
     line-height: 20px;
     font-weight: 400;
     font-size: 14px;
 }
-
-#payDown-modal .modal-footer-check .cancel-button {
+#payDown-modal .modal-footer-check .cancel-button{
     border-radius: 36px;
     background: transparent;
-    border: 1px solid #6B6C72;
+    border:1px solid #6B6C72;
 }
 
-#payDown-modal .table-container {
+#payDown-modal .table-container{
     background: #ffffff;
     padding-top: 15px;
     position: relative;
 }
-
-#payDown-modal .add-remove-line {
+#payDown-modal .add-remove-line{
     border-radius: 5px;
     display: inline-block;
     position: relative;
@@ -1109,67 +933,52 @@ select {
     margin-bottom: 20px;
 }
 
-#payDown-modal .modal-footer-check .middle-links a {
+#payDown-modal  .modal-footer-check  .middle-links a{
     color: #ffffff;
 }
-
-#payDown-modal .modal-footer-check .middle-links a:hover {
+#payDown-modal  .modal-footer-check  .middle-links a:hover{
     text-decoration: underline;
-    color: #ffffff !important;
-    ;
-    -webkit-box-shadow: 0 10px 6px -6px #afafaf;
-    -moz-box-shadow: 0 10px 6px -6px #afafaf;
-    box-shadow: 0 10px 6px -6px #afafaf;
+    color: #ffffff !important;;
+    -webkit-box-shadow:  0 10px 6px -6px #afafaf;
+    -moz-box-shadow:  0 10px 6px -6px #afafaf;
+    box-shadow:  0 10px 6px -6px #afafaf;
 }
-
-#payDown-modal .modal-footer-check .end {
+#payDown-modal .modal-footer-check  .end{
     border-right: none;
 }
-
-#payDown-modal .header-form {
+#payDown-modal .header-form{
     margin-bottom: 15px;
     color: #333333;
 }
-
-#payDown-modal .amount-title {
+#payDown-modal .amount-title{
     font-size: 16px;
     font-weight: 400;
     margin-bottom: 0;
 }
-
-#payDown-modal .amount-data h2 {
+#payDown-modal .amount-data h2{
     margin-top: 0;
     font-weight: 500;
 }
-
-
 /*Privacy*/
-
-.privacy {
+.privacy{
     font-size: 10px;
     text-align: center;
     color: #393A3D;
     margin-bottom: 100px;
 }
-
-
 /*Form inline*/
-
 .inline {
     display: inline-block;
 }
-
-.form-inline-group {
+.form-inline-group{
     width: 100%;
 }
-
-.form-inline-group label {
+.form-inline-group label{
     font-weight: 700;
     float: right;
     margin-right: 10px;
 }
-
-.form-inline-group .form-inline {
+.form-inline-group .form-inline{
     color: #363636;
     font-size: 16px;
     border-radius: 2px;
@@ -1179,16 +988,13 @@ select {
     display: inline-block;
     width: 100%;
 }
-
-.form-inline-group tr td {
+.form-inline-group tr td{
     padding-bottom: 12px;
 }
-
-.form-inline-group span {
+.form-inline-group span{
     font-weight: 700;
 }
-
-.form-inline-group textarea {
+.form-inline-group textarea{
     color: #363636;
     font-size: 16px;
     border-radius: 2px;
@@ -1196,78 +1002,58 @@ select {
     box-shadow: none;
     width: 100%;
 }
-
-#timeActivity-modal .modal-footer-activity {
+#timeActivity-modal .modal-footer-activity{
     padding: 10px;
     background: #393A3D;
     bottom: 0;
     position: fixed;
     width: 100%;
 }
-
-#timeActivity-modal .modal-content {
+#timeActivity-modal .modal-content{
     height: 100%;
 }
-
-.btn-transparent {
+.btn-transparent{
     color: #ffffff;
     border-radius: 36px;
     background: transparent;
-    border: 1px solid #6B6C72;
+    border:1px solid #6B6C72;
 }
-
-.btn-transparent:hover {
+.btn-transparent:hover{
     background: #6b6c72;
 }
-
 #edit-vendor-modal .modal-dialog,
-#new-vendor-modal .modal-dialog,
-#new-customer-modal .modal-dialog {
+#new-vendor-modal .modal-dialog{
     max-width: 1060px;
 }
-
 #edit-vendor-modal .modal-dialog .modal-body,
-#new-vendor-modal .modal-dialog .modal-body,
-#new-customer-modal .modal-dialog .modal-body {
+#new-vendor-modal .modal-dialog .modal-body{
     max-height: 480px;
 }
-
 #edit-vendor-modal .modal-dialog .modal-footer-vendor,
-#new-vendor-modal .modal-dialog .modal-footer-vendor,
-#new-customer-modal .modal-dialog .modal-footer-customer {
+#new-vendor-modal .modal-dialog .modal-footer-vendor{
     padding: 10px;
 }
-
 #edit-vendor-modal .modal-dialog .modal-footer-vendor button,
-#new-vendor-modal .modal-dialog .modal-footer-vendor button,
-#new-customer-modal .modal-dialog .modal-footer-customer button {
+#new-vendor-modal .modal-dialog .modal-footer-vendor button{
     border-radius: 36px;
 }
-
 #edit-vendor-modal .form-ib-group,
-#new-vendor-modal .form-ib-group,
-#new-customer-modal .form-ib-group {
+#new-vendor-modal .form-ib-group{
     display: block;
     width: 100%;
 }
-
 #edit-vendor-modal .form-ib-group .form-ib,
-#new-vendor-modal .form-ib-group .form-ib,
-#new-customer-modal .form-ib-group .form-ib {
+#new-vendor-modal .form-ib-group .form-ib{
     display: inline-block;
     position: relative;
     width: 100%;
 }
-
 #edit-vendor-modal .form-ib-group .form-ib label,
-#new-vendor-modal .form-ib-group .form-ib label,
-#new-customer-modal .form-ib-group .form-ib label {
+#new-vendor-modal .form-ib-group .form-ib label{
     font-weight: 600;
 }
-
 #edit-vendor-modal .form-ib-group .form-ib .form-textarea,
-#new-vendor-modal .form-ib-group .form-ib .form-textarea,
-#new-customer-modal .form-ib-group .form-ib .form-textarea {
+#new-vendor-modal .form-ib-group .form-ib .form-textarea{
     color: #363636;
     font-size: 16px;
     border-radius: 2px;
@@ -1277,31 +1063,25 @@ select {
     width: 100%;
     resize: none;
 }
-
 #edit-vendor-modal .form-ib-group .form-ib .address-form,
-#new-vendor-modal .form-ib-group .form-ib .address-form,
-#new-customer-modal .form-ib-group .form-ib .address-form {
+#new-vendor-modal .form-ib-group .form-ib .address-form{
     width: 49%;
     display: inline-block;
     margin-top: 8px;
 }
-
-.max-width {
+.max-width{
     min-width: 911px;
 }
-
-
 /*Add categories modal*/
-
 #addNewCategories .modal-dialog {
     height: 80% !important;
-    padding-top: 10%;
+    padding-top:10%;
     position: fixed;
 }
 
 #addNewCategories .modal-content {
     width: 60%;
-    overflow: visible;
+    overflow:visible;
     opacity: 1;
     top: 13px;
     position: fixed;
@@ -1312,7 +1092,6 @@ select {
     overflow: auto;
     height: 487px;
 }
-
 #addNewCategories .detailTypeDesc {
     margin-left: 3px;
     background-color: #ECEEF1;
@@ -1322,7 +1101,6 @@ select {
     height: 256px;
     overflow-y: scroll;
 }
-
 #addNewCategories .modal-footer-addcategories {
     align-items: center;
     -ms-flex-pack: end;
@@ -1333,19 +1111,17 @@ select {
     border-bottom-left-radius: .3rem;
 }
 
-#showExistingModal .modal-dialog {
+#showExistingModal .modal-dialog{
     min-width: 28%;
 }
 
-.modal-existing-file-container {
+.modal-existing-file-container{
     width: 350px;
     text-overflow: ellipsis;
 }
-
-.modal-existing-file-container span {
+.modal-existing-file-container span{
     text-overflow: ellipsis;
 }
-
-.modal-existing-file-section a {
+.modal-existing-file-section a{
     color: #0b97c4;
 }

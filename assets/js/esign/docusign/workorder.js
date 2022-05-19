@@ -2,8 +2,7 @@
   const $esignButton = $("#esignButton");
   const $templateModal = $("#docusignTemplateModal");
   const $table = $("#templatesTable");
-  const workorderId = $("#workorderId").val();
-  const jobId = $("#esignJobId").val();
+
   const urlPrefix = location.hostname === "localhost" ? "/nsmartrac" : "";
 
   function addEventListeners() {
@@ -25,6 +24,8 @@
         {
           sortable: false,
           render: function (_, _, row) {
+            console.log(row);
+
             const date = moment(row.created_at);
             const dateFormatted = date.format("MM/DD/YYYY");
             const timeFormatted = date.format("HH:mm:ss A");
@@ -37,16 +38,7 @@
         {
           sortable: false,
           render: function (_, _, row) {
-            let url = `${urlPrefix}/eSign/templatePrepare?id=${row.id}&job_id=${jobId}`;
-            if (workorderId) {
-              url = `${urlPrefix}/eSign/templatePrepare?id=${row.id}&workorder_id=${workorderId}`;
-            }
-
-            return `
-              <a href=${url} class="btn btn-sm btn-primary">
-                Use Template
-              </a>
-            `;
+            return `<button class="btn btn-sm btn-primary">Use Template</button>`;
           },
         },
       ],

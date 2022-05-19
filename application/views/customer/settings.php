@@ -19,7 +19,94 @@ add_css(array(
 <style>
     #draggable { width: 150px; height: 150px; padding: 0.5em; }
 </style>
-<?php include viewPath('customer/css/add_advance_css'); ?>
+<style>
+    .switch {
+        position: relative !important;
+        display: inline-block !important;
+        width: 50px;
+        height: 24px;
+        float: right;
+        margin-top: 6px;
+    }
+
+    .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .slider {
+        position: absolute !important;
+        cursor: pointer !important;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+
+    .slider:before {
+        position: absolute !important;
+        content: "";
+        height: 24px;
+        width: 26px;
+        left: 1px;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+
+    input:checked + .slider {
+        background: linear-gradient(to bottom, #45a73c 0%, #67ce5e 100%) !important;
+    }
+
+    input:focus + .slider {
+        box-shadow: 0 0 1px #2196F3 !important;
+    }
+
+    input:checked + .slider:before {
+        -webkit-transform: translateX(26px) !important;
+        -ms-transform: translateX(26px) !important;
+        transform: translateX(26px) !important;
+    }
+
+    /* Rounded sliders */
+    .slider.round {
+        border-radius: 34px !important;
+    }
+
+    .slider.round:before {
+        border-radius: 50% !important;
+    }
+    .form-control {
+        font-size: 12px;
+        height: 30px !important;
+        line-height: 150%;
+    }
+    label{
+        font-size: 12px !important;
+        margin-bottom: 1px !important;
+    }
+    hr{
+        border: 2px solid #32243d !important;
+        width: 100%;
+    }
+    .form-group {
+        margin-bottom: 3px !important;
+    }
+    .required{
+        color : red!important;
+    }
+    .msg-count-cus {
+        height: 30px;
+        width: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+</style>
 
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/customer'); ?>
@@ -50,63 +137,227 @@ add_css(array(
                                                 <div class="rb-01">
                                                     <ul class="nav nav-tabs border-0">
                                                         <li class="nav-item">
-                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?= $active_tab == 'salesArea' || $active_tab == '' ?   "active" : '';  ?>" data-toggle="tab" href="#salesArea">Sales Area</a>
+                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?php if ($minitab == 'mt2' || $minitab == '') {
+                                                                echo "active";
+                                                            } ?>" data-toggle="tab" href="#widget1">Import/Audit</a>
                                                         </li>
                                                         <li class="nav-item">
-                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?= $active_tab == 'leadSource' ?   "active" : '';  ?>" data-toggle="tab" href="#leadSource">Lead Source</a>
+                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?php if ($minitab == 'mt3' || $minitab == 'mt3-cdl') {
+                                                                echo "active";
+                                                            } ?>" data-toggle="tab" href="#widget2">Dispute Wizard</a>
                                                         </li>
                                                         <li class="nav-item">
-                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?= $active_tab == 'leadTypes' ?   "active" : '';  ?>" data-toggle="tab" href="#leadTypes">Lead Types</a>
+                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?php if ($minitab == 'mt4' || $minitab == 'mt4-2') {
+                                                                echo "active";
+                                                            } ?>" data-toggle="tab" href="#widget3">Dispute Items</a>
                                                         </li>
                                                         <li class="nav-item">
-                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?= $active_tab == 'ratePlan' ?   "active" : '';  ?>" data-toggle="tab" href="#ratePlan">Rate Plan</a>
+                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?php if ($minitab == 'mt5') {
+                                                                echo "active";
+                                                            } ?>" data-toggle="tab" href="#profle">Profile</a>
                                                         </li>
                                                         <li class="nav-item">
-                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?= $active_tab == 'activationFee' ?   "active" : '';  ?>" data-toggle="tab" href="#activationFee">Activation Fee</a>
+                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?php if ($minitab == 'mt6') {
+                                                                echo "active";
+                                                            } ?>" data-toggle="tab" href="#educate">Educate</a>
                                                         </li>
                                                         <li class="nav-item">
-                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?= $active_tab == 'spt' ?   "active" : '';  ?>" data-toggle="tab" href="#spt">System Package Type</a>
+                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?php if ($minitab == 'mt7') {
+                                                                echo "active";
+                                                            } ?>" data-toggle="tab" href="#messages">Messages</a>
                                                         </li>
                                                         <li class="nav-item">
-                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?= $active_tab == 'header' ?   "active" : '';  ?>" data-toggle="tab" href="#header">Header</a>
+                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?php if ($minitab == 'mt8') {
+                                                                echo "active";
+                                                            } ?>" data-toggle="tab" href="#notes">Internal Notes</a>
                                                         </li>
                                                         <li class="nav-item">
-                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?= $active_tab == 'customerStatus' ?   "active" : '';  ?>" data-toggle="tab" href="#customerStatus">Customer Status</a>
+                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?php if ($minitab == 'mt9') {
+                                                                echo "active";
+                                                            } ?>" data-toggle="tab" href="#invoices">Invoices</a>
+                                                        </li>
+                                                        <li class="nav-item">
+                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?php if ($minitab == 'mt10') {
+                                                                echo "active";
+                                                            } ?>" data-toggle="tab" href="#activity">Activity</a>
+                                                        </li>
+                                                        <li class="nav-item">
+                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?php if ($minitab == 'mt11') {
+                                                                echo "active";
+                                                            } ?>" data-toggle="tab" href="#details">Detail Sheet</a>
+                                                        </li>
+                                                        <li class="nav-item">
+                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?php if ($minitab == 'mt12') {
+                                                                echo "active";
+                                                            } ?>" data-toggle="tab" href="#custom">Customizable</a>
+                                                        </li>
+                                                        <li class="nav-item">
+                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?php if ($minitab == 'mt13') {
+                                                                echo "active";
+                                                            } ?>" data-toggle="tab" href="#others">Others</a>
                                                         </li>
                                                     </ul>
                                                 </div>
                                             </div>
                                             <div class="tab-content mt-4" >
-                                                    <div class="tab-pane <?= $active_tab == 'salesArea' || $active_tab == '' ? "active" : "fade"; ?> standard-accordion" id="salesArea">
-                                                        <?php include viewPath('customer/settings/sales_area'); ?>
+                                                <div class="tab-pane <?php if ($minitab == 'mt2' || $minitab == '') {
+                                                    echo "active";
+                                                } else {
+                                                    echo "fade";
+                                                } ?> standard-accordion" id="widget1">
+                                                    <?php
+                                                    include viewPath('customer/adv_cust_modules/settings_widget1');
+                                                    ?>
+                                                </div>
+                                                <div class="tab-pane <?php if ($minitab == 'mt3' || $minitab == 'mt3-cdl') {
+                                                    echo "active";
+                                                } else {
+                                                    echo "fade";
+                                                } ?> standard-accordion" id="widget2">
+                                                    <?php
+                                                    if ($minitab == 'mt3') {
+                                                        include viewPath('customer/adv_cust_modules/settings_widget2');
+                                                    } else if (isset($letter_id) && $letter_id != "") {
+                                                        include viewPath('customer/adv_cust_modules/settings_widget2-2');
+                                                    } else {
+                                                        include viewPath('customer/adv_cust_modules/settings_widget2-1');
+                                                    }
+                                                    ?>
+                                                </div>
+                                                <div class="tab-pane <?php if ($minitab == 'mt4' || $minitab == 'mt4-2') {
+                                                    echo "active";
+                                                } else {
+                                                    echo "fade";
+                                                } ?> standard-accordion" id="widget3">
+                                                    <?php
+                                                    include viewPath('customer/adv_cust_modules/settings_widget3');
+                                                    ?>
+                                                </div>
+                                                <div class="tab-pane <?php if ($minitab == 'mt5') {
+                                                    echo "active";
+                                                } else {
+                                                    echo "fade";
+                                                } ?> standard-accordion" id="profle">
+                                                    <div class="card">
+                                                        <div class="card-body hid-desk" style="padding-bottom:0px;">
+                                                            <?php
+                                                            include viewPath('customer/adv_cust_modules/settings_profile');
+                                                            ?>
+                                                        </div>
                                                     </div>
-
-                                                <div class="tab-pane <?= $active_tab == 'leadSource' ? "active" : "fade"; ?> standard-accordion" id="leadSource">
-                                                    <?php include viewPath('customer/settings/lead_source'); ?>
                                                 </div>
 
-                                                <div class="tab-pane <?= $active_tab == 'leadTypes' ? "active" : "fade"; ?> standard-accordion" id="leadTypes">
-                                                    <?php include viewPath('customer/settings/lead_types'); ?>
+                                                <div class="tab-pane <?php if ($minitab == 'mt6') {
+                                                    echo "active";
+                                                } else {
+                                                    echo "fade";
+                                                } ?> standard-accordion" id="educate">
+                                                    <?php
+                                                    include viewPath('customer/adv_cust_modules/settings_educate');
+                                                    ?>
                                                 </div>
 
-                                                <div class="tab-pane <?= $active_tab == 'ratePlan' ? "active" : "fade"; ?> standard-accordion" id="ratePlan">
-                                                    <?php include viewPath('customer/settings/rate_plan'); ?>
+                                                <div class="tab-pane <?php if ($minitab == 'mt7') {
+                                                    echo "active";
+                                                } else {
+                                                    echo "fade";
+                                                } ?> standard-accordion" id="messages">
+                                                    <div class="card">
+                                                        <div class="card-body hid-desk" style="padding-bottom:0px;">
+                                                            <div class="col-lg-12">
+                                                                <h6>Messages</h6>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
 
-                                                <div class="tab-pane <?= $active_tab == 'activationFee' ? "active" : "fade"; ?> standard-accordion" id="activationFee">
-                                                    <?php include viewPath('customer/settings/activation_fee'); ?>
+                                                <div class="tab-pane <?php if ($minitab == 'mt8') {
+                                                    echo "active";
+                                                } else {
+                                                    echo "fade";
+                                                } ?> standard-accordion" id="notes">
+                                                    <?php
+                                                    include viewPath('customer/adv_cust_modules/settings_notes');
+                                                    ?>
                                                 </div>
 
-                                                <div class="tab-pane <?= $active_tab == 'spt' ? "active" : "fade"; ?> standard-accordion" id="spt">
-                                                    <?php include viewPath('customer/settings/system_package_type'); ?>
+                                                <div class="tab-pane <?php if ($minitab == 'mt9') {
+                                                    echo "active";
+                                                } else {
+                                                    echo "fade";
+                                                } ?> standard-accordion" id="invoices">
+                                                    <div class="card">
+                                                        <div class="card-body hid-desk" style="padding-bottom:0px;">
+                                                            <div class="col-lg-12">
+                                                                <h6>Invoices</h6>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
 
-                                                <div class="tab-pane <?= $active_tab == 'header' ? "active" : "fade"; ?> standard-accordion" id="header">
-                                                    <?php include viewPath('customer/settings/header'); ?>
+                                                <div class="tab-pane <?php if ($minitab == 'mt10') {
+                                                    echo "active";
+                                                } else {
+                                                    echo "fade";
+                                                } ?> standard-accordion" id="activity">
+                                                    <div class="card">
+                                                        <div class="card-body hid-desk">
+
+                                                            <div class="col-lg-8">
+                                                                <!-- <h6>Activity</h6> -->
+                                                                <div class="MuiCardContent-root">
+                                                                    <div class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-column">
+                                                                        <table id="customer_info" class="table">
+                                                                            <thead>
+                                                                            <tr>
+
+                                                                            </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                            <tr>
+                                                                                <td>
+                                                                                    <div class="user-img position-relative d-inline-block mr-2">
+                                                                                        <span class="round text-white text-center rounded-circle bg-danger msg-count-cus">WH</span>
+                                                                                    </div>
+                                                                                    Welyelf Hisula
+                                                                                </td>
+                                                                                <td>Job scheduled SMS sent to (970) 691-9018</td>
+                                                                                <td>Thu 1/21/21
+                                                                                    6:20pm</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>
+                                                                                    <div class="user-img position-relative d-inline-block mr-2">
+                                                                                        <span class="round text-white text-center rounded-circle bg-danger msg-count-cus">WH</span>
+                                                                                    </div>
+                                                                                    Welyelf Hisula
+                                                                                </td>
+                                                                                <td>Job scheduled SMS sent to (970) 691-9018</td>
+                                                                                <td>Thu 1/21/21
+                                                                                    6:20pm</td>
+                                                                            </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-4"></div>
+                                                        </div>
+                                                    </div>
                                                 </div>
 
-                                                <div class="tab-pane <?= $active_tab == 'customerStatus' ? "active" : "fade"; ?> standard-accordion" id="customerStatus">
-                                                    <?php include viewPath('customer/settings/customer_settings'); ?>
+                                                <div class="tab-pane <?php if ($minitab == 'mt11') {
+                                                    echo "active";
+                                                } else {
+                                                    echo "fade";
+                                                } ?> standard-accordion" id="details">
+                                                    <div class="card">
+                                                        <div class="card-body hid-desk" style="padding-bottom:0px;">
+                                                            <div class="col-lg-12">
+                                                                <h6>Detail Sheet</h6>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
 
                                                 <div class="tab-pane <?php if ($minitab == 'mt12') {
@@ -171,6 +422,109 @@ add_css(array(
                                                         </div>
                                                     </div>
                                                 </div>
+
+                                                <div class="tab-pane <?php if ($minitab == 'mt13') {
+                                                    echo "active";
+                                                } else {
+                                                    echo "fade";
+                                                } ?> standard-accordion" id="others">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="alert alert-success" id="alert_box" style="display:none;">
+                                                                <strong>Success!</strong> Data has been added!
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="card">
+                                                        <div class="card-body hid-desk" style="padding-bottom:0px;">
+                                                            <div class="col-lg-12 table-responsive">
+                                                                <h6>Lead Types</h6>
+                                                                <button data-toggle="modal" data-target="#modal_lead_type" class="btn btn-sm btn-default pull-right"  style="margin-bottom: 10px;">
+                                                                    <i class="fa fa-plus"></i>
+                                                                </button>
+                                                                <table id="leadtype" class="table table-bordered table-striped">
+                                                                    <thead>
+                                                                    <tr>
+                                                                        <th>Lead Type Name</th>
+                                                                        <th>Action</th>
+                                                                    </tr>
+                                                                    </thead>
+                                                                    <tbody id="leadtype_table_data">
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="card">
+                                                        <div class="card-body hid-desk" style="padding-bottom:0px;">
+                                                            <div class="col-lg-12 table-responsive">
+                                                                <h6>Sales Area</h6>
+                                                                <button data-toggle="modal" data-target="#modal_sales_area" class="btn btn-sm btn-default pull-right sa" title="Add Sales Area" style="margin-bottom: 10px;">
+                                                                    <i class="fa fa-plus"></i>
+                                                                </button>
+                                                                <table id="salesarea" class="table table-bordered table-striped">
+                                                                    <thead>
+                                                                    <tr>
+                                                                        <th>Id</th>
+                                                                        <th>Action</th>
+                                                                    </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                    <?php foreach ($sales_area as $sa) { ?>
+                                                                        <tr>
+                                                                            <td><?= $sa->sa_name; ?></td>
+                                                                            <td>
+                                                                                <a href="" class="btn btn-sm btn-default" title="Edit User" data-toggle="tooltip"><i class="fa fa-pencil"></i></a>
+                                                                            </td>
+                                                                        </tr>
+                                                                    <?php } ?>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                        <!--<div id="draggable" class="ui-widget-content">
+                                                            <p>Drag me around</p>
+                                                        </div>
+                                                        <ul id="sortable">
+                                                            <li class="ui-state-default">1</li>
+                                                            <li class="ui-state-default">2</li>
+                                                            <li class="ui-state-default">3</li>
+                                                            <li class="ui-state-default">4</li>
+                                                            <li class="ui-state-default">5</li>
+                                                            <li class="ui-state-default">6</li>
+                                                            <li class="ui-state-default">7</li>
+                                                            <li class="ui-state-default">8</li>
+                                                            <li class="ui-state-default">9</li>
+                                                            <li class="ui-state-default">10</li>
+                                                            <li class="ui-state-default">11</li>
+                                                            <li class="ui-state-default">12</li>
+                                                        </ul>-->
+                                                    </div>
+                                                    <div class="card">
+                                                        <div class="card-body hid-desk" style="padding-bottom:0px;">
+                                                            <div class="col-lg-12 table-responsive">
+                                                                <h6>Lead Source</h6>
+                                                                <button id="add_ls" class="btn btn-sm btn-default pull-right sa" title="Add Sales Area" style="margin-bottom: 10px;">
+                                                                    <i class="fa fa-plus"></i>
+                                                                </button>
+                                                                <table id="leadsource" class="table table-bordered table-striped">
+                                                                    <thead>
+                                                                    <tr>
+                                                                        <th>Lead Source</th>
+                                                                        <th>Action</th>
+                                                                    </tr>
+                                                                    </thead>
+                                                                    <tbody id="tb_leadsource">
+
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -209,20 +563,8 @@ add_css(array(
 
 <!-- Reasons Modal -->
 <?php include viewPath('customer/adv_modals/modal_reasons'); ?>
-
-<!-- Rate PLan Modal -->
-<?php include viewPath('customer/adv_modals/modal_rate_plan'); ?>
-
-<!-- Activation Fee Modal -->
-<?php include viewPath('customer/adv_modals/modal_activation_fee'); ?>
-
-<!-- Activation Fee Modal -->
-<?php include viewPath('customer/adv_modals/modal_system_package_type'); ?>
-
-<!-- Customer Status Modal -->
-<?php include viewPath('customer/adv_modals/modal_customer_status'); ?>
-
 <!-- End Modals -->
+
 
 <?php
 // JS to add only Customer module
@@ -234,6 +576,8 @@ add_footer_js(array(
     'https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js',
     'https://code.jquery.com/ui/1.12.1/jquery-ui.js',
     'assets/textEditor/summernote-bs4.js'
+    // 'assets/frontend/js/creditcard.js',
+    // 'assets/frontend/js/customer/add.js',
 ));
 ?>
 <!-- page wrapper end -->
@@ -244,7 +588,7 @@ add_footer_js(array(
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 <?php include viewPath('customer/adv_cust/css_list'); ?>
-<?php include viewPath('customer/js/settings_js'); ?>
+<?php include viewPath('customer/adv_cust/js_list'); ?>
 
 <style>
     #sortable { list-style-type: none; margin: 0; padding: 0; width: 450px; }
@@ -294,6 +638,9 @@ add_footer_js(array(
             }
 
         });
+
+
+
         $(".sortable2").sortable({
             start: function (e, ui) {
                 // creates a temporary attribute on the element with the old index
@@ -344,6 +691,13 @@ add_footer_js(array(
                 }
             });
         });
+
+
+
+
     });
+
+
+
 
 </script>

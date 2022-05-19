@@ -30,46 +30,4 @@ class Accounting_inventory_qty_adjustments_model extends MY_Model {
 		$this->db->insert_batch('accounting_inventory_qty_adjustment_items', $data);
 		return $this->db->insert_id();
 	}
-
-	public function update($id, $data)
-	{
-		$this->db->where('company_id', logged('company_id'));
-		$this->db->where('id', $id);
-		$update = $this->db->update($this->table, $data);
-
-		return $update;
-	}
-
-	public function get_by_id($id)
-	{
-		$this->db->where('company_id', logged('company_id'));
-		$this->db->where('id', $id);
-		$query = $this->db->get($this->table);
-
-		return $query->row();
-	}
-
-	public function get_adjusted_products($adjustmentId)
-	{
-		$this->db->where('adjustment_id', $adjustmentId);
-		$query = $this->db->get('accounting_inventory_qty_adjustment_items');
-
-		return $query->result();
-	}
-
-	public function delete_adjustment_products($adjustmentId)
-	{
-		$this->db->where('adjustment_id', $adjustmentId);
-		$delete = $this->db->delete('accounting_inventory_qty_adjustment_items');
-
-		return $delete;
-	}
-
-	public function get_company_quantity_adjustments($filters = [])
-	{
-		$this->db->where('company_id', $filters['company_id']);
-		$this->db->where('status !=', 0);
-		$query = $this->db->get($this->table);
-		return $query->result();
-	}
 }

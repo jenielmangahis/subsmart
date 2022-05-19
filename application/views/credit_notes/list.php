@@ -2,10 +2,6 @@
 button#dropdown-edit {
     width: 100px;
 }
-label>input {
-  visibility: initial !important;
-  position: initial !important; 
-}
 .dropdown-toggle::after {
     display: block;
     position: absolute;
@@ -319,9 +315,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     }
 </style>
 <!-- page wrapper end -->
-<?php include viewPath('includes/footer'); ?>
+<?php include viewPath('includes/footer_accounting'); ?>
 <script>
-    $('.table-to-list').DataTable({
+    $('#dataTable1').DataTable({
+
         "ordering": false
     });
 

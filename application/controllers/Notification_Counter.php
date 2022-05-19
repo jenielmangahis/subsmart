@@ -9,7 +9,6 @@ class Notification_Counter extends MY_Controller {
 
 		$this->load->model('Event_model', 'event_model');
 		$this->load->model('BookingInquiry_model');
-		$this->load->model('Taskhub_model');
 	}
 
 	public function calendar_notification_counter() {
@@ -18,16 +17,24 @@ class Notification_Counter extends MY_Controller {
 		$role = logged('role');
 
 		//Schedule Events
-        $company_id = logged('company_id');
-        $events     = $this->event_model->getAllByCompany($company_id);
+        if ($role == 2 || $role == 3) {
+            $company_id = logged('company_id'); $company_id = 15;
+            $events = $this->event_model->getAllByCompany($company_id);
+        }
+        if ($role == 4) {
+            $events = $this->event_model->getAllByUserId();
+        }
+
         $total_events = count($events);
 
         //Taskhub
-        $tasks = $this->Taskhub_model->getAllByCompanyId($company_id);
+        $tasks = getTasks();
+		
 		$total_taskhub = count($tasks);
 
+
 		//Online Booking
-		$inquiries = $this->BookingInquiry_model->findAllByCompanyIdAndStatus($company_id, 1);
+		$inquiries = $this->BookingInquiry_model->findAllByUserId($uid);
 		$total_online_booking = count($inquiries);
 
 		$json_data = ['total_events' => $total_events, 'total_taskhub' => $total_taskhub, 'total_online_booking' => $total_online_booking];

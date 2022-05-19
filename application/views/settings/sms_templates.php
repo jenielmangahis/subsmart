@@ -1,42 +1,19 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
-<style>
-.row-title{
-    background: #32243d; 
-    color: #ffffff; 
-    font-size: 15px;
-}
-.p-40 {
-  padding-top: 40px !important;
-}
-.p-20 {
-  padding-top: 25px !important;
-  padding-bottom: 25px !important;
-  padding-right: 20px !important;
-  padding-left: 20px !important;
-}
-@media only screen and (max-width: 600px) {
-  .p-40 {
-    padding-top: 0px !important;
-  }
-  .pr-b10 {
-    position: relative;
-    bottom: 0px;
-  }
-}
-</style>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/setting'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
         <div class="container-fluid">
-            <div class="row p-40">
-                <div class="col">
-                    <h3 class="m-0">SMS Templates</h3>
-                </div>
-                <div style="background-color:#fdeac3;padding:.5%;margin-bottom:5px;margin-top:5px;margin-bottom:10px; width:100%;margin-left: 10px;">
-                    Customize your sms that are sent on different events. 
+            <div class="page-title-box">
+                <div class="row align-items-center">
+                    <div class="col-sm-6">
+                        <h1 class="page-title">Email Templates</h1>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item active">Customize the emails that are sent on different events.</li>
+                        </ol>
+                    </div>
                 </div>
             </div>
             <!-- end row -->
@@ -46,7 +23,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         
                         <div class="card">
                             <div class="tabs">
-                                <ul class="clearfix">
+                                <ul class="clearfix">      
                                     <li data-tab="residential">
                                         <a href="<?php echo base_url('settings/email_templates') ?>">Email Templates</a>
                                     </li>
@@ -57,11 +34,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </div>
                             <!-- Tab Section Start -->
                             <div class="tab-content">
-                                <a style="float: right;" href="<?= base_url('settings/create_sms_template') ?>"  class="btn btn-sm btn-primary">
-                                    <span class="fa fa-plus"></span> Add New SMS Template
-                                </a>
-                                <br><br>
-                                <?php include viewPath('flash'); ?>
                                 <div id="tab_residential" class="tab-panel">
                                     <table class="table table-hover table-to-list fix-reponsive-table">
                                         <thead>
@@ -72,40 +44,145 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <?php foreach($data_sms_templates as $value){ ?>
-                                                <tr>
-                                                    <td colspan="3" class="row-title" data-title="Template Name">
-                                                        <span class="bold"><?php echo $value['name']; ?></span>
-                                                    </td>
-                                                </tr>
-                                                <?php foreach($value['data'] as $d){ ?>
                                                     <tr>
-                                                        <td data-title="Template Name">
-                                                            <a class="a-default" href="<?= base_url('settings/email_templates_edit/').$d->id; ?>"><?= $d->title; ?></a>
-                                                        </td>
-                                                        <td data-title="Details">
-                                                            <span class="text-ter"><?= $d->details==1 ? 'Default Template' : 'Custom Template'; ?></span>
-                                                        </td>
-                                                        <td class="text-right" data-title="">
-                                                            <div class="dropdown dropdown-btn">
-                                                                <button class="btn btn-default dropdown-toggle" type="button" id="dropdown-edit" data-toggle="dropdown" aria-expanded="true">
-                                                                    <span class="btn-label">Manage</span><span class="caret-holder"><span class="caret"></span></span>
-                                                                </button>
-                                                                <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
-                                                                    <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                                               href="<?= base_url('settings/edit_sms_template/').$d->id; ?>"><span
-                                                                                    class="fa fa-pencil-square-o icon"></span> Edit</a>
-                                                                    </li>
-                                                                    <li role="presentation">
-                                                                        <a role="menuitem" class="delete-sms-template" data-name="<?php echo $d->title; ?>" href="javascript:void(0);" data-id="<?php echo $d->id; ?>"><span class="fa fa-trash-o icon"></span> Delete</a>
-                                                                    </li>
-                                                                </ul>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                <?php } ?>
-                                            <?php } ?>
-                                        </tbody>
+                                                <td colspan="3" style="background: #f5f5f5;" data-title="Template Name">
+                                                    <span class="bold">Invoice</span>
+                                                </td>
+                                            </tr>
+                                                    <tr>
+                                                <td data-title="Template Name"><a class="a-default" href="<?php echo base_url('settings/email_templates') ?>">Create and send invoice</a></td>
+                                                <td data-title="Details">
+                                                                    <span class="text-ter">Default template</span>
+                                                                </td>
+                                                <td class="text-right" data-title="">
+                                                    <a class="" href="#setupSqaureModal" data-toggle="modal" data-target="#editTemplateModal"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                                </td>
+                                            </tr>
+                                                            <tr>
+                                                <td colspan="3" style="background: #f5f5f5;" data-title="Template Name">
+                                                    <span class="bold">Estimate</span>
+                                                </td>
+                                            </tr>
+                                                    <tr>
+                                                <td data-title="Template Name"><a class="a-default" href="<?php echo base_url('settings/email_templates') ?>">Create and send estimate</a></td>
+                                                <td data-title="Details">
+                                                                    <span class="text-ter">Default template</span>
+                                                                </td>
+                                                <td class="text-right" data-title="">
+                                                    <a class="" href="#setupSqaureModal" data-toggle="modal" data-target="#editTemplateModal"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                                </td>
+                                            </tr>
+                                                            <tr>
+                                                <td colspan="3" style="background: #f5f5f5;" data-title="Template Name">
+                                                    <span class="bold">Schedule</span>
+                                                </td>
+                                            </tr>
+                                                    <tr>
+                                                <td data-title="Template Name"><a class="a-default" href="<?php echo base_url('settings/email_templates') ?>">Create Appointment</a></td>
+                                                <td data-title="Details">
+                                                                    <span class="text-ter">Default template</span>
+                                                                </td>
+                                                <td class="text-right" data-title="">
+                                                    <a class="" href="#setupSqaureModal" data-toggle="modal" data-target="#editTemplateModal"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                                </td>
+                                            </tr>
+                                                    <tr>
+                                                <td data-title="Template Name"><a class="a-default" href="<?php echo base_url('settings/email_templates') ?>">Appointment Reminder</a></td>
+                                                <td data-title="Details">
+                                                                    <span class="text-ter">Default template</span>
+                                                                </td>
+                                                <td class="text-right" data-title="">
+                                                    <a class="" href="#setupSqaureModal" data-toggle="modal" data-target="#editTemplateModal"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                                </td>
+                                            </tr>
+                                                    <tr>
+                                                <td data-title="Template Name"><a class="a-default" href="<?php echo base_url('settings/email_templates') ?>">Cancel appointment</a></td>
+                                                <td data-title="Details">
+                                                                    <span class="text-ter">Default template</span>
+                                                                </td>
+                                                <td class="text-right" data-title="">
+                                                    <a class="" href="#setupSqaureModal" data-toggle="modal" data-target="#editTemplateModal"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                                </td>
+                                            </tr>
+                                                    <tr>
+                                                <td data-title="Template Name"><a class="a-default" href="<?php echo base_url('settings/email_templates') ?>">On My Way</a></td>
+                                                <td data-title="Details">
+                                                                    <span class="text-ter">Default template</span>
+                                                                </td>
+                                                <td class="text-right" data-title="">
+                                                    <a class="" href="#setupSqaureModal" data-toggle="modal" data-target="#editTemplateModal"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                                </td>
+                                            </tr>
+                                                    <tr>
+                                                <td data-title="Template Name"><a class="a-default" href="<?php echo base_url('settings/email_templates') ?>">On My Way - Late Arrival</a></td>
+                                                <td data-title="Details">
+                                                                    <span class="text-ter">Default template</span>
+                                                                </td>
+                                                <td class="text-right" data-title="">
+                                                    <a class="" href="#setupSqaureModal" data-toggle="modal" data-target="#editTemplateModal"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                                </td>
+                                            </tr>
+                                                            <tr>
+                                                <td colspan="3" style="background: #f5f5f5;" data-title="Template Name">
+                                                    <span class="bold">Work Order</span>
+                                                </td>
+                                            </tr>
+                                                    <tr>
+                                                <td data-title="Template Name"><a class="a-default" href="<?php echo base_url('settings/email_templates') ?>">Start Work</a></td>
+                                                <td data-title="Details">
+                                                                    <span class="text-ter">Default template</span>
+                                                                </td>
+                                                <td class="text-right" data-title="">
+                                                    <a class="" href="#setupSqaureModal" data-toggle="modal" data-target="#editTemplateModal"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                                </td>
+                                            </tr>
+                                                    <tr>
+                                                <td data-title="Template Name"><a class="a-default" href="<?php echo base_url('settings/email_templates') ?>">Pause Work</a></td>
+                                                <td data-title="Details">
+                                                                    <span class="text-ter">Default template</span>
+                                                                </td>
+                                                <td class="text-right" data-title="">
+                                                    <a class="" href="#setupSqaureModal" data-toggle="modal" data-target="#editTemplateModal"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                                </td>
+                                            </tr>
+                                                    <tr>
+                                                <td data-title="Template Name"><a class="a-default" href="<?php echo base_url('settings/email_templates') ?>">Complete Work</a></td>
+                                                <td data-title="Details">
+                                                                    <span class="text-ter">Default template</span>
+                                                                </td>
+                                                <td class="text-right" data-title="">
+                                                    <a class="" href="#setupSqaureModal" data-toggle="modal" data-target="#editTemplateModal"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                                </td>
+                                            </tr>
+                                                            <tr>
+                                                <td colspan="3" style="background: #f5f5f5;" data-title="Template Name">
+                                                    <span class="bold">Credit Notes</span>
+                                                </td>
+                                            </tr>
+                                                    <tr>
+                                                <td data-title="Template Name"><a class="a-default" href="<?php echo base_url('settings/email_templates') ?>">Create and send credit note</a></td>
+                                                <td data-title="Details">
+                                                                    <span class="text-ter">Default template</span>
+                                                                </td>
+                                                <td class="text-right" data-title="">
+                                                    <a class="" href="#setupSqaureModal" data-toggle="modal" data-target="#editTemplateModal"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                                </td>
+                                            </tr>
+                                                            <tr>
+                                                <td colspan="3" style="background: #f5f5f5;" data-title="Template Name">
+                                                    <span class="bold">Ask For Review</span>
+                                                </td>
+                                            </tr>
+                                                    <tr>
+                                                <td data-title="Template Name"><a class="a-default" href="<?php echo base_url('settings/email_templates') ?>">Ask For Review</a></td>
+                                                <td data-title="Details">
+                                                                    <span class="text-ter">Default template</span>
+                                                                </td>
+                                                <td class="text-right" data-title="">
+                                                    <a class="" href="#setupSqaureModal" data-toggle="modal" data-target="#editTemplateModal"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                                </td>
+                                            </tr>
+                                                        </tbody>
                                     </table>
                                 </div>
 
@@ -114,30 +191,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </div>
                             <!-- Tab Section End -->
                         </div>                                             
-
-                        <!-- Modal Delete Checklist -->
-                        <div class="modal fade bd-example-modal-md" id="modalDeleteSmsTemplate" tabindex="-1" role="dialog" aria-labelledby="modalDeleteSmsTemplateTitle" aria-hidden="true">
-                          <div class="modal-dialog modal-md" role="document">
-                            <div class="modal-content">
-                              <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-trash"></i> Delete</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                  <span aria-hidden="true">&times;</span>
-                                </button>
-                              </div>
-                              <?php echo form_open_multipart('settings/delete_sms_template', ['class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
-                              <?php echo form_input(array('name' => 'smstid', 'type' => 'hidden', 'value' => '', 'id' => 'smstid'));?>
-                              <div class="modal-body">
-                                  <p>Are you sure you want to delete sms template <span class="sms-template-name"></span>?</p>
-                              </div>
-                              <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                                <button type="submit" class="btn btn-danger">Yes</button>
-                              </div>
-                              <?php echo form_close(); ?>
-                            </div>
-                          </div>
-                        </div>
 
                     </div>
                     <!-- end card -->
@@ -151,15 +204,3 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 </div>
 <?php include viewPath('includes/settings_modal'); ?>
 <?php include viewPath('includes/footer'); ?>
-<script>
-$(function(){
-    $(".delete-sms-template").click(function(){
-        var template_name = $(this).attr('data-name');
-        var smstid = $(this).attr('data-id');
-
-        $("#smstid").val(smstid);
-        $(".sms-template-name").html('<b>'+template_name+'</b>');
-        $("#modalDeleteSmsTemplate").modal('show');
-    });
-});
-</script>

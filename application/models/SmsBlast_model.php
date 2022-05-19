@@ -67,26 +67,6 @@ class SmsBlast_model extends MY_Model
         return $query->result();
     }
 
-    public function getAllIsPaidAndNotSent($conditions=array())
-    {
-
-        $this->db->select('sms_blast.*, users.id AS uid, users.company_id');
-        $this->db->from($this->table);
-        $this->db->join('users', 'sms_blast.user_id = users.id', 'LEFT');
-
-        $this->db->where('sms_blast.is_paid', $this->isPaid());
-        $this->db->where('sms_blast.is_sent', 0);
-
-        if( !empty($conditions) ){
-            foreach( $conditions as $c ){
-                $this->db->where($c['field'], $c['value']);                
-            }
-        }
-
-        $query = $this->db->get();
-        return $query->result();
-    }
-
     public function getById($id)
     {
         $this->db->select('sms_blast.*, users.id AS uid, users.company_id');
@@ -99,17 +79,6 @@ class SmsBlast_model extends MY_Model
         return $query;
     }
 
-    public function getByOrderNumber($order_number)
-    {
-        $this->db->select('sms_blast.*, users.id AS uid, users.company_id');
-        $this->db->from($this->table);
-        $this->db->join('users', 'sms_blast.user_id = users.id', 'LEFT');
-
-        $this->db->where('sms_blast.order_number', $order_number);
-
-        $query = $this->db->get()->row();
-        return $query;
-    }
     
     public function deleteSmsBlast($id){
         $user_id = logged('id');
@@ -147,20 +116,8 @@ class SmsBlast_model extends MY_Model
         return $this->stype_all_contacts;
     }
 
-    public function sendingTypeContactGroups(){
-        return $this->stype_contact_group;
-    }
-
-    public function sendingTypeCertainContact(){
-        return $this->stype_certain_contact;
-    }
-
     public function customerTypeResidential(){
         return $this->ctype_residential;
-    }
-
-    public function customerTypeCommercial(){
-        return $this->ctype_commercial;
     }
 
     public function updateSmsBlast($sms_blast_id, $data)

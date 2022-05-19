@@ -356,7 +356,5 @@ class Cronsetup extends MY_Controller {
         curl_close($ch);
     }
 
-    
-
 }
 

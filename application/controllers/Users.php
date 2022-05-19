@@ -55,26 +55,12 @@ class Users extends MY_Controller {
 	{	
 		$this->load->model('Business_model');
     	$this->load->model('ServiceCategory_model');
-    	$this->load->model('DealsSteals_model');
-
-    	add_css(array(
-            "assets/css/jquery.fancybox.css"
-        ));
-
-        add_footer_js(array(
-            "assets/js/jquery.fancybox.min.js"
-        ));
-    	
 
 		$user    = (object)$this->session->userdata('logged');
 		$comp_id = logged('company_id');	
 		$profiledata = $this->business_model->getByCompanyId($comp_id);	
 		$selectedCategories = $this->ServiceCategory_model->getAllCategoriesByCompanyID($comp_id);
 
-		$conditions[] = ['field' => 'deals_steals.status', 'value' => $this->DealsSteals_model->statusActive()];
-		$dealsSteals = $this->DealsSteals_model->getAllByCompanyId($comp_id, array(), $conditions);
-
-		$this->page_data['dealsSteals'] = $dealsSteals;
 		$this->page_data['profiledata'] = $profiledata;
 		$this->page_data['selectedCategories'] = $selectedCategories;
 		$this->load->view('pages/company_business_profile', $this->page_data);        
@@ -82,8 +68,6 @@ class Users extends MY_Controller {
 	
 	public function businessview()
 	{	
-		$this->load->model('DealsSteals_model');
-
 		add_css(array(
             "assets/css/jquery.fancybox.css"
         ));
@@ -97,22 +81,11 @@ class Users extends MY_Controller {
 		$cid=logged('id');
 		$comp_id = logged('company_id');
 		$profiledata = $this->business_model->getByCompanyId($comp_id);	
-
-		if( $profiledata->profile_slug == '' ){
-			$profile_slug = createSlug($profiledata->business_name,'-');
-			$profile_slug = $profile_slug ."-0";
-			$this->business_model->update($profiledata->id, ['profile_slug' => $profile_slug]);
-		}
-
 		$selectedCategories = $this->ServiceCategory_model->getAllCategoriesByCompanyID($comp_id);
 		$schedules   = unserialize($profiledata->working_days);
-
-		$conditions[] = ['field' => 'deals_steals.status', 'value' => $this->DealsSteals_model->statusActive()];
-		$dealsSteals = $this->DealsSteals_model->getAllByCompanyId($comp_id, array(), $conditions);
 		
 		$this->page_data['selectedCategories'] = $selectedCategories;
 		$this->page_data['profiledata'] = $profiledata;
-		$this->page_data['dealsSteals'] = $dealsSteals;
 		$this->load->view('business_profile/business', $this->page_data);
 
 	}
@@ -378,8 +351,8 @@ class Users extends MY_Controller {
 						case 'Thursday':
 							$schedules[] = [
 								'day' => 'Thursday',
-								'time_from' => $pdata['thuHoursFromAvail'],
-								'time_to' => $pdata['thuHoursToAvail']
+								'time_from' => $pdata['thurHoursFromAvail'],
+								'time_to' => $pdata['thurHoursToAvail']
 							];
 							break;
 						case 'Friday':	
@@ -719,7 +692,6 @@ class Users extends MY_Controller {
 
 	public function tracklocation()
 	{	
-		$this->hasAccessModule(63);
 //		ifPermissions('users_list');
 		add_css(array(
 			"assets/css/timesheet/tracklocation.css"
@@ -749,7 +721,7 @@ class Users extends MY_Controller {
 	public function index()
 
 	{	
-		$this->hasAccessModule(63);
+
 		//ifPermissions('users_list');
 		$this->load->helper(array('form', 'url', 'hashids_helper'));
 
@@ -761,20 +733,14 @@ class Users extends MY_Controller {
 
 		$this->page_data['users1'] = $this->users_model->getById(getLoggedUserID());
 		
-		/*$role_id = logged('role');
+		$role_id = logged('role');
 		if( $role_id == 1 || $role_id == 2 ){
-			$this->page_data['show_pass'] = 1;
 			$this->page_data['users'] = $this->users_model->getAllUsers();
 			$this->page_data['payscale'] = $this->PayScale_model->getAll();
 		}else{
-			$this->page_data['show_pass'] = 0;
 			$this->page_data['users'] = $this->users_model->getCompanyUsers($cid);
 			$this->page_data['payscale'] = $this->PayScale_model->getAllByCompanyId($cid);
-		}*/
-
-		$this->page_data['show_pass'] = 1;
-		$this->page_data['users'] = $this->users_model->getCompanyUsers($cid);
-		$this->page_data['payscale'] = $this->PayScale_model->getAllByCompanyId($cid);
+		}
 		
 
 		// echo '<pre>';print_r($this->page_data);die;
@@ -823,7 +789,6 @@ class Users extends MY_Controller {
     }
     public function addNewEmployee(){
     	$this->load->model('IndustryType_model');
-    	$this->load->model('Clients_model');
 
         $fname = $this->input->post('values[firstname]');
         $lname = $this->input->post('values[lastname]');
@@ -839,87 +804,63 @@ class Users extends MY_Controller {
         $user_type = $this->input->post('values[user_type]');
         $role = $this->input->post('values[role]');
         $status = $this->input->post('values[status]');
-        $profile_img = $this->input->post('[profile_photo]');
+        $web_access = $this->input->post('values[web_access]');
+        $app_access = $this->input->post('values[app_access]');
+        $profile_img = $this->input->post('values[profile_photo]');
         $payscale_id = $this->input->post('values[empPayscale]');
         $emp_number  = $this->input->post('values[emp_number]');
         $cid=logged('company_id');
+        $add = array(
+            'FName' => $fname,
+            'LName' => $lname,
+            'username' => $username,
+            'email' => $username,
+            'password' => hash("sha256",$password),
+            'password_plain' => $password,
+            'role' => $role,
+            'user_type' => $user_type,
+            'status' => $status,
+            'company_id' => $cid,
+            'profile_img' => $profile_img,
+            'address' => $address,
+            'state' => $state,
+            'city' => $city,
+            'postal_code' => $postal_code,
+            'payscale_id' => $payscale_id,
+            'employee_number' => $emp_number
+        );
+        $last_id = $this->users_model->addNewEmployee($add);
 
-        $post       = $this->input->post();
-        $app_access = 0;
-        $web_access = 0;
+        //Create timesheet record
+		$this->load->model('TimesheetTeamMember_model');
+		$this->TimesheetTeamMember_model->create([
+			'user_id' => $last_id,
+			'name' => $fname . ' ' . $lname,
+			'email' => $username,
+			'role' => 'Employee',
+			'department_id' => 0,
+			'department_role' => 'Member',
+			'will_track_location' => 1,
+			'status' => 1,
+			'company_id' => $cid
+		]);
+		//End Timesheet		
 
-        if( isset($post['values']['app_access']) ){
-        	$app_access = 1;	
-        }
-        
-        if( isset($post['values']['web_access']) ){
-        	$web_access = 1;	
-        }
+		//Create Trac360 record
+		$this->load->model('Trac360_model');
+		$data = [
+			'user_id' => $last_id,
+			'name' => $fname . ' ' . $lname,
+			'company_id' => $cid
+		];
+		$this->Trac360_model->add('trac360_people', $data);
+		//End Trac360
 
-        $company = $this->Clients_model->getById($cid);
-        if( $company->number_of_license <= 0 && $company->id != 1 ){
-        	echo json_encode(3);
+        if ($last_id > 0 ){
+            echo json_encode(1);
         }else{
-        	$add = array(
-	            'FName' => $fname,
-	            'LName' => $lname,
-	            'username' => $username,
-	            'email' => $username,
-	            'password' => hash("sha256",$password),
-	            'password_plain' => $password,
-	            'role' => $role,
-	            'user_type' => $user_type,
-	            'status' => $status,
-	            'company_id' => $cid,
-	            'profile_img' => $profile_img,
-	            'address' => $address,
-	            'state' => $state,
-	            'city' => $city,
-	            'postal_code' => $postal_code,
-	            'payscale_id' => $payscale_id,
-	            'employee_number' => $emp_number,
-	            'has_web_access' => $web_access,
-	            'has_app_access' => $app_access
-	        );
-	        $last_id = $this->users_model->addNewEmployee($add);
-
-	        //Deduct num license
-	        $new_num_license = $company->number_of_license;
-	        $company_data = ['number_of_license' => $new_num_license];
-	        $this->Clients_model->updateClient($cid, $company_data);
-
-	        //Create timesheet record
-			$this->load->model('TimesheetTeamMember_model');
-			$this->TimesheetTeamMember_model->create([
-				'user_id' => $last_id,
-				'name' => $fname . ' ' . $lname,
-				'email' => $username,
-				'role' => 'Employee',
-				'department_id' => 0,
-				'department_role' => 'Member',
-				'will_track_location' => 1,
-				'status' => 1,
-				'company_id' => $cid
-			]);
-			//End Timesheet		
-
-			//Create Trac360 record
-			$this->load->model('Trac360_model');
-			$data = [
-				'user_id' => $last_id,
-				'name' => $fname . ' ' . $lname,
-				'company_id' => $cid
-			];
-			$this->Trac360_model->add('trac360_people', $data);
-			//End Trac360
-
-	        if ($last_id > 0 ){
-	            echo json_encode(1);
-	        }else{
-	            echo json_encode(0);
-	        }
+            echo json_encode(0);
         }
-        
     }    
     public function getEmployeeData(){
 	    $user_id = $this->input->get('user_id');
@@ -939,7 +880,6 @@ class Users extends MY_Controller {
 	    echo json_encode($info);
 
     }
-
     public function ajax_edit_employee(){
 	    $user_id = $this->input->post('user_id');
 	    $get_user = $this->Users_model->getUser($user_id);
@@ -1063,29 +1003,54 @@ class Users extends MY_Controller {
 		redirect('users');
 	}
 
-	public function view($id){
-		//ifPermissions('users_view');
-		$user = $this->users_model->getById($id);
+
+
+	public function view($id)
+
+	{
+
+
+
+		ifPermissions('users_view');
+
+
+
 		$this->page_data['User'] = $this->users_model->getById($id);
+
 		$this->page_data['User']->role = $this->roles_model->getByWhere([
+
 			'id'=> $this->page_data['User']->role
+
 		])[0];
 
 		$this->page_data['User']->activity = $this->activity_model->getByWhere([
+
 			'user'=> $id
+
 		], [ 'order' => ['id', 'desc'] ]);
 
 		$this->load->view('users/view', $this->page_data);
+
+
+
 	}
 
+
+
 	public function edit($id)
+
 	{
 		// ifPermissions('users_edit');
 		$this->page_data['User'] = $this->users_model->getById($id);
 		$this->load->view('users/edit', $this->page_data);
 	}
 
+
+
+
+
 	public function update($id)
+
 	{
 		// ifPermissions('users_edit');
 		postAllowed();
@@ -1150,7 +1115,12 @@ class Users extends MY_Controller {
 		
 
 		redirect('users');
+
+
+
 	}
+
+
 
 	public function check()
 
@@ -1442,29 +1412,23 @@ class Users extends MY_Controller {
 		die(json_encode($users));
 	}
 
-	public function ajaxUpdateEmployeeProfilePhoto(){    	
-        $post 		  = $this->input->post();
-        $upload_photo = $this->profilePhoto();
-        $upload_data  = json_decode($upload_photo);
+	public function ajaxUpdateEmployeeProfilePhoto(){
 
-        if (!empty($_FILES['user_photo']['name'])){			
-			$target_dir = "./uploads/users/user-profile/";
-			
-			if(!file_exists($target_dir)) {
-				mkdir($target_dir, 0777, true);
-			}
+    	$user_id = $this->input->post('values[user_id_prof]');
+        $profile_img = $this->input->post('values[profile_img]');
 
-			$tmp_name = $_FILES['user_photo']['tmp_name'];
-			$name = basename($_FILES["user_photo"]["name"]);
-			move_uploaded_file($tmp_name, "./uploads/users/user-profile/" . $name);
-			$image_name = $name;
-			
-	        $user = $this->Users_model->update($post['user_id_prof'],array('profile_img' => $image_name));
-        	echo json_encode(1);
+        $user = $this->Users_model->getUser($user_id);
 
-		}else{
-			echo json_encode(0);
-		}
+        if( $profile_img == '' ){
+        	$profile_img = $user->profile_img;
+        }
+        $data = array(            
+			'profile_img' => $profile_img
+        );
+
+        $user = $this->Users_model->update($user_id,$data);
+
+        echo json_encode(1);
     }
 
 	public function ajaxUpdateEmployee(){
@@ -1482,17 +1446,8 @@ class Users extends MY_Controller {
 
         $role = $this->input->post('values[role]');
         $status = $this->input->post('values[status]');
-
-        $has_web_access = 0;        
-        if( $this->input->post('values[web_access]') == 'on' ){
-        	$has_web_access = 1;
-        }
-
-        $has_app_access = 0;
-        if( $this->input->post('values[app_access]') == 'on' ){
-        	$has_app_access = 1;
-        }
-
+        $web_access = $this->input->post('values[web_access]');
+        $app_access = $this->input->post('values[app_access]');
         $profile_img = $this->input->post('values[profile_photo]');
         $payscale_id = $this->input->post('values[empPayscale]');
         $emp_number  = $this->input->post('values[emp_number]');
@@ -1514,8 +1469,6 @@ class Users extends MY_Controller {
             'address' => $address,
             'state' => $state,
             'city' => $city,
-            'has_web_access' => $has_web_access,
-            'has_app_access' => $has_app_access,
             'postal_code' => $postal_code,
             'payscale_id' => $payscale_id,
             'user_type' => $user_type,
@@ -1558,7 +1511,6 @@ class Users extends MY_Controller {
 
     public function pay_scale()
 	{	
-		$this->hasAccessModule(63);
 		$company_id = logged('company_id');
 		$role_id    = logged('role');
 		$this->page_data['users1'] = $this->users_model->getById(getLoggedUserID());
@@ -1665,7 +1617,7 @@ class Users extends MY_Controller {
 
 			$profiledata = $this->business_model->getByCompanyId($comp_id);	
 			$workImages  = unserialize($profiledata->work_images);
-			$workImages[] = ['file' => $name, 'caption' => 'Work Picture'];
+			$workImages[] = ['file' => $name, 'caption' => ''];
 			$this->business_model->update($profiledata->id, ['work_images' => serialize($workImages)]);
 
 		}
@@ -1716,7 +1668,7 @@ class Users extends MY_Controller {
 		$comp_id = logged('company_id');
 
 		$profiledata = $this->business_model->getByCompanyId($comp_id);
-		$image_name  = $profiledata->business_cover_photo;
+		$image_name  = '';
 		if (!empty($_FILES['cover_photo']['name'])){			
 			$target_dir = "./uploads/company_cover_photo/$comp_id/";
 			
@@ -1732,7 +1684,7 @@ class Users extends MY_Controller {
 			move_uploaded_file($tmp_name, "./uploads/company_cover_photo/$comp_id/$name");
 			$image_name = $name;
 			
-			//$this->business_model->update($profiledata->id, ['work_images' => serialize($workImages)]);
+			$this->business_model->update($profiledata->id, ['work_images' => serialize($workImages)]);
 
 		}
 
@@ -1763,170 +1715,6 @@ class Users extends MY_Controller {
 
 		redirect('users/socialMedia');
 	}
-
-	public function user_export()
-    {
-    	$this->load->model('users_model');
-    	$this->load->model('roles_model');
-
-    	$role_id = logged('role');
-        $cid     = logged('company_id');           
-        if( $role_id == 1 || $role_id == 2 ){
-			$users = $this->users_model->getAllUsers();     
-		}else{
-			$users = $this->users_model->getCompanyUsers($cid);     
-		}
-
-        $delimiter = ",";
-        $time      = time();
-        $filename  = "users_list_".$time.".csv";
-
-        $f = fopen('php://memory', 'w');
-
-        $fields = array('Last Name', 'First Name', 'Role', 'Title', 'Email', 'Phone', 'Mobile', 'Address', 'City', 'State');
-        fputcsv($f, $fields, $delimiter);
-
-        if (!empty($users)) {
-            foreach ($users as $u) {
-                $csvData = array(
-                    $u->LName,
-                    $u->FName,
-                    getUserType($u->user_type),
-                    ucfirst($this->roles_model->getById($u->role)->title),
-                    $u->email,
-                    $u->phone,
-                    $u->mobile,
-                    $u->address,
-                    $u->city,
-                    $u->state
-                );
-                fputcsv($f, $csvData, $delimiter);
-            }
-        } else {
-            $csvData = array('');
-            fputcsv($f, $csvData, $delimiter);
-        }
-
-        fseek($f, 0);
-
-        header('Content-Type: text/csv');
-        header('Content-Disposition: attachment; filename="' . $filename . '";');
-
-        fpassthru($f);
-    }
-
-    public function ajax_delete_user()
-	{
-        $is_success = false;
-    	$msg = "";
-
-    	$post = $this->input->post();
-    	$id   = $post['eid'];
-
-		$user = $this->users_model->delete($id);
-
-		//Delete Timesheet 
-		$this->load->model('TimesheetTeamMember_model');
-		$this->TimesheetTeamMember_model->deleteByUserId($id);
-		//Delete Tract360
-		$this->load->model('Trac360_model');
-		$this->Trac360_model->deleteUser('trac360_people', $id);
-
-		$this->activity_model->add("User #$id Deleted by User:".logged('name'));
-
-        $is_success = true;
-    	$json_data = [
-    		'is_success' => $is_success,
-    		'msg' => $msg
-    	];
-
-    	echo json_encode($json_data);
-	}
-
-	public function ajax_edit_profile(){
-	    $user_id  = $this->input->post('user_id');
-	    $cid      = logged('company_id');		
-	    $get_user = $this->Users_model->getUser($user_id);
-	    $get_role = $this->db->get_where('roles',array('id' => $get_user->role));
-
-	    $this->page_data['user'] = $get_user;
-	    $this->load->view('users/modal_edit_profile', $this->page_data);
-    }
-
-    public function ajax_update_profile(){
-    	$post = $this->input->post();
-
-        $data = array(
-            'FName' => $post['firstname'],
-            'LName' => $post['lastname'],
-            'address' => $post['address'],
-            'state' => $post['state'],
-            'city' => $city,
-            'postal_code' => $post['postal_code'],
-            'employee_number' => $post['emp_number'],
-            'phone' => $post['phone_number'],
-            'mobile' => $post['mobile_number']
-        );
-
-        $user = $this->Users_model->update($post['user_id'],$data);
-
-        echo json_encode(1);
-    }
-
-    public function ajax_update_user_signature(){
-    	$post = $this->input->post();
-    	$uid  = logged('id');
-    	echo "<pre>";
-    	print_r($post);
-    	if(!empty($post['user_approval_signature1aM_web'])){
-
-    		$folderPath = "./uploads/Signatures/user/$uid/";
-			
-			if(!file_exists($folderPath)) {
-				mkdir($folderPath, 0777, true);
-			}
-
-            $rand1  = rand(10,10000000);
-            $datasig            = $post['user_approval_signature1aM_web'];
-            $image_parts        = explode(";base64,", $datasig);
-            $image_type_aux     = explode("image/", $image_parts[0]);
-            $image_type         = $image_type_aux[1];
-            $image_base64       = base64_decode($image_parts[1]);
-            $filename           = $rand1 . $wo_id . '_user' . '.'.$image_type;
-            $file               = $folderPath. $filename;            
-            file_put_contents($file, $image_base64);
-
-            $data = array('img_signature' => $filename);
-        	$user = $this->Users_model->update($uid,$data);
-        }
-
-        echo $filename;
-    }
-
-    public function ajax_admin_switch()
-    {
-    	$is_valid = 0;
-    	$msg = 'Invalid account type';
-    	if( isAdminBypass() ){
-    		$uid  = adminLogged('id');
-    		$user = $this->Users_model->getUserByID($uid);
-    	}else{
-    		$uid  = logged('id');
-    		$user = $this->Users_model->getUserByID($uid);
-    	}
-    	
-    	$data = ['username' => $user->username, 'password' => $user->password_plain];
-    	$attempt = $this->users_model->admin_attempt($data);
-        if ($attempt == 'valid') {
-            $this->users_model->admin_login($user);
-
-            $is_valid = 1;
-            $msg = '';
-        } 
-
-        $json_data = ['is_valid' => $is_valid, 'msg' => $msg];
-        echo json_encode($json_data);
-    }
 }
 
 

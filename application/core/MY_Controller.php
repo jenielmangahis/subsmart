@@ -41,28 +41,10 @@ class MY_Controller extends CI_Controller {
 			'submenu' => '',
 		];
 
-		$company_id     = logged('company_id');
-		$is_plan_active = isCompanyPlanActive();
+		$company_id =  logged('company_id');
 		if(!empty($company_id)){
 			$company = getCompanyFolder();
 		}
-
-		$method     = $this->router->fetch_method();
-		$controller = $this->router->fetch_class();		
-		$controller = strtolower($controller);
-		$company_id = logged('company_id');
-		$exempted_company_ids = exempted_company_ids();
-
-		if( !in_array($company_id, $exempted_company_ids) ){			
-			/*if( $is_plan_active == 0 && $controller != 'mycrm' && $method != 'membership' ){			
-				redirect('mycrm/renew_plan'); 
-			}*/
-			if( $is_plan_active == 0 && $controller != 'mycrm'){	
-				if( $method != 'renew_plan' && $method != 'plan_select' && $method != '_renew_membership_plan' ){
-					redirect('mycrm/renew_plan'); 	
-				}
-			}
-		}		
 	}
 
 	public function gtMyIpGlobal(){
@@ -144,30 +126,6 @@ class MY_Controller extends CI_Controller {
 
 		return $is_allowed;
 	}
-
-	public function hasAccessModule($module_id){
-		// check if customer is allowed to view this page
-		$company_id = logged('company_id');
-		//if( $company_id != 1 && $company_id != 31 ){
-		if( $company_id != 1 ){			
-			$ci = &get_instance();
-	        $ci->load->library('session');
-
-	        $allowed_modules = $ci->session->userdata('userAccessModules');
-	        if( !in_array($module_id, $allowed_modules) ){
-	            $this->session->set_flashdata('alert_class', 'alert-danger');
-	            $this->session->set_flashdata('message', 'You have no access to this module');
-	            redirect('mycrm/membership');
-	        }
-
-	        $deactivated_modules = $ci->session->userdata('deactivated_modules');
-	        if( in_array($module_id, $deactivated_modules) ){
-	            $this->session->set_flashdata('alert_class', 'alert-danger');
-	            $this->session->set_flashdata('message', 'You have no access to this module');
-	            redirect('mycrm/membership');
-	        }
-		}        
-    }
 }
 
 /* End of file My_Controller.php */

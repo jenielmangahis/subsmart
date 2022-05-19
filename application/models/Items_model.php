@@ -1,6 +1,6 @@
 <?php
 
-defined('BASEPATH') or exit('No direct script access allowed');
+defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Items_model extends MY_Model
 {
@@ -39,14 +39,13 @@ class Items_model extends MY_Model
     }
 
     
-    public function getUserByID($id)
-    {
-        $this->db->select('*');
-        $this->db->from('users');
-        $this->db->where('id', $id);
-        $query = $this->db->get();
-        return $query->result();
-    }
+	public function getUserByID($id) {
+		$this->db->select('*');
+		$this->db->from('users');
+		$this->db->where('id', $id);
+		$query = $this->db->get();
+		return $query->result();
+	}
 
     public function categoriesWithoutParent()
     {
@@ -62,7 +61,7 @@ class Items_model extends MY_Model
     public function insertCategory($data)
     {
         $insert = $this->db->insert($this->table_categories, $data);
-        return $this->db->insert_id();
+        return $insert ? true : false;
     }
     
     public function getCategory($id)
@@ -88,15 +87,17 @@ class Items_model extends MY_Model
 
     public function filterBy($filters = array(), $company_id, $type)
     {
+
         $this->db->select('*');
         $this->db->from($this->table);
-        if ($company_id > 0) {
+        if( $company_id > 0 ){
             $this->db->where('company_id', $company_id);
         }
         
         $this->db->where('type', $type);
 
         if (!empty($filters)) {
+
             if (isset($filters['category'])) {
                 $this->db->group_start();
                 $this->db->where('item_categories_id', $filters['category']);
@@ -108,23 +109,11 @@ class Items_model extends MY_Model
         return $query->result();
     }
 
-   public function getByCompanyId($company_id, $filters = [])
+    public function getByCompanyId($company_id)
     {
         $this->db->select('*');
         $this->db->from($this->table);
         $this->db->where('company_id', $company_id);
-        if( $filters ){
-            $count = 1;
-            foreach( $filters as $value ){
-                if( $count == 1 ){
-                    $this->db->where($value['field'], $value['value']);
-                }else{
-                    $this->db->or_where($value['field'], $value['value']);
-                }
-                $count++;
-            }
-        }
-
         $query = $this->db->get();
         return $query->result();
     }
@@ -133,10 +122,10 @@ class Items_model extends MY_Model
     {
         $this->db->where('company_id', getLoggedCompanyID());
         $this->db->where_in('is_active', $filters['status']);
-        if (isset($filters['category'])) {
+        if(isset($filters['category'])) {
             $this->db->where_in('item_categories_id', $filters['category']);
         }
-        if (isset($filters['type'])) {
+        if(isset($filters['type'])) {
             $this->db->where_in('type', $filters['type']);
         }
         $this->db->order_by($columnName, $order);
@@ -144,35 +133,11 @@ class Items_model extends MY_Model
         return $query->result();
     }
 
-    public function inactiveItem($data)
+    public function inactiveItem($id)
     {
-        $this->db->where('company_id', $data['company_id']);
-        $this->db->where('id', $data['id']);
-        $inactive = $this->db->update($this->table, ['is_active' => 0, 'title' => $data['name']]);
-        return $inactive ? true : false;
-    }
-
-    public function inactivePackage($data)
-    {
-        $this->db->where('company_id', $data['company_id']);
-        $this->db->where('id', $data['id']);
-        $inactive = $this->db->update('package_details', ['status' => 0, 'name' => $data['name']]);
-        return $inactive ? true : false;
-    }
-
-    public function activeItem($data)
-    {
-        $this->db->where('company_id', $data['company_id']);
-        $this->db->where('id', $data['id']);
-        $inactive = $this->db->update($this->table, ['is_active' => 1, 'title' => $data['name']]);
-        return $inactive ? true : false;
-    }
-
-    public function activePackage($data)
-    {
-        $this->db->where('company_id', $data['company_id']);
-        $this->db->where('id', $data['id']);
-        $inactive = $this->db->update('package_details', ['status' => 1, 'name' => $data['name']]);
+        $this->db->where('company_id', getLoggedCompanyID());
+        $this->db->where('id', $id);
+        $inactive = $this->db->update($this->table, ['is_active' => 0]);
         return $inactive ? true : false;
     }
 
@@ -199,34 +164,33 @@ class Items_model extends MY_Model
         return $query->result();
     }
 
-    public function getRows($params = array())
-    {
+    function getRows($params = array()) {
         $this->db->select('*');
         $this->db->from($this->table);
         
-        if (array_key_exists("where", $params)) {
-            foreach ($params['where'] as $key => $val) {
+        if(array_key_exists("where", $params)){
+            foreach($params['where'] as $key => $val){
                 $this->db->where($key, $val);
             }
         }
         
-        if (array_key_exists("returnType", $params) && $params['returnType'] == 'count') {
+        if(array_key_exists("returnType",$params) && $params['returnType'] == 'count'){
             $result = $this->db->count_all_results();
-        } else {
-            if (array_key_exists("id", $params)) {
+        }else{
+            if(array_key_exists("id", $params)){
                 $this->db->where('id', $params['id']);
                 $query = $this->db->get();
                 $result = $query->row_array();
-            } else {
+            }else{
                 $this->db->order_by('id', 'desc');
-                if (array_key_exists("start", $params) && array_key_exists("limit", $params)) {
-                    $this->db->limit($params['limit'], $params['start']);
-                } elseif (!array_key_exists("start", $params) && array_key_exists("limit", $params)) {
+                if(array_key_exists("start",$params) && array_key_exists("limit",$params)){
+                    $this->db->limit($params['limit'],$params['start']);
+                }elseif(!array_key_exists("start",$params) && array_key_exists("limit",$params)){
                     $this->db->limit($params['limit']);
                 }
                 
                 $query = $this->db->get();
-                $result = ($query->num_rows() > 0)?$query->result_array():false;
+                $result = ($query->num_rows() > 0)?$query->result_array():FALSE;
             }
         }
         
@@ -234,20 +198,19 @@ class Items_model extends MY_Model
         return $result;
     }
 
-    public function insert($data = array())
-    {
-        if (!empty($data)) {
+    public function insert($data = array()) {
+        if(!empty($data)){     
+
             $insert = $this->db->insert($this->table, $data);
             return $insert?$this->db->insert_id():false;
         }
         return false;
     }
 
-    public function update($data, $condition = array())
-    {
-        if (!empty($data)) {
+    public function update($data, $condition = array()) {
+        if(!empty($data)){
             // Add modified date if not included
-            if (!array_key_exists("modified", $data)) {
+            if(!array_key_exists("modified", $data)){
                 $data['modified'] = date("Y-m-d H:i:s");
             }
             
@@ -262,7 +225,7 @@ class Items_model extends MY_Model
 
     public function updateLocationDetails($data, $condition = array())
     {
-        if (!empty($data)) {
+        if(!empty($data)) {
             $update = $this->db->update($this->table_has_location, $data, $condition);
 
             return $update ? true : false;
@@ -277,7 +240,7 @@ class Items_model extends MY_Model
         return $update;
     }
 
-    public function getItemById($id)
+    public function getItemById($id) 
     {
         $this->db->select('*');
         $this->db->from($this->table);
@@ -294,12 +257,7 @@ class Items_model extends MY_Model
         $this->db->delete($this->table, array("id" => $id));
     }
 
-    public function deleteCompanyItem($id, $company_id)
-    {
-        $this->db->delete($this->table, array("id" => $id, 'company_id' => $company_id));
-    }
-
-    public function getLocationByItemId($id)
+    public function getLocationByItemId($id) 
     {
         $this->db->select('*');
         $this->db->from($this->table_has_location);
@@ -316,25 +274,25 @@ class Items_model extends MY_Model
         return $query->result();
     }
 
-    public function deletePackageItems($packageId)
+    public function deleteBundleItem($id, $item_id)
     {
-        $this->db->where('package_id', $packageId);
-        $delete = $this->db->delete('item_package');
+        $this->db->where('company_id', logged('company_id'));
+        $this->db->where('id', $id);
+        $this->db->where('item_id', $item_id);
+        $delete = $this->db->delete('bundle_item_contents');
         return $delete ? true : false;
     }
 
-    public function saveNewItemLocation($data = array())
-    {
-        if (!empty($data)) {
+    public function saveNewItemLocation($data = array()) {
+        if(!empty($data)){     
             $insert = $this->db->insert($this->table_has_location, $data);
             return $insert?$this->db->insert_id():false;
         }
         return false;
     }
 
-    public function saveBatchItemLocation($data = [])
-    {
-        if (!empty($data)) {
+    public function saveBatchItemLocation($data = []) {
+        if(!empty($data)) {
             $insert = $this->db->insert_batch($this->table_has_location, $data);
             return $this->db->insert_id();
         }
@@ -350,52 +308,37 @@ class Items_model extends MY_Model
 
     public function getItemQuantityAdjustments($item_id, $location_id)
     {
-        $this->db->select('accounting_inventory_qty_adjustment_items.*');
-        $this->db->from('accounting_inventory_qty_adjustment_items');
-        $this->db->where('accounting_inventory_qty_adjustment_items.product_id', $item_id);
-        $this->db->where('accounting_inventory_qty_adjustment_items.location_id', $location_id);
-        $this->db->where('accounting_inventory_qty_adjustments.status !=', 0);
-        $this->db->join('accounting_inventory_qty_adjustments', 'accounting_inventory_qty_adjustments.id = accounting_inventory_qty_adjustment_items.adjustment_id');
-        $query = $this->db->get();
+        $this->db->where('product_id', $item_id);
+        $this->db->where('location_id', $location_id);
+        $query = $this->db->get('accounting_inventory_qty_adjustment_items');
 
         return $query->result();
     }
 
-    public function saveItemAccountingDetails($data = [])
-    {
-        if (!empty($data)) {
+    public function saveItemAccountingDetails($data = []) {
+        if(!empty($data)) {
             $insert = $this->db->insert('items_accounting_details', $data);
             return $this->db->insert_id();
         }
         return false;
     }
 
-    public function updateItemAccountingDetails($data, $item_id)
-    {
+    public function updateItemAccountingDetails($data, $item_id) {
         $this->db->where('item_id', $item_id);
         $update = $this->db->update('items_accounting_details', $data);
         return $update ? true : false;
     }
 
-    public function getItemAccountingDetails($item_id)
-    {
+    public function getItemAccountingDetails($item_id) {
         $this->db->where('item_id', $item_id);
         $query = $this->db->get('items_accounting_details');
         return $query->row();
     }
 
-    public function getPackageAccountingDetails($packageId)
-    {
-        $this->db->where('package_id', $packageId);
-        $query = $this->db->get('items_accounting_details');
-        return $query->row();
-    }
-
-    public function countQty($item_id)
-    {
+    public function countQty($item_id) {
         $items = $this->getLocationByItemId($item_id);
         $qty = 0;
-        for ($i=0;$i<count($items);$i++) {
+        for($i=0;$i<count($items);$i++) {
             $qty += intval($items[$i]['qty']);
         }
 
@@ -411,133 +354,7 @@ class Items_model extends MY_Model
         $query = $this->db->get();
         return $query->row();
     }
-
-    public function changeRebate($data)
-    {
-        extract($data);
-        if ($get_val == '1') {
-            $item_val = '0';
-        } else {
-            $item_val = '1';
-        }
-        $this->db->where('id', $id);
-        $this->db->update('items', array('rebate' => $item_val));
-        return true;
-    }
-
-    public function getItemData($id)
-    {
-        $where = array(
-            'type' => 'Work Order',
-            'type_id'   => $id
-          );
-
-        $this->db->select('*');
-        $this->db->from('item_details');
-        $this->db->where($where);
-        $query = $this->db->get();
-        return $query->result();
-    }
-
-    public function getItemDataAlarm($id)
-    {
-        $where = array(
-            // 'type' => 'Work Order Alarm',
-            'work_orders_items.work_order_id'   => $id
-          );
-
-        $this->db->select('*, work_orders_items.total AS iTotal, work_orders_items.cost AS iCost, work_orders_items.tax AS itax');
-        $this->db->from('work_orders_items');
-        $this->db->join('items', 'items.id = work_orders_items.items_id');
-        $this->db->where($where);
-        $query = $this->db->get();
-        return $query->result();
-    }
-
-    public function getItemLocation($locationId, $itemId)
-    {
-        $this->db->where('item_id', $itemId);
-        $this->db->where('id', $locationId);
-        $query = $this->db->get($this->table_has_location);
-        return $query->row();
-    }
     
-    public function updateLocationQty($locationId, $itemId, $newQty)
-    {
-        $this->db->where('item_id', $itemId);
-        $this->db->where('id', $locationId);
-        return $this->db->update($this->table_has_location, ["qty" => $newQty]);
-    }
-
-    public function getCompanyItemById($company_id, $item_id)
-    {
-        $this->db->select('*');
-        $this->db->from($this->table);
-        $this->db->where('id', $item_id);
-        $this->db->where('company_id', $company_id);
-        $query = $this->db->get();
-        return $query->row();
-    }
-
-    public function get_items_by_category($categoryId)
-    {
-        $this->db->where('item_categories_id', $categoryId);
-        $this->db->where('is_active', 1);
-        $query = $this->db->get($this->table);
-        return $query->result();
-    }
-
-    public function get_package_items($packageId)
-    {
-        $this->db->where('package_id', $packageId);
-        $query = $this->db->get('item_package');
-        return $query->result();
-    }
-
-    public function get_package_by_id($packageId)
-    {
-        $this->db->where('id', $packageId);
-        $query = $this->db->get('package_details');
-        return $query->row();
-    }
-
-    public function get_first_location($itemId)
-    {
-        $this->db->where('item_id', $itemId);
-        $query = $this->db->get('items_has_storage_loc');
-        return $query->row();
-    }
-
-    public function update_package($id, $data)
-    {
-        $this->db->where('id', $id);
-        $update = $this->db->update('package_details', $data);
-        return $update;
-    }
-
-    public function get_company_packages($companyId, $filters = [])
-    {
-        $this->db->where('company_id', $companyId);
-        $this->db->where_in('status', $filters['status']);
-        $query = $this->db->get('package_details');
-        return $query->result();
-    }
-
-    public function check_name($companyId, $itemName)
-    {
-        $this->db->where('company_id', $companyId);
-        $this->db->where('title', $itemName);
-        $query = $this->db->get($this->table);
-        return $query->row();
-    }
-
-    public function check_package_name($companyId, $packageName)
-    {
-        $this->db->where('company_id', $companyId);
-        $this->db->where('name', $packageName);
-        $query = $this->db->get('package_details');
-        return $query->row();
-    }
 }
 
 

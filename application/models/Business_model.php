@@ -82,22 +82,6 @@ class Business_model extends MY_Model {
         $query = $this->db->get()->row();
         return $query;
     }
-    
-    public function getAll()
-    {
-        $this->db->select('business_profile.*');
-        $this->db->join('clients', 'business_profile.company_id = clients.id', 'left');
-        $this->db->join('industry_type', 'clients.industry_type_id = industry_type.id', 'left');
-        $this->db->from($this->table);
-        $query = $this->db->get();
-
-        return $query->result();
-    }
-
-    public function deleteByCompanyId($company_id)
-    {
-        $this->db->delete($this->table, array('company_id' => $company_id));
-    }
 }
 
 /* End of file Business_model.php */

@@ -4,13 +4,17 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>nSmarTrac: eSign</title>
+  <title>nSmarTrac: DocuSign</title>
 
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
   <link rel="stylesheet" href="<?=base_url('assets/css/esign/docusign/docusign.css');?>">
   <script src="https://use.fontawesome.com/f61f458313.js"></script>
 
   <style>
+    .fillAndSign__signatureDraw {
+        max-height: 40px;
+    }
+
     .signing__signatureInput {
         width: 100% !important;
     }

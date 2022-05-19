@@ -7,9 +7,7 @@ class Event_Types extends MY_Controller {
 
 		parent::__construct();
 		$this->checkLogin();
-		$this->page_data['page']->title = 'Event Types';
-        $this->page_data['page']->parent = 'Sales';
-        $this->hasAccessModule(4);
+
 		$this->load->model('EventType_model');
 		$this->load->helper(array('form', 'url', 'hashids_helper'));
 		$this->load->library('session');
@@ -30,7 +28,7 @@ class Event_Types extends MY_Controller {
         }
 
 		$this->page_data['eventTypes'] = $eventTypes;
-		$this->load->view('v2/pages/events/event_types/index', $this->page_data);
+		$this->load->view('event_types/index', $this->page_data);
 	}
 
     public function add_new_event_type(){

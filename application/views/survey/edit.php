@@ -2,7 +2,7 @@
 	defined('BASEPATH') OR exit('No direct script access allowed');
 	include viewPath('includes/header');
 ?>
-<script src="<?php echo $url->assets ?>plugins/jquery-initialize/jquery.initialize.min.js"></script>
+
 <style>
 	#card-order-list .dropleft .dropdown-toggle::before {
 		content: unset !important;
@@ -131,40 +131,8 @@
 	.theme-info{
 			position: absolute;
 	}
-	.choice-container .input-group{
-		width: 90% !important;
-	}
-	#builder-box .alert-dark{
-		background-color : none !important;
-	}
-	.nav-tabs .nav-item{
-		margin: 2px;
-		width: 193px;
-		text-align: center;
-	}
-	.nav-tabs .nav-item a.nav-link{
-		background-color: #32243d;
-		color: #ffffff;		
-	}
-	.nav-tabs .nav-item a{
-		color: #ffffff;
-	}
-	.nav-tabs .nav-item a.active{
-		background-color: #45a73c;
-		color: #ffffff;
-	}
-	.settings-label{
-		width: 16%;
-	}
-	.form-check{
-		margin-left: 3px;
-	}
-	.list-group-item{
-		border: none !important;
-	}
-	#add-question-choice{
-		margin-bottom: 10px;
-	}
+
+
 </style>
 <script>
 
@@ -196,8 +164,19 @@
 			<div class="row">
 				<div class="col-xl-12">
 					<div class="card">
+
+						<nav aria-label="breadcrumb">
+							<ol class="breadcrumb">
+								<li class="breadcrumb-item"><a href="<?php echo base_url()?>survey">Surveys</a></li>
+								<li class="breadcrumb-item"><a href="<?php echo base_url()?>survey/workspace">Workspace</a></li>
+								<li class="breadcrumb-item"><a href="<?php echo base_url()?>survey/result/<?=$survey->id?>"><?=$survey->title?></a></li>
+								<li class="breadcrumb-item active" aria-current="page">Edit Survey</li>
+							</ol>
+						</nav>
+						
 						<!-- header -->
-						<div class="container-fluid mb-3">							
+						<div class="container-fluid mb-3">
+							<a href="<?= base_url()?>survey">Back to survey list</a>
 							<div class="row">
 
 								<div class="col">
@@ -229,19 +208,18 @@
 								<!-- buttons -->
 								<div class="col-auto">
 									<div class="h1-spacer">
-										<a href="<?= base_url()?>survey" class="btn btn-primary">Back to survey list</a>
 										<?php if(count($questions) !== 0){?>
-											<!-- <a href="<?= base_url() ?>survey/preview/<?= $survey->id ?>?mode=preview" target="_blank" class="btn btn-info btn-md text-light" type="button" name="button">Preview</a> -->
+											<a href="<?= base_url() ?>survey/preview/<?= $survey->id ?>?mode=preview" target="_blank" class="btn btn-info btn-md text-light" type="button" name="button">Preview</a>
 										<?php } ?>
 										
-										<!-- <div class="btn-group">
+										<div class="btn-group">
 											<button id="btnPublish" class="btn btn-dark btn-md text-light " disabled></button>
 											<button class="btn btn-dark btn-md text-light dropdown-toggle" data-toggle="dropdown"></button>
 											<div class="dropdown-menu dropdown-menu-right">
 												<button id="btnToggleAutoPublish" type="button" class="dropdown-item"><i class="fa fa-check-circle" style="color="rgb(0,255,0)"></i> Publishing autimatically on change </button>
 												<button id="btnRestoreSettings" type="button" class="dropdown-item">Restore last changes</button>
 											</div>
-										</div> -->
+										</div>
 										
 									</div>
 								</div>
@@ -259,15 +237,15 @@
 									<a class="nav-link active" data-toggle="list" href="#builder-box"><i class="fa fa-wrench"></i> Builder</a>
 								</li>
 								<li class="nav-item">
-									<a class="nav-link tab-logic" data-id="<?= $survey->id; ?>" data-toggle="list" href="#logic-box"><i class="fa fa-link"></i> Logic Jump</a>
+									<a class="nav-link" data-toggle="list" href="#logic-box"><i class="fa fa-link"></i> Logic</a>
 								</li>
 								<li class="nav-item">
-									<a class="nav-link" data-toggle="list" href="#themes-box"><i class="fa fa-paint-brush"></i> Themes</a>
 								</li>
+									<a class="nav-link" data-toggle="list" href="#themes-box"><i class="fa fa-paint-brush"></i> Themes</a>
 								<li class="nav-item">
 									<a class="nav-link" data-toggle="list" href="#settings-box"><i class="fa fa-cog"></i> Settings</a>
 								</li>
-								<li class="nav-item" style="display: none;">
+								<li class="nav-item">
 									<a class="nav-link" data-toggle="list" href="#ra-box"><i class="fa fa-lock"></i> Respondent Access</a>
 								</li>
 							</ul>
@@ -297,13 +275,13 @@
 														<div>
 															<!-- dropdown menu for adding new questions -->
 															<div class="btn-group dropleft">
-																<button class="btn btn-primary btn-sm text-light dropdown-toggle " type="button" id="dropdownAddQuestion" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Add New Question</button>
+																<button class="btn btn-primary btn-sm text-light dropdown-toggle " type="button" id="dropdownAddQuestion" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Add New Question</button>
 																<div class="dropdown-menu dropdown-menu-left"  style="width: 450px" aria-labelledby="dropdownAddQuestion">
 																	<div class="row align-items-start">
 																		<?php foreach ($qTemplate as $template){?>
 																			<?php //if($template->id != 1): ?>
 																				<div class="col-xs-12 col-sm-6 ">
-																					<a href="<?= base_url() ?>survey/add/question/<?= $this->uri->segment(3) ?>/<?= $template->id ?>" class="dropdown-item btn-add-question" id="add-question"> <i class="<?= $template->icon ?>" style="background-color: <?= $template->color; ?>"></i> <?= $template->type ?></a>
+																					<a href="<?= base_url() ?>survey/add/question/<?= $this->uri->segment(3) ?>/<?= $template->id ?>" class="dropdown-item" id="add-question"> <i class="<?= $template->icon ?>" style="background-color: <?= $template->color; ?>"></i> <?= $template->type ?></a>
 																				</div>
 																			<?php //endif; ?>
 																			<?php }; ?>
@@ -311,29 +289,391 @@
 																</div>
 															</div>
 
-															<!-- <button id="btn-change-view" class="btn btn-sm btn-dark"><i class="fa fa-th"></i> Shrink List</button> -->
+															<button id="btn-change-view" class="btn btn-sm btn-dark"><i class="fa fa-th"></i> Shrink List</button>
 														</div>
 														
 														<!-- <button class="btn btn-sm btn-dark"><i class="fa fa-th"></i></button> -->
 													</div>
 													<hr/>
-													<?php if(count($questions) === 0){ ?>
-														<div class="alert alert-dark" id="card-order-list">
-															There are no questions listed for now.
-														</div>
-													<?php }else{ ?>
-														<div class="row" id="card-order-list"></div>
-													<?php } ?>
+													<?php
+														if(count($questions) === 0){
+															?>
+																<div class="alert alert-dark">
+																	There are no questions listed for now.
+																</div>
+															<?php
+														}else{
+															?>
+																<div class="row" id="card-order-list">
+																	<?php foreach($questions as $key =>  $question){ 
+																		if($question->template_id == 20){
+																			?>
+																			<div id="container-<?=$question->id?> card-group-questions-list" class="col-sm-12">
+																				<div class="card">
+																					<div class="card-body p-0">
+																					drag here
+																					</div>
+																				</div>
+																			</div>
+																			<?php
+																		}else{
+																			?>
+																				<!-- main container -->
+																				<div id="container-<?= $question->id ?>" class="col-sm-12">
+																					<div class="card">
+																						<div class="card-body p-0">
+
+																							<!-- main question -->
+																							<?= form_open("survey/update/question/".$question->id."", array('id'=>'frm-update-question')); ?>
+
+																								<div class="d-flex justify-content-between">
+																									<!-- title -->
+																									<h5 class="card-title d-flex">
+																										<i class="icon-design <?= $question->template_icon ?>" style="background-color:<?= $question->template_color ?>;"><strong class="px-1"><?=$key?></strong></i> <?= $question->template_title ?>
+																										<?php if($question->required == 1){ ?>
+																											<label class="text-danger" id="required-asterisk-<?= $question->id ?>">*</label>
+																										<?php }; ?>
+																									</h5>
+																									
+																									<!-- More options Drawer -->
+																									<div class="btn-group justify-content-right">
+																										<div>
+																											<a class="btn btn-sm text-white btn-danger" type="button" href="<?php echo base_url()?>survey/<?= $survey->id?>" id="btn-question-delete"  data-id="<?= $question->id ?>"><i class="fa fa-trash"></i></a>
+																										</div>
+																										<div>
+																											<a class="btn btn-sm text-white btn-info" type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent<?= $question->id ?>" aria-controls="navbarToggleExternalContent<?= $question->id ?>" aria-expanded="false" aria-label="Toggle navigation"><i class="fa fa-ellipsis-v"></i></a>
+																										</div>
+																									</div>
+																								</div>
+
+																								<div class="question-input-box" >
+																									<input type="hidden" name="survey_id" value="<?= $question->id ?>">
+
+																									<div class="form-group">
+																										<input type="text" class="form-control questions" name="question" value="<?= $question->question ?>" data-id="<?= $question->id ?>" placeholder="Enter your question">
+																									</div>
+
+																									<div id="description-container">
+																										<?php if($question->description == 1){ ?>
+																											<div class="form-group">
+																												<input type="text" class="form-control questions" name="description_label" placeholder="Description here" value="<?= $question->description_label ?>">
+																											</div>
+																										<?php } ?>
+																									</div>
+
+																									<div id="choices">
+																										<?php if($question->template_id == 3 || $question->template_id == 4 || $question->template_id == 15){
+																												foreach($question->questions as $option){
+																													?>
+																														<div class="d-flex w-100 justify-content-between">
+																															<?php echo $option->survey_template_choice; ?>
+																															<button id="btn-delete-option" data-id="<?= $option->id?>" class="btn btn-outline-danger" type="button" name="button"><i class="fa fa-trash"></i></button>
+																														</div>
+																													<?php
+																												}
+																										}else{ ?>
+
+																										<!-- <?= $question->questions[0]->survey_template_choice ?> -->
+																										<?php } ?>
+																									</div>
+																									<div class="d-flex justify-content-end">
+																										<?php if($question->template_id == 3 || $question->template_id == 4 ||$question->template_id == 15){ ?>
+																											<button id="add-question-choice" data-id="<?= $question->id ?>" data-template-id="<?= $question->template_id ?>" class="btn btn-success btn-sm" type="button" name="button">Add Choice</button>
+																										<?php } ?>
+																										<!-- <button class="btn btn-success ml-2 btn-sm" type="submit" name="button">Save Changes</button> -->
+																									</div>
+																									
+
+																									<div class="collapse" id="navbarToggleExternalContent<?= $question->id ?>">
+																										<ul class="list-group">
+																											<!-- image upload field -->
+																											<li class="list-group-item d-flex-justify-content-between">
+																												<div class="d-flex w-100 justify-content-between">
+																													<div class="custom-file">
+																														<input type="file" class="custom-file-input" id="image_background" name="image_background" data-id="<?=$question->id?>">
+																														<label class="custom-file-label" for="imageUpload">
+																															<?=($question->image_background == "" || $question->image_background == null)?"Upload an image here":"Current Image: ". $question->image_background?>
+																														</label>
+																													</div>
+																												</div>
+																											</li>
+
+																											<!-- custom button text field -->
+																											<li class="list-group-item">
+																												<div class="d-flex w-100 justify-content-between">
+																													<span>Custom button text:</span>
+																													<input class="form-control" type="text" name="txtCustomButtonText" id="txtCustomButtonText" placeholder="Enter custom button text" data-id="<?=$question->id?>" value="<?= ($question->custom_button_text == null || $question->custom_button_text == "") ? "" : $question->custom_button_text ?>">
+																												</div>
+																											</li>
+
+																											<!-- character limits -->
+																											<li class="list-group-item d-flex-justify-content-between">
+																												<div class="d-flex w-100 justify-content-between">
+																													<?php if($question->template_id == 6 || $question->template_id == 8 ||$question->template_id == 9 || $question->template_id == 13){ ?>
+																														<!-- <button id="add-question-choice" data-id="<?= $question->id ?>" data-template-id="<?= $question->template_id ?>" class="btn btn-dark btn-block" type="button" name="button">Add Choice</button> -->
+																														<div>
+																															<label for="maxcharacters"> Max. characters</label>
+																															<input type="number" class="form-control questions" data-id="<?=$question->id?>" id="maxcharacters" name="maxcharacters" value="<?= $question->maxcharacters?>">
+																														</div>
+																														<div>
+																															<label for="mincharacters"> Min. characters</label>
+																															<input type="number" class="form-control questions" data-id="<?=$question->id?>" id="mincharacters" name="mincharacters" value="<?= $question->mincharacters?>">
+																														</div>
+																													<?php } ?>
+																												</div>
+																											</li>
+																											
+																											<!-- required checkbox -->
+																											<li class="list-group-item">
+																												<div class="d-flex w-100 justify-content-between">
+																													<span>Required</span>
+																													<div class="form-check">
+																														<input <?= ($question->required == 1) ? "checked" : ""; ?> type="checkbox" class="form-check-input" value="required" data-id="<?= $question->id ?>" id="required<?= $question->id ?>">
+																													</div>
+																												</div>
+																											</li>
+																											
+																											<!-- description check box -->
+																											<li class="list-group-item">
+																												<div class="d-flex w-100 justify-content-between">
+																													<span>Description</span>
+																													<div class="form-check">
+																														<input <?= ($question->description == 1) ? "checked" : ""; ?> type="checkbox" class="form-check-input" value="description" data-id="<?= $question->id ?>" id="description<?= $question->id ?>">
+																													</div>
+																												</div>
+																											</li>
+
+																											<li class="list-group-item">
+																												<div class="d-flex w-100 justify-content-between">
+																													<span>Include this in the scoring system?</span>
+																													<div class="form-check">
+																														<input <?= ($question->isScoreCounted == 1) ? "checked" : ""; ?> type="checkbox" class="form-check-input" value="isScoreCounted" data-id="<?= $question->id ?>" id="isScoreCounted<?= $question->id ?>">
+																													</div>
+																												</div>
+																											</li>
+
+																											<!-- custom button text field -->
+																											<li class="list-group-item">
+																												<div class="d-flex w-100 justify-content-between">
+																													<span>Correct Answer:</span>
+																													<input class="form-control" type="text" name="txtCorrectAnswerText" id="txtCorrectAnswerText" placeholder="Enter the value of the correct answer" data-id="<?=$question->id?>" value="<?= ($question->correctAnswer == null || $question->correctAnswer == "") ? "" : $question->correctAnswer ?>">
+																												</div>
+																											</li>
+
+																										</ul>
+																										
+																									</div>
+																									<!-- End of More Options Drawer -->
+
+																									<div class="dropdown btn-add-question-bottom">
+																										<button class="btn btn-light dropdown-toggle" type="button" id="btn-add-question-bottom" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+																										<i class="fa fa-plus"></i>
+																										</button>
+																										<div class="dropdown-menu" aria-labelledby="btn-add-question-bottom">
+																											<a href="<?= base_url() ?>survey/add/question/<?= $this->uri->segment(3) ?>/9" class="dropdown-item" id="add-question-bottom">Welcome Screen</a>
+																											<a href="<?= base_url() ?>survey/add/question/<?= $this->uri->segment(3) ?>/1" class="dropdown-item" id="add-question-bottom">Short Text</a>
+																											<a href="<?= base_url() ?>survey/add/question/<?= $this->uri->segment(3) ?>/2" class="dropdown-item" id="add-question-bottom">Long Text</a>
+																											<a href="<?= base_url() ?>survey/add/question/<?= $this->uri->segment(3) ?>/3" class="dropdown-item" id="add-question-bottom">Single Choice Answer</a>
+																											<a href="<?= base_url() ?>survey/add/question/<?= $this->uri->segment(3) ?>/4" class="dropdown-item" id="add-question-bottom">Multiple Choice Answer</a>
+																											<a href="<?= base_url() ?>survey/add/question/<?= $this->uri->segment(3) ?>/5" class="dropdown-item" id="add-question-bottom">Email Type</a>
+																											<a href="<?= base_url() ?>survey/add/question/<?= $this->uri->segment(3) ?>/6" class="dropdown-item" id="add-question-bottom">Number Type</a>
+																											<a href="<?= base_url() ?>survey/add/question/<?= $this->uri->segment(3) ?>/7" class="dropdown-item" id="add-question-bottom">Image Type</a>
+																											<a href="<?= base_url() ?>survey/add/question/<?= $this->uri->segment(3) ?>/8" class="dropdown-item" id="add-question-bottom">Phone Number Type</a>
+																										</div>
+																									</div>
+
+																								</div>
+
+																							<?= form_close(); ?>
+
+
+																						</div>
+																					</div>
+																				</div>
+																				<!-- end of container -->
+																			<?php
+																		}
+
+																		?>
+																		
+																		
+																	<?php };?>
+																</div>
+															<?php
+														}
+													?>
 												</div>
 												<div class="col-xs-12 col-sm-12 col-md-6 px-3">
-													<iframe src="<?php echo base_url()?>survey/preview/<?php echo $survey->id?>?mode=preview&src=results" frameborder="0" style="width: 100%; height: 400px;"></iframe>
-													<a href="<?php echo base_url()?>survey/preview/<?php echo $survey->id?>?mode=preview" class="btn btn-primary btn-block text-center" target="_blank"><i class="fa fa-eye"></i> Preview on another page</a>
+													<iframe src="<?php echo base_url()?>survey/preview/<?php echo $survey->id?>?mode=preview&src=results" frameborder="0" style="width: 100%; height: 600px"></iframe>
+													<a href="<?php echo base_url()?>survey/preview/<?php echo $survey->id?>?mode=preview" class="btn btn-outline-primary btn-block text-center" target="_blank"><i class="fa fa-eye"></i> Preview on another page</a>
 												</div>
 											</div>
 									</div>
 
 									<!-- logic tab -->
-									<div class="tab-pane fade" id="logic-box"></div>
+									<div class="tab-pane fade" id="logic-box">
+										<h2>Logic settings</h2>
+										<div class="row">
+
+											<div class="col-xs-12 col-md-6">
+
+														<!-- title of the question selected -->
+														<div class="card">
+															<div class="card-content">
+																<h5 class="card-title d-flex">
+																	<i class="icon-design fa fa-cog" style="background-color: #ff5555;"><strong class="px-1">1</strong></i> question text here
+																	
+																		<label class="text-danger" id="required-asterisk-<?= $question->id ?>">*</label>
+																	
+																</h5>
+															</div>
+														</div>
+
+														<!-- if question has no logic -->
+														<div class="card">
+															<div class="card-content">
+																<div class="d-flex w-100 justify-content-between">
+																	<h6 class="card-title">
+																		Show different questions based on people's answers.
+																	</h6>
+																	<button id="btn-add-logic-jump" class="btn btn-primary">Add Logic jump</button>
+																</div>
+															</div>
+														</div>
+														<script>
+															document.querySelector("#btn-add-logic-jump").addEventListener('click', () => {
+																console.log("sending data");
+																let data = {
+																	'surveyId': <?=$survey->id?>
+																}
+																$.ajax({
+																	url: surveyBaseUrl + 'survey/logic/add',
+																	data: data,
+																	type: 'POST',
+																	dataType: 'json',
+																	success: function(res){
+																		window.alert("Logic added to this question");
+																	}
+																});
+															})
+														</script>
+														<!-- end if -->
+
+														<!-- if question has logic -->
+														<div class="card">
+															<div class="card-content">
+																<span>When someone answers this question:</span>
+																<hr/>
+																<!-- <div class="justify-content-between"> -->
+
+																	<div class="d-flex w-100 ">
+																		<h5 class="card-title">if</h5>
+																		<select class="custom-select" name="selectIfQuestionFrom" id="selectIfQuestionFrom">
+																			<option value="asdf"><i class="icon-design fa fa-cog" style="background-color: #ff5555;"><strong class="px-1">1</strong></i> question text here</option>
+																			<option value="asdf"><i class="icon-design fa fa-cog" style="background-color: #ff5555;"><strong class="px-1">1</strong></i> question text here</option>
+																			<option value="asdf"><i class="icon-design fa fa-cog" style="background-color: #ff5555;"><strong class="px-1">1</strong></i> question text here</option>
+																		</select>
+																		
+																		<select class="custom-select" name="selectCondition" id="selectCondition">
+																			<option value="asdf">is equal to </option>
+																			<option value="asdf">is not equal to </option>
+																			<option value="asdf">begins with</option>
+																			<option value="asdf">ends with</option>
+																			<option value="asdf">contains</option>
+																			<option value="asdf">does not contain</option>
+																		</select>
+																	</div>
+
+																	<div class="d-flex w-100 justify-content-left">
+																		<select name="selectifQuestionTo" id="selectIfQuestionTo" class="custom-select">
+																			<option value="asdf"><i class="icon-design fa fa-cog" style="background-color: #ff5555;"><strong class="px-1">1</strong></i> question text here</option>
+																			<option value="asdf"><i class="icon-design fa fa-cog" style="background-color: #ff5555;"><strong class="px-1">1</strong></i> question text here</option>
+																			<option value="asdf"><i class="icon-design fa fa-cog" style="background-color: #ff5555;"><strong class="px-1">1</strong></i> question text here</option>
+																		</select>
+																		<button class="btn btn-secondary btn-sm">+</button>
+																	</div>
+																	<hr/>
+																	<div class="d-flex w-100 justify-content-left">
+																		<span>Then jump to</span>
+																		<select class="custom-select" name="selectJumpToQuestion" id="selectJumpToQuestion">
+																			<option value="asdf"><i class="icon-design fa fa-cog" style="background-color: #ff5555;"><strong class="px-1">1</strong></i> question text here</option>
+																			<option value="asdf"><i class="icon-design fa fa-cog" style="background-color: #ff5555;"><strong class="px-1">1</strong></i> question text here</option>
+																			<option value="asdf"><i class="icon-design fa fa-cog" style="background-color: #ff5555;"><strong class="px-1">1</strong></i> question text here</option>
+																		</select>
+																	</div>
+																	
+																<!-- </div> -->
+															</div>
+														</div>
+
+
+														<div class="card">
+															<div class="card-content">
+																<div class="d-flex w-100 justify-content-between">
+																	<p>Always jump to</p>
+																	<select name="selectJumpToQuestion" id="selectJumpToQuestion" class="custom-select">
+																		<option value="keme">root</option>
+																		<option value="keme">root</option>
+																		<option value="keme">root</option>
+																		<option value="keme">root</option>
+																		<option value="keme">root</option>
+																	</select>
+																</div>
+															</div>
+														</div>
+											</div>
+
+											<div class="col-xs-12 col-md-6">
+												<div class="row" id="card-order-list">
+													<?php foreach($questions as $key =>  $question){ 
+														if($question->template_id == 20){
+															?>
+															<div id="container-<?=$question->id?> card-group-questions-list" class="col-sm-12">
+																<div class="card">
+																	<div class="card-body p-0">
+																	drag here	
+																	</div>
+																</div>
+															</div>
+															<?php
+														}else{
+															?>
+																<div id="container-<?= $question->id ?>" class="col-sm-12">
+																	<div class="card" onclick="selectQuestion(<?=$question->id?>)">
+																		<div class="card-body p-0">
+																				<span>
+																					<h5 class="card-title d-flex">
+																						<i class="icon-design <?= $question->template_icon ?>" style="background-color:<?= $question->template_color ?>;"><strong class="px-1"><?=$key?></strong></i> <?= $question->template_title ?>
+																						<?php if($question->required == 1){ ?>
+																							<label class="text-danger" id="required-asterisk-<?= $question->id ?>">*</label>
+																						<?php }; ?>:
+																					</h5>
+																					<?= $question->question ?>
+																				</span>
+																				<hr/>
+																		</div>
+																	</div>
+																</div>
+																
+															<?php
+														}
+
+														?>
+
+														<script>
+															selectQuestion = question_id => {
+																console.log(question_id);
+															}
+														</script>
+														
+														
+													<?php };?>
+												</div>
+											</div>
+										</div>
+										<script>
+										</script>
+									</div>
 
 									<!-- themes tab -->
 									<div class="tab-pane fade" id="themes-box">
@@ -344,20 +684,7 @@
 												<div data-id="<?php $theme->sth_rec_no?>" class="col-xs-12 col-sm-4">
 													<a href="<?= base_url()?>survey/themes/select/<?= $survey->id?>/<?= $theme->sth_rec_no ?>">
 														<div class="card theme-card">
-																<?php 
-																	if( $theme->company_id > 0 ){
-										                              $image = base_url('./uploads/survey/themes/'.$theme->company_id.'/'.$theme->sth_primary_image);
-										                              $path  = './uploads/survey/themes/'.$theme->company_id.'/'.$theme->sth_primary_image;
-										                            }else{
-										                              $image = base_url('./uploads/survey/themes/'.$theme->sth_primary_image);
-										                              $path  = './uploads/survey/themes/'.$theme->sth_primary_image;
-										                            }
-
-										                            if( !file_exists($path) ){
-										                              $image = base_url('./uploads/survey/themes/default_theme_img.jpg'); 
-										                            }
-																?>
-																<img src="<?= $image; ?>" style="<?= $theme->sth_primary_image_class?>" alt="<?= $theme->sth_primary_image?>" class="theme-image">
+																<img src="<?= base_url()?>uploads/survey/themes/<?= $theme->sth_primary_image?>" style="<?= $theme->sth_primary_image_class?>" alt="<?= $theme->sth_primary_image?>" class="theme-image">
 																<div class="theme-info">
 																	<div class="card-body">
 																		<h4 style="color: <?= $theme->sth_text_color?>">
@@ -385,108 +712,82 @@
 									<!-- settings tab -->
 									<div class="tab-pane fade " id="settings-box">
 										<h2>Survey Settings</h2>
-										<form id="survery-settings">
-										<input type="hidden" name="sid" id="settings-sid" value="<?= $survey->id; ?>">
 										<ul class="list-group">
 											<li class="list-group-item">
-												<div class="row">
-													<div class="col-2">
-														<span class="settings-label">Survey Name</span>
-													</div>
-													<div class="col-5" style="padding-left: 0px;">
-														<input type="text" name="txtSurveyTitle" class="form-control" id="txtSurveyTitle" data-id="<?=$survey->id?>" value="<?= $survey->title?>">
-													</div>
-												</div>
-											</li>
-											<li class="list-group-item">
-												<div class="row">
-													<div class="col-2">
-														<span>Survey Workspace</span>
-													</div>
-													<div class="col-5" style="padding-left: 0px;">
-														<select name="selWorkspace" id="selWorkspace" class="custom-select">
-															<?php
-																if($survey->workspace_id == 0 || $survey->workspace_id == ""){
-																	?>
-																		<option disabled selected value="0">Select workspace</option>
-																	<?php
-																}
-																foreach($survey_workspaces as $key => $workspace){
-																	?>
-																		<option onclick="selectWorkspace(<?=$workspace->id?>)" <?= ($survey->workspace_id === $workspace->id)?"selected":""?> value="<?=$workspace->id?>"><?=$workspace->name?></option>
-																	<?php
-																}
-															?>
-														</select>
-													</div>
-												</div>
-											</li>
-											<li class="list-group-item">
-												<div class="row">
-													<div class="col-2">
-														<span>Show Progress</span>
-													</div>
-													<div class="col-5" style="padding-left: 0px;">
-														<div class="form-check">
-															<input 	<?= ($survey->hasProgressBar == 1) ? "checked" : ""; ?> name="show_progress" type="checkbox" class="form-check-input" value="hasProgressBar" data-id="<?= $survey->id ?>" id="hasProgressBar<?= $survey->id ?>">
-														</div>
-													</div>
-												</div>												
-											</li>
-											<li class="list-group-item">
-												<div class="row">
-													<div class="col-2">
-														<span>Redirect on complete</span>	
-													</div>
-													<div class="col-5" style="padding-left: 0px;">
-														<div class="form-check">
-															<input <?= ($survey->canRedirectOnComplete == 1) ? "checked" : ""; ?> type="checkbox" class="form-check-input chk-redirect-oncomplete" data-id="<?= $survey->id; ?>" name="can_redirect_oncomplete" value="canRedirectOnComplete" data-id="<?= $survey->id ?>" id="canRedirectOnComplete<?= $survey->id ?>">
-														</div>
-													</div>
-												</div>
-											</li>
-											<li class="list-group-item" style="display: none;">												
 												<div class="d-flex w-100 justify-content-between">
-													<span class="settings-label">Use Background Image <em class="text-muted"><small>NOTE: This works when a custom image is uploaded and existing</small></em></span>
+													<span>Survey Name</span>
+													<input type="text" name="txtSurveyTitle" class="form-control" id="txtSurveyTitle" data-id="<?=$survey->id?>" value="<?= $survey->title?>">
+												</div>
+											</li>
+											<li class="list-group-item">
+												<div class="d-flex w-100 justify-content-between">
+													<span>Survey Workspace</span>
+													<select name="selWorkspace" id="selWorkspace" class="custom-select">
+
+														<?php
+															if($survey->workspace_id == 0 || $survey->workspace_id == ""){
+																?>
+																	<option disabled selected value="0">Select workspace</option>
+																<?php
+															}
+															foreach($survey_workspaces as $key => $workspace){
+																?>
+																	<option onclick="selectWorkspace(<?=$workspace->id?>)" <?= ($survey->workspace_id === $workspace->id)?"selected":""?> value="<?=$workspace->id?>"><?=$workspace->name?></option>
+																<?php
+															}
+														?>
+													</select>
+												</div>
+											</li>
+											<li class="list-group-item">
+												<div class="d-flex w-100 justify-content-between">
+													<span>Show Progress</span>
+													<div class="form-check">
+														<input 	<?= ($survey->hasProgressBar == 1) ? "checked" : ""; ?> type="checkbox" class="form-check-input" value="hasProgressBar" data-id="<?= $survey->id ?>" id="hasProgressBar<?= $survey->id ?>">
+													</div>
+												</div>
+											</li>
+											<li class="list-group-item">
+												<div class="d-flex w-100 justify-content-between">
+													<span>Redirect on complete</span>
+													<div class="form-check">
+														<input <?= ($survey->canRedirectOnComplete == 1) ? "checked" : ""; ?> type="checkbox" class="form-check-input" value="canRedirectOnComplete" data-id="<?= $survey->id ?>" id="canRedirectOnComplete<?= $survey->id ?>">
+													</div>
+												</div>
+											</li>
+											<li class="list-group-item">
+												<div class="d-flex w-100 justify-content-between">
+													<span>Use Background Image <em class="text-muted"><small>NOTE: This works when a custom image is uploaded and existing</small></em></span>
 													<div class="form-check">
 														<input <?= ($survey->useBackgroundImage == 1) ? "checked" : ""; ?> type="checkbox" class="form-check-input" value="useBackgroundImage" data-id="<?= $survey->id ?>" id="useBackgroundImage<?= $survey->id ?>">
 													</div>
 												</div>
 											</li>
-											<li class="list-group-item" style="display:none;">
+											<li class="list-group-item">
 												<div class="d-flex w-100 justify-content-between">
-													<span class="settings-label">Background Image: <strong id="customImageBackgroundName"><?= ($survey->backgroundImage === "") ? "none" : $survey->backgroundImage?></strong></span>
+													<span>Background Image: <strong id="customImageBackgroundName"><?= ($survey->backgroundImage === "") ? "none" : $survey->backgroundImage?></strong></span>
 													<?= form_open('survey/upload/custombackgroundimage/'.$survey->id, array('id' => 'form-upload-custom-image-background'))?>
 														<input type="file" value="useCustomBackgroundImage" name="useCustomBackgroundImage" data-id="<?= $survey->id ?>" id="useCustomBackgroundImage<?= $survey->id ?>">
 													<?= form_close();?>
 												</div>
 											</li>
 											<li class="list-group-item">
-												<div class="row">
-													<div class="col-2">
-														<span>Redirection Link</span>
-													</div>
-													<div class="col-5" style="padding-left:0px;">
-														<input type="text" <?= ($survey->canRedirectOnComplete == 0) ? "disabled" : "" ?> name="txtRedirectionLink" class="form-control" id="txtRedirectionLink" data-id="<?=$survey->id?>" value="<?= $survey->redirectionLink?>" placeholder="https://..">
-													</div>
+												<div class="d-flex w-100 justify-content-between">
+													<span>Redirection Link</span>
+													<input type="text" <?= ($survey->canRedirectOnComplete == 0) ? "disabled" : "" ?> name="txtRedirectionLink" class="form-control" id="txtRedirectionLink" data-id="<?=$survey->id?>" value="<?= $survey->redirectionLink?>" placeholder="https://..">
 												</div>
 											</li>
 											
 											<li class="list-group-item">
-												<div class="row">
-													<div class="col-2">
-														<span>Count Scores</span>
-													</div>
-													<div class="col-5" style="padding-left:0px;">
-														<div class="form-check">
-															<input <?= ($survey->isScoreMonitored == 1) ? "checked" : ""; ?> type="checkbox" name="isScoreMonitored" id="isScoreMonitored<?=$survey->id?>" class="form-check-input" value="isScoreMonitored"  data-id="<?=$survey->id?>" value="<?= $survey->isScoreMonitored?>">
-														</div>
+												<div class="d-flex w-100 justify-content-between">
+													<span>Count Scores</span>
+													<div class="form-check">
+														<input <?= ($survey->isScoreMonitored == 1) ? "checked" : ""; ?> type="checkbox" name="isScoreMonitored" id="isScoreMonitored<?=$survey->id?>" class="form-check-input" value="isScoreMonitored"  data-id="<?=$survey->id?>" value="<?= $survey->isScoreMonitored?>">
 													</div>
 												</div>
-												<button class="btn btn-primary btn-block btn-survey-update-settings" type="button" style="margin-top:39px;width: 57%;">Save Changes</button>
+												<!-- <button class="btn btn-success btn-block">Save Changes</button> -->
 											</li>
 										</ul>
-										</form>
 									</div>
 									
 									<!-- respondent access tab -->
@@ -567,65 +868,10 @@
 	</div>
 
 </div>
-<script>
 
-</script>
 <?php include viewPath('includes/footer'); ?>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dragula/3.7.2/dragula.min.js"></script>
 <script>
-	$(function(){
-	   questions_list('<?= $survey->id; ?>');
-	   function questions_list(survey_id){
-		  var url =  surveyBaseUrl + 'survey/_load_survey_questions';
-		  $.ajax({
-		    url: url,
-		    data: {survey_id:survey_id},
-		    type: 'POST',
-		    success: function(res){
-		      $('#card-order-list').html(res);
-		    }
-		  });
-		}
-
-		dragula([document.getElementById('card-order-list')])
-		  .on('drag', function (el, target,source,sibling) {
-		  }).on('drop', function (el, target,source,sibling) {
-		    saveQuestionOrder();
-		});
-
-		// saves the order of the questions
-		saveQuestionOrder = () => {
-			var number = [];
-	    $.each($('#card-order-list .col-sm-12'), function(key, value){
-				number.push(value.id.split("-")[1]);
-	    });
-	    $.ajax({
-	      url: base_url + '/survey/order/question',
-	      data: { 'id': number },
-	      dataType: 'json',
-	      type: 'POST',
-	      success: function(res){
-	        toastr["success"]("Order Successfully Update!");
-	      }
-	    })
-		}
-	}); 
-	
-	$(document).on('click', '.tab-logic', function(e){
-		var survey_id = $(this).attr('data-id');
-		var url =  surveyBaseUrl + 'survey/_load_survey_logic_jump';
-
-		$("#logic-box").html('<span class="spinner-border spinner-border-sm m-0"></span>');
-
-		  $.ajax({
-		    url: url,
-		    data: {survey_id:survey_id},
-		    type: 'POST',
-		    success: function(res){
-		      $('#logic-box').html(res);
-		    }
-		  });
-	});
 
 	currentOrder = document.querySelector('#card-order-list').innerHTML;
 	currentSettings = {
@@ -692,6 +938,23 @@
 			saveAllSettings();
 		}, 1500);
 	})
+
+	// saves the order of the questions
+	saveQuestionOrder = () => {
+		var number = [];
+    $.each($('#card-order-list .col-sm-12'), function(key, value){
+			number.push(value.id.split("-")[1]);
+    });
+    $.ajax({
+      url: surveyBaseUrl + '/survey/order/question',
+      data: { 'id': number },
+      dataType: 'json',
+      type: 'POST',
+      success: function(res){
+        toastr["success"]("Order Successfully Update!");
+      }
+    })
+	}
 	
 	$(document).on('click', '#btnRestoreSettings', function(e){
 		document.querySelector('#card-order-list').innerHTML = currentOrder;
@@ -775,6 +1038,13 @@
 	// dragula([].slice.apply(document.querySelectorAll('.card-order-list')),{
 	// 		direction: 'vertical'
 	// });
+
+  dragula([document.getElementById('card-order-list')])
+  .on('drag', function (el, target,source,sibling) {
+  }).on('drop', function (el, target,source,sibling) {
+    saveQuestionOrder();
+  });
+
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-<!-- <script type="text/javascript" src="<?=base_url()?>/assets/js/survey.js"></script> -->
+<script type="text/javascript" src="<?=base_url()?>/assets/js/survey.js"></script>

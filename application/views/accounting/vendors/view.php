@@ -8,15 +8,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         background-color: #32243D;
         border: 1px solid #32243D;
     }
+    #transactions-table tbody td:nth-child(2) a:hover {
+        text-decoration: underline;
+        color: #38a4f8 !important;
+    }
     #transactions-table .btn-group .btn:hover, #transactions-table .btn-group .btn:focus {
         color: unset;
     }
     #transactions-table .btn-group .btn {
         padding: 10px;
-    }
-    #transactions-table .view-attachment:hover {
-        background-color: #365ebf;
-        color: #fff;
     }
     #myTabContent .tab-pane {
         padding: 15px;
@@ -32,18 +32,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     #myTabContent #details .card:hover h5.edit-icon {
         display: block;
     }
-    #myTabContent .action-bar ul li a:after {
-        width: 0;
+    span.select2-selection.select2-selection--single {
+        min-width: unset !important;
     }
-    #myTabContent .action-bar ul li a {
-    font-size: 20px;
-    }
-    #myTabContent .action-bar ul li {
-        margin-right: 5px;
-    }
-	#myTabContent .action-bar ul li .dropdown-menu a {
-		font-size: 14px;
-	}
     .btn-transparent:hover {
         background: #d4d7dc !important;
         border-color: #6B6C72 !important;
@@ -60,11 +51,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     }
     .notes-container:hover {
         border-color: #dee2e6;
-    }
-    .dropdown-menu .dropdown-item.disabled {
-        cursor: default;
-        opacity: 0.50;
-        pointer-events: none;
     }
 </style>
 <?php include viewPath('includes/header'); ?>
@@ -84,17 +70,21 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="card-body hid-desk" style="padding-bottom:0px;">
                             <div class="row">
                                 <div class="col-sm-6">
-                                    <h3 class="page-title" style="margin: 0 !important">
-                                        <span id="vendor-display-name"><?=$vendorDetails->display_name?></span>
-                                        <?php if($vendorDetails->email !== "" && $vendorDetails->email !== null) : ?>
-                                            <small><a href="mailto: <?=$vendorDetails->email?>"><i class="fa fa-envelope-o"></i></a></small>
-                                        <?php endif; ?>
-                                    </h3>
+                                    <h3 class="page-title" style="margin: 0 !important">Vendors</h3>
                                 </div>
                                 <!-- <div class="col-sm-12">
                                     <div class="alert alert-warning mt-4 mb-4" role="alert">
                                         <span style="color:black;">See how easy paying and tracking contractors can be. This accounting features makes it easy to pay contractors today & W-2 employees tomorrow.  Get started by adding a Contractor.</span>
                                     </div>
+                                </div> -->
+                            </div>
+                            <div class="row pb-3">
+                                <!-- <div class="col-md-12 banking-tab-container">
+									<a href="<?php //echo url('/accounting/payroll-overview')?>" class="banking-tab ">Overview</a>
+									<a href="<?php //echo url('/accounting/employees')?>" class="banking-tab">Employees</a>
+									<a href="<?php //echo url('/accounting/contractors')?>" class="banking-tab-active text-decoration-none">Contractors</a>
+									<a href="<?php //echo url('/accounting/workers-comp')?>" class="banking-tab">Worker's Comp</a>
+									<a href="#" class="banking-tab">Benefits</a>
                                 </div> -->
                             </div>
                             <div class="row align-items-center">
@@ -104,19 +94,19 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <div class="col-sm-6">
                                     <div class="float-right d-none d-md-block">
                                         <div class="dropdown show">
-                                            <button class="btn btn-transparent px-4 mr-2 edit-vendor">Edit</button>
+                                            <button class="btn btn-transparent px-4 mr-2" data-toggle="modal" data-target="#edit-vendor-modal">Edit</button>
                                             <div class="btn-group float-right">
                                                 <button type="button" class="btn btn-success dropdown-toggle hide-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                     New transaction &nbsp;&nbsp;&nbsp;<i class="fa fa-caret-down"></i>
                                                 </button>
                                                 <div class="dropdown-menu">
-                                                    <a class="dropdown-item" href="#" id="new-time-activity">Time activity</a>
-                                                    <a class="dropdown-item" href="#" id="new-bill-transaction">Bill</a>
-                                                    <a class="dropdown-item" href="#" id="new-expense-transaction">Expense</a>
-                                                    <a class="dropdown-item" href="#" id="new-check-transaction">Check</a>
-                                                    <a class="dropdown-item" href="#" id="new-purchase-order-transaction">Purchase order</a>
-                                                    <a class="dropdown-item" href="#" id="new-vendor-credit-transaction">Vendor credit</a>
-                                                    <a class="dropdown-item" href="#" id="new-credit-card-pmt">Pay down credit card</a>
+                                                    <a class="dropdown-item" href="#">Time activity</a>
+                                                    <a class="dropdown-item" href="#">Bill</a>
+                                                    <a class="dropdown-item" href="#">Expense</a>
+                                                    <a class="dropdown-item" href="#">Check</a>
+                                                    <a class="dropdown-item" href="#">Purchase order</a>
+                                                    <a class="dropdown-item" href="#">Vendor credit</a>
+                                                    <a class="dropdown-item" href="#">Pay down credit card</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -127,9 +117,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <div class="col-sm-6">
                                             <div class="row h-100">
                                                 <div class="col-md-6">
-                                                    <p><?=$vendorDetailsAddress?></p>
-                                                    <div class="cursor-pointer h-75 p-3 notes-container">
-                                                        <?=$vendorDetails->notes !== null && $vendorDetails->notes !== "" ? $vendorDetails->notes : "No notes available. Please click to add note"?>
+                                                    <div class="cursor-pointer h-100 p-3 notes-container">
+                                                        <?=$vendor->notes !== null && $vendor->notes !== "" ? $vendor->notes : "No notes available. Please click to add note"?>
                                                     </div>
                                                 </div>
                                             </div>
@@ -139,14 +128,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <div class="d-flex align-items-center mb-3">
                                                     <div class="open-pay-color" style="border-color: #f2b835; background: #f2b835; width: 5px; height: 45px;"></div>
                                                     <div class="open-pay ml-2">
-                                                        <h4 class="m-0">$<span id="total-open-pay"><?=number_format($openBalance, 2, '.', ',')?></span></h4>
+                                                        <h4 class="m-0">$<span id="total-open-pay">0.00</span></h4>
                                                         <p class="m-0">OPEN</p>
                                                     </div>
                                                 </div>
                                                 <div class="d-flex align-items-center mb-3">
                                                     <div class="overdue-color" style="border-color: #ce5133; background: #ce5133; width: 5px; height: 45px;"></div>
                                                     <div class="overdue-pay ml-2">
-                                                        <h4 class="m-0">$<span id="total-overdue-pay"><?=number_format($overdueBalance, 2, '.', ',')?></span></h4>
+                                                        <h4 class="m-0">$<span id="total-overdue-pay">0.00</span></h4>
                                                         <p class="m-0">OVERDUE</p>
                                                     </div>
                                                 </div>
@@ -175,8 +164,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                         <div class="tab-content" id="myTabContent">
                             <div class="tab-pane fade" id="transaction-list" role="tabpanel" aria-labelledby="transaction-list-tab">
-                                <input type="hidden" name="vendor_id" id="vendor-id" value="<?=$vendorDetails->id?>">
-                                <div class="card p-0">
+                                <input type="hidden" name="vendor_id" id="vendor-id" value="<?=$vendor->id?>">
+                                <div class="card">
                                     <div class="card-body p-0">
                                         <div class="row">
                                             <div class="col-sm-6">
@@ -191,8 +180,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                             </button>
 
                                                             <div class="dropdown-menu" aria-labelledby="statusDropdownButton">
-                                                                <a href="#" class="dropdown-item disabled" id="print-transactions">Print transactions</a>
-                                                                <a href="#" class="dropdown-item disabled" id="categorize-selected">Categorize selected</a>
+                                                                <a href="#" class="dropdown-item">Print transactions</a>
+                                                                <a href="#" class="dropdown-item">Categorize selected</a>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -203,7 +192,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                             <div class="dropdown-menu p-3" aria-labelledby="filterDropdown">
                                                                 <div class="inner-filter-list">
                                                                     <div class="row">
-                                                                        <div class="col-md-8">
+                                                                        <div class="col-md-6">
                                                                             <div class="form-group">
                                                                                 <label for="type">Type</label>
                                                                                 <select name="template_type" id="template-type" class="form-control">
@@ -252,67 +241,29 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <div class="col-sm-6">
                                                 <div class="action-bar h-100 d-flex align-items-center">
                                                     <ul class="ml-auto">
-                                                        <li><a href="#" id="print-transactions"><i class="fa fa-print"></i></a></li>
-                                                        <li>
-                                                            <form action="/accounting/vendors/<?=$vendorDetails->id?>/export-transactions" method="post" id="export-transactions-form">
-                                                                <a href="#" id="export-vendor-transactions"><i class="fa fa-download"></i></a>
-                                                            </form>
-                                                        </li>
+                                                        <li><a href="#" onclick = "window.print()"><i class="fa fa-print"></i></a></li>
+                                                        <li><a href="#"><i class="fa fa-download"></i></a></li>
                                                         <li>
                                                             <a class="hide-toggle dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                                 <i class="fa fa-cog"></i>
                                                             </a>
                                                             <div class="dropdown-menu p-3" aria-labelledby="dropdownMenuLink">
                                                                 <p class="m-0">Columns</p>
-                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                    <input type="checkbox" id="method_chk" onchange="showCol(this)">
-                                                                    <label for="method_chk">Method</label>
-                                                                </div>
-                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                    <input type="checkbox" id="source_chk" onchange="showCol(this)">
-                                                                    <label for="source_chk">Source</label>
-                                                                </div>
-                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                    <input type="checkbox" id="due_date_chk" onchange="showCol(this)">
-                                                                    <label for="due_date_chk">Due date</label>
-                                                                </div>
-                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                    <input type="checkbox" id="balance_chk" onchange="showCol(this)">
-                                                                    <label for="balance_chk">Balance</label>
-                                                                </div>
-                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                    <input type="checkbox" id="status_chk" onchange="showCol(this)">
-                                                                    <label for="status_chk">Status</label>
-                                                                </div>
-                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                    <input type="checkbox" id="attachments_chk" onchange="showCol(this)">
-                                                                    <label for="attachments_chk">Attachments</label>
-                                                                </div>
-                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                    <input type="checkbox" id="type_chk" onchange="showCol(this)" checked>
-                                                                    <label for="type_chk">Type</label>
-                                                                </div>
-                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                    <input type="checkbox" id="number_chk" onchange="showCol(this)" checked>
-                                                                    <label for="number_chk">No.</label>
-                                                                </div>
-                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                    <input type="checkbox" id="payee_chk" onchange="showCol(this)" checked>
-                                                                    <label for="payee_chk">Payee</label>
-                                                                </div>
-                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                    <input type="checkbox" id="category_chk" onchange="showCol(this)" checked>
-                                                                    <label for="category_chk">Category</label>
-                                                                </div>
-                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                    <input type="checkbox" id="memo_chk" onchange="showCol(this)" checked>
-                                                                    <label for="memo_chk">Memo</label>
-                                                                </div>
+                                                                <p class="m-0"><input type="checkbox" id="method_chk" onchange="showCol(this)"> Method</p>
+                                                                <p class="m-0"><input type="checkbox" id="source_chk" onchange="showCol(this)"> Source</p>
+                                                                <p class="m-0"><input type="checkbox" id="due_date_chk" onchange="showCol(this)"> Due date</p>
+                                                                <p class="m-0"><input type="checkbox" id="balance_chk" onchange="showCol(this)"> Balance</p>
+                                                                <p class="m-0"><input type="checkbox" id="status_chk" onchange="showCol(this)"> Status</p>
+                                                                <p class="m-0"><input type="checkbox" id="attachments_chk" onchange="showCol(this)"> Attachments</p>
+                                                                <p class="m-0"><input type="checkbox" id="type_chk" onchange="showCol(this)" checked> Type</p>
+                                                                <p class="m-0"><input type="checkbox" id="number_chk" onchange="showCol(this)" checked> No.</p>
+                                                                <p class="m-0"><input type="checkbox" id="payee_chk" onchange="showCol(this)" checked> Payee</p>
+                                                                <p class="m-0"><input type="checkbox" id="category_chk" onchange="showCol(this)" checked> Category</p>
+                                                                <p class="m-0"><input type="checkbox" id="memo_chk" onchange="showCol(this)" checked> Memo</p>
+                                                                <p class="m-0">Other</p>
+                                                                <p class="m-0"><input type="checkbox" id="inc_inactive" value="1"> Include Inactive</p>
                                                                 <p class="m-0">Rows</p>
-                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                    <input type="checkbox" id="compact_chk">
-                                                                    <label for="compact_chk">Compact</label>
-                                                                </div>
+                                                                <p class="m-0"><input type="checkbox" id="compact_chk"> Compact</p>
                                                             </div>
                                                         </li>
                                                     </ul>
@@ -324,14 +275,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <table id="transactions-table" class="table table-bordered table-hover" style="width:100%">
                                                     <thead>
                                                         <tr>
-                                                            <th width="3%">
-                                                                <div class="d-flex justify-content-center">
-                                                                    <div class="checkbox checkbox-sec m-0">
-                                                                        <input type="checkbox" id="select-all-transactions">
-                                                                        <label for="select-all-transactions" class="p-0" style="width: 24px; height: 24px"></label>
-                                                                    </div>
-                                                                </div>
-                                                            </th>
+                                                            <th width="3"><input type="checkbox"></th>
                                                             <th>Date</th>
                                                             <th class="type">Type</th>
                                                             <th class="number">No.</th>
@@ -344,11 +288,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                             <th class="balance hide">Balance</th>
                                                             <th>Total</th>
                                                             <th class="status hide">Status</th>
-                                                            <th width="3%" class="attachments hide"><i class="fa fa-paperclip"></i></th>
+                                                            <th class="attachments hide">Attachments</th>
                                                             <th width="5%">Action</th>
                                                         </tr>
                                                     </thead>
-                                                    <tbody class="cursor-pointer"></tbody>
+                                                    <tbody></tbody>
                                                 </table>
                                             </div>
                                         </div>
@@ -358,7 +302,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div class="tab-pane fade show active" id="vendor-details" role="tabpanel" aria-labelledby="vendor-details-tab">
                                 <div class="row">
                                     <div class="col-sm-12">
-                                        <button class="btn btn-transparent px-4 float-right edit-vendor">Edit</button>
+                                        <button class="btn btn-transparent px-4 float-right" data-toggle="modal" data-target="#edit-vendor-modal">Edit</button>
                                     </div>
                                     <div class="col-sm-11">
                                         <div class="row">
@@ -367,27 +311,27 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     <tbody>
                                                         <tr>
                                                             <td>Vendor</td>
-                                                            <td><?=$vendorDetails->display_name?></td>
+                                                            <td><?=$vendor->display_name?></td>
                                                         </tr>
                                                         <tr>
                                                             <td>Email</td>
-                                                            <td><?=$vendorDetails->email?></td>
+                                                            <td><?=$vendor->email?></td>
                                                         </tr>
                                                         <tr>
                                                             <td>Phone</td>
-                                                            <td><?=$vendorDetails->phone?></td>
+                                                            <td><?=$vendor->phone?></td>
                                                         </tr>
                                                         <tr>
                                                             <td>Mobile</td>
-                                                            <td><?=$vendorDetails->mobile?></td>
+                                                            <td><?=$vendor->mobile?></td>
                                                         </tr>
                                                         <tr>
                                                             <td>Fax</td>
-                                                            <td><?=$vendorDetails->fax?></td>
+                                                            <td><?=$vendor->fax?></td>
                                                         </tr>
                                                         <tr>
                                                             <td>Website</td>
-                                                            <td><?=$vendorDetails->website?></td>
+                                                            <td><?=$vendor->website?></td>
                                                         </tr>
                                                         <tr>
                                                             <td class="p-0"></td>
@@ -404,9 +348,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                             <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
                                                         </div>
                                                     </div>
-                                                    <div class="d-flex justify-content-center align-items-center">
-                                                        <a href="#" id="show-existing-attachments" class="text-info">Show existing</a>
-                                                    </div>
                                                 </div>
                                             </div>
                                             <div class="col-sm-6">
@@ -415,9 +356,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         <tr>
                                                             <td>Billing address</td>
                                                             <td>
-                                                                <p class="m-0"><?=$vendorDetails->street?></p>
-                                                                <p class="m-0"><?=$vendorDetails->city?>,<?=$vendorDetails->state?></p>
-                                                                <p class="m-0"><?=$vendorDetails->zip?></p>
+                                                                <p class="m-0"><?=$vendor->street?></p>
+                                                                <p class="m-0"><?=$vendor->city?>,<?=$vendor->state?></p>
+                                                                <p class="m-0"><?=$vendor->zip?></p>
                                                             </td>
                                                         </tr>
                                                         <tr>
@@ -426,13 +367,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         </tr>
                                                         <tr>
                                                             <td>Company</td>
-                                                            <td><?=$vendorDetails->company?></td>
+                                                            <td><?=$vendor->company?></td>
                                                         </tr>
                                                         <tr>
                                                             <td>Notes</td>
                                                             <td>
                                                                 <div class="notes-container w-50">
-                                                                    <textarea name="notes" class="form-control cursor-pointer" disabled><?=$vendorDetails->notes === '' || $vendorDetails->notes === null ? 'No notes available. Please click to add notes.' : $vendorDetails->notes?></textarea>                              
+                                                                    <textarea name="notes" class="form-control cursor-pointer" disabled><?=$vendor->notes === '' || $vendor->notes === null ? 'No notes available. Please click to add notes.' : $vendor->notes?></textarea>                              
                                                                 </div>
                                                             </td>
                                                         </tr>
@@ -459,6 +400,341 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 </div>
 
 <div class="append-modal">
+    <!--    Add vendor modal-->
+    <div id="edit-vendor-modal" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-dialog-centered modal-lg m-auto">
+            <!-- Modal content-->
+            <form action="/accounting/vendors/<?=$vendor->id?>/update" method="post" class="form-validate" novalidate="novalidate" enctype="multipart/form-data">
+            <div class="modal-content max-width">
+                <div class="modal-header" style="border-bottom: 0">
+                    <div class="modal-title">Vendor Information</div>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xl-12">
+                            <div class="card p-0 m-0">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-7">
+                                            <div class="form-ib-group">
+                                                <div class="form-row">
+                                                    <div class="col-sm-2">
+                                                        <div class="form-ib">
+                                                            <label for="title">Title</label>
+                                                            <input type="text" name="title" id="title" class="form-control" value="<?=$vendor->title?>">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col">
+                                                        <div class="form-ib">
+                                                            <label for="f_name">First name</label>
+                                                            <input type="text" name="f_name" id="f_name" class="form-control" value="<?=$vendor->f_name?>">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col">
+                                                        <div class="form-ib">
+                                                            <label for="m_name">Middle name</label>
+                                                            <input type="text" name="m_name" id="m_name" class="form-control" value="<?=$vendor->m_name?>">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col">
+                                                        <div class="form-ib">
+                                                            <label for="l_name">Last name</label>
+                                                            <input type="text" name="l_name" id="l_name" class="form-control" value="<?=$vendor->l_name?>">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-2">
+                                                        <div class="form-ib">
+                                                            <label for="suffix">Suffix</label>
+                                                            <input type="text" name="suffix" id="suffix" class="form-control" value="<?=$vendor->suffix?>">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-ib-group">
+                                                <div class="form-row">
+                                                    <div class="col">
+                                                        <div class="form-ib">
+                                                            <label for="company">Company</label>
+                                                            <input type="text" name="company" id="company" class="form-control" value="<?=$vendor->company?>">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-ib-group">
+                                                <div class="form-row">
+                                                    <div class="col">
+                                                        <div class="form-ib">
+                                                            <label for="display_name"><span class="text-danger">*</span> Display name as</label>
+                                                            <input type="text" name="display_name" id="display_name" class="form-control" required value="<?=$vendor->display_name?>">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-ib-group">
+                                                <div class="form-row">
+                                                    <div class="col">
+                                                        <div class="form-ib">
+                                                            <label for="print_on_check_name" style="margin-right: 10px">Print on check as </label>
+                                                            <input type="checkbox" value="1" name="use_display_name" id="use_display_name" <?=$vendor->to_display === "1" ? "checked" : ""?>><label for="use_display_name" class="ml-3">Use display name</label>
+                                                            <input type="text" name="print_on_check_name" id="print_on_check_name" class="form-control" <?=$vendor->to_display === "1" ? "disabled" : ""?> value="<?=$vendor->print_on_check_name?>">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-ib-group">
+                                                <div class="form-row">
+                                                    <div class="col-12">
+                                                        <div class="form-ib">
+                                                            <label for="street" style="margin-right: 10px">Address</label>
+                                                            <a href="https://www.google.com/maps?q=++++" target="_blank" style="color: #0b97c4;">map</a>
+                                                            <textarea name="street" id="street" cols="30" rows="2" class="form-control" placeholder="Street" required><?=$vendor->street?></textarea>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <div class="form-ib mt-1">
+                                                            <input name="city" type="text" class="form-control" placeholder="City/Town" required value="<?=$vendor->city?>">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <div class="form-ib mt-1">
+                                                            <input name="state" type="text" class="form-control" placeholder="State/Province" required value="<?=$vendor->state?>">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <div class="form-ib mt-1">
+                                                            <input name="zip" type="text" class="form-control" placeholder="ZIP Code" required value="<?=$vendor->zip?>">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <div class="form-ib mt-1">
+                                                            <input name="country" type="text" class="form-control" placeholder="Country" required value="<?=$vendor->country?>">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-ib-group">
+                                                <div class="form-row">
+                                                    <div class="col">
+                                                        <div class="form-ib">
+                                                            <label for="notes">Notes</label>
+                                                            <textarea name="notes" id="notes" cols="30" rows="2" class="form-control"><?=$vendor->notes?></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-ib-group">
+                                                <div class="form-row">
+                                                    <div class="col">
+                                                        <div class="form-ib">
+                                                            <label for="attachment" style="margin-right: 15px"><i class="fa fa-paperclip"></i>&nbsp;Attachment</label> 
+                                                            <span>Maximum size: 20MB</span>
+                                                            <div id="vendorAttachments" class="dropzone" style="border: 1px solid #e1e2e3;background: #ffffff;width: 100%;">
+                                                                <div class="dz-message" style="margin: 20px;border">
+                                                                    <span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
+                                                                    <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
+                                                                </div>
+                                                            </div>
+                                                            <?php if($vendor->attachments !== null && $vendor->attachments !== "") : ?>
+                                                                <?php foreach(json_decode($vendor->attachments, true) as $attachment) : ?>
+                                                                    <input type="hidden" name="attachments[]" value="<?=$attachment?>">
+                                                                <?php endforeach; ?>
+                                                            <?php endif; ?>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-ib-group">
+                                                <h4>Get custom fields with Advanced</h4>
+                                                <p>Custom fields let you add more detailed info about your customers and transactions.
+                                                    Sort, track, and report info that's important to you.
+                                                </p>
+                                                <a href="#" style="color: #0b97c4;">Learn more</a>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <div class="form-ib-group">
+                                                <div class="form-row">
+                                                    <div class="col">
+                                                        <div class="form-ib">
+                                                            <label for="email">Email</label>
+                                                            <input type="text" class="form-control" name="email" id="email" placeholder="Separate multiple emails with commas" value="<?=$vendor->email?>">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-ib-group">
+                                                <div class="form-row">
+                                                    <div class="col">
+                                                        <div class="form-ib">
+                                                            <label for="phone">Phone</label>
+                                                            <input type="text" name="phone" id="phone" class="form-control" value="<?=$vendor->phone?>">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col">
+                                                        <div class="form-ib">
+                                                            <label for="mobile">Mobile</label>
+                                                            <input type="text" name="mobile" id="mobile" class="form-control" value="<?=$vendor->mobile?>">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col">
+                                                        <div class="form-ib">
+                                                            <label for="fax">Fax</label>
+                                                            <input type="text" name="fax" id="fax" class="form-control" value="<?=$vendor->fax?>">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-ib-group">
+                                                <div class="form-row">
+                                                    <div class="col">
+                                                        <div class="form-ib">
+                                                            <label for="website">Website</label>
+                                                            <input type="text" name="website" id="website" class="form-control" value="<?=$vendor->website?>">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-ib-group">
+                                                <div class="form-row">
+                                                    <div class="col">
+                                                        <div class="form-ib">
+                                                            <label for="billing_rate">Billing rate (/hr)</label>
+                                                            <input type="text" name="billing_rate" id="billing_rate" class="form-control" value="<?=$vendor->billing_rate?>">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col">
+                                                        <div class="form-ib">
+                                                            <label for="terms">Terms</label>
+                                                            <select class="form-control" name="terms" id="terms">
+                                                                <option value="" <?=in_array($vendor->terms, ['', "0", null]) ? 'selected' : ''?> disabled>&nbsp;</option>
+                                                                <option value="add-new">&plus; Add new</option>
+                                                                <?php if(count($terms) > 0) : ?>
+                                                                <?php foreach($terms as $term) : ?>
+                                                                    <option value="<?=$term->id?>" <?=$vendor->terms === $term->id ? 'selected' : ''?>><?=$term->name?></option>
+                                                                <?php endforeach; ?>
+                                                                <?php endif; ?>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-ib-group">
+                                                <div class="form-row">
+                                                    <div class="col">
+                                                        <div class="form-ib">
+                                                            <label for="opening_balance">Opening balance</label>
+                                                            <input type="text" name="opening_balance" id="opening_balance" class="form-control" value="<?=$vendor->opening_balance !== null && $vendor->opening_balance !== "" ? number_format(floatval($vendor->opening_balance), 2, '.', ',') : ""?>">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col">
+                                                        <div class="form-ib">
+                                                            <label for="opening_balance_as_of_date">as of</label>
+                                                            <input type="text" name="opening_balance_as_of_date" id="opening_balance_as_of_date" class="form-control datepicker" value="<?=date("m/d/Y", strtotime($vendor->opening_balance_as_of_date))?>">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-ib-group">
+                                                <div class="form-row">
+                                                    <div class="col">
+                                                        <div class="form-ib">
+                                                            <label for="account_number">Account no.</label>
+                                                            <input type="text" name="account_number" id="account_number" class="form-control" placeholder="Appears in the memo of all payment" value="<?=$vendor->account_number?>">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-ib-group">
+                                                <div class="form-row">
+                                                    <div class="col">
+                                                        <div class="form-ib">
+                                                            <label for="">Business ID No. / Social Security No.</label>
+                                                            <input type="text" name="tax_id" id="tax_id" class="form-control" required value="<?=$vendor->tax_id?>">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-ib-group">
+                                                <div class="form-row">
+                                                    <div class="col">
+                                                        <div class="form-ib">
+                                                            <label for="expense_account">Default expense account</label>
+                                                            <select name="default_expense_account" id="expense_account" class="form-control">
+                                                                <option value="" selected disabled>Choose Account</option>
+                                                                <?php if(count($expenseAccs) > 0) : ?>
+                                                                    <optgroup label="Expenses">
+                                                                    <?php foreach($expenseAccs as $expenseAcc) : ?>
+                                                                        <option value="<?=$expenseAcc->id?>" <?=$expenseAcc->id === $vendor->default_expense_account ? 'selected' : ''?>><?=$expenseAcc->name?></option>
+
+                                                                        <?php $childAccs = $this->chart_of_accounts_model->getChildAccounts($expenseAcc->id); ?>
+                                                                        <?php if(count($childAccs) > 0) : ?>
+                                                                            <optgroup label="&nbsp;&nbsp;&nbsp;&nbsp;Sub-accounts of <?=$expenseAcc->name?>">
+                                                                            <?php foreach($childAccs as $childAcc) : ?>
+                                                                                <option value="<?=$childAcc->id?>" <?=$childAcc->id === $vendor->default_expense_account ? 'selected' : ''?>>&nbsp;&nbsp;&nbsp;<?=$childAcc->name?></option>
+                                                                            <?php endforeach; ?>
+                                                                            </optgroup>
+                                                                        <?php endif; ?>
+                                                                    <?php endforeach; ?>
+                                                                    </optgroup>
+                                                                <?php endif; ?>
+                                                                <?php if(count($otherExpenseAccs) > 0) : ?>
+                                                                    <optgroup label="Other Expenses">
+                                                                    <?php foreach($otherExpenseAccs as $otherExpenseAcc) : ?>
+                                                                        <option value="<?=$otherExpenseAcc->id?>" <?=$otherExpenseAcc->id === $vendor->default_expense_account ? 'selected' : ''?>><?=$otherExpenseAcc->name?></option>
+
+                                                                        <?php $childAccs = $this->chart_of_accounts_model->getChildAccounts($otherExpenseAcc->id); ?>
+                                                                        <?php if(count($childAccs) > 0) : ?>
+                                                                            <optgroup label="&nbsp;&nbsp;&nbsp;&nbsp;Sub-accounts of <?=$otherExpenseAcc->name?>">
+                                                                            <?php foreach($childAccs as $childAcc) : ?>
+                                                                                <option value="<?=$childAcc->id?>" <?=$childAcc->id === $vendor->default_expense_account ? 'selected' : ''?>>&nbsp;&nbsp;&nbsp;<?=$childAcc->name?></option>
+                                                                            <?php endforeach; ?>
+                                                                            </optgroup>
+                                                                        <?php endif; ?>
+                                                                    <?php endforeach; ?>
+                                                                    </optgroup>
+                                                                <?php endif; ?>
+                                                                <?php if(count($cogsAccs) > 0) : ?>
+                                                                    <optgroup label="Cost of Goods Sold">
+                                                                    <?php foreach($cogsAccs as $cogsAcc) : ?>
+                                                                        <option value="<?=$cogsAcc->id?>" <?=$cogsAcc->id === $vendor->default_expense_account ? 'selected' : ''?>>&nbsp;<?=$cogsAcc->name?></option>
+
+                                                                        <?php $childAccs = $this->chart_of_accounts_model->getChildAccounts($cogsAcc->id); ?>
+                                                                        <?php if(count($childAccs) > 0) : ?>
+                                                                            <optgroup label="&nbsp;&nbsp;&nbsp;&nbsp;Sub-accounts of <?=$cogsAcc->name?>">
+                                                                            <?php foreach($childAccs as $childAcc) : ?>
+                                                                                <option value="<?=$childAcc->id?>" <?=$childAcc->id === $vendor->default_expense_account ? 'selected' : ''?>>&nbsp;&nbsp;&nbsp;&nbsp;<?=$childAcc->name?></option>
+                                                                            <?php endforeach; ?>
+                                                                            </optgroup>
+                                                                        <?php endif; ?>
+                                                                    <?php endforeach; ?>
+                                                                    </optgroup>
+                                                                <?php endif; ?>
+                                                            </select>
+                                                            <!-- <input type="text" name="default_expense_amount" id="expense_account" class="form-control" placeholder="Choose Account" required> -->
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="row w-100">
+                        <div class="col-md-6"><button type="button" class="btn btn-transparent" data-dismiss="modal">Cancel</button></div>
+                        <div class="col-md-6"><button type="submit" name="save" class="btn btn-success float-right">Save</button></div>
+                    </div>
+                </div>
+            </div>
+            </form>
+        </div>
+    </div>
+    <!--    end of modal-->
+
     <!-- Add payment term modal -->
     <div class="modal fade" id="payment_term_modal" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered m-auto w-25" role="document">
@@ -539,47 +815,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         </div>
     </div>
     <!-- end add payment term modal -->
-
-    <!-- Select category modal -->
-    <div class="modal fade" id="select_category_modal" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered m-auto w-25" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Categorize Selected</h4>
-                    <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
-                </div>
-                <form id="categorize-selected-form">
-                <div class="modal-body" style="max-height: 400px;">
-                    <div class="row">
-                        <div class="col-xl-12">
-                            <div class="card p-0 m-0">
-                                <div class="card-body" style="max-height: 650px; padding-bottom: 1.25rem">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="form-group" style="margin-bottom: 0 !important">
-                                                <select name="category_id" id="category-id" class="form-control" required></select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- end card -->
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <div class="col-sm-6">
-                        <button type="button" class="btn btn-secondary btn-rounded border" data-dismiss="modal">Close</button>
-                    </div>
-                    <div class="col-sm-6">
-                        <button type="submit" class="btn btn-success btn-rounded border float-right">Apply</button>
-                    </div>
-                </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    <!-- end select category modal -->
 </div>
 
 <!-- page wrapper end -->

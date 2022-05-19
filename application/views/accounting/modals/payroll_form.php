@@ -2,20 +2,29 @@
     <div class="col-md-3">
         <div class="form-group">
             <label for="payFrom">Pay from</label>
-            <select name="pay_from_account" id="bank-account" class="form-control" required>
-                <option value="<?=$accounts[array_key_first($accounts)]->id?>" selected><?=$accounts[array_key_first($accounts)]->name?></option>
+            <select name="pay_from" id="payFrom" class="form-control">
+                <?php foreach($accounts as $account) : ?>
+                    <option value="<?=$account->id?>"><?=$account->name?></option>
+                <?php endforeach; ?>
             </select>
         </div>
     </div>
     <div class="col-md-2 d-flex align-items-center">
-        <h6>Balance $<?=number_format(floatval($accounts[array_key_first($accounts)]->balance), 2, '.', ',')?></h6>
+        <?php 
+            if(strpos($accounts[array_key_first($accounts)]->balance, '-') !== false) {
+                $selectedBalance = str_replace('-', '-$', $accounts[array_key_first($accounts)]->balance);
+            } else {
+                $selectedBalance = '$'.$accounts[array_key_first($accounts)]->balance;
+            }
+        ?>
+        <h6>Balance <?=$selectedBalance?></h6>
     </div>
     <div class="col-md-3">
         <div class="form-group">
             <label for="payPeriod">Pay period</label>
             <select name="pay_period" id="payPeriod" class="form-control">
                 <?php foreach($payPeriods as $period) : ?>
-                    <option value="<?=$period['first_day'] . '-' . $period['last_day']?>" data-pay_date="<?=$period['pay_date']?>" <?=$period['selected'] === true ? 'selected' : ''?>><?=$period['first_day'] . ' to ' . $period['last_day']?></option>
+                    <option value="<?php echo $period['first_day'] . '-' . $period['last_day']; ?>" data-pay_date="<?=$period['pay_date']?>" <?=$period['selected'] === true ? 'selected' : ''?>><?php echo $period['first_day'] . ' to ' . $period['last_day']; ?></option>
                 <?php endforeach; ?>
             </select>
         </div>
@@ -58,7 +67,7 @@
                                 <tr>
                                     <td>
                                         <div class="form-group d-flex" style="margin-bottom: 0 !important">
-                                            <input class="m-auto" type="checkbox" name="select[]" value="<?=$employee->id?>" checked>
+                                            <input class="m-auto" type="checkbox" name="select[]" value="<?=$payDetail->id?>" checked>
                                         </div>
                                     </td>
                                     <td>

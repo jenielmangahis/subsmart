@@ -9,13 +9,14 @@ class NsmartAddons_model extends MY_Model
 
     public function getAll($filters=array())
     {
+        $id = logged('id');
+
         $this->db->select('*');
         $this->db->from($this->table);
 
         if ( !empty($filters) ) {
             if ( !empty($filters['search']) ) {
                 $this->db->like('name', $filters['search'], 'both');
-                $this->db->or_like('description', $filters['search'], 'both');
             }
         }
 
@@ -27,6 +28,8 @@ class NsmartAddons_model extends MY_Model
 
     public function getAllActive($filters=array())
     {
+        $id = logged('id');
+
         $this->db->select('*');
         $this->db->from($this->table);
 
@@ -46,6 +49,7 @@ class NsmartAddons_model extends MY_Model
 
     public function getById($id)
     {
+        $user_id = logged('id');
 
         $this->db->select('*');
         $this->db->from($this->table);
@@ -64,16 +68,6 @@ class NsmartAddons_model extends MY_Model
         ];
 
         return $status;
-    }
-
-    public function getAllByStatus($status_id)
-    {
-        $this->db->select('*');
-        $this->db->from($this->table);
-        $this->db->where('status', $status_id);
-        $this->db->order_by('id', 'DESC');
-        $query = $this->db->get();
-        return $query->result();
     }
 
     public function isAddonNameExists($name)

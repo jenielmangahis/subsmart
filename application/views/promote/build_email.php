@@ -137,11 +137,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div class="validation-error" style="display: none;"></div>
                             <div class="tabs-menu">
                                 <ul class="clearfix">
-                                  <li><a href="<?= base_url("promote/edit_deals/" . $dealsSteals->id); ?>">1. Edit Deal</a></li>
-                                  <li><a href="<?= base_url("promote/add_send_to"); ?>">2. Select Customers</a></li>
-                                  <li class="active"><a href="<?= base_url("promote/build_email"); ?>">3. Build Email</a></li>
-                                  <li><a href="<?= base_url("promote/preview_email_message"); ?>">4. Preview</a></li>
-                                  <li><a href="<?= base_url("promote/payment"); ?>">5. Purchase</a></li>
+                                  <li>1. Create Deal</li>
+                                  <li>2. Select Customers</li>
+                                  <li class="active">3. Build Email</li>
+                                  <li>4. Preview</li>
+                                  <li>5. Purchase</li>
                                 </ul>
                             </div>
                             <hr />
@@ -151,14 +151,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                   <div class="row">
                                     <div class="col-md-12 form-group">
                                         <label for="formClient-Name">Subject</label>
-                                        <input type="text" class="form-control" name="email_subject" value="<?= $dealsSteals ? $dealsSteals->email_subject : ''; ?>" id="email_subject" required placeholder="" autofocus/>
+                                        <input type="text" class="form-control" name="email_subject" value="<?= $emailCampaign ? $emailCampaign->email_subject : ''; ?>" id="email_subject" required placeholder="" autofocus/>
                                     </div>
 
                                     <div class="col-md-12 form-group">
                                         <label for="formClient-Name">Email Body</label>
                                         <textarea name="email_body" cols="40" rows="30"  class="form-control" id="mail_body" autocomplete="off">
-                                          <?php if($dealsSteals->email_body != ''){ ?>
-                                            <?= $dealsSteals->email_body; ?>
+                                          <?php if($emailCampaign->email_body != ''){ ?>
+                                            <?= $emailCampaign->email_body; ?>
                                           <?php }else{ ?>
                                             <p style="font-size: 28px; color: #222;">Dear {{customer.name}},</p>
                                             <p><br />Thank you for choosing <?= $company->business_name; ?>, we really appreciate you as our customer. <br /><br />We are currently running a promotion <strong>test</strong>. If you would like to take advantage of this limited time offer simply book the deal below. <br /><br /></p>
@@ -175,16 +175,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <table border="0" width="100%" cellspacing="0" cellpadding="0">
                                             <tbody>
                                             <tr>
-                                            <?php 
-                                              if( $dealsSteals->photos != '' ){
-                                                $image = base_url("uploads/deals_steals/" . $dealsSteals->company_id . "/" . $dealsSteals->photos);
-                                              }else{
-                                                $image = base_url('assets/img/default-deals.jpg');
-                                              }
-                                            ?>
-                                            <td width="150"><a href="<?= base_url("promote/deal_test/" . $dealsSteals->id); ?>"><img style="width: 200px;" src="<?= $image; ?>" alt="deal pic" /></a></td>
+                                            <td width="150"><a href="<?= base_url("promote/deal_test/" . $dealsSteals->id); ?>"><img style="width: 200px;" src="<?= base_url('assets/img/default-deals.jpg'); ?>" alt="deal pic" /></a></td>
                                             <td width="20">&nbsp;</td>
-                                            <td><strong><?= $dealsSteals->title; ?></strong><br /><span style="font-size: 18px; color: #ba001a;">$<?= number_format($dealsSteals->deal_price,2); ?></span> <span style="text-decoration: line-through;">was $<?= number_format($dealsSteals->original_price,2); ?></span></td>
+                                            <td><strong>test</strong><br /><span style="font-size: 18px; color: #ba001a;">$1.00</span> <span style="text-decoration: line-through;">was $2.00</span></td>
                                             </tr>
                                             </tbody>
                                             </table>

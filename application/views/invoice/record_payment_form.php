@@ -5,10 +5,10 @@
 
 <div class="pbar-top">
     <div class="pbar-top-left">Paid</div>
-    <div class="pbar-top-right">Due <span data-payment-modal="pbar-due-text">$<?php echo number_format($invoice->grand_total, 2, '.', ',') ?></span></div>
+    <div class="pbar-top-right">Due <span data-payment-modal="pbar-due-text">$<?php (false) ? number_format($invoice->invoice_totals['grand_total'], 2, '.', ',') : '' ?></span></div>
 </div>
 <div class="pbar">
-    <div class="pbar-label" data-payment-modal="pbar-paid-text">$0.00 of $<?php echo number_format($invoice->grand_total, 2, '.', ',') ?></div>
+    <div class="pbar-label" data-payment-modal="pbar-paid-text">$0.00 of $<?php echo (false) ? number_format($invoice->invoice_totals['grand_total'], 2, '.', ',') : '' ?></div>
     <div class="pbar-progress" data-payment-modal="pbar-paid" style="width: 0%;"></div>
 </div>
     <div class="validation-error" style="display: none;"></div>

@@ -1,13 +1,147 @@
+<style>
+    hr{
+        border: 0.5px solid #32243d !important;
+        width: 100%;
+    }
+    .form-group {
+        margin-bottom: 2px !important;
+    }
+    .banking-tab-container {
+        border-bottom: 1px solid grey;
+        padding-left: 0;
+    }
+    .form-line{
+        padding-bottom: 1px;
+    }
+    .btn {
+        font-size: 12px !important;
+        background-repeat: no-repeat;
+        padding: 6px 12px;
+    }
+    .input_select{
+        color: #363636;
+        border: 2px solid #e0e0e0;
+        box-shadow: none;
+        display: inline-block !important;
+        width: 100%;
+        background-color: #fff;
+        background-clip: padding-box;
+        font-size: 11px !important;
+    }
+    .pb-30 {
+        padding-bottom: 30px;
+    }
+    h5.card-title.mb-0, p.card-text.mt-txt {
+        text-align: center !important;
+    }
+    .dropdown-toggle::after {
+        display: block;
+        position: absolute;
+        top: 54% !important;
+        right: 9px !important;
+    }
+    .card-deck-upgrades {
+        display: block;
+    }
+    .card-deck-upgrades div {
+        padding: 20px;
+        float: left;
+        width: 33.33%;
+    }
+    .card-body.align-left {
+        width: 100% !important;
+    }
+    .card-deck-upgrades div a {
+        display: block;
+        width: 100%;
+        min-height: 400px;
+        float: left;
+        text-align: center;
+    }
+    .page-title, .box-title {
+        font-family: Sarabun, sans-serif !important;
+        font-size: 1.75rem !important;
+        font-weight: 600 !important;
+        padding-top: 5px;
+    }
+    .pr-b10 {
+        position: relative;
+        bottom: 10px;
+    }
+    .left {
+        float: left;
+    }
+    .p-40 {
+        padding-left: 15px !important;
+        padding-top: 40px !important;
+    }
+    a.btn-primary.btn-md {
+        height: 38px;
+        display: inline-block;
+        border: 0px;
+        padding-top: 7px;
+        position: relative;
+        top: 0px;
+    }
+    .card.p-20 {
+        padding-top: 18px !important;
+    }
+    .fr-right {
+        float: right;
+        justify-content: flex-end;
+    }
+    .p-20 {
+        padding-top: 25px !important;
+        padding-bottom: 25px !important;
+        padding-right: 20px !important;
+        padding-left: 20px !important;
+    }
+    .pd-17 {
+        position: relative;
+        left: 17px;
+    }
+    @media only screen and (max-width: 1300px) {
+        .card-deck-upgrades div a {
+            min-height: 440px;
+        }
+    }
+    @media only screen and (max-width: 1250px) {
+        .card-deck-upgrades div a {
+            min-height: 480px;
+        }
+        .card-deck-upgrades div {
+            padding: 10px !important;
+        }
+    }
+    @media only screen and (max-width: 600px) {
+        .p-40 {
+            padding-top: 0px !important;
+        }
+        .pr-b10 {
+            position: relative;
+            bottom: 0px;
+        }
+    }
+    .job-marker{
+        height: 57px;
+        width: 100px;
+        border: 1px solid #dee2e6;
+    }
+    .card{
+        box-shadow: 0 0 13px 0 rgb(116 116 117 / 44%) !important;
+    }
+</style>
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 // CSS to add only Customer module
 add_css(array(
+    'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css',
+    'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
     'https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css',
+    //"assets/css/accounting/sidebar.css",
+    'assets/textEditor/summernote-bs4.css',
 ));
-
-include viewPath('job/css/settings');
 ?>
-
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/job'); ?>
@@ -37,75 +171,47 @@ include viewPath('job/css/settings');
                         <div class="pl-3 pr-3 mt-0 row">
                             <div class="col mb-4 left alert alert-warning mt-0 mb-2">
                               <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">
-                                  Feel free to modify job settings in your company. Please note that the new update will only take effect to the new jobs after updating settings.
+                                  ......
                               </span>
                             </div>
                         </div>
                         <div class="tab-content">
-                            <div class="banking-tab-container">
-                                <div class="rb-01">
-                                    <ul class="nav nav-tabs border-0">
-                                        <li class="nav-item">
-                                            <a class="h6 mb-0 nav-link banking-sub-tab <?= $active_tab == 'jobSettings' || $active_tab == '' ?   "active" : '';  ?>" data-toggle="tab" href="#jobSettings">
-                                                Job Settings
-                                            </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="h6 mb-0 nav-link banking-sub-tab <?= $active_tab == 'taxRate' ?   "active" : '';  ?>" data-toggle="tab" href="#taxRate">
-                                                Tax Rate
-                                            </a>
-                                        </li>
-                                    </ul>
+                            <div class="tab-pan" id="tab1">
+                                <div class="row col-md-12 pb-3">
+                                    <label class="pt-2 pr-5">Job Prefix</label>
+                                    <input type="text" class="form-control col-md-2" id="surveyPrefix" value="JOB-">
                                 </div>
                             </div>
-                            <div class="tab-content mt-4" >
-                                <div class="tab-pane <?= $active_tab == 'jobSettings' || $active_tab == '' ? "active" : "fade"; ?> standard-accordion" id="jobSettings">
-                                    <form method="post" action="<?=base_url()?>job/settings">
-                                        <div class="row col-md-12 pb-3">
-                                            <label class="pt-2 pr-5">Job Prefix</label>
-                                            <input type="text" class="form-control col-md-2" name="job_num_prefix" id="job_num_prefix" value="<?= $job_settings->job_num_prefix ?>" ">
-                                        </div>
-                                        <div class="row form_line">
-                                            <div class="row col-md-12 ">
-                                                <button type="submit" class="btn btn-primary btn-save-payment"> <span class="fa fa-edit"></span> Update</button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
+                            <hr>
 
-                                <div class="tab-pane <?= $active_tab == 'taxRate' ? "active" : "fade"; ?> standard-accordion" id="taxRate">
-                                    <h6>Tax Rates</h6>
-                                    <table class="table table-bordered table-striped" id="tax_rates_table">
-                                        <a href="javascript:void(0);" id="add_new_tax" data-toggle="modal" data-target="#new_tax_rate" class="btn btn-primary btn-sm pull-right" >
-                                            <span class="fa fa-plus"></span> Add Tax Rate
-                                        </a>
-                                        <thead>
+                            <h6>Tax Rates</h6>
+                            <table class="table table-bordered table-striped" id="tax_rates_table">
+                                <a href="javascript:void(0)" id="add_new_tax" data-toggle="modal" data-target="#new_tax_rate" class="btn btn-primary btn-sm pull-right" >
+                                    <span class="fa fa-plus"></span> Add Tax Rate
+                                </a>
+                                <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Percent</th>
+                                    <th>Manage</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <?php if(!empty($tax_rates)): ?>
+                                    <?php foreach($tax_rates as $rate) : ?>
                                         <tr>
-                                            <th>Name</th>
-                                            <th>Percent</th>
-                                            <th>Date Created</th>
-                                            <th>Manage</th>
+                                            <td><?= $rate->name; ?></td>
+                                            <td><?= $rate->percentage; ?> %</td>
+                                            <td class="pl-3">
+                                                <a href="javascript:void(0)" id="<?= $rate->id; ?>"  class="delete_tax_rate btn btn-primary btn-sm">
+                                                    <span class="fa fa-trash"></span> Delete
+                                                </a>
+                                            </td>
                                         </tr>
-                                        </thead>
-                                        <tbody>
-                                        <?php if(!empty($tax_rates)): ?>
-                                            <?php foreach($tax_rates as $rate) : ?>
-                                                <tr>
-                                                    <td><?= $rate->name; ?></td>
-                                                    <td><?= $rate->rate; ?> %</td>
-                                                    <td><?= date("m-d-Y h:i A",strtotime($rate->date_created)); ?></td>
-                                                    <td class="pl-3">
-                                                        <a href="javascript:void(0)" id="<?= $rate->id; ?>"  class="delete_tax_rate btn btn-primary btn-sm">
-                                                            <span class="fa fa-trash"></span> Delete
-                                                        </a>
-                                                    </td>
-                                                </tr>
-                                            <?php endforeach; ?>
-                                        <?php endif; ?>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                     <!-- end card -->
@@ -133,7 +239,7 @@ include viewPath('job/css/settings');
                                 </div>
                                 <div class="col-md-12">
                                     <label for="invoice_job_location">Percentage</label>
-                                    <input type="number" class="form-control" name="rate" required placeholder="5">
+                                    <input type="number" class="form-control" name="percentage" required placeholder="5">
                                 </div>
                             </div>
                         </div>
@@ -161,7 +267,7 @@ add_footer_js(array(
 <?php include viewPath('includes/footer'); ?>
 <link href="https://nightly.datatables.net/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
 <script src="https://nightly.datatables.net/js/jquery.dataTables.js"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script>
     $(document).ready(function () {
         $('#tax_rates_table').DataTable({
@@ -181,8 +287,7 @@ add_footer_js(array(
                 success: function(data)
                 {
                     if(data === "1"){
-                        sucess_add('Awesome!','Successfully Added!','taxRate');
-                        //window.location.reload();
+                        window.location.reload();
                     }else {
                         console.log(data);
                     }
@@ -193,7 +298,7 @@ add_footer_js(array(
             var ID=this.id;
             // alert(ID);
             Swal.fire({
-                title: 'Are you sure to remove this tax rate?',
+                title: 'Are you sure to remove this Job Type?',
                 text: "",
                 icon: 'warning',
                 showCancelButton: true,
@@ -210,8 +315,7 @@ add_footer_js(array(
                         success: function(data)
                         {
                             if(data === "1"){
-                                //window.location.reload();
-                                sucess_add('Nice!','Removed Successfully!','taxRate');
+                                window.location.reload();
                             }else{
                                 alert(data);
                             }
@@ -220,25 +324,5 @@ add_footer_js(array(
                 }
             });
         });
-
-        function sucess_add($title,information,is_reload){
-            Swal.fire({
-                title: $title,
-                text: information,
-                icon: 'success',
-                showCancelButton: false,
-                confirmButtonColor: '#32243d',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Ok'
-            }).then((result) => {
-                if(is_reload === 1){
-                    if (result.value) {
-                        window.location.reload();
-                    }
-                }else{
-                    window.location.href='<?= base_url(); ?>job/settings/'+is_reload;
-                }
-            });
-        }
     });
 </script>

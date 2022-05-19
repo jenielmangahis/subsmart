@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Register extends MYF_Controller {
+class Register extends MY_Controller {
 
     public function __construct(){
         parent::__construct();
@@ -24,19 +24,6 @@ class Register extends MYF_Controller {
     }
 
     public function index(){
-
-        $default_plan = '';
-        $default_type = '';
-        if( $this->input->get('plan') ){
-            $default_plan = $this->input->get('plan');
-        }
-
-        if( $this->input->get('type') ){
-            $default_type = $this->input->get('type');
-        }
-
-        $this->page_data['default_plan'] = $default_plan;
-        $this->page_data['default_type'] = $default_type;
 
         $get_data = $this->input->get();  
 
@@ -154,8 +141,6 @@ class Register extends MYF_Controller {
         }else{
             $ip_exist = false;
         }
-
-        //$ip_exist = false;
 
         $industryTypes = $this->IndustryType_model->getAll();
         $paypal_client_id     = paypal_credential('client_id');
@@ -287,12 +272,12 @@ class Register extends MYF_Controller {
 
         //echo $is_authentic;
         $leads_input = array(
-            'firstname'     => $post['firstname'],
-            'lastname'      => $post['lastname'],
-            'phone_cell'    => $post['phone'],
-            'email_add'     => $post['a_email'],
-            'address'       => $post['business_address'],
-        );
+                        'firstname'     => $post['firstname'],
+                        'lastname'      => $post['lastname'],
+                        'phone_cell'    => $post['phone'],
+                        'email_add'     => $post['a_email'],
+                        'address'       => $post['business_address'],
+                    );
 
         $reg_temp_user_id = $this->session->userdata('reg_temp_user_id');
         if(isset($reg_temp_user_id) && $reg_temp_user_id > 0)
@@ -735,49 +720,35 @@ class Register extends MYF_Controller {
 
     public function registration_use_code()
     {
-        $this->load->model('Customer_advance_model', 'customer_ad_model');
-        
         $is_valid = false;
         $msg      = '';
 
-        //postAllowed();
+        postAllowed();
         $post = $this->input->post(); 
 
         //Check if offer code is valid
         $offerCode = $this->OfferCodes_model->getByOfferCodes($post['offer_code']);
-        //$startup_checklist = generateClientChecklist();
 
         if( $offerCode && $offerCode->status == 0 ){
-            $num_days_trial = $offerCode->trial_days;
-            $next_billing_date = date("Y-m-d", strtotime("+".$num_days_trial." day"));
-            $today = strtotime(date("Y-m-d"));
-            $cid   = $this->Clients_model->create([
+            $cid = $this->Clients_model->create([
                 'first_name' => $post['firstname'],
                 'last_name'  => $post['lastname'],
                 'email_address' => $post['email'],
                 'phone_number'  => $post['phone'],
                 'business_name' => $post['business_name'],
                 'business_address' => $post['business_address'],
-                'zip_code' => $post['zip_code'],
                 'number_of_employee' => $post['number_of_employee'],
                 'industry_type_id' => $post['industry_type_id'],
                 'password' => $post['password'],
                 'ip_address' => getValidIpAddress(),
                 'plan_date_registered' => date("Y-m-d"),
-                'plan_date_expiration' => date("Y-m-d", strtotime("+".$num_days_trial." day")),
+                'plan_date_registered' => date("Y-m-d", strtotime("+1 month")),
                 'date_created'  => date("Y-m-d H:i:s"),
                 'date_modified' => date("Y-m-d H:i:s"),
                 'is_plan_active' => 1,
                 'nsmart_plan_id' => $post['plan_id'],
                 'is_trial' => 1,
-                'is_startup' => 1,
-                'payment_method' => 'offer code',
-                'is_auto_renew' => 0,  
-                'next_billing_date' => $next_billing_date,
-                'num_months_discounted' => 0,
-                'recurring_payment_type' => 'monthly',
-                'checklist' => '',
-                'is_checklist' => 1
+                'is_startup' => 1
             ]);
 
             $uid = $this->users_model->create([
@@ -797,27 +768,16 @@ class Register extends MYF_Controller {
                 'status' => 1
             ));
 
-            //Create customer
-            $customer_data = array(
-                'company_id'      => 1,
-                'fk_user_id'      => 5,
-                'fk_sa_id'        => 0,
-                'contact_name'    => $post['firstname'] . ' ' . $post['lastname'],
-                'status'          => '',
-                'customer_type'   => 'Business',
-                'business_name'   => $post['business_name'],
-                'first_name'      => $post['firstname'],
-                'middle_name'     => '',
-                'industry_type_id' => $post['industry_type_id'],
-                'last_name'       => $post['lastname'],
-                'mail_add'        => $post['business_address'],
-                'city'            => '',
-                'state'           => '',
-                'zip_code'        => $post['zip_code'],
-                'phone_h'         => '',
-                'phone_m'         => $post['phone']
-            );
-            $fk_prod_id = $this->customer_ad_model->add($customer_data,"acs_profile");
+            $reg_temp_user_id = $this->session->userdata('reg_temp_user_id');
+            if(isset($reg_temp_user_id) && $reg_temp_user_id > 0)
+            {
+                $leads_input['tablename'] = "ac_leads";
+                $leads_input['field_name'] = "leads_id";
+                $leads_input['id'] = $reg_temp_user_id;
+                $this->Customer_advance_model->delete($leads_input);
+
+                $this->session->unset_userdata('reg_temp_user_id');
+            }
             
             $is_valid = true;
             $msg      = 'Registration completed. Redirecting to login page.';
@@ -917,58 +877,29 @@ class Register extends MYF_Controller {
 
     public function ajax_create_registration()
     {
-        $this->load->model('CompanySubscriptionPayments_model');
-        $this->load->model('NsmartPlan_model');
-        $this->load->model('Customer_advance_model', 'customer_ad_model');
-        $this->load->model('CardsFile_model');
-
         $is_success = true;
         $is_valid   = false;
 
         $post = $this->input->post(); 
-        if( $post['subscription_type'] != 'trial' ){
-            if( $post['payment_method'] == 'paypal' ){
-                if( $post['payment_method_status'] == 'COMPLETED' ){
-                    $is_valid = true;   
-                }
-            }elseif( $post['payment_method'] == 'stripe' ){
-                if( $post['payment_method_status'] == 'COMPLETED' ){
-                    $is_valid = true;   
-                }
-            }elseif( $post['payment_method'] == 'converge' ){
-                $is_valid = true;
+        if( $post['payment_method'] == 'paypal' ){
+            if( $post['payment_method_status'] == 'COMPLETED' ){
+                $is_valid = true;   
             }
-            
-            $payment_method = $post['payment_method'];
-        }else{
-            $is_valid = true;
-            $payment_method = 'trial';
-        }        
+        }elseif( $post['payment_method'] == 'stripe' ){
+            if( $post['payment_method_status'] == 'COMPLETED' ){
+                $is_valid = true;   
+            }
+        }
 
         if( $is_valid ){
-            $is_trial = 0;
-            $plan_amount = 0;
-            $num_months_discounted = 0;
-            if( $post['subscription_type'] == 'trial' ){
-                $is_trial = 1;
-            }else{
-                $num_months_discounted = REGISTRATION_MONTHS_DISCOUNTED - 1;
-                $plan_amount = $post['plan_price_discounted'];
-            }
-
-            $plan = $this->NsmartPlan_model->getById($post['plan_id']);
-            $next_billing_date = date("Y-m-d", strtotime("+1 month"));
             $today = strtotime(date("Y-m-d"));
-            //$startup_checklist = generateClientChecklist();
-
             $cid   = $this->Clients_model->create([
                 'first_name' => $post['firstname'],
                 'last_name'  => $post['lastname'],
                 'email_address' => $post['email'],
                 'phone_number'  => $post['phone'],
-                'business_name' => $post['business_name'],                
+                'business_name' => $post['business_name'],
                 'business_address' => $post['business_address'],
-                'zip_code' => $post['zip_code'],
                 'number_of_employee' => $post['number_of_employee'],
                 'industry_type_id' => $post['industry_type_id'],
                 'password' => $post['password'],
@@ -977,18 +908,11 @@ class Register extends MYF_Controller {
                 'date_modified' => date("Y-m-d H:i:s"),
                 'is_plan_active' => 1,
                 'nsmart_plan_id' => $post['plan_id'],
-                'payment_method' => $payment_method,
+                'payment_method' => $post['payment_method'],
                 'plan_date_registered' => date("Y-m-d", $today),
                 'plan_date_expiration' => date("Y-m-d", strtotime("+1 month", $today)),
-                'is_trial' => $is_trial,
-                'is_startup' => 1,              
-                'is_auto_renew' => 0,  
-                'number_of_license' => $plan->num_license,
-                'next_billing_date' => $next_billing_date,
-                'num_months_discounted' => $num_months_discounted,
-                'recurring_payment_type' => 'monthly',
-                'checklist' => '',
-                'is_checklist' => 1
+                'is_trial' => 1,
+                'is_startup' => 1
             ]);
 
             $uid = $this->users_model->create([
@@ -1003,151 +927,11 @@ class Register extends MYF_Controller {
                 'password_plain' =>  $post['password'],
                 'password' => hash( "sha256", $post['password'] ),
             ]); 
-
-            //Update cards file                        
-            if( $this->session->has_userdata('cfid') ) {
-                $cfid = $this->session->userdata('cfid');
-                $data = ['company_id' => $cid];
-                $this->CardsFile_model->updateCardsFile($cfid, $data);
-                $this->session->unset_userdata('cfid');
-            }
-
-            if( $is_trial == 0 ){
-                $or_amount = $plan_amount;
-                $or_description = 'Paid Membership, Monthly';
-            }else{
-                $or_amount = 0;
-                $or_description = 'Trial Membership';
-            }
-
-            //Record payment
-            $data_payment = [
-                'company_id' => $cid,
-                'description' => $or_description,
-                'payment_date' => date("Y-m-d"),
-                'total_amount' => $or_amount,
-                'date_created' => date("Y-m-d H:i:s")
-            ];
-
-            $sid = $this->CompanySubscriptionPayments_model->create($data_payment);                
-            $order_number = $this->CompanySubscriptionPayments_model->generateORNumber($sid);
-
-            $or_data = ['order_number' => $order_number];
-            $this->CompanySubscriptionPayments_model->update($sid, $or_data);
-
-            //Send invoice
-            $this->send_invoice_email($cid, $sid);
-
-            //Create customer
-            $customer_data = array(
-                'company_id'      => 1,
-                'fk_user_id'      => 5,
-                'fk_sa_id'        => 0,
-                'contact_name'    => $post['firstname'] . ' ' . $post['lastname'],
-                'status'          => '',
-                'customer_type'   => 'Business',
-                'industry_type_id' => $post['industry_type_id'],
-                'business_name'   => $post['business_name'],
-                'first_name'      => $post['firstname'],
-                'middle_name'     => '',
-                'last_name'       => $post['lastname'],
-                'mail_add'        => $post['business_address'],
-                'city'            => '',
-                'state'           => '',
-                'zip_code'        => $post['zip_code'],
-                'phone_h'         => '',
-                'phone_m'         => $post['phone']
-            );
-            $fk_prod_id = $this->customer_ad_model->add($customer_data,"acs_profile");
-
-            //Create leads
-            $leads_input = array(
-                'company_id'    => 1,
-                'firstname'     => $post['firstname'],
-                'lastname'      => $post['lastname'],
-                'phone_cell'    => $post['phone'],
-                'email_add'     => $post['email'],
-                'address'       => $post['business_address'],
-            );
-            $this->Customer_advance_model->add($leads_input, "ac_leads");
         }
 
         $json_data = ['is_success' => $is_success];
 
         echo json_encode($json_data);
-    }
-
-    public function send_invoice_email($cid, $payment_id){
-        $this->load->model('CompanySubscriptionPayments_model');
-        $this->load->model('Business_model');
-        $this->load->model('Clients_model');
-
-        $company_id = $cid;        
-        $payment    = $this->CompanySubscriptionPayments_model->getById($payment_id);
-        $company    = $this->Business_model->getByCompanyId($payment->company_id);
-        $client     = $this->Clients_model->getById($cid);
-
-        $this->page_data['payment'] = $payment;     
-        $this->page_data['client']  = $client; 
-        $body    = $this->load->view('mycrm/email_template/registration_invoice', $this->page_data, true);
-        $attachment = $this->create_attachment_invoice($payment_id);
-
-        $subject = 'nSmarTrac: Registration';
-        $to   = 'webtestcustomer@nsmartrac.com';
-
-        $data = [
-            'to' => 'webtestcustomer@nsmartrac.com', 
-            'subject' => $subject, 
-            'body' => $body,
-            'cc' => '',
-            'bcc' => '',
-            'attachment' => $attachment
-        ];
-
-        $isSent = sendEmail($data);
-        return true;
-    }
-
-    public function create_attachment_invoice($payment_id){
-
-        $this->load->model('CompanySubscriptionPayments_model');
-        $this->load->model('Business_model');
-        $this->load->model('Clients_model');
-        
-        $payment    = $this->CompanySubscriptionPayments_model->getById($payment_id);
-        $company    = $this->Clients_model->getById($payment->company_id);
-        $this->page_data['payment']   = $payment;
-        $this->page_data['company'] = $company;
-        $content = $this->load->view('mycrm/registration_subscription_invoice_pdf_template_a', $this->page_data, TRUE);  
-
-        $this->load->library('Reportpdf');
-        $title = 'subscription_invoice';
-
-        $obj_pdf = new Reportpdf('P', 'mm', 'A4', true, 'UTF-8', false);
-        $obj_pdf->SetTitle($title);
-        $obj_pdf->setPrintHeader(false);
-        $obj_pdf->setPrintFooter(false);
-        //$obj_pdf->SetDefaultMonospacedFont('helvetica');
-        $obj_pdf->SetMargins(10, 5, 10, 0, true);
-        $obj_pdf->SetAutoPageBreak(true, PDF_MARGIN_BOTTOM);
-        //$obj_pdf->SetFont('courierI', '', 9);
-        $obj_pdf->setFontSubsetting(false);
-        // set some language-dependent strings (optional)
-        if (@file_exists(dirname(__FILE__) . '/lang/eng.php')) {
-            require_once(dirname(__FILE__) . '/lang/eng.php');
-            $obj_pdf->setLanguageArray($l);
-        }
-        $obj_pdf->AddPage('P');
-        $html = '';
-        $obj_pdf->writeHTML($html . $content, true, false, true, false, '');
-        ob_clean();
-        $obj_pdf->lastPage();
-        // $obj_pdf->Output($title, 'I');
-        $filename = strtolower($payment->order_number) . ".pdf";
-        $file     = dirname(__DIR__, 2) . '/uploads/subscription_invoice/' . $filename;
-        $obj_pdf->Output($file, 'F');
-        //$obj_pdf->Output($file, 'F');
-        return $file;
     }
 
     public function ajax_converge_token_request(){
@@ -1162,18 +946,15 @@ class Register extends MYF_Controller {
         $merchantUserID = CONVERGE_MERCHANTUSERID; //Converge User ID *MUST FLAG AS HOSTED API USER IN CONVERGE UI*
         $merchantPinCode = CONVERGE_MERCHANTPIN; //Converge PIN (64 CHAR A/N)
 
-        //$url = "https://api.demo.convergepay.com/hosted-payments/transaction_token"; // URL to Converge demo session token server
-        $url = "https://api.convergepay.com/hosted-payments/transaction_token"; // URL to Converge production session token server
+        $url = "https://api.demo.convergepay.com/hosted-payments/transaction_token"; // URL to Converge demo session token server
+        //$url = "https://api.convergepay.com/hosted-payments/transaction_token"; // URL to Converge production session token server
 
         $post = $this->input->post();
         /*Payment Field Variables*/
         // In this section, we set variables to be captured by the PHP file and passed to Converge in the curl request.
         $firstname = $post['firstname']; //Post first name
         $lastname  = $post['lastname']; //Post first name
-        $address   = $post['business_address'];
-        $zipcode   = $post['zip_code'];
         $amount    = $post['total_amount']; //Post Tran Amount
-        //$amount    = 1;
         //$merchanttxnid = $_POST['ssl_merchant_txn_id']; //Capture user-defined ssl_merchant_txn_id as POST data
         //$invoicenumber = $_POST['ssl_invoice_number']; //Capture user-defined ssl_invoice_number as POST data
 
@@ -1192,8 +973,6 @@ class Register extends MYF_Controller {
         "&ssl_transaction_type=CCSALE".
         "&ssl_first_name=$firstname".
         "&ssl_last_name=$lastname".
-        "&ssl_avs_address=$address".
-        "&ssl_avs_zip=$zipcode".
         "&ssl_get_token=Y".
         "&ssl_add_token=Y".
         "&ssl_amount=$amount"
@@ -1216,91 +995,6 @@ class Register extends MYF_Controller {
 
         echo json_encode($json_data);
         //echo $sessiontoken;  //shows the session token.
-    }
-
-    public function ajax_converge_payment(){
-        $this->load->model('CardsFile_model');
-
-        $is_success = 0;        
-        $message    = '';
-
-        $post   = $this->input->post();
-        $plan   = $this->NsmartPlan_model->getById($post['plan_id']);
-        $amount = $plan->discount;
-        $converge_data = [
-            'amount' => $amount,
-            'card_number' => $post['ccnumber'],
-            'exp_month' => $post['expmonth'],
-            'exp_year' => $post['expyear'],
-            'card_cvc' => $post['cvc'],
-            'address' => $post['address'],
-            'zip' => $post['zipcode']
-        ];
-        $result = $this->converge_send_sale($converge_data);
-        if ($result['is_success']) {
-            $is_success = 1;
-            //Capture card
-            $data_cc = [
-                'card_owner_first_name' => $post['firstname'],
-                'card_owner_last_name' => $post['lastname'],
-                'card_number' => $post['ccnumber'],
-                'expiration_month' => $post['expmonth'],
-                'expiration_year' => $post['expyear'],
-                'card_cvv' => $post['cvc'],
-                'cc_type' => check_cc_type($post['ccnumber']),
-                'is_primary' => 1,
-                'created' => date("Y-m-d H:i:s"),
-                'modified' => date("Y-m-d H:i:s"),
-            ];
-
-            $card_file_id  = $this->CardsFile_model->create($data_cc);
-            $this->session->set_userdata('cfid', $card_file_id);
-            $is_success = 1;
-
-        }else{
-            $message = $result['msg'];
-        }
-
-        echo json_encode(['is_success' => $is_success, 'message' => $message]);
-        exit;
-    }
-
-    public function converge_send_sale($data)
-    {
-        include APPPATH . 'libraries/Converge/src/Converge.php';
-
-        $this->load->model('CompanyOnlinePaymentAccount_model');
-
-        $is_success = false;
-        $msg = '';
-
-        $exp_year = date("m/d/" . $data['exp_year']);
-        $exp_date = $data['exp_month'] . date("y", strtotime($exp_year));
-        $converge = new \wwwroth\Converge\Converge([
-            'merchant_id' => CONVERGE_MERCHANTID,
-            'user_id' => CONVERGE_MERCHANTUSERID,
-            'pin' => CONVERGE_MERCHANTPIN,
-            'demo' => false,
-        ]);
-        $createSale = $converge->request('ccsale', [
-            'ssl_card_number' => $data['card_number'],
-            'ssl_exp_date' => $exp_date,
-            'ssl_cvv2cvc2' => $data['card_cvc'],
-            'ssl_amount' => $data['amount'],
-            'ssl_avs_address' => $data['address'],
-            'ssl_avs_zip' => $data['zip'],
-        ]);
-
-        if ($createSale['success'] == 1) {
-            $is_success = true;
-            $msg = '';
-        } else {
-            $is_success = false;
-            $msg = $createSale['errorMessage'];
-        }
-
-        $return = ['is_success' => $is_success, 'msg' => $msg];
-        return $return;
     }
 }
 

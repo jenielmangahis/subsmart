@@ -1,5 +1,3 @@
-const contractorId = $('#contractor-id').val();
-const contractorName = $('.contractor-details-container h4').html().replace(' (deleted)', '').trim();
 $('.banking-tab-container a').on('click', function() {
     var activeTab = $(this).parent().find('.banking-tab-active');
     activeTab.removeClass('text-decoration-none');
@@ -135,70 +133,4 @@ $('#contractor-payments-table').DataTable({
             data: 'amount'
         }
     ]
-});
-
-$(document).on('click', '#write-check-button', function(e) {
-    e.preventDefault();
-
-    $.get('/accounting/get-other-modals/check_modal', function(res) {
-        if ($('div#modal-container').length > 0) {
-            $('div#modal-container').html(res);
-        } else {
-            $('body').append(`
-                <div id="modal-container"> 
-                    ${res}
-                </div>
-            `);
-        }
-
-        $('#checkModal #payee').append(`<option value="vendor-${contractorId}">${contractorName}</option>`);
-
-        initModalFields('checkModal');
-
-        $('#checkModal').modal('show');
-    });
-});
-
-$(document).on('click', '#create-expense-button', function(e) {
-    e.preventDefault();
-
-    $.get('/accounting/get-other-modals/expense_modal', function(res) {
-        if ($('div#modal-container').length > 0) {
-            $('div#modal-container').html(res);
-        } else {
-            $('body').append(`
-                <div id="modal-container"> 
-                    ${res}
-                </div>
-            `);
-        }
-
-        $('#expenseModal #payee').append(`<option value="vendor-${contractorId}">${contractorName}</option>`);
-
-        initModalFields('expenseModal');
-
-        $('#expenseModal').modal('show');
-    });
-});
-
-$(document).on('click', '#create-bill-button', function(e) {
-    e.preventDefault();
-
-    $.get('/accounting/get-other-modals/bill_modal', function(res) {
-        if ($('div#modal-container').length > 0) {
-            $('div#modal-container').html(res);
-        } else {
-            $('body').append(`
-                <div id="modal-container"> 
-                    ${res}
-                </div>
-            `);
-        }
-
-        $('#billModal #vendor').append(`<option value="${contractorId}">${contractorName}</option>`);
-
-        initModalFields('billModal');
-
-        $('#billModal').modal('show');
-    });
 });

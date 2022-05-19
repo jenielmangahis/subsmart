@@ -6,17 +6,11 @@ class Icons_model extends MY_Model
 
     public $table = 'icons';
 
-    public function getAll($filters=array())
+    public function getAll()
     {
 
         $this->db->select('*');
         $this->db->from($this->table);
-
-        if ( !empty($filters) ) {
-            if ( !empty($filters['search']) ) {
-                $this->db->like('name', $filters['search'], 'both');                
-            }
-        }
 
         $query = $this->db->get();
         return $query->result();

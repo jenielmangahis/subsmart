@@ -256,9 +256,9 @@ $user_id = getLoggedUserID();
                         <a class="dropdown-item" href="<?php echo url('/more/upgrades') ?>">
                             <i class="fa fa-level-up"></i> Upgrades
                         </a>
-                        <!-- <a class="dropdown-item" href="<?php echo url('/nsmart_plans/index') ?>">
+                        <a class="dropdown-item" href="<?php echo url('/nsmart_plans/index') ?>">
                             <i class="fa fa-cubes"></i> Plan Builder
-                        </a> -->
+                        </a>
                         <!-- <a class="dropdown-item" href="<?php //echo url('/more/addons') ?>">
                             <i class="fa fa-user-plus"></i> Add-on
                         </a> -->

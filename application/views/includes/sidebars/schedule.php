@@ -1,10 +1,10 @@
-<?php $module = 'calendar'; ?>
 <style type="text/css">
     div[role="wrapper"] .navbar-side .nav-header {
         background-color: #32243d;
         padding: 20px;
         margin-bottom: 0px;
         color: #45a73c;
+        /*border-bottom: 1px solid #ccc;*/
     }
     div[role="wrapper"] .navbar-side {
         background-color: #32243d;
@@ -46,6 +46,7 @@
                 <span class="fa fa-calendar" style="margin-right:5px;"></span><span class="total-schedule left-sidebar-badge"></span> Schedule <?php echo $userid; ?>
             </a>
         </li>
+        <?php // additional menus for Schedule ?>
         <li class="submenus <?php echo (!empty($page->menu) && $page->menu === 'taskhub')  ? "active" : ""; ?>">
             <a href="<?php echo base_url('taskhub') ?>" title="Taskhub">
                 <span class="fa fa-clipboard" style="margin-right:4px;"></span><span class="total-taskhub left-sidebar-badge"></span> TaskHub
@@ -63,11 +64,6 @@
         <li class="submenus <?php echo (!empty($page->menu) && $page->menu === 'event_types')  ? "active" : ""; ?>">
             <a href="<?php echo base_url('event_types/index') ?>" title="Event Types">
                 <span class="fa fa-gear"></span><span class="left-sidebar-badge"></span>Event Types
-            </a>
-        </li>
-        <li class="submenus <?php echo (!empty($page->menu) && $page->menu === 'appointment_types')  ? "active" : ""; ?>">
-            <a href="<?php echo base_url('appointment_types/index') ?>" title="Appointment Types">
-                <span class="fa fa-gear"></span><span class="left-sidebar-badge"></span>Appointment Types
             </a>
         </li>
         <li class="submenus <?php echo (!empty($page->menu) && $page->menu === 'color_settings')  ? "active" : ""; ?>">

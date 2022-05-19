@@ -1,5 +1,17 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
+<?php
+// CSS to add only Customer module
+add_css(array(
+    'assets/css/jquery.signaturepad.css',
+    'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css',
+    'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css',
+    'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
+    'https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css',
+    'assets/css/accounting/sales.css',
+    'assets/textEditor/summernote-bs4.css',
+));
+?>
 <?php include viewPath('includes/header'); ?>
 
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
@@ -94,35 +106,6 @@
         align-items: center;
         justify-content: center;
     }
-    .card{
-        box-shadow: 0 0 13px 0 rgb(116 116 117 / 44%) !important;
-    }
-    .nsm-button {
-        border: 1px solid #d3d3d3;
-        border-radius: 5px;
-        padding: 0.5em 0.7em;
-        background-color: transparent;
-        font-size: 14px;
-        font-weight: 700;
-    }
-    .content-title {
-        font-size: 15px !important;
-        font-weight: bold;
-        line-height: 1.3;
-        display: block;
-        margin-bottom: 14px !important;
-    }
-    .nsm-button.primary {
-        background-color: #6a4a86;
-        color: #fff;
-    }
-    .nsm-button:not(:first-child), .nsm-button:not(:last-child) {
-        margin-left: 5px;
-        margin-bottom: 15px;
-    }
-    .mb-2 {
-        margin-bottom: 0.5rem!important;
-    }
 </style>
 
 <div class="wrapper" role="wrapper">
@@ -132,6 +115,7 @@
         <?php include viewPath('includes/notifications'); ?>
         <div class="container-fluid">
             <div class="page-title-box">
+
             </div>
             <!-- end row -->
             <div class="row">
@@ -139,36 +123,25 @@
                     <div class="card">
                         <div class="card-body hid-desk" >
                             <div class="row margin-bottom-ter align-items-center">
+
                                 <!-- Nav tabs -->
                                 <div class="col-auto">
                                     <h2 class="page-title">Customer Dashboard</h2>
                                 </div>
                                 <div class="alert alert-warning col-md-12 mt-4 mb-4" role="alert">
-                                    <span style="color:black;">
-                                        Our customer dashboard is Visual and Easy-To-Use. Simply add a widget and quickly see the information you need to help better assist and maintain a well organized business.
-                                        Need us to create a customize widget with the table geared around your business.  Send us a request and our support team will be glad to get you a quote.
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="row margin-bottom-ter align-items-center">
-                                <div  id="settings">
-                                    <div class="banking-tab-container">
-                                        <div class="rb-01">
-                                            <?php include_once('cus_module_tabs.php'); ?>
-                                        </div>
-                                    </div>
-                                    <div class="tab-content mt-4" >
-
-                                    </div>
+                                        <span style="color:black;">
+                                             Our customer dashboard is Visual and Easy-To-Use. Simply add a widget and quickly see the information you need to help better assist and maintain a well organized business.
+                                            Need us to create a customize widget with the table geared around your business.  Send us a request and our support team will be glad to get you a quote.
+                                         </span>
                                 </div>
                             </div>
                         </div>
+                    </div>
                     <style>
                         .btn{
                             font-size: 12px !important;
                         }
                     </style>
-
                     <div class="tab-pane active standard-accordion" id="advance">
                         <div class="col-sm-12">
                                 <div class="col-sm-12">
@@ -196,72 +169,61 @@
                                         endforeach;
                                     endif;
                                     $datas['module_sort'] = $module_sort;
-                                    $this->load->view('customer/adv_cust_modules/alarm-com', $datas);
                                     $this->load->view('customer/adv_cust_modules/add_module', $datas);
+                                   $this->load->view('customer/adv_cust_modules/alarm-com', $datas);
                                     ?>
+
                                     <input type="hidden" id="custom_modules" value="<?= $module_sort->ams_values ?>" />
                                 </div>
                         </div>
                     </div>
-
-                    </div>
-
-                    <div class="modal fade nsm-modal fade" id="new_estimate_modal" tabindex="-1" aria-labelledby="new_estimate_modal_label" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <span class="modal-title content-title" id="new_estimate_modal_label">New Estimate</span>
-                                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="row text-center gy-3">
-                                        <div class="col-12">
-                                            <label class="content-title">What type of estimate you want to create</label>
-                                        </div>
-                                        <div class="col-12">
-                                            <label class="content-subtitle d-block mb-2">Create a regular estimate with items</label>
-                                            <button type="button" class="nsm-button w-50 primary" onclick="window.open('<?= base_url('estimate/add?cus_id='.$cus_id); ?>', '_blank', 'location=yes,height=1080,width=1500,scrollbars=yes,status=yes');">Standard Estimate</button>
-                                        </div>
-                                        <div class="col-12">
-                                            <label class="content-subtitle d-block mb-2">Customers can select all or only certain options</label>
-                                            <button type="button" class="nsm-button w-50 primary" onclick="window.open('<?= base_url('estimate/addoptions?type=2&cus_id='.$cus_id); ?>', '_blank', 'location=yes,height=1080,width=1500,scrollbars=yes,status=yes');">Options Estimate</button>
-                                        </div>
-                                        <div class="col-12">
-                                            <label class="content-subtitle d-block mb-2">Customers can select both Bundle Packages to<br>obtain an overall discount</label>
-                                            <button type="button" class="nsm-button w-50 primary" onclick="window.open('<?= base_url('estimate/addbundle?type=3&cus_id='.$cus_id); ?>', '_blank', 'location=yes,height=1080,width=1500,scrollbars=yes,status=yes');">Bundle Estimate</button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
 
                 </div>
             </div>
         </div>
     </div>
 </div>
-<style>
-    .individual-module-big h6 {
-        transform: rotate(-90deg);
-        width: 380px;
-        text-align: center;
-        background: #34203f;
-        padding: 5px;
-        position: absolute;
-        float: left;
-        left: -215px;
-        top: 155px;
-        color: white;
-        border-radius: 10px 10px 0 0;
-        cursor: pointer;
-    }
-</style>
 
 
+<!-- Modals -->
+
+<!-- Lead Type Modal -->
+<?php include viewPath('customer/adv_modals/modal_lead_type'); ?>
+
+<!-- Sales Area Modal -->
+<?php include viewPath('customer/adv_modals/modal_sales_area'); ?>
+
+<!-- Lead Source Modal -->
+<?php include viewPath('customer/adv_modals/modal_lead_source'); ?>
+
+<!-- Task Modal -->
+<?php include viewPath('customer/adv_modals/modal_task'); ?>
+
+<!-- Impoer Credit Modal -->
+<?php include viewPath('customer/adv_modals/modal_import_credit'); ?>
+
+<!-- Fusnishers Modal -->
+<?php include viewPath('customer/adv_modals/modal_furnishers'); ?>
+
+<!-- Reasons Modal -->
+<?php include viewPath('customer/adv_modals/modal_reasons'); ?>
+<!-- End Modals -->
+
+
+<?php
+// JS to add only Customer module
+add_footer_js(array(
+    'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js',
+    'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js',
+    'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js',
+    'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js',
+    'https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js',
+    'https://code.jquery.com/ui/1.12.1/jquery-ui.js',
+    'assets/textEditor/summernote-bs4.js'
+    // 'assets/frontend/js/creditcard.js',
+    // 'assets/frontend/js/customer/add.js',
+));
+?>
 <!-- page wrapper end -->
 <?php include viewPath('includes/footer'); ?>
 
@@ -297,6 +259,13 @@
 <script>
     $(document).ready(function () {
 
+        $(".date_picker").datetimepicker({
+            format: "l",
+            //'setDate': new Date(),
+            //minDate: new Date(),
+        });
+        $('.date_picker').val(new Date().toLocaleDateString());
+
         //$(".module").draggable({axis:"y"});
         ///$( ".sortable2" ).sortable("disable");
         $('#onoff-customize').change(function () {
@@ -313,6 +282,9 @@
             }
 
         });
+
+
+
         $(".sortable2").sortable({
             start: function (e, ui) {
                 // creates a temporary attribute on the element with the old index
@@ -347,5 +319,29 @@
 
         $(".sortable2").sortable("disable");
 
+        $(".remove_task").on("click", function (event) {
+            var ID = this.id;
+            //alert(ID);
+            $.ajax({
+                type: "POST",
+                url: "/customer/remove_task",
+                data: {id: ID}, // serializes the form's elements.
+                success: function (data) {
+                    if (data === "Done") {
+                        window.location.reload();
+                    } else {
+                        console.log(data);
+                    }
+                }
+            });
+        });
+
+
+
+
     });
+
+
+
+
 </script>

@@ -44,6 +44,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     #myTabContent #details .card:hover h5.edit-icon {
         display: block;
     }
+    span.select2-selection.select2-selection--single {
+        min-width: unset !important;
+    }
 </style>
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">
@@ -94,8 +97,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     <span class="sr-only">Toggle Dropdown</span>
                                                 </button>
                                                 <div class="dropdown-menu">
-                                                    <a class="dropdown-item" href="#" id="create-expense-button">Create expense</a>
-                                                    <a class="dropdown-item" href="#" id="create-bill-button">Create bill</a>
+                                                    <a class="dropdown-item" href="#">Create expense</a>
+                                                    <a class="dropdown-item" href="#">Create bill</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -108,7 +111,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         </div>
                                     </div>
                                     <div class="contractor-details-container">
-                                        <h4><?=$contractor->display_name?> <?=$contractor->status === "0" ? '(deleted)' : ''?></h4>
+                                        <h4><?=$contractor->display_name?> <?=$contractor->status === "0" ? '(deleted)' : ''?></h5>
                                         <div class="dropdown d-flex">
                                             <button class="btn m-auto" type="button" id="statusDropdownButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 <?=$contractor->status === "1" ? 'Active' : 'Inactive' ?>&nbsp;&nbsp;<i class="fa fa-chevron-down"></i>
@@ -145,7 +148,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                         <div class="tab-content" id="myTabContent">
                             <div class="tab-pane fade show active" id="details" role="tabpanel" aria-labelledby="details-tab">
-                                <input type="hidden" name="contractor_id" id="contractor-id" value="<?=$contractor->id?>">
                                 <div class="card cursor-pointer border">
                                     <div class="card-body" style="padding: 0">
                                         <div class="row">
@@ -371,7 +373,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                             <input type="text" name="city" id="city" class="form-control" required value="<?=$contractor->city?>">
                                                         </div>
                                                     </div>
-                                                    <div class="col-xl-2 p-0 default-field <?=$contractor->contractor_type_id !== null && $contractor->contractor_type_id !== "" ? "" : "hide"?>">
+                                                    <div class="col-xl-2 default-field <?=$contractor->contractor_type_id !== null && $contractor->contractor_type_id !== "" ? "" : "hide"?>">
                                                         <div class="form-group">
                                                             <label for="state">State *</label>
                                                             <select name="state" id="state" class="form-control" required>

@@ -25,23 +25,15 @@ class IndustryType_model extends MY_Model
         }
 
 
-        $this->db->order_by('name', 'ASC');
-        $query = $this->db->get();
-        return $query->result();
-    }
-
-    public function getAllByStatus($status_id)
-    {
-        $this->db->select('*');
-        $this->db->from($this->table);
-        $this->db->where('status', $status_id);
-        $this->db->order_by('id', 'DESC');
+        $this->db->order_by('business_type_name', 'ASC');
         $query = $this->db->get();
         return $query->result();
     }
 
     public function getAllActive($filters=array())
     {
+        $id = logged('id');
+
         $this->db->select('*');
         $this->db->from($this->table);
 
@@ -61,6 +53,8 @@ class IndustryType_model extends MY_Model
 
     public function getById($id)
     {
+        $user_id = logged('id');
+
         $this->db->select('*');
         $this->db->from($this->table);
 
@@ -72,6 +66,7 @@ class IndustryType_model extends MY_Model
 
     public function getByName($name)
     {
+        $user_id = logged('id');
 
         $this->db->select('*');
         $this->db->from($this->table);

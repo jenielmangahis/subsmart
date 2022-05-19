@@ -4,22 +4,8 @@
 <!--<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.css">
 </link>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.css" integrity="sha512-/zs32ZEJh+/EO2N1b0PEdoA10JkdC3zJ8L5FTiQu82LR9S/rOQNfQN7U59U9BC12swNeRAz3HSzIL2vpp4fv3w==" crossorigin="anonymous" />
- page wrapper start -->
-<style>
-    #overlay {
-        display: none;
-        background: rgba(255, 255, 255, 0.7);
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        top: 0;
-        z-index: 9998;
-        align-items: center;
-        justify-content: center;
-        margin: auto;
-    }
-</style>
+
+<!-- page wrapper start -->
 <link rel="stylesheet" href="<?= base_url("assets/css/dashboard-responsive.css") ?>">
 
 <div class="wrapper" style="padding: 80px 14px;">
@@ -36,11 +22,11 @@
                     </div>
                     <div class="col-lg-6 justify-content-center d-none d-lg-block">
                         <div class="col-lg-12" style="background: #ffffff; height:50px; height:130px; margin:0 auto; top:-27px; border-radius: 0 0 60px 60px; padding-top:25px;">
-                            <div onclick="document.location = '<?php echo base_url('customer/add_advance') ?>'" class="float-left col-lg-2 no-padding text-center pointer">
+                            <div onclick="document.location = '<?php echo base_url('/customer/add_lead') ?>'" class="float-left col-lg-2 no-padding text-center pointer">
                                 <img class="col-lg-8" src="<?= assets_url('img/shortcuts/') . 'new_customer_qs.png' ?>" style="margin: 0 auto;" />
                                 <p>Add Customer</p>
                             </div>
-                            <div class="float-left col-lg-2 no-padding text-center pointer" onclick="document.location = '<?= base_url('customer') ?>'">
+                            <div class="float-left col-lg-2 no-padding text-center pointer" onclick="$('#modal_customer').modal('show')">
                                 <img class="col-lg-8" src="<?= assets_url('img/shortcuts/') . 'find_customer_qs.png' ?>" style="margin: 0 auto;"  />
                                 <p>Find Customer</p>
                             </div>
@@ -82,16 +68,16 @@
                         <div class="modal-dialog modal-md" role="document" style="max-width: 592px; margin-top:230px;">
                             <div class="modal-content" style="border-radius: 30px;">
                                 <div class="modal-header">
-                                    <input type="text" placeholder="Title" id="feedSubject" class="form-control" required/>
+                                    <input type="text" placeholder="Subject Line" id="feedSubject" class="form-control" />
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
                                 <div class="modal-body text-center">
-                                    <textarea style="height:130px;" id="feedMessage" class="form-control" placeholder="Message" required></textarea>
+                                    <textarea style="height:130px;" id="feedMessage" class="form-control" placeholder="Feed Message" ></textarea>
                                 </div>
                                 <div class="modal-footer">
-                                    <button onclick="sendFeed()" class="float-right btn btn-success btn-small"><span class="fa fa-paper-plane"></span> Save Feed</button>
+                                    <button onclick="sendFeed()" class="float-right btn btn-success btn-small">Send Feed</button>
                                 </div>
                             </div>
                         </div>
@@ -107,20 +93,15 @@
 
                                 </div>
                                 <div class="modal-body text-center">
-                                    <textarea style="height:130px;" class="form-control" id="news" placeholder="News Bulletin" required></textarea>
+                                    <textarea style="height:130px;" class="form-control" id="news" placeholder="News Bulletin" ></textarea>
                                     <br />
-                                    <input class="float-left" id="file" type="file" value="Upload File" required/>
+                                    <input class="float-left" id="file" type="file" value="Upload File" />
                                 </div>
                                 <div class="modal-footer">
-                                    <button onclick="sendNewsLetter()" class="float-right btn btn-success btn-small"><span class="fa fa-paper-plane"></span> Send Newsletter</button>
+                                    <button onclick="sendNewsLetter()" class="float-right btn btn-success btn-small">Send Newsletter</button>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div id="overlay">
-                        <div>
-                            <img src="<?=base_url()?>/assets/img/uploading.gif" class="" style="width: 80px;" alt="" />
-                            <center><p>Processing...</p></center></div>
                     </div>
                     <script type="text/javascript">
                         function sendFeed()
@@ -133,15 +114,12 @@
                                     subject : $('#feedSubject').val(),
                                     message : $('#feedMessage').val()
                                 }, // serializes the form's elements.
-                                success: function (data) {
-                                    document.getElementById('overlay').style.display = "none";
-                                    $('#newFeed').modal('hide');
-                                    if(data.success){
-                                        notifyUser('Nice!',data.msg,'success');
-                                    }
-                                    console.log(data);
-                                }, beforeSend: function() {
-                                    document.getElementById('overlay').style.display = "flex";
+                                success: function (data)
+                                {
+                                    $('#newFeed').modal('hide')
+                                    alert(data.msg);
+                                    
+                                    console.log(data.notifyResult);
                                 }
                             });
                         }
@@ -159,22 +137,23 @@
                             formdata.append('news',$('#news').val());
 
                             $.ajax({
-                                url: '<?= base_url(); ?>newsletter/saveNewsBulletin',
+                                url: '<?php echo base_url(); ?>newsletter/saveNewsBulletin',
                                 method: 'POST',
                                 data: formdata,
                                 cache: false,
                                 contentType: false,
                                 processData: false,
                                 dataType: 'json',
+                                
                                 success: function (response) {
-                                    if(response.success){
-                                        notifyUser('Nice!',response.msg,'success');
+                                    if(response.success)
+                                    {
+                                        alert(response.msg)
+                                    }else{
+                                        alert(response.msg)
                                     }
-                                    console.log(response);
-                                    document.getElementById('overlay').style.display = "none";
+                                    
                                     $('#addNewsLetter').modal('hide');
-                                }, beforeSend: function() {
-                                    document.getElementById('overlay').style.display = "flex";
                                 }
                             });
                         }
@@ -240,7 +219,6 @@
                                 endif;
                             endforeach;
                             ?>
-
                         </div>
                     </div>
                 </div>
@@ -260,6 +238,7 @@
                     $this->load->view('widgets/add_widgets');
                     ?>
                 </div>
+
                 <!-- end row -->
                 <br>
                 <div class="row d-none d-lg-flex">
@@ -391,73 +370,18 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                <div class="wid_header col-md-6" data-id=""  id="widget">
-                    <div class="card" style="border: 2px solid #30233d; margin-top:0; border-radius: 40px; padding:5px;">
-                        <div style="border: 5px solid #30233d; margin-top:0; border-radius: 40px; box-shadow: 1px 0 15px 5px rgb(48, 35, 61);">
-                            <div class="card-body mt-2" style="padding:5px 10px;overflow: hidden">
-                                <div class="row" style="overflow-y: scroll; padding:5px 20px;">
-                                    <div id="" class="col-lg-12 text-center">
-                                        <h6 class="text-center"><strong>Feeds</strong></h6>
-                                        <table class="table table-responsive-sm table-striped">
-                                            <thead>
-                                                <tr>
-                                                    <th>Title</th>
-                                                    <th>Message</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <?php foreach($feeds as $feed): ?>
-                                                    <tr>
-                                                        <td class="text-left"><small><strong><?= $feed->title ?></strong></small><br /></td>
-                                                        <td><?= $feed->message ?></td>
-                                                    </tr>
-                                                <?php endforeach; ?>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="wid_header col-md-6" data-id=""  id="widget">
-                    <div class="card" style="border: 2px solid #30233d; margin-top:0; border-radius: 40px; padding:5px;">
-                        <div style="border: 5px solid #30233d; margin-top:0; border-radius: 40px; box-shadow: 1px 0 15px 5px rgb(48, 35, 61);">
-                            <div class="card-body mt-2" style="padding:5px 10px;overflow: hidden">
-                                <div class="row" style="overflow-y: scroll; padding:5px 20px;">
-                                    <div id="" class="col-lg-12 text-center">
-                                        <h6 class="text-center"><strong>Bulletins</strong></h6>
-                                        <table class="table table-responsive-sm table-striped">
-                                            <thead>
-                                                <tr>
-                                                    <th>File</th>
-                                                    <th>News</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                            <?php foreach($news as $new): ?>
-                                                <tr>
-                                                    <td class="text-left"><small><a href="<?= base_url(''.$new->file_link) ?>" target="_blank"><?= $new->file_link ?></a></small><br /></td>
-                                                    <td><?= $new->message ?></td>
-                                                </tr>
-                                            <?php endforeach; ?>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                </div>
             </div>
+            <!-- Earnings Display -->
+            <!-- end row -->
+            <!-- end container-fluid -->
         </div>
     </div>
+
     <!-- page wrapper end -->
 </div>
+
 <!-- floating action button -->
+
 <div class="col-12 d-md-none d-block p-0">
     <?php $this->load->view('dashboard/ringCentralActionButton'); ?>
 </div>

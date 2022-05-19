@@ -16,15 +16,29 @@
     </div>
 
     <div class="card" style="border: 2px solid #30233d; margin-top:0; border-radius: 40px; padding:5px;">
-        <div style="border: 5px solid #30233d; margin-top:0; border-radius: 40px; box-shadow: 1px 0 15px 5px rgb(48, 35, 61);">
+        <div style="border: 5px solid #30233d; margin-top:0; border-radius: 40px; box-shadow: 1px 0px 15px 5px rgb(48, 35, 61);">
             <div class="card-body mt-2" style="padding:5px 10px; height: 363px; overflow: hidden">
                 <div class="row" id="salesLeaderboardBody" style="<?= $height; ?> overflow-y: scroll; padding:10px;">
-               
+<!--                    <div class="col-md-6 col-sm-6">
+                        <div class="insl-bx">
+                            <h5>Top Reps</h5>
+
+                            <ul>
+                                <li><strong>1.</strong> T.Smith (COR) - <span>133</span></li>
+                                <li><strong>2.</strong> T.Smith (COR) - <span>133</span></li>
+                            </ul>
+                        </div>
+                    </div>-->
                     <div class="col-md-12 col-sm-12">
                         <div class="insl-bx">
                             <h5>Top Techs</h5>
                             <ul id="sales_leaderboard">
-                                <li><strong>1.</strong> Tommy Nguyen -  <span>1</span></li>
+                                <li><strong>1.</strong> T.Smith (COR) - <span>133</span></li>
+                                <li><strong>2.</strong> T.Smith (COR) - <span>133</span></li>
+                                <li><strong>3.</strong> T.Smith (COR) - <span>133</span></li>
+                                <li><strong>4.</strong> T.Smith (COR) - <span>133</span></li>
+                                <li><strong>5.</strong> T.Smith (COR) - <span>133</span></li>
+                                <li><strong>6.</strong> T.Smith (COR) - <span>133</span></li>
                             </ul>
                         </div>
                     </div>

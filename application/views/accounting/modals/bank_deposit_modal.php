@@ -1,50 +1,33 @@
 <!-- Modal for bank deposit-->
 <div class="full-screen-modal">
-<?php if(!isset($deposit)) : ?>
 <form onsubmit="submitModalForm(event, this)" id="modal-form">
-<?php else : ?>
-<form onsubmit="updateTransaction(event, this)" id="modal-form" data-href="/accounting/update-transaction/deposit/<?=$deposit->id?>">
-<?php endif; ?>
     <div id="depositModal" class="modal fade modal-fluid" role="dialog">
         <div class="modal-dialog">
             <!-- Modal content-->
             <div class="modal-content" style="height: 100%;">
                 <div class="modal-header" style="background: #f4f5f8;border-bottom: 0">
-                    <div class="row w-100">
-                        <div class="col-6 d-flex align-items-center">
-                            <div class="dropdown mr-1">
-                                <a href="javascript:void(0);" class="h4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fa fa-history fa-lg"></i>
-                                </a>
-                                <div class="dropdown-menu" style="width: 500px">
-                                    <h5 class="dropdown-header">Recent Deposits</h5>
-                                    <table class="table table-borderless table-hover cursor-pointer" id="recent-deposits">
-                                        <tbody></tbody>
-                                    </table>
-                                </div>
-                            </div>
-                            <h4 class="modal-title">
-                                Bank Deposit
-                            </h4>
-                        </div>
-                    </div>
+                    <h4 class="modal-title">Bank Deposit</h4>
                     <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
                 </div>
                 <div class="modal-body">
-                    <div class="row" style="min-height: 100%">
-                        <div class="col">
-                            <div class="card p-0 m-0" style="min-height: 100%">
+                    <div class="row">
+                        <div class="col-xl-12">
+                            <div class="card p-0 m-0">
                                 <div class="card-body" style="padding-bottom: 1.25rem">
                                     <div class="row bank-account-details">
                                         <div class="col-md-8">
                                             <div class="row">
                                                 <div class="col-md-5">
                                                     <div class="form-group">
-                                                        <label for="bank_deposit_account">Account</label>
-                                                        <select name="bank_account" id="bank_deposit_account" class="form-control" required>
-                                                            <?php if(isset($deposit)) : ?>
-                                                            <option value="<?=$account->id?>"><?=$account->name?></option>
-                                                            <?php endif; ?>
+                                                        <label for="bankAccount">Account</label>
+                                                        <select name="bank_account" id="bankAccount" class="form-control" required>
+                                                            <?php foreach($accounts as $key => $value) : ?>
+                                                                <optgroup label="<?= $key ?>">
+                                                                    <?php foreach($value as $account) : ?>
+                                                                        <option value="<?= $account['value'] ?>" <?= $account['selected'] === true ? 'selected' : '' ?>><?= $account['text'] ?></option>
+                                                                    <?php endforeach; ?>
+                                                                </optgroup>
+                                                            <?php endforeach; ?>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -54,54 +37,24 @@
                                                 <div class="col-md-4">
                                                     <div class="form-group">
                                                         <label for="date">Date</label>
-                                                        <input type="text" class="form-control date" name="date" id="date" value="<?=!isset($deposit) ? date('m/d/Y') : ($deposit->date !== "" && !is_null($deposit->date) ? date("m/d/Y", strtotime($deposit->date)) : "")?>"/>
+                                                        <input type="text" class="form-control date" name="date" id="date" value="<?php echo date('m/d/Y') ?>"/>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <h6 class="text-right">AMOUNT</h6>
-                                            <h2 class="text-right total-deposit-amount">
-                                                <?php if(isset($deposit)) :
-                                                    $amount = '$'.number_format(floatval($deposit->total_amount), 2, '.', ',');
-                                                    $amount = str_replace('$-', '-$', $amount);
-                                                ?>
-                                                <?=$amount?>
-                                                <?php else : ?>
-                                                $0.00
-                                                <?php endif; ?>
-                                            </h2>
+                                            <h2 class="text-right total-deposit-amount">$0.00</h2>
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <?php if($is_copy) : ?>
-                                        <div class="col-md-12">
-                                            <div class="alert alert-info alert-dismissible mb-4" role="alert">
-                                                <button type="button" class="close" data-dismiss="alert">&times;</button>
-                                                <h6 class="mt-0">This is a copy</h6>
-                                            </div>
-                                        </div>
-                                        <?php endif; ?>
                                         <div class="col-md-8">
                                             <div class="form-group">
                                                 <div id="label">
                                                     <label for="tags">Tags</label>
                                                     <span class="float-right"><a href="#" class="text-info" data-toggle="modal" data-target="#tags-modal" id="open-tags-modal">Manage tags</a></span>
                                                 </div>
-                                                <select name="tags[]" id="tags" class="form-control" multiple="multiple">
-                                                    <?php if(isset($tags) && count($tags) > 0) : ?>
-                                                        <?php foreach($tags as $tag) : ?>
-                                                            <?php 
-                                                                $name = $tag->name;
-                                                                if($tag->group_tag_id !== null) {
-                                                                    $group = $this->tags_model->getGroupById($tag->group_tag_id);
-                                                                    $name = $group->name.': '.$tag->name;
-                                                                }
-                                                            ?>
-                                                            <option value="<?=$tag->id?>" selected><?=$name?></option>
-                                                        <?php endforeach; ?>
-                                                    <?php endif; ?>
-                                                </select>
+                                                <select name="tags[]" id="tags" class="form-control" multiple="multiple"></select>
                                             </div>
                                         </div>
                                     </div>
@@ -132,75 +85,57 @@
                                                                 <td></td>
                                                                 <td>1</td>
                                                                 <td>
-                                                                    <select name="received_from[]" class="form-control"></select>
+                                                                    <select name="received_from[]" class="form-control">
+                                                                        <option value="" disabled selected>&nbsp;</option>
+                                                                        <?php if(count($dropdown['customers']) !== 0) : ?>
+                                                                        <optgroup label="Customers">
+                                                                            <?php foreach($dropdown['customers'] as $customer) :?>
+                                                                                <option value="customer-<?php echo $customer->prof_id; ?>"><?php echo $customer->first_name . ' ' . $customer->last_name;?></option>
+                                                                            <?php endforeach; ?>
+                                                                        </optgroup>
+                                                                        <?php endif; ?>
+                                                                        <?php if(count($dropdown['vendors']) !== 0) : ?>
+                                                                        <optgroup label="Vendors">
+                                                                            <?php foreach($dropdown['vendors'] as $vendor):?>
+                                                                                <option value="vendor-<?php echo $vendor->id;?>"><?php echo $vendor->f_name . ' ' . $vendor->l_name;?></option>
+                                                                            <?php endforeach; ?> 
+                                                                        </optgroup>
+                                                                        <?php endif; ?>
+                                                                        <?php if(count($dropdown['employees']) !== 0) : ?>
+                                                                        <optgroup label="Employees">
+                                                                            <?php foreach($dropdown['employees'] as $employee):?>
+                                                                                <option value="employee-<?php echo $employee->id;?>"><?php echo $employee->FName . ' ' . $employee->LName;?></option>
+                                                                            <?php endforeach; ?> 
+                                                                        </optgroup>
+                                                                        <?php endif; ?>
+                                                                    </select>
                                                                 </td>
                                                                 <td>
-                                                                    <select name="funds_account[]" class="form-control" required></select>
+                                                                    <select name="account[]" class="form-control" required>
+                                                                        <option value="" disabled selected>&nbsp;</option>
+                                                                        <?php foreach($accounts as $key => $value) : ?>
+                                                                            <optgroup label="<?= $key ?>">
+                                                                                <?php foreach($value as $account) : ?>
+                                                                                    <option value="<?= $account['value'] ?>"><?= $account['text'] ?></option>
+                                                                                    <?php $count++; ?>
+                                                                                <?php endforeach; ?>
+                                                                            </optgroup>
+                                                                        <?php endforeach; ?>
+                                                                    </select>
                                                                 </td>
                                                                 <td><input type="text" name="description[]" class="form-control"></td>
                                                                 <td>
                                                                     <select name="payment_method[]" class="form-control">
                                                                         <option value="" disabled selected>&nbsp;</option>
+                                                                        <option value="1">Cash</option>
+                                                                        <option value="2">Check</option>
+                                                                        <option value="3">Credit Card</option>
                                                                     </select>
                                                                 </td>
                                                                 <td><input type="text" name="reference_no[]" class="form-control"></td>
                                                                 <td><input type="number" name="amount[]" class="form-control text-right" step=".01" onchange="updateBankDepositTotal(this)" required></td>
-                                                                <td>
-                                                                    <div class="d-flex align-items-center justify-content-center">
-                                                                        <a href="#" class="deleteRow"><i class="fa fa-trash"></i></a>
-                                                                    </div>
-                                                                </td>
+                                                                <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
                                                             </tr>
-                                                            <?php $count = 1; ?>
-                                                            <?php if(isset($funds) && count($funds) > 0) : $fundsAmount = 0.00;?>
-                                                                <?php foreach($funds as $fund) : $fundsAmount += floatval($fund->amount);?>
-                                                                    <tr>
-                                                                        <td></td>
-                                                                        <td><?=$count?></td>
-                                                                        <td>
-                                                                            <select name="received_from[]" class="form-control">
-                                                                                <option value="<?=$fund->received_from_key.'-'.$fund->received_from_id?>"><?=$fund->name?></option>
-                                                                            </select>
-                                                                        </td>
-                                                                        <td>
-                                                                            <select name="funds_account[]" class="form-control" required>
-                                                                                <option value="<?=$fund->account->id?>"><?=$fund->account->name?></option>
-                                                                            </select>
-                                                                        </td>
-                                                                        <td><input type="text" name="description[]" class="form-control" value="<?=$fund->description?>"></td>
-                                                                        <td>
-                                                                            <select name="payment_method[]" class="form-control">
-                                                                                <option value="<?=$fund->payment_method?>"><?=$fund->payment->name?></option>
-                                                                            </select>
-                                                                        </td>
-                                                                        <td><input type="text" name="reference_no[]" class="form-control" value="<?=$fund->ref_no?>"></td>
-                                                                        <td><input type="number" name="amount[]" value="<?=number_format(floatval($fund->amount), 2, '.', ',')?>" class="form-control text-right" step=".01" onchange="updateBankDepositTotal(this)" required></td>
-                                                                        <td>
-                                                                            <div class="d-flex align-items-center justify-content-center">
-                                                                                <a href="#" class="deleteRow"><i class="fa fa-trash"></i></a>
-                                                                            </div>
-                                                                        </td>
-                                                                    </tr>
-                                                                    <?php $count++; ?>
-                                                                <?php endforeach; ?>
-                                                            <?php endif; ?>
-                                                            <?php do {?>
-                                                                <tr>
-                                                                    <td></td>
-                                                                    <td><?=$count?></td>
-                                                                    <td></td>
-                                                                    <td></td>
-                                                                    <td></td>
-                                                                    <td></td>
-                                                                    <td></td>
-                                                                    <td></td>
-                                                                    <td>
-                                                                        <div class="d-flex align-items-center justify-content-center">
-                                                                            <a href="#" class="deleteRow"><i class="fa fa-trash"></i></a>
-                                                                        </div>
-                                                                    </td>
-                                                                </tr>
-                                                            <?php $count++; } while ($count <= 2) ?>
                                                             <tr>
                                                                 <td></td>
                                                                 <td>2</td>
@@ -210,16 +145,12 @@
                                                                 <td></td>
                                                                 <td></td>
                                                                 <td></td>
-                                                                <td>
-                                                                    <div class="d-flex align-items-center justify-content-center">
-                                                                        <a href="#" class="deleteRow"><i class="fa fa-trash"></i></a>
-                                                                    </div>
-                                                                </td>
+                                                                <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
                                                             </tr>
                                                         </tbody>
                                                     </table>
                                                 </div>
-                                                <div class="table-footer">
+                                                <div class="funds-table-footer">
                                                     <div class="row">
                                                         <div class="col-md-6">
                                                             <button type="button" class="btn btn-outline-secondary border" data-target="#bank-deposit-table" onclick="addTableLines(event)">Add lines</button>
@@ -227,16 +158,7 @@
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="other-funds-total">
-                                                                <span class="float-right ml-5 other-funds-total">
-                                                                    <?php if(isset($funds)) :
-                                                                        $fundsAmount = '$'.number_format($fundsAmount, 2, '.', ',');
-                                                                        $fundsAmount = str_replace('$-', '-$', $fundsAmount);
-                                                                    ?>
-                                                                        <?=$fundsAmount?>
-                                                                    <?php else : ?>
-                                                                        $0.00
-                                                                    <?php endif; ?>
-                                                                </span>
+                                                                <span class="float-right ml-5 other-funds-total">$0.00</span>
                                                                 <span class="float-right">Other funds total</span>
                                                             </div>
                                                         </div>
@@ -248,7 +170,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="memo">Memo</label>
-                                                <textarea name="memo" id="memo" class="form-control w-50"><?=$deposit->memo?></textarea>
+                                                <textarea name="memo" id="memo" class="form-control w-50"></textarea>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
@@ -256,39 +178,35 @@
                                                 <div class="col-md-4">
                                                     <div class="form-group">
                                                         <label for="cashBackTarget">Cash back goes to</label>
-                                                        <select name="cash_back_account" id="cash_back_account" class="form-control" required>
-                                                            <?php if(isset($deposit) && !is_null($cash_back_account)) : ?>
-                                                            <option value="<?=$cash_back_account->id?>"><?=$cash_back_account->name?></option>
-                                                            <?php endif; ?>
+                                                        <select name="cash_back_target" id="cashBackTarget" class="form-control" required>
+                                                        <?php foreach($accounts as $key => $value) : ?>
+                                                            <optgroup label="<?= $key ?>">
+                                                                <?php foreach($value as $account) : ?>
+                                                                    <option value="<?= $account['value'] ?>"><?= $account['text'] ?></option>
+                                                                    <?php $count++; ?>
+                                                                <?php endforeach; ?>
+                                                            </optgroup>
+                                                        <?php endforeach; ?>
                                                         </select>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <div class="form-group">
                                                         <label for="cashBackMemo">Cash back memo</label>
-                                                        <textarea name="cash_back_memo" id="cashBackMemo" class="form-control"><?=$deposit->cash_back_memo?></textarea>
+                                                        <textarea name="cash_back_memo" id="cashBackMemo" class="form-control"></textarea>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <div class="form-group">
                                                         <label for="cashBackAmount">Cash back amount</label>
-                                                        <input type="number" name="cash_back_amount" value="<?=isset($deposit) && $deposit->cash_back_amount !== "0" ? number_format(floatval($deposit->cash_back_amount), 2, '.', ',') : ''?>" id="cashBackAmount" step=".01" onchange="updateBankDepositTotal(this)" class="form-control text-right">
+                                                        <input type="number" name="cash_back_amount" id="cashBackAmount" step=".01" onchange="updateBankDepositTotal(this)" class="form-control text-right">
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col-12">
                                                     <div class="cash-back-total">
-                                                        <span class="float-right ml-5 total-cash-back">
-                                                            <?php if(isset($deposit)) :
-                                                                $amount = '$'.number_format(floatval($deposit->total_amount), 2, '.', ',');
-                                                                $amount = str_replace('$-', '-$', $amount);
-                                                            ?>
-                                                            <?=$amount?>
-                                                            <?php else : ?>
-                                                            $0.00
-                                                            <?php endif; ?>
-                                                        </span>
+                                                        <span class="float-right ml-5 total-cash-back">$0.00</span>
                                                         <span class="float-right">Total </span>
                                                     </div>
                                                 </div>
@@ -296,18 +214,22 @@
                                         </div>
 
                                         <div class="col-md-4">
-                                            <div class="attachments">
-                                                <label for="attachment" style="margin-right: 15px"><i class="fa fa-paperclip"></i>&nbsp;Attachment</label> 
-                                                <span>Maximum size: 20MB</span>
-                                                <div id="bank-deposit-attachments" class="dropzone" style="border: 1px solid #e1e2e3;background: #ffffff;width: 100%;">
-                                                    <div class="dz-message" style="margin: 20px;border">
-                                                        <span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
-                                                        <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
+                                            <div class="deposit-attachments attachments">
+                                                <div class="attachments-header">
+                                                    <button type="button" onclick="document.getElementById('deposit-attachments').click();">Attachments</button>
+                                                    <span>Maximum size: 20MB</span>
+                                                </div>
+                                                <div class="attachments-list">
+                                                    <div class="attachments-container border" onclick="document.getElementById('deposit-attachments').click();">
+                                                        <div class="attachments-container-label">
+                                                            Drag/Drop files here or click the icon
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div class="d-flex justify-content-center align-items-center">
-                                                    <a href="#" id="show-existing-attachments" class="text-info">Show existing</a>
+                                                <div class="attachments-footer w-100 d-flex">
+                                                    <span class="m-auto"><a href="#" class="text-info">Show existing</a></span>
                                                 </div>
+                                                <input type="file" name="attachments[]" id="deposit-attachments" class="hide" multiple="multiple">
                                             </div>
                                         </div>
                                     </div>
@@ -327,33 +249,20 @@
                                     <span><a href="#" onclick="viewPrint(1, 'deposit-summary')" class="text-white">Print deposit summary</a></span>
                                     <span class="mx-3 divider"></span>
                                     <span><a href="#" onclick="makeRecurring('bank_deposit')" class="text-white">Make recurring</a></span>
-                                    <?php if(isset($deposit)) : ?>
-                                    <span class="mx-3 divider"></span>
-                                    <span>
-                                        <div class="dropup">
-                                            <a href="javascript:void(0);" class="text-white" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
-                                            <div class="dropdown-menu">
-                                                <a class="dropdown-item" href="#" id="delete-deposit">Delete</a>
-                                                <a class="dropdown-item" href="#">Transaction journal</a>
-                                                <a class="dropdown-item" href="#">Audit history</a>
-                                            </div>
-                                        </div>
-                                    </span>
-                                    <?php endif; ?>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <!-- Split dropup button -->
                             <div class="btn-group dropup float-right">
-                                <button type="button" class="btn btn-success" onclick="saveAndNewForm(event)">
+                                <button type="submit" class="btn btn-success">
                                     Save and new
                                 </button>
                                 <button type="button" class="btn btn-success dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <span class="sr-only">Toggle Dropdown</span>
                                 </button>
                                 <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="#" onclick="saveAndCloseForm(event)">Save and close</a>
+                                    <a class="dropdown-item" href="#">Save and close</a>
                                 </div>
                             </div>
                         </div>

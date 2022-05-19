@@ -14,32 +14,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     #chart-of-accounts-table .btn-group .btn {
         padding: 10px;
     }
-    #myTabContent .action-bar ul li a:after {
-        width: 0;
-    }
-    #myTabContent .action-bar ul li a {
-    font-size: 20px;
-    }
-    #myTabContent .action-bar ul li {
-        margin-right: 5px;
-    }
-    #myTabContent .action-bar ul li #cancel-edit-btn {
-        color: #6B6C72;
-        border: 0;
-    }
-    #myTabContent .action-bar ul li #cancel-edit-btn:hover {
-        background: transparent;
-    }
-    .btn-transparent:hover {
-        background: #d4d7dc !important;
-        border-color: #6B6C72 !important;
-    }
-    .btn-transparent {
-        color: #6B6C72 !important;
-    }
-    .btn-transparent:focus {
-        border-color: #6B6C72 !important;
-    }
 </style>
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">
@@ -84,7 +58,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     Run Report
                                             </a>
                                             <div class="btn-group float-right">
-                                                <a href="javascript:void(0);" id="add-new-account-button" class="btn btn-success d-flex align-items-center justify-content-center">
+                                                <a href="javascript:void(0);" data-toggle="modal" data-target="#modalAddAccount" class="btn btn-success d-flex align-items-center justify-content-center">
                                                     Add New
                                                 </a>
                                                 <button type="button" class="btn btn-success dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -112,82 +86,37 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <?php endif; ?>
                         <div class="tab-content" id="myTabContent">
                             <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1">
-                                <div class="row my-3 d-none" id="edit-accounts-buttons">
-                                    <div class="col">
-                                        <div class="action-bar h-100 align-items-center">
-											<ul class="ml-auto" style="min-width: 50%">
-												<li>
-													<button class="btn btn-transparent" id="cancel-edit-btn">Cancel</button>
-												</li>
-                                                <li>
-                                                    <button class="btn btn-success" id="save-table-btn">Save</button>
-                                                </li>
-											</ul>
-										</div>
-                                    </div>
-                                </div>
                                 <div class="row my-3">
                                     <div class="col-md-6">
                                         <div class="form-row">
-                                            <div class="col-2 d-flex align-items-end">
-                                                <div class="arrow-level-down ml-auto">
-                                                    <i class="fa fa-level-down fa-flip-horizontal fa-2x icon-arrow"></i>
-                                                </div>
-                                                <div class="dropdown d-inline-block">
-                                                    <button class="btn btn-transparent" type="button"
-                                                        id="statusDropdownButton" data-toggle="dropdown"
-                                                        aria-haspopup="true" aria-expanded="false">
-                                                        Batch actions&nbsp;&nbsp;<i class="fa fa-caret-down"></i>
-                                                    </button>
-
-                                                    <div class="dropdown-menu" aria-labelledby="statusDropdownButton">
-                                                        <a href="#" class="dropdown-item disabled" id="make-inactive-batch">Make inactive</a>
-                                                    </div>
-                                                </div>
-                                            </div>
                                             <div class="col-3">
                                                 <input type="text" name="search" id="search" class="form-control" placeholder="Filter by name">
                                             </div>
-                                            <!-- <div class="col-3">
-                                                <select name="" id="type" class="form-control">
+                                            <div class="col-3">
+                                                <select name="" id="" class="form-control">
                                                     <option value="all">All</option>
                                                     <option value="ctl">Counts toward limits</option>
                                                 </select>
-                                            </div> -->
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="action-bar h-100 d-flex align-items-center">
                                             <ul class="ml-auto">
-                                                <li><a href="#" id="edit-accounts"><i class="fa fa-edit"></i></a></li>
-                                                <li><a href="#" id="print-accounts"><i class="fa fa-print"></i></a></li>
+                                                <li><a href="#" class="editbtn"><i class="fa fa-edit"></i></a></li>
+                                                <li><a href="#" onclick = "window.print()"><i class="fa fa-print"></i></a></li>
                                                 <li>
                                                     <a class="hide-toggle dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                         <i class="fa fa-cog"></i>
                                                     </a>
                                                     <div class="dropdown-menu p-3" aria-labelledby="dropdownMenuLink">
                                                         <p class="m-0">Columns</p>
-                                                        <div class="checkbox checkbox-sec d-block my-2">
-                                                            <input type="checkbox" checked="checked" onchange="col_type()" name="chk_type" id="chk_type">
-                                                            <label for="chk_type">Type</label>
-                                                        </div>
-                                                        <div class="checkbox checkbox-sec d-block my-2">
-                                                            <input type="checkbox" checked="checked" onchange="col_detailtype()" name="chk_detail_type" id="chk_detail_type">
-                                                            <label for="chk_detail_type">Detail Type</label>
-                                                        </div>
-                                                        <div class="checkbox checkbox-sec d-block my-2">
-                                                            <input type="checkbox" checked="checked" onchange="col_nbalance()" name="chk_nsmart_balance" id="chk_nsmart_balance"> 
-                                                            <label for="chk_nsmart_balance">nSmarTrac Balance</label>
-                                                        </div>
-                                                        <div class="checkbox checkbox-sec d-block my-2">
-                                                            <input type="checkbox" checked="checked" onchange="col_bank_balance()" name="chk_bank_balance" id="chk_bank_balance">
-                                                            <label for="chk_bank_balance">Balance</label>
-                                                        </div>
+                                                        <p class="m-0"><input type="checkbox" checked="checked" onchange="col_type()" name="chk_type" id="chk_type"> Type</p>
+                                                        <p class="m-0"><input type="checkbox" checked="checked" onchange="col_detailtype()" name="chk_detail_type" id="chk_detail_type"> Detail Type</p>
+                                                        <p class="m-0"><input type="checkbox" checked="checked" onchange="col_nbalance()" name="chk_nsmart_balance" id="chk_nsmart_balance"> Nsmart Balance</p>
+                                                        <p><input type="checkbox" checked="checked" onchange="col_balance()" name="chk_balance" id="chk_balance"> Balance</p>
 											            <p class="m-0">Other</p>
-                                                        <div class="checkbox checkbox-sec d-block my-2">
-                                                            <input type="checkbox" id="inc_inactive" value="1">
-                                                            <label for="inc_inactive">Include Inactive</label>
-                                                        </div>
+                                                        <p class="m-0"><input type="checkbox" id="inc_inactive" value="1"> Include Inactive</p>
                                                         <p class="m-0">Rows</p>
                                                         <p class="m-0">
                                                             <select name="table_rows" id="table_rows" class="form-control">
@@ -205,22 +134,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </div>
 
                                 </div>
-                                <table id="chart-of-accounts-table" class="table table-bordered table-hover">
+                                <table id="chart-of-accounts-table" class="table table-striped table-bordered">
 									<thead>
                                         <tr>
-                                            <th width="2%">
-                                                <div class="d-flex justify-content-center">
-													<div class="checkbox checkbox-sec m-0">
-                                                        <input type="checkbox" id="select-all-accounts">
-														<label for="select-all-accounts" class="p-0" style="width: 24px; height: 24px"></label>
-													</div>
-												</div>
-                                            </th>
                                             <th>NAME</th>
                                             <th class="type">TYPE</th>
                                             <th class="detailtype">DETAIL TYPE</th>
                                             <th class="nbalance">NSMARTRAC BALANCE</th>
-                                            <th class="bank_balance">BANK BALANCE</th>
+                                            <th class="balance">BANK BALANCE</th>
                                             <th class="text-right" width="10%">ACTION</th>
                                         </tr>
 									</thead>
@@ -233,6 +154,121 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 </div>
             </div>
             <!-- end row -->
+
+            <!-- add account modal -->
+            <div class="modal fade" id="modalAddAccount" tabindex="-1" role="dialog" aria-labelledby="addLocationLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg w-50 m-auto" role="document">
+                    <div class="modal-content">
+                        <form action="/accounting/chart-of-accounts/add" method="post" class="form-validate" novalidate="novalidate">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="addLocationLabel">Accounts</h5>
+                                <button type="button" class="close" id="closeModalInvoice" data-dismiss="modal" aria-label="Close"><i class="fa fa-times fa-lg"></i></button>
+                            </div>
+                            <div class="modal-body" style="max-height: 650px;">
+                                <div class="row">
+                                    <div class="col-xl-12">
+                                        <div class="card p-0 m-0">
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <div class="form-group">
+                                                            <label for="account_type">Account Type</label>
+                                                            <select name="account_type" id="account_type" class="form-control select2" required>
+                                                                <?php foreach ($this->account_model->getAccounts() as $row): ?>
+                                                                    <option value="<?php echo $row->id ?>"><?php echo $row->account_name ?></option>
+                                                                <?php endforeach ?>
+                                                            </select>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="detail_type">Detail Type</label>
+                                                            <select name="detail_type" id="detail_type" class="form-control select2" onchange="showOptions(this)" required>
+                                                                <?php foreach ($this->account_detail_model->getDetailTypesById(1) as $row_detail): ?>
+                                                                    <option value="<?php echo $row_detail->acc_detail_id ?>" ><?php echo $row_detail->acc_detail_name ?></option>
+                                                                <?php endforeach ?>
+                                                            </select>
+                                                        </div>
+                                                        <div class="detail-type-desc">
+                                                            <?php $detail = $this->account_detail_model->getDetailTypesById(1)[0]; ?>
+                                                            <?=$detail->description?>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="form-group">
+                                                            <label for="name">Name</label>
+                                                            <input type="text" class="form-control" name="name" id="name" required
+                                                                placeholder="Enter Name"
+                                                                autofocus/>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="description">Description</label>
+                                                            <textarea type="text" class="form-control" name="description" id="description"
+                                                                    placeholder="Enter Description" rows="3" required></textarea>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <input type="checkbox" name="sub_account" class="js-switch" id="check_sub" onchange="check(this)"/>
+                                                            <label for="formClient-Status">Is sub account</label>
+                                                            <select name="sub_account_type" id="sub_account_type" class="form-control select2" required disabled="disabled">
+                                                                <option disabled selected>Enter parent account</option>
+                                                                <?php foreach($accountsDropdown as $key => $accounts) : ?>
+                                                                    <optgroup label="<?=$key?>">
+                                                                        <?php foreach($accounts as $account) : ?>
+                                                                            <option value="<?=$account['id']?>"><?=$account['name']?></option>
+                                                                            <?php if(!empty($account['child_accounts'])) : ?>
+                                                                                <optgroup label="&nbsp;&nbsp;&nbsp;&nbsp;<?='Sub-account of '.$account['name']?>">
+                                                                                    <?php foreach($account['child_accounts'] as $subAcc) : ?>
+                                                                                        <option value="<?=$subAcc->id?>">&nbsp;&nbsp;&nbsp;&nbsp;<?=$subAcc->name?></option>
+                                                                                    <?php endforeach; ?>
+                                                                                </optgroup>
+                                                                            <?php endif; ?>
+                                                                        <?php endforeach; ?>
+                                                                    </optgroup>
+                                                                <?php endforeach; ?>
+                                                            </select>
+                                                            <br>
+                                                            <label for="choose_time">When do you want to start tracking your finances from this account in nSmarTrac?</label>
+                                                            <span></span>
+                                                            <select name="choose_time" id="choose_time" class="form-control select2" required onchange="showdiv(this)">
+                                                                <option selected="selected" disabled="disabled">Choose one</option>
+                                                                <option value="Beginning of this year">Beginning of this year</option>
+                                                                <option value="Beginning of this month">Beginning of this month</option>
+                                                                <option value="Today">Today</option>
+                                                                <option value="Other" onclick="hidediv()">Other</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="form-group hide-date hide">
+                                                            <label for="time_date">Date</label>
+                                                            <div class="col-xs-10 date_picker">
+                                                                <input type="text" class="form-control" name="time_date" id="time_date"
+                                                                placeholder="Enter Date" autofocus/>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group hide-div hide">
+                                                            <label for="balance">Balance</label>
+                                                            <input type="text" class="form-control" name="balance" id="balance" required
+                                                                placeholder="Enter Balance"
+                                                                autofocus/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- end card -->
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!-- end modal-body -->
+                            <div class="modal-footer">
+                                <div class="row w-100">
+                                    <div class="col-md-6"><button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button></div>
+                                    <div class="col-md-6"><button type="submit" name="save" class="btn btn-success float-right">Save</button></div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- end add account modal -->
         </div>
         <!-- end container-fluid -->
     </div>

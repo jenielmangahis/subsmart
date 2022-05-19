@@ -1,132 +1,77 @@
+<?php
+   defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
-<style>
-.checklist-items{
-    margin-top: 15px;
-    margin-bottom: 51px;
-}
-.checklist-form .form-control{
-    width: 50%;
-}
-.p-40 {
-  padding-top: 40px !important;
-}
-.p-20 {
-  padding-top: 25px !important;
-  padding-bottom: 25px !important;
-  padding-right: 20px !important;
-  padding-left: 20px !important;
-}
-@media only screen and (max-width: 600px) {
-  .p-40 {
-    padding-top: 0px !important;
-  }
-  .pr-b10 {
-    position: relative;
-    bottom: 0px;
-  }
-}
-.checklist-container{
-    padding: 0px;
-    margin: 0px;
-}
-.checklist-container li{
-    width: 50%;
-    padding: 10px;
-    font-size: 17px;
-    background-color: #32243d;
-    color: #ffff;
-    margin: 10px 0px;
-}
-.checklist-container li a{
-    float: right;
-}
-</style>
-<div class="wrapper" role="wrapper">
-    <?php include viewPath('includes/sidebars/workorder'); ?>
-    <!-- page wrapper start -->
-    <div wrapper__section>
-        <div class="card p-40">
-        <div class="container-fluid">
-            <div class="row">
-                    <div class="col">
-                        <h3 class="m-0">Edit Workorder Type</h3>
-                    </div>
-                    <div style="background-color:#fdeac3;padding:.5%;margin-bottom:5px;margin-top:5px;margin-bottom:10px; width:100%;">
-                        Edit your workorder type.    
-                    </div>
-                </div>
-            <!-- end row -->
-            <div class="row">
-                <div class="col-xl-12">
-                    <div class="card" style="min-height: 400px !important;">
-                        <hr />
-                        <?php include viewPath('flash'); ?>
-                        <?php echo form_open_multipart('workstatus/update', [ 'class' => 'form-validate checklist-form', 'id' => 'frm-update-workorder-type', 'autocomplete' => 'off' ]); ?>
-                          <input type="hidden" name="wtid" value="<?php echo $workstatus->id; ?>">
-                          <div class="form-group">
-                              <label>Name</label> <span class="form-required">*</span>
-                              <input type="text" class="form-control" name="title" id="title" value="<?php echo $workstatus->title ?>" required placeholder="Enter title" autofocus />
-                          </div>
-                          <div class="form-group">
-                              <label>Color</label> <span class="form-required">*</span>
-                              <input type="text" class="form-control colorpicker" name="color" id="colorpicker" value="<?php echo $workstatus->color ?>" required placeholder="Select Color"/>
-                          </div>        
-                          <div class="col-md-5" style="padding: 0px;margin-top: 110px;">                            
-                            <button type="submit" class="btn btn-primary btn-update-workorder-type">Update</button>
-                            <a class="btn btn-default" href="<?php echo base_url('workstatus'); ?>">Cancel</a>
-                          </div>
-                      </div>
-                      <?php echo form_close(); ?>
-                    </div>
-                    <!-- end card -->
-                </div>
-            </div>
-            <!-- end row -->
-        </div>
-        <!-- end container-fluid -->
-    </div>
-    <!-- page wrapper end -->
+<!-- page wrapper start -->
+<div class="wrapper">
+   <?php include viewPath('includes/notifications'); ?>
+   <div class="container-fluid">
+      <!-- end row -->                     
+      <section class="content">
+         <!-- Default box -->
+         <div class="box">
+			<div class="page-title-box">
+				<div class="row align-items-center">
+					<div class="col-sm-6">
+						<h1 class="page-title">Work Status</h1>
+						<ol class="breadcrumb">
+							<li class="breadcrumb-item active">Edit Work Status</li>
+						</ol>
+					</div>
+					<div class="col-sm-6">
+						<div class="float-right d-none d-md-block">
+							<div class="dropdown">
+								<a href="<?php echo url('workstatus') ?>" class="btn btn-primary" aria-expanded="false">
+									<i class="mdi mdi-settings mr-2"></i> Go Back to Work Status
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+            <?php echo form_open('workstatus/update/'.$workstatus->id, [ 'class' => 'form-validate' ]); ?>
+            <div class="row custom__border">
+				<div class="col-xl-12">
+					<div class="card">
+						<div class="card-body">
+							<div class="row">
+								<div class="col-sm-6">
+									<div class="form-group">
+									  <label for="formClient-Name">Title *</label>
+									  <input type="text" class="form-control" name="title" id="formClient-Name" required placeholder="Enter Name" autofocus value="<?php echo $workstatus->title ?>"/>
+									</div>
+								</div>
+								<div class="col-sm-6">
+									<div class="form-group">
+									  <label for="color">Color *</label>
+									  <input type="color" class="form-control" name="color" id="color" required placeholder="Enter color" value="<?php echo $workstatus->color ?>"/>
+									</div>
+								</div>
+								   
+								<div class="col-sm-6 mt-3">
+									<button type="submit" class="btn btn-flat btn-primary">Submit</button>
+								</div>
+										   
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+            <!-- /.box-footer-->
+            <?php echo form_close(); ?>
+         </div>
+         <!-- /.box -->
+      </section>
+      <!-- end row -->           
+   </div>
+   <!-- end container-fluid -->
 </div>
+<!-- page wrapper end -->
 <?php include viewPath('includes/footer'); ?>
 <script>
-$(function(){
-    $('.colorpicker').colorpicker();
-    $("#frm-update-workorder-type").submit(function(e){
-        e.preventDefault();
-        var url = base_url + 'workstatus/_update_workorder_type';
-        $(".btn-update-workorder-type").html('<span class="spinner-border spinner-border-sm m-0"></span> Saving');
-        setTimeout(function () {
-            $.ajax({
-                 type: "POST",
-                 url: url,
-                 data: $("#frm-update-workorder-type").serialize(),
-                 dataType: 'json',
-                 success: function(o)
-                 {
-                    if( o.is_success == 1 ){
-                        Swal.fire({
-                            title: 'Success',
-                            text: 'Workorder type was successfully updated.',
-                            icon: 'success',
-                            showCancelButton: false,
-                            confirmButtonColor: '#32243d',
-                            cancelButtonColor: '#d33',
-                            confirmButtonText: 'Ok'
-                        }).then((result) => {
-                            location.href = base_url + "/workstatus"; 
-                        });
-                    }else{
-                        Swal.fire({
-                          icon: 'error',
-                          title: 'Cannot update data.',
-                          text: o.msg
-                        });
-                    }
-
-                    $(".btn-update-workorder-type").html('Save');
-                 }
-            });
-        }, 300);        
-    });
-});
+   $(document).ready(function() {
+   
+	$('.form-validate').validate();
+   
+   });
 </script>

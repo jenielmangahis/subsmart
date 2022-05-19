@@ -30,16 +30,6 @@ class Workstatus_model extends MY_Model
 		return false;
 	}
 
-	public function getWorkStatusByIdAndCompanyId($id, $company_id)
-	{
-		$this->db->select('*');
-        $this->db->from($this->table);
-        $this->db->where('id', $id);
-        $this->db->where('company_id', $company_id);
-		$query = $this->db->get();
-        return $query->row();
-	}
-
 
     public function filter($filters = array())
     {

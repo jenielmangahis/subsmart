@@ -133,7 +133,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                               <li>
                                                   <div class="checkbox checkbox-sm">
                                                       <input class="checkbox-select chk-contact-group" type="checkbox" <?= array_key_exists($cg->id, $selectedGroups) ? 'checked="checked"' : ''; ?> name="excludeGroups[]" value="<?= $cg->id; ?>" id="chk-customer-group-<?= $cg->id; ?>">
-                                                      <label for="chk-customer-group-<?= $cg->id; ?>"><?= $cg->title; ?></label>
+                                                      <label for="chk-customer-group-<?= $cg->id; ?>"><?= $cg->name; ?></label>
                                                   </div>
                                               </li>
                                           <?php } ?>

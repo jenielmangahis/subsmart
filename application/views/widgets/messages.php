@@ -3,7 +3,7 @@
         <i class="fa fa-envelope" aria-hidden="true"></i> Messages
         
         <div class="float-right">
-            <div class="dropdown" style="position: relative; float:right; display: inline-block;margin-left: 10px;">
+            <div class="dropdown" style="position: relative;float: right;display: inline-block;margin-left: 10px;">
                 <span type="button" data-toggle="dropdown" style="border-radius: 0 36px 36px 0;margin-left: -5px;">
                     &nbsp;<span class="fa fa-ellipsis-v"></span></span>
                 <ul class="dropdown-menu dropdown-menu-right">

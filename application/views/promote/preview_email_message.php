@@ -1,7 +1,6 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
-<script src="http://momentjs.com/downloads/moment.js"></script>
 <style>
 .tabs-menu {
     margin-bottom: 20px;
@@ -62,16 +61,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     border: 1px solid #dfdfdf;
     padding: 20px;
 }
-.package-price-original {
-    text-decoration: line-through;
-}
 </style>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/marketing'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
         <div class="container-fluid p-40">
-            <?php echo form_open_multipart('sms_campaigns/save_send_to', ['class' => 'form-validate', 'id' => 'deals_steals_preview', 'autocomplete' => 'off']); ?>
+            <?php echo form_open_multipart('sms_campaigns/save_send_to', ['class' => 'form-validate', 'id' => 'campaign_send_schedule', 'autocomplete' => 'off']); ?>
             <div class="row">
               <div class="col-xl-12">
                   <div class="card mt-0">
@@ -94,11 +90,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     </div>
                     <div class="tabs-menu">
                         <ul class="clearfix">
-                          <li><a href="<?= base_url("promote/edit_deals/" . $dealsSteals->id); ?>">1. Edit Deal</a></li>
-                          <li><a href="<?= base_url("promote/add_send_to"); ?>">2. Select Customers</a></li>
-                          <li><a href="<?= base_url("promote/build_email"); ?>">3. Build Email</a></li>
-                          <li class="active"><a href="<?= base_url("promote/preview_email_message"); ?>">4. Preview</a></li>
-                          <li><a href="<?= base_url("promote/payment"); ?>">5. Purchase</a></li>
+                          <li>1. Create Deal</li>
+                          <li>2. Select Customers</li>
+                          <li>3. Build Email</li>
+                          <li class="active">4. Preview</li>
+                          <li>5. Purchase</li>
                         </ul>
                         <hr />
                     </div>
@@ -113,7 +109,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                               <div class="col-md-6">
                                   <?php 
                                     $diff_increase  = $dealsSteals->original_price - $dealsSteals->deal_price;
-                                    $percentage_off = ($diff_increase / $dealsSteals->original_price) * 100; 
+                                    $percentage_off = ($diff_increase / $dealsSteals->original_price) * 100;  
                                   ?>
                                   <span class="text-ter">was <span style="font-size:18px;">$<?= number_format($dealsSteals->original_price,2); ?></span> you get <span style="font-size: 18px;"><?= number_format($percentage_off,2); ?>%</span> off</span>
                               </div>
@@ -126,12 +122,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                   <img src="<?= base_url("uploads/deals_steals/" . $dealsSteals->company_id . "/" . $dealsSteals->photos); ?>" style="width: 100%;">
                               </div>
                           </div>
-                          <div style="font-size:18px; font-weight: bold;">What You'll Get</div>
-                          <hr>
-                          <p style="font-size: 16px;">SAMPLE DEALS STEALS</p>
-                          <div style="font-size:18px; font-weight: bold; margin-top: 30px;">Terms &amp; Conditions</div>
-                          <hr>
-                          <p style="font-size: 16px;">TEST</p>
                         </div>
                       </div>
                       <div class="col-md-6 pl-0 pr-0 left">
@@ -154,9 +144,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                               <div class="row">
                                                   <div class="col-sm-8">
                                                       <div class="input-group mb-3">
-                                                        <div class="input-group-prepend">                                                          
-                                                          <label style="width: 400px;">Valid From <span class="fa fa-question-circle help-tooltip" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Select the start date. You can schedule a deal if you set this date in future." data-original-title="" title="" style="margin-left: 10px;"></span></label>                                                           
-                                                          <input type="text" name="valid_from" value="<?= isset($dealsSteals) ? date("m/d/Y",strtotime($dealsSteals->valid_from)) : date("m/d/Y"); ?>"  class="form-control valid-from-datepicker" autocomplete="off" required /><span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span>
+                                                        <div class="input-group-prepend">
+                                                          <label style="width: 400px;">Valid From <span class="fa fa-question-circle help-tooltip" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Select the start date. You can schedule a deal if you set this date in future." data-original-title="" title="" style="margin-left: 10px;"></span></label>                                                          
+                                                          <input type="text" name="send_date" value="<?= $send_date; ?>"  class="form-control default-datepicker" autocomplete="off" required /><span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span>
                                                         </div>
                                                       </div>
                                                   </div>
@@ -164,7 +154,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                       <div class="input-group mb-3">
                                                         <div class="input-group-prepend">
                                                           <label style="width: 400px;">Valid To <span style="margin-left: 10px;" class="fa fa-question-circle help-tooltip" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="The date when the deal will expire." data-original-title="" title=""></span></label>                                                          
-                                                          <input type="text" name="valid_to" value="<?= isset($dealsSteals) ? date("m/d/Y",strtotime($dealsSteals->valid_to)) : date("m/d/Y"); ?>"  class="form-control valid-to" autocomplete="off" required /><span class="input-group-text" id="basic-addon1" style="visibility: hidden;"><i class="fa fa-calendar"></i></span>
+                                                          <input type="text" name="send_date" value="<?= $send_date; ?>"  class="form-control default-datepicker" autocomplete="off" required /><span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span>
                                                         </div>
                                                       </div>
                                                   </div>
@@ -172,21 +162,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                           </div>
                                       </div>
                                   </div>
-                                  <hr />  
-                                  <div class="row margin-bottom">
-                                      <div class="col-sm-4">
-                                          <strong style="font-size: 16px;">Total</strong>
-                                      </div>
-                                      <div class="col-sm-16" style="font-size: 16px;">
-                                          <span class="bold" data-shop="package-price">$<?= number_format($deals_price, 2); ?></span><!-- <br> <span class="text-alert">was <span class="package-price-original" data-shop="package-price-original">$<?= number_format($dealsSteals->original_price, 2); ?></span>, you save <span data-shop="package-price-discount-percent">33.33</span>% -->
-                                          </span>
-                                      </div>
-                                  </div>
                                   <div class="row margin-top" style="bottom: 55px;">
                                     <div class="col-sm-12"></div>
                                     <div class="col-sm-12 text-right">
-                                        <a class="btn btn-default margin-right" href="<?php echo url('promote/build_email'); ?>">&laquo; Back</a>
-                                        <button class="btn btn-primary btn-deals-preview" type="submit">Continue &raquo;</button>
+                                        <a class="btn btn-default margin-right" href="<?php echo url('email_campaigns/build_email'); ?>">&laquo; Back</a>
+                                        <button class="btn btn-primary btn-campaign-update-send-schedule" data-form="submit" data-shop="to-cart" data-on-click-label="Saving...">Continue &raquo;</button>
                                     </div>
                                 </div>
                           </div>
@@ -210,49 +190,56 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/footer'); ?>
 <script>
 $(function(){
-    $("#deals_steals_preview").submit(function(e){
+    $("#campaign_send_schedule").submit(function(e){
         e.preventDefault();
 
         $('.form-msg').hide().html("");
 
-        var url = base_url + 'promote/update_validity';
-        $(".btn-deals-preview").html('<span class="spinner-border spinner-border-sm m-0"></span>  Saving');
+        var url = base_url + 'email_campaigns/create_send_schedule';
+        $(".btn-campaign-update-send-schedule").html('<span class="spinner-border spinner-border-sm m-0"></span>  Saving');
         setTimeout(function () {
           $.ajax({
              type: "POST",
              url: url,
              dataType: "json",
-             data: $("#deals_steals_preview").serialize(),
+             data: $("#campaign_send_schedule").serialize(),
              success: function(o)
              {
                 if( o.is_success == 1 ){
                     $('.form-msg').hide().html("<p class='alert alert-info'>"+o.msg+"</p>").fadeIn(500);
-                    location.href = base_url + "promote/payment";
+                    location.href = base_url + "email_campaigns/payment";
                     //$(".btn-campaign-update-send-schedule").html('<span class="spinner-border spinner-border-sm m-0"></span>  Redirecting to list');
                     /*setTimeout(function() {
                         location.href = base_url + "sms_campaigns";
                     }, 2500);*/
                 }else{
                     $('.form-msg').hide().html("<p class='alert alert-danger'>"+o.msg+"</p>").fadeIn(500);
-                    $(".btn-deals-preview").html('Save');
+                    $(".btn-campaign-update-send-schedule").html('Save');
                 }
              }
           });
         }, 1000);
     });
 
-    $('.valid-from-datepicker').datepicker({
-        format: 'mm/dd/yyyy',
-        autoclose: true        
+    <?php if($smsBlast->price_variables != ''){  ?>
+      $(".select-date-time").fadeIn();
+    <?php } ?>
+
+    $("#is_scheduled").change(function(){
+        if ($(this).is(':checked')) {
+            $(".select-date-time").fadeIn();
+        }else{
+            $(".select-date-time").fadeOut();
+        }
     });
 
-    $('.valid-from-datepicker').change(function(){
-      var validFrom = $(this).val();
-      var validFrom = moment(validFrom);
-      var validTo   = moment(validFrom).add(1, 'M');
+    $('#smsTimepicker').timepicker({
+        showInputs: false
+    });
 
-      $('.valid-to').val(validTo.format("MM/DD/YYYY"));
-      
+    $('.default-datepicker').datepicker({
+        format: 'mm/dd/yyyy',
+        autoclose: true
     });
 });
 </script>

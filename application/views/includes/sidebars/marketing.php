@@ -28,7 +28,7 @@
         <li class="submenus <?= ($this->uri->uri_string() == 'sms_campaigns') ? "active" : "";  ?>"><a href="<?php echo base_url('sms_campaigns'); ?>" title="SMS Blast"><span class="fa fa-users"></span>SMS Blast</a></li>
         <li class="submenus <?= ($this->uri->uri_string() == 'survey') ? 'active' : "" ?>"><a href="<?= base_url('survey') ?>" title="Survey"><span class="fa fa-cube"></span>Survey</a></li>
         <li class="submenus <?= ($this->uri->uri_string() == 'sms_automation') ? "active" : "";  ?>"><a href="<?php echo base_url('sms_automation'); ?>" title="SMS Automation"><span class="fa fa-cube"></span>SMS Automation</a></li>
-        <!-- <li class="submenus <?= ($this->uri->uri_string() == 'voicemail_campaigns') ? "active" : "";  ?>"><a href="<?php echo base_url('voicemail_campaigns'); ?>" title="Voicemail Blast"><span class="fa fa-cube"></span>Voicemail Blast</a></li> -->
+        <li class="submenus <?= ($this->uri->uri_string() == 'voicemail_campaigns') ? "active" : "";  ?>"><a href="<?php echo base_url('voicemail_campaigns'); ?>" title="Voicemail Blast"><span class="fa fa-cube"></span>Voicemail Blast</a></li>
         <li class="submenus <?= ($this->uri->uri_string() == 'email_campaigns') ? "active" : "";  ?>"><a href="<?php echo base_url('email_campaigns'); ?>" title="Email Blast"><span class="fa fa-cube"></span>Email Blast</a></li>
         <?php
             $email_automation_active = "";
@@ -39,8 +39,9 @@
         <li class="submenus <?= $email_automation_active; ?>"><a href="<?php echo base_url('email_automation'); ?>" title="Email Automation"><span class="fa fa-cube"></span>Email Automation</a></li>
         <li class="submenus <?= ($this->uri->uri_string() == 'promote/deals') ? "active" : "";  ?>"><a href="<?php echo base_url('promote/deals'); ?>" title="Deals and Steals"><span class="fa fa-money"></span>Deals and Steals</a></li>
 
-        <!-- <li class="submenus <?= ($this->uri->uri_string() == 'campaign_automation') ? "active" : "";  ?>"><a href="<?php echo base_url('campaign_automation'); ?>" title="Campaign Automation"><span class="fa fa-cube"></span>Campaign Automation</a></li>        
-        <li class="submenus  <?= ($this->uri->uri_string() == 'campaign_blast') ? "active" : "";  ?>"><a href="campaign_blast" title="Credentials"><span class="fa fa-cube"></span>Campaign Blast</a></li> -->
+        <li class="submenus <?= ($this->uri->uri_string() == 'campaign_automation') ? "active" : "";  ?>"><a href="<?php echo base_url('campaign_automation'); ?>" title="Campaign Automation"><span class="fa fa-cube"></span>Campaign Automation</a></li>
+        <li class="submenus <?= ($this->uri->uri_string() == 'offers') ? "active" : "";  ?>"><a href="<?php echo base_url('offers'); ?>" title="Offers"><span class="fa fa-cube"></span>Offers</a></li>
+        <li class="submenus  <?= ($this->uri->uri_string() == 'campaign_blast') ? "active" : "";  ?>"><a href="campaign_blast" title="Credentials"><span class="fa fa-cube"></span>Campaign Blast</a></li>
         <li class="submenus <?= ($this->uri->uri_string() == 'campaign') ? "active" : "";  ?>"><a href="<?php echo base_url('campaign'); ?>" title="Campaign 360"><span class="fa fa-cube"></span>Campaign 360</a></li>
         <li class="submenus <?= ($this->uri->uri_string() == 'my_inquires') ? "active" : "";  ?>"><a href="<?php echo base_url('my_inquires'); ?>" title="My Inquires List"><span class="fa fa-cube"></span>My Inquires List</a></li>
 

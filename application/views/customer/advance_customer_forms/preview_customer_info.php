@@ -39,7 +39,7 @@
                 <label>First Name 
             </div>
             <div class="col-md-6">
-                <?= isset($profile_info) && !empty($profile_info->first_name) ? $profile_info->first_name : 'n/a';?>
+                <?= isset($profile_info) && !empty($profile_info->first_name) ? $profile_info->first_name : '---';?>
             </div>
         </div>
         <div class="row form_line">
@@ -188,40 +188,66 @@
                 <?= isset($profile_info) && !empty($profile_info->phone_m) ? $profile_info->phone_m : '---';?>
             </div>
         </div>
-    </div>
-    <div class="card-header">
-        <span style="position: absolute;right: 0;margin-right: 25px;font-size: 20px;padding-top:10px;" class="fa fa-ellipsis-v"></span>
-        <h6 ><span class="fa fa-user"></span>&nbsp; &nbsp;Emergency Contacts</h6>
-    </div>
-    <div class="card-body">
-        <?php if(!empty($contacts)): ?>
-            <?php foreach ($contacts as $contact) : $x=1;?>
-            <div class="row form_line">
-                <div class="col-md-6 ">
-                    Contact Name <?= $x; ?>
-                </div>
-                <div class="col-md-6">
-                    <?= $contact->name; ?>
-                </div>
+        <hr>
+        <div class="row form_line">
+            <div class="col-md-6 ">
+                Contact Name 1
             </div>
-            <div class="row form_line">
-                <div class="col-md-6">
-                    Contact Phone <?= $x; ?>
-                </div>
-                <div class="col-md-6">
-                    <?= $contact->phone; ?>
-                </div>
+            <div class="col-md-6">
+                <?= !empty($profile_info->contact_name1) ? $profile_info->contact_name1 : '---';?>
             </div>
-            <div class="row form_line">
-                <div class="col-md-6">
-                    Relationship
-                </div>
-                <div class="col-md-6">
-                    <?= $contact->relation; ?>
-                </div>
+        </div>
+        <div class="row form_line">
+            <div class="col-md-6">
+                Contact Phone 1
             </div>
-            <?php endforeach; $x++; ?>
-        <?php endif; ?>
+            <div class="col-md-6">
+                <?= !empty($profile_info->contact_phone1) ? $profile_info->contact_phone1 : '---';?>
+            </div>
+        </div>
+        <div class="row form_line">
+            <div class="col-md-6">
+                Contact Name 2
+            </div>
+            <div class="col-md-6">
+                <?= !empty($profile_info->contact_name2) ? $profile_info->contact_name2 : '---';?>
+            </div>
+        </div>
+        <div class="row form_line">
+            <div class="col-md-6">
+                Contact Phone 2
+            </div>
+            <div class="col-md-6">
+                <?= !empty($profile_info->contact_phone2) ? $profile_info->contact_phone2 : '---';?>
+            </div>
+        </div>
+        <div class="row form_line">
+            <div class="col-md-6">
+                Contact Name 3
+            </div>
+            <div class="col-md-6">
+                <?= !empty($profile_info->contact_name3) ? $profile_info->contact_name3 : '---';?>
+            </div>
+        </div>
+        <div class="row form_line">
+            <div class="col-md-6">
+                Contact Phone 3
+            </div>
+            <div class="col-md-6">
+                <?= !empty($profile_info->contact_phone3) ? $profile_info->contact_phone3 : '---';?>
+            </div>
+        </div>
+
+        <!--<div class="row form_line" id="fax_">
+            <div class="col-md-6">
+                Fax
+            </div>
+            <div class="col-md-6">
+                <input type="text" class="form-control" name="fax" id="fax" value="<?php if(isset($profile_info->fax)){ echo $profile_info->fax; } ?>" />
+            </div>
+        </div>-->
+
     </div>
+
     <?php include viewPath('customer/advance_customer_forms/preview_billing_info'); ?>
 </div>

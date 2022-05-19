@@ -5,8 +5,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/invoice'); ?>
     <link href="<?php echo $url->assets ?>css/jquery.signaturepad.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
 
     <style>
   .custom-signaturepad {
@@ -100,236 +98,41 @@ input:checked + .slider:before {
 .slider.round:before {
   border-radius: 50%;
 }
-
-.signature_mobile
-{
-    display: none;
-}
-
-.show_mobile_view
-{
-    display: none;
-}
-
-@media only screen and (max-device-width: 600px) {
-    .label-element{
-        position:absolute;
-        top:-8px;
-        left:25px;
-        font-size:12px;
-        color:#666;
-        }
-    .input-element{
-        padding:30px 5px 10px 8px;
-        width:100%;
-        height:55px;
-        /* border:1px solid #CCC; */
-        font-weight: bold;
-        margin-top: -15px;
-    }
-
-        .mobile_qty
-    {
-        background: transparent !important;
-        border: none !important;
-        outline: none !important;
-        padding: 0px 0px 0px 0px !important;
-        text-align: center;
-    }
-
-    .select-wrap 
-    {
-    border: 2px solid #e0e0e0;
-    /* border-radius: 4px; */
-    margin-top: -10px;
-    /* margin-bottom: 10px; */
-    padding: 0 5px 5px;
-    width:100%;
-    /* background-color:#ebebeb; */
-    }
-
-    .select-wrap label
-    {
-    font-size:10px;
-    text-transform: uppercase;
-    color: #777;
-    padding: 2px 8px 0;
-    }
-
-    .m_select
-    {
-    /* background-color: #ebebeb;
-    border:0px; */
-    border-color: white !important;
-    border:0px !important;
-    outline:0px !important;
-    }
-    .select2 .select2-container .select2-container--default{
-        /* background-color: #ebebeb;
-    border:0px; */
-    border-color: white !important;
-    border:0px !important;
-    outline:0px !important;
-    }
-
-    .select2-container--default .select2-selection--single {
-    background-color: #fff;
-    border: 1px solid #fff !important;
-    border-radius: 4px;
-    }
-
-    .sub_label{
-        font-size:12px !important;
-    }
-
-    .signature_web
-    {
-        display: none;
-    }
-
-    .signature_mobile
-    {
-        display: block;
-    }
-
-    .hidden_mobile_view{
-        display: none;
-    }
-
-    .show_mobile_view
-    {
-        display: block;
-    }
-
-    .table_mobile
-    {
-        font-size:14px;
-    }
-
-    div.dropdown-wrapper select { 
-    width:115% /* This hides the arrow icon */; 
-    background-color:transparent /* This hides the background */; 
-    background-image:none; 
-    -webkit-appearance: none /* Webkit Fix */; 
-    border:none; 
-    box-shadow:none; 
-    padding:0.3em 0.5em; 
-    font-size:13px;
-    }
-    .signature-pad-canvas-wrapper {
-    margin: 15px 0 0;
-    border: 1px solid #cbcbcb;
-    border-radius: 3px;
-    overflow: hidden;
-    position: relative;
-}
-
-    .signature-pad-canvas-wrapper::after {
-        content: 'Name';
-        border-top: 1px solid #cbcbcb;
-        color: #cbcbcb;
-        width: 100%;
-        margin: 0 15px;
-        display: inline-flex;
-        position: absolute;
-        bottom: 10px;
-        font-size: 13px;
-        z-index: -1;
-    }
-
-    .tabs { list-style: none; }
-.tabs li { display: inline; }
-.tabs li a 
-{ 
-    color: black; 
-    float: left; 
-    display: block; 
-    /* padding: 4px 10px;  */
-    /* margin-left: -1px;  */
-    position: relative; 
-    /* left: 1px;  */
-    background: #a2a5a3; 
-    text-decoration: none; 
-}
-.tabs li a:hover 
-{ 
-    background: #ccc; 
-}
-.group:after 
-{ 
-    visibility: hidden; 
-    display: block; 
-    font-size: 0; 
-    content: " "; 
-    clear: both; 
-    height: 0; 
-}
-
-.box-wrap 
-{ 
-    position: relative; 
-    min-height: 250px; 
-}
-.tabbed-area div div 
-{ 
-    background: white; 
-    padding: 20px; 
-    min-height: 250px; 
-    position: absolute; 
-    top: -1px; 
-    left: 0; 
-    width: 100%; 
-}
-
-.tabbed-area div div, .tabs li a 
-{ 
-    border: 1px solid #ccc; 
-}
-
-#box-one:target, #box-two:target, #box-three:target {
-  z-index: 1;
-}
-
-.group li.active a,
-.group li a:hover,
-.group li.active a:focus,
-.group li.active a:hover{
-  background-color: #52cc6e;
-  color: black; 
-}
-}
 </style>
     <!-- page wrapper start -->
     <div wrapper__section>
         <div class="container-fluid" style="background-color:white;">
             <div class="page-title-box">
                 <div class="row align-items-center">
-                  <div class="col-sm-6">
-                      <h3 class="page-title mt-0" style="font-size: 1.75rem; font-weight: 600;">Add New Invoice</h3>
-                  </div>
-                  <div class="col-sm-6">
-                      <div class="float-right d-none d-md-block">
-                          <div class="dropdown">
-                                  <a href="<?php echo base_url('invoice') ?>" class="btn btn-primary"
-                                     aria-expanded="false">
-                                      <i class="mdi mdi-settings mr-2"></i> Go Back to Invoices List
-                                  </a>
-                          </div>
-                      </div>
-                  </div>
-                </div>
-                <div class="pl-3 pr-3 mt-2 row">
-                  <div class="col mb-4 left alert alert-warning mt-0 mb-0">
-                      <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Complete the fields below to create a new invoice.</span>
-                  </div>
+                    <div class="col-sm-6">
+                        <h3 style="font-family: Sarabun, sans-serif">New Invoice</h3>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item active">Complete the fields below to create a new invoice.</li>
+                        </ol>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="float-right d-none d-md-block">
+                            <div class="dropdown">
+                                <?php if (hasPermissions('WORKORDER_MASTER')) : ?>
+                                    <a href="<?php echo base_url('invoice') ?>" class="btn btn-primary"
+                                       aria-expanded="false">
+                                        <i class="mdi mdi-settings mr-2"></i> Go Back to Invoices
+                                    </a>
+                                <?php endif ?>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="validation-error" id="estimate-error" style="display: none;">You selected Credit Card Payments as payment method for this invoice. Please configure the <a href="https://www.markate.com/pro/settings/payments/main">Online Payment processor</a> first to accept cart payments.</div>
+                    </div>
                 </div>
             </div>
             <!-- end row -->
             <?php echo form_open_multipart('Invoice/addNewInvoice', ['class' => 'form-validate require-validation', 'id' => 'invoice_form', 'autocomplete' => 'off']); ?>
 
-            <div class="row ">
+            <div class="row custom__border">
                 <div class="col-xl-12">
-                    <div class="card2">
+                    <div class="card">
                         <div class="card-body">
                             <div class="row" style="background-color:white;">
                                 <div class="col-md-5 form-group">
@@ -341,12 +144,7 @@ input:checked + .slider:before {
                                     <select name="customer_id" id="customer_id" class="form-control" required>
                                     <option>Select a customer</option>
                                     <?php foreach ($customers as $customer):?>
-                                    <?php 
-                                        if( !empty($workorder[0]) ){
-                                            $default_cust_id = $workorder[0]->customer_id;
-                                        }
-                                    ?>
-                                    <option <?= $default_cust_id == $customer->prof_id ? 'selected="selected"' : ''; ?> value="<?php echo $customer->prof_id?>"><?php echo $customer->first_name."&nbsp;".$customer->last_name;?> </option>
+                                    <option value="<?php echo $customer->prof_id?>"><?php echo $customer->first_name."&nbsp;".$customer->last_name;?> </option>
                                     <?php endforeach; ?>
                                 </select>
                                 </div>
@@ -359,7 +157,7 @@ input:checked + .slider:before {
                                 <div class="col-md-5 form-group">
                                     <label for="job_location">Job Location <small class="help help-sm">(optional)</small></label>
                                     
-                                    <input type="text" class="form-control" value="<?= !empty($workorder[0]) ? $workorder[0]->job_location : ''; ?>" name="jobs_location" id="invoice_jobs_location" />
+                                    <input type="text" class="form-control" name="jobs_location" id="invoice_jobs_location" />
                                 </div>
                                 <div class="col-md-5 form-group">
                                     <!-- <p>&nbsp;</p>
@@ -369,7 +167,7 @@ input:checked + .slider:before {
                                 </div>
                                 <div class="col-md-5 form-group">
                                     <label for="job_name">Job Name <small class="help help-sm">(optional)</small></label>
-                                    <input type="text" class="form-control" value="<?= !empty($workorder[0]) ? $workorder[0]->job_name : ''; ?>" name="job_name" id="job_name" />
+                                    <input type="text" class="form-control" name="job_name" id="job_name" />
                                 </div>
                             </div>
 
@@ -388,7 +186,7 @@ input:checked + .slider:before {
                                         </div>
                                         <div class="col-md-3">
                                             <label>Customer email</label>
-                                            <input type="email" value="<?= !empty($w_customer) ? $w_customer->email : ''; ?>" class="form-control" name="customer_email" id="customer_email">
+                                            <input type="email" class="form-control" name="customer_email" id="customer_email">
                                             <p><input type="checkbox"> Send later </p>
                                         </div>
                                         <div class="col-md-3">
@@ -529,7 +327,7 @@ input:checked + .slider:before {
                                         </tr>
                                         </thead>
                                         <tbody id="jobs_items_table_body">
-                                        <!-- <tr>
+                                        <tr>
                                             <td><input type="text" class="form-control getItems"
                                                        onKeyup="getItems(this)" name="item[]">
                                                 <ul class="suggestions"></ul>
@@ -543,6 +341,9 @@ input:checked + .slider:before {
                                                        data-counter="0" id="quantity_0" value="1"></td>
                                             <td><input type="number" class="form-control price" name="price[]"
                                                        data-counter="0" id="price_0" min="0" value="0"></td>
+                                            <!-- <td><input type="hidden" class="form-control discount" name="discount[]"
+                                                       data-counter="0" id="discount_0" min="0" value="0">
+                                                       <span id="span_discount_0">0</span></td> -->
                                             <td><input type="number" class="form-control discount" name="discount[]"
                                                        data-counter="0" id="discount_0" min="0" value="0" ></td>
                                             <td><input type="hidden" class="form-control tax" name="tax[]"
@@ -551,182 +352,57 @@ input:checked + .slider:before {
                                             <td><input type="hidden" class="form-control " name="total[]"
                                                        data-counter="0" id="item_total_0" min="0" value="0">
                                                        $<span id="span_total_0">0.00</span></td>
-                                        </tr> -->
-                                        <?php if( empty($w_items) ){ ?>
-                                            <tr>
-                                                <td width="30%">
-                                                    <input type="text" class="form-control getItems"
-                                                           onKeyup="getItems(this)" name="items[]">
-                                                    <ul class="suggestions"></ul>
-                                                    <div class="show_mobile_view"><span class="getItems_hidden"></span></div>
-                                                    <input type="hidden" name="itemid[]" id="itemid" class="itemid">
-                                                </td>
-                                                <td width="20%">
-                                                <div class="dropdown-wrapper">
-                                                    <select name="item_type[]" id="item_typeid" class="form-control">
-                                                        <option value="product">Product</option>
-                                                        <option value="material">Material</option>
-                                                        <option value="service">Service</option>
-                                                        <option value="fee">Fee</option>
-                                                    </select>
-                                                </div>
-
-                                                <!-- <div class="show_mobile_view" style="color:green;"><span>Product</span></div> -->
-                                                    </td>
-                                                <td width="10%"><input type="number" class="form-control quantity mobile_qty" name="quantity[]"
-                                                           data-counter="0" id="quantity_0" value="1"></td>
-                                                <td width="10%"><input type="number" class="form-control price hidden_mobile_view" name="price[]"
-                                                           data-counter="0" id="price_0" min="0" value="0"> <input type="hidden" class="priceqty" id="priceqty_0"> 
-                                                           <div class="show_mobile_view"><span class="price">0</span>
-                                                           <!-- <input type="hidden" class="form-control price" name="price[]" data-counter="0" id="priceM_0" min="0" value="0"> -->
-                                                           </div><input id="priceM_qty0" value=""  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view price_qty"></td>
-                                                <td width="10%" class="hidden_mobile_view"><input type="number" class="form-control discount" name="discount[]"
-                                                           data-counter="0" id="discount_0" min="0" value="0"  readonly></td>
-                                                <td width="10%" class="hidden_mobile_view"><input type="text" class="form-control tax_change" name="tax[]"
-                                                           data-counter="0" id="tax1_0" min="0" value="0">
-                                                           <!-- <span id="span_tax_0">0.0</span> -->
-                                                           </td>
-                                                <td width="10%" class="hidden_mobile_view"><input type="hidden" class="form-control " name="total[]"
-                                                           data-counter="0" id="item_total_0" min="0" value="0">
-                                                           $<span id="span_total_0">0.00</span></td>
-                                                <td><a href="#" class="remove btn btn-sm btn-success" id="0"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
-                                            </tr>
-                                        <?php }else{ ?>
-                                            <?php $item_row = 0; foreach($w_items as $data){ ?>
-
-                                            <tr>
-                                                <td width="30%">
-                                                    <input type="text" class="form-control getItems"
-                                                           onKeyup="getItems(this)" name="items[]" value="<?php echo $data->title; ?>">
-                                                    <ul class="suggestions"></ul>
-                                                    <div class="show_mobile_view"><span class="getItems_hidden"><?php echo $data->title; ?></span></div>
-                                                    <input type="hidden" name="itemid[]" id="itemid" class="itemid" value="<?php echo $data->items_id; ?>">
-                                                </td>
-                                                <td width="20%">
-                                                <div class="dropdown-wrapper">
-                                                    <select name="item_type[]" id="item_typeid" class="form-control">
-                                                        <option value="<?php echo $data->type; ?>"><?php echo $data->type; ?></option>
-                                                        <option value="product">Product</option>
-                                                        <option value="material">Material</option>
-                                                        <option value="service">Service</option>
-                                                        <option value="fee">Fee</option>
-                                                    </select>
-                                                </div>
-                                                    </td>
-                                                <td width="10%"><input type="number" data-itemid="<?php echo $data->items_id; ?>" class="form-control quantity mobile_qty hidden_mobile_view" name="quantity[]"
-                                                           data-counter="0" id="quantity_<?php echo $item_row; ?>" value="<?php echo $data->qty; ?>"> 
-                                                           <!-- <div class="show_mobile_view"><span>1</span><input type="hidden" class="form-control qtyest2" name="quantity[]"
-                                                           data-counter="0" id="quantity_<?php echo $data->items_id; ?>" value="<?php echo $data->qty; ?>"></div>  -->
-                                                           </td>
-                                                <td width="10%"><input type="number" data-itemid="<?php echo $data->items_id; ?>" class="form-control price hidden_mobile_view" name="price[]"
-                                                           data-counter="0" id="price_<?php echo $item_row; ?>" min="0" value="<?php echo $data->costing; ?>"> <input type="hidden" class="priceqty" id="priceqty_<?php echo $data->id; ?>" value="<?php $quantity1 = $data->qty;
-                                                                                        $price1 = $data->costing; 
-                                                                                        $total1 = $quantity1*$price1;
-                                                                                        echo $total1;
-                                                                                                    ?>"> 
-                                                           <!-- <div class="show_mobile_view"><span class="price">0</span><input type="hidden" class="form-control price" name="price[]" data-counter="0" id="priceM_<?php echo $data->id; ?>" min="0" value="0"></div> -->
-                                                           <input id="priceM_qty<?php echo $data->items_id; ?>"  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view price_qty" value="" /></td>
-                                                <td width="10%" class="hidden_mobile_view"><input type="number" class="form-control discount" name="discount[]"
-                                                           data-counter="0" id="discount_<?php echo $item_row; ?>" min="0"  value="0" ></td>
-                                                <td width="10%" class="hidden_mobile_view"><input type="text" class="form-control tax_change" name="tax[]"
-                                                           data-counter="0" id="tax1_<?php echo $item_row; ?>" min="0" value="<?php echo number_format($data->tax,2); ?>">
-                                                           <!-- <span id="span_tax_0">0.0</span> -->
-                                                           </td>
-                                                <td width="10%" class="hidden_mobile_view"><input type="hidden" class="form-control " name="total[]"
-                                                           data-counter="0" id="item_total_<?php echo $data->items_id; ?>" min="0" value="<?php $a = $data->qty * $data->costing; $b = $a + $data->tax; echo $b; ?>">
-                                                           $<span id="span_total_<?php echo $item_row; ?>"><?php $a = $data->qty * $data->costing; $b = $a + $data->tax; echo number_format($b,2); ?></span></td>
-                                                <td><a href="#" class="remove btn btn-sm btn-success"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
-                                            </tr>
-                                            <?php $item_row++;} ?>
-
-                                        <?php } ?>
+                                        </tr>
                                         </tbody>
                                     </table>
-                                    <div class="row lamesa">
+                                    <div class="row">
                                         <!-- <a class="link-modal-open pt-1 pl-2" href="#" id="add_another_new_invoice" style="color:#02A32C;"><span
                                                     class="fa fa-plus-square fa-margin-right" style="color:#02A32C;"></span>Add Items</a> -->
                                         <a href="#" id="add_another_new_invoice2" style="color:#02A32C;" data-toggle="modal" data-target="#item_list"><i class="fa fa-plus-square" aria-hidden="true"></i> Add another line </a>
                                         <hr style="display:inline-block; width:91%">
                                     </div>
-                                    <!-- <div class="row" style="background-color:white;font-size:16px;">
+                                    <div class="row">
                                         <div class="col-md-7">
+                                        &nbsp;
                                         </div>
-                                        <div class="col-md-5">
-                                            <table class="table" style="text-align:left;">
-                                                <tr>
-                                                    <td>Subtotal</td>
-                                                    <td></td>
-                                                    <td>$ <span id="item_total_text">0.00</span>
-                                                        <input type="hidden" name="sub_total" id="item_total"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Taxes</td>
-                                                    <td></td>
-                                                    <td>$ <span id="total_tax_">0.00</span><input type="hidden" name="taxes" id="total_tax_input"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td style="width:250px;"><input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control" style="width:200px; display:inline; border: 1px dashed #d1d1d1"></td>
-                                                    <td style="width:150px;">
-                                                    <input type="number" name="adjustment_value" id="adjustment_input" value="0" class="form-control adjustment_input" style="width:100px; display:inline-block">
-                                                        <span class="fa fa-question-circle" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Optional it allows you to adjust the total amount Eg. +10 or -10." data-original-title="" title=""></span>
-                                                    </td>
-                                                    <td>0.00</td>
-                                                </tr>
-                                                    <input type="hidden" name="markup_input_form" id="markup_input_form" class="markup_input" value="0">
-                                                <tr style="color:blue;font-weight:bold;font-size:18px;">
-                                                    <td><b>Grand Total ($)</b></td>
-                                                    <td></td>
-                                                    <td><b><span id="grand_total">0.00</span>
-                                                        <input type="hidden" name="grand_total" id="grand_total_input" value='0'></b></td>
-                                                </tr>
-                                            </table>
-                                        </div>
-                                    </div> -->
-                                    <div class="row" style="background-color:white;font-size:16px;">
-                                        <div class="col-md-7">
-                                        </div>
-                                        <div class="col-md-5">
-                                            <table class="table table_mobile" style="text-align:left;">
-                                                <tr>
-                                                    <td>Subtotal</td>
-                                                    <!-- <td></td> -->
-                                                    <td colspan="2" align="right">$ <span id="span_sub_total_invoice">0.00</span>
-                                                        <input type="hidden" name="subtotal" id="item_total"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Taxes</td>
-                                                    <!-- <td></td> -->
-                                                    <td colspan="2" align="right">$ <span id="total_tax_">0.00</span><input type="hidden" name="taxes" id="total_tax_input"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td style="width:;"><input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control" style="width:; display:inline; border: 1px dashed #d1d1d1"></td>
-                                                    <td align="center">
-                                                    <input type="number" name="adjustment_value" id="adjustment_input" value="0" class="form-control adjustment_input" style="width:50%;display:inline;">
-                                                        <span class="fa fa-question-circle" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Optional it allows you to adjust the total amount Eg. +10 or -10." data-original-title="" title=""></span>
-                                                    </td>
-                                                    <td><span id="adjustmentText">0.00</span></td>
-                                                </tr>
-                                                <!-- <tr>
-                                                    <td>Markup $<span id="span_markup"></td> -->
-                                                    <!-- <td><a href="#" data-toggle="modal" data-target="#modalSetMarkup" style="color:#02A32C;">set markup</a></td> -->
-                                                    <input type="hidden" name="markup_input_form" id="markup_input_form" class="markup_input" value="0">
-                                                <!-- </tr> -->
-                                                <tr id="saved" style="color:green;font-weight:bold;display:none;">
-                                                    <td>Amount Saved</td>
-                                                    <td></td>
-                                                    <td><span id="offer_cost">0.00</span><input type="hidden" name="voucher_value" id="offer_cost_input"></td>
-                                                </tr>
-                                                <tr style="color:blue;font-weight:bold;font-size:16px;">
-                                                    <td><b>Grand Total ($)</b></td>
-                                                    <td></td>
-                                                    <td><b><span id="grand_total">0.00</span>
-                                                        <input type="hidden" name="grand_total" id="grand_total_input" value='0'></b></td>
-                                                </tr>
-                                            </table>
+                                        <div class="col-md-5 row pr-0">
+                                            <div class="col-sm-5">
+                                                <label style="padding: 0 .75rem;">Subtotal</label>
+                                            </div>
+                                            <div class="col-sm-6 text-right pr-3">
+                                                $ <span id="item_total_text">0.00</span>
+                                                <input type="hidden" name="sub_total" id="item_total">
+                                            </div>
+                                            <div class="col-sm-12">
+                                                <hr>
+                                            </div>
+                                            <div class="col-sm-5">
+                                                <input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control" style="width:200px; display:inline; border: 1px dashed #d1d1d1">
+                                            </div>
+                                            <div class="col-sm-3">
+                                                <input type="number" name="adjustment_input" id="adjustment_input" value="0" class="form-control adjustment_input" style="width:100px; display:inline-block">
+                                                <span class="fa fa-question-circle" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Optional it allows you to adjust the total amount Eg. +10 or -10." data-original-title="" title=""></span>
+                                            </div>
+                                            <div class="col-sm-3 text-right pt-2">
+                                                <label id="adjustment_amount">0.00</label>
+                                                <!-- <input type="hidden" name="adjustment_amount" id="adjustment_amount_form_input" value='0'> -->
+                                            </div>
+                                            <div class="col-sm-12">
+                                                <hr>
+                                            </div>
+                                            <div class="col-sm-5">
+                                                <label style="padding: .375rem .75rem;">Grand Total ($)</label>
+                                            </div>
+                                            <div class="col-sm-6 text-right pr-3">
+                                            <input type="hidden" name="adjustment_value" id="adjustment_input" value="0" class="form-control adjustment_input" style="width:100px; display:inline-block"><input type="hidden" name="markup_input_form" id="markup_input_form" class="markup_input" value="0">
+                                                <span id="grand_total">0.00</span>
+                                                <input type="hidden" name="grand_total" id="grand_total_input" value='0'>
+                                            </div>
+                                            <div class="col-sm-12">
+                                                <hr>
+                                            </div>
                                         </div>
                                     </div>
-
-                                    
                                 </div>
                             </div>
 
@@ -823,7 +499,7 @@ input:checked + .slider:before {
                                 <div class="col-md-12">
                                     <h5>Terms &amp; Conditions</h5>
                                     <span class="help help-sm help-block">Mention your company's T&amp;C that will appear on the invoice.</span>
-                                    <textarea name="terms_and_conditions" cols="40" rows="2" class="form-control ckeditor editor1_tc"><?= !empty($workorder[0]) ? htmlentities($workorder[0]->terms_and_conditions) : ''; ?></textarea>
+                                    <textarea name="terms_and_conditions" cols="40" rows="2" class="form-control"></textarea>
                                 </div>
                             </div>
                             </div>
@@ -853,7 +529,7 @@ input:checked + .slider:before {
                                 </div>
                             </div>
 
-                            <div class="row" style="background-color:white;padding-top:10px;">
+                            <div class="row" style="background-color:white;">
                                 <div class="col-md-12 form-group">
                                     <button class="btn btn-light but" style="border-radius: 0 !important;border:solid gray 1px;" data-action="update">Save as Draft</button>
                                     <button class="btn btn-success but" style="border-radius: 0 !important;" data-action="send">Preview</button>
@@ -1111,8 +787,8 @@ input:checked + .slider:before {
 </div>
 
 <!-- Modal -->
-<div class="modal fade lamesa" id="item_list" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document">
+<div class="modal fade" id="item_list" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document" style="width:800px;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="newcustomerLabel">Item Lists</h5>
@@ -1133,25 +809,20 @@ input:checked + .slider:before {
                                             <td> Action</td>
                                         </tr>
                                         </thead>
-                                        <tbody class="">
+                                        <tbody>
                                         <?php foreach($items as $item){ // print_r($item); ?>
                                             <tr>
                                                 <td><?php echo $item->title; ?></td>
                                                 <td><?php if($item->rebate == 1){ ?>
-                                                    <!-- <label class="switch">
-                                                    <input type="checkbox" id="rebatable_toggle" checked>
-                                                    <span class="slider round"></span> -->
-                                                    <input type="checkbox" class="toggle_checkbox" id="rebatable_toggle" item-id="<?php echo $item->id; ?>"  value="1"  data-toggle="toggle" data-size="xs" checked >
+                                                    <label class="switch">
+                                                    <input type="checkbox" checked>
+                                                    <span class="slider round"></span>
                                                     </label>
                                                 <?php }else{ ?>
-                                                    <!-- <label class="switch">
+                                                    <label class="switch">
                                                     <input type="checkbox">
                                                     <span class="slider round"></span>
-                                                    </label> -->
-
-                                                    <!-- <input type="checkbox" data-toggle="toggle" data-size="xs"> -->
-                                                    <input type="checkbox" class="toggle_checkbox" id="rebatable_toggle" item-id="<?php echo $item->id; ?>" value="0" data-toggle="toggle" data-size="xs">
-
+                                                    </label>
                                                 <?php  } ?></td>
                                                 <td></td>
                                                 <td><?php echo $item->price; ?></td>
@@ -1186,152 +857,7 @@ input:checked + .slider:before {
 
 </script>
 
-<script>
-//   $(function() {
-//     $("#rebatable_toggle").each(function(){
-//     $(this).change(function() {
-//     //   $('#console-event').html('Toggle: ' + $(this).prop('checked'))
-//     alert('yeah');
-//     })
-//   })
-$(document).ready(function () {
-
-//iterate through all the divs - get their ids, hide them, then call the on click
-$(".toggle").each(function () {
-    var $context = $(this);
-    var $button = $context.find("#rebatable_toggle");
-    //            $currentId = $button.attr('id');
-    // var $divOptions = $context.find('div').last();
-
-    //$($divOptions).hide();
-    $($button).on('change', function (event) {
-        // alert('yeah');
-        // $(this).click(function() {        
-        var id = $($button).attr("item-id");
-        var get_val = $($button).val();
-        // alert(id);
-
-        $.ajax({
-            type: 'POST',
-            url:"<?php echo base_url(); ?>accounting/changeRebate",
-            data: {id : id, get_val : get_val },
-            dataType: 'json',
-            success: function(response){
-                // alert('Successfully Change');
-                sucess("Rebate Updated Successfully!");
-                // $('.lamesa').load(window.location.href +  ' .lamesa');
-                // location.reload();
-                $('#item_list').modal('toggle');
-                // $("#item_list .modal-body").load(target, function() { 
-                // $("#item_list").modal("show"); 
-                // });
-                $('#item_list').on('hidden.bs.modal', function (e) {
-                    location.reload();
-                    });
-            },
-                error: function(response){
-                alert('Error'+response);
-       
-                }
-        });
-
-        function sucess(information,$id){
-            Swal.fire({
-                title: 'Good job!',
-                text: information,
-                icon: 'success',
-                showCancelButton: false,
-                confirmButtonColor: '#32243d',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Ok'
-            }).then((result) => {
-                if (result.value) {
-                    window.location.href="<?= base_url(); ?>customer/preview/"+$id;
-                }
-            });
-        }
-
-    // });
-    });
-});
-});
-</script>
-
-<script>
-// $(document).ready(function(){
-//     // $('#rebatable_toggle').click(function () {
-//     //     alert('yeah');
-//     // });
-//     // $("#rebatable_toggle").change(function() {
-//     // if(this.checked) {
-//     //     alert('yeah');
-//     // }
-// // });
-// // $("#rebatable_toggle").change(function(){
-// //     if($(this).prop("checked") == true){
-// //         alert('yeah');
-// //     }else{
-// //         alert('no');
-// //     }
-// // });
-
-// // $('.toggle_checkbox').each(function() {
-
-// // // $parent = $( el ).closest( '.toggle_checkbox' );
-// // $( this ).click(function() {
-// //     var yeah = $(this).attr("item-id");
-// //     alert(yeah);
-// // });
-
-// // });
-
-
-
-// });
-// function myFunctionChecked() {
-//     var yeah = $(this).attr("item-id");
-
-//     alert(yeah);
-// }
-
-// $(".toggle_checkbox").each(function(){
-//     // alert($(this).attr("item-id"));
-//     $( this ).click(function() {        
-//         var id = $(this).attr("item-id");
-//         var get_val = $(this).val();
-//         // alert(yeah);
-
-//         $.ajax({
-//             type: 'POST',
-//             url:"<?php echo base_url(); ?>accounting/changeRebate",
-//             data: {id : id, get_val : get_val },
-//             dataType: 'json',
-//             success: function(response){
-//                 alert('Successfully Change');
-//                 // $('.lamesa').load(window.location.href +  ' .lamesa');
-//                 location.reload();
-//                 $('#item_list').modal('toggle');
-//             },
-//                 error: function(response){
-//                 alert('Error'+response);
-       
-//                 }
-//         });
-
-//     });
-// });
-
-</script>
-
-
-<script>
-    $(function() {
-        $("nav:first").addClass("closed");
-    });
-</script>
-
-<!-- <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAlMWhWMHlxQzuolWb2RrfUeb0JyhhPO9c&libraries=places"></script> -->
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=<?= google_credentials()['api_key'] ?>&callback=initialize&libraries=&v=weekly"></script>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAlMWhWMHlxQzuolWb2RrfUeb0JyhhPO9c&libraries=places"></script>
 <script>
 function initialize() {
           var input = document.getElementById('invoice_jobs_location');
@@ -1375,7 +901,6 @@ $(document).ready(function(){
         });
     });
 });
-
 </script>
 
 

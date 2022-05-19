@@ -51,7 +51,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                         <div class="col-sm-6 right dashboard-container-1">
                             <div class="text-right">
-                                <a class="btn btn-primary" href="<?php echo base_url('color_settings/add_new_color_setting'); ?>"><i class="fa fa-file"></i> Add New</a>
+                                <a class="btn btn-info" href="<?php echo base_url('color_settings/add_new_color_setting'); ?>"><i class="fa fa-file"></i> Add New</a>
                             </div>
                         </div>
                       </div>
@@ -63,7 +63,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <table class="table table-hover" data-id="coupons">
                             <thead>
                                 <tr>
-                                    <th style="width: 60%;">Name</th>
+                                    <th style="width: 40%;">Name</th>
                                     <th style="width: 10%;">Color Code</th>
                                     <th style="width: 10%;"></th>
                                 </tr>
@@ -74,20 +74,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <td><?= $c->color_name; ?></td>
                                         <td style="text-align: center;color:#ffffff;"><div style="background-color: <?= $c->color_code; ?>;"><?= $c->color_code; ?></td>
                                         <td>
-                                            <div class="dropdown dropdown-btn">
-                                                <?php $eid = hashids_encrypt($ch->id, '', 15); ?>
-                                                <button class="btn btn-default dropdown-toggle" type="button" id="dropdown-edit" data-toggle="dropdown" aria-expanded="true">
-                                                    <span class="btn-label">Manage</span><span class="caret-holder"><span class="caret"></span></span>
-                                                </button>
-                                                <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
-                                                    <li role="presentation">
-                                                        <a role="menuitem" tabindex="-1" href="<?php echo base_url('color_settings/edit_color_setting/'.$c->id); ?>">
-                                                            <span class="fa fa-pencil-square-o icon"></span> Edit</a>
-                                                    </li>
-                                                    <li role="presentation">
-                                                        <a role="menuitem" class="btn-delete-color" href="javascript:void(0);" data-name="<?php echo $c->color_name; ?>" data-id="<?php echo $c->id; ?>"><span class="fa fa-trash-o"></span> Delete</a>
-                                                </ul>
-                                            </div>
+                                            <a class="btn btn-info btn-sm" href="<?php echo base_url('color_settings/edit_color_setting/'.$c->id); ?>"><i class="fa fa-pencil"></i> Edit</a>
+                                            <a class="btn btn-sm btn-danger btn-delete-color" href="javascript:void(0);" data-id="<?= $c->id; ?>"><i class="fa fa-trash"></i> Delete</a>
                                         </td>
                                     </tr>
                                 <?php } ?>

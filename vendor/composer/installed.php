@@ -1,24 +1,24 @@
 <?php return array (
   'root' => 
   array (
-    'pretty_version' => '1.0.0+no-version-set',
-    'version' => '1.0.0.0',
+    'pretty_version' => 'dev-master',
+    'version' => 'dev-master',
     'aliases' => 
     array (
     ),
-    'reference' => NULL,
+    'reference' => 'd26918c70c2844f1252443a6be6df40b1e6d2177',
     'name' => '__root__',
   ),
   'versions' => 
   array (
     '__root__' => 
     array (
-      'pretty_version' => '1.0.0+no-version-set',
-      'version' => '1.0.0.0',
+      'pretty_version' => 'dev-master',
+      'version' => 'dev-master',
       'aliases' => 
       array (
       ),
-      'reference' => NULL,
+      'reference' => 'd26918c70c2844f1252443a6be6df40b1e6d2177',
     ),
     'guzzle/batch' => 
     array (
@@ -192,14 +192,23 @@
       ),
       'reference' => '670ec6e743f5c95441263440afcdabc3fc720547',
     ),
-    'mpdf/mpdf' => 
+    'paragonie/random_compat' => 
     array (
-      'pretty_version' => 'v6.1.3',
-      'version' => '6.1.3.0',
+      'pretty_version' => 'v9.99.100',
+      'version' => '9.99.100.0',
       'aliases' => 
       array (
       ),
-      'reference' => '7f138bf7508eac895ac2c13d2509b056ac7e7e97',
+      'reference' => '996434e5492cb4c3edcb9168db6fbb1359ef965a',
+    ),
+    'paragonie/sodium_compat' => 
+    array (
+      'pretty_version' => 'v1.14.0',
+      'version' => '1.14.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'a1cfe0b21faf9c0b61ac0c6188c4af7fd6fd0db3',
     ),
     'phpmailer/phpmailer' => 
     array (
@@ -210,14 +219,23 @@
       ),
       'reference' => 'acba50393dd03da69a50226c139722af8b153b11',
     ),
-    'setasign/fpdi' => 
+    'psr/log' => 
     array (
-      'pretty_version' => '1.6.2',
-      'version' => '1.6.2.0',
+      'pretty_version' => '1.1.3',
+      'version' => '1.1.3.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'a6ad58897a6d97cc2d2cd2adaeda343b25a368ea',
+      'reference' => '0f73288fd15629204f9d42b7055f72dacbe811fc',
+    ),
+    'pusher/pusher-php-server' => 
+    array (
+      'pretty_version' => 'v5.0.1',
+      'version' => '5.0.1.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '6cad1269f1f5261969848b72829f4f30736f3d90',
     ),
     'symfony/event-dispatcher' => 
     array (

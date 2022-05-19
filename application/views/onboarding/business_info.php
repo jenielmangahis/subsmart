@@ -90,7 +90,7 @@ error_reporting(0);
                         <br/>
                         <label>Suite/Unit</label> <span class="help">(optional)</span>
                         <div class="help help-sm help-block">Suite #</div>
-                        <input type="text" name="unit_nbr" class="form-control" autocomplete="off" value="<?php echo ($profiledata) ? $profiledata->unit_nbr : '' ?>" placeholder="e.g. Ap #12">
+                        <input type="text" name="unit_nbr" class="form-control" autocomplete="off" value="<?php echo ($profiledata) ? $profiledata->unit_nbr : '' ?>" placeholder="e.g. Ap #12" required="">
                         <span class="validation-error-field" data-formerrors-for-name="unit_nbr" data-formerrors-message="true" style="display: none;"></span>
                      </div>
                   </div>
@@ -100,21 +100,15 @@ error_reporting(0);
                            <label>Profile Picture</label>
                            <div>
                               <a class="profile-avatar-img" data-fileuploadmodal="open-modal" href="#">
-                                <?php 
-                                  $img_profile = base_url('assets/img/onboarding/profile-avatar.png');
-                                  if($profiledata){
-                                    $img_profile = businessProfileImage($profiledata->id);
-                                  }
-                                ?>
-                                <?php if($profiledata) { ?>
-                                  <img height="100" data-fileuploadmodal="image-parent" id="img_profile" src="<?php echo $img_profile; ?>">
+                                <?php if ($profiledata) { ?>
+                                  <img height="100" data-fileuploadmodal="image-parent" id="img_profile" src="<?php echo (businessProfileImage($profiledata->id)) ? businessProfileImage($profiledata->id) : $url->assets ?>">
                                 <?php } else { ?>
                                   <img height="100" data-fileuploadmodal="image-parent" id="img_profile" src="<?php echo base_url();?>assets/img/onboarding/profile-avatar.png">
                                 <?php } ?>
                               </a>
                            </div>
                            <div class="margin-top-img mb-2">
-                            <input type="file" class="form-control" name="image" id="formClient-Image" placeholder="Upload Image" accept="image/*" onchange="loadFile(event)">
+                            <input type="file" class="form-control" name="image" id="formClient-Image" placeholder="Upload Image" accept="image/*" onchange="readURL(this);">
                           </div>
                         </div>
                         <div class="profile-avatar-help-container">
@@ -136,14 +130,7 @@ error_reporting(0);
                      </div>
                      <div class="col-md-4">
                         <label>Zip/Postal Code</label> <span class="form-required">*</span>
-                        <?php 
-                           if( $profiledata ){
-                              if( $profiledata->zip != '' ){
-                                 $zip_code = $profiledata->zip;
-                              }
-                           }
-                        ?>
-                        <input type="text" name="zip"  class="form-control" id="zip" value="<?php echo $zip_code; ?>" autocomplete="off" placeholder="e.g. 86336" required="">
+                        <input type="text" name="zip"  class="form-control" id="zip" value="<?php echo ($profiledata) ? $profiledata->zip : '' ?>" autocomplete="off" placeholder="e.g. 86336" required="">
                         <span class="validation-error-field" data-formerrors-for-name="zip" data-formerrors-message="true" style="display: none;"></span>
                      </div>
                      <div class="col-md-4">
@@ -161,14 +148,7 @@ error_reporting(0);
                         <label>Business Phone</label> <span class="form-required">*</span>
                         <div class="help help-sm help-block">We'll send you text/sms notifications to this nr.</div>
                         <div>
-                           <?php                               
-                              if( $profiledata ){
-                                 if( $profiledata->business_phone != '' ){
-                                    $business_phone = $profiledata->business_phone;
-                                 }
-                              }
-                           ?>
-                           <input type="text" name="business_phone" value="<?php echo $business_phone; ?>"  class="form-control" autocomplete="off" required="">
+                           <input type="text" name="business_phone" value="<?php echo ($profiledata) ? $profiledata->business_phone : '' ?>"  class="form-control" autocomplete="off" required="">
                            <span class="validation-error-field" data-formerrors-for-name="phone" data-formerrors-message="true" style="display: none;"></span>
                         </div>
                         <div>
@@ -227,14 +207,7 @@ error_reporting(0);
                   <div class="col-md-6">
                      <div class="form-group">
                         <label>Business Email</label> <span class="form-required">*</span>
-                        <?php                               
-                           if( $profiledata ){
-                              if( $profiledata->business_email != '' ){
-                                 $business_email = $profiledata->business_email;
-                              }
-                           }
-                        ?>
-                        <input type="text" name="business_email" value="<?php echo $business_email; ?>"  class="form-control" autocomplete="off" placeholder="Business Email" required="">
+                        <input type="text" name="business_email" value="<?php echo ($profiledata) ? $profiledata->business_email : '' ?>"  class="form-control" autocomplete="off" placeholder="Business Email" required="">
                         <span class="validation-error-field" data-formerrors-for-name="email" data-formerrors-message="true" style="display: none;"></span>
                      </div>
                   </div>
@@ -293,9 +266,3 @@ error_reporting(0);
 </div>
 <script src="<?php echo $url->assets ?>dashboard/js/jquery.min.js"></script>
 <?php include viewPath('includes/footer'); ?>
-<script>
-var loadFile = function(event) {
-   var image = document.getElementById('img_profile');
-   image.src = URL.createObjectURL(event.target.files[0]);
-};
-</script>

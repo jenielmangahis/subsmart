@@ -6,48 +6,25 @@ class AcsProfile_model extends MY_Model
 
     public $table = 'acs_profile';
 
-    public function getAllByCompanyId($company_id, $conditions=array(), $filters=array())
+    public function getAllByCompanyId($company_id)
     {
 
         $this->db->select('*');
         $this->db->from($this->table);
         $this->db->where('company_id', $company_id);
-
-        if( !empty($conditions) ){
-            foreach( $conditions as $c ){
-                if( $c['field'] != '' && $c['value'] != '' ){
-                    $this->db->where($c['field'], $c['value']);    
-                }
-                
-            }
-        }
-
-        if ( !empty($filters) ) {
-            if ( $filters['search'] != '' ) {
-                $this->db->like('first_name', $filters['search'], 'both');
-                $this->db->or_like('last_name', $filters['search'], 'both');
-            }
-        }
-
         $this->db->order_by('first_name', 'ASC');
 
         $query = $this->db->get();
         return $query->result();
     }
 
-    public function getByProfId($prof_id, $conditions=array())
+    public function getByProfId($prof_id)
     {
 
         $this->db->select('*');
         $this->db->from($this->table);
         $this->db->where('prof_id', $prof_id);
 
-        if( !empty($conditions) ){
-            foreach( $conditions as $c ){
-                $this->db->where($c['field'], $c['value']);                
-            }
-        }
-        
         $query = $this->db->get();
         return $query->row();
     }
@@ -63,18 +40,7 @@ class AcsProfile_model extends MY_Model
         return $query->row();
     }
 
-    public function getByProfile($prof_id)
-    {
-
-        $this->db->select('*');
-        $this->db->from($this->table);
-        $this->db->where('prof_id', $prof_id);
-
-        $query = $this->db->get();
-        return $query->row();
-    }
-
-    public function getAll($limit = 0)
+    public function getAll()
     {
 
         $this->db->select('*');
@@ -82,9 +48,6 @@ class AcsProfile_model extends MY_Model
         $this->db->order_by('first_name', 'ASC');
 
         $query = $this->db->get();
-        if( $limit > 0 ){
-            $this->db->limit($limit);
-        }
         return $query->result();
     }
 

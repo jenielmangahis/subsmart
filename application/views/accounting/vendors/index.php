@@ -35,60 +35,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     #vendors-table thead tr th:first-child {
         width: 1;
     }
-    #vendors-table .view-attachment:hover {
-        background-color: #365ebf;
-        color: #fff;
+    span.select2-selection.select2-selection--single, #edit-pay-schedule-modal span.select2-selection.select2-selection--single {
+        min-width: unset !important;
     }
-    .open-purchase-orders-cont, .open-bills-cont, .payments-cont {
-        color: #fff;
-        cursor: pointer;
-    }
-    .open-purchase-orders-cont p, .open-bills-cont p, .payments-cont p {
-        margin-bottom: 10px;
-    }
-    .open-purchase-orders-cont .row .col-12 {
-        background-color: #0077C5;
-    }
-    .open-bills-cont .row .col-6:first-child {
-        background-color: #FF8000;
-    }
-    .open-bills-cont .row .col-6:nth-child(2) {
-        background-color: #BABEC5;
-    }
-    .payments-cont .row .col-12 {
-        background-color: #7FD000;
-    }
-    .open-purchase-orders-cont, .open-bills-cont,
-    .payments-cont
-    {
-        max-height: 80px;
-        height: 80px;
-    }
-    .open-purchase-orders-cont.hovered .row .col-12,
-    .overdue-bills.hovered,
-    .open-bills.hovered,
-    .payments-cont.hovered .row .col-12,
-    .open-purchase-orders-cont.selected .row .col-12,
-    .overdue-bills.selected,
-    .overdue-bills.co-selected,
-    .open-bills.selected,
-    .payments-cont.selected .row .col-12
-    {
-        border-bottom: 6px solid rgba(0,0,0,.35);
-        transform: translateY(-7px);
-    }
-    #myTabContent .action-bar ul li a:after {
-        width: 0;
-    }
-    #myTabContent .action-bar ul li a {
-    font-size: 20px;
-    }
-    #myTabContent .action-bar ul li {
-        margin-right: 5px;
-    }
-	#myTabContent .action-bar ul li .dropdown-menu a {
-		font-size: 14px;
-	}
 </style>
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">
@@ -147,48 +96,40 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     <span class="sr-only">Toggle Dropdown</span>
                                                 </button>
                                                 <div class="dropdown-menu">
-                                                    <a class="dropdown-item" href="#" id="pay-bills">Pay bills</a>
+                                                    <a class="dropdown-item" href="#">Pay bills</a>
+                                                    <a class="dropdown-item" href="#">Order checks</a>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-12 mt-3">
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            <p>Unbilled Last 365 Days</p>
-                                            <div class="open-purchase-orders-cont" id="purchase-orders">
-                                                <div class="row mr-0">
-                                                    <div class="col-12">
-                                                        <h4><?=$purchaseOrders?></h4>
-                                                        <p>PURCHASE ORDERS</p>
+                                    <div class="tableContainer moneyBar">
+                                        <div class="unpaid-bar-container">
+                                            <div class="unpaid-bar-header">
+                                                Unpaid 365 days
+                                            </div>
+                                            <div class="overdue-bar">
+                                                <div class="overdue-bar-header">
+                                                    <h4>0</h4>
+                                                    <span>OPEN BILLS</span>
+                                                </div>
+                                                <div class="openbills-bar">
+                                                    <div class="openbills-bar-header">
+                                                        <h4>0</h4>
+                                                        <span>OVERDUE</span>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-4">
-                                            <p>Unpaid Last 365 Days</p>
-                                            <div class="open-bills-cont">
-                                                <div class="row mr-0">
-                                                    <div class="col-6 overdue-bills" id="overdue-bills">
-                                                        <h4><?=$overdueBills?></h4>
-                                                        <p>OVERDUE</p>
-                                                    </div>
-                                                    <div class="col-6 open-bills" id="open-bills">
-                                                        <h4><?=$openBills?></h4>
-                                                        <p>OPEN BILLS</p>
-                                                    </div>
-                                                </div>
+                                        <div class="paid-bar-container">
+                                            <div class="paid-header">
+                                                Paid
                                             </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <p>Paid</p>
-                                            <div class="payments-cont" id="payments">
-                                                <div class="row">
-                                                    <div class="col-12">
-                                                        <h4><?=$paidTransactions?></h4>
-                                                        <p>PAID LAST 30 DAYS</p>
-                                                    </div>
+                                            <div class="paid-bar">
+                                                <div class="paid-bar-header">
+                                                    <h4>39</h4>
+                                                    <span>PAID LAST 30 DAYS</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -222,8 +163,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     </button>
 
                                                     <div class="dropdown-menu" aria-labelledby="statusDropdownButton">
-                                                        <a href="mailto:" class="dropdown-item" id="email-vendor">Email</a>
-                                                        <a href="#" class="dropdown-item" id="make-inactive">Make inactive</a>
+                                                        <a href="#" class="dropdown-item">Email</a>
+                                                        <a href="#" class="dropdown-item">Make inactive</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -235,39 +176,20 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <div class="col-md-6">
                                         <div class="action-bar h-100 d-flex align-items-center">
                                             <ul class="ml-auto">
-                                                <li><a href="#" id="print-vendors"><i class="fa fa-print"></i></a></li>
-                                                <li>
-                                                    <form action="/accounting/vendors/export-vendors" method="post" id="export-form">
-                                                        <a href="#" id="export-vendors"><i class="fa fa-download"></i></a>
-                                                    </form>
-                                                </li>
+                                                <li><a href="#" onclick = "window.print()"><i class="fa fa-print"></i></a></li>
+                                                <li><a href="#"><i class="fa fa-download"></i></a></li>
                                                 <li>
                                                     <a class="hide-toggle dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                         <i class="fa fa-cog"></i>
                                                     </a>
                                                     <div class="dropdown-menu p-3" aria-labelledby="dropdownMenuLink">
                                                         <p class="m-0">Columns</p>
-                                                        <div class="checkbox checkbox-sec d-block my-2">
-                                                            <input type="checkbox" id="address_chk">
-                                                            <label for="address_chk">Address</label>
-                                                        </div>
-                                                        <div class="checkbox checkbox-sec d-block my-2">
-                                                            <input type="checkbox" id="attachments_chk">
-                                                            <label for="attachments_chk">Attachments</label>
-                                                        </div>
-                                                        <div class="checkbox checkbox-sec d-block my-2">
-                                                            <input type="checkbox" id="phone_chk" checked>
-                                                            <label for="phone_chk">Phone</label>
-                                                        </div>
-                                                        <div class="checkbox checkbox-sec d-block my-2">
-                                                            <input type="checkbox" id="email_chk" checked>
-                                                            <label for="email_chk">Email</label>
-                                                        </div>
+                                                        <p class="m-0"><input type="checkbox" id="address_chk"> Address</p>
+                                                        <p class="m-0"><input type="checkbox" id="attachments_chk"> Attachments</p>
+                                                        <p class="m-0"><input type="checkbox" id="phone_chk" checked> Phone</p>
+                                                        <p class="m-0"><input type="checkbox" id="email_chk" checked> Email</p>
 											            <p class="m-0">Other</p>
-                                                        <div class="checkbox checkbox-sec d-block my-2">
-                                                            <input type="checkbox" id="inc_inactive" value="1">
-                                                            <label for="inc_inactive">Include Inactive</label>
-                                                        </div>
+                                                        <p class="m-0"><input type="checkbox" id="inc_inactive" value="1"> Include Inactive</p>
                                                         <p class="m-0">Rows</p>
                                                         <p class="m-0">
                                                             <select name="table_rows" id="table_rows" class="form-control">
@@ -288,14 +210,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <table id="vendors-table" class="table table-bordered table-hover" style="width:100%">
 									<thead>
                                         <tr>
-                                            <th>
-                                                <div class="d-flex justify-content-center">
-													<div class="checkbox checkbox-sec m-0">
-                                                        <input type="checkbox" id="select-all-vendors">
-														<label for="select-all-vendors" class="p-0" style="width: 24px; height: 24px"></label>
-													</div>
-												</div>
-                                            </th>
+                                            <th><input type="checkbox"></th>
                                             <th>Vendor/Company</th>
                                             <th class="hide address">Address</th>
                                             <th class="phone">Phone</th>
@@ -305,7 +220,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <th class="text-right">Action</th>
                                         </tr>
 									</thead>
-									<tbody class="cursor-pointer"></tbody>
+									<tbody></tbody>
 								</table>
                             </div>
                         </div>

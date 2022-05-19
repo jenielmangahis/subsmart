@@ -2,21 +2,6 @@
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 <?php include viewPath('includes/header'); ?>
-<style>
-.affiliate-photo{
-    margin: 0 auto;
-    height: 265px !important;
-    width: auto;
-    margin-bottom: 23px;
-}
-.form-header{
-    background-color: #32243d;
-    padding: 10px;
-    font-size: 17px;
-    color: #ffffff;
-    margin-bottom: 31px;
-}
-</style>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/affiliate'); ?>
     <!-- page wrapper start -->
@@ -33,11 +18,21 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="card-body hid-desk" style="padding-bottom:0px;">
                             <div class="row align-items-center">
                                 <div class="col-sm-6">
-                                    <?php if( $action == 'add' ){ ?>
                                     <h3 class="page-title">Add Affiliate Partner</h3>
-                                    <?php }else{ ?>
-                                    <h3 class="page-title">Edit Affiliate Partner</h3>
-                                    <?php } ?>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="float-right d-md-block">
+                                        <div class="dropdown">
+                                            <?php //if (hasPermissions('WORKORDER_MASTER')): ?>
+                                                <!-- <a href="<?php echo url('inquiries/add') ?>" class="btn btn-primary" aria-expanded="false">
+									<i class="mdi mdi-settings mr-2"></i> New inquiry
+								</a>    -->
+                                                <a class="btn btn-primary btn-md"
+                                                   href="<?php echo url('affiliate') ?>"><span
+                                                            class="fa fa-caret-left"></span> Back</a>
+                                            <?php //endif ?>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -47,148 +42,300 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="tab-content" id="myTabContent">
                             <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1">
                             <?php echo form_open_multipart('affiliate/saveAffiliate', [ 'id'=> 'form-affiliate-details', 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
-                            <h3 class="form-header">Affiliate</h3>
-                            <div class="row">
-                                <div class="col-6">
-                                    <div class="form-group">
-                                      <label for="country-name">First Name</label>
-                                      <input type="hidden" name="affiliate_id" value="<?php echo (isset($affiliate)) ? $affiliate->id : ''; ?>">
+                             <div class="row ml-2 pt-4">
+                                <div class="col-sm-4">
+                                    <div class="row">
+                                        <div class="pt-2 pr-2">
+                                            <label for="">First Name<span style="color:red;">*</span> </label>
+                                        </div>
+                                        <div class="col">
+                                            <input type="hidden" name="affiliate_id" value="<?php echo (isset($affiliate)) ? $affiliate->id : ''; ?>">
                                             <input type="text" name="first_name" required class="form-control" placeholder="First name" value="<?php echo (isset($affiliate)) ? $affiliate->first_name : ''; ?>">
-                                    </div>
-
-                                    <div class="form-group">
-                                      <label for="country-iso">Last Name</label>
-                                      <input type="text" name="last_name" required class="form-control" placeholder="Last name" value="<?php echo (isset($affiliate)) ? $affiliate->last_name : ''; ?>">
-                                    </div>
-
-                                    <div class="form-group">
-                                      <label for="country-name">Email</label>
-                                      <input type="text" name="email" required class="form-control" value="<?php echo (isset($affiliate)) ? $affiliate->email : ''; ?>"  placeholder="Email">
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="country-name">Gender</label>
-                                        <select class="form-control" name="gender" id="">
-                                            <option <?php echo $affiliate->gender == 'Male' ? 'selected="selected"' : ''; ?> value="Male">Male</option>
-                                            <option <?php echo $affiliate->gender == 'Female' ? 'selected="selected"' : ''; ?> value="Female">Female</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="country-name">Status</label>
-                                        <select class="form-control" name="status" id="">
-                                            <option <?php echo $affiliate->status == 'active' ? 'selected="selected"' : ''; ?> value="active">Active</option>
-                                            <option <?php echo $affiliate->status == 'inactive' ? 'selected="selected"' : ''; ?> value="inactive">Inactive</option>
-                                        </select>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-4">
-                                    <div class="blog-photo-container">
-                                        <?php if (isset($affiliate)) : ?>
-                                            <img class="affiliate-photo" src="../uploads/affiliate/<?php echo logged('company_id') . '/' . $affiliate->photo; ?>" id="photoAffiliate" alt="">
-                                        <?php else :?>
-                                            <img class="affiliate-photo" src="../uploads/users/default.png" id="photoAffiliate" alt="">
-                                        <?php endif ;?>
+                                <div class="col-sm-4">
+                                     <div class="row">
+                                        <div class="pt-2 pr-2">
+                                            <label for="">Last Name<span style="color:red;">*</span> </label>
+                                        </div>
+                                        <div class="col">
+                                            <input type="text" name="last_name" required class="form-control" placeholder="Last name" value="<?php echo (isset($affiliate)) ? $affiliate->last_name : ''; ?>">
+                                        </div>
                                     </div>
-                                    <div class="form-group">
-                                      <div class="input-group" style="width:70%;margin: 0 auto;">
-                                        <div class="custom-file">
-                                          <label class="custom-file-label" for="photoInputFile">(Only jpeg, jpg and png)</label>
-                                          <input type="file" class="form-control" name="image" id="formClient-Image"
+                                </div>
+                                <div class="col-sm-4"></div>
+                                <div class="col-sm-4 mt-3">
+                                    <div class="row">
+                                        <div class="pr-5">
+                                            <label for="">Gender<span style="color:red;">*</span> </label>
+                                        </div>
+                                        <div class="col">
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="genderRadioOptions" <?php echo (isset($affiliate)) ? (($affiliate->gender === "Male") ? 'checked' : '') : ''; ?> id="inlineRadio1" value="Male">
+                                                <label class="form-check-label" for="inlineRadio1">Male</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="genderRadioOptions" <?php echo (isset($affiliate)) ? (($affiliate->gender === "Female") ? 'checked' : '') : ''; ?> id="inlineRadio2" value="Female">
+                                                <label class="form-check-label" for="inlineRadio2">Female</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4"></div>
+                                <div class="col-sm-4"></div>
+                                <div class="col-sm-4 mt-3">
+                                    <div class="row">
+                                        <div class="pt-2 pr-4">
+                                            <label for="">Company </label>
+                                        </div>
+                                        <div class="col">
+                                            <input type="text" name="company" class="form-control" value="<?php echo (isset($affiliate)) ? $affiliate->company : ''; ?>" placeholder="Company">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 mt-3">
+                                     <div class="row">
+                                        <div class="pt-2 pr-2">
+                                            <label for="">Website URL </label>
+                                        </div>
+                                        <div class="col">
+                                            <input type="text" name="website_url" id="websiteUrl" class="form-control" value="<?php echo (isset($affiliate)) ? $affiliate->website_url : ''; ?>" placeholder="">
+                                        </div>
+                                        <div class="col mt-2">
+                                            <a href="javascript:void(0)" id="checkAffiliateURL">Check URL</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-2"></div>
+                                <div class="col-sm-4 mt-3">
+                                    <div class="row">
+                                        <div class="pt-2 pr-5">
+                                            <label for="">Email<span style="color:red;">*</span> </label>
+                                        </div>
+                                        <div class="col">
+                                            <input type="text" name="email" required class="form-control" value="<?php echo (isset($affiliate)) ? $affiliate->email : ''; ?>"  placeholder="Email">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4 mt-3">
+                                     <div class="row">
+                                        <div class="pt-2 pr-2">
+                                            <label for="">Phone<span style="color:red;">*</span> </label>
+                                        </div>
+                                        <div class="col">
+                                            <input type="text" name="phone" required class="form-control" value="<?php echo (isset($affiliate)) ? $affiliate->phone : ''; ?>" placeholder="">
+                                        </div>
+                                        <div class="pt-2 pr-2">
+                                            <label for="">Ext</label>
+                                        </div>
+                                        <div class="col">
+                                            <input type="text" name="phone_ext" class="form-control" value="<?php echo (isset($affiliate)) ? $affiliate->phone_ext : ''; ?>" placeholder="">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4"></div>
+                                <div class="col-sm-4 mt-3">
+                                    <div class="row">
+                                        <div class="pt-2 pr-2">
+                                            <label for="">Alternate Phone </label>
+                                        </div>
+                                        <div class="col">
+                                            <input type="text" name="alternate_phone" class="form-control" value="<?php echo (isset($affiliate)) ? $affiliate->alternate_phone : ''; ?>" placeholder="">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4 mt-3">
+                                     <div class="row">
+                                        <div class="pt-2 pr-2">
+                                            <label for="">Fax </label>
+                                        </div>
+                                        <div class="col">
+                                            <input type="text" name="fax" class="form-control" value="<?php echo (isset($affiliate)) ? $affiliate->fax : ''; ?>" placeholder="">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4"></div>
+                                <div class="col-sm-12 pl-0 mt-4">
+                                    <a href="javascript:void(0)" id="addMailAdd"><span class="fa fa-plus"> Add mailing Address (optional)</a>
+                                    <a href="javascript:void(0)" class="hide-address" id="hideMailAdd"><span class="fa fa-minus"> Add mailing Address (optional)</a>
+                                </div>
+                                <div class="col-sm-8 mt-4 hide-address">
+                                     <div class="row">
+                                        <div class="pt-2 pr-2">
+                                            <label for="">Mailing Address </label>
+                                        </div>
+                                        <div class="col">
+                                            <textarea name="mailing_address" class="form-control"><?php echo (isset($affiliate)) ? $affiliate->mail_address : ''; ?></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4 hide-address"></div>
+                                <div class="col-sm-4 mt-3 hide-address">
+                                    <div class="row">
+                                        <div class="pt-2 pr-5">
+                                            <label for="">City </label>
+                                        </div>
+                                        <div class="col">
+                                            <input type="text" name="city" value="<?php echo (isset($affiliate)) ? $affiliate->city : ''; ?>" class="form-control" placeholder="">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4 mt-3 hide-address">
+                                    <div class="row">
+                                        <div class="pt-2 pr-2">
+                                            <label for="">State </label>
+                                        </div>
+                                        <div class="col">
+                                            <select class="form-control" value="<?php echo (isset($affiliate)) ? $affiliate->state : ''; ?>" name="state" id="exampleFormControlSelect1">
+                                                <option value="all">All</option>
+                                                <option value="active">Active</option>
+                                                <option value="inactive">Inactive</option>
+                                                <option value="pending">Pending</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4 hide-address"></div>
+                                <div class="col-sm-4 mt-3 hide-address">
+                                    <div class="row">
+                                        <div class="pt-2 pr-2">
+                                            <label for="">Zip code </label>
+                                        </div>
+                                        <div class="col">
+                                            <input type="text" name="zipcode" class="form-control" value="<?php echo (isset($affiliate)) ? $affiliate->zipcode : ''; ?>" placeholder="">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4 mt-3 hide-address">
+                                    <div class="row">
+                                        <div class="pt-2 pr-2">
+                                            <label for="">Country </label>
+                                        </div>
+                                        <div class="col pt-2 pr-2">
+                                            <label for="">United States </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4 hide-address"></div>
+                                <div class="col-sm-4 mt-3 hide-address">
+                                    <div class="row">
+                                        <div class="pt-2 pr-3">
+                                            <label for="">Status<span style="color:red;">*</span> </label>
+                                        </div>
+                                        <div class="col">
+                                            <?php if (isset($affiliate)) : ?>
+                                                <select class="form-control" name="status" id="exampleFormControlSelect1">
+                                                    <option value="<?php echo $affiliate->status?>" selected><?php echo $affiliate->status?></option>
+                                                    <option value="Active">Active (recommended)</option>
+                                                    <option value="Inactive">Inactive</option>
+                                                    <option value="Pending">Pending</option>
+                                                </select>
+                                            <?php else : ?>
+                                                <select class="form-control" name="status" id="exampleFormControlSelect1">
+                                                    <option value="" selected disabled>Select Status</option>
+                                                    <option value="active">Active (recommended)</option>
+                                                    <option value="inactive">Inactive</option>
+                                                    <option value="pending">Pending</option>
+                                                </select>
+                                            <?php endif;?>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4 hide-address"></div>
+                                <div class="col-sm-8 mt-4">
+                                     <div class="row">
+                                        <div class="pt-2 pr-2">
+                                            <label for="">Notes (internal)</label>
+                                        </div>
+                                        <div class="col">
+                                            <textarea name="notes" class="form-control"><?php echo (isset($affiliate)) ? $affiliate->notes : ''; ?></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4"></div>
+                                <div class="col-sm-8 mt-3">
+                                     <div class="row">
+                                        <div class="pt-3 pr-2">
+                                            <label for="">Photo</label>
+                                        </div>
+                                        <div class="col pt-2 pr-2">
+                                        <div class="form-group">
+                                            <input type="file" class="form-control" name="image" id="formClient-Image"
                                                 placeholder="Upload Image" accept="image/*"
-                                                onchange="readURL(this, 'photoAffiliate');">                                          
+                                                onchange="readURL(this, 'photoAffiliate');">
                                         </div>
-                                      </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <h3 class="form-header">Company Information</h3>
-                            <div class="row">
-                                <div class="col-6">                    
-                                    <div class="form-group">
-                                      <label for="country-name">Company</label>
-                                      <input type="text" name="company" class="form-control" value="<?php echo (isset($affiliate)) ? $affiliate->company : ''; ?>" placeholder="Company">
-                                    </div>
-                                    <div class="form-group">
-                                      <label for="country-name">Website URL</label>
-                                      <input type="text" name="website_url" id="websiteUrl" class="form-control" value="<?php echo (isset($affiliate)) ? $affiliate->website_url : ''; ?>" placeholder="Website URL">
-                                    </div>
-                                    <div class="form-group">
-                                      <label for="country-name">Fax</label>
-                                      <input type="text" name="fax" class="form-control" value="<?php echo (isset($affiliate)) ? $affiliate->fax : ''; ?>" placeholder="Fax">
-                                    </div>
-                                </div>
-                                <div class="col-6">                    
-                                    <div class="form-group">
-                                      <label for="country-name">Phone</label>
-                                      <input type="text" name="phone" required class="form-control" value="<?php echo (isset($affiliate)) ? $affiliate->phone : ''; ?>" placeholder="Phone">
-                                    </div>
-                                    <div class="form-group">
-                                      <label for="country-name">Alternate Phone</label>
-                                      <input type="text" name="alternate_phone" class="form-control" value="<?php echo (isset($affiliate)) ? $affiliate->alternate_phone : ''; ?>" placeholder="Aleternate Phone">
-                                    </div>
-                                    <div class="form-group">
-                                      <label for="country-name">Ext</label>
-                                      <input type="text" name="phone_ext" class="form-control" value="<?php echo (isset($affiliate)) ? $affiliate->phone_ext : ''; ?>" placeholder="Extension">
-                                    </div>
-                                </div>
-                            </div>
-                            <h3 class="form-header">Mailing Address<h3>
-                            <div class="row">
-                                <div class="col-6">       
-                                    <div class="form-group">
-                                      <label for="country-name">Country</label>
-                                      <input type="text" name="country" class="form-control" value="<?php echo (isset($affiliate)) ? $affiliate->country : ''; ?>" placeholder="Country">
-                                    </div>
-                                    <div class="form-group">
-                                      <label for="country-name">Address</label>
-                                      <textarea name="mailing_address" style="height: 195px;" class="form-control"><?php echo (isset($affiliate)) ? $affiliate->mailing_address : ''; ?></textarea>
-                                    </div>                                    
-                                </div>
-                                <div class="col-6">       
-                                    <div class="form-group">
-                                      <label for="country-name">City</label>
-                                      <input type="text" name="city" value="<?php echo (isset($affiliate)) ? $affiliate->city : ''; ?>" class="form-control" placeholder="City">
-                                    </div>
-                                    <div class="form-group">
-                                      <label for="country-name">State</label>
-                                      <input type="text" name="state" value="<?php echo (isset($affiliate)) ? $affiliate->state : ''; ?>" class="form-control" placeholder="State">
-                                    </div>
-                                    <div class="form-group">
-                                      <label for="country-name">Zip code</label>
-                                      <input type="text" name="zipcode" class="form-control" value="<?php echo (isset($affiliate)) ? $affiliate->zipcode : ''; ?>" placeholder="Zip Code">
-                                    </div>
-                                </div>
-                            </div>
-                            <h3 class="form-header">Other Information<h3>
-                            <div class="row">
-                                <div class="col-6">
-                                    <div class="form-group">
-                                      <label for="country-name">Notes (internal)</label>
-                                      <textarea name="notes" class="form-control"><?php echo (isset($affiliate)) ? $affiliate->notes : ''; ?></textarea>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="checkbox checkbox-sm">
-                                            <input type="checkbox" <?php (isset($affiliate)) ? (($affiliate->add_master_contact_list) ? 'checked' : 'checked') : '' ?> name="add_masterlist" id="add_masterlist">
-                                            <label for="add_masterlist" style="line-height: 20px;">Add to master contact list</label>
+                                        </div>
+                                        <div class="col pt-2 pr-2">
+                                            (Only jpeg, jpg and png)
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-6">
-                                    <div class="form-group">
-                                        <label for="country-name">Portal Access <i class="fa fa-question" data-toggle="tooltip" data-html="true" title='<i class="fa fa-lightbulb-o fa-lg" aria-hidden="true"></i> When you add an affiliate, you can grant them access to your portal to send you new leads and see the progress of the clients they refer. The client will always see the photo and contact information of the affiliate who referred them to you.'></i></label>
-                                        <select class="form-control" name="portal_access" id="">
-                                            <option <?php echo $affiliate->portal_access == 1 ? 'selected="selected"' : ''; ?> value="1">Yes</option>
-                                            <option <?php echo $affiliate->portal_access == 0 ? 'selected="selected"' : ''; ?> value="0">No</option>
-                                        </select>
+                                <div class="col-sm-4"></div>
+                                <div class="col-sm-12">
+                                    <?php if (isset($affiliate)) : ?>
+                                        <img src="../uploads/affiliate/<?php echo logged('company_id') . '/' . $affiliate->photo; ?>" width="180" id="photoAffiliate" alt="">
+                                    <?php else :?>
+                                        <img src="../uploads/users/default.png" width="180" id="photoAffiliate" alt="">
+                                    <?php endif ;?>
+                                </div>
+                                <div class="col-sm-8 mt-3">
+                                     <div class="row">
+                                        <div class="pt-2 pr-2">
+                                            <label for="">Assigned To</label>
+                                        </div>
+                                        <div class="col pt-2 pr-2">
+                                            <div class="form-check">
+                                                <div class="checkbox checkbox-sm">
+                                                    <input type="checkbox" name="id_selector" id="select1">
+                                                    <label for="select1">Tomy Fico</label>
+                                                </div>
+                                            </div>
+                                            <div class="form-check">
+                                                <div class="checkbox checkbox-sm">
+                                                    <input type="checkbox" name="id_selector1" id="select2">
+                                                    <label for="select2">Fico Heroes</label>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row ml-2 pt-4">                                                                
+                                <div class="col-sm-4"></div>
+                                <div class="col-sm-8 mt-3">
+                                     <div class="row">
+                                        <div class="pt-2 pr-2">
+                                            <div class="checkbox checkbox-sm">
+                                                <input type="checkbox" <?php (isset($affiliate)) ? (($affiliate->add_master_contact_list) ? 'checked' : 'checked') : '' ?> name="add_masterlist" id="add_masterlist">
+                                                <label for="add_masterlist">Add to master contact list</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12 mt-3" style="border-top:1px solid gray;">
+                                     <div class="row">
+                                        <div class="pt-2 pr-2">
+                                            <label for="">Portal Access</label>
+                                        </div>
+                                        <div class="col mt-2">
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
+                                                <label class="form-check-label" for="inlineRadio1">On</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" checked type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
+                                                <label class="form-check-label" for="inlineRadio2">Off</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="col-sm-12 mt-5 pl-0">
-                                    <button type="submit" class="btn btn-flat btn-primary">Save</button>
-                                    <a class="btn btn-danger" href="<?php echo url('affiliate') ?>">Cancel this</a>
-                                </div>                                             
+                                    <button type="submit" class="btn btn-primary btn-md">Submit</button>
+                                </div> 
+                                <div class="col-sm-12 mt-4 pl-0">
+                                    <div class="alert alert-secondary" role="alert">
+                                    <i class="fa fa-lightbulb-o fa-lg" aria-hidden="true"></i> When you add an affiliate, you can grant them access to your portal to send you new leads and see the progress of the clients they refer. The client will always see the photo and contact information of the affiliate who referred them to you. 
+                                    </div>
+                                </div>                   
                              </div>                   
                              <?php echo form_close(); ?>
                         </div>
@@ -203,10 +350,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 </div>
 <!-- page wrapper end -->
 <?php include viewPath('includes/footer'); ?>
-<script>
-$(function(){
-    $('.custom-file-label').click(function(){
-        $('#formClient-Image').click();
-    });
-});
-</script>
+<style>
+.hide-address {
+    display: none;
+}
+</style>

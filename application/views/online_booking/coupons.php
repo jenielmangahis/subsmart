@@ -1,51 +1,31 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
-<style>
-.row-header{
-    background-color: #32243d;
-    color: #ffffff;
-}
-.p-20 {
-  padding-top: 25px !important;
-  padding-bottom: 25px !important;
-  padding-right: 5px !important;
-  padding-left: 39px !important;
-  margin-top: 55px !important;
-}
-.hide{
-    display: none;
-}
-.tbl-coupons .badge{
-    display: block;
-    width: 100%;
-}
-</style>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/upgrades'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
-        <div class="container-fluid p-20">
-            <div class="row">
-                <div class="col">
-                  <h3 class="page-title mt-0">Online Booking</h3>
-                </div>
-                <div class="col-auto">
-                    <div class="h1-spacer">
-                        <a class="btn btn-primary btn-md" href="#modalAddCoupon" data-toggle="modal" data-target="#modalAddCoupon"><span class="fa fa-plus-square fa-margin-right"></span> Add Coupon</a>
+        <div class="container-fluid">
+            <div class="page-title-box">
+                <div class="row align-items-center">
+                    <div class="col-sm-6">
+                        <h1 class="page-title">Online Booking</h1>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item active">Manage your online booking</li>
+                        </ol>
                     </div>
                 </div>
-            </div>
-            <div class="pl-3 pr-3 mt-2 row" style="position: relative;top: 7px;">
-              <div class="col mb-4 left alert alert-warning mt-0 mb-0">
-                  <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Manage coupons that users can input on the booking form.</span>
-              </div>
             </div>
             <!-- end row -->
             <div class="row">
                 <div class="col-xl-12">
                     <div class="card" style="min-height: 400px !important;">
                         <?php include viewPath('includes/booking_tabs'); ?>   
+
+                        <div class="row dashboard-container-1">
+                            <div class="col-md-8"><strong>Manage coupons that users can input on the booking form.</strong></div>
+                        </div>       
+                        <hr />
                         <div class="tabs">
                             <ul class="clearfix">
                                 <li class="<?php echo $active_tab == 'active' ? 'active' : ''; ?>">
@@ -57,17 +37,33 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </ul>
                         </div>
                         <?php include viewPath('flash'); ?>
-                        <table class="table table-hover tbl-coupons" data-id="coupons">
+                        <table class="table table-hover" data-id="coupons">
                             <thead>
-                                <tr class="row-header">
-                                    <th style="width:60%;">Coupon</th>
+                                <tr>
+                                    <th>Coupon</th>
                                     <th>Code</th>
                                     <th>Discount</th>
                                     <th>Status</th>
-                                    <th style="width: 5%;"></th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
+                                <!-- <tr>
+                                    <td>
+                                        test coupon 
+                                        <div class="text-ter">
+                                            Uses: 1<br>
+                                            Valid: 14-Jul-2020-31-Jul-2020 
+                                        </div>
+                                    </td>
+                                    <td>dx123</td>
+                                    <td>$1.00</td>
+                                    <td>Active</td>
+                                    <td class="text-right">
+                                        <a class="coupon__edit margin-right-sec" data-coupon-edit-modal="open" data-id="165" href="#"><span class="fa fa-edit"></span> edit</a>
+                                        <a class="coupon__delete" data-coupon-delete-modal="open" data-id="165" data-name="test coupon" href="#"><span class="fa fa-trash"></span></a>
+                                    </td>
+                                </tr> -->
                                 <?php foreach( $coupons as $c ){ ?>
                                     <tr>
                                         <td>
@@ -81,44 +77,20 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <?php $discount_type = ""; ?>
                                         <?php $discount_type = $c->discount_from_total_type == 1 ? '%' : '$'; ?>
                                         <td><?php echo $c->discount_from_total . " " . $discount_type; ?></td>
-                                        <td>
-                                            <?php if( $c->status == 1 ){ ?>
-                                                <?php 
-                                                    $date = date("Y-m-d");
-                                                    $is_expired = 0;
-                                                    if( $date > $c->date_valid_to ){
-                                                        $is_expired = 1;
-                                                    }
-                                                ?>
-                                                <?php if( $is_expired == 1 ){ ?>    
-                                                    <span class="badge badge-warning" style="background-color:#ec4561; padding:10px;font-size: 14px;">Expired</span>
-                                                <?php }else{ ?>
-                                                    <span class="badge badge-primary" style="background-color:#007bff; padding:10px;font-size: 14px;">Active</span>
-                                                <?php } ?>
-                                                
-                                            <?php }else{ ?>
-                                                <span class="badge badge-danger" style="background-color: #ec4561; padding: 10px;font-size: 14px;">Closed</span>
-                                            <?php } ?>
-                                        </td>
+                                        <td>Active</td>
                                         <td class="text-right">
-                                            <div class="dropdown dropdown-btn">
-                                                <button class="btn btn-default dropdown-toggle" type="button" id="dropdown-edit" data-toggle="dropdown" aria-expanded="true">
-                                                    <span class="btn-label">Manage</span><span class="caret-holder"><span class="caret"></span></span>
-                                                </button>
-                                                <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">   
-                                                    <li role="presentation">
-                                                        <a role="menuitem" class="coupon__edit margin-right-sec" data-id="<?php echo $c->id; ?>" href="javascript:void(0);"><span class="fa fa-pencil icon"></span> Edit</a>
-                                                    </li>
-                                                    <li role="presentation">
-                                                        <a role="menuitem" class="coupon__delete" data-id="<?php echo $c->id; ?>" data-name="<?php echo $c->coupon_name; ?>" href="javascript:void(0);"><span class="fa fa-trash-o icon"></span> Delete</a>
-                                                    </li>
-                                                </ul>
-                                            </div>
+                                            <a class="coupon__edit margin-right-sec" data-id="<?php echo $c->id; ?>" href="javascript:void(0);"><span class="fa fa-edit"></span> edit</a>
+                                            <a class="coupon__delete" data-id="<?php echo $c->id; ?>" data-name="<?php echo $c->coupon_name; ?>" href="javascript:void(0);"><span class="fa fa-trash"></span></a>
                                         </td>
                                     </tr>
                                 <?php } ?>
                             </tbody>
                         </table>
+                        <a href="#modalAddCoupon" data-toggle="modal" data-target="#modalAddCoupon"><span class="fa fa-plus-square fa-margin-right"></span> Add Coupon</a>
+                        <hr />
+                        <div class="margin-top text-right">
+                            <a class="btn btn-primary" href="<?php echo base_url('more/addon/booking/settings') ?>">Continue &raquo;</a>
+                        </div>
                     </div>
                     <!-- end card -->
                 </div>
@@ -138,9 +110,6 @@ $(function(){
     $("#coupon_valid_from").datepicker();
     $("#coupon_valid_to").datepicker();
 
-    $("#edit_coupon_valid_from").datepicker();
-    $("#edit_coupon_valid_to").datepicker();
-
     $(".coupon-discount-type").change(function(){
         var type = $(this).val();
         if( type == 1 ){
@@ -156,7 +125,7 @@ $(function(){
         $("#modalEditCoupon").modal('show');
 
         var cid = $(this).attr("data-id");
-        var msg = '<div class="alert alert-info" role="alert"><span class="spinner-border spinner-border-sm m-0"></span></div>';
+        var msg = '<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" /> Loading...</div>';
         var url = base_url + '/booking/_edit_coupon';
 
         $(".modal-edit-coupon").html(msg);
@@ -179,5 +148,7 @@ $(function(){
         $("#cid").val(cid);
         $("#modalDeleteCoupon").modal('show');
     });
+
+
 });
 </script>

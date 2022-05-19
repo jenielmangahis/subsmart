@@ -10,7 +10,6 @@
     <link rel="stylesheet" href="<?php echo $url->assets?>plugins/font-awesome/css/font-awesome.min.css">
 
     <link href="<?php echo $url->assets ?>dashboard/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-
     <link rel="stylesheet" href="<?php echo $url->assets ?>frontend/css/style-business.css"/>
     <link href="<?php echo $url->assets ?>dashboard/css/style.css" rel="stylesheet" type="text/css">
     
@@ -19,40 +18,32 @@
     <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css" />
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
     <?php echo put_header_assets(); ?>
-	<style>
-		.left {
-			float: left !important;
-		}
-	</style>
 </head>
 <body style="background: white !important;">
 	<!-- Header section  -->
 	<header class="header-section clearfix">
 		<div class="header-top">
 			<div class="container">
-				<div class="row align-items-center desktop-only">
-					<div class="col-9 column-e left">
+				<div class="row align-items-center">
+					<div class="col-md-9 desktop-only">
 						<p>GROW YOUR BUSINESS WITH THE TOOL BUILT FOR YOU! <b class="ml-5 pl-4 sc-33">CALL US AT <span class="blink">(844) 406-7286</span></b> FOR BETTER COMPANY AUTOMATION</p>
 					</div>
-					<div class="col-3 text-md-right left">
-						<ul class="account-menu">
-						<li><a href="<?php echo url('/login') ?>">LOGIN</a></li>
-						<li class="no-break"><a href="<?php echo url('/registration') ?>" class="">SIGN UP</a></li>
-						</ul>
+        	<div class="col-md-10 mobile-only">
+          	<p>GROW YOUR BUSINESS WITH THE TOOL BUILT FOR YOU! <b class="ml-5 sc-33">CALL US AT <span class="blink">(844) 406-7286</span></b> FOR BETTER COMPANY AUTOMATION</p>
+        	</div>
+					<div class="col-md-3 text-md-right desktop-only">
+            <ul class="account-menu">
+              <li><a href="<?php echo url('/login') ?>">LOGIN</a></li>
+              <li class="no-break"><a href="<?php echo url('/registration') ?>" class="">SIGN UP</a></li>
+            </ul>
 						<div class="footer-social text-right">
 							<a href=""><i class="fa fa-facebook"></i></a>
 							<a href=""><i class="fa fa-twitter"></i></a>
 						</div>
 					</div>
 				</div>
-				<div class="row align-items-center mobile-only">
-					<div class="col-10 mobile-only">
-						<p>GROW YOUR BUSINESS WITH THE TOOL BUILT FOR YOU! <b class="ml-5 sc-33">CALL US AT <span class="blink">(844) 406-7286</span></b> FOR BETTER COMPANY AUTOMATION</p>
-					</div>
-				</div>
 			</div>
 		</div>
-		<br style="clear:both;"/>
 		<div class="site-navbar">
 			<div class="container">
 				<div class="row">

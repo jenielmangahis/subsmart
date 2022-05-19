@@ -8,11 +8,6 @@ class DealsSteals_model extends MY_Model
     public $is_active = 1;
     public $is_inactive = 0;
 
-    public $status_draft  = 0;
-    public $status_active = 1;
-    public $status_scheduled = 2;
-    public $status_ended = 3;
-
     public function getAll($filters=array())
     {
         $id = logged('id');
@@ -47,8 +42,8 @@ class DealsSteals_model extends MY_Model
         }
 
         if( !empty($conditions) ){
-            foreach( $conditions as $key => $value ){
-                $this->db->where($value['field'], $value['value']);                
+            foreach( $conditions as $c ){
+                $this->db->where($c['field'], $c['value']);                
             }
         }
 
@@ -84,17 +79,6 @@ class DealsSteals_model extends MY_Model
         return $query;
     }
 
-    public function getByOrderNumber($order_number)
-    {
-        $this->db->select('deals_steals.*, users.id AS uid, users.company_id');
-        $this->db->from($this->table);
-        $this->db->join('users', 'deals_steals.user_id = users.id', 'LEFT');
-
-        $this->db->where('deals_steals.order_number', $order_number);
-        $query = $this->db->get()->row();
-        return $query;
-    }
-
     public function isActive(){
         return $this->is_active;
     }
@@ -118,38 +102,6 @@ class DealsSteals_model extends MY_Model
         $this->db->set($data);
         $this->db->where('id', $id);
         $this->db->update();
-    }
-
-    public function dealStealPrice()
-    {
-        return 10;
-    }
-
-    public function statusDraft(){
-        return $this->status_draft;
-    }
-
-    public function statusScheduled(){
-        return $this->status_scheduled;
-    }
-
-    public function statusEnded(){
-        return $this->status_ended;
-    }
-
-    public function statusActive(){
-        return $this->status_active;
-    }
-
-    public function statusOptions(){
-        $options = [
-            $this->status_active => 'Active',
-            $this->status_draft => 'Draft',
-            $this->status_scheduled => 'Scheduled',
-            $this->status_ended => 'Ended'
-        ];
-
-        return $options;
     }
 
 }

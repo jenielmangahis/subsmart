@@ -63,12 +63,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 .card-type.discover {
     background-position: -125px 0;
 }
-.cc-is-primary{
-  height: 23px;
-}
 </style>
 <div class="wrapper" role="wrapper">
-    <?php include viewPath('includes/sidebars/mycrm'); ?>
+    <?php include viewPath('includes/sidebars/setting'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
         <div class="container-fluid p-40">
@@ -130,7 +127,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             </div> 
                                           <?php } ?>
                                         </td>
-                                        <td><?= $c->card_owner_first_name . " " . $c->card_owner_last_name; ?></td>
+                                        <td><?= $c->card_owner_name; ?></td>
                                         <td style="text-align: center;">
                                           <?php 
                                             $is_checked = '';
@@ -138,7 +135,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                               $is_checked = 'checked="checked"';
                                             }
                                           ?>
-                                          <input type="checkbox" <?= $is_checked; ?> class="cc-is-primary form-control" data-id="<?= $c->id; ?>">
+                                          <input type="checkbox" <?= $is_checked; ?> class="cc-is-primary" data-id="<?= $c->id; ?>">
                                         </td>
                                         <td>
                                           <div class="dropdown dropdown-btn">
@@ -148,7 +145,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                               <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit"> 
                                                   <li role="presentation">
                                                       <a role="menuitem" class="delete-card" data-id="<?= $c->id; ?>" href="javascript:void(0);"><span class="fa fa-trash-o icon"></span> Delete</a>
-                                                      <a role="menuitem" href="<?php echo url('cards_file/edit/'.$c->id) ?>"><span class="fa fa-pencil icon"></span> Edit</a>
                                                   </li>  
                                               </ul>
                                           </div>
@@ -199,17 +195,12 @@ $(function(){
     $(".cc-is-primary").change(function(){
       var url = base_url + 'cards_file/_update_primary_card';
       var id  = $(this).attr("data-id");
-      if( $(this).is(':checked') ){
-        var primary = 1;
-      }else{
-        var primary = 0;
-      }
       $(".cc-is-primary").not(this).prop('checked', false);
       $.ajax({
          type: "POST",
          url: url,
          dataType: "json",
-         data: {id:id, primary:primary},
+         data: {id:id},
          success: function(o)
          {
             if( o.is_success ){ 
@@ -219,7 +210,7 @@ $(function(){
                   showConfirmButton: false,
                   timer: 1500
                 })
-                //setTimeout(function(){location.reload();},1000);
+                setTimeout(function(){location.reload();},1000);
                 
             }else{
                 location.reload();

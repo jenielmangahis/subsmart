@@ -37,14 +37,6 @@ class Survey_model extends MY_Model {
 		return $query->row();
 	}
 
-	public function getSurveyQuestionById($id){
-		$this->db->select('*');
-		$this->db->where('id', $id);
-		$query = $this->db->get('survey_questions');
-
-		return $query->row();
-	}
-
 	public function update($id, $data){
 		// $this->db->select('*');
 		$this->db->set($data);
@@ -193,12 +185,12 @@ class Survey_model extends MY_Model {
 	public function getQuestions($id){
 		$this->db->select('*');
 		$this->db->where('survey_id', $id);
-		$this->db->order_by('order', 'ASC');
+			$this->db->order_by('order', 'ASC');
 		$query = $this->db->get('survey_questions');
 
 			$check = array_map( function($data){
 				$this->db->select('*');
-				$this->db->where('survey_template_id', $data->id);
+				$this->db->where('survey_template_id', $data->survey_id);
 				$query = $this->db->get('survey_template_answer');
 				$data->questions = $query->result();
 
@@ -323,6 +315,7 @@ class Survey_model extends MY_Model {
 		$this->load->helper('file');
 		$this->load->library('upload');
 		foreach ($post as $key => $value) {
+			
 				if($key == 'timer'){
 					$this->db->select('*');
 					$this->db->where('id', $id);
@@ -336,66 +329,38 @@ class Survey_model extends MY_Model {
 					$this->db->where('id', $id);
 					$this->db->update('survey', $timer);
 				}else{
-					$survey_type = explode('-', $key);
-					if( $survey_type[0] == 'multiple' ){
-						foreach( $value as $subValue ){
-							$question_id = $survey_type[1];
-							$surveyQuestion  = $this->getSurveyQuestionById($question_id);
-							$isCorrectAnswer = 0;
-							if( $surveyQuestion ){
-								if( (strtolower($surveyQuestion->correctAnswer) == strtolower($subValue)) && $surveyQuestion->correctAnswer != '' ){
-									$isCorrectAnswer = 1;
-								}
-							}  
-							$datas = array(
-								'answer' => $subValue,
-								'survey_id' => $id,
-								'question_id' => (int)$question_id,
-								'session_id' => $post["session"],
-								'isCorrectAnswer' => $isCorrectAnswer
-							);
-							$this->db->insert('survey_answer',$datas);
-						}
-					}else{
-						if(isset(explode('-', $key)[1])){						
-							$question_id = explode('-', $key)[1];
-							$surveyQuestion  = $this->getSurveyQuestionById($question_id);
-							$isCorrectAnswer = 0;
-							if( $surveyQuestion ){
-								if( (strtolower($surveyQuestion->correctAnswer) == strtolower($value)) && $surveyQuestion->correctAnswer != '' ){
-									$isCorrectAnswer = 1;
-								}
-							}  
-							$datas = array(
-								'answer' => $value,
-								'survey_id' => $id,
-								'question_id' => (int)$question_id,
-								'session_id' => $post["session"],
-								'isCorrectAnswer' => $isCorrectAnswer
-							);
-							$this->db->insert('survey_answer',$datas);
-						}
+					if(isset(explode('-', $key)[1])){
+						$question_id = explode('-', $key)[1];
+						$datas = array(
+							'answer' => $value,
+							'survey_id' => $id,
+							'question_id' => (int)$question_id,
+							'session_id' => $post["session"]
+						);
+						$this->db->insert('survey_answer',$datas);
 					}
 				}
 		}
 		if($files){
 			foreach ($files as $key => $value) {
 				$question_id = explode('-', $key)[1];
-				$target_dir  = "./uploads/survey/files/" . $id . "/";
-		        if(!file_exists($target_dir)) {
-		            mkdir($target_dir, 0777, true);
-		        }
+				$path = 'uploads/survey';
+			$config = [
+				'upload_path' 		=> $path,
+				'allowed_types' 	=> '*',
+				'overwrite' 		=> false
+			];
+			$test = $this->upload->initialize($config);
+			if ( ! $this->upload->do_upload('answer-'.$question_id.'') ){
 
-		        $tmp_name  = str_replace(" ", "-",$value['tmp_name']);
-		        $extension = strtolower(end(explode('.',$value['name'])));
-		        $file_name      = 'attached_'.time().".".$extension;
-		        move_uploaded_file($tmp_name, $target_dir . $file_name);
-
-				$datas = array(
-					'answer' => $file_name,
-					'survey_id' => $id,
-					'question_id' => $question_id
-				);
+				}else{
+				$upload_data = $this->upload->data();
+			}
+			$datas = array(
+				'answer' => $value['name'],
+				'survey_id' => $id,
+				'question_id' => $question_id
+			);
 				$this->db->insert('survey_answer',$datas);
 			}
 		}
@@ -437,13 +402,6 @@ class Survey_model extends MY_Model {
 		return $query->result();
 	}
 
-	public function getEnabledTemplateQuestions(){
-		$this->db->select('*');
-		$this->db->where('is_enabled', 1);
-		$query = $this->db->get('survey_template_questions');
-		return $query->result();
-	}
-
 	public function deleteQuestion($id, $condition = null){
 		if($condition == null){
 			$this->db->where('id', $id);
@@ -471,47 +429,40 @@ class Survey_model extends MY_Model {
 		$query = $this->db->insert('survey_template_answer', $update_data);
 		$insert_id = $this->db->insert_id();
 		if($tid == 4){
-			$test = '<div class="d-flex w-100 justify-content-between choice-container q-choice-container-'.$insert_id.'" style="margin:10px 0px; height:44px;">
-			<div class="input-group mb-3">
+			$test = '<div class="input-group mb-3">
 					<div class="input-group-prepend">
 						<div class="input-group-text">
 							<input type="checkbox" aria-label="Checkbox for following text input">
 						</div>
 					</div>
-					<input name="choices_label_'.$insert_id.'" type="text" class="form-control"  value="">					
-				</div><button id="btn-delete-option" data-id="'.$insert_id.'" class="btn btn-outline-danger btn-delete-choice" type="button" name="button"><i class="fa fa-trash"></i></button></div>';
+					<input name="choices_label_'.$insert_id.'" type="text" class="form-control"  value="">
+				</div>';
 		}elseif($tid == 15){
-			$test = '
-			<div class="d-flex w-100 justify-content-between choice-container q-choice-container-'.$insert_id.'" style="margin:10px 0px; height:44px;">
-			<div class="form-group">
-					<input name="choices_label_'.$insert_id.'" type="text" class="form-control" value="">					
-				 </div><button id="btn-delete-option" data-id="'.$insert_id.'" class="btn btn-outline-danger btn-delete-choice" type="button" name="button"><i class="fa fa-trash"></i></button></div>';
+			$test = '<div class="form-group">
+					<input name="choices_label_'.$insert_id.'" type="text" class="form-control"  value="">
+				 </div>';
 		}else {
-			$test = '<div class="d-flex w-100 justify-content-between choice-container q-choice-container-'.$insert_id.'" style="margin:10px 0px; height:44px;">
-			<div class="input-group mb-2">
+			$test = '<div class="input-group mb-2">
 					 <div class="input-group-prepend">
 						<div class="input-group-text">
 						<input name="options" type="radio" aria-label="Radio button for following text input">
 						</div>
 					</div>
 					<input name="choices_label_'.$insert_id.'" type="text" class="form-control">
-				</div><button id="btn-delete-option" data-id="'.$insert_id.'" class="btn btn-outline-danger btn-delete-choice" type="button" name="button"><i class="fa fa-trash"></i></button></div>';
+				</div>';
 		}
 
 		return $test;
 	}
 
 	public function orderUpdate($data){
-		if( $data ){
-			foreach($data as $key => $id){
-				$order = $key + 1;
-				$data = array(
-					'order' => $order
-				);
-				$this->db->where('id', $id);
-				$this->db->update('survey_questions', $data);
-			}
-		}		
+		foreach($data as $key => $id){
+			$data = array(
+				'order' => $key
+			);
+			$this->db->where('id', $id);
+			$this->db->update('survey_questions', $data);
+		}
 		return TRUE;
 	}
 
@@ -531,19 +482,6 @@ class Survey_model extends MY_Model {
 		}else{	
 			return $this->db->get('survey_themes')->result(); 
 		}
-	}	
-
-	public function getThemesByCompanyId($company_id = null){
-		$this->db->select("*");		
-		$this->db->where('company_id', $company_id);
-		return $this->db->get('survey_themes')->result(); 
-	}	
-
-	public function getThemesByCompanyIdAndIsDefault($company_id){
-		$this->db->select("*");		
-		$this->db->where('company_id', $company_id);
-		$this->db->or_where('company_id', 0);
-		return $this->db->get('survey_themes')->row();
 	}
 
 	public function addTheme($data){
@@ -583,48 +521,13 @@ class Survey_model extends MY_Model {
 		return $query->result();
 	}
 
-	public function getWorkspacesByCompanyId($company_id){
-		$this->db->select('*');
-		$this->db->where('company_id', $company_id);
-		$query = $this->db->get('survey_workspaces');
-		foreach($query->result() as $q){
-			
-			$this->db->select('*');
-			$this->db->where('workspace_id',$q->id);
-			$query2 = $this->db->get('survey');
-			$q->surveys = $query2->result();
-
-			foreach($q->surveys as $q2){
-				$q2->survey_theme = $this->getThemes($q2->theme_id);
-			}
-		}
-		return $query->result();
-	}
-
 	public function addWorkspace($data){
 		$this->db->insert('survey_workspaces', $data);
 		return $this->db->insert_id();
 	}
 
-	public function addSurveyLogic($data){
-		$this->db->insert('survey_logic', $data);
-		return $this->db->insert_id();
-	}
-
 	public function deleteWorkspace($id){
 		return $this->db->delete('survey_workspaces', array('id'=>$id));
-	}
-
-	public function deleteAllSurveyLogicBySurveyId($survey_id){
-		return $this->db->delete('survey_logic', array('sl_survey_id'=>$survey_id));
-	}
-
-	public function deleteSurveyTemplateAnswer($id){
-		return $this->db->delete('survey_template_answer', array('id'=>$id));
-	}
-
-	public function deleteThemeBySthRecNo($sth_rec_no){
-		return $this->db->delete('survey_themes', array('sth_rec_no'=>$sth_rec_no));
 	}
 
 	public function editWorkspace($id, $data){
@@ -639,23 +542,6 @@ class Survey_model extends MY_Model {
 	public function getSurveyLogics($survey_id){
 		$this->db->select('*');
 		$this->db->where('sl_survey_id', $survey_id);
-		$query = $this->db->get('survey_logic');
-		return $query->result();
-		
-	}
-
-	public function getSurveyQuestionsBySurveyId($survey_id){
-		$this->db->select('*');
-		$this->db->where('survey_id', $survey_id);
-		$this->db->order_by('order', 'ASC');
-		$query = $this->db->get('survey_questions');
-		return $query->result();
-		
-	}
-
-	public function getSurveyLogicByQuestionIdFrom($sl_question_id_from){
-		$this->db->select('*');
-		$this->db->where('sl_question_id_from', $sl_question_id_from);
 		$query = $this->db->get('survey_logic');
 		return $query->result();
 		

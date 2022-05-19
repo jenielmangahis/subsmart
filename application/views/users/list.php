@@ -21,11 +21,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         top: 5px;
     }
 
-    label>input {
-      visibility: initial !important;
-      position: initial !important; 
-    }
-
     #employeeTable tr>th {
         text-align: center;
     }
@@ -142,7 +137,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     }
 
     .section-title {
-        background-color: #32243d;
+        background-color: #38a4f8;
         color: #ffffff !important;
         padding: 10px;
         margin-bottom: 27px;
@@ -242,13 +237,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 <div class="col-xl-12">
                     <div class="card">
                         <div class="row align-items-center">
-                            <div class="col-md-6">
-                                <h3 class="page-title">Employees</h3>
-                            </div>
-                            <div class="col-md-6" style="text-align: right;">
-                                <button class="btn btn-primary btn-md btn-export-list" style="float: right;margin-left: 10px;"><i class="fa fa-upload"></i> Export List</button>
-                                <button class="btn btn-primary btn-md add-employee" id="addEmployeeData"><i class="fa fa-user-plus"></i> Add Employee</button>
-                                <button class="btn btn-primary btn-md share-add-employee" id="shareEmployeeForm"><i class="fa fa-globe"></i> Share Add Employee</button>
+                            <div class="col-sm-12">
+                                <h3 class="page-title" style="margin-top: 5px;margin-bottom:10px;">Employees</h3>
                             </div>
                         </div>
                         <div class="pl-3 pr-3 mt-0 row">
@@ -256,8 +246,16 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Manage Employees.</span>
                             </div>
                         </div>
-                        <br />
-                        <div class="card-body" style="padding:0px !important;">                            
+                        <div class="card-body" style="padding:0px !important;">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h4 class="mt-0 header-title mb-5">Employee list</h4>
+                                </div>
+                                <div class="col-md-6">
+                                    <button class="btn btn-info add-employee" id="addEmployeeData"><i class="fa fa-user-plus"></i> Add Employee</button>
+                                    <button class="btn btn-info share-add-employee" id="shareEmployeeForm"><i class="fa fa-globe"></i> Share Add Employee</button>
+                                </div>
+                            </div>
                             <div class="row">
                                 <div class="col-lg-12 table-responsive">
                                     <table id="employeeTable" data-page-length='25' class="table table-bordered table-striped">
@@ -265,9 +263,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                             <tr>
                                                 <th>User</th>
                                                 <th>Email</th>
-                                                <?php if( $show_pass == 1 ){ ?>
-                                                    <th>Password</th>
-                                                <?php } ?>
+                                                <th>Password</th>
                                                 <th>Title</th>
                                                 <th>Rights</th>
                                                 <th>Last Login</th>
@@ -281,14 +277,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                             <?php foreach ($users as $cnt => $row) : ?>
                                                 <tr>
                                                     <td class="center">
-                                                        <?php 
-                                                            if( $row->profile_img != '' ){
-                                                                $data_img = $row->profile_img;
-                                                            }else{
-                                                                $data_img = 'default.png';
-                                                            }
-                                                        ?>
-                                                        <a href="javascript:void(0)" data-id="<?php echo $row->id ?>" id="editEmployeeProfile" title="Change User Photo" data-toggle="tooltip" data-img="<?php echo $data_img; ?>">
+                                                        <a href="javascript:void(0)" data-id="<?php echo $row->id ?>" id="editEmployeeProfile" title="Edit User Profile" data-toggle="tooltip">
                                                             <span>
                                                                 <img src="<?php echo userProfileImage($row->id); ?>" width="40" height="40" alt="" class="img-avatar img-center" style="display:inline;" />
                                                                 <i class="fa fa-pencil"></i>
@@ -307,9 +296,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                         </div>
                                                     </td>
                                                     <td class="center"><?php echo $row->email ?></td>
-                                                    <?php if( $show_pass == 1 ){ ?>
-                                                        <td class="center pw-row-<?= $row->id; ?>"><?php echo $row->password_plain ?></td>
-                                                    <?php } ?>
+                                                    <td class="center pw-row-<?= $row->id; ?>"><?php echo $row->password_plain ?></td>
                                                     <td class="center"><?php echo ($row->role) ? ucfirst($this->roles_model->getById($row->role)->title) : '' ?></td>
                                                     <td class="center"><?php echo getUserType($row->user_type); ?></td>
                                                     <td class="center"><?php echo date('M d,Y', strtotime($row->last_login)); ?></td>
@@ -328,44 +315,29 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                         <?php //endif 
                                                         ?>
                                                     </td>
-                                                    <td class="text-center">
-                                                        <!-- <i class="fa fa-lg fa-mobile"></i> -->
-                                                        <?php if( $row->has_app_access == 1 ){ ?>
-                                                            <a class="btn btn-sm btn-primary" href="javascript:void(0);" title="Has mobile app access" data-toggle="tooltip"><i class="fa fa-lg fa-check"></i></a>
-                                                        <?php }else{ ?>
-                                                            <a class="btn btn-sm btn-danger" href="javascript:void(0);" title="Has no mobile app access" data-toggle="tooltip"><i class="fa fa-lg fa-close"></i></a>
-                                                        <?php } ?>                                                        
-                                                    </td>
-                                                    <td class="text-center">
-                                                        <!-- <span class="fa fa-lg fa-desktop"></span> -->
-                                                        <?php if( $row->has_web_access == 1 ){ ?>
-                                                            <a class="btn btn-sm btn-primary" href="javascript:void(0);" title="Has web app access" data-toggle="tooltip"><i class="fa fa-lg fa-check"></i></a>
-                                                        <?php }else{ ?>
-                                                            <a class="btn btn-sm btn-danger" href="javascript:void(0);" title="Has no web app access" data-toggle="tooltip"><i class="fa fa-lg fa-close"></i></a>
-                                                        <?php } ?>  
-                                                    </td>
+                                                    <td class="text-center"><span class="fa fa-lg fa-mobile"></span></td>
+                                                    <td class="text-center"><span class="fa fa-lg fa-desktop"></span></td>
                                                     <td class="center">
                                                         <?php //if (hasPermissions('users_edit')){ 
                                                         ?>
                                                         <!-- <a href="<?php echo url('users/edit/' . $row->id); ?>" title="Edit User" data-toggle="tooltip"><i class="fa fa-edit"></i></a> -->
                                                         <?php //} 
                                                         ?>
-                                                        <a class="btn btn-sm btn-primary" href="javascript:void(0)" data-id="<?php echo $row->id ?>" id="editEmployee" title="Edit User" data-toggle="tooltip"><i class="fa fa-pencil"></i></a>
-                                                        <a class="btn btn-sm btn-primary" href="javascript:void(0)" data-name="<?php echo $row->FName . ' ' . $row->LName; ?>" data-id="<?php echo $row->id ?>" id="changePassword" title="Change Password" data-toggle="tooltip"><i class="fa fa-lock"></i></a>
+                                                        <a href="javascript:void(0)" data-id="<?php echo $row->id ?>" id="editEmployee" title="Edit User" data-toggle="tooltip"><i class="fa fa-pencil"></i></a>
+                                                        <a href="javascript:void(0)" data-name="<?php echo $row->FName . ' ' . $row->LName; ?>" data-id="<?php echo $row->id ?>" id="changePassword" title="Change Password" data-toggle="tooltip"><i class="fa fa-lock"></i></a>
                                                         <?php //endif 
                                                         ?>
                                                         <?php //if (hasPermissions('users_view')): 
                                                         ?>
-                                                        <a class="btn btn-sm btn-primary" href="<?php echo url('users/view/' . $row->id) ?>" title="View User" data-toggle="tooltip"><i class="fa fa-eye"></i></a>
+                                                        <a href="<?php echo url('users/view/' . $row->id) ?>" title="View User" data-toggle="tooltip"><i class="fa fa-eye"></i></a>
                                                         <?php //endif 
                                                         ?>
                                                         <?php //if (hasPermissions('users_delete')): 
                                                         ?>
                                                         <?php if ($row->id != 1 && logged('id') != $row->id) : ?>
-                                                            <!-- <a class="btn btn-sm btn-primary" href="<?php echo url('users/delete/' . $row->id) ?>" onclick="return confirm('Do you really want to delete this user ?')" title="Delete User" data-toggle="tooltip"><i class="fa fa-trash"></i></a> -->
-                                                            <a class="btn btn-sm btn-primary btn-delete-user" data-id="<?= $row->id; ?>" href="javascript:void(0);" title="Delete User" data-toggle="tooltip"><i class="fa fa-trash"></i></a>
+                                                            <a href="<?php echo url('users/delete/' . $row->id) ?>" onclick="return confirm('Do you really want to delete this user ?')" title="Delete User" data-toggle="tooltip"><i class="fa fa-trash"></i></a>
                                                         <?php else : ?>
-                                                            <a class="btn btn-sm btn-primary" href="javascript:void (0)" title="You cannot Delete this User" data-toggle="tooltip" disabled><i class="fa fa-trash"></i></a>
+                                                            <a href="javascript:void (0)" title="You cannot Delete this User" data-toggle="tooltip" disabled><i class="fa fa-trash"></i></a>
                                                         <?php endif ?>
                                                         <?php //endif 
                                                         ?>
@@ -403,7 +375,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 <!-- Modal footer -->
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" id="closeEditEmployeeModal">Cancel</button>
-                    <button type="button" class="btn btn-primary" id="updateEmployee">Save</button>
+                    <button type="button" class="btn btn-success" id="updateEmployee">Save</button>
                 </div>
             </form>
 
@@ -416,18 +388,21 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         <div class="modal-content">
             <!-- Modal Header -->
             <div class="modal-header">
-                <h4 class="modal-title"><i class="fa fa-image"></i> Change Employee Photo</h4>
+                <h4 class="modal-title"><i class="fa fa-pencil"></i> Edit Employee Profile</h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <!-- Modal body -->
             <form action="" id="editEmployeeProfileForm">
-                <div class="modal-body modal-edit-employee-profile" style="padding-bottom: 0px;">
-                    <div class="form-group" style="margin-bottom: 0px !important;">
+                <div class="modal-body modal-edit-employee-profile">
+                    <div class="form-group">
                         <div class="row">
                             <div class="col-md-12">
-                                <img style="margin:0 auto; height: 300px;" id="img_profile" src="">
-                                <div class="margin-bottom" style="text-align: center;margin-top: 10px;">
-                                    <input type="file" class="form-control" style="margin-left: 77px; width: auto;" name="user_photo" id="upload-employee-photo" placeholder="Upload Image" accept="image/*" required="">
+                                <label for="">Profile Image</label>
+                                <div id="employeeProfilePhotoUpdate" class="dropzone" style="border: 1px solid #e1e2e3;background: #ffffff;width: 100%;">
+                                    <div class="dz-message" style="margin: 20px;border">
+                                        <span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
+                                        <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
+                                    </div>
                                 </div>
                                 <input type="hidden" name="user_id_prof" id="user_id_prof">
                                 <input type="hidden" name="img_id" id="photoId">
@@ -439,7 +414,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 <!-- Modal footer -->
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" id="closeEditEmployeeModalProfilePhoto">Close</button>
-                    <button type="button" class="btn btn-primary" id="updateEmployeeProfilePhoto">Save</button>
+                    <button type="button" class="btn btn-success" id="updateEmployeeProfilePhoto">Save & exit</button>
                 </div>
             </form>
 
@@ -484,7 +459,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 <!-- Modal footer -->
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" id="closedChangePasswordModal">Close</button>
-                    <button type="button" class="btn btn-primary" id="updatePassword">Save & exit</button>
+                    <button type="button" class="btn btn-success" id="updatePassword">Save & exit</button>
                 </div>
             </form>
 
@@ -693,7 +668,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                         <label for="role_4"><span>Standard User</span></label>
                                     </div>
                                     <div class="help help-sm help-block">
-                                        Cannot add or delete employees, can not manage subscriptions
+                                        Can not add or delete employees, can not manage subscriptions
                                     </div>
                                 </div>
                                 <div>
@@ -721,33 +696,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 <!-- Modal footer -->
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" id="closedEmployeeModal">Cancel</button>
-                    <button type="button" class="btn btn-primary" id="savedNewEmployee">Save</button>
+                    <button type="button" class="btn btn-success" id="savedNewEmployee">Save</button>
                 </div>
             </form>
 
-        </div>
-    </div>
-</div>
-
-<!--Delete User modal-->
-<div class="modal fade" id="modalDeleteUser">
-    <div class="modal-dialog modal-md">
-        <div class="modal-content">
-            <!-- Modal Header -->
-            <div class="modal-header">
-                <h4 class="modal-title"><i class="fa fa-trash"></i> Delete User</h4>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
-            <!-- Modal body -->
-            <div class="modal-body">
-                <input type="hidden" id="eid" value="">
-                <p>Are you sure you want to delete selected user?</p>
-            </div>
-            <!-- Modal footer -->
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
-                <button type="button" class="btn btn-danger" id="btn-modal-delete-user">Yes</button>
-            </div>
         </div>
     </div>
 </div>
@@ -775,12 +727,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <script>
     $(document).ready(function() {
         $('#employeeTable').DataTable({
-            "searching": true,
+            "searching": false,
             "sort": false
-        });
-
-        $(".btn-export-list").click(function(){
-            window.location.href= base_url + 'users/export_list';
         });
 
         $("#shareEmployeeForm").click(function() {
@@ -797,58 +745,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             $(".label-public-url").fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(100);
         });
 
-        $(document).on('change', '#upload-employee-photo', function(e){
-          var reader = new FileReader();
-          reader.onload = function(){
-            var output = document.getElementById('img_profile');
-            output.src = reader.result;
-          };
-          reader.readAsDataURL(e.target.files[0]);
-        });
-
-        $("#btn-modal-delete-user").click(function(){
-            var eid = $("#eid").val();
-            $.ajax({
-                url: base_url + 'users/_delete_user',
-                type:"POST",
-                dataType:"json",
-                data:{eid:eid},
-                success:function (data) {
-                    if (data.is_success){
-                        $("#modalDeleteUser").modal('hide');
-                        Swal.fire({
-                          title: 'Success',
-                          text: "User was successfully deleted.",
-                          icon: 'success',
-                          showCancelButton: false,
-                          confirmButtonColor: '#32243d',
-                          cancelButtonColor: '#d33',
-                          confirmButtonText: 'Ok'
-                        }).then((result) => {
-                          if (result.value) {
-                              location.reload();
-                          }
-                        });
-                    }else{
-                        Swal.fire(
-                        {
-                            showConfirmButton: false,
-                            timer: 2000,
-                            title: 'Failed',
-                            text: data.msg,
-                            icon: 'warning'
-                        });
-                    }
-                }
-            });
-        });
-
-        $(document).on('click', '.btn-delete-user', function() {
-            var eid = $(this).attr("data-id");
-            $("#eid").val(eid);
-            $("#modalDeleteUser").modal('show');
-        });
-
         $(document).on('click', '#addEmployeeData', function() {
             $('#modalAddEmployee').modal({
                 backdrop: 'static',
@@ -856,15 +752,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             });
         });
         $(document).on('click', '#editEmployeeProfile', function() {
-            var data_img = $(this).attr('data-img');
-            if( data_img == 'default.png' ){
-                var default_img = base_url + 'uploads/users/' + data_img;
-            }else{
-                var default_img = base_url + 'uploads/users/user-profile/' + data_img;
-            }
-
-            $("#img_profile").attr("src",default_img);
-
             $('#modalEditEmployeeProfile').modal({
                 backdrop: 'static',
                 keyboard: false
@@ -1066,20 +953,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 icon: 'success'
                             });
                             location.reload();
-                        }else if( data == 3 ){
-                            Swal.fire({
-                                title: 'Failed',
-                                text: 'Insufficient license. Please purchase license to continue adding user',
-                                icon: 'warning',
-                                showCancelButton: false,
-                                confirmButtonColor: '#32243d',
-                                cancelButtonColor: '#d33',
-                                confirmButtonText: 'Purchase License'
-                            }).then((result) => {
-                                if (result.value) {
-                                   window.location.href= base_url + 'mycrm/membership';
-                                }
-                            });
                         } else {
                             Swal.fire({
                                 showConfirmButton: false,
@@ -1118,18 +991,13 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                         if (data == 1) {
                             $("#modalEditEmployee").modal('hide');
                             Swal.fire({
+                                showConfirmButton: false,
+                                timer: 2000,
                                 title: 'Success',
-                                text: "Employee record has been Updated.",
-                                icon: 'success',
-                                showCancelButton: false,
-                                confirmButtonColor: '#32243d',
-                                cancelButtonColor: '#d33',
-                                confirmButtonText: 'Ok'
-                            }).then((result) => {
-                                if (result.value) {
-                                    location.reload();
-                                }
+                                text: "Employee record has been Updated",
+                                icon: 'success'
                             });
+                            location.reload();
                         } else {
                             Swal.fire({
                                 showConfirmButton: false,
@@ -1153,40 +1021,49 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         });
 
         $(document).on('click', '#updateEmployeeProfilePhoto', function() {
-            var formData = new FormData($("#editEmployeeProfileForm")[0]);   
-            $.ajax({
-                url: base_url + 'users/ajaxUpdateEmployeeProfilePhoto',
-                type: "POST",
-                dataType: "json",
-                contentType: false,
-                cache: false,
-                processData:false,
-                data: formData,
-                success: function(data) {
-                    if (data == 1) {
-                        $("#modalEditEmployeeProfile").modal('hide');
-                        Swal.fire({
-                            title: 'Success',
-                            text: "Employee photo has been Updated.",
-                            icon: 'success',
-                            showCancelButton: false,
-                            confirmButtonColor: '#32243d',
-                            cancelButtonColor: '#d33',
-                            confirmButtonText: 'Ok'
-                        }).then((result) => {
-                            location.reload();
-                        });
-                    } else {
-                        Swal.fire({
-                            showConfirmButton: false,
-                            timer: 2000,
-                            title: 'Failed',
-                            text: "Please select a valid image",
-                            icon: 'warning'
-                        });
-                    }
-                }
+            let values = {};
+            $.each($('#editEmployeeProfileForm').serializeArray(), function(i, field) {
+                values[field.name] = field.value;
             });
+            if (values['profile_img']) {
+                $.ajax({
+                    url: base_url + 'users/ajaxUpdateEmployeeProfilePhoto',
+                    type: "POST",
+                    dataType: "json",
+                    data: {
+                        values: values
+                    },
+                    success: function(data) {
+                        if (data == 1) {
+                            $("#modalEditEmployeeProfile").modal('hide');
+                            Swal.fire({
+                                showConfirmButton: false,
+                                timer: 2000,
+                                title: 'Success',
+                                text: "Employee record has been Updated",
+                                icon: 'success'
+                            });
+                            location.reload();
+                        } else {
+                            Swal.fire({
+                                showConfirmButton: false,
+                                timer: 2000,
+                                title: 'Failed',
+                                text: "Something is wrong in the process",
+                                icon: 'warning'
+                            });
+                        }
+                    }
+                });
+            } else {
+                Swal.fire({
+                    showConfirmButton: false,
+                    timer: 2000,
+                    title: 'Failed',
+                    text: "Something is wrong in the process",
+                    icon: 'warning'
+                });
+            }
         });
 
         $(document).on('click', '#updatePassword', function() {
@@ -1238,7 +1115,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
         $(document).on('click', '#editEmployee', function() {
             var user_id = $(this).attr('data-id');
-            $(".modal-edit-employee").html('<span class="spinner-border spinner-border-sm m-0"></span>  Loading');
             $('#modalEditEmployee').modal({
                 backdrop: 'static',
                 keyboard: false

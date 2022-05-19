@@ -27,20 +27,6 @@
     <title>eSign</title>
 
     <?php echo put_header_assets(); ?>
-
-    <style>
-        .fillAndSign__signatureDraw {
-            max-height: 40px;
-        }
-
-        .signing__signatureInput {
-            width: 100% !important;
-        }
-
-        .modal-backdrop.in {
-            opacity: 0.5 !important;
-        }
-    </style>
 </head>
 
 <body style="background: white !important;">
@@ -91,8 +77,8 @@
                     </span>
                 </div>
 
-                <div class="d-flex fileupload" id="sortable">
-                    <div class="custome-fileup">
+                <div class="d-flex fileupload">
+                    <div class="custome-fileup ">
                         <div class="upload-btn-wrapper">
                             <button class="btn">
                                 <img src="<?php echo $url->assets ?>esign/images/fileup-ic.png" alt="">
@@ -107,7 +93,7 @@
                     <h2 class="form__title">Message to All Recipients</h2>
                     <div class="form-group">
                         <label for="subject">Subject</label>
-                        <input class="form-control" id="subject" placeholder="Please eSign:" maxlength="100" require>
+                        <input class="form-control" id="subject" placeholder="Please Docusign:" maxlength="100" require>
                         <small class="form-text text-muted d-none">Characters remaining: <span class="limit">100</span></small>
                     </div>
                     <div class="form-group">
@@ -266,7 +252,7 @@
                     <div class="content_sidebar content_sidebar-left resizable" style="overflow-x: hidden" id="fieldsSidebar">
                         <div class="sidebar-fields sidebar-flex">
                             <div class="sidebar_main">
-                                <div class="dropdown esignBuilder__recipientSelect <?=$is_self_signing ? "d-none" : ""?>">
+                                <div class="dropdown esignBuilder__recipientSelect">
                                     <button
                                         data-recipient-color="<?=$recipients[0]['color'];?>"
                                         data-recipient-id="<?=$recipients[0]['id'];?>"
@@ -379,21 +365,21 @@
                                                     </div>
                                                 </li>
 
-                                                <li class="menu_listItem <?=$is_self_signing ? "d-none" : ""?>">
+                                                <li class="menu_listItem">
                                                     <div class="fields menu_item">
                                                         <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-checkbox"></i></span>
                                                         <span class="u-ellipsis ng-binding">Checkbox</span>
                                                     </div>
                                                 </li>
 
-                                                <li class="menu_listItem <?=$is_self_signing ? "d-none" : ""?>">
+                                                <li class="menu_listItem">
                                                     <div class="fields menu_item">
                                                         <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-dropdown"></i></span>
                                                         <span class="u-ellipsis ng-binding">Dropdown</span>
                                                     </div>
                                                 </li>
 
-                                                <li class="menu_listItem <?=$is_self_signing ? "d-none" : ""?>">
+                                                <li class="menu_listItem">
                                                     <div class="fields menu_item">
                                                         <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-radio"></i></span>
                                                         <span class="u-ellipsis ng-binding">Radio</span>
@@ -403,7 +389,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="sidebar_item <?=$is_self_signing ? "d-none" : ""?>">
+                                    <div class="sidebar_item">
                                         <div class="menu-fields">
                                             <ul class="menu_list">
                                                 <li class="menu_listItem">
@@ -449,7 +435,7 @@
                     </div>
 
                     <div class="main-pdf-render__container" role="region">
-                        <div id="main-pdf-render" style="display:flex; flex-direction:column; align-items:center;"  ></div>
+                        <div id="main-pdf-render"></div>
                     </div>
 
                     <div class="ng-scope content_sidebar content_sidebar-right ml-auto">
@@ -480,63 +466,9 @@
             </p>
 
             <div class="options mt-3">
-                <div class="mt-2 mb-2">
-                    <div>
-                        <input type="checkbox" name="optionsRequired" id="optionsRequired">
-                        <label for="optionsRequired">Required Field</label>
-                    </div>
-
-                    <hr/>
-
-                    <div>
-                        <label for="optionsFieldName">Field name</label>
-                        <input type="text" name="optionsFieldName" id="optionsFieldName" class="w-100">
-                    </div>
-
-                    <div class="options__values">
-                        <label>Values</label>
-                        <div class="options__valuesItem d-flex align-items-center">
-                            <input class="mt-0 mr-2" type="checkbox">
-                            <input style="flex-grow: 1;" type="text">
-                        </div>
-                        <div class="options__valuesSubItems"></div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="dropdown mt-3">
-                <div class="mt-2 mb-2">
-                    <div>
-                        <input type="checkbox" name="requiredDropdown" id="requiredDropdown">
-                        <label for="requiredDropdown">Required Field</label>
-                    </div>
-
-                    <hr/>
-
-                    <div>
-                        <label for="dropdownName">Field name</label>
-                        <input type="text" name="dropdownName" id="dropdownName" class="w-100">
-                    </div>
-
-                    <div>
-                        <label>Options</label>
-                        <div class="options__values"></div>
-                    </div>
-
-                    <div>
-                        <button class="btn btn-block btn-primary mt-2" id="addDropdownOption">+ Add Option</button>
-                    </div>
-
-                    <!-- <div>
-                        <label>Default Value</label>
-                        <select class="custom-select" id="dropdownDefaultValue">
-                            <option selected>Select</option>
-                            <option value="1">One</option>
-                            <option value="2">Two</option>
-                            <option value="3">Three</option>
-                        </select>
-                    </div> -->
-                </div>
+                <button type="button" class="btn btn-primary btn-block" id="addOption">
+                    + Add Option
+                </button>
             </div>
 
             <div class="text">
@@ -555,11 +487,6 @@
                     <div>
                         <label for="textFieldName">Field name</label>
                         <input type="text" name="textFieldName" id="textFieldName" class="w-100">
-                    </div>
-
-                    <div>
-                        <label for="textFieldValue">Add Text</label>
-                        <textarea  class="w-100" id="textFieldValue"></textarea>
                     </div>
                 </div>
             </div>
@@ -599,58 +526,9 @@
                 </button>
             </div>
         </div>
+
         <?php echo form_close(); ?>
         <?php include viewPath('esign/esign-page-preview-step-4-style');?>
-        <div class="modal fade" id="selfSigningSend" tabindex="-1" role="dialog" aria-labelledby="selfSigningSendLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="selfSigningSendLabel">Sign and Return</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form class="form">
-                        <div>
-                            <div class="form-group">
-                                <label for="selfSigningSend__name">Full Name</label>
-                                <input class="form-control" id="selfSigningSend__name">
-                                <div class="invalid-feedback">Invalid recipient name</div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="selfSigningSend__email">Email</label>
-                                <input class="form-control" id="selfSigningSend__email">
-                                <div class="invalid-feedback">Invalid recipient email</div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="form-group">
-                                <label for="selfSigningSend__subject">Subject</label>
-                                <input class="form-control" id="selfSigningSend__subject" maxlength="100">
-                            </div>
-
-                            <div class="form-group">
-                                <label for="selfSigningSend__message">Message</label>
-                                <textarea class="form-control" id="selfSigningSend__message" rows="3" maxlength="10000"></textarea>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary">No Thanks</button>
-                    <button type="button" class="btn btn-primary d-flex align-items-center">
-                        <div class="spinner-border spinner-border-sm mt-0 d-none" role="status">
-                            <span class="sr-only">Loading...</span>
-                        </div>
-                        Send And Close
-                    </button>
-                </div>
-                </div>
-            </div>
-        </div>
     <?php endif;?>
 
     <script type="text/javascript" src="<?php echo $url->assets ?>/esign/js/jquery.min.js"></script>
@@ -661,11 +539,6 @@
 </html>
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-
-<?php if (isset($next_step) && $next_step == 0): ?>
-    <script src="//code.jquery.com/jquery-1.12.4.js"></script>
-<?php endif;?>
-
 <?php echo put_footer_assets(); ?>
 <style>
     .esignBuilder__field,

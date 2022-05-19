@@ -79,7 +79,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
     <div wrapper__section>
         <div class="container-fluid p-40">
             <!-- end row -->
-            <?php echo form_open_multipart('credit_notes/save', ['class' => 'form-validate require-validation', 'id' => 'estimate_form', 'autocomplete' => 'off']); ?>
+            <?php echo form_open_multipart('credit_notes/update', ['class' => 'form-validate require-validation', 'id' => 'estimate_form', 'autocomplete' => 'off']); ?>
             <input type="hidden" id="inst_cost" value="0">
             <input type="hidden" id="one_time" value="0">
             <input type="hidden" id="m_monitoring" value="0">
@@ -128,14 +128,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <input type="text" class="form-control" name="job_name" id="job_name"
                                            placeholder="" required/>
                                 </div>
-                                <div class="col-md-3 form-group">
-                                    <label for="estimate_date">Status</label>
-                                    <select class="form-control" name="status">
-                                        <?php foreach($status as $key => $value){ ?>
-                                            <option value="<?= $key; ?>"><?= $value; ?></option>
-                                        <?php } ?>
-                                    </select>
-                                </div>
                             </div>
 
                             <div class="row">
@@ -145,7 +137,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                            required placeholder="" autofocus value="<?php echo $auto_increment_estimate_id; ?>"
                                            onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
                                 </div>
-                                <div class="col-md-3 form-group">
+                                <div class="col-md-4 form-group">
                                     <label for="estimate_date">Date Issued</label>
                                     <div class="input-group date" data-provide="datepicker">
                                         <input type="text" class="form-control" name="date_issued" id="estimate_date"
@@ -155,7 +147,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-3 form-group">
+                                <div class="col-md-4 form-group">
                                     <label for="expiry_date">Expiry Date</label>
                                     <div class="input-group date" data-provide="datepicker">
                                         <input type="text" class="form-control" name="expiry_date" id="expiry_date"
@@ -164,7 +156,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <span class="glyphicon glyphicon-th"></span>
                                         </div>
                                     </div>
-                                </div>                                
+                                </div>
                             </div>
 
                             <div class="row" id="plansItemDiv">
@@ -284,7 +276,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
                             <div class="row">
                                 <div class="col-md-4 form-group">
-                                    <button type="submit" class="btn btn-flat btn-primary">Save</button>
+                                    <button type="submit" class="btn btn-flat btn-primary">Save as Draft</button>
                                     <a href="<?php echo url('credit_notes') ?>" class="btn btn-danger">Cancel this</a>
                                 </div>
                             </div>

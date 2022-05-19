@@ -56,9 +56,9 @@ class BookingWorkOrder_model extends MY_Model
 
     public function getByBookingInfoId($booking_info_id)
     {
-        $this->db->select('booking_work_orders.*, booking_service_items.name AS item_name, booking_service_items.price, booking_service_items.price_unit');
+        $this->db->select('*');
         $this->db->from($this->table);
-        $this->db->join('booking_service_items','booking_work_orders.service_item_id = booking_service_items.id','left');
+
         $this->db->where('booking_info_id', $booking_info_id);
 
         $query = $this->db->get();

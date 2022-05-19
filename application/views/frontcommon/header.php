@@ -29,9 +29,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<link rel="stylesheet" href="<?php echo $url->assets ?>frontend/css/style.css"/>
 	<link rel="stylesheet" href="<?php echo $url->assets ?>frontend/fonts/stylesheet.css"/>
 	<link rel="stylesheet" href="https://allfont.net/css/lane-narrow.css" type="text/css" />
-	<!-- <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCL77vydXglokkXuSZV8cF8aJ3ZxueBhrU&libraries=places,geometry"></script> -->
+	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCL77vydXglokkXuSZV8cF8aJ3ZxueBhrU&libraries=places,geometry"></script>
     <script>
-        /*function initialize() {
+        function initialize() {
           var input = document.getElementById('google_search_place');
           var autocomplete = new google.maps.places.Autocomplete(input);
             google.maps.event.addListener(autocomplete, 'place_changed', function () {
@@ -39,20 +39,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 var address = place.address_components[0].long_name + ' ' + place.address_components[1].long_name + place.address_components[2].long_name + place.address_components[3].long_name;
                 $("#business_address").val(address);
                 $("#google_search_place").val(place.name); //Use this if return business name only
-
-                for (var i = 0; i < place.address_components.length; i++) {
-			      for (var j = 0; j < place.address_components[i].types.length; j++) {
-			        if (place.address_components[i].types[j] == "postal_code") {
-			        	$("#zip_code").val(place.address_components[i].long_name);
-			        }
-			      }
-			    }
-
-                //$("#zip_code").val(place.address_components[6].long_name);
                 //console.log(place);
             });
         }
-        google.maps.event.addDomListener(window, 'load', initialize);*/
+        google.maps.event.addDomListener(window, 'load', initialize);
     </script>
 
 	<!--[if lt IE 9]>

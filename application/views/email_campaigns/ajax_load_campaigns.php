@@ -38,12 +38,10 @@
                                 <button class="btn btn-default dropdown-toggle" type="button" id="dropdown-edit" data-toggle="dropdown" aria-expanded="true">
                                     <span class="btn-label">Manage</span><span class="caret-holder"><span class="caret"></span></span>
                                 </button>
-                                <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit"> 
-                                    <?php if($eb->status != $status_draft){ ?>                                 
-                                    <li role="presentation">
-                                        <a role="menuitem" tabindex="-1" href="<?php echo base_url('email_campaigns/view_campaign/' . $eb->id) ?>"><span class="fa fa-file-text-o icon"></span> View</a>
-                                    </li> 
-                                    <?php } ?>
+                                <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">                            
+                                    <!-- <li role="presentation">
+                                        <a role="menuitem" tabindex="-1" href="<?php echo base_url('email_campaigns/view/' . $eb->id) ?>"><span class="fa fa-file-text-o icon"></span> View</a>
+                                    </li>  -->     
                                     <?php if($eb->status != 3){ ?>      
                                     <li role="presentation">
                                         <a role="menuitem" tabindex="-1" href="<?php echo base_url('email_campaigns/edit_campaign/' . $eb->id) ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a>

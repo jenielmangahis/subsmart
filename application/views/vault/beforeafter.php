@@ -1,13 +1,13 @@
 <style>
 button#dropdown-edit {
-    /*width: 100px;*/
+    width: 100px;
 }
-/*.dropdown-toggle::after {
+.dropdown-toggle::after {
     display: block;
     position: absolute;
     top: 54% !important;
     right: 9px !important;
-}*/
+}
 .page-title, .box-title {
   font-family: Sarabun, sans-serif !important;
   font-size: 1.75rem !important;
@@ -78,9 +78,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             </div> -->
             <!-- end row -->
             <div class="row">
-                <div class="col-xl-12 p-3">
+                <div class="col-xl-12 p-0">
                     <div class="card" style="padding: 5px 20px !important;">
-                        <div class="row margin-bottom-ter mb-2 align-items-center">
+                      <div class="row margin-bottom-ter mb-2 align-items-center">
                           <div class="col-auto vault__header">
                               <h3 class="page-title mb-0 vault__title">Before and After Photos</h3>
                           </div>
@@ -94,14 +94,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                               <div class="float-right d-md-block">
                               </div>
                           </div>
+                      </div>
+                      <div class="pl-3 pr-3 mt-0 row">
+                        <div class="col mb-4 left alert alert-warning mt-0 mb-2">
+                            <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">
+                                One of the best way for prospect to process information is with visual data.  Before and after photos serve as proof that the product (or service) works.  Start sharing your success photos to others to grow your business. 
+                            </span>
                         </div>
-                        <div class="pl-3 pr-3 mt-0 row">
-                            <div class="col mb-4 left alert alert-warning mt-0 mb-2">
-                                <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">
-                                    One of the best way for prospect to process information is with visual data.  Before and after photos serve as proof that the product (or service) works.  Start sharing your success photos to others to grow your business. 
-                                </span>
-                            </div>
-                        </div>
+                      </div>
                         <div class="tab-content" id="myTabContent">
                             <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1">
                                 <?php if (!empty($photos)) { ?>
@@ -140,7 +140,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
                                                         <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo base_url('before-after/edit/'. $photo->id); ?>" class="editDeleteBeforeAfterBtn"><span class="fa fa-pencil-square-o icon"></span> Edit</a></li>
                                                         <li role="separator" class="divider"></li>
-                                                        <li role="presentation"><a role="menuitem" href="javascript:void(0);" data-id="<?php echo $photo->id; ?>" class="btn-delete-photo"><span class="fa fa-trash-o icon"></span> Delete</a></li>
+                                                        <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo base_url('before-after/delete/'. $photo->group_number); ?>" class="editDeleteBeforeAfterBtn"><span class="fa fa-trash-o icon"></span> Delete</a></li>
                                                     </ul>
                                                 </div>
                                             </td>
@@ -156,36 +156,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </div>
                                 <?php } ?>
                             </div>
-
-
                         </div>
                     </div>
                     <!-- end card -->
-
-                    <!-- Modal Delete  -->
-                    <div class="modal fade bd-example-modal-md" id="modalDeleteImage" tabindex="-1" role="dialog" aria-labelledby="modalDeleteImageTitle" aria-hidden="true">
-                      <div class="modal-dialog modal-md" role="document">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-trash"></i> Delete Image</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                              <span aria-hidden="true">&times;</span>
-                            </button>
-                          </div>
-                          <?php echo form_open_multipart('before-after/delete_image', ['class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
-                          <?php echo form_input(array('name' => 'bai', 'type' => 'hidden', 'value' => '', 'id' => 'bai'));?>
-                          <div class="modal-body">        
-                              <p>Delete selected before and after image?</p>
-                          </div>
-                          <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                            <button type="submit" class="btn btn-danger">Yes</button>
-                          </div>
-                          <?php echo form_close(); ?>
-                        </div>
-                      </div>
-                    </div>
-
                 </div>
             </div>
             <!-- end row -->
@@ -195,13 +168,3 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 </div>
 <!-- page wrapper end -->
 <?php include viewPath('includes/footer'); ?>
-<script>
-$(function(){
-    $(document).on('click', '.btn-delete-photo', function(){
-        var bai = $(this).attr('data-id');
-        $('#bai').val(bai);
-
-        $('#modalDeleteImage').modal('show');
-    });
-});
-</script>

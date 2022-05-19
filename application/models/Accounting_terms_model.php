@@ -42,9 +42,9 @@ class Accounting_terms_model extends MY_Model {
 		}
 	}
 
-	public function get_by_id($id, $companyId)
+	public function getById($id)
 	{
-		return $this->db->where(['company_id' => $companyId, 'id' => $id])->get($this->table)->row();
+		return $this->db->where(['company_id' => getLoggedCompanyID(), 'id' => $id])->get($this->table)->row();
 	}
 
 	public function getActiveCompanyTerms($companyId)

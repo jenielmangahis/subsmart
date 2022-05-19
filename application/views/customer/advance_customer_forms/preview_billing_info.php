@@ -7,7 +7,7 @@
             Card Holder First Name
         </div>
         <div class="col-md-6">
-            <?= isset($billing_info) && !empty($billing_info->card_fname) ? $billing_info->card_fname : $profile_info->first_name ?>
+            <?= isset($billing_info) && !empty($billing_info->card_fname) ? $billing_info->card_fname : '---' ?>
         </div>
     </div>
     <div class="row form_line">
@@ -15,7 +15,7 @@
            Card Holder Last Name
         </div>
         <div class="col-md-6">
-            <?= isset($billing_info) && !empty($billing_info->card_lname) ? $billing_info->card_lname : $profile_info->last_name ?>
+            <?= isset($billing_info) && !empty($billing_info->card_lname) ? $billing_info->card_lname : '---' ?>
         </div>
     </div>
     <div class="row form_line">

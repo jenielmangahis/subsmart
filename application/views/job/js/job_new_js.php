@@ -99,31 +99,23 @@ if(isset($jobs_data)){
     }
 
     $(document).ready(function() {
-        $("#jobs_form").submit(function(e) {
-            e.preventDefault(); // avoid to execute the actual submit of the form.
-            if($('#job_color_id').val()=== ""){
-                error('Sorry!','Event Color is required!','warning');
-            }else{
 
-                var form = $(this);
-                const $overlay = document.getElementById('overlay');
- 
-                //var url = form.attr('action');
-                $.ajax({
-                    type: "POST",
-                    url: "<?= base_url() ?>/job/save_job",
-                    data: form.serialize(), // serializes the form's elements.
-                    success: function(data) {
-                        if ($overlay) $overlay.style.display = "none";
-                        console.log(data);
-                        sucess_add_job(data);
-                    }, beforeSend: function() {
-                        if ($overlay) $overlay.style.display = "flex";
-                    }
-                });
-            }
+        $("#jobs_form").submit(function(e) {
+            //alert("asf");
+            e.preventDefault(); // avoid to execute the actual submit of the form.
+            var form = $(this);
+            //var url = form.attr('action');
+            $.ajax({
+                type: "POST",
+                url: "<?= base_url() ?>/job/save_job",
+                data: form.serialize(), // serializes the form's elements.
+                success: function(data) {
+                    console.log(data);
+                    sucess_add_job(data);
+                }
+            });
         });
-        function sucess_add_job(){
+        function sucess_add_job($id){
             Swal.fire({
                 title: 'Nice!',
                 text: 'Job has been added!',
@@ -134,21 +126,9 @@ if(isset($jobs_data)){
                 confirmButtonText: 'Ok'
             }).then((result) => {
                 if (result.value) {
+                    //window.location.href='<?= base_url(); ?>job/new_job1/'+$id;
                     window.location.href='<?= base_url(); ?>job/';
                 }
-            });
-        }
-        function error(title,text,icon){
-            Swal.fire({
-                title: title,
-                text: text,
-                icon: icon,
-                showCancelButton: false,
-                confirmButtonColor: '#32243d',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Ok'
-            }).then((result) => {
-
             });
         }
         $("#fill_esign_btn").click(function () {
@@ -175,9 +155,9 @@ if(isset($jobs_data)){
         });
 
         $(".workorder_select").click(function () {
-            window.location.href='<?= base_url(); ?>job/work_order_job/'+this.id;
-            //$('#customer_id').empty().append('<option value="">Select Existing Customer</option>');
-            //get_customers(idd);
+            var idd = this.id;
+            $('#customer_id').empty().append('<option value="">Select Existing Customer</option>');
+            get_customers(idd);
         });
 
         $(".invoice_select").click(function () {
@@ -193,7 +173,6 @@ if(isset($jobs_data)){
             var title = $(this).data('itemname');
             var price = $(this).data('price');
             var qty = $(this).data('quantity');
-            var item_type = $(this).data('item_type');
 
             var total_ = price * qty;
             var total = parseFloat(total_).toFixed(2);
@@ -201,9 +180,9 @@ if(isset($jobs_data)){
             console.log(total);
             markup = "<tr id=\"ss\">" +
                 "<td width=\"35%\"><small>Item name</small><input readonly value='"+title+"' type=\"text\" name=\"item_name[]\" class=\"form-control\" ><input type=\"hidden\" value='"+idd+"' name=\"item_id[]\"></td>\n" +
-                "<td width=\"10%\"><small>Qty</small><input min=\"1\" data-itemid='"+idd+"' id='"+idd+"' value='"+qty+"' type=\"number\" name=\"item_qty[]\" class=\"form-control qty\" maxlength=\"1\"></td>\n" +
+                "<td width=\"20%\"><small>Qty</small><input data-itemid='"+idd+"' id='"+idd+"' value='"+qty+"' type=\"number\" name=\"item_qty[]\" class=\"form-control qty\"></td>\n" +
                 "<td width=\"20%\"><small>Unit Price</small><input readonly id='price"+idd+"' value='"+price+"'  type=\"number\" name=\"item_price[]\" class=\"form-control\" placeholder=\"Unit Price\"></td>\n" +
-                "<td width=\"20%\"><small>Item Type</small><input readonly type=\"text\" class=\"form-control\" value='"+item_type+"'></td>\n" +
+                //"<td width=\"10%\"><small>Unit Cost</small><input type=\"text\" name=\"item_cost[]\" class=\"form-control\"></td>\n" +
                 //"<td width=\"25%\"><small>Inventory Location</small><input type=\"text\" name=\"item_loc[]\" class=\"form-control\"></td>\n" +
                 "<td  style=\"text-align: center;margin-top: 20px;\" class=\"d-flex\" width=\"15%\"><b style=\"font-size: 16px;\" data-subtotal='"+total_+"' id='sub_total"+idd+"' class=\"total_per_item\">"+total+"</b></td>" +
                 "<td width=\"20%\"><button style=\"margin-top: 20px;\" type=\"button\" class=\"btn btn-primary btn-sm items_remove_btn remove_item_row\"><span class=\"fa fa-trash-o\"></span></button></td>\n" +
@@ -258,19 +237,6 @@ if(isset($jobs_data)){
         }
         // get the changed quantity of each item on item list and multiply it to the cost and put in subtotal
         $("body").delegate(".qty", "keyup", function(){
-            //console.log( "Handler for .keyup() called." );
-            var id = this.id;
-            var qty=this.value;
-            var cost = $('#price'+id).val();
-            var new_sub_total = Number(qty) * Number(cost);
-            $('#sub_total'+id).data('subtotal',new_sub_total);
-            $('#sub_total'+id).text('$' + formatNumber(parseFloat(new_sub_total).toFixed(2)));
-            $('#device_sub_total'+id).text('$' + formatNumber(parseFloat(new_sub_total).toFixed(2)));
-            $('#device_qty'+id).text(qty);
-            calculate_subtotal();
-        });
-
-        $("body").delegate(".qty", "change", function(){
             //console.log( "Handler for .keyup() called." );
             var id = this.id;
             var qty=this.value;
@@ -645,8 +611,6 @@ if(isset($jobs_data)){
         });
 
         $("#fillAndSignNext").on( "click", function( event ) {
-            return; // moved implementation to script.js@onClickNext
-
             console.log('fsdfd');
             var formData = {
                 'status': $(this).data('status'),

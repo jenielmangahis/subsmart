@@ -267,7 +267,7 @@ li {
     color: #858585;
     background-color: #eaeaea;
 }
-.btn.btn-green.btn-sm {
+button.btn.btn-green.btn-sm {
     background: #45a73c;
     padding: 12px 20px;
     color: #fff;
@@ -293,12 +293,12 @@ li {
     float: left;
 }
 .btn-group-sm > .btn, .btn-sm {
-    /*font-size: 12px;
+    font-size: 12px;
     line-height: 6px;
     min-width: 40px;
     height: 30px;
     padding-left: 10px;
-    padding-right: 10px;*/
+    padding-right: 10px;
 }
 .category-list .product__view {
     display: none;
@@ -394,7 +394,7 @@ li {
     padding-top: 10px;
 }
 .widget-cart {
-    max-height: 500px;
+    max-height: 395px;
     overflow-y: auto;
     margin-right: -10px;
     padding-right: 30px;

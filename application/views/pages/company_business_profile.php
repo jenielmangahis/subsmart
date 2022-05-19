@@ -133,18 +133,19 @@ h3 {
     font-size: 22px;
     margin-bottom: 0px;
 }
-/*.image-caption{
+.image-caption{
   position: relative;
     top: -25px;
     left: 16px;
     color: #ffffff;
-}*/
+}
 .gallery li {
     width: 30%;
-    display: inline-flex;
+    display: inline-block;
     margin-right: 10px;
     margin-bottom: 10px;
-    height: 392px;
+    height: 286px;
+    float: left;
 }
 div.picture-container div.img img {
     object-fit: cover;
@@ -196,16 +197,6 @@ section.mr-23 {
 }
 .email-color {
     color: #ee710e;
-}
-.image-caption, .deals-caption{
-  background: linear-gradient(to right, #2d1a3e 0%, #4a385d 100%);
-  color: #ffffff;
-  padding: 8px;
-  height: 41px;
-}
-.gallery-img{
-  display: inline-block;
-  height: 126px;
 }
 </style>
 <div role="wrapper" style="padding-top: 0px;background:white;">
@@ -463,50 +454,6 @@ section.mr-23 {
 
         <div class="col-md-8" style="padding-left: 6px !important;">
           <div class="col-sm-12 pl-0 left">
-              <h3 class="page-title pl-0 mb-2">Deals</h3>
-              <section class="content mr-23 mb-5">
-                <?php if($dealsSteals){ ?>
-                  <ul class="gallery ui-sortable" id="gallery">
-                    <?php foreach($dealsSteals as $ds){ ?>
-                      <li class="col-image-<?= $key ?>" style="width:28%;margin-right: 15px;text-align: center;height: auto;margin-bottom:38px;">
-                        <div class="">
-                          <div class="img">
-                            <?php
-                              $slug = createSlug($ds->title,'-');
-                              $deal_url = url('deal/' . $slug . '/' . $ds->id);
-                            ?>
-                            <a href="<?= $deal_url; ?>">
-                              <?php 
-                                if( $ds->photos != '' ){
-                                  $deals_image = base_url("uploads/deals_steals/" . $ds->company_id . "/" . $ds->photos);
-                                   if( !file_exists(FCPATH."uploads/deals_steals/"  . $ds->company_id . "/" . $ds->photos) ){
-                                    $deals_image = base_url("assets/img/default-deals.jpg");
-                                  } 
-                                }else{
-                                  $deals_image = base_url("assets/img/default-deals.jpg");
-                                }
-                                
-                              ?>
-                              <img class="gallery-img" src="<?= $deals_image; ?>" style="width: 100%;">
-                                <div class="image-caption deals-caption">
-                                 <b><?= $ds->title; ?></b>
-                                </div>
-                            </a>
-                          </div>
-                        </div>
-                      </li>
-                    <?php } ?>
-                 </ul>
-                <?php }else{ ?>
-                  <p class="profile-content-margin">No deals at this moment.</p>
-                <?php } ?>
-              </section>
-            
-          </div>          
-        </div>
-
-        <div class="col-md-8" style="padding-left: 6px !important;">
-          <div class="col-sm-12 pl-0 left">
               <h3 class="page-title pl-0 mb-2">Portfolio</h3>
               <section class="content mr-23 mb-5">
                  <?php
@@ -522,7 +469,7 @@ section.mr-23 {
                         <div class="picture-container ui-sortable-handle">
                           <div class="img">
                             <a href="<?= url("uploads/work_pictures/" . $profiledata->company_id . "/" . $i['file']); ?>" data-fancybox="gallery" data-caption="<?= $i['caption']; ?>">
-                              <img class="gallery-img" src="<?= url("uploads/work_pictures/" . $profiledata->company_id . "/" . $i['file']); ?>">
+                              <img src="<?= url("uploads/work_pictures/" . $profiledata->company_id . "/" . $i['file']); ?>">
                               <div class="image-caption image-caption-container-<?= $key; ?>">
                                 <?= $i['caption']; ?>
                               </div>

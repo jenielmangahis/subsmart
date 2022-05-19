@@ -1,5 +1,4 @@
 function Step1(params = {}) {
-  const PDFJS = pdfjsLib;
   const validFileExtensions = ["pdf"];
 
   const $form = $("#form");
@@ -14,7 +13,6 @@ function Step1(params = {}) {
   const $selectFileModalClose = $("#selectDocumentCloseButton");
   const $vaultTab = $("#vault");
   const $recentTab = $("#recent");
-  const $myTemplates = $("#myTemplates");
   const $selectDocumentButton = $("#selectDocumentButton");
   const $fileInput = $("#fileInput");
 
@@ -22,17 +20,12 @@ function Step1(params = {}) {
   let documentObj = null;
   let documentUrl = null;
   let recentDocuments = [];
-  let templates = [];
   let onSelect = params.onSelect || (() => {});
 
   const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
 
   function getVaultDocumentById(id) {
     return vaultDocuments.find(({ file_id }) => file_id == id);
-  }
-
-  function getTemplateById(id) {
-    return templates.find(({ id: currId }) => currId == id);
   }
 
   function getRecentById(id) {
@@ -81,17 +74,15 @@ function Step1(params = {}) {
 
     await sleep(1000);
 
-    let document = await PDFJS.getDocument({ url: documentUrl });
-    document = await document.promise;
+    const document = await PDFJS.getDocument({ url: documentUrl });
     const documentPage = await document.getPage(1);
 
     $docTitle.text(file.name);
     $docModalTitle.text(file.name);
     $docPageCount.text(`${document.numPages} page`);
 
-    const scaleRequired =
-      $canvas.width / documentPage.getViewport({ scale: 1 }).width;
-    const viewport = documentPage.getViewport({ scale: scaleRequired });
+    const scaleRequired = $canvas.width / documentPage.getViewport(1).width;
+    const viewport = documentPage.getViewport(scaleRequired);
     const canvasContext = {
       viewport,
       canvasContext: context,
@@ -122,15 +113,13 @@ function Step1(params = {}) {
     $modalBody = $docModal.find(".modal-body");
     $modalBody.empty();
 
-    let document = await PDFJS.getDocument({ url: documentUrl });
-    document = await document.promise;
-
+    const document = await PDFJS.getDocument({ url: documentUrl });
     for (index = 1; index <= document.numPages; index++) {
       const canvas = window.document.createElement("canvas");
       $modalBody.append(canvas);
 
       const documentPage = await document.getPage(index);
-      const viewport = documentPage.getViewport({ scale: 1 });
+      const viewport = documentPage.getViewport(1);
       canvas.height = viewport.height;
       canvas.width = viewport.width;
 
@@ -303,7 +292,8 @@ function Step1(params = {}) {
       return $element;
     });
 
-    $vaultTab.find(".fillAndSign__vault").append($elements);
+    const $vaultList = $vaultTab.find(".fillAndSign__vault");
+    $vaultList.append($elements);
   }
 
   function displayRecentDocuments() {
@@ -347,81 +337,20 @@ function Step1(params = {}) {
       return $element;
     });
 
-    $recentTab.find(".fillAndSign__recent").append($elements);
-  }
-
-  function displayMyTemplates() {
-    if (!templates.length) {
-      $myTemplates.append("<p>🤷‍♀️ Nothing to display here</p>");
-      return;
-    }
-
-    const $elements = templates.map((template) => {
-      const { id, name, created_at: createdRaw, user, is_shared } = template;
-      const created = moment(createdRaw).format("MMMM DD, YYYY");
-
-      const html = `
-        <li class="fillAndSign__vaultItem" data-template-id=${id}>
-            <div class="media">
-                <i class="fa fa-file-pdf-o fa-2x text-danger mr-3"></i>
-                <div class="media-body">
-                    <h5 class="mt-0 fillAndSign__vaultItemTitle">${name}</h5>
-                    <div class="fillAndSign__vaultItemInfo">
-                      Created on <span>${created}</span>
-                  </div>
-                </div>
-            </div>
-        </li>
-        `;
-
-      $element = createElementFromHTML(html);
-      if (user && is_shared) {
-        $element.find(".fillAndSign__vaultItemInfo").html(`
-          Created by ${user.FName} ${user.LName} on ${created}
-        `);
-      }
-
-      $element.on("click", (event) => {
-        const $currActive = $(".fillAndSign__vaultItem--selected");
-        $currActive.removeClass("fillAndSign__vaultItem--selected");
-
-        let $target = $(event.target);
-        if (!$target.hasClass("fillAndSign__vaultItem")) {
-          $target = $target.closest(".fillAndSign__vaultItem");
-        }
-
-        $target.addClass("fillAndSign__vaultItem--selected");
-        onSelect(event);
-      });
-
-      return $element;
-    });
-
-    $myTemplates.find(".fillAndSign__vault").append($elements);
-  }
-
-  async function fetchMyTemplates() {
-    const endpoint = `${prefixURL}/DocuSign/apiTemplates?all=true`;
-    const response = await fetch(endpoint, {
-      headers: { accepts: "application/json" },
-    });
-
-    const { data } = await response.json();
-    templates = data.map((currData) => ({ ...currData, isTemplate: true }));
+    const $recentList = $vaultTab.find(".fillAndSign__recent");
+    $recentTab.append($elements);
   }
 
   async function init() {
     await fetchPdfs();
     await fetchRecentDocuments();
-    await fetchMyTemplates();
 
     displayVaultDocuments();
     displayRecentDocuments();
     attachEventHandlers();
-    displayMyTemplates();
   }
 
-  return { init, getVaultDocumentById, getTemplateById, getRecentById };
+  return { init, getVaultDocumentById, getRecentById };
 }
 
 $(document).ready(function () {

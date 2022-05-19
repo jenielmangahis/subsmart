@@ -55,10 +55,6 @@ class ChecklistItem_model extends MY_Model
     public function deleteById($id){
         $this->db->delete($this->table, array('id' => $id));
     }
-
-    public function deleteAllByChecklistId($checklist_id){
-        $this->db->delete($this->table, array('checklist_id' => $checklist_id));
-    }
 }
 
 /* End of file ChecklistItem_model.php */

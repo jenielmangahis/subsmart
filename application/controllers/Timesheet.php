@@ -1,19 +1,24 @@
 <?php
 
 defined('BASEPATH') or exit('No direct script access allowed');
-
-define("FIREBASE_API_KEY", "AAAAGdnNhSA:APA91bERYT0vPfk5mH7M_UYgIDTdLDLgEsTUDue9WJRbsqhpTXOPwsamzXoUB0BmaFJxoXX5p2RzSy_cvI96uolp0_iZV2FuQgUjusGbVDVtshbBzGLTZYhIiSqt5lbsuXV9lNsnaLOk");
+define("FIREBASE_API_KEY", "AAAA0yE6SAE:APA91bFQOOZnqWcMbdBY9ZfJfc0TWanlN1l6f95QfjpfMhVLWNfHVd63nlfxP69I_snCkaqaY9yuezx65GLyevUmkflRADYdYAZKPY8e8SS5Q_dyPDqQaxxlstamhhUG1BiFr4bC4ABo");
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class Timesheet extends MY_Controller
 {
+ 
+
+
     public function __construct()
+
+
     {
+
         parent::__construct();
         $this->checkLogin();
-        $this->hasAccessModule(77);
+
         $this->page_data['page']->title = 'Timesheet Management';
 
         $this->page_data['page']->menu = 'users';
@@ -242,175 +247,8 @@ class Timesheet extends MY_Controller
         $this->load->view('users/tracklocation', $this->page_data);
     }
 
-
-    public function insert_cOut_cIn_Location(){
-        $data = $this->input->post();
-        $cIn_cOut_exist = $this->timesheet_model->get_cOut_cIn_Location(logged('company_id'));
-
-        if($cIn_cOut_exist){
-            $update = $this->timesheet_model->update_cOut_cIn_Location($data);
-            $this->timesheet_model->insert_logs_for_cIn_cOut(logged('company_id'),logged('id'));
-        }else{
-            $insert = $this->timesheet_model->insert_cOut_cIn_Location($data);
-            $this->timesheet_model->insert_logs_for_cIn_cOut(logged('company_id'),logged('id'));
-        }
-
-        $query = $this->timesheet_model->get_user_according_cIncOut_logs();
-       
-        $query2 = $this->timesheet_model->get_logs_cOut_cIn_location(logged('company_id'));
-        foreach($query2 as $q){
-            $last_update = date("M d, Y h:i A", strtotime($this->datetime_zone_converter($q->date_created, "UTC", $this->session->userdata('usertimezone'))));
-        }
-
-        $cOutIn = new stdClass();
-        $cOutIn->name = $query;
-        $cOutIn->last_update = $last_update;
-
-        echo json_encode($cOutIn);
-    }
-
-    public function getData()
-    {
-        $query = $this->timesheet_model->getData(logged('company_id'));
-        $query2 = $this->timesheet_model->getLastResClockInPayDateLogs_allow(logged('company_id'));
-        $query4 = $this->timesheet_model->getLastResClockInPayDateLogs_payday(logged('company_id'));
-        $query5 = $this->timesheet_model->getLastResClockInPayDateLogs_gps(logged('company_id'));
-        $query3 = $this->timesheet_model->getUsersAccordingToLogs();
-        $query6 = $this->timesheet_model->get_user_according_cIncOut_logs();
-        $user_payday = $this->timesheet_model->getUsersAccordingToLogs_payday();
-
-       
-        $query6 = $this->timesheet_model->get_logs_cOut_cIn_location(logged('company_id'));
-        foreach($query as $q){
-            $last_update_for_auto_view = date("M d, Y h:i A", strtotime($this->datetime_zone_converter($q->date_updated, "UTC", $this->session->userdata('usertimezone'))));
-        }
-        foreach($query6 as $q){
-            $last_update4 = date("M d, Y h:i A", strtotime($this->datetime_zone_converter($q->date_created, "UTC", $this->session->userdata('usertimezone'))));
-        }
-        foreach ($query2 as $res) {
-            $last_update = date("M d, Y h:i A", strtotime($this->datetime_zone_converter($res->date_created, "UTC", $this->session->userdata('usertimezone'))));
-            
-        }
-        foreach ($query4 as $res2) {
-            $last_update2 = date("M d, Y h:i A", strtotime($this->datetime_zone_converter($res2->date_created, "UTC", $this->session->userdata('usertimezone'))));
-            
-        }
-        foreach ($query5 as $res3) {
-            $last_update3 = date("M d, Y h:i A", strtotime($this->datetime_zone_converter($res3->date_created, "UTC", $this->session->userdata('usertimezone'))));
-        }
-
-
-        $data = new stdClass();
-        $data->result = $query;
-        $data->payday_dateUpdated = $last_update_for_auto_view;
-        $data->recent = $query2;
-        $data->user   = $query3;
-        $data->recent2 = $query4;
-        $data->users2 = $query5;
-        $data->user_payday = $user_payday;
-        $data->last_update   = $last_update;
-        $data->last_update2  = $last_update2;
-        $data->last_update3  = $last_update3;
-        $data->last_update4  = $last_update4;
-        echo json_encode($data);
-    }
-    public function getResClockInPayDate()
-    {
-        $query = $this->timesheet_model->getResClockInPayDate(logged('company_id'));
-        // var_dump($query);
-        return $query;
-    }
-
-
-
-    public function insertResClockInPayDate_allow()
-    {
-        $data = $this->input->post();
-
-        $query = $this->getResClockInPayDate(logged("company_id"));
-
-        if ($query != null) {
-            $this->timesheet_model->updateResClockInPayDate_allow($data);
-            $date_created = $this->timesheet_model->insertResClockInPayDateLogs_allow();
-        } else {
-            $this->timesheet_model->insertResClockInPayDate_allow($data);
-            $date_created = $this->timesheet_model->insertResClockInPayDateLogs_allow();
-        }
-
-        $query2 = $this->timesheet_model->getLastResClockInPayDateLogs_allow(logged('company_id'));
-        $query3 = $this->timesheet_model->getUsersAccordingToLogs();
-        foreach ($query2 as $res) {
-            $last_update = date("M d, Y h:i A", strtotime($this->datetime_zone_converter($date_created, "UTC", $this->session->userdata('usertimezone'))));
-        }
-
-        $data = new stdClass();
-        $data->recent = $query2;
-        $data->user   = $query3;
-        $data->last_update   = $last_update;
-
-        echo json_encode($data);
-    }
-
-    public function insertResClockInPayDate_gps()
-    {
-        $data = $this->input->post();
-
-        $query = $this->getResClockInPayDate();
-
-
-        if ($query != null) {
-            $this->timesheet_model->updateResClockInPayDate_gps($data);
-            $date_created = $this->timesheet_model->insertResClockInPayDateLogs_gps();
-        } else {
-            $this->timesheet_model->insertResClockInPayDate_gps($data);
-            $date_created = $this->timesheet_model->insertResClockInPayDateLogs_gps();
-        }
-
-        $query2 = $this->timesheet_model->getLastResClockInPayDateLogs_allow(logged('company_id'));
-        $query3 = $this->timesheet_model->getUsersAccordingToLogs();
-        foreach ($query2 as $res) {
-            $last_update = date("M d, Y h:i A", strtotime($this->datetime_zone_converter($date_created, "UTC", $this->session->userdata('usertimezone'))));
-        }
-
-        $data = new stdClass();
-        $data->recent = $query2;
-        $data->user   = $query3;
-        $data->last_update   = $last_update;
-
-        echo json_encode($data);
-    }
-
-    public function insertResClockInPayDate()
-    {
-        $data = $this->input->post();
-
-        $query = $this->getResClockInPayDate();
-
-        if ($query != null) {
-            $this->timesheet_model->updateResClockInPayDate($data);
-            $date_created = $this->timesheet_model->insertResClockInPayDateLogs_paydate();
-        } else {
-            $this->timesheet_model->insertResClockInPayDate_paydate($data);
-            $date_created = $this->timesheet_model->insertResClockInPayDateLogs_paydate();
-        }
-
-        $query2 = $this->timesheet_model->getLastResClockInPayDateLogs_payday(logged('company_id'));
-        $query3 = $this->timesheet_model->getUsersAccordingToLogs();
-        foreach ($query2 as $res) {
-            $last_update = date("M d, Y h:i A", strtotime($this->datetime_zone_converter($date_created, "UTC", $this->session->userdata('usertimezone'))));
-        }
-
-        $data = new stdClass();
-        $data->recent = $query2;
-        $data->user   = $query3;
-        $data->last_update   = $last_update;
-
-        echo json_encode($data);
-    }
-
-
-
     public function index()
+
     {
         // $user_id = logged('id');
         // $this->load->model('users_model');
@@ -1215,28 +1053,7 @@ class Timesheet extends MY_Controller
     }
     public function attendance()
     {
-        $session = $this->session->userdata('logged');
-        if ($session == null || $session == "") {
-            $_SESSION['usertimezone'] = json_decode(get_cookie('logged'))->usertimezone;
-            $_SESSION['offset_zone'] = json_decode(get_cookie('logged'))->offset_zone;
-            $array = [
 
-                'login' => true,
-
-                // saving encrypted userid and password as token in session
-
-                'login_token' => get_cookie('login_token'),
-                'logged' => [
-                    'id' => json_decode(get_cookie('logged'))->id,
-                    'time' => json_decode(get_cookie('logged'))->time,
-                    'role' => json_decode(get_cookie('logged'))->role,
-                    'company_id' => json_decode(get_cookie('logged'))->company_id
-                ]
-
-            ];
-
-            $this->session->set_userdata($array);
-        }
         date_default_timezone_set('UTC');
         $this->load->model('timesheet_model');
         $this->load->model('users_model');
@@ -1267,7 +1084,7 @@ class Timesheet extends MY_Controller
         $this->page_data['on_unapprovedleave'] = $this->timesheet_model->getLeaveList(date('Y-m-d'), "unapproved");
         $this->page_data['on_pendingleave'] = $this->timesheet_model->getLeaveList(date('Y-m-d'), "pending");
         $this->page_data['on_pendingleave'] = $this->timesheet_model->getLeaveList(date('Y-m-d'), "pending");
-        $this->page_data['paydate'] = $this->timesheet_model->getData(logged('company_id'));
+
         // var_dump($this->page_data['out_now']);
         $this->load->view('users/timesheet_attendance', $this->page_data);
     }
@@ -1978,7 +1795,7 @@ class Timesheet extends MY_Controller
     //      $data = new stdClass();
     //      $data->date_time = $date_time;
     //      $data->end_time = $end_time;
-    //      echo json_encode($data);
+    //      echo json_encode($data); 
     //    }
 
     public function clockInEmployee_manual($user_id, $entry_type)
@@ -2003,10 +1820,10 @@ class Timesheet extends MY_Controller
         $check_attendance = $this->db->get_where('timesheet_attendance', array('id' => $attn_id));
         date_default_timezone_set($this->session->userdata('usertimezone'));
         if ($entry_type == "Manual") {
-            $content_notification = 'Manually clocked In ' . " at " . date('M d, Y h:i A') . " " . $this->session->userdata('offset_zone');
+            $content_notification = 'Manually clocked In ' . " at " . date('m-d-Y h:i A') . " " . $this->session->userdata('offset_zone');
             $approved_by = logged('id');
         } else {
-            $content_notification = "Clocked In in " . $employeeLongnameAddress . " at " . date('M d, Y h:i A') . " " . $this->session->userdata('offset_zone');
+            $content_notification = "Clocked In in " . $employeeLongnameAddress . " at " . date('m-d-Y h:i A') . " " . $this->session->userdata('offset_zone');
             $approved_by = 0;
         }
 
@@ -2023,7 +1840,7 @@ class Timesheet extends MY_Controller
 
             );
             $this->db->insert('user_notification', $clock_in_notify);
-
+            
             // insert to timesheet_logs
 
             $logs_insert = array(
@@ -2045,6 +1862,7 @@ class Timesheet extends MY_Controller
         if ($this->db->affected_rows() != 1) {
             echo json_encode(0);
         } else {
+
             $this->db->select('FName,LName,profile_img,device_token,device_type');
             $this->db->from('users');
             $this->db->where('id', $user_id);
@@ -2065,7 +1883,7 @@ class Timesheet extends MY_Controller
             $data->user_id = $user_id;
             $data->token = $getUserDetail->device_token;
             $data->title = "Time Clock Alert";
-            $data->timesheet_logs_id = $timesheet_logs_id;
+            $data->timesheet_logs_id= $timesheet_logs_id;
 
 
 
@@ -2091,10 +1909,6 @@ class Timesheet extends MY_Controller
             $data->html = $html;
             $data->content_notification = $content_notification;
             $data->profile_img = $image;
-            $data->send_sms = false;
-            if (logged("company_id") == 1) {
-                $data->send_sms = true;
-            }
             if ($entry_type == "Manual") {
                 echo json_encode($data);
             } else {
@@ -2120,17 +1934,6 @@ class Timesheet extends MY_Controller
             $options
         );
         $pusher->trigger('nsmarttrac', 'my-event', $data);
-    }
-
-    public function getShiftSchedule()
-    {
-        $query = $this->timesheet_model->getShiftSchedule();
-        $query2 = $this->timesheet_model->getData(logged('company_id'));
-        $data = new stdClass();
-        $data->attend = $query;
-        $data->resClock = $query2;
-
-        echo json_encode($data);
     }
 
     public function clockInEmployee()
@@ -2173,7 +1976,7 @@ class Timesheet extends MY_Controller
             $data = $data . " send_android_push";
         }
         if ($ios_token_ctr > 0) {
-            $this->send_ios_push($ios_tokens, $title, $body);
+            $this->send_ios_push($ios_tokens, $title,  $body);
             $data = $data . " send_ios_push";
         }
         $return = array(
@@ -2186,7 +1989,6 @@ class Timesheet extends MY_Controller
         );
         echo json_encode($return);
     }
-
     public function clockOut_validation()
     {
         $attn_id = $this->input->post('attn_id');
@@ -2232,18 +2034,20 @@ class Timesheet extends MY_Controller
 
     public function removeNotification()
     {
+
         $this->load->model('timesheet_model');
         $id = $this->input->post('notificationid');
 
         $this->db->set('status', 0);
         $this->db->where_in('id', $id);
         $this->db->update('user_notification');
-        return ($this->db->affected_rows() > 0) ? true : false;
+        return ($this->db->affected_rows() > 0) ? TRUE : FALSE;
     }
 
 
     public function getNotificationTbl()
     {
+
         $this->load->model('timesheet_model');
         $notification = $this->timesheet_model->getTSNotification();
 
@@ -2288,6 +2092,7 @@ class Timesheet extends MY_Controller
 
     public function getNotificationsAll()
     {
+
         $userid = logged('id');
         $badgeCount = $this->input->post('badgeCount');
         $notification = $this->timesheet_model->get_unreadNotification($badgeCount, "");
@@ -2309,28 +2114,12 @@ class Timesheet extends MY_Controller
                 }
                 $date_created = date('m-d-Y h:i A', strtotime($notify->date_created));
 
-                if ($notify->title == 'New Work Order') {
-                    $html .= '<a href="' . site_url() . 'workorder" id="notificationDP"
-                            data-id=' . $notify->id . '" class="dropdown-item notify-item active"
-                            style="background-color:' . $bg . '">
-                            <img style="width:40px;height:40px;border-radius: 20px;margin-bottom:-40px" class="profile-user-img img-responsive img-circle" src="' . $image . '" alt="User profile picture" />
-                            <p class="notify-details" style="margin-left: 50px;">' . $notify->FName . " " . $notify->LName . '<span class="text-muted">' . $notify->content . '</span></p>
-                            </a>';
-                } elseif ($notify->title == 'New Estimates') {
-                    $html .= '<a href="' . site_url() . 'estimate" id="notificationDP"
-                    data-id=' . $notify->id . '" class="dropdown-item notify-item active"
-                    style="background-color:' . $bg . '">
-                    <img style="width:40px;height:40px;border-radius: 20px;margin-bottom:-40px" class="profile-user-img img-responsive img-circle" src="' . $image . '" alt="User profile picture" />
-                    <p class="notify-details" style="margin-left: 50px;">' . $notify->FName . " " . $notify->LName . '<span class="text-muted">' . $notify->content . '</span></p>
-                    </a>';
-                } else {
-                    $html .= '<a href="' . site_url() . 'timesheet/attendance" id="notificationDP"
-                            data-id=' . $notify->id . '" class="dropdown-item notify-item active"
-                            style="background-color:' . $bg . '">
-                            <img style="width:40px;height:40px;border-radius: 20px;margin-bottom:-40px" class="profile-user-img img-responsive img-circle" src="' . $image . '" alt="User profile picture" />
-                            <p class="notify-details" style="margin-left: 50px;">' . $notify->FName . " " . $notify->LName . '<span class="text-muted">' . $notify->content . '</span></p>
-                            </a>';
-                }
+                $html .= '<a href="' . site_url() . 'timesheet/attendance" id="notificationDP"
+            data-id=' . $notify->id . '" class="dropdown-item notify-item active"
+            style="background-color:' . $bg . '">
+            <img style="width:40px;height:40px;border-radius: 20px;margin-bottom:-40px" class="profile-user-img img-responsive img-circle" src="' . $image . '" alt="User profile picture" />
+            <p class="notify-details" style="margin-left: 50px;">' . $notify->FName . " " . $notify->LName . '<span class="text-muted">' . $notify->content . '</span></p>
+            </a>';
             }
         }
 
@@ -2341,85 +2130,6 @@ class Timesheet extends MY_Controller
         );
         echo json_encode($notificationListArray);
     }
-
-    public function getV2NotificationsAll()
-    {
-        $userid = logged('id');
-        $badgeCount = $this->input->post('badgeCount');
-        $notification = $this->timesheet_model->get_unreadNotification($badgeCount, "");
-        $html = '';
-        date_default_timezone_set($this->session->userdata('usertimezone'));
-        if ($notification != null) {
-            $notifyCount = count($notification);
-            foreach ($notification as $notify) {
-                $seen = '';
-                if ($notify->status == 1) {
-                    $seen = 'read';
-                }
-
-                $image = userProfilePicture($notify->user_id);
-                $date_created = date('m-d-Y h:i A', strtotime($notify->date_created));
-
-                if ($notify->title == 'New Work Order') {
-                    $html .= '<div class="list-item" onclick="location.href=\'' . site_url("workorder") . '\'" data-id="' . $notify->id . '">
-                                <div class="nsm-notification-item">';
-
-                    if (is_null($image)) :
-                        $html .= '<div class="nsm-profile"><span>' . ucwords($notify->FName[0]) . ucwords($notify->LName[0]) . '</span></div>';
-                    else :
-                        $html .= '<div class="nsm-profile" style="background-image: url(' . $image . ');"></div>';
-                    endif;
-
-                    $html .= '<div class="nsm-notification-content ' . $seen . '">
-                                        <span class="content-title fw-bold mb-1">' . $notify->FName . " " . $notify->LName . '</span>
-                                        <span class="content-subtitle">' . $notify->content . '</span>
-                                    </div>
-                                </div>
-                            </div>';
-                } elseif ($notify->title == 'New Estimates') {
-                    $html .= '<div class="list-item" onclick="location.href=\'' . site_url("estimates") . '\'" data-id="' . $notify->id . '">
-                                <div class="nsm-notification-item">';
-
-                    if (is_null($image)) :
-                        $html .= '<div class="nsm-profile"><span>' . ucwords($notify->FName[0]) . ucwords($notify->LName[0]) . '</span></div>';
-                    else :
-                        $html .= '<div class="nsm-profile" style="background-image: url(' . $image . ');"></div>';
-                    endif;
-
-                    $html .= '<div class="nsm-notification-content ' . $seen . '">
-                                        <span class="content-title fw-bold mb-1">' . $notify->FName . " " . $notify->LName . '</span>
-                                        <span class="content-subtitle">' . $notify->content . '</span>
-                                    </div>
-                                </div>
-                            </div>';
-                } else {
-                    $html .= '<div class="list-item" onclick="location.href=\'' . site_url("timesheet/attendance") . '\'" data-id="' . $notify->id . '">
-                                <div class="nsm-notification-item">';
-
-                    if (is_null($image)) :
-                        $html .= '<div class="nsm-profile"><span>' . ucwords($notify->FName[0]) . ucwords($notify->LName[0]) . '</span></div>';
-                    else :
-                        $html .= '<div class="nsm-profile" style="background-image: url(' . $image . ');"></div>';
-                    endif;
-
-                    $html .= '<div class="nsm-notification-content ' . $seen . '">
-                                        <span class="content-title fw-bold mb-1">' . $notify->FName . " " . $notify->LName . '</span>
-                                        <span class="content-subtitle">' . $notify->content . '</span>
-                                    </div>
-                                </div>
-                            </div>';
-                }
-            }
-        }
-
-        $notificationListArray = array(
-            'notifyCount' => $notifyCount,
-            'badgeCount' => $this->timesheet_model->get_unreadNotification($notifyCount, "counter"),
-            'autoNotifications' => $html,
-        );
-        echo json_encode($notificationListArray);
-    }
-
     public function getCount_NotificationsAll()
     {
         $userid = logged('id');
@@ -2451,38 +2161,21 @@ class Timesheet extends MY_Controller
         $_SESSION['autoclockout_timer_closed'] = false;
         date_default_timezone_set('UTC');
         $attn_id = $this->input->post('attn_id');
-        $entry_type = $this->input->post('auto');
-        if ($entry_type == "") {
-            $entry_type = "Normal";
-        }
+
         // $current_status = statusChecker($attn_id,date('Y-m-d'));
         // if($lastcurrent_status == "Break in"){
 
         // }
-        $execute = true;
-        $user_location_address = "";
-        $usercoords = "";
-        if ($entry_type == "Auto") {
-            $attendance = $this->timesheet_model->get_attendance_for_clockout($attn_id);
-            if ($attendance->overtime_status == 1) {
-                $execute = false;
-            } elseif ($attendance->status == 0) {
-                $execute = false;
-            }
-        }
+
         $clock_out = date('Y-m-d H:i:s');
 
         $employeeLongnameAddress = $this->employeeLongNameAddress();
         $user_id = logged('id');
         $check_attn = $this->db->get_where('timesheet_attendance', array('id' => $attn_id, 'user_id' => $user_id));
         // var_dump($check_attn->num_rows());
-        if ($check_attn->num_rows() == 1 && $execute) {
+        if ($check_attn->num_rows() == 1) {
             date_default_timezone_set($this->session->userdata('usertimezone'));
-            if ($entry_type == "Auto") {
-                $content_notification = "Has been auto clocked out at " . date('M d, Y h:i A') . " " . $this->session->userdata('offset_zone');
-            } else {
-                $content_notification = "Clocked Out in " . $employeeLongnameAddress . " at " . date('M d, Y h:i A') . " " . $this->session->userdata('offset_zone');
-            }
+            $content_notification = "Clocked Out in " . $employeeLongnameAddress . " at " . date('m-d-Y h:i A') . " " . $this->session->userdata('offset_zone');
             $clock_out_notify = array(
                 'user_id' => $user_id,
                 'title' => 'Clock Out',
@@ -2493,19 +2186,19 @@ class Timesheet extends MY_Controller
             );
             $this->db->insert('user_notification', $clock_out_notify);
             date_default_timezone_set('UTC');
-
+            $employee_address = $this->employeeAddress();
             $out = array(
                 'attendance_id' => $attn_id,
                 'user_id' => $user_id,
                 'action' => 'Check out',
                 'user_location' => $this->timesheet_model->employeeCoordinates(),
                 'user_location_address' => $this->employeeAddress(),
-                'entry_type' => $entry_type,
+                'entry_type' => 'Normal',
                 'company_id' => getLoggedCompanyID()
             );
             $this->db->insert('timesheet_logs', $out);
             $timesheet_logs_id = $this->db->insert_id();
-
+            
             $hours_worked = $this->timesheet_model->calculateShiftDuration_and_overtime($attn_id);
             $shift_duration = round($hours_worked[0], 2);
             $update = array(
@@ -2543,14 +2236,9 @@ class Timesheet extends MY_Controller
             $data->FName = $getUserDetail->FName;
             $data->LName = $getUserDetail->LName;
             $data->profile_img = $getUserDetail->profile_img;
-            if ($entry_type == "Auto") {
-                $data->body = $getUserDetail->FName . " " . $getUserDetail->LName . " has been Auto clocked out at " . date('h:i A', time()) . " " . $this->session->userdata('offset_zone');
-            } else {
-                $data->body = $getUserDetail->FName . " " . $getUserDetail->LName . " has Clocked Out today in " . $employeeLongnameAddress . " at " . date('h:i A', time()) . " " . $this->session->userdata('offset_zone');
-            }
-
+            $data->body = $data->body = $getUserDetail->FName . " " . $getUserDetail->LName . " has Clocked Out today in " . $employeeLongnameAddress . " at " . date('h:i A', time()) . " " . $this->session->userdata('offset_zone');
             $data->device_type =  $getUserDetail->device_type;
-            $data->company_id = logged('company_id');
+            $data->company_id = getLoggedCompanyID();
             $data->token = $getUserDetail->device_token;
             $data->title = "Time Clock Alert";
             $data->timesheet_logs_id = $timesheet_logs_id;
@@ -2577,14 +2265,10 @@ class Timesheet extends MY_Controller
             $data->html = $html;
             $data->content_notification = $content_notification;
             $data->profile_img = $image;
+            echo json_encode($data);
             $data->device_type = "";
             $data->token = "";
-            $data->send_sms = false;
-            if (logged("company_id") == 1) {
-                $data->send_sms = true;
-            }
             $this->pusher_notification($data);
-            echo json_encode($data);
         }
     }
 
@@ -2740,19 +2424,18 @@ class Timesheet extends MY_Controller
         $get_location = json_decode(file_get_contents('http://ip-api.com/json/' . $ipaddress));
         $lat = $get_location->lat;
         $lng = $get_location->lon;
-        return $get_location->city . " " . $get_location->zip . ", " . $get_location->country;
-        // $g_map = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?latlng=' . trim($lat) . ',' . trim($lng) . '&sensor=true&key='.GOOGLE_MAP_API_KEY);
-        // $output = json_decode($g_map);
-        // $status = $output->status;
-        // $address = ($status == "OK") ? $output->results[1]->formatted_address : 'Address not found';
-        // return $address;
+        $g_map = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?latlng=' . trim($lat) . ',' . trim($lng) . '&sensor=true&key=AIzaSyBK803I2sEIkUtnUPJqmyClYQy5OVV7-E4');
+        $output = json_decode($g_map);
+        $status = $output->status;
+        $address = ($status == "OK") ? $output->results[1]->formatted_address : 'Address not found';
+        return $address;
 
-        // $address = ($status == "OK") ? $output->results[1]->address_components : 'Address not found';
-        // $longname = "";
-        // foreach ($address as $row) {
-        //     $longname = $row->long_name;
-        //     break;
-        // }
+        $address = ($status == "OK") ? $output->results[1]->address_components : 'Address not found';
+        $longname = "";
+        foreach ($address as $row) {
+            $longname = $row->long_name;
+            break;
+        }
     }
     private function employeeLongNameAddress()
     {
@@ -2760,22 +2443,21 @@ class Timesheet extends MY_Controller
         $get_location = json_decode(file_get_contents('http://ip-api.com/json/' . $ipaddress));
         $lat = $get_location->lat;
         $lng = $get_location->lon;
-        // $g_map = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?latlng=' . trim($lat) . ',' . trim($lng) . '&sensor=true&key='.GOOGLE_MAP_API_KEY);
-        // $output = json_decode($g_map);
-        // $status = $output->status;
+        $g_map = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?latlng=' . trim($lat) . ',' . trim($lng) . '&sensor=true&key=AIzaSyBK803I2sEIkUtnUPJqmyClYQy5OVV7-E4');
+        $output = json_decode($g_map);
+        $status = $output->status;
 
-        // if ($status == "OK") {
-        //     $address = $output->results[1]->address_components;
-        //     $longname = "";
-        //     foreach ($address as $row) {
-        //         $longname = $row->long_name;
-        //         break;
-        //     }
-        //     return $longname;
-        // } else {
-        //     return 'Address not found';
-        // }
-        return $get_location->city;
+        if ($status == "OK") {
+            $address = $output->results[1]->address_components;
+            $longname = "";
+            foreach ($address as $row) {
+                $longname = $row->long_name;
+                break;
+            }
+            return $longname;
+        } else {
+            return 'Address not found';
+        }
     }
     public function overtimeApproval()
     {
@@ -2888,13 +2570,14 @@ class Timesheet extends MY_Controller
         // echo "UTC: ".$datetime->format('Y-m-d H:i:s') . "<br>";
         $ManilaZone = new DateTimeZone('Asia/Manila');
         $datetime->setTimezone($ManilaZone);
-        // echo "Asia/Manila".$datetime->format('Y-m-d H:i:s');
+        // echo "Asia/Manila".$datetime->format('Y-m-d H:i:s');  
         // var_dump(timezone_identifiers_list());
         // echo  "server_timezone: ".date_default_timezone_get ();
     }
 
     public function subtract_dates()
     {
+
         echo logged("role") . "::::";
 
         $date = date_create(date("Y-m-d H:i:s"));
@@ -2946,6 +2629,7 @@ class Timesheet extends MY_Controller
 
     public function readNotification()
     {
+
         $id = $this->input->post('id');
         $query = $this->db->get_where('user_notification', array('id' => $id));
         if ($query->num_rows() == 1) {
@@ -2994,7 +2678,7 @@ class Timesheet extends MY_Controller
         $this->email->from('no-reply@nsmartrac.com', 'nSmartrac');
         $this->email->to($email);
         $this->email->subject('nSmartrac invitation');
-        $message = $this->load->view('users/invite_link_template', $data, true);
+        $message = $this->load->view('users/invite_link_template', $data, TRUE);
         $this->email->message($message);
         //Send mail
         $this->email->send();
@@ -3120,8 +2804,9 @@ class Timesheet extends MY_Controller
     }
 
     // send push to android
-    public function send_android_push($registrationIds, $body, $title)
+    function send_android_push($registrationIds, $body, $title)
     {
+
         $notification = array(
             'body'     => $body,
             'title'    => $title,
@@ -3153,8 +2838,9 @@ class Timesheet extends MY_Controller
     }
 
 
-    public function send_ios_push($registrationIds, $title, $body)
+    function send_ios_push($registrationIds, $title, $body)
     {
+
         $notification = array(
             'title'     => $title,
             'body'      => $body,
@@ -3312,14 +2998,15 @@ class Timesheet extends MY_Controller
                 $duration = 0;
                 // $tester = "";
                 foreach ($employee_schedules as $schedule) {
+
                     date_default_timezone_set('UTC');
                     $the_date_start = strtotime($schedule->shift_start);
                     $the_date_end = strtotime($schedule->shift_end);
                     date_default_timezone_set($this->session->userdata('usertimezone'));
                     $shift_start_date = date('Y-m-d', $the_date_start);
-                    $shift_start = date('H:i', $the_date_start);
-                    $shift_end_date = date('Y-m-d', $the_date_end);
-                    $shift_end = date('H:i', $the_date_end);
+                    $shift_start = date('H:i',  $the_date_start);
+                    $shift_end_date = date('Y-m-d',  $the_date_end);
+                    $shift_end = date('H:i',  $the_date_end);
 
                     // $tester .=  "Original: " . $schedule->shift_start . " <br>" . $this->session->userdata('usertimezone') . " Converted: " . $shift_start_date . "  :  " . $shift_start . "<br>";
                     if ($date_this_check[0] == $shift_start_date) {
@@ -3483,6 +3170,7 @@ class Timesheet extends MY_Controller
             foreach ($all_employee_schedules as $schedule) {
                 if ($schedule->shift_date == $shift_date && $schedule->user_id == $user_id) {
                     if ($found_shift_end) {
+
                         $existing_schedule = array(
                             'shift_start' => $shift_start,
                             'shift_end' => $shift_end,
@@ -3534,9 +3222,7 @@ class Timesheet extends MY_Controller
                 if ($delete_these_shift_dates_on_db != "") {
                     $delete_these_shift_dates_on_db .= " or ";
                 }
-                if ($delete_shift_dates_user_ids[$i] != "") {
-                    $delete_these_shift_dates_on_db .= "(shift_date ='" . $shift_date . "' AND user_id =" . $delete_shift_dates_user_ids[$i] . ")";
-                }
+                $delete_these_shift_dates_on_db .= "(shift_date ='" . $shift_date . "' AND user_id =" . $delete_shift_dates_user_ids[$i] . ")";
             }
             $this->timesheet_model->delete_shift_schedule($delete_these_shift_dates_on_db);
         }
@@ -3545,7 +3231,7 @@ class Timesheet extends MY_Controller
         $data->all_employee_schedules = $date_this_check;
         echo json_encode($data);
     }
-    public function get_differenct_of_dates($date_start, $date_end, $late_checker = false)
+    public function get_differenct_of_dates($date_start, $date_end)
     {
         $start = new DateTime($date_start);
         $end =  new DateTime($date_end);
@@ -3555,15 +3241,7 @@ class Timesheet extends MY_Controller
         $difference += ($interval->h * 60) * 60;
         $difference += ($interval->i) * 60;
         $difference += $interval->s;
-        if ($late_checker) {
-            if ($date_start > $date_end) {
-                return 0;
-            } else {
-                return ($difference / 60) / 60;
-            }
-        } else {
-            return ($difference / 60) / 60;
-        }
+        return ($difference / 60) / 60;
     }
     public function autoclockout_timer_closed()
     {
@@ -3582,7 +3260,6 @@ class Timesheet extends MY_Controller
         ));
         $this->load->model('timesheet_model');
         $this->page_data['newforyou'] = $this->timesheet_model->getNewForyouNotifications();
-
         // var_dump($this->page_data['allnotification']);
         $this->load->view('users/timesheet_attendance_logs', $this->page_data);
     }
@@ -3994,7 +3671,6 @@ class Timesheet extends MY_Controller
     {
         $att_id = $this->input->post("attn_id");
         $shifts = $this->timesheet_model->calculateShiftDuration_and_overtime($att_id);
-        $overtime_status = $this->timesheet_model->get_attendance_overtime_status($att_id);
 
         $lunch_auxes = $this->timesheet_model->get_lunch_auxes($att_id);
         $lunch_in = "";
@@ -4011,15 +3687,11 @@ class Timesheet extends MY_Controller
         $lunch_duration = $this->get_differenct_of_dates($lunch_in, $lunch_out);
         $data = new stdClass();
         $data->difference = $shifts[0] + $shifts[1];
-        if ($overtime_status == 1) {
-            $_SESSION['autoclockout_timer_closed'] = true;
-            $data->autoclockout_timer_closed = $this->session->userdata('autoclockout_timer_closed');
-        }
+        $data->autoclockout_timer_closed = $this->session->userdata('autoclockout_timer_closed');
         $data->over_lunch = false;
         if ($lunch_duration > 4 && $lunch_in != "") {
             $data->over_lunch = true;
         }
-        $data->overtime_status = $overtime_status;
         $data->lunch_duration = $lunch_duration;
         $data->lunch_in = $lunch_in;
         $data->lunch_out = $lunch_out;
@@ -4030,16 +3702,16 @@ class Timesheet extends MY_Controller
     {
         $date_from = $this->input->post("date_from");
         $date_to = $this->input->post("date_to");
-        // file name
+        // file name 
         $filename = $date_from . " to " . $date_to . '.csv';
         header("Content-Description: File Transfer");
         header("Content-Disposition: attachment; filename=$filename");
         header("Content-Type: application/csv; ");
-        // get data
+        // get data 
 
 
 
-        // file creation
+        // file creation 
 
 
 
@@ -4341,7 +4013,6 @@ class Timesheet extends MY_Controller
                 if ($expected_hours >= 8) {
                     $expected_break = 60;
                 }
-
                 $expected_work_hours = round((($expected_hours * 60) - $expected_break) / 60, 2);
             }
 
@@ -4379,7 +4050,7 @@ class Timesheet extends MY_Controller
             $display .= '<td class="center num_only time-log">' . ($attendance->shift_duration + $attendance->overtime) . '</td>';
             $minutes_late = "";
             if ($shift_start != '') {
-                $minutes_late = $this->get_differenct_of_dates($shift_start, $checkin, true) * 60;
+                $minutes_late = $this->get_differenct_of_dates($shift_start, $checkin) * 60;
             }
             $display .= '<td class="center num_only time-log">' . $attendance->break_duration . '</td>';
             $display .= '<td class="center num_only time-log">' . round($minutes_late, 2) . '</td>';
@@ -4390,7 +4061,7 @@ class Timesheet extends MY_Controller
                 } elseif ($attendance->shift_duration == 0) {
                     $overtime = 0;
                 } else {
-                    $overtime = 0;
+                    $overtime = $expected_work_hours;
                 }
             } else {
                 $overtime = $attendance->overtime;
@@ -4529,6 +4200,7 @@ class Timesheet extends MY_Controller
         $display .= '</thead>';
         $display .= '<tbody>';
         foreach ($requests as $request) {
+
             $display .= '<tr role="row" class="odd">';
             $display .= '<td><label class="gray">' . date('m-d-Y', strtotime($this->datetime_zone_converter($request->clock_in, "UTC", $this->session->userdata('usertimezone')))) . '</label></td>';
             $display .= '<td>';
@@ -4644,98 +4316,37 @@ class Timesheet extends MY_Controller
     }
     public function show_my_attendance_remarks()
     {
-
-
-        $data = $this->timesheet_model->getData(logged('company_id'));
-
         $week = $this->input->post("week");
         $user_id = logged("id");
         $week_convert = date('Y-m-d', strtotime($week));
-        if (count($data) > 0) {
-            $pay_day = "";
-            foreach ($data as $result) {
-                $pay_day = $result->pay_date;
-            }
-            $pay_date_this_week = date('Y-m-d', strtotime($pay_day . ' this week', strtotime($week_convert)));
-
-            $start_date_view = $pay_date_this_week;
-            $end_date_view = date('Y-m-d', strtotime($pay_date_this_week . ' + 6 days'));
-            if ($week_convert < $pay_date_this_week) {
-                $start_date_view = date('Y-m-d', strtotime($pay_date_this_week . ' - 7 days'));
-                $end_date_view = date('Y-m-d', strtotime($pay_date_this_week . ' - 1 days'));
-            }
-
-
-            $week_check = array();
-            $week_dates = array();
-
-            $display = "";
-
-            $display_tbody= '<tbody>';
-            $display_tbody .= '<tr role="row">';
-            $display_tbody .= '</tr>';
-            $display_tbody .= '</tbody>';
-
-            $display .= '<thead>';
-            $display .= '<tr role="row">';
-            $week_ctr=0;
-            for ($ctr = $start_date_view; $ctr <=  $end_date_view;) {
-                $display .= '<th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">' . strtoupper(date('D', strtotime($ctr)))  . '<br>' . date('M d', strtotime($ctr)) . '</th>';
-                $week_dates[$week_ctr] = $week_check[$week_ctr] =  date('Y-m-d', strtotime($ctr));
-                $week_ctr++;
-                $ctr = date('Y-m-d', strtotime($ctr . ' + 1 day'));
-            }
-            $week_check[$week_ctr] = date('Y-m-d', strtotime($ctr));
-            $display .= '</tr>';
-            $display .= '</thead>'.$display_tbody;
-        } else {
-            $date_this_week = array(
-                "Monday" => date("M d", strtotime('monday this week', strtotime($week_convert))),
-                "Tuesday" => date("M d", strtotime('tuesday this week', strtotime($week_convert))),
-                "Wednesday" => date("M d", strtotime('wednesday this week', strtotime($week_convert))),
-                "Thursday" => date("M d", strtotime('thursday this week', strtotime($week_convert))),
-                "Friday" => date("M d", strtotime('friday this week', strtotime($week_convert))),
-                "Saturday" => date("M d", strtotime('saturday this week', strtotime($week_convert))),
-                "Sunday" => date("M d", strtotime('sunday this week', strtotime($week_convert))),
-            );
-            $week_check = array(
-                0 => date("Y-m-d", strtotime('monday this week', strtotime($week_convert))),
-                1 => date("Y-m-d", strtotime('tuesday this week', strtotime($week_convert))),
-                2 => date("Y-m-d", strtotime('wednesday this week', strtotime($week_convert))),
-                3 => date("Y-m-d", strtotime('thursday this week', strtotime($week_convert))),
-                4 => date("Y-m-d", strtotime('friday this week', strtotime($week_convert))),
-                5 => date("Y-m-d", strtotime('saturday this week', strtotime($week_convert))),
-                6 => date("Y-m-d", strtotime('sunday this week', strtotime($week_convert))),
-                7 => date("Y-m-d", strtotime('monday next week', strtotime($week_convert))),
-            );
-            $week_dates = array(
-                0 => date("Y-m-d", strtotime('monday this week', strtotime($week_convert))),
-                1 => date("Y-m-d", strtotime('tuesday this week', strtotime($week_convert))),
-                2 => date("Y-m-d", strtotime('wednesday this week', strtotime($week_convert))),
-                3 => date("Y-m-d", strtotime('thursday this week', strtotime($week_convert))),
-                4 => date("Y-m-d", strtotime('friday this week', strtotime($week_convert))),
-                5 => date("Y-m-d", strtotime('saturday this week', strtotime($week_convert))),
-                6 => date("Y-m-d", strtotime('sunday this week', strtotime($week_convert))),
-            );
-           
-            $display = "";
-            $display .= '<thead>';
-            $display .= '<tr role="row">';
-
-
-            $display .= '<th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Monday<br>' . $date_this_week['Monday'] . '</th>';
-            $display .= '<th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Tuesday<br>' . $date_this_week['Tuesday'] . '</th>';
-            $display .= '<th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Wednesday<br>' . $date_this_week['Wednesday'] . '</th>';
-            $display .= '<th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Thursday<br>' . $date_this_week['Thursday'] . '</th>';
-            $display .= '<th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Friday<br>' . $date_this_week['Friday'] . '</th>';
-            $display .= '<th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Saturday<br>' . $date_this_week['Saturday'] . '</th>';
-            $display .= '<th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Sunday<br>' . $date_this_week['Sunday'] . '</th>';
-            $display .= '</tr>';
-            $display .= '</thead>';
-            
-        }
-
-        
+        $date_this_week = array(
+            "Monday" => date("M d", strtotime('monday this week', strtotime($week_convert))),
+            "Tuesday" => date("M d", strtotime('tuesday this week', strtotime($week_convert))),
+            "Wednesday" => date("M d", strtotime('wednesday this week', strtotime($week_convert))),
+            "Thursday" => date("M d", strtotime('thursday this week', strtotime($week_convert))),
+            "Friday" => date("M d", strtotime('friday this week', strtotime($week_convert))),
+            "Saturday" => date("M d", strtotime('saturday this week', strtotime($week_convert))),
+            "Sunday" => date("M d", strtotime('sunday this week', strtotime($week_convert))),
+        );
+        $week_check = array(
+            0 => date("Y-m-d", strtotime('monday this week', strtotime($week_convert))),
+            1 => date("Y-m-d", strtotime('tuesday this week', strtotime($week_convert))),
+            2 => date("Y-m-d", strtotime('wednesday this week', strtotime($week_convert))),
+            3 => date("Y-m-d", strtotime('thursday this week', strtotime($week_convert))),
+            4 => date("Y-m-d", strtotime('friday this week', strtotime($week_convert))),
+            5 => date("Y-m-d", strtotime('saturday this week', strtotime($week_convert))),
+            6 => date("Y-m-d", strtotime('sunday this week', strtotime($week_convert))),
+            7 => date("Y-m-d", strtotime('monday next week', strtotime($week_convert))),
+        );
+        $week_dates = array(
+            0 => date("Y-m-d", strtotime('monday this week', strtotime($week_convert))),
+            1 => date("Y-m-d", strtotime('tuesday this week', strtotime($week_convert))),
+            2 => date("Y-m-d", strtotime('wednesday this week', strtotime($week_convert))),
+            3 => date("Y-m-d", strtotime('thursday this week', strtotime($week_convert))),
+            4 => date("Y-m-d", strtotime('friday this week', strtotime($week_convert))),
+            5 => date("Y-m-d", strtotime('saturday this week', strtotime($week_convert))),
+            6 => date("Y-m-d", strtotime('sunday this week', strtotime($week_convert))),
+        );
         $remarks = array();
         $shift_dates = array();
         $dates_founds = array();
@@ -4758,7 +4369,7 @@ class Timesheet extends MY_Controller
                 }
                 $minutes_late = 0;
                 if ($shift_start != '') {
-                    $minutes_late = $this->get_differenct_of_dates($shift_start, $checkin_time, true) * 60;
+                    $minutes_late = $this->get_differenct_of_dates($shift_start, $checkin_time) * 60;
                 }
                 $date_user = date('Y-m-d', strtotime($this->datetime_zone_converter($checkin_time, "UTC", $this->session->userdata('usertimezone'))));
                 $date_found = false;
@@ -4780,14 +4391,14 @@ class Timesheet extends MY_Controller
                 if ($found) {
                     if (!$date_found) {
                         $dates_founds[] = $date_user;
-                        if (intval($minutes_late) > 0) {
+                        if ($minutes_late > 0) {
                             $remarks[] = '<label style="font-size:12px; color:red;">L</label> ';
                         } else {
                             $remarks[] = 'P ';
                         }
                         $remarks_ctr++;
                     } else {
-                        if (intval($minutes_late) > 0) {
+                        if ($minutes_late > 0) {
                             $remarks[$ctr_found] = '<label style="font-size:12px; color:red;">L</label> ';
                         } else {
                             $remarks[$ctr_found] = 'P ';
@@ -4859,7 +4470,18 @@ class Timesheet extends MY_Controller
                 }
             }
         }
-
+        $display = "";
+        $display .= '<thead>';
+        $display .= '<tr role="row">';
+        $display .= '<th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;"> Monday<br>' . $date_this_week['Monday'] . '</th>';
+        $display .= '<th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Tuesday<br>' . $date_this_week['Tuesday'] . '</th>';
+        $display .= '<th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Wednesday<br>' . $date_this_week['Wednesday'] . '</th>';
+        $display .= '<th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Thursday<br>' . $date_this_week['Thursday'] . '</th>';
+        $display .= '<th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Friday<br>' . $date_this_week['Friday'] . '</th>';
+        $display .= '<th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Saturday<br>' . $date_this_week['Saturday'] . '</th>';
+        $display .= '<th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Sunday<br>' . $date_this_week['Sunday'] . '</th>';
+        $display .= '</tr>';
+        $display .= '</thead>';
         $display .= '<tbody>';
         $display .= '<tr role="row">';
         if ($remarks_ctr > 0) {
@@ -4871,7 +4493,6 @@ class Timesheet extends MY_Controller
         }
         $display .= '</tr>';
         $display .= '</tbody>';
-
         $data = new stdClass();
         $data->display = $display;
         $data->shift_dates = $shift_dates;
@@ -5138,15 +4759,14 @@ class Timesheet extends MY_Controller
         $report_privacy = $this->timesheet_model->get_timesheet_report_privacy(logged("company_id"));
         $this->page_data['report_privacy'] = $report_privacy;
         $this->page_data['report_settings'] = $this->timesheet_model->get_saved_timezone(logged("id"));
-        $this->page_data['report_privacy_updated'] = $this->datetime_zone_converter($report_privacy->datetime_updated, "UTC", $this->session->userdata("usertimezone"));
+        $this->page_data['report_privacy_updated'] = $this->datetime_zone_converter($report_privacy->datetime_updated,"UTC",$this->session->userdata("usertimezone"));
         $this->load->view('users/timesheet_settings', $this->page_data);
     }
     public function get_saved_timezone()
     {
         $current_saved = $this->timesheet_model->get_saved_timezone(logged('id'));
-        $current_tz = $this->input->post(
-            'usertimezone'
-        );
+        $current_tz = $this->input->post('usertimezone'
+    );
         $data = new stdClass();
         $data->hasSet = false;
         if (count($current_saved) > 0) {
@@ -5156,8 +4776,8 @@ class Timesheet extends MY_Controller
                 $data->timezone_display_name = $saved_tz->timezone_id;
                 $data->timezone_id_of_tz = $saved_tz->id_of_timezone;
                 $data->subscribed = $saved_tz->subscribed;
-                $data->sched_day = explode(",", $saved_tz->schedule_day);
-                $data->sched_time = date('H:i:s', strtotime($this->datetime_zone_converter(date('Y-m-d') . " " . $saved_tz->schedule_time, 'UTC', $saved_tz->id_of_timezone)));;
+                $data->sched_day = explode(",",$saved_tz->schedule_day);
+                $data->sched_time = date('H:i:s',strtotime($this->datetime_zone_converter(date('Y-m-d')." ".$saved_tz->schedule_time,'UTC',$saved_tz->id_of_timezone)));;
                 $data->report_series = $saved_tz->report_series;
                 $data->email_report = $saved_tz->email_report;
             }
@@ -5178,27 +4798,26 @@ class Timesheet extends MY_Controller
     {
         $timezone_id = $this->input->post("tz_display_name");
         $user_id = logged('id');
-        $subscribe = $this->input->post("subscribe") . "";
+        $subscribe = $this->input->post("subscribe")."";
         $report_series = $this->input->post("report_series");
-        $sched_day = $this->input->post("sched_day");
+        $sched_day=$this->input->post("sched_day");
         $tz_id_of_tz = $this->input->post("tz_id_of_tz");
         $email_report = $this->input->post("email_report");
-        $sched_time = date('H:i:s', strtotime($this->datetime_zone_converter(date('Y-m-d') . " " . $this->input->post("sched_time"), $tz_id_of_tz, 'UTC')));
-        if ($subscribe == "true") {
-            $sub_val = 1;
-        } else {
-            $sub_val = 0;
+        $sched_time= date('H:i:s',strtotime($this->datetime_zone_converter(date('Y-m-d')." ".$this->input->post("sched_time"),$tz_id_of_tz,'UTC')));
+        if($subscribe == "true"){
+            $sub_val=1;
+        }else{
+            $sub_val=0;
         }
-        $this->timesheet_model->save_timezone_changes($timezone_id, $user_id, $sub_val, $report_series, $sched_day, $sched_time, $email_report);
+        $this->timesheet_model->save_timezone_changes($timezone_id, $user_id,$sub_val,$report_series,$sched_day,$sched_time,$email_report);
 
-        $est_wage_privacy = $this->input->post("est_wage_privacy") . "";
+        $est_wage_privacy = $this->input->post("est_wage_privacy")."";
         $company_id = logged('company_id');
         $date_time_now = date("Y-m-d H:i:s");
         $est_wage_private = 0;
-        if ($est_wage_privacy == "true") {
+        if($est_wage_privacy == "true"){
             $est_wage_private = 1;
         }
-
         $this->timesheet_model->save_est_wage_privacy($est_wage_private, $company_id, $date_time_now, $user_id);
 
         echo json_encode("saved");
@@ -5211,18 +4830,17 @@ class Timesheet extends MY_Controller
         $next_report_date = date('M d D h:i A', strtotime($date_converted));
         echo json_encode($next_report_date);
     }
-    public function timesheet_save_current_geo_location()
-    {
-        $table_id = $this->input->post("table_id");
-        $table_name = $this->input->post("table_name");
-        $lat = $this->input->post("lat");
-        $lng = $this->input->post("lng");
-        $formatted_address = $this->input->post("formatted_address");
+    public function timesheet_save_current_geo_location(){
+        $table_id= $this->input->post("table_id");
+        $table_name= $this->input->post("table_name");
+        $lat= $this->input->post("lat");
+        $lng= $this->input->post("lng");
+        $formatted_address= $this->input->post("formatted_address");
         $update = array(
-            "user_location" => $lat . "," . $lng,
+            "user_location" => $lat.",".$lng,
             "user_location_address" => $formatted_address,
         );
-        $this->timesheet_model->save_current_geo_location($table_name, $table_id, $update);
+        $this->timesheet_model->save_current_geo_location($table_name,$table_id,$update);
         echo json_encode("saved");
     }
 }

@@ -5,15 +5,9 @@ class Widgets_model extends MY_Model {
     
     function loadTechLeaderboard($comp_id)
     {
-        $this->db->from('users');
-        $this->db->select('users.id,users.FName,users.LName,count(*) as totalJobs');
-        $this->db->where('users.company_id', $comp_id);
-        $this->db->join('jobs', 'jobs.employee_id = users.id','right');
-        $this->db->where('jobs.status', 'Completed');
-        $this->db->group_by('jobs.employee_id');
-        $this->db->order_by('totalJobs', 'DESC');
-        return $this->db->get()->result();
-
+        $this->db->where('company_id', $comp_id);
+        $this->db->where('role', 7);
+        return $this->db->get('users')->result();
     }
     
     function getOverdueInvoices($comp_id)
@@ -28,21 +22,7 @@ class Widgets_model extends MY_Model {
     {
         $this->db->where('company_id' , getLoggedCompanyID());
         return $this->db->get('job_tags')->result();
-    }
-
-    function rawGetTagsWithCount($company_id)
-    {
-        $sql = '
-            SELECT jt.`id`,jt.`name`,jt.`company_id`, (
-                SELECT COUNT(*)
-              FROM jobs j 
-              WHERE j.tags = jt.id
-            )AS total_job_tags 
-            FROM job_tags jt 
-            WHERE jt.company_id = '.$company_id.'
-        ';
-        $query = $this->db->query($sql);
-        return $query->result();
+        
     }
     
     function getLeadSource($comp_id)

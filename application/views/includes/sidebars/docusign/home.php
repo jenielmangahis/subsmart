@@ -44,7 +44,7 @@
             <img src="<?=getCompanyBusinessProfileImage();?>" class="company-logo"/>
         </li>
 
-        <li class="nav-header" style="padding-top: 0px;margin-top: 0px;">eSign</li>
+        <li class="nav-header" style="padding-top: 0px;margin-top: 0px;">DOCUSIGN</li>
 
         <li class="submenus">
             <a href="<?=base_url('esign/Files')?>" title="New">
@@ -52,12 +52,12 @@
         </li>
 
         <li class="submenus">
-            <a href="<?=base_url('eSign/manage')?>?view=inbox" title="Inbox">
+            <a href="<?=base_url('DocuSign/manage')?>?view=inbox" title="Inbox">
             <span class="fa fa-inbox"></span>Manage</a>
         </li>
 
         <li class="submenus">
-            <a href="<?=base_url('eSign/manage')?>?view=sent" title="Sent">
+            <a href="<?=base_url('DocuSign/manage')?>?view=sent" title="Sent">
             <span class="fa fa-pencil"></span>Templates</a>
         </li>
     </ul>

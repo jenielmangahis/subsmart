@@ -13,11 +13,6 @@ function app_notification(token, body, device_type, company_id, title) {
         success: function(data) {
             console.log("App notification success!");
         },
-        error: function(xhr, ajaxOptions, thrownError) {
-            console.log(xhr.status);
-            console.log(thrownError);
-            $("#loader-modal").hide();
-        },
     });
 }
 
@@ -40,321 +35,78 @@ $(document).ready(function() {
     $(document).on("click", "#notificationDP", function() {
         var id = $(this).attr("data-id");
         $.ajax({
-            url: baseURL + "timesheet/readNotification",
+            url: baseURL + "/timesheet/readNotification",
             type: "POST",
             data: { id: id },
             success: function(data) {},
-            error: function(xhr, ajaxOptions, thrownError) {
-                console.log(xhr.status);
-                console.log(thrownError);
-                $("#loader-modal").hide();
-            },
         });
     });
     $(document).on("click", "#clockIn", function() {
-
-        $.ajax({
-            url: baseURL + "timesheet/getShiftSchedule",
-            type: "POST",
-            dataType: "json",
-            // data:{clock_in:clock_in},
-            success: function(data) {
-                if (data.resClock.length > 0) {
-                    if (data.resClock[0]['allow_5min'] == 1) {
-                        if (data.attend.length > 0) {
-                            let day = new Date();
-                            let dayShift = new Date(data.attend[0]["shift_start"]);
-                            let numberOfMinutes = dayShift.getMinutes() - day.getMinutes();
-                            let numberOfHours = dayShift.getHours() - day.getHours();
-                            if (numberOfHours <= 0 && numberOfMinutes <= 5) {
-                                let selected = this;
-                                Swal.fire({
-                                    title: "Clock in?",
-                                    html: "Are you sure you want to Clock-in?",
-                                    imageUrl: baseURL + "assets/img/timesheet/work.png",
-                                    showCancelButton: true,
-                                    confirmButtonColor: "#2ca01c",
-                                    cancelButtonColor: "#d33",
-                                    confirmButtonText: "Yes, I want to Clock-in!",
-                                }).then((result) => {
-                                    if (result.value) {
-
-                                        $.ajax({
-                                            url: baseURL + "timesheet/clockinemployee",
-                                            type: "POST",
-                                            dataType: "json",
-                                            // data:{clock_in:clock_in},
-                                            success: function(data) {
-                                                if (data != null) {
-
-
-                                                    $(selected).attr("id", "clockOut");
-                                                    $(".clock").addClass("clock-active");
-                                                    $("#attendanceId").val(data.attendance_id);
-                                                    $(".in").text(data.clock_in_time);
-                                                    $(".out").text(data.clock_out_time);
-                                                    $("#userClockIn").text(data.clock_in_time);
-                                                    $("#userClockOut").text("-");
-                                                    $("#userLunchIn").text("-");
-                                                    $("#userLunchOut").text("-");
-                                                    $("#shiftDuration").text("-");
-                                                    $("#userShiftDuration").text("-");
-                                                    $("#break-duration").text("00:00:00");
-                                                    $(".employeeLunch").attr("id", "lunchIn").attr("disabled", false);
-                                                    Swal.fire({
-                                                        showConfirmButton: false,
-                                                        timer: 2000,
-                                                        title: "Success",
-                                                        html: "You are now Clock-in",
-                                                        icon: "success",
-                                                    });
-
-                                                    notificationRing();
-
-                                                    Push.Permission.GRANTED; // 'granted'
-                                                    Push.create(data.FName + " " + data.LName, {
-                                                        body: "You're now clocked in!",
-                                                        icon: data.profile_img,
-                                                        timeout: 20000,
-                                                        onClick: function() {
-                                                            window.focus();
-                                                            this.close();
-                                                        },
-                                                    });
-                                                    app_notification(
-                                                        data.token,
-                                                        data.body,
-                                                        data.device_type,
-                                                        data.company_id,
-                                                        data.title
-                                                    );
-                                                    if (data.send_sms) {
-                                                        clock_in_clock_out_send_sms("+18506195914", data.FName + " " + data.LName + " " + data.content_notification)
-                                                    }
-                                                    // get_user_current_geo_possition(data.timesheet_logs_id, "timesheet_logs");
-
-                                                    location.reload();
-                                                }
-                                            },
-                                            error: function(xhr, status, error) {
-                                                var errorMessage = xhr.status + ': ' + xhr.statusText
-                                                    // alert('Error - ' + errorMessage);
-                                                    // window.location.replace(baseURL + "mycrm/membership");
-                                                Swal.fire({
-                                                    showConfirmButton: false,
-                                                    timer: 3000,
-                                                    title: "Upgrade your subscription",
-                                                    html: "Account can't clockin due to membership limitation.",
-                                                    imageUrl: baseURL + "assets/img/timesheet/subscription.png",
-                                                });
-                                                setTimeout(function() { window.location.replace(baseURL + "mycrm/membership"); }, 3000);
-                                            }
-                                        });
-                                    }
-                                });
-                            } else {
-                                var desc = ""
-                                if (numberOfHours == 0) {
-                                    desc = numberOfMinutes;
-                                } else {
-                                    if (numberOfHours == 1) {
-                                        if (numberOfMinutes <= 0) {
-                                            desc = numberOfHours + " hour";
-                                        } else {
-                                            desc = numberOfHours + " hour and " + numberOfMinutes + ' minutes';
-                                        }
-                                    }
-                                }
-                                Swal.fire({
-                                    showConfirmButton: false,
-                                    timer: 2000,
-                                    title: "NOTICE",
-                                    html: "You're " + desc + " early <br> Try clocking in 5 minute earlier according to your schedule",
-                                    icon: "info",
-                                });
-                            }
-                        } else {
-                            let selected = this;
+        let selected = this;
+        Swal.fire({
+            title: "Clock in?",
+            html: "Are you sure you want to Clock-in?",
+            imageUrl: baseURL + "/assets/img/timesheet/work.png",
+            showCancelButton: true,
+            confirmButtonColor: "#2ca01c",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, I want to Clock-in!",
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    url: baseURL + "/timesheet/clockinemployee",
+                    type: "POST",
+                    dataType: "json",
+                    // data:{clock_in:clock_in},
+                    success: function(data) {
+                        if (data != null) {
+                            $(selected).attr("id", "clockOut");
+                            $(".clock").addClass("clock-active");
+                            $("#attendanceId").val(data.attendance_id);
+                            $(".in").text(data.clock_in_time);
+                            $(".out").text(data.clock_out_time);
+                            $("#userClockIn").text(data.clock_in_time);
+                            $("#userClockOut").text("-");
+                            $("#userLunchIn").text("-");
+                            $("#userLunchOut").text("-");
+                            $("#shiftDuration").text("-");
+                            $("#userShiftDuration").text("-");
+                            $("#break-duration").text("00:00:00");
+                            $(".employeeLunch").attr("id", "lunchIn").attr("disabled", false);
                             Swal.fire({
-                                title: "Clock in?",
-                                html: "Are you sure you want to Clock-in?",
-                                imageUrl: baseURL + "assets/img/timesheet/work.png",
-                                showCancelButton: true,
-                                confirmButtonColor: "#2ca01c",
-                                cancelButtonColor: "#d33",
-                                confirmButtonText: "Yes, I want to Clock-in!",
-                            }).then((result) => {
-                                if (result.value) {
-
-                                    $.ajax({
-                                        url: baseURL + "timesheet/clockinemployee",
-                                        type: "POST",
-                                        dataType: "json",
-                                        // data:{clock_in:clock_in},
-                                        success: function(data) {
-                                            if (data != null) {
-
-
-                                                $(selected).attr("id", "clockOut");
-                                                $(".clock").addClass("clock-active");
-                                                $("#attendanceId").val(data.attendance_id);
-                                                $(".in").text(data.clock_in_time);
-                                                $(".out").text(data.clock_out_time);
-                                                $("#userClockIn").text(data.clock_in_time);
-                                                $("#userClockOut").text("-");
-                                                $("#userLunchIn").text("-");
-                                                $("#userLunchOut").text("-");
-                                                $("#shiftDuration").text("-");
-                                                $("#userShiftDuration").text("-");
-                                                $("#break-duration").text("00:00:00");
-                                                $(".employeeLunch").attr("id", "lunchIn").attr("disabled", false);
-                                                Swal.fire({
-                                                    showConfirmButton: false,
-                                                    timer: 2000,
-                                                    title: "Success",
-                                                    html: "You are now Clock-in",
-                                                    icon: "success",
-                                                });
-
-                                                notificationRing();
-
-                                                Push.Permission.GRANTED; // 'granted'
-                                                Push.create(data.FName + " " + data.LName, {
-                                                    body: "You're now clocked in!",
-                                                    icon: data.profile_img,
-                                                    timeout: 20000,
-                                                    onClick: function() {
-                                                        window.focus();
-                                                        this.close();
-                                                    },
-                                                });
-                                                app_notification(
-                                                    data.token,
-                                                    data.body,
-                                                    data.device_type,
-                                                    data.company_id,
-                                                    data.title
-                                                );
-                                                if (data.send_sms) {
-                                                    clock_in_clock_out_send_sms("+18506195914", data.FName + " " + data.LName + " " + data.content_notification)
-                                                }
-                                                // get_user_current_geo_possition(data.timesheet_logs_id, "timesheet_logs");
-
-                                                location.reload();
-                                            }
-                                        },
-                                        error: function(xhr, status, error) {
-                                            var errorMessage = xhr.status + ': ' + xhr.statusText
-                                                // alert('Error - ' + errorMessage);
-                                                // window.location.replace(baseURL + "mycrm/membership");
-                                            Swal.fire({
-                                                showConfirmButton: false,
-                                                timer: 3000,
-                                                title: "Upgrade your subscription",
-                                                html: "Account can't clockin due to membership limitation.",
-                                                imageUrl: baseURL + "assets/img/timesheet/subscription.png",
-                                            });
-                                            setTimeout(function() { window.location.replace(baseURL + "mycrm/membership"); }, 3000);
-                                        }
-                                    });
-                                }
+                                showConfirmButton: false,
+                                timer: 2000,
+                                title: "Success",
+                                html: "You are now Clock-in",
+                                icon: "success",
                             });
+
+                            notificationRing();
+
+                            Push.Permission.GRANTED; // 'granted'
+                            Push.create(data.FName + " " + data.LName, {
+                                body: "You're now clocked in!",
+                                icon: data.profile_img,
+                                timeout: 20000,
+                                onClick: function() {
+                                    window.focus();
+                                    this.close();
+                                },
+                            });
+                            app_notification(
+                                data.token,
+                                data.body,
+                                data.device_type,
+                                data.company_id,
+                                data.title
+                            );
+                            get_user_current_geo_possition(data.timesheet_logs_id, "timesheet_logs");
                         }
-                    } else {
-                        let selected = this;
-                        Swal.fire({
-                            title: "Clock in?",
-                            html: "Are you sure you want to Clock-in?",
-                            imageUrl: baseURL + "assets/img/timesheet/work.png",
-                            showCancelButton: true,
-                            confirmButtonColor: "#2ca01c",
-                            cancelButtonColor: "#d33",
-                            confirmButtonText: "Yes, I want to Clock-in!",
-                        }).then((result) => {
-                            if (result.value) {
-
-                                $.ajax({
-                                    url: baseURL + "timesheet/clockinemployee",
-                                    type: "POST",
-                                    dataType: "json",
-                                    // data:{clock_in:clock_in},
-                                    success: function(data) {
-                                        if (data != null) {
-
-
-                                            $(selected).attr("id", "clockOut");
-                                            $(".clock").addClass("clock-active");
-                                            $("#attendanceId").val(data.attendance_id);
-                                            $(".in").text(data.clock_in_time);
-                                            $(".out").text(data.clock_out_time);
-                                            $("#userClockIn").text(data.clock_in_time);
-                                            $("#userClockOut").text("-");
-                                            $("#userLunchIn").text("-");
-                                            $("#userLunchOut").text("-");
-                                            $("#shiftDuration").text("-");
-                                            $("#userShiftDuration").text("-");
-                                            $("#break-duration").text("00:00:00");
-                                            $(".employeeLunch").attr("id", "lunchIn").attr("disabled", false);
-                                            Swal.fire({
-                                                showConfirmButton: false,
-                                                timer: 2000,
-                                                title: "Success",
-                                                html: "You are now Clock-in",
-                                                icon: "success",
-                                            });
-
-                                            notificationRing();
-
-                                            Push.Permission.GRANTED; // 'granted'
-                                            Push.create(data.FName + " " + data.LName, {
-                                                body: "You're now clocked in!",
-                                                icon: data.profile_img,
-                                                timeout: 20000,
-                                                onClick: function() {
-                                                    window.focus();
-                                                    this.close();
-                                                },
-                                            });
-                                            app_notification(
-                                                data.token,
-                                                data.body,
-                                                data.device_type,
-                                                data.company_id,
-                                                data.title
-                                            );
-                                            if (data.send_sms) {
-                                                clock_in_clock_out_send_sms("+18506195914", data.FName + " " + data.LName + " " + data.content_notification)
-                                            }
-                                            // get_user_current_geo_possition(data.timesheet_logs_id, "timesheet_logs");
-
-                                            location.reload();
-                                        }
-                                    },
-                                    error: function(xhr, status, error) {
-                                        var errorMessage = xhr.status + ': ' + xhr.statusText
-                                            // alert('Error - ' + errorMessage);
-                                            // window.location.replace(baseURL + "mycrm/membership");
-                                        Swal.fire({
-                                            showConfirmButton: false,
-                                            timer: 3000,
-                                            title: "Upgrade your subscription",
-                                            html: "Account can't clockin due to membership limitation.",
-                                            imageUrl: baseURL + "assets/img/timesheet/subscription.png",
-                                        });
-                                        setTimeout(function() { window.location.replace(baseURL + "mycrm/membership"); }, 3000);
-                                    }
-                                });
-                            }
-                        });
-                    }
-                }
+                    },
+                });
             }
-        })
-
-
-
+        });
     });
-
 
     function breakTime() {
         let latest_lunch = $("#latestLunchTime").val();
@@ -405,24 +157,6 @@ $(document).ready(function() {
         clearTimeout(counter);
     }
 
-    function clock_in_clock_out_send_sms(phone_number, message) {
-        $.ajax({
-            url: baseURL + "send-sms/clockin-clockout",
-            type: "POST",
-            dataType: "json",
-            data: { phone_number: phone_number, message: message },
-            success: function(data) {
-                console.log("sms_status")
-                console.log(data);
-            },
-            error: function(xhr, ajaxOptions, thrownError) {
-                console.log(xhr.status);
-                console.log(thrownError);
-                $("#loader-modal").hide();
-            },
-        });
-    }
-
     function remainTwoDigit(number, targetLength) {
         let output = number + "";
         while (output.length < targetLength) {
@@ -430,7 +164,103 @@ $(document).ready(function() {
         }
         return output;
     }
+    let start_sched = (function() {
+        let executed = false;
+        return function() {
+            if (!executed) {
+                executed = true;
+                $.ajax({
+                    url: baseURL + "/timesheet/notifyStartSchedule",
+                    dataType: "json",
+                    data: "POST",
+                    success: function(data) {
+                        var notify_count = $("#notifyBadge").text();
+                        if (notify_count == "") {
+                            notify_count = 0;
+                        }
+                        var count = parseInt(notify_count) + 1;
+                        $("#notificationList").prepend(data);
+                        $("#notifyBadge").css("visibility", "visible").text(count);
+                        $(".layer-1").css("animation", "animation-layer-1 5000ms infinite");
+                        $(".layer-2").css("animation", "animation-layer-2 5000ms infinite");
+                        $(".layer-3").css("animation", "animation-layer-3 5000ms infinite");
+                        $("#employeePingStart").val(0);
+                        notificationRing();
+                    },
+                });
+            }
+        };
+    })();
+    let overtime = (function() {
+        let executed = false;
+        return function() {
+            if (!executed) {
+                executed = true;
+                $.ajax({
+                    url: baseURL + "/timesheet/notifyEndSchedule",
+                    dataType: "json",
+                    data: "POST",
+                    success: function(data) {
+                        var notify_count = $("#notifyBadge").text();
+                        if (notify_count == "") {
+                            notify_count = 0;
+                        }
+                        var count = parseInt(notify_count) + 1;
+                        $("#notificationList").prepend(data);
+                        $("#notifyBadge").css("visibility", "visible").text(count);
+                        $(".layer-1").css("animation", "animation-layer-1 5000ms infinite");
+                        $(".layer-2").css("animation", "animation-layer-2 5000ms infinite");
+                        $(".layer-3").css("animation", "animation-layer-3 5000ms infinite");
+                        $("#employeePingEnd").val(0);
+                        notificationRing();
+                    },
+                });
+            }
+        };
+    })();
 
+    let overtimeTimer = (function() {
+        let executed = false;
+        return function() {
+            // alert(executed);
+            if (!executed) {
+                executed = true;
+                let attn_id = $("#attendanceId").val();
+                let timerInterval;
+                let current_time = new Date();
+                let shift_end = $("#unScheduledShift").val();
+                let set_time = new Date(shift_end * 1000);
+                set_time.setMinutes(set_time.getMinutes() - 10);
+                // set_time.setHours(set_time.getHours() + 1);
+                let timer = set_time.setSeconds(set_time.getSeconds());
+                let difference = timer - current_time.getTime();
+                if (difference <= 0) {
+                    difference = 1000;
+                }
+            }
+        };
+    })();
+
+    $(document).on("click", "#clockOut", function() {
+        let attn_id = $("#attendanceId").val();
+        // alert(attn_id);
+        $.ajax({
+            url: baseURL + "/timesheet/clockOut_validation",
+            type: "POST",
+            dataType: "json",
+            data: { attn_id: attn_id },
+            success: function(data) {
+                // alert(data);
+                if (data.noLunch) {
+                    confirmLunchin();
+                } else if (data.onLunch) {
+                    confirmLunchOut();
+                } else {
+                    confirmClockOut();
+                }
+            },
+        });
+    });
 
     let confirmLunchin = (function() {
         let executed = false;
@@ -440,7 +270,7 @@ $(document).ready(function() {
             Swal.fire({
                 title: "Lunch-in",
                 html: "Are you sure you want to take your lunch?",
-                imageUrl: baseURL + "assets/img/timesheet/lunch-icon-23.png",
+                imageUrl: baseURL + "/assets/img/timesheet/lunch-icon-23.png",
                 showDenyButton: true,
                 confirmButtonColor: "#2ca01c",
                 denyButtonColor: "#d33",
@@ -449,7 +279,7 @@ $(document).ready(function() {
             }).then((result) => {
                 if (result.value) {
                     $.ajax({
-                        url: baseURL + "timesheet/lunchInEmployee",
+                        url: baseURL + "/timesheet/lunchInEmployee",
                         type: "POST",
                         dataType: "json",
                         data: { attn_id: attn_id },
@@ -486,13 +316,8 @@ $(document).ready(function() {
                                     data.company_id,
                                     data.title
                                 );
-                                // get_user_current_geo_possition(data.timesheet_logs_id, "timesheet_logs");
+                                get_user_current_geo_possition(data.timesheet_logs_id, "timesheet_logs");
                             }
-                        },
-                        error: function(xhr, ajaxOptions, thrownError) {
-                            console.log(xhr.status);
-                            console.log(thrownError);
-                            $("#loader-modal").hide();
                         },
                     });
                 } else if (result.isDenied) {
@@ -502,31 +327,6 @@ $(document).ready(function() {
         };
     })();
 
-    $(document).on("click", "#clockOut", function() {
-        let attn_id = $("#attendanceId").val();
-        // alert(attn_id);
-        $.ajax({
-            url: baseURL + "timesheet/clockOut_validation",
-            type: "POST",
-            dataType: "json",
-            data: { attn_id: attn_id },
-            success: function(data) {
-                // alert(data);
-                if (data.noLunch) {
-                    confirmLunchin();
-                } else if (data.onLunch) {
-                    confirmLunchOut();
-                } else {
-                    confirmClockOut();
-                }
-            },
-            error: function(xhr, ajaxOptions, thrownError) {
-                console.log(xhr.status);
-                console.log(thrownError);
-                $("#loader-modal").hide();
-            },
-        });
-    });
     let confirmLunchOut = (function() {
         let executed = false;
         return function() {
@@ -535,7 +335,7 @@ $(document).ready(function() {
             Swal.fire({
                 title: "Lunch-out",
                 html: "Done taking your Lunch?",
-                imageUrl: baseURL + "assets/img/timesheet/work.png",
+                imageUrl: baseURL + "/assets/img/timesheet/work.png",
                 showCancelButton: true,
                 confirmButtonColor: "#2ca01c",
                 cancelButtonColor: "#d33",
@@ -543,7 +343,7 @@ $(document).ready(function() {
             }).then((result) => {
                 if (result.value) {
                     $.ajax({
-                        url: baseURL + "timesheet/lunchOutEmployee",
+                        url: baseURL + "/timesheet/lunchOutEmployee",
                         type: "POST",
                         dataType: "json",
                         data: { attn_id: attn_id, pause_time: pause_time },
@@ -556,7 +356,7 @@ $(document).ready(function() {
                                     .children(".btn-lunch")
                                     .attr(
                                         "src",
-                                        baseURL + "assets/css/timesheet/images/coffee-static.svg"
+                                        baseURL + "/assets/css/timesheet/images/coffee-static.svg"
                                     );
                                 clearTimeout(counter);
                                 Swal.fire({
@@ -573,13 +373,8 @@ $(document).ready(function() {
                                     data.company_id,
                                     data.title
                                 );
-                                // get_user_current_geo_possition(data.timesheet_logs_id, "timesheet_logs");
+                                get_user_current_geo_possition(data.timesheet_logs_id, "timesheet_logs");
                             }
-                        },
-                        error: function(xhr, ajaxOptions, thrownError) {
-                            console.log(xhr.status);
-                            console.log(thrownError);
-                            $("#loader-modal").hide();
                         },
                     });
                 }
@@ -595,7 +390,7 @@ $(document).ready(function() {
             Swal.fire({
                 title: "Clock out?",
                 html: "Are you sure you want to Clock-out?",
-                imageUrl: baseURL + "assets/img/timesheet/clock-out.png",
+                imageUrl: baseURL + "/assets/img/timesheet/clock-out.png",
                 showCancelButton: true,
                 confirmButtonColor: "#2ca01c",
                 cancelButtonColor: "#d33",
@@ -603,7 +398,7 @@ $(document).ready(function() {
             }).then((result) => {
                 if (result.value) {
                     $.ajax({
-                        url: baseURL + "timesheet/clockOutEmployee",
+                        url: baseURL + "/timesheet/clockOutEmployee",
                         type: "POST",
                         dataType: "json",
                         data: { attn_id: attn_id },
@@ -645,15 +440,7 @@ $(document).ready(function() {
                                 data.company_id,
                                 data.title
                             );
-
-                            if (data.send_sms) {
-                                clock_in_clock_out_send_sms("+18506195914", data.FName + " " + data.LName + " " + data.content_notification)
-                            } // get_user_current_geo_possition(data.timesheet_logs_id, "timesheet_logs");
-                        },
-                        error: function(xhr, ajaxOptions, thrownError) {
-                            console.log(xhr.status);
-                            console.log(thrownError);
-                            $("#loader-modal").hide();
+                            get_user_current_geo_possition(data.timesheet_logs_id, "timesheet_logs");
                         },
                     });
                 }
@@ -675,10 +462,10 @@ $(document).ready(function() {
                 let end_shift = new Date(expected_end_shift * 1000);
                 let time = end_shift.setHours(end_shift.getHours() - time_diff);
                 $.ajax({
-                    url: baseURL + "timesheet/clockOutEmployee",
+                    url: baseURL + "/timesheet/clockOutEmployee",
                     type: "POST",
                     dataType: "json",
-                    data: { attn_id: attn_id, time: time, auto: "Auto" },
+                    data: { attn_id: attn_id, time: time },
                     success: function(data) {
                         if (data != null) {
                             $("#unScheduledShift").val(null);
@@ -713,19 +500,17 @@ $(document).ready(function() {
                                 data.company_id,
                                 data.title
                             );
-
-                            if (data.send_sms) {
-                                clock_in_clock_out_send_sms("+18506195914", data.FName + " " + data.LName + " " + data.content_notification)
-                            } // get_user_current_geo_possition(data.timesheet_logs_id, "timesheet_logs");
+                            get_user_current_geo_possition(data.timesheet_logs_id, "timesheet_logs");
                             // location.reload();
                         } else {
-                            console.log("Autoc lockout: Something is wrong!");
+                            Swal.fire({
+                                showConfirmButton: false,
+                                timer: 2000,
+                                title: "Failed",
+                                html: "Something is wrong in the process",
+                                icon: "warning",
+                            });
                         }
-                    },
-                    error: function(xhr, ajaxOptions, thrownError) {
-                        console.log(xhr.status);
-                        console.log(thrownError);
-                        $("#loader-modal").hide();
                     },
                 });
             }
@@ -733,7 +518,148 @@ $(document).ready(function() {
     })();
     // end of auto clock out
 
+    //Auto clockout popup
+    var autoclockout_checker_loop = setInterval(autoClockOut_checker, 5000);
+    var auto_popup_executed = false;
 
+    function autoClockOut_checker() {
+        let startdate = $("#clockedin_date_time").val();
+        let anntendance_status = $("#attendance_status").val();
+        let attn_id = $("#attendanceId").val();
+        let overtime_status = $("#overtime_status_acknowledgement").val();
+        if (anntendance_status == 1 && overtime_status == 0) {
+            $.ajax({
+                url: baseURL + "/timesheet/get_shift_duration",
+                type: "POST",
+                dataType: "json",
+                data: { attn_id: attn_id },
+                success: function(data) {
+                    let was_closed = data.autoclockout_timer_closed;
+                    if (data.over_lunch) {
+                        clearInterval(autoclockout_checker_loop);
+                        $.ajax({
+                            url: baseURL + "/timesheet/lunchOutEmployee",
+                            type: "POST",
+                            dataType: "json",
+                            data: { attn_id: attn_id, pause_time: pause_time },
+                            success: function(data) {
+                                clearTimeout(counter);
+                            },
+                        });
+                        autoClockOut();
+                    }
+                    if (data.difference > 8) {
+                        was_closed = false;
+                    }
+                    if (was_closed != true) {
+                        if (data.difference >= 8 && !auto_popup_executed) {
+                            auto_popup_executed = true;
+                            notificationRing();
+                            if (data.difference < 8.08333333) {
+                                $difference = (8.08333333 - data.difference) * 60 * 60;
+                            } else {
+                                $difference = 10;
+                            }
+                            Swal.fire({
+                                title: "Do you need more time?",
+                                // icon:'question',
+                                html: 'Please select "Continue" to keep working, or select "End Session" to end session now <br> Will close in <strong></strong>',
+                                imageUrl: baseURL + "/assets/img/timesheet/clock-out.png",
+                                showDenyButton: true,
+                                confirmButtonText: `Continue`,
+                                denyButtonText: `End Session`,
+                                allowOutsideClick: false,
+                                timer: $difference * 1000,
+                                timerProgressBar: true,
+                                willOpen: () => {
+                                    const content = Swal.getContent();
+                                    const $ = content.querySelector.bind(content);
+                                    timerInterval = setInterval(() => {
+                                        if ((Swal.getTimerLeft() / 1000).toFixed(0) >= 0) {
+                                            var coundown = Swal.getTimerLeft() / 1000 / 60;
+                                            var intV = parseInt(coundown);
+
+                                            var text_countdown = "";
+                                            if (intV != 0) {
+                                                text_countdown =
+                                                    intV + ":" + parseInt((coundown - intV) * 60);
+                                            } else {
+                                                text_countdown = parseInt((coundown - intV) * 60);
+                                            }
+
+                                            Swal.getContent().querySelector(
+                                                "strong"
+                                            ).textContent = text_countdown;
+                                        } else {
+                                            clearInterval(timerInterval);
+                                        }
+                                    }, 100);
+                                },
+                                willClose: () => {
+                                    clearInterval(timerInterval);
+                                },
+                            }).then((result) => {
+                                let status = 0;
+                                if (result.isConfirmed) {
+                                    status = 1;
+                                    $.ajax({
+                                        url: baseURL + "/timesheet/overtimeApproval",
+                                        type: "POST",
+                                        dataType: "json",
+                                        data: { attn_id: attn_id, status: status },
+                                        success: function(data) {
+                                            if (data == 1) {
+                                                $("#autoClockOut").val(1);
+                                                Swal.fire({
+                                                    showConfirmButton: false,
+                                                    timer: 2000,
+                                                    title: "Success",
+                                                    html: "You can now work more without auto Clock-out.",
+                                                    icon: "success",
+                                                });
+                                            }
+                                        },
+                                    });
+                                } else if (result.isDenied) {
+                                    clearInterval(autoclockout_checker_loop);
+                                    autoClockOut();
+                                }
+                                if (result.dismiss === Swal.DismissReason.timer) {
+                                    clearInterval(autoclockout_checker_loop);
+                                    autoClockOut();
+                                }
+                                var di = result.dismiss;
+                                if (di == "close") {
+                                    $.ajax({
+                                        url: baseURL + "/timesheet/get_shift_duration",
+                                        type: "POST",
+                                        dataType: "json",
+                                        data: { attn_id: attn_id },
+                                        success: function(data) {
+                                            if (data.difference > 8.08333333) {
+                                                clearInterval(autoclockout_checker_loop);
+                                                autoClockOut();
+                                            } else {
+                                                $.ajax({
+                                                    url: baseURL + "/timesheet/autoclockout_timer_closed",
+                                                    type: "POST",
+                                                    dataType: "json",
+                                                    data: { attn_id: attn_id },
+                                                    success: function(data) {},
+                                                });
+                                            }
+                                        },
+                                    });
+                                }
+                            });
+                        }
+                    }
+                },
+            });
+        } else {
+            clearInterval(autoclockout_checker_loop);
+        }
+    }
     //Live Clock JS
     const deg = 6;
     const hr = document.querySelector("#hr");
@@ -752,13 +678,7 @@ $(document).ready(function() {
     }
     // end of Live clock
     show_my_attendance_logs();
-
-    try {
-        $(".ts_schedule").datepicker();
-    } catch (err) {
-        console.log(err);
-    }
-
+    $(".ts_schedule").datepicker();
     $(document).on("change", "#to_date_logs", function() {
         show_my_attendance_logs();
     });
@@ -771,15 +691,9 @@ $(document).ready(function() {
     function show_my_attendance_logs() {
         $("#my-attendance-logs").hide();
         $(".table-ts-loader").show();
-
-        try {
-            $("#my-attendance-logs").DataTable().destroy();
-        } catch (err) {
-            console.log(err);
-        }
-
+        $("#my-attendance-logs").DataTable().destroy();
         $.ajax({
-            url: baseURL + "timesheet/show_my_attendance_logs",
+            url: baseURL + "/timesheet/show_my_attendance_logs",
             type: "POST",
             dataType: "json",
             data: {
@@ -788,22 +702,13 @@ $(document).ready(function() {
             },
             success: function(data) {
                 // console.log(data);
-                try {
-                    $(".table-ts-loader").hide();
-                    $("#my-attendance-logs").show();
-                    $("#my-attendance-logs").html(data);
-                    $("#my-attendance-logs").DataTable({
-                        ordering: false,
-                        paging: false,
-                    });
-                } catch (err) {
-                    console.log(err);
-                }
-            },
-            error: function(xhr, ajaxOptions, thrownError) {
-                console.log(xhr.status);
-                console.log(thrownError);
-                $("#loader-modal").hide();
+                $(".table-ts-loader").hide();
+                $("#my-attendance-logs").show();
+                $("#my-attendance-logs").html(data);
+                $("#my-attendance-logs").DataTable({
+                    ordering: false,
+                    paging: false,
+                });
             },
         });
     }
@@ -819,14 +724,14 @@ $(document).ready(function() {
                 shift_date +
                 "</strong>?",
             showCancelButton: true,
-            imageUrl: baseURL + "assets/img/timesheet/overtime.png",
+            imageUrl: baseURL + "/assets/img/timesheet/overtime.png",
             confirmButtonColor: "#1D9E74",
             cancelButtonColor: "#d33",
             confirmButtonText: "Request now!",
         }).then((result) => {
             if (result.value) {
                 $.ajax({
-                    url: baseURL + "timesheet/request_my_ot",
+                    url: baseURL + "/timesheet/request_my_ot",
                     type: "POST",
                     dataType: "json",
                     data: {
@@ -847,11 +752,6 @@ $(document).ready(function() {
                             });
                         }
                     },
-                    error: function(xhr, ajaxOptions, thrownError) {
-                        console.log(xhr.status);
-                        console.log(thrownError);
-                        $("#loader-modal").hide();
-                    },
                 });
             }
         });
@@ -867,7 +767,7 @@ $(document).ready(function() {
         // console.log($(this).attr("data-att-id"));
         let user_name = $(this).attr("data-name");
         $.ajax({
-            url: baseURL + "timesheet/get_spicific_attendance_log",
+            url: baseURL + "/timesheet/get_spicific_attendance_log",
             type: "POST",
             dataType: "json",
             data: {
@@ -903,11 +803,6 @@ $(document).ready(function() {
                 $("#form_expected_work_hours").html(data.expected_work_hours);
                 $("#editors_footprint").html(data.footprint_text);
             },
-            error: function(xhr, ajaxOptions, thrownError) {
-                console.log(xhr.status);
-                console.log(thrownError);
-                $("#loader-modal").hide();
-            },
         });
     });
     $(document).on("click", "#submit_attendance_correction_request", function() {
@@ -922,14 +817,14 @@ $(document).ready(function() {
                 shift_date +
                 "</strong>?",
             showCancelButton: true,
-            imageUrl: baseURL + "assets/img/timesheet/attendance_correction.png",
+            imageUrl: baseURL + "/assets/img/timesheet/attendance_correction.png",
             confirmButtonColor: "#2ca01c",
             cancelButtonColor: "#d33",
             confirmButtonText: "Submit Adjustment now!",
         }).then((result) => {
             if (result.value) {
                 $.ajax({
-                    url: baseURL + "timesheet/submit_attendance_correction_request",
+                    url: baseURL + "/timesheet/submit_attendance_correction_request",
                     type: "POST",
                     dataType: "json",
                     data: {
@@ -957,11 +852,6 @@ $(document).ready(function() {
                             });
                         }
                     },
-                    error: function(xhr, ajaxOptions, thrownError) {
-                        console.log(xhr.status);
-                        console.log(thrownError);
-                        $("#loader-modal").hide();
-                    },
                 });
             }
         });
@@ -982,7 +872,7 @@ $(document).ready(function() {
         $(".my-correction-requests-loader").show();
         $("#my_correction_requests").DataTable().destroy();
         $.ajax({
-            url: baseURL + "timesheet/show_my_correction_requests",
+            url: baseURL + "/timesheet/show_my_correction_requests",
             type: "POST",
             dataType: "json",
             data: {
@@ -999,11 +889,6 @@ $(document).ready(function() {
                     paging: false,
                 });
             },
-            error: function(xhr, ajaxOptions, thrownError) {
-                console.log(xhr.status);
-                console.log(thrownError);
-                $("#loader-modal").hide();
-            },
         });
     }
     $(document).on("click", ".cancel_my_correction_reqiest", function() {
@@ -1018,14 +903,14 @@ $(document).ready(function() {
                 shift_date +
                 "</strong>?",
             showCancelButton: true,
-            imageUrl: baseURL + "assets/img/timesheet/cancel.png",
+            imageUrl: baseURL + "/assets/img/timesheet/cancel.png",
             confirmButtonColor: "#2ca01c",
             cancelButtonColor: "#d33",
             confirmButtonText: "Cancel now",
         }).then((result) => {
             if (result.value) {
                 $.ajax({
-                    url: baseURL + "timesheet/cancel_my_correction_request",
+                    url: baseURL + "/timesheet/cancel_my_correction_request",
                     type: "POST",
                     dataType: "json",
                     data: {
@@ -1045,11 +930,6 @@ $(document).ready(function() {
                             icon: "success",
                         });
                     },
-                    error: function(xhr, ajaxOptions, thrownError) {
-                        console.log(xhr.status);
-                        console.log(thrownError);
-                        $("#loader-modal").hide();
-                    },
                 });
             }
         });
@@ -1068,7 +948,7 @@ $(document).ready(function() {
         $("#my_leave_requests").hide();
         $(".my-leave-requests-loader").show();
         $.ajax({
-            url: baseURL + "timesheet/show_my_leave_requests",
+            url: baseURL + "/timesheet/show_my_leave_requests",
             type: "POST",
             dataType: "json",
             data: {
@@ -1086,11 +966,6 @@ $(document).ready(function() {
                     $(".leave_request_action_td").show();
                 }
             },
-            error: function(xhr, ajaxOptions, thrownError) {
-                console.log(xhr.status);
-                console.log(thrownError);
-                $("#loader-modal").hide();
-            },
         });
     }
 
@@ -1106,14 +981,14 @@ $(document).ready(function() {
                 date_filed +
                 "</strong>?",
             showCancelButton: true,
-            imageUrl: baseURL + "assets/img/timesheet/cancel.png",
+            imageUrl: baseURL + "/assets/img/timesheet/cancel.png",
             confirmButtonColor: "#2ca01c",
             cancelButtonColor: "#d33",
             confirmButtonText: "Cancel now",
         }).then((result) => {
             if (result.value) {
                 $.ajax({
-                    url: baseURL + "timesheet/cancel_my_leave_request",
+                    url: baseURL + "/timesheet/cancel_my_leave_request",
                     type: "POST",
                     dataType: "json",
                     data: {
@@ -1135,11 +1010,6 @@ $(document).ready(function() {
                             icon: "success",
                         });
                     },
-                    error: function(xhr, ajaxOptions, thrownError) {
-                        console.log(xhr.status);
-                        console.log(thrownError);
-                        $("#loader-modal").hide();
-                    },
                 });
             }
         });
@@ -1153,7 +1023,7 @@ $(document).ready(function() {
         $("#show_my_attendance_remarks").hide();
         $(".my-attendance-remarks-loader").show();
         $.ajax({
-            url: baseURL + "timesheet/show_my_attendance_remarks",
+            url: baseURL + "/timesheet/show_my_attendance_remarks",
             type: "POST",
             dataType: "json",
             data: {
@@ -1169,214 +1039,6 @@ $(document).ready(function() {
                 //   ordering: false,
                 //   paging: false,
                 // });
-            },
-            error: function(xhr, ajaxOptions, thrownError) {
-                console.log(xhr.status);
-                console.log(thrownError);
-                $("#loader-modal").hide();
-            },
-        });
-    }
-    //Auto clockout popup
-    autoClockOut_checker();
-    var autoclockout_checker_loop = setInterval(autoClockOut_checker, 5000);
-    var auto_popup_executed = false;
-
-    function autoClockOut_checker() {
-
-        let attn_id = $("#attendanceId").val();
-        $.ajax({
-            url: baseURL + "timesheet/get_shift_duration",
-            type: "POST",
-            dataType: "json",
-            data: { attn_id: attn_id },
-            success: function(data) {
-                $("#overtime_status_acknowledgement").val(data.overtime_status);
-                console.log(data.overtime_status);
-                let startdate = $("#clockedin_date_time").val();
-                let anntendance_status = $("#attendance_status").val();
-                let overtime_status = $("#overtime_status_acknowledgement").val();
-                if (anntendance_status == 1 && data.overtime_status == 0) {
-                    // alert("pasok");
-                    $.ajax({
-                        url: baseURL + "timesheet/get_shift_duration",
-                        type: "POST",
-                        dataType: "json",
-                        data: { attn_id: attn_id },
-                        success: function(data) {
-                            let was_closed = data.autoclockout_timer_closed;
-                            if (data.over_lunch) {
-                                clearInterval(autoclockout_checker_loop);
-                                $.ajax({
-                                    url: baseURL + "timesheet/lunchOutEmployee",
-                                    type: "POST",
-                                    dataType: "json",
-                                    data: { attn_id: attn_id, pause_time: pause_time },
-                                    success: function(data) {
-                                        clearTimeout(counter);
-                                    },
-                                    error: function(xhr, ajaxOptions, thrownError) {
-                                        console.log(xhr.status);
-                                        console.log(thrownError);
-                                        $("#loader-modal").hide();
-                                    },
-                                });
-                                autoClockOut();
-                            }
-                            if (data.difference > 8) {
-                                was_closed = false;
-                            }
-                            if (was_closed != true) {
-
-                                if (data.difference >= 8 && !auto_popup_executed) {
-
-                                    auto_popup_executed = true;
-                                    notificationRing();
-                                    if (data.difference < 8.08333333) {
-                                        $difference = (8.08333333 - data.difference) * 60 * 60;
-                                    } else {
-                                        $difference = 10;
-                                    }
-                                    Swal.fire({
-                                        title: "Do you need more time?",
-                                        // icon:'question',
-                                        html: 'Please select "Continue" to keep working, or select "End Session" to end session now <br> Will close in <strong></strong>',
-                                        imageUrl: baseURL + "assets/img/timesheet/clock-out.png",
-                                        showDenyButton: true,
-                                        confirmButtonText: `Continue`,
-                                        denyButtonText: `End Session`,
-                                        allowOutsideClick: false,
-                                        timer: $difference * 1000,
-                                        timerProgressBar: true,
-                                        willOpen: () => {
-                                            var content;
-                                            try {
-                                                content = Swal.getContent();
-                                            } catch (err) {}
-
-                                            try {
-                                                content = Swal.getHtmlContainer();
-                                            } catch (err) {}
-                                            const $ = content.querySelector.bind(content);
-                                            timerInterval = setInterval(() => {
-                                                if ((Swal.getTimerLeft() / 1000).toFixed(0) >= 0) {
-                                                    var coundown = Swal.getTimerLeft() / 1000 / 60;
-                                                    var intV = parseInt(coundown);
-
-                                                    var text_countdown = "";
-                                                    if (intV != 0) {
-                                                        text_countdown =
-                                                            intV + ":" + parseInt((coundown - intV) * 60);
-                                                    } else {
-                                                        text_countdown = parseInt((coundown - intV) * 60);
-                                                    }
-
-                                                    try {
-                                                        Swal.getContent().querySelector(
-                                                            "strong"
-                                                        ).textContent = text_countdown;
-                                                    } catch (err) {}
-
-                                                    try {
-                                                        Swal.getHtmlContainer().querySelector(
-                                                            "strong"
-                                                        ).textContent = text_countdown;
-                                                    } catch (err) {}
-                                                } else {
-                                                    clearInterval(timerInterval);
-                                                }
-                                            }, 100);
-                                        },
-                                        willClose: () => {
-                                            clearInterval(timerInterval);
-                                        },
-                                    }).then((result) => {
-                                        let status = 0;
-                                        if (result.isConfirmed) {
-                                            $("#overtime_status_acknowledgement").val(1);
-                                            status = 1;
-                                            $.ajax({
-                                                url: baseURL + "timesheet/overtimeApproval",
-                                                type: "POST",
-                                                dataType: "json",
-                                                data: { attn_id: attn_id, status: status },
-                                                success: function(data) {
-                                                    if (data == 1) {
-                                                        $("#autoClockOut").val(1);
-                                                        Swal.fire({
-                                                            showConfirmButton: false,
-                                                            timer: 2000,
-                                                            title: "Success",
-                                                            html: "You can now work more without auto Clock-out.",
-                                                            icon: "success",
-                                                        });
-                                                    }
-                                                },
-                                                error: function(xhr, ajaxOptions, thrownError) {
-                                                    console.log(xhr.status);
-                                                    console.log(thrownError);
-                                                    $("#loader-modal").hide();
-                                                },
-                                            });
-                                        } else if (result.isDenied) {
-                                            clearInterval(autoclockout_checker_loop);
-                                            autoClockOut();
-                                        }
-                                        if (result.dismiss === Swal.DismissReason.timer) {
-                                            clearInterval(autoclockout_checker_loop);
-                                            autoClockOut();
-                                        }
-                                        var di = result.dismiss;
-                                        if (di == "close") {
-                                            $.ajax({
-                                                url: baseURL + "timesheet/get_shift_duration",
-                                                type: "POST",
-                                                dataType: "json",
-                                                data: { attn_id: attn_id },
-                                                success: function(data) {
-                                                    if (data.difference > 8.08333333) {
-                                                        clearInterval(autoclockout_checker_loop);
-                                                        autoClockOut();
-                                                    } else {
-                                                        $.ajax({
-                                                            url: baseURL + "/timesheet/autoclockout_timer_closed",
-                                                            type: "POST",
-                                                            dataType: "json",
-                                                            data: { attn_id: attn_id },
-                                                            success: function(data) {},
-                                                            error: function(xhr, ajaxOptions, thrownError) {
-                                                                console.log(xhr.status);
-                                                                console.log(thrownError);
-                                                                $("#loader-modal").hide();
-                                                            },
-                                                        });
-                                                    }
-                                                },
-                                                error: function(xhr, ajaxOptions, thrownError) {
-                                                    console.log(xhr.status);
-                                                    console.log(thrownError);
-                                                    $("#loader-modal").hide();
-                                                },
-                                            });
-                                        }
-                                    });
-                                }
-                            }
-                        },
-                        error: function(xhr, ajaxOptions, thrownError) {
-                            console.log(xhr.status);
-                            console.log(thrownError);
-                            $("#loader-modal").hide();
-                        },
-                    });
-                } else {
-                    clearInterval(autoclockout_checker_loop);
-                }
-            },
-            error: function(xhr, ajaxOptions, thrownError) {
-                console.log(xhr.status);
-                console.log(thrownError);
-                $("#loader-modal").hide();
             },
         });
     }
@@ -1489,7 +1151,7 @@ function show_user_current_geo_possition(position) {
                     }
                     console.log("lat: " + current_user_latitude + " lng: " + current_user_longitude + " Address: " + formattedAddress);
                     $.ajax({
-                        url: baseURL + "timesheet/timesheet_save_current_geo_location",
+                        url: baseURL + "/timesheet/timesheet_save_current_geo_location",
                         type: "POST",
                         dataType: "json",
                         data: {
@@ -1502,11 +1164,6 @@ function show_user_current_geo_possition(position) {
                         success: function(data) {
                             console.log("current location saved.");
                             console.log(table_id);
-                        },
-                        error: function(xhr, ajaxOptions, thrownError) {
-                            console.log(xhr.status);
-                            console.log(thrownError);
-                            $("#loader-modal").hide();
                         },
                     });
                 }

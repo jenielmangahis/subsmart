@@ -26,9 +26,6 @@ class Affiliate extends MY_Controller {
 
 	public function index()
 	{
-        $this->page_data['page']->title = 'Affiliate Partners';
-        $this->page_data['page']->parent = 'Tools';
-
         $is_allowed = $this->isAllowedModuleAccess(50);
         if( !$is_allowed ){
             $this->page_data['module'] = 'affiliates';
@@ -37,38 +34,18 @@ class Affiliate extends MY_Controller {
         }
 
 		// ifPermissions('activity_log_list');
-		$get    = $this->input->get();
-        $cid    = logged('company_id');
-        $search = array();
-        $condition = array();
-        if( $get['affiliate_name'] != '' ){
-            $search[] = ['field' => 'first_name', 'value' => $get['affiliate_name']];
-            $search[] = ['field' => 'last_name', 'value' => $get['affiliate_name']];
-        }
-
-        if( $get['affiliate_email'] != '' ){
-            $search[] = ['field' => 'email', 'value' => $get['affiliate_email']];
-        }
-
-        if( $get['affiliate_company'] != '' ){
-            $search[] = ['field' => 'company', 'value' => $get['affiliate_company']];
-        }
-
-        if( $get['affiliate_status'] != '' ){
-            if( $get['affiliate_status'] != 'all' ){
-                $condition[] = ['field' => 'status', 'value' => ucfirst($get['affiliate_status'])];
-            }            
-        }
-        
-        if( !empty($search) || !empty($condition) ){
-            $affiliates = $this->affiliate_model->getAllByCompany($cid, $search, $condition);
+		$get = $this->input->get();
+        $role_id = logged('role');
+        if( $role_id == 1 || $role_id == 2 ){
+            $arg = array();
         }else{
-            $arg = array('company_id'=>$cid);
-            $affiliates = $this->affiliate_model->getByWhere($arg, ['order' => [ 'id', 'desc' ]]);            
+            $arg = array('company_id'=>logged('company_id'));
         }
-        
-		$this->page_data['affiliates'] = $affiliates;
-		$this->load->view('v2/pages/affiliate/list', $this->page_data);
+
+		$this->page_data['affiliates'] = $this->affiliate_model->getByWhere($arg, [
+			'order' => [ 'id', 'desc' ]
+		]);
+		$this->load->view('affiliate/list', $this->page_data);
 
 	}
 
@@ -76,7 +53,6 @@ class Affiliate extends MY_Controller {
 	{
 		// ifPermissions('activity_log_view');
 		// $this->page_data['activity'] = $this->activity_model->getById($id);
-        $this->page_data['action'] = 'add';
 		$this->load->view('affiliate/add', $this->page_data);
 
 	}
@@ -84,10 +60,9 @@ class Affiliate extends MY_Controller {
 	public function edit()
 	{
 		// ifPermissions('activity_log_view');
-		$get = $this->input->get();        
+		$get = $this->input->get();
 
 		$this->page_data['affiliate'] = $this->affiliate_model->getById($get['id']);
-        $this->page_data['action'] = 'edit';
 		$this->load->view('affiliate/add', $this->page_data);
 
 	}
@@ -112,19 +87,11 @@ class Affiliate extends MY_Controller {
 
 		$affiliate_image = $this->moveUploadedFile();
 
-        if ($this->input->post('affiliate_id') != '') {
-            $affiliate = $this->affiliate_model->getById($this->input->post('affiliate_id'));
-            if( $affiliate_image == '' ){
-                $affiliate_image = $affiliate->photo;    
-            }
-            
-        }
-
         $data = array(
             'company_id' => $comp_id,
             'first_name' => $this->input->post('first_name'),
             'last_name' => ucfirst($this->input->post('last_name')),
-            'gender' => $this->input->post('gender'),
+            'gender' => $this->input->post('genderRadioOptions'),
             'company' => $this->input->post('company'),
             'website_url' => $this->input->post('website_url'),
             'email' => $this->input->post('email'),
@@ -133,14 +100,12 @@ class Affiliate extends MY_Controller {
             'alternate_phone' => $this->input->post('alternate_phone'),
             'fax' => $this->input->post('fax'),
             'mailing_address' => $this->input->post('mailing_address'),
-            'country' => $this->input->post('country'),
             'city' => $this->input->post('city'),
             'state' => $this->input->post('state'),
             'status' => $this->input->post('status'),
             'notes' => $this->input->post('notes'),
-            'zipcode' => $this->input->post('zipcode'),
             'photo' => $affiliate_image,
-            'assigned_to' => 0,
+            'assigned_to' => 1,
             'add_master_contact_list' => $this->input->post('add_masterlist'),
             'portal_access' => $this->input->post('portal_access'),
         );
@@ -154,7 +119,7 @@ class Affiliate extends MY_Controller {
 			$permission = $this->affiliate_model->create($data);
 		}
 
-        $this->activity_model->add($message_1 . " affiliate #$permission Created by User: #" . logged('id'));
+        $this->activity_model->add($message_1 . " item #$permission Created by User: #" . logged('id'));
         $this->session->set_flashdata('alert-type', 'success');
         $this->session->set_flashdata('alert', $message_2);
 
@@ -176,9 +141,9 @@ class Affiliate extends MY_Controller {
 	}
 
 	public function delete() {
-        $post = $this->input->post();
+        $get = $this->input->get();
 
-		$this->affiliate_model->delete($post['aid']);
+		$this->affiliate_model->delete($get['id']);
 
         $message_2 = "Affiliate deleted Successfully";
 		$this->session->set_flashdata('alert-type', 'success');
@@ -323,16 +288,6 @@ class Affiliate extends MY_Controller {
             return false;
         }
     }
-
-
-    public function stats_dashboard()
-	{
-        $this->page_data['page']->title = 'Affiliates Stats Dashboard';
-        $this->page_data['page']->parent = 'Tools';
-
-        $is_allowed = $this->isAllowedModuleAccess(50);
-		$this->load->view('v2/pages/affiliate/stats_dashboard', $this->page_data);
-	}
 
 }
 

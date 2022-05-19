@@ -1,15 +1,6 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-<?php include viewPath('includes/header_front_booking'); ?>
-<style>
-.booking-header{
-  background-color: #32243d;
-  color: #ffffff;
-  font-size: 16px;
-  padding: 10px;
-  margin: 0px;
-}
-</style>
+<?php include viewPath('includes/header'); ?>
 <div>
     <!-- page wrapper start -->
     <div class="col-xl-9 left">
@@ -17,18 +8,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <div class="page-title-box">
                 <div class="row align-items-center">
                     <div class="col-sm-6">
-                        <h1 class="page-title-v2"><?php echo $booking_settings ? $booking_settings->page_title : 'Online Booking'; ?> : Schedule</h1>
+                        <h1 class="page-title-v2">Schedule</h1>
                     </div>
                 </div>
-                <div class="pl-3 pr-3 mt-2 row" style="position: relative;top: 7px;">
-                  <div class="col mb-4 left alert alert-warning mt-0 mb-0">
-                      <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;"><?php echo $booking_settings->page_instruction; ?></span>
-                  </div>
-                </div>
             </div>
+            <!-- end row -->
             <div class="row">
                 <div class="col-xl-12">
-                  <div class="sc-name booking-header">Choose an arrival window.</div>
+                  <div class="sc-name">Choose an arrival window.</div>
                   <div class="col-12 sc-container pl-0 pr-0 pt-3 mt-4">                    
                     <div class="schedule-container"></div>                    
                   </div>
@@ -51,6 +38,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 </div>
 <?php include viewPath('includes/footer_front_booking'); ?>
 <script>
+var base_url = "<?php echo base_url(); ?>";
+
 function continue_cart(){    
     var eid = "<?php echo $eid; ?>";
     window.location.href = base_url + "booking/product_booking_form/"+eid;
@@ -59,7 +48,7 @@ function continue_cart(){
 $(function(){
     function load_week_schedule(week_start_date, eid){
       var url = base_url + '/booking/_load_week_schedule';
-      var msg = '<span class="spinner-border spinner-border-sm m-0"></span> Loading schedule';
+      var msg = '<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" style="display:inline;" /> Loading schedule...</div>';
 
       $(".schedule-container").html(msg);
 

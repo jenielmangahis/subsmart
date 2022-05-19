@@ -44,90 +44,31 @@
             <img src="<?=getCompanyBusinessProfileImage();?>" class="company-logo"/>
         </li>
 
-        <li class="nav-header" style="padding-top: 0px;margin-top: 0px;">eSign</li>
+        <li class="nav-header" style="padding-top: 0px;margin-top: 0px;">DOCUSIGN</li>
 
         <li class="submenus">
-            <a href="<?=base_url('esign/Files')?>" title="Send Envelope">
-            <span class="fa fa-envelope"></span>Send envelope</a>
-        </li>
-
-        <li class="submenus" id="signadocument">
-            <a href="#" title="Sign a document">
-            <span class="fa fa-pencil"></span>Sign a document</a>
+            <a href="<?=base_url('esign/Files')?>" title="New">
+            <span class="fa fa-plus"></span>New</a>
         </li>
 
         <li class="submenus">
-            <a href="<?=base_url('eSign/manage?view=inbox')?>" title="Inbox">
+            <a href="<?=base_url('DocuSign/manage')?>?view=inbox" title="Inbox">
             <span class="fa fa-inbox"></span>Inbox</a>
         </li>
 
         <li class="submenus">
-            <a href="<?=base_url('eSign/manage?view=sent')?>" title="Sent">
+            <a href="<?=base_url('DocuSign/manage')?>?view=sent" title="Sent">
             <span class="fa fa-send"></span>Sent</a>
         </li>
 
         <li class="submenus">
-            <a href="<?=base_url('eSign/manage?view=drafts')?>" title="Drafts">
+            <a href="<?=base_url('DocuSign/manage')?>?view=drafts" title="Drafts">
             <span class="fa fa-pencil"></span>Drafts</a>
         </li>
 
         <li class="submenus">
-            <a href="<?=base_url('eSign/manage?view=deleted')?>" title="Deleted">
+            <a href="<?=base_url('DocuSign/manage')?>?view=deleted" title="Deleted">
             <span class="fa fa-trash"></span>Deleted</a>
-        </li>
-
-        <li class="submenus">
-            <a href="<?=base_url('eSign/manage?view=action_required')?>" title="Action Required">
-            <span class="fa fa-info-circle"></span></span>Action Required</a>
         </li>
     </ul>
 </nav>
-
-<div class="modal fade" id="selectDocument" tabindex="-1" role="dialog" aria-labelledby="selectDocumentLabel" aria-hidden="true">
-	<div class="modal-dialog modal-lg" role="document" style="max-width: 802px;">
-		<div class="modal-content">
-		<div class="modal-header">
-			<h5 class="modal-title" id="selectDocumentLabel">Sign a document</h5>
-			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-			<span aria-hidden="true">&times;</span>
-			</button>
-		</div>
-		<div class="modal-body">
-            <div class="fileupload">
-                <div class="custome-fileup">
-                    <div class="upload-btn-wrapper">
-                        <button class="btn">
-                            <img src="https://localhost/nsmartrac/assets/esign/images/fileup-ic.png" alt="">
-                            <span>Upload</span>
-                        </button>
-                        <input multiple="" type="file" name="docFile" id="docFile" accept="application/pdf,application/vnd.ms-excel" required="">
-                    </div>
-                </div>
-            </div>
-		</div>
-		<div class="modal-footer">
-			<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-			<button type="button" class="btn btn-primary d-flex align-items-center">
-				<div class="spinner-border spinner-border-sm m-0 d-none" role="status">
-					<span class="sr-only">Loading...</span>
-				</div>
-				<span class="ml-1">Sign</span>
-			</button>
-		</div>
-		</div>
-	</div>
-</div>
-
-<div class="modal fillAndSign__modal" id="documentModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title"></h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span>&times;</span>
-                </button>
-            </div>
-            <div class="modal-body d-flex flex-column"></div>
-        </div>
-    </div>
-</div>

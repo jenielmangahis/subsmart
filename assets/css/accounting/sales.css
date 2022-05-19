@@ -206,7 +206,7 @@
 	max-width:85%;
 }
 .nav-tabs .nav-link.active{
-	/* background-color: transparent !important; */
+	background-color: transparent !important;
     border: 0;
     border-bottom: 5px solid #498002 !important;
     font-weight: bolder;

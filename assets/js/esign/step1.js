@@ -1,6 +1,5 @@
 function Step1() {
   jQuery.noConflict();
-  const PDFJS = pdfjsLib;
 
   const validFileExtensions = ["pdf"];
   const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
@@ -8,12 +7,9 @@ function Step1() {
   const $form = $("[data-form-step=1]");
   const $fileInput = $("#docFile");
   const $docModal = $("#documentModal");
-  const $sortable = $("#sortable");
-
   let files = [];
 
   async function createFilePreview(event, file) {
-    await sleep(1000);
     const fileId = Date.now();
     const fileExtension = file.name.split(".").pop().toLowerCase();
 
@@ -26,7 +22,6 @@ function Step1() {
 
     try {
       document = await PDFJS.getDocument({ url: documentUrl });
-      document = await document.promise;
     } catch (error) {
       alert(error);
       return;
@@ -34,31 +29,10 @@ function Step1() {
 
     const html = `
       <div class="esignBuilder__docPreview h-100" data-id="${fileId}">
-        <div class="esignBuilder__docPreviewHover"></div>
-
         <canvas></canvas>
         <div class="esignBuilder__docInfo">
-            <div class="esignBuilder__docInfoText">
-              <h5 class="esignBuilder__docTitle"></h5>
-              <span class="esignBuilder__docPageCount"></span>
-            </div>
-
-            <div class="dropdown">
-              <button
-                class="btn dropdown-toggle esignBuilder__docInfoActions"
-                type="button"
-                data-toggle="dropdown"
-                aria-haspopup="true"
-                aria-expanded="false"
-              >
-                <i class="fa fa-ellipsis-v"></i>
-              </button>
-
-              <div class="dropdown-menu dropdown-menu-right">
-                <a class="dropdown-item" data-action="preview" href="#">Preview</a>
-                <a class="dropdown-item" data-action="delete" href="#">Delete</a>
-              </div>
-            </div>
+            <h5 class="esignBuilder__docTitle"></h5>
+            <span class="esignBuilder__docPageCount"></span>
         </div>
 
         <div class="esignBuilder__uploadProgress" width="100%">
@@ -102,9 +76,8 @@ function Step1() {
     $docModalTitle.text(file.name);
     $docPageCount.text(`${document.numPages} page`);
 
-    const scaleRequired =
-      $canvas.width / documentPage.getViewport({ scale: 1 }).width;
-    const viewport = documentPage.getViewport({ scale: scaleRequired });
+    const scaleRequired = $canvas.width / documentPage.getViewport(1).width;
+    const viewport = documentPage.getViewport(scaleRequired);
     const canvasContext = {
       viewport,
       canvasContext: context,
@@ -121,66 +94,20 @@ function Step1() {
     $progressCheck.addClass("esignBuilder__uploadProgressCheck--completed");
 
     files.push({ file, documentUrl, id: fileId });
-    $docPreview
-      .find(".esignBuilder__docPreviewHover")
-      .on("click", showDocument);
-
-    const actions = {
-      preview: showDocument,
-      delete: function (event) {
-        files = files.filter((f) => f.id != fileId);
-        const $parent = $(event.target).closest(".esignBuilder__docPreview");
-        $parent.remove();
-        setSubjectFromFiles();
-      },
-    };
-
-    $docPreview.find(".dropdown-item").on("click", function (event) {
-      event.preventDefault();
-      const action = $(this).attr("data-action");
-      actions[action](event);
-    });
+    $docPreview.on("click", showDocument);
 
     const $target = $(event.target);
     $target.val("");
     $target.removeAttr("required");
 
-    setSubjectFromFiles();
-  }
-
-  function setSubjectFromFiles() {
     const $subject = $form.find("#subject");
     const filenames = files.map(({ file }) => file.name);
-    const currValue = $subject.val().trim();
-
-    if (currValue && !currValue.startsWith("Please eSign:")) {
-      return;
-    }
-
-    let value = "";
-    if (filenames.length) {
-      value = `${$subject.prop("placeholder")} ${filenames.join(", ")}`;
-    }
-
-    $subject.val(value);
+    $subject.val(`${$subject.prop("placeholder")} ${filenames.join(", ")}`);
   }
 
   async function onChangeFile(event) {
-    const { files: eventFiles } = event.target;
-
-    if (files && files.length) {
-      for (let index = 0; index < eventFiles.length; index++) {
-        const file = eventFiles[index];
-        if (files.find((f) => f.file.name === file.name)) {
-          alert(`File name already exists: ${file.name}`);
-          return;
-        }
-      }
-    }
-
-    const promises = [...eventFiles].map((file) =>
-      createFilePreview(event, file)
-    );
+    const { files } = event.target;
+    const promises = [...files].map((file) => createFilePreview(event, file));
     await Promise.all(promises);
     $(".esignBuilder__submit").removeAttr("disabled");
   }
@@ -197,20 +124,9 @@ function Step1() {
       return;
     }
 
-    const $items = $(".esignBuilder__docPreview");
-    let documentSequence = $items.map((_, item) => {
-      const file = files.find((f) => f.id == $(item).attr("data-id"));
-      return file === undefined ? null : file.file.name;
-    });
-
-    documentSequence = [...documentSequence].filter(Boolean);
-    documentSequence = JSON.stringify({ sequence: documentSequence });
-
     const formData = new FormData();
     formData.append("subject", $subject.val());
     formData.append("message", $message.val());
-    formData.append("document_sequence", documentSequence);
-
     files.forEach(({ file }) => {
       formData.append("files[]", file);
     });
@@ -222,7 +138,7 @@ function Step1() {
 
     const { data } = await response.json();
     const { id: envelopeId } = data;
-    window.location = `${prefixURL}/esign/Files?id=${envelopeId}&next_step=2`;
+    window.location = `${prefixURL}/esign/Files?id=${envelopeId}&next_step=3`;
   }
 
   async function showDocument(event) {
@@ -239,7 +155,7 @@ function Step1() {
       $modalBody.append(canvas);
 
       const documentPage = await document.getPage(index);
-      const viewport = documentPage.getViewport({ scale: 1 });
+      const viewport = documentPage.getViewport(1);
       canvas.height = viewport.height;
       canvas.width = viewport.width;
 
@@ -259,14 +175,6 @@ function Step1() {
 
   async function init() {
     attachEventHandlers();
-
-    // console.log({ $sortable })
-    // $sortable.disableSelection();
-    $sortable.sortable({
-      placeholder: "ui-state-highlight",
-      items: "> .esignBuilder__docPreview",
-      cursor: "move",
-    });
   }
 
   return { init };

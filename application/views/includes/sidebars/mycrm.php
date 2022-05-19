@@ -26,9 +26,8 @@
         <li class="nav-header">My CRM</li>
         <li class="submenus <?php if($this->uri->uri_string() == 'mycrm') { echo 'active'; }?>"><a href="<?php echo base_url('mycrm') ?>" title="My CRM"><span class="fa fa-user"></span>My CRM</a></li>
         <li class="submenus <?php if($this->uri->uri_string() == 'mycrm/membership') { echo 'active'; }?>"><a href="<?php echo base_url('mycrm/membership') ?>" title="Membership"><span class="fa fa-calendar"></span>Membership</a></li>
-        <li class="submenus <?php if($this->uri->uri_string() == 'cards_file/list') { echo 'active'; }?>"><a href="<?php echo base_url('cards_file/list') ?>" title="Payment Methods"><span class="fa fa-credit-card"></span>Cards On File</a></li>
+        <li class="submenus <?php if($this->uri->uri_string() == 'mycrm/payment_methods') { echo 'active'; }?>"><a href="<?php echo base_url('mycrm/payment_methods') ?>" title="Payment Methods"><span class="fa fa-credit-card"></span>Cards On File</a></li>
         <li class="submenus <?php if($this->uri->uri_string() == 'mycrm/orders') { echo 'active'; }?>"><a href="<?php echo base_url('mycrm/orders') ?>" title="Orders"><span class="fa fa-file"></span>Orders</a></li>
-        <li class="submenus <?php if($this->uri->uri_string() == 'support') { echo 'active'; }?>"><a href="<?php echo base_url('support') ?>" title="Orders"><span class="fa fa-ticket"></span>Support</a></li>
-        <!-- <li class="submenus <?php if($this->uri->uri_string() == 'mycrm/payment_balance') { echo 'active'; }?>"><a href="<?php echo base_url('mycrm/payment_balance') ?>" title="Payment Balance"><span class="fa fa-money"></span>Payment Balance</a></li> -->
+        <li class="submenus <?php if($this->uri->uri_string() == 'mycrm/payment_balance') { echo 'active'; }?>"><a href="<?php echo base_url('mycrm/payment_balance') ?>" title="Payment Balance"><span class="fa fa-money"></span>Payment Balance</a></li>
     </ul>
 </nav>

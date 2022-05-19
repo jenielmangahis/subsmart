@@ -1,5 +1,3 @@
-const PDFJS = pdfjsLib;
-
 function Step2({ documentId }) {
   const $closeModalButtons = $(".fillAndSign__modal .close-me");
 
@@ -44,7 +42,7 @@ function Step2({ documentId }) {
 
   async function renderPage({ canvas, page, document }) {
     const documentPage = await document.getPage(page);
-    const viewport = await documentPage.getViewport({ scale: 1.5 });
+    const viewport = await documentPage.getViewport(1.5);
     canvas.height = viewport.height;
     canvas.width = viewport.width;
 
@@ -302,8 +300,7 @@ function Step2({ documentId }) {
   }
 
   async function renderPDF() {
-    let document = await PDFJS.getDocument({ url: documentUrl });
-    document = await document.promise;
+    const document = await PDFJS.getDocument({ url: documentUrl });
 
     for (let index = 1; index <= document.numPages; index++) {
       if (index > 1) break;
@@ -792,17 +789,15 @@ async function generatePDF(documentId) {
 
   async function renderPage({ canvas, page, document }) {
     const documentPage = await document.getPage(page);
-    const viewport = await documentPage.getViewport({ scale: 1.5 });
+    const viewport = await documentPage.getViewport(1.5);
     canvas.height = viewport.height;
     canvas.width = viewport.width;
 
-    // https://mozilla.github.io/pdf.js/examples/
-    const renderContext = {
+    await documentPage.render({
       viewport,
       canvasContext: canvas.getContext("2d"),
-    };
-    const renderTask = await documentPage.render(renderContext);
-    await renderTask.promise;
+    });
+
     return canvas;
   }
 
@@ -812,8 +807,7 @@ async function generatePDF(documentId) {
     await fetchSignatures();
 
     const documentUrl = `${prefixURL}/uploads/fillandsign/${documentPdf.name}`;
-    let document = await PDFJS.getDocument({ url: documentUrl });
-    document = await document.promise;
+    const document = await PDFJS.getDocument({ url: documentUrl });
 
     for (let index = 1; index <= document.numPages; index++) {
       if (index > 1) break;
@@ -1135,7 +1129,6 @@ var textUnderline = function ({
 
 // https://stackoverflow.com/a/46181/8062659
 function isValidEmail(email) {
-  const re =
-    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return re.test(String(email).toLowerCase());
 }

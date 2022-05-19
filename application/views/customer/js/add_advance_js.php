@@ -16,7 +16,7 @@
             placeholder: "Select Month Rate"
         });
         $("#bill_freq").select2({
-            placeholder: "Select"
+            placeholder: "Select Billing Frequency"
         });
         $("#bill_day").select2({
             placeholder: "Select Billing Day"
@@ -81,12 +81,6 @@
         $("#customer_type").select2({
             placeholder: "Select Customer Type"
         });
-        $("#customer_group").select2({
-            placeholder: "Select Customer Group"
-        });
-        $("#industry_type").select2({
-            placeholder: "Select Industry Type"
-        });
         $("#pay_method").select2({
             placeholder: "Select Payment Type"
         });
@@ -97,7 +91,7 @@
             placeholder: "Select Month"
         });
         $("#frequency").select2({
-            placeholder: "Select"
+            placeholder: "Select Month"
         });
         $("#transaction_category").select2({
             placeholder: "Select Category"
@@ -123,81 +117,14 @@
         $("#equipment").select2({
             placeholder: "Select"
         });
-        $("#invoice_term").select2({
-            placeholder: ""
-        });
     });
     $(function() {
         $("nav:first").addClass("closed");
-        $(".date_checkbox").on( 'change', function (event) {
-            const date_id = this.value;
-            if (event.currentTarget.checked) {
-                event.preventDefault();
-                $('#'+date_id).prop("disabled", false);
-            } else {
-                event.preventDefault();
-                $('#'+date_id).val(""); // Element(s) are now enabled.
-                $('#'+date_id).prop("disabled", true); // Element(s) are now enabled.
-            }
-        });
     });
 </script>
 
 <script>
     $(document).ready(function () {
-
-        $("body").delegate(".remove_item_row", "click", function(){
-            $(this).parent().parent().remove();
-        });
-
-        $("#add_field").click(function () {
-            const custom_field_form= "<div class=\"row form_line\">\n" +
-                "                <div class=\"col-md-5\">\n" +
-                "                    Name\n" +
-                "                    <input type=\"text\" class=\"form-control\" name=\"custom_name[]\" id=\"office_custom_field1\" value=\"\" />\n" +
-                "                </div>\n" +
-                "                <div class=\"col-md-5\">\n" +
-                "                    Value\n" +
-                "                    <input type=\"text\" class=\"form-control\" name=\"custom_value[]\" id=\"office_custom_field1\" value=\"\" />\n" +
-                "                </div>\n" +
-                "                <div class=\"col-md-2\">\n" +
-                "                    <button style=\"margin-top: 30px;\" type=\"button\" class=\"btn btn-primary btn-sm items_remove_btn remove_item_row\"><span class=\"fa fa-trash-o\"></span></button>\n" +
-                "                </div>\n" +
-                "            </div>";
-            $("#custom_field").append(custom_field_form);
-        });
-
-        $("#bill_start_date").datepicker({
-            onselect: function(dateText) {
-                console.log('adsfsdf');
-                //console.log("Selected date: " + dateText + "; input's current value: " + this.value);
-            },
-            dateFormat: 'dd/mm/yy'
-        }).on("changeDate", function (e) {
-            console.log(e.date);
-            var selected_data = moment(e.date).format('L');
-            var contract = $('#contract_term').val();
-            var plus_date = moment.utc(selected_data).add(contract,'months');
-
-            $('#bill_end_date').datepicker("setDate", plus_date.toDate());
-            $('#bill_day').val(plus_date.format('D')).trigger("change");
-        });
-
-        $("#contract_term").change(function(){
-            var terms = $(this).val();
-            var start_date = $("#bill_start_date").val();
-            if( start_date != '' ){
-                var selected_data = moment(start_date).format('L');
-                var plus_date = moment.utc(selected_data).add(terms,'months');
-                $('#bill_end_date').val(moment(plus_date).format('L'));
-            }
-        });
-
-        $( ".datepicker" ).datepicker();
-        $("#recurring_end_date").datepicker();
-        $("#bill_end_date").datepicker();
-
-
         $("#first_name").on("keyup change", function(e) {
             $('#card_fname').val(this.value);
         });
@@ -236,9 +163,6 @@
             }else if(c_type === 'ACH'){
                 hide_all();
                 route_show();
-            }else if(c_type === 'Invoicing'){
-                hide_all();
-                $(".invoicing_field").show("slow");
             }else if(c_type === 'VENMO' || c_type === 'PP' || c_type === 'SQ'){
                 hide_all();
                 $(".account_cred").show('slow');
@@ -263,7 +187,6 @@
             $("#accountNumber").show("slow");
         }
         function hide_all(){
-            $(".invoicing_field").hide("slow");
             $("#checkNumber").hide("slow");
             $("#routingNumber").hide("slow");
             $("#accountNumber").hide("slow");
@@ -302,7 +225,39 @@
 
 
 
+        $("#date_picker").datetimepicker({
+            format: "l",
+            //minDate: new Date(),
+        });
+        $("#recurring_start_date").datetimepicker({
+            format: "l",
+            //minDate: new Date(),
+        });
+        $("#recurring_end_date").datetimepicker({
+            format: "l",
+            //minDate: new Date(),
+        });
+        $("#bill_start_date").datetimepicker({
+            format: "l",
+            //minDate: new Date(),
+        }).on('dp.change', function (e) {
+            var selected_data = moment(e.date._d).format('L');
+            var contract = $('#contract_term').val();
+            console.log(selected_data);
+            var plus_date = moment.utc(selected_data).add(contract,'months');
+            console.log( moment(plus_date).format('l'));
+            $('#bill_end_date').val(moment(plus_date).format('l'));
+        });
 
+        $("#bill_end_date").datetimepicker({
+            format: "l",
+            //minDate: new Date(),
+        });
+        $(".date_picker").datetimepicker({
+            format: "l",
+            //'setDate': new Date(),
+            //minDate: new Date(),
+        });
         //$('.date_picker').val(new Date().toLocaleDateString());
 
         //$('.time_picker').val(new Date().toLocaleTimeString());
@@ -310,14 +265,6 @@
         // $(".time_picker").datetimepicker({
         //     format: "LT",
         // });
-
-        $("#rep_comm").keyup(function(){
-            $('#rep_paid').val(this.value);
-        });
-
-        $("#tech_comm").keyup(function(){
-            $('#tech_paid').val(this.value);
-        });
 
         $("#rep_paid").keyup(function(){
             var repPaid=this.value;
@@ -337,17 +284,6 @@
 
 
         $('.timepicker').timepicker('setTime', new Date().toLocaleTimeString());
-        //$('#tech_depart_time').timepicker('setTime', moment.utc(new Date().toLocaleTimeString()).add(2,'hours'));
-        $('#tech_depart_time').timepicker('setTime',  moment.utc(new Date().toLocaleTimeString(),'hh:mm a').add(2,'hour').format('h:mm a'));
-
-        $("#tech_arrive_time").on("keyup change", function(e) {
-            //$('#card_fname').val(this.value);
-            $('#tech_depart_time').timepicker('setTime',  moment.utc(this.value,'hh:mm a').add(2,'hour').format('h:mm a'));
-        });
-
-        $("#monitor_id").on("keyup change", function(e) {
-            $('#alarm_cs_account').val(this.value);
-        });
 
         var table_assign_module = $('#assign_module_table').DataTable({
             "lengthChange": false,
@@ -385,40 +321,9 @@
 </script>
 <script>
     $(document).ready(function() {
-        $("#customer_form").submit(async function(e) {
+        $("#customer_form").submit(function(e) {
             e.preventDefault(); // avoid to execute the actual submit of the form.
             var form = $(this);
-
-            const formArray = form.serializeArray();
-            const payload = {};
-            formArray.forEach(({ name, value }) => payload[name] = value);
-            
-            const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
-            const response = await fetch(`${prefixURL}/Customer_Form/apiCheckDuplicate`, { 
-                method: "post", 
-                body: JSON.stringify(payload),
-                headers: { 
-                    accept: "application/json", 
-                    "content-type": "application/json"
-                }
-            });
-            const json = await response.json();
-            if (json.data && json.message) {
-                const duplicateConfirmation = await Swal.fire({
-                    title: 'Possible duplicate customer',
-                    html: json.message,
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#32243d',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Save anyway'
-                });
-
-                if (!duplicateConfirmation.isConfirmed) {
-                    return;
-                }
-            }
-
             //var url = form.attr('action');
             $.ajax({
                 type: "POST",
@@ -426,22 +331,16 @@
                 data: form.serialize(), // serializes the form's elements.
                 success: function(data)
                 {
-                    document.getElementById('overlay').style.display = "none";
-                    if(data.success){
-                        <?php if(isset($profile_info)): ?>
-                        sucess("Customer Information has been Updated Successfully!",data.profile_id);
-                        <?php else: ?>
-                        sucess("New Customer has been Added Successfully!",data.profile_id);
-                        <?php endif; ?>
+                    if(isNaN(data)){
+                        error(data);
                     }else{
-                        error(data.message);
+                        <?php if(isset($profile_info)): ?>
+                        sucess("Customer Information has been Updated Successfully!",data);
+                        <?php else: ?>
+                        sucess("New Customer has been Added Successfully!",data);
+                        <?php endif; ?>
                     }
                     console.log(data);
-                }, beforeSend: function() {
-                    document.getElementById('overlay').style.display = "flex";
-                },error: function (xhr, ajaxOptions, thrownError) {
-                    console.log(thrownError);
-                    document.getElementById('overlay').style.display = "none";
                 }
             });
         });
@@ -467,7 +366,7 @@
                 }
             });
         }
-        function sucess(information,id){
+        function sucess(information,$id){
             Swal.fire({
                 title: 'Good job!',
                 text: information,
@@ -478,7 +377,7 @@
                 confirmButtonText: 'Ok'
             }).then((result) => {
                 if (result.value) {
-                    window.location.href="<?= base_url(); ?>customer/preview_/"+id;
+                    window.location.href="<?= base_url(); ?>customer/preview/"+$id;
                 }
             });
         }

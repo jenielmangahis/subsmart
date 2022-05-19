@@ -47,8 +47,7 @@
                             
                         </div>
                         <div class="col-md-6" align="right">
-                            AMOUNT<h2><span id="grand_total_dc_total">0.00</span></h2><br>
-                            <input type="hidden" name="grand_total_amount" id="grand_total_dc_total_val">
+                            AMOUNT<h2><input type="text" class="form-control" style="font-size:36px;border: 0px;background: transparent;text-align:right;" name="total_amount" value="0.00" readonly></h2><br>
                         </div>
                     </div>
                     <hr>
@@ -75,11 +74,11 @@
                                             <th width="150px">Tax (Change in %)</th>
                                             <th>Total</th>
                                 </thead>
-                                <tbody id="items_table_body_refund_credit">
+                                <tbody id="items_table_body">
                                 <tr>
                                             <td>
-                                                <input type="text" class="form-control getItemCredit"
-                                                       onKeyup="getItemCredit_k(this)" name="items[]">
+                                                <input type="text" class="form-control getItems"
+                                                       onKeyup="getItems(this)" name="items[]">
                                                 <ul class="suggestions"></ul>
                                             </td>
                                             <td><select name="item_type[]" class="form-control">
@@ -88,19 +87,19 @@
                                                     <option value="service">Service</option>
                                                     <option value="fee">Fee</option>
                                                 </select></td>
-                                            <td width="150px"><input type="number" class="form-control quantitydc" name="quantity[]"
+                                            <td width="150px"><input type="number" class="form-control quantity" name="quantity[]"
                                                        data-counter="0" id="quantity_0" value="1"></td>
-                                            <td width="150px"><input type="number" class="form-control pricedc" name="price[]"
-                                                       data-counter="0" id="price_dc_0" min="0" value="0"></td>
-                                            <td width="150px"><input type="number" class="form-control discountdc" name="discount[]"
-                                                       data-counter="0" id="discount_dc_0" min="0" value="0" ></td>
+                                            <td width="150px"><input type="number" class="form-control price" name="price[]"
+                                                       data-counter="0" id="price_0" min="0" value="0"></td>
+                                            <td width="150px"><input type="number" class="form-control discount" name="discount[]"
+                                                       data-counter="0" id="discount_0" min="0" value="0" ></td>
                                             <td width="150px"><input type="text" class="form-control tax_change" name="tax[]"
-                                                       data-counter="0" id="tax1_dc_0" min="0" value="0">
+                                                       data-counter="0" id="tax1_0" min="0" value="0">
                                                        <!-- <span id="span_tax_0">0.0</span> -->
                                                        </td>
                                             <td width="150px"><input type="hidden" class="form-control " name="total[]"
-                                                       data-counter="0" id="item_total_dc_0" min="0" value="0">
-                                                       $<span id="span_total_credit_0">0.00</span></td>
+                                                       data-counter="0" id="item_total_0" min="0" value="0">
+                                                       $<span id="span_total_0">0.00</span></td>
                                         </tr>
                                 </tr>
                                 </tbody>
@@ -114,11 +113,6 @@
                            <!-- <button class="btn1">Add lines</button> -->
                            <a class="link-modal-open" href="#" id="add_another_items" data-toggle="modal" data-target="#item_list_delayed_credit"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a>
                         </div>
-                                        <input type="hidden" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control" style="width:200px; display:inline; border: 1px dashed #d1d1d1">
-                                        <input type="hidden" name="adjustment_value" id="adjustment_input_dc" value="0" class="form-control adjustment_input_dc" style="width:100px; display:inline-block">
-                                        <input type="hidden" name="markup_input_form" id="markup_input_form" class="markup_input" value="0">
-                                        <input type="hidden" name="voucher_value" id="offer_cost_input">
-                                        <input type="hidden" name="grand_total" id="grand_total_dc" value='0'>
                         <!-- <div class="col-md-1">
                            <button class="btn1">Clear all lines</button>
                         </div>
@@ -206,7 +200,6 @@
             </div>
 
         </div>
-      </div>
     </div>
     <!--end of modal-->
     <script>
@@ -251,7 +244,7 @@
                                                 <td><?php echo $item->title; ?></td>
                                                 <td></td>
                                                 <td><?php echo $item->price; ?></td>
-                                                <td><button id="<?= $item->id; ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default select_item_dc">
+                                                <td><button id="<?= $item->id; ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default select_item2">
                                                 <span class="fa fa-plus"></span>
                                             </button></td>
                                             </tr>
@@ -314,76 +307,11 @@ $(document).ready(function(){
 
 <script>
 
-$(document).on("focusout", ".adjustment_input_dc", function () {
-  // var counter = $(this).data("counter");
-  // alert('yeah');
-  // calculationcm(counter);
-  var grand_total = $("#grand_total_input").val();
-  var adjustment = $("#adjustment_input_dc").val();
-
-  grand_total = parseFloat(grand_total) + parseFloat(adjustment);
-
-  var subtotal = 0;
-  // $("#span_total_0").each(function(){
-    $('*[id^="span_total_credit_"]').each(function(){
-    subtotal += parseFloat($(this).text());
-  });
-
-  // alert(subtotaltax);
-  
-  var s_total = subtotal.toFixed(2);
-  var grand_total_w = s_total - parseFloat(adjustment);
-  // var markup = $("#markup_input_form").val();
-  // var grand_total_w = s_total + parseFloat(adjustment);
-
-  // $("#total_tax_").text(subtotaltax.toFixed(2));
-  // $("#total_tax_").val(subtotaltax.toFixed(2));
-
-  $("#grand_total_input").val(grand_total_w.toFixed(2));
-  $("#grand_total_dc").text(grand_total_w.toFixed(2));
-  $("#adjustment_area_dc").text(adjustment);
-  $("#grand_total_dc_total").text(grand_total_w.toFixed(2));
-  $("#grand_total_dc_total_val").val(grand_total_w.toFixed(2));
-  // alert(grand_total_w);
-});
-
-</script>
-
-<script>
-$(document).ready(function(){
- 
- $('#sel-customer').change(function(){
- var id  = $(this).val();
-//  alert(id);
-
-     $.ajax({
-         type: 'POST',
-         url:"<?php echo base_url(); ?>accounting/addLocationajax",
-         data: {id : id },
-         dataType: 'json',
-         success: function(response){
-            //  alert('success');
-             console.log(response);
-         $("#email").val(response['customer'].email);
-         $("#billing_address").html(response['customer'].billing_address);
-     
-         },
-             error: function(response){
-             alert('Error'+response);
-    
-             }
-     });
- });
-    });
-</script>
-
-<script>
-
-function getItemCredit_k(obj) {
+function getItemsrr(obj) {
   var sk = jQuery(obj).val();
   var site_url = jQuery("#siteurl").val();
   jQuery.ajax({
-    url: site_url + "items/getitem_Credit",
+    url: site_url + "items/getitems_cm",
     data: { sk: sk },
     type: "GET",
     success: function (data) {
@@ -395,50 +323,49 @@ function getItemCredit_k(obj) {
     },
   });
 }
-// over_tax = parseFloat(tax_tot).toFixed(2);
+over_tax = parseFloat(tax_tot).toFixed(2);
 // alert(over_tax);
 
-function setitemCredit(obj, title, price, discount, itemid) {
-  // alert( 'yeah');
+function setitemdc(obj, title, price, discount, itemid) {
+
 // alert('setitemCM');
-  jQuery(obj).parent().parent().find(".getItemCredit").val(title);
-  jQuery(obj).parent().parent().parent().find(".pricedc").val(price);
-  jQuery(obj).parent().parent().parent().find(".discountdc").val(discount);
+  jQuery(obj).parent().parent().find(".getItemsrr").val(title);
+  jQuery(obj).parent().parent().parent().find(".pricerr").val(price);
+  jQuery(obj).parent().parent().parent().find(".discountrr").val(discount);
   jQuery(obj).parent().parent().parent().find(".itemid").val(itemid);
   var counter = jQuery(obj)
     .parent()
     .parent()
     .parent()
-    .find(".pricedc")
+    .find(".pricerr")
     .data("counter");
   jQuery(obj).parent().empty();
-  calculationCredit(counter);
+  calculationrr(counter);
 }
 
-$(document).on("focusout", ".pricedc", function () {
+$(document).on("focusout", ".pricerr", function () {
   var counter = $(this).data("counter");
-  calculationCredit(counter);
+  calculationrr(counter);
 });
 
 // $(document).on("focusout", ".quantitycm", function () {
 //   var counter = $(this).data("counter");
 //   calculationcm(counter);
 // });
-$(document).on("focusout", ".discountdc", function () {
+$(document).on("focusout", ".discountrr", function () {
   var counter = $(this).data("counter");
-  calculationCredit(counter);
+  calculationrr(counter);
 });
 
-
-$(document).on("focusout", ".quantitydc2", function () {
+$(document).on("focusout", ".quantityrr", function () {
   // var counter = $(this).data("counter");
 //   calculationcm(counter);
 // var idd = this.id;
 var idd = $(this).attr('data-itemid');
 var in_id = idd;
-  var price = $("#price_dc_" + in_id).val();
+  var price = $("#price_" + in_id).val();
   var quantity = $("#quantity_" + in_id).val();
-  var discount = $("#discount_dc_" + in_id).val();
+  var discount = $("#discount_" + in_id).val();
   var tax = (parseFloat(price) * 7.5) / 100;
   var tax1 = (((parseFloat(price) * 7.5) / 100) * parseFloat(quantity)).toFixed(
     2
@@ -454,26 +381,26 @@ var in_id = idd;
 
 //   alert( 'yeah' + total);
 
-  $("#span_total_credit_" + in_id).text(total);
+  $("#span_total_" + in_id).text(total);
   $("#tax_1_" + in_id).text(tax1);
-  $("#tax1_dc_" + in_id).val(tax1);
-  $("#discount_dc_" + in_id).val(discount);
+  $("#tax1_" + in_id).val(tax1);
+  $("#discount_" + in_id).val(discount);
 
   if( $('#tax_1_'+ in_id).length ){
     $('#tax_1_'+in_id).val(tax1);
   }
 
-  if( $('#item_total_dc_'+ in_id).length ){
-    $('#item_total_dc_'+in_id).val(total);
+  if( $('#item_total_'+ in_id).length ){
+    $('#item_total_'+in_id).val(total);
   }
 
   var eqpt_cost = 0;
   var cnt = $("#count").val();
   var total_discount = 0;
   for (var p = 0; p <= cnt; p++) {
-    var prc = $("#price_dc_" + p).val();
+    var prc = $("#price_" + p).val();
     var quantity = $("#quantity_" + p).val();
-    var discount = $("#discount_dc_" + p).val();
+    var discount = $("#discount_" + p).val();
     // var discount= $('#discount_' + p).val();
     // eqpt_cost += parseFloat(prc) - parseFloat(discount);
     eqpt_cost += parseFloat(prc) * parseFloat(quantity);
@@ -490,7 +417,7 @@ var in_id = idd;
 
   var subtotaldc = 0;
   // $("#span_total_0").each(function(){
-    $('*[id^="span_total_credit_"]').each(function(){
+    $('*[id^="span_total_"]').each(function(){
     subtotaldc += parseFloat($(this).text());
   });
   // $('#sum').text(subtotal);
@@ -507,21 +434,20 @@ var in_id = idd;
   $("#total_discount").val(total_discount);
   $("#span_sub_total_0").text(total_discount);
   $("#span_sub_total_dc").text(subtotal.toFixed(2));
-  $("#item_total_dc").val(subtotal.toFixed(2));
+  $("#item_total").val(subtotal.toFixed(2));
 
   var s_total = subtotal.toFixed(2);
-  var adjustment = $("#adjustment_input_dc").val();
+  var adjustment = $("#adjustment_input").val();
   var grand_total = s_total - parseFloat(adjustment);
   var markup = $("#markup_input_form").val();
   var grand_total_w = grand_total + parseFloat(markup);
 
-  $("#total_tax_dc_").text(subtotaltax.toFixed(2));
-  $("#total_tax_dc_").val(subtotaltax.toFixed(2));
+  $("#total_tax_").text(subtotaltax.toFixed(2));
+  $("#total_tax_").val(subtotaltax.toFixed(2));
 
 
   $("#grand_total_dc").text(grand_total_w.toFixed(2));
-  $("#grand_total_dc_total").text(grand_total_w.toFixed(2));
-  $("#grand_total_dc_total_val").val(grand_total_w.toFixed(2));
+  $("#grand_total_rr_t").text(grand_total_w.toFixed(2));
   $("#grand_total_input").val(grand_total_w.toFixed(2));
 
   var sls = (parseFloat(eqpt_cost).toFixed(2) * 7.5) / 100;
@@ -530,11 +456,10 @@ var in_id = idd;
   cal_total_due();
 });
 
-function calculationCredit(counter) {
-  // alert( 'yeah');
-  var price = $("#price_dc_" + counter).val();
+function calculationrr(counter) {
+  var price = $("#price_" + counter).val();
   var quantity = $("#quantity_" + counter).val();
-  var discount = $("#discount_dc_" + counter).val();
+  var discount = $("#discount_" + counter).val();
   var tax = (parseFloat(price) * 7.5) / 100;
   var tax1 = (((parseFloat(price) * 7.5) / 100) * parseFloat(quantity)).toFixed(
     2
@@ -548,14 +473,14 @@ function calculationCredit(counter) {
     parseFloat(discount)
   ).toFixed(2);
 
-  // console.log( 'yeah' + total);
+  // alert( 'yeah' + total);
 
-  $("#span_total_credit_" + counter).text(total);
+  $("#span_total_" + counter).text(total);
   $("#tax_1_" + counter).text(tax1);
   $("#tax_111_" + counter).text(tax1);
   $("#tax_1_" + counter).val(tax1);
-  $("#discount_dc_" + counter).val(discount);
-  $("#tax1_dc_" + counter).val(tax1);
+  $("#discount_" + counter).val(discount);
+  $("#tax1_" + counter).val(tax1);
   // $("#tax1_" + counter).val(tax1);
   // $("#tax_" + counter).val(tax1);
   // alert(tax1);
@@ -564,8 +489,8 @@ function calculationCredit(counter) {
     $('#tax_1_'+counter).val(tax1);
   }
 
-  if( $('#item_total_dc_'+ counter).length ){
-    $('#item_total_dc_'+counter).val(total);
+  if( $('#item_total_'+ counter).length ){
+    $('#item_total_'+counter).val(total);
   }
 
   // alert('dri');
@@ -574,9 +499,9 @@ function calculationCredit(counter) {
   var cnt = $("#count").val();
   var total_discount = 0;
   for (var p = 0; p <= cnt; p++) {
-    var prc = $("#price_dc_" + p).val();
+    var prc = $("#price_" + p).val();
     var quantity = $("#quantity_" + p).val();
-    var discount = $("#discount_dc_" + p).val();
+    var discount = $("#discount_" + p).val();
     // var discount= $('#discount_' + p).val();
     // eqpt_cost += parseFloat(prc) - parseFloat(discount);
     eqpt_cost += parseFloat(prc) * parseFloat(quantity);
@@ -593,7 +518,7 @@ function calculationCredit(counter) {
 
   var subtotal = 0;
   // $("#span_total_0").each(function(){
-    $('*[id^="span_total_credit_"]').each(function(){
+    $('*[id^="span_total_"]').each(function(){
     subtotal += parseFloat($(this).text());
   });
   // $('#sum').text(subtotal);
@@ -609,24 +534,22 @@ function calculationCredit(counter) {
   $("#total_discount").val(total_discount);
   $("#span_sub_total_0").text(total_discount);
   $("#span_sub_total_dc").text(subtotal.toFixed(2));
-  $("#item_total_dc").val(subtotal.toFixed(2));
+  $("#item_total").val(subtotal.toFixed(2));
 
   var s_total = subtotal.toFixed(2);
-  var adjustment = $("#adjustment_input_dc").val();
+  var adjustment = $("#adjustment_input").val();
   var grand_total = s_total - parseFloat(adjustment);
   var markup = $("#markup_input_form").val();
   var grand_total_w = grand_total + parseFloat(markup);
 
-  $("#total_tax_dc_").text(subtotaltax.toFixed(2));
-  $("#total_tax_input_dc").val(subtotaltax.toFixed(2));
+  $("#total_tax_").text(subtotaltax.toFixed(2));
+  $("#total_tax_input").val(subtotaltax.toFixed(2));
 
 
   $("#grand_total_dc").text(grand_total_w.toFixed(2));
-  $("#grand_total_dc_total").text(grand_total_w.toFixed(2));
-  $("#grand_total_dc_total_val").val(grand_total_w.toFixed(2));
+  $("#grand_total_rr_t").text(grand_total_w.toFixed(2));
   $("#grand_total_input").val(grand_total_w.toFixed(2));
   $("#grandtotal_input").val(grand_total_w.toFixed(2));
-  // alert(grand_total_w);
 
   if($("#grand_total").length && $("#grand_total").val().length)
   {
@@ -650,11 +573,8 @@ function calculationCredit(counter) {
   cal_total_due();
 }
 
-</script>
-<script>
 
-
-$(".select_item_dc").click(function () {
+$(".select_item2").click(function () {
             var idd = this.id;
             console.log(idd);
             console.log($(this).data('itemname'));
@@ -684,17 +604,17 @@ $(".select_item_dc").click(function () {
                 "<td width=\"20%\"><select name=\"item_type[]\" class=\"form-control\"><option value=\"product\">Product</option><option value=\"material\">Material</option><option value=\"service\">Service</option><option value=\"fee\">Fee</option></select></td>\n" +
                 "<td width=\"10%\"><input data-itemid='"+idd+"' id='quantity_"+idd+"' value='"+qty+"' type=\"number\" name=\"quantity[]\" data-counter=\"0\"  min=\"0\" class=\"form-control qtyest\"></td>\n" +
                 // "<td>\n" + '<input type="number" class="form-control qtyest" name="quantity[]" data-counter="' + count + '" id="quantity_' + count + '" min="1" value="1">\n' + "</td>\n" +
-                "<td width=\"10%\"><input id='price_dc_"+idd+"' value='"+price+"'  type=\"number\" name=\"price[]\" class=\"form-control\" placeholder=\"Unit Price\"></td>\n" +
+                "<td width=\"10%\"><input id='price_"+idd+"' value='"+price+"'  type=\"number\" name=\"price[]\" class=\"form-control\" placeholder=\"Unit Price\"></td>\n" +
                 // "<td width=\"10%\"><input type=\"number\" class=\"form-control discount\" name=\"discount[]\" data-counter="0" id=\"discount_0\" min="0" value="0" ></td>\n" +
                 // "<td width=\"10%\"><small>Unit Cost</small><input type=\"text\" name=\"item_cost[]\" class=\"form-control\"></td>\n" +
-                "<td width=\"10%\"><input type=\"number\" name=\"discount[]\" class=\"form-control discount\" id='discount_dc_"+idd+"'></td>\n" +
+                "<td width=\"10%\"><input type=\"number\" name=\"discount[]\" class=\"form-control discount\" id='discount_"+idd+"'></td>\n" +
                 // "<td width=\"25%\"><small>Inventory Location</small><input type=\"text\" name=\"item_loc[]\" class=\"form-control\"></td>\n" +
-                "<td width=\"20%\"><input type=\"text\" data-itemid='"+idd+"' class=\"form-control tax_change2\" name=\"tax[]\" data-counter=\"0\" id='tax1_dc_"+idd+"' min=\"0\" value='"+taxes_t+"'></td>\n" +
-                "<td style=\"text-align: center\" class=\"d-flex\" width=\"15%\"><span data-subtotal='"+total_+"' id='span_total_credit_"+idd+"' class=\"total_per_item\">"+total+
+                "<td width=\"20%\"><input type=\"text\" data-itemid='"+idd+"' class=\"form-control tax_change2\" name=\"tax[]\" data-counter=\"0\" id='tax1_"+idd+"' min=\"0\" value='"+taxes_t+"'></td>\n" +
+                "<td style=\"text-align: center\" class=\"d-flex\" width=\"15%\"><span data-subtotal='"+total_+"' id='span_total_"+idd+"' class=\"total_per_item\">"+total+
                 // "</span><a href=\"javascript:void(0)\" class=\"remove_item_row\"><i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i></a>"+
                 "</span> <input type=\"hidden\" name=\"total[]\" id='sub_total_text"+idd+"' value='"+total+"'></td>" +
                 "</tr>";
-            tableBody = $("#items_table_body_refund_credit");
+            tableBody = $("#items_table_bodyrr");
             tableBody.append(markup);
             markup2 = "<tr id=\"sss\">" +
                 "<td >"+title+"</td>\n" +
@@ -716,9 +636,9 @@ $(".select_item_dc").click(function () {
             // calculation(idd);
 
   var in_id = idd;
-  var price = $("#price_dc_" + in_id).val();
+  var price = $("#price_" + in_id).val();
   var quantity = $("#quantity_" + in_id).val();
-  var discount = $("#discount_dc_" + in_id).val();
+  var discount = $("#discount_" + in_id).val();
   var tax = (parseFloat(price) * 7.5) / 100;
   var tax1 = (((parseFloat(price) * 7.5) / 100) * parseFloat(quantity)).toFixed(
     2
@@ -734,18 +654,18 @@ $(".select_item_dc").click(function () {
 
   // alert( 'yeah' + total);
 
-  $("#span_total_credit_" + in_id).text(total);
+  $("#span_total_" + in_id).text(total);
   $("#sub_total_text" + in_id).val(total);
   $("#tax_1_" + in_id).text(tax1);
-  $("#tax1_dc_" + in_id).val(tax1);
-  $("#discount_dc_" + in_id).val(discount);
+  $("#tax1_" + in_id).val(tax1);
+  $("#discount_" + in_id).val(discount);
 
   if( $('#tax_1_'+ in_id).length ){
     $('#tax_1_'+in_id).val(tax1);
   }
 
-  if( $('#item_total_dc_'+ in_id).length ){
-    $('#item_total_dc_'+in_id).val(total);
+  if( $('#item_total_'+ in_id).length ){
+    $('#item_total_'+in_id).val(total);
   }
 
   var eqpt_cost = 0;
@@ -753,9 +673,9 @@ $(".select_item_dc").click(function () {
   var cnt = $("#count").val();
   var total_discount = 0;
   for (var p = 0; p <= cnt; p++) {
-    var prc = $("#price_dc_" + p).val();
+    var prc = $("#price_" + p).val();
     var quantity = $("#quantity_" + p).val();
-    var discount = $("#discount_dc_" + p).val();
+    var discount = $("#discount_" + p).val();
     // var discount= $('#discount_' + p).val();
     // eqpt_cost += parseFloat(prc) - parseFloat(discount);
     // total_cost += parseFloat(prc);
@@ -769,12 +689,12 @@ $(".select_item_dc").click(function () {
 
 var total_cost = 0;
   // $("#span_total_0").each(function(){
-    $('*[id^="price_dc_"]').each(function(){
+    $('*[id^="price_"]').each(function(){
       total_cost += parseFloat($(this).val());
   });
 
 var tax_tot = 0;
-$('*[id^="tax1_dc_"]').each(function(){
+$('*[id^="tax1_"]').each(function(){
   tax_tot += parseFloat($(this).val());
 });
 
@@ -782,8 +702,8 @@ over_tax = parseFloat(tax_tot).toFixed(2);
 // alert(over_tax);
 
 $("#sales_taxs").val(over_tax);
-$("#total_tax_input_dc").val(over_tax);
-$("#total_tax_dc_").text(over_tax);
+$("#total_tax_input").val(over_tax);
+$("#total_tax_").text(over_tax);
 
 
   eqpt_cost = parseFloat(eqpt_cost).toFixed(2);
@@ -793,7 +713,7 @@ $("#total_tax_dc_").text(over_tax);
 
   var subtotal = 0;
   // $("#span_total_0").each(function(){
-    $('*[id^="span_total_credit_"]').each(function(){
+    $('*[id^="span_total_"]').each(function(){
     subtotal += parseFloat($(this).text());
   });
   // $('#sum').text(subtotal);
@@ -809,12 +729,12 @@ $("#total_tax_dc_").text(over_tax);
   $("#eqpt_cost").val(eqpt_cost);
   $("#total_discount").val(total_discount);
   $("#span_sub_total_0").text(total_discount);
-  $("#span_sub_total_invoice_dc").text(subtotal.toFixed(2));
+  $("#span_sub_total_invoice").text(subtotal.toFixed(2));
   // $("#item_total").val(subtotal.toFixed(2));
-  $("#item_total_dc").val(stotal_cost);
+  $("#item_total").val(stotal_cost);
   
   var s_total = subtotal.toFixed(2);
-  var adjustment = $("#adjustment_input_dc").val();
+  var adjustment = $("#adjustment_input").val();
   var grand_total = s_total - parseFloat(adjustment);
   var markup = $("#markup_input_form").val();
   var grand_total_w = grand_total + parseFloat(markup);
@@ -825,12 +745,8 @@ $("#total_tax_dc_").text(over_tax);
   
   
 
-  $("#grand_total_dc").text(grand_total_w.toFixed(2));
+  $("#grand_total").text(grand_total_w.toFixed(2));
   $("#grand_total_input").val(grand_total_w.toFixed(2));
-  $("#grand_total_dc_total").text(grand_total_w.toFixed(2));
-  $("#grand_total_dc_total_val").val(grand_total_w.toFixed(2));
-  $("#grand_total_dc").text(grand_total_w.toFixed(2));
-  $("#span_sub_total_dc").text(grand_total_w.toFixed(2));
 
   var sls = (parseFloat(eqpt_cost).toFixed(2) * 7.5) / 100;
   sls = parseFloat(sls).toFixed(2);
@@ -838,248 +754,9 @@ $("#total_tax_dc_").text(over_tax);
   cal_total_due();
         });
 </script>
-
 <script>
-document.getElementById("payment_method_Receipt").onchange = function() {
-    if (this.value == 'Cash') {
-        // alert('cash');
-		// $('#exampleModal').modal('toggle');
-        $('#cash_area_Receipt').show();
-        $('#check_area_Receipt').hide();
-        $('#credit_card_Receipt').hide();
-        $('#debit_card_Receipt').hide();
-        $('#ach_area_Receipt').hide();
-        $('#venmo_area_Receipt').hide();
-        $('#paypal_area_Receipt').hide();
-        $('#invoicing_Receipt').hide();
-        $('#square_area_Receipt').hide();
-        $('#warranty_area_Receipt').hide();
-        $('#home_area_Receipt').hide();
-        $('#e_area_Receipt').hide();
-        $('#other_credit_card_Receipt').hide();
-        $('#other_payment_area_Receipt').hide();
-    	}
-    else if(this.value == 'Invoicing'){
-
-        $('#cash_area_Receipt').hide();
-        $('#check_area_Receipt').hide();
-        $('#invoicing_Receipt').show();
-        $('#credit_card_Receipt').hide();
-        $('#debit_card_Receipt').hide();
-        $('#ach_area_Receipt').hide();
-        $('#venmo_area_Receipt').hide();
-        $('#paypal_area_Receipt').hide();
-        $('#square_area_Receipt').hide();
-        $('#warranty_area_Receipt').hide();
-        $('#home_area_Receipt').hide();
-        $('#e_area_Receipt').hide();
-        $('#other_credit_card_Receipt').hide();
-        $('#other_payment_area_Receipt').hide();
-    }
-	
-    else if(this.value == 'Check'){
-        // alert('Check');
-        $('#cash_area_Receipt').hide();
-        $('#check_area_Receipt').show();
-        $('#credit_card_Receipt').hide();
-        $('#debit_card_Receipt').hide();
-        $('#invoicing_Receipt').hide();
-        $('#ach_area_Receipt').hide();
-        $('#venmo_area_Receipt').hide();
-        $('#paypal_area_Receipt').hide();
-        $('#square_area_Receipt').hide();
-        $('#warranty_area_Receipt').hide();
-        $('#home_area_Receipt').hide();
-        $('#e_area_Receipt').hide();
-        $('#other_credit_card_Receipt').hide();
-        $('#other_payment_area_Receipt').hide();
-    }
-    else if(this.value == 'Credit Card'){
-        // alert('Credit card');
-        $('#cash_area_Receipt').hide();
-        $('#check_area_Receipt').hide();
-        $('#credit_card_Receipt').show();
-        $('#debit_card_Receipt').hide();
-        $('#invoicing_Receipt').hide();
-        $('#ach_area_Receipt').hide();
-        $('#venmo_area_Receipt').hide();
-        $('#paypal_area_Receipt').hide();
-        $('#square_area_Receipt').hide();
-        $('#warranty_area_Receipt').hide();
-        $('#home_area_Receipt').hide();
-        $('#e_area_Receipt').hide();
-        $('#other_credit_card_Receipt').hide();
-        $('#other_payment_area_Receipt').hide();
-    }
-    else if(this.value == 'Debit Card'){
-        // alert('Credit card');
-        $('#cash_area_Receipt').hide();
-        $('#check_area_Receipt').hide();
-        $('#credit_card_Receipt').hide();
-        $('#debit_card_Receipt').show();
-        $('#ach_area_Receipt').hide();
-        $('#venmo_area_Receipt').hide();
-        $('#invoicing_Receipt').hide();
-        $('#paypal_area_Receipt').hide();
-        $('#square_area_Receipt').hide();
-        $('#warranty_area_Receipt').hide();
-        $('#home_area_Receipt').hide();
-        $('#e_area_Receipt').hide();
-        $('#other_credit_card_Receipt').hide();
-        $('#other_payment_area_Receipt').hide();
-    }
-    else if(this.value == 'ACH'){
-        // alert('Credit card');
-        $('#cash_area_Receipt').hide();
-        $('#check_area_Receipt').hide();
-        $('#credit_card_Receipt').hide();
-        $('#debit_card_Receipt').hide();
-        $('#invoicing_Receipt').hide();
-        $('#ach_area_Receipt').show();
-        $('#venmo_area_Receipt').hide();
-        $('#paypal_area_Receipt').hide();
-        $('#square_area_Receipt').hide();
-        $('#warranty_area_Receipt').hide();
-        $('#home_area_Receipt').hide();
-        $('#e_area_Receipt').hide();
-        $('#other_credit_card_Receipt').hide();
-        $('#other_payment_area_Receipt').hide();
-    }
-    else if(this.value == 'Venmo'){
-        // alert('Credit card');
-        $('#cash_area_Receipt').hide();
-        $('#check_area_Receipt').hide();
-        $('#credit_card_Receipt').hide();
-        $('#debit_card_Receipt').hide();
-        $('#ach_area_Receipt').hide();
-        $('#invoicing_Receipt').hide();
-        $('#venmo_area_Receipt').show();
-        $('#paypal_area_Receipt').hide();
-        $('#square_area_Receipt').hide();
-        $('#warranty_area_Receipt').hide();
-        $('#home_area_Receipt').hide();
-        $('#e_area_Receipt').hide();
-        $('#other_credit_card_Receipt').hide();
-        $('#other_payment_area_Receipt').hide();
-    }
-    else if(this.value == 'Paypal'){
-        // alert('Credit card');
-        $('#cash_area_Receipt').hide();
-        $('#check_area_Receipt').hide();
-        $('#credit_card_Receipt').hide();
-        $('#debit_card_Receipt').hide();
-        $('#invoicing_Receipt').hide();
-        $('#ach_area_Receipt').hide();
-        $('#venmo_area_Receipt').hide();
-        $('#paypal_area_Receipt').show();
-        $('#square_area_Receipt').hide();
-        $('#warranty_area_Receipt').hide();
-        $('#home_area_Receipt').hide();
-        $('#e_area_Receipt').hide();
-        $('#other_credit_card_Receipt').hide();
-        $('#other_payment_area_Receipt').hide();
-    }
-    else if(this.value == 'Square'){
-        // alert('Credit card');
-        $('#cash_area_Receipt').hide();
-        $('#check_area_Receipt').hide();
-        $('#credit_card_Receipt').hide();
-        $('#invoicing_Receipt').hide();
-        $('#debit_card_Receipt').hide();
-        $('#ach_area_Receipt').hide();
-        $('#venmo_area_Receipt').hide();
-        $('#paypal_area_Receipt').hide();
-        $('#square_area_Receipt').show();
-        $('#warranty_area_Receipt').hide();
-        $('#home_area_Receipt').hide();
-        $('#e_area_Receipt').hide();
-        $('#other_credit_card_Receipt').hide();
-        $('#other_payment_area_Receipt').hide();
-    }
-    else if(this.value == 'Warranty Work'){
-        // alert('Credit card');
-        $('#cash_area_Receipt').hide();
-        $('#check_area_Receipt').hide();
-        $('#credit_card_Receipt').hide();
-        $('#invoicing_Receipt').hide();
-        $('#debit_card_Receipt').hide();
-        $('#ach_area_Receipt').hide();
-        $('#venmo_area_Receipt').hide();
-        $('#paypal_area_Receipt').hide();
-        $('#square_area_Receipt').hide();
-        $('#warranty_area_Receipt').show();
-        $('#home_area_Receipt').hide();
-        $('#e_area_Receipt').hide();
-        $('#other_credit_card_Receipt').hide();
-        $('#other_payment_area_Receipt').hide();
-    }
-    else if(this.value == 'Home Owner Financing'){
-        // alert('Credit card');
-        $('#cash_area_Receipt').hide();
-        $('#check_area_Receipt').hide();
-        $('#credit_card_Receipt').hide();
-        $('#debit_card_Receipt').hide();
-        $('#invoicing_Receipt').hide();
-        $('#ach_area_Receipt').hide();
-        $('#venmo_area_Receipt').hide();
-        $('#paypal_area_Receipt').hide();
-        $('#square_area_Receipt').hide();
-        $('#warranty_area_Receipt').hide();
-        $('#home_area_Receipt').show();
-        $('#e_area_Receipt').hide();
-        $('#other_credit_card_Receipt').hide();
-        $('#other_payment_area_Receipt').hide();
-    }
-    else if(this.value == 'e-Transfer'){
-        // alert('Credit card');
-        $('#cash_area_Receipt').hide();
-        $('#check_area_Receipt').hide();
-        $('#credit_card_Receipt').hide();
-        $('#debit_card_Receipt').hide();
-        $('#invoicing_Receipt').hide();
-        $('#ach_area_Receipt').hide();
-        $('#venmo_area_Receipt').hide();
-        $('#paypal_area_Receipt').hide();
-        $('#square_area_Receipt').hide();
-        $('#warranty_area_Receipt').hide();
-        $('#home_area_Receipt').hide();
-        $('#e_area_Receipt').show();
-        $('#other_credit_card_Receipt').hide();
-        $('#other_payment_area_Receipt').hide();
-    }
-    else if(this.value == 'Other Credit Card Professor'){
-        // alert('Credit card');
-        $('#cash_area_Receipt').hide();
-        $('#check_area_Receipt').hide();
-        $('#credit_card_Receipt').hide();
-        $('#debit_card_Receipt').hide();
-        $('#invoicing_Receipt').hide();
-        $('#ach_area_Receipt').hide();
-        $('#venmo_area_Receipt').hide();
-        $('#paypal_area_Receipt').hide();
-        $('#square_area_Receipt').hide();
-        $('#warranty_area_Receipt').hide();
-        $('#home_area_Receipt').hide();
-        $('#e_area_Receipt').hide();
-        $('#other_credit_card_Receipt').show();
-        $('#other_payment_area_Receipt').hide();
-    }
-    else if(this.value == 'Other Payment Type'){
-        // alert('Credit card');
-        $('#cash_area_Receipt').hide();
-        $('#check_area_Receipt').hide();
-        $('#credit_card_Receipt').hide();
-        $('#debit_card_Receipt').hide();
-        $('#invoicing_Receipt').hide();
-        $('#ach_area_Receipt').hide();
-        $('#venmo_area_Receipt').hide();
-        $('#paypal_area_Receipt').hide();
-        $('#square_area_Receipt').hide();
-        $('#warranty_area_Receipt').hide();
-        $('#home_area_Receipt').hide();
-        $('#e_area_Receipt').hide();
-        $('#other_credit_card_Receipt').hide();
-        $('#other_payment_area_Receipt').show();
-    }
-}
+$('#addcreditmemoModal').modal({
+    backdrop: 'static',
+    keyboard: false
+})
 </script>

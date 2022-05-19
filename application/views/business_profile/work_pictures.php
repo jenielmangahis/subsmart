@@ -18,9 +18,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 }
 .option-container {
     position: relative;
-    top: 37px;
+    top: 30px;
     float: right;
-    background-color: #000000;
+        background-color: #000000;
     width: 16%;
     padding: 5px;
 }
@@ -99,12 +99,9 @@ div.picture-container div.img img {
 }
 .image-caption{
   position: relative;
-  top: -31px;
-  /*left: 16px;*/
-  color: #ffffff;
-  background-color: #000000;
-  height: 31px;
-  padding: 5px;
+    top: -25px;
+    left: 16px;
+    color: #ffffff;
 }
 </style>
 <div class="wrapper" role="wrapper">
@@ -128,7 +125,7 @@ div.picture-container div.img img {
                         </div>
                         <div class="alert alert-warning mt-2 mb-4" role="alert">
                             <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">
-                              Add photos to spotlight features of your business or past projects pictures.
+                              Add photos to spotlight features of your business or past projects pictures.  You can upload up to <b>25 images.</b>
                             </span>
                         </div>
                         <?php include viewPath('flash'); ?>

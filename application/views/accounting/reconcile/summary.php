@@ -67,7 +67,7 @@ position: absolute;
                             </div>
                             <div class="row pb-3">
                                 <div class="col-md-12 banking-tab-container">
-                                    <a href="<?php echo url('/accounting/chart-of-accounts')?>" class="banking-tab">Chart of Accounts</a>
+                                    <a href="<?php echo url('/accounting/chart_of_accounts')?>" class="banking-tab">Chart of Accounts</a>
                                     <a href="<?php echo url('/accounting/reconcile')?>" class="banking-tab-active text-decoration-none">Reconcile</a>
                                 </div>
                             </div>
@@ -75,7 +75,7 @@ position: absolute;
                                 <div class="col-md-6">
                                     <div class="breadcrumb-pager m-0">
                                         <ul>
-                                            <li><a href="<?= url('accounting/chart-of-accounts') ?>">Chart of Accounts</a></li>
+                                            <li><a href="<?= url('accounting/chart_of_accounts') ?>">Chart of Accounts</a></li>
                                             <li><a href="#">Bank Register</a></li>
                                             <li>Reconciliation summary</li>
                                         </ul>

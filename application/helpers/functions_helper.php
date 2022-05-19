@@ -174,47 +174,4 @@ if (!function_exists('pay_history')){
         return $status[$id];
     }
 }
-
-if (!function_exists('transaction_categories')){
-    function transaction_categories($name=null){
-        $categories = array(
-            array(
-                'name' => 'E',
-                'description' => 'Equipment',
-            ),array(
-                'name' => 'MMR',
-                'description' => 'Monthly Monitoring',
-            ),array(
-                'name' => 'RMR',
-                'description' => 'RMR',
-            ),array(
-                'name' => 'MS',
-                'description' => 'Monthly Subscription',
-            ),array(
-                'name' => 'AF',
-                'description' => 'Activation Fee',
-            ),array(
-                'name' => 'FM',
-                'description' => 'First Month',
-            ),array(
-                'name' => 'AFM',
-                'description' => 'Activation + First Month',
-            ),array(
-                'name' => 'D',
-                'description' => 'Deposit',
-            ),array(
-                'name' => 'O',
-                'description' => 'Other',
-            )
-        );
-        if(isset($name)){
-            for($x=0;$x<count($categories);$x++){
-                if($categories[$x]['name'] == $name){
-                    return $categories[$x];
-                }
-            }
-        }
-        return $categories;
-    }
-}
 ?>

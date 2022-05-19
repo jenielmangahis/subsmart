@@ -1,128 +1,44 @@
-var columns = [
-    {
-        orderable: false,
-        data: null,
-        name: 'id',
-        fnCreatedCell: function(td, cellData, rowData, row, col) {
-            $(td).html(`
-            <div class="d-flex justify-content-center">
-                <div class="checkbox checkbox-sec m-0">
-                    <input type="checkbox" value="${rowData.id}" id="account-${rowData.id}">
-                    <label for="account-${rowData.id}" class="p-0" style="width: 24px; height: 24px"></label>
-                </div>
-            </div>
-            `);
-        }
-    },
-    {
-        data: 'name',
-        name: 'name',
-        fnCreatedCell: function(td, cellData, rowData, row, col) {
-            if(rowData.status === 1 || rowData.status === "1") {
-                $(td).html(cellData);
-                if(rowData.is_sub_acc) {
-                    $(td).html('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'+cellData);
-                }
-            } else {
-                $(td).html(cellData+' (deleted)');
-            }
+function showOptions(s)
+{
+    var option_text = s[s.selectedIndex].innerHTML;
 
-            if(rowData.hasOwnProperty('parent_acc')) {
-                $(td).append(`<p class="m-0 font-italic text-muted">Sub-account of ${rowData.parent_acc}</p>`);
-            }
-        }
-    },
-    {
-        data: 'type',
-        name: 'type',
-        fnCreatedCell: function(td, cellData, rowData, row, col) {
-            $(td).addClass('type');
-        }
-    },
-    {
-        orderable: false,
-        data: 'detail_type',
-        name: 'detail_type',
-        fnCreatedCell: function(td, cellData, rowData, row, col) {
-            $(td).addClass('detailtype');
-        }
-    },
-    {
-        data: 'nsmartrac_balance',
-        name: 'nsmartrac_balance',
-        fnCreatedCell: function(td, cellData, rowData, row, col) {
-            $(td).addClass('nbalance');
-        }
-    },
-    {
-        data: 'bank_balance',
-        name: 'bank_balance',
-        fnCreatedCell: function(td, cellData, rowData, row, col) {
-            $(td).addClass('bank_balance');
-        }
-    },
-    {
-        orderable: false,
-        data: null,
-        name: 'action',
-        fnCreatedCell: function(td, cellData, rowData, row, col) {
-            if(rowData.status === 0 || rowData.status === "0") {
-                $(td).html(`
-                <div class="btn-group float-right">
-                    <a href="#" class="btn text-primary d-flex align-items-center justify-content-center make-active">Make active</a>
+    $('#modalAddAccount #name').val(option_text);
+}
 
-                    <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span class="sr-only">Toggle Dropdown</span>
-                    </button>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" href="#">Run Report</a>
-                    </div>
-                </div>
-                `);
-            } else {
-                var noRegTypes = [
-                    'Income',
-                    'Cost of Goods Sold',
-                    'Expenses',
-                    'Other Income',
-                    'Other Expense'
-                ];
-
-                if(noRegTypes.includes(rowData.type) === false) {
-                    var inactiveText = rowData.type === 'Bank' ? 'reduces usage' : "won't reduce usage";
-                    $(td).html(`
-                    <div class="btn-group float-right">
-                        <a href="/accounting/chart-of-accounts/view-register/${rowData.id}" class="btn text-primary d-flex align-items-center justify-content-center view-register">View Register</a>
-
-                        <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="sr-only">Toggle Dropdown</span>
-                        </button>
-                        <div class="dropdown-menu">
-                            <a class="dropdown-item" href="javascript:void(0);" id="editAccount" data-id="${rowData.id}">Edit</a>
-                            <a class="dropdown-item make-inactive" href="#">Make inactive (${inactiveText})</a>
-                            <a class="dropdown-item" href="#">Run Report</a>
-                        </div>
-                    </div>
-                    `);
-                } else {
-                    $(td).html(`
-                    <div class="btn-group float-right">
-                        <a href="#" class="btn text-primary d-flex align-items-center justify-content-center">Run report</a>
-
-                        <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="sr-only">Toggle Dropdown</span>
-                        </button>
-                        <div class="dropdown-menu">
-                            <a class="dropdown-item" href="javascript:void(0);" id="editAccount" data-id="${rowData.id}">Edit</a>
-                            <a class="dropdown-item make-inactive" href="#">Make inactive (won't reduce usage)</a>
-                        </div>
-                    </div>
-                    `);
-                }
-            }
-        }
+function check(el)
+{
+    var x = document.getElementById($(el).attr('id')).checked;
+    if(x == true)
+    {
+        $(el).parent().children('select[name="sub_account_type"]').removeAttr('disabled','disabled');
     }
-];
+    else
+    {
+        $(el).parent().children('select[name="sub_account_type"]').attr('disabled','disabled');
+
+        $.get('/accounting/chart-of-accounts/get-all-account-types', function(result) {
+            var res = JSON.parse(result);
+
+            if($(el).attr('id').includes('edit')) {
+                var selected = $('#edit_account_type').val();
+                $('#edit_account_type').html('');
+                for(i in res) {
+                    $('#edit_account_type').append(`<option value="${res[i].id}">${res[i].account_name}</option>`);
+                }
+                $('#edit_account_type').val(selected);
+                $('#edit_account_type').trigger('change');
+            } else {
+                var selected = $('#account_type').val();
+                $('#account_type').html('');
+                for(i in res) {
+                    $('#account_type').append(`<option value="${res[i].id}">${res[i].account_name}</option>`);
+                }
+                $('#account_type').val(selected);
+                $('#account_type').trigger('change');
+            }
+        });
+    }
+}
 
 function showdiv(el)
 {
@@ -153,13 +69,13 @@ function col_type()
     if($('#chk_type').attr('checked'))
     {
         $('#chk_type').removeAttr('checked');
-        $('.type').hide();
+        $('.type').css('display','none');
 
     }
     else
     {
         $('#chk_type').attr('checked',"checked");
-        $('.type').show();
+        $('.type').css('display','');
     }
 }
 function col_detailtype()
@@ -167,13 +83,13 @@ function col_detailtype()
     if($('#chk_detail_type').attr('checked'))
     {
         $('#chk_detail_type').removeAttr('checked');
-        $('.detailtype').hide();
+        $('.detailtype').css('display','none');
 
     }
     else
     {
         $('#chk_detail_type').attr('checked',"checked");
-        $('.detailtype').show();
+        $('.detailtype').css('display','');
     }
 }
 function col_nbalance()
@@ -181,27 +97,27 @@ function col_nbalance()
     if($('#chk_nsmart_balance').attr('checked'))
     {
         $('#chk_nsmart_balance').removeAttr('checked');
-        $('.nbalance').hide();
+        $('.nbalance').css('display','none');
 
     }
     else
     {
         $('#chk_nsmart_balance').attr('checked',"checked");
-        $('.nbalance').show();
+        $('.nbalance').css('display','');
     }
 }
-function col_bank_balance()
+function col_balance()
 {
-    if($('#chk_bank_balance').attr('checked'))
+    if($('#chk_balance').attr('checked'))
     {
-        $('#chk_bank_balance').removeAttr('checked');
-        $('.bank_balance').hide();
+        $('#chk_balance').removeAttr('checked');
+        $('.balance').css('display','none');
 
     }
     else
     {
-        $('#chk_bank_balance').attr('checked',"checked");
-        $('.bank_balance').show();
+        $('#chk_balance').attr('checked',"checked");
+        $('.balance').css('display','');
     }
 }
 
@@ -227,18 +143,53 @@ $(document).on('change', '#sub_account_type, #edit_sub_account_type', function()
     });
 });
 
+$(document).on('change', '#account_type, #edit_account_type', function() {
+    var el = $(this);
+    var account_id = this.value;
+    if(account_id!='')
+    {
+        $.ajax({
+            url:"/accounting/chart-of-accounts/fetch-acc-detail",
+            method: "POST",
+            data: {account_id:account_id},
+            success:function(data)
+            {
+                if(el.attr('id').includes('edit')) {
+                    $("#edit_detail_type").html(data);
+                    showOptions(document.getElementById('edit_detail_type'));
+                    $('#edit_detail_type').trigger('change');
+                }else {
+                    $("#detail_type").html(data);
+                    showOptions(document.getElementById('detail_type'));
+                    $('#detail_type').trigger('change');
+                }
+            }
+        })
+    }
+});
+
+$(document).on('change', '#detail_type, #edit_detail_type', function() {
+    var el = $(this);
+    var id = el.val();
+
+    $.ajax({
+        url: "/accounting/chart-of-accounts/get-detail-type/"+id,
+        success: function(data)
+        {
+            data = JSON.parse(data);
+            
+            el.parent().next().html(data.description);
+        }
+    });
+});
+
 $(document).ready(function () {
 
     $('.form-validate').validate();
 
     //Initialize Select2 Elements
 
-    $('.select2').select2({
-        dropdownParent: $('.modal')
-    });
-    $('#myTabContent select').select2({
-        minimumResultsForSearch: -1
-    });
+    $('.select2').select2()
 
     var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
 
@@ -301,7 +252,87 @@ $(document).ready(function () {
             },
             pagingType: 'full_numbers'
         },
-        columns: columns
+        columns: [
+            {
+                data: 'name',
+                name: 'name',
+                fnCreatedCell: function(td, cellData, rowData, row, col) {
+                    if(rowData.status === 1 || rowData.status === "1") {
+                        $(td).html(cellData);
+                        if(rowData.is_sub_acc) {
+                            $(td).html('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'+cellData);
+                        }
+                    } else {
+                        $(td).html(cellData+' (deleted)');
+                    }
+                }
+            },
+            {
+                data: 'type',
+                name: 'type',
+                fnCreatedCell: function(td, cellData, rowData, row, col) {
+                    $(td).addClass('type');
+                }
+            },
+            {
+                orderable: false,
+                data: 'detail_type',
+                name: 'detail_type',
+                fnCreatedCell: function(td, cellData, rowData, row, col) {
+                    $(td).addClass('detailtype');
+                }
+            },
+            {
+                data: 'nsmartrac_balance',
+                name: 'nsmartrac_balance',
+                fnCreatedCell: function(td, cellData, rowData, row, col) {
+                    $(td).addClass('nbalance');
+                }
+            },
+            {
+                data: 'bank_balance',
+                name: 'bank_balance',
+                fnCreatedCell: function(td, cellData, rowData, row, col) {
+                    $(td).addClass('balance');
+                }
+            },
+            {
+                orderable: false,
+                data: null,
+                name: 'action',
+                fnCreatedCell: function(td, cellData, rowData, row, col) {
+                    if(rowData.status === 0 || rowData.status === "0") {
+                        $(td).html(`
+                        <div class="btn-group float-right">
+                            <a href="#" class="btn text-primary d-flex align-items-center justify-content-center make-active">Make active</a>
+
+                            <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="sr-only">Toggle Dropdown</span>
+                            </button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="#">Run Report</a>
+                            </div>
+                        </div>
+                        `);
+                    } else {
+                        $(td).html(`
+                        <div class="btn-group float-right">
+                            <a href="#" class="btn text-primary d-flex align-items-center justify-content-center">View Register</a>
+
+                            <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="sr-only">Toggle Dropdown</span>
+                            </button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="javascript:void(0);" data-href="/accounting/chart-of-accounts/edit/${rowData.id}" id="editAccount" data-id="${rowData.id}">Edit</a>
+                                <a class="dropdown-item make-inactive" href="#">Make Inactive (Reduce usage)</a>
+                                <a class="dropdown-item" href="#">Run Report</a>
+                            </div>
+                        </div>
+                        `);
+                    }
+                }
+            }
+        ]
     });
 
     $(document).on('click', '#chart-of-accounts-table .make-active', function(e) {
@@ -331,43 +362,30 @@ $(document).ready(function () {
     });
 })
 
-$(document).on('click', '#add-new-account-button', function(e) {
-    e.preventDefault();
-
-    $.get('/accounting/get-dropdown-modal/account_modal', function(result) {
-        if ($('#modal-container').length > 0) {
-            $('div#modal-container').html(`<div class="full-screen-modal">${result}</div>`);
-        } else {
-            $('body').append(`
-                <div id="modal-container"> 
-                    <div class="full-screen-modal">
-                        ${result}
-                    </div>
-                </div>
-            `);
-        }
-
-        initAccountModal();
-    });
-});
-
 $(document).on('click', '#editAccount', function(e){
     var target = e.currentTarget.dataset;
-    $.get('/accounting/chart-of-accounts/edit/'+target.id, function(html) {
-        if ($('#modal-container').length > 0) {
-            $('div#modal-container').html(`<div class="full-screen-modal">${html}</div>`);
-        } else {
-            $('body').append(`
-                <div id="modal-container"> 
-                    <div class="full-screen-modal">
-                        ${html}
-                    </div>
-                </div>
-            `);
-        }
+    $.ajax({
+        url:"/accounting/chart-of-accounts/edit/" + target.id,
+        method: "GET",
+        success:function(html)
+        {
+            $('.append-edit-account').html(html);
+            $('.date_picker input#edit_time_date').datepicker({
+                uiLibrary: 'bootstrap',
+                todayBtn: "linked",
+                language: "de"
+            });
+            $('.form-validate').validate();
 
-        initAccountModal();
-    });
+            //Initialize Select2 Elements
+
+            $('.select2').select2()
+
+            var element = document.querySelector('#edit_check_sub');
+            var switchery = new Switchery(element, {size: 'small'});
+            $('#modalEditAccount').modal('show');
+        }
+    })
 });
 
 $('#import_form').on('submit', function(event){
@@ -407,190 +425,5 @@ $('#time_date, #edit_time_date').on('change', function() {
         } else {
             $('#edit_balance').parent().removeClass('hide');
         }
-    }
-});
-
-$(document).on('dblclick', '#chart-of-accounts-table tbody tr', function() {
-    if($(this).find('a.view-register').length > 0) {
-        location.href = $(this).find('a.view-register').attr('href');
-    }
-});
-
-$('#print-accounts').on('click', function(e) {
-    e.preventDefault();
-
-    var data = new FormData();
-
-	data.set('inactive', $('#inc_inactive').prop('checked') ? 1 : 0);
-    data.set('type', $('#chk_type').prop('checked') ? 1 : 0);
-    data.set('detail_type', $('#chk_detail_type').prop('checked') ? 1 : 0);
-    data.set('nsmart_balance', $('#chk_nsmart_balance').prop('checked') ? 1 : 0);
-    data.set('balance', $('#chk_bank_balance').prop('checked') ? 1 : 0);
-	data.set('search', $('#search').val());
-
-    var tableOrder = $('#chart-of-accounts-table').DataTable().order();
-    data.set('column', columns[tableOrder[0][0]].name);
-    data.set('order', tableOrder[0][1]);
-
-    $.ajax({
-		url: '/accounting/chart-of-accounts/print-table',
-        data: data,
-        type: 'post',
-        processData: false,
-        contentType: false,
-        success: function(result) {
-			let pdfWindow = window.open("");
-			pdfWindow.document.write(`<h3>Chart of Accounts</h3>`);
-			pdfWindow.document.write(result);
-			$(pdfWindow.document).find('body').css('padding', '0');
-			$(pdfWindow.document).find('body').css('margin', '0');
-			$(pdfWindow.document).find('iframe').css('border', '0');
-			pdfWindow.print();
-		}
-	});
-});
-
-
-$('#edit-accounts').on('click', function(e) {
-    e.preventDefault();
-
-    $('#chart-of-accounts-table tbody tr').each(function() {
-        var data = $('#chart-of-accounts-table').DataTable().row($(this)).data();
-        $(this).find('td:first-child()').hide();
-        $(this).find('td:nth-child(2)').html(`<input type="text" value="${data.name}" name="account_name[]" class="form-control">`);
-        $(this).find('td:last-child()').hide();
-    });
-
-    $('#chart-of-accounts-table thead tr th:first-child()').hide();
-    $('#chart-of-accounts-table thead tr th:last-child()').hide();
-
-    $('#edit-accounts-buttons').removeClass('d-none');
-    $('#edit-accounts-buttons').next().removeClass('d-flex');
-    $('#edit-accounts-buttons').next().addClass('d-none');
-});
-
-$('#cancel-edit-btn').on('click', function(e) {
-    e.preventDefault();
-
-    $('#chart-of-accounts-table thead tr th:first-child()').show();
-    $('#chart-of-accounts-table thead tr th:last-child()').show();
-
-    $('#chart-of-accounts-table tbody tr').each(function() {
-        var data = $('#chart-of-accounts-table').DataTable().row($(this)).data();
-
-        if(data.is_sub_acc) {
-            $(this).find('td:nth-child(2)').html(`&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${data.name}`);
-        } else {
-            $(this).find('td:nth-child(2)').html(data.name);
-        }
-        $(this).find('td:first-child()').show();
-        $(this).find('td:last-child()').show();
-    });
-
-    $('#edit-accounts-buttons').addClass('d-none');
-    $('#edit-accounts-buttons').next().addClass('d-flex');
-    $('#edit-accounts-buttons').next().removeClass('d-none');
-});
-
-$('#save-table-btn').on('click', function(e) {
-    e.preventDefault();
-
-    var data = new FormData();
-
-    $('#chart-of-accounts-table tbody tr').each(function() {
-        var rowData = $('#chart-of-accounts-table').DataTable().row($(this)).data();
-        var newName = $(this).find('td:first-child()').children('input').val();
-
-        data.set(`account_name[${rowData.id}]`, newName);
-    });
-
-    $.ajax({
-		url: '/accounting/chart-of-accounts/update-accounts-name',
-        data: data,
-        type: 'post',
-        processData: false,
-        contentType: false,
-        success: function(result) {
-			$('#chart-of-accounts-table').DataTable().ajax.reload(null, true);
-            $('#chart-of-accounts-table thead tr th:last-child()').show();
-
-            $('#edit-accounts-buttons').addClass('d-none');
-            $('#edit-accounts-buttons').next().addClass('d-flex');
-            $('#edit-accounts-buttons').next().removeClass('d-none');
-
-            Swal.fire({
-                html: `Chart of accounts saved.`,
-                icon: 'success',
-                showConfirmButton: false,
-                showCancelButton: false,
-                timer: 1500
-            });
-		}
-	});
-});
-
-$(document).on('change', '#chart-of-accounts-table thead #select-all-accounts', function() {
-    $('#chart-of-accounts-table tbody input[type="checkbox"]').prop('checked', $(this).prop('checked'));
-
-    if($(this).prop('checked')) {
-        var flag = true;
-        $('#chart-of-accounts-table tbody tr').each(function() {
-            var rowData = $('#chart-of-accounts-table').DataTable().row($(this)).data();
-            if(rowData.status === 0 || rowData.status === "0") {
-                flag = false;
-            }
-        });
-
-        if(flag) {
-            $('#make-inactive-batch.dropdown-item').removeClass('disabled');
-        } else {
-            $('#make-inactive-batch.dropdown-item').addClass('disabled');
-        }
-    } else {
-        $('#make-inactive-batch.dropdown-item').addClass('disabled');
-    }
-});
-
-$(document).on('change', '#chart-of-accounts-table tbody input[type="checkbox"]', function() {
-    var flag = true;
-    $('#chart-of-accounts-table tbody tr').each(function() {
-        var rowData = $('#chart-of-accounts-table').DataTable().row($(this)).data();
-        if($(this).find('input[type="checkbox"]:checked').length > 0) {
-            if(rowData.status === 0 || rowData.status === "0") {
-                flag = false;
-            }
-        }
-    });
-
-    if(flag) {
-        $('#make-inactive-batch.dropdown-item').removeClass('disabled');
-    } else {
-        $('#make-inactive-batch.dropdown-item').addClass('disabled');
-    }
-});
-
-$('#make-inactive-batch').on('click', function(e) {
-    e.preventDefault();
-    if($(this).hasClass('disabled') === false) {
-        var data = new FormData();
-
-        $('#chart-of-accounts-table tbody tr input[type="checkbox"]:checked').each(function() {
-            data.append('ids[]', $(this).val());
-        });
-
-        $.ajax({
-            url:"/accounting/chart-of-accounts/inactive-batch",
-            method:"post",
-            data: data,
-            contentType:false,
-            cache:false,
-            processData:false,
-            success:function(data){
-                $('#chart-of-accounts-table').DataTable().ajax.reload(null, true);
-
-            }
-        });
-
-        $('#chart-of-accounts-table thead #select-all-accounts').prop('checked', false).trigger('change');
     }
 });

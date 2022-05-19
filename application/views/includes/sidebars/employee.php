@@ -36,12 +36,9 @@
             <img src="<?= getCompanyBusinessProfileImage(); ?>" class="company-logo" />
         </li>
         <li class="nav-header" style="padding-top: 0px;margin-top: 0px;">EMPLOYEES</li>
-        <?php 
-            $controller = $this->router->fetch_class();
-            $method     = $this->router->fetch_method();
-            $uri = $_SERVER['REQUEST_URI']; 
+        <?php $uri = $_SERVER['REQUEST_URI']; //print_r($uri);
         ?>
-        <li class="submenus <?php if ($controller == 'users' && $method != 'tracklocation' && $method != 'pay_scale') {
+        <li class="submenus <?php if ($uri == '/users') {
                                 echo 'active';
                             } ?>"><a href="<?php echo base_url('users') ?>" title="Employees"><span class="fa fa-user"></span>Employees</a></li>
         <?php //dd(logged()); 

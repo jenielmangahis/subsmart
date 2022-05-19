@@ -7,38 +7,28 @@ class Clients_model extends MY_Model
    
     public function getAll($filters=array())
     {
-        $this->db->select('clients.*, nsmart_plans.plan_name, nsmart_plans.price, industry_type.name AS industry_type_name, business_profile.business_name as bp_business_name,business_profile.id as bp_id,business_profile.contact_name as bp_contact_name, business_profile.business_phone as bp_business_phone');
+        $id = logged('id');
+
+        $this->db->select('clients.*, nsmart_plans.plan_name, nsmart_plans.price, industry_type.name AS industry_type_name');
         $this->db->from($this->table);
 
         $this->db->join('industry_type', 'clients.industry_type_id = industry_type.id', 'left');
-        $this->db->join('nsmart_plans', 'nsmart_plans.nsmart_plans_id = clients.nsmart_plan_id', 'right');
-        $this->db->join('business_profile', 'business_profile.company_id = clients.id', 'left');
+        $this->db->join('nsmart_plans', 'nsmart_plans.nsmart_plans_id = clients.nsmart_plan_id', 'left');
+
+        //$this->db->join('industry_type', 'clients.industry_type_id = industry_type.id', 'left');
 
         if ( !empty($filters) ) {
             if ( !empty($filters['search']) ) {
-                $this->db->like('business_profile.business_name', $filters['search'], 'both');
-                $this->db->or_like('industry_type.name', $filters['search'], 'both');
+                $this->db->like('first_name', $filters['search'], 'both');
             }
         }
+
+
 
         //table "nsmart_plans" field nsmart_plans_id
 
         $this->db->order_by('id', 'DESC');
 
-        $query = $this->db->get();
-        return $query->result();
-    }
-
-    public function getAllByStatus($status)
-    {
-        $this->db->select('clients.*, nsmart_plans.plan_name, nsmart_plans.price, industry_type.name AS industry_type_name, business_profile.business_name as bp_business_name,business_profile.id as bp_id,business_profile.contact_name as bp_contact_name, business_profile.business_phone as bp_business_phone');
-        $this->db->from($this->table);
-
-        $this->db->join('industry_type', 'clients.industry_type_id = industry_type.id', 'left');
-        $this->db->join('nsmart_plans', 'nsmart_plans.nsmart_plans_id = clients.nsmart_plan_id', 'right');
-        $this->db->join('business_profile', 'business_profile.company_id = clients.id', 'left');
-        $this->db->where('clients.is_plan_active', $status);
-        $this->db->order_by('id', 'DESC');
         $query = $this->db->get();
         return $query->result();
     }
@@ -55,31 +45,6 @@ class Clients_model extends MY_Model
 
         $this->db->where('clients.id', $id);
 
-        $query = $this->db->get()->row();
-        return $query;
-    }
-
-    public function getByIdPub($id)
-    {
-        // $user_id = logged('company_id');
-
-        $this->db->select('*');
-        $this->db->from($this->table);
-
-        // $this->db->join('industry_type', 'clients.industry_type_id = industry_type.id', 'left');
-        // $this->db->join('nsmart_plans', 'nsmart_plans.nsmart_plans_id = clients.nsmart_plan_id', 'left');
-
-        $this->db->where('id', $id);
-
-        $query = $this->db->get()->row();
-        return $query;
-    }
-
-    public function getByIdPubClientProf($id)
-    {
-        $this->db->select('*');
-        $this->db->from('business_profile');
-        $this->db->where('id', $id);
         $query = $this->db->get()->row();
         return $query;
     }
@@ -139,43 +104,7 @@ class Clients_model extends MY_Model
         $this->db->delete($this->table, array('id' => $id));
     } 
 
-    public function getAllByPlanDateExpiration($date, $fields = ''){
-        if( $fields != '' ){
-            $this->db->select($fields);
-        }else{
-            $this->db->select('*');
-        }
-        
-        $this->db->where('plan_date_expiration', $date);
-        $this->db->from($this->table);
-
-        $query = $this->db->get();
-        return $query->result();
-    }
-
-    public function getAllExpiredSubscription($date, $fields = ''){
-        if( $fields != '' ){
-            $this->db->select($fields);
-        }else{
-            $this->db->select('*');
-        }
-        
-        $this->db->where('plan_date_expiration <=', $date);
-        $this->db->from($this->table);
-
-        $query = $this->db->get();
-        return $query->result();
-    }
-
-    public function deactivateExpiredUnpaidSubscription(){
-        $date = date("Y-m-d");
-
-        $this->db->from($this->table);
-        $this->db->set(['is_plan_active' => 0]);
-        $this->db->where('is_auto_renew', 0);
-        $this->db->where('next_billing_date <=', $date);
-        $this->db->update();
-    }
+    
 }
 
 /* End of file Clients_model.php */

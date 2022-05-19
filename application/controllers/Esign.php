@@ -9,7 +9,6 @@ class Esign extends MY_Controller {
     {
         parent::__construct();
 		$this->checkLogin();
-		$this->hasAccessModule(49);
 		$this->load->model('Esign_model', 'Esign_model');
 		$this->load->model('Activity_model', 'activity');
 		add_css(array(
@@ -205,18 +204,6 @@ class Esign extends MY_Controller {
 		$this->load->model('User_docflies_model', 'User_docflies_model');
 		$this->page_data['users'] = $this->users_model->getUser(logged('id'));
 		$this->page_data['file_id'] = $this->input->get('id');
-
-		$queries = array();
-		parse_str($_SERVER['QUERY_STRING'], $queries);
-		$isTemplate = array_key_exists('template_id', $queries);
-		$isSelfSigning = array_key_exists('signing_id', $queries);
-
-		$this->page_data['is_self_signing'] = false;
-		if ($isSelfSigning) {
-			$this->page_data['file_id'] = $queries['signing_id'];
-			$this->page_data['is_self_signing'] = true;
-		}
-
 		$this->page_data['file_url'] = "";
 		if($this->page_data['file_id'] > 0) {
 			$query = $this->db->from('user_docfile')->where('id',$this->page_data['file_id'])->get();
@@ -224,12 +211,14 @@ class Esign extends MY_Controller {
 		}
 		$this->page_data['next_step'] = ($this->input->get('next_step') == '')?0:$this->input->get('next_step');
 
-
-		$recipients = [];
+		$queries = array();
+		parse_str($_SERVER['QUERY_STRING'], $queries);
+		$isTemplate = array_key_exists('template_id', $queries);
+	
 		if ($isTemplate) { // :( this shouldn't be here
 			$this->db->where('template_id', $queries['template_id']);
 			$recipients = $this->db->get('user_docfile_templates_recipients')->result_array();
-		} else if (!$isSelfSigning) {
+		} else {
 			$queryRecipients = $this->db->from('user_docfile_recipients')->where('docfile_id',$this->page_data['file_id'])->get();
 			$recipients = $queryRecipients->result_array();
 		}
@@ -244,18 +233,12 @@ class Esign extends MY_Controller {
 		}, $recipients, array_keys($recipients));
 		$this->page_data['recipients'] = $recipients;
 
-		add_css([
-			'assets/css/esign/esign-builder/esign-builder.css',
-			'assets/css/esign/docusign/docusign.css'
-		]);
-
+		add_css('assets/css/esign/esign-builder/esign-builder.css');
 		add_footer_js([
 			// 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js',
 			'assets/js/esign/libs/pdf.js',
 			'assets/js/esign/libs/pdf.worker.js',
-            'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js',
 
-			'assets/js/esign/docusign/input.autoresize.js',
 			'assets/js/esign/step1.js',
 			'assets/js/esign/step2.js',
 			'assets/js/esign/step3.js',
@@ -284,14 +267,13 @@ class Esign extends MY_Controller {
 		$coordinates = json_encode($payload['coordinates']);
 		$specs = $payload['specs'] ? json_encode($payload['specs']) : null;
 		$docPage = $payload['doc_page'];
-		$field = $payload['field'] ?? $payload['field_name'];
+		$field = $payload['field'];
 		$recipientId = $payload['recipient_id'];
 		$userId = logged('id');
-		$docfileDocumentId = $payload['docfile_document_id'];
-		$docfileId = $payload['docfile_id'];
+		$docId = $payload['docfile_id'];
 		$uniqueKey = $payload['unique_key'];
 
-		$this->db->where('docfile_id', $docfileId);
+		$this->db->where('docfile_id', $docId);
 		$this->db->where('user_id', $userId);
 		$this->db->where('unique_key', $uniqueKey);
 		$record = $this->db->get('user_docfile_fields')->row();
@@ -302,8 +284,7 @@ class Esign extends MY_Controller {
 			$this->db->insert('user_docfile_fields', [
 				'coordinates' => $coordinates,
 				'doc_page' => $docPage,
-				'docfile_id' => $docfileId,
-				'docfile_document_id' => $docfileDocumentId,
+				'docfile_id' => $docId,
 				'field_name' => $field,
 				'unique_key' => $uniqueKey,
 				'user_id' => $userId,
@@ -315,8 +296,7 @@ class Esign extends MY_Controller {
 			$this->db->update('user_docfile_fields', [
 				'coordinates' => $coordinates,
 				'doc_page' => $docPage,
-				'docfile_id' => $docfileId,
-				'docfile_document_id' => $docfileDocumentId,
+				'docfile_id' => $docId,
 				'field_name' => $field,
 				'unique_key' => $uniqueKey,
 				'user_id' => $userId,
@@ -325,14 +305,11 @@ class Esign extends MY_Controller {
 			]);
 		}
 
-		$query = <<<SQL
-        SELECT `user_docfile_fields`.*, `user_docfile_recipients`.`color` FROM `user_docfile_fields`
-        LEFT JOIN `user_docfile_recipients` ON `user_docfile_recipients`.`id` = `user_docfile_fields`.`user_docfile_recipients_id`
-        WHERE `user_docfile_fields`.`id` = ?
-SQL;
-
 		$recordId = $isCreated ? $this->db->insert_id() : $record->id;
-		$record = $this->db->query($query, [$recordId])->row();
+
+		$this->db->where('id', $recordId);
+		$record = $this->db->get('user_docfile_fields')->row();
+
 		echo json_encode(['record' => $record, 'is_created' => $isCreated]);
 	}
 
@@ -363,33 +340,6 @@ SQL;
         header('content-type: application/json');
         echo json_encode(['success' => true]);
     }
-
-	public function apiDocumentFile($id)
-	{
-		$this->db->where('docfile_id', $id);
-        $this->db->order_by('id', 'ASC');
-        $records = $this->db->get('user_docfile_documents')->result_array();
-
-		$this->db->where('docfile_id', $id);
-        $sequence = $this->db->get('user_docfile_document_sequence')->row();
-        $sorted = null;
-
-        if ($sequence) {
-            $sorted = [];
-            $sequence = explode(',', $sequence->sequence);
-            foreach ($sequence as $recordId) {
-                foreach ($records as $record) {
-                    if ($record['id'] == $recordId) {
-                        $sorted[] = $record;
-                        break;
-                    }
-                }
-            }
-        }
-
-        header('content-type: application/json');
-        echo json_encode(['data' => is_null($sorted) ? $records : $sorted]);
-	}
 
 	public function changeFavoriteStatus($id,$isFavorite){
 		// $this->load->model('Esign_model', 'Esign_model');
@@ -713,7 +663,7 @@ SQL;
 		}
 
 		foreach ($payload['recipients'] as $recipient) {
-			//['id' => $id, 'name' => $name, 'email' => $email, 'color' => $color, 'role' => $role] = $recipient;
+			['id' => $id, 'name' => $name, 'email' => $email, 'color' => $color, 'role' => $role] = $recipient;
 
 			$this->db->where('id', $id);
 			$this->db->where('docfile_id', $docId);
@@ -818,10 +768,10 @@ SQL;
             return;
         }
 
-		//['subject' => $subject, 'message' => $message] = $this->input->post();
+		['subject' => $subject, 'message' => $message] = $this->input->post();
 
 		$this->db->insert('user_docfile', [
-			'name' => $subject,
+			'name' => '',
 			'type' => 'Single',
 			'status' => 'Draft',
 			'subject' => $subject,
@@ -847,35 +797,6 @@ SQL;
 
 			move_uploaded_file($tempName, $filepath . $filename);
 		}
-
-		// save sequence
-		$this->db->where('docfile_id', $insertedId);
-        $record = $this->db->get('user_docfile_document_sequence')->row();
-
-        //['document_sequence' => $sequence] = $this->input->post();
-        //['sequence' => $sequence] = json_decode($sequence, true);
-		$sequence = is_array($sequence) ? $sequence : [];
-
-        $this->db->where('docfile_id', $insertedId);
-        $documents = $this->db->get('user_docfile_documents')->result_array();
-
-        $sequenceIds = [];
-        foreach ($sequence as $documentName) {
-            foreach ($documents as $document) {
-                if (strpos($document['name'], $documentName) !== false) {
-                    $sequenceIds[] = $document['id'];
-                    break;
-                }
-            }
-        }
-
-        $payload = ['docfile_id' => $insertedId, 'sequence' => implode(',', $sequenceIds)];
-        if (!$record) {
-            $this->db->insert('user_docfile_document_sequence', $payload);
-        } else {
-            $this->db->where('docfile_id', $insertedId);
-            $this->db->update('user_docfile_document_sequence', $payload);
-        }
 
 		$this->db->where('id', $insertedId);
 		$record = $this->db->get('user_docfile')->row();

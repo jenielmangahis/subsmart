@@ -34,36 +34,7 @@
                 <div class="text-center">
                     <a class="text-info" href="<?= base_url() ?>estimate">SEE ALL ESTIMATES</a>
                 </div>
-                <?php
-                $draft=0;
-                $accepted=0;
-                $invoiced=0;
-                $other=0;
-                ?>
-                <?php foreach ($estimate_draft as $estimate): ?>
-                    <?php
-                    switch ($estimate->status){
-                        case 'Draft';
-                            $draft++;
-                            break;
-                        case 'Accepted';
-                            $accepted++;
-                            break;
-                        case 'Invoiced';
-                            $invoiced++;
-                            break;
-                        default;
-                            $other++;
-                            break;
-                    }
-                    ?>
-                <?php endforeach; ?>
-                <?php
-                    $draft_percent = number_format((float)$draft/count($estimate_draft),2,'.','') * 100;
-                    $accepted_percent = number_format((float)$accepted/count($estimate_draft),2,'.','') * 100;
-                    $invoiced_percent = number_format((float)$invoiced/count($estimate_draft),2,'.','') * 100;
-                    $other_percent = number_format((float)$other/count($estimate_draft),2,'.','') * 100;
-                ?>
+
             </div>
         </div>
     </div>
@@ -160,10 +131,10 @@
             data: {
                 datasets: [{
                         data: [
-                            '<?= $draft_percent; ?>',
-                            '<?= $accepted_percent; ?>',
-                            '<?= $invoiced_percent; ?>',
-                            '<?= $other_percent; ?>'
+                            100,
+                            50,
+                            80,
+                            0
                         ],
                         backgroundColor: [
                             window.chartColors.red,
@@ -173,10 +144,10 @@
                         ],
                     }],
                 labels: [
-                    'Draft',
-                    'Accepted',
-                    'Invoiced',
-                    'Other',
+                    'Created',
+                    'Open',
+                    'Lost',
+                    'Won',
                 ]
             },
             options: {

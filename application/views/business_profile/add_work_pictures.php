@@ -81,7 +81,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <script src="https://rawgit.com/enyo/dropzone/master/dist/dropzone.js"></script>
                                 <link rel="stylesheet" href="https://rawgit.com/enyo/dropzone/master/dist/dropzone.css">
                                 <!-- Change /upload-target to your upload address -->
-                                <form action="<?= url('users/upload_work_pictures'); ?>" class="dropzone" id="nsdropzone"></form>
+                                <form action="<?= url('users/upload_work_pictures'); ?>" class="dropzone"></form>
                             
                         </div>
                     </div>
@@ -98,14 +98,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php //include viewPath('includes/footer'); ?>
 <script>
 $(document).ready(function(){
-    new Dropzone("#nsdropzone", { 
-        maxFilesize: 2, // MB
-        init: function() {
-            this.on("success", function(file, responseText) {
-                console.log(responseText);
-            });
-        }
-    });
 });
 </script>
 

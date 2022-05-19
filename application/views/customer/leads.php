@@ -86,7 +86,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="card-body hid-desk pl-0 pr-0" style="padding-top:0px;padding-bottom:0px;">
                             <div class="row align-items-center mb-0">
                                 <div class="col-sm-6">
-                                    <h3 class="page-title mt-0" style="margin:5px 0 10px 0 !important;">Leads Manager List</h3>
+                                    <h3 class="page-title mt-0" style="margin:5px 0 10px 0 !important;">Leads Manager</h3>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="float-right d-md-block">
@@ -111,11 +111,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <thead>
                                     <tr>
                                         <th>Name</th>
-                                        <th>City</th>
-                                        <th>State</th>
+                                        <th>Address</th>
                                         <th>Assigned To</th>
                                         <th>Email</th>
                                         <th>SSS Number</th>
+                                        <th>Date of Birth</th>
                                         <th>Phone</th>
                                         <th>Status</th>
                                         <th>Actions</th>
@@ -125,44 +125,26 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <?php foreach ($leads as $lead) : ?>
                                             <tr>
                                                 <td><?= $lead->firstname.' '.$lead->lastname; ?></td>
-                                                <td><?= $lead->city ?></td>
-                                                <td><?= $lead->state ?></td>
-                                                <td><?= $lead->FName. ' '. $lead->LName; ?></td>
+                                                <td><?= $lead->address; ?></td>
+                                                <td><?= $lead->FName; ?></td>
                                                 <td><?= $lead->email_add; ?></td>
                                                 <td><?= $lead->sss_num; ?></td>
+                                                <td><?= $lead->date_of_birth; ?></td>
                                                 <td><?= $lead->phone_cell; ?></td>
                                                 <td><?= $lead->status; ?></td>
                                                 <td>
-                                                    <div class="dropdown dropdown-btn text-center">
-                                                        <button class="btn btn-default" type="button" id="dropdown-edit"
-                                                            data-toggle="dropdown" aria-expanded="true">
-                                                            <span class="btn-label">Manage <i class="fa fa-caret-down fa-sm"
-                                                                    style="margin-left:10px;"></i></span></span>
-                                                        </button>
-                                                        <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
-                                                            <li role="presentation">
-                                                                <a role="menuitem" tabindex="-1" href="<?php echo url('/customer/add_lead/'.$lead->leads_id); ?>" class="editItemBtn">
-                                                                    <span class="fa fa-edit icon"></span> Edit
-                                                                </a>
-                                                            </li>
-                                                            <li role="presentation">
-                                                                <a role="menuitem" tabindex="-1" href="javascript:void(0);" id="<?php echo $lead->leads_id; ?>" class="delete_lead">
-                                                                    <span class="fa fa-trash icon"></span> Delete
-                                                                </a>
-                                                            </li>
-                                                            <li role="presentation">
-                                                                <a role="menuitem" tabindex="-1" href="<?php echo url('/customer/add_lead/'.$lead->leads_id); ?>" class="editItemBtn">
-                                                                    <span class="fa fa-file-text icon"></span> Send SMS
-                                                                </a>
-                                                            </li>
-                                                            <li role="presentation">
-                                                                <a role="menuitem" tabindex="-1" href="mailto:<?= $lead->email_add; ?>" class="editItemBtn">
-                                                                    <span class="fa fa-envelope icon"></span> Send Email
-                                                                </a>
-                                                            </li>
-                                                            <li role="separator" class="divider"></li>
-                                                        </ul>
-                                                    </div>
+                                                    <a href="<?php echo url('/customer/add_lead/'.$lead->leads_id); ?>" style="text-decoration:none;display:inline-block;" title="Edit Customer">
+                                                        <img src="/assets/img/customer/actions/ac_edit.png" width="16px" height="16px" border="0" title="Edit Lead">
+                                                    </a>
+                                                    <a href="javascript:void(0);" id="<?php echo $lead->leads_id; ?>" class="delete_lead" style="text-decoration:none;display:inline-block;" title="Edit Customer">
+                                                        <img src="/assets/img/customer/actions/ac_delete.png" width="16px" height="16px" border="0" title="Delete Lead">
+                                                    </a>
+                                                    <a href="#" style="text-decoration:none; display:inline-block;" >
+                                                        <img src="/assets/img/customer/actions/ac_sms.png" width="16px" height="16px" border="0" title="Send SMS">
+                                                    </a>
+                                                    <a href="mailto:<?= $lead->email_add; ?>" style="text-decoration:none; display:inline-block;" >
+                                                        <img src="/assets/img/customer/actions/ac_email.png" width="16px" height="16px" border="0" title="Send Email">
+                                                    </a>
                                                 </td>
                                             </tr>
                                         <?php endforeach; ?>
@@ -199,8 +181,33 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         "scrollX":        false,
         "scrollCollapse": true,
         "autoWidth": true,
-        "order": [],
-        
+        "order": [[ 1, "asc" ]],
+        initComplete: function () {
+            this.api().columns([7]).every( function () {
+                var column = this;
+                var select = $('<select >' +
+                    '<option value=""></option>' +
+                    '<option value="New">New</option>' +
+                    '<option value="Contacted">Contacted</option>' +
+                    '<option value="Follow Up">Follow Up</option>' +
+                    '<option value="Assigned">Assigned</option>' +
+                    '<option value="Converted">Converted</option>' +
+                    '<option value="Closed">Closed</option>' +
+                    '</select>').appendTo( $(column.header()))
+                    .on( 'change', function () {
+                        var val = $.fn.dataTable.util.escapeRegex(
+                            $(this).val()
+                        );
+                        column.search( val ? val : '', false, true ).draw();
+                    } );
+                column.data().unique().sort().each( function ( d, j ) {
+                    //var val = $('<div/>').html(d).text();
+                    //select.append( '<option value="' + val + '">' + val + '</option>' );
+                   // select.append( '<option value="'+d+'">'+d+'</option>' )
+                    //console.log(val);
+                });
+            } );
+        }
     });
     });
     $(".delete_lead").on( "click", function( event ) {

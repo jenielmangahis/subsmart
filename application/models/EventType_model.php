@@ -9,19 +9,17 @@ class EventType_model extends MY_Model
     {
         $id = logged('id');
 
-        $this->db->select('event_types.*, users.id AS uid, users.company_id, business_profile.business_name');
+        $this->db->select('event_types.*, users.id AS uid, users.company_id');
         $this->db->from($this->table);
         $this->db->join('users', 'event_types.user_id = users.id', 'INNER'); 
-        $this->db->join('business_profile', 'event_types.company_id = business_profile.company_id', 'LEFT'); 
 
         if ( !empty($filters) ) {
             if ( !empty($filters['search']) ) {
-                $this->db->like('title', $filters['search'], 'both');
-                $this->db->or_like('business_profile.business_name', $filters['search'], 'both');
+                $this->db->like('name', $filters['search'], 'both');
             }
         }
 
-        $this->db->order_by('id', 'DESC');
+        $this->db->order_by('id', 'ASC');
 
         $query = $this->db->get();
         return $query->result();

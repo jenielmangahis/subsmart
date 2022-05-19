@@ -1,8 +1,3 @@
-$browser-context: 16; // Default
-@function em($pixels, $context: $browser-context) {
-  @return #{$pixels/$context}em;
-}
-
 @font-face {
   font-family: "Southam";
   src: url(../fill-and-sign/fonts/SouthamDemo.otf);
@@ -57,7 +52,7 @@ body {
   }
 
   &-indicator {
-    --size: #{em(14)};
+    --size: 14px;
 
     display: none;
     width: var(--size);
@@ -67,7 +62,7 @@ body {
     cursor: default;
 
     // font should be similar to field inputs
-    font-size: #{em(12)};
+    font-size: 12px;
     font-family: monospace;
   }
 }
@@ -103,39 +98,29 @@ body {
   margin-top: 80px;
   margin-bottom: 50px;
 
-  [data-field-type="date-signed"],
-  .text {
-    font-family: monospace;
-    font-size: #{em(12)};
-  }
-
   input,
   select {
-    font-size: #{em(12)};
+    font-size: 12px;
     font-family: monospace;
-    // border: #{em(2)} var(--border-style) var(--border-color, #bf1e2e);
+    border: 2px var(--border-style) var(--border-color, #bf1e2e);
     outline: 0;
   }
 
   input[type="checkbox"],
   input[type="radio"] {
-    // outline: #{em(2)} var(--border-style) #bf1e2e;
+    outline: 2px var(--border-style) #bf1e2e;
   }
 
-  &--finished,
-  .completed {
+  &--finished {
     user-select: none;
     pointer-events: none;
-    border-color: transparent;
-    background-color: transparent;
 
     input,
     select,
     .signing__fieldSignature,
     .signing__fieldAttachment {
-      border: 0 !important;
+      border: 0;
       cursor: initial;
-      background-color: inherit;
     }
 
     input[type="checkbox"],
@@ -145,11 +130,6 @@ body {
       &:not(:checked) {
         display: none;
       }
-    }
-
-    input[value=""],
-    input:not([value]) {
-      display: none;
     }
 
     select {
@@ -176,10 +156,10 @@ body {
 
       &-input {
         display: none;
+      }
 
-        &:checked + .form-check-indicator {
-          display: inline-flex;
-        }
+      &-indicator {
+        display: inline-flex;
       }
     }
   }
@@ -215,7 +195,6 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    font-size: 16px;
 
     canvas {
       width: 100%;
@@ -230,15 +209,15 @@ body {
 
   &__fieldSignature,
   &__fieldAttachment {
-    --size: #{em(60)};
-    --size-svg: #{em(30)};
+    --size: 60px;
+    --size-svg: 30px;
 
     height: var(--size);
     width: var(--size);
     display: flex;
     align-items: center;
     justify-content: center;
-    border: #{em(2)} solid #bf1e2e;
+    border: 2px solid #bf1e2e;
     cursor: pointer;
 
     svg {
@@ -256,7 +235,7 @@ body {
   }
 
   &__fieldSignature {
-    --size-svg: #{em(35)};
+    --size-svg: 35px;
   }
 
   &__signaturePad {
@@ -324,47 +303,5 @@ body {
     .btn {
       padding: 0 5px;
     }
-  }
-}
-
-.fillAndSign__signatureDraw {
-  max-height: #{em(40)};
-}
-
-.fillAndSign__signatureContainer {
-  position: relative;
-}
-
-.fillAndSign__signatureDrawDate {
-  position: absolute;
-  width: max-content;
-  font-size: 9px !important;
-  background-color: #333;
-  color: #fff;
-  bottom: -1rem;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.docusignField__checkbox,
-.docusignField__radio {
-  &--isRequired {
-    input {
-      outline: #{em(2)} var(--border-style) #bf1e2e;
-    }
-  }
-}
-
-select.docusignField__dropdown--isRequired {
-  border: #{em(2)} var(--border-style) var(--border-color, #bf1e2e);
-}
-
-.docusignField__input--isRequired input {
-  border: #{em(2)} var(--border-style) var(--border-color, #bf1e2e);
-}
-
-.signing__documentPDF {
-  canvas {
-    max-width: 900px;
   }
 }

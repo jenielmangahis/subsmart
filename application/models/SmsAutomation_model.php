@@ -37,26 +37,6 @@ class SmsAutomation_model extends MY_Model
         return $query->result();
     }
 
-    public function getAllActive($conditions=array())
-    {
-
-        $this->db->select('sms_automation.*, users.id AS uid, users.company_id');
-        $this->db->from($this->table);
-        $this->db->join('users', 'sms_automation.user_id = users.id', 'LEFT');
-
-        if( !empty($conditions) ){
-            foreach( $conditions as $c ){
-                $this->db->where($c['field'], $c['value']);                
-            }
-        }
-
-        $this->db->where('sms_automation.status', $this->status_active);
-        $this->db->order_by('id', 'ASC');
-
-        $query = $this->db->get();
-        return $query->result();
-    }
-
     public function getAllByCompanyId($company_id, $filters=array(), $conditions=array())
     {
 
@@ -167,22 +147,6 @@ class SmsAutomation_model extends MY_Model
 
     public function getPricePerSms(){
         return 0.05;
-    }
-
-    public function ruleEstimateSubmitted(){
-        return $this->rule_event_estimate_submitted;
-    }
-
-    public function ruleInvoicePaid(){
-        return $this->rule_event_invoice_paid;
-    }
-
-    public function ruleInvoiceDue(){
-        return $this->rule_event_invoice_due;
-    }
-
-    public function ruleWorkOrderCompleted(){
-        return $this->rule_event_work_order_completed;
     }
 
 }

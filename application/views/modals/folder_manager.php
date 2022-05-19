@@ -35,8 +35,7 @@
    }
  }
 </style>
-<link rel="stylesheet" href="<?=base_url('assets/css/esign/esign.css');?>" type="text/css">
-<?php if (!$isMain) {?>
+<?php if(!$isMain){ ?>
 <div id="modal-folder-manager" class="modal" role="dialog">
   <div class="modal-dialog" style="max-width: 1500px">
 
@@ -47,25 +46,25 @@
         <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
       <div class="modal-body" style="padding: 1rem !important">
-<?php }?>
+<?php } ?>
         <?php
-$default_tag = 'Welcome ' . $company_name;
+              $default_tag = 'Welcome ' . $company_name;
 
-if ($isMyLibrary) {
-    $default_tag = 'Hello ' . $user_fname . ' ' . $user_lname;
-    ?>
+              if($isMyLibrary){
+                $default_tag = 'Hello ' . $user_fname . ' ' . $user_lname;
+        ?>
           <input type="hidden" id="vault_type" value="mylibrary" />
-        <?php } else if ($isBusinessFormTemplates) {?>
+        <?php } else if($isBusinessFormTemplates){ ?>
           <input type="hidden" id="vault_type" value="businessformtemplates" />
-        <?php } else {?>
+        <?php } else { ?>
           <input type="hidden" id="vault_type" value="sharedlibrary" />
-        <?php }?>
+        <?php } ?>
 
         <div class="card vaultContainer">
 
         <div class="vault__header">
 
-          <?php if ($isMyLibrary): ?>
+          <?php if($isMyLibrary): ?>
             <h1 class="vault__title">My Library</h1>
             <div class="alert alert-warning mt-2" role="alert">
               <span style="color:black;">
@@ -73,7 +72,7 @@ if ($isMyLibrary) {
               </span>
             </div>
 
-          <?php elseif ($isBusinessFormTemplates): ?>
+          <?php elseif($isBusinessFormTemplates): ?>
             <h1 class="vault__title">Business Form Templates</h1>
             <div class="alert alert-warning mt-2" role="alert">
               <span style="color:black;">
@@ -89,20 +88,10 @@ if ($isMyLibrary) {
               </span>
             </div>
 
-          <?php endif;?>
-
-          <div class="esignActionRequired alert alert-primary">
-            <div class="esignActionRequired__inner">
-              <i class="fa fa-info-circle esignActionRequired__icon"></i>
-              <a class="esignActionRequired__body" href="<?php echo base_url('eSign/manage?view=action_required') ?>">
-                Your action is required for <span class="esignActionRequired__count">0</span> of your eSign documents.
-              </a>
-            </div>
-          </div>
-
+          <?php endif; ?>
         </div>
 
-          <div class="card-header pb-0">
+          <div class="card-header pb-0">        
             <div class="row">
                 <div class="col-md-6">
                   <h5 id="folders_name">
@@ -129,9 +118,9 @@ if ($isMyLibrary) {
                         </tr>
                         <tr>
                           <td class="p-0 pb-1">
-                          <?php if ($isBusinessFormTemplates) {?>
+                          <?php if($isBusinessFormTemplates){ ?>
                             <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1" control="category_entry" title="Category Entry"><i class="fa fa-list-ul"></i></a>
-                          <?php }?>
+                          <?php } ?>
                             <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1" control="recycle" title="Recycle Bin"><i class="fa fa-recycle" title="Recycle Bin"></i></a>
                             <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1" control="search" title="Search File/Folder"><i class="fa fa-search" title="Search File/Folder"></i></a>
                             <a href="#" class="nodecontrol btn btn-sm btn-default pull-right ml-1" control="view" title="View Details"><i class="fa fa-eye" title="View Details"></i></a>
@@ -152,11 +141,11 @@ if ($isMyLibrary) {
               </div>
             </div>
           </div>
-          <div class="card-body" style="<?php if (!$isMain) {echo 'height: 64vh !important; overflow: auto';}?>">
+          <div class="card-body" style="<?php if(!$isMain){ echo 'height: 64vh !important; overflow: auto'; } ?>">
             <div id="docusign_templates"></div>
             <div id="quick_access"></div>
             <div id="folders_and_files"></div>
-            <?php if (((!$isMyLibrary) && (!$isBusinessFormTemplates)) || ((!$isMyLibrary) && (!$isBusinessFormTemplates) && ($isMain))) {?>
+            <?php if(((!$isMyLibrary) && (!$isBusinessFormTemplates)) || ((!$isMyLibrary) && (!$isBusinessFormTemplates) && ($isMain))){ ?>
               <!-- <div class="mt-5">
                 <div class="row">
                   <div class="col-md-4 border">
@@ -176,17 +165,17 @@ if ($isMyLibrary) {
                   </div>
                 </div>
               </div> -->
-            <?php }?>
+            <?php } ?>
           </div>
         </div>
 
-<?php if (!$isMain) {?>
+<?php if(!$isMain){ ?>
       </div>
     </div>
 
   </div>
 </div>
-<?php }?>
+<?php } ?>
 
 <div id="modal-folder-manager-entry" class="modal" role="dialog" data-keyboard="false" data-backdrop="static">
   <div class="modal-dialog" id="modal-folder-manager-entry-dialog">
@@ -222,7 +211,7 @@ if ($isMyLibrary) {
               <input type="text" class="form-control" name="file_desc" id="file_desc" placeholder="Enter File Description" maxlength="255" autofocus />
             </div>
           </div>
-          <?php if ($isBusinessFormTemplates) {?>
+          <?php if($isBusinessFormTemplates){ ?>
             <div class="d-none w-100" id="category_entry">
               <div class="col-md-12 form-group">
                 <label for="category_name">Category Name<small> Set name of the category</small></label>
@@ -239,10 +228,10 @@ if ($isMyLibrary) {
                 <select class="form-control" name="f_category" id="f_category">
                   <option value="">Select Category</option>
                   <?php
-foreach ($categories as $category) {
-    ?>
+                    foreach($categories as $category){
+                  ?>
                     <option value="<?php echo $category->category_id; ?>" catdesc="<?php echo $category->category_desc; ?>"><?php echo $category->category_name; ?></option>
-                <?php }?>
+                <?php } ?>
                 </select>
               </div>
             </div>
@@ -251,7 +240,7 @@ foreach ($categories as $category) {
               <button type="button" class="btn btn-default bft-btn-control" id="btn-modal-folder-manager-entry-edit-category">Edit</button>
               <button type="button" class="btn btn-default bft-btn-control" id="btn-modal-folder-manager-entry-delete-category">Delete</button>
             </div>
-          <?php }?>
+          <?php } ?>
           <div class="d-none w-100" id="general_permissions_entry">
             <div class="col-md-12">
               <div class="row">
@@ -584,19 +573,19 @@ foreach ($categories as $category) {
                 <div class="bg-light" name="f_folder_name" id="f_folder_name">
                 </div>
               </div>
-              <?php if ($isBusinessFormTemplates) {?>
+              <?php if($isBusinessFormTemplates){ ?>
                 <div class="col-md-7 form-group">
                   <label for="f_category">Categories<small> Select category to put the file/folder</small></label>
                   <select class="form-control" name="dtu_f_category" id="dtu_f_category">
                     <option value="">Select Category</option>
                     <?php
-foreach ($categories as $category) {
-    ?>
+                      foreach($categories as $category){
+                    ?>
                       <option value="<?php echo $category->category_id; ?>" catdesc="<?php echo $category->category_desc; ?>"><?php echo $category->category_name; ?></option>
-                  <?php }?>
+                  <?php } ?>
                   </select>
                 </div>
-              <?php }?>
+              <?php } ?>
           </div>
           <div class="tmp_mfm_dtu_height align-items-center justify-content-center" style="border: #999 5px dashed; display: flex;" ondrop="displayDroppedFiles(event)" ondragover="return false" id="mfm-dtu-drop-area">
             <div>
@@ -630,18 +619,3 @@ foreach ($categories as $category) {
 
     </div>
   </div>
-
-<script>
-window.addEventListener('DOMContentLoaded', async (event) => {
-  const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
-  const response = await fetch(`${prefixURL}/DocuSign/apiGetActionRequired`);
-  const { data } = await response.json();
-
-  if (data.length === 0) return;
-
-  const $alert = document.querySelector(".esignActionRequired");
-  const $count = $alert.querySelector(".esignActionRequired__count");
-  $count.textContent = data.length;
-  $alert.classList.add("esignActionRequired--show");
-});
-</script>

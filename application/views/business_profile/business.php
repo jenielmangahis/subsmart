@@ -96,25 +96,15 @@ div[wrapper__section] [role="white__holder"] .profile-subtitle {
 
 .gallery li {
     width: 30%;
-    display: inline-flex;
+    display: inline-block;
     margin-right: 10px;
     margin-bottom: 10px;
-    height: 392px;
+    height: 286px;
 }
 div.picture-container div.img img {
     object-fit: cover;
     height: 286px;
     width: 100% !important;
-}
-.image-caption, .deals-caption{
- 	background: linear-gradient(to right, #2d1a3e 0%, #4a385d 100%);
-	color: #ffffff;
-	padding: 8px;
-	height: 41px;
-}
-.gallery-img{
-	display: inline-block;
-	height: 126px;
 }
 </style>
 <?php include viewPath('includes/header'); ?>
@@ -280,41 +270,7 @@ div.picture-container div.img img {
 						<div role="white__holder_section_holder" class="no_border">
 							<div class="profile-content-section">
 								<h3 class="profile-subtitle">Deals <a class="a-alert a-edit" href="<?php echo base_url('promote/deals'); ?>"><span class="fa fa-edit"></span> edit</a></h3>
-								<?php if($dealsSteals){ ?>
-									<ul class="gallery">
-				                    <?php foreach($dealsSteals as $ds){ ?>
-				                      <li class="col-image-<?= $key ?>" style="width:19%;margin-right: 48px;text-align: center;height: auto;margin-bottom:38px;">
-				                        <div class="">
-				                          <div class="img">
-				                          	<?php
-				                              $slug = createSlug($ds->title,'-');
-				                              $deal_url = url('deal/' . $slug . '/' . $ds->id);
-				                            ?>
-				                          	<a href="<?= $deal_url; ?>" target="_new">
-				                          		<?php 
-				                          			if( $ds->photos != '' ){
-				                          				$deals_image = base_url("uploads/deals_steals/" . $ds->company_id . "/" . $ds->photos);
-					                          			 if( !file_exists(FCPATH."uploads/deals_steals/"  . $ds->company_id . "/" . $ds->photos) ){
-					                          				$deals_image = base_url("assets/img/default-deals.jpg");
-					                          			}	
-				                          			}else{
-				                          				$deals_image = base_url("assets/img/default-deals.jpg");
-				                          			}
-				                          			
-				                          		?>
-				                            	<img class="gallery-img" src="<?= $deals_image; ?>" style="width: 100%;">
-				                                <div class="image-caption deals-caption">
-				                                 <b><?= $ds->title; ?></b>
-				                                </div>
-				                            </a>
-				                          </div>
-				                        </div>
-				                      </li>
-				                    <?php } ?>
-				                 </ul>
-								<?php }else{ ?>
-									<p class="profile-content-margin">No deals at this moment.</p>
-								<?php } ?>								
+								<p class="profile-content-margin">No deals at this moment.</p>
 							</div>
 						</div>
 						<div role="white__holder_section_holder" class="no_border">
@@ -327,13 +283,13 @@ div.picture-container div.img img {
 				                  }
 				                ?>
 				                <?php if($images){ ?>
-				                	<ul class="gallery">
+				                	<ul class="gallery ui-sortable" id="gallery">
 					                    <?php foreach($images as $key => $i){ ?>
-					                      <li>
-					                        <div class="picture-container">
+					                      <li class="col-image-<?= $key ?>">
+					                        <div class="picture-container ui-sortable-handle">
 					                          <div class="img">
 					                          	<a href="<?= url("uploads/work_pictures/" . $profiledata->company_id . "/" . $i['file']); ?>" data-fancybox="gallery" data-caption="<?= $i['caption']; ?>">
-					                            	<img class="gallery-img" src="<?= url("uploads/work_pictures/" . $profiledata->company_id . "/" . $i['file']); ?>">
+					                            	<img src="<?= url("uploads/work_pictures/" . $profiledata->company_id . "/" . $i['file']); ?>">
 					                                <div class="image-caption image-caption-container-<?= $key; ?>">
 					                                 <?= $i['caption']; ?>
 					                                </div>

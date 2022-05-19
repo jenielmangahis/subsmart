@@ -11,31 +11,44 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <tr>
                             <td width="50%" align="left" valign="top">
                                 <div class="contacttext">
-                                    <h3 style="font-size: 15px; margin-bottom: 10px;"><?php if (isset($profile_info)) {echo $profile_info->first_name . ' ' . $profile_info->last_name;} ?></h3>
+                                    <h3 style="font-size: 15px; margin-bottom: 10px;"><?php if (isset($profile_info)) {
+    echo $profile_info->first_name . ' ' . $profile_info->last_name;
+} ?></h3>
                                 </div>
+
                                 <div class="contacttext">
-                                    <div><?php if (isset($profile_info)) {echo $profile_info->phone_h;}; ?>
-                                        <a id="email-confirm" href="#" style="display:block;margin-top: 5px;width:180px;" title="kylenguyenmailbox@gmail.com" class="js-qwynlraxz">
-                                        <?php if (isset($profile_info)) {echo $profile_info->email;}; ?></a>
+                                    <div>
+<?php if (isset($profile_info)) {
+    echo $profile_info->phone_h;
+}; ?>
+                                        <a id="email-confirm" href="#" style="display:block;margin-top: 5px;width:180px;" title="kylenguyenmailbox@gmail.com" class="js-qwynlraxz"><?php if (isset($profile_info)) {
+    echo $profile_info->email;
+}; ?></a>
                                         <input type="hidden" name="email-confirm-hidden" id="email-confirm-hidden" value="kylenguyenmailbox@gmail.com">
+
                                     </div>
                                     <div style="margin-top:7px;"><span>---</span>
                                     </div>
                                     <div style="margin-top:7px;">
                                         Status:
-                                        <span class="active" style="color:#0b62a4;"><?= $profile_info->status; ?></span>
+                                        <span class="active">Client</span>
+
                                         <img src="https://app.creditrepaircloud.com/application/images/cancel_icon.png" id="status_cancel"  title="cancel" style="display:none;cursor:pointer; vertical-align:middle;" border="0" width="16" height="16">
                                         <img src="https://app.creditrepaircloud.com/application/images/ajax-loader.gif" id="status_loading" style="display:none; vertical-align:middle;" border="0" width="16" height="16">
                                         <br>
                                     </div>
+
+
                                 </div>
                                 <div style="margin-right:15px; margin-top:6px;" align="left" class="normaltext1">
-                                    <a href="<?php if (isset($profile_info)) { echo url('/customer/preview/' . $profile_info->prof_id);} ?>" class="normaltext1" style="color:#58bc4f;">
-                                        View &nbsp;&nbsp;
-                                    </a>
-                                    <a href="<?php if (isset($profile_info)) { echo url('/customer/add_advance/' . $profile_info->prof_id);} ?>" class="normaltext1" style="color:#58bc4f;">
-                                        Edit Profile
-                                    </a>
+                                    <!--<a href="<?php if (isset($profile_info)) {
+    echo url('/customer/index/tab2/' . $profile_info->prof_id) . '/mt5';
+} ?>" class="normaltext1" style="color:#58bc4f;">-->
+                                    <a href="<?php if (isset($profile_info)) {
+    echo url('/customer/add_advance/' . $profile_info->prof_id);
+} ?>" class="normaltext1" style="color:#58bc4f;">
+                                        View/Edit Profile
+                                    </a>&nbsp;&nbsp;
                                 </div>
                             </td>
                             <td width="50%" valign="middle">

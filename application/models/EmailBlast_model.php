@@ -38,24 +38,6 @@ class EmailBlast_model extends MY_Model
         return $query->result();
     }
 
-    public function getAllIsPaidAndNotSent($limit = 0)
-    {
-        $id = logged('id');
-
-        $this->db->select('email_blast.*, users.id AS uid, users.company_id');
-        $this->db->from($this->table);
-        $this->db->join('users', 'email_blast.user_id = users.id', 'LEFT');
-        $this->db->where('email_blast.is_paid', 1);
-        $this->db->where('email_blast.is_sent', 0);
-        if( $limit > 0 ){
-            $this->db->limit($limit);  
-        }
-        $this->db->order_by('id', 'ASC');
-
-        $query = $this->db->get();
-        return $query->result();
-    }
-
     public function getAllByCompanyId($company_id, $filters=array(), $conditions=array())
     {
 
@@ -88,18 +70,6 @@ class EmailBlast_model extends MY_Model
         $this->db->join('users', 'email_blast.user_id = users.id', 'LEFT');
 
         $this->db->where('email_blast.id', $id);
-
-        $query = $this->db->get()->row();
-        return $query;
-    }
-
-    public function getByOrderNumber($order_number)
-    {
-        $this->db->select('email_blast.*, users.id AS uid, users.company_id');
-        $this->db->from($this->table);
-        $this->db->join('users', 'email_blast.user_id = users.id', 'LEFT');
-
-        $this->db->where('email_blast.order_number', $order_number);
 
         $query = $this->db->get()->row();
         return $query;
@@ -140,14 +110,6 @@ class EmailBlast_model extends MY_Model
 
     public function sendingTypeAll(){
         return $this->stype_all_contacts;
-    }
-
-    public function sedingTypeCustomerGroup(){
-        return $this->stype_contact_group;
-    }
-
-    public function sendingTypeCertainCustomer(){
-        return $this->stype_certain_contact;
     }
 
     public function customerTypeResidential(){

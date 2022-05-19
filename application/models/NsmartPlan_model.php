@@ -18,8 +18,7 @@ class NsmartPlan_model extends MY_Model
 
         if ( !empty($filters) ) {
             if ( !empty($filters['search']) ) {
-                $this->db->like('plan_name', $filters['search'], 'both');
-                $this->db->or_like('plan_description', $filters['search'], 'both');
+                $this->db->like('title', $filters['search'], 'both');
             }
         }
 
@@ -29,18 +28,12 @@ class NsmartPlan_model extends MY_Model
         return $query->result();
     }
 
-    public function getAllByStatus($status_id)
-    {
-        $this->db->select('*');
-        $this->db->from($this->table);
-        $this->db->where('status', $status_id);
-        $this->db->order_by('nsmart_plans_id', 'DESC');
-        $query = $this->db->get();
-        return $query->result();
-    }    
+    
 
     public function getById($id)
     {
+        $user_id = logged('id');
+
         $this->db->select('*');
         $this->db->from($this->table);
 

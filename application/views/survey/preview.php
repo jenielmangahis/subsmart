@@ -12,7 +12,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css"/>
     <link href="https://cdn.jsdelivr.net/jquery.jssocials/1.4.0/jssocials.css">
     <link href="<?= base_url()?>/assets/css/survey.css" rel="stylesheet">
-    <script src="<?= base_url() ?>/assets/dashboard/js/jquery.min.js"></script>
     <style>
         html, body {
           height: 100%;
@@ -145,24 +144,16 @@
   <body>
       <script>
         console.log(<?= json_encode($questions)?>);
-        var surveyBaseUrl = '<?= base_url() ?>';
       </script>
     <?php
       $image_half = null;
       $question_length = count($questions);
       $scored_question_length = 0;
-      $score_counted_questions = 0;
-      foreach( $questions as $q ){
-        if( $q->isScoreCounted == 1 ){
-          $score_counted_questions++;
-        } 
-      }
 
 
       foreach($questions as $question){
         if($question->isScoreCounted == 1 ){
           $scored_question_length++;
-          $score_counted_questions++;
         }
         if($question->template_id == 1 || $question->template_id == 19){
           $question_length--;
@@ -176,7 +167,7 @@
             if(isset($_GET['src'])){
               if($_GET['src'] == "results" ){
                 ?>
-                  <a type="button" class="btn btn-outline-light btn-sm" onclick="window.location.reload()" href="javascript:void(0);">Refresh</a>
+                  <a type="button" class="btn btn-outline-light btn-sm" onclick="window.location.reload()" href="#">Refresh</a>
                 <?php
               }
             }else{
@@ -193,18 +184,12 @@
     <div class="d-flex h-100 justify-content-center align-items-center">
       <?php
         if($survey_theme !== null){
-          if($survey->backgroundImage == null || $survey->theme_id > 0){
+          if($survey->backgroundImage == null){
             ?>
-              <?php if( $survey_theme->company_id > 0 ){ ?>
-                <img class="theme-image" src="<?= base_url() ?>uploads/survey/themes/<?= $survey_theme->company_id; ?>/<?= $survey_theme->sth_primary_image ?>" alt="<?= substr($survey_theme->sth_primary_image, 0, 4)?>-image" style="<?= $survey_theme->sth_primary_image_class?>">
-              <?php }else{ ?>
-                <img class="theme-image" src="<?= base_url() ?>uploads/survey/themes/<?= $survey_theme->sth_primary_image ?>" alt="<?= substr($survey_theme->sth_primary_image, 0, 4)?>-image" style="<?= $survey_theme->sth_primary_image_class?>">
-              <?php } ?>
-              
+              <img class="theme-image" src="<?= base_url() ?>uploads/survey/themes/<?= $survey_theme->sth_primary_image ?>" alt="<?= substr($survey_theme->sth_primary_image, 0, 4)?>-image" style="<?= $survey_theme->sth_primary_image_class?>">
             <?php
           }else{
             ?>
-
               <img class="theme-image" src="<?= base_url() ?>assets/survey/template_images/<?= $survey->backgroundImage ?>" alt="<?= substr($survey->backgroundImage, 0, 4)?>-image">
             <?php
           }
@@ -213,9 +198,9 @@
 
       <?php
       if(strpos(uri_string(), 'preview' ) !== true){
-        $form_submission_url = base_url().'survey/submit_answer/'. $this->uri->segment(2);
+        $form_submission_url = base_url().'survey/answer/'. $this->uri->segment(2);
       }else{
-        $form_submission_url = base_url().'/nsmartrac/survey/submit_answer/'. $this->uri->segment(3);
+        $form_submission_url = base_url().'/nsmartrac/survey/answer/'. $this->uri->segment(3);
       }
       ?>
 
@@ -262,7 +247,7 @@
                         <?php foreach($questions as $key => $question){ ?>        
 
                           <!-- <img class="image-set-background-image" src="https://picsum.photos/id/1005/5760/3840"> -->
-                          <div id="question-<?= $key ?>" class="col-sm-3 <?= ($key != 0) ? "d-none" : "" ?> srv-<?= $question->id; ?> animate__animated animate__fadeIn" style="<?=($question->template_id != null && $question->template_id == 1)?"text-align: center;" :""?>">
+                          <div id="question-<?= $key ?>" class="col-sm-3 <?= ($key != 0) ? "d-none" : "" ?> animate__animated animate__fadeIn" style="<?=($question->template_id != null && $question->template_id == 1)?"text-align: center;" :""?>">
 
                             <!-- image for welcome screen -->
                             <?php
@@ -281,7 +266,7 @@
                                     break;
                                   case 12:
                                     ?>
-                                      <!-- <img class="image-set-half-image" src="https://picsum.photos/id/1005/5760/3840">   -->
+                                      <img class="image-set-half-image" src="https://picsum.photos/id/1005/5760/3840">  
                                     <?php
                                     break;
                                   default:
@@ -308,48 +293,40 @@
 
                                 <!-- input -->
                                 <?php if($question->template_id == 15){ ?>
-                                  
+                                  <select name="answer-<?=$question->id?>" class="form-control input-content " id="exampleFormControlSelect1">
                                 <?php }; ?>
 
                                 
                                 <?php //foreach ($question->questions as $key1 => $quest):?>
                                   <?php
-                                    $type = '';
                                     switch($question->template_id){
                                       case 2; // long text
                                       
                                         ?>
-                                          <div class="form-survey-item-error-<?= $question->id; ?>"></div>
                                           <div class="inp ut-content form-group">
                                             <textarea class="form-control" name="answer-<?=$question->id?>" rows="5" placeholder="Enter your answer"></textarea>
                                           </div>
                                         <?php
                                         break;
                                       case 3: // single choice
-                                      ?>
-                                      <?php $type = 'single_choice'; ?>
-                                      <div class="form-survey-item-error-<?= $question->id; ?>"></div>
-                                      <?php foreach ($question->questions as $key1 => $quest){
+                                        foreach ($question->questions as $key1 => $quest){
                                           ?>
                                             <div class="input-group input-content mb-1">
                                               <div class="input-group-prepend">
                                                 <div class="input-group-text">
-                                                <input name="answer-<?=$question->id?>" type="radio" class="chk-survey-<?=$question->id?>" value="<?=$quest->choices_label?>" aria-label="Radio button for following text input" >
+                                                <input name="options" type="radio" aria-label="Radio button for following text input" >
                                                 </div>
                                               </div>
-                                              <input type="text" class="form-control" name="choices_label[]" value="<?=$quest->choices_label?>" readonly disabled>
+                                              <input type="text" class="form-control" name="choices_label[]" value="<?=$quest->choices_label?>">
                                             </div>
                                           <?php
                                         }
                                         break;
                                       case 4: //checkboxes
-                                      ?>
-                                      <?php $type = 'checkboxes'; ?>
-                                      <div class="form-survey-item-error-<?= $question->id; ?>"></div>
-                                      <?php foreach ($question->questions as $key1 => $quest){
+                                        foreach ($question->questions as $key1 => $quest){
                                           ?>
                                             <div class="form-check mb-1">
-                                              <input name="multiple-<?=$question->id?>[]" class="chk-survey-<?=$question->id?>" type="checkbox" aria-label="Checkbox for following text input" value="<?=$quest->choices_label?>">
+                                              <input name="answer-<?=$question->id?>" type="checkbox" aria-label="Checkbox for following text input" value="<?=$quest->choices_label?>">
                                               <label for="" class="form-check-label">
                                                 <?=$quest->choices_label?>
                                               </label>
@@ -359,19 +336,15 @@
                                         break;
                                       case 5: //email
                                         ?>
-                                        <?php $type = 'email'; ?>
                                         <div class="form-group input-content">
-                                          <div class="form-survey-item-error-<?= $question->id; ?>"></div>
-                                          <input type="email" class="form-control survey-item-<?= $question->id; ?>" name="answer-<?=$question->id?>" id="for_email" placeholder="name@example.com">
+                                          <input type="email" class="form-control" name="answer-<?=$question->id?>" id="for_email" placeholder="name@example.com">
                                         </div>
                                         <?php
                                         break;
                                       case 6: //number
                                         ?>
-                                          <?php $type = 'number'; ?>
                                           <div class="form-group input-content">
-                                            <div class="form-survey-item-error-<?= $question->id; ?>"></div>
-                                            <input type="text" class="form-control survey-item-<?= $question->id; ?>" name="answer-<?=$question->id?>" value="" placeholder="Enter your answer">
+                                            <input type="number" class="form-control" name="answer-<?=$question->id?>" value="" placeholder="Enter your answer">
                                           </div>
                                         <?php
                                         break;
@@ -383,7 +356,7 @@
                                                 <span class="input-group-text">Upload</span>
                                               </div>
                                               <div class="custom-file">
-                                                <input name="answer-<?=$question->id?>" data-id="<?=$question->id?>" type="file" class="custom-file-input form-control preview-file-upload" id="inputGroupFile01">
+                                                <input name="answer-<?=$question->id?>" type="file" class="custom-file-input form-control" id="inputGroupFile01">
                                                 <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
                                               </div>
                                             </div>
@@ -392,51 +365,46 @@
                                         break;
                                       case 8: // Phone Number
                                         ?>
-                                          <?php $type = 'phone'; ?>
                                           <div class="form-group input-content">
-                                            <div class="form-survey-item-error-<?= $question->id; ?>"></div>
-                                            <input type="text" class="form-control valid survey-item-<?= $question->id; ?>" name="answer-<?=$question->id?>" id="contact_phone" placeholder="(555) 555-5555" aria-invalid="false">
+                                            <input type="text" class="form-control valid" name="answer-<?=$question->id?>" id="contact_phone" placeholder="(555) 555-5555" aria-invalid="false">
                                           </div>
                                         <?php
                                         break;
                                       case 9:  // short text
                                         ?>
-                                          <?php $type = 'short_text'; ?>
                                           <div class="form-group input-content">
-                                            <div class="form-survey-item-error-<?= $question->id; ?>"></div>
-                                            <input type="text" class="form-control survey-item-<?= $question->id; ?>" <?= $question->mincharacters > 0 ? 'minlength="'.$question->mincharacters.'"' : ''; ?> <?= $question->maxcharacters > 0 ? 'maxlength="'.$question->maxcharacters.'"' : ''; ?> name="answer-<?=$question->id?>" value="" placeholder="Enter your answer">
+                                            <input type="text" class="form-control" name="answer-<?=$question->id?>" value="" placeholder="Enter your answer">
                                           </div>
                                         <?php
                                         break;
                                       case 11: // yes/no 
                                         ?>
                                           <div class="form-group input-content">
-                                            <input type="checkbox" class="toggle-yes-no" data-id="<?= $question->id; ?>" checked data-toggle="toggle" name="answer-<?=$question->id?>"  data-on="Yes" data-off="No">
-                                            <input type="hidden" name="answer-<?=$question->id?>" id="toggle-yesno-<?= $question->id; ?>" value="Yes">                                   
+                                            <input type="checkbox" checked data-toggle="toggle" name="answer-<?=$question->id?>"  data-on="Yes" data-off="No">                                   
                                           </div>
                                         <?php
                                         break;
                                       case 12: // rating
                                         ?>
                                           <div class="form-group input-content" id="rating-ability-wrapper">
-                                            <input type="hidden" id="selected_rating_<?= $question->id; ?>" name="answer-<?=$question->id?>" value="" required="required">
+                                            <input type="hidden" id="selected_rating" name="answer-<?=$question->id?>" value="" required="required">
                                             </label>
                                             <h2 class="bold rating-header" style="">
-                                              <span class="selected-rating selected-rating-<?= $question->id; ?>">0</span><small> / 5</small>
+                                            <span class="selected-rating">0</span><small> / 5</small>
                                             </h2>
-                                            <button type="button" class="btnrating btn btn-default btn-lg" data-id="<?= $question->id; ?>" data-attr="1" id="<?= $question->id; ?>-rating-star-1">
+                                            <button type="button" class="btnrating btn btn-default btn-lg" data-attr="1" id="rating-star-1">
                                                 <i class="fa fa-star" aria-hidden="true"></i>
                                             </button>
-                                            <button type="button" class="btnrating btn btn-default btn-lg" data-id="<?= $question->id; ?>" data-attr="2" id="<?= $question->id; ?>-rating-star-2">
+                                            <button type="button" class="btnrating btn btn-default btn-lg" data-attr="2" id="rating-star-2">
                                                 <i class="fa fa-star" aria-hidden="true"></i>
                                             </button>
-                                            <button type="button" class="btnrating btn btn-default btn-lg" data-id="<?= $question->id; ?>" data-attr="3" id="<?= $question->id; ?>-rating-star-3">
+                                            <button type="button" class="btnrating btn btn-default btn-lg" data-attr="3" id="rating-star-3">
                                                 <i class="fa fa-star" aria-hidden="true"></i>
                                             </button>
-                                            <button type="button" class="btnrating btn btn-default btn-lg" data-id="<?= $question->id; ?>" data-attr="4" id="<?= $question->id; ?>-rating-star-4">
+                                            <button type="button" class="btnrating btn btn-default btn-lg" data-attr="4" id="rating-star-4">
                                                 <i class="fa fa-star" aria-hidden="true"></i>
                                             </button>
-                                            <button type="button" class="btnrating btn btn-default btn-lg" data-id="<?= $question->id; ?>" data-attr="5" id="<?= $question->id; ?>-rating-star-5">
+                                            <button type="button" class="btnrating btn btn-default btn-lg" data-attr="5" id="rating-star-5">
                                                 <i class="fa fa-star" aria-hidden="true"></i>
                                             </button>
                                           </div>
@@ -444,26 +412,20 @@
                                         break;
                                       case 13: // statement
                                         ?>
-                                          <?php $type = 'statement'; ?>
                                           <div class="form-group input-content">
-                                            <div class="form-survey-item-error-<?= $question->id; ?>"></div>
-                                            <textarea class="form-control" <?= $question->mincharacters > 0 ? 'minlength="'.$question->mincharacters.'"' : ''; ?> <?= $question->maxcharacters > 0 ? 'maxlength="'.$question->maxcharacters.'"' : ''; ?> name="answer-<?=$question->id?>" rows="5" placeholder="Enter your answer"></textarea>
+                                            <textarea class="form-control" name="answer-<?=$question->id?>" rows="5" placeholder="Enter your answer"></textarea>
                                           </div>
                                         <?php
                                         break;
                                       case 14: // website
                                         ?>
-                                          <?php $type = 'website'; ?>
                                           <div class="form-group input-content">
-                                            <div class="form-survey-item-error-<?= $question->id; ?>"></div>
-                                            <input type="url" class="form-control survey-item-<?= $question->id; ?>" name="answer-<?=$question->id?>" id="for_email" placeholder="www.yourdomain.com/">
+                                            <input type="url" class="form-control" name="answer-<?=$question->id?>" id="for_email" placeholder="name@example.com">
                                           </div>
                                         <?php
                                         break;
                                       case 15: //dropdown
                                         ?>
-                                          <select name="answer-<?=$question->id?>" class="form-control input-content " id="exampleFormControlSelect1">
-                                            <option value="">Please Select</option>
                                             <?php
                                               foreach ($question->questions as $key1 => $quest){
                                                 ?>
@@ -472,7 +434,6 @@
                                                 <?php
                                               }
                                             ?>
-                                          </select>
                                         <?php
                                         break;
                                       case 16: //payment
@@ -521,8 +482,7 @@
                                       case 17: //date
                                         ?>
                                           <div class="form-group input-content">
-                                            <div class="form-survey-item-error-<?= $question->id; ?>"></div>
-                                            <input type="date" class="form-control survey-item-<?= $question->id; ?>" name="answer-<?=$question->id?>" value="" placeholder="Enter your answer">
+                                            <input type="date" class="form-control" name="answer-<?=$question->id?>" value="" placeholder="Enter your answer">
                                           </div>
                                         <?php
                                         break;
@@ -534,7 +494,7 @@
                                                 <span class="input-group-text">Upload</span>
                                               </div>
                                               <div class="custom-file">
-                                                <input name="answer-<?=$question->id?>" data-id="<?=$question->id?>" type="file" class="custom-file-input" id="inputGroupFile01">
+                                                <input name="answer-<?=$question->id?>" type="file" class="custom-file-input" id="inputGroupFile01">
                                                 <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
                                               </div>
                                             </div>
@@ -559,14 +519,14 @@
                                     </script>
                                   <?php endif; ?>
                                 <?php if($question->template_id == 15){ ?>
-                                <!-- </select> -->
+                                </select>
                                 <?php }; ?>
 
                                 <!-- next button -->
-                                <button id="btn-next" data-sid="<?= $survey->id; ?>" data-survey-item-type="<?= $type; ?>" data-survey-item="<?=$question->id?>" data-id="<?= $key ?>" data-temp-id="<?=$question->template_id?>" data-is-required="<?=$question->required?>" data-correct-answer="<?=$question->correctAnswer?>" class="btn btn-md btn-primary mt-3 btn-srv-<?=$question->id?>" style="background-color: <?= $survey_theme !== null ? $survey_theme->sth_primary_color : ""?>; color: <?= $survey_theme !== null ? $survey_theme->sth_text_color : ""?>"><?= ($question->custom_button_text == "" || $question->custom_button_text == null) ? "Next" : $question->custom_button_text ?></button>
+                                <button id="btn-next" data-id="<?= $key ?>" data-temp-id="<?=$question->template_id?>" data-is-required="<?=$question->required?>" data-correct-answer="<?=$question->correctAnswer?>" class="btn btn-md btn-primary mt-3" style="background-color: <?= $survey_theme !== null ? $survey_theme->sth_primary_color : ""?>; color: <?= $survey_theme !== null ? $survey_theme->sth_text_color : ""?>"><?= ($question->custom_button_text == "" || $question->custom_button_text == null) ? "Next" : $question->custom_button_text ?></button>
                                 <?php if($key >= 1){
                                   ?>
-                                    <button id="btn-back" data-id="<?= $key ?>" data-prev="<?= $key ?>" class="btn-back-<?=$question->id?> btn btn-md btn-outline-light mt-3">Go back</button>
+                                    <button id="btn-back" data-id="<?= $key ?>"  class="btn btn-md btn-outline-light mt-3">Go back</button>
                                   <?php
                                 }?>
                               </div>
@@ -582,13 +542,10 @@
 
                           <div class="result-survey">
                             <h1 class="font-weight-bold" style="color: <?= $survey_theme !== null ? $survey_theme->sth_text_color : ""?>">Survey completed!</h1>
-                            <?php if($survey->isScoreMonitored == 1){ ?>
-                              <div class="survey-score"></div>
-                            <?php } ?>
                             <div class="line-separator" style="background-color: <?=  $survey_theme !== null ? $survey_theme->sth_secondary_color : "" ?>"></div>
                             
                             <!-- <button id="from-top" data-id="<?= count($questions) ?>"  class="btn btn-md  btn-outline-secondary" type="submit" style="background-color: <?= $survey_theme !== null ?  $survey_theme->sth_secondary_color : ""?>; color: <?= $survey_theme !== null ? $survey_theme->sth_text_color : ""?>">Back to Top</button> -->
-                            <?php                            
+                            <?php
                               if(strpos(uri_string(), 'preview') !== false){
                                 if(isset($_GET["src"])){
                                   ?>
@@ -604,8 +561,8 @@
                                 ?>
                                   <div class="result-survey">
                                     <p style="color: <?= $survey_theme !== null ? $survey_theme->sth_text_color : ""?>">Before submitting, make sure you have answered all of the questions given. You can go back and review your answers, or submit your answers fully. </p>
-                                    <button id="btn-submit" type="submit" class="btn btn-md btn-primary" style="background-color: <?= $survey_theme !== null ? $survey_theme->sth_primary_color : ""?>; color: <?= $survey_theme !== null ? $survey_theme->sth_text_color : ""?>">Submit Answers</button><br />
-                                    <a id="from-top" style="color: <?= $survey_theme->sth_text_color?>;margin-top: 20px; display: block;" href="#">I would like to check my answers once more</a>
+                                    <button id="btn-submit" type="submit" class="btn btn-md btn-primary" style="background-color: <?= $survey_theme !== null ? $survey_theme->sth_primary_color : ""?>; color: <?= $survey_theme !== null ? $survey_theme->sth_text_color : ""?>">Submit Answers</button><br/>
+                                    <a id="from-top" style="color: <?= $survey_theme->sth_text_color?>" href="#">I would like to check my answers once more</a>
                                   </div>
                                 <?php
                               }
@@ -663,6 +620,11 @@
       </style>
 
     </div>
+
+    <script>
+      
+    </script>
+    <script src="<?= base_url() ?>/assets/dashboard/js/jquery.min.js"></script>
     <script src="<?= base_url() ?>/assets/js/survey.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
 
@@ -676,29 +638,18 @@
     <script>
       const urlParams = new URLSearchParams(window.location.search);
       const sessionId = Math.floor(100000000 + Math.random() * 900000000);
-      let elm;
       let pageNumber = 1;
       let numQuestions = <?=$question_length?>;
       let answeredFields = 0;
       let progress = 0;
       let surveyScore = 0;
       let scoredQuestionLength = <?=$scored_question_length?>;
-      let previous_question_id  = 0;
 
 
       $(document).ready(function(){
         $("#t").timer({action:'start', seconds:0, });
         $('#page-current-number').html(pageNumber);
         $('#page-end-number').html('<?= count($questions) + 1?>');
-
-        function validateEmail(email) {
-          var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
-          return emailReg.test( email );
-        }
-
-        function is_valid_url(url) {
-            return /^(http(s)?:\/\/)?(www\.)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/.test(url);
-        }
 
         $(document).on('click', '#btn-submit', function(e){
           e.preventDefault();
@@ -725,7 +676,7 @@
                   if(isset($_GET['st'])){
                     if($survey->redirectionLink != '' || $survey->redirectionLink != null ){
                       ?>
-                        location.href ="<?=$survey->redirectionLink; ?>"
+                        window.location="<?=$survey->redirectionLink?>"
                       <?php
                     }else{
                       ?>
@@ -753,33 +704,17 @@
           var next_id = 0;
           pageNumber = 1;
           surveyScore = 0;
-
-          answeredFields = 0;
-          progress = answeredFields / numQuestions * 100;
-          $('#survey-progress-bar').css("width", progress+"%");
-
-          pageNumber = 1
-          $('#page-current-number').html(pageNumber);
-
           $('#question-'+id+'').addClass('d-none');
           $('#question-'+ next_id +'').removeClass('d-none');
           $('#preview-end-note').addClass('d-none');
           $('.result-survey').addClass('d-none');
-          $('.survey-score').html('');
         });
         
         $(document).on('click', '#btn-back', function(e){
           e.preventDefault();
 
-          var id = $(this).data('id');          
-          var data_prev = $(this).attr('data-prev');
-          //
-          if( data_prev > 0 ){
-            var prev_id = parseInt(data_prev);
-          }else{
-            var prev_id = id-1;
-          }
-          
+          var id = $(this).data('id');
+          var prev_id = id-1;
           // var data =  $(this).serializeArray();
           var regex = /\[[^\]]*\]/g;
           // var str = $('#question-'+next_id+' #question').html();
@@ -806,10 +741,6 @@
             $('#question-'+prev_id+' #question').html(question);
           }
 
-          answeredFields = answeredFields - 1;
-          progress = answeredFields / numQuestions * 100;
-          $('#survey-progress-bar').css("width", progress+"%");
-
           pageNumber = prev_id + 1
           $('#page-current-number').html(pageNumber);
           $('#question-'+id+'').addClass('d-none');
@@ -820,10 +751,7 @@
           e.preventDefault()
 
           var id = $(this).data('id');
-          var sid = $(this).data('sid');
           var tempid = $(this).data('temp-id');
-          var survey_type = $(this).attr('data-survey-item-type');
-          var survey_item_id = $(this).attr('data-survey-item');
           var next_id = id+1;
           var isRequired = $(this).data('is-required')
           var data =  $(this).serializeArray();
@@ -832,107 +760,39 @@
           var value = $('#question-'+id+' [name*="answer"]').val();
           let correctAnswer = $(this).data('correct-answer');
 
-          if(document.getElementById('toggle-yesno-'+survey_item_id) != null) {
-            value = $('#toggle-yesno-'+survey_item_id).val();
-          }
-
-          //Count correct answer
-          if( survey_type == 'checkboxes' || survey_type == 'single_choice' ){
-            $('.chk-survey-'+survey_item_id).each(function () {
-                if( $(this).val() == correctAnswer && $(this).is(':checked') ){
-                  surveyScore++;
-                }
-            });
-          }else{
-            if(value == correctAnswer){
-              surveyScore++;
-            }  
-          }
-
-          /*if(value){
-            answeredFields = (tempid === 12 || tempid === 1) ? null :  answeredFields++;            
-          }*/        
-
-          //if(urlParams.get('mode') != 'preview'){
-            if(isRequired && $('#question-'+id+' [name*="answer"]').val() == ""){
-             // toastr["error"]("This field should not be empty");
-              $('.form-survey-item-error-'+survey_item_id).fadeIn("normal", function() {
-                $(this).html('<div class="alert alert-danger" role="alert">This field is required</div>');
-              });     
-              //window.alert('This field should not be empty');
-              return;
-            }else{
-              if( isRequired && (survey_type == 'checkboxes' || survey_type == 'single_choice') ){
-                var selected = 0;
-                $('.chk-survey-'+survey_item_id).each(function () {
-                    if( $(this).is(':checked') ){
-                      selected++;
-                    }
-                });
-
-                if( selected == 0 ){
-                  $('.form-survey-item-error-'+survey_item_id).fadeIn("normal", function() {
-                    $(this).html('<div class="alert alert-danger" role="alert">This field is required</div>');
-                  });  
-
-                  return;
-
-                }
-              }
-            }
-
-            var input_val = $('.survey-item-'+survey_item_id).val();
-            if( survey_type == 'email' ){      
-              if( !validateEmail(input_val) ){
-                $('.form-survey-item-error-'+survey_item_id).fadeIn("normal", function() {
-                  $(this).html('<div class="alert alert-danger" role="alert">Not a valid email</div>');
-                });
-                return;
-              }else{
-                $('.form-survey-item-error-'+survey_item_id).hide();
-              }
-            }else if( survey_type == 'website' ){
-              if( !is_valid_url(input_val) ){
-                $('.form-survey-item-error-'+survey_item_id).fadeIn("normal", function() {
-                  $(this).html('<div class="alert alert-danger" role="alert">Not a valid url</div>');
-                });
-                return;
-              }else{
-                $('.form-survey-item-error-'+survey_item_id).hide();
-              }
-            }else if( survey_type == 'number' ){
-              var numberRegex = /^[+-]?\d+(\.\d+)?([eE][+-]?\d+)?$/;
-              if(!numberRegex.test(input_val)) {
-                 $('.form-survey-item-error-'+survey_item_id).fadeIn("normal", function() {
-                  $(this).html('<div class="alert alert-danger" role="alert">Not a valid number</div>');
-                });
-                return;
-              }else{
-                $('.form-survey-item-error-'+survey_item_id).hide();
-              }  
-            }else{
-              $('.form-survey-item-error-'+survey_item_id).hide();
-            }
-
+          console.log(value);
+          console.log(correctAnswer);
           <?php
             if(!isset($_GET["src"])){
               if($survey->isScoreMonitored == 1){
                 ?>
-                  if(pageNumber == <?= count($questions)?>){                    
-                    if( scoredQuestionLength > 0 ){
-                      $('.survey-score').html('<span class="spinner-border spinner-border-sm m-0"></span>');
-                      setTimeout(() => {
-                        $('.survey-score').fadeIn("normal", function() {
-                          $(this).html('<div class="alert alert-success" role="alert">Your score is '+surveyScore+' out of '+scoredQuestionLength+'</div>');
-                        });
-                        //window.alert(`Your score is ${surveyScore} out of <?= $scored_question_length?>`)
-                      }, 1000);
-                    }                    
+                  if(pageNumber == <?= count($questions)?>){
+                    setTimeout(() => {
+                      window.alert(`Your score is ${surveyScore} out of <?= $scored_question_length?>`)
+                    }, 1000);
+                  }else{
+                    if(value == correctAnswer){
+                      surveyScore++;
+                    }
                   }
                 <?php
               }
             }
           ?>
+
+
+          
+          if(value){
+            answeredFields = (tempid === 12 || tempid === 1) ? null :  answeredFields++;
+          }
+        
+
+          if(urlParams.get('mode') != 'preview'){
+            if(isRequired && $('#question-'+id+' [name*="answer"]').val() == ""){
+              window.alert('This field should not be empty');
+              return;
+            }
+          }
 
           if(pageNumber === <?= count($questions)?>){
             $('#question-'+id+'').removeClass('d-none');
@@ -948,8 +808,8 @@
           }
 
           if(str.match(regex) == null){
-
           }else{
+
             var question = ``;
             $.each( str.split(regex), function(key, value){
               if(str.match(regex)[key] != undefined){
@@ -960,36 +820,19 @@
                 question += value;
               }
             });
+            
             $('#question-'+next_id+' #question').html(question);
           }
-            
-          answeredFields = answeredFields + 1;
-          progress       = answeredFields / numQuestions * 100;
-          $('#survey-progress-bar').css("width", progress+"%");          
+          
+          progress = answeredFields / numQuestions * 100;
+          $('#survey-progress-bar').css("width", progress+"%");
+          pageNumber = next_id + 1;
+          $('#page-current-number').html(pageNumber);
+          $('#question-'+id+'').addClass('d-none');
+          $('#question-'+ next_id +'').removeClass('d-none');
 
-          $.ajax({
-            type: "POST",
-            url: surveyBaseUrl + 'survey/_question_logic_jump',
-            dataType: 'json',
-            data: {sid:sid,survey_item_id:survey_item_id,value:value},       
-            success: function(res){              
-              if( res.jump_id > 0 ){
-                $('#question-'+id+'').addClass('d-none');
-                $('.srv-'+ res.jump_id).removeClass('d-none');
-                $('.btn-back-'+res.jump_id).attr('data-prev', id);
-                pageNumber = parseInt($('.btn-srv-'+res.jump_id).attr('data-id')) + 1;
-              }else{
-                $('#question-'+id+'').addClass('d-none');
-                $('#question-'+ next_id +'').removeClass('d-none');
-                $('.btn-back-'+res.next_question_id).attr('data-prev', 'origin');
-                pageNumber = next_id + 1;                
-              }
-              $('#page-current-number').html(pageNumber);
-
-            }
-          });
         });
-
+        
         $(document).on('click', '#page-back-button', function(e){
           e.preventDefault();
           var id = $(this).data('id');
@@ -1074,29 +917,27 @@
       
       $(".btnrating").on('click',(function(e) {
 
-      var previous_value = $("#selected_rating_"+qid).val();
+      var previous_value = $("#selected_rating").val();
       var isSelected = false;
       var selected_value = $(this).attr("data-attr");
-      var qid = $(this).attr('data-id');
       
       if(previous_value == ''){
         answeredFields++;
       }
 
-      $("#selected_rating_"+qid).val(selected_value);
+      $("#selected_rating").val(selected_value);
 
-      $(".selected-rating-"+qid).empty();
-      $(".selected-rating-"+qid).html(selected_value);
+      $(".selected-rating").empty();
+      $(".selected-rating").html(selected_value);
 
       for (i = 1; i <= selected_value; ++i) {
-        $("#"+qid+"-rating-star-"+i).addClass('btn-warning');
-        //$("#"+qid+"-rating-star-"+i).toggleClass('btn-default');
+        $("#rating-star-"+i).toggleClass('btn-warning');
+        $("#rating-star-"+i).toggleClass('btn-default');
       }
-      
-      selected_value++;
-      for (ix = selected_value; ix <= 5; ix++) {        
-        //$("#"+qid+"-rating-star-"+ix).toggleClass('btn-warning');
-        $("#"+qid+"-rating-star-"+ix).removeClass('btn-warning');
+
+      for (ix = 1; ix <= previous_value; ++ix) {
+        $("#rating-star-"+ix).toggleClass('btn-warning');
+        $("#rating-star-"+ix).toggleClass('btn-default');
       }
 
     }));
@@ -1153,16 +994,8 @@
                 $form.append("<input type='hidden' name='stripeToken' value='" + token + "'/>");
                 //  $form.get(0).submit();
             }
-      }
-
-      $(document).on('change', '.toggle-yes-no', function(){
-        var qid = $(this).attr('data-id');
-        if( $(this).is(':checked') ){
-          $('#toggle-yesno-'+qid).val('Yes');
-        }else{
-          $('#toggle-yesno-'+qid).val('No');
         }
-      });
+          
     });
     </script>
   </body>

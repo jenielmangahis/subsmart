@@ -9,7 +9,6 @@ class Vault extends MY_Controller {
 	{
 		parent::__construct();
 		$this->checkLogin();
-		$this->hasAccessModule(46); 
 		$this->page_data['page']->title = 'Files Management';
 		$this->page_data['page']->menu = 'vault';
 		
@@ -19,6 +18,13 @@ class Vault extends MY_Controller {
 
 	public function index()
 	{
+		$is_allowed = $this->isAllowedModuleAccess(46);
+        if( !$is_allowed ){
+            $this->page_data['module'] = 'vault';
+            echo $this->load->view('no_access_module', $this->page_data, true);
+            die();
+        }
+
 		$this->page_data['folder_manager'] = getFolderManagerView();
 		$this->load->view('vault/shared_library', $this->page_data);
 	}
@@ -26,7 +32,6 @@ class Vault extends MY_Controller {
 	public function mylibrary()
 	{
 		$this->page_data['folder_manager'] = getFolderManagerView(true, true);
-		add_footer_js(['assets/js/vaults/dataTables.checkboxes.min.js']);
 		$this->load->view('vault/list', $this->page_data);
 	}
 
@@ -34,7 +39,11 @@ class Vault extends MY_Controller {
 	{
         $this->load->model('Before_after_model', 'before_after_model');
 		$comp_id = logged('company_id');
-		$this->page_data['photos'] = $this->before_after_model->getAllByCompanyId($comp_id);
+		if( $role == 1 || $role == 2 ){
+			$this->page_data['photos'] = $this->before_after_model->getAll();
+		}else{
+			$this->page_data['photos'] = $this->before_after_model->getAllByCompanyId($comp_id);
+		}
 		$this->load->view('vault/beforeafter', $this->page_data);
 	}
 

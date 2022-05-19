@@ -3,9 +3,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 ?>
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">
-<?php include viewPath('includes/sidebars/accounting/accounting'); ?>
-<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
-<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+    <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
    <style>
    .but:hover {
     font-weight: 900;
@@ -19,255 +17,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
     content:" *";
     color: red;
     }
-    .switch {
-  position: relative;
-  display: inline-block;
-  width: 60px;
-  height: 34px;
-}
-
-.switch input { 
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-.slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #ccc;
-  -webkit-transition: .4s;
-  transition: .4s;
-}
-
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 26px;
-  width: 26px;
-  left: 4px;
-  bottom: 4px;
-  background-color: white;
-  -webkit-transition: .4s;
-  transition: .4s;
-}
-
-input:checked + .slider {
-  background-color: #10ab06;
-}
-
-input:focus + .slider {
-  box-shadow: 0 0 1px #10ab06;
-}
-
-input:checked + .slider:before {
-  -webkit-transform: translateX(26px);
-  -ms-transform: translateX(26px);
-  transform: translateX(26px);
-}
-
-/* Rounded sliders */
-.slider.round {
-  border-radius: 34px;
-}
-
-.slider.round:before {
-  border-radius: 50%;
-}
-
-
-.signature_mobile
-{
-    display: none;
-}
-
-.show_mobile_view
-{
-    display: none;
-}
-
-@media only screen and (max-device-width: 600px) {
-    .label-element{
-        position:absolute;
-        top:-8px;
-        left:25px;
-        font-size:12px;
-        color:#666;
-        }
-    .input-element{
-        padding:30px 5px 10px 8px;
-        width:100%;
-        height:55px;
-        /* border:1px solid #CCC; */
-        font-weight: bold;
-        margin-top: -15px;
-        }
-
-    .select-wrap 
-    {
-    border: 2px solid #e0e0e0;
-    /* border-radius: 4px; */
-    margin-top: -10px;
-    /* margin-bottom: 10px; */
-    padding: 0 5px 5px;
-    width:100%;
-    /* background-color:#ebebeb; */
+    .input-groupss{
+    position:relative;width:100%;overflow:hidden;
     }
-
-    .select-wrap label
-    {
-    font-size:10px;
-    text-transform: uppercase;
-    color: #777;
-    padding: 2px 8px 0;
-    }
-
-    .m_select
-    {
-    /* background-color: #ebebeb;
-    border:0px; */
-    border-color: white !important;
-    border:0px !important;
-    outline:0px !important;
-    }
-    .select2 .select2-container .select2-container--default{
-        /* background-color: #ebebeb;
-    border:0px; */
-    border-color: white !important;
-    border:0px !important;
-    outline:0px !important;
-    }
-
-    .select2-container--default .select2-selection--single {
-    background-color: #fff;
-    border: 1px solid #fff !important;
-    border-radius: 4px;
-    }
-
-    .sub_label{
-        font-size:12px !important;
-    }
-
-    .signature_web
-    {
-        display: none;
-    }
-
-    .signature_mobile
-    {
-        display: block;
-    }
-
-    .hidden_mobile_view{
-        display: none;
-    }
-
-    .show_mobile_view
-    {
-        display: block;
-    }
-
-    .table_mobile
-    {
-        font-size:14px;
-    }
-
-    div.dropdown-wrapper select { 
-    width:115% /* This hides the arrow icon */; 
-    background-color:transparent /* This hides the background */; 
-    background-image:none; 
-    -webkit-appearance: none /* Webkit Fix */; 
-    border:none; 
-    box-shadow:none; 
-    padding:0.3em 0.5em; 
-    font-size:13px;
-    }
-    .signature-pad-canvas-wrapper {
-    margin: 15px 0 0;
-    border: 1px solid #cbcbcb;
-    border-radius: 3px;
-    overflow: hidden;
-    position: relative;
-}
-
-    .signature-pad-canvas-wrapper::after {
-        content: 'Name';
-        border-top: 1px solid #cbcbcb;
-        color: #cbcbcb;
-        width: 100%;
-        margin: 0 15px;
-        display: inline-flex;
-        position: absolute;
-        bottom: 10px;
-        font-size: 13px;
-        z-index: -1;
-    }
-
-    .tabs { list-style: none; }
-.tabs li { display: inline; }
-.tabs li a 
-{ 
-    color: black; 
-    float: left; 
-    display: block; 
-    /* padding: 4px 10px;  */
-    /* margin-left: -1px;  */
-    position: relative; 
-    /* left: 1px;  */
-    background: #a2a5a3; 
-    text-decoration: none; 
-}
-.tabs li a:hover 
-{ 
-    background: #ccc; 
-}
-.group:after 
-{ 
-    visibility: hidden; 
-    display: block; 
-    font-size: 0; 
-    content: " "; 
-    clear: both; 
-    height: 0; 
-}
-
-.box-wrap 
-{ 
-    position: relative; 
-    min-height: 250px; 
-}
-.tabbed-area div div 
-{ 
-    background: white; 
-    padding: 20px; 
-    min-height: 250px; 
-    position: absolute; 
-    top: -1px; 
-    left: 0; 
-    width: 100%; 
-}
-
-.tabbed-area div div, .tabs li a 
-{ 
-    border: 1px solid #ccc; 
-}
-
-#box-one:target, #box-two:target, #box-three:target {
-  z-index: 1;
-}
-
-.group li.active a,
-.group li a:hover,
-.group li.active a:focus,
-.group li.active a:hover{
-  background-color: #52cc6e;
-  color: black; 
-}
-}
+    .input-groupss input{position:relative;height:45px;border-radius:30px;min-width:500px;box-shadow:none;border:1px solid #eaeaea;padding-left:160px;}
+    .input-groupss label{position:absolute;left:0;height:48px;background:#55ccf2;padding:0px 25px;border-radius:30px;line-height:48px;font-size:18px;color:#fff;top:0;width:100px;font-weight:100;}
    </style>
 
     <!-- page wrapper start -->
@@ -287,7 +41,7 @@ input:checked + .slider:before {
                         <div class="float-right d-none d-md-block">
                             <div class="dropdown">
                                 <?php //if (hasPermissions('WORKORDER_MASTER')) : ?>
-                                    <a href="<?php echo base_url('estimate') ?>" class="btn btn-primary"
+                                    <a href="<?php echo base_url('accounting/newEstimateList') ?>" class="btn btn-primary"
                                        aria-expanded="false">
                                         <i class="mdi mdi-settings mr-2"></i> Go Back to Estimate
                                     </a>
@@ -306,7 +60,7 @@ input:checked + .slider:before {
 
             </div>
             <!-- end row -->
-            <?php echo form_open_multipart('estimate/savenewestimateOptionsAccounting', ['class' => 'form-validate require-validation', 'id' => 'estimate_form', 'autocomplete' => 'off']); ?>
+            <?php echo form_open_multipart('accounting/savenewestimateOptions', ['class' => 'form-validate require-validation', 'id' => 'estimate_form', 'autocomplete' => 'off']); ?>
             <style>
 
             </style>
@@ -317,14 +71,12 @@ input:checked + .slider:before {
                             <div class="row" style="background-color:white;margin-top:-2%;">
                                 <div class="col-md-6">
                                     <label for="customers" class="required"><b>Customer</b></label>
-                                    <div id="sel-customerdiv">
-                                    <select id="sel-customerOptions" name="customer_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
+                                    <select id="customer_id" name="customer_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
                                         <option value="0">- none -</option>
                                         <?php foreach($customers as $c){ ?>
-                                            <option value="<?= $c->prof_id; ?>"><?= $c->contact_name . '' . $c->first_name . ' ' . $c->last_name; ?></option>
+                                            <option value="<?= $c->prof_id; ?>"><?= $c->first_name . ' ' . $c->last_name; ?></option>
                                         <?php } ?>
                                     </select>
-                                    </div>
                                 </div>
                                 <div class="col-md-3">
                                     <br><br><a class="link-modal-open" href="javascript:void(0)" data-toggle="modal"
@@ -348,7 +100,7 @@ input:checked + .slider:before {
                                 <div class="col-md-6">
                                     <label for="job_name"><b>Job Name</b> (optional)</label>
                                     <input type="text" class="form-control" name="job_name" id="job_name"
-                                           placeholder="Enter Job Name"/>
+                                           placeholder="Enter Job Name" required/>
                                 </div>
                             </div>
                             <hr>
@@ -404,27 +156,16 @@ input:checked + .slider:before {
                                     </div>
                                 <!-- </div>
                                 <div class="row" style="background-color:white;"> -->
-                                    <div class="col-md-3 form-group">
-                                        <label for="estimate_date"><b>Estimate Type</b> <span style="color:red;">*</span></label>
-                                        <select name="estimate_type" class="form-control">
-                                            <option value="Deposit">Deposit</option>
-                                            <option value="Partial Payment">Partial Payment</option>
-                                            <option value="Final Payment">Final Payment</option>
-                                            <option value="Total Due">Total Due</option>
-                                        </select>
-                                    </div>
-                                <!-- </div>
-                                <div class="row" style="background-color:white;"> -->
                                     <div class="col-md-3">
-                                        <label for="status" class="required"><b>Estimate Status</b></label>
+                                        <label for="zip" class="required"><b>Estimate Status</b></label>
                                         <!-- <input type="text" class="form-control" name="zip" id="zip" required
                                             placeholder="Enter Estimate Status"/> -->
                                             <select name="status" class="form-control">
-                                                    <option value="Draft">Draft</option>
-                                                    <option value="Submitted">Submitted</option>
-                                                    <option value="Accepted">Accepted</option>
-                                                    <option value="Declined By Customer">Declined By Customer</option>
-                                                    <option value="Lost">Lost</option>
+                                                    <option value="product">Draft</option>
+                                                    <option value="material">Submitted</option>
+                                                    <option value="service">Approved</option>
+                                                    <option value="service">Declined</option>
+                                                    <option value="service">Schedule</option>
                                                 </select>
                                     </div>
                             </div>
@@ -447,6 +188,7 @@ input:checked + .slider:before {
                                 <div class="col-md-14 table-responsive">
                                     <table class="table table-hover">
                                         <input type="hidden" name="count" value="0" id="count">
+                                        <input type="hidden" name="count2" value="0" id="count2">
                                         <thead style="background-color:#E9E8EA;">
                                         <tr>
                                             <th><b>Option-1 Items</b></th>
@@ -458,80 +200,37 @@ input:checked + .slider:before {
                                             <th width="150px"><b>Total</b></th>
                                         </tr>
                                         </thead>
-                                        <tbody id="jobs_items_table_body">
-                                        <!-- <tr>
-                                        <td width="30%">
-                                                <input type="text" class="form-control getItems"
-                                                       onKeyup="getItems(this)" name="items[]">
-                                                <ul class="suggestions"></ul>
-                                                <div class="show_mobile_view"><span class="getItems_hidden"></span></div>
-                                            </td>
-                                            <td width="20%">
-                                            <div class="dropdown-wrapper">
-                                                <select name="item_type[]" id="item_typeid" class="form-control">
-                                                    <option value="product">Product</option>
-                                                    <option value="material">Material</option>
-                                                    <option value="service">Service</option>
-                                                    <option value="fee">Fee</option>
-                                                </select>
-                                            </div>
-                                                </td>
-                                            <td width="10%"><input type="number" class="form-control quantity hidden_mobile_view" name="quantity[]"
-                                                       data-counter="0" id="quantity_0" value="1"> <div class="show_mobile_view"><span>1</span><input type="hidden" class="form-control quantity" name="quantity[]"
-                                                       data-counter="0" id="quantity_0" value="1"></div> </td>
-                                            <td width="10%"><input type="number" class="form-control price hidden_mobile_view" name="price[]"
-                                                       data-counter="0" id="price_0" min="0" value="0"> <input type="hidden" class="priceqty" id="priceqty_0"> <div class="show_mobile_view"><span class="price">0</span><input type="hidden" class="form-control price" name="price[]" data-counter="0" id="priceM_0" min="0" value="0"></div><input id="priceM_qty0" value=""  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view price_qty"></td>
-                                            <td width="10%" class="hidden_mobile_view"><input type="number" class="form-control discount" name="discount[]"
-                                                       data-counter="0" id="discount_0" min="0" value="0" ></td>
-                                            <td width="10%" class="hidden_mobile_view"><input type="text" class="form-control tax_change" name="tax[]"
-                                                       data-counter="0" id="tax1_0" min="0" value="0">
-                                                       </td>
-                                            <td width="10%" class="hidden_mobile_view"><input type="hidden" class="form-control " name="total[]"
-                                                       data-counter="0" id="item_total_0" min="0" value="0">
-                                                       $<span id="span_total_0">0.00</span></td>
-                                        </tr> -->
+                                        <tbody id="table_body_option1">
                                         <tr>
-                                            <td width="30%">
+                                        <td>
                                                 <input type="text" class="form-control getItems"
                                                        onKeyup="getItems(this)" name="items[]">
                                                 <ul class="suggestions"></ul>
-                                                <div class="show_mobile_view"><span class="getItems_hidden"></span></div>
-                                                <input type="hidden" name="itemid[]" id="itemid" class="itemid">
                                             </td>
-                                            <td width="20%">
-                                            <div class="dropdown-wrapper">
-                                                <select name="item_type[]" id="item_typeid" class="form-control">
+                                            <td><select name="item_type[]" class="form-control">
                                                     <option value="product">Product</option>
                                                     <option value="material">Material</option>
                                                     <option value="service">Service</option>
                                                     <option value="fee">Fee</option>
-                                                </select>
-                                            </div>
-
-                                            <!-- <div class="show_mobile_view" style="color:green;"><span>Product</span></div> -->
-                                                </td>
-                                            <td width="10%"><input type="number" class="form-control quantity mobile_qty" name="quantity[]"
+                                                </select></td>
+                                            <td><input type="number" class="form-control quantity" name="quantity[]"
                                                        data-counter="0" id="quantity_0" value="1"></td>
-                                            <td width="10%"><input type="number" class="form-control price hidden_mobile_view" name="price[]"
-                                                       data-counter="0" id="price_0" min="0" value="0"> <input type="hidden" class="priceqty" id="priceqty_0"> 
-                                                       <div class="show_mobile_view"><span class="price">0</span>
-                                                       <!-- <input type="hidden" class="form-control price" name="price[]" data-counter="0" id="priceM_0" min="0" value="0"> -->
-                                                       </div><input id="priceM_qty0" value="0"  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view price_qty"></td>
-                                            <td width="10%" class="hidden_mobile_view"><input type="number" class="form-control discount" name="discount[]"
-                                                       data-counter="0" id="discount_0" min="0" value="0"  readonly></td>
-                                            <td width="10%" class="hidden_mobile_view"><input type="text" class="form-control tax_change" name="tax[]"
-                                                       data-counter="0" id="tax1_0" min="0" value="0">
-                                                       <!-- <span id="span_tax_0">0.0</span> -->
-                                                       </td>
-                                            <td width="10%" class="hidden_mobile_view"><input type="hidden" class="form-control " name="total[]"
+                                            <!-- <td><input type="text" class="form-control" name="location[]"></td> -->
+                                            <td><input type="number" class="form-control price" name="price[]"
+                                                       data-counter="0" id="price_0" min="0" value="0"></td>
+                                            <td><input type="number" class="form-control discount" name="discount[]"
+                                                       data-counter="0" id="discount_0" min="0" value="0" readonly></td>
+                                            <td><input type="text" class="form-control tax_changeoptions" name="tax[]"
+                                                       data-counter="0" id="tax_1_0" min="0" value="0">
+                                                       <!-- <span id="tax_111_0">0.00</span></td> -->
+                                            <td><input type="hidden" class="form-control " name="total[]"
                                                        data-counter="0" id="item_total_0" min="0" value="0">
                                                        $<span id="span_total_0">0.00</span></td>
-                                            <td><a href="#" class="remove btn btn-sm btn-success" id="0"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
                                         </tr>
                                         </tbody>
                                     </table>
                                     <!-- <a href="#" id="add_another_option1" style="color:#02A32C;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add another line</a> -->
-                                    <a class="link-modal-open" href="#" id="add_another_items" data-toggle="modal" data-target="#item_listOptions" style="color:#02A32C;"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a>
+                                    <a class="link-modal-open" href="#" id="add_another_items" data-toggle="modal" data-target="#item_list" style="color:#02A32C;"><span class="fa fa-plus-square fa-margin-right"></span>Add another line</a>
                                 </div>
                             </div>
 
@@ -601,7 +300,7 @@ input:checked + .slider:before {
                             <div class="row" id="plansItemDiv" style="background-color:white;">
                                 <div class="col-md-12 table-responsive">
                                     <table class="table table-hover">
-                                        <input type="hidden" name="count" value="0" id="count2">
+                                        <input type="hidden" name="count" value="0" id="count">
                                         <thead style="background-color:#E9E8EA;">
                                         <tr>
                                             <th><b>Option-2 Items</b></th>
@@ -619,7 +318,6 @@ input:checked + .slider:before {
                                                 <input type="text" class="form-control getItems2"
                                                        onKeyup="getItemsOption2(this)" name="items2[]">
                                                 <ul class="suggestions"></ul>
-                                                <input type="hidden" name="itemid2[]" id="itemid2" class="itemid2">
                                             </td>
                                             <td><select name="item_type2[]" class="form-control">
                                                     <option value="product">Product</option>
@@ -631,7 +329,7 @@ input:checked + .slider:before {
                                                        data-counter="0" id="quantity2_0" value="1"></td>
                                             <!-- <td><input type="text" class="form-control" name="location[]"></td> -->
                                             <td><input type="number" class="form-control price2" name="price2[]"
-                                                       data-counter="0" id="price2_0" min="0" value="0"><input type="hidden" class="priceqty2" id="priceqty2_0" value="0"></td>
+                                                       data-counter="0" id="price2_0" min="0" value="0"></td>
                                             <td><input type="number" class="form-control discount2" name="discount2[]"
                                                        data-counter="0" id="discount2_0" min="0" value="0" readonly></td>
                                             <td><input type="text" class="form-control tax_changeoptionsb" name="tax2[]"
@@ -639,12 +337,11 @@ input:checked + .slider:before {
                                             <td><input type="hidden" class="form-control " name="total2[]"
                                                        data-counter="0" id="item_total2_0" min="0" value="0">
                                                        $<span id="span_total2_0">0.00</span></td>
-                                            <td><a href="#" class="remove2 btn btn-sm btn-success" id="0"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
                                         </tr>
                                         </tbody>
                                     </table>
                                     <!-- <a href="#" id="add_another_option2" style="color:#02A32C;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add another line</a> -->
-                                    <a class="link-modal-open" href="#" id="add_another_items" data-toggle="modal" data-target="#item_list2Options" style="color:#02A32C;"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a>
+                                    <a class="link-modal-open" href="#" id="add_another_items" data-toggle="modal" data-target="#item_list2" style="color:#02A32C;"><span class="fa fa-plus-square fa-margin-right"></span>Add another line</a>
                                 </div>
                             </div>
 
@@ -760,7 +457,7 @@ input:checked + .slider:before {
                             <div class="row" style="background-color:white;">
                                 <div class="col-md-12 form-group">
                                     <button type="submit" class="btn btn-light but" style="border-radius: 0 !important;border:solid gray 1px;">Save as Draft</button>
-                                    <!-- <button type="button" class="btn btn-success but" style="border-radius: 0 !important;">Preview</button> -->
+                                    <button type="button" class="btn btn-success but" style="border-radius: 0 !important;">Preview</button>
                                     <a href="<?php echo url('workorder') ?>" class="btn but-red">Cancel this</a>
                                 </div>
                             </div>
@@ -813,7 +510,7 @@ input:checked + .slider:before {
             </div>
 
             <!-- Modal -->
-            <div class="modal fade" id="item_listOptions" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
+            <div class="modal fade" id="item_list" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg" role="document" style="width:800px;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -829,7 +526,6 @@ input:checked + .slider:before {
                                         <thead>
                                         <tr>
                                             <td> Name</td>
-                                            <td>Rebate</td>
                                             <td> Qty</td>
                                             <td> Price</td>
                                             <td> Action</td>
@@ -839,22 +535,6 @@ input:checked + .slider:before {
                                         <?php foreach($items as $item){ // print_r($item); ?>
                                             <tr>
                                                 <td><?php echo $item->title; ?></td>
-                                                <td><?php if($item->rebate == 1){ ?>
-                                                    <!-- <label class="switch">
-                                                    <input type="checkbox" id="rebatable_toggle" checked>
-                                                    <span class="slider round"></span> -->
-                                                    <input type="checkbox" class="toggle_checkbox" id="rebatable_toggle" item-id="<?php echo $item->id; ?>"  value="1"  data-toggle="toggle" data-size="xs" checked >
-                                                    </label>
-                                                <?php }else{ ?>
-                                                    <!-- <label class="switch">
-                                                    <input type="checkbox">
-                                                    <span class="slider round"></span>
-                                                    </label> -->
-
-                                                    <!-- <input type="checkbox" data-toggle="toggle" data-size="xs"> -->
-                                                    <input type="checkbox" class="toggle_checkbox" id="rebatable_toggle" item-id="<?php echo $item->id; ?>" value="0" data-toggle="toggle" data-size="xs">
-
-                                                <?php  } ?></td>
                                                 <td></td>
                                                 <td><?php echo $item->price; ?></td>
                                                 <td><button id="<?= $item->id; ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default select_item">
@@ -878,7 +558,7 @@ input:checked + .slider:before {
             </div>
 
              <!-- Modal New Customer -->
-            <div class="modal fade" id="modalNewCustomer" tabindex="-1" role="dialog"
+             <div class="modal fade" id="modalNewCustomer" tabindex="-1" role="dialog"
                  aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
@@ -898,7 +578,7 @@ input:checked + .slider:before {
             </div>
 
             <!-- Modal -->
-            <div class="modal fade" id="item_list2Options" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
+            <div class="modal fade" id="item_list2" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg" role="document" style="width:800px;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -914,7 +594,6 @@ input:checked + .slider:before {
                                         <thead>
                                         <tr>
                                             <td> Name</td>
-                                            <td>Rebate</td>
                                             <td> Qty</td>
                                             <td> Price</td>
                                             <td> Action</td>
@@ -924,25 +603,9 @@ input:checked + .slider:before {
                                         <?php foreach($items as $item){ // print_r($item); ?>
                                             <tr>
                                                 <td><?php echo $item->title; ?></td>
-                                                <td><?php if($item->rebate == 1){ ?>
-                                                    <!-- <label class="switch">
-                                                    <input type="checkbox" id="rebatable_toggle" checked>
-                                                    <span class="slider round"></span> -->
-                                                    <input type="checkbox" class="toggle_checkbox" id="rebatable_toggle" item-id="<?php echo $item->id; ?>"  value="1"  data-toggle="toggle" data-size="xs" checked >
-                                                    </label>
-                                                <?php }else{ ?>
-                                                    <!-- <label class="switch">
-                                                    <input type="checkbox">
-                                                    <span class="slider round"></span>
-                                                    </label> -->
-
-                                                    <!-- <input type="checkbox" data-toggle="toggle" data-size="xs"> -->
-                                                    <input type="checkbox" class="toggle_checkbox" id="rebatable_toggle" item-id="<?php echo $item->id; ?>" value="0" data-toggle="toggle" data-size="xs">
-
-                                                <?php  } ?></td>
                                                 <td></td>
                                                 <td><?php echo $item->price; ?></td>
-                                                <td><button id="<?= $item->id; ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default select_item22">
+                                                <td><button id="<?= $item->id; ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default select_item2">
                                                 <span class="fa fa-plus"></span>
                                             </button></td>
                                             </tr>
@@ -997,8 +660,7 @@ input:checked + .slider:before {
 </div>
 
 <?php echo $file_selection; ?>
-<?php include viewPath('includes/footer'); ?>
-<script src="<?php echo $url->assets ?>js/add.js"></script>
+<?php include viewPath('includes/footer_accounting'); ?>
 
 <script>
     function validatecard() {
@@ -1013,94 +675,21 @@ input:checked + .slider:before {
     }
 
 
-    $(document).ready(function () {
-        $('#sel-customer').select2();
-        var customer_id = "<?php echo isset($_GET['customer_id']) ? $_GET['customer_id'] : '' ?>";
+    // $(document).ready(function () {
+    //     $('#sel-customer').select2();
+    //     var customer_id = "<?php echo isset($_GET['customer_id']) ? $_GET['customer_id'] : '' ?>";
 
-        /*$('#customers')
-            .empty() //empty select
-            .append($("<option/>") //add option tag in select
-                .val(customer_id) //set value for option to post it
-                .text("<?php echo get_customer_by_id($_GET['customer_id'])->contact_name ?>")) //set a text for show in select
-            .val(customer_id) //select option of select2
-            .trigger("change"); //apply to select2*/
-    });
-</script>
-
-<script>
-//   $(function() {
-//     $("#rebatable_toggle").each(function(){
-//     $(this).change(function() {
-//     //   $('#console-event').html('Toggle: ' + $(this).prop('checked'))
-//     alert('yeah');
-//     })
-//   })
-$(document).ready(function () {
-
-//iterate through all the divs - get their ids, hide them, then call the on click
-$(".toggle").each(function () {
-    var $context = $(this);
-    var $button = $context.find("#rebatable_toggle");
-    //            $currentId = $button.attr('id');
-    // var $divOptions = $context.find('div').last();
-
-    //$($divOptions).hide();
-    $($button).on('change', function (event) {
-        // alert('yeah');
-        // $(this).click(function() {        
-        var id = $($button).attr("item-id");
-        var get_val = $($button).val();
-        // alert(id);
-
-        $.ajax({
-            type: 'POST',
-            url:"<?php echo base_url(); ?>accounting/changeRebate",
-            data: {id : id, get_val : get_val },
-            dataType: 'json',
-            success: function(response){
-                // alert('Successfully Change');
-                sucess("Rebate Updated Successfully!");
-                // $('.lamesa').load(window.location.href +  ' .lamesa');
-                // location.reload();
-                $('#item_listOptions').modal('toggle');
-                // $("#item_list .modal-body").load(target, function() { 
-                // $("#item_list").modal("show"); 
-                // });
-                $('#item_listOptions').on('hidden.bs.modal', function (e) {
-                    location.reload();
-                    });
-            },
-                error: function(response){
-                alert('Error'+response);
-       
-                }
-        });
-
-        function sucess(information,$id){
-            Swal.fire({
-                title: 'Good job!',
-                text: information,
-                icon: 'success',
-                showCancelButton: false,
-                confirmButtonColor: '#32243d',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Ok'
-            }).then((result) => {
-                if (result.value) {
-                    window.location.href="<?= base_url(); ?>customer/preview/"+$id;
-                }
-            });
-        }
-
+    //     /*$('#customers')
+    //         .empty() //empty select
+    //         .append($("<option/>") //add option tag in select
+    //             .val(customer_id) //set value for option to post it
+    //             .text("<?php echo get_customer_by_id($_GET['customer_id'])->contact_name ?>")) //set a text for show in select
+    //         .val(customer_id) //select option of select2
+    //         .trigger("change"); //apply to select2*/
     // });
-    });
-});
-});
 </script>
 
-<!-- <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAlMWhWMHlxQzuolWb2RrfUeb0JyhhPO9c&libraries=places"></script> -->
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=<?= google_credentials()['api_key'] ?>&callback=initialize&libraries=&v=weekly"></script>
-
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAlMWhWMHlxQzuolWb2RrfUeb0JyhhPO9c&libraries=places"></script>
 <script>
 function initialize() {
           var input = document.getElementById('job_location');
@@ -1118,14 +707,11 @@ function initialize() {
 <script>
 
 $(document).ready(function(){
-    <?php if($customer_id > 0){ echo "option_customer_field_changed(".$customer_id.");";} ?>
-    $('#sel-customerOptions').change(function(){
+ 
+    $('#customer_id').change(function(){
     var id  = $(this).val();
     // alert(id);
-    option_customer_field_changed(id);
-    });
-    function option_customer_field_changed(id){
-        $('#sel-customerOptions').val(id);
+
         $.ajax({
             type: 'POST',
             url:"<?php echo base_url(); ?>accounting/addLocationajax",
@@ -1145,7 +731,7 @@ $(document).ready(function(){
        
                 }
         });
-    }
+    });
 
     $(document).on('click','.setmarkup',function(){
        // alert('yeah');
@@ -1162,162 +748,158 @@ $(document).ready(function(){
 </script>
 
 <script>
-// $(".select_item").click(function () {
-//             var idd = this.id;
-//             console.log(idd);
-//             console.log($(this).data('itemname'));
-//             var title = $(this).data('itemname');
-//             var price = $(this).data('price');
-//             // var qty = $(this).data('quantity');
-//             if(!$(this).data('quantity')){
-//               // alert($(this).data('quantity'));
-//               var qty = 0;
-//             }else{
-//               // alert('0');
-//               var qty = $(this).data('quantity');
-//             }
+$(".select_item").click(function () {
+            var idd = this.id;
+            console.log(idd);
+            console.log($(this).data('itemname'));
+            var title = $(this).data('itemname');
+            var price = $(this).data('price');
+            // var qty = $(this).data('quantity');
+            if(!$(this).data('quantity')){
+              // alert($(this).data('quantity'));
+              var qty = 0;
+            }else{
+              // alert('0');
+              var qty = $(this).data('quantity');
+            }
 
-//             var count = parseInt($("#count").val()) + 1;
-//             $("#count").val(count);
-//             var total_ = price * qty;
-//             var total = parseFloat(total_).toFixed(2);
-//             var withCommas = Number(total).toLocaleString('en');
-//             total = '$' + withCommas + '.00';
-//             // console.log(total);
-//             // alert(total);
-//             markup = "<tr id=\"ss\">" +
-//                 "<td width=\"35%\"><input value='"+title+"' type=\"text\" name=\"items[]\" class=\"form-control\" ><input type=\"hidden\" value='"+idd+"' name=\"item_id[]\"></td>\n" +
-//                 "<td width=\"20%\"><select name=\"item_type[]\" class=\"form-control\"><option value=\"product\">Product</option><option value=\"material\">Material</option><option value=\"service\">Service</option><option value=\"fee\">Fee</option></select></td>\n" +
-//                 "<td width=\"10%\"><input data-itemid='"+idd+"' id='quantity_"+idd+"' value='"+qty+"' type=\"number\" name=\"quantity[]\" class=\"form-control qtyest\"></td>\n" +
-//                 // "<td>\n" + '<input type="number" class="form-control qtyest" name="quantity[]" data-counter="' + count + '" id="quantity_' + count + '" min="1" value="1">\n' + "</td>\n" +
-//                 "<td width=\"10%\"><input id='price_"+idd+"' value='"+price+"'  type=\"number\" name=\"price[]\" class=\"form-control price2\" placeholder=\"Unit Price\"></td>\n" +
-//                 // "<td width=\"10%\"><input type=\"number\" class=\"form-control discount\" name=\"discount[]\" data-counter="0" id=\"discount_0\" min="0" value="0" ></td>\n" +
-//                 // "<td width=\"10%\"><small>Unit Cost</small><input type=\"text\" name=\"item_cost[]\" class=\"form-control\"></td>\n" +
-//                 "<td width=\"10%\"><input type=\"number\" name=\"discount[]\" class=\"form-control discount\"  id='discount_"+idd+"'></td>\n" +
-//                 // "<td width=\"25%\"><small>Inventory Location</small><input type=\"text\" name=\"item_loc[]\" class=\"form-control\"></td>\n" +
-//                 "<td width=\"20%\"><input type=\"text\"  data-itemid='"+idd+"' class=\"form-control tax_changeoptions2\" name=\"tax[]\" data-counter=\"0\"  id='tax_1_"+idd+"'></td>\n" +
-//                 "<td style=\"text-align: center\" class=\"d-flex\" width=\"15%\"><span data-subtotal='"+total_+"' id='span_total_"+idd+"' class=\"total_per_item\">"+total+
-//                 // "</span><a href=\"javascript:void(0)\" class=\"remove_item_row\"><i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i></a>"+
-//                 "</span><input type=\"hidden\" name=\"total[]\" id='item_total_"+idd+"' value='"+total+"'></td>" +
-//                 "<td>\n" +
-//                 "<a href=\"#\" class=\"remove btn btn-sm btn-success\" id='"+idd+"'><i class=\"fa fa-trash\" aria-hidden=\"true\"></i></a>\n" +
-//                 "</td>\n" +
-//                 "</tr>";
-//             tableBody = $("#table_body_option1");
-//             tableBody.append(markup);
-//             markup2 = "<tr id=\"sss\">" +
-//                 "<td >"+title+"</td>\n" +
-//                 "<td ></td>\n" +
-//                 "<td ></td>\n" +
-//                 "<td >"+price+"</td>\n" +
-//                 "<td ></td>\n" +
-//                 "<td >"+qty+"</td>\n" +
-//                 "<td ></td>\n" +
-//                 "<td ></td>\n" +
-//                 "<td >0</td>\n" +
-//                 "<td ></td>\n" +
-//                 "<td ><a href=\"#\" data-name='"+title+"' data-price='"+price+"' data-quantity='"+qty+"' id='"+idd+"' class=\"edit_item_list\"><span class=\"fa fa-edit\"></span></i></a> <a href=\"javascript:void(0)\" class=\"remove_audit_item_row\"><span class=\"fa fa-trash\"></span></i></a></td>\n" +
-//                 "</tr>";
-//             tableBody2 = $("#device_audit_datas");
-//             tableBody2.append(markup2);
-//             // calculate_subtotal();
+            var count = parseInt($("#count").val()) + 1;
+            $("#count").val(count);
+            var total_ = price * qty;
+            var total = parseFloat(total_).toFixed(2);
+            var withCommas = Number(total).toLocaleString('en');
+            total = '$' + withCommas + '.00';
+            // console.log(total);
+            // alert(total);
+            markup = "<tr id=\"ss\">" +
+                "<td width=\"35%\"><input value='"+title+"' type=\"text\" name=\"items[]\" class=\"form-control\" ><input type=\"hidden\" value='"+idd+"' name=\"item_id[]\"></td>\n" +
+                "<td width=\"20%\"><select name=\"item_type[]\" class=\"form-control\"><option value=\"product\">Product</option><option value=\"material\">Material</option><option value=\"service\">Service</option><option value=\"fee\">Fee</option></select></td>\n" +
+                "<td width=\"10%\"><input data-itemid='"+idd+"' id='quantity_"+idd+"' value='"+qty+"' type=\"number\" name=\"quantity[]\" class=\"form-control qtyest\"></td>\n" +
+                // "<td>\n" + '<input type="number" class="form-control qtyest" name="quantity[]" data-counter="' + count + '" id="quantity_' + count + '" min="1" value="1">\n' + "</td>\n" +
+                "<td width=\"10%\"><input id='price_"+idd+"' value='"+price+"'  type=\"number\" name=\"price[]\" class=\"form-control\" placeholder=\"Unit Price\"></td>\n" +
+                // "<td width=\"10%\"><input type=\"number\" class=\"form-control discount\" name=\"discount[]\" data-counter="0" id=\"discount_0\" min="0" value="0" ></td>\n" +
+                // "<td width=\"10%\"><small>Unit Cost</small><input type=\"text\" name=\"item_cost[]\" class=\"form-control\"></td>\n" +
+                "<td width=\"10%\"><input type=\"number\" name=\"discount[]\" class=\"form-control discount\"  id='discount_"+idd+"'></td>\n" +
+                // "<td width=\"25%\"><small>Inventory Location</small><input type=\"text\" name=\"item_loc[]\" class=\"form-control\"></td>\n" +
+                "<td width=\"20%\"><input type=\"text\"  data-itemid='"+idd+"' class=\"form-control tax_changeoptions2\" name=\"tax[]\" data-counter=\"0\"  id='tax_1_"+idd+"'></td>\n" +
+                "<td style=\"text-align: center\" class=\"d-flex\" width=\"15%\"><span data-subtotal='"+total_+"' id='span_total_"+idd+"' class=\"total_per_item\">"+total+
+                // "</span><a href=\"javascript:void(0)\" class=\"remove_item_row\"><i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i></a>"+
+                "</span><input type=\"hidden\" name=\"total[]\" id='item_total_"+idd+"' value='"+total+"'></td>" +
+                "</tr>";
+            tableBody = $("#table_body_option1");
+            tableBody.append(markup);
+            markup2 = "<tr id=\"sss\">" +
+                "<td >"+title+"</td>\n" +
+                "<td ></td>\n" +
+                "<td ></td>\n" +
+                "<td >"+price+"</td>\n" +
+                "<td ></td>\n" +
+                "<td >"+qty+"</td>\n" +
+                "<td ></td>\n" +
+                "<td ></td>\n" +
+                "<td >0</td>\n" +
+                "<td ></td>\n" +
+                "<td ><a href=\"#\" data-name='"+title+"' data-price='"+price+"' data-quantity='"+qty+"' id='"+idd+"' class=\"edit_item_list\"><span class=\"fa fa-edit\"></span></i></a> <a href=\"javascript:void(0)\" class=\"remove_audit_item_row\"><span class=\"fa fa-trash\"></span></i></a></td>\n" +
+                "</tr>";
+            tableBody2 = $("#device_audit_datas");
+            tableBody2.append(markup2);
+            // calculate_subtotal();
 
-//   var in_id = idd;
-//   var price = $("#price_" + in_id).val();
-//   var quantity = $("#quantity_" + in_id).val();
-//   var discount = $("#discount_" + in_id).val();
-//   var tax = (parseFloat(price) * 7.5) / 100;
-//   var tax1 = (((parseFloat(price) * 7.5) / 100) * parseFloat(quantity)).toFixed(
-//     2
-//   );
-//   if( discount == '' ){
-//     discount = 0;
-//   }
+  var in_id = idd;
+  var price = $("#price_" + in_id).val();
+  var quantity = $("#quantity_" + in_id).val();
+  var discount = $("#discount_" + in_id).val();
+  var tax = (parseFloat(price) * 7.5) / 100;
+  var tax1 = (((parseFloat(price) * 7.5) / 100) * parseFloat(quantity)).toFixed(
+    2
+  );
+  if( discount == '' ){
+    discount = 0;
+  }
   
-//   var total = (
-//     (parseFloat(price) + parseFloat(tax)) * parseFloat(quantity) -
-//     parseFloat(discount)
-//   ).toFixed(2);
+  var total = (
+    (parseFloat(price) + parseFloat(tax)) * parseFloat(quantity) -
+    parseFloat(discount)
+  ).toFixed(2);
 
-// //   alert( 'yeah' + tax1);
+//   alert( 'yeah' + tax1);
 
-//   $("#span_total_" + in_id).text(total);
-//   $("#tax_1_" + in_id).text(tax1);
-//   $("#tax_11_" + in_id).val(tax1);
-//   $("#discount_" + in_id).val(discount);
+  $("#span_total_" + in_id).text(total);
+  $("#tax_1_" + in_id).text(tax1);
+  $("#tax_11_" + in_id).val(tax1);
+  $("#discount_" + in_id).val(discount);
 
-//   if( $('#tax_1_'+ in_id).length ){
-//     $('#tax_1_'+in_id).val(tax1);
-//   }
+  if( $('#tax_1_'+ in_id).length ){
+    $('#tax_1_'+in_id).val(tax1);
+  }
 
-//   if( $('#item_total_'+ in_id).length ){
-//     $('#item_total_'+in_id).val(total);
-//   }
+  if( $('#item_total_'+ in_id).length ){
+    $('#item_total_'+in_id).val(total);
+  }
 
-//   var eqpt_cost = 0;
-//   var cnt = $("#count").val();
-//   var total_discount = 0;
-//   for (var p = 0; p <= cnt; p++) {
-//     var prc = $("#price_" + p).val();
-//     var quantity = $("#quantity_" + p).val();
-//     var discount = $("#discount_" + p).val();
-//     // var discount= $('#discount_' + p).val();
-//     // eqpt_cost += parseFloat(prc) - parseFloat(discount);
-//     eqpt_cost += parseFloat(prc) * parseFloat(quantity);
-//     total_discount += parseFloat(discount);
-//   }
-// //   var subtotal = 0;
-// // $( total ).each( function(){
-// //   subtotal += parseFloat( $( this ).val() ) || 0;
-// // });
-
-//   eqpt_cost = parseFloat(eqpt_cost).toFixed(2);
-//   total_discount = parseFloat(total_discount).toFixed(2);
-//   // var test = 5;
-
+  var eqpt_cost = 0;
+  var cnt = $("#count").val();
+  var total_discount = 0;
+  for (var p = 0; p <= cnt; p++) {
+    var prc = $("#price_" + p).val();
+    var quantity = $("#quantity_" + p).val();
+    var discount = $("#discount_" + p).val();
+    // var discount= $('#discount_' + p).val();
+    // eqpt_cost += parseFloat(prc) - parseFloat(discount);
+    eqpt_cost += parseFloat(prc) * parseFloat(quantity);
+    total_discount += parseFloat(discount);
+  }
 //   var subtotal = 0;
-//   // $("#span_total_0").each(function(){
-//     $('*[id^="span_total_"]').each(function(){
-//     subtotal += parseFloat($(this).text());
-//   });
-//   // $('#sum').text(subtotal);
+// $( total ).each( function(){
+//   subtotal += parseFloat( $( this ).val() ) || 0;
+// });
 
-//   var subtotaltaxx = 0;
-//   // $("#span_total_0").each(function(){
-//     $('*[id^="tax_1_"]').each(function(){
-//       subtotaltaxx += parseFloat($(this).val());
-//   });
+  eqpt_cost = parseFloat(eqpt_cost).toFixed(2);
+  total_discount = parseFloat(total_discount).toFixed(2);
+  // var test = 5;
 
-// //   alert(subtotaltaxx);
+  var subtotal = 0;
+  // $("#span_total_0").each(function(){
+    $('*[id^="span_total_"]').each(function(){
+    subtotal += parseFloat($(this).text());
+  });
+  // $('#sum').text(subtotal);
 
-//   $("#eqpt_cost").val(eqpt_cost);
-//   $("#total_discount").val(total_discount);
-//   $("#span_sub_total_0").text(total_discount);
-//   $("#span_sub_total_invoice").text(subtotal.toFixed(2));
-//   $("#item_total").val(subtotal.toFixed(2));
+  var subtotaltaxx = 0;
+  // $("#span_total_0").each(function(){
+    $('*[id^="tax_1_"]').each(function(){
+      subtotaltaxx += parseFloat($(this).val());
+  });
+
+//   alert(subtotaltaxx);
+
+  $("#eqpt_cost").val(eqpt_cost);
+  $("#total_discount").val(total_discount);
+  $("#span_sub_total_0").text(total_discount);
+  $("#span_sub_total_invoice").text(subtotal.toFixed(2));
+  $("#item_total").val(subtotal.toFixed(2));
   
-//   var s_total = subtotal.toFixed(2);
-//   var adjustment = $("#adjustment_input").val();
-//   var grand_total = s_total - parseFloat(adjustment);
-//   var markup = $("#markup_input_form").val();
-//   var grand_total_w = grand_total + parseFloat(markup);
+  var s_total = subtotal.toFixed(2);
+  var adjustment = $("#adjustment_input").val();
+  var grand_total = s_total - parseFloat(adjustment);
+  var markup = $("#markup_input_form").val();
+  var grand_total_w = grand_total + parseFloat(markup);
 
-//   $("#total_tax_").text(subtotaltaxx.toFixed(2));
-//   $("#total_tax_input").val(subtotaltaxx.toFixed(2));
+  $("#total_tax_").text(subtotaltaxx.toFixed(2));
+  $("#total_tax_input").val(subtotaltaxx.toFixed(2));
   
 
-//   $("#grand_total").text(grand_total_w.toFixed(2));
-//   $("#grand_total_input").val(grand_total_w.toFixed(2));
+  $("#grand_total").text(grand_total_w.toFixed(2));
+  $("#grand_total_input").val(grand_total_w.toFixed(2));
 
-//   var sls = (parseFloat(eqpt_cost).toFixed(2) * 7.5) / 100;
-//   sls = parseFloat(sls).toFixed(2);
-//   $("#sales_tax").val(sls);
-//   cal_total_due();
+  var sls = (parseFloat(eqpt_cost).toFixed(2) * 7.5) / 100;
+  sls = parseFloat(sls).toFixed(2);
+  $("#sales_tax").val(sls);
+  cal_total_due();
 
-//         });
+        });
 
-$(".select_item22").click(function () {
-    // alert('test');
+$(".select_item2").click(function () {
             var idd = this.id;
             console.log(idd);
             console.log($(this).data('itemname'));
@@ -1334,22 +916,19 @@ $(".select_item22").click(function () {
             // console.log(total);
             // alert(total);
             markup = "<tr id=\"ss\">" +
-                "<td width=\"35%\"><input value='"+title+"' type=\"text\" name=\"items2[]\" class=\"form-control\" ><input type=\"hidden\" value='"+idd+"' name=\"itemid2[]\"></td>\n" +
+                "<td width=\"35%\"><input value='"+title+"' type=\"text\" name=\"items2[]\" class=\"form-control\" ><input type=\"hidden\" value='"+idd+"' name=\"item_id2[]\"></td>\n" +
                 "<td width=\"20%\"><select name=\"item_type2[]\" class=\"form-control\"><option value=\"product\">Product</option><option value=\"material\">Material</option><option value=\"service\">Service</option><option value=\"fee\">Fee</option></select></td>\n" +
-                "<td width=\"10%\"><input data-itemid='"+idd+"' id='quantity2_"+idd+"' value='"+qty+"' type=\"number\" name=\"quantity2[]\" class=\"form-control qtyest2b\"></td>\n" +
+                "<td width=\"10%\"><input data-itemid='"+idd+"' id='quantity2_"+idd+"' value='"+qty+"' type=\"number\" name=\"quantity2[]\" class=\"form-control qtyest2\"></td>\n" +
                 // "<td>\n" + '<input type="number" class="form-control qtyest" name="quantity[]" data-counter="' + count + '" id="quantity_' + count + '" min="1" value="1">\n' + "</td>\n" +
-                "<td width=\"10%\"><input id='price2_"+idd+"' value='"+price+"'  type=\"number\" name=\"price2[]\" class=\"form-control\" placeholder=\"Unit Price\"><input type=\"hidden\" class=\"priceqty\" id='priceqty2_"+idd+"'></td>\n" +
+                "<td width=\"10%\"><input id='price2_"+idd+"' value='"+price+"'  type=\"number\" name=\"price2[]\" class=\"form-control\" placeholder=\"Unit Price\"></td>\n" +
                 // "<td width=\"10%\"><input type=\"number\" class=\"form-control discount\" name=\"discount[]\" data-counter="0" id=\"discount_0\" min="0" value="0" ></td>\n" +
                 // "<td width=\"10%\"><small>Unit Cost</small><input type=\"text\" name=\"item_cost[]\" class=\"form-control\"></td>\n" +
-                "<td width=\"10%\"><input type=\"number\" name=\"discount2[]\" class=\"form-control discount2\"  id='discount2_"+idd+"' readonly></td>\n" +
+                "<td width=\"10%\"><input type=\"number\" name=\"discount2[]\" class=\"form-control discount2\"  id='discount2_"+idd+"'></td>\n" +
                 // "<td width=\"25%\"><small>Inventory Location</small><input type=\"text\" name=\"item_loc[]\" class=\"form-control\"></td>\n" +
                 "<td width=\"20%\"><input type=\"text\" data-itemid='"+idd+"' class=\"form-control tax_changeoptions2b\" name=\"tax2[]\" data-counter=\"0\"  id='tax2_1_"+idd+"'></td>\n" +
                 "<td style=\"text-align: center\" class=\"d-flex\" width=\"15%\"><span data-subtotal='"+total_+"' id='span_total2_"+idd+"' class=\"total_per_item2\">"+total+
                 // "</span><a href=\"javascript:void(0)\" class=\"remove_item_row\"><i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i></a>"+
                 "</span><input type=\"hidden\" name=\"total2[]\" id='item_total2_"+idd+"' value='"+total+"'></td>" +
-                "<td>\n" +
-                "<a href=\"#\" class=\"remove2 btn btn-sm btn-success\" id='"+idd+"'><i class=\"fa fa-trash\" aria-hidden=\"true\"></i></a>\n" +
-                "</td>\n" +
                 "</tr>";
             tableBody = $("#table_body_option2");
             tableBody.append(markup);
@@ -1389,9 +968,6 @@ $(".select_item22").click(function () {
 
 //   alert( 'yeah' + tax1);
 
-var total_wo_tax = price * quantity;
-
-  $("#priceqty2_" + in_id).val(total_wo_tax);
   $("#span_total2_" + in_id).text(total);
   $("#tax2_1_" + in_id).text(tax1);
   $("#tax2_11_" + in_id).val(tax1);
@@ -1406,16 +982,14 @@ var total_wo_tax = price * quantity;
   }
 
   var eqpt_cost = 0;
-  var cnt = $("#count2").val();
+  var cnt = $("#count").val();
   var total_discount = 0;
-  var total_costss = 0;
   for (var p = 0; p <= cnt; p++) {
     var prc = $("#price2_" + p).val();
     var quantity = $("#quantity2_" + p).val();
     var discount = $("#discount2_" + p).val();
     // var discount= $('#discount_' + p).val();
     // eqpt_cost += parseFloat(prc) - parseFloat(discount);
-    total_costss += parseFloat(prc);
     eqpt_cost += parseFloat(prc) * parseFloat(quantity);
     total_discount += parseFloat(discount);
   }
@@ -1423,11 +997,9 @@ var total_wo_tax = price * quantity;
 // $( total ).each( function(){
 //   subtotal += parseFloat( $( this ).val() ) || 0;
 // });
-// alert( 'yeah' + total_costss);
 
   eqpt_cost = parseFloat(eqpt_cost).toFixed(2);
   total_discount = parseFloat(total_discount).toFixed(2);
-  stotal_cost = parseFloat(total_costss).toFixed(2);
   // var test = 5;
 
   var subtotal = 0;
@@ -1445,15 +1017,10 @@ var total_wo_tax = price * quantity;
 
 //   alert(subtotaltaxx);
 
-var priceqty2 = 0;
-    $('*[id^="priceqty2_"]').each(function(){
-      priceqty2 += parseFloat($(this).val());
-  });
-
   $("#eqpt_cost").val(eqpt_cost);
   $("#total_discount").val(total_discount);
   $("#span_sub_total_0").text(total_discount);
-  $("#span_sub_total_invoice2").text(priceqty2.toFixed(2));
+  $("#span_sub_total_invoice2").text(subtotal.toFixed(2));
   $("#item_total2").val(subtotal.toFixed(2));
   
   var s_total = subtotal.toFixed(2);
@@ -1475,7 +1042,7 @@ var priceqty2 = 0;
   cal_total_due();
   
   
-});
+        });
 
         // $("body").delegate(".qtyest", "keyup", function(){
         //     //console.log( "Handler for .keyup() called." );
@@ -1487,7 +1054,7 @@ var priceqty2 = 0;
         //     $('#sub_total'+id).text('$' + formatNumber(new_sub_total));
         //     calculate_subtotal();
         // });
-$(document).on("focusout", ".qtyest", function () {
+    $(document).on("focusout", ".qtyest", function () {
         
         var id = this.id;
         var in_id = $(this).attr('data-itemid');
@@ -1608,12 +1175,12 @@ $(document).on("focusout", ".qtyest", function () {
             cal_total_due();
         });
 
-    $(document).on("focusout", ".qtyest2b", function () {
+    $(document).on("focusout", ".qtyest2", function () {
         // alert('two');
         var id = this.id;
         var in_id = $(this).attr('data-itemid');
             var qty=this.value;
-            var cost = $('#price2_'+in_id).val();
+            var cost = $('#price_'+in_id).val();
             var new_sub_total = Number(qty) * Number(cost);
             var new_sub_total_val = Number(qty) * Number(cost);
             var tax = '0.075';
@@ -1669,16 +1236,14 @@ $(document).on("focusout", ".qtyest", function () {
             }
 
             var eqpt_cost = 0;
-            var cnt = $("#count2").val();
+            var cnt = $("#count").val();
             var total_discount = 0;
-            var total_cost = 0;
             for (var p = 0; p <= cnt; p++) {
                 var prc = $("#price2_" + p).val();
                 var quantity = $("#quantity2_" + p).val();
                 var discount = $("#discount2_" + p).val();
                 // var discount= $('#discount_' + p).val();
                 // eqpt_cost += parseFloat(prc) - parseFloat(discount);
-                total_cost += parseFloat(prc);
                 eqpt_cost += parseFloat(prc) * parseFloat(quantity);
                 total_discount += parseFloat(discount);
             }
@@ -1689,9 +1254,7 @@ $(document).on("focusout", ".qtyest", function () {
 
             eqpt_cost = parseFloat(eqpt_cost).toFixed(2);
             total_discount = parseFloat(total_discount).toFixed(2);
-            stotal_cost = parseFloat(total_cost).toFixed(2);
             // var test = 5;
-            alert(total_cost);
 
             var subtotal = 0;
             // $("#span_total_0").each(function(){
@@ -1706,12 +1269,12 @@ $(document).on("focusout", ".qtyest", function () {
                 subtotaltaxx += parseFloat($(this).val());
             });
 
-            //   alert(stotal_cost);
+            //   alert(subtotaltaxx);
 
             $("#eqpt_cost").val(eqpt_cost);
             $("#total_discount").val(total_discount);
             $("#span_sub_total_0").text(total_discount);
-            $("#span_sub_total_invoice2").text(total_cost);
+            $("#span_sub_total_invoice2").text(subtotal.toFixed(2));
             $("#item_total2").val(subtotal.toFixed(2));
             
             var s_total = subtotal.toFixed(2);
@@ -2186,29 +1749,4 @@ $(document).on("focusout", ".tax_changeoptions2b", function () {
   cal_total_due();
 });
 
-</script>
-
-<script type="text/javascript">
-// $(window).on('beforeunload', function(){
-//     var c = confirm();
-//     if(c){
-//         return true;
-//     }
-//     else
-//         return false;
-// });
-</script>
-
-<script>
-jQuery(document).ready(function () {
-    $(document).on('click','#Commercial',function(){
-        $('#business_name_area').show();
-    });
-    $(document).on('click','#customer_type',function(){
-        $('#business_name_area').hide();
-    });
-    $(document).on('click','#advance',function(){
-        $('#business_name_area').hide();
-    });
-});
 </script>

@@ -184,29 +184,25 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <div class="row" style="background-color:white;margin-top:-2%;">
                                 <div class="col-md-6">
                                     <label for="customers" class="required"><b>Customer</b></label>
-                                    <select id="sel-customer" name="customer_id" data-customer-source="dropdown" required="" class="form-control searchable-dropdown" placeholder="Select">
-                                        <option value="0">- Select Customer -</option>
+                                    <select id="sel-customer" name="customer_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
+                                        <option value="0">- none -</option>
                                         <?php foreach($customers as $c){ ?>
-                                            <?php if( $default_customer_id > 0 ){ ?>
-                                                <option <?= $default_customer_id == $c->prof_id ? 'selected="selected"' : ''; ?> value="<?= $c->prof_id; ?>"><?= $c->first_name . ' ' . $c->last_name; ?></option>
-                                            <?php }else{ ?>
-                                                <option value="<?= $c->prof_id; ?>"><?= $c->first_name . ' ' . $c->last_name; ?></option>
-                                            <?php } ?>                                            
+                                            <option value="<?= $c->prof_id; ?>"><?= $c->first_name . ' ' . $c->last_name; ?></option>
                                         <?php } ?>
                                     </select>
                                 </div>
                                 <div class="col-md-3">
-                                    <br><br><a href="<?= base_url('customer/add_advance'); ?>" class="btn btn-sm btn-primary" target="_new" id=""><i class="fa fa-plus" aria-hidden="true"></i> New Customer</a>
+                                    <br><br><a href="#" id="" style="color:#02A32C;"><i class="fa fa-plus" aria-hidden="true"></i> New Customer</a>
                                 </div>
                             </div>
                             <div class="row" style="background-color:white;margin-top:-2%;">
                                 <div class="col-md-6">
-                                    <label for="job_location"><b>Job Location</b> (optional)</label>
+                                    <label for="job_location"><b>Job Location</b> (optional, select or add new one)</label>
                                     <input type="text" class="form-control" name="job_location" id="job_location"
                                            required placeholder="Enter address" autofocus
                                            onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
                                 </div>
-                                <div class="col-md-3" style="display: none;">
+                                <div class="col-md-3">
                                     <br><br><a href="#" id="" style="color:#02A32C;"><i class="fa fa-plus" aria-hidden="true"></i> New Location Address</a>
                                 </div>
                             </div>
@@ -219,11 +215,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             </div>
                             <div class="row" style="background-color:white;">
                                 <div class="col-md-4 form-group">
-                                    <label for="city">Job Tag</label><label style="float:right;color:green;"><a class="btn btn-sm btn-primary" target="_new" href="<?= base_url('job/job_tags'); ?>">Manage Tag</a></label>
+                                    <label for="city">Job Tag</label><label style="float:right;color:green;">Manage Tag</label>
                                     <select class="form-control">
-                                        <?php foreach($tags as $t){ ?>
-                                            <option value="<?= $t->id; ?>"><?= $t->name; ?></option>
-                                        <?php } ?>
+                                                <option>---</option>
                                     </select>
                                 </div>
                             </div>

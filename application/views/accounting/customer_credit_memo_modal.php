@@ -91,15 +91,16 @@
                                             <td width="150px"><input type="number" class="form-control quantitycm" name="quantity[]"
                                                        data-counter="0" id="quantity_0" value="1"></td>
                                             <td width="150px"><input type="number" class="form-control pricecm" name="price[]"
-                                                       data-counter="0" id="pricecm_0" min="0" value="0"></td>
+                                                       data-counter="0" id="price_0" min="0" value="0"></td>
                                             <td width="150px"><input type="number" class="form-control discountcm" name="discount[]"
                                                        data-counter="0" id="discount_0" min="0" value="0" ></td>
-                                            <td width="150px"><input type="text" class="form-control tax_changecm" name="tax[]"
-                                                       data-counter="0" id="taxcm1_0" min="0" value="0">
+                                            <td width="150px"><input type="text" class="form-control tax_change" name="tax[]"
+                                                       data-counter="0" id="tax1_0" min="0" value="0">
+                                                       <!-- <span id="span_tax_0">0.0</span> -->
                                                        </td>
                                             <td width="150px"><input type="hidden" class="form-control " name="total[]"
-                                                       data-counter="0" id="item_totalcm_0" min="0" value="0">
-                                                       $<span id="span_totalcm_0">0.00</span></td>
+                                                       data-counter="0" id="item_total_0" min="0" value="0">
+                                                       $<span id="span_total_0">0.00</span></td>
                                         </tr>
                                 </tr>
                                 </tbody>
@@ -137,9 +138,9 @@
                             Message on statement<br>
                             <textarea style="height:100px;width:100%;" name="message_on_statement"></textarea>
                         </div>
-                        <div class="col-md-5">
-                        </div>
                         <div class="col-md-4">
+                        </div>
+                        <div class="col-md-5">
                             <!-- Taxable subtotal <b>$0.00</b><br>
                             <table class="table table-borderless">
                                 <tr>
@@ -172,13 +173,13 @@
                                         <tr>
                                             <td>Subtotal</td>
                                             <td></td>
-                                            <td align="right">$ <span id="span_sub_total_cm">0.00</span>
+                                            <td>$ <span id="span_sub_total_cm">0.00</span>
                                                 <input type="hidden" name="subtotal" id="item_total"></td>
                                         </tr>
                                         <tr>
                                             <td>Taxes</td>
                                             <td></td>
-                                            <td align="right">$ <span id="total_tax_">0.00</span><input type="hidden" name="taxes" id="total_tax_input"></td>
+                                            <td>$ <span id="total_tax_">0.00</span><input type="hidden" name="taxes" id="total_tax_input"></td>
                                         </tr>
                                         <tr>
                                             <td style="width:250px;"><input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control" style="width:200px; display:inline; border: 1px dashed #d1d1d1"></td>
@@ -186,7 +187,7 @@
                                             <input type="number" name="adjustment_value" id="adjustment_input_cm" value="0" class="form-control adjustment_input_cm_c" style="width:100px; display:inline-block">
                                                 <span class="fa fa-question-circle" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Optional it allows you to adjust the total amount Eg. +10 or -10." data-original-title="" title=""></span>
                                             </td>
-                                            <td align="right">$<span id="adjustment_area">0.00</span></td>
+                                            <td>$<span id="adjustment_area">0.00</span></td>
                                         </tr>
                                         <!-- <tr>
                                             <td>Markup $<span id="span_markup"></td> -->
@@ -201,7 +202,7 @@
                                         <tr style="color:blue;font-weight:bold;font-size:18px;">
                                             <td><b>Grand Total ($)</b></td>
                                             <td></td>
-                                            <td align="right"><b><span id="grand_total_cm">0.00</span>
+                                            <td><b><span id="grand_total_cm">0.00</span>
                                                 <input type="hidden" name="grand_total" id="grand_total_input" value='0'></b></td>
                                         </tr>
                                     </table>
@@ -321,10 +322,9 @@
             </div>
 
         </div>
-      </div>
     </div>
     <!--end of modal-->
-<script>
+    <script>
   function totalfunc(){
     var inputs = document.getElementsByName('amount[]');
     // alert(inputs);
@@ -419,7 +419,7 @@ function getItemscm(obj) {
     },
   });
 }
-// over_tax = parseFloat(tax_tot).toFixed(2);
+over_tax = parseFloat(tax_tot).toFixed(2);
 // alert(over_tax);
 
 function setitemCM(obj, title, price, discount, itemid) {
@@ -844,7 +844,7 @@ $("#total_tax_").text(over_tax);
   
   
   
-  $("#item_total").val(grand_total_w.toFixed(2));
+
   $("#grand_total").text(grand_total_w.toFixed(2));
   $("#grand_total_input").val(grand_total_w.toFixed(2));
   $("#grand_total_cm_t").text(grand_total_w.toFixed(2));
@@ -861,6 +861,6 @@ $("#total_tax_").text(over_tax);
 $('#addcreditmemoModal').modal({
     backdrop: 'static',
     keyboard: false
-});
+})
 </script>
 </div>

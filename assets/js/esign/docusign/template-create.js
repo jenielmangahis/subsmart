@@ -1,6 +1,4 @@
 function TemplateCreate() {
-  const PDFJS = pdfjsLib;
-
   const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
   const validFileExtensions = ["pdf"];
 
@@ -9,23 +7,13 @@ function TemplateCreate() {
   let templateId = undefined;
   let template = {};
   let files = [];
-  let workorder = undefined;
-  let job = undefined;
 
   const $form = $("#templateForm");
   const $docModal = $("#documentModal");
   const $formList = $("#setup-recipient-list");
   const $addRecipientButton = $("#add-recipient-button");
-  const $sortable = $("#sortable");
-
-  const ACTIONS = {
-    CREATE: "CREATE",
-    UPDATE: "UPDATE",
-    PREPARE: "PREPARE",
-  };
 
   async function createFilePreview(event, file) {
-    // await sleep(1000);
     const fileId = Date.now();
     const fileExtension = file.name.split(".").pop().toLowerCase();
 
@@ -38,7 +26,6 @@ function TemplateCreate() {
 
     try {
       document = await PDFJS.getDocument({ url: documentUrl });
-      document = await document.promise;
     } catch (error) {
       alert(error);
       return;
@@ -46,31 +33,10 @@ function TemplateCreate() {
 
     const html = `
       <div class="esignBuilder__docPreview h-100" data-id="${fileId}">
-        <div class="esignBuilder__docPreviewHover"></div>
-
         <canvas></canvas>
         <div class="esignBuilder__docInfo">
-            <div class="esignBuilder__docInfoText">
-              <h5 class="esignBuilder__docTitle"></h5>
-              <span class="esignBuilder__docPageCount"></span>
-            </div>
-
-            <div class="dropdown">
-              <button
-                class="btn dropdown-toggle esignBuilder__docInfoActions"
-                type="button"
-                data-toggle="dropdown"
-                aria-haspopup="true"
-                aria-expanded="false"
-              >
-                <i class="fa fa-ellipsis-v"></i>
-              </button>
-
-              <div class="dropdown-menu dropdown-menu-right">
-                <a class="dropdown-item" data-action="preview" href="#">Preview</a>
-                <a class="dropdown-item" data-action="delete" href="#">Delete</a>
-              </div>
-            </div>
+            <h5 class="esignBuilder__docTitle"></h5>
+            <span class="esignBuilder__docPageCount"></span>
         </div>
 
         <div class="esignBuilder__uploadProgress" width="100%">
@@ -100,149 +66,67 @@ function TemplateCreate() {
     const $docTitle = $docPreview.find(".esignBuilder__docTitle");
     const $docPageCount = $docPreview.find(".esignBuilder__docPageCount");
     const $docModalTitle = $docModal.find(".modal-title");
+    const context = $canvas.getContext("2d");
 
     $docPreview.removeClass("d-none");
+    context.clearRect(0, 0, $canvas.width, $canvas.height);
     $docPreview.removeClass("esignBuilder__docPreview--completed");
     $progress.removeClass("esignBuilder__uploadProgress--completed");
     $progressCheck.removeClass("esignBuilder__uploadProgressCheck--completed");
 
-    // await sleep(1000);
+    await sleep(1000);
 
     $docTitle.text(file.name);
     $docModalTitle.text(file.name);
     $docPageCount.text(`${document.numPages} page`);
 
-    const viewport = documentPage.getViewport({ scale: 1 });
-    $canvas.height = viewport.height;
-    $canvas.width = viewport.width;
-
-    await documentPage.render({
+    const scaleRequired = $canvas.width / documentPage.getViewport(1).width;
+    const viewport = documentPage.getViewport(scaleRequired);
+    const canvasContext = {
       viewport,
-      canvasContext: $canvas.getContext("2d"),
-    });
+      canvasContext: context,
+    };
+
+    await documentPage.render(canvasContext);
 
     $docPreview.addClass("esignBuilder__docPreview--completed");
     $progress.addClass("esignBuilder__uploadProgress--completed");
 
-    // await sleep(500);
+    await sleep(500);
 
     $progress.removeClass("esignBuilder__uploadProgress--completed");
     $progressCheck.addClass("esignBuilder__uploadProgressCheck--completed");
 
     files.push({ file, documentUrl, id: fileId });
-    // $docPreview
-    //   .find(".esignBuilder__docPreviewHover")
-    //   .on("click", showDocument);
-
-    const actions = {
-      preview: showDocument,
-      delete: function (event) {
-        const _file = files.find((f) => f.name == file.name);
-
-        if (!_file || !_file.total_fields) {
-          actions._delete(event);
-          return;
-        }
-
-        const $modal = $("#deleteDocument");
-        const $buttonPrimary = $modal.find(".btn-primary");
-
-        $modal.find(".total-fields").html(_file.total_fields);
-        $modal.modal("show");
-
-        $buttonPrimary.off();
-        $buttonPrimary.on("click", () => {
-          actions._delete(event);
-          $modal.modal("hide");
-        });
-      },
-      _delete: function (event) {
-        files = files.filter((f) => f.id != fileId);
-        const $parent = $(event.target).closest(".esignBuilder__docPreview");
-        $parent.remove();
-        setSubjectFromFiles();
-      },
-    };
-
-    $docPreview.find(".dropdown-item").on("click", function (event) {
-      event.preventDefault();
-      const action = $(this).attr("data-action");
-      actions[action](event);
-    });
+    $docPreview.on("click", showDocument);
 
     const $target = $(event.target);
     $target.val("");
     $target.removeAttr("required");
 
-    setSubjectFromFiles();
-  }
-
-  function setSubjectFromFiles() {
-    if (template.subject) {
-      return;
-    }
-
     const $subject = $form.find("#subject");
     const filenames = files.map(({ file }) => file.name);
-
-    let value = "";
-    if (filenames.length) {
-      value = `${$subject.prop("placeholder")} ${filenames.join(", ")}`;
-    }
-
-    $subject.val(value);
+    $subject.val(`${$subject.prop("placeholder")} ${filenames.join(", ")}`);
   }
 
   async function onChangeFile(event) {
-    const { files: eventFiles } = event.target;
-
-    if (files && files.length) {
-      for (let index = 0; index < eventFiles.length; index++) {
-        const file = eventFiles[index];
-        if (files.find((f) => f.file.name === file.name)) {
-          alert(`File name already exists: ${file.name}`);
-          return;
-        }
-      }
-    }
-
-    // We could use Promise.all, but that wont display
-    // previews in order, but a lot faster.
-    for (let index = 0; index < eventFiles.length; index++) {
-      const file = eventFiles[index];
-      await createFilePreview(event, file);
-    }
+    const { files } = event.target;
+    const promises = [...files].map((file) => createFilePreview(event, file));
+    await Promise.all(promises);
   }
 
-  function prepareForm({ action }) {
+  function prepareForm() {
     const dateNow = moment().format("MM/DD/YYYY");
-    const timeNow = moment().format("hh:mm A");
+    const timeNow = moment().format("hh:mm:ss A");
 
     $form.find("#name").attr("placeholder", `Untitled ${dateNow} | ${timeNow}`);
 
-    if (action === ACTIONS.CREATE) {
-      return;
-    }
-
-    $("#pageTitle").text(template.name);
-    const $submitBtn = $form.find("[type=submit]");
-    const $submitBtnText = $submitBtn.find(".text");
-
-    if (action === ACTIONS.PREPARE) {
+    if (templateId) {
+      $("#pageTitle").text(template.name);
       $("#templateInfo").hide();
       $("#templateDocument").hide();
-      $("#add-recipient-button").hide();
-      $submitBtnText.text("Send");
-      return;
+      $addRecipientButton.hide();
     }
-
-    const $saveAndClose = $("#saveandclose");
-    const $discardChanges = $("#discardChanges");
-
-    $saveAndClose.removeClass("d-none");
-    $saveAndClose.addClass("d-flex");
-    $discardChanges.removeClass("d-none");
-    $submitBtnText.text("Next");
   }
 
   async function showDocument(event) {
@@ -253,19 +137,17 @@ function TemplateCreate() {
     $modalBody = $docModal.find(".modal-body");
     $modalBody.empty();
 
-    let document = await PDFJS.getDocument({ url: documentUrl });
-    document = await document.promise;
-
+    const document = await PDFJS.getDocument({ url: documentUrl });
     for (index = 1; index <= document.numPages; index++) {
       const canvas = window.document.createElement("canvas");
       $modalBody.append(canvas);
 
       const documentPage = await document.getPage(index);
-      const viewport = documentPage.getViewport({ scale: 1.3 });
+      const viewport = documentPage.getViewport(1);
       canvas.height = viewport.height;
       canvas.width = viewport.width;
 
-      await documentPage.render({
+      documentPage.render({
         viewport,
         canvasContext: canvas.getContext("2d"),
       });
@@ -274,139 +156,84 @@ function TemplateCreate() {
     $docModal.modal("show");
   }
 
-  function attachEventHandlers({ templateId: templateIdParam = null, action }) {
+  function attachEventHandlers({ templateId: templateIdParam = null }) {
+    $form.on("submit", async function (event) {
+      event.preventDefault();
+
+      const $this = $(this);
+      const $name = $this.find("#name");
+      const $description = $this.find("#description");
+      const $file = $this.find("#docFile");
+      const $subject = $this.find("#subject");
+      const $message = $this.find("#message");
+
+      if (templateIdParam) {
+        $(this).attr("disabled", true);
+        $(this).find(".spinner-border").removeClass("d-none");
+
+        const payload = {
+          recipients: recipients.map((r) => r.getData()),
+          subject: $subject.val(),
+          message: $message.val(),
+        };
+
+        const endpoint = `${prefixURL}/DocuSign/apiSendTemplate/${templateIdParam}`;
+        const response = await fetch(endpoint, {
+          method: "POST",
+          body: JSON.stringify(payload),
+          headers: {
+            accepts: "application/json",
+            "content-type": "application/json",
+          },
+        });
+
+        const data = await response.json();
+        window.location = `${prefixURL}/DocuSign/manage?view=sent`;
+        return;
+      }
+
+      const payload = {
+        name: $name.val() || $name.prop("placeholder"),
+        description: $description.val(),
+        // file: $file.get(0).files[0],
+        subject: $subject.val(),
+        message: $message.val(),
+        recipients: JSON.stringify(recipients.map((r) => r.getData())), // :v
+      };
+
+      const formData = new FormData();
+      for (const key in payload) {
+        formData.append(key, payload[key]);
+      }
+
+      files.forEach(({ file }) => {
+        formData.append("files[]", file);
+      });
+
+      $(this).attr("disabled", true);
+      $(this).find(".spinner-border").removeClass("d-none");
+
+      const response = await fetch(`${prefixURL}/DocuSign/apiStoreTemplate`, {
+        method: "POST",
+        body: formData,
+      });
+
+      const { data } = await response.json();
+      const { id: templateId } = data;
+
+      $(this).attr("disabled", false);
+      $(this).find(".spinner-border").addClass("d-none");
+
+      window.location = `${prefixURL}/esign/Files?template_id=${templateId}&next_step=3`;
+    });
+
     $form.find("#docFile").on("change", onChangeFile);
     // $docPreview.on("click", showDocument);
 
     $addRecipientButton.on("click", () => addRecipient());
-
-    $form.on("submit", (e) => sendForm(e, templateIdParam, action));
-    $("#saveandclose").on("click", (e) => sendForm(e, templateIdParam, action));
-  }
-
-  async function sendForm(event, templateIdParam, action) {
-    event.preventDefault();
-
-    const $name = $form.find("#name");
-    const $description = $form.find("#description");
-    const $subject = $form.find("#subject");
-    const $message = $form.find("#message");
-
-    if (!templateIdParam && action !== ACTIONS.CREATE) {
-      return;
-    }
-
-    if (action === ACTIONS.PREPARE) {
-      const $button = $form.find(".btn-primary");
-      $button.attr("disabled", true);
-      $button.find(".spinner-border").removeClass("d-none");
-
-      const payload = {
-        recipients: recipients.map((r) => r.getData()),
-        subject: $subject.val(),
-        message: $message.val(),
-        workorder_id: workorder ? workorder.id : null,
-        job_id: job ? job.id : null,
-      };
-
-      const endpoint = `${prefixURL}/DocuSign/apiSendTemplate/${templateIdParam}`;
-      const response = await fetch(endpoint, {
-        method: "POST",
-        body: JSON.stringify(payload),
-        headers: {
-          accepts: "application/json",
-          "content-type": "application/json",
-        },
-      });
-
-      const data = await response.json();
-      let nextUrl = `${prefixURL}/eSign/manage?view=sent`;
-      if (data.hash) {
-        nextUrl = `${prefixURL}/eSign/signing?hash=${data.hash}`;
-      }
-
-      window.location = nextUrl;
-      return;
-    }
-
-    const $items = $(".esignBuilder__docPreview");
-    let documentSequence = $items.map((_, item) => {
-      const file = files.find((f) => f.id == $(item).attr("data-id"));
-      return file === undefined ? null : file.file.name;
-    });
-
-    documentSequence = [...documentSequence].filter(Boolean);
-    documentSequence = JSON.stringify({ sequence: documentSequence });
-
-    const payload = {
-      name: $name.val() || $name.prop("placeholder"),
-      description: $description.val(),
-      subject: $subject.val(),
-      message: $message.val(),
-      recipients: JSON.stringify(recipients.map((r) => r.getData())), // :v
-      id: templateIdParam,
-      document_sequence: documentSequence,
-    };
-
-    const formData = new FormData();
-    for (const key in payload) {
-      formData.append(key, payload[key]);
-    }
-
-    files.forEach(({ file }) => {
-      formData.append("files[]", file);
-    });
-
-    let $button = $(event.currentTarget);
-    if (event.type.toLowerCase() === "submit") {
-      $button = $form.find(".btn-primary");
-    }
-
-    $button.attr("disabled", true);
-    $button.find(".spinner-border").removeClass("d-none");
-
-    const response = await fetch(`${prefixURL}/DocuSign/apiStoreTemplate`, {
-      method: "POST",
-      body: formData,
-    });
-
-    const { data } = await response.json();
-    const { id: templateId } = data;
-
-    $button.attr("disabled", false);
-    $button.find(".spinner-border").addClass("d-none");
-
-    let nextUrl = `${prefixURL}/vault/mylibrary`;
-    if ($button.hasClass("btn-primary")) {
-      nextUrl = `${prefixURL}/esign/Files?template_id=${templateId}&next_step=3`;
-    }
-
-    window.location = nextUrl;
   }
 
   function removeRecipient(id) {
-    let recipient = recipients.find((r) => r.getData().id == id);
-    recipient = recipient.getData();
-
-    if (!recipient.total_fields) {
-      _removeRecipient(id);
-      return;
-    }
-
-    const $modal = $("#deleteRecipient");
-    const $buttonPrimary = $modal.find(".btn-primary");
-
-    $modal.find(".total-fields").html(recipient.total_fields);
-    $modal.modal("show");
-
-    $buttonPrimary.off();
-    $buttonPrimary.on("click", () => {
-      _removeRecipient(id);
-      $modal.modal("hide");
-    });
-  }
-
-  function _removeRecipient(id) {
     recipients = recipients.filter((recipient) => {
       return recipient.getData().id !== id;
     });
@@ -432,11 +259,11 @@ function TemplateCreate() {
     ];
 
     if ($.isEmptyObject(data)) {
-      data.id = `temp_${new Date().getTime()}`;
+      data.id = new Date().getTime();
       data.role_name = "";
       data.name = "";
       data.email = "";
-      data.role = "Signs in Person";
+      data.role = "Needs to Sign";
 
       const takenColors = recipients.map((recipient) => {
         return recipient.getData().color;
@@ -486,7 +313,7 @@ function TemplateCreate() {
     const endpoint = `${prefixURL}/DocuSign/apiTemplateFile/${templateId}`;
     const response = await fetch(endpoint);
     const { data } = await response.json();
-    template.files = data;
+    template.file = data;
   }
 
   async function fetchTemplateRecipients() {
@@ -496,32 +323,19 @@ function TemplateCreate() {
     template.recipients = data;
   }
 
-  async function setFormValues({ isPreparingTemplate = false, action }) {
-    await fetchTemplate();
-    await fetchTemplateRecipients();
+  async function setFormValues({ isPreparingTemplate = false }) {
+    await Promise.all([
+      fetchTemplate(),
+      fetchTemplateFile(),
+      fetchTemplateRecipients(),
+    ]);
 
-    if (action === ACTIONS.UPDATE) {
-      await fetchTemplateFile();
-    }
+    const { name, description, subject, message, file, recipients } = template;
+    const { path: filePath, name: fileName } = file;
 
-    const {
-      name,
-      description,
-      subject,
-      message,
-      recipients,
-      files = [],
-    } = template;
-
-    let templateFiles = files.map(async (file) => {
-      const { path: filePath, name: fileName } = file;
-
-      const fileResponse = await fetch(`${prefixURL}${filePath}`);
-      const blob = await fileResponse.blob();
-      return new File([blob], fileName);
-    });
-
-    templateFiles = await Promise.all(templateFiles);
+    const fileResponse = await fetch(`${prefixURL}${filePath}`);
+    const blob = await fileResponse.blob();
+    const templateFile = new File([blob], fileName);
 
     const $name = $form.find("#name");
     const $description = $form.find("#description");
@@ -535,123 +349,33 @@ function TemplateCreate() {
     $message.val(message);
     $file.removeAttr("required");
 
-    const fakeEvent = { target: { files: templateFiles } };
+    const fakeEvent = { target: { files: [templateFile] } };
     await onChangeFile(fakeEvent);
 
-    let customerSet = false;
-    let _recipients = recipients.map((r) => {
-      if (!workorder && !job) return r;
-      if (customerSet || r.name || r.email) return r;
+    recipients.forEach((recipient) =>
+      addRecipient({
+        ...recipient,
+        isPreparingTemplate,
+      })
+    );
 
-      const { first_name, last_name, email } = workorder || job;
-      r.name = `${first_name} ${last_name}`;
-      r.email = email;
-      customerSet = true;
-      return r;
-    });
-
-    if (!job || !job.id) {
-      return _recipients.forEach((recipient) =>
-        addRecipient({
-          ...recipient,
-          isPreparingTemplate,
-        })
-      );
-    }
-
-    // For jobs that are using the Master template.
-    _recipients.forEach((recipient) => {
-      let { role_name: role } = recipient;
-      role = role.toUpperCase();
-
-      if (role === "ESA Rep".toUpperCase()) {
-        if (job.employee) {
-          recipient.email = job.employee.email;
-          recipient.name = `${job.employee.FName} ${job.employee.LName}`;
-        }
-      }
-
-      if (role === "Client".toUpperCase()) {
-        recipient.email = job.email;
-        recipient.name = `${job.first_name} ${job.last_name}`;
-      }
-
-      if (role === "Admin".toUpperCase()) {
-        if (job.admin) {
-          recipient.email = job.admin.email;
-          recipient.name = `${job.admin.FName} ${job.admin.LName}`;
-        }
-      }
-    });
-
-    if (_recipients.every((recipient) => !recipient.email && !recipient.name)) {
-      // Nothing is set, or this job is not using the Master template,
-      // we'll set the first recipient as the job customer.
-      _recipients.forEach((recipient, index) => {
-        if (index === 0) {
-          recipient.email = job.email;
-          recipient.name = `${job.first_name} ${job.last_name}`;
-        }
-      });
-    }
-
-    _recipients.forEach((recipient) => {
-      addRecipient({ ...recipient, isPreparingTemplate });
-    });
-  }
-
-  async function getWorkorderCustomer(workorderId) {
-    const endpoint = `${prefixURL}/DocuSign/getWorkorderCustomer/${workorderId}`;
-    const response = await fetch(endpoint);
-    const { data } = await response.json();
-    workorder = data;
-  }
-
-  async function getJobCustomer(customerId) {
-    const endpoint = `${prefixURL}/DocuSign/getJobCustomer/${customerId}`;
-    const response = await fetch(endpoint);
-    const { data } = await response.json();
-    job = data;
+    $form.find("[type=submit] .text").text("Send");
   }
 
   async function init() {
     const urlParams = new URLSearchParams(window.location.search);
     templateId = urlParams.get("id");
-
-    const { pathname } = window.location;
-    let action = ACTIONS.CREATE;
-    if (/edit/i.test(pathname)) action = ACTIONS.UPDATE;
-    if (/prepare/i.test(pathname)) action = ACTIONS.PREPARE;
-
-    const isPreparingTemplate = action === ACTIONS.PREPARE;
+    const isPreparingTemplate = Boolean(templateId);
 
     if (templateId) {
-      const workorderId = urlParams.get("workorder_id");
-      const jobId = urlParams.get("job_id");
-
-      if (workorderId) {
-        await getWorkorderCustomer(workorderId);
-      }
-
-      if (jobId) {
-        await getJobCustomer(jobId);
-      }
-
-      await setFormValues({ isPreparingTemplate, action });
+      await setFormValues({ isPreparingTemplate });
     } else {
       addRecipient();
     }
 
-    prepareForm({ action });
-    attachEventHandlers({ templateId, action });
+    prepareForm();
+    attachEventHandlers({ templateId });
     $(".card--loading").removeClass("card--loading");
-
-    $sortable.disableSelection();
-    $sortable.sortable({
-      placeholder: "ui-state-highlight",
-      items: "> .esignBuilder__docPreview",
-      cursor: "move",
-    });
   }
 
   return { init };
@@ -732,10 +456,6 @@ function Recipient({
         value: "Needs to Sign",
       },
       {
-        icon: "fa-user",
-        value: "Signs in Person",
-      },
-      {
         icon: "fa-clone",
         value: "Receives a copy",
       },
@@ -806,7 +526,12 @@ function Recipient({
                       ${roles
                         .map(
                           (currRole) =>
-                            `<li><a href="#"><i class="fa ${currRole.icon}"></i>${currRole.value}</a></li>`
+                            `<li>
+                              <a href="#">
+                                <i class="fa ${currRole.icon}"></i>
+                                ${currRole.value}
+                              </a>
+                            </li>`
                         )
                         .join("")}
                     </div>
@@ -856,8 +581,7 @@ const sleep = (ms) => new Promise((res) => setTimeout(res, ms));
 
 // https://stackoverflow.com/a/46181/8062659
 function isValidEmail(string) {
-  const regex =
-    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  const regex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return regex.test(String(string).toLowerCase());
 }
 

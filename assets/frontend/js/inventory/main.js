@@ -203,62 +203,12 @@ $(document).ready(function () {
     $("#selectedIds").val(selectedIds);
   });
 
-  $(".deleteSelectOld").click(function () {
+  $(".deleteSelect").click(function () {
     $.LoadingOverlay("show");
     var param = {
       ids: $("#selectedIds").val(),
     };
     deleteMultiple(param);
-  });
-
-  $(".deleteSelect").click(function(){
-    Swal.fire({
-        title: 'Delete all selected item(s)?',
-        text: "",
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonColor: '#32243d',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes',
-        cancelButtonText: 'No',
-    }).then((result) => {
-        if (result.value) {
-            var selectedIds = [];
-            $("input.inventoryFees").each(function () {
-              if ($(this).prop("checked")) selectedIds.push($(this).data("id"));
-            });
-            $("#selectedIds").val(selectedIds);
-            var param = {
-              ids: $("#selectedIds").val(),
-            };
-            deleteMultiple(param);
-        }
-    });
-  });
-
-  $(".servicesDeleteSelect").click(function(){
-    Swal.fire({
-        title: 'Delete all selected item(s)?',
-        text: "",
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonColor: '#32243d',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes',
-        cancelButtonText: 'No',
-    }).then((result) => {
-        if (result.value) {
-            var selectedIds = [];
-            $("input.inventoryService").each(function () {
-              if ($(this).prop("checked")) selectedIds.push($(this).data("id"));
-            });
-            $("#selectedIds").val(selectedIds);
-            var param = {
-              ids: $("#selectedIds").val(),
-            };
-            deleteMultiple(param);
-        }
-    });
   });
 
   $(document).on("click", "#seeLocation", function () {

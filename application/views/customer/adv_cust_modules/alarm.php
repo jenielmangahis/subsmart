@@ -2,8 +2,8 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 ?>
 <div class="alarm module_med ui-state-default"  data-id="<?= $id ?>"  id="<?= $id ?>">
-    <div class="col-sm-12 individual-module-big">
-        <h6>Alarm</h6>
+    <div class="col-sm-12">
+        <h6></h6>
         <div class="row">
             <div class="col-sm-6">
                 <div class="contacttext">

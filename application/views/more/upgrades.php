@@ -17,11 +17,10 @@ h5.card-title.mb-0, p.card-text.mt-txt {
 .card-deck-upgrades div {
     padding: 20px;
     float: left;
-    width: 100%;
+    width: 33.33%;
 }
 .card-body.align-left {
   width: 100% !important;
-  padding: 0px;
 }
 .card-deck-upgrades div a {
     display: block;
@@ -123,13 +122,50 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                       </div>
                   <div class="col-xl-12">
                       <?php include viewPath('flash'); ?>
-                      <div class="row">
-                         <div style="text-align: right;display: inline-block;width: 100%;margin-right: 22px;">
-                            <a href="javascript:void(0);" class="btn btn-primary btn-sm btn-addons-list">Addons List</a>
-                            <a href="javascript:void(0);" class="btn btn-primary btn-sm btn-active-addons-list">Active Addons</a></div>                      
-                          </div> 
-                      </div>
-                      <div class="row addons-container"></div>
+                      <!-- <div class="card">
+                          <div class="card-body">
+                              <p>Add-on Plugins</p>
+                          </div>
+                      </div> -->
+                      <!-- <div class="marketing-card-deck card-deck pl-50 pb-100">
+                          <a href="#" class="card border-gr"> <img
+                                      class="marketing-img" alt="SMS Blast - Flaticons" src="<?php echo base_url('/assets/dashboard/images/online-booking.png') ?>"
+                                      data-holder-rendered="true">
+                              <div class="card-body align-left">
+                                  <h5 class="card-title mb-0">Online Booking</h5>
+                                  <p style="text-align: justify;" class="card-text mt-txt">Set your services with prices and place a booking form on your website and collect leads from your customers.</p>
+                                  <p style="text-align: center;"><strong>Subscribe Now</strong></p>
+                                  <div style="text-align: center;" class="card-price bottom-txt">$0.05/SMS + $5.00 service fee</div>
+                              </div>
+                          </a>
+                      </div> -->
+
+                      <?php  $row = 1;
+                             if($NsmartUpgrades) {  foreach ($NsmartUpgrades as $key => $NsmartUpgrade) { ?>
+
+                             <?php if($row == 1){ ?>
+                               <div class="marketing-card-deck card-deck-upgrades pl-1 pb-30"> <?php } $row++; ?>
+                                 <div class="card-container">
+                                    <a href="#" class="card border-gr btn-addon" data-id="<?= $NsmartUpgrade->id; ?>">
+                                        <img class="marketing-img" alt="Add On" src="<?php echo base_url('/assets/img/onboarding/'.$NsmartUpgrade->image_filename) ?>" data-holder-rendered="true">
+                                        <div class="card-body align-left">
+                                            <h5 class="card-title mb-0"><?php echo $NsmartUpgrade->name; ?></h5>
+                                            <p style="text-align: justify;" class="card-text mt-txt"><?php  echo $NsmartUpgrade->description; ?></p>
+                                            <p style="text-align: center;"><strong>Subscribe Now</strong></p>
+                                            <div style="text-align: center;width:100%;" class="card-price bottom-txt">
+                                              <span style="position: relative;right: 40px;">$<?php  echo $NsmartUpgrade->sms_fee; ?>/SMS + $<?php  echo $NsmartUpgrade->service_fee; ?> service fee</span></div>
+                                        </div>
+                                    </a>
+                                  </div>
+                           <?php if($row == 4){ ?>
+                            </div>
+                          <?php $row = 1; }   ?>
+
+
+                      <?php    }
+                            } ?>
+
+                      <!-- end card -->
                   </div>
               </div>
             </div>
@@ -152,8 +188,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <?php echo form_open_multipart('more/add_plugin', ['class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
             <?php echo form_input(array('name' => 'pid', 'type' => 'hidden', 'value' => '', 'id' => 'pid'));?>
             <div class="modal-body plugin-info-container"></div>
-            <div class="modal-footer footer-add-addon">
-                <button type="submit" class="btn btn-success">Add</button>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                <button type="submit" class="btn btn-success">Yes</button>
             </div>
             <?php echo form_close(); ?>
           </div>
@@ -163,62 +200,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/footer'); ?>
 <script>
 $(function(){
-
-    load_addons_list();
-
-    function load_addons_list(){
-      var url = base_url + 'more/_load_addons_list';
-      $(".addons-container").fadeOut();
-      setTimeout(function () {
-          $.ajax({
-             type: "POST",
-             url: url,
-             success: function(o)
-             {
-
-                $(".addons-container").html(o).fadeIn();
-             }
-          });
-      }, 500);
-    }
-
-    function load_active_addons_list(){
-      var url = base_url + 'more/_load_active_addons_list';
-      $(".addons-container").fadeOut();
-      setTimeout(function () {
-          $.ajax({
-             type: "POST",
-             url: url,
-             success: function(o)
-             {
-
-                $(".addons-container").html(o).fadeIn();
-             }
-          });
-      }, 500);
-    }
-
-    $(document).on('click', '.btn-addons-list', function(){
-      load_addons_list();
-    });
-
-    $(document).on('click', '.btn-active-addons-list', function(){
-      load_active_addons_list();
-    });
-
-    $(document).on('click', '.btn-addon', function(){
-      var aid = $(this).attr("data-id");
+    $(".btn-addon").click(function(){
+        var aid = $(this).attr("data-id");
 
         var msg = '<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" style="display:inline-block;" /> Loading...</div>';
         var url = base_url + '/more/_load_plugin_details';
-
-        if( $(this).hasClass('availed') ){
-          $(".footer-add-addon").hide();
-          $("#modalLoadingMsg .modal-title").html('Addon Details');
-        }else{
-          $(".footer-add-addon").show();
-          $("#modalLoadingMsg .modal-title").html('Avail Addon');
-        } 
 
         $("#pid").val(aid);
         $("#modalLoadingMsg").modal("show");

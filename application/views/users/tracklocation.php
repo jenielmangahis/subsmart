@@ -186,7 +186,5 @@ var popup, Popup;
     ?>
   }
 </script>
-<!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBg27wLl6BoSPmchyTRgvWuGHQhUUHE5AU&callback=initMap&libraries=&v=weekly" async></script>
-<script src="https://maps.googleapis.com/maps/api/geocode/json?address=Winnetka&key=AIzaSyBg27wLl6BoSPmchyTRgvWuGHQhUUHE5AU"></script> -->
-<script src="<?="https://maps.googleapis.com/maps/api/js?key=".GOOGLE_MAP_API_KEY."&callback=initMap&libraries=&v=weekly"?>" async></script>
-<script src="<?="https://maps.googleapis.com/maps/api/geocode/json?address=Winnetka&key=".GOOGLE_MAP_API_KEY?>"> </script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBg27wLl6BoSPmchyTRgvWuGHQhUUHE5AU&callback=initMap&libraries=&v=weekly" async></script>
+<script src="https://maps.googleapis.com/maps/api/geocode/json?address=Winnetka&key=AIzaSyBg27wLl6BoSPmchyTRgvWuGHQhUUHE5AU"></script>

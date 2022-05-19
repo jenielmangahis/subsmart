@@ -31,19 +31,20 @@ function JobFillAndEsign() {
 
     const { files } = $target.get(0);
 
-    if (files && files.length) {
+    if (files && !files.length) {
+      return;
+    }
+
+    if (files) {
       documentObj = files[0];
     } else {
-      const $activeTab = $("[data-upload-type].tab-pane.active");
+      const $activeTab = $(".tab-pane.active");
       const uploadType = $activeTab.data("upload-type");
       const $selected = $(".fillAndSign__vaultItem--selected");
 
       if (uploadType === "vault") {
         fileId = $selected.data("file-id");
         documentObj = step1.getVaultDocumentById(fileId);
-      } else if (uploadType === "myTemplates") {
-        fileId = $selected.data("template-id");
-        documentObj = step1.getTemplateById(fileId);
       } else {
         recentFileId = $selected.data("recent-id");
         documentObj = step1.getRecentById(recentFileId);
@@ -112,7 +113,7 @@ function JobFillAndEsign() {
     };
 
     const endpoint = `${prefixURL}/Job/createOrUpdateSignature`;
-    await fetch(endpoint, {
+    const response = await fetch(endpoint, {
       method: "POST",
       body: JSON.stringify(payload),
       headers: {
@@ -121,12 +122,8 @@ function JobFillAndEsign() {
       },
     });
 
-    await approveJob();
-    const response = await approveJobSuccessAlert();
-
-    if (response.value) {
-      window.location.reload();
-    }
+    const data = await response.json();
+    console.log(data);
 
     signaturePad.clear();
     $signatureTextInput.val("");
@@ -139,44 +136,15 @@ function JobFillAndEsign() {
       return saveSignatureOnly();
     }
 
-    if (documentObj) {
-      if (documentObj.isRecent) {
-        initStep2(documentObj.id);
-        return;
-      }
-
-      if (documentObj.isTemplate) {
-        const $fillAndSignNext = $("#fillAndSignNext");
-        const jobId = $fillAndSignNext.data("id");
-        const isSuccess = await approveJob();
-
-        if (isSuccess) {
-          const { id: templateId } = documentObj;
-          window.location = `${prefixURL}/eSign/templatePrepare?id=${templateId}&job_id=${jobId}`;
-        } else {
-          await Swal.fire({
-            title: "Warning!",
-            text: "There is an error updating job status. Contact Administrator!",
-            icon: "warning",
-            showCancelButton: false,
-            confirmButtonColor: "#32243d",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Ok",
-          });
-        }
-
-        return;
-      }
+    if (documentObj.isRecent) {
+      initStep2(documentObj.id);
+      return;
     }
 
     const formData = new FormData();
     if (documentObj instanceof File) {
       formData.append("document", documentObj);
     } else {
-      if (!documentObj) {
-        return;
-      }
-
       formData.append("vault_file_id", documentObj.file_id);
     }
 
@@ -193,27 +161,8 @@ function JobFillAndEsign() {
     initStep2(document_id);
   }
 
-  async function onClickSave() {
-    await approveJob();
-    const response = await approveJobSuccessAlert();
-
-    if (response.value) {
-      window.location.reload();
-    }
-
-    // $modal.modal("hide");
-  }
-
-  async function approveJobSuccessAlert() {
-    return await Swal.fire({
-      title: "Good job!",
-      text: "Job Status Updated",
-      icon: "success",
-      showCancelButton: false,
-      confirmButtonColor: "#32243d",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Ok",
-    });
+  function onClickSave() {
+    $modal.modal("hide");
   }
 
   function attachEventHandlers() {
@@ -242,29 +191,10 @@ function JobFillAndEsign() {
   async function init() {
     signaturePad = new SignaturePad($signaturePadCanvas.get(0));
 
-    step1 = new Step1({ onSelect });
+    step1 = new Step1({ onSelect: onSelect });
     await step1.init();
 
     attachEventHandlers();
-  }
-
-  async function approveJob() {
-    const $fillAndSignNext = $("#fillAndSignNext");
-    const jobId = $fillAndSignNext.data("id");
-    const jobStatus = $fillAndSignNext.data("status");
-
-    const formData = new FormData();
-    formData.append("id", jobId);
-    formData.append("status", jobStatus);
-
-    const endpoint = `${prefixURL}/job/update_jobs_status`;
-    const response = await fetch(endpoint, {
-      method: "POST",
-      body: formData,
-    });
-
-    const text = await response.text();
-    return text === "Success";
   }
 
   return { init };

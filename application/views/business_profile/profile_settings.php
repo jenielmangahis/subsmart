@@ -109,11 +109,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <?php 
                           $slug = '';
                           if( isset($profiledata) && $profiledata->profile_slug != ''){
-                            $slug = $profiledata->profile_slug;
+                            $slug = createSlug($profiledata->profile_slug,'-');
                           }
                         ?>
                         <?php if( $slug != '' ){ ?>
-                          <span class="profile-url-prefix"><a href="<?= base_url('business/' . $slug . "/" . $profiledata->company_id); ?>" style="color:#45a73c;" target="_new"><?= base_url('business/' . $slug); ?></a></span>
+                          <span class="profile-url-prefix"><a href="<?= base_url('business/' . $slug); ?>" style="color:#45a73c;" target="_new"><?= base_url('business/' . $slug); ?></a></span>
                         <?php }else{ ?>
                           <span class="profile-url-prefix"><?= base_url('business/'); ?></span>
                         <?php } ?>

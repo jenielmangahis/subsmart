@@ -64,7 +64,7 @@
                         yAxisID: "id2",
                         order: 1
                     }],
-                labels: ['January', 'February', 'March',]
+                labels: ['January', 'February', 'March']
             },
             options: {
                 responsive: true,

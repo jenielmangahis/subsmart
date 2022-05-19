@@ -63,7 +63,6 @@ class CardsFile_model extends MY_Model
         $this->db->select('*');
         $this->db->from($this->table);
         $this->db->where('company_id', $company_id);
-        $this->db->where('is_primary', 1);
 
         $query = $this->db->get()->row();
         return $query;

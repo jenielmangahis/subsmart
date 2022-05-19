@@ -17,9 +17,7 @@ foreach($jobs_data_items as $ji){
 
     $grand_total += $ji->price * $ji->qty;
 }
-//$due_date = date("m/d/Y", strtotime("+30 days"));
-$due_date     = date("m/d/Y", strtotime($jobs_data->invoice_due_date));
-$invoice_date = date("m/d/Y", strtotime($jobs_data->invoice_date));
+$due_date = date("m/d/Y", strtotime("+30 days"));
 ?>
 <table style="font-size: 10px;" width="100%">
     <tr>
@@ -133,7 +131,7 @@ $invoice_date = date("m/d/Y", strtotime($jobs_data->invoice_date));
                             </tr>
                             <tr>
                                 <td style="text-align:center;page-break-after: always;display:block;border:1px solid black;"><table><tr><td></td></tr></table><span style="width:100%;display:block;text-align:center;">1</span></td>
-                                <td style="text-align:center;display:block;border:1px solid black;"><table><tr><td></td></tr></table><span style="width:100%;display:block;text-align:center;"><?= $invoice_date; ?></span></td>
+                                <td style="text-align:center;display:block;border:1px solid black;"><table><tr><td></td></tr></table><span style="width:100%;display:block;text-align:center;"><?= date("m/d/Y"); ?></span></td>
                             </tr>
                             <tr><td style="font-size:4px;"></td></tr>
                             <tr>

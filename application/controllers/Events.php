@@ -9,9 +9,7 @@ class Events extends MY_Controller
     {
         parent::__construct();
         $this->checkLogin();
-		$this->page_data['page']->title = 'Events';
-        $this->page_data['page']->parent = 'Sales';
-        $this->hasAccessModule(4);
+        
         //$this->load->library('paypal_lib');
         $this->load->model('Event_model', 'event_model');
         //$this->load->model('Invoice_model', 'invoice_model');
@@ -28,20 +26,15 @@ class Events extends MY_Controller
     }
 
     public function index() {
-        $get = $this->input->get();
-        $filter_status = '';
-
-        if( isset($get['status']) ){
-            $filter_status = $get['status'];
-            $condition[]   = ['field' => 'events.status', 'value' => ucfirst($get['status'])];
-            $this->page_data['events'] = $this->event_model->get_all_events(0, $condition);
-        }else{
-            $this->page_data['events'] = $this->event_model->get_all_events();
+        $is_allowed = true; //$this->isAllowedModuleAccess(15);
+        if( !$is_allowed ){
+            $this->page_data['module'] = 'job';
+            echo $this->load->view('no_access_module', $this->page_data, true);
+            die();
         }
-
-        $this->page_data['filter_status'] = $filter_status;
+        $this->page_data['events'] = $this->event_model->get_all_events();
         $this->page_data['title'] = 'Events';
-        $this->load->view('v2/pages/events/list', $this->page_data);
+        $this->load->view('events/list', $this->page_data);
     }
 
     public function new_event($id=null) {
@@ -142,15 +135,12 @@ class Events extends MY_Controller
         $settings = $this->settings_model->getValueByKey(DB_SETTINGS_TABLE_KEY_SCHEDULE);
         $this->page_data['settings'] = unserialize($settings);
 
-        $page_action = 'add';
         if(!$id==NULL){
-            $page_action = 'edit';
             $this->page_data['jobs_data'] = $this->event_model->get_specific_event($id);
             $this->page_data['event_items'] = $this->event_model->get_specific_event_items($id);
             //print_r($this->page_data['jobs_data_items'] );
         }
 
-        $this->page_data['page_action'] = $page_action;
         $this->load->view('events/event_new', $this->page_data);
     }
 
@@ -211,7 +201,7 @@ class Events extends MY_Controller
                 'company_id' => logged('company_id'),
             ),
             'table' => 'business_profile',
-            'select' => 'id,business_phone,business_name,business_email,street,city,postal_code,state,business_image',
+            'select' => 'id,business_phone,business_name,business_logo,business_email,street,city,postal_code,state,business_image',
         );
         $this->page_data['company_info'] = $this->general->get_data_with_param($get_company_info,FALSE);
 
@@ -369,10 +359,8 @@ class Events extends MY_Controller
                 'ordering' => 'DESC',
             ),
         );
-		$this->page_data['page']->title = 'Event Tags';
-        $this->page_data['page']->parent = 'Sales';
         $this->page_data['event_tags'] = $this->general->get_data_with_param($get_job_settings);
-        $this->load->view('v2/pages/events/event_tags', $this->page_data);
+        $this->load->view('events/event_tags', $this->page_data);
     }
 
     public function event_types() {
@@ -428,13 +416,8 @@ class Events extends MY_Controller
             ),
             'table' => 'events'
         );
-
-        $event = $this->event_model->get_specific_event($_POST['job_id']);
-        if( $event ){
-            if($this->general->delete_($remove_event)){
-                customerAuditLog(logged('id'), $event->customer_id, $event->id, 'Event', 'Deleted event #'.$event->event_number);
-                echo '1';
-            }
+        if($this->general->delete_($remove_event)){
+            echo '1';
         }
     }
 
@@ -536,20 +519,18 @@ class Events extends MY_Controller
             'customer_id' => $input['customer_id'],
             'employee_id' => $input['employee_id'],
             'event_description' => $input['event_description'],
-
             'start_date' => $input['start_date'],
             'start_time' => $input['start_time'],
             'end_date' => $input['end_date'],
             'end_time' => $input['end_time'],
-            'event_type' => $input['event_types'],
+            'event_type' => $input['event_type'],
             'event_tag' => $input['event_tag'],
             'event_color' => $input['event_color'],
             'customer_reminder_notification' => $input['customer_reminder_notification'],
             'url_link' => $input['link'],
             'event_address' => $input['event_address'],
             'status' => 'Scheduled',//$this->input->post('job_status'),
-            'description' => $input['description'],
-            'timezone' => $input['timezone'],
+            'description' => $input['message'],
             'created_by' => $input['created_by'],
             'company_id' => $comp_id,
             //'date_issued' => date('Y-m-d'),
@@ -566,7 +547,6 @@ class Events extends MY_Controller
                 $events_items_data['event_id'] = $event_id;
                 $events_items_data['items_id'] = $input['item_id'][$xx];
                 $events_items_data['qty'] = $input['item_qty'][$xx];
-                $events_items_data['item_price'] = $input['item_price'][$xx];
                 $this->general->add_($events_items_data, 'event_items');
                 unset($events_items_data);
             }
@@ -575,8 +555,6 @@ class Events extends MY_Controller
             'event_next_num' => $event_settings[0]->event_next_num + 1,
         );
         $this->general->update_with_key($event_settings_data,$event_settings[0]->id, 'event_settings');
-
-        customerAuditLog(logged('id'), $input['customer_id'], $event_id, 'Events', 'Created an event #'.$event_number);
 
         echo $event_id;
     }

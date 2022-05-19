@@ -91,7 +91,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                               <div class="dropdown">
                                                   <a href="<?php echo url('workorder/priority/') ?>" class="btn btn-primary"
                                                      aria-expanded="false">
-                                                      <i class="mdi mdi-settings mr-2"></i> Go Back to List
+                                                      <i class="mdi mdi-settings mr-2"></i> Go Back to Job Type
                                                   </a>
                                               </div>
                                           </div>

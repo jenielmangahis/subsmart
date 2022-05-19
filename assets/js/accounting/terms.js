@@ -10,10 +10,6 @@ $('#search').on('keyup', function() {
     $('#terms_table').DataTable().ajax.reload();
 });
 
-$('#table_rows').select2({
-    minimumResultsForSearch: -1
-});
-
 var table = $('#terms_table').DataTable({
     autoWidth: false,
     searching: false,
@@ -89,33 +85,42 @@ var table = $('#terms_table').DataTable({
     }
 });
 
+$('a[data-target="#payment_term_modal"]').on('click', function() {
+    $('#payment_term_modal h4.modal-title').html('New Term');
+
+    $('#payment_term_modal input[name="id"]').remove();
+    $('#payment_term_modal input[name="type"][value="1"]').trigger('click');
+    $('#payment-term-form input[type="text"], #payment-term-form input[type="number"]').val('');
+});
+
+$('#payment_term_modal .form-check label').on('click', function() {
+    $(this).prev().trigger('click');
+});
+
+$('input[name="type"]').on('change', function() {
+    if($(this).val() === "1" || $(this).val() === 1) {
+        $('#payment_term_modal #net_due_days').prop('disabled', false);
+
+        $('#day_of_month_due, #minimum_days_to_pay').prop('disabled', true);
+        $('#day_of_month_due, #minimum_days_to_pay').val('');
+    } else if($(this).val() === "2" || $(this).val() === 2) {
+        $('#payment_term_modal #net_due_days').val('');
+        $('#payment_term_modal #net_due_days').prop('disabled', true);
+
+        $('#day_of_month_due, #minimum_days_to_pay').prop('disabled', false);
+    }
+});
+
 $(document).on('click', '#terms_table .make-inactive', function(e) {
     e.preventDefault();
 
     var row = $(this).parent().parent().parent().parent();
     var data = table.row(row).data();
 
-    Swal.fire({
-        title: 'Are you sure?',
-        html: `You want to make <b>${data.name}</b> inactive?`,
-        icon: 'warning',
-        showCloseButton: false,
-        confirmButtonColor: '#2ca01c',
-        confirmButtonText: 'Yes',
-        showCancelButton: true,
-        cancelButtonText: 'No',
-        cancelButtonColor: '#d33'
-    }).then((result) => {
-        if(result.isConfirmed) {
-            $.ajax({
-                url: `/accounting/terms/delete/${data.id}`,
-                type:"DELETE",
-                success:function (result) {
-                    location.reload();
-                }
-            });
-        }
-    });
+    $('#inactive_term .modal-footer .btn-success').attr('data-id', data.id);
+    $('#inactive_term span.term-name').html(data.name);
+
+    $('#inactive_term').modal('show');
 });
 
 $(document).on('click', '#terms_table .make-active', function(e) {
@@ -124,25 +129,36 @@ $(document).on('click', '#terms_table .make-active', function(e) {
     var row = $(this).parent().parent().parent();
     var data = table.row(row).data();
 
-    Swal.fire({
-        title: 'Are you sure?',
-        html: `You want to make <b>${data.name}</b> active?`,
-        icon: 'warning',
-        showCloseButton: false,
-        confirmButtonColor: '#2ca01c',
-        confirmButtonText: 'Yes',
-        showCancelButton: true,
-        cancelButtonText: 'No',
-        cancelButtonColor: '#d33'
-    }).then((result) => {
-        if(result.isConfirmed) {
-            $.ajax({
-                url: `/accounting/terms/activate/${data.id}`,
-                type:"GET",
-                success:function (result) {
-                    location.reload();
-                }
-            });
+    $('#active_term .modal-footer .btn-success').attr('data-id', data.id);
+    $('#active_term span.term-name').html(data.name);
+
+    $('#active_term').modal('show');
+});
+
+$(document).on('click', '#inactive_term .modal-footer .btn-success', function(e) {
+    e.preventDefault();
+
+    var id = e.currentTarget.dataset.id;
+
+    $.ajax({
+        url: `/accounting/terms/delete/${id}`,
+        type:"DELETE",
+        success:function (result) {
+            location.reload();
+        }
+    });
+});
+
+$(document).on('click', '#active_term .modal-footer .btn-success', function(e) {
+    e.preventDefault();
+
+    var id = e.currentTarget.dataset.id;
+
+    $.ajax({
+        url: `/accounting/terms/activate/${id}`,
+        type:"GET",
+        success:function (result) {
+            location.reload();
         }
     });
 });
@@ -153,67 +169,21 @@ $(document).on('click', '#terms_table .edit-term', function(e) {
     var row = $(this).parent().parent().parent().parent();
     var data = table.row(row).data();
 
-    $.get(`/accounting/terms/edit/${data.id}`, function(result) {
-        if ($('#modal-container').length > 0) {
-            $('div#modal-container').html(`<div class="full-screen-modal">${result}</div>`);
-        } else {
-            $('body').append(`
-                <div id="modal-container"> 
-                    <div class="full-screen-modal">
-                        ${result}
-                    </div>
-                </div>
-            `);
-        }
+    $('#payment-term-form').prop('action', `/accounting/terms/update/${data.id}`);
 
-        $('#modal-container #term-modal').modal('show');
-    });
-});
+    if(data.name !== null && data.name !== "null") {
+        $('#payment-term-form #name').val(data.name);
+    }
 
-$(document).on('click', '#new-payment-term', function(e) {
-    e.preventDefault();
-
-    $.get(`/accounting/get-dropdown-modal/term_modal`, function(result) {
-        if ($('#modal-container').length > 0) {
-            $('div#modal-container').html(`<div class="full-screen-modal">${result}</div>`);
-        } else {
-            $('body').append(`
-                <div id="modal-container"> 
-                    <div class="full-screen-modal">
-                        ${result}
-                    </div>
-                </div>
-            `);
-        }
-
-        $(`#modal-container #term-modal`).modal('show');
-    });
-});
-
-$(document).on('click', '#print-terms', function(e) {
-    e.preventDefault();
-    var data = new FormData();
+    $(`input[name="type"][value="${data.type}"]`).trigger('click');
     
-    data.set('inactive', $('#inc_inactive').prop('checked') === true ? 1 : 0);
-    data.set('search', $('input#search').val());
+    if(data.type === 1 || data.type === "1") {
+        $('#payment_term_modal #net_due_days').val(data.net_due_days);
+    } else if(data.type === 2 || data.type === "2") {
+        $('#payment_term_modal #day_of_month_due').val(data.day_of_month_due);
+        $('#payment_term_modal #minimum_days_to_pay').val(data.minimum_days_to_pay);
+    }
 
-    var tableOrder = $('#terms_table').DataTable().order();
-    data.set('order', tableOrder[0][1]);
-
-    $.ajax({
-		url: '/accounting/terms/print',
-        data: data,
-        type: 'post',
-        processData: false,
-        contentType: false,
-        success: function(result) {
-			let pdfWindow = window.open("");
-			pdfWindow.document.write(`<h3>Terms</h3>`);
-			pdfWindow.document.write(result);
-			$(pdfWindow.document).find('body').css('padding', '0');
-			$(pdfWindow.document).find('body').css('margin', '0');
-			$(pdfWindow.document).find('iframe').css('border', '0');
-			pdfWindow.print();
-		}
-	});
+    $('#payment_term_modal h4.modal-title').html('Edit Term');
+    $('#payment_term_modal').modal('show');
 });

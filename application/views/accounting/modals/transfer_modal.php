@@ -1,57 +1,33 @@
 <!-- Modal for bank deposit-->
 <div class="full-screen-modal">
-<?php if(!isset($transfer)) : ?>
 <form onsubmit="submitModalForm(event, this)" id="modal-form">
-<?php else : ?>
-<form onsubmit="updateTransaction(event, this)" id="modal-form" data-href="/accounting/update-transaction/transfer/<?=$transfer->id?>">
-<?php endif; ?>
     <div id="transferModal" class="modal fade modal-fluid" role="dialog">
         <div class="modal-dialog">
             <!-- Modal content-->
             <div class="modal-content" style="height: 100%;">
                 <div class="modal-header" style="background: #f4f5f8;border-bottom: 0">
-                    <div class="row w-100">
-                        <div class="col-6 d-flex align-items-center">
-                            <div class="dropdown mr-1">
-                                <a href="javascript:void(0);" class="h4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fa fa-history fa-lg"></i>
-                                </a>
-                                <div class="dropdown-menu" style="width: 500px">
-                                    <h5 class="dropdown-header">Recent Transfers</h5>
-                                    <table class="table table-borderless table-hover cursor-pointer" id="recent-transfers">
-                                        <tbody></tbody>
-                                    </table>
-                                </div>
-                            </div>
-                            <h4 class="modal-title">
-                                Transfer
-                            </h4>
-                        </div>
-                    </div>
+                    <h4 class="modal-title">Transfer</h4>
                     <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
                 </div>
 
                 <div class="modal-body">
-                    <div class="row" style="min-height: 100%">
-                        <div class="col">
-                            <div class="card p-0 m-0" style="min-height: 100%">
+                    <div class="row">
+                        <div class="col-xl-12">
+                            <div class="card p-0 m-0">
                                 <div class="card-body" style="padding-bottom: 1.25rem">
                                     <div class="row">
-                                        <?php if($is_copy) : ?>
-                                        <div class="col-md-12">
-                                            <div class="alert alert-info alert-dismissible mb-4" role="alert">
-                                                <button type="button" class="close" data-dismiss="alert">&times;</button>
-                                                <h6 class="mt-0">This is a copy</h6>
-                                            </div>
-                                        </div>
-                                        <?php endif; ?>
                                         <div class="col-md-6">
                                             <div class="form-group w-50">
-                                                <label for="transfer_from_account">Transfer Funds From</label>
-                                                <select name="transfer_from_account" id="transfer_from_account" class="form-control" required>
-                                                    <?php if(isset($transfer)) : ?>
-                                                    <option value="<?=$transfer->transfer_from->id?>"><?=$transfer->transfer_from->name?></option>
-                                                    <?php endif; ?>
+                                                <label for="transferFrom">Transfer Funds From</label>
+                                                <select name="transfer_from" id="transferFrom" class="form-control" required>
+                                                    <option disabled selected>&nbsp;</option>
+                                                    <?php foreach($accounts as $key => $value) : ?>
+                                                        <optgroup label="<?= $key ?>">
+                                                            <?php foreach($value as $account) : ?>
+                                                                <option value="<?= $account['value'] ?>"><?= $account['text'] ?></option>
+                                                            <?php endforeach; ?>
+                                                        </optgroup>
+                                                    <?php endforeach; ?>
                                                 </select>
                                             </div>
                                         </div>
@@ -59,7 +35,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="transferFromBalance">Balance</label>
-                                                <h3><?=str_replace('$-', '-$', '$'.number_format(floatval($transfer->transfer_from->balance), 2, '.', ','))?></h3>
+                                                <h3 id="transferFromBalance"></h3>
                                             </div>
                                         </div>
                                     </div>
@@ -67,11 +43,16 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group w-50">
-                                                <label for="transfer_to_account">Transfer Funds To</label>
-                                                <select name="transfer_to_account" id="transfer_to_account" class="form-control" required>
-                                                    <?php if(isset($transfer)) : ?>
-                                                    <option value="<?=$transfer->transfer_to->id?>"><?=$transfer->transfer_to->name?></option>
-                                                    <?php endif; ?>
+                                                <label for="transferTo">Transfer Funds To</label>
+                                                <select name="transfer_to" id="transferTo" class="form-control" required>
+                                                    <option disabled selected>&nbsp;</option>
+                                                    <?php foreach($accounts as $key => $value) : ?>
+                                                        <optgroup label="<?= $key ?>">
+                                                            <?php foreach($value as $account) : ?>
+                                                                <option value="<?= $account['value'] ?>"><?= $account['text'] ?></option>
+                                                            <?php endforeach; ?>
+                                                        </optgroup>
+                                                    <?php endforeach; ?>
                                                 </select>
                                             </div>
                                         </div>
@@ -79,7 +60,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="transferToBalance">Balance</label>
-                                                <h3><?=str_replace('$-', '-$', '$'.number_format(floatval($transfer->transfer_to->balance), 2, '.', ','))?></h3>
+                                                <h3 id="transferToBalance"></h3>
                                             </div>
                                         </div>
                                     </div>
@@ -88,14 +69,14 @@
                                         <div class="col-md-6">
                                             <div class="form-group w-50">
                                                 <label for="transferAmount">Transfer Amount</label>
-                                                <input type="number" name="transfer_amount" value="<?=isset($transfer) ? number_format(floatval($transfer->transfer_amount), 2, '.', ',') : ''?>" step="0.01" onchange="convertToDecimal(this)" id="transferAmount" class="form-control text-right" required>
+                                                <input type="number" name="transfer_amount" step="0.01" onchange="convertToDecimal(this)" id="transferAmount" class="form-control text-right" required>
                                             </div>
                                         </div>
 
                                         <div class="col-md-6">
                                             <div class="form-group w-50">
                                                 <label for="date">Date</label>
-                                                <input type="text" class="form-control date" name="date" id="date" value="<?=!isset($transfer) ? date('m/d/Y') : ($transfer->transfer_date !== "" && !is_null($transfer->transfer_date) ? date("m/d/Y", strtotime($transfer->transfer_date)) : "")?>"/>
+                                                <input type="text" class="form-control date" name="date" id="date" value="<?php echo date('m/d/Y') ?>"/>
                                             </div>
                                         </div>
                                     </div>
@@ -104,25 +85,29 @@
                                         <div class="col-md-6">
                                             <div class="form-group w-50">
                                                 <label for="memo">Memo</label>
-                                                <textarea name="memo" id="memo" class="form-control"><?=$transfer->transfer_memo?></textarea>
+                                                <textarea name="memo" id="memo" class="form-control"></textarea>
                                             </div>
                                         </div>
                                     </div>
 
                                     <div class="row">
                                         <div class="col-md-4">
-                                            <div class="attachments">
-                                                <label for="attachment" style="margin-right: 15px"><i class="fa fa-paperclip"></i>&nbsp;Attachment</label> 
-                                                <span>Maximum size: 20MB</span>
-                                                <div id="transfer-attachments" class="dropzone" style="border: 1px solid #e1e2e3;background: #ffffff;width: 100%;">
-                                                    <div class="dz-message" style="margin: 20px;border">
-                                                        <span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
-                                                        <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
+                                            <div class="transfer-attachments attachments">
+                                                <div class="attachments-header">
+                                                    <button type="button" onclick="document.getElementById('transfer-attachments').click();">Attachments</button>
+                                                    <span>Maximum size: 20MB</span>
+                                                </div>
+                                                <div class="attachments-list">
+                                                    <div class="attachments-container border" onclick="document.getElementById('transfer-attachments').click();">
+                                                        <div class="attachments-container-label">
+                                                            Drag/Drop files here or click the icon
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div class="d-flex justify-content-center align-items-center">
-                                                    <a href="#" id="show-existing-attachments" class="text-info">Show existing</a>
+                                                <div class="attachments-footer w-100 d-flex">
+                                                    <span class="m-auto"><a href="#" class="text-info">Show existing</a></span>
                                                 </div>
+                                                <input type="file" name="attachments[]" id="transfer-attachments" class="hide" multiple="multiple">
                                             </div>
                                         </div>
                                     </div>
@@ -137,40 +122,20 @@
                         <div class="col-md-4">
                             <button type="button" class="btn btn-secondary btn-rounded border" data-dismiss="modal">Close</button>
                         </div>
-                        <div class="col-md-4 <?=!isset($transfer) ? 'd-flex' : ''?>">
-                            <?php if(!isset($transfer)) : ?>
+                        <div class="col-md-4 d-flex">
                             <a href="#" class="text-white m-auto" onclick="makeRecurring('transfer')">Make Recurring</a>
-                            <?php else : ?>
-                            <div class="row h-100">
-                                <div class="col-md-12 d-flex align-items-center justify-content-center">
-                                    <span><a href="#" class="text-white" onclick="makeRecurring('transfer')">Make Recurring</a></span>
-                                    <span class="mx-3 divider"></span>
-                                    <span>
-                                        <div class="dropup">
-                                            <a href="javascript:void(0);" class="text-white" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
-                                            <div class="dropdown-menu">
-                                                <a class="dropdown-item" href="#" id="void-transfer">Void</a>
-                                                <a class="dropdown-item" href="#" id="delete-transfer">Delete</a>
-                                                <a class="dropdown-item" href="#">Transaction journal</a>
-                                                <a class="dropdown-item" href="#">Audit history</a>
-                                            </div>
-                                        </div>
-                                    </span>
-                                </div>
-                            </div>
-                            <?php endif; ?>
                         </div>
                         <div class="col-md-4">
                             <!-- Split dropup button -->
                             <div class="btn-group dropup float-right">
-                                <button type="button" class="btn btn-success" onclick="saveAndNewForm(event)">
+                                <button type="submit" class="btn btn-success">
                                     Save and new
                                 </button>
                                 <button type="button" class="btn btn-success dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <span class="sr-only">Toggle Dropdown</span>
                                 </button>
                                 <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="#" onclick="saveAndCloseForm(event)">Save and close</a>
+                                    <a class="dropdown-item" href="#">Save and close</a>
                                 </div>
                             </div>
                         </div>

@@ -72,17 +72,11 @@
   gap: 10px;
   grid-template-columns: repeat(auto-fit, minmax(var(--size), auto));
   justify-content: left;
-  position: relative;
-
-  .ui-state-highlight {
-    background-color: yellow !important;
-  }
 
   .esignBuilder__docPreview,
   .custome-fileup {
     min-height: var(--size);
     max-width: var(--size);
-    height: var(--size) !important;
   }
 
   .esignBuilder__docPreview canvas {
@@ -161,8 +155,4 @@
       font-size: 24px;
     }
   }
-}
-
-.esignBuilder__docPreviewHover {
-  cursor: initial !important;
 }

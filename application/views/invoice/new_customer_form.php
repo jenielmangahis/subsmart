@@ -115,7 +115,7 @@
                     <!-- <input type="text" class="form-control" name="street_address" id="street_address"/> -->
                     <!-- <input id="ship-address" name="street_address"  class="form-control" placeholder="Enter your address"
                   onFocus="geolocate()" type="text"></input> -->
-                  <input id="ship-address1" name="street_address"  class="form-control" placeholder="Enter your address" type="text"></input>
+                  <input id="ship-address" name="street_address"  class="form-control" placeholder="Enter your address" type="text"></input>
                   <!-- <input id="ship-address" name="ship-address" required autocomplete="off" /> -->
                   <!-- <input id="address2" name="address2" />
                   <input id="locality" name="locality" required />

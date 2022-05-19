@@ -16,11 +16,10 @@ class Accounting_transfer_funds_model extends MY_Model {
 	    return $this->db->insert_id();
 	}
 
-	function getById($id, $companyId = null) {
-		if($companyId) {
-			$this->db->where('company_id', $companyId);
-		}
+	function getById($id) {
+		$this->db->where('company_id', getLoggedCompanyID());
 		$this->db->where('id', $id);
+		$this->db->where('status', 1);
 
 		$query = $this->db->get($this->table);
 		return $query->row();
@@ -35,20 +34,5 @@ class Accounting_transfer_funds_model extends MY_Model {
 		} else {
 			return false;
 		}
-	}
-
-	public function get_company_transfers($filters = [])
-    {
-        $this->db->where('company_id', $filters['company_id']);
-        $this->db->where('status !=', 0);
-		$this->db->where('recurring', null);
-        $query = $this->db->get($this->table);
-        return $query->result();
-    }
-
-	public function delete_transfer($id)
-	{
-		$this->db->where('id', $id);
-		return $this->db->delete($this->table);
 	}
 }

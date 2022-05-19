@@ -5,10 +5,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
 <div class="wrapper" role="wrapper">
 <?php include viewPath('includes/sidebars/workorder'); ?>
     <style>
-    label>input {
-      visibility: initial !important;
-      position: initial !important; 
-    }
    .but:hover {
     font-weight: 900;
     color:black;
@@ -31,334 +27,29 @@ defined('BASEPATH') or exit('No direct script access allowed');
     color:red;
     padding:12px;
 }
-
-#signature-pad {min-height:200px;}
-#signature-pad canvas {background-color:white;left: 0;top: 0;width: 100%;min-height:250px;height: 100%}
-
-#signature-pad2 {min-height:200px;}
-#signature-pad2 canvas {background-color:white;left: 0;top: 0;width: 100%;min-height:250px;height: 100%}
-
-#signature-pad3 {min-height:200px;}
-#signature-pad3 canvas {background-color:white;left: 0;top: 0;width: 100%;min-height:250px;height: 100%}
-
-#signature-padM {min-height:200px;}
-#signature-padM canvas {background-color:white;left: 0;top: 0;width: 100%;min-height:250px;height: 100%}
-
-#signature-pad2M {min-height:200px;}
-#signature-pad2M canvas {background-color:white;left: 0;top: 0;width: 100%;min-height:250px;height: 100%}
-
-#signature-pad3M {min-height:200px;}
-#signature-pad3M canvas {background-color:white;left: 0;top: 0;width: 100%;min-height:250px;height: 100%}
-
-.switch {
-  position: relative;
-  display: inline-block;
-  width: 60px;
-  height: 34px;
-}
-
-.switch input { 
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-.slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #ccc;
-  -webkit-transition: .4s;
-  transition: .4s;
-}
-
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 26px;
-  width: 26px;
-  left: 4px;
-  bottom: 4px;
-  background-color: white;
-  -webkit-transition: .4s;
-  transition: .4s;
-}
-
-input:checked + .slider {
-  background-color: #10ab06;
-}
-
-input:focus + .slider {
-  box-shadow: 0 0 1px #10ab06;
-}
-
-input:checked + .slider:before {
-  -webkit-transform: translateX(26px);
-  -ms-transform: translateX(26px);
-  transform: translateX(26px);
-}
-
-/* Rounded sliders */
-.slider.round {
-  border-radius: 34px;
-}
-
-.slider.round:before {
-  border-radius: 50%;
-}
-
-.tr_qty{
-    width:150px;
-}
-
-
-nav > .nav.nav-tabs{
-
-border: none;
-  color:#fff;
-  background:#272e38;
-  border-radius:0;
-
-}
-nav > div a.nav-item.nav-link,
-nav > div a.nav-item.nav-link.active
-{
-border: none;
-  padding: 18px 25px;
-  color:#fff;
-  background:#272e38;
-  border-radius:0;
-}
-
-/* nav > div a.nav-item.nav-link.active:after
-{
-content: "";
-position: relative;
-bottom: -60px;
-left: -10%;
-border: 15px solid transparent;
-border-top-color: #e74c3c ;
-} */
-.tab-content{
-background: #fdfdfd;
-  line-height: 25px;
-  border: 1px solid #ddd;
-  border-top:5px solid #e74c3c;
-  border-bottom:5px solid #e74c3c;
-  padding:30px 25px;
-}
-
-nav > div a.nav-item.nav-link:hover,
-nav > div a.nav-item.nav-link:focus
-{
-border: none;
-  background: #e74c3c;
-  color:#fff;
-  border-radius:0;
-  transition:background 0.20s linear;
-}
-
-.signature_mobile
-{
-    display: none;
-}
-
-.show_mobile_view
-{
-    display: none;
-}
-
-.box-wrap 
-{ 
-    position: relative; 
-    /* min-height: 250px;  */
-    width:100%;
-}
-
-/* #canvas
-{
- width: 100%;
- height: 100%;
- object-fit: contain;
-} */
-.tabbed-area div div 
-{ 
-    background: white; 
-    padding: 20px; 
-    min-height: 250px; 
-    position: absolute; 
-    top: -1px; 
-    left: 0; 
-    width: 100%; 
-}
-
-.tabbed-area div div, .tabs li a 
-{ 
-    border: 1px solid #ccc; 
-}
-
-#box-one:target, #box-two:target, #box-three:target {
-  z-index: 1;
-}
-
-
-@media only screen and (max-device-width: 600px) {
-    .label-element{
-        position:absolute;
-        top:-8px;
-        left:25px;
-        font-size:12px;
-        color:#666;
-        }
-    .input-element{
-        padding:30px 5px 10px 8px;
-        width:100%;
-        height:55px;
-        /* border:1px solid #CCC; */
-        font-weight: bold;
-        margin-top: -15px;
-        }
-
-    .select-wrap 
-    {
-    border: 2px solid #e0e0e0;
-    /* border-radius: 4px; */
-    margin-top: -10px;
-    /* margin-bottom: 10px; */
-    padding: 0 5px 5px;
-    width:100%;
-    /* background-color:#ebebeb; */
-    }
-
-    .select-wrap label
-    {
-    font-size:10px;
-    text-transform: uppercase;
-    color: #777;
-    padding: 2px 8px 0;
-    }
-
-    .m_select
-    {
-    /* background-color: #ebebeb;
-    border:0px; */
-    border-color: white !important;
-    border:0px !important;
-    outline:0px !important;
-    }
-    .select2 .select2-container .select2-container--default{
-        /* background-color: #ebebeb;
-    border:0px; */
-    border-color: white !important;
-    border:0px !important;
-    outline:0px !important;
-    }
-
-    .select2-container--default .select2-selection--single {
-    background-color: #fff;
-    border: 1px solid #fff !important;
-    border-radius: 4px;
-    }
-
-    .sub_label{
-        font-size:12px !important;
-    }
-
-    .signature_web
-    {
-        display: none;
-    }
-
-    .signature_mobile
-    {
-        display: block;
-    }
-
-    .hidden_mobile_view{
-        display: none;
-    }
-
-    .show_mobile_view
-    {
-        display: block;
-    }
-
-    .table_mobile
-    {
-        font-size:14px;
-    }
-
-    div.dropdown-wrapper select { 
-    width:115% /* This hides the arrow icon */; 
-    background-color:transparent /* This hides the background */; 
-    background-image:none; 
-    -webkit-appearance: none /* Webkit Fix */; 
-    border:none; 
-    box-shadow:none; 
-    padding:0.3em 0.5em; 
-    font-size:13px;
-    }
-    .signature-pad-canvas-wrapper {
-    margin: 15px 0 0;
-    border: 1px solid #cbcbcb;
-    border-radius: 3px;
-    overflow: hidden;
-    position: relative;
-}
-
-    .signature-pad-canvas-wrapper::after {
-        content: 'Name';
-        border-top: 1px solid #cbcbcb;
-        color: #cbcbcb;
-        width: 100%;
-        margin: 0 15px;
-        display: inline-flex;
-        position: absolute;
-        bottom: 10px;
-        font-size: 13px;
-        z-index: -1;
-    }
-}
-
-#header_area {
-  width: 90%;
-  position: relative;
-}
-#header_area:hover > .btn-edit-header {
-  display: block;
-}
-.btn-edit-header {
-  display: none;
-  position: absolute;
-  top: 5px;
-  right: 5px;
-}
-.selected-checklists{
-    width: 18%;
-}
-.selected-checklists li{
-    padding: 10px;
-}
-.selected-checklists li a{
-    float: right;
-}
-</style>
+   </style>
     <!-- page wrapper start -->
     <div wrapper__section>
         <div class="container-fluid p-40">
-            <div class="row" style="margin-top: 30px;">
-                <div class="col">
-                    <h3 class="m-0">Edit Work Order</h3>
-                </div>
-            </div>
-
-            <div style="background-color:#fdeac3; width:100%;padding:.5%;margin-bottom:5px;margin-top:5px;margin-bottom:10px;">
-                Update your workorder.
-            </div>
           <div class="card">
+              <div class="page-title-box pt-1 pb-0">
+                  <div class="row align-items-center">
+                      <div class="col-sm-12">
+                          </div>
+                          <!-- <h3 class="page-title mt-0">New Lead</h3> -->
+                          <h3 style="font-family: Sarabun, sans-serif">Update Work Order</h3>
+                          <!-- <div class="pl-3 pr-3 mt-1 row">
+                            <div class="col mb-4 left alert alert-warning mt-0 mb-2">
+                                <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">
+                                    To create new lead go to Lead TAB and Select new. Enter all the Lead information as shown below.
+                                    Enter Address information.  Enter Additional Information and Description
+                                    and Finally click Save Button.  All required fields must have information.
+                                </span>
+                            </div>
+                          </div> -->
+                      </div>
+                  </div>
+              </div>
             <!-- end row -->
             <!-- <div class="row">
                 <div class="col-md-12" style="background-color:#32243d;padding:1px;text-align:center;color:white;">
@@ -366,25 +57,24 @@ border: none;
                 </div>
             </div>
             <br> -->
-            <?php echo form_open_multipart('workorder/UpdateWorkorder', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?> 
+            <?php echo form_open_multipart('workorder/savenewWorkorder', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?> 
                     <div class="row">
                         <div class="col-md-12">
                             <div id="header_area">
                                 <h4 class="mt-0 header-title mb-5">Header</h4>
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <ol class="breadcrumb" style="margin-top:-30px;">
+                                        <ol class="breadcrumb" style="margin-top:-30px;"> <i class="fa fa-pencil" aria-hidden="true"></i>
                                             <li class="breadcrumb-item active">
                                                 <label style="background-color:#E8E8E9;" id="headerContent"><?php echo $headers->content; ?></label>
                                                 <input type="hidden" name="header" value="<?php echo $headers->content; ?>">
                                             </li>
-                                        </ol>                                        
+                                        </ol>
                                     </div> 
                                 </div>
                                 <br>
-                                <a class="btn btn-sm btn-primary btn-edit-header" href="javascript:void(0);">Edit</a>
+
                                 <input type="hidden" id="company_name" value="<?php echo $clients->business_name; ?>">
-                                <input type="hidden" name="wo_id" value="<?php echo $workorder->id; ?>">
                                 <input type="hidden" id="current_date" value="<?php echo @date('m-d-Y'); ?>">
 
                                 <input type="hidden" id="content_input" class="form-control" name="header" value="<?php echo $headers->content; ?>">
@@ -398,11 +88,11 @@ border: none;
                             </div>
                             <div class="col-md-3 form-group">
 								<label for="last_name">Last Name</label>
-								<input type="text" class="form-control" name="customer[last_name]" id="last_name" required placeholder="Enter Last Name" value="<?php echo $customer->last_name; ?>" readonly/>
+								<input type="text" class="form-control" name="customer[last_name]" id="last_name" required placeholder="Enter Last Name" value="<?php echo $customer->last_name; ?>"/>
 							</div>
 							<div class="col-md-3 form-group">
 								<label for="first_name">First Name</label>
-								<input type="text" class="form-control" name="customer[first_name]" id="first_name" required placeholder="Enter First Name" value="<?php echo $customer->first_name; ?>" readonly/>
+								<input type="text" class="form-control" name="customer[first_name]" id="first_name" required placeholder="Enter First Name" value="<?php echo $customer->first_name; ?>"/>
 							</div>
                         </div>
                         <div class="row">
@@ -481,7 +171,7 @@ border: none;
                             <div class="col-md-4 form-group">
                                 <label for="contact_phone">Password</label> 
                                 <!-- <i class="fa fa-pencil" aria-hidden="true" ></i> -->
-                                <input type="text" class="form-control" name="password" id="password" placeholder="Password" value="<?php echo $workorder->password; ?>"/>
+                                <input type="text" class="form-control" name="password" id="password" placeholder="Password" />
                             </div>
                             <!-- <div class="col-md-4 form-group">
                                 <label for="suit" class="mytxt">Custom Field</label> <i class="fa fa-pencil" aria-hidden="true"></i>
@@ -490,13 +180,13 @@ border: none;
                             </div> -->
                         </div>
                         
-                        <div class="row" id="thisdiv">
-                        <?php foreach($custom_fields as $field){ ?>
+                        <!-- <div class="row" id="thisdiv">
+                        <?php foreach($fields as $field){ ?>
                             <div class="col-md-3 form-group">
-                            <label for="suit" data-toggle="modal" data-target="#modalupdateCustom" class="mytxtc label-element" label-id="<?php echo $field->id; ?>"  label-name="<?php echo $field->name; ?>"><?php echo $field->name; ?></label> <i class="fa fa-pencil" aria-hidden="true"></i>
-                                <input type="text" class="form-control" name="custom_value[]" id="custom1_value" value="<?php echo $field->value; ?>"/>
+                                <label for="suit" data-toggle="modal" data-target="#modalupdateCustom" class="mytxtc" label-id="<?php echo $field->id; ?>"  label-name="<?php echo $field->name; ?>"><?php echo $field->name; ?></label> <i class="fa fa-pencil" aria-hidden="true"></i>
+                                <input type="text" class="form-control" name="custom_value[]" id="custom1_value"/>
                                 <input type="hidden" class="custom_<?php echo $field->id; ?>" value="<?php echo $field->name; ?>" name="custom_field[]">
-                            </div>     
+                            </div>      -->
                             <!-- <div class="col-md-4 form-group">
                                 <label for="suit" class="mytxt2">Custom Field</label> <i class="fa fa-pencil" aria-hidden="true"></i>
                                 <input type="text" class="form-control" name="custom2_value" id="custom2_value"/>
@@ -519,8 +209,8 @@ border: none;
                                 <input type="text" class="form-control" name="custom5_value" id="custom5_value"/>
                                 <input type="hidden" class="custom5" name="custom5_field">
                             </div> -->
-                            <?php } ?>
-                        </div>
+                            <!-- <?php } ?>
+                        </div> -->
                         
                         <div class="row" style="background-color:white;font-size:16px;">
                                 <div class="col-md-3">
@@ -576,97 +266,38 @@ border: none;
                                             <th width="150px">Quantity</th>
                                             <!-- <th>Location</th> -->
                                             <th width="150px">Price</th>
-                                            <th class="hidden_mobile_view" width="150px">Discount</th>
-                                            <th class="hidden_mobile_view" width="150px">Tax (Change in %)</th>
-                                            <th class="hidden_mobile_view">Total</th>
+                                            <th width="150px">Discount</th>
+                                            <th width="150px">Tax (Change in %)</th>
+                                            <th>Total</th>
                                         </tr>
                                         </thead>
                                         <tbody id="jobs_items_table_body">
-                                        <?php if(empty($items_data)){ ?>
                                         <tr>
-                                            <td width="30%">
+                                            <td>
                                                 <input type="text" class="form-control getItems"
                                                        onKeyup="getItems(this)" name="items[]">
                                                 <ul class="suggestions"></ul>
-                                                <div class="show_mobile_view"><span class="getItems_hidden"></span></div>
-                                                <input type="hidden" name="itemid[]" id="itemid" class="itemid">
                                             </td>
-                                            <td width="20%">
-                                            <div class="dropdown-wrapper">
-                                                <select name="item_type[]" id="item_typeid" class="form-control">
+                                            <td><select name="item_type[]" class="form-control">
                                                     <option value="product">Product</option>
                                                     <option value="material">Material</option>
                                                     <option value="service">Service</option>
                                                     <option value="fee">Fee</option>
-                                                </select>
-                                            </div>
-
-                                            <!-- <div class="show_mobile_view" style="color:green;"><span>Product</span></div> -->
-                                                </td>
-                                            <td width="10%"><input type="number" class="form-control quantity mobile_qty" name="quantity[]"
+                                                </select></td>
+                                            <td width="150px"><input type="number" class="form-control quantity" name="quantity[]"
                                                        data-counter="0" id="quantity_0" value="1"></td>
-                                            <td width="10%"><input type="number" class="form-control price hidden_mobile_view" name="price[]"
-                                                       data-counter="0" id="price_0" min="0" value="0"> <input type="hidden" class="priceqty" id="priceqty_0"> 
-                                                       <div class="show_mobile_view"><span class="price">0</span>
-                                                       <!-- <input type="hidden" class="form-control price" name="price[]" data-counter="0" id="priceM_0" min="0" value="0"> -->
-                                                       </div><input id="priceM_qty0" value=""  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view price_qty"></td>
-                                            <td width="10%" class="hidden_mobile_view"><input type="number" class="form-control discount" name="discount[]"
-                                                       data-counter="0" id="discount_0" min="0" value="0"  readonly></td>
-                                            <td width="10%" class="hidden_mobile_view"><input type="text" class="form-control tax_change" name="tax[]"
+                                            <td width="150px"><input type="number" class="form-control price" name="price[]"
+                                                       data-counter="0" id="price_0" min="0" value="0"></td>
+                                            <td width="150px"><input type="number" class="form-control discount" name="discount[]"
+                                                       data-counter="0" id="discount_0" min="0" value="0" ></td>
+                                            <td width="150px"><input type="text" class="form-control tax_change" name="tax[]"
                                                        data-counter="0" id="tax1_0" min="0" value="0">
                                                        <!-- <span id="span_tax_0">0.0</span> -->
                                                        </td>
-                                            <td width="10%" class="hidden_mobile_view"><input type="hidden" class="form-control " name="total[]"
+                                            <td width="150px"><input type="hidden" class="form-control " name="total[]"
                                                        data-counter="0" id="item_total_0" min="0" value="0">
                                                        $<span id="span_total_0">0.00</span></td>
                                         </tr>
-                                        <?php } ?>
-                                        <?php $item_row = 0; foreach($items_data as $data){ ?>
-
-                                        <tr>
-                                            <td width="30%">
-                                                <input type="text" class="form-control getItems"
-                                                       onKeyup="getItems(this)" name="items[]" value="<?php echo $data->title; ?>">
-                                                <ul class="suggestions"></ul>
-                                                <div class="show_mobile_view"><span class="getItems_hidden"><?php echo $data->title; ?></span></div>
-                                                <input type="hidden" name="itemid[]" id="itemid" class="itemid" value="<?php echo $data->items_id; ?>">
-                                            </td>
-                                            <td width="20%">
-                                            <div class="dropdown-wrapper">
-                                                <select name="item_type[]" id="item_typeid" class="form-control">
-                                                    <option value="<?php echo $data->type; ?>"><?php echo $data->type; ?></option>
-                                                    <option value="product">Product</option>
-                                                    <option value="material">Material</option>
-                                                    <option value="service">Service</option>
-                                                    <option value="fee">Fee</option>
-                                                </select>
-                                            </div>
-                                                </td>
-                                            <td width="10%"><input type="number" data-itemid="<?php echo $data->items_id; ?>" class="form-control quantity mobile_qty hidden_mobile_view" name="quantity[]"
-                                                       data-counter="0" id="quantity_<?php echo $item_row; ?>" value="<?php echo $data->qty; ?>"> 
-                                                       <!-- <div class="show_mobile_view"><span>1</span><input type="hidden" class="form-control qtyest2" name="quantity[]"
-                                                       data-counter="0" id="quantity_<?php echo $data->items_id; ?>" value="<?php echo $data->qty; ?>"></div>  -->
-                                                       </td>
-                                            <td width="10%"><input type="number" data-itemid="<?php echo $data->items_id; ?>" class="form-control price hidden_mobile_view" name="price[]"
-                                                       data-counter="0" id="price_<?php echo $item_row; ?>" min="0" value="<?php echo $data->costing; ?>"> <input type="hidden" class="priceqty" id="priceqty_<?php echo $data->id; ?>" value="<?php $quantity1 = $data->qty;
-                                                                                    $price1 = $data->costing; 
-                                                                                    $total1 = $quantity1*$price1;
-                                                                                    echo $total1;
-                                                                                                ?>"> 
-                                                       <!-- <div class="show_mobile_view"><span class="price">0</span><input type="hidden" class="form-control price" name="price[]" data-counter="0" id="priceM_<?php echo $data->id; ?>" min="0" value="0"></div> -->
-                                                       <input id="priceM_qty<?php echo $data->items_id; ?>"  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view price_qty" value="" /></td>
-                                            <td width="10%" class="hidden_mobile_view"><input type="number" class="form-control discount" name="discount[]"
-                                                       data-counter="0" id="discount_<?php echo $item_row; ?>" min="0"  value="0" ></td>
-                                            <td width="10%" class="hidden_mobile_view"><input type="text" class="form-control tax_change" name="tax[]"
-                                                       data-counter="0" id="tax1_<?php echo $item_row; ?>" min="0" value="<?php echo number_format($data->tax,2); ?>">
-                                                       <!-- <span id="span_tax_0">0.0</span> -->
-                                                       </td>
-                                            <td width="10%" class="hidden_mobile_view"><input type="hidden" class="form-control " name="total[]"
-                                                       data-counter="0" id="item_total_<?php echo $data->items_id; ?>" min="0" value="<?php $a = $data->qty * $data->costing; $b = $a + $data->tax; echo $b; ?>">
-                                                       $<span id="span_total_<?php echo $item_row; ?>"><?php $a = $data->qty * $data->costing; $b = $a + $data->tax; echo number_format($b,2); ?></span></td>
-                                            <td><a href="#" class="remove btn btn-sm btn-success"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
-                                        </tr>
-                                        <?php $item_row++;} ?>
                                         </tbody>
                                     </table>
                                     <!-- <a href="#" id="add_another_estimate" style="color:#02A32C;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add another line</a> &emsp; -->
@@ -715,73 +346,34 @@ border: none;
                                     <table class="table" style="text-align:left;">
                                         <tr>
                                             <td>Subtotal</td>
-                                            <td colspan="2" align="center">$ <span id="span_sub_total_invoice"><?php echo number_format($workorder->subtotal,2); ?></span>
-                                                <input type="hidden" name="subtotal" id="item_total" value="<?php echo $workorder->subtotal; ?>"></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Taxes</td>
-                                            <td colspan="2" align="center">$ <span id="total_tax_"><?php echo number_format($workorder->taxes,2); ?></span><input type="hidden" name="taxes" id="total_tax_input" value="<?php echo $workorder->taxes; ?>"></td>
-                                        </tr>
-                                        <tr>
-                                            <td style="width:;"><input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control" style="width:; display:inline; border: 1px dashed #d1d1d1" value="<?php echo $workorder->adjustment_name; ?>"></td>
-                                            <td style="width:;">
-                                            <input type="number" name="adjustment_value" id="adjustment_input" value="<?php if(empty($workorder->adjustment_value)){ echo "0"; }else{ echo $workorder->adjustment_value; } ?>" class="form-control adjustment_input" style="width:100px; display:inline-block">
-                                                <span class="fa fa-question-circle" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Optional it allows you to adjust the total amount Eg. +10 or -10." data-original-title="" title=""></span>
-                                            </td>
-                                            <td><?php echo number_format($workorder->adjustment_value,2); ?></td>
-                                        </tr>
-                                            <input type="hidden" name="markup_input_form" id="markup_input_form" class="markup_input" value="0">
-                                        <?php if(empty($workorder->voucher_value)){ ?>
-                                        <tr id="saved" style="color:green;font-weight:bold;display:none;">
-                                            <td>Amount Saved</td>
                                             <td></td>
-                                            <td><span id="offer_cost">0.00</span><input type="hidden" name="voucher_value" id="offer_cost_input" value="0"></td>
-                                        </tr>
-                                        <?php }else{ ?>
-                                            <tr id="saved" style="color:green;font-weight:bold;">
-                                            <td>Amount Saved</td>
-                                            <td></td>
-                                            <td><span id="offer_cost"><?php echo $workorder->voucher_value; ?></span><input type="hidden" name="voucher_value" id="offer_cost_input" value="<?php echo $workorder->voucher_value; ?>"></td>
-                                        </tr>
-                                        <?php } ?>
-                                        <tr style="color:blue;font-weight:bold;font-size:18px;">
-                                            <td><b>Grand Total ($)</b></td>
-                                            <td colspan="2" align="center"><b><span id="grand_total"><?php echo number_format($workorder->grand_total,2); ?></span>
-                                                <input type="hidden" name="grand_total" id="grand_total_input" value='<?php echo $workorder->grand_total; ?>'></b></td>
-                                        </tr>
-                                    </table>
-                                </div>
-                            </div>
-
-                            <!-- <div class="row" style="background-color:white;font-size:16px;">
-                                <div class="col-md-7">
-                                </div>
-                                <div class="col-md-5">
-                                    <table class="table table_mobile" style="text-align:left;">
-                                        <tr>
-                                            <td>Subtotal</td>
-                                            <td colspan="2" align="right">$ <span id="span_sub_total_invoice">0.00</span>
+                                            <td>$ <span id="span_sub_total_invoice">0.00</span>
                                                 <input type="hidden" name="subtotal" id="item_total"></td>
                                         </tr>
                                         <tr>
                                             <td>Taxes</td>
-                                            <td colspan="2" align="right">$ <span id="total_tax_">0.00</span><input type="hidden" name="taxes" id="total_tax_input"></td>
+                                            <td></td>
+                                            <td>$ <span id="total_tax_">0.00</span><input type="hidden" name="taxes" id="total_tax_input"></td>
                                         </tr>
                                         <tr>
-                                            <td style="width:;"><input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control" style="width:; display:inline; border: 1px dashed #d1d1d1"></td>
-                                            <td align="center">
-                                            <input type="number" name="adjustment_value" id="adjustment_input" value="0" class="form-control adjustment_input" style="width:50%;display:inline;">
+                                            <td style="width:250px;"><input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control" style="width:200px; display:inline; border: 1px dashed #d1d1d1"></td>
+                                            <td style="width:150px;">
+                                            <input type="number" name="adjustment_value" id="adjustment_input" value="0" class="form-control adjustment_input" style="width:100px; display:inline-block">
                                                 <span class="fa fa-question-circle" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Optional it allows you to adjust the total amount Eg. +10 or -10." data-original-title="" title=""></span>
                                             </td>
-                                            <td><span id="adjustmentText">0.00</span></td>
+                                            <td>0.00</td>
                                         </tr>
+                                        <!-- <tr>
+                                            <td>Markup $<span id="span_markup"></td> -->
+                                            <!-- <td><a href="#" data-toggle="modal" data-target="#modalSetMarkup" style="color:#02A32C;">set markup</a></td> -->
                                             <input type="hidden" name="markup_input_form" id="markup_input_form" class="markup_input" value="0">
+                                        <!-- </tr> -->
                                         <tr id="saved" style="color:green;font-weight:bold;display:none;">
                                             <td>Amount Saved</td>
                                             <td></td>
                                             <td><span id="offer_cost">0.00</span><input type="hidden" name="voucher_value" id="offer_cost_input"></td>
                                         </tr>
-                                        <tr style="color:blue;font-weight:bold;font-size:16px;">
+                                        <tr style="color:blue;font-weight:bold;font-size:18px;">
                                             <td><b>Grand Total ($)</b></td>
                                             <td></td>
                                             <td><b><span id="grand_total">0.00</span>
@@ -789,10 +381,7 @@ border: none;
                                         </tr>
                                     </table>
                                 </div>
-                            </div> -->
-
-
-
+                            </div>
                             <!-- <div class="row">
                                 <div class=" col-md-9">
                                     <div class="work_nore">
@@ -840,21 +429,13 @@ border: none;
                             <h5>Checklist</h5>
                             <small class="help help-sm">You can set up a checklist for employees.</small><br>
                             <br><br>
-                            <div id="checklist_added">
-                                <ul class="selected-checklists">
-                                    <?php $c_row = 1; foreach($selected_checklists as $key => $checklist){ ?>
-                                        <li id="s-checklist-<?php echo $c_row; ?>" c_id="<?php echo $checklist['id']; ?>">
-                                            <?php echo $checklist['name']; ?>
-                                            <input type="hidden" name="checklists[]" value="<?php echo $checklist['id']; ?>" />
-                                            <a class="remove-checklist" data-row="<?php echo $c_row; ?>" href="javascript:void(0);"><i class="fa fa-trash-o icon"></i></a>
-                                        </li>
-                                    <?php $c_row++;} ?>
-                                </ul>
-                            </div>
+                            <div id="checklist_added"></div>
                             <!-- <div id="citems"> -->
                             <!-- </div> -->
                             <br><br>
-                            <a class="btn btn-success" style="color:white;" data-toggle="modal" data-target="#checklist_modal" href="javascript:void(0);"><i class="fa fa-plus-square" aria-hidden="true"></i> Select Checklist</a>
+                            <button class="btn btn-success" style="color:white;" data-toggle="modal" data-target="#checklist_modal"><i class="fa fa-plus-square" aria-hidden="true"></i> Select Checklist</button>
+
+                            
                         <br><br><br><br>
                             <h6>JOB DETAIL</h6><br>
                             
@@ -862,7 +443,6 @@ border: none;
                                 <div class="form-group col-md-4">
                                     <label for="job_type">Job Type</label>
                                     <select name="job_type" id="job_type" class="form-control custom-select">
-                                        <option value="<?php echo $workorder->job_type ?>"><?php echo $workorder->job_type ?></option>
                                     <?php foreach($job_types as $jt){ ?>
                                         <option value="<?php echo $jt->title ?>"><?php echo $jt->title ?></option>
 
@@ -879,10 +459,9 @@ border: none;
                                 <!-- <label style="float:right;color:green;">Manage Tag</label> -->
                                 <!-- <input type="text" class="form-control" name="job_tag" id="job_tag" /> -->
                                 <select class="form-control" name="job_tag" id="job_tag">
-                                            <option value="<?php echo $workorder->tags ?>"><?php echo $workorder->tags ?></option>
                                             <!-- <option>---</option> -->
                                             <?php foreach($job_tags as $tags){ ?>
-                                                <option value="<?php echo $tags->name; ?>"><?php echo $tags->name; ?></option>
+                                                <option value="<?php echo $tags->name; ?>"><?php echo $tags->name; ?><option>
                                             <?php } ?>
                                 </select>
                             </div>
@@ -939,12 +518,11 @@ border: none;
                             <div class="row">                        
                                 <div class="form-group col-md-4">
                                     <label for="contact_name">Schedule Date Given</label>
-                                    <input type="text" class="form-control" name="schedule_date_given" id="datepicker_dateissued" value="<?php echo $workorder->date_issued; ?>" />
+                                    <input type="date" class="form-control" name="schedule_date_given" id="schedule_date_given" />
                                 </div>      
                                 <div class="form-group col-md-4">
                                     <label for="workorder_priority">Priority</label>
                                     <select name="priority" id="workorder_priority" class="form-control custom-select">
-                                        <option value="<?php echo $workorder->priority ?>"><?php echo $workorder->priority ?></option>
                                         <option value="Emergency">Emergency</option>
                                         <option value="Low">Low</option>
                                         <option value="Standard">Standard</option>
@@ -955,25 +533,12 @@ border: none;
                             <div class="row">                        
                                 <div class="form-group col-md-4">
                                     <label for="job_name">Job Name</label>
-                                    <input type="text" class="form-control" name="job_name" id="job_name" value="<?php echo $workorder->job_name; ?>" />
+                                    <input type="text" class="form-control" name="job_name" id="job_name" required />
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="job_desc">Job Description</label>
-                                    <textarea name="job_description" id="job_desc" cols="5" rows="2" class="form-control"><?php echo $workorder->job_description; ?></textarea> 
+                                    <textarea name="job_description" id="job_desc" cols="5" rows="2" class="form-control"></textarea> 
                                 </div>                                           
-                            </div>
-                            <div class="row">                        
-                                <div class="form-group col-md-4">
-                                <div class="select-wrap">
-                                    <label for="lead_source">Lead Source</label>
-                                    <select id="lead_source" name="lead_source" class="form-control custom-select m_select">
-                                        <option value="0">- none -</option>
-                                        <?php foreach($lead_source as $lead){ ?>
-                                            <option <?php if(isset($workorder)){ if($workorder->lead_source_id == $lead->ls_id){echo "selected";} } ?> value="<?php echo $lead->ls_id; ?>"><?php echo $lead->ls_name; ?></option>
-                                        <?php } ?>
-                                    </select>
-                                </div>    
-                                </div>                                     
                             </div>
 
                             
@@ -982,7 +547,7 @@ border: none;
                                 <div class="form-group col-md-4">
                                     <label for="job_type">Payment Method</label>
                                     <select name="payment_method" id="payment_method" class="form-control custom-select">
-                                        <option value="<?php echo $workorder->payment_method; ?>"><?php echo $workorder->payment_method; ?></option>
+                                        <option value="">Choose method</option>
                                         <option value="Cash">Cash</option>
                                         <option value="Check">Check</option>
                                         <option value="Credit Card">Credit Card</option>
@@ -1000,7 +565,7 @@ border: none;
                                 </div>      
                                 <div class="form-group col-md-4">
                                     <label for="job_type">Amount</label><small class="help help-sm"> ( $ )</small>
-                                    <input type="text" class="form-control" name="payment_amount" id="payment_amount" value="<?php echo $workorder->payment_amount; ?>" />
+                                    <input type="text" class="form-control" name="payment_amount" id="payment_amount"  />
                                 </div>
                                 <div class="form-group col-md-4" id="cash_area" style="display:none;">
                                                 <br><br>
@@ -1011,17 +576,17 @@ border: none;
                                 <div class="row">                   
                                     <div class="form-group col-md-4">
                                         <label for="job_type">Check Number</label>
-                                        <input type="text" class="form-control" name="check_number" id="check_number" value="<?php echo $payment->check_number; ?>" />
+                                        <input type="text" class="form-control" name="check_number" id="check_number"/>
                                     </div>
                                     <div class="form-group col-md-4">
                                         <label for="job_type">Routing Number</label>
-                                        <input type="text" class="form-control" name="routing_number" id="routing_number" value="<?php echo $payment->routing_number; ?>" />
+                                        <input type="text" class="form-control" name="routing_number" id="routing_number"/>
                                     </div>                                             
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-md-4">
                                         <label for="job_type">Account Number</label>
-                                        <input type="text" class="form-control" name="account_number" id="account_number" value="<?php echo $payment->account_number; ?>" />
+                                        <input type="text" class="form-control" name="account_number" id="account_number"/>
                                     </div>                                       
                                 </div>
                             </div>
@@ -1029,31 +594,31 @@ border: none;
                                 <div class="row">                   
                                     <div class="form-group col-md-4">
                                         <label for="job_type">Credit Card Number</label>
-                                        <input type="text" class="form-control" name="credit_number" id="credit_number" placeholder="0000 0000 0000 000"  value="<?php echo $payment->credit_number; ?>" />
+                                        <input type="text" class="form-control" name="credit_number" id="credit_number" placeholder="0000 0000 0000 000" />
                                     </div>
                                     <div class="form-group col-md-3">
                                         <label for="job_type">Credit Card Expiration</label>
-                                        <input type="text" class="form-control" name="credit_expiry" id="credit_expiry" placeholder="MM/YYYY" value="<?php echo $payment->credit_expiry; ?>" />
+                                        <input type="text" class="form-control" name="credit_expiry" id="credit_expiry" placeholder="MM/YYYY"/>
                                     </div>  
                                     <div class="form-group col-md-3">
                                         <label for="job_type">CVC</label>
-                                        <input type="text" class="form-control" name="credit_cvc" id="credit_cvc" placeholder="CVC" value="<?php echo $payment->credit_cvc; ?>" />
+                                        <input type="text" class="form-control" name="credit_cvc" id="credit_cvc" placeholder="CVC"/>
                                     </div>                                             
                                 </div>
                             </div>
                             <div id="debit_card" style="display:none;">
                                 <div class="row">                   
                                     <div class="form-group col-md-4">
-                                        <label for="job_type">Debit Card Number</label>
-                                        <input type="text" class="form-control" name="debit_credit_number" id="credit_number" placeholder="0000 0000 0000 000"  value="<?php echo $payment->credit_number; ?>" />
+                                        <label for="job_type">Credit Card Number</label>
+                                        <input type="text" class="form-control" name="debit_credit_number" id="credit_number" placeholder="0000 0000 0000 000" />
                                     </div>
                                     <div class="form-group col-md-3">
                                         <label for="job_type">Credit Card Expiration</label>
-                                        <input type="text" class="form-control" name="debit_credit_expiry" id="credit_expiry" placeholder="MM/YYYY" value="<?php echo $payment->credit_expiry; ?>" />
+                                        <input type="text" class="form-control" name="debit_credit_expiry" id="credit_expiry" placeholder="MM/YYYY"/>
                                     </div>  
                                     <div class="form-group col-md-3">
                                         <label for="job_type">CVC</label>
-                                        <input type="text" class="form-control" name="debit_credit_cvc" id="credit_cvc" placeholder="CVC" value="<?php echo $payment->credit_cvc; ?>" />
+                                        <input type="text" class="form-control" name="debit_credit_cvc" id="credit_cvc" placeholder="CVC"/>
                                     </div>                                            
                                 </div>
                             </div>
@@ -1061,11 +626,11 @@ border: none;
                                 <div class="row">                   
                                     <div class="form-group col-md-4">
                                         <label for="job_type">Routing Number</label>
-                                        <input type="text" class="form-control" name="ach_routing_number" id="ach_routing_number" value="<?php echo $payment->routing_number; ?>"  />
+                                        <input type="text" class="form-control" name="ach_routing_number" id="ach_routing_number" />
                                     </div>
                                     <div class="form-group col-md-3">
                                         <label for="job_type">Account Number</label>
-                                        <input type="text" class="form-control" name="ach_account_number" id="ach_account_number" value="<?php echo $payment->account_number; ?>"  />
+                                        <input type="text" class="form-control" name="ach_account_number" id="ach_account_number" />
                                     </div>  
                                 </div>
                             </div>
@@ -1073,15 +638,15 @@ border: none;
                                 <div class="row">                   
                                     <div class="form-group col-md-4">
                                         <label for="job_type">Account Credential</label>
-                                        <input type="text" class="form-control" name="account_credentials" id="account_credentials" value="<?php echo $payment->account_credentials; ?>" />
+                                        <input type="text" class="form-control" name="account_credentials" id="account_credentials"/>
                                     </div>
                                     <div class="form-group col-md-3">
                                         <label for="job_type">Account Note</label>
-                                        <input type="text" class="form-control" name="account_note" id="account_note" value="<?php echo $payment->account_note; ?>" />
+                                        <input type="text" class="form-control" name="account_note" id="account_note"/>
                                     </div>  
                                     <div class="form-group col-md-3">
                                         <label for="job_type">Confirmation</label>
-                                        <input type="text" class="form-control" name="confirmation" id="confirmation" value="<?php echo $payment->confirmation; ?>" />
+                                        <input type="text" class="form-control" name="confirmation" id="confirmation"/>
                                     </div>                                            
                                 </div>
                             </div>
@@ -1089,15 +654,15 @@ border: none;
                                 <div class="row">                   
                                     <div class="form-group col-md-4">
                                         <label for="job_type">Account Credential</label>
-                                        <input type="text" class="form-control" name="paypal_account_credentials" id="paypal_account_credentials" value="<?php echo $payment->account_credentials; ?>" />
+                                        <input type="text" class="form-control" name="paypal_account_credentials" id="paypal_account_credentials"/>
                                     </div>
                                     <div class="form-group col-md-3">
                                         <label for="job_type">Account Note</label>
-                                        <input type="text" class="form-control" name="paypal_account_note" id="paypal_account_note" value="<?php echo $payment->account_note; ?>" />
+                                        <input type="text" class="form-control" name="paypal_account_note" id="paypal_account_note"/>
                                     </div>  
                                     <div class="form-group col-md-3">
                                         <label for="job_type">Confirmation</label>
-                                        <input type="text" class="form-control" name="paypal_confirmation" id="paypal_confirmation" value="<?php echo $payment->confirmation; ?>" />
+                                        <input type="text" class="form-control" name="paypal_confirmation" id="paypal_confirmation"/>
                                     </div>                                            
                                 </div>
                             </div>
@@ -1105,15 +670,15 @@ border: none;
                                 <div class="row">                   
                                     <div class="form-group col-md-4">
                                         <label for="job_type">Account Credential</label>
-                                        <input type="text" class="form-control" name="square_account_credentials" id="square_account_credentials" value="<?php echo $payment->account_credentials; ?>" />
+                                        <input type="text" class="form-control" name="square_account_credentials" id="square_account_credentials"/>
                                     </div>
                                     <div class="form-group col-md-3">
                                         <label for="job_type">Account Note</label>
-                                        <input type="text" class="form-control" name="square_account_note" id="square_account_note" value="<?php echo $payment->account_note; ?>" />
+                                        <input type="text" class="form-control" name="square_account_note" id="square_account_note"/>
                                     </div>  
                                     <div class="form-group col-md-3">
                                         <label for="job_type">Confirmation</label>
-                                        <input type="text" class="form-control" name="square_confirmation" id="square_confirmation" value="<?php echo $payment->confirmation; ?>" />
+                                        <input type="text" class="form-control" name="square_confirmation" id="square_confirmation"/>
                                     </div>                                            
                                 </div>
                             </div>
@@ -1121,11 +686,11 @@ border: none;
                                 <div class="row">                   
                                     <div class="form-group col-md-4">
                                         <label for="job_type">Account Credential</label>
-                                        <input type="text" class="form-control" name="warranty_account_credentials" id="warranty_account_credentials" value="<?php echo $payment->account_credentials; ?>" />
+                                        <input type="text" class="form-control" name="warranty_account_credentials" id="warranty_account_credentials"/>
                                     </div>
                                     <div class="form-group col-md-3">
                                         <label for="job_type">Account Note</label>
-                                        <input type="text" class="form-control" name="warranty_account_note" id="warranty_account_note" value="<?php echo $payment->account_note; ?>" />
+                                        <input type="text" class="form-control" name="warranty_account_note" id="warranty_account_note"/>
                                     </div>                                         
                                 </div>
                             </div>
@@ -1133,11 +698,11 @@ border: none;
                                 <div class="row">                   
                                     <div class="form-group col-md-4">
                                         <label for="job_type">Account Credential</label>
-                                        <input type="text" class="form-control" name="home_account_credentials" id="home_account_credentials" value="<?php echo $payment->account_credentials; ?>" />
+                                        <input type="text" class="form-control" name="home_account_credentials" id="home_account_credentials"/>
                                     </div>
                                     <div class="form-group col-md-3">
                                         <label for="job_type">Account Note</label>
-                                        <input type="text" class="form-control" name="home_account_note" id="home_account_note" value="<?php echo $payment->account_note; ?>" />
+                                        <input type="text" class="form-control" name="home_account_note" id="home_account_note"/>
                                     </div>                                         
                                 </div>
                             </div>
@@ -1145,11 +710,11 @@ border: none;
                                 <div class="row">                   
                                     <div class="form-group col-md-4">
                                         <label for="job_type">Account Credential</label>
-                                        <input type="text" class="form-control" name="e_account_credentials" id="e_account_credentials" value="<?php echo $payment->account_credentials; ?>" />
+                                        <input type="text" class="form-control" name="e_account_credentials" id="e_account_credentials"/>
                                     </div>
                                     <div class="form-group col-md-3">
                                         <label for="job_type">Account Note</label>
-                                        <input type="text" class="form-control" name="e_account_note" id="e_account_note" value="<?php echo $payment->account_note; ?>" />
+                                        <input type="text" class="form-control" name="e_account_note" id="e_account_note"/>
                                     </div>                                         
                                 </div>
                             </div>
@@ -1157,15 +722,15 @@ border: none;
                                 <div class="row">                   
                                     <div class="form-group col-md-4">
                                         <label for="job_type">Credit Card Number</label>
-                                        <input type="text" class="form-control" name="other_credit_number" id="other_credit_number" placeholder="0000 0000 0000 000"  value="<?php echo $payment->credit_number; ?>" />
+                                        <input type="text" class="form-control" name="other_credit_number" id="other_credit_number" placeholder="0000 0000 0000 000" />
                                     </div>
                                     <div class="form-group col-md-3">
                                         <label for="job_type">Credit Card Expiration</label>
-                                        <input type="text" class="form-control" name="other_credit_expiry" id="other_credit_expiry" placeholder="MM/YYYY" value="<?php echo $payment->credit_expiry; ?>" />
+                                        <input type="text" class="form-control" name="other_credit_expiry" id="other_credit_expiry" placeholder="MM/YYYY"/>
                                     </div>  
                                     <div class="form-group col-md-3">
                                         <label for="job_type">CVC</label>
-                                        <input type="text" class="form-control" name="other_credit_cvc" id="other_credit_cvc" placeholder="CVC" value="<?php echo $payment->credit_cvc; ?>" />
+                                        <input type="text" class="form-control" name="other_credit_cvc" id="other_credit_cvc" placeholder="CVC"/>
                                     </div>                                             
                                 </div>
                             </div>
@@ -1173,11 +738,11 @@ border: none;
                                 <div class="row">                   
                                     <div class="form-group col-md-4">
                                         <label for="job_type">Account Credential</label>
-                                        <input type="text" class="form-control" name="other_payment_account_credentials" id="other_payment_account_credentials" value="<?php echo $payment->account_credentials; ?>" />
+                                        <input type="text" class="form-control" name="other_payment_account_credentials" id="other_payment_account_credentials"/>
                                     </div>
                                     <div class="form-group col-md-3">
                                         <label for="job_type">Account Note</label>
-                                        <input type="text" class="form-control" name="other_payment_account_note" id="other_payment_account_note" value="<?php echo $payment->account_note; ?>" />
+                                        <input type="text" class="form-control" name="other_payment_account_note" id="other_payment_account_note"/>
                                     </div>                                         
                                 </div>
                             </div>
@@ -1185,14 +750,14 @@ border: none;
                             <!-- ====== TERMS AND CONDITIONS ====== -->
                             <br><br><br>
                             <div class="row">
-                                <div class=" col-md-12"><label style="float:right;color:green;"><a href="#" style="color:green;" data-toggle="modal" data-target="#terms_conditions_modal">Update Terms and Condition</a></label>
-                                <label style="font-weight:bold;font-size:18px;">TERMS AND CONDITIONS</label>
+                                <div class=" col-md-12">
+                                <label style="font-weight:bold;font-size:18px;">TERMS AND CONDITIONS</label><label style="float:right;color:green;"><a href="#" style="color:green;" data-toggle="modal" data-target="#terms_conditions_modal">Update Terms and Condition</a></label>
                                     <div style="height:200px; overflow:auto; background:#FFFFFF;"
                                          id="thisdiv2">
-                                            <p><?php echo $workorder->terms_and_conditions; ?></p>
+                                            <p><?php echo $terms_conditions->content; ?></p>
                                             <input type="hidden" id="company_id" value="<?php echo getLoggedCompanyID(); ?>">
                                     </div>
-                                    <input type="hidden" class="form-control" name="terms_conditions" id="terms_conditions" value="<?php echo $workorder->terms_and_conditions; ?>" />
+                                    <input type="hidden" class="form-control" name="terms_conditions" id="terms_conditions" value="<?php echo $terms_conditions->content; ?>" />
                                 </div>
                             </div>
                             <br><br>
@@ -1226,7 +791,7 @@ border: none;
                             <div class="row">                        
                                 <div class="form-group col-md-4">
                                     <label for="purchase_order">Purchase Order# (optional)</label>
-                                    <input type="text" class="form-control" name="purchase_order_number" id="purchase_order" value="<?php echo $workorder->po_number; ?>" /> 
+                                    <input type="text" class="form-control" name="purchase_order_number" id="purchase_order" /> 
                                 </div>                                        
                             </div>
 
@@ -1236,17 +801,17 @@ border: none;
                                     <label style="font-weight:bold;font-size:18px;">TERMS OF USE</label><label style="float:right;color:green;"><a href="#" style="color:green;" data-toggle="modal" data-target="#terms_use_modal">Update Terms of Use</a></label>
                                     <div style="height:100px; overflow:auto; background:#FFFFFF; padding-left:10px;"
                                          id="thisdiv3">
-                                            <p><?php echo $workorder->terms_of_use; ?></p>
+                                            <p><?php echo $terms_uses->content; ?></p>
                                             <input type="hidden" id="company_id" value="<?php echo getLoggedCompanyID(); ?>">
                                     </div>
-                                    <input type="hidden" class="form-control" name="terms_of_use" id="terms_of_use"  value="<?php echo $workorder->terms_of_use; ?>"/>
+                                    <input type="hidden" class="form-control" name="terms_of_use" id="terms_of_use"  value="<?php echo $terms_uses->content; ?>"/>
                                 </div>
                             </div>
                             <br><br>
                             <div class="row">        
                                 <div class="form-group col-md-4">
                                     <label for="instructions">Instructions</label>
-                                    <textarea name="instructions" id="instructions" cols="5" rows="2" class="form-control"><?php echo $workorder->instructions; ?></textarea>
+                                    <textarea name="instructions" id="instructions" cols="5" rows="2" class="form-control"></textarea>
                                 </div>                                           
                             </div>
 
@@ -1262,61 +827,82 @@ border: none;
                             </div>
                             <div class="row">
                                 <div class="col-md-4">
-                                    <h6>Company Representative Approval &emsp; <a data-toggle="modal" data-target=".companySignature"><i class="fa fa-pencil" aria-hidden="true"></i></a> </h6>
-                                    <img src="<?php echo base_url($workorder->company_representative_signature); ?>" class="img1">
-                                    <div id="companyrep"></div>
+                                    <h6>Company Representative Approval</h6>
+                                    <div class="sigPad" id="smoothed1a" style="width:100%;border:solid gray 1px;background-color:#00b300;">
+                                    <!-- <a href="#" style="float:right;margin-right:10px;" class="smoothed1a_pencil" id="smoothed1a_pencil"><i class="fa fa-pencil" aria-hidden="true"></i></a> -->
+                                        <ul class="sigNav" style="">
+                                            <li class="drawIt"><a href="#draw-it">Draw It</a></li>
+                                            <li class="clearButton"><a href="#clear">Clear</a></li>
+                                        </ul>
+                                        <ul class="edit">
+                                            <li class="smoothed1a_pencil pointer"><a onclick="myFunction()" style="float:right;margin-right:10px;" class="smoothed1a_pencil"><i class="fa fa-pencil" aria-hidden="true"></i></a></li>
+                                        </ul>
+                                        <div class="sig sigWrapper" id="smoothed1a_pencil" style="height:auto;pointer-events: none;">
+                                            <div class="typed"></div>
+                                            <canvas class="pad" id="company_representative_approval_signature1a" style="width:100%;"></canvas>
+                                            <input type="hidden" name="output-2" class="output">
+                                        </div>
+                                    </div>
+                                    <input type="hidden" id="saveCompanySignatureDB1a"
+                                           name="company_representative_approval_signature1a">
                                     <br>
 
                                     <label for="comp_rep_approval">Printed Name</label>
-                                    <!-- <input type="text" class="form-control mb-3"
+                                    <input type="text6" class="form-control mb-3"
                                            name="company_representative_printed_name"
-                                           id="comp_rep_approval" value="<?php //echo $workorder->company_representative_name; ?>" />-->
-                                        <select class="form-control mb-3" name="company_representative_printed_name">
-                                            <option value="0">Select Name</option>
-                                            <?php foreach($users_lists as $ulist){ ?>
-                                                <option <?php if(isset($workorder)){ if($workorder->company_representative_name == $ulist->id){echo "selected";} } ?>  value="<?php echo $ulist->id ?>"><?php echo $ulist->FName .' '.$ulist->LName; ?></option>
-                                            <?php } ?>
-                                        </select>
-                                           <input type="hidden" id="saveCompanySignatureDB1aM_web" name="company_representative_approval_signature1aM_web"> 
+                                           id="comp_rep_approval" placeholder=""/>
 
                                 </div>
                                 <div class="col-md-4">
-                                    <h6>Primary Account Holder &emsp; <a data-toggle="modal" data-target=".primarySignature"><i class="fa fa-pencil" aria-hidden="true"></i></a></h6>
-                                    <img src="<?php echo base_url($workorder->primary_account_holder_signature); ?>" class="img2">
-                                    <div id="primaryrep"></div>
+                                    <h6>Primary Account Holder</h6>
+                                    <div class="sigPad" id="smoothed2a" style="width:100%;border:solid gray 1px;background-color:#f7b900;">
+                                    <!-- <p style="float:right;margin-right:10px;"><i class="fa fa-pencil" aria-hidden="true"></i></p> -->
+                                        <ul class="sigNav">
+                                            <li class="drawIt"><a href="#draw-it">Draw It</a></li>
+                                            <li class="clearButton"><a href="#clear">Clear</a></li>
+                                        </ul>
+                                        <ul class="edit">
+                                            <li class="smoothed1a_pencil pointer"><a onclick="myFunctiontwo()" style="float:right;margin-right:10px;" class="smoothed1a_pencil"><i class="fa fa-pencil" aria-hidden="true"></i></a></li>
+                                        </ul>
+                                        <div class="sig sigWrapper" style="height:auto;pointer-events: none;">
+                                            <div class="typed"></div>
+                                            <canvas class="pad" id="primary_account_holder_signature2a" style="width:100%;"></canvas>
+                                            <input type="hidden" name="output-2" class="output">
+                                        </div>
+                                    </div>
+                                    <input type="hidden" id="savePrimaryAccountSignatureDB2a"
+                                           name="primary_account_holder_signature2a">
                                     <br>
 
                                     <label for="comp_rep_approval">Printed Name</label>
-                                    <input type="text" class="form-control mb-3" name="primary_account_holder_name"
-                                           id="comp_rep_approval" placeholder="" value="<?php echo $workorder->primary_account_holder_name; ?>"/>
-
-                                        <!-- <select class="form-control mb-3" name="primary_account_holder_name">
-                                            <option value="0">Select Name</option>
-                                            <?php //foreach($users_lists as $ulist){ ?>
-                                                <option <?php //if(isset($workorder)){ if($workorder->primary_account_holder_name == $ulist->id){echo "selected";} } ?>  value="<?php //echo $ulist->id ?>"><?php echo $ulist->FName .' '.$ulist->LName; ?></option>
-                                            <?php //} ?>
-                                        </select> -->
-
-                                           <input type="hidden" id="saveCompanySignatureDB1aM_web2" name="primary_representative_approval_signature1aM_web">
+                                    <input type="text6" class="form-control mb-3" name="primary_account_holder_name"
+                                           id="comp_rep_approval" placeholder=""/>
 
                                 </div>
                                 <div class="col-md-4">
-                                    <h6>Secondary Account Holder &emsp; <a data-toggle="modal" data-target=".secondarySignature"><i class="fa fa-pencil" aria-hidden="true"></i></a></h6>
-                                    <img src="<?php echo base_url($workorder->secondary_account_holder_signature); ?>" class="img3">
-                                    <div id="secondaryrep"></div>
+                                    <h6>Secondary Account Holder</h6>
+                                    <div class="sigPad" id="smoothed3a" style="width:100%;border:solid gray 1px;background-color:#f75c1e;">
+                                    <!-- <p style="float:right;margin-right:10px;"><i class="fa fa-pencil" aria-hidden="true"></i></p> -->
+                                        <ul class="sigNav">
+                                            <li class="drawIt"><a href="#draw-it">Draw It</a></li>
+                                            <li class="clearButton"><a href="#clear">Clear</a></li>
+                                        </ul>
+                                        <ul class="edit">
+                                            <li class="smoothed1a_pencil pointer"><a onclick="myFunctionthree()" style="float:right;margin-right:10px;" class="smoothed1a_pencil"><i class="fa fa-pencil" aria-hidden="true"></i></a></li>
+                                        </ul>
+                                        <div class="sig sigWrapper" style="height:auto;pointer-events: none;">
+                                            <div class="typed"></div>
+                                            <canvas class="pad" id="secondary_account_holder_signature3a" style="width:100%;"></canvas>
+                                            <input type="hidden" name="output-2" class="output">
+                                        </div>
+                                    </div>
+                                    <input type="hidden" id="saveSecondaryAccountSignatureDB3a"
+                                           name="secondary_account_holder_signature3a">
                                     <br>
 
                                     <label for="comp_rep_approval">Printed Name</label>
-                                    <input type="text" class="form-control mb-3" name="secondery_account_holder_name"
-                                           id="comp_rep_approval" placeholder="" value="<?php echo $workorder->secondary_account_holder_name; ?>"/>
-                                        <!-- <select class="form-control mb-3" name="secondery_account_holder_name">
-                                            <option value="0">Select Name</option>
-                                            <?php //foreach($users_lists as $ulist){ ?>
-                                                <option <?php //if(isset($workorder)){ if($workorder->secondary_account_holder_name == $ulist->id){echo "selected";} } ?>  value="<?php //echo $ulist->id ?>"><?php echo $ulist->FName .' '.$ulist->LName; ?></option>
-                                            <?php //} ?>
-                                        </select> -->
-
-                                           <input type="hidden" id="saveCompanySignatureDB1aM_web3" name="secondary_representative_approval_signature1aM_web">
+                                    <input type="text6" class="form-control mb-3" name="secondery_account_holder_name"
+                                           id="comp_rep_approval" placeholder=""/>
 
                                 </div>
                             </div>
@@ -1324,23 +910,15 @@ border: none;
                             <div class="row" style="margin-top:80px;">                        
                                 <div class="form-group col-md-4">
                                     <label for="attachment">Attach Photo</label>
-                                    <?php if( $workorder->attached_photo != '' ){ ?>
-                                         <br />
-                                         <a class="btn btn-sm btn-primary" target="_new" style="margin-top:20px; margin-bottom: 20px;" href="<?= base_url('uploads/workorders/' . $workorder->employee_id . '/' . $workorder->attached_photo); ?>"><?= $workorder->attached_photo; ?></a>
-                                    <?php } ?>
                                     <!-- <p style="font-weight: 10;">Optionally attach files to this work order. Allowed type: pdf, doc, docx, png, jpg, gif.</p> -->
-                                    <input type="file" class="form-control" name="attachment_photo" id="attachment">
+                                    <input type="file" class="form-control" name="attachment" id="attachment">
                                 </div>                                                                
                             </div>
                             <div class="row">                        
                                 <div class="form-group col-md-4">
-                                    <label for="attachment">Attach Document</label>
-                                    <?php if( $workorder->document_links != '' ){ ?>
-                                         <br />
-                                         <a class="btn btn-sm btn-primary" target="_new" style="margin-top:20px; margin-bottom: 20px;" href="<?= base_url('uploads/workorders/' . $workorder->employee_id . '/' . $workorder->document_links); ?>"><?= $workorder->document_links; ?></a>
-                                    <?php } ?>
+                                    <label for="attachment">Document Links</label>
                                     <!-- <p style="font-weight: 10;">Optionally attach files to this work order. Allowed type: pdf, doc, docx, png, jpg, gif.</p> -->
-                                    <input type="file" class="form-control" name="attachment_document" id="attachment">
+                                    <input type="file" class="form-control" name="attachment" id="attachment">
                                 </div>                                                                
                             </div>
 
@@ -1348,12 +926,11 @@ border: none;
                 <div>
 
                      <div class="form-group">
-                                <button type="submit" class="btn btn-flat btn-primary" value="submit">Update</button>
-                                <!-- <button type="submit" class="btn btn-flat btn-success">Preview</button> -->
-                                <button type="submit" name="action" class="btn btn-flat btn-primary pdf_sheet" target="_blank" value="preview">Preview as PDF</button>
-                                <!-- <button type="submit" class="btn btn-flat btn-success" style="background-color: #32243d !important"><b>Save Template</b></button> -->
-                                <!-- <button type="submit" class="btn btn-flat btn-success" id="esignButton">eSign</button> -->
-                                <a class="btn btn-flat btn-primary" href="<?php echo url('workorder') ?>" class="btn ">Cancel</a>
+                                <button type="submit" class="btn btn-flat btn-success">Submit</button>
+                                <button type="submit" class="btn btn-flat btn-success">Preview</button>
+                                <button type="submit" class="btn btn-flat btn-success" style="background-color: #32243d !important"><b>Save Template</b></button>
+                                <button type="submit" class="btn btn-flat btn-success" id="esignButton">eSign</button>
+                                <a href="<?php echo url('workorder') ?>" class="btn ">Cancel this</a>
                     </div>
                 </div>
             <!-- end card -->
@@ -1411,117 +988,6 @@ border: none;
                 </div>
             </div>
 
-            <!-- first signature -->
-
-            <div class="modal fade companySignature" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                            <div align="center">
-                                <p style="padding:2%;background-color:#d2d2d2;width:380px;"> Company Representative Approval </p>
-                            </div>
-                                    <div class="box-wrap">
-                                        
-                                        <div id="box-one">
-                                        <div class="row">
-                                        <div class="col-md-12" style="padding:1%;">
-                                        <center>
-                                        <div id="signArea" >
-                                            <canvas id="canvas" style="border: solid gray 1px;"></canvas>
-                                            <input type="hidden" class="form-control mb-3" name="company_representative_printed_name" id="comp_rep_approval1" value="Company Representative"/>
-                                            <input type="hidden" id="saveCompanySignatureDB1aM" name="company_representative_approval_signature1aM">
-                                            </div>
-                                            </div>
-                                            <br>
-                                        </div>
-                                        </center>
-                                        </div>
-                                    
-                                    </div>
-                        
-                        <div class="modal-footer">
-                            <button id="clear" class="btn btn-danger">Clear</button>
-                            <button type="button" class="btn btn-success edit_first_signature" id="enter_signature">Update</button>
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <!-- <input type="submit" value="save" id="btnSaveSign"> -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- second signature -->
-
-            <div class="modal fade primarySignature" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                            <div align="center">
-                                <p style="padding:2%;background-color:#d2d2d2;width:380px;"> Primary Account Holder </p>
-                            </div>
-                                    <div class="box-wrap">
-                                        
-                                        <div id="box-one">
-                                        <div class="row">
-                                        <div class="col-md-12" style="padding:1%;">
-                                        <center>
-                                        <div id="signArea2" >
-                                            <canvas id="canvas2" style="border: solid gray 1px;"></canvas>
-                                            <input type="hidden" class="form-control mb-3" name="primary_representative_printed_name" id="comp_rep_approval2" value="Primary Account Holder"/>
-                                            <input type="hidden" id="savePrimaryAccountSignatureDB2aM" name="primary_account_holder_signature2aM">
-                                            </div>
-                                            </div>
-                                            <br>
-                                        </div>
-                                        </center>
-                                        </div>
-                                    
-                                    </div>
-                        
-                        <div class="modal-footer">
-                            <button id="clear2" class="btn btn-danger">Clear</button>
-                            <button type="button" class="btn btn-success edit_second_signature" id="enter_signature">Update</button>
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <!-- <input type="submit" value="save" id="btnSaveSign"> -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- third signature -->
-
-            <div class="modal fade secondarySignature" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                            <div align="center">
-                                <p style="padding:2%;background-color:#d2d2d2;width:380px;"> Secondary Account Holder </p>
-                            </div>
-                                    <div class="box-wrap">
-                                        
-                                        <div id="box-one">
-                                        <div class="row">
-                                        <div class="col-md-12" style="padding:1%;">
-                                        <center>
-                                        <div id="signArea3" >
-                                            <canvas id="canvas3" style="border: solid gray 1px;"></canvas>
-                                            <input type="hidden" class="form-control mb-3" name="secondary_representative_printed_name" id="comp_rep_approval3" value="Secondary Account Holder"/>
-                                            <input type="hidden" id="saveSecondaryAccountSignatureDB3aM" name="secondary_account_holder_signature3aM">
-                                            </div>
-                                            </div>
-                                            <br>
-                                        </div>
-                                        </center>
-                                        </div>
-                                    
-                                    </div>
-                        
-                        <div class="modal-footer">
-                            <button id="clear3" class="btn btn-danger">Clear</button>
-                            <button type="button" class="btn btn-success edit_third_signature" id="enter_signature">Update</button>
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <!-- <input type="submit" value="save" id="btnSaveSign"> -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <!-- Modal -->
             <div class="modal fade" id="terms_conditions_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
                 <div class="modal-dialog modal-lg" role="document">
@@ -1549,7 +1015,7 @@ border: none;
 
             <!-- Modal checklist -->
             <div class="modal fade" id="checklist_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-                <div class="modal-dialog modal-md" role="document">
+                <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLongTitle">Select Checklists</h5>
@@ -1558,24 +1024,9 @@ border: none;
                         </button>
                     </div>
                     <div class="modal-body">
-                        <?php foreach($checklists as $key => $checklist){ ?>
-                            <?php if( !empty($checklist['items']) ){ ?>
-                                <label style="width: 100%;">
-                                <h4 style="font-size: 16px; padding: 10px; background-color:#32243d; color:#ffffff;margin:17px 0px;">                                    
-                                    <input type="checkbox" id="checkist_checkbox" item-id="<?php echo $checklist['header']->id; ?>" value="<?php echo $checklist['header']->id; ?>" /> <?php echo $checklist['header']->checklist_name; ?>                                
-                                </h4>
-                                </label>
-                                <div class="row" style="margin-left: 1px;">                                   
-                                    <?php foreach($checklist['items'] as $item){ ?>
-                                        <div class="col-md-3 item-container">
-                                            <span class="">
-                                                <?php echo $item->item_name; ?>
-                                            </span>
-                                        </div>
-                                    <?php } ?>                                    
-                                </div>
+                            <?php foreach($checklists as $checklist){ ?>
+                            <input type="checkbox" id="checkist_checkbox" item-id="<?php echo $checklist->check_id; ?>" value="<?php echo $checklist->check_id; ?>"> <?php echo $checklist->checklist_name; ?><br>
                             <?php } ?>
-                        <?php } ?>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -1648,10 +1099,12 @@ border: none;
                         <div class="modal-body">
                             <div class="row">
                                 <div class="col-md-12">
-                                    <table id="modal_items_list" class="table table-hover" style="width: 100%;">
+                                    <table id="items_table_estimate" class="table table-hover" style="width: 100%;">
                                         <thead>
                                         <tr>
                                             <td> Name</td>
+                                            <td> Rebatable</td>
+                                            <td> Qty</td>
                                             <td> Price</td>
                                             <td> Action</td>
                                         </tr>
@@ -1660,6 +1113,8 @@ border: none;
                                         <?php foreach($items as $item){ // print_r($item); ?>
                                             <tr>
                                                 <td><?php echo $item->title; ?></td>
+                                                <td><?php echo $item->rebate; ?></td>
+                                                <td></td>
                                                 <td><?php echo $item->price; ?></td>
                                                 <td><button id="<?= $item->id; ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default select_item">
                                                 <span class="fa fa-plus"></span>
@@ -1782,8 +1237,7 @@ border: none;
 
 <?php include viewPath('includes/footer'); ?>
 
-<!-- <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAlMWhWMHlxQzuolWb2RrfUeb0JyhhPO9c&libraries=places"></script> -->
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=<?= google_credentials()['api_key'] ?>&callback=initialize&libraries=&v=weekly"></script>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAlMWhWMHlxQzuolWb2RrfUeb0JyhhPO9c&libraries=places"></script>
 <script>
 function initialize() {
           var input = document.getElementById('job_location');
@@ -1798,12 +1252,6 @@ function initialize() {
         google.maps.event.addDomListener(window, 'load', initialize);
 </script>
 
-<script>
-  $( function() {
-    $( "#datepicker2" ).datepicker();
-  } );
-</script>
-
 <script type="text/javascript">
 // $(window).on('beforeunload', function(){
 //     var c = confirm();
@@ -1814,243 +1262,6 @@ function initialize() {
 //         return false;
 // });
 </script>
-
-<script>
-// $('.enter_signature').click(function(){
-//     // alert("nisulod");
-//         if(signaturePad.isEmpty()){
-//             console.log('it is empty');
-//             return false;            
-//         }
-//     });
-
-var signaturePad;
-jQuery(document).ready(function () {
-  var signaturePadCanvas = document.querySelector('#canvas');
-//   var parentWidth = jQuery(signaturePadCanvas).parent().outerWidth();
-//   signaturePadCanvas.setAttribute("width", parentWidth);
-  signaturePad = new SignaturePad(signaturePadCanvas);
-
-  signaturePadCanvas.width  = 780;
-  signaturePadCanvas.height = 300;
-});
-
-var signaturePad2;
-jQuery(document).ready(function () {
-  var signaturePadCanvas2 = document.querySelector('#canvas2');
-//   var parentWidth = jQuery(signaturePadCanvas).parent().outerWidth();
-//   signaturePadCanvas.setAttribute("width", parentWidth);
-  signaturePad2 = new SignaturePad(signaturePadCanvas2);
-
-  signaturePadCanvas2.width  = 780;
-  signaturePadCanvas2.height = 300;
-});
-
-var signaturePad3;
-jQuery(document).ready(function () {
-  var signaturePadCanvas3 = document.querySelector('#canvas3');
-//   var parentWidth = jQuery(signaturePadCanvas).parent().outerWidth();
-//   signaturePadCanvas.setAttribute("width", parentWidth);
-  signaturePad3 = new SignaturePad(signaturePadCanvas3);
-
-  signaturePadCanvas3.width  = 780;
-  signaturePadCanvas3.height = 300;
-});
-
-
-$(document).on('click touchstart','#sign',function(){
-    // alert('test');
-    var canvas_web = document.getElementById("sign");    
-    var dataURL = canvas_web.toDataURL("image/png");
-    $("#saveCompanySignatureDB1aM_web").val(dataURL);
-});
-
-$(document).on('click touchstart','#sign2',function(){
-    // alert('test');
-    var canvas_web2 = document.getElementById("sign2");    
-    var dataURL = canvas_web2.toDataURL("image/png");
-    $("#saveCompanySignatureDB1aM_web2").val(dataURL);
-});
-
-$(document).on('click touchstart','#sign3',function(){
-    // alert('test');
-    var canvas_web3 = document.getElementById("sign3");    
-    var dataURL = canvas_web3.toDataURL("image/png");
-    $("#saveCompanySignatureDB1aM_web3").val(dataURL);
-});
-
-// var btn = document.getElementById('enter_signature');
-// btn.onclick = function () {
-//     document.getElementById('smoothed1a_pencil').remove();
-//     this.remove();
-// };
-
-function submit() {
-    
-    // document.getElementById('smoothed1a_pencil').remove();
-    // this.remove();
-
-    // $("#smoothed1a").remove();
-    // $("#smoothed2a").remove();
-    // $("#smoothed3a").remove();
-
-    // $(".signature_web").remove();
-
-//   if (signaturePad.isEmpty() || signaturePad2.isEmpty() || signaturePad3.isEmpty()) {
-//     // console.log("Empty!");
-//     alert('Please check, you must sign all tab.')
-//   }
-//   else{
-    // sigpad= $("#output-2a").val();
-    var canvas = document.getElementById("canvas");    
-    var dataURL = canvas.toDataURL("image/png");
-    $("#saveCompanySignatureDB1aM").val(dataURL);
-
-    var canvas2 = document.getElementById("canvas2");    
-    var dataURL2 = canvas2.toDataURL("image/png");
-    $("#savePrimaryAccountSignatureDB2aM").val(dataURL2);
-
-    var canvas3 = document.getElementById("canvas3");    
-    var dataURL3 = canvas3.toDataURL("image/png");
-    $("#saveSecondaryAccountSignatureDB3aM").val(dataURL3);
-
-    var input1 = $("#comp_rep_approval1").val();
-    var input2 = $("#comp_rep_approval2").val();
-    var input3 = $("#comp_rep_approval3").val();
-    
-    $.ajax({
-    type : 'POST',
-    url : "<?php echo base_url(); ?>accounting/testSave",
-    data : {dataURL: dataURL, dataURL2: dataURL2, dataURL3: dataURL3},
-    success: function(result){
-        // $('#res').html('Signature Uploaded successfully');
-        alert('Signature Uploaded successfully');
-        console.log(dataURL);
-        console.log(dataURL2);
-        console.log(dataURL3);
-
-        // var image = new Image();
-        // image.src = '"' + dataURL + '"';
-        // document.body.appendChild(image);
-
-        var input_conf = '<br><div style="border:solid gray 1px;padding:2%;"><img id="image1" src="'+dataURL+'"></img><input type="hidden" class="form-control" name="signature1" id="signature1" value="'+ dataURL +'"><br><input type="text" class="form-control" name="name1" id="name1" value="'+ input1 +'" readonly></div><br><div style="border:solid gray 1px;padding:2%;"><img id="image1" src="'+dataURL2+'"></img><input type="hidden" class="form-control" name="signature2" id="signature2" value="'+ dataURL2 +'"><br><input type="text" class="form-control" name="name2" id="name2" value="'+ input2 +'" readonly></div><br><div style="border:solid gray 1px;padding:2%;"><img id="image1" src="'+dataURL3+'"></img><input type="hidden" class="form-control" name="signature3" id="signature3" value="'+ dataURL3 +'"><br><input type="text" class="form-control" name="name3" id="name3" value="'+ input3 +'" readonly></div>';
-
-        $('.signatureArea').html(input_conf);
-
-        // $(".sigWrapper").remove();
-
-        $("#saveCompanySignatureDB1aM_web").val(dataURL);
-        $("#saveCompanySignatureDB1aM_web2").val(dataURL2);
-        $("#saveCompanySignatureDB1aM_web3").val(dataURL3);
-
-        $(".output1").val(dataURL);
-        $(".output2").val(dataURL2);
-        $(".output3").val(dataURL3);
-
-        $("#company_representative_printed_name").val(input1);
-        $("#primary_account_holder_name").val(input2);
-        $("#secondery_account_holder_name").val(input3);
-
-        $('#signature_mobile').modal('toggle');
-        // if (confirm('Some message')) {
-        //     alert('Thanks for confirming');
-        // } else {
-        //     alert('Why did you press cancel? You should have confirmed');
-        // }
-
-        // location.reload();
-    },
-    });
-//   }
-}
-</script>
-
-<script>
-    // var canvas = document.getElementById("canvas");    
-    // var dataURL = canvas.toDataURL("image/png");
-    // $("#saveCompanySignatureDB1aM").val(dataURL);
-
-    // var canvas2 = document.getElementById("canvas2");    
-    // var dataURL2 = canvas2.toDataURL("image/png");
-    // $("#savePrimaryAccountSignatureDB2aM").val(dataURL2);
-
-    // var canvas3 = document.getElementById("canvas3");    
-    // var dataURL3 = canvas3.toDataURL("image/png");
-    // $("#saveSecondaryAccountSignatureDB3aM").val(dataURL3);
-
-$(document).on('click touchstart','#canvas',function(){
-    // alert('test');
-    var canvas_web = document.getElementById("canvas");    
-    var dataURL = canvas_web.toDataURL("image/png");
-    $("#saveCompanySignatureDB1aM").val(dataURL);
-});
-
-$(document).on('click touchstart','#canvas2',function(){
-    // alert('test');
-    var canvas_web2 = document.getElementById("canvas2");    
-    var dataURL = canvas_web2.toDataURL("image/png");
-    $("#savePrimaryAccountSignatureDB2aM").val(dataURL);
-});
-
-$(document).on('click touchstart','#canvas3',function(){
-    // alert('test');
-    var canvas_web3 = document.getElementById("canvas3");    
-    var dataURL = canvas_web3.toDataURL("image/png");
-    $("#saveSecondaryAccountSignatureDB3aM").val(dataURL);
-});
-
-
-
-$(document).on('click touchstart','.edit_first_signature',function(){
-    // alert('test');
-    var first = $("#saveCompanySignatureDB1aM").val();
-    // alert(first);
-    $("#saveCompanySignatureDB1aM_web").val(first);
-
-    $(".img1").hide();
-
-    var input_conf = '<img src="'+first+'">'
-
-    $('#companyrep').html(input_conf);
-    
-    $('.companySignature').modal('hide');
-    
-});
-
-$(document).on('click touchstart','.edit_second_signature',function(){
-    // alert('test');
-    var first = $("#savePrimaryAccountSignatureDB2aM").val();
-    // alert(first);
-    $("#saveCompanySignatureDB1aM_web2").val(first);
-
-    $(".img2").hide();
-
-    var input_conf = '<img src="'+first+'">'
-
-    $('#primaryrep').html(input_conf);
-
-    $('.primarySignature').modal('hide');
-    
-});
-
-$(document).on('click touchstart','.edit_third_signature',function(){
-    // alert('test');
-    var first = $("#saveSecondaryAccountSignatureDB3aM").val();
-    // alert(first);
-    $("#saveCompanySignatureDB1aM_web3").val(first);
-
-    $(".img3").hide();
-
-    var input_conf = '<img src="'+first+'">'
-
-    $('#secondaryrep').html(input_conf);
-
-    $('.secondarySignature').modal('hide');
-    
-});
-</script>
-
-
 
 <script src="<?php echo $url->assets ?>js/add.js"></script>
 <script>
@@ -2089,108 +1300,6 @@ jQuery(document).ready(function () {
         }
     }
     
-</script>
-
-
-<script>
-$(document).ready(function(){
-    if(window.matchMedia("(max-width: 600px)").matches){
-        // alert("This is a mobile device.");
-        $(document).on("click", ".testing", function () {
-            $('.getItems').hide();
-            $('#item_typeid').removeClass('form-control');
-            $(".sigWrapper").remove();
-            // $(".output2").remove();
-            // $(".output3").remove();
-        });
-        $(document).on("click", ".select_item", function () {
-            $('.getItems').hide();
-        });
-    } 
-    // else{
-    //     $('.getItems_hidden').hide();
-    // }
-});
-</script>
-
-<script>
-// $(document).on('click','.show_mobile_view',function(){
-//     //    alert('yeah');
-//     $('#update_group').modal('show');
-// });
-$(document).on('click','.groupChange',function(){
-    //    alert('yeah');
-    $('#item_group_type').val();
-});
-</script>
-
-<script>
-    $(function() {
-        $("nav:first").addClass("closed");
-    });
-</script>
-
-<script>
-var wrapper = document.getElementById("signature-pad");
-var canvas = wrapper.querySelector("canvas");
-
-var sign = new SignaturePad(document.getElementById('sign'), {
-  backgroundColor: 'rgba(255, 255, 255, 0)',
-  penColor: 'rgb(0, 0, 0)'
-});
-
-function resizeCanvas() {
-     var ratio =  Math.max(window.devicePixelRatio || 1, 1);
-
-     canvas.width = canvas.offsetWidth * ratio;
-     canvas.height = canvas.offsetHeight * ratio;
-     canvas.getContext("2d").scale(ratio, ratio);
-}
-
-window.onresize = resizeCanvas;
-resizeCanvas();
-</script>
-
-<script>
-var wrapper = document.getElementById("signature-pad2");
-var canvas = wrapper.querySelector("canvas");
-
-var sign = new SignaturePad(document.getElementById('sign2'), {
-  backgroundColor: 'rgba(255, 255, 255, 0)',
-  penColor: 'rgb(0, 0, 0)'
-});
-
-function resizeCanvas() {
-     var ratio =  Math.max(window.devicePixelRatio || 1, 1);
-
-     canvas.width = canvas.offsetWidth * ratio;
-     canvas.height = canvas.offsetHeight * ratio;
-     canvas.getContext("2d").scale(ratio, ratio);
-}
-
-window.onresize = resizeCanvas;
-resizeCanvas();
-</script>
-
-<script>
-var wrapper = document.getElementById("signature-pad3");
-var canvas = wrapper.querySelector("canvas");
-
-var sign = new SignaturePad(document.getElementById('sign3'), {
-  backgroundColor: 'rgba(255, 255, 255, 0)',
-  penColor: 'rgb(0, 0, 0)'
-});
-
-function resizeCanvas() {
-     var ratio =  Math.max(window.devicePixelRatio || 1, 1);
-
-     canvas.width = canvas.offsetWidth * ratio;
-     canvas.height = canvas.offsetHeight * ratio;
-     canvas.getContext("2d").scale(ratio, ratio);
-}
-
-window.onresize = resizeCanvas;
-resizeCanvas();
 </script>
 
 <script>
@@ -2316,11 +1425,6 @@ $("#content_input").val(function() {
 
 <script>
 $(document).on('click','#headerContent',function(){
-    //    alert('yeah');
-    $('#update_header_modal').modal('show');
-});
-
-$(document).on('click','.btn-edit-header',function(){
     //    alert('yeah');
     $('#update_header_modal').modal('show');
 });
@@ -2486,20 +1590,6 @@ $(document).ready(function(){
 
 <script>
     $(document).ready(function(){
-        $(document).on('click', '.remove-checklist', function(){
-            var checklist_row_id = $(this).attr('data-row');
-            $("#s-checklist-"+checklist_row_id).remove();
-        });
-
-        $('#modal_items_list').DataTable({
-            "autoWidth" : false,
-            "columnDefs": [
-            { width: 540, targets: 0 },
-            { width: 100, targets: 0 },
-            { width: 100, targets: 0 }
-            ],
-            "ordering": false,
-        });
 
         $('.add_checklist_items').click(function(){
             // alert('test');
@@ -2516,8 +1606,8 @@ $(document).ready(function(){
                 data : { id : id },
                 success: function(response){
 
-                  //console.log('yeahhhhhhhhhhhhhhh'+response['checklists'][0].checklist_name); 
-                  //console.log(response); 
+                  console.log('yeahhhhhhhhhhhhhhh'+response['checklists'][0].checklist_name); 
+                  console.log(response); 
 
                   $("#checklist_modal").modal('hide')
                 //   $("#checklist_added").html(response['checklists'].checklist_name);
@@ -2528,17 +1618,11 @@ $(document).ready(function(){
                 //     inputs += response['checklists'].checklist_name;
                 // });
 
-                //New Code
-                var current_row  = $('.selected-checklists li').length + 1;
-                var input_hidden = '<input type="hidden" name="checklists[]" value="'+response['checklists'][0].id+'" />';
-                var check = '<li id="s-checklist-'+current_row+'" id="view_details" c_id="'+ response['checklists'][0].id +'">'+response['checklists'][0].checklist_name+' <a class="remove-checklist" data-row="'+current_row+'" href="javascript:void(0);"><i class="fa fa-trash-o icon"></i></a>'+input_hidden+'</li>';
-                $(".selected-checklists").append(check);
+                
+                var check = '<ul> <li id="view_details" c_id="'+ response['checklists'][0].id +'"><h6>'+ response['checklists'][0].checklist_name +'</h6> </li> </ul>';
 
-                //Old code
-                /*var check = '<ul> <li id="view_details" c_id="'+ response['checklists'][0].id +'"><h6>'+ response['checklists'][0].checklist_name +'</h6> </li> </ul>';
-                $("#checklist_added").append(check);   */
-
-
+                $("#checklist_added").append(check);
+                
                 var cID = response['checklists'][0].id;
                 // alert(cID);
 
@@ -2592,7 +1676,7 @@ $(document).ready(function(){
 
                 },
                     error: function(response){
-                    //alert('Error'+response);
+                    alert('Error'+response);
        
                 }
 
@@ -2662,10 +1746,9 @@ $('.saveUpdateCustomField').on('click', function(){
     //   alert('yeah');
       var id = $('#update_custom_id').val();
       var name = $('#update_custom_name').val();
-    //   alert(name);
 
       $.ajax({
-            url:"<?php echo base_url(); ?>workorder/save_update_custom_name_edit",
+            url:"<?php echo base_url(); ?>workorder/save_update_custom_name",
             type: "POST",
             data: {id : id, name : name },
             success: function(dataResult){
@@ -3129,304 +2212,4 @@ document.getElementById("payment_method").onchange = function() {
         $('#other_payment_area').show();
     }
 }
-</script>
-
-<script>
-// $(document).on("click",".pdf_sheet", function(){
-//     // window.open(url, '_blank');
-//     // alert('yes!');
-//     var subjectID = $("#workorder_number").val();
-//     // $("#workorder_number").val();view_workorder_number
-//     // var session = $("#SessionFrom").val()+"-"+$("#SessionTo").val();
-//     // var courseID = $("#classesID").val();
-//     // var yearsOrSemester = $("#yearSemesterID").val();
-//     // var form = '';
-//     // form += '<input type="hidden" name="subjectID" value="' + subjectID + '">';
-//     // form += '<input type="hidden" name="session" value="' + session + '">';
-//     // form += '<input type="hidden" name="courseID" value="' + courseID + '">';
-//     // form += '<input type="hidden" name="yearsOrSemester" value="' + yearsOrSemester+ '">';
-//     // form += '</form>';
-//     // $('body').append(form);
-//     // $('#static_form').submit();
-//     $.ajax({
-//         type : 'POST',
-//         url : "<?php echo base_url(); ?>workorder/preview",
-//         // data : {dataURL: dataURL},
-//         success: function(result){
-//         // $('#res').html('Signature Uploaded successfully');
-//         alert('yes');
-//         // console.log(dataURL)
-//         // location.reload();
-        
-//         },
-//     });
-
-
-// });
-$('#clear').click(function() {
-  $('#signArea').signaturePad().clearCanvas();
-});
-
-$('#clear2').click(function() {
-  $('#signArea2').signaturePad().clearCanvas();
-});
-
-$('#clear3').click(function() {
-  $('#signArea3').signaturePad().clearCanvas();
-});
-</script>
-
-<script>
-$(document).ready(function(){
-    var payment_method = $('#payment_method').val();
-    
-    if (payment_method == 'Cash') {
-        // alert('cash');
-		// $('#exampleModal').modal('toggle');
-        $('#cash_area').show();
-        $('#check_area').hide();
-        $('#credit_card').hide();
-        $('#debit_card').hide();
-        $('#ach_area').hide();
-        $('#venmo_area').hide();
-        $('#paypal_area').hide();
-        $('#invoicing').hide();
-        $('#square_area').hide();
-        $('#warranty_area').hide();
-        $('#home_area').hide();
-        $('#e_area').hide();
-        $('#other_credit_card').hide();
-        $('#other_payment_area').hide();
-    	}
-    else if(payment_method == 'Invoicing'){
-
-        $('#cash_area').hide();
-        $('#check_area').hide();
-        $('#invoicing').show();
-        $('#credit_card').hide();
-        $('#debit_card').hide();
-        $('#ach_area').hide();
-        $('#venmo_area').hide();
-        $('#paypal_area').hide();
-        $('#square_area').hide();
-        $('#warranty_area').hide();
-        $('#home_area').hide();
-        $('#e_area').hide();
-        $('#other_credit_card').hide();
-        $('#other_payment_area').hide();
-    }
-	
-    else if(payment_method == 'Check'){
-        // alert('Check');
-        $('#cash_area').hide();
-        $('#check_area').show();
-        $('#credit_card').hide();
-        $('#debit_card').hide();
-        $('#invoicing').hide();
-        $('#ach_area').hide();
-        $('#venmo_area').hide();
-        $('#paypal_area').hide();
-        $('#square_area').hide();
-        $('#warranty_area').hide();
-        $('#home_area').hide();
-        $('#e_area').hide();
-        $('#other_credit_card').hide();
-        $('#other_payment_area').hide();
-    }
-    else if(payment_method == 'Credit Card'){
-        // alert('Credit card');
-        $('#cash_area').hide();
-        $('#check_area').hide();
-        $('#credit_card').show();
-        $('#debit_card').hide();
-        $('#invoicing').hide();
-        $('#ach_area').hide();
-        $('#venmo_area').hide();
-        $('#paypal_area').hide();
-        $('#square_area').hide();
-        $('#warranty_area').hide();
-        $('#home_area').hide();
-        $('#e_area').hide();
-        $('#other_credit_card').hide();
-        $('#other_payment_area').hide();
-    }
-    else if(payment_method == 'Debit Card'){
-        // alert('Credit card');
-        $('#cash_area').hide();
-        $('#check_area').hide();
-        $('#credit_card').hide();
-        $('#debit_card').show();
-        $('#ach_area').hide();
-        $('#venmo_area').hide();
-        $('#invoicing').hide();
-        $('#paypal_area').hide();
-        $('#square_area').hide();
-        $('#warranty_area').hide();
-        $('#home_area').hide();
-        $('#e_area').hide();
-        $('#other_credit_card').hide();
-        $('#other_payment_area').hide();
-    }
-    else if(payment_method == 'ACH'){
-        // alert('Credit card');
-        $('#cash_area').hide();
-        $('#check_area').hide();
-        $('#credit_card').hide();
-        $('#debit_card').hide();
-        $('#invoicing').hide();
-        $('#ach_area').show();
-        $('#venmo_area').hide();
-        $('#paypal_area').hide();
-        $('#square_area').hide();
-        $('#warranty_area').hide();
-        $('#home_area').hide();
-        $('#e_area').hide();
-        $('#other_credit_card').hide();
-        $('#other_payment_area').hide();
-    }
-    else if(payment_method == 'Venmo'){
-        // alert('Credit card');
-        $('#cash_area').hide();
-        $('#check_area').hide();
-        $('#credit_card').hide();
-        $('#debit_card').hide();
-        $('#ach_area').hide();
-        $('#invoicing').hide();
-        $('#venmo_area').show();
-        $('#paypal_area').hide();
-        $('#square_area').hide();
-        $('#warranty_area').hide();
-        $('#home_area').hide();
-        $('#e_area').hide();
-        $('#other_credit_card').hide();
-        $('#other_payment_area').hide();
-    }
-    else if(payment_method == 'Paypal'){
-        // alert('Credit card');
-        $('#cash_area').hide();
-        $('#check_area').hide();
-        $('#credit_card').hide();
-        $('#debit_card').hide();
-        $('#invoicing').hide();
-        $('#ach_area').hide();
-        $('#venmo_area').hide();
-        $('#paypal_area').show();
-        $('#square_area').hide();
-        $('#warranty_area').hide();
-        $('#home_area').hide();
-        $('#e_area').hide();
-        $('#other_credit_card').hide();
-        $('#other_payment_area').hide();
-    }
-    else if(payment_method == 'Square'){
-        // alert('Credit card');
-        $('#cash_area').hide();
-        $('#check_area').hide();
-        $('#credit_card').hide();
-        $('#invoicing').hide();
-        $('#debit_card').hide();
-        $('#ach_area').hide();
-        $('#venmo_area').hide();
-        $('#paypal_area').hide();
-        $('#square_area').show();
-        $('#warranty_area').hide();
-        $('#home_area').hide();
-        $('#e_area').hide();
-        $('#other_credit_card').hide();
-        $('#other_payment_area').hide();
-    }
-    else if(payment_method == 'Warranty Work'){
-        // alert('Credit card');
-        $('#cash_area').hide();
-        $('#check_area').hide();
-        $('#credit_card').hide();
-        $('#invoicing').hide();
-        $('#debit_card').hide();
-        $('#ach_area').hide();
-        $('#venmo_area').hide();
-        $('#paypal_area').hide();
-        $('#square_area').hide();
-        $('#warranty_area').show();
-        $('#home_area').hide();
-        $('#e_area').hide();
-        $('#other_credit_card').hide();
-        $('#other_payment_area').hide();
-    }
-    else if(payment_method == 'Home Owner Financing'){
-        // alert('Credit card');
-        $('#cash_area').hide();
-        $('#check_area').hide();
-        $('#credit_card').hide();
-        $('#debit_card').hide();
-        $('#invoicing').hide();
-        $('#ach_area').hide();
-        $('#venmo_area').hide();
-        $('#paypal_area').hide();
-        $('#square_area').hide();
-        $('#warranty_area').hide();
-        $('#home_area').show();
-        $('#e_area').hide();
-        $('#other_credit_card').hide();
-        $('#other_payment_area').hide();
-    }
-    else if(payment_method == 'e-Transfer'){
-        // alert('Credit card');
-        $('#cash_area').hide();
-        $('#check_area').hide();
-        $('#credit_card').hide();
-        $('#debit_card').hide();
-        $('#invoicing').hide();
-        $('#ach_area').hide();
-        $('#venmo_area').hide();
-        $('#paypal_area').hide();
-        $('#square_area').hide();
-        $('#warranty_area').hide();
-        $('#home_area').hide();
-        $('#e_area').show();
-        $('#other_credit_card').hide();
-        $('#other_payment_area').hide();
-    }
-    else if(payment_method == 'Other Credit Card Professor'){
-        // alert('Credit card');
-        $('#cash_area').hide();
-        $('#check_area').hide();
-        $('#credit_card').hide();
-        $('#debit_card').hide();
-        $('#invoicing').hide();
-        $('#ach_area').hide();
-        $('#venmo_area').hide();
-        $('#paypal_area').hide();
-        $('#square_area').hide();
-        $('#warranty_area').hide();
-        $('#home_area').hide();
-        $('#e_area').hide();
-        $('#other_credit_card').show();
-        $('#other_payment_area').hide();
-    }
-    else if(payment_method == 'Other Payment Type'){
-        // alert('Credit card');
-        $('#cash_area').hide();
-        $('#check_area').hide();
-        $('#credit_card').hide();
-        $('#debit_card').hide();
-        $('#invoicing').hide();
-        $('#ach_area').hide();
-        $('#venmo_area').hide();
-        $('#paypal_area').hide();
-        $('#square_area').hide();
-        $('#warranty_area').hide();
-        $('#home_area').hide();
-        $('#e_area').hide();
-        $('#other_credit_card').hide();
-        $('#other_payment_area').show();
-    }
-});
-</script>
-
-<script>
-  $( function() {
-    $( "#datepicker_dateissued" ).datepicker({
-        format: 'mm/dd/yyyy'
-    });
-  } );
 </script>

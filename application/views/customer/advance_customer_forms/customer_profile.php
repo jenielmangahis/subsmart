@@ -1,35 +1,39 @@
 <div class="card">
     <div class="card-header">
         <span style="position: absolute;right: 0;margin-right: 25px;font-size: 20px;padding-top:10px;" class="fa fa-ellipsis-v"></span>
-        <h6 ><span class="fa fa-user"></span>&nbsp; &nbsp;Customer Profile</h6>
+        <h6 ><span class="fa fa-user"></span>&nbsp; &nbsp;Customer Profle</h6>
     </div>
     <div class="card-body">
         <div class="row form_line">
             <div class="col-md-4">
-                Status
+                <label for="">Status</label>
             </div>
             <div class="col-md-8">
-                <select data-type="customer_status" id="status" name="status" data-customer-source="dropdown" class="input_select" >
+                <select id="status" name="status" data-customer-source="dropdown" class="input_select" >
                     <option  value=""></option>
-                    <?php foreach ($customer_status as $status): ?>
-                        <option <?= isset($profile_info) ? ($profile_info->status == $status->name ? 'selected' : '') : '' ?> value="<?= $status->name ?>"><?= $status->name ?></option>
-                    <?php endforeach; ?>
+                    <option  value="Draft">Draft</option>
+                    <option <?php if(isset($profile_info)){ if($profile_info->status == 'Scheduled'){ echo 'selected'; } } ?> value="Charge Back">Charge Back</option>
+                    <option <?php if(isset($profile_info)){ if($profile_info->status == 'Scheduled'){ echo 'selected'; } } ?> value="Cancelled">Cancelled</option>
+                    <option <?php if(isset($profile_info)){ if($profile_info->status == 'Scheduled'){ echo 'selected'; } } ?> value="Collection">Collection</option>
+                    <option <?php if(isset($profile_info)){ if($profile_info->status == 'Scheduled'){ echo 'selected'; } } ?> value="Cancel Pending">Cancel Pending</option>
+                    <option <?php if(isset($profile_info)){ if($profile_info->status == 'Installed'){ echo 'selected'; } } ?> value="Installed">Installed</option>
+                    <option <?php if(isset($profile_info)){ if($profile_info->status == 'Scheduled'){ echo 'selected'; } } ?> value="Lead">Lead</option>
+                    <option <?php if(isset($profile_info)){ if($profile_info->status == 'Scheduled'){ echo 'selected'; } } ?> value="No Show">No Show</option>
+                    <option <?php if(isset($profile_info)){ if($profile_info->status == 'Scheduled'){ echo 'selected'; } } ?> value="Pending">Pending</option>
+                    <option <?php if(isset($profile_info)){ if($profile_info->status == 'Scheduled'){ echo 'selected'; } } ?> value="Past Due">Past Due</option>
+                    <option <?php if(isset($profile_info)){ if($profile_info->status == 'Scheduled'){ echo 'selected'; } } ?> value="Re-Scheduled">Re-Scheduled</option>
+                    <option <?php if(isset($profile_info)){ if($profile_info->status == 'Scheduled'){ echo 'selected'; } } ?> value="Scheduled">Scheduled</option>
+                    <option <?php if(isset($profile_info)){ if($profile_info->status == 'Scheduled'){ echo 'selected'; } } ?> value="Service Customer">Service Customer</option>
+                    <option <?php if(isset($profile_info)){ if($profile_info->status == 'Scheduled'){ echo 'selected'; } } ?> value="Other">Other</option>
                 </select>
-                <a href="javascript:void(0);" onclick="window.open('<?= base_url('customer/settings/customerStatus') ?>', '_blank', 'location=yes,height=1080,width=1500,scrollbars=yes,status=yes');" style="color:#58bc4f;font-size: 10px;"><span class="fa fa-plus"></span> Manage Status</a>&nbsp;&nbsp;
             </div>
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                Customer Type
+                <label>Customer Type</label>
             </div>
             <div class="col-md-8">
-                <select 
-                    id="customer_type" 
-                    name="customer_type" 
-                    data-customer-source="dropdown" 
-                    class="form-controls input_select"
-                    data-value="<?php if(isset($profile_info)) { echo $profile_info->customer_type; } ?>" 
-                >
+                <select id="customer_type" name="customer_type" data-customer-source="dropdown" class="form-controls input_select">
                     <option value="Residential">Residential</option>
                     <option value="Business">Business</option>
                 </select>
@@ -37,58 +41,20 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                Customer Group
+                <label>Sales Area <span class="required"> *</span></label>
             </div>
             <div class="col-md-8">
-                <select id="customer_group" name="customer_group" data-customer-source="dropdown" class="form-controls input_select">
-                    <?php foreach($customerGroups as $cg){ ?>
-                        <option value="<?= $cg->id; ?>"><?= $cg->title; ?></option>
-                    <?php } ?>
+                <select id="fk_sa_id" name="fk_sa_id" data-customer-source="dropdown" class="input_select searchable-dropdown" required>
+                    <?php foreach ($sales_area as $sa): ?>
+                        <option <?php if(isset($profile_info)){ if($profile_info->fk_sa_id == $sa->sa_id){ echo 'selected'; } } ?> value="<?= $sa->sa_id; ?>"><?= $sa->sa_name; ?></option>
+                    <?php endforeach ?>
                 </select>
-            </div>
-        </div>
-        <div class="row form_line">
-            <div class="col-md-4">
-                Industry Type
-            </div>
-            <div class="col-md-8">
-                <select 
-                    id="industry_type" 
-                    name="industry_type" 
-                    data-customer-source="dropdown" 
-                    class="form-controls input_select"
-                >
-                    <option>Select your Industry</option>
-                    <?php $businessTypeName  = "";
-                        foreach($industryTypes  as $industryType ){ ?>
-                           <?php if ($businessTypeName!== $industryType->business_type_name ) { ?> 
-                                    <optgroup label="<?php echo $industryType->business_type_name; ?>">
-                           <?php  $businessTypeName =  $industryType->business_type_name; }      ?>  
-                           <?php 
-                            $selected_industry_type = 0;
-                            if( isset($profile_info) ){
-                                $selected_industry_type = $profile_info->industry_type_id;
-                            }
-                           ?>
-                            <option <?= $selected_industry_type == $industryType->id ? 'selected="selected"' : ''; ?> value="<?php echo $industryType->id; ?>"><?php echo $industryType->name; ?></option>
-                        <?php  }   ?>
-                </select>
-            </div>
-        </div>
-        <div class="row form_line">
-            <div class="col-md-4">
-                Sales Area <span class="required"> *</span>
-            </div>
-            <div class="col-md-8">
-                <select name="fk_sa_id" data-type="customer_sales_area" class="form-control" required>
-                    <option value="<?=$profile_info->fk_sa_id?>"><?=$profile_info->fk_sa_text?></option>
-                </select>
-                <a href="<?= base_url() ?>customer/settings/salesArea" target="_blank"  style="color:#58bc4f;font-size: 10px;"><span class="fa fa-plus"></span> Manage Sales Area</a>&nbsp;&nbsp;
+                <a href="<?= base_url() ?>customer/settings" target="_blank"  style="color:#58bc4f;font-size: 10px;"><span class="fa fa-plus"></span> Manage Sales Area</a>&nbsp;&nbsp;
             </div>
         </div>
         <div class="row form_line" id="businessName">
             <div class="col-md-4" id="businessNameLabel">
-                <label for="" >Business Name
+                <label for="" >Business Name</label>
             </div>
             <div class="col-md-8" id="businessNameInput">
                 <input type="text" class="form-control" name="business_name" id="business_name" value="<?php if(isset($profile_info)){ echo $profile_info->business_name; } ?>"/>
@@ -96,7 +62,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                First Name <span class="required"> *</span>
+                <label>First Name <span class="required"> *</span></label>
             </div>
             <div class="col-md-8">
                 <input type="text" class="form-control" name="first_name" id="first_name" value="<?php if(isset($profile_info->first_name)){ echo $profile_info->first_name; } ?>" required/>
@@ -104,7 +70,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                Middle Initial
+                <label for="">Middle Initial</label>
             </div>
             <div class="col-md-8">
                 <input type="text" class="form-control" maxlength="1" name="middle_name" id="middle_name" value="<?php if(isset($profile_info)){ echo $profile_info->middle_name; } ?>" />
@@ -112,7 +78,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                Last Name <span class="required"> *</span>
+                <label for="">Last Name <span class="required"> *</span></label>
             </div>
             <div class="col-md-8">
                 <input type="text" class="form-control" name="last_name" id="last_name" value="<?php if(isset($profile_info)){ echo $profile_info->last_name; } ?>" required/>
@@ -120,7 +86,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                Name Prefix
+                <label>Name Prefix</label>
             </div>
             <div class="col-md-8">
                 <select id="prefix" name="prefix" data-customer-source="dropdown" class="form-controls input_select searchable-dropdown">
@@ -138,7 +104,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                Suffix
+                <label for="">Suffix</label>
             </div>
             <div class="col-md-8">
                 <select id="suffix" name="suffix" data-customer-source="dropdown" class="input_select searchable-dropdown" >
@@ -154,64 +120,64 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                Address <span class="required"> *</span>
+                <label for="">Address <span class="required"> *</span></label>
             </div>
             <div class="col-md-8">
-                <input data-type="customer_address" type="text" class="form-control" name="mail_add" id="mail_address" value="<?php if(isset($profile_info->mail_add)){ echo $profile_info->mail_add; } ?>" required/>
+                <input type="text" class="form-control" name="mail_add" id="mail_add" value="<?php if(isset($profile_info->mail_add)){ echo $profile_info->mail_add; } ?>" required/>
             </div>
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                City <span class="required"> *</span>
+                <label for="">City <span class="required"> *</span></label>
             </div>
             <div class="col-md-8">
-                <input data-type="customer_address_city" type="text" class="form-control" name="city" id="city" value="<?php if(isset($profile_info->city)){ echo $profile_info->city; } ?>" required/>
+                <input type="text" class="form-control" name="city" id="city" value="<?php if(isset($profile_info->city)){ echo $profile_info->city; } ?>" required/>
             </div>
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                State <span class="required"> *</span>
+                <label for="">State <span class="required"> *</span></label>
             </div>
             <div class="col-md-8">
-                <input data-type="customer_address_state" type="text" class="form-control" name="state" id="state" value="<?php if(isset($profile_info->state)){ echo $profile_info->state; } ?>" required/>
+                <input type="text" class="form-control" name="state" id="state" value="<?php if(isset($profile_info->state)){ echo $profile_info->state; } ?>" required/>
             </div>
         </div>
 
         <div class="row form_line">
             <div class="col-md-4">
-                Zip Code
+                <label for="">Zip Code</label>
             </div>
             <div class="col-md-8">
-                <input data-type="customer_address_zip" type="text" class="form-control" name="zip_code" id="zip_code" value="<?php if(isset($profile_info->zip_code)){ echo $profile_info->zip_code; } ?>"/>
+                <input type="text" class="form-control" name="zip_code" id="zip_code" value="<?php if(isset($profile_info->zip_code)){ echo $profile_info->zip_code; } ?>"/>
             </div>
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                Cross Street
+                <label for="">Cross Street</label>
             </div>
             <div class="col-md-8">
-                <input data-type="customer_address_street" type="text" class="form-control" name="cross_street" id="cross_street" value="<?php if(isset($profile_info->cross_street)){ echo $profile_info->cross_street; } ?>"/>
+                <input type="text" class="form-control" name="cross_street" id="cross_street" value="<?php if(isset($profile_info->cross_street)){ echo $profile_info->cross_street; } ?>"/>
             </div>
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                County
+                <label for="">County</label>
             </div>
             <div class="col-md-8">
-                <input data-type="customer_address_country" type="text" class="form-control" name="country" id="country" value="<?php if(isset($profile_info->country)){ echo $profile_info->country; } ?> " />
+                <input type="text" class="form-control" name="country" id="country" value="<?php if(isset($profile_info->country)){ echo $profile_info->country; } ?> " />
             </div>
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                Subdivision
+                <label for="">Subdivision</label>
             </div>
             <div class="col-md-8">
-                <input data-type="customer_address_subdivision" type="text" class="form-control" name="subdivision" id="subdivision" value="<?php if(isset($profile_info->subdivision)){ echo $profile_info->subdivision; } ?>" />
+                <input type="text" class="form-control" name="subdivision" id="subdivision" value="<?php if(isset($profile_info->subdivision)){ echo $profile_info->subdivision; } ?>" />
             </div>
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                Social Security No.
+                <label for="">Social Security No.</label>
             </div>
             <div class="col-md-8">
                 <input type="text" placeholder="xxx-xx-xxxx" maxlength="11" class="form-control" name="ssn" id="ssn" value="<?php if(isset($profile_info)){ echo $profile_info->ssn; } ?>" />
@@ -219,25 +185,25 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                Date Of Birth 
+                <label for="">Date Of Birth </label>
             </div>
             <div class="col-md-8">
-                <div data-type="customer_birthday" data-value="<?php if(isset($profile_info)){ echo date("Y-m-d", strtotime($profile_info->date_of_birth)); } ?>"></div>
+                <input type="text" class="form-control" placeholder="01/01/2021" name="date_of_birth" id="date_picker" value="<?php if(isset($profile_info)){ echo $profile_info->date_of_birth; } ?>"/>
             </div>
         </div>
 
         <div class="row form_line">
             <div class="col-md-4">
-                Email 
+                <label for="">Email </label>
             </div>
             <div class="col-md-8">
-                <input data-type="customer_email" type="email" class="form-control" name="email" id="email" value="<?php if(isset($profile_info)){ echo $profile_info->email; } ?>" />
+                <input type="email" class="form-control" name="email" id="email" value="<?php if(isset($profile_info)){ echo $profile_info->email; } ?>" />
             </div>
         </div>
 
         <div class="row form_line">
             <div class="col-md-4">
-                Phone (H)
+                <label for="">Phone (H)</label>
             </div>
             <div class="col-md-8">
                 <input type="text" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="phone_h" id="phone_h" value="<?php if(isset($profile_info)){ echo $profile_info->phone_h; } ?>" />
@@ -245,7 +211,7 @@
         </div>
         <!--<div class="row form_line">
             <div class="col-md-4">
-                Phone (W)
+                <label for="">Phone (W)</label>
             </div>
             <div class="col-md-8">
                 <input type="text" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="phone_w" id="phone_w" value="<?php if(isset($profile_info)){ echo $profile_info->phone_w; } ?>" />
@@ -253,10 +219,59 @@
         </div>-->
         <div class="row form_line">
             <div class="col-md-4">
-                Phone (M) <span class="required"> *</span>
+                <label for="">Phone (M) <span class="required"> *</span></label>
             </div>
             <div class="col-md-8">
                 <input type="text" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="phone_m" id="phone_m" value="<?php if(isset($profile_info->phone_m)){ echo $profile_info->phone_m; } ?>" required />
+            </div>
+        </div>
+        <hr>
+        <div class="row form_line">
+            <div class="col-md-4 ">
+                <label for="">Contact Name 1</label>
+            </div>
+            <div class="col-md-8">
+                <input type="text" class="form-control" name="contact_name1" id="contact_name1" value="<?php if(isset($profile_info)){ echo $profile_info->contact_name1; } ?>"/>
+            </div>
+        </div>
+        <div class="row form_line">
+            <div class="col-md-4">
+                <label for="">Contact Phone 1</label>
+            </div>
+            <div class="col-md-8">
+                <input type="text" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="contact_phone1" id="contact_phone1" value="<?php if(isset($profile_info)){ echo $profile_info->contact_phone1; } ?>"/>
+            </div>
+        </div>
+        <div class="row form_line">
+            <div class="col-md-4">
+                <label for="">Contact Name 2</label>
+            </div>
+            <div class="col-md-8">
+                <input type="text" class="form-control" name="contact_name2" id="contact_name2" value="<?php if(isset($profile_info)){ echo $profile_info->contact_name2; } ?>"/>
+            </div>
+        </div>
+        <div class="row form_line">
+            <div class="col-md-4">
+                <label for="">Contact Phone 2</label>
+            </div>
+            <div class="col-md-8">
+                <input type="text" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="contact_phone2" id="contact_phone2" value="<?php if(isset($profile_info)){ echo $profile_info->contact_phone2; } ?>"/>
+            </div>
+        </div>
+        <div class="row form_line">
+            <div class="col-md-4">
+                <label for="">Contact Name 3</label>
+            </div>
+            <div class="col-md-8">
+                <input type="text" class="form-control" name="contact_name3" id="contact_name3" value="<?php if(isset($profile_info)){ echo $profile_info->contact_name3; } ?>" />
+            </div>
+        </div>
+        <div class="row form_line">
+            <div class="col-md-4">
+                <label for="">Contact Phone 3</label>
+            </div>
+            <div class="col-md-8">
+                <input type="text" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="contact_phone3" id="contact_phone3" value="<?php if(isset($profile_info)){ echo $profile_info->contact_phone3; } ?>"/>
             </div>
         </div>
     </div>

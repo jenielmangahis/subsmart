@@ -9,14 +9,12 @@ class Inventory extends MY_Controller
     {
         parent::__construct();
         $this->checkLogin();
-        $this->hasAccessModule(51);
 
         $this->page_data['page']->title = 'Inventory Management';
         $this->page_data['page']->menu = 'items';
         $this->load->model('Items_model', 'items_model');
         $this->load->library('form_validation');
         $this->load->helper('file');
-        $this->load->model('General_model', 'general');
 
         add_css(array(
             'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css',
@@ -38,286 +36,44 @@ class Inventory extends MY_Controller
 
     public function index()
     {
-        $this->page_data['page']->title = 'Inventory';
-        $this->page_data['page']->parent = 'Tools';
-
         $get = $this->input->get();
         $this->page_data['items'] = $this->items_model->get();
         $comp_id = logged('company_id');
         $this->page_data['active_category'] = "Show All";
-        $type    = $this->page_data['type']  = (!empty($get['type'])) ? $get['type'] : "product";
+        $type    = $this->page_data['type']  = (!empty($get['type'])) ? $get['type'] : "inventory";
         $role_id = logged('role');
         if (!empty($get['category'])) {
             if( $role_id == 1 || $role_id == 2 ){
                 $comp_id = 0;
             }
+
             $this->page_data['category'] = $get['category'];
             $this->page_data['active_category'] = $get['category'];
             $items = $this->items_model->filterBy(['category' => $get['category'], 'is_active' => "1"], $comp_id, ucfirst($type));
         } else {
+            
             if( $role_id == 1 || $role_id == 2 ){
                 $arg = array('type'=>ucfirst($type), 'is_active'=>1); 
             }else{
                 $arg = array('company_id'=>$comp_id, 'type'=>ucfirst($type), 'is_active'=>1); 
             }
-            $items = $this->items_model->getByWhere($arg);
-        }
-        $this->page_data['items'] = $this->categorizeNameAlphabetically($items);
-        $comp = array(
-            'company_id' => $comp_id
-        );
-        $this->page_data['items_categories'] = $this->db->get_where($this->items_model->table_categories, $comp)->result();
-        $this->load->view('v2/pages/inventory/list', $this->page_data);
-    }
-
-    public function services($page = null)
-    {
-        $this->page_data['page']->title = 'Services';
-        $this->page_data['page']->parent = 'Tools';
-
-        $get = $this->input->get();
-        $this->page_data['items'] = $this->items_model->get();
-        $comp_id = logged('company_id');
-        $this->page_data['active_category'] = "Show All";
-        $type    = $this->page_data['type']  = "service";
-        $role_id = logged('role');
-        if (!empty($get['category'])) {
-            if( $role_id == 1 || $role_id == 2 ){
-                $comp_id = 0;
-            }
-            $this->page_data['category'] = $get['category'];
-            $this->page_data['active_category'] = $get['category'];
-            $items = $this->items_model->filterBy(['category' => $get['category'], 'is_active' => "1"], $comp_id, ucfirst($type));
-        } else {
-
-            if( $role_id == 1 || $role_id == 2 ){
-                $arg = array('type'=>ucfirst($type), 'is_active'=>1);
-            }else{
-                $arg = array('company_id'=>$comp_id, 'type'=>ucfirst($type), 'is_active'=>1);
-            }
 
             $items = $this->items_model->getByWhere($arg);
         }
-
-        $this->page_data['items'] = $this->categorizeNameAlphabetically($items);
-        $comp = array(
-            'company_id' => $comp_id
-        );
-        $this->page_data['items_categories'] = $this->db->get_where($this->items_model->table_categories, $comp)->result();
-
-        if($page == null){
-            $this->load->view('v2/pages/inventory/services', $this->page_data);
-        }else if ($page == 'add'){
-            $this->load->view('inventory/services_add', $this->page_data);
-        }
-    }
-
-    public function edit_services($id)
-    {
-        $comp_id = logged('company_id');        
-        $arg     = array('company_id'=>$comp_id, 'id' => $id, 'is_active'=>1);
-        $item    = $this->items_model->getCompanyItemById($comp_id, $id);
-
-        $this->page_data['item'] = $item;
-        $this->load->view('inventory/services_edit', $this->page_data);
-    }
-
-    public function fees($page = null)
-    {
-        $this->page_data['page']->title = 'Fees';
-        $this->page_data['page']->parent = 'Tools';
-
-        $get = $this->input->get();
-        $this->page_data['items'] = $this->items_model->get();
-        $comp_id = logged('company_id');
-        $this->page_data['active_category'] = "Show All";
-        $type    = $this->page_data['type']  = "fees";
-        $role_id = logged('role');
-        if (!empty($get['category'])) {
-            if( $role_id == 1 || $role_id == 2 ){
-                $comp_id = 0;
-            }
-            $this->page_data['category'] = $get['category'];
-            $this->page_data['active_category'] = $get['category'];
-            $items = $this->items_model->filterBy(['category' => $get['category'], 'is_active' => "1"], $comp_id, ucfirst($type));
-        } else {
-
-            if( $role_id == 1 || $role_id == 2 ){
-                //$arg = array('type'=>ucfirst($type), 'is_active'=>1);
-                $arg = array('company_id'=>$comp_id, 'type'=>ucfirst($type), 'is_active'=>1);
-            }else{
-                $arg = array('company_id'=>$comp_id, 'type'=>ucfirst($type), 'is_active'=>1);
-            }
-            $items = $this->items_model->getByWhere($arg);
-        }
-
+        //print_r($items);
         $this->page_data['items'] = $this->categorizeNameAlphabetically($items);
 
-        if($page == null){
-            $this->load->view('v2/pages/inventory/fees', $this->page_data);
-        }else if ($page == 'add'){
-            $this->load->view('inventory/fees_add', $this->page_data);
-        }
-    }
-
-    public function item_groups($page = null)
-    {
-        $this->page_data['page']->title = 'Item Categories';
-        $this->page_data['page']->parent = 'Tools';
-
-        $comp_id = logged('company_id');
-
-        $get_items_categories = array(
-            'where' => array('company_id' => $comp_id),
-            'table' => 'item_categories',
-            'select' => '*',
-        );
-        $this->page_data['item_categories'] = $this->general->get_data_with_param($get_items_categories);
-
-        if($page == null){
-            $this->load->view('v2/pages/inventory/item_groups', $this->page_data);
-        }else if ($page == 'add'){
-            $this->load->view('inventory/item_groups_add', $this->page_data);
-        }
-    }
-
-    public function plans($page = null)
-    {
-        $role = logged('role');
-        if( $role == 1 || $role == 2 ){
-            $this->page_data['plans'] = $this->plans_model->getByWhere([]);
-        }else{
-            $company_id =  logged('company_id');
-            $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id'=>$company_id]);
-        }
-
-        // ifPermissions('plan_list');
-
-        // $this->page_data['items'] = $this->items_model->get();
-        //$company_id =  logged('company_id');
-        // $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id'=>$company_id]);
-        //$this->page_data['plans'] = array();
-        /* echo "<pre>"; print_r($this->page_data['items']); die; */
-        if($page == null){
-            $this->load->view('inventory/plans', $this->page_data);
-        }else if ($page == 'add'){
-            $this->load->view('inventory/plans_add', $this->page_data);
-        }
-    }
-
-    public function vendors($page = null)
-    {
-        $this->page_data['page']->title = 'Vendors';
-        $this->page_data['page']->parent = 'Tools';
-
-        $get_vendors = array(
-            'where' => array('company_id' => logged('company_id')),
-            'table' => 'vendor',
-            'select' => '*',
-        );
-        $this->page_data['vendors'] = $this->general->get_data_with_param($get_vendors);
-        if($page == null){
-            $this->load->view('v2/pages/inventory/vendors', $this->page_data);
-        }else if ($page == 'add'){
-            $this->load->view('inventory/plans_add', $this->page_data);
-        }
-    }
-
-    public function import()
-    {
-        $get = $this->input->get();
-        $this->page_data['items'] = $this->items_model->get();
-        $comp_id = logged('company_id');
-        $this->page_data['active_category'] = "Show All";
-        $type    = $this->page_data['type']  = (!empty($get['type'])) ? $get['type'] : "product";
-        $role_id = logged('role');
-        if (!empty($get['category'])) {
-            if( $role_id == 1 || $role_id == 2 ){
-                $comp_id = 0;
-            }
-            $this->page_data['category'] = $get['category'];
-            $this->page_data['active_category'] = $get['category'];
-            $items = $this->items_model->filterBy(['category' => $get['category'], 'is_active' => "1"], $comp_id, ucfirst($type));
-        } else {
-
-            if( $role_id == 1 || $role_id == 2 ){
-                $arg = array('type'=>ucfirst($type), 'is_active'=>1);
-            }else{
-                $arg = array('company_id'=>$comp_id, 'type'=>ucfirst($type), 'is_active'=>1);
-            }
-
-            $items = $this->items_model->getByWhere($arg);
-        }
-
-        $this->page_data['items'] = $this->categorizeNameAlphabetically($items);
         $comp = array(
             'company_id' => $comp_id
         );
         $this->page_data['items_categories'] = $this->db->get_where($this->items_model->table_categories, $comp)->result();
         //print_r($this->page_data['items']);
 
-        $this->load->view('inventory/import_items', $this->page_data);
+        $this->load->view('inventory/list', $this->page_data);
     }
 
     public function add()
     {
-        $input = $this->input->post();
-        if($input){
-            $config = array(
-                'upload_path' => "./uploads/",
-                'allowed_types' => "gif|jpg|png|jpeg",
-                'overwrite' => TRUE,
-                'max_size' => "2048000",
-                'max_height' => "768",
-                'max_width' => "1024"
-            );
-
-            $this->load->library('upload', $config);
-            if (!$this->upload->do_upload('attach_photo')) {
-                $product_image = '';
-            } else {
-                $data = array('upload_data' => $this->upload->data());
-                $product_image = $data['upload_data']['file_name'];
-            }
-
-            $data = array(
-                'company_id' => logged('company_id'),
-                'title' => $this->input->post('item_name'),
-                'type' => ucfirst($this->input->post('item_type')),
-                'model' => $this->input->post('model_number'),
-                'COGS' => $this->input->post('cost_of_goods'),
-                'cost' => $this->input->post('cost'),
-                'brand' => $this->input->post('brand'),
-                'price' => $this->input->post('retailField'),
-                'rebate' => $this->input->post('rebateField'),
-                // 'cost_per' => $this->input->post('cost_per'),
-                'description' => $this->input->post('description'),
-                'url' => $this->input->post('product_url'),
-                'notes' => '',
-                'item_categories_id' => $this->input->post('item_category'),
-                'is_active' => 1,
-                'vendor_id' => $this->input->post('vendor'),
-                'units' => $this->input->post('unit'),
-                'attached_image' => $product_image
-            );
-            $profile_id = $this->general->add_return_id($data, 'items');
-            redirect(base_url('inventory'));
-        }
-
-        $get_items_categories = array(
-            'where' => array('company_id' => logged('company_id')),
-            'table' => 'item_categories',
-            'select' => '*',
-        );
-        $this->page_data['item_categories'] = $this->general->get_data_with_param($get_items_categories);
-
-        $get_vendors = array(
-            'where' => array('company_id' => logged('company_id')),
-            'table' => 'vendor',
-            'select' => '*',
-        );
-        $this->page_data['vendors'] = $this->general->get_data_with_param($get_vendors);
-
         $this->page_data['page_title'] = 'Add Inventory Item';
         $this->load->view('inventory/add', $this->page_data);
     }
@@ -332,114 +88,18 @@ class Inventory extends MY_Controller
             'description' => $this->input->post('descriptionItemCat'),
             'parent_id' => $comp_id
         );
-        if($this->db->insert($this->items_model->table_categories, $data)){
-            echo 'sucess';
-            $this->activity_model->add("New item Categories ".$this->input->post('groupName')." Created by User: #" . logged('id'));
-        }else{
-            echo 'error';
-        }
-    }
-
-    public function ajax_create_item_category()
-    {
-        $this->load->model('Vendor_model');
-
-        $post = $this->input->post();
-        $cid  = logged('company_id');
-
-        $data = array(
-            'company_id' => $cid,
-            'name' => $this->input->post('category_name'),
-            'description' => $this->input->post('category_description'),
-            'parent_id' => $cid
-        );
-
         $this->db->insert($this->items_model->table_categories, $data);
 
-        $json_data = ['is_success' => 1];
+        $this->activity_model->add("New item Categories #$categories Created by User: #" . logged('id'));
+        $this->session->set_flashdata('alert-type', 'success');
+        $this->session->set_flashdata('alert', 'New item Created Successfully');
 
-        echo json_encode($json_data);
-
+        redirect('job');
     }
-
-    public function  save_new_item()
-    {
-        $input = $this->input->post();
-        $input['is_active'] =  1;
-        $input['company_id'] =  logged('company_id');
-        if ($this->general->add_($input, "items")) {
-            echo "1";
-        } else {
-            echo "0";
-        }
-    }
-
-    public function  update_service_item()
-    {
-        $data = $this->input->post();
-        $id   = $data['sid'];
-        unset($data['sid']);        
-        $company_id =  logged('company_id');
-        if ( $this->items_model->update($data, array("id" => $id, 'company_id' => $company_id)) ) {
-            echo "1";
-        } else {
-            echo "0";
-        }
-    }
-
-    public function  save_new_service()
-    {
-        $input = $this->input->post();
-        $input['is_active'] =  1;
-        $input['company_id'] =  logged('company_id');
-        if ($this->general->add_($input, "items")) {
-            echo "1";
-        } else {
-            echo "0";
-        }
-    }
-
-    public function delete()
-    {
-        $post = $this->input->post();
-        $id   = $post['id'];
-        $company_id =  logged('company_id');
-
-        $item = $this->items_model->getItemById($id)[0];
-
-        $attempt = 0;
-        do {
-            $name = $attempt > 0 ? "$item->title (deleted - $attempt)" : "$item->title (deleted)";
-            $checkName = $this->items_model->check_name($company_id, $name);
-
-            $attempt++;
-        } while(!is_null($checkName));
-
-        $data = [
-            'id' => $id,
-            'name' => $name,
-            'company_id' => logged('company_id')
-        ];
-
-        $delete = $this->items_model->inactiveItem($data);
-
-        // $remove_item = array(
-        //     'where' => array('id' =>$id, 'company_id' => $company_id),
-        //     'table' => 'items'
-        // );
-        if ($delete) {
-
-            $this->session->set_flashdata('alert-type', 'success');
-            $this->session->set_flashdata('alert', 'Record was successfully deleted');
-
-            echo '1';
-        }
-    }
-
 
     public function saveItems()
     {
-        //postAllowed();
+        postAllowed();
         $comp_id = logged('company_id');
         $id = $this->input->post('item_id');
         
@@ -655,7 +315,6 @@ class Inventory extends MY_Controller
     
                                     $data = array(
                                         'company_id' => logged('company_id'),
-                                        'initial_qty' => $location_quantities[1],
                                         'qty' => $location_quantities[1],
                                         'name' => $location_quantities[0],
                                         'item_id' => $last_id,
@@ -705,7 +364,13 @@ class Inventory extends MY_Controller
         }
     }
 
+    public function delete() {
+        $get = $this->input->get();
 
+        $this->items_model->delete($get['id']);
+
+        redirect('inventory');
+    }
 
     public function categorizeNameAlphabetically($items) {
         $result = array();
@@ -758,7 +423,7 @@ class Inventory extends MY_Controller
                 array_push($result,$header);
 
                 foreach($c as $v) {
-                    $value = array($v->title, $v->description, $v->brand, $v->id, $v->price, $v->frequency, $v->estimated_time, $v->model,$v->qty_order,$v->re_order_points, $v->id);
+                    $value = array($v->title, $v->description, $v->brand, $v->id, $v->price, $v->frequency, $v->estimated_time, $v->model,$v->qty_order,$v->re_order_points);
                     array_push($result,$value);
                 }
             }
@@ -772,19 +437,7 @@ class Inventory extends MY_Controller
         $ids = explode(",",$this->input->post('ids'));
         
         foreach($ids as $id) {
-            $item = $this->items_model->getItemById($id)[0];
-
-            $attempt = 0;
-            do {
-                $name = $attempt > 0 ? "$item->title (deleted - $attempt)" : "$item->title (deleted)";
-                $checkName = $this->items_model->check_name(logged('company_id'), $name);
-
-                $attempt++;
-            } while(!is_null($checkName));
-
-            $condition = ['id' => $id, 'company_id' => logged('company_id')];
-            $update = $this->items_model->update($data, $condition);
-            // $this->items_model->delete($id);
+            $this->items_model->delete($id);
         }
 
         echo json_encode(true);
@@ -796,7 +449,6 @@ class Inventory extends MY_Controller
         $comp_id = logged('company_id');
         $data = array(
             'company_id' => $comp_id,
-            'initial_qty' => $this->input->post('qty'),
             'qty' => $this->input->post('qty'),
             'name' => $this->input->post('name'),
             'item_id' => $this->input->post('item_id'),
@@ -812,257 +464,6 @@ class Inventory extends MY_Controller
         postAllowed();
         $result = $this->items_model->getLocationByItemId($this->input->post('item_id'));
         echo json_encode($result);
-    }
-
-    public function inventory_export()
-    {
-        $cid   = logged('company_id');
-        $items = $this->items_model->getByCompanyId($cid);    
-
-        $delimiter = ",";
-        $time      = time();
-        $filename  = "inventory_list_".$time.".csv";
-
-        $f = fopen('php://memory', 'w');
-
-        $fields = array('Item Name', 'Type', 'Model', 'Brand', 'Price', 'Retail', 'Rebate', 'units', 'Qty Order');
-        fputcsv($f, $fields, $delimiter);
-
-        if (!empty($items)) {
-            foreach ($items as $i) {
-                $csvData = array(
-                    $i->title,
-                    $i->type,
-                    $i->model,
-                    $i->brand,
-                    number_format($i->price,2),
-                    number_format($i->retail,2),
-                    number_format($i->rebate, 2),
-                    $i->units,
-                    $i->qty_order
-                );
-                fputcsv($f, $csvData, $delimiter);
-            }
-        } else {
-            $csvData = array('');
-            fputcsv($f, $csvData, $delimiter);
-        }
-
-        fseek($f, 0);
-
-        header('Content-Type: text/csv');
-        header('Content-Disposition: attachment; filename="' . $filename . '";');
-
-        fpassthru($f);
-    }
-
-    public function edit_fee( $id  ){
-        $cid = logged('company_id');
-        $item = $this->items_model->getCompanyItemById($cid, $id);
-        $this->page_data['item'] = $item;
-        $this->load->view('inventory/fees_edit', $this->page_data);
-    }
-
-    public function update_fees(){
-        $post = $this->input->post();
-        $cid  = logged('company_id');
-        $item = $this->items_model->getCompanyItemById($cid, $post['fid']);
-
-        if( $item ){
-            $data = [
-                'title' => $post['title'],
-                'description' => $post['description'],
-                'price' => $post['price'],
-                'frequency' => $post['frequency']
-            ];
-
-            $this->items_model->update($data, array("id" => $item->id, 'company_id' => $cid));
-
-            $this->session->set_flashdata('alert-type', 'success');
-            $this->session->set_flashdata('alert', 'Record was successfully udpated');
-        }else{
-            $this->session->set_flashdata('message', 'Record not found.');
-            $this->session->set_flashdata('alert_class', 'alert-danger');            
-        }
-
-        redirect('inventory/fees');
-    }
-
-    public function add_vendor()
-    {
-        $this->load->view('inventory/vendor_add', $this->page_data);
-    }
-
-    public function ajax_create_vendor()
-    {
-        $this->load->model('Vendor_model');
-
-        $post = $this->input->post();
-        $cid  = logged('company_id');
-
-        $data = [
-            'company_id' => $cid,
-            'vendor_name' => $post['vendor_name'],
-            'status' => 0,
-            'business_URL' => $post['vendor_website'],
-            'email' => $post['vendor_email'],
-            'mobile' => $post['vendor_mobile'],
-            'phone' => $post['vendor_phone'],
-            'street_address' => $post['vendor_address'],
-            'suite_unit' => $post['vendor_suite_unit'],
-            'city' => $post['vendor_city'],
-            'postal_code' => $post['vendor_postal_code'],
-            'state' => $post['vendor_state']
-        ];
-
-        $this->Vendor_model->create($data);
-
-        $json_data = ['is_success' => 1];
-
-        echo json_encode($json_data);
-
-    }
-
-    public function edit_vendor( $id )
-    {
-        $this->load->model('Vendor_model');
-
-        $cid  = logged('company_id');
-        $vendor = $this->Vendor_model->getByIdAndCompanyId($id, $cid);
-        if( $vendor ){
-            $this->page_data['vendor'] = $vendor;
-            $this->load->view('inventory/vendor_edit', $this->page_data);
-        }else{
-            
-            $this->session->set_flashdata('message', 'Record not found.');
-            $this->session->set_flashdata('alert_class', 'alert-danger');   
-
-            redirect('inventory/vendors');
-        }
-    }
-
-    public function edit_item_category( $id )
-    {
-        $this->load->model('ItemCategory_model');
-
-        $cid  = logged('company_id');
-        $itemCategory = $this->ItemCategory_model->getByIdAndCompanyId($id, $cid);
-        if( $itemCategory ){
-            $this->page_data['itemCategory'] = $itemCategory;
-            $this->load->view('inventory/item_groups_edit', $this->page_data);
-        }else{
-            
-            $this->session->set_flashdata('message', 'Record not found.');
-            $this->session->set_flashdata('alert_class', 'alert-danger');   
-
-            redirect('inventory/item_groups');
-        }
-    }
-
-    public function ajax_update_vendor()
-    {
-        $this->load->model('Vendor_model');
-
-        $is_success = 0;
-
-        $post = $this->input->post();
-        $cid  = logged('company_id');
-
-        $vendor = $this->Vendor_model->getByIdAndCompanyId($post['vid'], $cid);
-        if( $vendor ){
-            $data = [
-                'vendor_name' => $post['vendor_name'],
-                'business_URL' => $post['vendor_website'],
-                'email' => $post['vendor_email'],
-                'mobile' => $post['vendor_mobile'],
-                'phone' => $post['vendor_phone'],
-                'street_address' => $post['vendor_address'],
-                'suite_unit' => $post['vendor_suite_unit'],
-                'city' => $post['vendor_city'],
-                'postal_code' => $post['vendor_postal_code'],
-                'state' => $post['vendor_state']
-            ];
-
-            $this->Vendor_model->updateVendor($post['vid'],$data);
-
-            $is_success = 1;
-        }
-
-        $json_data = ['is_success' => $is_success];
-
-        echo json_encode($json_data);
-
-    }
-
-    public function ajax_update_item_category()
-    {
-        $this->load->model('ItemCategory_model');
-
-        $is_success = 0;
-
-        $post = $this->input->post();
-        $cid  = logged('company_id');
-
-        $itemCategory = $this->ItemCategory_model->getByIdAndCompanyId($post['icid'], $cid);
-        if( $itemCategory ){
-            $data = [
-                'name' => $post['category_name'],
-                'description' => $post['category_description']
-            ];
-
-            $this->ItemCategory_model->updateItemCategory($post['icid'],$data);
-
-            $is_success = 1;
-        }
-
-        $json_data = ['is_success' => $is_success];
-
-        echo json_encode($json_data);
-
-    }
-
-    public function ajax_delete_vendor()
-    {
-        $this->load->model('Vendor_model');
-
-        $is_success = 0;
-
-        $post = $this->input->post();
-        $cid  = logged('company_id');
-
-        $vendor = $this->Vendor_model->getByIdAndCompanyId($post['id'], $cid);
-        if( $vendor ){
-            
-            $this->Vendor_model->deleteByVendorId($post['id']);
-
-            $is_success = 1;
-        }
-
-        $json_data = ['is_success' => $is_success];
-
-        echo json_encode($json_data);
-    }
-
-    public function ajax_delete_item_category()
-    {
-        $this->load->model('ItemCategory_model');
-
-        $is_success = 0;
-
-        $post = $this->input->post();
-        $cid  = logged('company_id');
-
-        $itemCategory = $this->ItemCategory_model->getByIdAndCompanyId($post['id'], $cid);
-        if( $itemCategory ){
-            
-            $this->ItemCategory_model->deleteByItemCategoryId($post['id']);
-
-            $is_success = 1;
-        }
-
-        $json_data = ['is_success' => $is_success];
-
-        echo json_encode($json_data);
     }
 }
 /* End of file items.php */

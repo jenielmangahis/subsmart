@@ -194,7 +194,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <li>
                                                 <div class="checkbox checkbox-sm">
                                                     <input class="checkbox-select chk-exclude-contact-group" type="checkbox" name="optionA[exclude_customer_group_id][]" value="<?= $cg->id; ?>" id="chk-exclude-customer-group-<?= $cg->id; ?>" <?= array_key_exists($cg->id, $selectedExcludes) ? 'checked="checked"' : ''; ?>>
-                                                    <label for="chk-exclude-customer-group-<?= $cg->id; ?>"><?= $cg->title; ?></label>
+                                                    <label for="chk-exclude-customer-group-<?= $cg->id; ?>"><?= $cg->name; ?></label>
                                                 </div>
                                             </li>
                                         <?php } ?>
@@ -247,7 +247,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <li>
                                                 <div class="checkbox checkbox-sm">
                                                     <input class="checkbox-select chk-contact-group" type="checkbox" <?= array_key_exists($cg->id, $selectedGroups) ? 'checked="checked"' : ''; ?> name="optionC[customer_group_id][]" value="<?= $cg->id; ?>" id="chk-customer-group-<?= $cg->id; ?>">
-                                                    <label for="chk-customer-group-<?= $cg->id; ?>"><?= $cg->title; ?></label>
+                                                    <label for="chk-customer-group-<?= $cg->id; ?>"><?= $cg->name; ?></label>
                                                 </div>
                                             </li>
                                         <?php } ?>

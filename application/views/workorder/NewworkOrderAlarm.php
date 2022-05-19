@@ -1,39 +1,28 @@
-<?php
-defined('BASEPATH') or exit('No direct script access allowed');
-?>
 <?php include viewPath('includes/header'); ?>
-<div class="wrapper" role="wrapper">
-<?php include viewPath('includes/sidebars/workorder'); ?>
-<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
-<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
-<link href="<?php echo $url->assets ?>sass/styles.scss" rel="stylesheet" type="text/css">
-    <style>
-    label>input {
-      visibility: initial !important;
-      position: initial !important; 
-    }
-   .but:hover {
-    font-weight: 900;
-    color:black;
-    }
-    .but-red:hover {
-    font-weight: 900;
-    color:red;
-    }
-    .required:after {
-    content:" *";
-    color: red;
-    }
-    .navbar-side.closed{
-        padding-top:100px !important;
-    }
-    .pointer {cursor: pointer;}
 
-    .highlight{
-    background-color:#CAA1FC;
-    color:red;
-    padding:12px;
-}
+<style>
+  .custom-signaturepad {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .custom-signaturepad .sigWrapper canvas {
+      width: 100%;
+  }
+  .custom-signaturepad .sigPad  {
+    width: 100% !important;
+  }
+  #group_area{
+    background-color:#F9F9F9;
+  }
+  #group_area:hover{
+    background-color:#EBFFE2;
+  }
+  .pointer {cursor: pointer;}
+/* 
+  #company_representative_approval_signature1a{
+  border: solid 1px blue;  
+  width: 100%;
+} */
 
 #signature-pad {min-height:200px;}
 #signature-pad canvas {background-color:white;left: 0;top: 0;width: 100%;min-height:250px;height: 100%}
@@ -43,15 +32,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 #signature-pad3 {min-height:200px;}
 #signature-pad3 canvas {background-color:white;left: 0;top: 0;width: 100%;min-height:250px;height: 100%}
-
-#signature-padM {min-height:200px;}
-#signature-padM canvas {background-color:white;left: 0;top: 0;width: 100%;min-height:250px;height: 100%}
-
-#signature-pad2M {min-height:200px;}
-#signature-pad2M canvas {background-color:white;left: 0;top: 0;width: 100%;min-height:250px;height: 100%}
-
-#signature-pad3M {min-height:200px;}
-#signature-pad3M canvas {background-color:white;left: 0;top: 0;width: 100%;min-height:250px;height: 100%}
 
 .switch {
   position: relative;
@@ -112,494 +92,66 @@ input:checked + .slider:before {
 .slider.round:before {
   border-radius: 50%;
 }
-
-.tr_qty{
-    width:150px;
-}
-
-
-nav > .nav.nav-tabs{
-
-border: none;
-  color:#fff;
-  background:#272e38;
-  border-radius:0;
-
-}
-nav > div a.nav-item.nav-link,
-nav > div a.nav-item.nav-link.active
-{
-border: none;
-  padding: 18px 25px;
-  color:#fff;
-  background:#272e38;
-  border-radius:0;
-}
-
-/* nav > div a.nav-item.nav-link.active:after
-{
-content: "";
-position: relative;
-bottom: -60px;
-left: -10%;
-border: 15px solid transparent;
-border-top-color: #e74c3c ;
-} */
-.tab-content{
-background: #fdfdfd;
-  line-height: 25px;
-  border: 1px solid #ddd;
-  border-top:5px solid #e74c3c;
-  border-bottom:5px solid #e74c3c;
-  padding:30px 25px;
-}
-
-nav > div a.nav-item.nav-link:hover,
-nav > div a.nav-item.nav-link:focus
-{
-border: none;
-  background: #673ab7;
-  color:#fff;
-  border-radius:0;
-  transition:background 0.20s linear;
-}
-
-.signature_mobile
-{
-    display: none;
-}
-
-.show_mobile_view
-{
-    display: none;
-}
-
-@media only screen and (max-device-width: 600px) {
-    .label-element{
-        position:absolute;
-        top:-8px;
-        left:25px;
-        font-size:12px;
-        color:#666;
-        }
-    .input-element{
-        padding:30px 5px 10px 8px;
-        width:100%;
-        height:55px;
-        /* border:1px solid #CCC; */
-        font-weight: bold;
-        margin-top: -15px;
-        }
-
-    .select-wrap 
-    {
-    border: 2px solid #e0e0e0;
-    /* border-radius: 4px; */
-    margin-top: -10px;
-    /* margin-bottom: 10px; */
-    padding: 0 5px 5px;
-    width:100%;
-    /* background-color:#ebebeb; */
-    }
-
-    .select-wrap label
-    {
-    font-size:10px;
-    text-transform: uppercase;
-    color: #777;
-    padding: 2px 8px 0;
-    }
-
-    .m_select
-    {
-    /* background-color: #ebebeb;
-    border:0px; */
-    border-color: white !important;
-    border:0px !important;
-    outline:0px !important;
-    }
-    .select2 .select2-container .select2-container--default{
-        /* background-color: #ebebeb;
-    border:0px; */
-    border-color: white !important;
-    border:0px !important;
-    outline:0px !important;
-    }
-
-    .select2-container--default .select2-selection--single {
-    background-color: #fff;
-    border: 1px solid #fff !important;
-    border-radius: 4px;
-    }
-
-    .sub_label{
-        font-size:12px !important;
-    }
-
-    .signature_web
-    {
-        display: none;
-    }
-
-    .signature_mobile
-    {
-        display: block;
-        margin-bottom:10px;
-    }
-
-    .hidden_mobile_view{
-        display: none;
-    }
-
-    .show_mobile_view
-    {
-        display: block;
-    }
-
-    .table_mobile
-    {
-        font-size:14px;
-    }
-
-    div.dropdown-wrapper select { 
-    width:115% /* This hides the arrow icon */; 
-    background-color:transparent /* This hides the background */; 
-    background-image:none; 
-    -webkit-appearance: none /* Webkit Fix */; 
-    border:none; 
-    box-shadow:none; 
-    padding:0.3em 0.5em; 
-    font-size:13px;
-    }
-    .signature-pad-canvas-wrapper {
-    margin: 15px 0 0;
-    border: 1px solid #cbcbcb;
-    border-radius: 3px;
-    overflow: hidden;
-    position: relative;
-}
-
-    .signature-pad-canvas-wrapper::after {
-        content: 'Name';
-        border-top: 1px solid #cbcbcb;
-        color: #cbcbcb;
-        width: 100%;
-        margin: 0 15px;
-        display: inline-flex;
-        position: absolute;
-        bottom: 10px;
-        font-size: 13px;
-        z-index: -1;
-    }
-
-    .mobile_view
-    {
-        font-size:12px;
-    }
-
-    .sigWrapper
-    {
-        overflow: hidden; 
-    }
-
-    .mobile_view_table
-    {
-        min-width: 350px !important;
-        margin-left: -20px !important;
-    }
-
-    .add_mobile
-    {
-        margin-left: -22px !important;
-    }
-
-    .mobile_qty
-    {
-        background: transparent !important;
-        border: none !important;
-        outline: none !important;
-        padding: 0px 0px 0px 0px !important;
-        text-align: center;
-    }
-
-
-.tabs { list-style: none; }
-.tabs li { display: inline; }
-.tabs li a 
-{ 
-    color: black; 
-    float: left; 
-    display: block; 
-    /* padding: 4px 10px;  */
-    /* margin-left: -1px;  */
-    position: relative; 
-    /* left: 1px;  */
-    background: #a2a5a3; 
-    text-decoration: none; 
-}
-.tabs li a:hover 
-{ 
-    background: #ccc; 
-}
-.group:after 
-{ 
-    visibility: hidden; 
-    display: block; 
-    font-size: 0; 
-    content: " "; 
-    clear: both; 
-    height: 0; 
-}
-
-.box-wrap 
-{ 
-    position: relative; 
-    min-height: 250px; 
-}
-.tabbed-area div div 
-{ 
-    background: white; 
-    padding: 20px; 
-    min-height: 250px; 
-    position: absolute; 
-    top: -1px; 
-    left: 0; 
-    width: 100%; 
-}
-
-.tabbed-area div div, .tabs li a 
-{ 
-    border: 1px solid #ccc; 
-}
-
-#box-one:target, #box-two:target, #box-three:target {
-  z-index: 1;
-}
-
-.group li.active a,
-.group li a:hover,
-.group li.active a:focus,
-.group li.active a:hover{
-  background-color: #52cc6e;
-  color: black; 
-}
-
-}
-
-.blockHead:after {
-  color: #00bcd4;
-  border-left: 20px solid;
-  border-top: 20px solid transparent;
-  border-bottom: 20px solid transparent;
-  display: inline-block;
-  content: '';
-  position: absolute;
-  right: -20px;
-  top: 0;
-}
-.blockHead {
-  background-color: #00bcd4;
-  /*width: 150px; */
-  height: 40px;
-  line-height: 40px;
-  display: inline-block;
-  position: relative;
-}
-.blocktext {
-  color: white;
-  font-weight: bold;
-  padding-left: 10px;
-  font-family: Arial;
-  font-size: 11;
-}
-
-.right-arrow {
-	display: inline-block;
-	position: relative;
-	background: #00bcd4;
-	padding: 15px;
-    color: white;
-}
-.right-arrow:after {
-	content: '';
-	display: block;  
-	position: absolute;
-	left: 100%;
-	top: 50%;
-	margin-top: -10px;
-	width: 0;
-	height: 0;
-	border-top: 10px solid transparent;
-	border-right: 10px solid transparent;
-	border-bottom: 10px solid transparent;
-	border-left: 10px solid #00bcd4;
-}
-
-.down-arrow {
-	display: inline-block;
-	position: relative;
-	background: darkcyan;
-	padding: 7px 0;
-	width: 150px;
-	text-align: center;
-}
-.down-arrow:after {
-	content: '';
-	display: block;  
-	position: absolute;
-	left: 0;
-	top: 100%;
-	width: 0;
-	height: 0;
-	border-top: 10px solid darkcyan;
-	border-right: 75px solid transparent;
-	border-bottom: 0 solid transparent;
-	border-left: 75px solid transparent;
-}
-
-.down-arrow2 {
-	display: inline-block;
-	position: relative;
-	background: #81167B;
-	padding: 7px 0;
-	width: 150px;
-	text-align: center;
-}
-.down-arrow2:after {
-	content: '';
-	display: block;  
-	position: absolute;
-	left: 0;
-	top: 100%;
-	width: 0;
-	height: 0;
-	border-top: 10px solid #81167B;
-	border-right: 75px solid transparent;
-	border-bottom: 0 solid transparent;
-	border-left: 75px solid transparent;
-}
-
-.down-arrow3 {
-	display: inline-block;
-	position: relative;
-	background: #F6B343;
-	padding: 7px 0;
-	width: 150px;
-	text-align: center;
-}
-.down-arrow3:after {
-	content: '';
-	display: block;  
-	position: absolute;
-	left: 0;
-	top: 100%;
-	width: 0;
-	height: 0;
-	border-top: 10px solid #F6B343;
-	border-right: 75px solid transparent;
-	border-bottom: 0 solid transparent;
-	border-left: 75px solid transparent;
-}
-
-#header_area {
-  width: 90%;
-  position: relative;
-}
-#header_area:hover > .btn-edit-header {
-  display: block;
-}
-.btn-edit-header {
-  display: none;
-  position: absolute;
-  top: 5px;
-  right: 5px;
-}
-
 </style>
+<div class="wrapper" role="wrapper">
+    <?php include viewPath('includes/sidebars/workorder'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
-        <div class="container-fluid p-40 add_mobile">
-            <div class="row" style="margin-top: 30px;">
-                <div class="col">
-                    <h3 class="m-0">ALARM SYSTEM WORKORDER AGREEMENT</h3>
-                </div>
-            </div>
-
-            <div style="background-color:#fdeac3; width:100%;padding:.5%;margin-bottom:5px;margin-top:5px;margin-bottom:10px;">
-                Create new workorder.
-            </div>
-          <div class="card">              
-            <!-- end row -->
-            <!-- <div class="row">
-                <div class="col-md-12" style="background-color:#32243d;padding:1px;text-align:center;color:white;">
-                    <h5>General Information</h5>
-                </div>
-            </div>
-            <br> -->
-            <?php echo form_open_multipart('workorder/savenewWorkorderAlarm', [ 'class' => 'form-validate', 'autocomplete' => 'off']); ?> 
-            <div class="row">
-                <div class="col-md-12">
-                    <div id="header_area">
-                        <h4 class="mt-0 header-title mb-5">Header</h4>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <ol class="breadcrumb" style="margin-top:-30px;"></i>
-                                    <li class="breadcrumb-item active">
-                                        <label style="background-color:#E8E8E9;" id="headerContent"><?php echo $headers->content; ?></label>
-                                        <input type="hidden" id="headerID" name="header" value="<?php echo $headers->content; ?>">
-                                    </li>
-                                </ol>                                        
-                            </div> 
+        <div class="container-fluid">
+            <div class="page-title-box">
+                <div class="row align-items-center">
+                    <div class="col-sm-6">
+                        <h1 class="page-title">Workorder</h1>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item active">ALARM SYSTEM WORKORDER AGREEMENT</li>
+                        </ol>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="float-right d-none d-md-block">
+                            <div class="dropdown">
+                                <?php //if (hasPermissions('WORKORDER_MASTER')) : ?>
+                                    <a href="<?php echo url('workorder') ?>" class="btn btn-primary"
+                                       aria-expanded="false">
+                                        <i class="mdi mdi-settings mr-2"></i> Go Back to Workorder
+                                    </a>
+                                <?php //endif ?>
+                            </div>
                         </div>
-                        <br>
-                        <a class="btn btn-sm btn-primary btn-edit-header" href="javascript:void(0);">Edit</a>
-                        <input type="hidden" id="company_name" value="<?php echo $clients->business_name; ?>">
-                        <input type="hidden" id="current_date" value="<?php echo @date('m-d-Y'); ?>">
-
-                        <input type="hidden" id="content_input" class="form-control" name="header_" value="<?php echo $headers->content; ?>">
-                        <input type="hidden" name="wo_id" value="<?php 
-                        foreach($ids as $id)
-                        {
-                            $add = $id->id + 1;
-                            echo $add;
-                        }
-                        ?>">
                     </div>
                 </div>
             </div>
+            <!-- end row -->
+            <?php echo form_open_multipart('workorder/savenewWorkorderAlarm', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?> 
 
-            <div class="row">
-                <div class="col-md-12">
-                    <!-- <div class="card"> -->
-                        <!-- <div class="card-body"> -->                            
+
+            <div class="row custom__border">
+                <div class="col-xl-12">
+                    <div class="card">
+                        <div class="card-body">
+                        <div id="header_area">
+                                <ol class="breadcrumb" style="margin-top:-30px;"> <i class="fa fa-pencil" aria-hidden="true"></i>
+                                            <li class="breadcrumb-item active">
+                                                <label style="background-color:#E8E8E9;" id="headerContent"><?php echo $headers->content; ?></label>
+                                                <input type="hidden" name="header" value="<?php echo $headers->content; ?>">
+                                            </li>
+                                        </ol>
+
+                                        <input type="hidden" id="company_name" value="<?php echo $clients->business_name; ?>">
+                                <input type="hidden" id="current_date" value="<?php echo @date('m-d-Y'); ?>">
+
+                                <input type="hidden" id="content_input" class="form-control" name="header" value="<?php echo $headers->content; ?>">
+                            </div>
                             <!-- ====== CUSTOMER ====== -->
 							 <div class="row" id="group_area">
-                                <div class="col-md-3 form-group">
-                                    <label for="contact_name" class="label-element">Work Order #</label>
-<!--                                     <input type="text" class="form-control input-element" name="workorder_number" id="contact_name" value="<?php echo "WO-"; 
-                                            foreach ($number as $num):
-                                                    $next = $num->work_order_number;
-                                                    $arr = explode("-", $next);
-                                                    $date_start = $arr[0];
-                                                    $nextNum = $arr[1];
-                                                //    echo $number;
-                                            endforeach;
-                                            $val = $nextNum + 1;
-                                            echo str_pad($val,7,"0",STR_PAD_LEFT);
-                                            ?>" required readonly/> -->
-
-                                        <input type="text" class="form-control input-element" name="workorder_number" id="workorder-number" value="<?= $prefix . $next_num; ?>" required readonly/>
-                                </div>
 								<div class="col-md-12">
 									<div class="row">
 										<div class="form-group col-md-12">
 											<h5 class="box-title">Customer</h5>
 										</div>
 										<div class="col-md-4 form-group">
-                                        <div class="select-wrap">
-											<label for="">Customer Type</label> <span class="form-required">*</span><br/>
-											<select name="customer_type" required
-													class="form-control custom-select m_select"
+											<label for="">Customer Type</label><br/>
+											<select name="customer_type"
+													class="form-control"
 													id="customer_type">
 												<?php foreach (get_config_item('customer_types') as $key => $customer_type) { ?>
 													<option value="<?php echo $customer_type ?>" <?php echo (!empty($workorder->customer['customer_type']) && $workorder->customer['customer_type'] == $customer_type) ? "selected" : "" ?>>
@@ -608,18 +160,16 @@ border: none;
 												<?php } ?>
 											</select>
 										</div>
-                                        </div>
 
-                                        <div class="col-md-4" style="display:none;" id="business_name_area">
-											<label for="customer_install_type" class="label-element">Business Name</label><br/>
-											<input type="text" class="form-control input-element" name="business_name" id="business_name" placeholder="Enter Name" />
+                                        <div class="col-md-4 form-group" style="display:none;" id="business_name_area">
+											<label for="customer_install_type">Business Name</label><br/>
+											<input type="text" class="form-control" name="business_name" id="business_name" placeholder="Enter Name" />
 										</div>
 
 										<div class="col-md-4 form-group">
-                                        <div class="select-wrap">
-											<label for="customer_install_type">Install Type</label> <span class="form-required">*</span><br/>
+											<label for="customer_install_type">Install Type</label><br/>
 											<select name="install_type"
-													class="form-control custom-select m_select"
+													class="form-control"
 													id="customer_install_type">
 												<?php foreach (get_config_item('install_types') as $key => $install_type) { ?>
 													<option value="<?php echo $install_type ?>" <?php echo (!empty($workorder->customer['install_type']) && $workorder->customer['install_type'] == $install_type) ? "selected" : "" ?>>
@@ -627,13 +177,12 @@ border: none;
 													</option>
 												<?php } ?>
 											</select>
-                                        </div>
 										</div>
 										<div class="col-md-4 form-group"
 											 style="display: <?php echo (!empty($workorder->customer['install_type']) && $workorder->customer['install_type'] == 'Takeover') ? 'block' : 'none' ?>">
-											<label for="customer_company_name" class="label-element">
+											<label for="customer_company_name">
 												Company Name </label>
-											<input type="text" class="form-control input-element" required name="customer[company_name]"
+											<input type="text" class="form-control" name="customer[company_name]"
 												   id="customer_company_name"
 												   value="<?php echo (!empty($workorder->customer['company_name'])) ? $workorder->customer['company_name'] : '' ?>" 
 												   placeholder="Enter Company Name" <?php echo (!empty($workorder->customer['install_type']) && $workorder->customer['install_type'] == 'Takeover') ? "" : 'disabled' ?> />
@@ -642,39 +191,39 @@ border: none;
 
 									<div class="row">
 										<div class="col-md-3 form-group">
-											<label for="last_name" class="label-element">Last Name <span class="form-required">*</span></label>
-											<input type="text" class="form-control input-element" name="last_name"
+											<label for="last_name">Last Name</label>
+											<input type="text" class="form-control" name="last_name"
 												   id="last_name"
 												   required placeholder="Enter Last Name"
 												   value="<?php echo (!empty($workorder->customer['last_name'])) ? $workorder->customer['last_name'] : '' ?>"/>
 										</div>
 										<div class="col-md-3 form-group">
-											<label for="first_name" class="label-element">First Name <span class="form-required">*</span></label>
-											<input type="text" class="form-control input-element" name="first_name"
+											<label for="first_name">First Name</label>
+											<input type="text" class="form-control" name="first_name"
 												   id="first_name" required
 												   required placeholder="Enter First Name" />
 										</div>
 										<div class="col-md-2 form-group">
-											<label for="contact_mobile" class="label-element">Mobile <span class="form-required">*</span></label>
-											<input type="text" class="form-control input-element" name="mobile_number" required
-												   id="contact_mobile" placeholder="Enter Mobile No"/>
+											<label for="contact_mobile">Mobile</label>
+											<input type="text" class="form-control" name="mobile_number" required
+												   id="contact_mobile" />
 
 										</div>
 
 										<div class="col-md-2 form-group">
-											<label for="contact_dob" class="label-element">DOB </label>
-											<input type="text" class="form-control input-element" name="dob"
-												   id="customer_contact_dob"
+											<label for="contact_dob">DOB</label>
+											<input type="text" class="form-control" name="dob"
+												   id="customer_contact_dob" required
 												   value="<?php echo (!empty($workorder->customer['contact_dob'])) ? date('m/d/Y', strtotime($workorder->customer['contact_dob'])) : '' ?>"
 												   placeholder="Enter DOB"/>
 										</div>
 
 										<div class="col-md-2 form-group">
-											<label for="contact_ssn" class="label-element">SSN <span class="form-required">*</span></label>
-											<input type="text" class="form-control input-element" name="security_number"
-												   id="security_number"
+											<label for="contact_ssn">SSN</label>
+											<input type="text" class="form-control" name="security_number"
+												   id="contact_ssn"
 												   value="<?php echo (!empty($workorder->customer['contact_ssn'])) ? $workorder->customer['contact_ssn'] : '' ?>"
-                                                   required
+												   required
 												   placeholder="Enter SSN"/>
 										</div>
 									</div>
@@ -684,38 +233,38 @@ border: none;
 											<span class="help help-sm">Spouse</span>
 										</div>
 										<div class="col-md-3 form-group">
-											<label for="spouse_last_name" class="label-element">Last Name <small class="help help-sm">(optional)</small></label>
-											<input type="text" class="form-control input-element" name="s_last_name"
+											<label for="spouse_last_name">Last Name</label>
+											<input type="text" class="form-control" name="s_last_name"
 												   id="spouse_last_name"
-												     placeholder="Enter Spouse Last Name" />
+												     placeholder="Enter Last Name" />
 										</div>
 										<div class="col-md-3 form-group">
-											<label for="spouse_first_name" class="label-element">First Name <small class="help help-sm">(optional)</small></label>
-											<input type="text" class="form-control input-element" name="s_first_name"
+											<label for="spouse_first_name">First Name</label>
+											<input type="text" class="form-control" name="s_first_name"
 												   id="spouse_first_name"
-												     placeholder="Enter Spouse First Name"
+												     placeholder="Enter First Name"
 												   value="<?php echo (!empty($workorder->customer['spouse_first_name'])) ? $workorder->customer['spouse_first_name'] : '' ?>"/>
 										</div>
 										<div class="col-md-2 form-group">
-											<label for="spouse_contact_mobile" class="label-element">Mobile <small class="help help-sm">(optional)</small></label>
-											<input type="text" class="form-control input-element" name="s_mobile"
-												   id="phone_no"
+											<label for="spouse_contact_mobile">Mobile</label>
+											<input type="text" class="form-control" name="s_mobile"
+												   id="spouse_contact_mobile"
 												   value="<?php echo (!empty($workorder->customer['spouse_contact_mobile'])) ? $workorder->customer['spouse_contact_mobile'] : '' ?>"
 												   placeholder="Enter Mobile"/>
 
 										</div>
 
 										<div class="col-md-2 form-group">
-											<label for="contact_dob" class="label-element">DOB <small class="help help-sm">(optional)</small></label>
-											<input type="text" class="form-control input-element" name="s_dob"
+											<label for="contact_dob">DOB</label>
+											<input type="text" class="form-control" name="s_dob"
 												   id="customer_spouse_contact_dob"
 												   value="<?php echo (!empty($workorder->customer['spouse_contact_dob'])) ? date('m/d/Y', strtotime($workorder->customer['spouse_contact_dob'])) : '' ?>"
 												   placeholder="Enter DOB"/>
 										</div>
 
 										<div class="col-md-2 form-group">
-											<label for="spouse_contact_ssn" class="label-element">SSN <small class="help help-sm">(optional)</small></label>
-											<input type="text" class="form-control input-element" name="s_ssn"
+											<label for="spouse_contact_ssn">SSN</label>
+											<input type="text" class="form-control" name="s_ssn"
 												   id="spouse_contact_ssn"
 												   value="<?php echo (!empty($workorder->customer['spouse_contact_ssn'])) ? $workorder->customer['spouse_contact_ssn'] : '' ?>"
 												   placeholder="Enter SSN"/>
@@ -724,62 +273,61 @@ border: none;
 
 									<div class="row">
 										<div class="col-md-3 form-group">
-											<label for="monitored_location" class="label-element">Monitored Location <span class="form-required">*</span></label>
-											<input type="text" class="form-control input-element" name="monitored_location"
+											<label for="monitored_location">Monitored Location</label>
+											<input type="text" class="form-control" name="monitored_location"
 												   id="ship-address"
 												   value="<?php echo (!empty($workorder->customer['monitored_location'])) ? $workorder->customer['monitored_location'] : '' ?>"
 												   required placeholder="Monitored Location"/>
 										</div>
 										<div class="col-md-3 form-group">
-											<label for="city" class="label-element">City  <span class="form-required">*</span></label>
-                                                   <input type="text" class="form-control input-element" name="city" id="locality" placeholder="Enter City"  required/>
+											<label for="city">City</label> 
+                                                   <input type="text" class="form-control" name="city" id="locality" placeholder="Enter Name" />
 										</div>
 										<div class="col-md-2 form-group">
-											<label for="state" class="label-element">State <span class="form-required">*</span></label>
-											<input type="text" class="form-control input-element" name="state" required
-												   id="state"  placeholder="Enter State"/>
+											<label for="state">State</label>
+											<input type="text" class="form-control" name="state"
+												   id="state" />
 
 										</div>
 
 										<div class="col-md-2 form-group">
-											<label for="zip" class="label-element">ZIP  <span class="form-required">*</span></label>
-                                                   <input type="text" id="postcode" name="zip_code" class="form-control input-element"  required placeholder="Enter Zip"/>
+											<label for="zip">ZIP</label> 
+                                                   <input type="text" id="postcode" name="zip_code" class="form-control"  placeholder="Enter Zip"/>
 										</div>
 
 										<div class="col-md-2 form-group">
-											<label for="cross_street" class="label-element">Cross Street <small class="help help-sm">(optional)</small></label>
-											<input type="text" class="form-control input-element" name="cross_street"
+											<label for="cross_street">Cross Street</label>
+											<input type="text" class="form-control" name="cross_street"
 												   id="cross_street"
 												   value="<?php echo (!empty($workorder->customer['cross_street'])) ? $workorder->customer['cross_street'] : '' ?>"
+												   required
 												   placeholder="Cross Street"/>
 										</div>
 									</div>
 
 									<div class="row">
 										<div class="col-md-3 form-group">
-											<label for="email" class="label-element">Email <span class="form-required">*</span></label>
-											<input type="email" class="form-control input-element" name="email"
+											<label for="email">Email</label>
+											<input type="email" class="form-control" name="email"
 												   id="email" 
 												   value="<?php echo (!empty($workorder->customer['email'])) ? $workorder->customer['email'] : '' ?>"
 												   required placeholder="Enter Email"/>
 										</div>
 										<div class="col-md-2 form-group">
-											<label for="password" class="label-element">Password <span class="form-required">*</span></label>
-											<input type="text" class="form-control input-element" name="password" required
+											<label for="password">Password</label>
+											<input type="text" class="form-control" name="password" required
 												   id="password" >
 										</div>
                                         
                                         <div class="col-md-3 form-group">
-                                        <div class="select-wrap">
                                             <label for="">Notification Type</label><br/>
-                                                <select name="notification_type" id="customer_notification_type_email" class="form-control custom-select m_select">
+                                                <select name="notification_type" id="customer_notification_type_email" class="form-control" required>
                                                     <option>Notification Type</option>
                                                     <option value="Text">Text</option>
                                                     <option value="Email">Email</option>
                                                     <option value="Text and Email">Text and Email</option>
                                                     <option value="None">None</option>
                                                 </select>
-                                        </div>
                                         </div>
 										<!--
 										<div class="col-auto form-group">
@@ -804,12 +352,6 @@ border: none;
 									</div>
 
 								</div>
-
-                                <input type="hidden" name="acs_fullname" id="acs_fullname">
-                                <input type="hidden" name="company_name" id="company_name" value="<?php echo $companyDet->first_name.' '.$companyDet->last_name; ?>">
-                                <input type="hidden" name="business_address" id="business_address" value="<?php echo $companyDet->business_address; ?>">
-                                <input type="hidden" name="acs_phone_number" id="acs_phone_number" value="<?php echo $companyDet->phone_number; ?>">
-
                             </div>
 
                             
@@ -819,19 +361,19 @@ border: none;
                                 <div class="form-group col-md-12">
                                     <h5 class="box-title">Emergency Call List</h5>
                                 </div>
-                                <div class="col-md-4 form-group">
-                                    <!-- <div class=""> -->
-                                        <label for="1st_call_verification_name" class="label-element">1st Call Verification Name <small class="help help-sm">(optional)</small></label>
-                                        <input type="text" class="form-control input-element"
-                                               name="1st_verification_name[]"
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="1st_call_verification_name">1st Call Verification Name</label>
+                                        <input type="text" class="form-control"
+                                               name="1st_verification_name"
                                                value="<?php echo (!empty($workorder->emergency_call_list['1st_call_verification_name'])) ? $workorder->emergency_call_list['1st_call_verification_name'] : '' ?>"
                                                id="1st_call_verification_name"
-                                                placeholder="Enter 1st Call Verification Name"/>
-                                    <!-- </div> -->
+                                               required placeholder="Enter 1st Call Verification Name"/>
+                                    </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="contact_phone" class="mobile_view">Phone Number <small class="help help-sm">(optional)</small></label>
+                                        <label for="contact_phone">Phone Number</label>
                                         <div class="input-group phone-input">
                                             <span class="input-group-btn">
                                                 <button type="button" class="btn btn-default dropdown-toggle"
@@ -847,11 +389,11 @@ border: none;
                                                            data-type-value="work">Work</a></li>
                                                 </ul>
                                             </span>
-                                            <input type="hidden" name="1st_number_type[]"
+                                            <input type="hidden" name="1st_number_type"
                                                    class="type-input"
                                                    value="<?php echo (!empty($workorder->emergency_call_list['phone']['type'][0])) ? $workorder->emergency_call_list['phone']['type'][0] : '' ?>"
                                                    value="mobile"/>
-                                            <input type="text" name="1st_number[]"
+                                            <input type="text" name="1st_number"
                                                    class="form-control"
                                                    value="<?php echo (!empty($workorder->emergency_call_list['phone']['number'][0])) ? $workorder->emergency_call_list['phone']['number'][0] : '' ?>"
                                                    placeholder="Enter Phone"/>
@@ -859,27 +401,14 @@ border: none;
 
                                     </div>
                                 </div>
-                                <div class="col-md-4 form-group">
-                                    <!-- <div class=""> -->
-                                        <label for="emergency_call_relation" class="label-element">Relation <small class="help help-sm">(optional)</small></label>
-                                        <!-- <input type="text" class="form-control input-element" name="1st_relation"
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="emergency_call_relation">Relation</label>
+                                        <input type="text" class="form-control" name="1st_relation"
                                                id="emergency_call_relation"
-                                               value="<?php //echo (!empty($workorder->emergency_call_list['relation'][0])) ? $workorder->emergency_call_list['relation'][0] : '' ?>"
-                                                placeholder="Enter Relation"/> -->
-                                                <select name="1st_relation[]" id="1st_relation" class="form-control custom-select m_select">
-                                                    <option value="">Choose Relation</option>
-                                                    <option value="Owner">Owner</option>
-                                                    <option value="Relative">Relative</option>
-                                                    <option value="Employee">Employee</option>
-                                                    <option value="Friend">Friend</option>
-                                                    <option value="Manager">Manager</option>
-                                                    <option value="On-site">On-site</option>
-                                                    <option value="Neighbor">Neighbor</option>
-                                                    <option value="Resident">Resident</option>
-                                                    <option value="Maintenance">Maintenance</option>
-                                                    <option value="Other">Other</option>
-                                                </select>
-                                    <!-- </div> -->
+                                               value="<?php echo (!empty($workorder->emergency_call_list['relation'][0])) ? $workorder->emergency_call_list['relation'][0] : '' ?>"
+                                               required placeholder="Enter Relation"/>
+                                    </div>
                                 </div>
                                 <!-- <div class="col-md-3">
                                     <div class="form-group">
@@ -892,19 +421,19 @@ border: none;
                                     </div>
                                 </div> -->
 
-                                <div class="col-md-4 form-group">
-                                    <!-- <div class="form-group"> -->
-                                        <label for="" class="label-element">2nd Call Verification Name <small class="help help-sm">(optional)</small></label>
-                                        <input type="text" class="form-control input-element"
-                                               name="1st_verification_name[]"
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="2nd_call_verification_name">2nd Call Verification Name</label>
+                                        <input type="text" class="form-control"
+                                               name="2nd_verification_name"
                                                id="2nd_call_verification_name"
                                                value="<?php echo (!empty($workorder->emergency_call_list['2nd_call_verification_name'])) ? $workorder->emergency_call_list['2nd_call_verification_name'] : '' ?>"
-                                                placeholder="Enter 2nd Call Verification Name"/>
-                                    <!-- </div> -->
+                                               required placeholder="Enter 2nd Call Verification Name"/>
+                                    </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="contact_phone" class="mobile_view">Phone Number <small class="help help-sm">(optional)</small></label>
+                                        <label for="contact_phone">Phone Number</label>
                                         <div class="input-group phone-input">
                                             <span class="input-group-btn">
                                                 <button type="button" class="btn btn-default dropdown-toggle"
@@ -920,11 +449,11 @@ border: none;
                                                            data-type-value="work">Work</a></li>
                                                 </ul>
                                             </span>
-                                            <input type="hidden" name="1st_number_type[]"
+                                            <input type="hidden" name="2nd_number_type"
                                                    class="type-input"
                                                    value="<?php echo (!empty($workorder->emergency_call_list['phone']['type'][1])) ? $workorder->emergency_call_list['phone']['type'][1] : '' ?>"
                                                    value="mobile"/>
-                                            <input type="text" name="1st_number[]"
+                                            <input type="text" name="2nd_number"
                                                    class="form-control"
                                                    value="<?php echo (!empty($workorder->emergency_call_list['phone']['number'][1])) ? $workorder->emergency_call_list['phone']['number'][1] : '' ?>"
                                                    placeholder="Enter Phone"/>
@@ -932,27 +461,14 @@ border: none;
 
                                     </div>
                                 </div>
-                                <div class="col-md-4 form-group">
-                                    <!-- <div class="form-group"> -->
-                                        <label for="emergency_call_relation" class="label-element">Relation <small class="help help-sm">(optional)</small></label>
-                                        <!-- <input type="text" class="form-control input-element" name="2nd_relation"
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="emergency_call_relation">Relation</label>
+                                        <input type="text" class="form-control" name="2nd_relation"
                                                id="emergency_call_relation"
-                                               value="<?php //echo (!empty($workorder->emergency_call_list['relation'][1])) ? $workorder->emergency_call_list['relation'][1] : '' ?>"
-                                                placeholder="Enter Relation"/> -->
-                                                <select name="1st_relation[]" id="2nd_relation" class="form-control custom-select m_select">
-                                                    <option value="">Choose Relation</option>
-                                                    <option value="Owner">Owner</option>
-                                                    <option value="Relative">Relative</option>
-                                                    <option value="Employee">Employee</option>
-                                                    <option value="Friend">Friend</option>
-                                                    <option value="Manager">Manager</option>
-                                                    <option value="On-site">On-site</option>
-                                                    <option value="Neighbor">Neighbor</option>
-                                                    <option value="Resident">Resident</option>
-                                                    <option value="Maintenance">Maintenance</option>
-                                                    <option value="Other">Other</option>
-                                                </select>
-                                    <!-- </div> -->
+                                               value="<?php echo (!empty($workorder->emergency_call_list['relation'][1])) ? $workorder->emergency_call_list['relation'][1] : '' ?>"
+                                               required placeholder="Enter Relation"/>
+                                    </div>
                                 </div>
                                 <!-- <div class="col-md-3">
                                     <div class="form-group">
@@ -965,19 +481,19 @@ border: none;
                                     </div>
                                 </div> -->
 
-                                <div class="col-md-4 form-group">
-                                    <!-- <div class=""> -->
-                                        <label for="emergency_call_emergency_contact_1" class="label-element">3rd Call Verification Name <small class="help help-sm">(optional)</small></label>
-                                        <input type="text" class="form-control input-element"
-                                               name="1st_verification_name[]"
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="emergency_call_emergency_contact_1">3rd Call Verification Name</label>
+                                        <input type="text" class="form-control"
+                                               name="3rd_verification_name"
                                                id="emergency_call_emergency_contact_1"
                                                value="<?php echo (!empty($workorder->emergency_call_list['emergency_contact_1'])) ? $workorder->emergency_call_list['emergency_contact_1'] : '' ?>"
-                                                placeholder="Enter Emergency Contact"/>
-                                    <!-- </div> -->
+                                               required placeholder="Enter Emergency Contact"/>
+                                    </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="contact_phone" class="mobile_view">Phone Number <small class="help help-sm">(optional)</small></label>
+                                        <label for="contact_phone">Phone Number</label>
                                         <div class="input-group phone-input">
                                             <span class="input-group-btn">
                                                 <button type="button" class="btn btn-default dropdown-toggle"
@@ -993,11 +509,11 @@ border: none;
                                                            data-type-value="work">Work</a></li>
                                                 </ul>
                                             </span>
-                                            <input type="hidden" name="1st_number_type[]"
+                                            <input type="hidden" name="3rd_number_type"
                                                    class="type-input"
                                                    value="<?php echo (!empty($workorder->emergency_call_list['phone']['type'][2])) ? $workorder->emergency_call_list['phone']['type'][2] : '' ?>"
                                                    value="mobile"/>
-                                            <input type="text" name="1st_number[]"
+                                            <input type="text" name="3rd_number"
                                                    class="form-control"
                                                    value="<?php echo (!empty($workorder->emergency_call_list['phone']['number'][2])) ? $workorder->emergency_call_list['phone']['number'][2] : '' ?>"
                                                    placeholder="Enter Phone"/>
@@ -1005,44 +521,31 @@ border: none;
 
                                     </div>
                                 </div>
-                                <div class="col-md-4 form-group">
-                                    <!-- <div class="form-group"> -->
-                                        <label for="emergency_call_relation" class="label-element">Relation <small class="help help-sm">(optional)</small></label>
-                                        <!-- <input type="text" class="form-control input-element" name="3rd_relation"
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="emergency_call_relation">Relation</label>
+                                        <input type="text" class="form-control" name="3rd_relation"
                                                id="emergency_call_relation"
-                                               value="<?php //echo (!empty($workorder->emergency_call_list['relation'][2])) ? $workorder->emergency_call_list['relation'][2] : '' ?>"
-                                                placeholder="Enter Relation"/> -->
-                                                <select name="1st_relation[]" id="3rd_relation" class="form-control custom-select m_select">
-                                                    <option value="">Choose Relation</option>
-                                                    <option value="Owner">Owner</option>
-                                                    <option value="Relative">Relative</option>
-                                                    <option value="Employee">Employee</option>
-                                                    <option value="Friend">Friend</option>
-                                                    <option value="Manager">Manager</option>
-                                                    <option value="On-site">On-site</option>
-                                                    <option value="Neighbor">Neighbor</option>
-                                                    <option value="Resident">Resident</option>
-                                                    <option value="Maintenance">Maintenance</option>
-                                                    <option value="Other">Other</option>
-                                                </select>
-                                    <!-- </div> -->
+                                               value="<?php echo (!empty($workorder->emergency_call_list['relation'][2])) ? $workorder->emergency_call_list['relation'][2] : '' ?>"
+                                               required placeholder="Enter Relation"/>
+                                    </div>
                                 </div>
 
                                 <!-- <div class="col-md-3">
 								</div> -->
-                                <div class="col-md-4 form-group">
-                                    <!-- <div class=""> -->
-                                        <label for="emergency_call_emergency_contact_2" class="label-element">4th Call Verification Name <small class="help help-sm">(optional)</small></label>
-                                        <input type="text" class="form-control input-element"
-                                               name="1st_verification_name[]"
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="emergency_call_emergency_contact_2">4th Call Verification Name</label>
+                                        <input type="text" class="form-control"
+                                               name="4th_verification_name"
                                                id="emergency_call_emergency_contact_2"
                                                value="<?php echo (!empty($workorder->emergency_call_list['emergency_contact_2'])) ? $workorder->emergency_call_list['emergency_contact_2'] : '' ?>"
-                                                placeholder="Enter Emergency Contact"/>
-                                    <!-- </div> -->
+                                               required placeholder="Enter Emergency Contact"/>
+                                    </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="contact_phone" class="mobile_view">Phone Number <small class="help help-sm">(optional)</small></label>
+                                        <label for="contact_phone">Phone Number</label>
                                         <div class="input-group phone-input">
                                             <span class="input-group-btn">
                                                 <button type="button" class="btn btn-default dropdown-toggle"
@@ -1058,11 +561,11 @@ border: none;
                                                            data-type-value="work">Work</a></li>
                                                 </ul>
                                             </span>
-                                            <input type="hidden" name="1st_number_type[]"
+                                            <input type="hidden" name="4th_number_type"
                                                    class="type-input"
                                                    value="<?php echo (!empty($workorder->emergency_call_list['phone']['type'][3])) ? $workorder->emergency_call_list['phone']['type'][3] : '' ?>"
                                                    value="mobile"/>
-                                            <input type="text" name="1st_number[]"
+                                            <input type="text" name="4th_number"
                                                    class="form-control"
                                                    value="<?php echo (!empty($workorder->emergency_call_list['phone']['number'][3])) ? $workorder->emergency_call_list['phone']['number'][3] : '' ?>"
                                                    placeholder="Enter Phone"/>
@@ -1070,27 +573,14 @@ border: none;
 
                                     </div>
                                 </div>
-                                <div class="col-md-4 form-group">
-                                    <!-- <div class=""> -->
-                                        <label for="emergency_call_relation" class="label-element">Relation <small class="help help-sm">(optional)</small></label>
-                                        <!-- <input type="text" class="form-control input-element" name="4th_relation"
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="emergency_call_relation">Relation</label>
+                                        <input type="text" class="form-control" name="4th_relation"
                                                id="emergency_call_relation"
-                                               value="<?php //echo (!empty($workorder->emergency_call_list['relation'][3])) ? $workorder->emergency_call_list['relation'][3] : '' ?>"
-                                                placeholder="Enter Relation"/> -->
-                                                <select name="1st_relation[]" id="4th_relation" class="form-control custom-select m_select">
-                                                    <option value="">Choose Relation</option>
-                                                    <option value="Owner">Owner</option>
-                                                    <option value="Relative">Relative</option>
-                                                    <option value="Employee">Employee</option>
-                                                    <option value="Friend">Friend</option>
-                                                    <option value="Manager">Manager</option>
-                                                    <option value="On-site">On-site</option>
-                                                    <option value="Neighbor">Neighbor</option>
-                                                    <option value="Resident">Resident</option>
-                                                    <option value="Maintenance">Maintenance</option>
-                                                    <option value="Other">Other</option>
-                                                </select>
-                                    <!-- </div> -->
+                                               value="<?php echo (!empty($workorder->emergency_call_list['relation'][3])) ? $workorder->emergency_call_list['relation'][3] : '' ?>"
+                                               required placeholder="Enter Relation"/>
+                                    </div>
                                 </div>
                             </div>
 
@@ -1100,16 +590,15 @@ border: none;
                                     <h5 class="box-title">Customer System Information</h5>
                                 </div>
                                 <div class="col-md-6 form-group">
-                                <div class="select-wrap">
-                                    <label for="street_address"> Plan Type: <span class="form-required">*</span></label>
+                                    <label for="street_address"> Plan Type:</label>
                                         <!-- <select
                                                 name="plan_type"
                                                 id="plan_type"
                                                 class="form-control">
                                             <option>Select Plan Type</option>
                                         </select> -->
-                                        <select name="plan_type" id="plan_types" class="form-control custom-select m_select" required>
-                                            <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == ''){echo "selected";} } ?> value="">--SELECT--</option>
+                                        <select name="plan_type" id="plan_types" class="form-control" required>
+                                            <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == ''){echo "selected";} } ?> value=""></option>
                                             <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'DIGI'){echo "selected";} } ?> value="DIGI">Landline</option>
                                             <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'DW2W'){echo "selected";} } ?> value="DW2W">Landline W/ 2-Way</option>
                                             <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'DWCB'){echo "selected";} } ?> value="DWCB">Landline W/ Cell Backup</option>
@@ -1133,15 +622,13 @@ border: none;
                                             <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'IwACwA'){echo "selected";} } ?> value="IwACwA">Interactive w/Access Control w/Automn</option>
                                         </select>
                                 </div>
-                                </div>
                                 <div class="form-group col-md-6">
-                                <div class="select-wrap">
-                                    <!-- <div class="col-md-12"> -->
-                                        <label>Account Type <span class="form-required">*</span></label>
-                                    <!-- </div> -->
-                                    <!-- <div class="col-md-12"> -->
+                                    <div class="col-md-12">
+                                        <label>Account Type</label>
+                                    </div>
+                                    <div class="col-md-12">
                                         <select name="account_type"
-                                                class="form-control custom-select m_select"
+                                                class="form-control"
                                                 id="account_type" required>
                                             <option>--SELECT--</option>
                                             <?php foreach (get_config_item('account_types') as $key => $account_type) { ?>
@@ -1161,18 +648,16 @@ border: none;
                                                        $workorder->account_type['other'] : '' ?>"
                                                    placeholder="Write it here..." required>
                                         </div>
-                                    <!-- </div> -->
+                                    </div>
 
-                                </div>
                                 </div>
 
                                     <!-- ====== EQUIPMENT ====== -->
                                 <!-- <div class="row"> -->
                                     <div class="col-md-4">
-                                    <div class="select-wrap">
-                                        <label>Panel Type <span class="form-required">*</span></label>
-                                        <select name="panel_type" id="panel_type" class="form-control custom-select m_select" required>
-                                            <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == ''){echo "selected";} } ?> value="">--SELECT--</option>
+                                        <label>Panel Type</label>
+                                        <select name="panel_type" id="panel_type" class="form-control" required>
+                                            <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == ''){echo "selected";} } ?> value=""></option>
                                             <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'AERIONICS'){echo "selected";} } ?> value="AERIONICS">AERIONICS</option>
                                             <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'AlarmNet'){echo "selected";} } ?> value="AlarmNet">AlarmNet</option>
                                             <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Alarm.com'){echo "selected";} } ?> value="Alarm.com">Alarm.com</option>
@@ -1187,7 +672,7 @@ border: none;
                                             <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Honeywell'){echo "selected";} } ?> value="Honeywell Touch">Honeywell Touch</option>
                                             <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Honeywell'){echo "selected";} } ?> value="Honeywell 3000">Honeywell 3000</option>
                                             <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Honeywell'){echo "selected";} } ?> value="Honeywell Vista">Honeywell Vista</option>
-                                            <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Honeywell'){echo "selected";} } ?> value="Honeywell Vista with Sem">Honeywell Vista with Sem</option>
+                                            <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Honeywell'){echo "selected";} } ?> value="Honeywell Vista with Sim">Honeywell Vista with Sim</option>
                                             <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Honeywell'){echo "selected";} } ?> value="Honeywell Lyric">Honeywell Lyric</option>
                                             <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'IEI'){echo "selected";} } ?> value="IEI">IEI</option>
                                             <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'MIER'){echo "selected";} } ?> value="MIER">MIER</option>
@@ -1203,22 +688,20 @@ border: none;
                                         </select>
 
                                     </div>
-                                    </div>
 
-                                    <div class="col-md-4 form-group">
-                                        <!-- <div class="form-group"> -->
-                                            <label for="panel_location" class="label-element"> Panel Location:</label>
-                                            <input type="text" class="form-control input-element" name="panel_location"
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="panel_location"> Panel Location:</label>
+                                            <input type="text" class="form-control" name="panel_location"
                                                 value="<?php echo (!empty($workorder->panel_location)) ? $workorder->panel_location : '' ?>"
                                                 id="panel_location" placeholder=""/>
-                                        <!-- </div> -->
+                                        </div>
                                     </div>
-                                    <div class="col-md-4 form-group">
-                                    <div class="select-wrap">
-                                        <!-- <div class="form-group"> -->
+                                    <div class="col-md-4">
+                                        <div class="form-group">
                                             <label for="panel_communication"> Panel Communication:</label>
                                             <select name="panel_communication"
-                                                    class="form-control custom-select m_select"
+                                                    class="form-control"
                                                     id="panel_communication">
                                                 <option>--SELECT--</option>
                                                 <?php foreach (get_config_item('panel_communications') as $key => $panel_communication) { ?>
@@ -1227,7 +710,7 @@ border: none;
                                                     </option>
                                                 <?php } ?>
                                             </select>
-                                        <!-- </div> -->
+                                        </div>
                                     </div>
 
                                 <!-- </div> -->
@@ -1242,38 +725,24 @@ border: none;
                                 <div class="form-group col-md-12">
                                     <h5 class="box-title">Job</h5>
                                 </div>
-                                <div class="col-md-4 form-group">
-                                    <!-- <div class=""> -->
-                                        <label for="date_w_issued" class="label-element"> Requested Date:</label>
-                                        <!-- <div class='input-group date datepicker'> -->
-                                            <input type="text"
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="date_w_issued"> Requested Date:</label>
+                                        <div class='input-group date datepicker'>
+                                            <input type='text'
+                                                   value="<?php echo (!empty($workorder->date_issued)) ?
+                                                       date('m/d/Y', strtotime($workorder->date_issued)) : '' ?>"
                                                    name="date_issued"
-                                                   class="form-control input-element"
-                                                   id="datepicker_dateissued"/>
-                                        <!-- </div> -->
-                                    <!-- </div> -->
+                                                   class="form-control"
+                                                   id="date_w_issued"/>
+                                        </div>
+                                    </div>
                                 </div>
 
-                                
-                                <div class="col-md-4 form-group">
-                                <div class="select-wrap">
-                                    <label for="job_name" class="label-element">Job Name</label>
-                                    <input type="text" class="form-control input-element" name="job_name" id="job_name" />
-                                </div>
-                                </div>
-
-                                <div class="col-md-4 form-group">
-                                <div class="select-wrap">
-                                        <label for="job_desc" class="label-element">Job Description</label>
-                                        <textarea name="job_description" id="job_desc" cols="5" rows="2" class="form-control input-element"></textarea> 
-                                </div>                                           
-                                </div>
-
-                                <div class="col-md-4 form-group">
-                                <div class="select-wrap">
-                                    <!-- <div class=""> -->
+                                <div class="col-md-4">
+                                    <div class="form-group">
                                         <label for="job_type_id"> Job Type:</label>
-                                        <select name="job_type" id="job_type" class="form-control custom-select m_select">
+                                        <select name="job_type" id="job_type" class="form-control custom-select">
                                     <?php foreach($job_types as $jt){ ?>
                                         <option value="<?php echo $jt->title ?>"><?php echo $jt->title ?></option>
 
@@ -1284,29 +753,25 @@ border: none;
                                         <option value="Repair">Repair</option>
                                         <option value="Replace">Replace</option> -->
                                     </select>
-                                    <!-- </div> -->
-                                </div>
+                                    </div>
                                 </div>
                                 
-                                <div class="col-md-4 form-group">
-                                <div class="select-wrap">
-                                    <!-- <div class="form-group"> -->
+                                <div class="col-md-4">
+                                    <div class="form-group">
                                         <label for="job_type_id">Job Tag</label>
-                                        <select name="job_tag" id="job_tag" class="form-control custom-select m_select">
+                                        <select name="job_tag" id="job_tag" class="form-control custom-select">
                                         <?php foreach($job_tags as $tags){ ?>
-                                                <option value="<?php echo $tags->name; ?>"><?php echo $tags->name; ?></option>
+                                                <option value="<?php echo $tags->name; ?>"><?php echo $tags->name; ?><option>
                                             <?php } ?>
                                     </select>
-                                    <!-- </div> -->
-                                </div>
+                                    </div>
                                 </div>
                                 
 
-                                <div class="col-md-4 form-group">
-                                <div class="select-wrap">
-                                    <!-- <div class=""> -->
+                                <div class="col-md-6">
+                                    <div class="form-group">
                                         <label for="status_id"> Status:</label>
-                                        <select name="status" id="workorder_status" class="form-control custom-select m_select">
+                                        <select name="status" id="workorder_status" class="form-control custom-select">
                                         <option value="New">New</option>
                                         <option value="Draft">Draft</option>
                                         <option value="Scheduled">Scheduled</option>
@@ -1317,36 +782,20 @@ border: none;
                                         <option value="Withdrawn">Withdrawn</option>
                                         <option value="Closed">Closed</option>
                                     </select>
-                                    <!-- </div> -->
-                                </div>
+                                    </div>
                                 </div>
 
-                                <div class="col-md-4 form-group">
-                                <div class="select-wrap">
-                                    <!-- <div class=""> -->
+                                <div class="col-md-6">
+                                    <div class="form-group">
                                         <label for="job_priority"> Priority:</label> 
-                                        <select name="priority" id="workorder_priority" class="form-control custom-select m_select">
+                                        <select name="priority" id="workorder_priority" class="form-control custom-select">
                                         <option value="Standard">Standard</option>
                                         <option value="Emergency">Emergency</option>
                                         <option value="Low">Low</option>
                                         <option value="Urgent">Urgent</option>                
                                     </select>
-                                    <!-- </div> -->
+                                    </div>
                                 </div>
-                                </div>
-                                <!-- <div class="row">                         -->
-                                    <div class="form-group col-md-4">
-                                    <div class="select-wrap">
-                                        <label for="lead_source">Lead Source</label>
-                                        <select id="lead_source" name="lead_source" class="form-control custom-select m_select">
-                                            <option value="0">- none -</option>
-                                            <?php foreach($lead_source as $lead){ ?>
-                                                <option value="<?php echo $lead->ls_id; ?>"><?php echo $lead->ls_name; ?></option>
-                                            <?php } ?>
-                                        </select>
-                                    </div>    
-                                    </div>                                     
-                                <!-- </div> -->
 
                             </div>
 
@@ -1359,66 +808,66 @@ border: none;
                                     <div class="panel-group">
                                         <div class="panels panel-default">
                                             <div class="panel-heading">
-                                                <h6 class="panel-title">
+                                                <h4 class="panel-title">
                                                     <a data-toggle="collapse" href="#collapse1">Cameras <i
-                                                                class="fa fa-angle-down mobile_view"
+                                                                class="fa fa-angle-down"
                                                                 style="font-size: 31px;top: 4px;position: relative;font-weight: bolder;"></i></a>
-                                                </h6>
+                                                </h4>
                                             </div>
                                             <div id="collapse1" class="panel-collapse collapse">
                                                 <table class="table" style="width:50%;">
                                                     <tr>
                                                         <th></th>
-                                                        <th><div class="down-arrow"><span class="blocktext">WO</span></div></th>
-                                                        <th><div class="down-arrow2"><span class="blocktext">WI</span></div></th>
-                                                        <th><div class="down-arrow3"><span class="blocktext">Doorbell Cam</span></div></th>
+                                                        <th>WO</th>
+                                                        <th>WI</th>
+                                                        <th>Doorbell Cam</th>
                                                     </tr>
                                                     <tr>
-                                                        <td><div class="right-arrow"><span class="blocktext">Honeywell</span></div> </td>
+                                                        <td>Honeywell</td>
                                                         <td style="min-width:10%;"><input type="text" class="form-control"
-                                                                   name="honeywell_wo"
+                                                                   name="ip_cameras[honeywell][wo]"
                                                                    value="<?php echo (!empty($workorder->ip_cameras)) ? $workorder->ip_cameras['honeywell']['wo'] : '' ?>"
                                                                    placeholder=""/>
                                                         </td>
                                                         <td style="min-width:80px;"><input type="text" class="form-control"
                                                                    value="<?php echo (!empty($workorder->ip_cameras)) ? $workorder->ip_cameras['honeywell']['wi'] : '' ?>"
-                                                                   name="honeywell_wi" placeholder=""/>
+                                                                   name="ip_cameras[honeywell][wi]" placeholder=""/>
                                                         </td>
                                                         <td style="min-width:80px;"><input type="text" class="form-control"
                                                                    value="<?php echo (!empty($workorder->ip_cameras)) ? $workorder->ip_cameras['honeywell']['doorbell_cam'] : '' ?>"
-                                                                   name="honeywell_doorbellcam"
+                                                                   name="ip_cameras[honeywell][doorbell_cam]"
                                                                    placeholder=""/>
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td><div class="right-arrow"><span class="blocktext">Alarm.com</span></div></td>
+                                                        <td>Alarm.com</td>
                                                         <td style="min-width:80px;"><input type="text" class="form-control"
                                                                    value="<?php echo (!empty($workorder->ip_cameras)) ? $workorder->ip_cameras['avycon']['wo'] : '' ?>"
-                                                                   name="alarm_wo" placeholder=""/>
+                                                                   name="ip_cameras[avycon][wo]" placeholder=""/>
                                                         </td>
                                                         <td style="min-width:80px;"><input type="text" class="form-control"
                                                                    value="<?php echo (!empty($workorder->ip_cameras)) ? $workorder->ip_cameras['avycon']['wi'] : '' ?>"
-                                                                   name="alarm_wi" placeholder=""/>
+                                                                   name="ip_cameras[avycon][wi]" placeholder=""/>
                                                         </td>
                                                         <td style="min-width:80px;"><input type="text" class="form-control"
                                                                    value="<?php echo (!empty($workorder->ip_cameras)) ? $workorder->ip_cameras['avycon']['doorbell_cam'] : '' ?>"
-                                                                   name="alarm_doorbellcam"
+                                                                   name="ip_cameras[avycon][doorbell_cam]"
                                                                    placeholder=""/>
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td><div class="right-arrow"><span class="blocktext">Other</span></div></td>
+                                                        <td>Other</td>
                                                         <td style="min-width:80px;"><input type="text" class="form-control"
                                                                    value="<?php echo (!empty($workorder->ip_cameras)) ? $workorder->ip_cameras['other']['wo'] : '' ?>"
-                                                                   name="other_wo" placeholder=""/>
+                                                                   name="ip_cameras[other][wo]" placeholder=""/>
                                                         </td>
                                                         <td style="min-width:80px;"><input type="text" class="form-control"
                                                                    value="<?php echo (!empty($workorder->ip_cameras)) ? $workorder->ip_cameras['other']['wi'] : '' ?>"
-                                                                   name="other_wi" placeholder=""/>
+                                                                   name="ip_cameras[other][wi]" placeholder=""/>
                                                         </td>
                                                         <td style="min-width:80px;"><input type="text" class="form-control"
                                                                    value="<?php echo (!empty($workorder->ip_cameras)) ? $workorder->ip_cameras['other']['doorbell_cam'] : '' ?>"
-                                                                   name="other_doorbellcam"
+                                                                   name="ip_cameras[other][doorbell_cam]"
                                                                    placeholder=""/>
                                                         </td>
                                                     </tr>
@@ -1432,52 +881,52 @@ border: none;
                                     <div class="panel-group">
                                         <div class="panels panel-default">
                                             <div class="panel-heading">
-                                                <h6 class="panel-title">
+                                                <h4 class="panel-title">
                                                     <a data-toggle="collapse" href="#collapse2">Doorlocks: <i
-                                                                class="fa fa-angle-down mobile_view"
+                                                                class="fa fa-angle-down"
                                                                 style="font-size: 31px;top: 4px;position: relative;font-weight: bolder;"></i></a>
-                                                </h6>
+                                                </h4>
                                             </div>
                                             <div id="collapse2" class="panel-collapse collapse">
                                                 <div class="panel-body">
                                                     <table class="table" style="width:50%;">
                                                         <tr>
                                                             <th></th>
-                                                            <th><div class="down-arrow"><span class="blocktext">Brass</span></div></th>
-                                                            <th><div class="down-arrow2"><span class="blocktext">Nickel</span></div></th>
-                                                            <th><div class="down-arrow3"><span class="blocktext">Bronze</span></div></th>
+                                                            <th>Brass</th>
+                                                            <th>Nickel</th>
+                                                            <th>Bronze</th>
                                                         </tr>
                                                         <tr>
-                                                            <td><div class="right-arrow"><span class="blocktext">Deadbolt</span></div></td>
+                                                            <td>Deadbolt</td>
                                                             <td style="min-width:80px;"><input type="text" class="form-control"
-                                                                       name="deadbolt_brass"
+                                                                       name="doorlocks[deadbolt][brass]"
                                                                        value="<?php echo (!empty($workorder->doorlocks)) ? $workorder->doorlocks['deadbolt']['brass'] : '' ?>"
                                                                        placeholder=""/>
                                                             </td>
                                                             <td style="min-width:80px;"><input type="text" class="form-control"
                                                                        value="<?php echo (!empty($workorder->doorlocks)) ? $workorder->doorlocks['deadbolt']['nickal'] : '' ?>"
-                                                                       name="deadbolt_nickel"
+                                                                       name="doorlocks[deadbolt][nickal]"
                                                                        placeholder=""/>
                                                             </td>
                                                             <td style="min-width:80px;"><input type="text" class="form-control"
                                                                        value="<?php echo (!empty($workorder->doorlocks)) ? $workorder->doorlocks['deadbolt']['bronze'] : '' ?>"
-                                                                       name="deadbolt_bronze"
+                                                                       name="doorlocks[deadbolt][bronze]"
                                                                        placeholder=""/>
                                                             </td>
                                                         </tr>
                                                         <tr>
-                                                            <td><div class="right-arrow"><span class="blocktext">Handle</span></div></td>
+                                                            <td>Handle</td>
                                                             <td style="min-width:80px;"><input type="text" class="form-control"
                                                                        value="<?php echo (!empty($workorder->doorlocks)) ? $workorder->doorlocks['handle']['brass'] : '' ?>"
-                                                                       name="handle_brass" placeholder=""/>
+                                                                       name="doorlocks[handle][brass]" placeholder=""/>
                                                             </td>
                                                             <td style="min-width:80px;"><input type="text" class="form-control"
                                                                        value="<?php echo (!empty($workorder->doorlocks)) ? $workorder->doorlocks['handle']['nickal'] : '' ?>"
-                                                                       name="handle_nickel" placeholder=""/>
+                                                                       name="doorlocks[handle][nickal]" placeholder=""/>
                                                             </td>
                                                             <td style="min-width:80px;"><input type="text" class="form-control"
                                                                        value="<?php echo (!empty($workorder->doorlocks)) ? $workorder->doorlocks['handle']['bronze'] : '' ?>"
-                                                                       name="handle_bonze" placeholder=""/>
+                                                                       name="doorlocks[handle][bronze]" placeholder=""/>
                                                             </td>
                                                         </tr>
                                                     </table>
@@ -1491,64 +940,64 @@ border: none;
                                     <div class="panel-group">
                                         <div class="panels panel-default">
                                             <div class="panel-heading">
-                                                <h6 class="panel-title">
+                                                <h4 class="panel-title">
                                                     <a data-toggle="collapse" href="#collapse3">DVR <i
-                                                                class="fa fa-angle-down mobile_view"
+                                                                class="fa fa-angle-down"
                                                                 style="font-size: 31px;top: 4px;position: relative;font-weight: bolder;"></i></a>
-                                                </h6>
+                                                </h4>
                                             </div>
                                             <div id="collapse3" class="panel-collapse collapse">
                                                 <table class="table" style="width:50%;">
                                                     <tr>
                                                         <th></th>
-                                                        <th><div class="down-arrow"><span class="blocktext">4 Channel</span></div></th>
-                                                        <th><div class="down-arrow2"><span class="blocktext">8 Channel</span></div></th>
-                                                        <th><div class="down-arrow3"><span class="blocktext">16 Channel</span></div></th>
+                                                        <th>4 Channel</th>
+                                                        <th>8 Channel</th>
+                                                        <th>16 Channel</th>
                                                     </tr>
                                                     <tr>
-                                                        <td><div class="right-arrow"><span class="blocktext">Honeywell</span></div></td>
+                                                        <td>Honeywell</td>
                                                         <td><input type="text" class="form-control"
                                                                    value="<?php echo (!empty($workorder->dvr_nvr)) ? $workorder->dvr_nvr['honeywell']['4_channel'] : '' ?>"
-                                                                   name="honeywell_4ch" placeholder=""/>
+                                                                   name="dvr_nvr[honeywell][4_channel]" placeholder=""/>
                                                         </td>
                                                         <td><input type="text" class="form-control"
                                                                    value="<?php echo (!empty($workorder->dvr_nvr)) ? $workorder->dvr_nvr['honeywell']['8_channel'] : '' ?>"
-                                                                   name="honeywell_8ch" placeholder=""/>
+                                                                   name="dvr_nvr[honeywell][8_channel]" placeholder=""/>
                                                         </td>
                                                         <td><input type="text" class="form-control"
                                                                    value="<?php echo (!empty($workorder->dvr_nvr)) ? $workorder->dvr_nvr['honeywell']['16_channel'] : '' ?>"
-                                                                   name="honeywell_16ch"
+                                                                   name="dvr_nvr[honeywell][16_channel]"
                                                                    placeholder=""/>
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td><div class="right-arrow"><span class="blocktext">Alarm.com</span></div></td>
+                                                        <td>Alarm.com</td>
                                                         <td><input type="text" class="form-control"
                                                                    value="<?php echo (!empty($workorder->dvr_nvr)) ? $workorder->dvr_nvr['avycon']['4_channel'] : '' ?>"
-                                                                   name="alarm_4ch" placeholder=""/>
+                                                                   name="dvr_nvr[avycon][4_channel]" placeholder=""/>
                                                         </td>
                                                         <td><input type="text" class="form-control"
                                                                    value="<?php echo (!empty($workorder->dvr_nvr)) ? $workorder->dvr_nvr['avycon']['8_channel'] : '' ?>"
-                                                                   name="alarm_8ch" placeholder=""/>
+                                                                   name="dvr_nvr[avycon][8_channel]" placeholder=""/>
                                                         </td>
                                                         <td><input type="text" class="form-control"
                                                                    value="<?php echo (!empty($workorder->dvr_nvr)) ? $workorder->dvr_nvr['avycon']['16_channel'] : '' ?>"
-                                                                   name="alarm_16ch" placeholder=""/>
+                                                                   name="dvr_nvr[avycon][16_channel]" placeholder=""/>
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td><div class="right-arrow"><span class="blocktext">Other</span></div></td>
+                                                        <td>Other</td>
                                                         <td><input type="text" class="form-control"
                                                                    value="<?php echo (!empty($workorder->dvr_nvr)) ? $workorder->dvr_nvr['other']['4_channel'] : '' ?>"
-                                                                   name="other_4ch" placeholder=""/>
+                                                                   name="dvr_nvr[other][4_channel]" placeholder=""/>
                                                         </td>
                                                         <td><input type="text" class="form-control"
                                                                    value="<?php echo (!empty($workorder->dvr_nvr)) ? $workorder->dvr_nvr['other']['8_channel'] : '' ?>"
-                                                                   name="other_8ch" placeholder=""/>
+                                                                   name="dvr_nvr[other][8_channel]" placeholder=""/>
                                                         </td>
                                                         <td><input type="text" class="form-control"
                                                                    value="<?php echo (!empty($workorder->dvr_nvr)) ? $workorder->dvr_nvr['other']['16_channel'] : '' ?>"
-                                                                   name="other_16ch" placeholder=""/>
+                                                                   name="dvr_nvr[other][16_channel]" placeholder=""/>
                                                         </td>
                                                     </tr>
                                                 </table>
@@ -1561,50 +1010,50 @@ border: none;
                                     <div class="panel-group">
                                         <div class="panels panel-default">
                                             <div class="panel-heading">
-                                                <h6 class="panel-title">
+                                                <h4 class="panel-title">
                                                     <a data-toggle="collapse" href="#collapse4">AUTOMATION <i
-                                                                class="fa fa-angle-down mobile_view"
+                                                                class="fa fa-angle-down"
                                                                 style="font-size: 31px;top: 4px;position: relative;font-weight: bolder;"></i></a>
-                                                </h6>
+                                                </h4>
                                             </div>
                                             <div id="collapse4" class="panel-collapse collapse">
                                                 <table class="table" style="width:30%;">
                                                     <tr>
                                                         <!-- <th></th> -->
-                                                        <th><div class="down-arrow"><span class="blocktext">Thermostats</span></div></th>
-                                                        <th><div class="down-arrow2"><span class="blocktext">Lights & Bulbs</span></div></th>
+                                                        <th>Thermostats</th>
+                                                        <th>Lights & Bulbs</th>
                                                     </tr>
                                                     <tr>
                                                         <!-- <td></td> -->
                                                         <td style="min-width:100px;"><input type="text" class="form-control"
                                                                    value="<?php echo (!empty($workorder->automation)) ? $workorder->automation['thermostats'][0] : '' ?>"
-                                                                   name="thermostats[]" placeholder=""/>
+                                                                   name="automation[thermostats][]" placeholder=""/>
                                                         </td>
                                                         <td style="min-width:100px;"><input type="text" class="form-control"
                                                                    value="<?php echo (!empty($workorder->automation)) ? $workorder->automation['light_bulbs'][0] : '' ?>"
-                                                                   name="lights_and_bulbs[]" placeholder=""/>
+                                                                   name="automation[light_bulbs][]" placeholder=""/>
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <!-- <td></td> -->
                                                         <td style="min-width:100px;"><input type="text" class="form-control"
                                                                    value="<?php echo (!empty($workorder->automation)) ? $workorder->automation['thermostats'][1] : '' ?>"
-                                                                   name="thermostats[]" placeholder=""/>
+                                                                   name="automation[thermostats][]" placeholder=""/>
                                                         </td>
                                                         <td style="min-width:100px;"><input type="text" class="form-control"
                                                                    value="<?php echo (!empty($workorder->automation)) ? $workorder->automation['light_bulbs'][1] : '' ?>"
-                                                                   name="lights_and_bulbs[]" placeholder=""/>
+                                                                   name="automation[light_bulbs][]" placeholder=""/>
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <!-- <td></td> -->
                                                         <td style="min-width:100px;"><input type="text" class="form-control"
                                                                    value="<?php echo (!empty($workorder->automation)) ? $workorder->automation['thermostats'][2] : '' ?>"
-                                                                   name="thermostats[]" placeholder=""/>
+                                                                   name="automation[thermostats][]" placeholder=""/>
                                                         </td>
                                                         <td style="min-width:100px;"><input type="text" class="form-control"
                                                                    value="<?php echo (!empty($workorder->automation)) ? $workorder->automation['light_bulbs'][2] : '' ?>"
-                                                                   name="lights_and_bulbs[]" placeholder=""/>
+                                                                   name="automation[light_bulbs][]" placeholder=""/>
                                                         </td>
                                                     </tr>
                                                 </table>
@@ -1617,28 +1066,28 @@ border: none;
                                     <div class="panel-group">
                                         <div class="panels panel-default">
                                             <div class="panel-heading">
-                                                <h6 class="panel-title">
+                                                <h4 class="panel-title">
                                                     <a data-toggle="collapse" href="#collapse5">PERS <i
-                                                                class="fa fa-angle-down mobile_view"
+                                                                class="fa fa-angle-down"
                                                                 style="font-size: 31px;top: 4px;position: relative;font-weight: bolder;"></i></a>
-                                                </h6>
+                                                </h4>
                                             </div>
                                             <div id="collapse5" class="panel-collapse collapse">
                                                 <table class="table" style="width:50%;">
                                                     <tr>
                                                         <th></th>
-                                                        <th><div class="down-arrow"><span class="blocktext">Fall Detection</span></div></th>
-                                                        <th><div class="down-arrow2"><span class="blocktext">W/O Fall Protection</span></div></th>
+                                                        <th>Fall Detection</th>
+                                                        <th>W/O Fall Protection</th>
                                                     </tr>
                                                     <tr>
                                                         <td></td>
                                                         <td style="min-width:100px;"><input type="number" class="form-control"
                                                                    value="<?php echo (!empty($workorder->pers)) ? $workorder->pers['fall_detection'][0] : '' ?>"
-                                                                   name="fall_detection" placeholder=""/>
+                                                                   name="pers[fall_detection][]" placeholder=""/>
                                                         </td>
                                                         <td style="min-width:100px;"><input type="number" class="form-control"
                                                                    value="<?php echo (!empty($workorder->pers)) ? $workorder->pers['wo_fall_detection'][0] : '' ?>"
-                                                                   name="w_o_fall_protection" placeholder=""/>
+                                                                   name="pers[wo_fall_detection][]" placeholder=""/>
                                                         </td>
                                                     </tr>
                                                     <!-- <tr>
@@ -1669,7 +1118,6 @@ border: none;
                                     </div>
                                 </div>
                             </div>
-                            </div>
 
                             <!-- ====== Additional Equipment/Services ====== -->
                             <div class="row" id="group_area">
@@ -1681,103 +1129,127 @@ border: none;
 
                                         <div class="row" id="plansItemDiv">
 
-                                            <div class="col-md-12">
-                                            <table class="table table-hover">
-                                        <input type="hidden" name="count" value="0" id="count">
-                                        <thead style="background-color:#E9E8EA;">
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Group</th>
-                                            <!-- <th>Description</th> -->
-                                            <th width="150px">Quantity</th>
-                                            <!-- <th>Location</th> -->
-                                            <th width="150px">Price</th>
-                                            <th class="hidden_mobile_view" width="150px">Discount</th>
-                                            <th class="hidden_mobile_view" width="150px">Tax (Change in %)</th>
-                                            <th class="hidden_mobile_view">Total</th>
-                                        </tr>
-                                        </thead>
-                                        <!-- <tbody id="jobs_items_table_body">
-                                        <tr>
-                                            <td width="30%">
-                                                <input type="text" class="form-control getItems"
-                                                       onKeyup="getItems(this)" name="items[]">
-                                                <ul class="suggestions"></ul>
-                                                <div class="show_mobile_view"><span class="getItems_hidden"></span></div>
-                                                <input type="hidden" name="itemid[]" id="itemid" class="itemid">
-                                            </td>
-                                            <td width="20%">
-                                            <div class="dropdown-wrapper">
-                                                <select name="item_type[]" id="item_typeid" class="form-control">
-                                                    <option value="product">Product</option>
-                                                    <option value="material">Material</option>
-                                                    <option value="service">Service</option>
-                                                    <option value="fee">Fee</option>
-                                                </select>
-                                            </div>
-                                                </td>
-                                            <td width="10%"><input type="number" class="form-control quantity hidden_mobile_view" name="quantity[]"
-                                                       data-counter="0" id="quantity_0" value="1"> <div class="show_mobile_view"><span>1</span><input type="hidden" class="form-control quantity" name="quantity[]"
-                                                       data-counter="0" id="quantity_0" value="1"></div> </td>
-                                            <td width="10%"><input type="number" class="form-control price hidden_mobile_view" name="price[]"
-                                                       data-counter="0" id="price_0" min="0" value="0"> <input type="hidden" class="priceqty" id="priceqty_0"> <div class="show_mobile_view"><span class="price">0</span><input type="hidden" class="form-control price" name="price[]" data-counter="0" id="priceM_0" min="0" value="0"></div><input id="priceM_qty0" value=""  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view price_qty"></td>
-                                            <td width="10%" class="hidden_mobile_view"><input type="number" class="form-control discount" name="discount[]"
-                                                       data-counter="0" id="discount_0" min="0" value="0" ></td>
-                                            <td width="10%" class="hidden_mobile_view"><input type="text" class="form-control tax_change" name="tax[]"
-                                                       data-counter="0" id="tax1_0" min="0" value="0">
-                                                       </td>
-                                            <td width="10%" class="hidden_mobile_view"><input type="hidden" class="form-control " name="total[]"
-                                                       data-counter="0" id="item_total_0" min="0" value="0">
-                                                       $<span id="span_total_0">0.00</span></td>
-                                        </tr>
-                                        </tbody> -->
-                                        <tbody id="jobs_items_table_body">
-                                        <tr>
-                                            <td width="30%">
-                                                <input type="text" class="form-control getItems"
-                                                       onKeyup="getItems(this)" name="items[]">
-                                                <ul class="suggestions"></ul>
-                                                <div class="show_mobile_view"><span class="getItems_hidden"></span></div>
-                                                <input type="hidden" name="itemid[]" id="itemid" class="itemid" value="0">
-                                                <input type="hidden" name="packageID[]" value="0">
-                                            </td>
-                                            <td width="20%">
-                                            <div class="dropdown-wrapper">
-                                                <select name="item_type[]" id="item_typeid" class="form-control">
-                                                    <option value="product">Product</option>
-                                                    <option value="material">Material</option>
-                                                    <option value="service">Service</option>
-                                                    <option value="fee">Fee</option>
-                                                </select>
-                                            </div>
+                                            <div class="col-md-12 table-responsive">
+                                                <table class="table table-hover">
+                                                    <input type="hidden" name="count" value="0" id="count">
+                                                    <thead>
+                                                    <tr>
+                                                        <th>DESCRIPTION</th>
+                                                        <th>GROUP</th>
+                                                        <th width="100px">QUANTITY</th>
+                                                        <th>LOCATION</th>
+                                                        <th width="140px">COST</th>
+                                                        <th width="100px">Discount</th>
+                                                        <th>Tax(%)</th>
+                                                        <th>Total</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody id="jobs_items_table_body">
+                                                    <?php if (count($workorder->additional_services) > 0) { ?>
+                                                        <input type="hidden" name="count"
+                                                               value="<?php echo count($workorder->additional_services) > 0 ? count($workorder->additional_services) - 1 : 0; ?>"
+                                                               id="count">
+                                                        <?php $i = 0;
+                                                        foreach ($workorder->additional_services as $row) { ?>
 
-                                            <!-- <div class="show_mobile_view" style="color:green;"><span>Product</span></div> -->
-                                                </td>
-                                            <td width="10%"><input type="number" class="form-control quantity_w mobile_qty" name="quantity[]"
-                                                       data-counter="0" id="quantity_0" value="1"></td>
-                                            <td width="10%"><input type="number" class="form-control price_w price hidden_mobile_view" name="price[]"
-                                                       data-counter="0" id="price_0" min="0" value="0"> <input type="hidden" class="priceqty" value="0" id="priceqty_0"> 
-                                                       <div class="show_mobile_view"><span class="price">0</span>
-                                                       <!-- <input type="hidden" class="form-control price" name="price[]" data-counter="0" id="priceM_0" min="0" value="0"> -->
-                                                       </div><input id="priceM_qty0" value="0"  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view price_qty"></td>
-                                            <td width="10%" class="hidden_mobile_view"><input type="number" class="form-control discount" name="discount[]"
-                                                       data-counter="0" id="discount_0" min="0" value="0" ></td>
-                                            <td width="10%" class="hidden_mobile_view"><input type="text" class="form-control tax_change" name="tax[]"
-                                                       data-counter="0" id="tax1_0" min="0" value="0">
-                                                       <!-- <span id="span_tax_0">0.0</span> -->
-                                                       </td>
-                                            <td width="10%" class="hidden_mobile_view"><input type="hidden" class="form-control " name="total[]"
-                                                       data-counter="0" id="item_total_0" min="0" value="0">
-                                                       $<span id="span_total_0">0.00</span></td>
-                                            <td><a href="#" class="remove btn btn-sm btn-success" id="0"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
+                                                            <tr>
+                                                                <td>
+                                                                    <input type="text" class="form-control getItems"
+                                                                           onKeyup="getItems(this)" name="item[]"
+                                                                           value="<?php echo $row['item']; ?>">
+                                                                    <ul class="suggestions"></ul>
+                                                                </td>
+                                                                <td><select name="item_type[]" class="form-control">
+
+                                                                        <option value="Product" <?php if ($row['item_type'] == 'Product') echo 'selected'; ?>>
+                                                                        Product
+                                                                        </option>
+                                                                        <option value="Service" <?php if ($row['item_type'] == 'Service') echo 'selected'; ?>>
+                                                                        Service
+                                                                        </option>
+                                                                        <option value="QSP" <?php if ($row['item_type'] == 'QSP') echo 'selected'; ?>>
+                                                                        QSP
+                                                                        </option>
+                                                                    </select></td>
+                                                                <td>
+                                                                    <input type="text" class="form-control quantity"
+                                                                           name="quantity[]"
+                                                                           data-counter="<?php echo $i; ?>"
+                                                                           id="quantity_<?php echo $i; ?>"
+                                                                           value="<?php echo $row['quantity'] ?>">
+                                                                </td>
+                                                                <td>
+                                                                    <input type="text" class="form-control"
+                                                                           name="location[]"
+                                                                           value="<?php echo $row['location'] ?>">
+                                                                </td>
+                                                                <td>
+                                                                    <input type="number" class="form-control price"
+                                                                           name="price[]"
+                                                                           data-counter="<?php echo $i; ?>"
+                                                                           id="price_<?php echo $i; ?>" min="0"
+                                                                           value="<?php echo $row['price'] ?>">
+                                                                </td>
+                                                                <td>
+                                                                    <input type="number"
+                                                                           value="<?php echo $row['discount'] ?>"
+                                                                           class="form-control discount"
+                                                                           name="discount[]"
+                                                                           data-counter="<?php echo $i; ?>"
+                                                                           id="discount_<?php echo $i; ?>" min="0"
+                                                                           value="0"
+                                                                           readonly>
+                                                                </td>
+                                                                <td style="width:85px;">
+															<span id="span_tax_<?php echo $i; ?>"><?php $tax = ($row['price'] * 7.5 / 100) * $row['quantity'];
+                                                                echo number_format($tax, 2) ?></span>
+                                                                </td>
+                                                                <td>
+															<span id="span_total_<?php echo $i; ?>"><?php $price = ($row['price'] + $tax) * $row['quantity'];
+                                                                echo number_format($price, 2); ?></span>
+                                                                </td>
+                                                                <td>
+                                                                    <a href="#" class="remove">X</a>
+                                                                </td>
+                                                            </tr>
+                                                            <?php $i++;
+                                                        } ?>
+
+                                                    <?php } else { ?>
+                                                        <input type="hidden" name="count" value="0" id="count">
+                                                        <tr>
+                                                            <td><input type="text" class="form-control getItems"
+                                                                       onKeyup="getItems(this)" name="item[]">
+                                                                <ul class="suggestions"></ul>
+                                                            </td>
+                                                            <td><select name="item_type[]" class="form-control">
+                                                                    <option value="Product">Product</option>
+                                                                    <option value="Service">Service</option>
+                                                                    <option value="QSP">QSP</option>
+                                                                </select></td>
+                                                            <td><input type="text" class="form-control quantity"
+                                                                       name="quantity[]" data-counter="0"
+                                                                       id="quantity_0"
+                                                                       value="1"></td>
+                                                            <td><input type="text" class="form-control"
+                                                                       name="location[]"></td>
+                                                            <td><input type="number" class="form-control price"
+                                                                       name="price[]"
+                                                                       data-counter="0" id="price_0" min="0" value="0">
+                                                            </td>
+                                                            <td><input type="number" class="form-control discount"
+                                                                       name="discount[]" data-counter="0"
+                                                                       id="discount_0"
+                                                                       min="0" value="0" readonly></td>
+                                                            <td style="width:85px;"><span id="span_tax_0">0.00 (7.5%)</span></td>
+                                                            <td><span id="span_total_0">0.00</span></td>
+                                                        </tr>
+
+                                                    <?php } ?>
+                                                    </tbody>
+                                                </table>
                                                 <!-- <a href="#" class="btn btn-primary" id="add_another">Add Items</a> -->
                                                 <a class="link-modal-open" href="#" id="add_another_itemss" data-toggle="modal" data-target="#item_list"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a>
-                                                &emsp;
-                                                <a class="link-modal-open" href="#" id="add_package" data-toggle="modal" data-target=".bd-example-modal-lg"><span class="fa fa-plus-square fa-margin-right"></span>Add By Group</a> &emsp;
-                                                <a class="link-modal-open" href="#" id="create_package" data-toggle="modal" data-target=".createPackage"><span class="fa fa-plus-square fa-margin-right"></span>Add/Create Package</a>
                                             </div>
                                         </div><br/>
 
@@ -1786,104 +1258,55 @@ border: none;
 
                                         <div class="row" id="plansItemDiv">
 
-                                            <div class="col-md-12">
-                                            <table class="table table-hover">
-                                        <input type="hidden" name="count" value="0" id="count">
-                                        <thead style="background-color:#E9E8EA;">
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Group</th>
-                                            <!-- <th>Description</th> -->
-                                            <th width="150px">Quantity</th>
-                                            <!-- <th>Location</th> -->
-                                            <th width="150px">Price</th>
-                                            <th class="hidden_mobile_view" width="150px">Discount</th>
-                                            <th class="hidden_mobile_view" width="150px">Tax (Change in %)</th>
-                                            <th class="hidden_mobile_view">Total</th>
-                                        </tr>
-                                        </thead>
-                                        <!-- <tbody id="jobs_items_table_body">
-                                        <tr>
-                                            <td width="30%">
-                                                <input type="text" class="form-control getItems"
-                                                       onKeyup="getItems(this)" name="items[]">
-                                                <ul class="suggestions"></ul>
-                                                <div class="show_mobile_view"><span class="getItems_hidden"></span></div>
-                                                <input type="hidden" name="itemid[]" id="itemid" class="itemid">
-                                            </td>
-                                            <td width="20%">
-                                            <div class="dropdown-wrapper">
-                                                <select name="item_type[]" id="item_typeid" class="form-control">
-                                                    <option value="product">Product</option>
-                                                    <option value="material">Material</option>
-                                                    <option value="service">Service</option>
-                                                    <option value="fee">Fee</option>
-                                                </select>
-                                            </div>
-
-                                                </td>
-                                            <td width="10%"><input type="number" class="form-control quantity hidden_mobile_view" name="quantity[]"
-                                                       data-counter="0" id="quantity_0" value="1"> <div class="show_mobile_view"><span>1</span><input type="hidden" class="form-control quantity" name="quantity[]"
-                                                       data-counter="0" id="quantity_0" value="1"></div> </td>
-                                            <td width="10%"><input type="number" class="form-control price hidden_mobile_view" name="price[]"
-                                                       data-counter="0" id="price_0" min="0" value="0"> <input type="hidden" class="priceqty" id="priceqty_0"> <div class="show_mobile_view"><span class="price">0</span><input type="hidden" class="form-control price" name="price[]" data-counter="0" id="priceM_0" min="0" value="0"></div><input id="priceM_qty0" value=""  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view price_qty"></td>
-                                            <td width="10%" class="hidden_mobile_view"><input type="number" class="form-control discount" name="discount[]"
-                                                       data-counter="0" id="discount_0" min="0" value="0" ></td>
-                                            <td width="10%" class="hidden_mobile_view"><input type="text" class="form-control tax_change" name="tax[]"
-                                                       data-counter="0" id="tax1_0" min="0" value="0">
-                                                       </td>
-                                            <td width="10%" class="hidden_mobile_view"><input type="hidden" class="form-control " name="total[]"
-                                                       data-counter="0" id="item_total_0" min="0" value="0">
-                                                       $<span id="span_total_0">0.00</span></td>
-                                        </tr>
-                                        </tbody> -->
-                                        <tbody id="jobs_items_table_body">
-                                            <tr>
-                                                <td width="30%">
-                                                    <input type="text" class="form-control getItems"
-                                                        onKeyup="getItems(this)" name="items[]">
-                                                    <ul class="suggestions"></ul>
-                                                    <div class="show_mobile_view"><span class="getItems_hidden"></span></div>
-                                                    <input type="hidden" name="itemid[]" id="itemid" class="itemid" value="0">
-                                                    <input type="hidden" name="packageID[]" value="0">
-                                                </td>
-                                                <td width="20%">
-                                                <div class="dropdown-wrapper">
-                                                    <select name="item_type[]" id="item_typeid" class="form-control">
-                                                        <option value="product">Product</option>
-                                                        <option value="material">Material</option>
-                                                        <option value="service">Service</option>
-                                                        <option value="fee">Fee</option>
-                                                    </select>
-                                                </div>
-
-                                                <!-- <div class="show_mobile_view" style="color:green;"><span>Product</span></div> -->
-                                                    </td>
-                                                <td width="10%"><input type="number" class="form-control quantity mobile_qty" name="quantity[]"
-                                                        data-counter="0" id="quantity_0" value="1"></td>
-                                                <td width="10%"><input type="number" class="form-control price_ price hidden_mobile_view" name="price[]"
-                                                        data-counter="0" id="price_0" min="0" value="0"> <input type="hidden" class="priceqty" value="0" id="priceqty_0"> 
-                                                        <div class="show_mobile_view"><span class="price">0</span>
-                                                        <!-- <input type="hidden" class="form-control price" name="price[]" data-counter="0" id="priceM_0" min="0" value="0"> -->
-                                                        </div><input id="priceM_qty0" value="0"  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view price_qty"></td>
-                                                <td width="10%" class="hidden_mobile_view"><input type="number" class="form-control discount" name="discount[]"
-                                                        data-counter="0" id="discount_0" min="0" value="0"></td>
-                                                <td width="10%" class="hidden_mobile_view"><input type="text" class="form-control tax_change" name="tax[]"
-                                                        data-counter="0" id="tax1_0" min="0" value="0" disabled="">
-                                                        <!-- <span id="span_tax_0">0.0</span> -->
+                                            <div class="col-md-12 table-responsive">
+                                                <table class="table table-hover">
+                                                    <input type="hidden" name="count" value="0" id="count">
+                                                    <thead>
+                                                    <tr>
+                                                        <th>DESCRIPTION</th>
+                                                        <th>GROUP</th>
+                                                        <th width="100px">Quantity</th>
+                                                        <!-- <th>LOCATION</th> -->
+                                                        <th width="140px">COST</th>
+                                                        <th width="100px">Discount</th>
+                                                        <th>Tax(%)</th>
+                                                        <th>Total</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody id="jobs_items_table_body">
+                                                    <tr>
+                                                        <td><input type="text" class="form-control getItems"
+                                                                   onKeyup="getItems(this)" name="item[]">
+                                                            <ul class="suggestions"></ul>
                                                         </td>
-                                                <td width="10%" class="hidden_mobile_view"><input type="hidden" class="form-control " name="total[]"
-                                                        data-counter="0" id="item_total_0" min="0" value="0">
-                                                        $<span id="span_total_0">0.00</span></td>
-                                                <td><a href="#" class="remove btn btn-sm btn-success" id="0"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
+                                                        <td><select name="item_type[]" class="form-control">
+                                                                <option value="Product">Product</option>
+                                                                <option value="Service">Service</option>
+                                                                <option value="QSP">QSP</option>
+                                                            </select></td>
+                                                        <td><input type="text" class="form-control quantity"
+                                                                   name="quantity[]"
+                                                                   data-counter="0" id="quantity_0" value="1"></td>
+                                                        <!-- <td><input type="text" class="form-control" name="location[]"> </td> -->
+                                                        <td><input type="number" class="form-control price"
+                                                                   name="price[]"
+                                                                   data-counter="0" id="price_0" min="0" value="0"></td>
+                                                        <td><input type="number" class="form-control discount"
+                                                                   name="discount[]"
+                                                                   data-counter="0" id="discount_0" min="0" value="0"
+                                                                   readonly>
+                                                        </td>
+                                                        <!-- <td><span id="span_tax_0">0.00 (7.5%)</span></td> -->
+                                                        <td style="width:85px;"><input type="text" class="form-control tax_change" name="tax[]"
+                                                       data-counter="0" id="tax1_0" min="0" value="0">
+                                                       <!-- <span id="span_tax_0">0.0</span> -->
+                                                       </td>
+                                                        <td><span id="span_total_0">0.00</span></td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
                                                 <!-- <a href="#" class="btn btn-primary" id="add_another">Add Items</a> -->
                                                 <a class="link-modal-open" href="#" id="add_another_itemss" data-toggle="modal" data-target="#item_list"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a>
-                                                &emsp;
-                                                <a class="link-modal-open" href="#" id="add_package" data-toggle="modal" data-target=".bd-example-modal-lg"><span class="fa fa-plus-square fa-margin-right"></span>Add By Group</a> &emsp;
-                                                <a class="link-modal-open" href="#" id="create_package" data-toggle="modal" data-target=".createPackage"><span class="fa fa-plus-square fa-margin-right"></span>Add/Create Package</a>
                                             </div>
                                         </div><br/>
 
@@ -1901,7 +1324,7 @@ border: none;
                                         <table class="table table-bordered" style="width:80%;">
                                             <tr>
                                                 <td>Equipment Cost</td>
-                                                 <td class="d-flex align-items-center">$  <input type="text" name="subtotal" id="item_total" class="form-control" value="0" >
+                                                 <td class="d-flex align-items-center">$  <input type="text" name="subtotal" id="item_total" name="eqpt_cost" class="form-control" >
                                                 </td>
                                             </tr>
                                             <tr>
@@ -1909,7 +1332,7 @@ border: none;
                                                 <td class="d-flex align-items-center">$ <input type="text" 
                                                                                                name="taxes"
                                                                                                id="sales_taxs"
-                                                                                               class="form-control" value="0">
+                                                                                               class="form-control">
                                                 </td>
                                             </tr>
                                             <tr>
@@ -1940,7 +1363,7 @@ border: none;
                                                 <td>Total Due</td>
                                                  <td class="d-flex align-items-center">$ 
                                                             <input type="hidden" name="adjustment_value" id="adjustment_input" value="0" class="form-control adjustment_input" style="width:100px; display:inline-block"><input type="hidden" name="markup_input_form" id="markup_input_form" class="markup_input" value="0"> 
-                                                            <input type="text" name="grand_total_text" id="grand_total_inputs" class="form-control" placeholder="0">
+                                                            <input type="text" name="grand_total_text" id="grand_total_input" class="form-control" placeholder="0">
                                                 </td>
                                             </tr>
                                         </table>
@@ -1955,10 +1378,9 @@ border: none;
                                     </div>
                                     <div class="row">
                                         <div class="col-md-3">
-                                        <div class="select-wrap form-group">
                                             <label for="billing_date">Billing Date</label>
-                                            <!-- <div class=""> -->
-                                                <select name="billing_date" id="billing_date" class="form-control custom-select m_select">
+                                            <div class="form-group">
+                                                <select name="billing_date" id="billing_date" class="form-control">
                                                     <option>--SELECT--</option>
                                                     <?php foreach (range(1, 31) as $date) { ?>
                                                         <option value="<?php echo $date ?>" <?php echo (!empty($workorder->billing_date) && $workorder->billing_date == $date) ? 'selected' : '' ?>>
@@ -1966,14 +1388,12 @@ border: none;
                                                         </option>
                                                     <?php } ?>
                                                 </select>
-                                            <!-- </div> -->
-                                        </div>
+                                            </div>
                                         </div>
                                         <div class="col-md-3">
-                                            <div class="select-wrap form-group">
-                                            <!-- <div class="form-group"> -->
+                                            <div class="form-group">
                                                 <label for="payment_type"> Payment Type:</label> 
-                                                <select name="payment_method" id="payment_method" class="form-control custom-select m_select">
+                                                <select name="payment_method" id="payment_method" class="form-control custom-select">
                                                     <option value="">Choose method</option>
                                                     <option value="Cash">Cash</option>
                                                     <option value="Check">Check</option>
@@ -1997,10 +1417,10 @@ border: none;
                                             </div>
                                         </div>
                                         <div class="col-md-3">
-                                            <div class="select-wrap form-group">
+                                            <div class="form-group">
                                                 <label for="billing_freq"> Billing Frequency:</label>
                                                 <select name="billing_frequency"
-                                                        class="form-control custom-select m_select"
+                                                        class="form-control"
                                                         id="billing_freq">
                                                     <option>--SELECT--</option>
                                                     <?php foreach (get_config_item('billing_frequency') as $key => $billing_frequency) { ?>
@@ -2017,7 +1437,7 @@ border: none;
                                         </div>
                                         <div class="col-md-3">
                                             <div class="form-group">
-                                                <label for="job_type">Amount<small class="help help-sm"> ( $ )</small></label>
+                                                <label for="job_type">Amount</label><small class="help help-sm"> ( $ )</small>
                                                 <input type="text" class="form-control" name="payment_amount" id="payment_amount"  />
                                             </div>
                                             <div id="cash_area" style="display:none;margin-top:-20px;">
@@ -2113,18 +1533,18 @@ border: none;
                                     <div id="check_area" style="display:none;">
                                         <div class="row">                   
                                             <div class="form-group col-md-4">
-                                                <label for="job_type" class="label-element">Check Number</label>
-                                                <input type="text" class="form-control input-element" name="check_number" id="check_number"/>
+                                                <label for="job_type">Check Number</label>
+                                                <input type="text" class="form-control" name="check_number" id="check_number"/>
                                             </div>
                                             <div class="form-group col-md-4">
-                                                <label for="job_type" class="label-element">Routing Number</label>
-                                                <input type="text" class="form-control input-element" name="routing_number" id="routing_number"/>
+                                                <label for="job_type">Routing Number</label>
+                                                <input type="text" class="form-control" name="routing_number" id="routing_number"/>
                                             </div>                                             
                                         <!-- </div>
                                         <div class="row"> -->
                                             <div class="form-group col-md-4">
-                                                <label for="job_type" class="label-element">Account Number</label>
-                                                <input type="text" class="form-control input-element" name="account_number" id="account_number"/>
+                                                <label for="job_type">Account Number</label>
+                                                <input type="text" class="form-control" name="account_number" id="account_number"/>
                                             </div>                                       
                                         </div>
                                     </div>
@@ -2163,16 +1583,16 @@ border: none;
                                         <br><br>
                                         <div class="row">                   
                                             <div class="form-group col-md-4">
-                                                <label for="job_type" class="label-element">Credit Card Number</label>
-                                                <input type="text" class="form-control input-element" name="credit_number" id="credit_number" placeholder="0000 0000 0000 000" />
+                                                <label for="job_type">Credit Card Number</label>
+                                                <input type="text" class="form-control" name="credit_number" id="credit_number" placeholder="0000 0000 0000 000" />
                                             </div>
                                             <div class="form-group col-md-4">
-                                                <label for="job_type" class="label-element">Credit Card Expiration</label>
-                                                <input type="text" class="form-control input-element" name="credit_expiry" id="credit_expiry" placeholder="MM/YYYY"/>
+                                                <label for="job_type">Credit Card Expiration</label>
+                                                <input type="text" class="form-control" name="credit_expiry" id="credit_expiry" placeholder="MM/YYYY"/>
                                             </div>  
                                             <div class="form-group col-md-4">
-                                                <label for="job_type" class="label-element">CVC</label>
-                                                <input type="text" class="form-control input-element" name="credit_cvc" id="credit_cvc" placeholder="CVC"/>
+                                                <label for="job_type">CVC</label>
+                                                <input type="text" class="form-control" name="credit_cvc" id="credit_cvc" placeholder="CVC"/>
                                             </div>                                             
                                         </div>
                                     </div>
@@ -2181,30 +1601,30 @@ border: none;
                                         <input type="checkbox" id="same_as"> <b>Same as above in Monitoring Address</b> <br><br>
                                         <div class="row">                   
                                             <div class="col-md-4 form-group">
-                                                <label for="monitored_location" class="label-element">Mail Address</label>
-                                                <input type="text" class="form-control input-element" name="mail-address"
+                                                <label for="monitored_location">Mail Address</label>
+                                                <input type="text" class="form-control" name="mail-address"
                                                     id="mail-address" placeholder="Monitored Location"/>
                                             </div>
                                             <div class="col-md-4 form-group">
-                                                <label for="city" class="label-element">City</label>
-                                                    <input type="text" class="form-control input-element" name="mail_locality" id="mail_locality" placeholder="Enter Name" />
+                                                <label for="city">City</label>
+                                                    <input type="text" class="form-control" name="mail_locality" id="mail_locality" placeholder="Enter Name" />
                                             </div>
                                             <div class="col-md-4 form-group">
-                                                <label for="state" class="label-element">State</label>
-                                                <input type="text" class="form-control input-element" name="mail_state"
+                                                <label for="state">State</label>
+                                                <input type="text" class="form-control" name="mail_state"
                                                     id="mail_state" 
                                                     placeholder="Enter State"/>
                                             </div>
                                         </div>
                                         <div class="row">  
                                             <div class="col-md-4 form-group">
-                                                <label for="zip" class="label-element">ZIP</label> 
-                                                    <input type="text" id="mail_postcode" name="mail_postcode" class="form-control input-element"  placeholder="Enter Zip"/>
+                                                <label for="zip">ZIP</label> 
+                                                    <input type="text" id="mail_postcode" name="mail_postcode" class="form-control"  placeholder="Enter Zip"/>
                                             </div>
 
                                             <div class="col-md-4 form-group">
-                                                <label for="cross_street" class="label-element">Cross Street</label>
-                                                <input type="text" class="form-control input-element" name="mail_cross_street"
+                                                <label for="cross_street">Cross Street</label>
+                                                <input type="text" class="form-control" name="mail_cross_street"
                                                     id="mail_cross_street" 
                                                     placeholder="Cross Street"/>
                                             </div>                                        
@@ -2213,140 +1633,140 @@ border: none;
                                     <div id="debit_card" style="display:none;">
                                         <div class="row">                   
                                             <div class="form-group col-md-4">
-                                                <label for="job_type" class="label-element">Debit Card Number</label>
-                                                <input type="text" class="form-control input-element" name="debit_credit_number" id="credit_number2" placeholder="0000 0000 0000 000" />
+                                                <label for="job_type">Credit Card Number</label>
+                                                <input type="text" class="form-control" name="debit_credit_number" id="credit_number" placeholder="0000 0000 0000 000" />
                                             </div>
                                             <div class="form-group col-md-4">
-                                                <label for="job_type" class="label-element">Debit Card Expiration</label>
-                                                <input type="text" class="form-control input-element" name="debit_credit_expiry" id="credit_expiry" placeholder="MM/YYYY"/>
+                                                <label for="job_type">Credit Card Expiration</label>
+                                                <input type="text" class="form-control" name="debit_credit_expiry" id="credit_expiry" placeholder="MM/YYYY"/>
                                             </div>  
                                             <div class="form-group col-md-4">
-                                                <label for="job_type" class="label-element">CVC</label>
-                                                <input type="text" class="form-control input-element" name="debit_credit_cvc" id="credit_cvc" placeholder="CVC"/>
+                                                <label for="job_type">CVC</label>
+                                                <input type="text" class="form-control" name="debit_credit_cvc" id="credit_cvc" placeholder="CVC"/>
                                             </div>                                            
                                         </div>
                                     </div>
                                     <div id="ach_area" style="display:none;">
                                         <div class="row">                   
                                             <div class="form-group col-md-4">
-                                                <label for="job_type" class="label-element">Routing Number</label>
-                                                <input type="text" class="form-control input-element" name="ach_routing_number" id="ach_routing_number" />
+                                                <label for="job_type">Routing Number</label>
+                                                <input type="text" class="form-control" name="ach_routing_number" id="ach_routing_number" />
                                             </div>
                                             <div class="form-group col-md-4">
-                                                <label for="job_type" class="label-element">Account Number</label>
-                                                <input type="text" class="form-control input-element" name="ach_account_number" id="ach_account_number" />
+                                                <label for="job_type">Account Number</label>
+                                                <input type="text" class="form-control" name="ach_account_number" id="ach_account_number" />
                                             </div>  
                                         </div>
                                     </div>
                                     <div id="venmo_area" style="display:none;">
                                         <div class="row">                   
                                             <div class="form-group col-md-4">
-                                                <label for="job_type" class="label-element">Account Credential</label>
-                                                <input type="text" class="form-control input-element" name="account_credentials" id="account_credentials"/>
+                                                <label for="job_type">Account Credential</label>
+                                                <input type="text" class="form-control" name="account_credentials" id="account_credentials"/>
                                             </div>
                                             <div class="form-group col-md-4">
-                                                <label for="job_type" class="label-element">Account Note</label>
-                                                <input type="text" class="form-control input-element" name="account_note" id="account_note"/>
+                                                <label for="job_type">Account Note</label>
+                                                <input type="text" class="form-control" name="account_note" id="account_note"/>
                                             </div>  
                                             <div class="form-group col-md-4">
-                                                <label for="job_type" class="label-element">Confirmation</label>
-                                                <input type="text" class="form-control input-element" name="confirmation" id="confirmation"/>
+                                                <label for="job_type">Confirmation</label>
+                                                <input type="text" class="form-control" name="confirmation" id="confirmation"/>
                                             </div>                                            
                                         </div>
                                     </div>
                                     <div id="paypal_area" style="display:none;">
                                         <div class="row">                   
                                             <div class="form-group col-md-4">
-                                                <label for="job_type" class="label-element">Account Credential</label>
-                                                <input type="text" class="form-control input-element" name="paypal_account_credentials" id="paypal_account_credentials"/>
+                                                <label for="job_type">Account Credential</label>
+                                                <input type="text" class="form-control" name="paypal_account_credentials" id="paypal_account_credentials"/>
                                             </div>
                                             <div class="form-group col-md-4">
-                                                <label for="job_type" class="label-element">Account Note</label>
-                                                <input type="text" class="form-control input-element" name="paypal_account_note" id="paypal_account_note"/>
+                                                <label for="job_type">Account Note</label>
+                                                <input type="text" class="form-control" name="paypal_account_note" id="paypal_account_note"/>
                                             </div>  
                                             <div class="form-group col-md-4">
-                                                <label for="job_type" class="label-element">Confirmation</label>
-                                                <input type="text" class="form-control input-element" name="paypal_confirmation" id="paypal_confirmation"/>
+                                                <label for="job_type">Confirmation</label>
+                                                <input type="text" class="form-control" name="paypal_confirmation" id="paypal_confirmation"/>
                                             </div>                                            
                                         </div>
                                     </div>
                                     <div id="square_area" style="display:none;">
                                         <div class="row">                   
                                             <div class="form-group col-md-4">
-                                                <label for="job_type" class="label-element">Account Credential</label>
-                                                <input type="text" class="form-control input-element" name="square_account_credentials" id="square_account_credentials"/>
+                                                <label for="job_type">Account Credential</label>
+                                                <input type="text" class="form-control" name="square_account_credentials" id="square_account_credentials"/>
                                             </div>
                                             <div class="form-group col-md-4">
-                                                <label for="job_type" class="label-element">Account Note</label>
-                                                <input type="text" class="form-control input-element" name="square_account_note" id="square_account_note"/>
+                                                <label for="job_type">Account Note</label>
+                                                <input type="text" class="form-control" name="square_account_note" id="square_account_note"/>
                                             </div>  
                                             <div class="form-group col-md-4">
-                                                <label for="job_type" class="label-element">Confirmation</label>
-                                                <input type="text" class="form-control input-element" name="square_confirmation" id="square_confirmation"/>
+                                                <label for="job_type">Confirmation</label>
+                                                <input type="text" class="form-control" name="square_confirmation" id="square_confirmation"/>
                                             </div>                                            
                                         </div>
                                     </div>
                                     <div id="warranty_area" style="display:none;">
                                         <div class="row">                   
                                             <div class="form-group col-md-4">
-                                                <label for="job_type" class="label-element">Account Credential</label>
-                                                <input type="text" class="form-control input-element" name="warranty_account_credentials" id="warranty_account_credentials"/>
+                                                <label for="job_type">Account Credential</label>
+                                                <input type="text" class="form-control" name="warranty_account_credentials" id="warranty_account_credentials"/>
                                             </div>
                                             <div class="form-group col-md-4">
-                                                <label for="job_type" class="label-element">Account Note</label>
-                                                <input type="text" class="form-control input-element" name="warranty_account_note" id="warranty_account_note"/>
+                                                <label for="job_type">Account Note</label>
+                                                <input type="text" class="form-control" name="warranty_account_note" id="warranty_account_note"/>
                                             </div>                                         
                                         </div>
                                     </div>
                                     <div id="home_area" style="display:none;">
                                         <div class="row">                   
                                             <div class="form-group col-md-4">
-                                                <label for="job_type" class="label-element">Account Credential</label>
-                                                <input type="text" class="form-control input-element" name="home_account_credentials" id="home_account_credentials"/>
+                                                <label for="job_type">Account Credential</label>
+                                                <input type="text" class="form-control" name="home_account_credentials" id="home_account_credentials"/>
                                             </div>
                                             <div class="form-group col-md-4">
-                                                <label for="job_type" class="label-element">Account Note</label>
-                                                <input type="text" class="form-control input-element" name="home_account_note" id="home_account_note"/>
+                                                <label for="job_type">Account Note</label>
+                                                <input type="text" class="form-control" name="home_account_note" id="home_account_note"/>
                                             </div>                                         
                                         </div>
                                     </div>
                                     <div id="e_area" style="display:none;">
                                         <div class="row">                   
                                             <div class="form-group col-md-4">
-                                                <label for="job_type" class="label-element">Account Credential</label>
-                                                <input type="text" class="form-control input-element" name="e_account_credentials" id="e_account_credentials"/>
+                                                <label for="job_type">Account Credential</label>
+                                                <input type="text" class="form-control" name="e_account_credentials" id="e_account_credentials"/>
                                             </div>
                                             <div class="form-group col-md-4">
-                                                <label for="job_type" class="label-element">Account Note</label>
-                                                <input type="text" class="form-control input-element" name="e_account_note" id="e_account_note"/>
+                                                <label for="job_type">Account Note</label>
+                                                <input type="text" class="form-control" name="e_account_note" id="e_account_note"/>
                                             </div>                                         
                                         </div>
                                     </div>
                                     <div id="other_credit_card" style="display:none;">
                                         <div class="row">                   
                                             <div class="form-group col-md-4">
-                                                <label for="job_type" class="label-element">Credit Card Number</label>
-                                                <input type="text" class="form-control input-element" name="other_credit_number" id="other_credit_number" placeholder="0000 0000 0000 000" />
+                                                <label for="job_type">Credit Card Number</label>
+                                                <input type="text" class="form-control" name="other_credit_number" id="other_credit_number" placeholder="0000 0000 0000 000" />
                                             </div>
                                             <div class="form-group col-md-4">
-                                                <label for="job_type" class="label-element">Credit Card Expiration</label>
-                                                <input type="text" class="form-control input-element" name="other_credit_expiry" id="other_credit_expiry" placeholder="MM/YYYY"/>
+                                                <label for="job_type">Credit Card Expiration</label>
+                                                <input type="text" class="form-control" name="other_credit_expiry" id="other_credit_expiry" placeholder="MM/YYYY"/>
                                             </div>  
                                             <div class="form-group col-md-4">
-                                                <label for="job_type" class="label-element">CVC</label>
-                                                <input type="text" class="form-control input-element" name="other_credit_cvc" id="other_credit_cvc" placeholder="CVC"/>
+                                                <label for="job_type">CVC</label>
+                                                <input type="text" class="form-control" name="other_credit_cvc" id="other_credit_cvc" placeholder="CVC"/>
                                             </div>                                             
                                         </div>
                                     </div>
                                     <div id="other_payment_area" style="display:none;">
                                         <div class="row">                   
                                             <div class="form-group col-md-4">
-                                                <label for="job_type" class="label-element">Account Credential</label>
-                                                <input type="text" class="form-control input-element" name="other_payment_account_credentials" id="other_payment_account_credentials"/>
+                                                <label for="job_type">Account Credential</label>
+                                                <input type="text" class="form-control" name="other_payment_account_credentials" id="other_payment_account_credentials"/>
                                             </div>
                                             <div class="form-group col-md-4">
-                                                <label for="job_type" class="label-element">Account Note</label>
-                                                <input type="text" class="form-control input-element" name="other_payment_account_note" id="other_payment_account_note"/>
+                                                <label for="job_type">Account Note</label>
+                                                <input type="text" class="form-control" name="other_payment_account_note" id="other_payment_account_note"/>
                                             </div>                                         
                                         </div>
                                     </div>
@@ -2375,10 +1795,11 @@ border: none;
                                     </div>
                                 </div>
                             </div>
-                            <div class="row signature_web">
+                            <div class="row" id="group_area">
                                 <div class="col-md-4">
-                                    <h6>Company Representative Approval</h6> <a data-toggle="modal" data-target=".companySignature" class="btn btn-success"><span class="fa fa-plus-square fa-margin-right"></span> Add Signature</a>
-                                    <!-- <div class="sigPad" id="smoothed1a" style="width:100%;border:solid gray 1px;background-color:#00b300;">
+                                    <h6>Company Representative Approval</h6>
+                                    <div class="sigPad" id="smoothed1a" style="width:100%;border:solid gray 1px;background-color:#00b300;">
+                                    <!-- <a href="#" style="float:right;margin-right:10px;" class="smoothed1a_pencil" id="smoothed1a_pencil"><i class="fa fa-pencil" aria-hidden="true"></i></a> -->
                                         <ul class="sigNav" style="">
                                             <li class="drawIt"><a href="#draw-it">Draw It</a></li>
                                             <li class="clearButton"><a href="#clear">Clear</a></li>
@@ -2386,37 +1807,29 @@ border: none;
                                         <ul class="edit">
                                             <li class="smoothed1a_pencil pointer"><a onclick="myFunction()" style="float:right;margin-right:10px;" class="smoothed1a_pencil"><i class="fa fa-pencil" aria-hidden="true"></i></a></li>
                                         </ul>
-                                        <div class="sig sigWrapper sigWrapper1" id="smoothed1a_pencil" style="height:auto;pointer-events: none;">
+                                        <div class="sig sigWrapper" id="smoothed1a_pencil" style="height:auto;pointer-events: none;">
                                             <div class="typed"></div>
+                                            <!-- <canvas class="pad" id="company_representative_approval_signature1a"  style="width:100%;"></canvas> -->
                                             <div id="signature-pad">
                                             <canvas style="border:1px solid #000" id="sign"></canvas>
                                             </div>
-                                            <input type="hidden" name="output-2" class="output output1">
+                                            <input type="hidden" name="output-1" class="output">
                                         </div>
-                                    </div> -->
-                                    <div id="companyrep"></div>
-
-
+                                    </div>
                                     <input type="hidden" id="saveCompanySignatureDB1a"
                                            name="company_representative_approval_signature1a">
                                     <br>
 
-                                    <label for="comp_rep_approval">Printed Name <?php //echo logged('id'); ?></label>
-                                    <!-- <input type="text6" class="form-control mb-3"
+                                    <label for="comp_rep_approval">Printed Name</label>
+                                    <input type="text6" class="form-control mb-3"
                                            name="company_representative_printed_name"
-                                           id="company_representative_printed_name" placeholder=""/> -->
-                                        <select class="form-control mb-3" name="company_representative_printed_name">
-                                            <!-- <option value="0">Select Name</option> -->
-                                            <?php foreach($users_lists as $ulist){ ?>
-                                                <option <?php if($ulist->id == logged('id')){ echo "selected";} ?> value="<?php echo $ulist->id ?>"><?php echo $ulist->FName .' '.$ulist->LName; ?></option>
-                                            <?php } ?>
-                                        </select>
-                                            <input type="hidden" id="saveCompanySignatureDB1aM_web" name="company_representative_approval_signature1aM_web">
+                                           id="comp_rep_approval" placeholder=""/>
 
                                 </div>
                                 <div class="col-md-4">
-                                    <h6>Primary Account Holder</h6><a data-toggle="modal" data-target=".primarySignature" class="btn btn-warning"><span class="fa fa-plus-square fa-margin-right"></span> Add Signature</a>
-                                    <!-- <div class="sigPad" id="smoothed2a" style="width:100%;border:solid gray 1px;background-color:#f7b900;">
+                                    <h6>Primary Account Holder</h6>
+                                    <div class="sigPad" id="smoothed2a" style="width:100%;border:solid gray 1px;background-color:#f7b900;">
+                                    <!-- <p style="float:right;margin-right:10px;"><i class="fa fa-pencil" aria-hidden="true"></i></p> -->
                                         <ul class="sigNav">
                                             <li class="drawIt"><a href="#draw-it">Draw It</a></li>
                                             <li class="clearButton"><a href="#clear">Clear</a></li>
@@ -2424,36 +1837,28 @@ border: none;
                                         <ul class="edit">
                                             <li class="smoothed1a_pencil pointer"><a onclick="myFunctiontwo()" style="float:right;margin-right:10px;" class="smoothed1a_pencil"><i class="fa fa-pencil" aria-hidden="true"></i></a></li>
                                         </ul>
-                                        <div class="sig sigWrapper sigWrapper2" id="smoothed1a_pencil" style="height:auto;pointer-events: none;">
+                                        <div class="sig sigWrapper" style="height:auto;pointer-events: none;">
                                             <div class="typed"></div>
+                                            <!-- <canvas class="pad" id="primary_account_holder_signature2a" style="width:100%;"></canvas> -->
                                             <div id="signature-pad2">
                                             <canvas style="border:1px solid #000" id="sign2"></canvas>
                                             </div>
-                                            <input type="hidden" name="output-2" class="output output2">
+                                            <input type="hidden" name="output-2" class="output">
                                         </div>
-                                    </div> -->
-                                    <div id="primaryrep"></div>
-
+                                    </div>
                                     <input type="hidden" id="savePrimaryAccountSignatureDB2a"
                                            name="primary_account_holder_signature2a">
                                     <br>
 
                                     <label for="comp_rep_approval">Printed Name</label>
                                     <input type="text6" class="form-control mb-3" name="primary_account_holder_name"
-                                           id="primary_account_holder_name" placeholder=""/>
-                                        <!-- <select class="form-control mb-3" name="primary_account_holder_name">
-                                            <option value="0">Select Name</option>
-                                            <?php //foreach($users_lists as $ulist){ ?>
-                                                <option value="<?php //echo $ulist->id ?>"><?php //echo $ulist->FName .' '.$ulist->LName; ?></option>
-                                            <?php //} ?>
-                                        </select> -->
-                                    
-                                           <input type="hidden" id="saveCompanySignatureDB1aM_web2" name="primary_representative_approval_signature1aM_web">
+                                           id="comp_rep_approval" placeholder=""/>
 
                                 </div>
                                 <div class="col-md-4">
-                                    <h6>Secondary Account Holder</h6><a data-toggle="modal" data-target=".secondarySignature" class="btn btn-danger"><span class="fa fa-plus-square fa-margin-right"></span> Add Signature</a>
-                                    <!-- <div class="sigPad" id="smoothed3a" style="width:100%;border:solid gray 1px;background-color:#f75c1e;">
+                                    <h6>Secondary Account Holder</h6>
+                                    <div class="sigPad" id="smoothed3a" style="width:100%;border:solid gray 1px;background-color:#f75c1e;">
+                                    <!-- <p style="float:right;margin-right:10px;"><i class="fa fa-pencil" aria-hidden="true"></i></p> -->
                                         <ul class="sigNav">
                                             <li class="drawIt"><a href="#draw-it">Draw It</a></li>
                                             <li class="clearButton"><a href="#clear">Clear</a></li>
@@ -2461,58 +1866,28 @@ border: none;
                                         <ul class="edit">
                                             <li class="smoothed1a_pencil pointer"><a onclick="myFunctionthree()" style="float:right;margin-right:10px;" class="smoothed1a_pencil"><i class="fa fa-pencil" aria-hidden="true"></i></a></li>
                                         </ul>
-                                        <div class="sig sigWrapper sigWrapper3" id="smoothed1a_pencil" style="height:auto;pointer-events: none;">
+                                        <div class="sig sigWrapper" style="height:auto;pointer-events: none;">
                                             <div class="typed"></div>
+                                            <!-- <canvas class="pad" id="secondary_account_holder_signature3a" style="width:100%;"></canvas> -->
                                             <div id="signature-pad3">
                                             <canvas style="border:1px solid #000" id="sign3"></canvas>
                                             </div>
-                                            <input type="hidden" name="output-2" class="output output3">
+                                            <input type="hidden" name="output-3" class="output">
                                         </div>
-                                    </div> -->
-                                    <div id="secondaryrep"></div>
-                                    
+                                    </div>
                                     <input type="hidden" id="saveSecondaryAccountSignatureDB3a"
                                            name="secondary_account_holder_signature3a">
                                     <br>
 
                                     <label for="comp_rep_approval">Printed Name</label>
                                     <input type="text6" class="form-control mb-3" name="secondery_account_holder_name"
-                                           id="secondery_account_holder_name" placeholder=""/>
-                                        <!-- <select class="form-control mb-3" name="secondery_account_holder_name">
-                                            <option value="0">Select Name</option>
-                                            <?php //foreach($users_lists as $ulist){ ?>
-                                                <option value="<?php //echo $ulist->id ?>"><?php //echo $ulist->FName .' '.$ulist->LName; ?></option>
-                                            <?php //} ?>
-                                        </select> -->
-
-                                           <input type="hidden" id="saveCompanySignatureDB1aM_web3" name="secondary_representative_approval_signature1aM_web">
+                                           id="comp_rep_approval" placeholder=""/>
 
                                 </div>
                             </div>
-
-
-                            <div class="signature_mobile">
-                                    <br><br>
-                                    <a href="#" class="btn btn-success" data-toggle="modal" data-target="#signature_mobile">Signature</a>
-                                    <br><br>
-                            </div>
-
-                            <div class="signature_mobile signatureArea">
-                            </div>
-                            <br><br>
-                                
-                                <div class="row">        
-                                    <div class="form-group col-md-6">
-                                        <label for="instructions" class="label-element">Instructions</label>
-                                        <textarea name="instructions" id="instructions" cols="5" rows="2" class="form-control input-element"></textarea>
-                                    </div>                                           
-                                </div>
 
                             <!-- ====== TERMS OF USE ====== -->
                             <div class="row" id="group_area">
-                            
-                            <br><br>
-
                                 <div class=" col-md-12"><label style="float:right;color:green;"><a href="#" style="color:green;" data-toggle="modal" data-target="#terms_use_modal">Update Terms of Use</a></label>
                                     <h6>Agreement</h6>
                                     <div style="height:200px; overflow:auto; background:#FFFFFF; padding-left:10px;" id="thisdiv3">
@@ -2522,10 +1897,8 @@ border: none;
                                     </div>
                                 </div>
 
-
                                 <div class="col-md-6">
-                                    <div class="form-group"> 
-                                        <br><br>
+                                    <div class="form-group">
                                         <label for="initials">**INITIALS**</label>
                                         <input type="text" class="form-control"
                                                name="initials"
@@ -2668,8 +2041,8 @@ border: none;
                                     </div>
 
                                 </div>
-                            </div> 
-                            </div>-->
+                            </div> -->
+
 
                             <div class="row">
                                 <div class="col-md-4 form-group">
@@ -2677,16 +2050,14 @@ border: none;
                                             class="btn btn-flat btn-primary">
                                         Submit
                                     </button> -->
-                                    <!-- <input type="submit" value="Submit" class="btn btn-flat btn-primary"> -->
-                                    <button type="submit" name="action" class="btn btn-flat btn-primary" value="submit">Submit</button>
-                                    <!-- <button type="submit" name="action" class="btn btn-flat btn-success pdf_sheet" target="_blank" value="preview">Preview</button> -->
-                                    <a href="<?php echo url('workorder') ?>" class="btn btn-primary">Cancel</a>
+                                    <input type="submit" value="Submit" class="btn btn-flat btn-primary">
+                                    <a href="<?php echo url('workorder') ?>" class="btn btn-danger">Cancel this</a>
                                 </div>
                             </div>
 
-                        <!-- </div> -->
+                        </div>
                         <!-- end card -->
-                    <!-- </div> -->
+                    </div>
                 </div>
 
 
@@ -2716,125 +2087,6 @@ border: none;
         <!-- page wrapper end -->
     </div>
 
-    <!-- first signature -->
-
-    <div class="modal fade companySignature" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                            <div align="center">
-                                <p style="padding:2%;background-color:#d2d2d2;width:380px;"> <b>Company Representative Approval </b></p>
-                                <div align="center"><i><p style="padding:2%;background-color:#d2d2d2;width:80%;"> By Signing below you verify that the above information is true and complete,
-                                            and you authorize payment and confirmation with nSmarTrac. </p></i></div>
-                            </div>
-                                    <div class="box-wrap">
-                                        
-                                        <div id="box-one">
-                                        <div class="row">
-                                        <div class="col-md-12" style="padding:1%;">
-                                        <center>
-                                        <div id="signArea" >
-                                            <canvas id="canvasb" style="border: solid gray 1px;"></canvas>
-                                            <input type="hidden" class="form-control mb-3" name="company_representative_printed_name" id="comp_rep_approval1" value="Company Representative"/>
-                                            <input type="hidden" id="saveCompanySignatureDB1aMb" name="company_representative_approval_signature1aM">
-                                            </div>
-                                            </div>
-                                            <br>
-                                        </div>
-                                        </center>
-                                        </div>
-                                    
-                                    </div>
-                        
-                        <div class="modal-footer">
-                            <button id="clear" class="btn btn-danger">Clear</button>
-                            <button type="button" class="btn btn-success edit_first_signature" id="enter_signature">Update</button>
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <!-- <input type="submit" value="save" id="btnSaveSign"> -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- second signature -->
-
-            <div class="modal fade primarySignature" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                            <div align="center">
-                                <p style="padding:2%;background-color:#d2d2d2;width:380px;"> <b>Primary Account Holder</b> </p>
-                                <div align="center"><i><p style="padding:2%;background-color:#d2d2d2;width:80%;"> By Signing below you verify that the above information is true and complete,
-                                            and you authorize payment and confirmation with nSmarTrac. </p></i></div>
-                            </div>
-                                    <div class="box-wrap">
-                                        
-                                        <div id="box-one">
-                                        <div class="row">
-                                        <div class="col-md-12" style="padding:1%;">
-                                        <center>
-                                        
-                                        <div id="signArea2" >
-                                            <canvas id="canvas2b" style="border: solid gray 1px;"></canvas>
-                                            <input type="hidden" class="form-control mb-3" name="primary_representative_printed_name" id="comp_rep_approval2" value="Primary Account Holder"/>
-                                            <input type="hidden" id="savePrimaryAccountSignatureDB2aMb" name="primary_account_holder_signature2aM">
-                                            </div>
-                                            </div>
-                                            <br>
-                                        </div>
-                                        </center>
-                                        </div>
-                                    
-                                    </div>
-                        
-                        <div class="modal-footer">
-                            <button id="clear2" class="btn btn-danger">Clear</button>
-                            <button type="button" class="btn btn-success edit_second_signature" id="enter_signature">Update</button>
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <!-- <input type="submit" value="save" id="btnSaveSign"> -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- third signature -->
-
-            <div class="modal fade secondarySignature" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                            <div align="center">
-                                <p style="padding:2%;background-color:#d2d2d2;width:380px;"> <b>Secondary Account Holder</b> </p>
-                                <div align="center"><i><p style="padding:2%;background-color:#d2d2d2;width:80%;"> By Signing below you verify that the above information is true and complete,
-                                            and you authorize payment and confirmation with nSmarTrac. </p></i></div>
-                            </div>
-                                    <div class="box-wrap">
-                                        
-                                        <div id="box-one">
-                                        <div class="row">
-                                        <div class="col-md-12" style="padding:1%;">
-                                        <center>
-                                        
-                                        <div id="signArea3" >
-                                            <canvas id="canvas3b" style="border: solid gray 1px;"></canvas>
-                                            <input type="hidden" class="form-control mb-3" name="secondary_representative_printed_name" id="comp_rep_approval3" value="Secondary Account Holder"/>
-                                            <input type="hidden" id="saveSecondaryAccountSignatureDB3aMb" name="secondary_account_holder_signature3aM">
-                                            </div>
-                                            </div>
-                                            <br>
-                                        </div>
-                                        </center>
-                                        </div>
-                                    
-                                    </div>
-                        
-                        <div class="modal-footer">
-                            <button id="clear3" class="btn btn-danger">Clear</button>
-                            <button type="button" class="btn btn-success edit_third_signature" id="enter_signature">Update</button>
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <!-- <input type="submit" value="save" id="btnSaveSign"> -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-
     <!-- Modal -->
     <div class="modal fade" id="update_header_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
                 <div class="modal-dialog modal-lg" role="document">
@@ -2862,7 +2114,7 @@ border: none;
 
      <!-- Modal -->
      <div class="modal fade" id="item_list" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document" >
+                <div class="modal-dialog modal-lg" role="document" style="width:800px;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="newcustomerLabel">Item Lists</h5>
@@ -2887,22 +2139,19 @@ border: none;
                                         <?php foreach($items as $item){ // print_r($item); ?>
                                             <tr>
                                                 <td><?php echo $item->title; ?></td>
-                                                <td><?php if($item->rebate == 1){ ?>
-                                                    <!-- <label class="switch">
-                                                    <input type="checkbox" id="rebatable_toggle" checked>
-                                                    <span class="slider round"></span> -->
-                                                    <input type="checkbox" class="toggle_checkbox" id="rebatable_toggle" item-id="<?php echo $item->id; ?>"  value="1"  data-toggle="toggle" data-size="xs" checked >
+                                                <td>
+                                                <?php if($item->rebate == 1){ ?>
+                                                    <label class="switch">
+                                                    <input type="checkbox" checked>
+                                                    <span class="slider round"></span>
                                                     </label>
                                                 <?php }else{ ?>
-                                                    <!-- <label class="switch">
+                                                    <label class="switch">
                                                     <input type="checkbox">
                                                     <span class="slider round"></span>
-                                                    </label> -->
-
-                                                    <!-- <input type="checkbox" data-toggle="toggle" data-size="xs"> -->
-                                                    <input type="checkbox" class="toggle_checkbox" id="rebatable_toggle" item-id="<?php echo $item->id; ?>" value="0" data-toggle="toggle" data-size="xs">
-
-                                                <?php  } ?></td>
+                                                    </label>
+                                                <?php  } ?>
+                                                    </td>
                                                 <td></td>
                                                 <td><?php echo $item->price; ?></td>
                                                 <td><button id="<?= $item->id; ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default select_item">
@@ -2910,267 +2159,6 @@ border: none;
                                             </button></td>
                                             </tr>
                                             
-                                        <?php } ?>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer modal-footer-detail">
-                            <div class="button-modal-list">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal"><span class="fa fa-remove"></span> Close</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Add By Group</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body pt-0 pl-3 pb-3">
-                                    <table id="items_table_newWorkorder" class="table table-hover" style="width: 100%;">
-                                        <thead>
-                                        <tr>
-                                            <td> Name</td>
-                                            <td> Action</td>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <?php foreach($packages as $package){ // print_r($item); ?>
-                                            <tr>
-                                                <td><?php echo $package->name; ?></td>
-                                                <td>
-                                                    <button id="<?= $package->item_categories_id ; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default select_package"><span class="fa fa-plus"></span> </button>
-                                            </td>
-                                            </tr>
-                                            
-                                        <?php } ?>
-                                        </tbody>
-                                    </table>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
-                        </div>
-                </div>
-            </div>
-            </div>
-
-            <!-- add manual package -->
-            <div class="modal fade createPackage" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">Add/Create Package</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body pt-0 pl-3 pb-3" id="divcreatePackage">
-                                <section id="tabs" class="project-tab">
-                                    <!-- <div class="container"> -->
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <nav>
-                                                    <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
-                                                        <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Add Package</a>
-                                                        <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false">Create Package</a>
-                                                    </div>
-                                                </nav>
-                                                <div class="tab-content" id="nav-tabContent">
-                                                    <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
-                                                        <!-- <div class="container"> -->
-                                                            <table class="table table-condensed"  id="myTable">
-                                                                <thead>
-                                                                    <tr>
-                                                                        <th>ID #</th>
-                                                                        <th>Package Name</th>
-                                                                        <th></th>
-                                                                        <th></th>
-                                                                        <th>Amount</th>
-                                                                        <th>Action</th>
-                                                                        <th></th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody class="panel">
-                                                                <?php foreach($itemPackages as $pItems){ ?>
-                                                                    <tr data-toggle="collapse" data-target="#demo<?php echo  $pItems->id; ?>" data-parent="#myTable" id="packageID" pack-id="<?php echo  $pItems->id; ?>">
-                                                                        <td><?php echo  $pItems->id; ?></td>
-                                                                        <td><?php echo  $pItems->name; ?></td>
-                                                                        <td></td>
-                                                                        <td class="text-success"></td>
-                                                                        <td class="text-success"><?php echo  $pItems->amount_set; ?></td>
-                                                                        <td class="text-error"><button id="<?= $pItems->id; ?>" pack-id="<?= $pItems->id; ?>"  class="btn btn-sm btn-default addNewPackageToList"><span class="fa fa-plus"></span></button></td>
-                                                                        <td><i class="fa fa-sort-down" style="font-size:24px"></i></td>
-                                                                    </tr>
-                                                                    <tr id="demo<?php echo  $pItems->id; ?>" class="collapse">
-                                                                        <td colspan="6" class="hiddenRow"><div id="packageItems<?php echo  $pItems->id; ?>"></div> </td>
-                                                                    </tr>
-                                                                <?php } ?>
-                                                                    <!-- <tr data-toggle="collapse" data-target="#demo2" data-parent="#myTable">
-                                                                        <td>2</td>
-                                                                        <td>05 May 2013</td>
-                                                                        <td></td>
-                                                                        <td class="text-success"></td>
-                                                                        <td class="text-error"></td>
-                                                                        <td class="text-success">$600.00</td>
-                                                                        <td><i class="fa fa-sort-down" style="font-size:24px"></i></td>
-                                                                    </tr>
-                                                                    <tr id="demo2" class="collapse">
-                                                                        <td colspan="6" class="hiddenRow"><div>Demo2</div></td>
-                                                                    </tr>
-                                                                    <tr data-toggle="collapse" data-target="#demo3" data-parent="#myTable">
-                                                                        <td>3</td>
-                                                                        <td>05 May 2013</td>
-                                                                        <td></td>
-                                                                        <td class="text-success"></td>
-                                                                        <td class="text-error"></td>
-                                                                        <td class="text-success">$661.00</td>
-                                                                        <td><i class="fa fa-sort-down" style="font-size:24px"></i></td>
-                                                                    </tr>
-                                                                    <tr id="demo3" class="collapse">
-                                                                        <td colspan="6" class="hiddenRow"><div>Demo3</div></td>
-                                                                    </tr> -->
-                                                                </tbody>
-                                                            </table>
-                                                        <!-- </div> -->
-                                                    </div>
-                                                    <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab" style="width:100%;">
-                                                        <input type="hidden" name="count" value="0" id="count">
-                                                        <div class="row">
-                                                            <div class="col-md-6">
-                                                            <h6>Package Name</h6> <input type="text" class="form-control" style="width:80%;" name="package_name" id="package_name">
-                                                            </div>
-                                                        </div>
-                                                        <br>
-                                                        <table class="table table-hover" style="width:100%;">
-                                                            <input type="hidden" name="count" value="0" id="count">
-                                                            <thead style="background-color:#E9E8EA;">
-                                                            <tr>
-                                                                <th>Name</th>
-                                                                <th>Group</th>
-                                                                <!-- <th>Description</th> -->
-                                                                <th width="150px">Quantity</th>
-                                                                <!-- <th>Location</th> -->
-                                                                <th width="150px">Price</th>
-                                                                <!-- <th class="hidden_mobile_view" width="150px">Discount</th>
-                                                                <th class="hidden_mobile_view" width="150px">Tax (Change in %)</th> -->
-                                                                <!-- <th class="hidden_mobile_view">Total</th> -->
-                                                                <th></th>
-                                                            </tr>
-                                                            </thead>
-                                                            <tbody id="items_package_table">
-                                                                <!-- <tr>
-                                                                    <td width="35%">
-                                                                        <input type="text" class="form-control getItemsPackage"
-                                                                            onKeyup="getItemsPackage(this)" name="itemsPackage[]">
-                                                                        <ul class="suggestions"></ul>
-                                                                        <div class="show_mobile_view"><span class="getItems_hidden"></span></div>
-                                                                        <input type="hidden" name="itemid[]" id="itemid" class="itemid_package" value="0">
-                                                                    </td>
-                                                                    <td width="25%">
-                                                                    <div class="dropdown-wrapper">
-                                                                        <select name="item_typePackage[]" id="item_typeid" class="form-control">
-                                                                            <option value="product">Product</option>
-                                                                            <option value="material">Material</option>
-                                                                            <option value="service">Service</option>
-                                                                            <option value="fee">Fee</option>
-                                                                        </select>
-                                                                    </div>
-                                                                    </td>
-                                                                    <td width=""><input type="number" class="form-control quantityPackage" name="quantityPackage[]"
-                                                                            data-counter="0" id="quantity_package_0" value="1"></td>
-                                                                    <td width=""><input type="number" class="form-control price_package hidden_mobile_view" name="pricePackage[]"
-                                                                            data-counter="0" id="price_package_0" min="0" value="0"> <input type="hidden" class="priceqty priceqty_package" value="0" id="priceqty_0"> 
-                                                                            <div class="show_mobile_view"><span class="price">0</span>
-                                                                            </div><input id="priceqty_package_0" value="0"  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view priceqty_package"></td>
-                                                                    
-                                                                    <td><a href="#" class="remove btn btn-sm btn-success" id="0"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
-                                                                </tr> -->
-                                                                </tbody>
-                                                        </table>
-                                                        <a class="link-modal-open" href="#" id="add_another_itemss" data-toggle="modal" data-target="#item_list_package" style="float:left;"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a>
-                                                        <br>
-                                                        <br>
-                                                        <div class="row">
-                                                            <div class="col-md-4">
-                                                            </div>
-                                                            <div class="col-md-8">
-                                                                <table>
-                                                                    <tr>
-                                                                        <td><b>Total Price</b> <input type="text" class="form-control" style="width:90%;" name="package_price" id="package_price"></td>
-                                                                        <td><b>Set Package Price</b> <input type="text" class="form-control" style="width:90%;" name="package_price_set" id="package_price_set"></td>
-                                                                    <tr>
-                                                                </table>
-                                                            </div>
-                                                        </div>
-                                                        <br>
-                                                        <div class="row">
-                                                            <div class="col-md-6">
-                                                            </div>
-                                                            <div class="col-md-6" align="right">
-                                                                <!-- <div style="align:right;"> -->
-                                                                    <button type="button" class="btn btn-primary addCreatePackage">Create/Add Package</button>
-                                                                <!-- </div> -->
-                                                            </div>
-                                                        </div>
-
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    <!-- </div> -->
-                                </section>
-                                    
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- edd package -->
-
-            
-
-            <!-- Modal -->
-            <div class="modal fade" id="item_list_package" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document" >
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="newcustomerLabel">Item Lists</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <table id="modal_items_list" class="table table-hover" style="width: 100%;">
-                                        <thead>
-                                        <tr>
-                                            <td> Name</td>
-                                            <td> Price</td>
-                                            <td> Action</td>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <?php foreach($items as $item){ // print_r($item); ?>
-                                            <tr>
-                                                <td><?php echo $item->title; ?></td>
-                                                <td><?php echo $item->price; ?></td>
-                                                <td><button id="<?= $item->id; ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default select_item_package">
-                                                <span class="fa fa-plus"></span>
-                                            </button></td>
-                                            </tr>
                                         <?php } ?>
                                         </tbody>
                                     </table>
@@ -3212,65 +2200,6 @@ border: none;
             </div>
 
             <!-- Modal -->
-            <div class="modal fade" id="signature_mobile" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document">
-                    <div class="modal-content">
-                    <!-- <div class="modal-header"> -->
-                        <!-- <h5 class="modal-title" id="exampleModalLongTitle">Update Terms and Conditions</h5> -->
-                        <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div> -->
-                    <div align="center"><p style="padding:2%;background-color:#d2d2d2;width:380px;"> By Signing below you verify that the above information is true and complete,
-                                            and you authorize payment and confirmation with nSmarTrac. </p></div>
-                    <div class="modal-body">
-                            <div class="row signature_mobile">
-                            
-                            <div class="tabbed-area">
-
-                                    <div class="box-wrap">
-                                    
-                                        <div id="box-one">
-                                            <canvas id="canvas" height="250px" style=""></canvas>
-                                            <input type="hidden" class="form-control mb-3" name="company_representative_printed_name" id="comp_rep_approval1" value="Company Representative"/>
-                                            <input type="hidden" id="saveCompanySignatureDB1aM" name="company_representative_approval_signature1aM">
-                                        </div>
-                                        
-                                        <div id="box-two">
-                                            <canvas id="canvas2" height="250px" style=""></canvas>
-                                            <input type="hidden" class="form-control mb-3" name="company_representative_printed_name" id="comp_rep_approval2" value="Primary Account Holder"/>
-                                            <input type="hidden" id="savePrimaryAccountSignatureDB2aM" name="primary_account_holder_signature2aM">
-                                        </div>
-                                        
-                                        <div id="box-three">
-                                            <canvas id="canvas3" height="250px" style=""></canvas>
-                                            <input type="hidden" class="form-control mb-3" name="company_representative_printed_name" id="comp_rep_approval3" value="Secondary Account Holder"/>
-                                            <input type="hidden" id="saveSecondaryAccountSignatureDB3aM" name="secondary_account_holder_signature3aM">
-                                        </div>
-                                    
-                                    </div>
-                                    <br><br><br><br>
-                                    <ul class="tabs group" style="width:100% !important;">
-                                        <li class="active"><a href="#box-one" class="btn" style="width:100%;font-size:8px;">Company Representative</a></li>
-                                        <li><a href="#box-two" class="btn" style="width:100%;font-size:8px;">Primary Account Holder</a></li>
-                                        <li><a href="#box-three" class="btn" style="width:100%;font-size:8px;">Secondary Account Holder</a></li>
-                                    </ul>
-
-                                </div>
-                        
-                            </div>
-                    </div>
-                    <div class="modal-footer">
-                        <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
-                        <button type="button" onClick="submit()" class="btn btn-primary enter_signature" id="enter_signature">Save changes</button>
-                        <!-- <input type="submit" value="save" id="btnSaveSign"> -->
-                    </div>
-                    <?php //echo form_close(); ?>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Modal -->
             <div class="modal fade" id="terms_use_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
                 <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
@@ -3296,789 +2225,6 @@ border: none;
             </div>
 
     <?php include viewPath('includes/footer'); ?>
-
-    <script>
-    $("#first_name").keyup(function () {
-      var value = $(this).val();
-      var value2 = $("#last_name").val();
-      $("#primary_account_holder_name").val(value + ' ' + value2);
-    }).keyup();
-
-    $("#last_name").keyup(function () {
-      var value2 = $(this).val();
-      var value = $("#first_name").val();
-      $("#primary_account_holder_name").val(value + ' ' + value2);
-    }).keyup();
-
-    $("#spouse_first_name").keyup(function () {
-      var value = $(this).val();
-      var value2 = $("#spouse_last_name").val();
-      $("#secondery_account_holder_name").val(value + ' ' + value2);
-    }).keyup();
-
-    $("#spouse_last_name").keyup(function () {
-      var value2 = $(this).val();
-      var value = $("#spouse_first_name").val();
-      $("#secondery_account_holder_name").val(value + ' ' + value2);
-    }).keyup();
-    </script>
-
-<script>
-// $('.value').on('keydown keyup mousedown mouseup', function() {
-//     	 var res = this.value, //grabs the value
-//     		 len = res.length, //grabs the length
-//     		 max = 9, //sets a max chars
-//     		 stars = len>0?len>1?len>2?len>3?len>4?'XXX-XX-':'XXX-X':'XXX-':'XX':'X':'', //this provides the masking and formatting
-//     		result = stars+res.substring(5); //this is the result
-//     	 $(this).attr('maxlength', max); //setting the max length
-//     	$(".number").val(result); //spits the value into the input
-//     });
-
-// $('#security_number').keyup(function() {
-//     var val = this.value.replace(/\D/g, '');
-//     var newVal = '';
-//     var sizes = [3, 2, 4];
-
-//     for (var i in sizes) {
-//       if (val.length > sizes[i]) {
-//         newVal += val.substr(0, sizes[i]) + '-';
-//         val = val.substr(sizes[i]);
-//       }
-//       else
-//         break;        
-//     }
-
-//     newVal += val;
-//     this.value = newVal;
-// });
-
-$('#security_number').keyup(function() {
-        var val = this.value.replace(/\D/g, '');
-        val = val.replace(/^(\d{3})/, '$1-');
-        val = val.replace(/-(\d{2})/, '-$1-');
-        val = val.replace(/(\d)-(\d{4}).*/, '$1-$2');
-        this.value = val;
-    });
-
-
-// $('#phone_no').keyup(function () {
-//     var foo = $(this).val().split("-").join(""); // remove hyphens
-//     if (foo.length > 0) {
-//         foo = foo.match(new RegExp('.{1,3}', 'g')).join("-");
-//     }
-//     $(this).val(foo);
-// });
-
-$('#phone_no').keyup(function() {
-        var val = this.value.replace(/\D/g, '');
-        val = val.replace(/^(\d{3})/, '$1-');
-        val = val.replace(/-(\d{3})/, '-$1-');
-        val = val.replace(/(\d)-(\d{4}).*/, '$1-$2');
-        this.value = val;
-    });
-
-// $('#mobile_no').keyup(function () {
-//     var foo = $(this).val().split("-").join(""); // remove hyphens
-//     if (foo.length > 0) {
-//         foo = foo.match(new RegExp('.{1,3}', 'g')).join("-");
-//     }
-//     $(this).val(foo);
-// });
-
-$('#contact_mobile').keyup(function() {
-        var val = this.value.replace(/\D/g, '');
-        val = val.replace(/^(\d{3})/, '$1-');
-        val = val.replace(/-(\d{3})/, '-$1-');
-        val = val.replace(/(\d)-(\d{4}).*/, '$1-$2');
-        this.value = val;
-    });
-
-</script>
-
-    <script>
-// $('.enter_signature').click(function(){
-//     // alert("nisulod");
-//         if(signaturePad.isEmpty()){
-//             console.log('it is empty');
-//             return false;            
-//         }
-//     });
-
-var signaturePad;
-jQuery(document).ready(function () {
-  var signaturePadCanvas = document.querySelector('#canvasb');
-//   var parentWidth = jQuery(signaturePadCanvas).parent().outerWidth();
-//   signaturePadCanvas.setAttribute("width", parentWidth);
-  signaturePad = new SignaturePad(signaturePadCanvas);
-
-  signaturePadCanvas.width  = 780;
-  signaturePadCanvas.height = 300;
-});
-
-var signaturePad2;
-jQuery(document).ready(function () {
-  var signaturePadCanvas2 = document.querySelector('#canvas2b');
-//   var parentWidth = jQuery(signaturePadCanvas).parent().outerWidth();
-//   signaturePadCanvas.setAttribute("width", parentWidth);
-  signaturePad2 = new SignaturePad(signaturePadCanvas2);
-
-  signaturePadCanvas2.width  = 780;
-  signaturePadCanvas2.height = 300;
-});
-
-var signaturePad3;
-jQuery(document).ready(function () {
-  var signaturePadCanvas3 = document.querySelector('#canvas3b');
-//   var parentWidth = jQuery(signaturePadCanvas).parent().outerWidth();
-//   signaturePadCanvas.setAttribute("width", parentWidth);
-  signaturePad3 = new SignaturePad(signaturePadCanvas3);
-
-  signaturePadCanvas3.width  = 780;
-  signaturePadCanvas3.height = 300;
-});
-
-
-// $(document).on('click touchstart','#sign',function(){
-//     // alert('test');
-//     var canvas_web = document.getElementById("sign");    
-//     var dataURL = canvas_web.toDataURL("image/png");
-//     $("#saveCompanySignatureDB1aM_web").val(dataURL);
-// });
-
-// $(document).on('click touchstart','#sign2',function(){
-//     // alert('test');
-//     var canvas_web2 = document.getElementById("sign2");    
-//     var dataURL = canvas_web2.toDataURL("image/png");
-//     $("#saveCompanySignatureDB1aM_web2").val(dataURL);
-// });
-
-// $(document).on('click touchstart','#sign3',function(){
-//     // alert('test');
-//     var canvas_web3 = document.getElementById("sign3");    
-//     var dataURL = canvas_web3.toDataURL("image/png");
-//     $("#saveCompanySignatureDB1aM_web3").val(dataURL);
-// });
-
-$(document).on('click touchstart','#canvasb',function(){
-    // alert('test');
-    var canvas_web = document.getElementById("canvasb");    
-    // alert(canvas_web);
-    var dataURL = canvas_web.toDataURL("image/png");
-    $("#saveCompanySignatureDB1aMb").val(dataURL);
-});
-
-$(document).on('click touchstart','#canvas2b',function(){
-    // alert('test');
-    var canvas_web2 = document.getElementById("canvas2b");    
-    var dataURL = canvas_web2.toDataURL("image/png");
-    $("#savePrimaryAccountSignatureDB2aMb").val(dataURL);
-});
-
-$(document).on('click touchstart','#canvas3b',function(){
-    // alert('test');
-    var canvas_web3 = document.getElementById("canvas3b");    
-    var dataURL = canvas_web3.toDataURL("image/png");
-    $("#saveSecondaryAccountSignatureDB3aMb").val(dataURL);
-});
-
-
-$(document).on('click touchstart','.edit_first_signature',function(){
-    // alert('test');
-    var first = $("#saveCompanySignatureDB1aMb").val();
-    // alert(first);
-    $("#saveCompanySignatureDB1aM_web").val(first);
-
-    // $(".img1").hide();
-
-    var input_conf = '<img src="'+first+'">'
-
-    $('#companyrep').html(input_conf);
-    
-    $('.companySignature').modal('hide');
-    
-});
-
-$(document).on('click touchstart','.edit_second_signature',function(){
-    // alert('test');
-    var first = $("#savePrimaryAccountSignatureDB2aMb").val();
-    // alert(first);
-    $("#saveCompanySignatureDB1aM_web2").val(first);
-
-    // $(".img2").hide();
-
-    var input_conf = '<img src="'+first+'">'
-
-    $('#primaryrep').html(input_conf);
-
-    $('.primarySignature').modal('hide');
-    
-});
-
-$(document).on('click touchstart','.edit_third_signature',function(){
-    // alert('test');
-    var first = $("#saveSecondaryAccountSignatureDB3aMb").val();
-    // alert(first);
-    $("#saveCompanySignatureDB1aM_web3").val(first);
-
-    // $(".img3").hide();
-
-    var input_conf = '<img src="'+first+'">'
-
-    $('#secondaryrep').html(input_conf);
-
-    $('.secondarySignature').modal('hide');
-    
-});
-</script>
-
-<script>
-  $( function() {
-    $( "#datepicker" ).datepicker();
-  } );
-</script>
-
-<script>
-// $('.addCreatePackage').on('click', function(){
-$(".addCreatePackage").click(function () {
-// var item = $("#itemidPackage").val();
-var item = $('input[name="itemidPackage[]"]').map(function () {
-    return this.value; // $(this).val()
-}).get();
-
-var type = $('input[name="item_typePackage[]"]').map(function () {
-    return this.value; // $(this).val()
-}).get();
-
-var quantity = $('input[name="quantityPackage[]"]').map(function () {
-    return this.value; // $(this).val()
-}).get();
-
-var price = $('input[name="pricePackage[]"]').map(function () {
-    return this.value; // $(this).val()
-}).get();
-
-var package_name =  $("#package_name").val();
-var package_price =  $("#package_price").val();
-var package_price_set =  $("#package_price_set").val();
-
-// console.log('items '+item);
-// console.log('type '+type);
-// console.log('quantity '+quantity);
-// console.log('price '+price);
-    $.ajax({
-        type : 'POST',
-        url : "<?php echo base_url(); ?>workorder/createPackage",
-        data : {item: item, type:type, quantity:quantity, price:price, package_price:package_price, package_name:package_name, package_price_set:package_price_set },
-        dataType: 'json',
-        success: function(response){
-
-        // console.log(result);
-        var Randnumber = 1 + Math.floor(Math.random() * 99999);
-        // var Randnumber = Math.floor(Math.random()*(999999-1000000+1)+100);
-
-        console.log(response['pName']);
-
-                    // var inputs1 = "";
-                        $.each(response['pName'], function (a, b) {
-                            // inputs1 += b.name;
-                            var pName = b.name;
-                            // var Rnumber = 3 + Math.floor(Math.random() * 9);
-                            // var Rnumber = Math.floor(Math.random()*(9999-100000+1)+100);
-                            var Rnumber = Math.floor(Math.random()*(9999-10000+1)+100);
-
-                        
-
-                markup = "<tr id=\"ss\">" +
-                        // "<td width=\"35%\"><input value='"+title+"' type=\"text\" name=\"items[]\" class=\"form-control getItems\" ><input type=\"hidden\" value='"+idd+"' name=\"item_id[]\"><div class=\"show_mobile_view\"><span class=\"getItems_hidden\">"+title+"</span></div><input type=\"hidden\" name=\"itemidPackage[]\" id=\"itemidPackage\" class=\"itemid\" value='"+idd+"'></td>\n" +
-                        // "<td width=\"25%\"><div class=\"dropdown-wrapper\"><select name=\"item_typePackage[]\" class=\"form-control\"><option value=\"product\">Product</option><option value=\"material\">Material</option><option value=\"service\">Service</option><option value=\"fee\">Fee</option></select></div></td>\n" +
-                        // "<td width=\"\"><input data-itemid='"+idd+"' id='quantity_package_"+idd+"' value='"+qty+"' type=\"number\" name=\"quantityPackage[]\" data-counter=\"0\"  min=\"0\" class=\"form-control quantityPackage2\"></td>\n" +
-                        // "<td width=\"\"><input data-itemid='"+idd+"' id='price_package_"+idd+"' value='"+price+"'  type=\"number\" name=\"pricePackage[]\" class=\"form-control price_package2 hidden_mobile_view\" placeholder=\"Unit Price\"><input type=\"hidden\" class=\"priceqty\" id='priceqty_package_"+idd+"' value='"+total_+"'><div class=\"show_mobile_view\"><span class=\"price\">"+price+"</span></div></td>\n" +
-                        // "<td>\n" +
-                        // "<a href=\"#\" class=\"remove btn btn-sm btn-success\" id='"+idd+"'><i class=\"fa fa-trash\" aria-hidden=\"true\"></i></a>\n" +
-                        // "</td>\n" +
-                        "<td colspan=\"6\" ><h6>"+ pName +"</h6><div><table class=\"table table-hover\" ><thead><th width=\"10%\" ></th><th>Item Name</th><th>Quantity</th><th>Price</th></thead> <tbody id='packageBody"+Randnumber+"'>" +
-                        "<input type=\"hidden\" class=\"priceqty\" id='priceqty_"+Rnumber+"' value='"+b.amount_set+"'><input type=\"hidden\" name=\"itemid[]\" value=\"0\"><input type=\"hidden\" name=\"packageID[]\" value='"+b.id+"'><input type=\"hidden\" name=\"quantity[]\" value=\"1\"><input type=\"hidden\" name=\"price[]\" value='"+b.amount_set+"'><input type=\"hidden\" name=\"tax[]\" value=\"0\"><input type=\"hidden\" name=\"discount[]\" value=\"0\">"+
-
-                        "</tbody></table></div></td>\n" +
-                        "<td style=\"text-align: center\" class=\"hidden_mobile_view\" width=\"15%\">$ <span data-subtotal='"+b.amount_set+"' id='span_total_"+Rnumber+"' class=\"total_per_item\">"+b.amount_set+
-                        "</span> <input type=\"hidden\" name=\"total[]\" id='sub_total_text"+Rnumber+"' value='"+b.amount_set+"'></td>" +
-                    "</tr>";
-                    tableBody = $("#jobs_items_table_body");
-                    tableBody.append(markup);
-                });
-                    
-                    var inputs = "";
-                        $.each(response['details'], function (i, v) {
-                            inputs += v.package_name ;
-                            // "<tr>"+
-                            // "<td>"+ v.item_id +"</td>"+
-                            // "<td>"+ v.quantity +"</td>"+
-                            // "<td>"+ v.price +"</td>"+
-                            // "</tr>"+
-                        // });
-
-                    markup2 = "<tr width=\"10%\" id=\"sss\">" +
-                        // "<tr>"+
-                            "<td></td>"+
-                            "<td>"+ v.title +"</td>"+
-                            "<td>"+ v.quantity +"</td>"+
-                            "<td>"+ v.price +"</td>"+
-                        "</tr>";
-                    tableBody2 = $("#packageBody"+Randnumber);
-                    tableBody2.append(markup2);
-
-                });
-
-
-                var priceqty2 = 0;
-                $('*[id^="priceqty_"]').each(function(){
-                priceqty2 += parseFloat($(this).val());
-                });
-                $("#item_total").val(priceqty2.toFixed(2));
-
-                
-                var subtotal = 0;
-                // $("#span_total_0").each(function(){
-                $('*[id^="span_total_"]').each(function(){
-                subtotal += parseFloat($(this).text());
-                });
-                var s_total = subtotal.toFixed(2);
-                var adjustment = $("#adjustment_input").val();
-                var grand_total = s_total - parseFloat(adjustment);
-                var markup = $("#markup_input_form").val();
-                var grand_total_w = grand_total + parseFloat(markup);
-                $("#grand_total_inputs").val(grand_total_w.toFixed(2));
-
-        },
-    });
-
-    
-
-    $(".createPackage").modal("hide");
-    // $('#divcreatePackage').load(window.location.href +  '#divcreatePackage');
-    // $(document.body).on('hidden.bs.modal', function () {
-    //     $('.createPackage').removeData('bs.modal')
-    // });
-    $("#divcreatePackage").load(" #divcreatePackage");
-
-});
-</script>
-
-<script>
-$(".addNewPackageToList").click(function () {
-    var packId = $(this).attr('pack-id');
-
-    $.ajax({
-        type : 'POST',
-        url : "<?php echo base_url(); ?>workorder/addNewPackageToList",
-        data : {packId: packId },
-        dataType: 'json',
-        success: function(response){
-
-        // console.log(result);
-        var Randnumber = 1 + Math.floor(Math.random() * 99999);
-        // var Randnumber = Math.floor(Math.random()*(999999-1000000+1)+100);
-
-        console.log(response['pName']);
-
-                    // var inputs1 = "";
-                        $.each(response['pName'], function (a, b) {
-                            // inputs1 += b.name;
-                            var pName = b.name;
-                            // var Rnumber = 1 + Math.floor(Math.random() * 9);
-                            var Rnumber = Math.floor(Math.random()*(9999-10000+1)+100);
-
-                        
-
-                markup = "<tr id=\"ss\">" +
-                        // "<td width=\"35%\"><input value='"+title+"' type=\"text\" name=\"items[]\" class=\"form-control getItems\" ><input type=\"hidden\" value='"+idd+"' name=\"item_id[]\"><div class=\"show_mobile_view\"><span class=\"getItems_hidden\">"+title+"</span></div><input type=\"hidden\" name=\"itemidPackage[]\" id=\"itemidPackage\" class=\"itemid\" value='"+idd+"'></td>\n" +
-                        // "<td width=\"25%\"><div class=\"dropdown-wrapper\"><select name=\"item_typePackage[]\" class=\"form-control\"><option value=\"product\">Product</option><option value=\"material\">Material</option><option value=\"service\">Service</option><option value=\"fee\">Fee</option></select></div></td>\n" +
-                        // "<td width=\"\"><input data-itemid='"+idd+"' id='quantity_package_"+idd+"' value='"+qty+"' type=\"number\" name=\"quantityPackage[]\" data-counter=\"0\"  min=\"0\" class=\"form-control quantityPackage2\"></td>\n" +
-                        // "<td width=\"\"><input data-itemid='"+idd+"' id='price_package_"+idd+"' value='"+price+"'  type=\"number\" name=\"pricePackage[]\" class=\"form-control price_package2 hidden_mobile_view\" placeholder=\"Unit Price\"><input type=\"hidden\" class=\"priceqty\" id='priceqty_package_"+idd+"' value='"+total_+"'><div class=\"show_mobile_view\"><span class=\"price\">"+price+"</span></div></td>\n" +
-                        // "<td>\n" +
-                        // "<a href=\"#\" class=\"remove btn btn-sm btn-success\" id='"+idd+"'><i class=\"fa fa-trash\" aria-hidden=\"true\"></i></a>\n" +
-                        // "</td>\n" +
-                        "<td colspan=\"6\" ><h6>"+ pName +"</h6><div><table class=\"table table-hover\" ><thead><th width=\"10%\" ></th><th>Item Name</th><th>Quantity</th><th>Price</th></thead> <tbody id='packageBody"+Randnumber+"'>" +
-                        "<input type=\"hidden\" class=\"priceqty\" id='priceqty_"+Rnumber+"' value='"+b.amount_set+"'><input type=\"hidden\" name=\"itemid[]\" value=\"0\"><input type=\"hidden\" name=\"packageID[]\" value='"+b.id+"'><input type=\"hidden\" name=\"quantity[]\" value=\"1\"><input type=\"hidden\" name=\"price[]\" value='"+b.amount_set+"'><input type=\"hidden\" name=\"tax[]\" value=\"0\"><input type=\"hidden\" name=\"discount[]\" value=\"0\">"+
-
-                        "</tbody></table></div></td>\n" +
-                        "<td style=\"text-align: center\" class=\"hidden_mobile_view\" width=\"15%\">$ <span data-subtotal='"+b.amount_set+"' id='span_total_"+Rnumber+"' class=\"total_per_item\">"+b.amount_set+
-                        "</span> <input type=\"hidden\" name=\"total[]\" id='sub_total_text"+Rnumber+"' value='"+b.amount_set+"'></td>" +
-                    "</tr>";
-                    tableBody = $("#jobs_items_table_body");
-                    tableBody.append(markup);
-                });
-                    
-                    var inputs = "";
-                        $.each(response['details'], function (i, v) {
-                            inputs += v.package_name ;
-                            // "<tr>"+
-                            // "<td>"+ v.item_id +"</td>"+
-                            // "<td>"+ v.quantity +"</td>"+
-                            // "<td>"+ v.price +"</td>"+
-                            // "</tr>"+
-                        // });
-
-                    markup2 = "<tr width=\"10%\" id=\"sss\">" +
-                        // "<tr>"+
-                            "<td></td>"+
-                            "<td>"+ v.title +"</td>"+
-                            "<td>"+ v.quantity +"</td>"+
-                            "<td>"+ v.price +"</td>"+
-                        "</tr>";
-                    tableBody2 = $("#packageBody"+Randnumber);
-                    tableBody2.append(markup2);
-
-                });
-
-
-                var priceqty2 = 0;
-                $('*[id^="priceqty_"]').each(function(){
-                priceqty2 += parseFloat($(this).val());
-                });
-                $("#item_total").val(priceqty2.toFixed(2));
-
-                
-                var subtotal = 0;
-                // $("#span_total_0").each(function(){
-                $('*[id^="span_total_"]').each(function(){
-                subtotal += parseFloat($(this).text());
-                });
-                var s_total = subtotal.toFixed(2);
-                var adjustment = $("#adjustment_input").val();
-                var grand_total = s_total - parseFloat(adjustment);
-                var markup = $("#markup_input_form").val();
-                var grand_total_w = grand_total + parseFloat(markup);
-                $("#grand_total_inputs").val(grand_total_w.toFixed(2));
-
-        },
-    });
-
-    $(".createPackage").modal("hide");
-    // $('#divcreatePackage').load(window.location.href +  '#divcreatePackage');
-    // $(document.body).on('hidden.bs.modal', function () {
-    //     $('.createPackage').removeData('bs.modal')
-    // });
-    // $("#divcreatePackage").load(" #divcreatePackage");
-
-});
-</script>
-
-<script>
-// $("#packageID").click(function () {
-$(document).ready(function()
-{
-    // $( "#packageID" ).each(function(i) {
-    //     $(this).on("click", function(){
-    //     var packId = $(this).attr('pack-id');
-    //     alert(packId);
-        $.ajax({
-            type : 'POST',
-            url : "<?php echo base_url(); ?>workorder/getPackageItemsById",
-            // data : {packId: packId },
-            dataType: 'json',
-            success: function(response){
-                var inputs = "";
-                $.each(response['pItems'], function (i, v) {
-                    // inputs += v.package_name ;
-                    markup2 = "<tr>" +
-                                "<td></td>"+
-                                "<td>"+ v.title +"</td>"+
-                                "<td>"+ v.quantity +"</td>"+
-                                "<td>"+ v.price +"</td>"+
-                            "</tr>";
-                        tableBody2 = $("#packageItems"+v.package_id);
-                        tableBody2.append(markup2);
-                });
-            },
-        // });
-        // });
-    });
-});
-</script>
-
-    <script>
-// $("#company_representative_approval_signature1aM").on("click touchstart",
-//   function () {
-//     alert('yeah');
-//     var canvas = document.getElementById(
-//       "signM"
-//     );    
-//     var dataURL = canvas.toDataURL("image/png");
-//     $("#saveCompanySignatureDB1aM").val(dataURL);
-//     // console.log(dataURL);
-//   }
-// );
-
-// $(document).on('click','#signature-padM',function(){
-//        alert('yeah');
-//     // $('#item_group_type').val();
-// });
-// var canvas = document.getElementById('canvas');
-// var dataURL = canvas.toDataURL("image/png");
-// test = $("#saveCompanySignatureDB1aM").val(dataURL);
-// // var dataURL = canvas.toDataURL();
-// console.log(test);
-// jQuery(document).ready(function($){
-    
-//     var canvas = document.getElementById("canvas");
-//     var signaturePad = new SignaturePad(canvas);
-//     var dataURL = canvas.toDataURL("image/png");
-//     test = $("#saveCompanySignatureDB1aM").val(dataURL);
-
-//     onsole.log(test);
-    
-//     // $('#clear-signature').on('click', function(){
-//     //     signaturePad.clear();
-//     // });
-    
-// });
-
-            $(document).ready(function() {
-				// $('#canvas').signaturePad({drawOnly:true, drawBezierCurves:true, lineTop:90});
-                var canvas = document.getElementById("canvas");    
-                var signaturePad = new SignaturePad(canvas);
-
-                var canvas2 = document.getElementById("canvas2");    
-                var signaturePad2 = new SignaturePad(canvas2);
-
-                var canvas3 = document.getElementById("canvas3");    
-                var signaturePad3 = new SignaturePad(canvas3);
-
-			});
-
-// $("#canvas").on("click touchstart",
-//   function () {
-//     // alert('yeah');
-//     var canvas = document.getElementById(
-//       "canvas"
-//     );    
-//     var signaturePad = new SignaturePad(canvas);
-//     var dataURL = canvas.toDataURL("image/png");
-//     $("#saveCompanySignatureDB1aM").val(dataURL);
-//     // console.log(dataURL);
-//   }
-// );
-
-$("#btnSaveSign").click(function(e){
-    var canvas = document.getElementById("canvas");    
-    var dataURL = canvas.toDataURL("image/png");
-    $("#saveCompanySignatureDB1aM").val(dataURL);
-                        // console.log(dataURL);
-						//ajax call to save image inside folder
-						// $.ajax({
-						// 	url: "<?php echo base_url(); ?>accounting/testSave",
-						// 	data: { dataURL : dataURL },
-						// 	type: 'post',
-						// 	dataType: 'json',
-						// 	success: function (response) {
-						// 	   alert('success');
-						// 	}
-						// });
-
-$.ajax({
-    type : 'POST',
-    url : "<?php echo base_url(); ?>accounting/testSave",
-    data : {dataURL: dataURL},
-    success: function(result){
-    // $('#res').html('Signature Uploaded successfully');
-    console.log(dataURL)
-    // location.reload();
-    
-    },
-    });
-					
-			});
-
-
-</script>
-
-<script>
-// $('.enter_signature').click(function(){
-//     // alert("nisulod");
-//         if(signaturePad.isEmpty()){
-//             console.log('it is empty');
-//             return false;            
-//         }
-//     });
-
-var signaturePad;
-jQuery(document).ready(function () {
-  var signaturePadCanvas = document.querySelector('#canvas');
-//   var parentWidth = jQuery(signaturePadCanvas).parent().outerWidth();
-//   signaturePadCanvas.setAttribute("width", parentWidth);
-  signaturePad = new SignaturePad(signaturePadCanvas);
-
-//   signaturePadCanvas3.width  = 780;
-//   signaturePadCanvas3.height = 300;
-});
-
-var signaturePad2;
-jQuery(document).ready(function () {
-  var signaturePadCanvas2 = document.querySelector('#canvas2');
-//   var parentWidth = jQuery(signaturePadCanvas).parent().outerWidth();
-//   signaturePadCanvas.setAttribute("width", parentWidth);
-  signaturePad2 = new SignaturePad(signaturePadCanvas2);
-
-//   signaturePadCanvas3.width  = 780;
-//   signaturePadCanvas3.height = 300;
-});
-
-var signaturePad3;
-jQuery(document).ready(function () {
-  var signaturePadCanvas3 = document.querySelector('#canvas3');
-//   var parentWidth = jQuery(signaturePadCanvas).parent().outerWidth();
-//   signaturePadCanvas.setAttribute("width", parentWidth);
-  signaturePad3 = new SignaturePad(signaturePadCanvas3);
-
-//   signaturePadCanvas3.width  = 780;
-//   signaturePadCanvas3.height = 300;
-});
-
-$(document).on('click touchstart','#sign',function(){
-    // alert('test');
-    var canvas_web = document.getElementById("sign");    
-    var dataURL = canvas_web.toDataURL("image/png");
-    $("#saveCompanySignatureDB1aM_web").val(dataURL);
-});
-
-$(document).on('click touchstart','#sign2',function(){
-    // alert('test');
-    var canvas_web2 = document.getElementById("sign2");    
-    var dataURL = canvas_web2.toDataURL("image/png");
-    $("#saveCompanySignatureDB1aM_web2").val(dataURL);
-});
-
-$(document).on('click touchstart','#sign3',function(){
-    // alert('test');
-    var canvas_web3 = document.getElementById("sign3");    
-    var dataURL = canvas_web3.toDataURL("image/png");
-    $("#saveCompanySignatureDB1aM_web3").val(dataURL);
-});
-
-// var btn = document.getElementById('enter_signature');
-// btn.onclick = function () {
-//     document.getElementById('smoothed1a_pencil').remove();
-//     this.remove();
-// };
-
-function submit() {
-    
-    // document.getElementById('smoothed1a_pencil').remove();
-    // this.remove();
-
-    // $("#smoothed1a").remove();
-    // $("#smoothed2a").remove();
-    // $("#smoothed3a").remove();
-
-    // $(".signature_web").remove();
-
-//   if (signaturePad.isEmpty() || signaturePad2.isEmpty() || signaturePad3.isEmpty()) {
-//     // console.log("Empty!");
-//     alert('Please check, you must sign all tab.')
-//   }
-//   else{
-    // sigpad= $("#output-2a").val();
-    var canvas = document.getElementById("canvas");    
-    var dataURL = canvas.toDataURL("image/png");
-    $("#saveCompanySignatureDB1aM").val(dataURL);
-
-    var canvas2 = document.getElementById("canvas2");    
-    var dataURL2 = canvas2.toDataURL("image/png");
-    $("#savePrimaryAccountSignatureDB2aM").val(dataURL2);
-
-    var canvas3 = document.getElementById("canvas3");    
-    var dataURL3 = canvas3.toDataURL("image/png");
-    $("#saveSecondaryAccountSignatureDB3aM").val(dataURL3);
-
-    var input1 = $("#comp_rep_approval1").val();
-    var input2 = $("#comp_rep_approval2").val();
-    var input3 = $("#comp_rep_approval3").val();
-    
-    $.ajax({
-    type : 'POST',
-    url : "<?php echo base_url(); ?>accounting/testSave",
-    data : {dataURL: dataURL, dataURL2: dataURL2, dataURL3: dataURL3},
-    success: function(result){
-        // $('#res').html('Signature Uploaded successfully');
-        alert('Signature Uploaded successfully');
-        console.log(dataURL);
-        console.log(dataURL2);
-        console.log(dataURL3);
-
-        // var image = new Image();
-        // image.src = '"' + dataURL + '"';
-        // document.body.appendChild(image);
-
-        var input_conf = '<br><div style="border:solid gray 1px;padding:2%;width:400px !important;"><img id="image1" src="'+dataURL+'"></img><input type="hidden" class="form-control" name="signature1" id="signature1" value="'+ dataURL +'"><br><input type="text" class="form-control" name="name1" id="name1" value="'+ input1 +'" readonly></div><br><div style="border:solid gray 1px;padding:2%;"><img id="image1" src="'+dataURL2+'"></img><input type="hidden" class="form-control" name="signature2" id="signature2" value="'+ dataURL2 +'"><br><input type="text" class="form-control" name="name2" id="name2" value="'+ input2 +'" readonly></div><br><div style="border:solid gray 1px;padding:2%;"><img id="image1" src="'+dataURL3+'"></img><input type="hidden" class="form-control" name="signature3" id="signature3" value="'+ dataURL3 +'"><br><input type="text" class="form-control" name="name3" id="name3" value="'+ input3 +'" readonly></div>';
-
-        $('.signatureArea').html(input_conf);
-
-        // $(".sigWrapper").remove();
-
-        $("#saveCompanySignatureDB1aM_web").val(dataURL);
-        $("#saveCompanySignatureDB1aM_web2").val(dataURL2);
-        $("#saveCompanySignatureDB1aM_web3").val(dataURL3);
-
-        $(".output1").val(dataURL);
-        $(".output2").val(dataURL2);
-        $(".output3").val(dataURL3);
-
-        $("#company_representative_printed_name").val(input1);
-        $("#primary_account_holder_name").val(input2);
-        $("#secondery_account_holder_name").val(input3);
-
-        $('#signature_mobile').modal('toggle');
-        // if (confirm('Some message')) {
-        //     alert('Thanks for confirming');
-        // } else {
-        //     alert('Why did you press cancel? You should have confirmed');
-        // }
-
-        // location.reload();
-    },
-    });
-//   }
-}
-</script>
-
-<script>
-$(document).ready(function(){
-    if(window.matchMedia("(max-width: 600px)").matches){
-        // alert("This is a mobile device.");
-        $(document).on("click", ".testing", function () {
-            $('.getItems').hide();
-            $('#item_typeid').removeClass('form-control');
-            $(".sigWrapper").remove();
-            // $(".output2").remove();
-            // $(".output3").remove();
-        });
-        $(document).on("click", ".select_item", function () {
-            $('.getItems').hide();
-        });
-    } 
-    // else{
-    //     $('.getItems_hidden').hide();
-    // }
-});
-</script>
-
-<script>
-// $(document).on('click','.show_mobile_view',function(){
-//     //    alert('yeah');
-//     $('#update_group').modal('show');
-// });
-$(document).on('click','.groupChange',function(){
-    //    alert('yeah');
-    $('#item_group_type').val();
-});
-</script>
-
-<script>
-    $(function() {
-        $("nav:first").addClass("closed");
-    });
-</script>
 
 <script>
 var wrapper = document.getElementById("signature-pad");
@@ -4145,7 +2291,6 @@ resizeCanvas();
 
     <script>
     $(document).on("focusout", "#one_time", function () {
-        // alert('test');
         var counter = $(this).val();
         var m_monitoring = $("#m_monitoring").val();
         var subtotal = 0;
@@ -4156,7 +2301,7 @@ resizeCanvas();
 
         grand_tot = parseFloat(counter) + parseFloat(subtotal) + parseFloat(m_monitoring);
         //  alert(grand_tot);
-        var grand = $("#grand_total_inputs").val(grand_tot.toFixed(2));
+        var grand = $("#grand_total_input").val(grand_tot);
     });
 
     $(document).on("focusout", "#m_monitoring", function () {
@@ -4171,7 +2316,7 @@ resizeCanvas();
 
         grand_tot = parseFloat(counter) + parseFloat(subtotal) + parseFloat(one_time);
         //  alert(grand_tot);
-        var grand = $("#grand_total_inputs").val(grand_tot.toFixed(2));
+        var grand = $("#grand_total_input").val(grand_tot);
     });
 
     // $(document).on("checked", "#same_as", function () {
@@ -4232,7 +2377,7 @@ resizeCanvas();
         // addresses in the US and Canada.
         autocomplete = new google.maps.places.Autocomplete(address1Field, {
           componentRestrictions: { country: ["us", "ca"] },
-          fields: ["address_components"],
+          fields: ["address_components", "geometry"],
           types: ["address"],
         });
         address1Field.focus();
@@ -4270,10 +2415,10 @@ resizeCanvas();
               break;
             }
 
-            // case "postal_code_suffix": {
-            //   postcode = `${postcode}-${component.long_name}`;
-            //   break;
-            // }
+            case "postal_code_suffix": {
+              postcode = `${postcode}-${component.long_name}`;
+              break;
+            }
             case "locality":
               document.querySelector("#locality").value = component.long_name;
               break;
@@ -4282,9 +2427,9 @@ resizeCanvas();
               document.querySelector("#state").value = component.short_name;
               break;
             }
-            // case "country":
-            //   document.querySelector("#country").value = component.long_name;
-            //   break;
+            case "country":
+              document.querySelector("#country").value = component.long_name;
+              break;
           }
         }
         address1Field.value = address1;
@@ -4295,11 +2440,10 @@ resizeCanvas();
         address2Field.focus();
       }
     </script>
-    <!-- <script
+    <script
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAlMWhWMHlxQzuolWb2RrfUeb0JyhhPO9c&callback=initAutocomplete&libraries=places&v=weekly"
       async
-    ></script> -->
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=<?= google_credentials()['api_key'] ?>&callback=initialize&libraries=&v=weekly"></script>
+    ></script>
 
     <script>
         // function validatecard() {
@@ -4361,30 +2505,6 @@ $("#headerContent").html(function() {
 jQuery(function($){
 
 // Replace 'td' with your html tag
-$("#headerID").val(function() { 
-
-// Replace 'ok' with string you want to change, you can delete 'hello everyone' to remove the text
- var currentDate = $('#current_date').val();
-      return $(this).val().replace("{curr_date}", currentDate);  
-
-});
-});
-
-jQuery(function($){
-
-// Replace 'td' with your html tag
-$("#headerID").val(function() { 
-
-    var companyName = $('#company_name').val();
-// Replace 'ok' with string you want to change, you can delete 'hello everyone' to remove the text
-      return $(this).val().replace("{comp_name}", companyName);  
-
-});
-});
-
-jQuery(function($){
-
-// Replace 'td' with your html tag
 $("#thisdiv3").html(function() { 
 
     // var companyName = $('#company_name').val();
@@ -4429,55 +2549,6 @@ $("#thisdiv3").html(function() {
       return $(this).html().replace("{current_date_3}", date);  
 
 });
-
-jQuery(function($){
-
-// Replace 'td' with your html tag
-$("#terms_of_use").val(function() { 
-
-    // var companyName = $('#company_name').val();
-    // var now = new Date();
-    // now.setDate(now.getDate()+3);
-    // var n=3; //number of days to add. 
-    // var t = new Date();
-    // t.setDate(t.getDate() + n); 
-    // var month = "0"+(t.getMonth()+1);
-    // var date = "0"+t.getDate();
-    // month = month.slice(-2);
-    // date = date.slice(-2);
-    // var date = " "+ month +"-"+date +"-"+t.getFullYear();
-
-
-    // var startDate = "16-APR-2021";
-    var startDate = new Date();
-    // var daaa = new Date();
-    
-    // var date = d.getDate();
-    // var month = d.getMonth() + 1; // Since getMonth() returns month from 0-11 not 1-12
-    // var year = d.getFullYear();
-        
-    // var startDate = date + "-" + month + "-" + year;
-
-    // startDate = new Date(startDate.replace(/-/g, "/"));
-    var endDate = "", noOfDaysToAdd = 3, count = 0;
-    while(count < noOfDaysToAdd){
-        endDate = new Date(startDate.setDate(startDate.getDate() + 1));
-        if(endDate.getDay() != 0 && endDate.getDay() != 6){
-        count++;
-        }
-    }
-    //alert(endDate);
-    var month = "0"+(endDate.getMonth()+1);
-    var date = "0"+endDate.getDate();
-    month = month.slice(-2);
-    date = date.slice(-2);
-    var date = " "+ month +"-"+date +"-"+endDate.getFullYear();
-
-// alert(now);  
-      return $(this).val().replace("{current_date_3}", date);  
-
-});
-});
 });
 </script>
 
@@ -4518,11 +2589,6 @@ $("#content_input").val(function() {
 </script>
 <script>
 $(document).on('click','#headerContent',function(){
-    //    alert('yeah');
-    $('#update_header_modal').modal('show');
-});
-
-$(document).on('click','.btn-edit-header',function(){
     //    alert('yeah');
     $('#update_header_modal').modal('show');
 });
@@ -4631,15 +2697,6 @@ $(document).on('click','.save_terms_of_use',function(){
 </script>
 
 <script>
-$('#modal_items_list').DataTable({
-    "autoWidth" : false,
-    "columnDefs": [
-    { width: 540, targets: 0 },
-    { width: 100, targets: 0 },
-    { width: 100, targets: 0 }
-    ],
-    "ordering": false,
-});
 $(document).on("click", "label.mytxt", function () {
         var txt = $(".mytxt").text();
         $(".mytxt").replaceWith("<input class='mytxt'/>");
@@ -4965,522 +3022,4 @@ document.getElementById("payment_method").onchange = function() {
         $('#other_payment_area').show();
     }
 }
-</script>
-
-<script>
-$(".select_package").click(function () {
-  var idd = this.id;
-  console.log(idd);
-  console.log($(this).data('itemname'));
-  var title = $(this).data('itemname');
-  var price = $(this).data('price');
-
-    if(!$(this).data('quantity')){
-    // alert($(this).data('quantity'));
-    var qty = 0;
-  }else{
-    // alert('0');
-    var qty = $(this).data('quantity');
-  }
-  
-
-$.ajax({
-    type: 'POST',
-    url:"<?php echo base_url(); ?>workorder/select_package",
-    data: {idd : idd },
-    dataType: 'json',
-    success: function(response){
-        // alert('Successfully Change');
-        console.log(response['items']);
-
-        // var objJSON = JSON.parse(response['items'][0].title);
-                var inputs = "";
-                $.each(response['items'], function (i, v) {
-                    inputs += v.title ;
-                    var total_pu = v.price * v.units;
-                    var total_tax = (v.price * v.units) * 7.5 / 100;
-                    var total_temp = total_pu + total_tax;
-                    var total = total_temp.toFixed(2);
-
-                    
-                  markup = "<tr id=\"ss\">" +
-                      "<td width=\"35%\"><input value='"+v.title+"' type=\"text\" name=\"items[]\" class=\"form-control getItems\" ><input type=\"hidden\" value='"+v.id+"' name=\"itemid[]\" id=\"itemid\"><div class=\"show_mobile_view\"><span class=\"getItems_hidden\">"+v.title+"</span></div></td>\n" +
-                      "<td width=\"20%\"><div class=\"dropdown-wrapper\"><select name=\"item_type[]\" class=\"form-control\"><option value=\"product\">Product</option><option value=\"material\">Material</option><option value=\"service\">Service</option><option value=\"fee\">Fee</option></select></div></td>\n" +
-                      "<td width=\"10%\"><input data-itemid='"+v.id+"' id='quantity_"+v.id+"' value='"+v.units+"' type=\"number\" name=\"quantity[]\" data-counter=\"0\"  min=\"0\" class=\"form-control qtyest2 mobile_qty \"></td>\n" +
-                      "<td width=\"10%\"><input id='price_"+v.id+"' value='"+v.price+"'  type=\"number\" name=\"price[]\" class=\"form-control hidden_mobile_view \" placeholder=\"Unit Price\"><input type=\"hidden\" class=\"priceqty\" id='priceqty_"+v.id+"' value='"+total_pu+"'><div class=\"show_mobile_view\"><span class=\"price\">"+v.price+"</span><input type=\"hidden\" class=\"form-control price\" name=\"price_[]\" data-counter=\"0\" id=\"priceM_0\" min=\"0\" value='"+v.price+"'></div></td>\n" +
-                    //   "<td width=\"10%\"><input type=\"number\" class=\"form-control discount\" name=\"discount[]\" data-counter=\"0\" id=\"discount_0\" value=\"0\" ></td>\n" +
-                    // //  "<td width=\"10%\"><small>Unit Cost</small><input type=\"text\" name=\"item_cost[]\" class=\"form-control\"></td>\n" +
-                      "<td width=\"10%\" class=\"hidden_mobile_view\"><input type=\"number\" name=\"discount[]\" class=\"form-control discount\" id='discount_"+v.id+"' value=\"0\"></td>\n" +
-                    // "<td width=\"25%\"><small>Inventory Location</small><input type=\"text\" name=\"item_loc[]\" class=\"form-control\"></td>\n" +
-                      "<td width=\"20%\" class=\"hidden_mobile_view\"><input type=\"text\" data-itemid='"+v.id+"' class=\"form-control tax_change2\" name=\"tax[]\" data-counter=\"0\" id='tax1_"+v.id+"' min=\"0\" value='"+total_tax+"'></td>\n" +
-                      "<td style=\"text-align: center\" class=\"hidden_mobile_view\" width=\"15%\"><span data-subtotal='"+total+"' id='span_total_"+v.id+"' class=\"total_per_item\">"+total+
-                    // "</span><a href=\"javascript:void(0)\" class=\"remove_item_row\"><i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i></a>"+
-                      "</span> <input type=\"hidden\" name=\"total[]\" id='sub_total_text"+v.id+"' value='"+total+"'></td>" +
-                      "<td>\n" +
-                        "<a href=\"#\" class=\"remove btn btn-sm btn-success\" id='"+v.id+"'><i class=\"fa fa-trash\" aria-hidden=\"true\"></i></a>\n" +
-                        "</td>\n" +
-                      "</tr>";
-                    tableBody = $("#jobs_items_table_body");
-                    tableBody.append(markup);
-                    markup2 = "<tr id=\"sss\">" +
-                      "<td >"+v.title+"</td>\n" +
-                      "<td ></td>\n" +
-                    "<td ></td>\n" +
-                    "<td >"+v.price+"</td>\n" +
-                    "<td ></td>\n" +
-                    "<td >"+v.units+"</td>\n" +
-                    "<td ></td>\n" +
-                    "<td ></td>\n" +
-                    "<td >0</td>\n" +
-                    "<td ></td>\n" +
-                      "<td ></td>\n" +
-                      "</tr>";
-
-                });
-                // $("#input_container").html(inputs);
-                
-                tableBody2 = $("#device_audit_datas");
-                tableBody2.append(markup2);
-                // alert(inputs);
-
-                var in_id = idd;
-                var price = $("#price_" + in_id).val();
-                var quantity = $("#quantity_" + in_id).val();
-                var discount = $("#discount_" + in_id).val();
-                var tax = (parseFloat(price) * 7.5) / 100;
-                var tax1 = (((parseFloat(price) * 7.5) / 100) * parseFloat(quantity)).toFixed(
-                2
-                );
-                if( discount == '' ){
-                discount = 0;
-                }
-
-                var total = (
-                (parseFloat(price) + parseFloat(tax)) * parseFloat(quantity) -
-                parseFloat(discount)
-                ).toFixed(2);
-
-                var total_wo_tax = price * quantity;
-
-                // alert( 'yeah' + total);
-
-
-                $("#priceqty_" + in_id).val(total_wo_tax);
-                $("#span_total_" + in_id).text(total);
-                $("#sub_total_text" + in_id).val(total);
-                $("#tax_1_" + in_id).text(tax1);
-                $("#tax1_" + in_id).val(tax1);
-                $("#discount_" + in_id).val(discount);
-
-                if( $('#tax_1_'+ in_id).length ){
-                $('#tax_1_'+in_id).val(tax1);
-                }
-
-                if( $('#item_total_'+ in_id).length ){
-                $('#item_total_'+in_id).val(total);
-                }
-
-                var eqpt_cost = 0;
-                var total_costs = 0;
-                var cnt = $("#count").val();
-                var total_discount = 0;
-                var pquantity = 0;
-                for (var p = 0; p <= cnt; p++) {
-                var prc = $("#price_" + p).val();
-                var quantity = $("#quantity_" + p).val();
-                var discount = $("#discount_" + p).val();
-                var pqty = $("#priceqty_" + p).val();
-                // var discount= $('#discount_' + p).val();
-                // eqpt_cost += parseFloat(prc) - parseFloat(discount);
-                pquantity += parseFloat(pqty);
-                total_costs += parseFloat(prc);
-                eqpt_cost += parseFloat(prc) * parseFloat(quantity);
-                total_discount += parseFloat(discount);
-                }
-                //   var subtotal = 0;
-                // $( total ).each( function(){
-                //   subtotal += parseFloat( $( this ).val() ) || 0;
-                // });
-
-                var total_cost = 0;
-                // $("#span_total_0").each(function(){
-                $('*[id^="price_"]').each(function(){
-                total_cost += parseFloat($(this).val());
-                });
-
-                // var totalcosting = 0;
-                // $('*[id^="span_total_"]').each(function(){
-                //   totalcosting += parseFloat($(this).val());
-                // });
-
-
-                // alert(total_cost);
-
-                var tax_tot = 0;
-                $('*[id^="tax1_"]').each(function(){
-                tax_tot += parseFloat($(this).val());
-                });
-
-                over_tax = parseFloat(tax_tot).toFixed(2);
-                // alert(over_tax);
-
-                $("#sales_taxs").val(over_tax);
-                $("#total_tax_input").val(over_tax);
-                $("#total_tax_").text(over_tax);
-
-
-                eqpt_cost = parseFloat(eqpt_cost).toFixed(2);
-                total_discount = parseFloat(total_discount).toFixed(2);
-                stotal_cost = parseFloat(total_cost).toFixed(2);
-                priceqty = parseFloat(pquantity).toFixed(2);
-                // var test = 5;
-
-                var subtotal = 0;
-                // $("#span_total_0").each(function(){
-                $('*[id^="span_total_"]').each(function(){
-                subtotal += parseFloat($(this).text());
-                });
-                // $('#sum').text(subtotal);
-
-                var subtotaltax = 0;
-                // $("#span_total_0").each(function(){
-                $('*[id^="tax_1_"]').each(function(){
-                subtotaltax += parseFloat($(this).text());
-                });
-
-
-                var priceqty2 = 0;
-                $('*[id^="priceqty_"]').each(function(){
-                priceqty2 += parseFloat($(this).val());
-                });
-
-                $("#span_sub_total_invoice").text(priceqty2.toFixed(2));
-                // $("#span_sub_total_invoice").text(priceqty);
-
-                $("#eqpt_cost").val(eqpt_cost);
-                $("#total_discount").val(total_discount);
-                $("#span_sub_total_0").text(total_discount);
-                // $("#span_sub_total_invoice").text(stotal_cost);
-                // $("#item_total").val(subtotal.toFixed(2));
-                $("#item_total").val(priceqty2.toFixed(2));
-
-                var s_total = subtotal.toFixed(2);
-                var adjustment = $("#adjustment_input").val();
-                var grand_total = s_total - parseFloat(adjustment);
-                var markup = $("#markup_input_form").val();
-                var grand_total_w = grand_total + parseFloat(markup);
-
-                // $("#total_tax_").text(subtotaltax.toFixed(2));
-                // $("#total_tax_").val(subtotaltax.toFixed(2));
-
-
-
-
-                $("#grand_total").text(grand_total_w.toFixed(2));
-                $("#grand_total_input").val(grand_total_w.toFixed(2));
-                $("#grand_total_inputs").val(grand_total_w.toFixed(2));
-
-                var sls = (parseFloat(eqpt_cost).toFixed(2) * 7.5) / 100;
-                sls = parseFloat(sls).toFixed(2);
-                $("#sales_tax").val(sls);
-                cal_total_due();
-
-
-    },
-        error: function(response){
-        alert('Error'+response);
-
-        }
-});
-
-
-
-//   if(!$(this).data('quantity')){
-//     // alert($(this).data('quantity'));
-//     var qty = 0;
-//   }else{
-//     // alert('0');
-//     var qty = $(this).data('quantity');
-//   }
-
-//   var count = parseInt($("#count").val()) + 1;
-//   $("#count").val(count);
-//   var total_ = price * qty;
-//   var tax_ =(parseFloat(total_).toFixed(2) * 7.5) / 100;
-//   var taxes_t = parseFloat(tax_).toFixed(2);
-//   var total = parseFloat(total_).toFixed(2);
-//   var withCommas = Number(total).toLocaleString('en');
-//   total = '$' + withCommas + '.00';
-//   // console.log(total);
-//   // alert(total);
-//   markup = "<tr id=\"ss\">" +
-//       "<td width=\"35%\"><input value='"+title+"' type=\"text\" name=\"items[]\" class=\"form-control getItems\" ><input type=\"hidden\" value='"+idd+"' name=\"item_id[]\"><div class=\"show_mobile_view\"><span class=\"getItems_hidden\">"+title+"</span></div></td>\n" +
-//       "<td width=\"20%\"><div class=\"dropdown-wrapper\"><select name=\"item_type[]\" class=\"form-control\"><option value=\"product\">Product</option><option value=\"material\">Material</option><option value=\"service\">Service</option><option value=\"fee\">Fee</option></select></div></td>\n" +
-//       "<td width=\"10%\"><input data-itemid='"+idd+"' id='quantity_"+idd+"' value='"+qty+"' type=\"number\" name=\"quantity[]\" data-counter=\"0\"  min=\"0\" class=\"form-control qtyest2 mobile_qty \"></td>\n" +
-//       // "<td>\n" + '<input type="number" class="form-control qtyest" name="quantity[]" data-counter="' + count + '" id="quantity_' + count + '" min="1" value="1">\n' + "</td>\n" +
-//       "<td width=\"10%\"><input id='price_"+idd+"' value='"+price+"'  type=\"number\" name=\"price[]\" class=\"form-control hidden_mobile_view \" placeholder=\"Unit Price\"><input type=\"hidden\" class=\"priceqty\" id='priceqty_"+idd+"'><div class=\"show_mobile_view\"><span class=\"price\">"+price+"</span><input type=\"hidden\" class=\"form-control price\" name=\"price[]\" data-counter=\"0\" id=\"priceM_0\" min=\"0\" value='"+price+"'></div></td>\n" +
-//       // "<td width=\"10%\"><input type=\"number\" class=\"form-control discount\" name=\"discount[]\" data-counter="0" id=\"discount_0\" min="0" value="0" ></td>\n" +
-//       // "<td width=\"10%\"><small>Unit Cost</small><input type=\"text\" name=\"item_cost[]\" class=\"form-control\"></td>\n" +
-//       "<td width=\"10%\" class=\"hidden_mobile_view\"><input type=\"number\" name=\"discount[]\" class=\"form-control discount\" id='discount_"+idd+"'></td>\n" +
-//       // "<td width=\"25%\"><small>Inventory Location</small><input type=\"text\" name=\"item_loc[]\" class=\"form-control\"></td>\n" +
-//       "<td width=\"20%\" class=\"hidden_mobile_view\"><input type=\"text\" data-itemid='"+idd+"' class=\"form-control tax_change2\" name=\"tax[]\" data-counter=\"0\" id='tax1_"+idd+"' min=\"0\" value='"+taxes_t+"'></td>\n" +
-//       "<td style=\"text-align: center\" class=\"hidden_mobile_view\" width=\"15%\"><span data-subtotal='"+total_+"' id='span_total_"+idd+"' class=\"total_per_item\">"+total+
-//       // "</span><a href=\"javascript:void(0)\" class=\"remove_item_row\"><i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i></a>"+
-//       "</span> <input type=\"hidden\" name=\"total[]\" id='sub_total_text"+idd+"' value='"+total+"'></td>" +
-//       "</tr>";
-//   tableBody = $("#jobs_items_table_body");
-//   tableBody.append(markup);
-//   markup2 = "<tr id=\"sss\">" +
-//       "<td >"+title+"</td>\n" +
-//       "<td ></td>\n" +
-//       "<td ></td>\n" +
-//       "<td >"+price+"</td>\n" +
-//       "<td ></td>\n" +
-//       "<td >"+qty+"</td>\n" +
-//       "<td ></td>\n" +
-//       "<td ></td>\n" +
-//       "<td >0</td>\n" +
-//       "<td ></td>\n" +
-//       "<td ><a href=\"#\" data-name='"+title+"' data-price='"+price+"' data-quantity='"+qty+"' id='"+idd+"' class=\"edit_item_list\"><span class=\"fa fa-edit\"></span></i></a> <a href=\"javascript:void(0)\" class=\"remove_audit_item_row\"><span class=\"fa fa-trash\"></span></i></a></td>\n" +
-//       "</tr>";
-//   tableBody2 = $("#device_audit_datas");
-//   tableBody2.append(markup2);
-//   // calculate_subtotal();
-//   // var counter = $(this).data("counter");
-//   // calculation(idd);
-
-// var in_id = idd;
-// var price = $("#price_" + in_id).val();
-// var quantity = $("#quantity_" + in_id).val();
-// var discount = $("#discount_" + in_id).val();
-// var tax = (parseFloat(price) * 7.5) / 100;
-// var tax1 = (((parseFloat(price) * 7.5) / 100) * parseFloat(quantity)).toFixed(
-// 2
-// );
-// if( discount == '' ){
-// discount = 0;
-// }
-
-// var total = (
-// (parseFloat(price) + parseFloat(tax)) * parseFloat(quantity) -
-// parseFloat(discount)
-// ).toFixed(2);
-
-// var total_wo_tax = price * quantity;
-
-// // alert( 'yeah' + total);
-
-
-// $("#priceqty_" + in_id).val(total_wo_tax);
-// $("#span_total_" + in_id).text(total);
-// $("#sub_total_text" + in_id).val(total);
-// $("#tax_1_" + in_id).text(tax1);
-// $("#tax1_" + in_id).val(tax1);
-// $("#discount_" + in_id).val(discount);
-
-// if( $('#tax_1_'+ in_id).length ){
-// $('#tax_1_'+in_id).val(tax1);
-// }
-
-// if( $('#item_total_'+ in_id).length ){
-// $('#item_total_'+in_id).val(total);
-// }
-
-// var eqpt_cost = 0;
-// var total_costs = 0;
-// var cnt = $("#count").val();
-// var total_discount = 0;
-// var pquantity = 0;
-// for (var p = 0; p <= cnt; p++) {
-// var prc = $("#price_" + p).val();
-// var quantity = $("#quantity_" + p).val();
-// var discount = $("#discount_" + p).val();
-// var pqty = $("#priceqty_" + p).val();
-// // var discount= $('#discount_' + p).val();
-// // eqpt_cost += parseFloat(prc) - parseFloat(discount);
-// pquantity += parseFloat(pqty);
-// total_costs += parseFloat(prc);
-// eqpt_cost += parseFloat(prc) * parseFloat(quantity);
-// total_discount += parseFloat(discount);
-// }
-// //   var subtotal = 0;
-// // $( total ).each( function(){
-// //   subtotal += parseFloat( $( this ).val() ) || 0;
-// // });
-
-// var total_cost = 0;
-// // $("#span_total_0").each(function(){
-// $('*[id^="price_"]').each(function(){
-// total_cost += parseFloat($(this).val());
-// });
-
-// // var totalcosting = 0;
-// // $('*[id^="span_total_"]').each(function(){
-// //   totalcosting += parseFloat($(this).val());
-// // });
-
-
-// // alert(total_cost);
-
-// var tax_tot = 0;
-// $('*[id^="tax1_"]').each(function(){
-// tax_tot += parseFloat($(this).val());
-// });
-
-// over_tax = parseFloat(tax_tot).toFixed(2);
-// // alert(over_tax);
-
-// $("#sales_taxs").val(over_tax);
-// $("#total_tax_input").val(over_tax);
-// $("#total_tax_").text(over_tax);
-
-
-// eqpt_cost = parseFloat(eqpt_cost).toFixed(2);
-// total_discount = parseFloat(total_discount).toFixed(2);
-// stotal_cost = parseFloat(total_cost).toFixed(2);
-// priceqty = parseFloat(pquantity).toFixed(2);
-// // var test = 5;
-
-// var subtotal = 0;
-// // $("#span_total_0").each(function(){
-// $('*[id^="span_total_"]').each(function(){
-// subtotal += parseFloat($(this).text());
-// });
-// // $('#sum').text(subtotal);
-
-// var subtotaltax = 0;
-// // $("#span_total_0").each(function(){
-// $('*[id^="tax_1_"]').each(function(){
-// subtotaltax += parseFloat($(this).text());
-// });
-
-
-// var priceqty2 = 0;
-// $('*[id^="priceqty_"]').each(function(){
-// priceqty2 += parseFloat($(this).val());
-// });
-
-// $("#span_sub_total_invoice").text(priceqty2.toFixed(2));
-// // $("#span_sub_total_invoice").text(priceqty);
-
-// $("#eqpt_cost").val(eqpt_cost);
-// $("#total_discount").val(total_discount);
-// $("#span_sub_total_0").text(total_discount);
-// // $("#span_sub_total_invoice").text(stotal_cost);
-// // $("#item_total").val(subtotal.toFixed(2));
-// $("#item_total").val(priceqty2.toFixed(2));
-
-// var s_total = subtotal.toFixed(2);
-// var adjustment = $("#adjustment_input").val();
-// var grand_total = s_total - parseFloat(adjustment);
-// var markup = $("#markup_input_form").val();
-// var grand_total_w = grand_total + parseFloat(markup);
-
-// // $("#total_tax_").text(subtotaltax.toFixed(2));
-// // $("#total_tax_").val(subtotaltax.toFixed(2));
-
-
-
-
-// $("#grand_total").text(grand_total_w.toFixed(2));
-// $("#grand_total_input").val(grand_total_w.toFixed(2));
-// $("#grand_total_inputs").val(grand_total_w.toFixed(2));
-
-// var sls = (parseFloat(eqpt_cost).toFixed(2) * 7.5) / 100;
-// sls = parseFloat(sls).toFixed(2);
-// $("#sales_tax").val(sls);
-// cal_total_due();
-});
-</script>
-
-<script>
-// $(document).on("click",".pdf_sheet", function(){
-//     // window.open(url, '_blank');
-//     // alert('yes!');
-//     var subjectID = $("#workorder_number").val();
-//     // $("#workorder_number").val();view_workorder_number
-//     // var session = $("#SessionFrom").val()+"-"+$("#SessionTo").val();
-//     // var courseID = $("#classesID").val();
-//     // var yearsOrSemester = $("#yearSemesterID").val();
-//     // var form = '';
-//     // form += '<input type="hidden" name="subjectID" value="' + subjectID + '">';
-//     // form += '<input type="hidden" name="session" value="' + session + '">';
-//     // form += '<input type="hidden" name="courseID" value="' + courseID + '">';
-//     // form += '<input type="hidden" name="yearsOrSemester" value="' + yearsOrSemester+ '">';
-//     // form += '</form>';
-//     // $('body').append(form);
-//     // $('#static_form').submit();
-//     $.ajax({
-//         type : 'POST',
-//         url : "<?php echo base_url(); ?>workorder/preview",
-//         // data : {dataURL: dataURL},
-//         success: function(result){
-//         // $('#res').html('Signature Uploaded successfully');
-//         alert('yes');
-//         // console.log(dataURL)
-//         // location.reload();
-        
-//         },
-//     });
-
-
-// });
-$('#clear').click(function() {
-  $('#signArea').signaturePad().clearCanvas();
-});
-
-$('#clear2').click(function() {
-  $('#signArea2').signaturePad().clearCanvas();
-});
-
-$('#clear3').click(function() {
-  $('#signArea3').signaturePad().clearCanvas();
-});
-</script>
-<script>
-  $( function() {
-    $( "#datepicker_dateissued" ).datepicker({
-        format: 'mm/dd/yyyy'
-    });
-  } );
-</script>
-<script>
-$('#ssn').keyup(function() {
-  var foo = $(this).val().split("-").join(""); // remove hyphens
-  if (foo.length > 0) {
-    foo = foo.match(new RegExp('.{1,4}', 'g')).join("-");
-  }
-  $(this).val(foo);
-});
-
-$('#credit_number').keyup(function() {
-  var foo = $(this).val().split("-").join(""); // remove hyphens
-  if (foo.length > 0) {
-    foo = foo.match(new RegExp('.{1,4}', 'g')).join("-");
-  }
-  $(this).val(foo);
-});
-
-$('#credit_number2').keyup(function() {
-  var foo = $(this).val().split("-").join(""); // remove hyphens
-  if (foo.length > 0) {
-    foo = foo.match(new RegExp('.{1,4}', 'g')).join("-");
-  }
-  $(this).val(foo);
-});
-
-$('#other_credit_number').keyup(function() {
-  var foo = $(this).val().split("-").join(""); // remove hyphens
-  if (foo.length > 0) {
-    foo = foo.match(new RegExp('.{1,4}', 'g')).join("-");
-  }
-  $(this).val(foo);
-});
-$('#spouse_contact_ssn').keyup(function() {
-  var foo = $(this).val().split("-").join(""); // remove hyphens
-  if (foo.length > 0) {
-    foo = foo.match(new RegExp('.{1,4}', 'g')).join("-");
-  }
-  $(this).val(foo);
-});
 </script>

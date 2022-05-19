@@ -6,7 +6,6 @@ class Booking extends MY_Controller {
 	public function __construct() {
 		parent::__construct();
 		$this->checkLogin();
-		$this->hasAccessModule(7);
 
 		$this->page_data['page_title'] = 'Online Booking';
 
@@ -27,20 +26,25 @@ class Booking extends MY_Controller {
 	}
 
 	public function index() {
-		$user = $this->session->userdata('logged');
-		$cid  = logged('company_id');
-    	$eid  = hashids_encrypt($cid, '', 15);    	
 
-		$total_category = $this->BookingCategory_model->countTotalByCompanyId($cid);
-		$total_products = $this->BookingServiceItem_model->countTotalByCompanyId($cid);
-		$total_timeslots = $this->BookingTimeSlot_model->countTotalByCompanyId($cid);
-		$total_new_inquiry = $this->BookingInfo_model->countTotalNewByCompanyId($cid);
+		$is_allowed = $this->isAllowedModuleAccess(7);
+        if( !$is_allowed ){
+            $this->page_data['module'] = 'online_booking';
+            echo $this->load->view('no_access_module', $this->page_data, true);
+            die();
+        }
+
+		$user = $this->session->userdata('logged');
+    	$eid = hashids_encrypt($user['id'], '', 15);
+
+		$total_category = $this->BookingCategory_model->countTotal();
+		$total_products = $this->BookingServiceItem_model->countTotal();
+		$total_timeslots = $this->BookingTimeSlot_model->countTotal();
 
 		$this->page_data['eid']   = $eid;
 		$this->page_data['total_category']  = $total_category;
 		$this->page_data['total_products']  = $total_products;
 		$this->page_data['total_timeslots'] = $total_timeslots;
-		$this->page_data['total_new_inquiry'] = $total_new_inquiry;
 		$this->page_data['users'] = $this->users_model->getUser(logged('id'));
 		$this->load->view('online_booking/index', $this->page_data);
 	}
@@ -48,8 +52,12 @@ class Booking extends MY_Controller {
 	public function products() {
 		$user_id = logged('id');
         $role_id = logged('role');
-        
-        $args = array('company_id' => logged('company_id'));
+        if( $role_id == 1 || $role_id == 2 ){
+            $args = array();
+        }else{
+            $args = array('company_id' => logged('company_id'));
+        }
+
 		$category = $this->BookingCategory_model->getByWhere($args);
 		$service_items = $this->BookingServiceItem_model->getAllItemsGroupByCategoryArray();
 
@@ -63,8 +71,7 @@ class Booking extends MY_Controller {
 	public function time() {
         $user = $this->session->userdata('logged');
 
-        $cid = logged('company_id');
-        $bookingTimeSlots = $this->BookingTimeSlot_model->findAllByCompanyId($cid);
+        $bookingTimeSlots = $this->BookingTimeSlot_model->findAllByUserId($user['id']);
 
         $this->page_data['bookingTimeSlots'] = $bookingTimeSlots;
 		$this->page_data['users'] = $this->users_model->getUser(logged('id'));
@@ -163,7 +170,6 @@ class Booking extends MY_Controller {
 
         	foreach ($post_data as $key => $value) {
 	        	$data = array(
-	        		'company_id' => logged('company_id'),
 	        		'user_id' => $user['id'],
 	        		'field_name' => $value['field_name'],
 	        		'label' => $value['label'],
@@ -191,16 +197,14 @@ class Booking extends MY_Controller {
 			$param = 'active';
 		}
 
-		$filters[] = ['field' => 'company_id', 'value' => logged('company_id')];
-
 		if( $param == 'active' ){
-			$coupons = $this->BookingCoupon_model->getAllActive($filters);
+			$coupons = $this->BookingCoupon_model->getAllActive();
 		}else{
-			$coupons = $this->BookingCoupon_model->getAllClosed($filters);
+			$coupons = $this->BookingCoupon_model->getAllClosed();
 		}
-		
-		$total_active = $this->BookingCoupon_model->totalActive($filters);
-		$total_closed = $this->BookingCoupon_model->totalClosed($filters);
+
+		$total_active = $this->BookingCoupon_model->totalActive();
+		$total_closed = $this->BookingCoupon_model->totalClosed();
 
 		$this->page_data['total_active'] = $total_active;
 		$this->page_data['total_closed'] = $total_closed;
@@ -227,7 +231,6 @@ class Booking extends MY_Controller {
 			$setting = array(
 				'page_title' => $bookingSetting->page_title,
 				'page_intro' => $bookingSetting->page_introduction,
-				'page_instructions' => $bookingSetting->page_instruction,
 				'product_list_mode' => $bookingSetting->product_listing_mode,
 				'time_slot_bookings' => $bookingSetting->appointment_per_time_slot,
 				'cart_total_min' => $bookingSetting->minimum_price_for_entier_booking,
@@ -250,7 +253,6 @@ class Booking extends MY_Controller {
 			$setting = array(
 				'page_title' => '',
 				'page_intro' => '',
-				'page_instructions' => '',
 				'product_list_mode' => 'grid',
 				'time_slot_bookings' => 0,
 				'cart_total_min' => 1,
@@ -275,9 +277,7 @@ class Booking extends MY_Controller {
 
 	public function preview() {
 		$user = $this->session->userdata('logged');
-		$cid  = logged('company_id');
-    	//$eid  = hashids_encrypt($user['id'], '', 15);
-    	$eid  = hashids_encrypt($cid, '', 15);
+    	$eid = hashids_encrypt($user['id'], '', 15);
 
     	$this->page_data['eid']   = $eid;
 		$this->page_data['users'] = $this->users_model->getUser(logged('id'));
@@ -330,9 +330,8 @@ class Booking extends MY_Controller {
     public function ajax_edit_coupon()
     {
 
-    	$id  = post('cid');
-    	$cid = logged('company_id');
-    	$coupon = $this->BookingCoupon_model->getByIdAndCompanyId($id, $cid);
+    	$id = post('cid');
+    	$coupon = $this->BookingCoupon_model->getById($id);
 
     	$this->page_data['coupon'] = $coupon;
 		$this->load->view('online_booking/ajax_edit_coupon', $this->page_data);
@@ -340,8 +339,7 @@ class Booking extends MY_Controller {
 
     public function delete_coupon()
     {
-    	$cid = logged('company_id');
-    	$id  = $this->BookingCoupon_model->deleteCouponByIdAndCompanyId(post('cid'), $cid);
+    	$id = $this->BookingCoupon_model->deleteUserCoupon(post('cid'));
 
 		$this->activity_model->add("Coupon #$id Deleted by User:".logged('name'));
 
@@ -555,7 +553,6 @@ class Booking extends MY_Controller {
         	$this->load->model('BookingServiceItem_model');
 
         	$data = array(
-        		'company_id' => logged('company_id'),
         		'user_id' => $user['id'],
         		'category_id' => post('category_id'),
         		'name' => post('name'),
@@ -653,8 +650,7 @@ class Booking extends MY_Controller {
 
     public function delete_service_item()
     {
-    	$cid = logged('company_id');
-    	$id  = $this->BookingServiceItem_model->deleteServiceItemByIdAndCompanyId(post('siid'), $cid);
+    	$id = $this->BookingServiceItem_model->deleteServiceItem(post('siid'));
 
 		$this->activity_model->add("Service/Item #$id Deleted by User:".logged('name'));
 
@@ -711,7 +707,6 @@ class Booking extends MY_Controller {
 
         }else{
         	$data = array(
-        		'company_id' => logged('company_id'),
         		'user_id' => $user['id'],
         		'page_title' => post('page_title'),
         		'page_instruction' => post('page_intro'),
@@ -729,7 +724,7 @@ class Booking extends MY_Controller {
         		'widget_status' => post('status')
         	);
 
-        	$last_id = $this->BookingSetting_model->create($data);
+        	$last_id = $this->BookingSetting_model->createSetting($data);
 
         	if( post('convert_lead_to_work_order') == 1 ){
         		$assigned_batch_data = array();
@@ -763,7 +758,6 @@ class Booking extends MY_Controller {
         	if(!empty($t['days'])) {
 	            $days = serialize($t['days']);
 	            $data = array(
-	            	'company_id' => logged('company_id'),
 	                'user_id' => $user['id'],
 	                'time_start' => $t['time_start'],
 	                'time_end' => $t['time_end'],
@@ -822,8 +816,8 @@ class Booking extends MY_Controller {
 
     public function inquiries()
     {
-    	$cid = logged('company_id');
-    	$inquiries = $this->BookingInquiry_model->findAllByCompanyId($cid);
+    	$user      = $this->session->userdata('logged');
+    	$inquiries = $this->BookingInquiry_model->findAllByUserId($user['id']);
 
     	$this->page_data['inquiries'] = $inquiries;
 		$this->load->view('online_booking/inquiries', $this->page_data);
@@ -893,10 +887,9 @@ class Booking extends MY_Controller {
 
     public function ajax_inquiry_edit_details()
     {
-		$id   = post('iid');
-		$cid  = logged('company_id'); 
+		$id = post('iid');
         $post = $this->input->post();
-        $inquiry = $this->BookingInquiry_model->findByIdAndCompanyId($id, $cid);
+        $inquiry = $this->BookingInquiry_model->findById($id);
 
         $this->page_data['inquiry'] = $inquiry;
         $this->page_data['inquiry_id'] = $id;
@@ -1335,34 +1328,6 @@ class Booking extends MY_Controller {
     	$this->session->unset_userdata('cartItems');
     	$this->session->unset_userdata('coupon');
         redirect('booking/products/'.$post['eid']);
-    }
-
-    public function delete_inquiry()
-    {
-    	$cid = logged('company_id');
-    	$iid = post('iid');
-    	$id  = $this->BookingInquiry_model->deleteByIdAndCompanyId($iid, $cid);
-
-		$this->activity_model->add("Online Inquiry #$iid Deleted by User:".logged('name'));
-
-		$this->session->set_flashdata('message', 'Online Inquiry has been Deleted Successfully');
-		$this->session->set_flashdata('alert_class', 'alert-success');
-
-		redirect('more/addon/inquiries');
-    }
-
-    public function ajax_view_inquiry()
-    {
-		$id   = post('iid');
-		$cid  = logged('company_id'); 
-        $post = $this->input->post();
-        $inquiry = $this->BookingInquiry_model->findByIdAndCompanyId($id, $cid);
-        $bookingItems   = $this->BookingWorkOrder_model->getByBookingInfoId($id);
-        
-        $this->page_data['inquiry']    = $inquiry;
-        $this->page_data['inquiry_id'] = $id;
-        $this->page_data['bookingItems'] = $bookingItems;
-        $this->load->view('online_booking/ajax_view_inquiry', $this->page_data);
     }
 
 }

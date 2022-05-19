@@ -10,18 +10,16 @@ class Customer extends MY_Controller
 
         $this->page_data['page']->title = 'My Customers';
         $this->page_data['page']->menu = 'customers';
-
-        // load Models
+        //$this->load->model('Customer_model', 'customer_model');
+        //$this->load->model('CustomerAddress_model', 'customeraddress_model');
         $this->load->model('Customer_advance_model', 'customer_ad_model');
         $this->load->model('Esign_model', 'Esign_model');
         $this->load->model('Activity_model','activity');
+
         $this->load->model('General_model', 'general');
 
         $this->checkLogin();
-
-        //load library
         $this->load->library('session');
-        // load helper
         $this->load->helper('functions');
         // concept
         $uid = $this->session->userdata('uid');
@@ -32,14 +30,10 @@ class Customer extends MY_Controller
             $uid = $this->session->userdata('uid');
             $this->page_data['uid'] = $uid;
         }
+
+        //error_reporting(0);
     }
 
-    public function addJSONResponseHeader() {
-        header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
-        header("Cache-Control: post-check=0, pre-check=0", false);
-        header("Pragma: no-cache");
-        header("Content-Type: application/json");
-    }
 
     public function getModulesList()
     {
@@ -48,179 +42,35 @@ class Customer extends MY_Controller
 
         $this->page_data['module_sort'] = $this->customer_ad_model->get_data_by_id('fk_user_id',$user_id,"ac_module_sort");
         $this->page_data['widgets'] = $this->customer_ad_model->getModulesList();
-        $this->load->view('v2/pages/customer/adv_cust_modules/add_module_details', $this->page_data);
+        $this->load->view('customer/adv_cust_modules/add_module_details', $this->page_data);
     }
 
     public function index()
     {
-        $this->page_data['page']->title = 'Customers';
-        $this->page_data['page']->parent = 'Customers';
-        
-        $this->hasAccessModule(9);
-
-        $this->load->library('wizardlib');        
+        $this->load->library('wizardlib');
+        $is_allowed = $this->isAllowedModuleAccess(9);
+        if( !$is_allowed ){
+            $this->page_data['module'] = 'customer';
+            echo $this->load->view('no_access_module', $this->page_data, true);
+            die();
+        }
         $input = $this->input->post();
         if($input){
             $this->page_data['profiles'] = $this->customer_ad_model->get_customer_data($input);
-        }else {            
-            $this->page_data['profiles'] = $this->customer_ad_model->get_customer_data();
         }
-        $this->page_data['affiliates'] = $this->customer_ad_model->get_all(FALSE,"","","affiliates","id");
-
-        $get_company_settings = array(
-            'where' => array(
-                'company_id' => logged('company_id')
-            ),
-            'table' => 'customer_settings_headers',
-            'select' => '*',
-        );
-        $customer_settings = $this->general->get_data_with_param($get_company_settings);
-        $enabled_table_headers = array();
-        if( $customer_settings[0] ){
-            $enabled_table_headers = unserialize($customer_settings[0]->headers);
-        }
-
-        add_footer_js([
-            'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js',
-        ]);
-        
-        $this->page_data['companyId'] = logged('company_id');
-        $this->page_data['enabled_table_headers'] = $enabled_table_headers;
-        $this->load->view('v2/pages/customer/list', $this->page_data);
-    }
-
-    public function preview_($id=null){
-        $this->load->model('IndustryType_model');
-
-        $this->page_data['page']->title = 'Customer Preview';
-        $this->page_data['page']->parent = 'Customers';
-
-        $this->load->model('jobs_model');
-        $is_allowed = $this->isAllowedModuleAccess(9);
-        if( !$is_allowed ){
-            $this->page_data['module'] = 'customer';
-            echo $this->load->view('no_access_module', $this->page_data, true);
-            die();
-        }
-        $userid = $id;
-        $user_id = logged('id');
-        if(isset($userid) || !empty($userid)){
-            $customer = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
-            $this->page_data['industryType'] = $this->IndustryType_model->getById($customer->industry_type_id);
-            $this->page_data['profile_info'] = $customer;
-            $this->page_data['access_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_access");
-            $this->page_data['office_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_office");
-            $this->page_data['billing_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_billing");
-            $this->page_data['alarm_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_alarm");
-            $get_customer_notes = array(
-                'where' => array(
-                    'fk_prof_id' => $userid
-                ),
-                'table' => 'acs_notes',
-                'select' => '*',
-            );
-            $this->page_data['customer_notes'] = $this->general->get_data_with_param($get_customer_notes);
-
-            $get_login_user = array(
-                'where' => array(
-                    'id' => $user_id
-                ),
-                'table' => 'users',
-                'select' => 'id,FName,LName',
-            );
-            $this->page_data['logged_in_user'] = $this->general->get_data_with_param($get_login_user,FALSE);
-            $this->page_data['jobs_data_items'] = $this->jobs_model->get_customer_job_items($id);
-
-            $customer_papers_query = array(
-                'where' => array(
-                    'customer_id' => $userid
-                ),
-                'table' => 'acs_papers',
-                'select' => '*',
-            );
-            $this->page_data['papers'] = $this->general->get_data_with_param($customer_papers_query);
-            if (count($this->page_data['papers'])) {
-                $this->page_data['papers'] = $this->page_data['papers'][0];
-            }
-
-            $customer_contacts = array(
-                'where' => array(
-                    'customer_id' => $userid
-                ),
-                'table' => 'contacts',
-                'select' => '*',
-                'order' => array(
-                    'order_by' => 'id',
-                    'ordering' => 'asc'
-                ),
-            );
-            $this->page_data['contacts'] = $this->general->get_data_with_param($customer_contacts);
-        }
-        $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE,"","ASC","ac_salesarea","sa_id");
-        $this->page_data['employees'] = $this->customer_ad_model->get_all(FALSE,"","ASC","users","id");
-        $this->page_data['users'] = $this->users_model->getUsers();
-
-        $this->load->view('v2/pages/customer/preview', $this->page_data);
-    }
-
-    public function print_customer_details($id=null){
-        $this->load->model('jobs_model');
-        $is_allowed = $this->isAllowedModuleAccess(9);
-        if( !$is_allowed ){
-            $this->page_data['module'] = 'customer';
-            echo $this->load->view('no_access_module', $this->page_data, true);
-            die();
-        }
-        $userid = $id;
-        $user_id = logged('id');
-        if(isset($userid) || !empty($userid)){
-            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
-            $this->page_data['access_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_access");
-            $this->page_data['office_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_office");
-            $this->page_data['billing_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_billing");
-            $this->page_data['alarm_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_alarm");
-            $get_customer_notes = array(
-                'where' => array(
-                    'fk_prof_id' => $userid
-                ),
-                'table' => 'acs_notes',
-                'select' => '*',
-            );
-            $this->page_data['customer_notes'] = $this->general->get_data_with_param($get_customer_notes);
-
-            $get_login_user = array(
-                'where' => array(
-                    'id' => $user_id
-                ),
-                'table' => 'users',
-                'select' => 'id,FName,LName',
-            );
-            $this->page_data['logged_in_user'] = $this->general->get_data_with_param($get_login_user,FALSE);
-            $this->page_data['jobs_data_items'] = $this->jobs_model->get_customer_job_items($id);
-
-            $customer_papers_query = array(
-                'where' => array(
-                    'customer_id' => $userid
-                ),
-                'table' => 'acs_papers',
-                'select' => '*',
-            );
-            $this->page_data['papers'] = $this->general->get_data_with_param($customer_papers_query);
-
-            $customer_contacts = array(
-                'where' => array(
-                    'customer_id' => $userid
-                ),
-                'table' => 'contacts',
-                'select' => '*',
-            );
-            $this->page_data['contacts'] = $this->general->get_data_with_param($customer_contacts);
-        }
-        $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE,"","ASC","ac_salesarea","sa_id");
-        $this->page_data['employees'] = $this->customer_ad_model->get_all(FALSE,"","ASC","users","id");
-        $this->page_data['users'] = $this->users_model->getUsers();
-
-        $this->load->view('customer/print/customer_details', $this->page_data);
+//      $this->page_data['library_templates'] = $this->Esign_model->get_library_template_by_category($user_id);
+//      $this->page_data['library_categories'] = $this->Esign_model->get_library_categories();
+        $this->page_data['cust_tab'] = $this->uri->segment(3);
+//       $this->page_data['affiliates'] = $this->customer_ad_model->get_all(FALSE,"","","affiliates","id");
+//       $this->page_data['furnishers'] = $this->customer_ad_model->get_all(FALSE,"","","acs_furnisher","furn_id");
+//       $this->page_data['reasons'] = $this->customer_ad_model->get_all(FALSE,"","","acs_reasons","reason_id");
+//       $this->page_data['lead_types'] = $this->customer_ad_model->get_all(FALSE,"","","ac_leadtypes","lead_id");
+//       $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE,"","","ac_salesarea","sa_id");
+        //$this->page_data['users'] = $this->users_model->getUsers();
+        // $this->load->model('Activity_model','activity');
+        //$this->page_data['activity_list'] = $this->activity->getActivity($user_id, [], 0);
+        //$this->page_data['history_activity_list'] = $this->activity->getActivity($user_id, [6,0], 1);
+        $this->load->view('customer/list', $this->page_data);
     }
 
     public function preview($id=null){
@@ -257,50 +107,28 @@ class Customer extends MY_Controller
             );
             $this->page_data['logged_in_user'] = $this->general->get_data_with_param($get_login_user,FALSE);
             $this->page_data['jobs_data_items'] = $this->jobs_model->get_customer_job_items($id);
-
-            $customer_papers_query = array(
-                'where' => array(
-                    'customer_id' => $userid
-                ),
-                'table' => 'acs_papers',
-                'select' => '*',
-            );
-            $this->page_data['papers'] = $this->general->get_data_with_param($customer_papers_query);
-
-            $customer_contacts = array(
-                'where' => array(
-                    'customer_id' => $userid
-                ),
-                'table' => 'contacts',
-                'select' => '*',
-            );
-            $this->page_data['contacts'] = $this->general->get_data_with_param($customer_contacts);
         }
         $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE,"","ASC","ac_salesarea","sa_id");
         $this->page_data['employees'] = $this->customer_ad_model->get_all(FALSE,"","ASC","users","id");
         $this->page_data['users'] = $this->users_model->getUsers();
 
-        $this->load->view('customer/preview_pdf', $this->page_data);
+        $this->load->view('customer/preview', $this->page_data);
     }
 
     public function billing($id=null){
-        $this->hasAccessModule(9);
+        // check if customer is allowed to view this page
+        $is_allowed = $this->isAllowedModuleAccess(9);
+        if( !$is_allowed ){
+            $this->page_data['module'] = 'customer';
+            echo $this->load->view('no_access_module', $this->page_data, true);
+            die();
+        }
 
         $userid = $id;
         $user_id = logged('id');
         if(isset($userid) || !empty($userid)){
             $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
             $this->page_data['billing_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_billing");
-
-            // get customer transaction details
-            $transaction_details_query = array(
-                'where' => array(
-                    'customer_id' => $userid
-                ),
-                'table' => 'acs_transaction_history',
-                'select' => '*',
-            );
-            $this->page_data['transaction_details'] = $this->general->get_data_with_param($transaction_details_query);
 
             $get_login_user = array(
                 'where' => array(
@@ -311,312 +139,18 @@ class Customer extends MY_Controller
             );
             $this->page_data['logged_in_user'] = $this->general->get_data_with_param($get_login_user,FALSE);
         }
-        //print_r($this->page_data['transaction_details']);
-        $this->page_data['transaction_details'];
+
         $this->load->view('customer/billing', $this->page_data);
     }
 
-    public function save_billing(){        
-        $input = $this->input->post();
-        if($input){
-            $is_valid = true;
-            $err_msg  = '';
-            if( $input['method'] == 'CC' ){
-                $customer = $this->customer_ad_model->get_data_by_id('prof_id',$input['customer_id'],"acs_profile");
-                $converge_data = [
-                    'amount' => $input['transaction_amount'],
-                    'card_number' => $input['card_number'],
-                    'exp_month' => $input['exp_month'],
-                    'exp_year' => $input['exp_year'],
-                    'card_cvc' => $input['cvc'],
-                    'address' => $customer->mail_add,
-                    'zip' => $customer->zip_code
-                ];
-                $result   = $this->converge_send_sale($converge_data);
-                $is_valid = $result['is_success'];
-                $err_msg  = $result['msg'];
-            }
-
-            if( $input['method'] == 'NMI' ){
-                $customer = $this->customer_ad_model->get_data_by_id('prof_id',$input['customer_id'],"acs_profile");
-                $nmi_data = [
-                    'customer_id' => $customer->prof_id,
-                    'frequency' => $input['frequency'],
-                    'bill_day' => $input['bill_day'],
-                    'amount' => $input['transaction_amount'],
-                    'card_number' => $input['card_number'],
-                    'exp_month' => $input['exp_month'],
-                    'exp_year' => $input['exp_year'],
-                    'card_cvc' => $input['cvc'],
-                    'address' => $customer->mail_add,
-                    'zip' => $customer->zip_code
-                ];
-                $result   = $this->nmi_send_sale($nmi_data);
-                $is_valid = $result['is_success'];
-                $err_msg  = $result['msg'];
-            }
-
-            if( $is_valid ){
-                $transaction_details = array();
-                $transaction_details['customer_id'] = $input['customer_id'];
-                $transaction_details['subtotal'] = $input['subtotal'];
-                $transaction_details['tax'] = $input['tax'];
-                $transaction_details['category'] = $input['transaction_category'];
-                $transaction_details['method'] = $input['method'];
-                $transaction_details['transaction_type'] = 'Pre-Auth and Capture';
-                $transaction_details['frequency'] = $input['frequency'];
-                $transaction_details['notes'] = $input['notes'];
-                $transaction_details['status'] = 'Approved';
-                $transaction_details['datetime'] = date("m-d-Y h:i A");
-
-                if($this->general->add_($transaction_details, 'acs_transaction_history')){
-                    echo '0';
-                }else{
-                    echo 'Database Error!';
-                }    
-            }else{
-                echo $err_msg;
-            }
-            
-        }
-    }
-
-    public function save_subscription(){
-        $input = $this->input->post();
-        if($input){
-            $is_valid = true;
-            $err_msg  = '';            
-            if( $input['method'] == 'CC' ){
-                $customer = $this->customer_ad_model->get_data_by_id('prof_id',$input['customer_id'],"acs_profile");
-                $converge_data = [
-                    'amount' => $input['transaction_amount'],
-                    'card_number' => $input['card_number'],
-                    'exp_month' => $input['exp_month'],
-                    'exp_year' => $input['exp_year'],
-                    'card_cvc' => $input['cvc'],
-                    'address' => $customer->mail_add,
-                    'zip' => $customer->zip_code
-                ];
-                $result   = $this->converge_send_sale($converge_data);
-                $is_valid = $result['is_success'];
-                $err_msg  = $result['msg'];
-            }
-
-            if( $input['method'] == 'NMI' ){
-                $customer = $this->customer_ad_model->get_data_by_id('prof_id',$input['customer_id'],"acs_profile");
-                $nmi_data = [
-                    'customer_id' => $customer->id,
-                    'frequency' => $input['frequency'],
-                    'bill_day' => $input['bill_day'],
-                    'amount' => $input['transaction_amount'],
-                    'card_number' => $input['card_number'],
-                    'exp_month' => $input['exp_month'],
-                    'exp_year' => $input['exp_year'],
-                    'card_cvc' => $input['cvc'],
-                    'address' => $customer->mail_add,
-                    'zip' => $customer->zip_code
-                ];
-                $result   = $this->nmi_send_sale($nmi_data);
-                $is_valid = $result['is_success'];
-                $err_msg  = $result['msg'];
-            }
-
-            if( $is_valid ){
-                $subscription_details = array();
-                $subscription_details['customer_id'] = $input['customer_id'];
-                $subscription_details['category'] = $input['transaction_category'];
-                $subscription_details['total_amount'] = $input['transaction_amount'];
-                $subscription_details['method'] = $input['method'];
-                $subscription_details['transaction_type'] = 'Pre-Auth and Capture';
-                $subscription_details['frequency'] = $input['frequency'];
-                //$subscription_details['num_frequency'] = $input['num_frequency'];
-                $subscription_details['notes'] = $input['notes'];
-                $subscription_details['status'] = 'Approved';
-
-                if($this->general->add_($subscription_details, 'acs_subscriptions')){
-                    echo '0';
-                }else{
-                    echo 'Database Error!';
-                }    
-            }else{
-                echo $err_msg;
-            }
-            
-        }
-    }
-
-    public function converge_send_sale($data){
-        include APPPATH . 'libraries/Converge/src/Converge.php';
-
-        $this->load->model('CompanyOnlinePaymentAccount_model');
-
-        $is_success = false;
-        $msg = '';
-
-        $companyApiSetting = $this->CompanyOnlinePaymentAccount_model->getByCompanyId(logged('company_id'));
-
-        if( $companyApiSetting ){
-            if( $companyApiSetting->converge_merchant_id != '' && $companyApiSetting->converge_merchant_user_id != '' && $companyApiSetting->converge_merchant_pin != '' ){
-                if( $data['exp_month'] < 10 ){
-                    $data['exp_month'] = 0 . $data['exp_month'];
-                }
-                $year = date("d-m-" . $data['exp_year']);
-                $exp_date = $data['exp_month'] . date("y",strtotime($year));
-                $converge = new \wwwroth\Converge\Converge([
-                    'merchant_id' => $companyApiSetting->converge_merchant_id,
-                    'user_id' => $companyApiSetting->converge_merchant_user_id,
-                    'pin' => $companyApiSetting->converge_merchant_pin,
-                    'demo' => false,
-                ]);
-
-                $createSale = $converge->request('ccsale', [
-                    'ssl_card_number' => $data['card_number'],
-                    'ssl_exp_date' => $exp_date,
-                    'ssl_cvv2cvc2' => $data['card_cvc'],
-                    'ssl_amount' => $data['amount'],
-                    'ssl_avs_address' => $data['address'],
-                    'ssl_avs_zip' => $data['zip'],
-                ]);
-
-                if( $createSale['success'] == 1 ){
-                    $is_success = true;
-                    $msg = '';
-                }else{
-                    $is_success = false;
-                    $msg = $createSale['errorMessage'];
-                }
-            }else{
-                $msg = 'Please setup your converge api credentials in API Connectors';
-            }
-        }else{
-            $msg = 'Please setup your converge api credentials in API Connectors';
-        }
-        
-        $return = ['is_success' => $is_success, 'msg' => $msg];
-        return $return;
-    }
-
-    public function nmi_send_sale($data){
-        $is_success = 0;
-        $msg = '';
-        $is_with_error = false;
-
-        $this->load->model('CompanyOnlinePaymentAccount_model');
-
-        $is_success = false;
-        $msg = '';
-
-        $companyApiSetting = $this->CompanyOnlinePaymentAccount_model->getByCompanyId(logged('company_id'));
-
-        if( $companyApiSetting ){
-            if( $companyApiSetting->nmi_transaction_key != '' && $companyApiSetting->nmi_terminal_id != '' ){
-                //include APPPATH . 'libraries/nmi/examples/common.php';
-                include_once APPPATH . 'libraries/nmi/src/Client.php';
-
-                if( $data['exp_month'] < 10 ){
-                    $data['exp_month'] = 0 . $data['exp_month'];
-                }
-                $year = date("d-m-" . $data['exp_year']);
-                $exp_date = date("y",strtotime($year)) . $data['exp_month'];
-
-                // Setup the request.
-                $request = new Request();
-                $request->setSoftwareName(NMI_SOFTWARE_NAME);
-                $request->setSoftwareVersion(NMI_SOFTWARE_VERSION);
-                $request->setTerminalID($companyApiSetting->nmi_terminal_id);
-                $request->setTransactionKey($companyApiSetting->nmi_transaction_key);
-
-                $billing  = $this->customer_ad_model->get_data_by_id('fk_prof_id',$data['customer_id'],"acs_billing");
-                if( $data['frequency'] != '' ){                    
-                    switch ($data['frequency']) {
-                        case 'One Time Only':
-                            $frequency = Frequency_Empty;
-                            break;
-                        case 'Every 1 Month':
-                            $frequency = Frequency_Monthly;                            
-                            break;
-                        case 'Every 3 Months':
-                            $frequency = Frequency_Quarterly;
-                            break;
-                        case 'Every 6 Months':
-                            $frequency = Frequency_HalfYearly;
-                            break;
-                        case 'Every 1 Year':
-                            $frequency = Frequency_Yearly;
-                            break;
-                        default:
-                            $frequency = Frequency_Monthly;     
-                            break;
-                    }
-
-                    $start_date = strtotime($billing->bill_start_date);
-                    $end_date   = strtotime($billing->bill_end_date);
-                    $datediff   = $end_date - $start_date;
-                    $total_payments = round($datediff / (60 * 60 * 24));
-                    
-                    if( $total_payments <= 0 ){
-                        $is_with_error = true;
-                    }
-                    // Setup the request detail.
-                    $final_amount = $data['amount'];
-                    $request->setRequestType(RequestType_Recurring);
-                    $request->setSubType(SubType_RecurringSetup);
-
-                    $request->setRecurringInitialAmount($data['amount']);
-                    $request->setRecurringRegularAmount($data['amount']);
-                    $request->setRecurringRegularFrequency($frequency);
-                    $request->setRecurringRegularMaximumPayments($total_payments);
-                    $request->setRecurringFinalAmount($final_amount);
-                    $request->setPAN($data['card_number']);
-                    $request->setExpiryDate($exp_date);
-                    $request->setUserReference(rand());
-
-                }else{
-                   // Setup the request detail.
-                    $request->setRequestType(RequestType_Auth);
-                    $request->setAmount($data['amount']);
-                    $request->setPAN($data['card_number']);
-                    $request->setExpiryDate($exp_date); 
-                }
-
-                if( !$is_with_error ){
-                    // Setup the client.
-                    $client = new Client();
-                    $client->addServerURL(NMI_TEST_SERVER_URL, 45000);
-                    $client->setRequest($request);
-
-                    // Process the request.
-                    $client->processRequest();
-
-                    // Get the response.
-                    $response = $client->getResponse();
-                    $errors   = $response->getErrors();
-                    if (!empty($errors)) {
-                        foreach ($errors as $error) {
-                            $msg .= $error->getMessage() . "<br />";
-                        }
-                    }else{
-                        $is_success = true;
-                        $msg = '';
-                    }
-                }else{
-                    $is_success = false;
-                    $msg = 'Invalid billing start and end date';
-                }
-                
-            }else{
-                $msg = 'Please setup your NMI api credentials in API Connectors';
-            }
-        }else{
-            $msg = 'Please setup your NMI api credentials in API Connectors';
-        }
-        
-        $return = ['is_success' => $is_success, 'msg' => $msg];
-        return $return;
-    }
-
     public function subscription($id=null){
-        $this->hasAccessModule(9);
+        // check if customer is allowed to view this page
+        $is_allowed = $this->isAllowedModuleAccess(9);
+        if( !$is_allowed ){
+            $this->page_data['module'] = 'customer';
+            echo $this->load->view('no_access_module', $this->page_data, true);
+            die();
+        }
 
         $userid = $id;
         $user_id = logged('id');
@@ -632,163 +166,157 @@ class Customer extends MY_Controller
                 'select' => 'id,FName,LName',
             );
             $this->page_data['logged_in_user'] = $this->general->get_data_with_param($get_login_user,FALSE);
-
-            // get customer subscription history
-            $subscriptions_query = array(
-                'where' => array(
-                    'customer_id' => $userid
-                ),
-                'table' => 'acs_subscriptions',
-                'select' => '*',
-            );
-            $this->page_data['subscriptions'] = $this->general->get_data_with_param($subscriptions_query);
         }
 
         $this->load->view('customer/subscription', $this->page_data);
 
     }
 
-    public function subscription_new($id=null)
+    public function index2()
     {
-        $userid = $id;
-        $user_id = logged('id');
-        $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
-        $get_login_user = array(
-            'where' => array('id' => $user_id),
-            'table' => 'users',
-            'select' => 'id,FName,LName',
-        );
-        $this->page_data['logged_in_user'] = $this->general->get_data_with_param($get_login_user,FALSE);
-        $this->load->view('customer/subscription_new', $this->page_data);
-    }
-
-    public function subscription_details($id=null)
-    {
-
-        $subscriptions_query = array(
-            'where' => array(
-                'id' => $id
-            ),
-            'table' => 'acs_subscriptions',
-            'select' => '*',
-        );
-        $subscription = $this->general->get_data_with_param($subscriptions_query,FALSE);
-        $this->page_data['subscription_details'] = $subscription;
-
-        $userid = $subscription->customer_id;
-
-        if(isset($userid) || !empty($userid)){
-            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
-            $this->page_data['billing_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_billing");
-
-            $alarm_details_query = array(
-                'where' => array(
-                    'fk_prof_id' => $userid
-                ),
-                'table' => 'acs_alarm',
-                'select' => 'monitor_id',
-            );
-            $this->page_data['alarm_data'] = $this->general->get_data_with_param($alarm_details_query,FALSE);
-
-            $get_login_user = array(
-                'where' => array(
-                    'id' => logged('id')
-                ),
-                'table' => 'users',
-                'select' => 'id,FName,LName',
-            );
-            $this->page_data['logged_in_user'] = $this->general->get_data_with_param($get_login_user,FALSE);
-
-        }
-        $this->load->view('customer/subscription_details', $this->page_data);
-
-    }
-
-    public function settings()
-    {
-        $this->page_data['page']->title = 'Customer Settings';
-        $this->page_data['page']->parent = 'Sales';
-
         $this->load->library('wizardlib');
-        $this->hasAccessModule(9); 
-        /*$is_allowed = $this->isAllowedModuleAccess(9);
+        $is_allowed = $this->isAllowedModuleAccess(9);
         if( !$is_allowed ){
             $this->page_data['module'] = 'customer';
             echo $this->load->view('no_access_module', $this->page_data, true);
             die();
-        }*/
-
-        $user_id = logged('id');
-
-        // set a global data for customer profile id
-        $this->page_data['customer_profile_id'] = $user_id;
-
-        if(isset($userid) || !empty($userid)){
-            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
-            $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
         }
 
-        $this->page_data['active_tab'] = $this->uri->segment(3);
+        $user_id = logged('id');
+        $check_if_exist = $this->customer_ad_model->if_exist('fk_user_id',$user_id,"ac_module_sort");
+//        if(!$check_if_exist){
+//            $input = array();
+//            $input['fk_user_id'] = $user_id ;
+//            $input['ams_values'] = "profile,score,tech,access,admin,office,owner,docu,tasks,memo,invoice,assign,cim,billing,alarm,dispute" ;
+//            $this->customer_ad_model->add($input,"ac_module_sort");
+//        }
+        $userid = $this->uri->segment(4);
+//        if(!isset($userid) || empty($userid)){
+//            $get_id = $this->customer_ad_model->get_all(1,"","DESC","acs_profile","prof_id");
+//            if(!empty($get_id)){
+//                $userid =  $get_id[0]->prof_id;
+//            }else{
+//                $userid = 0;
+//            }
+//        }else{
+//            $this->qrcodeGenerator($userid);
+//        }
+
+        // set a global data for customer profile id
+        $this->page_data['customer_profile_id'] = $userid;
+
+        //$this->session->set_userdata('customer_data_session', 233);
+        //$this->session->unset_userdata('customer_data_session');
+
+        if(isset($userid) || !empty($userid)){
+            //$this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
+//            $this->page_data['access_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_access");
+//            $this->page_data['office_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_office");
+//            $this->page_data['billing_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_billing");
+//            $this->page_data['alarm_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_alarm");
+//            $this->page_data['audit_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_audit_import");
+//            $this->page_data['minitab'] = $this->uri->segment(5);
+//            $this->page_data['task_info'] = $this->customer_ad_model->get_all_by_id("fk_prof_id",$userid,"acs_tasks");
+           // $this->page_data['module_sort'] = $this->customer_ad_model->get_data_by_id('fk_user_id',$user_id,"ac_module_sort");
+            //$this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
+
+//            if($this->uri->segment(5) == "mt3-cdl"){
+//                $template_id = !empty($this->uri->segment(6)) ? $this->uri->segment(6) : '';
+//                $this->page_data['letter_id'] = $template_id;
+//                $this->page_data['letter_template'] = $this->Esign_model->get_template_by_id($template_id);
+//            }
+            // print_r($this->page_data['alarm_info']);
+        }
+//        $this->page_data['library_templates'] = $this->Esign_model->get_library_template_by_category($user_id);
+//        $this->page_data['library_categories'] = $this->Esign_model->get_library_categories();
+        $this->page_data['cust_tab'] = $this->uri->segment(3);
 //        $this->page_data['affiliates'] = $this->customer_ad_model->get_all(FALSE,"","","affiliates","id");
 //        $this->page_data['furnishers'] = $this->customer_ad_model->get_all(FALSE,"","","acs_furnisher","furn_id");
 //        $this->page_data['reasons'] = $this->customer_ad_model->get_all(FALSE,"","","acs_reasons","reason_id");
-        $this->page_data['lead_source'] = $this->customer_ad_model->get_all(FALSE,"","","ac_leadsource","ls_id");
-        $this->page_data['lead_types'] = $this->customer_ad_model->get_all(FALSE,"","","ac_leadtypes","lead_id");
-        $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE,"","","ac_salesarea","sa_id");
-        $this->page_data['rate_plans'] = $this->customer_ad_model->get_all(FALSE,"","","ac_rateplan","id");
-        $this->page_data['customer_status'] = $this->customer_ad_model->get_all(FALSE,"","","acs_cust_status","id");
-
-
-        // get activation fee
-        $activation_fee_query = array(
-            'table' => 'ac_activationfee',
-            'order' => array(
-                'order_by' => 'id',
-            ),
-            'select' => '*',
-        );
-        $this->page_data['activation_fee'] = $this->general->get_data_with_param($activation_fee_query);
-
-
-        // get system package type
-        $spt_query = array(
-            'table' => 'ac_system_package_type',
-            'order' => array(
-                'order_by' => 'id',
-            ),
-            'select' => '*',
-        );
-        $this->page_data['system_package_type'] = $this->general->get_data_with_param($spt_query);
-
-        $this->page_data['customer_list_headers'] = customer_list_headers();
-        $this->page_data['profiles'] = $this->customer_ad_model->get_customer_data_settings($user_id);
-
-        $get_company_settings = array(
-            'where' => array(
-                'company_id' => logged('company_id')
-            ),
-            'table' => 'customer_settings_headers',
-            'select' => '*',
-        );
-        $customer_settings = $this->general->get_data_with_param($get_company_settings);
-        $headers = unserialize($customer_settings[0]->headers);
-        $this->page_data['customer_tbl_headers'] = $headers;
-        //$this->load->model('Activity_model','activity');
-       // $this->page_data['activity_list'] = $this->activity->getActivity($user_id, [], 0);
+//        $this->page_data['lead_types'] = $this->customer_ad_model->get_all(FALSE,"","","ac_leadtypes","lead_id");
+//        $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE,"","","ac_salesarea","sa_id");
+        //$this->page_data['users'] = $this->users_model->getUsers();
+        $this->page_data['profiles'] = $this->customer_ad_model->get_customer_data($user_id);
+       // $this->load->model('Activity_model','activity');
+        //$this->page_data['activity_list'] = $this->activity->getActivity($user_id, [], 0);
         //$this->page_data['history_activity_list'] = $this->activity->getActivity($user_id, [6,0], 1);
+        $this->load->view('customer/list', $this->page_data);
+    }
 
+    public function settings()
+    {
+        $this->load->library('wizardlib');
+        $is_allowed = $this->isAllowedModuleAccess(9);
+        if( !$is_allowed ){
+            $this->page_data['module'] = 'customer';
+            echo $this->load->view('no_access_module', $this->page_data, true);
+            die();
+        }
+
+        $user_id = logged('id');
+        $check_if_exist = $this->customer_ad_model->if_exist('fk_user_id',$user_id,"ac_module_sort");
+        if(!$check_if_exist){
+            $input = array();
+            $input['fk_user_id'] = $user_id ;
+            $input['ams_values'] = "profile,score,tech,access,admin,office,owner,docu,tasks,memo,invoice,assign,cim,billing,alarm,dispute" ;
+            $this->customer_ad_model->add($input,"ac_module_sort");
+        }
+        $userid = $this->uri->segment(4);
+        if(!isset($userid) || empty($userid)){
+            $get_id = $this->customer_ad_model->get_all(1,"","DESC","acs_profile","prof_id");
+            if(!empty($get_id)){
+                $userid =  $get_id[0]->prof_id;
+            }else{
+                $userid = 0;
+            }
+        }else{
+            $this->qrcodeGenerator($userid);
+        }
+
+        // set a global data for customer profile id
+        $this->page_data['customer_profile_id'] = $userid;
+
+        //$this->session->set_userdata('customer_data_session', 233);
+        //$this->session->unset_userdata('customer_data_session');
+
+        if(isset($userid) || !empty($userid)){
+            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
+//            $this->page_data['access_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_access");
+//            $this->page_data['office_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_office");
+//            $this->page_data['billing_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_billing");
+//            $this->page_data['alarm_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_alarm");
+//            $this->page_data['audit_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_audit_import");
+//            $this->page_data['minitab'] = $this->uri->segment(5);
+//            $this->page_data['task_info'] = $this->customer_ad_model->get_all_by_id("fk_prof_id",$userid,"acs_tasks");
+            $this->page_data['module_sort'] = $this->customer_ad_model->get_data_by_id('fk_user_id',$user_id,"ac_module_sort");
+            $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
+
+            if($this->uri->segment(5) == "mt3-cdl"){
+                $template_id = !empty($this->uri->segment(6)) ? $this->uri->segment(6) : '';
+                $this->page_data['letter_id'] = $template_id;
+                $this->page_data['letter_template'] = $this->Esign_model->get_template_by_id($template_id);
+            }
+            // print_r($this->page_data['alarm_info']);
+        }
+//        $this->page_data['library_templates'] = $this->Esign_model->get_library_template_by_category($user_id);
+//        $this->page_data['library_categories'] = $this->Esign_model->get_library_categories();
+        $this->page_data['cust_tab'] = $this->uri->segment(3);
+//        $this->page_data['affiliates'] = $this->customer_ad_model->get_all(FALSE,"","","affiliates","id");
+//        $this->page_data['furnishers'] = $this->customer_ad_model->get_all(FALSE,"","","acs_furnisher","furn_id");
+//        $this->page_data['reasons'] = $this->customer_ad_model->get_all(FALSE,"","","acs_reasons","reason_id");
+//        $this->page_data['lead_types'] = $this->customer_ad_model->get_all(FALSE,"","","ac_leadtypes","lead_id");
+//        $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE,"","","ac_salesarea","sa_id");
+        $this->page_data['users'] = $this->users_model->getUsers();
+        $this->page_data['profiles'] = $this->customer_ad_model->get_customer_data_settings($user_id);
+        $this->load->model('Activity_model','activity');
+        $this->page_data['activity_list'] = $this->activity->getActivity($user_id, [], 0);
+        $this->page_data['history_activity_list'] = $this->activity->getActivity($user_id, [6,0], 1);
         $this->load->view('customer/settings', $this->page_data);
     }
 
     public function module($id=null)
     {
-        $this->page_data['page']->title = 'Customer Dashboard';
-        $this->page_data['page']->parent = 'Customers';
-
-        $this->load->model('taskhub_model');
         $this->load->library('wizardlib');
-        $this->load->model('Invoice_model', 'invoice_model');
-        
         $is_allowed = $this->isAllowedModuleAccess(9);
         if( !$is_allowed ){
             $this->page_data['module'] = 'customer';
@@ -819,7 +347,6 @@ class Customer extends MY_Controller
         // set a global data for customer profile id
         $this->page_data['customer_profile_id'] = $userid;
         if($id!=null){
-            $this->page_data['cust_invoices'] = $this->invoice_model->getAllByCustomerId($id);
             $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$id,"acs_profile");
             $this->page_data['access_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$id,"acs_access");
             $this->page_data['office_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$id,"acs_office");
@@ -827,561 +354,27 @@ class Customer extends MY_Controller
             $this->page_data['alarm_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$id,"acs_alarm");
             $this->page_data['audit_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$id,"acs_audit_import");
             //$this->page_data['minitab'] = $this->uri->segment(5);
-            $this->page_data['task_info'] = $this->taskhub_model->getAllNotCompletedTasksByCustomerId($id);
-            $this->page_data['item_details'] = $this->customer_ad_model->get_customer_item_details($id);
-            //$this->page_data['task_info'] = $this->customer_ad_model->get_all_by_id("fk_prof_id",$id,"acs_tasks");
+            $this->page_data['task_info'] = $this->customer_ad_model->get_all_by_id("fk_prof_id",$id,"acs_tasks");
             $this->page_data['module_sort'] = $this->customer_ad_model->get_data_by_id('fk_user_id',$user_id,"ac_module_sort");
-            $this->page_data['tasks'] = $this->customer_ad_model->get_data_by_id('prof_id',$user_id,"tasks");
             $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
-            $this->page_data['cus_id'] = $id;
 
             if($this->uri->segment(5) == "mt3-cdl"){
                 $template_id = !empty($this->uri->segment(6)) ? $this->uri->segment(6) : '';
                 $this->page_data['letter_id'] = $template_id;
                 $this->page_data['letter_template'] = $this->Esign_model->get_template_by_id($template_id);
             }
-
-
-            $this->db->where('customer_id', $id);
-            $this->page_data['customer_documents'] = $this->db->get('acs_customer_documents')->result_array();
-
+            // print_r($this->page_data['alarm_info']);
         }else{
             redirect(base_url('customer/'));
         }
-        // load job checlist model
-        $this->load->model('JobChecklist_model');
-        $jobChecklists = $this->JobChecklist_model->getAllByCompanyId(logged('company_id'));
-        $this->page_data['job_check_lists'] = $jobChecklists;
-
         $this->page_data['cust_tab'] = $this->uri->segment(3);
-        $this->page_data['cust_active_tab'] = 'dashboard';
         $this->page_data['users'] = $this->users_model->getUsers();
         $this->page_data['history_activity_list'] = $this->activity->getActivity($user_id, [6,0], 1);
-        $this->load->view('v2/pages/customer/module', $this->page_data);
-    }
-
-    public function jobs_list($cid)
-    {
-        $this->load->model('Jobs_model');
-        $this->load->model('AcsProfile_model');
-
-        $jobs = $this->Jobs_model->getAllJobsByCustomerId($cid);
-        $customer = $this->AcsProfile_model->getByProfId($cid);
-
-        $this->page_data['cust_active_tab'] = 'jobs';
-        $this->page_data['cus_id']   = $cid;
-        $this->page_data['jobs']     = $jobs;
-        $this->page_data['customer'] = $customer;
-
-        $this->load->view('customer/jobs_list', $this->page_data);
-    }
-
-    public function estimates_list($cid)
-    {
-        $this->load->model('Estimate_model');
-        $this->load->model('AcsProfile_model');
-
-        $estimates = $this->Estimate_model->getAllEstimatesByCustomerId($cid);
-        $customer  = $this->AcsProfile_model->getByProfId($cid);
-
-        $this->page_data['cust_active_tab'] = 'estimates';
-        $this->page_data['cus_id']    = $cid;
-        $this->page_data['estimates'] = $estimates;
-        $this->page_data['customer']  = $customer;
-
-        $this->load->view('customer/estimate_list', $this->page_data);
-    }
-
-    public function activities($cid)
-    {
-        $this->load->model('CustomerAuditLog_model');
-        $this->load->model('AcsProfile_model');
-
-        $activities = $this->CustomerAuditLog_model->getAllByCustomerId($cid);
-        $customer  = $this->AcsProfile_model->getByProfId($cid);
-
-        $this->page_data['cust_active_tab'] = 'activites';
-        $this->page_data['cus_id']    = $cid;
-        $this->page_data['activities'] = $activities;
-        $this->page_data['customer']   = $customer;
-
-        $this->load->view('customer/activities', $this->page_data);
-    }
-
-    public function invoice_list($cid)
-    {
-        $this->load->model('Invoice_model');
-        $this->load->model('AcsProfile_model');
-
-        $invoices = $this->Invoice_model->getAllByCustomerId($cid);
-        $customer  = $this->AcsProfile_model->getByProfId($cid);
-
-        $this->page_data['cust_active_tab'] = 'invoices';
-        $this->page_data['cus_id']    = $cid;
-        $this->page_data['invoices']  = $invoices;
-        $this->page_data['customer']  = $customer;
-
-        $this->load->view('customer/invoice_list', $this->page_data);
-    }
-
-    public function messages_list($cid)
-    {
-        $this->load->model('CustomerMessages_model');
-        $this->load->model('QuickNote_model');
-        $this->load->model('AcsProfile_model');
-
-        $company_id = logged('company_id');
-
-        $messages   = $this->CustomerMessages_model->getAllByProfId($cid);
-        $customer   = $this->AcsProfile_model->getByProfId($cid);
-        $quickNotes = $this->QuickNote_model->getAllByCompanyId($company_id);
-
-        $this->page_data['cust_active_tab'] = 'messages';
-        $this->page_data['cus_id']     = $cid;
-        $this->page_data['messages']   = $messages;
-        $this->page_data['quickNotes'] = $quickNotes;
-        $this->page_data['customer']   = $customer;
-
-        $this->load->view('customer/messages_list', $this->page_data);
-    }
-
-    public function inventory_list($cid)
-    {
-        $this->page_data['page']->title = 'Customer Inventory List';
-        $this->page_data['page']->parent = 'Customers';
-
-        $this->load->model('Jobs_model');
-        $this->load->model('AcsProfile_model');
-
-        $jobs = $this->Jobs_model->getAllJobsByCustomerId($cid);
-        $inventory = array();
-        foreach( $jobs as $j ){
-            $jobItems = $this->Jobs_model->get_specific_job_items($j->id);
-            $inventory[$j->id]['job'] = $j;
-            if( $jobItems ){
-                $inventory[$j->id]['items'] = $jobItems;
-            }            
-        }
-
-        $customer  = $this->AcsProfile_model->getByProfId($cid);
-        $this->page_data['cust_active_tab'] = 'inventory';
-        $this->page_data['cus_id']    = $cid;
-        $this->page_data['inventory'] = $inventory;
-        $this->page_data['customer']  = $customer;
-
-        $this->load->view('v2/pages/customer/inventory_list', $this->page_data);
-    }
-
-    public function workorders_list($cid)
-    {
-        $this->load->model('Workorder_model');
-        $this->load->model('AcsProfile_model');
-
-        $workorders = $this->Workorder_model->getAllByCustomerId($cid);
-        $customer = $this->AcsProfile_model->getByProfId($cid);
-
-        $this->page_data['cust_active_tab'] = 'workorders';
-        $this->page_data['cus_id']    = $cid;
-        $this->page_data['workorders'] = $workorders;
-        $this->page_data['customer']   = $customer;
-
-        $this->load->view('customer/workorders_list', $this->page_data);
-    }
-
-    public function internal_notes($cid)
-    {
-        $this->load->model('CustomerInternalNotes_model');
-        $this->load->model('AcsProfile_model');
-
-        $internalNotes = $this->CustomerInternalNotes_model->getAllByProfId($cid);
-        $customer = $this->AcsProfile_model->getByProfId($cid);
-
-        $this->page_data['cust_active_tab'] = 'internal_notes';
-        $this->page_data['cus_id']    = $cid;
-        $this->page_data['internalNotes']   = $internalNotes;
-        $this->page_data['customer']        = $customer;
-
-        $this->load->view('customer/internal_notes', $this->page_data);
-    }
-
-    public function credit_industry($cid)
-    {
-        $this->load->model('AcsProfile_model');
-        $this->load->model('CustomerDispute_model');
-        $this->load->model('CreditBureau_model');
-        $this->load->model('CustomerDisputeItem_model');
-
-        $company_id = logged('company_id');
-        $customer   = $this->AcsProfile_model->getByProfId($cid);
-
-        $companyDispute = $this->CustomerDispute_model->getAllByCustomerId($cid);
-        $cbStatus       = array();
-
-        foreach( $companyDispute as $cd ){
-            $disputeItems = $this->CustomerDisputeItem_model->getAllByCustomerDisputeId($cd->id);
-            $cd->disputeItems = $disputeItems;
-            foreach( $disputeItems as $di ){
-                $cbStatus[$cd->id][$di->credit_bureau_id] = ['status' => $di->status, 'icon' => $this->CustomerDisputeItem_model->optionOtherInfoStatus($di->status)];
-            }            
-        }
-
-        $creditBureaus = $this->CreditBureau_model->getAll();        
-
-        $this->page_data['companyDispute']  = $companyDispute;
-        $this->page_data['creditBureaus']   = $creditBureaus;
-        $this->page_data['cbStatus'] = $cbStatus;
-        $this->page_data['cust_active_tab'] = 'credit_industry';
-        $this->page_data['cus_id']     = $cid;
-        $this->page_data['customer']   = $customer;
-
-        $this->load->view('customer/credit_industry', $this->page_data);
-    }
-
-    public function add_new_dispute_item($cid)
-    {
-        $this->load->model('AcsProfile_model');
-        $this->load->model('CreditBureau_model');
-        $this->load->model('Furnisher_model');
-        $this->load->model('CompanyReason_model');
-        $this->load->model('CustomerDispute_model');
-        $this->load->model('CustomerDisputeItem_model');
-
-        $company_id = logged('company_id');
-        $customer   = $this->AcsProfile_model->getByProfId($cid);
-        $reasons    = $this->CompanyReason_model->getAllDefaultAndByCompanyId($company_id);
-
-        $creditBureaus = $this->CreditBureau_model->getAll();
-        $furnishers    = $this->Furnisher_model->getAllByCompanyId($company_id);
-
-        $this->page_data['optionOtherInfoStatus'] = $this->CustomerDisputeItem_model->optionOtherInfoStatus();
-        $this->page_data['customer'] = $customer;
-        $this->page_data['cid'] = $cid;
-        $this->page_data['creditBureaus'] = $creditBureaus;
-        $this->page_data['furnishers'] = $furnishers;
-        $this->page_data['reasons'] = $reasons;
-
-        $this->load->view('customer/add_new_dispute_item', $this->page_data);
-    }
-
-    public function ajax_load_company_reason_list()
-    {
-        $this->load->model('CompanyReason_model');
-
-        $company_id = logged('company_id');
-        $reasons    = $this->CompanyReason_model->getAllDefaultAndByCompanyId($company_id);
-    
-        $this->page_data['reasons'] = $reasons;        
-        $this->load->view('customer/ajax_load_company_reason_list', $this->page_data);
-
-    }
-
-    public function ajax_create_company_reason()
-    {
-        $this->load->model('CompanyReason_model');
-        
-        $is_success = false;
-        $msg = '';
-
-        $company_id = logged('company_id');
-        $post       = $this->input->post();
-
-        if( $post['company_reason'] != '' ){
-            $data = [
-                'company_id' => $company_id,
-                'reason' => $post['company_reason'],
-                'date_created' => date("Y-m-d H:i:s"),
-                'date_modified' => date("Y-m-d H:i:s")
-            ];
-
-            $this->CompanyReason_model->create($data);
-
-            $is_success = true;
-        }else{
-            $msg = 'Cannot save data';
-        }
-
-        $json_data = ['is_success' => $is_success, 'msg' => $msg];
-        echo json_encode($json_data);     
-    }
-
-    public function ajax_create_dispute_item()
-    {
-        $this->load->model('CustomerDispute_model');
-        $this->load->model('CompanyReason_model');
-        $this->load->model('CompanyDisputeInstruction_model');
-        $this->load->model('CustomerDisputeItem_model');
-        
-        $is_success = false;
-        $msg = '';
-
-        $company_id = logged('company_id');
-        $post       = $this->input->post();
-
-        if( !empty($post['creditedBureau']) ){
-            if( $post['cus_id'] > 0 ){
-
-                $instruction = '';
-                if( $post['new_instruction'] != '' ){
-                    $instruction = $post['new_instruction'];
-
-                    //Save instruction
-                    $data_new_instruction = [
-                        'company_id' => $company_id,
-                        'instructions' => $instruction,
-                        'date_created' => date("Y-m-d H:i:s")
-                    ];
-
-                    $this->CompanyDisputeInstruction_model->create($data_new_instruction);
-
-                }else{
-                    $companyInstruction = $this->CompanyDisputeInstruction_model->getById($post['list_instruction']);
-                    if( $companyInstruction ){
-                        $instruction = $companyInstruction->instructions;
-                    } 
-                }              
-                
-                $data_dispute = [
-                    'company_id' => $company_id,
-                    'prof_id' => $post['cus_id'],
-                    'furnisher_id' => $post['furnisher_id'],
-                    'date_dispute' => date('Y-m-d'),                 
-                    'company_reason_id' => $post['dispute_reason'],
-                    'instruction' => $instruction,
-                    'date_created' => date("Y-m-d H:i:s"),
-                    'date_modified' => date("Y-m-d H:i:s")
-                ];
-
-                $customer_dispute_id = $this->CustomerDispute_model->saveDispute($data_dispute);
-
-                if( $customer_dispute_id > 0 ){
-                    foreach( $post['creditedBureau'] as $key => $bureauId ){
-
-                        $account_number = '';
-                        if( $post['account_number_opt'] == 'acc_num_same' ){
-                            $account_number = $post['account_number_all'];
-                        }else{
-                            if( isset($post['cb_account_number'][$bureauId]) ){
-                                $account_number = $post['cb_account_number'][$bureauId];
-                            }                        
-                        }
-
-                        //Other fields
-                        $status = '';
-                        $other_fields = array();
-                        if( $post['other_fields_type'] == 'same' ){
-                            foreach($post['otherInfo']['group'] as $field => $value){
-                                if( $field == 'status' ){
-                                    $status = $value;
-                                }
-                                $other_fields[$field] = ['field' => $field, 'value' => $value];
-                            }
-                        }else{
-                            foreach($post['otherInfo']['individual'][$bureauId] as $field => $value){
-                                if( $field == 'status' ){
-                                    $status = $value;
-                                }
-                                $other_fields[$field] = ['field' => $field, 'value' => $value];
-                            }
-                        }
-
-                        $other_fields = serialize($other_fields);
-
-                        $data_dispute_item = [                            
-                            'customer_dispute_id' => $customer_dispute_id,
-                            'credit_bureau_id' => $bureauId,
-                            'account_number`' => $account_number,
-                            'status' => $status,
-                            'other_fields' => $other_fields,
-                            'date_created' => date("Y-m-d H:i:s"),
-                            'date_modified' => date("Y-m-d H:i:s")
-                        ];
-
-                        $companyDisputeItems = $this->CustomerDisputeItem_model->create($data_dispute_item);
-                    }
-
-                    $is_success = true;
-                }else{
-                    $msg = 'Cannot save dispute data';
-                }
-            }else{
-                $msg = 'Customer not found';
-            }
-        }else{
-            $msg = 'Please select credit bureau';
-        }
-
-        $json_data = ['is_success' => $is_success, 'msg' => $msg];
-        echo json_encode($json_data);     
-    }
-
-    public function ajax_edit_dispute_item()
-    {
-        $this->load->model('CustomerDispute_model');
-        $this->load->model('CustomerDisputeItem_model');
-        $this->load->model('CreditBureau_model');
-
-        $cid  = logged('company_id');
-        $post = $this->input->post();
-
-        $dispute = $this->CustomerDispute_model->getById($post['did']);
-        $disputeItems = $this->CustomerDisputeItem_model->getAllByCustomerDisputeId($post['did']); 
-        $creditBureaus = $this->CreditBureau_model->getAll();   
-
-        $aDisputeItems = array();
-        foreach($disputeItems as $di){
-            $aDisputeItems[$di->credit_bureau_id] = $di;
-        }
-
-        $this->page_data['dispute'] = $dispute;
-        $this->page_data['aDisputeItems'] = $aDisputeItems;
-        $this->page_data['creditBureaus'] = $creditBureaus;
-        $this->page_data['optionOtherInfoStatus'] = $this->CustomerDisputeItem_model->optionOtherInfoStatus();
-        $this->load->view('customer/ajax_edit_dispute_item', $this->page_data);
-    }
-
-    public function ajax_delete_customer_dispute()
-    {
-        $this->load->model('CustomerDispute_model');
-        $this->load->model('CustomerDisputeItem_model');
-
-        $is_success = 0;
-        $msg = '';
-
-        $cid  = logged('company_id');
-        $post = $this->input->post();
-
-        $customerDispute = $this->CustomerDispute_model->getByIdAndCustomerId($post['did'], $post['cdid']);
-        if( $customerDispute ){
-
-            $this->CustomerDisputeItem_model->deleteByCustomerDisputeId($customerDispute->id);
-            $this->CustomerDispute_model->deleteById($customerDispute->id);
-
-            $is_success = 1;
-
-        }else{
-            $msg = 'Cannot find data';
-        }
-
-        $json_data = ['is_success' => $is_success, 'msg' => $msg];
-        echo json_encode($json_data);
-    }
-
-    public function ajax_create_internal_notes()
-    {
-        $this->load->model('CustomerInternalNotes_model');
-        $this->load->model('AcsProfile_model');
-        
-        $is_success = false;
-        $msg = '';
-
-        $user_id = logged('id');
-        $post    = $this->input->post();
-
-        if( $post['interal_notes'] != '' && $post['customer_id'] > 0 ){
-            $customer = $this->AcsProfile_model->getByProfId($post['customer_id']);
-            if( $customer ){
-                $data = [
-                    'prof_id' => $customer->prof_id,
-                    'user_id' => $user_id,
-                    'note_date' => date("Y-m-d",strtotime($post['note_date'])),
-                    'notes' => $post['interal_notes'],
-                    'date_created' => date("Y-m-d H:i:s"),
-                    'date_modified' => date("Y-m-d H:i:s")
-                ];
-
-                $internal_note = $this->CustomerInternalNotes_model->create($data);
-
-                $is_success = true;
-
-            }else{
-                $msg = 'Cannot find customer';
-            }
-        }else{
-            $msg = 'Cannot save data';
-        }
-
-        $json_data = ['is_success' => $is_success, 'msg' => $msg];
-        echo json_encode($json_data);        
-    }
-
-    public function ajax_update_internal_notes()
-    {
-        $this->load->model('CustomerInternalNotes_model');
-        $this->load->model('AcsProfile_model');
-        
-        $is_success = false;
-        $msg = '';
-
-        $user_id = logged('id');
-        $post    = $this->input->post();
-        $internalNote = $this->CustomerInternalNotes_model->getById($post['nid']);  
-
-        if( $internalNote ){
-            $data = [
-                'note_date' => date("Y-m-d",strtotime($post['note_date'])),
-                'notes' => $post['interal_notes']
-            ];
-
-            $this->CustomerInternalNotes_model->update($internalNote->id, $data);
-
-            $is_success = 1;
-
-        }else{
-            $msg = 'Cannot find data';
-        }  
-
-        $json_data = ['is_success' => $is_success, 'msg' => $msg];
-        echo json_encode($json_data);        
-    }
-
-    public function ajax_delete_internal_notes()
-    {
-        $this->load->model('CustomerInternalNotes_model');
-
-        $is_success = 0;
-        $msg    = '';
-
-        $company_id = logged('company_id');
-        $post = $this->input->post(); 
-        $internalNote = $this->CustomerInternalNotes_model->getById($post['nid']);
-        if( $internalNote ){
-            if( $internalNote->company_id == $company_id  ){
-                $this->CustomerInternalNotes_model->deleteById($internalNote->id);
-                $is_success = 1;
-                $msg = 'Record deleted';
-            }else{
-                $msg = 'Cannot find record';    
-            }
-        }else{
-            $msg = 'Cannot find record';
-        }
-
-        $json_data = [
-            'is_success' => $is_success,
-            'msg' => $msg
-        ];
-
-        echo json_encode($json_data);
-    }
-
-    public function ajax_edit_internal_note()
-    {
-        $this->load->model('CustomerInternalNotes_model');
-
-        $post = $this->input->post(); 
-
-        $internalNote = $this->CustomerInternalNotes_model->getById($post['nid']);      
-
-        $this->page_data['internalNote']   = $internalNote;
-        $this->load->view('customer/ajax_edit_internal_note', $this->page_data);
+        $this->load->view('customer/module', $this->page_data);
     }
 
     public function add_advance($id=null)
     {
-        $this->load->model('IndustryType_model');
-
-        $this->hasAccessModule(9);
-
         $userid = $id;
         $user_id = logged('id');
         if(isset($userid) || !empty($userid)){
@@ -1400,41 +393,7 @@ class Customer extends MY_Controller
             );
             $this->page_data['customer_notes'] = $this->general->get_data_with_param($get_customer_notes);
             //$this->page_data['device_info'] = $this->customer_ad_model->get_all_by_id('fk_prof_id',$userid,"acs_devices");
-        
-            $customer_contacts = array(
-                'where' => array(
-                    'customer_id' => $userid
-                ),
-                'table' => 'contacts',
-                'select' => '*',
-                'order' => array(
-                    'order_by' => 'id',
-                    'ordering' => 'asc'
-                ),
-            );
-            $this->page_data['contacts'] = $this->general->get_data_with_param($customer_contacts);
-
-            $customer_papers_query = array(
-                'where' => array(
-                    'customer_id' => $userid
-                ),
-                'table' => 'acs_papers',
-                'select' => '*',
-            );
-            $this->page_data['papers'] = $this->general->get_data_with_param($customer_papers_query);
-            if (count($this->page_data['papers'])) {
-                $this->page_data['papers'] = $this->page_data['papers'][0];
-            }
         }
-
-        $get_customer_groups = array(
-            'where' => array(
-                    'company_id' => logged('company_id')
-                ),
-                'table' => 'customer_groups',
-                'select' => '*',
-            );
-
         $get_login_user = array(
             'where' => array(
                 'id' => $user_id
@@ -1442,70 +401,24 @@ class Customer extends MY_Controller
             'table' => 'users',
             'select' => 'id,FName,LName',
         );
-
-        $rate_plan_query = array(
-            // 'where' => array(
-            //     'id' => $user_id
-            // ),
-            'table' => 'ac_rateplan',
-            'select' => 'id,amount',
-        );
-
-        $spt_query = array(
-            'table' => 'ac_system_package_type',
-            'select' => 'id,name',
-        );
-
-        $activation_fee_query = array(
-            'table' => 'ac_activationfee',
-            'select' => 'id,amount',
-        );
-
-        $this->page_data['customerGroups'] = $this->general->get_data_with_param($get_customer_groups);
-        $this->page_data['rate_plans'] = $this->general->get_data_with_param($rate_plan_query);
-        $this->page_data['system_package_types'] = $this->general->get_data_with_param($spt_query);
-        $this->page_data['activation_fees'] = $this->general->get_data_with_param($activation_fee_query);
-
         $this->page_data['logged_in_user'] = $this->general->get_data_with_param($get_login_user,FALSE);
         $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE,"","ASC","ac_salesarea","sa_id");
         $this->page_data['employees'] = $this->customer_ad_model->get_all(FALSE,"","ASC","users","id");
         $this->page_data['users'] = $this->users_model->getUsers();
-
-        // fetch customer statuses
-        $this->page_data['customer_status'] = $this->customer_ad_model->get_all(FALSE,"","","acs_cust_status","id");
-
-        if (isset($this->page_data['profile_info']->fk_sa_id)) {
-            foreach ($this->page_data['sales_area'] as $area) {
-                if ($area->sa_id == $this->page_data['profile_info']->fk_sa_id) {
-                    $this->page_data['profile_info']->fk_sa_text = $area->sa_name;
-                }
-            }
-        }
-
-        add_footer_js([
-            'assets/js/customer/add_advance/add_advance.js',
-            'assets/js/customer/lib/bday-picker.js',
-        ]);
-
-        add_css([
-            'assets/css/customer/add_advance/add_advance.css',
-        ]);
-
-        $this->page_data['industryTypes'] = $this->IndustryType_model->getAll(); 
-
         $this->load->view('customer/add_advance', $this->page_data);
     }
 
     public function leads()
-    {   
-        $this->page_data['page']->title = 'Leads Manager List';
-        $this->page_data['page']->parent = 'Sales';
+    {   $is_allowed = $this->isAllowedModuleAccess(14);
+        if( !$is_allowed ){
+            $this->page_data['module'] = 'customer_leads';
+            echo $this->load->view('no_access_module', $this->page_data, true);
+            die();
+        }
 
-        $this->hasAccessModule(14);
-        
         $user_id = logged('id');
         $this->page_data['leads'] = $this->customer_ad_model->get_leads_data();
-        $this->load->view('v2/pages/customer/leads', $this->page_data);
+        $this->load->view('customer/leads', $this->page_data);
     }
 
     public function ac_module_sort($id=NULL){
@@ -1515,8 +428,7 @@ class Customer extends MY_Controller
         if($this->customer_ad_model->update_data($input,"ac_module_sort","ams_id")){
             $view = $this->wizardlib->getModuleById($id);
             $data['id'] = $id;
-            $page = 'v2/pages/'.$view->ac_view_link;
-            $this->load->view($page, $data);
+            $this->load->view($view->ac_view_link, $data);
         }else{
             echo "Error";
         }
@@ -1562,31 +474,13 @@ class Customer extends MY_Controller
     }
 
     public function save_customer_profile(){
-        self::addJSONResponseHeader();
-
         $input = $this->input->post();
-        if(isset($input['customer_id']) AND !empty($input['customer_id']) ){
+        if(isset($input['customer_id'])){
             $check_customer='';
         }else{
-            // $check_customer = $this->customer_ad_model->check_customer($input);
-
-            // duplicate checking is implemented on Customer_Form apiCheckDuplicate
-            $check_customer = [];
+            $check_customer= $this->customer_ad_model->check_customer($input);
         }
-
-        $custom_fields_array = [];
-        if (array_key_exists('custom_name', $input) && array_key_exists('custom_value', $input)) {
-            foreach ($input['custom_name'] as $key => $name) {
-                $cleanName = trim($name);
-                $cleanValue = trim($input['custom_value'][$key]);
-
-                if (!empty($cleanName) && !empty($cleanValue)) {
-                    array_push($custom_fields_array, ['name' => $cleanName, 'value' => $cleanValue]);
-                }
-            }
-        }
-
-        if(empty($check_customer) ){
+        if(empty($check_customer)){
             // customer profile info
             $input_profile = array();
             $input_profile['fk_user_id'] = logged('id');
@@ -1594,7 +488,6 @@ class Customer extends MY_Controller
             $input_profile['company_id'] = logged('company_id');
             $input_profile['status'] = $input['status'];
             $input_profile['customer_type'] = $input['customer_type'];
-            $input_profile['customer_group_id'] = $input['customer_group'];
             $input_profile['business_name'] = $input['business_name'];
             $input_profile['first_name'] = $input['first_name'];
             $input_profile['last_name'] = $input['last_name'];
@@ -1605,7 +498,6 @@ class Customer extends MY_Controller
             $input_profile['city'] = $input['city'];
             $input_profile['state'] = $input['state'];
             $input_profile['country'] = $input['country'];
-            $input_profile['industry_type_id'] = $input['industry_type'];
             $input_profile['zip_code'] = $input['zip_code'];
             $input_profile['cross_street'] = $input['cross_street'];
             $input_profile['subdivision'] = $input['subdivision'];
@@ -1614,136 +506,54 @@ class Customer extends MY_Controller
             $input_profile['date_of_birth'] = $input['date_of_birth'];
             $input_profile['phone_h'] = $input['phone_h'];
             $input_profile['phone_m'] = $input['phone_m'];
-            $input_profile['custom_fields'] = json_encode($custom_fields_array);
-            if( $input['bill_method'] == 'CC' ){
-                //Check cc if valid using converge
-                $a_exp_date = explode("/", $input['credit_card_exp']);
-                $exp_date   = $a_exp_date[0] . date("y",strtotime($a_exp_date[1] . "-01-01"));
-                $data_cc = [
-                    'card_number' => $input['credit_card_num'],
-                    'exp_date' => $exp_date,
-                    'cvc' => $input['credit_card_exp_mm_yyyy'],
-                    'ssl_amount' => 0,
-                    'ssl_first_name' => $input['first_name'],
-                    'ssl_last_name' => $input['last_name'],
-                    'ssl_address' => $input['mail_add'] . ' ' . $input['city'] . ' ' . $input['state'],
-                    'ssl_zip' => $input['zip_code']
-                ];
-                $is_valid = $this->converge_check_cc_details_valid($data_cc);
-
-                echo $is_valid;
-                if( $is_valid['is_success'] == 1 ){
-                    $proceed = 1;
-                }else{
-                    $proceed = 0;
-                }
+            $input_profile['contact_name1'] = $input['contact_name1'];
+            $input_profile['contact_name2'] = $input['contact_name2'];
+            $input_profile['contact_name3'] = $input['contact_name3'];
+            $input_profile['contact_phone1'] = $input['contact_phone1'];
+            $input_profile['contact_phone2'] = $input['contact_phone2'];
+            $input_profile['contact_phone3'] = $input['contact_phone3'];
+            //$input_profile['notes'] = $input['notes'];
+            if(isset($input['customer_id'])){
+                $this->general->update_with_key_field($input_profile, $input['customer_id'],'acs_profile','prof_id');
+                $profile_id = $input['customer_id'];
             }else{
-                $proceed = 1;
-            }   
+                $profile_id = $this->general->add_return_id($input_profile, 'acs_profile');
+            }
 
-            if( $proceed == 1 ){
-                if(isset($input['customer_id'])){
-                    $this->general->update_with_key_field($input_profile, $input['customer_id'],'acs_profile','prof_id');
-                    $profile_id = $input['customer_id'];
-
-                    customerAuditLog(logged('id'), $profile_id, $profile_id, 'Customer', 'Updated customer ' .$input['first_name'].' '.$input['last_name']);
-
-                }else{
-                    $profile_id = $this->general->add_return_id($input_profile, 'acs_profile');
-
-                    customerAuditLog(logged('id'), $profile_id, $profile_id, 'Customer', 'Created customer ' .$input['first_name'].' '.$input['last_name']);
+            $save_billing = $this->save_billing_information($input,$profile_id);
+            $save_office = $this->save_office_information($input,$profile_id);
+            $save_alarm = $this->save_alarm_information($input,$profile_id);
+            $save_access = $this->save_access_information($input,$profile_id);
+            if($save_billing == 0){
+                echo 'Error Occured on Saving Billing Information';
+            }else if($save_office == 0){
+                echo 'Error Occured on Saving Office Information';
+            }else if($save_alarm == 0){
+                echo 'Error Occured on Saving Alarm Information';
+            }else if($save_access == 0){
+                echo 'Error Occured on Saving Access Information';
+            }else {
+                if ($input['notes'] != "" && $input['notes'] != NULL && !empty($input['notes'])){
+                    $this->save_notes($input,$profile_id);
                 }
-
-                $save_billing = $this->save_billing_information($input,$profile_id);
-                $save_office = $this->save_office_information($input,$profile_id);
-                $save_alarm = $this->save_alarm_information($input,$profile_id);
-                $save_access = $this->save_access_information($input,$profile_id);
-                $save_papers = $this->save_papers_information($input,$profile_id);
-                $save_contacts = $this->save_contacts($input,$profile_id);
-
-                if($save_billing == 0 || $save_office == 0 || $save_alarm == 0 || $save_access == 0 || $save_papers == 0){
-                    echo 'Error Occured on Saving Billing Information';
-                    $data_arr = array("success" => FALSE,"message" => 'Error on saving information');
-                }else {
-                    if ($input['notes'] != "" && $input['notes'] != NULL && !empty($input['notes'])){
-                        $this->save_notes($input,$profile_id);
-                    }
-                    //$this->generate_qr_image($profile_id);
-                    if(isset($input['customer_id'])){
-                        $data_arr = array("success" => TRUE,"profile_id" => $input['customer_id']);
-                    }else{
-                        $data_arr = array("success" => TRUE,"profile_id" => $profile_id);
-                    }
+                $this->qrcodeGenerator($profile_id);
+                if(isset($input['customer_id'])){
+                    echo $input['customer_id'];
+                }else{
+                    echo $profile_id;
                 }
             }
         }else {
-            $data_arr = array("success" => FALSE,"message" => 'Customer Already Exist!');
+            echo 'Customer Already Exist!';
         }
-        die(json_encode($data_arr));
-    }
-
-    public function converge_check_cc_details_valid($data){
-        include APPPATH . 'libraries/Converge/src/Converge.php';
-
-        $msg = '';
-        $is_success = 0;
-
-        $converge = new \wwwroth\Converge\Converge([
-            'merchant_id' => CONVERGE_MERCHANTID,
-            'user_id' => CONVERGE_MERCHANTUSERID,
-            'pin' => CONVERGE_MERCHANTPIN,
-            'demo' => false,
-        ]);
-
-        $verify = $converge->request('ccverify', [
-            'ssl_card_number' => $data['card_number'],
-            'ssl_exp_date' => $data['exp_date'],
-            'ssl_cvv2cvc2' => $data['cvc'],
-            'ssl_first_name' => $data['ssl_first_name'],
-            'ssl_last_name' => $data['ssl_last_name'],
-            'ssl_amount' => $data['ssl_amount'],
-            'ssl_avs_address' => $data['ssl_address'],
-            'ssl_avs_zip' => $data['ssl_zip'],
-        ]);
-        if( $verify['success'] == 1 ){
-            if( $verify['ssl_result_message'] == 'DECLINED' ){
-                $is_success = 0;
-            }else{
-                $is_success = 1;    
-            }
-            
-        }else{
-            $msg = $verify['errorMessage'];
-        }
-        
-        $return = ['is_success' => $is_success, 'msg' => $msg];
-        return $return;
     }
 
     public function save_billing_information($input,$id){
         $input_billing = array();
         // billing data
-        switch ($input['bill_freq']) {
-            case 'One Time Only':
-                $billing_frequency = 1;
-                break;
-            case 'Every 1 Month':
-                $billing_frequency = 1;
-                break;
-            case 'Every 3 Months':
-                $billing_frequency = 3;
-                break;
-            case 'Every 6 Months':
-                $billing_frequency = 6;
-                break;
-            case 'Every 1 Year':
-                $billing_frequency = 12;
-                break;
-            default:
-                $billing_frequency = 0;
-                break;
+        if(!isset($input['customer_id'])){
+            $input_billing['fk_prof_id'] = $id;
         }
-        $input_billing['fk_prof_id'] = $id;
         $input_billing['card_fname'] = $input['card_fname'];
         $input_billing['card_lname'] = $input['card_lname'];
         $input_billing['card_address'] = $input['card_address'];
@@ -1775,10 +585,8 @@ class Customer extends MY_Controller
         $input_billing['recurring_end_date'] = $input['recurring_end_date'];
         $input_billing['transaction_amount'] = $input['transaction_amount'];
         $input_billing['transaction_category'] = $input['transaction_category'];
-        $input_billing['frequency'] = $input['frequency']; //Subscription
-        $input_billing['billing_frequency'] = $billing_frequency; //Billing
-        $input_billing['next_billing_date'] = date("n/j/Y",strtotime("+" . $billing_frequency . " months", strtotime($input['bill_start_date'])));
-        $input_billing['next_subscription_billing_date'] = date("n/j/Y",strtotime("+" . $input['frequency'] . " months", strtotime($input['recurring_start_date'])));
+        $input_billing['frequency'] = $input['frequency'];
+
 
         $check = array(
             'where' => array(
@@ -1794,44 +602,13 @@ class Customer extends MY_Controller
         }
     }
 
-    public function save_contacts($postData, $customerId)
-    {
-        $payload = [];
-        $saveToPayload = function ($customerNumber) use (&$payload, $postData, $customerId) {
-            if (empty(trim($postData['contact_name' . $customerNumber]))) {
-                return; // ignore empty contact with empty name
-            }
-
-            array_push($payload, [
-                'name' => trim($postData['contact_name' . $customerNumber]),
-                'relation' => $postData['contact_relationship' . $customerNumber],
-                'phone' => $postData['contact_phone' . $customerNumber],
-                'customer_id' => $customerId,
-                'phone_type' => 'mobile',
-            ]);
-        };
-
-        $saveToPayload(1);
-        $saveToPayload(2);
-        $saveToPayload(3);
-
-        if (!empty($payload)) {
-            $this->db->where('customer_id', $customerId);
-            $this->db->delete('contacts');
-
-            $this->db->insert_batch('contacts', $payload);
-        }
-
-        $this->db->where('customer_id', $customerId);
-        $contacts = $this->db->get('contacts')->result();
-        return $contacts;
-    }
-
     public function save_office_information($input,$id){
         $input_office = array();
 
         // office data
-        $input_office['fk_prof_id'] = $id;
+        if(!isset($input['customer_id'])){
+            $input_office['fk_prof_id'] = $id;
+        }
         $input_office['welcome_sent'] = 0;
         $input_office['entered_by'] = $input['entered_by'];
         $input_office['time_entered'] = $input['time_entered'];
@@ -1918,7 +695,9 @@ class Customer extends MY_Controller
         $input_alarm = array();
 
         // alarm data
-        $input_alarm['fk_prof_id'] = $id;
+        if(!isset($input['customer_id'])){
+            $input_alarm['fk_prof_id'] = $id;
+        }
         $input_alarm['monitor_comp'] = $input['monitor_comp'];
         $input_alarm['monitor_id'] = $input['monitor_id'];
         //$input_alarm['install_date'] = $input['install_date'];
@@ -1967,6 +746,7 @@ class Customer extends MY_Controller
         $input_access['reset_password'] ='';
         $input_access['access_login'] = $input['access_login'];
         $input_access['access_password'] = $input['access_password'];
+
         $check = array(
             'where' => array(
                 'fk_prof_id' => $id
@@ -1978,30 +758,6 @@ class Customer extends MY_Controller
             return $this->general->update_with_key_field($input_access, $input['customer_id'], 'acs_access','fk_prof_id');
         }else{
             return $this->general->add_($input_access, 'acs_access');
-        }
-    }
-
-    public function save_papers_information($input,$id){
-        $input_papers = array();
-        $input_papers['customer_id'] = $id;
-        $input_papers['rep_paper_date'] = $input['rep_paper_date'];
-        $input_papers['tech_paper_date'] = $input['tech_paper_date'];
-        $input_papers['scanned_date'] = $input['scanned_date'];
-        $input_papers['paperwork'] = $input['paperwork'];
-        $input_papers['submitted'] = $input['submitted'];
-        $input_papers['funded'] = $input['funded'];
-        $input_papers['charged_back'] = $input['charged_back'];
-        $check = array(
-            'where' => array(
-                'customer_id' => $id
-            ),
-            'table' => 'acs_papers'
-        );
-        $exist = $this->general->get_data_with_param($check,FALSE);
-        if($exist){
-            return $this->general->update_with_key_field($input_papers, $input['customer_id'], 'acs_papers','customer_id');
-        }else{
-            return $this->general->add_($input_papers, 'acs_papers');
         }
     }
 
@@ -2144,9 +900,13 @@ class Customer extends MY_Controller
 
     public function add_lead($lead_id=0)
     {
-        //$this->hasAccessModule(9);
-        $this->hasAccessModule(43);
-        
+        $is_allowed = $this->isAllowedModuleAccess(43);
+        if( !$is_allowed ){
+            $this->page_data['module'] = 'customer_add_leads';
+            echo $this->load->view('no_access_module', $this->page_data, true);
+            die();
+        }
+
         if(isset($lead_id)){
             $this->page_data['leads_data'] = $this->customer_ad_model->get_data_by_id('leads_id',$lead_id,"ac_leads");
         }
@@ -2178,6 +938,8 @@ class Customer extends MY_Controller
             if(isset($profile_id)){
                 redirect(base_url('customer/add_advance/'.$profile_id));
             }
+            //print_r($input);
+            //echo "Convert na";
         }else {
             if ($input) {
                 unset($input['credit_report']);
@@ -2189,6 +951,13 @@ class Customer extends MY_Controller
                         redirect(base_url('customer/leads'));
                     } else {
                         echo "Error";
+                    }
+                } else {
+                    if ($this->customer_ad_model->add($input, "ac_leads")) {
+                        redirect(base_url('customer/leads'));
+                    } else {
+                        echo "Error";
+
                     }
                 }
             } else {
@@ -2202,67 +971,6 @@ class Customer extends MY_Controller
                 $this->load->view('customer/add_lead', $this->page_data);
             }
         }
-    }
-
-    public function save_new_lead()
-    {
-        $input = $this->input->post();
-        if ($input) {
-            unset($input['credit_report']);
-            unset($input['report_history']);            
-            if( isset($input['leads_id']) ){                
-                if ($this->customer_ad_model->update_data($input, "ac_leads", 'leads_id')) {
-                    echo 'Saved';
-                } else {
-                    echo "Error";
-                }
-            }else{
-                $input['company_id'] = logged('company_id');
-                if ($this->customer_ad_model->add($input, "ac_leads")) {
-                    echo 'Saved';
-                } else {
-                    echo "Error";
-                }
-            }
-            
-        }
-    }
-
-    public function convert_to_customer()
-    {
-        $is_success = 0;
-        $msg = 'Cannot save data';
-
-        $input = $this->input->post();
-        if ($input) {
-            $customer_data = [
-                'company_id' => logged('company_id'),
-                'fk_user_id' => logged('id'),
-                'fk_sa_id' => 0,
-                'contact_name' => '',
-                'status' => 'New',
-                'customer_type' => 'Residential',
-                'first_name' => $input['firstname'],
-                'middle_name' => $input['middle_initial'],
-                'last_name' => $input['lastname'],
-                'mail_add' => $input['address'],
-                'city' => $input['city'],
-                'state' => $input['state'],
-                'zip_code' => $input['zip_code'],
-                'country' => $input['country'],
-                'date_of_birth' => date('m/d/Y', strtotime($input['date_of_birth'])),
-                'email' => $input['email_add'],
-                'phone_h' => $input['phone_home']
-            ];
-            if ($this->customer_ad_model->add($customer_data, "acs_profile")) {
-                $is_success = 1;
-            } else {
-                $msg = 'Required field is missing. Cannot convert to customer.';
-            }
-        }
-
-        $json = ['is_success' => $is_success, 'msg' => $msg];
-        echo json_encode($json);
     }
 
     public function add_audit_import_ajax(){
@@ -2383,80 +1091,6 @@ class Customer extends MY_Controller
         }
     }
 
-    public function update_lead_type_ajax(){
-        $input = $this->input->post();
-        $data = ['lead_id' => $input['lead_id'], 'lead_name' => $input['lead_name']];
-        if($this->customer_ad_model->update_data($data,"ac_leadtypes","lead_id")){
-            echo 1;
-        }else{
-            echo 0;
-        }
-    }
-
-    public function add_rate_plan_ajax(){
-        $input = $this->input->post();
-        // customer_ad_model
-        if(empty($input['id'])){
-            unset($input['id']);
-            $input['company_id'] = logged('company_id');
-            if($this->customer_ad_model->add($input,"ac_rateplan")){
-                echo 1;
-            }else{
-                echo 0;
-            }
-        }else{
-            if($this->customer_ad_model->update_data($input,"ac_rateplan","id")){
-                echo "Updated";
-            }else{
-                echo "Error";
-            }
-        }
-    }
-
-    public function update_rate_plan_ajax(){
-        $input = $this->input->post();
-        $data = ['id' => $input['rate-plan-id'], 'amount' => $input['amount'], 'plan_name' => $input['plan_name']];
-        if($this->customer_ad_model->update_data($data,"ac_rateplan","id")){
-            echo 1;
-        }else{
-            echo 0;
-        }
-    }
-
-    public function customer_settings_ajax_process(){
-        $input = $this->input->post();
-        // customer_ad_model
-        if(empty($input['id'])){
-            unset($input['id']);
-            if($this->customer_ad_model->add($input,"acs_cust_status")){
-                echo true;
-            }else{
-                echo "Error";
-            }
-        }else{
-            if($this->customer_ad_model->update_data($input,"acs_cust_status","id")){
-                echo "Updated";
-            }else{
-                echo "Error";
-            }
-        }
-    }
-
-    public function customer_settings_delete(){
-        $deletion_query = array(
-            'where' => array(
-                'id' => $_POST['id']
-            ),
-            'table' => 'acs_cust_status'
-        );
-        if($this->general->delete_($deletion_query)){
-            echo 1;
-        }else{
-            echo 0;
-        }
-    }
-
-
     public function add_salesarea_ajax(){
         $input = $this->input->post();
         // customer_ad_model
@@ -2473,16 +1107,6 @@ class Customer extends MY_Controller
             }else{
                 echo "Error";
             }
-        }
-    }
-
-    public function update_sales_area_ajax(){
-        $input = $this->input->post();
-        $data = ['sa_id' => $input['sa_id'], 'sa_name' => $input['sa_name']];
-        if($this->customer_ad_model->update_data($data,"ac_salesarea","sa_id")){
-            echo 1;
-        }else{
-            echo 0;
         }
     }
 
@@ -2505,96 +1129,11 @@ class Customer extends MY_Controller
         }
     }
 
-    public function update_leadsource_ajax(){
-        $input = $this->input->post();
-        $data = ['ls_id' => $input['ls_id'], 'ls_name' => $input['ls_name']];
-        if($this->customer_ad_model->update_data($data,"ac_leadsource","ls_id")){
-            echo 1;
-        }else{
-            echo 0;
-        }
-    }
-
-    public function add_activation_fee_ajax(){
-        $input = $this->input->post();
-        // customer_ad_model
-        if(empty($input['id'])){
-            unset($input['id']);
-            $input['company_id'] = logged('company_id');
-            if($this->customer_ad_model->add($input,"ac_activationfee")){
-                echo 1;
-            }else{
-                echo 0;
-            }
-        }else{
-            if($this->customer_ad_model->update_data($input,"ac_activationfee","id")){
-                echo "Updated";
-            }else{
-                echo "Error";
-            }
-        }
-    }
-
-    public function update_activation_fee_ajax(){
-        $input = $this->input->post();
-        $data = ['id' => $input['id'], 'amount' => $input['amount']];
-        if($this->customer_ad_model->update_data($data,"ac_activationfee","id")){
-            echo 1;
-        }else{
-            echo 0;
-        }
-    }
-
-    public function add_spt_ajax(){
-        $input = $this->input->post();
-        // customer_ad_model
-        if(empty($input['id'])){
-            unset($input['id']);
-            $input['company_id'] = logged('company_id');
-            if($this->customer_ad_model->add($input,"ac_system_package_type")){
-                echo 1;
-            }else{
-                echo 0;
-            }
-        }else{
-            if($this->customer_ad_model->update_data($input,"ac_system_package_type","id")){
-                echo "Updated";
-            }else{
-                echo "Error";
-            }
-        }
-    }
-
-    public function update_spt_ajax(){
-        $input = $this->input->post();
-        $data = ['id' => $input['id'], 'name' => $input['name']];
-        if($this->customer_ad_model->update_data($data,"ac_system_package_type","id")){
-            echo 1;
-        }else{
-            echo 0;
-        }
-    }
-
     public function update_customer_profile(){
-        $this->load->model('CustomerInternalNotes_model');
-
         $input = array();
         $input['notes'] = $_POST['notes'];
         $input['prof_id'] = $_POST['id'];
         if($this->customer_ad_model->update_data($input,"acs_profile","prof_id")){
-            //Insert to internal notes
-            if( trim($input['notes']) != '' && $input['notes'] != $_POST['memo_note'] ){
-                $data_memo = [
-                    'prof_id' => $input['prof_id'],
-                    'user_id' => logged('id'),
-                    'note_date' => date("Y-m-d"),
-                    'notes' => trim($input['notes']),
-                    'date_created' => date("Y-m-d H:i:s"),
-                    'date_modified' => date("Y-m-d H:i:s")
-                ];
-
-                $this->CustomerInternalNotes_model->create($data_memo);
-            }
             echo "Success";
         }else{
             echo "Error";
@@ -2643,91 +1182,7 @@ class Customer extends MY_Controller
         }
     }
 
-    public function delete_sales_area(){
-        $deletion_query = array(
-            'where' => array(
-                'sa_id' => $_POST['id']
-            ),
-            'table' => 'ac_salesarea'
-        );
-        if($this->general->delete_($deletion_query)){
-            echo 1;
-        }else{
-            echo 0;
-        }
-    }
-
-    public function delete_lead_source(){
-        $deletion_query = array(
-            'where' => array(
-                'ls_id' => $_POST['id']
-            ),
-            'table' => 'ac_leadsource'
-        );
-        if($this->general->delete_($deletion_query)){
-            echo 1;
-        }else{
-            echo 0;
-        }
-    }
-
-    public function delete_lead_type(){
-        $deletion_query = array(
-            'where' => array(
-                'lead_id' => $_POST['id']
-            ),
-            'table' => 'ac_leadtypes'
-        );
-        if($this->general->delete_($deletion_query)){
-            echo 1;
-        }else{
-            echo 0;
-        }
-    }
-
-    public function delete_rate_plan(){
-        $deletion_query = array(
-            'where' => array(
-                'id' => $_POST['id']
-            ),
-            'table' => 'ac_rateplan'
-        );
-        if($this->general->delete_($deletion_query)){
-            echo 1;
-        }else{
-            echo 0;
-        }
-    }
-
-    public function delete_activation_fee(){
-        $deletion_query = array(
-            'where' => array(
-                'id' => $_POST['id']
-            ),
-            'table' => 'ac_activationfee'
-        );
-        if($this->general->delete_($deletion_query)){
-            echo 1;
-        }else{
-            echo 0;
-        }
-    }
-
-    public function delete_spt(){
-        $deletion_query = array(
-            'where' => array(
-                'id' => $_POST['id']
-            ),
-            'table' => 'ac_system_package_type'
-        );
-        if($this->general->delete_($deletion_query)){
-            echo 1;
-        }else{
-            echo 0;
-        }
-    }
-
-    public function send_qr2($id=null)
+    public function send_qr($id=null)
     {
         $info = $this->customer_ad_model->get_data_by_id('prof_id',$id,"acs_profile");
         $to = $info->email;
@@ -2756,116 +1211,47 @@ class Customer extends MY_Controller
         }
     }
 
-    public function send_qr() {
-
-        $id = $_POST['custId'];
-        
-        $customer = $this->customer_ad_model->get_data_by_id('prof_id',$id,"acs_profile");
-        //Email Sending
-        $server    = MAIL_SERVER;
-        $port      = MAIL_PORT ;
-        $username  = MAIL_USERNAME;
-        $password  = MAIL_PASSWORD;
-        $from      = MAIL_FROM;
-        $recipient = 'welyelfhisula@gmail.com';
-        $subject = 'nSmarTrac : Customer QR';
-        $this->page_data['customer_id'] = $id.'.png';
-
-        $params = array();
-        $params['customer_id'] = ["id"=>$id,"firstname"=>$customer->first_name,"lastname"=>$customer->last_name];
-
-        include APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
-        $mail = new PHPMailer;
-        $mail->isSMTP();
-        $mail->getSMTPInstance()->Timelimit = 5;
-        $mail->Host = $server;
-        $mail->SMTPAuth = true;
-        $mail->Username = $username;
-        $mail->Password = $password;
-        $mail->SMTPSecure = 'ssl';
-        $mail->Timeout = 10; // seconds
-        $mail->Port = $port;
-        $mail->From = $from;
-        $mail->FromName = 'nSmarTrac';
-        $mail->Subject = $subject;
-        $mail->Body    = 'This is customer QR.';
-        //$mail->addAttachment($attachment);
-
-        $content = $this->load->view('customer/email_template/customer_qr_template', $params, true);
-
-        $mail->MsgHTML($content);
-        $mail->addAddress($recipient);
-        if($mail->send()){
-            echo json_encode(['success' => true]);
-        }else{
-            echo json_encode(['success' => false]);
-        }
-        $mail->ClearAllRecipients();
-        
-    }
-
-    public function send_welcome_email() {
-        
-        $payload = json_decode(file_get_contents('php://input'), true);
-        ['customer_email' => $customerEmail, 'letter_id' => $letterId] = $payload;
- 
-        //Email Sending
-        $server    = MAIL_SERVER;
-        $port      = MAIL_PORT ;
-        $username  = MAIL_USERNAME;
-        $password  = MAIL_PASSWORD;
-        $from      = MAIL_FROM;
-        $recipient = $customerEmail;
-        $subject = 'Welcome to nSmaTrac';
-
-        $params = array();
-        
-        include APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
-        $mail = new PHPMailer;
-        $mail->isSMTP();
-        $mail->getSMTPInstance()->Timelimit = 5;
-        $mail->Host = $server;
-        $mail->SMTPAuth = true;
-        $mail->Username = $username;
-        $mail->Password = $password;
-        $mail->SMTPSecure = 'ssl';
-        $mail->Timeout = 10; // seconds
-        $mail->Port = $port;
-        $mail->From = $from;
-        $mail->FromName = 'nSmarTrac';
-        $mail->Subject = $subject;
-        $mail->Body    = 'Welcome to nSmaTrac';
-        //$mail->addAttachment($attachment);
-
-        //$content = $this->load->view('customer/email_template/customer_qr_template', $params, true);
-        $content = '<h1>Welcome to nSmarTrac!</h1>';
-
-        $mail->MsgHTML($content);
-        $mail->addAddress($recipient);
-        if($mail->send()){
-            echo json_encode(['success' => true]);
-        }else{
-            echo json_encode(['success' => false]);
-        }
-        $mail->ClearAllRecipients();
-        
+    public function sendqr(){
+        $config = Array(
+            'protocol' => 'smtp',
+            'smtp_host' => 'ssl://smtp.gmail.com',
+            'smtp_port' => 465,
+            'smtp_user' => 'welyelfhisula@gmail.com',
+            'smtp_pass' => 'wrhisula1123',
+            'mailtype' => 'html',
+            'charset' => 'iso-8859-1',
+            'starttls'  => true,
+            'smtp_timeout' =>'60',
+            'crlf'     => "\n",
+            'validation'  => TRUE,
+            'wordwrap' => TRUE,
+    );
+        $this->load->library('email',$config);
+        //$this->email->initialize($config);
+       // $this->email->set_mailtype("html");
+        //Email content
+        $this->email->set_newline("\r\n");
+        $this->email->to('wrhisula1123@gmail.com');
+        $this->email->from('welyelfhisula@gmail.com','MyWebsite');
+        $this->email->subject('QR Details');
+        $this->email->message('Testing the email class.');
+        //Send email
+       $this->email->send();
+       show_error($this->email->print_debugger());
     }
 
     public function get_customer_import_header(){
 
             if (is_uploaded_file($_FILES['file']['tmp_name'])) {
-                $csv = array_map("str_getcsv", file($_FILES['file']['tmp_name'],FILE_SKIP_EMPTY_LINES));
-                $csvHeader = array_shift($csv);
-                foreach( $csvHeader as $key => $value ){
-                    if( strtolower($value) == 'firstname' ){
-                        unset($csvHeader[$key]);
+                $this->load->library('CSVReader');
+                $csvData = $this->csvreader->get_header($_FILES['file']['tmp_name']);
+
+                if (!empty($csvData)) {
+                    foreach ($csvData as $row) {
+                        //echo $row['MonitoringID'];
                     }
-                    if( strtolower($value) == 'lastname' ){
-                        unset($csvHeader[$key]);
-                    }
-                }
-                if (!empty($csvHeader)) {
-                    echo json_encode($csvHeader,true);
+                    //print_r($csvData);
+                    echo json_encode($csvData,true);
                 }else{
                     echo 'error';
                 }
@@ -2874,77 +1260,40 @@ class Customer extends MY_Controller
     }
 
     public function import_customer_data() {
-        $is_success = 0;
-
-        $data = array();        
+        $data = array();
+        $input_profile = array();
         $input = $this->input->post();
-
         if ($input) {
                 $insertCount = $updateCount = $rowCount = $notAddCount = 0;
                 if (is_uploaded_file($_FILES['file']['tmp_name'])) {
                     $this->load->library('CSVReader');
                     $csvData = $this->csvreader->parse_csv($_FILES['file']['tmp_name']);
+                     /*
+                         ALTER TABLE acs_profile MODIFY `business_name` varchar(255) null;
+                         ALTER TABLE acs_profile MODIFY `prefix` varchar(20) null;
+                         ALTER TABLE acs_profile MODIFY `suffix` varchar(20) null;
+                         ALTER TABLE acs_profile MODIFY `middle_name` varchar(50) null;
+                         ALTER TABLE acs_profile MODIFY `date_of_birth` varchar(50) null;
+                         ALTER TABLE acs_profile MODIFY `ssn` varchar(50) null;
+                     */
+                     //print_r($csvData);
                     if (!empty($csvData)) {
                         foreach ($csvData as $row) {
                             //print_r($row);
-                            $company = '';
-                            if( in_array('Company', $input['headers']) ){
-                                $company = $row['Company'];
-                            }
-
-                            $status = '';
-                            if( in_array('Status', $input['headers']) ){
-                                $status = $row['Status'];
-                            }
-
-                            $address = '';
-                            if( in_array('Address', $input['headers']) ){
-                                $address = $row['Address'];
-                            }
-
-                            $city = '';
-                            if( in_array('City', $input['headers']) ){
-                                $city = $row['City'];
-                            }
-
-                            $city = '';
-                            if( in_array('City', $input['headers']) ){
-                                $city = $row['City'];
-                            }
-
-                            $state = '';
-                            if( in_array('State', $input['headers']) ){
-                                $state = $row['State'];
-                            }
-
-                            $email = '';
-                            if( in_array('Email', $input['headers']) ){
-                                $email = $row['Email'];
-                            }
-
-                            $zip = '';
-                            if( in_array('Zip', $input['headers']) ){
-                                $city = $row['Zip'];
-                            }
-
-                            $country = '';
-                            if( in_array('Country', $input['headers']) ){
-                                $city = $row['Country'];
-                            }
-
+                            $rowCount++;
                             $input_profile = array(
                                 'fk_user_id' => logged('id'),
                                 'fk_sa_id' => 0,
                                 'first_name' => $row['FirstName'],
                                 'last_name' => $row['LastName'],
-                                'business_name' => $company,
-                                'status' => $status,
-                                'mail_add' => $address,
-                                'city' => $city,
-                                'email' => $email,
-                                'state' => $state,
-                                'zip_code' => $zip,
-                                'country' => $country,
+                                'business_name' => $row['Company'],
+                                'status' => $row['Status'],
+                                'mail_add' => $row['Address'],
+                                'city' => $row['City'],
+                                'email' => $row['Email'],
+                                'state' => $row['State'],
+                                'zip_code' => $row['Zip'],
+                                'country' => 'USA',
                                 'company_id' => logged('company_id'),
                             );
                             if(!empty( $row['FirstName']) && !empty( $row['LastName'])) {
@@ -2959,6 +1308,7 @@ class Customer extends MY_Controller
                                 $prevCount = $this->customer_ad_model->check_if_user_exist($check_user, 'acs_profile');
 
                                 if ($prevCount > 0) {
+                                    echo $row['FirstName'].' '. $row['LastName'].' exist!'; echo "<br>";
 //                                $condition = array('contact_name' => $row['Contact Name']);
 //                                $update = $this->customer_model->update($itemData, $condition);
 //                                if ($update) {
@@ -2988,7 +1338,6 @@ class Customer extends MY_Controller
                                     }
                                     //$insert = $this->customer_ad_model->insert($itemData);
                                     $fk_prod_id = $this->customer_ad_model->add($input_profile,"acs_profile");
-
                                     if ($fk_prod_id) {
                                         $insertCount++;
                                         $input_alarm = array(
@@ -3001,6 +1350,7 @@ class Customer extends MY_Controller
                                             'monitor_id' => $row['MonitoringID'],
                                             'acct_type' => $row['AccountType'],
                                         );
+
                                         $input_office = array(
                                             'fk_prof_id' => $fk_prod_id,
                                             'sales_date' => $row['SaleDate'],
@@ -3008,6 +1358,7 @@ class Customer extends MY_Controller
                                             'technician' => $row['Technician'],
                                             'credit_score' => $score2,
                                         );
+
                                         if(logged('company_id') == 2){
                                             $input_billing = array(
                                                 'fk_prof_id' => $fk_prod_id,
@@ -3026,21 +1377,16 @@ class Customer extends MY_Controller
                                                 'contract_term' => $row['ContractTerm'],
                                             );
                                         }
-                                        //$this->customer_ad_model->add($input_alarm,"acs_alarm");
-                                        //$this->customer_ad_model->add($input_office,"acs_office");
-                                        //$this->customer_ad_model->add($input_billing,"acs_billing");
+
+                                        $this->customer_ad_model->add($input_alarm,"acs_alarm");
+                                        $this->customer_ad_model->add($input_office,"acs_office");
+                                        $this->customer_ad_model->add($input_billing,"acs_billing");
                                     }
-                                    $data[$rowCount]['firstname']= $row['FirstName'];
-                                    $data[$rowCount]['lastname']= $row['LastName'];
-                                    $data[$rowCount]['email']= $row['Email'];
-                                    $data[$rowCount]['monitoring_company']= $row['MonitoringCompany'];
-                                    $data[$rowCount]['state']= $row['State'];
-                                    $data[$rowCount]['sales_rep']= $row['Technician'];
-                                    $data[$rowCount]['status']= $row['Status'];
-                                    $rowCount++;
+                                    echo $row['FirstName'].' '. $row['LastName'].' has been added!'; echo "<br>";
                                 }
                             }
                         }
+                        $notAddCount = ($rowCount - ($insertCount + $updateCount));
                         //$successMsg = 'Customer imported successfully. Total Rows ('.$rowCount.') | Inserted ('.$insertCount.') | Updated ('.$updateCount.') | Not Inserted ('.$notAddCount.')';
                        // $this->session->set_userdata('success_msg', $successMsg);
 
@@ -3048,52 +1394,39 @@ class Customer extends MY_Controller
                         //$this->session->set_flashdata('alert-type', 'success');
                         //$this->session->set_flashdata('alert', $successMsg);
                     }
-                    //echo json_encode($data);
-                    $is_success = 1;
-                    //redirect(base_url('customer'));
+                    redirect(base_url('customer'));
                 } else {
-                    //$this->session->set_userdata('error_msg', 'Error on file upload, please try again.');
-                   // redirect($_SERVER['HTTP_REFERER'], 'refresh');
-                    $is_success = 2;
+                    $this->session->set_userdata('error_msg', 'Error on file upload, please try again.');
+                    redirect($_SERVER['HTTP_REFERER'], 'refresh');
                 }
-        }else{
-            $is_success = 0;
         }
-
-        $json_data = ['is_success' => $is_success];
-        echo json_encode($json_data);
+        //redirect('customer');
     }
 
     public function customer_export()
     {
+
         $user_id = logged('id');
         //$items = $this->customer_model->getByCompanyId(logged('company_id'));
         //$items =  $this->customer_ad_model->get_customer_data('fk_user_id',$user_id,"acs_profile");
-        $items =  $this->customer_ad_model->get_customer_data();
+        $items =  $this->customer_ad_model->get_customer_data($user_id);
 
         $delimiter = ",";
-        $time      = time();
-        $filename  = "customers_list_".$time.".csv";
+        $filename = getLoggedName()."_customers.csv";
 
         $f = fopen('php://memory', 'w');
 
-        $fields = array('MonitoringID', 'LastName', 'FirstName', 'Company', 'Industry', 'PanelType', 'AccountType', 'InstallDate', 'SaleDate', 'MonthlyMonitoringRate', 'SalesRep', 'Status', 'EquipmentStatus',
+        $fields = array('MonitoringID', 'LastName', 'FirstName', 'Company', 'PanelType', 'AccountType', 'InstallDate', 'SaleDate', 'MonthlyMonitoringRate', 'SalesRep', 'Status', 'EquipmentStatus',
                         'AbortCode','Address','Address1','Area','City','State','Zip','ContractTerm','CreditScore','CreditScore2','Email','MonitoringCompany','StatusID','Technician');
         fputcsv($f, $fields, $delimiter);
 
         if (!empty($items)) {
             foreach ($items as $item) {
-                $industry_type = 'Not Specified';
-                if( $item->industry_type_id > 0 ){
-                    $industry_type = $item->industry_type;
-                }
-
                 $csvData = array(
                     $item->monitor_id,
                     $item->last_name,
                     $item->first_name,
                     $item->business_name,
-                    $industry_type,
                     $item->panel_type,
                     $item->acct_type,
                     $item->install_date,
@@ -3727,15 +2060,16 @@ class Customer extends MY_Controller
 
     public function group()
     {
-        $this->page_data['page']->title = 'Customer Groups';
-        $this->page_data['page']->parent = 'Customers';
-
-        $this->hasAccessModule(9);
+        $is_allowed = $this->isAllowedModuleAccess(11);
+        if( !$is_allowed ){
+            $this->page_data['module'] = 'customer_group';
+            echo $this->load->view('no_access_module', $this->page_data, true);
+            die();
+        }
         // pass the $this so that we can use it to load view, model, library or helper classes
        // $customerGroup = new CustomerGroup($this);
         $this->page_data['customerGroups'] =  $this->customer_ad_model->get_all_by_id('user_id',logged('id'),'customer_groups');
-        // $this->load->view('customer/group/list', $this->page_data);
-        $this->load->view('v2/pages/customer/group/list', $this->page_data);
+        $this->load->view('customer/group/list', $this->page_data);
     }
 
     public function group_edit($id=null)
@@ -3867,20 +2201,14 @@ class Customer extends MY_Controller
     }
 
     public function ticketslist(){
-        $this->page_data['page']->title = 'Tickets';
-        $this->page_data['page']->parent = 'Sales';
-
-        $this->hasAccessModule(39);
         // $user_id = logged('id');
         // $this->page_data['leads'] = $this->customer_ad_model->get_leads_data();
-        $this->load->view('v2/pages/tickets/list', $this->page_data);
+        $this->load->view('tickets/list', $this->page_data);
     }
 
     public function addTicket()
     {
-        $this->hasAccessModule(39);
         $this->load->model('AcsProfile_model');
-        $this->load->model('Job_tags_model');
 
         $query_autoincrment = $this->db->query("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'customer_groups'");
         $result_autoincrement = $query_autoincrment->result_array();
@@ -3909,22 +2237,12 @@ class Customer extends MY_Controller
         $company_id = logged('company_id');
         $role = logged('role');
         // $this->page_data['workstatus'] = $this->Workstatus_model->getByWhere(['company_id'=>$company_id]);
-        /*if( $role == 1 || $role == 2 ){
+        if( $role == 1 || $role == 2 ){
             $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
         }else{
             $this->page_data['customers'] = $this->AcsProfile_model->getAll();
-        }*/
-        $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
-
-        $default_customer_id = 0;
-        if( $this->input->get('cus_id') ){
-            $default_customer_id = $this->input->get('cus_id');
         }
-
-        $this->page_data['default_customer_id'] = $default_customer_id;
-
         $type = $this->input->get('type');
-        $this->page_data['tags'] = $this->Job_tags_model->getJobTagsByCompany($company_id);
         $this->page_data['type'] = $type;
         $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
 
@@ -4291,623 +2609,4 @@ class Customer extends MY_Controller
         echo json_encode($json_data);
     }
 
-    public function generate_qr_image($profile_id)
-    {
-        require_once APPPATH . 'libraries/qr_generator/QrCode.php';
-
-        $target_dir = "./uploads/customer_qr/";
-        
-        if(!file_exists($target_dir)) {
-            mkdir($target_dir, 0777, true);
-        }
-        
-        $qr_data  = base_url('/customer/preview/' . $profile_id);
-        $ecc      = 'M';                       
-        $size     = 3;
-        $filename = 'qr'.md5($qr_data.'|'.$ecc.'|'.$size).'.png'; 
-
-        $qrApi = new \Qr\QrCode();  
-        $qrApi->setFileName($target_dir . $filename);
-        $qrApi->setErrorCorrectionLevel($ecc);
-        $qrApi->setMatrixPointSize($size);
-        $qrApi->setQrData($qr_data);               
-        $qr_data = $qrApi->generateQR();
-
-        $profile_data = ['qr_img' => $filename];
-        $this->general->update_with_key_field($profile_data, $profile_id,'acs_profile','prof_id');
-    }
-
-    public function save_customer_headers(){
-        $input = $this->input->post();
-        $headers = array();
-        foreach( $input['headers'] as $key => $value ){
-            $headers[] = $key;
-        }
-        $get_company_settings = array(
-            'where' => array(
-                'company_id' => logged('company_id')
-            ),
-            'table' => 'customer_settings_headers',
-            'select' => '*',
-        );
-        $customer_settings = $this->general->get_data_with_param($get_company_settings);
-        if( $customer_settings ){
-            $data = ['headers' => serialize($headers)];
-            $this->general->update_with_key_field($data, logged('company_id'),'customer_settings_headers','company_id');
-        }else{
-            $data = [
-                'company_id' => logged('company_id'),
-                'headers' => serialize($headers)
-            ];
-            $this->general->add_($data, 'customer_settings_headers');
-        }
-
-        $json_data = ['is_success' => 1];
-        echo json_encode($json_data);
-    }
-
-    public function billing_errors(){
-        $billingErrors = $this->customer_ad_model->get_customer_billing_errors(logged('company_id'));
-        $this->page_data['billingErrors'] = $billingErrors;
-        $this->load->view('customer/billing_error/list', $this->page_data);
-    }
-
-    public function ajax_load_company_billing_credit_card_details(){
-        $post = $this->input->post();
-        $billing_id = $post['billing_id'];
-        $billing = $this->customer_ad_model->get_company_billing_error(logged('company_id'), $billing_id);
-        // if( $billing ){
-        //     $date_year = explode("/", $billing->credit_card_exp);
-
-        //     $this->page_data['cc_date_year'] = $date_year;
-        //     $this->page_data['billing'] = $billing;
-        //     $this->load->view('customer/billing_error/ajax_credit_card_details', $this->page_data);
-            
-        // }else{
-        //     echo "<div class='alert alert-danger'>Cannot find record</div>";
-        // }        
-
-        $date_year = explode("/", $billing->credit_card_exp);
-
-        $this->page_data['cc_date_year'] = $date_year;
-        $this->page_data['billing'] = $billing;
-        $this->load->view('v2/pages/customer/load_credit_card_details', $this->page_data);
-    }
-
-    public function ajax_update_billing_credit_card_details(){
-        $is_success = 0;
-        $msg        = '';
-        $post       = $this->input->post();
-
-        $billing     = $this->customer_ad_model->get_company_billing_error(logged('company_id'), $post['bid']);
-        $cc_exp_date = $post['exp_month'] . date("y", strtotime("01-01-" . $post['exp_year']));
-        
-        $data_cc = [
-            'card_number' => $post['card_number'],
-            'exp_date' => $cc_exp_date,
-            'cvc' => $post['cvc'],
-            'ssl_amount' => 0,
-            'ssl_first_name' => $billing->card_fname,
-            'ssl_last_name' => $billing->card_lname,
-            'ssl_address' => $billing->card_address . ' ' . $billing->city . ' ' . $billing->state,
-            'ssl_zip' => $billing->zip
-        ];
-        $is_valid = $this->converge_check_cc_details_valid($data_cc);
-        if( $is_valid['is_success'] > 0 ){
-            $is_success = 1;
-            //Update cc
-            $billing_data = [
-                'credit_card_num' => $post['card_number'],
-                'credit_card_exp' => $post['exp_month'] . "/" . $post['exp_year'],
-                'credit_card_exp_mm_yyyy' => $post['cvc'],
-                'is_with_error' => 0,
-                'error_message' => '',
-                'error_type' => '',
-                'error_date' => ''
-            ];
-            $this->general->update_with_key_field($billing_data, $billing->bill_id, 'acs_billing', 'bill_id');
-        }else{
-            $msg = $is_valid['msg'];
-        }
-
-        $json_data = ['is_success' => $is_success, 'msg' => $msg];
-
-        echo json_encode($json_data);
-    }
-
-    public function customer_subscriptions()
-    {
-        $this->page_data['page']->title = 'Customer Subscriptions';
-        $this->page_data['page']->parent = 'Customers';
-        
-        // $this->load->view('customer/subscription_list', $this->page_data);
-        $this->load->view('v2/pages/customer/subscription_list', $this->page_data);
-    }
-
-    public function ajax_load_active_subscriptions()
-    {
-        $this->load->model('Customer_advance_model');
-        
-        $company_id    = logged('company_id');
-        $activeSubscriptions = $this->Customer_advance_model->get_all_active_subscription_by_company_id($company_id);        
-        $this->page_data['activeSubscriptions'] = $activeSubscriptions;
-        // $this->load->view('customer/ajax_load_active_subscriptions', $this->page_data);
-        $this->load->view('v2/pages/customer/load_active_subscriptions', $this->page_data);
-    }
-
-    public function ajax_load_completed_subscriptions()
-    {
-        $this->load->model('Customer_advance_model');
-        
-        $company_id    = logged('company_id');
-        $completedSubscriptions = $this->Customer_advance_model->get_all_completed_subscription_by_company_id($company_id);        
-        $this->page_data['completedSubscriptions'] = $completedSubscriptions;
-        // $this->load->view('customer/ajax_load_completed_subscriptions', $this->page_data);
-        $this->load->view('v2/pages/customer/load_completed_subscriptions', $this->page_data);
-    }
-
-    public function ajax_load_billing_error_subscriptions()
-    {
-        $this->load->model('Customer_advance_model');
-        
-        $company_id    = logged('company_id');
-        $errorSubscriptions = $this->Customer_advance_model->get_all_billing_errors_by_company_id($company_id);        
-        $this->page_data['errorSubscriptions'] = $errorSubscriptions;
-        // $this->load->view('customer/ajax_load_billing_error_subscriptions', $this->page_data);
-        $this->load->view('v2/pages/customer/load_biller_error_subscriptions', $this->page_data);
-    }
-
-    public function ajax_load_subscription_list_counter(){
-        $this->load->model('Customer_advance_model');
-
-        $company_id = logged('company_id');
-        $activeSubscriptions    = $this->Customer_advance_model->get_all_active_subscription_by_company_id($company_id);    
-        $completedSubscriptions = $this->Customer_advance_model->get_all_completed_subscription_by_company_id($company_id);
-        $errorSubscriptions     = $this->Customer_advance_model->get_all_billing_errors_by_company_id($company_id);    
-
-        $json_data = [
-            'total_active' => count($activeSubscriptions),
-            'total_completed' => count($completedSubscriptions),
-            'total_billing_errors' => count($errorSubscriptions)
-        ];
-
-        echo json_encode($json_data);
-    }
-
-    public function ajax_load_subscription_payment_history()
-    {
-        $this->load->model('Customer_advance_model');
-
-        $post = $this->input->post();
-        
-        $paymentHistory = $this->Customer_advance_model->get_all_subscription_payments($post['customer_id']);        
-        $this->page_data['paymentHistory'] = $paymentHistory;
-        // $this->load->view('customer/ajax_load_subscription_payment_history', $this->page_data);
-        $this->load->view('v2/pages/customer/load_subscription_payment_history', $this->page_data);
-    }
-
-    public function settings_sales_area()
-    {
-        $this->page_data['page']->title = 'Sales Area';
-        $this->page_data['page']->parent = 'Sales';
-
-        $this->load->library('wizardlib');
-        $this->hasAccessModule(9); 
-
-        $user_id = logged('id');
-
-        // set a global data for customer profile id
-        $this->page_data['customer_profile_id'] = $user_id;
-
-        if(isset($userid) || !empty($userid)){
-            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
-            $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
-        }
-
-        $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE,"","","ac_salesarea","sa_id");
-
-        $this->load->view('v2/pages/customer/settings_sales_area', $this->page_data);
-    }
-
-    public function settings_lead_source()
-    {
-        $this->page_data['page']->title = 'Lead Source';
-        $this->page_data['page']->parent = 'Sales';
-
-        $this->load->library('wizardlib');
-        $this->hasAccessModule(9); 
-
-        $user_id = logged('id');
-
-        // set a global data for customer profile id
-        $this->page_data['customer_profile_id'] = $user_id;
-
-        if(isset($userid) || !empty($userid)){
-            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
-            $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
-        }
-
-        $this->page_data['lead_source'] = $this->customer_ad_model->get_all(FALSE,"","","ac_leadsource","ls_id");
-        
-        $this->load->view('v2/pages/customer/settings_lead_source', $this->page_data);
-    }
-
-    public function settings_lead_types()
-    {
-        $this->page_data['page']->title = 'Lead Types';
-        $this->page_data['page']->parent = 'Sales';
-
-        $this->load->library('wizardlib');
-        $this->hasAccessModule(9); 
-
-        $user_id = logged('id');
-
-        // set a global data for customer profile id
-        $this->page_data['customer_profile_id'] = $user_id;
-
-        if(isset($userid) || !empty($userid)){
-            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
-            $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
-        }
-
-        $this->page_data['lead_types'] = $this->customer_ad_model->get_all(FALSE,"","","ac_leadtypes","lead_id");
-
-        $this->load->view('v2/pages/customer/settings_lead_types', $this->page_data);
-    }
-
-    public function settings_rate_plans()
-    {
-        $this->page_data['page']->title = 'Rate Plans';
-        $this->page_data['page']->parent = 'Sales';
-
-        $this->load->library('wizardlib');
-        $this->hasAccessModule(9); 
-
-        $user_id = logged('id');
-
-        // set a global data for customer profile id
-        $this->page_data['customer_profile_id'] = $user_id;
-
-        if(isset($userid) || !empty($userid)){
-            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
-            $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
-        }
-
-        $this->page_data['rate_plans'] = $this->customer_ad_model->get_all(FALSE,"","","ac_rateplan","id");
-        
-        $this->load->view('v2/pages/customer/settings_rate_plans', $this->page_data);
-    }
-
-    public function settings_activation_fee()
-    {
-        $this->page_data['page']->title = 'Activation Fee';
-        $this->page_data['page']->parent = 'Sales';
-
-        $this->load->library('wizardlib');
-        $this->hasAccessModule(9); 
-
-        $user_id = logged('id');
-
-        // set a global data for customer profile id
-        $this->page_data['customer_profile_id'] = $user_id;
-
-        if(isset($userid) || !empty($userid)){
-            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
-            $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
-        }
-
-        // get activation fee
-        $activation_fee_query = array(
-            'table' => 'ac_activationfee',
-            'order' => array(
-                'order_by' => 'id',
-            ),
-            'select' => '*',
-        );
-        $this->page_data['activation_fee'] = $this->general->get_data_with_param($activation_fee_query);
-
-        $this->load->view('v2/pages/customer/settings_activation_fee', $this->page_data);
-    }
-
-    public function settings_system_package()
-    {
-        $this->page_data['page']->title = 'System Package Type';
-        $this->page_data['page']->parent = 'Sales';
-
-        $this->load->library('wizardlib');
-        $this->hasAccessModule(9); 
-
-        $user_id = logged('id');
-
-        // set a global data for customer profile id
-        $this->page_data['customer_profile_id'] = $user_id;
-
-        if(isset($userid) || !empty($userid)){
-            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
-            $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
-        }
-
-        $spt_query = array(
-            'table' => 'ac_system_package_type',
-            'order' => array(
-                'order_by' => 'id',
-            ),
-            'select' => '*',
-        );
-        $this->page_data['system_package_type'] = $this->general->get_data_with_param($spt_query);
-
-        $this->load->view('v2/pages/customer/settings_system_package', $this->page_data);
-    }
-
-    public function settings_headers()
-    {
-        $this->page_data['page']->title = 'Headers';
-        $this->page_data['page']->parent = 'Sales';
-
-        $this->load->library('wizardlib');
-        $this->hasAccessModule(9); 
-
-        $user_id = logged('id');
-
-        // set a global data for customer profile id
-        $this->page_data['customer_profile_id'] = $user_id;
-
-        if(isset($userid) || !empty($userid)){
-            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
-            $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
-        }
-
-        $this->page_data['customer_list_headers'] = customer_list_headers();
-        $this->page_data['profiles'] = $this->customer_ad_model->get_customer_data_settings($user_id);
-
-        $get_company_settings = array(
-            'where' => array(
-                'company_id' => logged('company_id')
-            ),
-            'table' => 'customer_settings_headers',
-            'select' => '*',
-        );
-        $customer_settings = $this->general->get_data_with_param($get_company_settings);
-        $headers = unserialize($customer_settings[0]->headers);
-        $this->page_data['customer_tbl_headers'] = $headers;
-
-        $this->load->view('v2/pages/customer/settings_headers', $this->page_data);
-    }
-    
-    public function ajax_use_quick_note()
-    {
-        $this->load->model('QuickNote_model');
-
-        $company_id    = logged('company_id');
-        $post = $this->input->post();
-
-        $quickNote  = $this->QuickNote_model->getById($post['qnid']);
-        $quickNotes = $this->QuickNote_model->getAllByCompanyId($company_id);
-
-        $this->page_data['quickNote'] = $quickNote;
-        $this->page_data['quickNotes'] = $quickNotes;
-        $this->load->view('customer/ajax_load_quick_note', $this->page_data);
-    }
-
-    public function ajax_send_message()
-    {
-        $this->load->model('CustomerMessages_model');
-        $this->load->model('AcsProfile_model');
-        
-        $is_success = 0;
-        $msg = '';
-
-        $user_id = logged('id');
-        $post    = $this->input->post();
-
-        if( $post['message_subject'] != '' && $post['message_body'] != '' && $post['cid'] > 0 ){
-            $customer = $this->AcsProfile_model->getByProfId($post['cid']);
-            if( $customer ){
-                $data = [
-                    'prof_id' => $customer->prof_id,
-                    'customer_email' => $customer->email,
-                    'date_sent' => date("Y-m-d"),
-                    'subject' => $post['message_subject'],
-                    'message' => $post['message_body'],
-                    'is_sent' => 0,
-                    'date_created' => date("Y-m-d H:i:s")
-                ];
-
-                $last_id = $this->CustomerMessages_model->create($data);
-
-                //Send mail
-                $body    = $post['message_body'];
-                $attachment = '';
-
-                $subject = 'nSmarTrac: ' . $post['message_subject'];
-                $to      = $customer->email;
-
-                $data_email = [
-                    'subject' => $subject, 
-                    'body' => $body,
-                    'to' => $to,
-                    'cc' => '',
-                    'bcc' => '',
-                    'attachment' => $attachment
-                ];
-
-                $isSent = sendEmail($data_email);
-                if( $isSent['is_valid'] ){
-                    $cus_data = ['is_sent' => 1];
-                    $this->CustomerMessages_model->update($last_id, $cus_data);
-
-                    $is_success = 1;
-                }ELSE{
-                    $msg = $isSent['err_msg'] ;
-                }
-            }else{
-                $msg = 'Cannot find customer';
-            }
-        }else{
-            $msg = 'Cannot save data';
-        }
-
-        $json_data = ['is_success' => $is_success, 'msg' => $msg];
-        echo json_encode($json_data);        
-    }
-
-    public function ajax_delete_customer_message()
-    {
-        $this->load->model('CustomerMessages_model');
-
-        $is_success = 0;
-        $msg    = '';
-
-        $company_id = logged('company_id');
-        $post = $this->input->post(); 
-
-        $customerMessage = $this->CustomerMessages_model->getById($post['mid']);
-        if( $customerMessage ){
-            if( $customerMessage->company_id == $company_id  ){
-                $this->CustomerMessages_model->deleteById($customerMessage->id);
-                $is_success = 1;
-                $msg = 'Record deleted';
-            }else{
-                $msg = 'Cannot find record';    
-            }
-        }else{
-            $msg = 'Cannot find record';
-        }
-
-        $json_data = [
-            'is_success' => $is_success,
-            'msg' => $msg
-        ];
-
-        echo json_encode($json_data);
-    }
-
-    public function ajax_welcome_email_form()
-    {
-        $post = $this->input->post(); 
-
-        $customer = $this->customer_ad_model->get_data_by_id('prof_id',$post['cid'],"acs_profile");
-        $this->page_data['customer'] = $customer;
-        $this->load->view('customer/ajax_welcome_email_form', $this->page_data);
-    }
-
-    public function ajax_send_welcome_email()
-    {
-        $this->load->model('AcsProfile_model');
-        
-        $is_success = 0;
-        $msg = '';
-
-        $user_id = logged('id');
-        $post    = $this->input->post();
-
-        if( $post['message_subject'] != '' && $post['message_body'] != '' && $post['cid'] > 0 ){
-            $customer = $this->AcsProfile_model->getByProfId($post['cid']);
-            if( $customer ){
-
-                //Send mail
-                $body    = $post['message_body'];
-                $attachment = '';
-
-                $subject = 'nSmarTrac: ' . $post['message_subject'];
-                $to      = $customer->email;
-
-                $data_email = [
-                    'subject' => $subject, 
-                    'body' => $body,
-                    'to' => $to,
-                    'cc' => '',
-                    'bcc' => '',
-                    'attachment' => $attachment
-                ];
-
-                $isSent = sendEmail($data_email);
-                if( $isSent['is_valid'] ){
-                    customerAuditLog(logged('id'), $customer->prof_id, $customer->prof_id, 'Customer', 'Sent welcome email to ' . $customer->email);
-                    $is_success = 1;
-                }ELSE{
-                    $msg = $isSent['err_msg'] ;
-                }
-            }else{
-                $msg = 'Cannot find customer';
-            }
-        }else{
-            $msg = 'Cannot save data';
-        }
-
-        $json_data = ['is_success' => $is_success, 'msg' => $msg];
-        echo json_encode($json_data);        
-    }
-
-    public function ajax_update_customer_dispute()
-    {
-        $this->load->model('CustomerDispute_model');
-        $this->load->model('CompanyReason_model');
-        $this->load->model('CompanyDisputeInstruction_model');
-        $this->load->model('CustomerDisputeItem_model');
-        
-        $is_success = false;
-        $msg = '';
-
-        $company_id = logged('company_id');
-        $post       = $this->input->post();
-
-        $dispute = $this->CustomerDispute_model->getById($post['did']);
-
-        if( $dispute && $dispute->company_id == $company_id ){
-            if( !empty($post['creditedBureau']) ){                
-                $data_dispute = [
-                    'furnisher_id' => $post['furnisher_id'],
-                    'date_dispute' => $post['dispute_date'],                 
-                    'company_reason_id' => $post['dispute_reason'],
-                    'instruction' => $post['dispute_instruction'],
-                    'date_modified' => date("Y-m-d H:i:s")
-                ];
-
-                $this->CustomerDispute_model->update($dispute->id, $data_dispute);
-                $this->CustomerDisputeItem_model->deleteByCustomerDisputeId($dispute->id);
-
-                foreach( $post['creditedBureau'] as $key => $bureauId ){
-
-                    $account_number = '';
-                    if( isset($post['cb_account_number'][$bureauId]) ){
-                        $account_number = $post['cb_account_number'][$bureauId];
-                    }
-
-                    //Other fields
-                    $status = '';
-                    $other_fields = array();
-                    foreach($post['otherInfo']['individual'][$bureauId] as $field => $value){
-                        if( $field == 'status' ){
-                            $status = $value;
-                        }
-                        $other_fields[$field] = ['field' => $field, 'value' => $value];
-                    }
-
-                    $other_fields = serialize($other_fields);
-
-                    $data_dispute_item = [                            
-                        'customer_dispute_id' => $dispute->id,
-                        'credit_bureau_id' => $bureauId,
-                        'account_number`' => $account_number,
-                        'status' => $status,
-                        'other_fields' => $other_fields,
-                        'date_created' => date("Y-m-d H:i:s"),
-                        'date_modified' => date("Y-m-d H:i:s")
-                    ];
-
-                    $companyDisputeItems = $this->CustomerDisputeItem_model->create($data_dispute_item);
-                }
-
-                $is_success = true;
-            }else{
-                $msg = 'Please select credit bureau';
-            }
-        }else{
-            $msg = 'Cannot find data';
-        }
-
-        $json_data = ['is_success' => $is_success, 'msg' => $msg];
-        echo json_encode($json_data);     
-    }
 }

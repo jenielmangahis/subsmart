@@ -17,37 +17,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     #attachments_table .btn-group .btn {
         padding: 10px;
     }
-    #myTabContent .action-bar ul li a:after {
-        width: 0;
-    }
-    #myTabContent .action-bar ul li a {
-    font-size: 20px;
-    }
-    #myTabContent .action-bar ul li {
-        margin-right: 5px;
-    }
-    #myTabContent .action-bar ul li #cancel-edit-btn {
-        color: #6B6C72;
-        border: 0;
-    }
-    #myTabContent .action-bar ul li #cancel-edit-btn:hover {
-        background: transparent;
-    }
-    .btn-transparent:hover {
-        background: #d4d7dc !important;
-        border-color: #6B6C72 !important;
-    }
-    .btn-transparent {
-        color: #6B6C72 !important;
-    }
-    .btn-transparent:focus {
-        border-color: #6B6C72 !important;
-    }
-    .dropdown-menu .dropdown-item.disabled {
-        cursor: default;
-        opacity: 0.50;
-        pointer-events: none;
-    }
 </style>
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">
@@ -79,16 +48,22 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <h6><a href="/accounting/lists" class="text-info"><i class="fa fa-chevron-left"></i> All Lists</a></h6>
                                 </div>
                                 <div class="col-sm-12">
-                                    <div class="attachments-container">
-                                        <label for="attachment" style="margin-right: 15px"><i class="fa fa-paperclip"></i>&nbsp;Attachment</label> 
-                                        <span>Maximum size: 20MB</span>
-                                        <div id="attachments" class="dropzone" style="border: 1px solid #e1e2e3;background: #ffffff;width: 100%;">
-                                            <div class="dz-message" style="margin: 20px;border">
-                                                <span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
-                                                <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
+                                    <form id="attachments-form">
+                                        <div class="attachments attachments">
+                                            <div class="attachments-header">
+                                                <button type="button" onclick="document.getElementById('attachments').click();">Attachments</button>
+                                                <span>Maximum size: 20MB</span>
                                             </div>
+                                            <div class="attachments-list">
+                                                <div class="attachments-container border" onclick="document.getElementById('attachments').click();">
+                                                    <div class="attachments-container-label">
+                                                        Drag/Drop files here or click the icon
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <input type="file" name="attachments[]" id="attachments" class="hide" multiple="multiple">
                                         </div>
-                                    </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -107,32 +82,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                         <div class="tab-content" id="myTabContent">
                             <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1">
-                                <form class="d-none" id="export-form" method="post" action="/accounting/attachments/export"></form>
                                 <div class="row my-3">
-                                    <div class="col-md-6">
-                                        <div class="row">
-                                            <div class="col-sm-3 d-flex align-items-end justify-content-center">
-                                                <div class="arrow-level-down m-0">
-                                                    <i class="fa fa-level-down fa-flip-horizontal fa-2x icon-arrow"></i>
-                                                </div>
-                                                <div class="dropdown d-inline-block">
-                                                    <button class="btn btn-transparent" type="button" id="attachment-actions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                        Batch actions&nbsp;&nbsp;<i class="fa fa-caret-down"></i>
-                                                    </button>
-
-                                                    <div class="dropdown-menu" aria-labelledby="attachment-actions">
-                                                        <a href="#" class="dropdown-item disabled" id="export-attachments">Export</a>
-                                                        <!-- <a href="#" class="dropdown-item disabled" id="create-invoice">Create invoice</a> -->
-                                                        <a href="#" class="dropdown-item disabled" id="create-expense">Create expense</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="action-bar h-100 d-flex align-items-center">
-                                            <ul class="ml-auto">
-                                                <li><a href="#" id="print-attachments"><i class="fa fa-print"></i></a></li>
+									 <div class="col-md-12">
+                                        <div class="action-bar">
+                                            <ul>
+                                                <li><a href="#" onclick = "window.print()"><i class="fa fa-print"></i></a></li>
                                                 <li>
                                                     <div class="dropdown">
                                                         <a class="hide-toggle dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -140,18 +94,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         </a>
                                                         <div class="dropdown-menu p-3" aria-labelledby="dropdownMenuLink">
                                                             <p class="m-0">Columns</p>
-                                                            <div class="checkbox checkbox-sec d-block my-2">
-                                                                <input type="checkbox" id="col_size" checked="checked" onchange="col(this)">
-                                                                <label for="col_size">Size</label>
-                                                            </div>
-                                                            <div class="checkbox checkbox-sec d-block my-2">
-                                                                <input type="checkbox" id="col_uploaded" checked="checked" onchange="col(this)">
-                                                                <label for="col_uploaded">Uploaded</label>
-                                                            </div>
-                                                            <div class="checkbox checkbox-sec d-block my-2">
-                                                                <input type="checkbox" id="col_note" checked="checked" onchange="col(this)">
-                                                                <label for="col_note">Notes</label>
-                                                            </div>
+                                                            <p class="m-0"><input type="checkbox" id="col_size" checked="checked" onchange="col(this)"> Size</p>
+                                                            <p class="m-0"><input type="checkbox" id="col_uploaded" checked="checked" onchange="col(this)"> Uploaded</p>
+                                                            <p class="m-0"><input type="checkbox" id="col_note" checked="checked" onchange="col(this)"> Notes</p>
                                                             <p class="m-0">Rows</p>
                                                             <p class="m-0">
                                                                 <select name="table_rows" id="table_rows" class="form-control">
@@ -172,14 +117,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <table id="attachments_table" class="table table-striped table-bordered" style="width:100%">
 									<thead>
                                         <tr>
-                                            <th width="4%">
-                                                <div class="d-flex justify-content-center">
-													<div class="checkbox checkbox-sec m-0">
-                                                        <input type="checkbox" id="select-all-attachments">
-														<label for="select-all-attachments" class="p-0" style="width: 24px; height: 24px"></label>
-													</div>
-												</div>
-                                            </th>
+                                            <th width="3%"></th>
                                             <th width="10%">THUMBNAIL</th>
                                             <th class='type'>TYPE</th>
                                             <th class='name'>NAME</th>

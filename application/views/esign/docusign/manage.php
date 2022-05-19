@@ -1,6 +1,5 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed');?>
 <?php include viewPath('includes/header');?>
-<script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/1.18.0/TweenMax.min.js"></script>
 
 <div class="wrapper docusignSent" role="wrapper">
     <?php include viewPath('includes/sidebars/docusign');?>
@@ -8,16 +7,6 @@
     <section class="container-fluid mt-3">
         <div class="card">
             <h1 class="title text-capitalize" id="currentView"></h1>
-
-            <div class="esignActionRequired alert alert-primary">
-              <div class="esignActionRequired__inner">
-                <i class="fa fa-info-circle esignActionRequired__icon"></i>
-                <a class="esignActionRequired__body" href="<?php echo base_url('eSign/manage?view=action_required') ?>">
-                  Your action is required for <span class="esignActionRequired__count">0</span> of your eSign documents.
-                </a>
-              </div>
-            </div>
-
             <table id="documentsTable" class="table table-hover table-bordered table-striped">
                 <thead>
                     <tr>
@@ -145,27 +134,5 @@
     </div>
   </div>
 </div>
-
-<script>
-window.addEventListener('DOMContentLoaded', async (event) => {
-  const urlParams = new URLSearchParams(window.location.search);
-  const view = urlParams.get("view");
-
-  if (view === "action_required") {
-    return;
-  }
-
-  const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
-  const response = await fetch(`${prefixURL}/DocuSign/apiGetActionRequired`);
-  const { data } = await response.json();
-
-  if (data.length === 0) return;
-
-  const $alert = document.querySelector(".esignActionRequired");
-  const $count = $alert.querySelector(".esignActionRequired__count");
-  $count.textContent = data.length;
-  $alert.classList.add("esignActionRequired--show");
-});
-</script>
 
 <?php include viewPath('includes/footer');?>

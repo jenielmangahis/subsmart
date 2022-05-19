@@ -7,7 +7,6 @@ class Color_Settings extends MY_Controller {
 
 		parent::__construct();
 		$this->checkLogin();
-        $this->hasAccessModule(8);
 
 		$this->load->model('ColorSettings_model');
 		$this->load->helper(array('form', 'url', 'hashids_helper'));

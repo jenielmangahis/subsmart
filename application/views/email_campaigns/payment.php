@@ -1,6 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
+<script src="https://js.stripe.com/v3/"></script>
 <style>
 .page-title {
   font-family: Sarabun, sans-serif !important;
@@ -273,24 +274,18 @@ $(function(){
                success: function(o)
                {
                   if( o.is_success ){
-                      Swal.fire({
-                          title: 'Update Successful!',
-                          text: 'Email Campaign was successfully activated',
-                          icon: 'success',
-                          showCancelButton: false,
-                          confirmButtonColor: '#32243d',
-                          cancelButtonColor: '#d33',
-                          confirmButtonText: 'Ok'
-                      }).then((result) => {
-                          if (result.value) {
-                              window.location.href= base_url + 'email_campaigns/payment_details';
-                          }
-                      });
+                      $('.form-msg').hide().html("<p class='alert alert-info'>"+o.msg+"</p>").fadeIn(500);
+                      $(".btn-automation-activate").html('<span class="spinner-border spinner-border-sm m-0"></span>  Redirecting to list');
+                      setTimeout(function() {
+                          location.href = base_url + "email_campaigns";
+                      }, 2500);
                   }else{
+                      $(".btn-automation-activate").html('Purchase');
+
                       Swal.fire({
                         icon: 'error',
-                        title: 'Cannot activate campaign.',
-                        text: o.msg
+                        title: o.msg,
+                        text: 'Cannot activate campaign.'
                       });
                   }
                }

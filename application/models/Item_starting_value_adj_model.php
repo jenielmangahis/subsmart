@@ -10,28 +10,6 @@ class Item_starting_value_adj_model extends MY_Model
     {
         parent::__construct();
     }
-
-    public function get_by_item_id($item_id)
-    {
-        $this->db->where('item_id', $item_id);
-        $query = $this->db->get($this->table);
-        return $query->row();
-    }
-
-    public function update($id, $data)
-    {
-        $this->db->where('id', $id);
-        $query = $this->db->update($this->table, $data);
-        return $query ? true : false;
-    }
-
-    public function get_by_id($id)
-    {
-        $this->db->where('company_id', logged('company_id'));
-        $this->db->where('id', $id);
-        $query = $this->db->get($this->table);
-        return $query->row();
-    }
 }
 
 /* End of file Item_starting_value_adj_model.php */

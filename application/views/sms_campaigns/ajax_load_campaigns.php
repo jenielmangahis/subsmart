@@ -6,7 +6,6 @@
                     <th>Campaign</th>
                     <th>Send To</th>
                     <th>Sent on</th>
-                    <th>Texts</th>
                     <th>Status</th>           
                     <th></th>            
                 </tr>
@@ -33,19 +32,16 @@
                                 }
                             ?>
                         </td>
-                        <td>0 - <a href="<?php echo base_url('sms_campaigns/view_logs/' . $sb->id) ?>" style="color:#259e57;">view log</a></td>
                         <td><?= $statusOptions[$sb->status]; ?></td>
                         <td>
                             <div class="dropdown dropdown-btn">
                                 <button class="btn btn-default dropdown-toggle" type="button" id="dropdown-edit" data-toggle="dropdown" aria-expanded="true">
                                     <span class="btn-label">Manage</span><span class="caret-holder"><span class="caret"></span></span>
                                 </button>
-                                <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit"> 
-                                	<?php if($sb->status != $status_draft){ ?>                                 
-                                    <li role="presentation">
-                                        <a role="menuitem" tabindex="-1" href="<?php echo base_url('sms_campaigns/view_campaign/' . $sb->id) ?>"><span class="fa fa-file-text-o icon"></span> View</a>
-                                    </li> 
-                                    <?php } ?>   
+                                <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">                            
+                                    <!-- <li role="presentation">
+                                        <a role="menuitem" tabindex="-1" href="<?php echo base_url('credit_notes/view/' . $sb->id) ?>"><span class="fa fa-file-text-o icon"></span> View</a>
+                                    </li> -->      
                                     <?php if($sb->status != 3){ ?>      
                                     <li role="presentation">
                                         <a role="menuitem" tabindex="-1" href="<?php echo base_url('sms_campaigns/edit_campaign/' . $sb->id) ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a>

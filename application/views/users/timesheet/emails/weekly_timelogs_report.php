@@ -5,10 +5,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
 <html lang="en">
 
 <head>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-        integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-        integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
     <style>
         article,
         aside,
@@ -30,14 +28,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
         .jumbotron {
             padding: 2rem 1rem;
             margin-bottom: 2rem;
-            background-color: #fff;
-            border-radius: .3rem;
-        }
-
-        .jumbotron .data-section {
             background-color: #e9ecef;
-            padding: 15px;
-            border-radius: 10px;
+            border-radius: .3rem;
         }
 
         article,
@@ -57,9 +49,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
             .jumbotron {
                 padding: 4rem 2rem;
             }
-
-            .nsmartrac-address {
-                font-size: 10px !important;
+            .nsmartrac-address{
+                font-size:10px!important;
             }
         }
 
@@ -127,8 +118,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
         .container {
             width: 100%;
-            padding-right: 0px;
-            padding-left: 0px;
+            padding-right: 15px;
+            padding-left: 15px;
             margin-right: auto;
             margin-left: auto;
         }
@@ -227,14 +218,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
             background-color: #0069d9;
             border-color: #0062cc;
         }
-
         .btn-success {
             color: #fff !important;
             background-color: #28a745;
             border-color: #28a745;
         }
-
-        .table {
+        .table{
             width: 100%;
         }
     </style>
@@ -246,48 +235,38 @@ defined('BASEPATH') or exit('No direct script access allowed');
         <section class="jumbotron text-center">
             <div class="container">
 
-                <?php
-                if ($has_logo) {
-                    ?>
+                <?php 
+                if($has_logo){ 
+                ?>
                 <p style="text-align: left;"><img width="100" src="cid:company_logo" alt="" style="width:100px;"></p>
                 <?php
-                } else {
-                    ?>
-                <h4 style="text-align:left;"><?=$business_name?>
-                </h4>
+                }else{
+                ?>
+                <h4 style="text-align:left;"><?=$business_name?></h4>
                 <?php
                 }
                 ?>
                 <h2 style="text-align:left;">Timesheet Report</h2>
-                <h3 style="text-align:left;"><?= date("M d", strtotime($date_from)) ?>
-                    - <?= date("d", strtotime($date_to))<date("d", strtotime($date_from))?date("M d", strtotime($date_to)):date("d", strtotime($date_to)) ?>
-                </h3>
-                <div class="data-section">
-                    <p class="lead text-muted" style="text-align: left; margin-top:20px;"><label
-                            style="padding-bottom: 10px;">Hi <?= $FName ?>,</label><br>Below you'll find the
-                        timesheet report you requested for your team at <?= $business_name ?> for the time period <?= date("M d", strtotime($date_from)) ?>
-                        - <?= date("d", strtotime($date_to))<date("d", strtotime($date_from))?date("M d", strtotime($date_to)):date("d", strtotime($date_to)) ?>.
-                    </p>
-                    <p>
-                        <a href="<?= base_url('/timesheet/timelogs/') . $file_info[0] ?>"
-                            class="btn btn-primary my-2">Download .CSV</a>
-                        <a href="<?= base_url('/timesheet/timelogs/') . $file_info[3] ?>"
-                            class="btn btn-primary my-2">Download .PDF</a>
-                    </p>
-                    <table class="table">
-                        <tbody>
-                            <thead>
-                                <tr style="font-weight: bold; border:solid 2px #E6E6E6;">
-                                    <th style="text-align:left;">Employee</th>
-                                    <th>Total Paid</th>
-                                    <th>Regular</th>
-                                    <th>OT</th>
-                                    <?php if ($est_wage_privacy == 1) {
-                    echo '<th>Est. Wages</th>';
-                }?>
-                                </tr>
-                            </thead>
-                            <?php
+                <h3 style="text-align:left;"><?= date("M d",strtotime($date_from)) ?> - <?= date("d",strtotime($date_to))<date("d",strtotime($date_from))?date("M d",strtotime($date_to)):date("d",strtotime($date_to)) ?></h3>
+                <p class="lead text-muted" style="text-align: left; margin-top:20px;"><label style="padding-bottom: 10px;">Hi <?= $FName ?>,</label><br>Below you'll find the timesheet report you requested for your team at <?= $business_name ?> for the time period <?= date("M d",strtotime($date_from)) ?> - <?= date("d",strtotime($date_to))<date("d",strtotime($date_from))?date("M d",strtotime($date_to)):date("d",strtotime($date_to)) ?>.</p>
+                <p>
+                    <a href="<?= base_url('/timesheet/timelogs/') . $file_info[0] ?>" class="btn btn-primary my-2">Download .CSV</a>
+                    <a href="<?= base_url('/timesheet/timelogs/') . $file_info[3] ?>" class="btn btn-primary my-2">Download .PDF</a>
+                </p>
+            <table class="table" >
+                <tbody>
+                    <thead>
+                        <tr style="font-weight: bold; border:solid 2px #E6E6E6;">
+                            <th style="text-align:left;">Employee</th>
+                            <th>Total Paid</th>
+                            <th>Regular</th>
+                            <th>OT</th>
+                            <?php if($est_wage_privacy == 1){
+                                echo '<th>Est. Wages</th>';
+                            }?>
+                        </tr>
+                    </thead>
+                    <?php
                     $timehseet_storage = $file_info[2];
                     $id_running;
                     $started = false;
@@ -308,11 +287,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     $overall_time_card_ctr = 0;
                     $overall_pto = 0;
                     for ($i = 0; $i < count($timehseet_storage); $i++) {
+
                         if ($id_running != $timehseet_storage[$i][0]) {
                             if (!$started) {
                                 $started = true;
                             } else {
-                                if ($est_wage_privacy == 1) {
+                                if($est_wage_privacy == 1){
                                     $est_wage_html = '<td >$' . $total_est_wage . '</td>';
                                 }
                                 $table .= '<tr style="border:solid 2px #E6E6E6;">
@@ -343,7 +323,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             $actual_vs_expected = $timehseet_storage[$i][10] == '' ?  8 - round($timehseet_storage[$i][18], 2) . "" : "0.00";
                         }
                         $regular_hours = ($timehseet_storage[$i][12] == '' ? 8 : $timehseet_storage[$i][12]);
-                        $paid_hours = ($timehseet_storage[$i][17] == 'Approved' ? $timehseet_storage[$i][18] : round($timehseet_storage[$i][18], 2));
+                        $paid_hours = ($timehseet_storage[$i][17] == 'Approved' ? $timehseet_storage[$i][18] : round($regular_hours, 2));
 
                         $est_wage = 0;
                         if ($timehseet_storage[$i][21] == "hourly") {
@@ -368,7 +348,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         $overall_total_est_wage += $est_wage;
                         $overall_time_card_ctr++;
                         if ($i == count($timehseet_storage) - 1) {
-                            if ($est_wage_privacy == 1) {
+
+                            if($est_wage_privacy == 1){
                                 $est_wage_html = '<td >$' . $total_est_wage . '</td>';
                             }
                             $table .= '<tr style="border:solid 2px #E6E6E6;">
@@ -380,63 +361,45 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 </tr>';
                         }
                     }
-                    if (count($timehseet_storage) == 0) {
-                        $col_span =9;
-                        if ($est_wage_privacy == 1) {
-                            $col_span = 10;
-                        }
-                        $table .= '<tr style="background-color:#F2F2F2; font-weight:500;">
-                                                    <td colspan="'.$col_span.'"> No timelogs recorded.</td>
-                                                </tr>';
-                    }
                     echo $table;
                     ?>
-                        </tbody>
-                    </table>
-
-                    <div style="text-align:left; font-weight: bold; margin-top:20px;">Total Work Hours - <?= $overall_total_paid ?> hours</div>
-                    <table class="table">
-                        <thead>
-                            <tr style="font-weight: bold;  border:none;">
-                                <th>Regular</th>
-                                <th>OT</th>
-                                <?php if ($est_wage_privacy == 1) {
-                        echo '<th>Est. Wages</th>';
-                    }?>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr style="font-weight: bold; border:none;">
-                                <td style="color:#6c757d"><?= $overall_total_regular ?> hours</td>
-                                <td style="color:#6c757d"><?= $overall_total_overtime ?>
-                                </td>
-                                <?php if ($est_wage_privacy == 1) {
-                        echo '<td style="color:#6c757d">'.$overall_total_est_wage.'</td>';
-                    }?>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <p style="margin-top:20px;">
-                        <a href="<?= base_url('/dashboard')?>"
-                            class="btn btn-success my-2">VISIT MY ACCOUNT</a>
-                    </p>
-                    <p class="lead text-muted" style="text-align: left; margin-top:20px;">
-                        <label style="padding-bottom: 5px;">Thanks,<br><br> nSmarTrac Team<br>You are receiving this
-                            email
-                            because you signed up for nSmarTrac. If you'd rather not receive this type of email, please
-                            click here to <a
-                                href="<?=base_url('/timesheet/settings')?>">unsubscribe</a>
-
-                    </p>
-                    <p class="lead text-muted nsmartrac-address"
-                        style="text-align:left;font-size: 10px!important;color: #6C757D!important;">
-                        6866 Pine Forest Road Suite C &#8226; Pensacola, Florida 32526
-                    </p>
-                    <p style="text-align: left; margin-top:20px;"><img width="100" src="cid:logo_2u" alt=""
-                            style="width:100px;"></p>
-                </div>
+                </tbody>
+            </table>
+            <div style="text-align:left; font-weight: bold; margin-top:20px;">Total Work Hours - <?= $overall_total_paid ?> hours</div>
+            <table class="table">
+                    <thead>
+                        <tr style="font-weight: bold;  border:none;">
+                            <th>Regular</th>
+                            <th>OT</th>
+                            <?php if($est_wage_privacy == 1){
+                                echo '<th>Est. Wages</th>';
+                            }?>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="font-weight: bold; border:none;">
+                            <td style="color:#6c757d"><?= $overall_total_regular ?> hours</td>
+                            <td style="color:#6c757d"><?= $overall_total_overtime ?></td>
+                            <?php if($est_wage_privacy == 1){
+                                echo '<td style="color:#6c757d">'.$overall_total_est_wage.'</td>';
+                            }?>
+                        </tr>
+                    </tbody>
+                </table>
+                <p style="margin-top:20px;">
+                    <a href="<?= base_url('/dashboard')?>" class="btn btn-success my-2">VISIT MY ACCOUNT</a>
+                </p>
+                <p class="lead text-muted" style="text-align: left; margin-top:20px;">
+                    <label style="padding-bottom: 5px;">Thanks,<br><br> nSmarTrac Team<br>You are receiving this email because you signed up for nSmarTrac. If you'd rather not receive this type of email, please click here to <a href="<?=base_url('/timesheet/settings')?>">unsubscribe</a>
+                
+                </p>
+                <p class="lead text-muted nsmartrac-address" style="text-align:left;font-size: 10px!important;color: #6C757D!important;">
+                    6866 Pine Forest Road Suite C &#8226; Pensacola, Florida 32526
+                </p>
+                <p style="text-align: left; margin-top:20px;"><img width="100" src="cid:logo_2u" alt="" style="width:100px;"></p>
+                    
             </div>
-        </section>
+        </section>  
     </main>
 </body>
 

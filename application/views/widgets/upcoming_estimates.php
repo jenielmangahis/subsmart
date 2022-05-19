@@ -43,7 +43,8 @@
                                             <img src="<?= base_url() ?>uploads/users/default.png" alt="user" class="rounded-circle nav-user-img vertical-center">
                                         </td>
                                         <td>
-                                            <b style="font-weight:700; margin:0;"><?php echo strtoupper('EST-00001'); ?></b>
+                                            <h6 style="font-weight:700; margin:0;"><?php echo strtoupper('EST-00001'); ?></h6>
+                                            <p style="color: #9d9e9d;font-weight: 700; margin-bottom: 0; "><?php echo strtoupper('Tommy Nguyen'); ?></p>
                                             <p style="color: #9d9e9d; "><?php echo ucwords(strtolower($jb->job_location)); ?></p>
                                         </td>
                                         <td class="text-center">

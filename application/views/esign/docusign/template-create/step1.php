@@ -20,7 +20,7 @@
     <div id="templateDocument">
         <h2 class="form__title">Add Document</h2>
         <div class="form-group">
-            <div class="fileupload" id="sortable">
+            <div class="fileupload">
                 <div class="custome-fileup">
                     <div class="upload-btn-wrapper">
                         <button type="button" class="btn">
@@ -54,7 +54,7 @@
 
         <div class="form-group">
             <label for="subject">Subject</label>
-            <input class="form-control" id="subject" placeholder="Please eSign:" maxlength="100">
+            <input class="form-control" id="subject" placeholder="Please Docusign:" maxlength="100">
             <small class="form-text text-muted d-none">Characters remaining: <span class="limit">100</span></small>
         </div>
 
@@ -66,17 +66,6 @@
     </div>
 
     <div class="d-flex justify-content-end">
-        <a id="discardChanges" href="<?php echo base_url('vault/mylibrary') ?>" class="btn btn-secondary align-items-center mr-1 d-none">
-            Discard Changes
-        </a>
-
-        <button id="saveandclose" type="button" class="btn btn-secondary align-items-center mr-1 d-none">
-            <div class="spinner-border spinner-border-sm mt-0 mr-1 d-none" role="status">
-                <span class="sr-only">Loading...</span>
-            </div>
-            <span class="text">Save And Close</span>
-        </button>
-
         <button type="submit" class="btn btn-primary d-flex align-items-center">
             <div class="spinner-border spinner-border-sm mt-0 mr-1 d-none" role="status">
                 <span class="sr-only">Loading...</span>
@@ -98,44 +87,4 @@
             <div class="modal-body d-flex flex-column"></div>
         </div>
     </div>
-</div>
-
-<div class="modal fade" id="deleteRecipient" tabindex="-1" role="dialog" aria-labelledby="deleteRecipientLabel" aria-hidden="true">
-	<div class="modal-dialog modal-lg" role="document">
-		<div class="modal-content">
-		<div class="modal-header">
-			<h5 class="modal-title" id="deleteRecipientLabel">Delete Recipient</h5>
-			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-			<span aria-hidden="true">&times;</span>
-			</button>
-		</div>
-		<div class="modal-body">
-         <p>This recipient has <span class="total-fields">0</span> assigned fields. By deleting this recipient, you will also delete their fields. Would you like to delete the recipient and fields?</p>
-		</div>
-		<div class="modal-footer">
-			<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-			<button type="button" class="btn btn-primary">Delete</button>
-		</div>
-		</div>
-	</div>
-</div>
-
-<div class="modal fade" id="deleteDocument" tabindex="-1" role="dialog" aria-labelledby="deleteDocumentLabel" aria-hidden="true">
-	<div class="modal-dialog modal-lg" role="document">
-		<div class="modal-content">
-		<div class="modal-header">
-			<h5 class="modal-title" id="deleteDocumentLabel">Delete Document</h5>
-			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-			<span aria-hidden="true">&times;</span>
-			</button>
-		</div>
-		<div class="modal-body">
-         <p>Are you sure you want to delete this document? All <span class="total-fields">0</span> fields will be lost.</p>
-		</div>
-		<div class="modal-footer">
-			<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-			<button type="button" class="btn btn-primary">Delete</button>
-		</div>
-		</div>
-	</div>
 </div>
