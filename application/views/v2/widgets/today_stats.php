@@ -40,13 +40,11 @@ endif;
                                         if(date("Y-m-d")==date("Y-m-d",strtotime($p->created_at))){
                                             $totalPayments += $p->amount;
                                         }
-                                        
                                     }
                                     foreach ($paymentInvoices as $PI) {
                                         if(date("Y-m-d")==date("Y-m-d",strtotime($PI->created_at))){
                                             $totalPayments += $PI->payment_amount;
                                         }
-                                        
                                     }
                                     echo $totalPayments;
                                     ?></h3>
@@ -118,7 +116,6 @@ endif;
                                         if(date("Y-m-d") == date("Y-m-d",strtotime($JD->date_issued))) {
                                             $totalJobsAdded++;
                                         }
-                                        
                                     }
                                 }
                                 echo $totalJobsAdded;
@@ -152,7 +149,6 @@ endif;
                             <h2>
                                 <?php
                                 $totalInvoices = 0;
-
                                 foreach ($upcomingInvoice as $UI) {
                                     if ($UI->status == "Due"){
                                         if(date("Y-m-d") == date("Y-m-d", strtotime($UI->due_date))){
@@ -161,9 +157,7 @@ endif;
                                         
                                     }
                                 }
-
                                 echo $totalInvoices;
-
                                 ?>
                             </h2>
                             <span>Collections</span>

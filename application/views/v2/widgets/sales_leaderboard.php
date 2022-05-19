@@ -30,15 +30,15 @@ endif;
     </div>
     <?php
 
-
     for ($x = 0; $x < count($salesLeaderboard); $x++) {
 
     ?>
+        <?php if(!empty($salesLeaderboard[$x][0])): ?>
         <div class="nsm-card-content wow">
             <div class="nsm-widget-table">
                 <div class="widget-item">
                     <div class="nsm-profile">
-                        <span><?php echo $salesLeaderboard[$x][0];  ?></span>
+                        <span><?= $salesLeaderboard[$x][0];  ?></span>
                     </div>
                     <div class="content">
                         <div class="details">
@@ -52,6 +52,7 @@ endif;
                 </div>
             </div>
         </div>
+        <?php endif; ?>
     <?php
 
 

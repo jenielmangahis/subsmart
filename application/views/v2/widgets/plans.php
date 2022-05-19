@@ -52,6 +52,19 @@
                     </div>
                 </div>
             </div>
+            <div class="col-12">
+                <div class="nsm-counter primary h-100">
+                    <div class="row h-100">
+                        <div class="col-12 col-md-4 order-sm-last mb-2 mb-md-0 d-flex justify-content-center justify-content-md-end align-items-center">
+                            <i class='bx bx-dollar-circle'></i>
+                        </div>
+                        <div class="col-12 col-md-8 mb-2 mb-md-0 d-flex flex-column align-items-center align-items-md-start justify-content-between">
+                            <span>Total $ Recurring Payment</span>
+                            <h2><?= $total_recurring_payment; ?></h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

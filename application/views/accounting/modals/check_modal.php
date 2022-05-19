@@ -574,11 +574,12 @@
                                     <?php foreach($linkableTransactions as $linkableTransac) : ?>
                                     <?php
                                     $title = $linkableTransac['type'];
+                                    $title .= $linkableTransac['number'] !== '' ? ' #' . $linkableTransac['number'] : '';
                                     ?>
                                     <div class="col-12">
                                         <div class="card border">
                                             <div class="card-body p-0">
-                                                <h5 class="card-title"><?=$linkableTransac['type']?></h5>
+                                                <h5 class="card-title"><?=$title?></h5>
                                                 <p class="card-subtitle"><?=$linkableTransac['formatted_date']?></p>
                                                 <p class="card-text">
                                                     <strong>Total</strong> <?=$linkableTransac['total']?>
