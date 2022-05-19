@@ -204,7 +204,8 @@ class Event_model extends MY_Model
 
     public function getAllInvoices()
     {
-        $query = $this->db->get('invoices');
+        $company_id = logged('company_id');
+        $query = $this->db->get_where('invoices', array('company_id' => $company_id));
 
         if ($query) {
             return $query->result();
@@ -214,7 +215,7 @@ class Event_model extends MY_Model
     }
     public function getAllPayment()
     {
-        $query = $this->db->get('accounting_receive_payment');
+        $query = $this->db->get_where('accounting_receive_payment', array('company_id' => logged('company_id')));
 
         if ($query) {
             return $query->result();
@@ -289,7 +290,7 @@ class Event_model extends MY_Model
         $salesItems = $this->getSalesLeaderboardItems(logged('company_id'));
 
         $z =1;
-        //  var_dump($salesItems[0]->prof_id);
+        //var_dump($salesItems[0]->prof_id);
         
         for ($k = 0; $k < count($salesItems);$k++) {
             $salesOffice = $this->getSalesinOffice($salesItems[$k]->prof_id);
@@ -329,7 +330,8 @@ class Event_model extends MY_Model
 
     public function getAllJobs()
     {
-        $query = $this->db->get('jobs');
+        $company_id = logged('company_id');
+        $query = $this->db->get_where('jobs', array('company_id' => $company_id));
 
         if ($query) {
             return $query->result();
@@ -340,7 +342,7 @@ class Event_model extends MY_Model
 
     public function getAllSales()
     {
-        $query = $this->db->get('accounting_sales_receipt');
+        $query = $this->db->get_where('accounting_sales_receipt', array('company_id' => logged('company_id')));
 
         if ($query) {
             return $query->result();

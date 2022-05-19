@@ -40,7 +40,8 @@
     var secMonth = month[today.getMonth()-1];
     var firstMonth = month[today.getMonth()-2];
 
-    <?php $currJobCount = 0; $prevJobCount = 0;  $previousJobCount=0; $prevMonthDate = date("Y-m-d", strtotime("-1 month")); $firstprevMonth = date("Y", strtotime("-60 days"));  foreach($jobsDone as $jD){ 
+    <?php $currJobCount = 0; $prevJobCount = 0;  $previousJobCount=0; $prevMonthDate = date("Y-m-d", strtotime("-1 month")); $firstprevMonth = date("Y", strtotime("-60 days"));  
+    foreach($jobsDone as $jD){ 
         if(date("M")==date("M",strtotime($jD->date_created)) && date("Y")==date("Y",strtotime($jD->date_created))){
             $currJobCount++;
         }else if(date("M", strtotime("-1 month"))==date("M",strtotime($jD->date_created)) && date("Y",strtotime($prevMonthDate))==date("Y",strtotime($jD->date_created))){
