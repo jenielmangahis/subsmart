@@ -464,7 +464,7 @@ if ($this->session->userdata('usertimezone') == null) {
                 </li>
                 <?php //$newtasks = getNewTasks();
                             ?>
-                <?php $newtasks = getTasks(); ?>
+                <?php $newtasks = getCompanyNewTasks(); ?>
                 <li title="Tasks" class="dropdown notification-list list-inline-item ml-auto"
                     style="vertical-align: middle;">
                     <div class="schedule-icon-container dropdown-toggle" data-toggle="dropdown" role="button"

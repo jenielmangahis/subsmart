@@ -91,6 +91,9 @@ class Taskhub extends MY_Controller {
 		$this->form_validation->set_rules('estimated_date_complete', 'Estimated Date of Competion', 'trim|required');
 
 		if($this->form_validation->run() == false){
+			IF( $this->input->post('description') == '' ){
+				$this->page_data['error'] = 'Please specify task description';
+			}
 			$this->page_data['optionPriority'] = $this->taskhub_model->optionPriority();
 			$this->load->view('workcalender/taskhub/entry', $this->page_data);
 		} else {
@@ -213,34 +216,33 @@ class Taskhub extends MY_Controller {
 			}
 
 			if($process_successful){
-				if($this->taskhub_participants_model->trans_delete(array(), array('task_id' => trim($taskid)))){
-					$data_participants = array();
-					$participants = $this->input->post('participants');
-					if((!empty($participants)) && ($participants != '')){
-						$participants = explode(',', $participants);
-						foreach ($participants as $participant) {
-							$data_participant = array(
-								'task_id' => trim($taskid),
-								'user_id' => $participant,
-								'is_assigned' => 0
-							);
-
-							array_push($data_participants, $data_participant);
-						}
-
+				$this->taskhub_participants_model->deleteAllByTaskId(trim($taskid));
+				//$this->taskhub_participants_model->trans_delete(array(), array('task_id' => trim($taskid)))				
+				$data_participants = array();
+				$participants = $this->input->post('participants');
+				if((!empty($participants)) && ($participants != '')){
+					$participants = explode(',', $participants);
+					foreach ($participants as $participant) {
 						$data_participant = array(
 							'task_id' => trim($taskid),
-							'user_id' => $assigned_to,
-							'is_assigned' => 1
+							'user_id' => $participant,
+							'is_assigned' => 0
 						);
 
-						array_push($data_participants, $data_participant);
-
-						$this->taskhub_participants_model->trans_create($data_participants, true);
-					}
+						$this->taskhub_participants_model->create($data_participant);
+					}						
 				}
 
+				$data_assigned = [
+	                'task_id' => $taskid,
+	                'user_id' => $assigned_to,
+	                'is_assigned' => 1
+	            ];
+
+	            $this->taskhub_participants_model->create($data_assigned);
+
 				redirect('taskhub');
+
 			} else {
 				$this->page_data['error'] = 'Error creating task';
 				$this->load->view('workcalender/taskhub/entry', $this->page_data);
@@ -528,10 +530,18 @@ class Taskhub extends MY_Controller {
         $cid = logged('company_id');
         $uid = logged('id');
 
-        $is_success = 1;
+        $is_success = 0;
         $msg = '';
 
-        $this->Taskhub_model->completeAllTasksByCompanyId($cid);
+        $uncompletedTasks = $this->Taskhub_model->getAllNotCompletedTasksByCompanyId($cid);
+        if( count($uncompletedTasks) > 0 ){
+        	$this->Taskhub_model->completeAllTasksByCompanyId($cid);
+
+        	$is_success = 1;
+        	$msg = '';
+        }else{
+        	$msg = 'All tasks are already completed. No task to update.';
+        }
  
 		$json_data = ['is_success' => $is_success, 'msg' => $msg];
 

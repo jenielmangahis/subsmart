@@ -1359,6 +1359,33 @@ if (!function_exists('getTasks')){
     }
 
 }
+
+if (!function_exists('getCompanyNewTasks')){
+
+    function getCompanyNewTasks(){
+        $CI = &get_instance();
+        $company_id = logged('company_id');
+        $date_today = date("Y-m-d");
+
+        $sql = 'select '.
+               'a.task_id, '.
+               'a.subject, '.
+               'a.date_created, '.
+               //'DATE_FORMAT(a.estimated_date_complete,"%b %d, %Y %h:%i:%s") as estimated_date_complete_formatted, '.
+               //'DATE_FORMAT(a.date_created,"%b %d, %Y %h:%i:%s") as date_created_formatted, '.
+               'DATE_FORMAT(a.estimated_date_complete,"%b %d, %Y") as estimated_date_complete_formatted, '.
+               'DATE_FORMAT(a.date_created,"%b %d, %Y") as date_created_formatted '.
+               'from tasks a '.
+               ' where a.company_id = '. $company_id . 
+               ' AND DATE_FORMAT(a.date_created,"%Y-%m-%d")="' . $date_today . '"' .
+               ' AND a.status_id <> 6' .
+               ' order by a.date_created desc';
+
+        return $CI->db->query($sql)->result();
+    }
+
+}
+
 if (!function_exists('getAllTasks')){
 
     function getAllTasks(){

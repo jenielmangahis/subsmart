@@ -136,7 +136,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <div class="col-6">
                                             <div class="form-group">
                                                 <label for="assigned_to">Customer</label>                                                
-                                                <select name="customer_id" id="customer-id" class="form-control">
+                                                <select name="customer_id" id="customer-id" required="" class="form-control">
                                                     <?php if($customer){ ?>
                                                         <option value="<?= $customer->prof_id; ?>"><?= $customer->first_name . ' ' . $customer->last_name; ?></option>
                                                     <?php } ?>
