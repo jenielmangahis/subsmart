@@ -10,6 +10,9 @@
             <span>TaskHub</span>
         </div>
         <div class="nsm-card-controls">
+            <a role="button" class="nsm-button btn-sm m-0 me-2 btn-complete-all" href="javascript:void(0);">
+                Clear All
+            </a>
             <a role="button" class="nsm-button btn-sm m-0 me-2 btn-task-list" href="javascript:void(0);">
                 See More
             </a>
@@ -32,6 +35,8 @@
 </div>
 
 <script type="text/javascript">
+    var enable_clear_all = false;
+    
     $(document).ready(function(){
         loadTasks();
     });
@@ -52,6 +57,48 @@
              }
           });
         }, 800);        
+    });
+
+    $(document).on('click', '.btn-complete-all', function(){
+        var url = base_url + 'taskhub/_mark_all_completed';
+
+        Swal.fire({
+            title: 'Clear All',
+            html: "This will mark all tasks as completed. Proceed with action?",
+            icon: 'question',
+            confirmButtonText: 'Proceed',
+            showCancelButton: true,
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    dataType: 'json',
+                    success: function(o) {
+                        if( o.is_success == 1 ){   
+                            Swal.fire({
+                                title: 'Update Successful!',
+                                text: "Taskhub Data Successfully Updated!",
+                                icon: 'success',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            }).then((result) => {
+                                //if (result.value) {
+                                    location.reload();
+                                //}
+                            });
+                        }else{
+                          Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            html: o.msg
+                          });
+                        }
+                    },
+                });
+            }
+        });
     });
 
     $(document).on('click','.btn-add-task',function(){

@@ -161,7 +161,7 @@ class Dashboard extends Widgets {
         $this->page_data['subs']=$this->event_model->getAllsubs();
         $this->page_data['payment']=$this->event_model->getAllPayment();
         $this->page_data['paymentInvoices']=$this->event_model->getAllPInvoices();
-        $this->page_data['jobsDone']=$this->event_model->getAllJobs();
+        $this->page_data['jobsDone']= $this->event_model->getAllJobs();
         $this->page_data['salesLeaderboard']=$this->event_model->getSalesLeaderboard();
         $this->page_data['sales']=$this->event_model->getAllSales();
         $this->page_data['acct_banks']=$this->accounting_bank_accounts->getAllBanks();
@@ -251,9 +251,23 @@ class Dashboard extends Widgets {
             'table' => 'news',
             'select' => '*',
         );
-        $this->page_data['news'] = $this->general->get_data_with_param($news_query);        
+        $this->page_data['news'] = $this->general->get_data_with_param($news_query);
+        $this->page_data['total_recurring_payment'] = $this->getTotalRecurringPayment();    
+
         // $this->load->view('dashboard', $this->page_data);
         $this->load->view('dashboard_v2', $this->page_data);
+    }
+
+    private function getTotalRecurringPayment()
+    {
+        $companyId = logged('company_id');
+        $this->db->select('SUM(billing.transaction_amount + 0) AS total', false);
+        $this->db->from('acs_billing billing');
+        $this->db->join('acs_profile profile', 'profile.prof_id = billing.fk_prof_id', 'left');
+        $this->db->where('profile.company_id', $companyId);
+        $queru = $this->db->get();
+        $result = $queru->row();
+        return '$' . number_format($result->total, 2);
     }
     
     public function getInbox(){
