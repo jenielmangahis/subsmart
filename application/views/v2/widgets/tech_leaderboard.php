@@ -3,7 +3,11 @@
         echo '<div class="col-12 col-lg-4">';
     endif;
 ?>
-
+<style>
+    .nsm-widget-table .widget-item .content .details {
+        width: 40% !important;
+    }
+</style>
 <div class="<?= $class ?>" data-id="<?= $id ?>" id="widget_<?= $id ?>" draggable="true">
     <div class="nsm-card-header">
         <div class="nsm-card-title">
@@ -21,10 +25,26 @@
             </div>
         </div>
     </div>
-    <div class="nsm-card-content">
-        <div class="nsm-widget-table techleaderboard-container">
-            <div class="nsm-loader">
-                <i class='bx bx-loader-alt bx-spin'></i>
+    <div class="nsm-card-content jobs_stat">
+        <div class="nsm-widget-table">
+            <div class="widget-item">
+                <div class="nsm-profile">
+                    <span>TN</span>
+                </div>
+                <div class="content">
+                    <div class="details">
+                        <span class="content-title">Tommy Nguyen</span>
+                        <span class="content-subtitle d-block">Technician</span>
+                    </div>
+                    <div style="padding-top: 5px;">
+                        <span class="content-subtitle nsm-text-success fw-bold" style="font-size:12px;">$100.23</span>
+                        <span class="content-subtitle d-block">revenue</span>
+                        </div>
+                    <div class="controls">
+                        <span class="content-subtitle nsm-text-success fw-bold" style="font-size:12px;">23</span>
+                        <span class="content-subtitle d-block">customers</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -32,7 +52,7 @@
 
 <script type="text/javascript">
     $(document).ready(function(){
-        loadTechLeaderboards();
+        //loadTechLeaderboards();
     });
 
     function loadTechLeaderboards(){

@@ -122,8 +122,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <tr>
                                             <td class="pl-3">
                                                 <div class="row">
-                                                    <img src="<?php echo base_url() . "uploads/" . $photo->before_image;  ?>" width="200px" height="150px;">&nbsp;&nbsp;
-                                                    <img src="<?php echo base_url() . "uploads/" . $photo->after_image;  ?>" width="200px" height="150px;">
+                                                    <img src="<?php echo base_url() . "uploads/beforeandafter/" . $photo->before_image;  ?>" width="200px" height="150px;">&nbsp;&nbsp;
+                                                    <img src="<?php echo base_url() . "uploads/beforeandafter/" . $photo->after_image;  ?>" width="200px" height="150px;">
                                                 </div>
                                                 <div class="row">
                                                     <span><strong style="margin-left:70px; margin-right:165px;">Before</strong></span>

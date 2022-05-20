@@ -741,6 +741,7 @@ add_css(array(
                                                     <th>Tech</th>
                                                     <th>Plan Type</th>
                                                     <th>Subscription Amount</th>
+                                                    <th>Job Amount</th>
                                                     <th>Phone</th>
                                                     <th>Status</th>
                                                     <th>Actions</th>
@@ -770,8 +771,8 @@ add_css(array(
                                                         </td>
                                                         <td><?php echo $customer->system_type; ?>
                                                         </td>
-                                                        <td>$<?= $customer->total_amount; ?>
-                                                        </td>
+                                                        <td>$<?= $customer->total_amount; ?></td>
+                                                        <td>$<?= $customer->total_amount; ?></td>
                                                         <td><?php echo $customer->phone_m; ?>
                                                         </td>
                                                         <td><?= $customer->status != null ? $customer->status : 'Pending'; ?>
