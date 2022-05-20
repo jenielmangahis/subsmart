@@ -4181,7 +4181,8 @@ class Admin extends CI_Controller
         if( get('status') != '' ){
             $cid_search = ucwords(get('status'));
             $status = ucwords(get('status'));
-            //$events = $this->Event_model->getAllByStatus($status);
+            $query_search = ['field' => 'ac_leads.status', 'value' => $status];
+            $leads = $this->Customer_advance_model->get_all_leads_data(array(), $query_search);
         }elseif( get('search') != '' ){
             $search  = trim(get('search'));
             $filters = ['search' => $search];
@@ -4305,7 +4306,229 @@ class Admin extends CI_Controller
 
     public function ajax_view_lead()
     {
-        
+        $this->load->model('Customer_advance_model');
+
+        $post = $this->input->post();
+        $lead = $this->Customer_advance_model->getByLeadId($post['lid']);
+
+        $this->page_data['lead'] = $lead;
+        $this->load->view('admin/leads/ajax_view_lead', $this->page_data);        
+    }
+
+    public function lead_types()
+    {
+        $this->load->model('Customer_advance_model');
+
+        $search = '';
+        if( get('search') != '' ){
+            $search  = get('search');
+            $search_param = ['field' => 'lead_name', 'value' => ucwords($search)];
+            $leadTypes   = $this->Customer_advance_model->get_all(FALSE, "", "ASC", "ac_leadtypes", "lead_id", $search_param);
+        }else{
+            $leadTypes = $this->Customer_advance_model->get_all(FALSE, "", "ASC", "ac_leadtypes", "lead_id");
+        }
+            
+        $this->page_data['search'] = $search;
+        $this->page_data['leadTypes']  = $leadTypes;
+        $this->page_data['page_title']  = 'Lead Types';
+        $this->page_data['page_parent'] = 'Lead Types';
+        $this->load->view('admin/lead_types/list', $this->page_data);
+    }
+
+    public function ajaxSaveLeadType()
+    {
+        $this->load->model('Customer_advance_model');
+
+        $is_success = 0;
+        $msg = 'Cannot save data.';
+
+        $post = $this->input->post();
+
+        if( $post['lead_type_name'] != ''){            
+            
+            $data_lead_type = [
+                'lead_name' => $post['lead_type_name'],
+                'date_created' => date("Y-m-d H:i:s")
+            ];
+
+            $this->Customer_advance_model->add($data_lead_type, "ac_leadtypes");
+
+            $is_success = 1;
+            $msg = '';
+
+        }else{
+            $msg = 'Please specify lead type name';
+        }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+
+        echo json_encode($json_data);
+    }
+
+    public function ajaxUpdateLeadType()
+    {
+        $this->load->model('Customer_advance_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find data.';
+
+        $post = $this->input->post();
+        $leadType = $this->Customer_advance_model->get_data_by_id('lead_id', $post['ltid'],'ac_leadtypes');
+        if( $leadType ){
+            if( $post['lead_type_name'] != ''){            
+            
+                $data_lead_type = [
+                    'lead_id' => $post['ltid'],
+                    'lead_name' => $post['lead_type_name']
+                ];
+                $this->Customer_advance_model->update_data($data_lead_type, "ac_leadtypes", 'lead_id');
+
+                $is_success = 1;
+                $msg = '';
+                
+            }else{
+                $msg = 'Please specify lead type name';
+            }
+        }        
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+
+        echo json_encode($json_data);
+    }
+
+    public function ajaxDeleteLeadType()
+    {
+        $this->load->model('Customer_advance_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $post = $this->input->post();
+
+        $leadType = $this->Customer_advance_model->get_data_by_id('lead_id', $post['ltid'],'ac_leadtypes');
+        if( $leadType ){
+            $data_lead_type = [
+                'field_name' => 'lead_id',
+                'id' => $post['ltid'],
+                'tablename' => 'ac_leadtypes'
+            ];
+            $this->Customer_advance_model->delete($data_lead_type);
+
+            $msg = '';
+            $is_success = 1;
+        }
+
+        $json_data = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($json_data);
+    }
+
+    public function customers()
+    {
+        $this->load->model('Customer_advance_model');
+
+        $search = '';
+        $cid_search = 'All Customers';
+        if( get('search') != '' ){
+            $search  = get('search');
+            $search_param = ['value' => ucwords($search)];
+            $customers   = $this->Customer_advance_model->admin_get_customer_data($search_param);
+        }else{
+            $customers = $this->Customer_advance_model->admin_get_customer_data();
+        }
+            
+        $this->page_data['search'] = $search;
+        $this->page_data['cid_search'] = $cid_search;
+        $this->page_data['customers']  = $customers;
+        $this->page_data['page_title']  = 'Customers';
+        $this->page_data['page_parent'] = 'Customers';
+        $this->load->view('admin/customers/list', $this->page_data);
+    }
+
+    public function export_customers()
+    {
+        $this->load->model('Customer_advance_model');
+
+        $customers = $this->Customer_advance_model->admin_get_customer_data();
+
+        $delimiter = ",";
+        $time      = time();
+        $filename  = "customers_list_".$time.".csv";
+
+        $f = fopen('php://memory', 'w');
+
+        $fields = array('Company', 'Name', 'Industry', 'Source', 'Sales Rep', 'Tech', 'Plan Type ', 'Subscription Amount', 'Phone', 'Status');
+        fputcsv($f, $fields, $delimiter);
+
+        if (!empty($customers)) {
+            foreach ($customers as $customer) {                
+                if( $customer->industry_type_id > 0 ){
+                    $industry = $customer->industry_type;
+                }else{
+                    $industry = 'Not Specified';                                                    
+                }
+
+                $amount = '0.00';
+                if( $customer->total_amount > 0 ){
+                    $amount = $customer->total_amount;
+                }   
+
+                $amount = '$' . $amount;
+
+                $csvData = array(
+                    $customer->business_name,
+                    $customer->first_name . ' ' . $customer->last_name,
+                    $industry,
+                    $customer->lead_source != "" ? $customer->lead_source : 'n/a',
+                    $customer->entered_by,
+                    $customer->technician != null ? $customer->technician : 'Not Assigned',
+                    $customer->system_type,
+                    $amount,
+                    $customer->phone_m,
+                    $customer->status != null ? $customer->status : 'Pending'
+                );
+                fputcsv($f, $csvData, $delimiter);      
+            }
+        } else {
+            $csvData = array('');
+            fputcsv($f, $csvData, $delimiter);
+        }
+
+        fseek($f, 0);
+
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="' . $filename . '";');
+
+        fpassthru($f);
+    }
+
+    public function ajaxDeleteCustomer()
+    {
+        $this->load->model('Customer_advance_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $post = $this->input->post();
+
+        $customer = $this->Customer_advance_model->get_data_by_id('prof_id',$post['cid'],'acs_profile');
+        if( $customer ){
+            $input = array();
+            $input['field_name'] = "prof_id";
+            $input['id'] = $post['cid'];
+            $input['tablename'] = "acs_profile";
+            $this->Customer_advance_model->delete($input);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+
+        echo json_encode($json_data);
     }
 }
 
