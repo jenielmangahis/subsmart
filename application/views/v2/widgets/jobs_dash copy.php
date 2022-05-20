@@ -196,39 +196,46 @@ endif;
                             </div>
                         </div>
                     </div>
-                    <div class="row js-row-dash">
-                        <div class="col">
-                            <div class="row">
-                                <div class="col-9 marg-top">
-                                    <div class="jname"> Completed</div>
-                                </div>
-                                <div class="col-3 col-center">
-                                    <div class="row">
-                                        <div class="col col-align">
-                                            <span class="nsm-badge success" style="font-size:12px;">21</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
-                    <div class="row js-row-dash">
-                        <div class="col">
-                            <div class="row">
-                                <div class="col-9 marg-top">
-                                    <div class="jname"> Pending</div>
-                                </div>
-                                <div class="col-3 col-center">
-                                    <div class="row">
-                                        <div class="col col-align">
-                                            <span class="nsm-badge secondary" style="font-size:12px;">2</span>
+                    <?php
+                    if ($jobsDone) {
+                        $limit = 4;
+                        $count = 0;
+
+                        foreach ($jobsDone as $jobs) {
+                            if ($count < $limit) {
+                    ?>
+                                <div class="row js-row-dash">
+                                    <div class="col">
+                                        <div class="row">
+                                            <div class="col-9 marg-top">
+                                                <div class="prof"></div>
+                                                <div class="jname"> <?php echo $jobs->job_number; ?></div>
+                                            </div>
+                                            <div class="col-3 col-center">
+                                                <div class="row">
+                                                    <div class="col col-align">
+                                                        <div class="stat-item"> <?php echo $jobs->status; ?></div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <?php $date = $jobs->status;
+                                                        echo $jobs->end_date; ?>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
+                    <?php
+                        $count++;
+                            }
+                        }
+                    }
+                    ?>
+
+
                 </div>
             </div>
         </div>

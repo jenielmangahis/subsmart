@@ -62,6 +62,7 @@
                                 <?php if (in_array('tech', $enabled_table_headers)) : ?><td data-name="Tech">Tech</td><?php endif; ?>
                                 <?php if (in_array('plan_type', $enabled_table_headers)) : ?><td data-name="Plan Type">Plan Type</td><?php endif; ?>
                                 <?php if (in_array('subscription_amount', $enabled_table_headers)) : ?><td data-name="Subscription Amount">Subscription Amount</td><?php endif; ?>
+                                <?php if (in_array('subscription_amount', $enabled_table_headers)) : ?><td data-name="Job Amount">Job Amount</td><?php endif; ?>
                                 <?php if (in_array('phone', $enabled_table_headers)) : ?><td data-name="Phone">Phone</td><?php endif; ?>
                                 <?php if (in_array('status', $enabled_table_headers)) : ?><td data-name="Status">Status</td><?php endif; ?>
                                 <td data-name="Manage"></td>
@@ -152,6 +153,9 @@
                                     <?php if (in_array('subscription_amount', $enabled_table_headers)) : ?>
                                         <td>$<?= $customer->total_amount; ?></td>
                                     <?php endif; ?>
+                                    <?php if (in_array('subscription_amount', $enabled_table_headers)) : ?>
+                                        <td>$<?= $customer->total_amount ? $customer->total_amount : '0.00' ; ?></td>
+                                    <?php endif; ?>
                                     <?php if (in_array('phone', $enabled_table_headers)) : ?>
                                         <td><?php echo $customer->phone_m; ?></td>
                                     <?php endif; ?>
@@ -225,6 +229,7 @@
                                 <td data-name="<?= $companyId == 58 ? 'Mentor' : 'Tech'   ?>"><?= $companyId == 58 ? 'Mentor' : 'Tech'   ?></td>
                                 <td data-name="Plan Type">Plan Type</td>
                                 <td data-name="Subscription Amount">Subscription Amount</td>
+                                <td data-name="Job Amount">Job Amount</td>
                                 <td data-name="Phone">Phone</td>
                                 <td data-name="Status">Status</td>
                                 <td data-name="Manage"></td>
@@ -288,6 +293,7 @@
                                         <td><?= $customer->technician != null ? $customer->technician : 'Not Assigned'; ?></td>
                                         <td><?php echo $customer->system_type; ?></td>
                                         <td>$<?= $customer->total_amount; ?></td>
+                                        <td>$<?= $customer->total_amount ? $customer->total_amoun : '0.00'; ?></td>
                                         <td><?php echo $customer->phone_m; ?></td>
                                         <td><span class="nsm-badge <?= $badge ?>"><?= $customer->status != null ? $customer->status : 'Pending'; ?></span></td>
                                         <td>

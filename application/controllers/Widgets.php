@@ -123,7 +123,7 @@ class Widgets extends MY_Controller
                 $data['id'] = $id;
                 $data['class'] = 'col-lg-3 col-md-6 col-sm-12';
                 $data['height'] = 'height: 310px;';
-                if($wids->w_name === 'Expense') {
+                if ($wids->w_name === 'Expense') {
                     $data = set_expense_graph_data($data);
                 }
                 $view = $this->load->view($widget->w_view_link, $data);
@@ -161,7 +161,7 @@ class Widgets extends MY_Controller
                     $data['id'] = $id;
                     $data['class'] = 'col-lg-3 col-md-6 col-sm-12';
                     $data['height'] = 'height: 310px;';
-                    if($wids->w_name === 'Expense') {
+                    if ($wids->w_name === 'Expense') {
                         $data = set_expense_graph_data($data);
                     }
                     $view = $this->load->view($widget->w_view_link, $data);
@@ -201,7 +201,7 @@ class Widgets extends MY_Controller
                     $data['id'] = $id;
                     $data['dynamic_load'] = true;
 
-                    if($widget->w_name === 'Expense') {
+                    if ($widget->w_name === 'Expense') {
                         $data = set_expense_graph_data($data);
                     }
 
@@ -410,144 +410,146 @@ class Widgets extends MY_Controller
         $in_count = 0;
         $company_id = 0;
         $counter = 0;
-        $user_limit = 5;
+        $user_limit = 7;
         foreach ($users as $cnt => $user) :
             $counter += 1;
-
-            if ($counter <= $user_limit) :
-                $user_photo = userProfileImage($user->id);
-                $company_id = $user->company_id;
-                foreach ($user_roles as $role) {
-                    if ($role->id == $user->role) {
-                        $u_role = $role->title;
+            if ($user->status == 1) :
+                if ($counter <= $user_limit) :
+                    $user_photo = userProfileImage($user->id);
+                    $company_id = $user->company_id;
+                    foreach ($user_roles as $role) {
+                        if ($role->id == $user->role) {
+                            $u_role = $role->title;
+                        }
                     }
-                }
-                foreach ($attendance as $attn) {
-                    foreach ($logs as $log) {
-                        if ($user->id == $attn->user_id) {
-                            $attn_id = $attn->id;
-                            if ($attn_id == $log->attendance_id) {
-                                if ($log->action == 'Check in') {
-                                    if (date('Y-m-d', strtotime($log->date_created)) == date('Y-m-d', strtotime('yesterday'))) {
-                                        $yesterday_in = "(Yesterday)";
-                                    } else {
-                                        $yesterday_in = null;
+                    foreach ($attendance as $attn) {
+                        foreach ($logs as $log) {
+                            if ($user->id == $attn->user_id) {
+                                $attn_id = $attn->id;
+                                if ($attn_id == $log->attendance_id) {
+                                    if ($log->action == 'Check in') {
+                                        $date_in_logs = $this->timesheet_model->datetime_zone_converter(date('Y-m-d h:i A', strtotime($log->date_created)), "UTC", $this->session->userdata('usertimezone'));
+                                        if (date('Y-m-d', strtotime($date_in_logs)) == date('Y-m-d', strtotime('yesterday'))) {
+                                            $yesterday_in = "(Yesterday)";
+                                        } else {
+                                            $yesterday_in = null;
+                                        }
+                                        $time_in = date('h:i A', strtotime($date_in_logs));
+                                        $time_out = null;
+                                        $break_in = null;
+                                        $break_out = null;
+                                        $btn_action = 'employeeCheckOut';
+                                        $status = 'fa-check';
+                                        $break = null;
+                                        $disabled = null;
+                                        $break_id = 'employeeBreakIn';
+                                        $indicator_in = 'display:block';
+                                        $indicator_out = 'display:none';
+                                        $indicator_in_break = 'display:none';
+                                        $indicator_out_break = 'display:none';
+                                        $tooltip_status = 'Logged in';
                                     }
-                                    $time_in = date('h:i A', strtotime($log->date_created));
-                                    $time_out = null;
-                                    $break_in = null;
-                                    $break_out = null;
-                                    $btn_action = 'employeeCheckOut';
-                                    $status = 'fa-check';
-                                    $break = null;
-                                    $disabled = null;
-                                    $break_id = 'employeeBreakIn';
-                                    $indicator_in = 'display:block';
-                                    $indicator_out = 'display:none';
-                                    $indicator_in_break = 'display:none';
-                                    $indicator_out_break = 'display:none';
-                                    $tooltip_status = 'Logged in';
-                                }
-                                if ($log->action == 'Break in') {
-                                    $break_id = 'employeeBreakOut';
-                                    $status = 'fa-mug-hot';
-                                    $break_in = date('h:i A', strtotime($log->date_created));
-                                    $indicator_in = 'display:none';
-                                    $indicator_out = 'display:none';
-                                    $indicator_in_break = 'display:block';
-                                    $indicator_out_break = 'display:none';
-                                    $tooltip_status = 'On break';
-                                    $break_out = null;
-                                }
-                                if ($log->action == 'Break out') {
-                                    $status = 'fa-check';
-                                    $break_out = date('h:i A', strtotime($log->date_created));
-                                    //                                                                    $break = 'disabled="disabled"';
-                                    $break_id = 'employeeBreakIn';
-                                    $indicator_in = 'display:none';
-                                    $indicator_out = 'display:none';
-                                    $indicator_in_break = 'display:none';
-                                    $indicator_out_break = 'display:block';
-                                    $tooltip_status = 'Back to work';
-                                }
-                                if ($log->action == 'Check out') {
-                                    $status = 'fa-times-circle';
-                                    $btn_action = 'employeeCheckIn';
-                                    $time_out = date('h:i A', strtotime($log->date_created));
-                                    $disabled = null;
-                                    $break = 'disabled="disabled"';
-                                    $break_id = null;
-                                    $indicator_in = 'display:none';
-                                    $indicator_out = 'display:block';
-                                    $indicator_in_break = 'display:none';
-                                    $indicator_out_break = 'display:none';
-                                    $tooltip_status = 'Logged out';
+                                    if ($log->action == 'Break in') {
+                                        $break_id = 'employeeBreakOut';
+                                        $status = 'fa-mug-hot';
+                                        $break_in = date('h:i A', strtotime($date_in_logs));
+                                        $indicator_in = 'display:none';
+                                        $indicator_out = 'display:none';
+                                        $indicator_in_break = 'display:block';
+                                        $indicator_out_break = 'display:none';
+                                        $tooltip_status = 'On break';
+                                        $break_out = null;
+                                    }
+                                    if ($log->action == 'Break out') {
+                                        $status = 'fa-check';
+                                        $break_out = date('h:i A', strtotime($date_in_logs));
+                                        //                                                                    $break = 'disabled="disabled"';
+                                        $break_id = 'employeeBreakIn';
+                                        $indicator_in = 'display:none';
+                                        $indicator_out = 'display:none';
+                                        $indicator_in_break = 'display:none';
+                                        $indicator_out_break = 'display:block';
+                                        $tooltip_status = 'Back to work';
+                                    }
+                                    if ($log->action == 'Check out') {
+                                        $status = 'fa-times-circle';
+                                        $btn_action = 'employeeCheckIn';
+                                        $time_out = date('h:i A', strtotime($date_in_logs));
+                                        $disabled = null;
+                                        $break = 'disabled="disabled"';
+                                        $break_id = null;
+                                        $indicator_in = 'display:none';
+                                        $indicator_out = 'display:block';
+                                        $indicator_in_break = 'display:none';
+                                        $indicator_out_break = 'display:none';
+                                        $tooltip_status = 'Logged out';
+                                    }
                                 }
                             }
                         }
                     }
-                }
-                if ($indicator_in == 'display:block' || $indicator_in_break == 'display:block' || $indicator_out_break == 'display:block') {
-                    $in_count++;
-                }
-                if ($indicator_out == 'display:block') {
-                    $out_count++;
-                }
+                    if ($indicator_in == 'display:block' || $indicator_in_break == 'display:block' || $indicator_out_break == 'display:block') {
+                        $in_count++;
+                    }
+                    if ($indicator_out == 'display:block') {
+                        $out_count++;
+                    }
             ?>
-                <div class="col-12">
-                    <div class="widget-item timesheet-item">
-                        <div class="nsm-profile">
-                            <span><?php echo getLoggedNameInitials($user->id); ?></span>
-                        </div>
-                        <div class="content">
-                            <div class="details">
-                                <span class="content-title"><?php echo $user->FName; ?> <?php echo $user->LName; ?></span>
-                                <span class="content-subtitle d-block"><?php echo $u_role; ?></span>
+                    <div class="col-12">
+                        <div class="widget-item timesheet-item">
+                            <div class="nsm-profile">
+                                <span><?php echo getLoggedNameInitials($user->id); ?></span>
                             </div>
-                            <div class="controls">
-                                <div class="timesheet-group">
-                                    <div class="timesheet-time" data-count="<?php echo $in_count ?>">
-                                        <span class="content-subtitle d-block"><span class="timesheet-label">In: </span><?php echo is_null($time_in) ? '--:-- --' : $time_in; ?></span>
-                                        <span class="content-subtitle d-block"><?php echo $yesterday_in; ?></span>
-                                    </div>
-                                    <div class="timesheet-time" data-count="<?php echo $time_out ?>">
-                                        <span class="content-subtitle d-block"><span class="timesheet-label">Out: </span><?php echo is_null($time_out) ? '--:-- --' : $time_out; ?></span>
-                                    </div>
+                            <div class="content">
+                                <div class="details">
+                                    <span class="content-title"><?php echo $user->FName; ?> <?php echo $user->LName; ?></span>
+                                    <span class="content-subtitle d-block"><?php echo $u_role; ?></span>
                                 </div>
-                                <div class="timesheet-group">
-                                    <div class="timesheet-time">
-                                        <span class="content-subtitle d-block"><span class="timesheet-label">Lunch In: </span><?php echo is_null($break_in) ? '--:-- --' : $break_in; ?></span>
+                                <div class="controls">
+                                    <div class="timesheet-group">
+                                        <div class="timesheet-time" data-count="<?php echo $in_count ?>">
+                                            <span class="content-subtitle d-block"><span class="timesheet-label">In: </span><?php echo is_null($time_in) ? '--:-- --' : $time_in; ?></span>
+                                            <span class="content-subtitle d-block"><?php echo $yesterday_in; ?></span>
+                                        </div>
+                                        <div class="timesheet-time" data-count="<?php echo $time_out ?>">
+                                            <span class="content-subtitle d-block"><span class="timesheet-label">Out: </span><?php echo is_null($time_out) ? '--:-- --' : $time_out; ?></span>
+                                        </div>
                                     </div>
-                                    <div class="timesheet-time">
-                                        <span class="content-subtitle d-block"><span class="timesheet-label">Lunch Out: </span><?php echo is_null($break_out) ? '--:-- --' : $break_out; ?></span>
+                                    <div class="timesheet-group">
+                                        <div class="timesheet-time">
+                                            <span class="content-subtitle d-block"><span class="timesheet-label">Lunch In: </span><?php echo is_null($break_in) ? '--:-- --' : $break_in; ?></span>
+                                        </div>
+                                        <div class="timesheet-time">
+                                            <span class="content-subtitle d-block"><span class="timesheet-label">Lunch Out: </span><?php echo is_null($break_out) ? '--:-- --' : $break_out; ?></span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <?php
-                $u_role = null;
-                $status = 'fa-times-circle';
-                $tooltip_status = 'Not logged in';
-                $time_in = null;
-                $time_out = null;
-                $btn_action = 'employeeCheckIn';
-                $disabled = null;
-                $break = 'disabled="disabled"';
-                $break_id = null;
-                $break_in = null;
-                $break_out = null;
-                $indicator_in = 'display:none';
-                $indicator_out = 'display:none';
-                $indicator_in_break = 'display:none';
-                $indicator_out_break = 'display:none';
-                $week_id = null;
-                $attn_id = null;
-                $yesterday_in = null;
-                $yesterday_out = null;
-                ?>
+                    <?php
+                    $u_role = null;
+                    $status = 'fa-times-circle';
+                    $tooltip_status = 'Not logged in';
+                    $time_in = null;
+                    $time_out = null;
+                    $btn_action = 'employeeCheckIn';
+                    $disabled = null;
+                    $break = 'disabled="disabled"';
+                    $break_id = null;
+                    $break_in = null;
+                    $break_out = null;
+                    $indicator_in = 'display:none';
+                    $indicator_out = 'display:none';
+                    $indicator_in_break = 'display:none';
+                    $indicator_out_break = 'display:none';
+                    $week_id = null;
+                    $attn_id = null;
+                    $yesterday_in = null;
+                    $yesterday_out = null;
+                    ?>
 <?php
+                endif;
             endif;
         endforeach;
     }

@@ -21,14 +21,73 @@
             </div>
         </div>
     </div>
-    <div class="nsm-card-content d-flex justify-content-center align-items-center">
-        <canvas id="lead_source_chart" class="nsm-chart" data-chart-type="lead-source"></canvas>
+    <div class="nsm-card-content jobs_stat">
+    <div class="nsm-widget-table">
+            <div class="stat_content">
+                <div class="row row-pad">
+                    <div class="col">
+                        <div class="row">
+                            <div class="col-9">
+                                <h6>Source</h6>
+                            </div>
+                            <div class="col-3" style="text-align: center;">
+                                <h6>Count</h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row js-row-dash">
+                        <div class="col">
+                            <div class="row">
+                                <div class="col-9 marg-top">
+                                    <div class="jname"> Customer Referral</div>
+                                </div>
+                                <div class="col-3 col-center">
+                                    <div class="row">
+                                        <div class="col" style="padding-top: 5px;"> 50 </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row js-row-dash">
+                        <div class="col">
+                            <div class="row">
+                                <div class="col-9 marg-top">
+                                    <div class="jname"> Door</div>
+                                </div>
+                                <div class="col-3 col-center">
+                                    <div class="row">
+                                        <div class="col" style="padding-top: 5px;"> 2 </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row js-row-dash">
+                        <div class="col">
+                            <div class="row">
+                                <div class="col-9 marg-top">
+                                    <div class="jname"> Door Hanger</div>
+                                </div>
+                                <div class="col-3 col-center">
+                                    <div class="row">
+                                        <div class="col" style="padding-top: 5px;"> 25 </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
 <script type="text/javascript">
     $(document).ready(function(){
-        initializeLeadSourceChart();
+        //initializeLeadSourceChart();
     });
 
     function initializeLeadSourceChart(){

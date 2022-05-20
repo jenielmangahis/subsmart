@@ -627,7 +627,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                             <div class="col-md-6">
                                 <label for="">Image</label>
                                 <div id="employeeProfilePhoto" class="dropzone" style="border: 1px solid #e1e2e3;background: #ffffff;width: 100%;">
-                                    <div class="dz-message" style="margin: 20px;border">
+                                    <div class="dz-message" style="margin: 20px;">
                                         <span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
                                         <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
                                     </div>

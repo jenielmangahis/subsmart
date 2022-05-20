@@ -81,9 +81,10 @@ foreach ($jobs as $job) {
                             <td data-name="Job Number">Job Number</td>
                             <td data-name="Date">Date</td>
                             <td data-name="Customer">Customer</td>
-                            <td data-name="Employee">Employee</td>
+                            <td data-name="Sales Rep">Sales Rep</td>
+                            <td data-name="Tech Rep">Tech Rep</td>
                             <td data-name="Status">Status</td>
-                            <td data-name="Amount">Amount</td>
+                            <td data-name="Amount">Job Amount</td>
                             <td data-name="Job Type">Job Type</td>
                             <td data-name="Job Tag">Job Tag</td>
                             <td data-name="Priority">Priority</td>
@@ -124,6 +125,7 @@ foreach ($jobs as $job) {
                                     <td><?php echo date_format(date_create($job->start_date), "m/d/Y"); ?></td>
                                     <td><?= $job->first_name . ' ' . $job->last_name; ?></td>
                                     <td><?= $job->FName . ' ' . $job->LName; ?></td>
+                                    <td></td>
                                     <td><span class="nsm-badge <?= $badge ?>"><?= $job->status; ?></span></td>
                                     <td>$<?= number_format((float)$job->amount, 2, '.', ',');  ?></td>
                                     <td><?php echo $job->job_type; ?></td>
@@ -173,7 +175,8 @@ foreach ($jobs as $job) {
                             <td data-name="Job Number">Job Number</td>
                             <td data-name="Date">Date</td>
                             <td data-name="Customer">Customer</td>
-                            <td data-name="Employee">Employee</td>
+                            <td data-name="Sales Rep">Sales Rep</td>
+                            <td data-name="Tech Rep">Tech Rep</td>
                             <td data-name="Status">Status</td>
                             <td data-name="Amount">Amount</td>
                             <td data-name="Job Type">Job Type</td>
@@ -262,7 +265,8 @@ foreach ($jobs as $job) {
                             <td data-name="Job Number">Job Number</td>
                             <td data-name="Date">Date</td>
                             <td data-name="Customer">Customer</td>
-                            <td data-name="Employee">Employee</td>
+                            <td data-name="Sales Rep">Sales Rep</td>
+                            <td data-name="Tech Rep">Tech Rep</td>
                             <td data-name="Status">Status</td>
                             <td data-name="Amount">Amount</td>
                             <td data-name="Job Type">Job Type</td>
@@ -351,7 +355,8 @@ foreach ($jobs as $job) {
                             <td data-name="Job Number">Job Number</td>
                             <td data-name="Date">Date</td>
                             <td data-name="Customer">Customer</td>
-                            <td data-name="Employee">Employee</td>
+                            <td data-name="Sales Rep">Sales Rep</td>
+                            <td data-name="Tech Rep">Tech Rep</td>
                             <td data-name="Status">Status</td>
                             <td data-name="Amount">Amount</td>
                             <td data-name="Job Type">Job Type</td>
@@ -440,7 +445,8 @@ foreach ($jobs as $job) {
                             <td data-name="Job Number">Job Number</td>
                             <td data-name="Date">Date</td>
                             <td data-name="Customer">Customer</td>
-                            <td data-name="Employee">Employee</td>
+                            <td data-name="Sales Rep">Sales Rep</td>
+                            <td data-name="Tech Rep">Tech Rep</td>
                             <td data-name="Status">Status</td>
                             <td data-name="Amount">Amount</td>
                             <td data-name="Job Type">Job Type</td>
@@ -529,7 +535,8 @@ foreach ($jobs as $job) {
                             <td data-name="Job Number">Job Number</td>
                             <td data-name="Date">Date</td>
                             <td data-name="Customer">Customer</td>
-                            <td data-name="Employee">Employee</td>
+                            <td data-name="Sales Rep">Sales Rep</td>
+                            <td data-name="Tech Rep">Tech Rep</td>
                             <td data-name="Status">Status</td>
                             <td data-name="Amount">Amount</td>
                             <td data-name="Job Type">Job Type</td>

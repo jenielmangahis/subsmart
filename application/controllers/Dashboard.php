@@ -252,7 +252,9 @@ class Dashboard extends Widgets {
             'select' => '*',
         );
         $this->page_data['news'] = $this->general->get_data_with_param($news_query);
+
         $this->page_data['total_recurring_payment'] = $this->getTotalRecurringPayment();    
+        $this->page_data['total_agreements_to_expire_in_30_days'] = $this->getAgreementsToExpireIn30Days();
 
         // $this->load->view('dashboard', $this->page_data);
         $this->load->view('dashboard_v2', $this->page_data);
@@ -265,9 +267,22 @@ class Dashboard extends Widgets {
         $this->db->from('acs_billing billing');
         $this->db->join('acs_profile profile', 'profile.prof_id = billing.fk_prof_id', 'left');
         $this->db->where('profile.company_id', $companyId);
-        $queru = $this->db->get();
-        $result = $queru->row();
+        $query = $this->db->get();
+        $result = $query->row();
         return '$' . number_format($result->total, 2);
+    }
+
+    private function getAgreementsToExpireIn30Days()
+    {
+        $companyId = logged('company_id');
+        $this->db->select('COUNT(billing.recurring_end_date) AS total', false);
+        $this->db->from('acs_billing billing');
+        $this->db->join('acs_profile profile', 'profile.prof_id = billing.fk_prof_id', 'left');
+        $this->db->where('profile.company_id', $companyId);
+        $this->db->where("STR_TO_DATE(billing.recurring_end_date, '%m/%d/%Y') < ADDDATE(STR_TO_DATE(recurring_end_date, '%m/%d/%Y'), INTERVAL 30 DAY)");
+        $query = $this->db->get();
+        $result = $query->row();
+        return $result->total;
     }
     
     public function getInbox(){
