@@ -37,4 +37,11 @@ class Accounting_linked_transactions_model extends MY_Model
         $this->db->where('id', $linkId);
         return $this->db->delete($this->table);
     }
+
+    public function unlink_all_from_linked_to($transactionType, $transactionId)
+    {
+        $this->db->where('linked_to_type', $transactionType);
+        $this->db->where('linked_to_id', $transactionId);
+        return $this->db->delete($this->table);
+    }
 }

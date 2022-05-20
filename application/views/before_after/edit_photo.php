@@ -67,14 +67,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                         <div class="set__box__title --off">Before</div>
                                                         <a class="set__box__delete" data-fileupload-delete="0,0" data-id="0" href=""><span class="fa fa-remove"></span></a>
                                                         <div class="set__box__icon " data-fileupload="upload" data-position="0,0"><span class="fa fa-camera"></span></div>
-                                                        <img data-fileupload-image="0,0" id="b1_img" src="<?php echo base_url() . "uploads/" . $beforeAfter->before_image?>">
+                                                        <img data-fileupload-image="0,0" id="b1_img" src="<?php echo base_url() . "uploads/beforeandafter/" . $beforeAfter->before_image?>">
                                                         <div class="set__box__date"></div>
                                                     </div>
                                                     <div class="set__box">
                                                         <div class="set__box__title --off">After</div>
                                                         <a class="set__box__delete" data-fileupload-delete="0,1" data-id="0" href=""><span class="fa fa-remove"></span></a>
                                                         <div class="set__box__icon " data-fileupload="upload" data-position="0,1"><span class="fa fa-camera"></span></div>
-                                                        <img data-fileupload-image="0,0" id="a1_img" src="<?php echo base_url() . "uploads/" . $beforeAfter->after_image?>">
+                                                        <img data-fileupload-image="0,0" id="a1_img" src="<?php echo base_url() . "uploads/beforeandafter/" . $beforeAfter->after_image?>">
                                                         <div class="set__box__date"></div>
                                                     </div>
                                                 </div>

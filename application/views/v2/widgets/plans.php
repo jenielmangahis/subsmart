@@ -47,7 +47,7 @@
                         </div>
                         <div class="col-12 col-md-8 mb-2 mb-md-0 d-flex flex-column align-items-center align-items-md-start justify-content-between">
                             <span>Agreements to expire in 30 days</span>
-                            <h2>0</h2>
+                            <h2><?= $total_agreements_to_expire_in_30_days; ?></h2>
                         </div>
                     </div>
                 </div>

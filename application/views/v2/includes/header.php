@@ -28,7 +28,7 @@ if ($this->session->userdata('usertimezone') == null) {
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="<?= base_url("assets/css/v2/google-font.css") ?>" rel="stylesheet">
-    <!-- Sweet Alert --> 
+    <!-- Sweet Alert -->
     <link rel="stylesheet" href="<?= base_url("assets/css/v2/sweetalert2.min.css") ?>">
     <!-- Select2 -->
     <link rel="stylesheet" href="<?= base_url("assets/plugins/select2/dist/css/select2.min.css") ?>" />
@@ -42,6 +42,15 @@ if ($this->session->userdata('usertimezone') == null) {
         var surveyBaseUrl = '<?= base_url() ?>';
     </script>
 </head>
+<script>
+    $(document).ready(function() {
+        if ($('.Btn').attr('id') == 'clockOut') {
+            $('.cBtn').css({
+                'color': "green"
+            });
+        }
+    })
+</script>
 
 <body>
     <div class="nsm-container">
@@ -57,51 +66,60 @@ if ($this->session->userdata('usertimezone') == null) {
             </div>
 
             <ul class="nsm-sidebar-menu">
-                <li class="<?php if($page->title == 'Dashboard'): echo 'selected '; endif; if($page->parent == 'Dashboard'): echo 'active'; endif; ?>">
+                <li class="<?php if ($page->title == 'Dashboard') : echo 'selected ';
+                            endif;
+                            if ($page->parent == 'Dashboard') : echo 'active';
+                            endif; ?>">
                     <a href="#">
-                        <i class='bx bx-fw bx-tachometer'></i> Dashboard 
+                        <i class='bx bx-fw bx-tachometer'></i> Dashboard
                         <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
                     </a>
                     <ul class="mt-3">
-                        <li class="<?php if($page->title == 'SMS'): echo 'selected'; endif; ?>">
+                        <li class="<?php if ($page->title == 'SMS') : echo 'selected';
+                                    endif; ?>">
                             <a href="<?= base_url("sms") ?>">
                                 <i class='bx bx-fw bx-message-square-dots'></i> SMS
                             </a>
                         </li>
-                        <li class="<?php if($page->title == 'Calls and Logs'): echo 'selected'; endif; ?>">
+                        <li class="<?php if ($page->title == 'Calls and Logs') : echo 'selected';
+                                    endif; ?>">
                             <a href="#">
                                 <i class='bx bx-fw bx-phone-call'></i> Calls and Logs
                             </a>
                         </li>
-                        <li class="<?php if($page->title == 'Smart Zoom'): echo 'selected'; endif; ?>">
+                        <li class="<?php if ($page->title == 'Smart Zoom') : echo 'selected';
+                                    endif; ?>">
                             <a href="#">
                                 <i class='bx bx-fw bx-square-rounded'></i> Smart Zoom
                             </a>
                         </li>
-                        <li class="<?php if($page->title == 'Inbox'): echo 'selected'; endif; ?>">
+                        <li class="<?php if ($page->title == 'Inbox') : echo 'selected';
+                                    endif; ?>">
                             <a href="<?= base_url("inbox") ?>">
                                 <i class='bx bx-fw bxs-inbox'></i> Inbox
                             </a>
                         </li>
-                        <li class="<?php if($page->title == 'Sent'): echo 'selected'; endif; ?>">
+                        <li class="<?php if ($page->title == 'Sent') : echo 'selected';
+                                    endif; ?>">
                             <a href="#">
                                 <i class='bx bx-fw bx-paper-plane'></i> Sent
                             </a>
                         </li>
-                        <li class="<?php if($page->title == 'Support'): echo 'selected'; endif; ?>">
+                        <li class="<?php if ($page->title == 'Support') : echo 'selected';
+                                    endif; ?>">
                             <a href="#">
                                 <i class='bx bx-fw bx-support'></i> Support
                             </a>
                         </li>
 
-                        <?php if( logged('user_type') == 1 || isAdminBypass() ){ ?>
-                        <li class="btn-admin-switch">
-                            <a href="javascript:void(0);">
-                                <i class='bx bx-fw bx-refresh'></i> Switch to Admin
-                            </a>
-                        </li>
+                        <?php if (logged('user_type') == 1 || isAdminBypass()) { ?>
+                            <li class="btn-admin-switch">
+                                <a href="javascript:void(0);">
+                                    <i class='bx bx-fw bx-refresh'></i> Switch to Admin
+                                </a>
+                            </li>
                         <?php } ?>
-                        
+
                     </ul>
                 </li>
                 <li>
@@ -109,37 +127,44 @@ if ($this->session->userdata('usertimezone') == null) {
                         <i class='bx bx-fw bx-calendar'></i> Calendar
                     </a>
                 </li>
-                <li class="<?php if($page->parent == 'Sales'): echo 'active'; endif; ?>">
+                <li class="<?php if ($page->parent == 'Sales') : echo 'active';
+                            endif; ?>">
                     <a href="#">
                         <i class='bx bx-fw bx-line-chart'></i> Sales <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
                     </a>
                     <ul class="mt-3">
-                        <li class="<?php if($page->title == 'Events' || $page->title == 'Event Tags' || $page->title == 'Event Types'): echo 'selected'; endif; ?>">
+                        <li class="<?php if ($page->title == 'Events' || $page->title == 'Event Tags' || $page->title == 'Event Types') : echo 'selected';
+                                    endif; ?>">
                             <a href="<?= base_url("events") ?>">
                                 <i class='bx bx-fw bx-calendar-event'></i> Events
                             </a>
                         </li>
-                        <li class="<?php if($page->title == 'Jobs' || $page->title == 'Job Types' || $page->title == 'Job Tags' || $page->title == 'Bird Eye View' || $page->title == 'Checklist' || $page->title == 'Job Settings'): echo 'selected'; endif; ?>">
+                        <li class="<?php if ($page->title == 'Jobs' || $page->title == 'Job Types' || $page->title == 'Job Tags' || $page->title == 'Bird Eye View' || $page->title == 'Checklist' || $page->title == 'Job Settings') : echo 'selected';
+                                    endif; ?>">
                             <a href="<?= base_url("job") ?>">
                                 <i class='bx bx-fw bx-message-square-error'></i> Jobs
                             </a>
                         </li>
-                        <li class="<?php if($page->title == 'Estimates' || $page->title == 'Plans' || $page->title == 'Estimate Settings'): echo 'selected'; endif; ?>">
+                        <li class="<?php if ($page->title == 'Estimates' || $page->title == 'Plans' || $page->title == 'Estimate Settings') : echo 'selected';
+                                    endif; ?>">
                             <a href="<?= base_url("estimate") ?>">
                                 <i class='bx bx-fw bx-chart'></i> Estimates
                             </a>
                         </li>
-                        <li class="<?php if($page->title == 'Workorder' || $page->title == 'Workorder Settings' || $page->title == 'Workorder Checklist'): echo 'selected'; endif; ?>">
+                        <li class="<?php if ($page->title == 'Workorder' || $page->title == 'Workorder Settings' || $page->title == 'Workorder Checklist') : echo 'selected';
+                                    endif; ?>">
                             <a href="<?= base_url("workorder") ?>">
                                 <i class='bx bx-fw bx-task'></i> Work Orders
                             </a>
                         </li>
-                        <li class="<?php if($page->title == 'Invoices & Payments' || $page->title == 'Recurring Invoices' || $page->title == 'Tax Rates' || $page->title == 'Invoice Settings'): echo 'selected'; endif; ?>">
+                        <li class="<?php if ($page->title == 'Invoices & Payments' || $page->title == 'Recurring Invoices' || $page->title == 'Tax Rates' || $page->title == 'Invoice Settings') : echo 'selected';
+                                    endif; ?>">
                             <a href="<?= base_url("invoice") ?>">
                                 <i class='bx bx-fw bx-receipt'></i> Invoices
                             </a>
                         </li>
-                        <li class="<?php if($page->title == 'Tickets'): echo 'selected'; endif; ?>">
+                        <li class="<?php if ($page->title == 'Tickets') : echo 'selected';
+                                    endif; ?>">
                             <a href="<?= base_url("customer/ticketslist") ?>">
                                 <i class='bx bx-fw bx-note'></i> Tickets
                             </a>
@@ -149,19 +174,22 @@ if ($this->session->userdata('usertimezone') == null) {
                                 <i class='bx bx-fw bx-file'></i> Credit Notes
                             </a>
                         </li>
-                        <li class="<?php if($page->title == 'Leads Manager List'): echo 'selected'; endif; ?>">
+                        <li class="<?php if ($page->title == 'Leads Manager List') : echo 'selected';
+                                    endif; ?>">
                             <a href="<?= base_url("customer/leads") ?>">
                                 <i class='bx bx-fw bx-notepad'></i> Leads
                             </a>
                         </li>
-                        <li class="<?php if($page->title == 'Workorder Type'): echo 'selected'; endif; ?>">
+                        <li class="<?php if ($page->title == 'Workorder Type') : echo 'selected';
+                                    endif; ?>">
                             <a href="<?= base_url("workstatus") ?>">
                                 <i class='bx bx-fw bx-checkbox-square'></i> Status
                             </a>
                         </li>
                     </ul>
                 </li>
-                <li class="<?php if($page->parent == 'Customers'): echo 'selected'; endif; ?>">
+                <li class="<?php if ($page->parent == 'Customers') : echo 'selected';
+                            endif; ?>">
                     <a href="<?= base_url("customer") ?>">
                         <i class='bx bx-fw bx-group'></i> Customers
                     </a>
@@ -189,84 +217,104 @@ if ($this->session->userdata('usertimezone') == null) {
                     <ul>
                     </ul>
                 </li>
-                <li class="<?php if($page->title == 'Marketing Features' || $page->title == 'Survey Wizard' || $page->title == 'SMS Automation' || $page->title == 'Email Blast' || $page->title == 'Email Automation' || $page->title == 'Deals & Steals' || $page->title == 'My Inquiry List' || $page->title == 'Campaign 360'): echo 'selected '; endif; if($page->parent == 'Marketing'): echo 'active'; endif; ?>">
+                <li class="<?php if ($page->title == 'Marketing Features' || $page->title == 'Survey Wizard' || $page->title == 'SMS Automation' || $page->title == 'Email Blast' || $page->title == 'Email Automation' || $page->title == 'Deals & Steals' || $page->title == 'My Inquiry List' || $page->title == 'Campaign 360') : echo 'selected ';
+                            endif;
+                            if ($page->parent == 'Marketing') : echo 'active';
+                            endif; ?>">
                     <a href="<?= base_url("marketing") ?>">
                         <i class='bx bx-fw bx-bar-chart-square'></i> Marketing <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
                     </a>
                     <ul class="mt-3">
-                        <li class="<?php if($page->title == 'Customers'): echo 'selected'; endif; ?>">
+                        <li class="<?php if ($page->title == 'Customers') : echo 'selected';
+                                    endif; ?>">
                             <a href="<?= base_url("customer") ?>">
                                 <i class='bx bx-fw bx-group'></i> My Customers
                             </a>
                         </li>
-                        <li class="<?php if($page->title == 'SMS Blast'): echo 'selected'; endif; ?>">
+                        <li class="<?php if ($page->title == 'SMS Blast') : echo 'selected';
+                                    endif; ?>">
                             <a href="<?= base_url("sms_campaigns") ?>">
                                 <i class='bx bx-fw bx-chat'></i> SMS Blast
                             </a>
                         </li>
-                        <li class="<?php if($page->title == 'Survey Wizard'): echo 'selected'; endif; ?>">
+                        <li class="<?php if ($page->title == 'Survey Wizard') : echo 'selected';
+                                    endif; ?>">
                             <a href="<?= base_url("survey") ?>">
                                 <i class='bx bx-fw bx-list-check'></i> Survey
                             </a>
                         </li>
-                        <li class="<?php if($page->title == 'SMS Automation'): echo 'selected'; endif; ?>">
+                        <li class="<?php if ($page->title == 'SMS Automation') : echo 'selected';
+                                    endif; ?>">
                             <a href="<?= base_url("sms_automation") ?>">
                                 <i class='bx bx-fw bx-message-dots'></i> SMS Automation
                             </a>
                         </li>
-                        <li class="<?php if($page->title == 'Email Blast'): echo 'selected'; endif; ?>">
+                        <li class="<?php if ($page->title == 'Email Blast') : echo 'selected';
+                                    endif; ?>">
                             <a href="<?= base_url("email_campaigns") ?>">
                                 <i class='bx bx-fw bx-envelope'></i> Email Blast
                             </a>
                         </li>
-                        <li class="<?php if($page->title == 'Email Automation'): echo 'selected'; endif; ?>">
+                        <li class="<?php if ($page->title == 'Email Automation') : echo 'selected';
+                                    endif; ?>">
                             <a href="<?= base_url("email_automation") ?>">
                                 <i class='bx bx-fw bx-mail-send'></i> Email Automation
                             </a>
                         </li>
-                        <li class="<?php if($page->title == 'Deals & Steals'): echo 'selected'; endif; ?>">
+                        <li class="<?php if ($page->title == 'Deals & Steals') : echo 'selected';
+                                    endif; ?>">
                             <a href="<?= base_url("promote/deals") ?>">
                                 <i class='bx bx-fw bx-purchase-tag-alt'></i> Deals and Steals
                             </a>
                         </li>
-                        <li class="<?php if($page->title == 'Campaign 360'): echo 'selected'; endif; ?>">
+                        <li class="<?php if ($page->title == 'Campaign 360') : echo 'selected';
+                                    endif; ?>">
                             <a href="<?= base_url("campaign") ?>">
                                 <i class='bx bx-fw bx-map-pin'></i> Campaign 360
                             </a>
                         </li>
-                        <li class="<?php if($page->title == 'My Inquiry List'): echo 'selected'; endif; ?>">
+                        <li class="<?php if ($page->title == 'My Inquiry List') : echo 'selected';
+                                    endif; ?>">
                             <a href="<?= base_url("my_inquires") ?>">
                                 <i class='bx bx-fw bx-help-circle'></i> My Inquiry List
                             </a>
                         </li>
                     </ul>
                 </li>
-                <li class="<?php if($page->title == 'Business Tools'): echo 'selected '; endif; if($page->parent == 'Tools'): echo 'active'; endif; ?>">
+                <li class="<?php if ($page->title == 'Business Tools') : echo 'selected ';
+                            endif;
+                            if ($page->parent == 'Tools') : echo 'active';
+                            endif; ?>">
                     <a href="#">
                         <i class='bx bx-fw bx-extension'></i> Tools <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
                     </a>
                     <ul class="mt-3">
-                        <li class="<?php if($page->title == 'Business Tools' || $page->title == 'API Connectors' || $page->title == 'Google Contacts' || $page->title == 'Quickbooks Payroll' || $page->title == 'Nice Job' || $page->title == 'MailChimp' || $page->title == 'Active Campaign' || $page->title == 'API Integration'): echo 'selected'; endif; ?>">
+                        <li class="<?php if ($page->title == 'Business Tools' || $page->title == 'API Connectors' || $page->title == 'Google Contacts' || $page->title == 'Quickbooks Payroll' || $page->title == 'Nice Job' || $page->title == 'MailChimp' || $page->title == 'Active Campaign' || $page->title == 'API Integration') : echo 'selected';
+                                    endif; ?>">
                             <a href="<?= base_url("tools/business_tools") ?>">
-                                <i class='bx bx-fw bx-wrench'></i> Business Tools 
+                                <i class='bx bx-fw bx-wrench'></i> Business Tools
                             </a>
                         </li>
-                        <li class="<?php if($page->title == 'eSign Tools'): echo 'selected'; endif; ?>">
+                        <li class="<?php if ($page->title == 'eSign Tools') : echo 'selected';
+                                    endif; ?>">
                             <a href="<?= base_url("esignmain") ?>">
                                 <i class='bx bx-fw bx-palette'></i> eSign
                             </a>
                         </li>
-                        <li class="<?php if($page->title == 'Affiliate Partners' || $page->title == 'Affiliates Stats Dashboard'): echo 'selected'; endif; ?>">
+                        <li class="<?php if ($page->title == 'Affiliate Partners' || $page->title == 'Affiliates Stats Dashboard') : echo 'selected';
+                                    endif; ?>">
                             <a href="<?= base_url("affiliate") ?>">
                                 <i class='bx bx-fw bx-group'></i> Affiliates
                             </a>
                         </li>
-                        <li class="<?php if($page->title == 'Inventory' || $page->title == 'Services' || $page->title == 'Fees' || $page->title == 'Vendors' || $page->title == 'Item Categories'): echo 'selected'; endif; ?>">
+                        <li class="<?php if ($page->title == 'Inventory' || $page->title == 'Services' || $page->title == 'Fees' || $page->title == 'Vendors' || $page->title == 'Item Categories') : echo 'selected';
+                                    endif; ?>">
                             <a href="<?= base_url("inventory") ?>">
                                 <i class='bx bx-fw bx-box'></i> Inventory
                             </a>
                         </li>
-                        <li class="<?php if($page->title == 'My Forms'): echo 'selected'; endif; ?>">
+                        <li class="<?php if ($page->title == 'My Forms') : echo 'selected';
+                                    endif; ?>">
                             <a href="<?= base_url("fb") ?>">
                                 <i class='bx bx-fw bx-add-to-queue'></i> Form Builder
                             </a>
@@ -288,7 +336,10 @@ if ($this->session->userdata('usertimezone') == null) {
                         </li>
                     </ul>
                 </li>
-                <li class="<?php if($page->title == 'Company'): echo 'selected '; endif; if($page->parent == 'Company'): echo 'active'; endif; ?>">
+                <li class="<?php if ($page->title == 'Company') : echo 'selected ';
+                            endif;
+                            if ($page->parent == 'Company') : echo 'active';
+                            endif; ?>">
                     <a href="#">
                         <i class='bx bx-fw bx-buildings'></i> Company <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
                     </a>
@@ -298,7 +349,8 @@ if ($this->session->userdata('usertimezone') == null) {
                                 <i class='bx bx-fw bx-building-house'></i> My Business
                             </a>
                         </li>
-                        <li class="<?php if($page->title == 'Email Templates' | $page->title == 'SMS Templates' | $page->title == 'Email Branding' | $page->title == 'Notifications'): echo 'selected'; endif; ?>">
+                        <li class="<?php if ($page->title == 'Email Templates' | $page->title == 'SMS Templates' | $page->title == 'Email Branding' | $page->title == 'Notifications') : echo 'selected';
+                                    endif; ?>">
                             <a href="<?= base_url("settings/email_templates") ?>">
                                 <i class='bx bx-fw bx-cog'></i> Settings
                             </a>
@@ -308,7 +360,8 @@ if ($this->session->userdata('usertimezone') == null) {
                                 <i class='bx bx-fw bx-user-pin'></i> Employees
                             </a>
                         </li>
-                        <li class="<?php if($page->title == 'My CRM' | $page->title == 'Cards File'): echo 'selected'; endif; ?>">
+                        <li class="<?php if ($page->title == 'My CRM' | $page->title == 'Cards File') : echo 'selected';
+                                    endif; ?>">
                             <a href="<?= base_url("mycrm") ?>">
                                 <i class='bx bx-fw bx-book-content'></i> My CRM
                             </a>
@@ -345,14 +398,14 @@ if ($this->session->userdata('usertimezone') == null) {
                 </div>
                 <div class="nsm-page-title">
                     <h4><?= $page->title ?></h4>
-                    <?php 
-                    if($page->title == 'Dashboard'):
-                    ?>
-                    <span>Welcome <?php echo getLoggedName(); ?>!</span>
                     <?php
-                    else:
+                    if ($page->title == 'Dashboard') :
                     ?>
-                    <?= $page->message; ?>
+                        <span>Welcome <?php echo getLoggedName(); ?>!</span>
+                    <?php
+                    else :
+                    ?>
+                        <?= $page->message; ?>
                     <?php
                     endif;
                     ?>
@@ -400,11 +453,10 @@ if ($this->session->userdata('usertimezone') == null) {
                             // $ipInfo = file_get_contents("http://www.geoplugin.net/json.gp?ip=" . $_SERVER['HTTP_CLIENT_IP']);
                             // $getTimeZone = json_decode($ipInfo);
 
-                            try{
+                            try {
                                 $UserTimeZone = new DateTimeZone($this->session->userdata('usertimezone'));
-                            }
-                            catch (Exception $e) {
-                                header("Location: ".base_url()."/logout");
+                            } catch (Exception $e) {
+                                header("Location: " . base_url() . "/logout");
                             }
 
                             $checkin_date_time = "";
@@ -547,9 +599,9 @@ if ($this->session->userdata('usertimezone') == null) {
                             <input type="hidden" id="timeDifference" value="<?php echo $time_difference; ?>">
                             <input type="hidden" id="unScheduledShift" value="<?php echo $shift_end; ?>" data-value="<?php echo date('h:i A', $shift_end) ?>">
                             <input type="hidden" id="autoClockOut" value="<?php echo $overtime_status; ?>">
-                            <div class="dropdown dropdown-hover d-flex" id="<?php echo $clock_btn ?>" data-allow-module="<?= $_SESSION['alert_class'] ?>">
+                            <div class="dropdown dropdown-hover d-flex Btn" id="<?php echo $clock_btn ?>" data-allow-module="<?= $_SESSION['alert_class'] ?>">
                                 <a href="#" class="dropdown-toggle">
-                                    <i class='bx bx-fw bx-time-five'></i>
+                                    <i class='bx bx-fw bx-time-five cBtn'></i>
                                 </a>
                                 <div class="dropdown-menu dropdown-list">
                                     <div class="list-item d-flex">
@@ -579,31 +631,31 @@ if ($this->session->userdata('usertimezone') == null) {
                                         <h6 class="dropdown-header fw-bold">Tasks</h6>
                                     </div>
                                     <div id="task_container">
-                                    <?php
-                                    $newtasks = getTasks();
+                                        <?php
+                                        $newtasks = getTasks();
 
-                                    if (count($newtasks) > 0) :
-                                        foreach ($newtasks as $task) :
-                                    ?>
-                                            <div class="list-item" onclick="location.href='<?php echo base_url('taskhub/view/' . $task->task_id); ?>'">
-                                                <span class="content-title"><?php echo $task->subject; ?></span>
-                                                <span class="content-subtitle">
-                                                    <?php
-                                                    $date_created = date_create($task->date_created);
-                                                    echo date_format($date_created, "F d, Y h:i:s");
-                                                    ?>
-                                                </span>
+                                        if (count($newtasks) > 0) :
+                                            foreach ($newtasks as $task) :
+                                        ?>
+                                                <div class="list-item" onclick="location.href='<?php echo base_url('taskhub/view/' . $task->task_id); ?>'">
+                                                    <span class="content-title"><?php echo $task->subject; ?></span>
+                                                    <span class="content-subtitle">
+                                                        <?php
+                                                        $date_created = date_create($task->date_created);
+                                                        echo date_format($date_created, "F d, Y h:i:s");
+                                                        ?>
+                                                    </span>
+                                                </div>
+                                            <?php
+                                            endforeach;
+                                        else :
+                                            ?>
+                                            <div class="text-center py-3">
+                                                <span class="content-subtitle">No tasks for now.</span>
                                             </div>
                                         <?php
-                                        endforeach;
-                                    else :
+                                        endif;
                                         ?>
-                                        <div class="text-center py-3">
-                                            <span class="content-subtitle">No tasks for now.</span>
-                                        </div>
-                                    <?php
-                                    endif;
-                                    ?>
                                     </div>
                                     <div>
                                         <hr class="dropdown-divider">

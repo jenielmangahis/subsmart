@@ -278,6 +278,7 @@ class Timesheet extends MY_Controller
         $query3 = $this->timesheet_model->getUsersAccordingToLogs();
         $query6 = $this->timesheet_model->get_user_according_cIncOut_logs();
         $user_payday = $this->timesheet_model->getUsersAccordingToLogs_payday();
+        $user_allow = $this->timesheet_model->getUsersAccordingToLogs_allow();
 
        
         $query6 = $this->timesheet_model->get_logs_cOut_cIn_location(logged('company_id'));
@@ -312,6 +313,7 @@ class Timesheet extends MY_Controller
         $data->last_update2  = $last_update2;
         $data->last_update3  = $last_update3;
         $data->last_update4  = $last_update4;
+        $data->user_allow = $user_allow;
         echo json_encode($data);
     }
     public function getResClockInPayDate()

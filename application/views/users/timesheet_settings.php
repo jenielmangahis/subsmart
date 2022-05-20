@@ -112,6 +112,22 @@ foreach ($report_settings as $settings) {
     .table-responsive {
         overflow-x: hidden;
     }
+
+    label.custom-control-label.allow_clock_in::before {
+        left: -2.25rem;
+        width: 1.75rem rem;
+        pointer-events: all;
+        border-radius: 0.5rem;
+        background-color: #ff584cd9;
+    }
+
+    label.custom-control-label.allow_clock_in::after {
+        background-color: #ffffff;
+    }
+
+    .custom-control-input:checked~.custom-control-label.allow_clock_in:before {
+        background-color: #4cc510;
+    }
 </style>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/employee'); ?>
@@ -172,7 +188,7 @@ foreach ($report_settings as $settings) {
                                         <li class="nav-item">
                                             <a class="nav-link timesheet_report_settings active" data-toggle="tab" href="#timesheet_report_settings">Timesheet Report Settings</a>
                                         </li>
-                                        
+
                                     </ul>
                                 </div>
                             </div>
@@ -182,25 +198,26 @@ foreach ($report_settings as $settings) {
                                     <div class="row" style="padding-top: 20px;">
                                         <div class="col-md-12">
                                             <form id="timezone_settings_form2" action="">
-                                                <!-- <div class="row">
+                                                <div class="row">
                                                     <div class="col-md-6">
                                                         <div class="form-group ">
                                                             <div class="custom-control custom-switch">
 
                                                                 <input type="checkbox" value=0 class="custom-control-input allow_clock_in" id="est_wage_privacy2">
-                                                                <label class="custom-control-label" for="est_wage_privacy2">Allow cannot <span style="font-weight: bold;">Clock In</span> if it's not 5 minutes early base on their schedule</label>
+                                                                <label class="custom-control-label allow_clock_in" for="est_wage_privacy2"> <span id="status">Enable</span> user <b>cannot clock in 5 minutes</b> early.</label>
 
 
-                                                                    <label class="est_wage_privacy_editor" for="est_wage_privacy2">
-                                                                        <p>Latest
-                                                                            update by <span id="update"></span></p>
-                                                                    </label>
+                                                                <br><label class="est_wage_privacy_editor" for="est_wage_privacy2">
+                                                                    <p>Latest
+                                                                        update by <span id="update"></span></p>
+                                                                </label>
 
 
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <!--
                                                 <div class="row">
                                                     <div class="col-md-6">
                                                         <div class="form-group ">
@@ -252,7 +269,7 @@ foreach ($report_settings as $settings) {
 
 
                                             </form>
-                                           
+
                                         </div>
                                         <div class="col-md-12">
                                             <form id="timezone_settings_form" action="">
@@ -504,7 +521,7 @@ foreach ($report_settings as $settings) {
                                                     </div>
                                                 </div>
                                             </div> <!-- last -->
-                                            <div class="row" >
+                                            <div class="row">
                                                 <div class="col-3">
                                                     <label class="est_wage_privacy_editor" for="est_wage_privacy2">
                                                         <p>Latest

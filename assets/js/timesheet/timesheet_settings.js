@@ -74,8 +74,12 @@ $(document).ready(function() {
 
         if ($("#est_wage_privacy2").is(":checked")) {
             $("#est_wage_privacy2").val(1);
+            var status = 'Disable';
+            $('.allow_clock_in #status').html(status);
         } else {
             $("#est_wage_privacy2").val(0);
+            var status = 'Enable';
+            $('.allow_clock_in #status').html(status);
         }
 
     })
@@ -233,8 +237,27 @@ $(document).ready(function() {
         dataType: "json",
         data: {},
         success: function(data) {
-            var html = data.user_payday[0]['FName'] + " " + data.user_payday[0]['LName'] + ", " + data.payday_dateUpdated;
+
+            var html = data.user_payday[0]['FName'] + " " + data.user_payday[0]['LName'] + ", " + data.last_update2;
+
+            var html2 = data.user_allow[0]['FName'] + " " + data.user_allow[0]['LName'] + ", " + data.last_update;
+
+            if (data.result.length > 0) {
+                if (data.result[0]['allow_5min'] == 1) {
+                    $(".custom-control-input.allow_clock_in").attr('checked', true);
+                    var status = 'Disable';
+                    $('.allow_clock_in #status').html(status);
+                } else {
+                    $(".custom-control-input.allow_clock_in").attr('checked', false);
+                    var status = 'Enable';
+                    $('#status').html(status);
+                }
+
+            }
+
+
             $("#update2").html(html);
+            $(".est_wage_privacy_editor #update").html(html2);
 
             $("input[name='payday']").each(function() {
                 if ($(this).val() == data.result[0]['pay_date']) {

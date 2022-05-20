@@ -223,9 +223,19 @@ class Timesheet_model extends MY_Model
     {
         $this->db->or_where('DATE(date_created)', date('Y-m-d'));
         $this->db->or_where('DATE(date_created)', date('Y-m-d', strtotime('yesterday')));
+       
         $qry = $this->db->get($this->attn_tbl);
         return $qry->result();
     }
+    public function getEmployeeAttendance1()
+    {
+        $this->db->or_where('DATE(date_created)', date('Y-m-d'));
+        $this->db->or_where('DATE(date_created)', date('Y-m-d', strtotime('yesterday')));
+        $this->db->order_by('id', 'DESC');
+        $qry = $this->db->get($this->attn_tbl);
+        return $qry->result();
+    }
+    
     public function employeeAttendance()
     {
         $qry = $this->db->get($this->attn_tbl)->result();
@@ -659,9 +669,11 @@ class Timesheet_model extends MY_Model
     }
     public function getTimesheetLogs()
     {
+
         $qry = $this->db->get('timesheet_logs');
         return $qry->result();
     }
+    
     public function getTSByDate($date_this_week)
     {
         //            $this->db->like('date_created',date('Y-m-d',strtotime('yesterday')));
@@ -1357,14 +1369,24 @@ class Timesheet_model extends MY_Model
         return $query->result();
     }
 
+    public function getUsersAccordingToLogs_allow()
+    {
+        $query = $this->getLastResClockInPayDateLogs_allow(logged('company_id'));
+
+
+        foreach ($query as $q) {
+            $query2 = $this->db->get_where('users', array('id' => $q->user_id));
+        }
+        return $query2->result();
+    }
     public function getUsersAccordingToLogs_payday()
     {
         $query = $this->getLastResClockInPayDateLogs_payday(logged('company_id'));
 
 
-       foreach($query as $q){
-        $query2 = $this->db->get_where('users', array('id' => $q->user_id));
-       }
+        foreach ($query as $q) {
+            $query2 = $this->db->get_where('users', array('id' => $q->user_id));
+        }
         return $query2->result();
     }
 
@@ -1386,9 +1408,9 @@ class Timesheet_model extends MY_Model
         $query = $this->getLastResClockInPayDateLogs_allow(logged('company_id'));
 
 
-       foreach($query as $q){
-        $query2 = $this->db->get_where('users', array('id' => $q->user_id));
-       }
+        foreach ($query as $q) {
+            $query2 = $this->db->get_where('users', array('id' => $q->user_id));
+        }
         return $query2->result();
     }
 
@@ -1432,7 +1454,7 @@ class Timesheet_model extends MY_Model
         $this->db->insert('timesheet_ClockInRes_PayDate_logs', $insert);
         return $date_created;
     }
-    
+
     public function get_cOut_cIn_Location($company_id)
     {
         $this->db->select("*");
@@ -1443,20 +1465,21 @@ class Timesheet_model extends MY_Model
         $query = $this->db->get();
         var_dump($query->result() . 'mao ni');
         return $query->result();
-        
     }
 
-    public function get_user_according_cIncOut_logs(){
-        $query2=$this->get_logs_cOut_cIn_location(logged('company_id'));
-        foreach($query2 as $q){
+    public function get_user_according_cIncOut_logs()
+    {
+        $query2 = $this->get_logs_cOut_cIn_location(logged('company_id'));
+        foreach ($query2 as $q) {
             $query = $this->db->get_where('users', array('id' => $q->user_id));
         }
-        
+
 
         return $query->result();
     }
 
-    public function get_logs_cOut_cIn_location($company_id){
+    public function get_logs_cOut_cIn_location($company_id)
+    {
         $this->db->select("*");
         $this->db->where('company_id', $company_id);
         $this->db->from("timesheet_location_for_clock_in_out_logs");
@@ -1468,26 +1491,26 @@ class Timesheet_model extends MY_Model
     }
 
 
-    public function insert_logs_for_cIn_cOut($company_id, $user_id){
+    public function insert_logs_for_cIn_cOut($company_id, $user_id)
+    {
         $insert = [
             'user_id' => $user_id,
             'company_id' => $company_id,
             'date_created' => date("Y-m-d H:i:s")
         ];
 
-        $this->db->insert('timesheet_location_for_clock_in_out_logs',$insert);
+        $this->db->insert('timesheet_location_for_clock_in_out_logs', $insert);
     }
 
     public function update_cOut_cIn_Location($data)
     {
         $update = [
-            'clock_In_location' =>$data['cIn'],
+            'clock_In_location' => $data['cIn'],
             'clock_Out_location' => $data['cOut'],
             'date_created' => date("Y-m-d")
         ];
-        $this->db->where('company_id',logged('company_id'));
+        $this->db->where('company_id', logged('company_id'));
         $this->db->update('timesheet_location_for_clock_in_out', $update);
-
     }
 
 
@@ -1770,7 +1793,7 @@ class Timesheet_model extends MY_Model
     public function getResClockInPayDate($company_id)
     {
         $query = $this->db->get_where("timesheet_ClockInRes_PayDate", array('company_id' => $company_id));
-        
+
         return $query->result();
     }
     public function updateResClockInPayDate_allow($data)

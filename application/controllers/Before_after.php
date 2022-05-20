@@ -83,13 +83,23 @@ class Before_after extends MY_Controller
         redirect('vault/beforeafter');
     }
 
+    private function getUploadPath()
+    {
+        $filePath = FCPATH . (implode(DIRECTORY_SEPARATOR, ['uploads', 'beforeandafter']) . DIRECTORY_SEPARATOR);
+        if (!file_exists($filePath)) {
+            mkdir($filePath, 0777, true);
+        }
+
+        return $filePath;
+    }
+
     public function updateBeforeAfter() {
         //postAllowed();
         $post = $this->input->post();
         $beforeAfter = $this->before_after_model->getById($post['id']);
         if( $beforeAfter ){
             $config = array(
-                'upload_path' => "./uploads/",
+                'upload_path' => $this->getUploadPath(),
                 'allowed_types' => "gif|jpg|png|jpeg",
                 'overwrite' => FALSE,
                 'encrypt_name' => TRUE,
@@ -136,7 +146,7 @@ class Before_after extends MY_Controller
 
     public function uploadBeforeAfter($customer_id, $group_number, $notes) {
         $config = array(
-            'upload_path' => "./uploads/",
+            'upload_path' => $this->getUploadPath(),
             'allowed_types' => "gif|jpg|png|jpeg",
             'overwrite' => FALSE,
             'encrypt_name' => TRUE,
@@ -145,6 +155,7 @@ class Before_after extends MY_Controller
             'max_width' => "1024"
         );
         $this->load->library('upload', $config);
+        $this->upload->upload_path = $config['upload_path'];
 
         $user_id = logged('id');
         $comp_id = logged('company_id');
