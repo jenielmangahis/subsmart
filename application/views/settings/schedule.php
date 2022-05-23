@@ -182,7 +182,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 </div>
 
                                 <div class="col-sm-6">
-                                    <label><b>Calendar Job/Event Display Options</b></label>
+                                    <label><b>Calendar Event Display Options</b></label>
                                     <div class="help help-sm help-block">The details you will see for an event on
                                         main calendar
                                     </div>
@@ -190,19 +190,20 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                         <div class="checkbox checkbox-sec margin-right">
                                             <input type="checkbox" name="work_order_show_customer"
                                                    value="1"
-                                                <?= !empty($settings['work_order_show_customer']) && $settings['work_order_show_customer'] == 1 ? "checked=checked" : "" ?>
-                                               id="work_order_show_customer">
-                                            <label for="work_order_show_customer"><span>Customer name</span></label>
+                                                   checked="checked"
+                                                <?php echo (!empty($settings['work_order_show_customer']) && ($settings['work_order_show_customer'] === 1)) ? "checked" : "" ?>
+                                                   id="work_order_show_customer">
+                                            <label for="work_order_show_customer"><span>Customer name, phone</span></label>
                                         </div>
                                     </div>
                                     <div>
                                         <div class="checkbox checkbox-sec margin-right">
                                             <input type="checkbox" name="work_order_show_details"
                                                    value="1"
-                                                <?= !empty($settings['work_order_show_details']) && $settings['work_order_show_details'] == 1 ? "checked=checked" : "" ?>
-                                                id="work_order_show_details">
+                                                <?php echo (!empty($settings['work_order_show_details']) && ($settings['work_order_show_details'] === 1)) ? "checked" : "" ?>
+                                                   id="work_order_show_details">
                                             <label for="work_order_show_details">
-                                                <span>Job address and description</span>
+                                                <span>Job address, name, description</span>
                                             </label>
                                         </div>
                                     </div>
@@ -210,19 +211,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                         <div class="checkbox checkbox-sec margin-right">
                                             <input type="checkbox" name="work_order_show_price"
                                                    value="1"
-                                                <?= !empty($settings['work_order_show_price']) && $settings['work_order_show_price'] == 1 ? "checked=checked" : "" ?>
+                                                   checked="checked"
+                                                <?php echo (!empty($settings['work_order_show_price']) && ($settings['work_order_show_price'] === 1)) ? "checked" : "" ?>
                                                    id="work_order_show_price">
-                                            <label for="work_order_show_price"><span>Price</span></label>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div class="checkbox checkbox-sec margin-right">
-                                            <input type="checkbox" name="work_order_show_link"
-                                                   value="1"
-
-                                                    <?= !empty($settings['work_order_show_link']) && $settings['work_order_show_link'] == 1 ? "checked=checked" : "" ?>
-                                                   id="work_order_show_link">
-                                            <label for="work_order_show_link"><span>Url Links</span></label>
+                                            <label for="work_order_show_price"><span>Job price</span></label>
                                         </div>
                                     </div>
                                     <hr class="card-hr" style="border-bottom: solid 2px #dfdfdf !important;">

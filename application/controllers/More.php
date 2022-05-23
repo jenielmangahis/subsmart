@@ -13,75 +13,43 @@ class More extends MY_Controller {
 
 		parent::__construct();
 		$this->checkLogin();
-		$this->hasAccessModule(65); 
 		$this->page_data['page']->title = 'More ';
 		$this->page_data['page']->menu = 'more';
 		$this->load->model('NsmartUpgrades_model');
 		$this->load->model('SubscriberNsmartUpgrade_model');
-		$cid  = logged('id');
-		$profiledata = $this->business_model->getByWhere(array('user_id'=>$cid));
-		$this->page_data['profiledata'] = ($profiledata) ? $profiledata[0] : null;
 	}
 
 
-	public function upgrades(){
-
-		/*$is_allowed = $this->isAllowedModuleAccess(66);
+	public function upgrades(){	
+		
+		$is_allowed = $this->isAllowedModuleAccess(66);
         if( !$is_allowed ){
             $this->page_data['module'] = 'plan_builder';
             echo $this->load->view('no_access_module', $this->page_data, true);
             die();
-        }*/
+        }
 
 		$user = (object)$this->session->userdata('logged');
 		$cid  = logged('company_id');
 
+		$NsmartUpgrades = $this->NsmartUpgrades_model->getAll();
+		$profiledata = $this->business_model->getByWhere(array('id'=>$cid));	
+		$this->page_data['NsmartUpgrades'] = $NsmartUpgrades;
+		/*$this->page_data['userid'] = $user->id;
+		$this->page_data['profiledata'] = $profiledata[0];*/
+		
 		$this->load->view('more/upgrades', $this->page_data);
 	}
 
-	public function ajax_load_addons_list(){
-		$user = (object)$this->session->userdata('logged');
-		$cid  = logged('company_id');
-
-		$activeAddons   = $this->SubscriberNsmartUpgrade_model->getAllByClientId($cid);
-		$NsmartUpgrades = $this->NsmartUpgrades_model->getAll();
-
-		$active_addons_id = array();
-		foreach($activeAddons as $a){
-			$active_addons_id[$a->plan_upgrade_id] = $a->plan_upgrade_id;
-		}
-
-		$this->page_data['active_addons_id'] = $active_addons_id;
-		$this->page_data['NsmartUpgrades']   = $NsmartUpgrades;
-		$this->load->view('more/ajax_load_addons_list', $this->page_data);
-	}
-
-	public function ajax_load_active_addons_list(){
-		$user = (object)$this->session->userdata('logged');
-		$cid  = logged('company_id');
-
-		$activeAddons   = $this->SubscriberNsmartUpgrade_model->getAllByClientId($cid);
-		$NsmartUpgrades = $this->NsmartUpgrades_model->getAll();
-
-		$active_addons_id = array();
-		foreach($activeAddons as $a){
-			$active_addons_id[$a->plan_upgrade_id] = $a->plan_upgrade_id;
-		}
-
-		$this->page_data['active_addons_id'] = $active_addons_id;
-		$this->page_data['NsmartUpgrades']   = $NsmartUpgrades;
-		$this->load->view('more/_load_active_addons_list', $this->page_data);
-	}
-
-	public function addons(){
-
+	public function addons(){	
+		
 		$user = (object)$this->session->userdata('logged');
 		$cid=logged('company_id');
-		$profiledata = $this->business_model->getByWhere(array('id'=>$cid));
-
+		$profiledata = $this->business_model->getByWhere(array('id'=>$cid));	
+		
 		/*$this->page_data['userid'] = $user->id;
 		$this->page_data['profiledata'] = $profiledata[0];*/
-
+		
 		$this->load->view('more/addons', $this->page_data);
 	}
 

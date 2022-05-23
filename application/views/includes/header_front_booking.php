@@ -9,7 +9,7 @@
 	<?php if($page_title) { ?>
 			<title><?php echo $page_title; ?></title>
 	<?php } else { ?>
-		<title>Nsmart</title>
+		<title>Dashboards</title>
 	<?php } ?>
 
     <meta content="<?php echo $page_title; ?>" name="description">
@@ -39,10 +39,6 @@
     <link rel="stylesheet" href="<?php echo $url->assets?>css/addons/booking.css">
     <!-- <link rel="stylesheet" href="<?php //echo $url->assets?>bootstrap/css/bootstrap.min.css"> -->
     <?php echo put_header_assets(); ?>
-
-    <script>  
-        var base_url = "<?php echo base_url(); ?>";
-    </script>
 
 </head>
 

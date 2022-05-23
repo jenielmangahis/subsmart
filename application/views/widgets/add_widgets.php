@@ -1,23 +1,21 @@
-<div class="col-lg-3 col-md-6 col-sm-12 widget_header" id="addWidget">
-    <div  class="wid_header">
-        <i class="fa fa-bar-chart"></i> Add More Report
-    </div>
-    <div class="card" style="border: 2px solid #30233d; margin-top:0; border-radius: 40px; padding:5px;">
-        <div style="border: 5px solid #30233d; margin-top:0; border-radius: 40px; box-shadow: 1px 0px 15px 5px rgb(48, 35, 61);">
-            <div class="card-body mt-2" style="padding:5px 10px; height: 363px; overflow: hidden">
-                <div 
-                    onmouseover="$('.add_widget').attr('style', 'font-size: 120px; color: black')" 
-                    onmouseout="$('.add_widget').attr('style', 'font-size: 120px; color: gray')" 
-                    onclick="$('#addWidgets').modal('show')"
-                    class="text-center justify-content-center" style="cursor: pointer">
-                    <i style="font-size: 120px; color: gray" class="fa fa-plus-circle add_widget"></i><br />
-                    <span>Manage Widgets</span>
-                </div>
-                <hr />
-                <div class="justify-content-center text-center">
-                    <span>Track stats important to your business</span><br />
-                    <button onclick="document.location = '<?= base_url('mycrm/membership') ?>'" class="btn btn-primary mt-2">Upgrade Plan</button>
-                </div>
+<div class="col-lg-3 col-md-6 col-sm-12" id="addWidget">
+    <div class="card" style="margin:0;">
+        <div class="card-header">
+            <i class="fa fa-bar-chart"></i> Add More Report
+        </div>
+        <div class="card-body">
+            <div 
+                onmouseover="$('.add_widget').attr('style', 'font-size: 120px; color: black')" 
+                onmouseout="$('.add_widget').attr('style', 'font-size: 120px; color: gray')" 
+                onclick="$('#addWidgets').modal('show')"
+                class="text-center justify-content-center" style="cursor: pointer">
+                <i style="font-size: 120px; color: gray" class="fa fa-plus-circle add_widget"></i><br />
+                <span>Manage Widgets</span>
+            </div>
+            <hr />
+            <div class="justify-content-center text-center">
+                <span>Track stats important to your business</span><br />
+                <button onclick="document.location = '<?= base_url('nsmart_plans/index') ?>'" class="btn btn-primary mt-2">Upgrade Plan</button>
             </div>
         </div>
     </div>
@@ -70,35 +68,17 @@
     }
 
 
-    function addToMain(id, isMain, isGlobal)
-    {
-        if(!isGlobal){
-            $.ajax({
-                url: '<?php echo base_url(); ?>widgets/addToMain',
-                method: 'POST',
-                data: {id: id},
-                //dataType: 'json',
-                success: function (response) {
-                   alert(isMain?'Successfully Removed':'Successfully Added');
-                   location.reload();
-                }
-            });
-        }else{
-            alert('Sorry you cannot update a widget set by the company as global')
-        }
-    }
-
     function addWidget(id)
     {
-        var isGlobal = $('#widgetGlobal_' + id).is(":checked") ? '1' : 0;
-        var isMain = $('#widgetMain_' + id).is(":checked") ? '1' : 0;
+        var isGlobal = $('#widgetGlobal_'+id).is(":checked")?'1':0;
+        var isMain = $('#widgetMain_'+id).is(":checked")?'1':0;
         $.ajax({
             url: '<?php echo base_url(); ?>widgets/addWidget',
             method: 'POST',
-            data: {id: id, isGlobal: isGlobal, isMain: isMain},
+            data: {id: id, isGlobal:isGlobal, isMain:isMain},
             //dataType: 'json',
             success: function (response) {
-                if (isMain != '1') {
+                if(isMain != '1'){
                     $(response).insertBefore($('#addWidget'));
                 }
             }
@@ -116,9 +96,6 @@
                 if (response.success)
                 {
                     $('#widget_' + dis).remove();
-                   
-                }else{
-                    alert(response.message);
                 }
             }
         });

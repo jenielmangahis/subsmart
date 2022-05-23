@@ -1,4 +1,7 @@
-@import url(https://fonts.googleapis.com/css?family=Roboto:400,500|Sarabun:400,600,700);
+@import url(https://fonts.googleapis.com/css?family=Roboto:400,
+500|Sarabun:400,
+600,
+700);
 
 body {
     background-repeat: repeat;
@@ -638,8 +641,7 @@ body {
     right: 0;
     left: 0;
     top: 0;
-    /*z-index: 1030;*/
-    z-index: 950;
+    z-index: 1030;
     border: 0;
     -webkit-transition: all 0.5s ease;
     transition: all 0.5s ease;
@@ -926,8 +928,8 @@ body .navigation-menu {
 }
 
 .nav-user img {
-    height: 64px;
-    width: 64px;
+    height: 36px;
+    width: 36px;
 }
 
 .arrow-none:after {
@@ -2398,7 +2400,7 @@ button:focus {
 }
 
 .progress {
-    height: 15px;
+    height: 10px;
 }
 
 .progress-bar {
@@ -4419,10 +4421,6 @@ a.faq[data-toggle="collapse"]:before {
     }
 }
 
-nav.navbar-side ul {
-    margin-top: 32px;
-}
-
 /*BUNINESS PAGE*/
 div[role="wrapper"] {
     padding: 0;
@@ -4579,26 +4577,14 @@ div#calender_toolbar h1 {
     background-color: #3a87ad;
     font-weight: normal;
 }
-.logo {
-    position: relative;
-    top: 14px;
-    left: 20px;
-}
+
 #topnav .topbar-main {
-    background: #dddede;
-    /* background: linear-gradient(to top, #c4daeb, #F0F8FF); */
-    /* background: linear-gradient(to right, rgb(107 239 253), rgb(35 115 255), rgb(107 239 253)); */
-    /*background: linear-gradient(to right, #6FB1FC, #0052D4, #6FB1FC);*/
+    background: linear-gradient(to top, #c4daeb, #F0F8FF);
     border: none;
     border-bottom-color: currentcolor;
     border-bottom-style: none;
     border-bottom-width: medium;
 }
-
-/*.logo img{
-    background-color: #32243d;
-    padding: 10px;
-}*/
 
 #calender_toolbar form .margin-left-sec {
     width: auto;
@@ -5817,12 +5803,24 @@ table.dataTable tbody td {
     font-size: 13px !important;
 }
 
+div.dataTables_wrapper div.dataTables_filter input {
+    margin-left: 0.5em;
+    display: inline-block;
+    width: auto;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    padding: 5px;
+}
+
+div.dataTables_wrapper div.dataTables_filter {
+    text-align: right;
+    margin-bottom: 10px;
+}
 
 .navbar-side .nav .nav-close {
     display: inline-block;
     position: absolute;
-    /*top: 5px;*/
-    top: 122px;
+    top: 5px;
     right: 10px;
     cursor: pointer;
     z-index: 1;
@@ -5838,7 +5836,7 @@ table.dataTable tbody td {
     position: absolute;
     top: 0;
     left: 0;
-    /* bottom: 0px; */
+    bottom: 0px;
     overflow-x: hidden;
     overflow-y: auto;
 }
@@ -6696,8 +6694,8 @@ input:focus+label {}
 }
 
 .dropdown-menu-align-right {
-    left: auto !important;
-    right: 0 !important;
+    left: auto;
+    right: 0;
 }
 
 /* fa-  font-awesome related */
@@ -7474,7 +7472,7 @@ input:focus+label {}
 .tabs li {
     float: left;
     margin: 0;
-    /* padding: 0px 30px 0px 0px; */
+    padding: 0px 30px 0px 0px;
 }
 
 .tabs li:LAST-CHILD {
@@ -8131,7 +8129,7 @@ input:focus+label {}
 .table-name .checkbox-sm {
     margin-top: 0;
     margin-right: 5px;
-
+    !
 }
 
 /* multiselect */
@@ -8448,7 +8446,7 @@ body{
     content: '';
     width: 1px;
     height: 70%;
-    background:  #8d9096;
+    background:  #2ca01c;
     right: -15px;
     top:50%;
     transform: translate(0,-50%);
@@ -9624,7 +9622,7 @@ p.sinot{font-size: 14px;font-weight: normal;color: #404040;margin: 0 0 15px;padd
     width: 100%;
     margin: 0 auto;
     position: absolute;
-    top:250px;
+    top:120px;
     left: 30px;
 }
 #new-popup .modal-dialog:before{
@@ -10290,7 +10288,7 @@ select#select-employee {
         margin-bottom: 13px;
     }
     .stcs-3-full {
-        width: 46.6%;
+        width: 46.6%%;
         float: left;
         margin-bottom: 10px;
     }
@@ -10576,7 +10574,7 @@ select#select-employee {
 .table-block .table thead th:last-child {
     border-right: none;
 }
-/* **** End Audit Page **** */
+/* **** End Audit Page **** */ 
 /**/
 
 .MuiButton-textPrimary:hover {
@@ -10617,20 +10615,6 @@ select#select-employee {
 .MuiCardHeader-action .jss57 {
     float: left;
     width: 100%;
-}
-nav.navbar-side.d-none.d-md-block:not(.closed) ul span svg#svg-sprite-menu-close {
-    position: relative !important;
-    top: 120px !important;
-}
-nav.navbar-side.d-none.d-md-block:not(.closed) ul span{
-    height: 22px !important;
-}
-img.company-logo {
-  width: 170px;
-  height: 70px;
-  object-fit: contain;
-  margin: 0 auto;
-  margin-top: 8px;
 }
 .progress-fill-card .top-block {
     justify-content: space-between;

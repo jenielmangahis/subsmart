@@ -1,85 +1,116 @@
 <style>
-.nav-subuser-img{
-    margin-top: 10px;
+/* Using panels to display blog date */
+.panel.date {
+    margin: 0px;
+    width: 60px;
+    text-align: center;
+}
+
+.panel.date .month {
+    padding: 2px 0px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.panel.date .day {
+    padding: 3px 0px;
+    font-weight: 700;
+    font-size: 1.5em;
+}
+.panel-title {
+    margin-top: 0;
+    margin-bottom: 0;
+    font-size: 16px;
+    color: inherit;
+}
+.panel.date .day {
+    padding: 3px 0px;
+    font-weight: 700;
+    font-size: 1.5em;
+}
+.panel-body {
+    padding: 15px;
+}
+.text-danger {
+    color: #a94442;
+}
+.media-list {
+    padding-left: 0;
+    list-style: none;
+}
+.media-left, .media-right, .media-body {
+    display: table-cell;
+    vertical-align: top;
+}
+.media-left, .media>.pull-left {
+    padding-right: 10px;
+}
+.panel-danger>.panel-heading {
+    color: #a94442;
+    background-color: #f2dede;
+    border-color: #ebccd1;
+}
+.panel-danger>.panel-heading {
+    color: #a94442;
+    background-color: #f2dede;
+    border-color: #ebccd1;
+}
+.media{
+  margin-bottom: 9px;
+  border-bottom: 1px solid #dddddd;
+}
+.date .month {
+    padding: 2px 0px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+.panel-heading {
+    padding: 10px 15px;
+    /* border-bottom: 1px solid transparent; */
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
+.custom-panel {
+    margin-bottom: 20px;
+    background-color: #fff;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.05);
+    box-shadow: 0 1px 1px rgba(0,0,0,.05);
+}
+.media-body{
+  margin-left: 20px;
+  border-left: 1px solid #ddd;
+  padding-left: 10px;
+  height: 130px;
+}
+.event-time{
+  font-size: 14px;
+  margin-bottom: 11px;
+  display: block;
+}
+.estimate-gray{
+  color:#888888 !important;
+  font-size: 13px;
+}
+.estimate-details h4{
+  font-size: 17px;
+  margin-bottom: 0px;
 }
 </style>
-<div class="row" style="height: 250px; overflow-y: auto;">
-  <div class="col-lg-12 col-md-12 col-sm-12">
-    <?php if ( !empty($upcomingJobs) ) { ?>
-      <?php foreach($upcomingJobs as $jb){ ?>  
-        <div class="mb-2 col-lg-12 float-left jobsRow" style="border-bottom: 1px solid #ccc; padding-bottom: -1px; cursor: pointer">
-            <div class="col-18 float-left no-padding text-center" style="border-right:1px solid #ccc; padding-right:5px;">
-                <a href="<?php echo base_url('workcalender/'); ?>">
-                <time style="font-size: 10px; text-align: left;" datetime="2021-02-09" class="icon-calendar-live">
-                    <em><?= date('D', strtotime($jb->start_date)) ?></em>
-                    <strong style="background-color: #58c04e;"><?= date('M', strtotime($jb->start_date)) ?></strong>
-                    <span><?= date('d', strtotime($jb->start_date)) ?></span>
-                </time>
-                </a>
-                <div class="job-status text-center mb-2" style="background:<?= $jb->event_color?>; color:#ffffff;"><b><?php echo strtoupper($jb->status); ?></b></div>
-                <span style="font-family: Sarabun, sans-serif !important;color: #9d9e9d;font-weight: 700;font-size: 10px;" class="text-center">ARRIVAL TIME</span><br/>
-                <span class="job-caption text-center" style="font-weight:700; color: black; font-family: Sarabun, sans-serif !important; font-size:12px">
-                    <?php echo $jb->start_time; ?>-<?php echo $jb->end_time; ?>
-                </span>
-            </div>
-            <div class="col-lg-7 float-left mt-2" style="padding-right: 0;text-align: left;">
-                <a style="color: #000!important;" href="<?php echo base_url('job/new_job1/' . $jb->id); ?>">
-                    <h6 style="font-weight:600; margin:0;font-size: 14px;text-transform: uppercase;"><?php echo $jb->job_number . ' : ' . $jb->job_type. ' - ' . $jb->tags_name; ?></h6>
-            <?php if(!empty($settings['work_order_show_customer']) && $settings['work_order_show_customer'] == 1): ?>
-                    <b  style="color:#45a73c;">
-                        <?= $jb->first_name. ' '. $jb->last_name; ?>                                              
-                    </b>
-                    <?php if( $jb->cust_phone != '' ){ ?>
-                            <a style="margin-left: 10px;color:#000000;" href="tel:<?= $jb->cust_phone; ?>"><i class="fa fa-phone-square"></i></a>
-                        <?php } ?>  
-                    <br>
-            <?php endif; ?>
-                    <?php if(!empty($settings['work_order_show_details']) && $settings['work_order_show_details'] == 1): ?>
-                        <small class="text-muted" ><?= $jb->mail_add .' '. $jb->cust_city.' '.$jb->cust_state.' '.$jb->cust_zip_code; ?></small><br>
-                        <i> <small class="text-muted" ><?= $jb->job_description; ?></small></i><br>
-                    <?php endif; ?>
-                    <?php if(!empty($settings['work_order_show_price']) && $settings['work_order_show_price'] == 1): ?>
-                        <!-- <small>Amount : $ <?= $jb->amount!="" ? number_format((float)$jb->amount ,2,'.',',') : '0.00' ; ?></small> <br> -->
-                        <small>Amount : $ <?= number_format((float)$jobs_total_amount[$jb->id] ,2,'.',',') ; ?></small> <br>
-                    <?php endif; ?>
-                    <?php if(!empty($settings['work_order_show_link']) && $settings['work_order_show_link'] == 1): ?>
-                        <a href="<?=$jb->link; ?>" target=""><small style="color: darkred;"><?=$jb->link; ?></small></a>
-                    <?php endif; ?>
-                </a>
-            </div>
-            <div class="col-lg-1 float-right">
-                <img style="position: absolute;width: 40px;" src="<?php echo userProfileImage($jb->e_employee_id); ?>" alt="user" class="rounded-circle nav-user-img vertical-center">
-                <?php if( $jb->employee2_img != '' ){ ?>
-                    <br />
-                    <img style="width: 40px;" src="<?php echo userProfileImage($jb->employee2_employee_id); ?>" alt="user" class="rounded-circle nav-user-img nav-subuser-img vertical-center">
-                <?php } ?>
-                <?php if( $jb->employee3_img != '' ){ ?>
-                    <img style="width: 40px;" src="<?php echo userProfileImage($jb->employee3_employee_id); ?>" alt="user" class="rounded-circle nav-user-img nav-subuser-img vertical-center">
-                <?php } ?>
-                <?php if( $jb->employee4_img != '' ){ ?>
-                    <img style="width: 40px;" src="<?php echo userProfileImage($jb->employee4_employee_id); ?>" alt="user" class="rounded-circle nav-user-img nav-subuser-img vertical-center">
-                <?php } ?>
-                <?php if( customerQrCode($jb->prof_id) ){ ?>
-                    <!-- <img src="<?= customerQrCode($jb->prof_id); ?>" style="position: absolute;top: 67px;left: 3px;" /> -->
-                    <br />
-                    <img style="margin-top: 20px;margin-bottom: 17px;" src="<?= customerQrCode($jb->prof_id); ?>" />
-                <?php } ?>
-            </div>
-        </div>
+<?php if ( !empty($upcomingJobs) ) { ?>
+  <div class="panel-body" style="padding: 0px;">
+    <ul class="media-list">
+      <?php foreach($upcomingJobs as $uj){ ?>
+        <li class="media">
+          <div class="estimate-details">
+            <h4><?= $uj->first_name . ' ' . $uj->last_name; ?> <span class="estimate-gray">(<?= $uj->job_number; ?>)</span></h4>
+            <span class="estimate-gray"><i class="fa fa-calendar"></i> <?= date("Y-m-d",strtotime($uj->start_date)) . ' - ' . date("Y-m-d",strtotime($uj->end_date)); ?></span>
+          </div>
+      </li>
       <?php } ?>
-    <?php }else{ ?>
-      <div class="cue-event-name no-data">NO UPCOMING JOBS</div>
-    <?php } ?>
+    </ul>
   </div>
-</div>
-<style>
-    .job-status {
-        width: 100%;
-        background: #32243d;
-        color: #ffffff;
-        text-align: center;
-        font-size: 12px;
-        line-height: 1.5;
-        margin-top: 10px;
-    }
-</style>
+<?php }else{ ?>
+  <div class="cue-event-name">NO UPCOMING JOBS</div>
+<?php } ?>

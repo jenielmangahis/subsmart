@@ -46,22 +46,9 @@ class Customer_advance_model extends MY_Model {
 
     public function get_data_by_id($fieldname,$fieldvalue,$tablename)
     {
-        $this->db->select('*');
         $this->db->where($fieldname, $fieldvalue);
         $query = $this->db->get($tablename);
         return $query->row();
-    }
-
-    public function get_customer_item_details($id){
-        $this->db->from("job_items");
-        $this->db->select('items.title,job_items.qty,items.type');
-        $this->db->join('jobs', 'jobs.id = job_items.job_id','left');
-        $this->db->join('items', 'job_items.items_id = items.id','left');
-        $this->db->where("jobs.customer_id", $id);
-        $this->db->order_by('jobs.id', "DESC");
-        $this->db->limit(10);
-        $query = $this->db->get();
-        return $query->result();
     }
 
     public function get_leads_data(){
@@ -69,21 +56,12 @@ class Customer_advance_model extends MY_Model {
         $this->db->from("ac_leads");
         $this->db->select('ac_leads.*,users.FName,users.LName');
         $this->db->join('users', 'users.id = ac_leads.fk_assign_id','left');
-        $this->db->order_by('id', "DESC");
         $this->db->where("ac_leads.company_id", $cid);
         $query = $this->db->get();
         return $query->result();
     }
-    public function check_customer($search){
-        $this->db->from("acs_profile");
-        $this->db->select('prof_id');
-        $this->db->where('first_name', $search['first_name']);
-        $this->db->where('last_name', $search['last_name']);
-        $query = $this->db->get();
-        return $query->row();
-    }
 
-    public function get_customer_data_settings($id){
+    public function get_customer_data($user_id){
         $cid=logged('company_id');
         $this->db->from("acs_profile");
         //$this->db->where("fk_user_id", $user_id);
@@ -93,106 +71,10 @@ class Customer_advance_model extends MY_Model {
         $this->db->join('acs_alarm', 'acs_alarm.fk_prof_id = acs_profile.prof_id','left');
         $this->db->join('acs_office', 'acs_office.fk_prof_id = acs_profile.prof_id','left');
         $this->db->join('acs_office as ao', 'ao.fk_prof_id = users.id','left');
-        $this->db->where("acs_profile.prof_id", $id);
-        //$this->db->limit(20);
-        $query = $this->db->get();
-        return $query->result();
-    }
-
-    public function get_customer_data($search=null){
-        $cid = logged('company_id');
-        $this->db->from("acs_profile");
-        //$this->db->where("fk_user_id", $user_id);
-        $this->db->select('users.id,acs_profile.prof_id,acs_profile.first_name,acs_profile.last_name,acs_profile.email,acs_profile.phone_m,acs_profile.status,acs_b.mmr,
-        acs_alarm.system_type,acs_office.entered_by,acs_office.lead_source,acs_profile.city,acs_profile.state,users.LName,users.FName,acs_profile.customer_type,
-        acs_profile.business_name,acs_office.technician,acs_b.transaction_amount as total_amount,industry_type.name AS industry_type, acs_profile.industry_type_id');
-        $this->db->join('users', 'users.id = acs_profile.fk_user_id','left');
-        $this->db->join('acs_billing as acs_b', 'acs_b.fk_prof_id = acs_profile.prof_id','left');
-        $this->db->join('acs_subscriptions as acs_s', 'acs_s.customer_id = acs_profile.prof_id','left');
-        $this->db->join('acs_alarm', 'acs_alarm.fk_prof_id = acs_profile.prof_id','left');
-        $this->db->join('acs_office', 'acs_office.fk_prof_id = acs_profile.prof_id','left');
-        $this->db->join('acs_office as ao', 'ao.fk_prof_id = users.id','left');
-        $this->db->join('industry_type', 'acs_profile.industry_type_id = industry_type.id','left');
-
-        if(!empty($search)){
-            if($search['monitoring_id'] != ""){
-                $this->db->where('acs_alarm.monitor_id LIKE', '%' . $search['monitoring_id'] . '%');
-            }
-            if($search['firstname'] != ""){
-                $this->db->where('acs_profile.first_name LIKE', '%' . $search['firstname'] . '%');
-            }
-            if($search['lastname'] != ""){
-                $this->db->where('acs_profile.last_name LIKE', '%' . $search['lastname'] . '%');
-            }
-            if($search['email'] !=  ""){
-                $this->db->where('acs_profile.email LIKE', '%' . $search['email'] . '%');
-            }
-            if($search['phone'] != ""){
-                $this->db->or_where('acs_profile.phone_h LIKE', '%' . $search['phone'] . '%');
-            }
-            if($search['sales_date'] != ""){
-                $this->db->where('acs_office.sales_date LIKE', '%' . $search['sales_date'] . '%');
-            }
-            if($search['company_name'] != ""){
-                $this->db->where('acs_alarm.monitor_comp LIKE', '%' . $search['company_name'] . '%');
-            }
-            if($search['panel_type'] != ""){
-                $this->db->where('acs_alarm.panel_type LIKE', '%' . $search['panel_type'] . '%');
-            }
-            if($search['acct_type'] != ""){
-                $this->db->where('acs_alarm.acct_type LIKE', '%' . $search['acct_type'] . '%');
-            }
-            if($search['status'] != ""){
-                $this->db->where('acs_profile.status LIKE', '%' . $search['status'] . '%');
-            }
-            if($search['address'] != ""){
-                $this->db->where('acs_profile.mail_add LIKE', '%' . $search['address'] . '%');
-            }
-            if($search['city'] != ""){
-                $this->db->or_where('acs_profile.city LIKE', '%' . $search['city'] . '%');
-            }
-            if($search['state'] != ""){
-                $this->db->where('acs_profile.state LIKE', '%' . $search['state'] . '%');
-            }
-            if($search['zip'] != ""){
-                $this->db->where('acs_profile.zip_code LIKE', '%' . $search['zip'] . '%');
-            }
-            if($search['routing_number'] != ""){
-                $this->db->where('acs_b.routing_num LIKE', '%' . $search['routing_number'] . '%');
-            }
-            if($search['company'] != ""){
-                $this->db->where('acs_alarm.monitor_comp LIKE', '%' . $search['company'] . '%');
-            }
-            if($search['monitor_company'] != ""){
-                $this->db->where('acs_alarm.monitor_comp LIKE', '%' . $search['monitor_company'] . '%');
-            }
-            if($search['credit_score'] != ""){
-                $this->db->where('acs_office.credit_score LIKE', '%' . $search['credit_score'] . '%');
-            }
-            if($search['contract_term'] != ""){
-                $this->db->where('acs_b.contract_term LIKE', '%' . $search['contract_term'] . '%');
-            }
-        }else{
-            //$this->db->limit(10);
-            $this->db->order_by('prof_id', "DESC");
-        }
         $this->db->where("acs_profile.company_id", $cid);
-        //$this->db->limit(20);
+        $this->db->limit(20);
         $query = $this->db->get();
         return $query->result();
-    }
-
-    public function get_customer_details($id=null){
-        $this->db->from("acs_profile");
-        $this->db->select('acs_profile.city,acs_profile.state,users.LName,users.FName');
-        $this->db->join('users', 'users.id = acs_profile.fk_user_id','left');
-        $this->db->join('acs_billing as acs_b', 'acs_b.fk_prof_id = acs_profile.prof_id','left');
-        $this->db->join('acs_alarm', 'acs_alarm.fk_prof_id = acs_profile.prof_id','left');
-        $this->db->join('acs_office', 'acs_office.fk_prof_id = acs_profile.prof_id','left');
-        $this->db->join('acs_office as ao', 'ao.fk_prof_id = users.id','left');
-        $this->db->where("acs_profile.prof_id", $id);
-        $query = $this->db->get();
-        return $query->row();
     }
 
     public function get_all_by_id($fieldname,$fieldvalue,$tablename){
@@ -241,86 +123,5 @@ class Customer_advance_model extends MY_Model {
         } else {
             return false;
         }
-    }
-
-    public function get_customer_billing_errors($company_id)
-    {        
-        $this->db->select('acs_billing.bill_id, acs_billing.fk_prof_id, acs_billing.is_with_error, acs_billing.error_type, acs_profile.company_id, acs_profile.prof_id, acs_billing.error_message, acs_billing.error_date, acs_profile.first_name, acs_profile.last_name');
-        $this->db->from("acs_billing");
-        $this->db->join('acs_profile', 'acs_billing.fk_prof_id = acs_profile.prof_id');
-        $this->db->where("acs_billing.is_with_error", 1);
-        $this->db->where("acs_profile.company_id", $company_id);
-        $query = $this->db->get();
-        return $query->result();
-    }
-
-    public function get_billing_error($billing_id=0){        
-        $this->db->select('*');
-        $this->db->from("acs_billing");        
-        $this->db->where("bill_id", $billing_id);
-        $this->db->where("is_with_error", 1);
-        $query = $this->db->get();
-        return $query->row();
-    }
-
-    public function get_company_billing_error($company_id = 0, $billing_id = 0){        
-        $this->db->select('*');
-        $this->db->from("acs_billing");        
-        $this->db->where("bill_id", $billing_id);
-        $this->db->where("is_with_error", 1);
-        $query = $this->db->get();
-        return $query->row();
-    }
-
-    public function get_all_subscription_by_company_id($company_id=0){        
-        $this->db->select('acs_billing.*, acs_profile.first_name, acs_profile.last_name, acs_profile.company_id');
-        $this->db->from("acs_billing");   
-        $this->db->join('acs_profile', 'acs_billing.fk_prof_id = acs_profile.prof_id','left');     
-        $this->db->where('acs_profile.company_id', $company_id);       
-        $query = $this->db->get(); 
-        return $query->result();
-    }
-
-    public function get_all_active_subscription_by_company_id($company_id=0){   
-        $today = date("m/d/Y");     
-        $this->db->select('acs_billing.*, acs_profile.first_name, acs_profile.last_name, acs_profile.company_id');
-        $this->db->from("acs_billing");   
-        $this->db->join('acs_profile', 'acs_billing.fk_prof_id = acs_profile.prof_id','left');     
-        $this->db->where('acs_profile.company_id', $company_id);       
-        $this->db->where('acs_billing.recurring_end_date >=', $today);       
-        $query = $this->db->get(); 
-        return $query->result();
-    }
-
-    public function get_all_completed_subscription_by_company_id($company_id=0){   
-        $today = date("m/d/Y");     
-        $this->db->select('acs_billing.*, acs_profile.first_name, acs_profile.last_name, acs_profile.company_id');
-        $this->db->from("acs_billing");   
-        $this->db->join('acs_profile', 'acs_billing.fk_prof_id = acs_profile.prof_id','left');     
-        $this->db->where('acs_profile.company_id', $company_id);       
-        $this->db->where('acs_billing.recurring_end_date <=', $today);       
-        $query = $this->db->get(); 
-        return $query->result();
-    }
-
-    public function get_all_billing_errors_by_company_id($company_id=0){   
-        $today = date("m/d/Y");     
-        $this->db->select('acs_billing.*, acs_profile.first_name, acs_profile.last_name, acs_profile.company_id');
-        $this->db->from("acs_billing");   
-        $this->db->join('acs_profile', 'acs_billing.fk_prof_id = acs_profile.prof_id','left');     
-        $this->db->where('acs_profile.company_id', $company_id);       
-        $this->db->where('acs_billing.is_with_error', 1);       
-        $query = $this->db->get(); 
-        return $query->result();
-    }
-
-    public function get_all_subscription_payments($customer_id=0){   
-        $today = date("m/d/Y");     
-        $this->db->select('acs_transaction_history.*, acs_profile.first_name, acs_profile.last_name, acs_profile.company_id');
-        $this->db->from("acs_transaction_history");   
-        $this->db->join('acs_profile', 'acs_transaction_history.customer_id = acs_profile.prof_id','left');     
-        $this->db->where('acs_transaction_history.customer_id', $customer_id);  
-        $query = $this->db->get(); 
-        return $query->result();
     }
 }

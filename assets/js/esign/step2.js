@@ -7,8 +7,7 @@ function createElementFromHTML(htmlString) {
 
 // https://stackoverflow.com/a/46181/8062659
 function isValidEmail(string) {
-  const regex =
-    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  const regex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return regex.test(String(string).toLowerCase());
 }
 
@@ -148,7 +147,7 @@ function Recipient({ data: dataParam, onRemove: onRemoveParam }) {
                                   .join("")}
                             </ul>
                         </li>
-                        <li class="dropdown"><a href="#" class="dropdown-toggle d-none" data-toggle="dropdown">More</a>
+                        <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">More</a>
                             <ul class="dropdown-menu">
                                 <li><a href="#"><i class="fa fa-key"></i>Add access authentication</a></li>
                                 <li><a href="#"><i class="fa fa-comment"></i>Add private message</a></li>
@@ -233,7 +232,7 @@ function Step2() {
       data.id = new Date().getTime();
       data.name = "";
       data.email = "";
-      data.role = "Signs in Person";
+      data.role = "Needs to Sign";
 
       const takenColors = recipients.map((recipient) => {
         return recipient.getData().color;

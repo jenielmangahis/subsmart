@@ -63,9 +63,6 @@ $user_id = getLoggedUserID();
         height: 20px;
         margin-right: 8px;
     }
-    .icons-list-navbar span {
-        color:black !important;
-    }
 </style>
 <div class="navbar-custom col">
     <div class="container-fluid">
@@ -75,15 +72,15 @@ $user_id = getLoggedUserID();
 
                 <?php ////if (hasPermissions('plan_list')): ?>
                 <li class="has-submenu">
-                    <div class="icons-list-navbar" style="margin-right:20px; align-items: center;justify-content: center">
+                    <div class="icons-list-navbar" style="margin-right: 10px;align-items: center;justify-content: center">
                         <a href="<?php echo url('/workcalender') ?>">
                             <!--                            <i class="fa fa-calendar" aria-hidden="true"></i><span>Calendar</span>-->
                             <!--                                <img class="calendar-static" src="/assets/css/icons/images/calendar-1.1s-47px.svg" alt="">-->
                             <!--                                <img class="calendar-active" src="/assets/css/icons/images/calendar-1.1s-47px-active.svg" alt="">-->
-                            <time datetime="<?php echo date('Y-m-d')?>" class="icon-calendar-live" style="font-size:7px; margin-bottom: 6px;">
+                            <time datetime="<?php echo date('Y-m-d')?>" class="icon-calendar-live">
                                 <em><?php echo date('l')?></em>
                                 <strong><?php echo date('M')?></strong>
-                                <span style="color:black !important;"><?php echo date('d')?></span>;
+                                <span><?php echo date('d')?></span>
                             </time>
                             <span>Calendar</span>
                         </a>
@@ -95,20 +92,19 @@ $user_id = getLoggedUserID();
                          aria-expanded="false">
                         <a href="<?php echo base_url('dashboard/blank/?page=Sales') ?>">
                             <!--                        <i class="fa fa-bar-chart" aria-hidden="true"></i> <span>Sales</span>-->
-                            <img style="width: 60px;" class="bar-static" src="<?php echo base_url('assets/css/icons/sales.svg') ?>" alt="">
-                            <img style="width: 65px;" class="bar-active" src="<?php echo base_url('assets/css/icons/sales.svg') ?>" alt="">
+                            <img class="bar-static" src="<?php echo base_url('assets/css/icons/images/bar-1.1s-47px.svg') ?>" alt="">
+                            <img class="bar-active" src="<?php echo base_url('assets/css/icons/images/bar-1.1s-47px-active.svg') ?>" alt="">
                             <span>Sales</span>
                         </a>
                     </div>
                     <div class="dropdown-menu dropdown-menu-right">
-                        <!--<a class="dropdown-item" href="<?php echo base_url('customer') ?>"><i class="fa fa-users"></i> Customer Manager</a>-->
-                        <a class="dropdown-item" href="<?= base_url('events') ?>"><i class="fa fa-calendar-check-o"></i> Events</a>
-                        <a class="dropdown-item" href="<?php echo base_url('job') ?>"><i class="fa fa-briefcase"></i> Jobs</a>
-                        <a class="dropdown-item" href="<?php echo base_url('estimate') ?>"><i class="fa fa-list-alt"></i> Estimates</a>
+                        <a class="dropdown-item" href="<?php echo base_url('customer') ?>"><i class="fa fa-users"></i> Customer Manager</a>
+                        <a class="dropdown-item" href="<?php echo base_url('job') ?>"><i class="fa fa-briefcase"></i> Job</a>
+                        <a class="dropdown-item" href="<?php echo base_url('estimate') ?>"><i class="fa fa-list-alt"></i><b> Estimates</b></a>
                         <?php ////if (hasPermissions('WORKORDER_MASTER')): ?>
                         <a class="dropdown-item" href="<?php echo url('/workorder') ?>"><i class="fa fa-list-alt"></i><b> Work Orders</b></a>
                         <?php //endif ?>
-                        <a class="dropdown-item" href="<?php echo base_url('invoice') ?>"><i class="fa fa-file-text"></i><b> Invoices</b></a>
+                        <a class="dropdown-item" href="<?php echo base_url('invoice') ?>"><i class="fa fa-file-text-o"></i><b> Invoices</b></a>
                         <?php ////if (hasPermissions('items_list')): ?>
                         <!-- <a class="dropdown-item" href="<?php echo url('/items') ?>"><i class="fa fa-cubes"></i><b> Items</b></a> -->
                         <?php //endif ?>
@@ -116,7 +112,7 @@ $user_id = getLoggedUserID();
                         <!-- <a class="dropdown-item" href="<?php echo url('/plans') ?>"><i class="fa fa-list"></i> Plans</a> -->
                         <?php //endif ?>
                         <?php ////if (hasPermissions('items_list')): ?>
-                        <a class="dropdown-item" href="<?php echo url('customer/ticketslist') ?>"><i class="fas fa-ticket-alt"></i>Tickets</a>
+                        <a class="dropdown-item" href="<?php echo url('customer/tickets') ?>"><i class="fa fa-ticket"></i> Tickets</a>
                         <a class="dropdown-item" href="<?php echo url('credit_notes') ?>"><i class="fa fa-list"></i> Credit Notes</a>
                         <?php //endif ?>
                         <?php ////if (hasPermissions('items_list')): ?>
@@ -132,33 +128,57 @@ $user_id = getLoggedUserID();
                 </li>
                 <li class="has-submenu">
                     <div class="icons-list-navbar">
-                        <a href="<?= base_url('customer') ?>" role="button" >
-<!--                            <img class="cash-static" src="<?php echo base_url('assets/css/icons/images/cash-1.1s-47px.svg') ?>" alt="" style="margin: 0 auto">
-                            <img class="cash-active" src="<?php echo base_url('assets/css/icons/images/cash-1.1s-47px-active.svg') ?>" alt="">-->
-                            <img style="width:60px;" class="cash-static" src="<?php echo base_url('assets/css/icons/customer.svg') ?>" alt="">
-                            <img style="width: 65px;" class="cash-active" src="<?php echo base_url('assets/css/icons/customer.svg') ?>" alt="">
-                            <span>Customers</span>
-                        </a>
-                    </div>
-                   
-                </li>
-                <li class="has-submenu">
-                    <div class="icons-list-navbar">
                         <a href="<?php echo url('/accounting/banking') ?>" role="button" >
-<!--                            <img class="cash-static" src="<?php echo base_url('assets/css/icons/images/cash-1.1s-47px.svg') ?>" alt="" style="margin: 0 auto">
-                            <img class="cash-active" src="<?php echo base_url('assets/css/icons/images/cash-1.1s-47px-active.svg') ?>" alt="">-->
-                            <img style="width:60px;" class="cash-static" src="<?php echo base_url('assets/img/accounting/accounting_nav.svg') ?>" alt="">
-                            <img style="width: 65px;" class="cash-active" src="<?php echo base_url('assets/img/accounting/accounting_nav.svg') ?>" alt="">
+                            <img class="cash-static" src="<?php echo base_url('assets/css/icons/images/cash-1.1s-47px.svg') ?>" alt="" style="margin: 0 auto">
+                            <img class="cash-active" src="<?php echo base_url('assets/css/icons/images/cash-1.1s-47px-active.svg') ?>" alt="">
                             <span>Accounting</span>
+                            <!--                        <i class="fa fa-money" aria-hidden="true"></i> <span>Accounting</span>-->
                         </a>
                     </div>
-                 
+                    <!--                    <div class="dropdown-menu dropdown-menu-right profile-dropdown">-->
+                    <!--                        <a class="dropdown-item" href="--><?php //echo url('/accounting/banking') ?><!--">-->
+                    <!--                            <i class="mdi mdi-wallet m-r-5"></i> Banking-->
+                    <!--                        </a>-->
+                    <!--                        <a class="dropdown-item" href="--><?php //echo url('/accounting/expenses') ?><!--">-->
+                    <!--                            <i class="mdi mdi-wallet m-r-5"></i> Expenses-->
+                    <!--                        </a>-->
+                    <!-- <a class="dropdown-item" href="<?php //echo url('/users/businessview') ?>">
+                            <i class="mdi mdi-wallet m-r-5"></i> My Expenses
+                        </a>
+                        <a class="dropdown-item" href="<?php //echo url('/users/businessview') ?>">
+                            <i class="mdi mdi-wallet m-r-5"></i> Record Expense
+                        </a>
+                        <a class="dropdown-item" href="<?php //echo url('/users/businessview') ?>">
+                            <i class="mdi mdi-wallet m-r-5"></i> Expense Category
+                        </a>
+                        <a class="dropdown-item" href="<?php //echo url('/users/businessview') ?>">
+                            <i class="mdi mdi-wallet m-r-5"></i> Vendors
+                        </a>
+                        <a class="dropdown-item" href="<?php //echo url('/users/businessview') ?>">
+                            <i class="mdi mdi-wallet m-r-5"></i> Expense Vendor
+                        </a> -->
+                    <!--                        <a class="dropdown-item" href="--><?php //echo url('/accounting/receivables') ?><!--">-->
+                    <!--                            <i class="mdi mdi-wallet m-r-5"></i> Receivables-->
+                    <!--                        </a>-->
+                    <!--                        <a class="dropdown-item" href="--><?php //echo url('/accounting/workers') ?><!--">-->
+                    <!--                            <i class="mdi mdi-wallet m-r-5"></i> Workers-->
+                    <!--                        </a>-->
+                    <!--                        <a class="dropdown-item" href="--><?php //echo url('/accounting/taxes') ?><!--">-->
+                    <!--                            <i class="mdi mdi-wallet m-r-5"></i> Taxes-->
+                    <!--                        </a>-->
+                    <!--                        <a class="dropdown-item" href="--><?php //echo url('/accounting/chart_of_accounts') ?><!--">-->
+                    <!--                            <i class="mdi mdi-wallet m-r-5"></i> Chart of Accounts-->
+                    <!--                        </a>-->
+                    <!--                        <a class="dropdown-item" href="--><?php //echo url('/accounting/my_accountant') ?><!--">-->
+                    <!--                            <i class="mdi mdi-wallet m-r-5"></i> My Accountant-->
+                    <!--                        </a>-->
+                    <!--                    </div>-->
                 </li>
                 <li class="has-submenu">
                     <div class="icons-list-navbar">
                         <a href="<?php echo base_url('vault') ?>">
-                            <img style="width:60px;" class="cash-static" src="<?php echo base_url('assets/css/icons/file_vault.svg') ?>" alt="">
-                            <img style="width: 65px;" class="cash-active" src="<?php echo base_url('assets/css/icons/file_vault.svg') ?>" alt="">
+                            <img class="lock-static" src="<?php echo base_url('assets/css/icons/images/lock-1.1s-47px.svg') ?>" alt="" style="margin: 0 auto">
+                            <img class="lock-active" src="<?php echo base_url('assets/css/icons/images/lock-1.1s-47px-active.svg') ?>" alt="">
                             <span>Files Vault</span>
                             <!--                            <i class="fa fa-industry" aria-hidden="true"></i><span>Files Vault</span>-->
                         </a>
@@ -181,8 +201,8 @@ $user_id = getLoggedUserID();
                 <li class="has-submenu">
                     <div class="icons-list-navbar">
                         <a href="<?php echo base_url('marketing') ?>">
-                            <img style="width:60px;" class="marketing-static" src="<?php echo base_url('assets/css/icons/marketing.svg') ?>" alt="" style="margin: 0 auto">
-                            <img style="width: 65px;" class="marketing-active" src="<?php echo base_url('assets/css/icons/marketing.svg') ?>" alt="">
+                            <img class="marketing-static" src="<?php echo base_url('assets/css/icons/images/html-1.1s-47px.svg') ?>" alt="" style="margin: 0 auto">
+                            <img class="marketing-active" src="<?php echo base_url('assets/css/icons/images/html-1.1s-47px-active.svg') ?>" alt="">
                             <span>Marketing</span>
                             <!--                        <i class="fa fa-file-code-o" aria-hidden="true"></i> <span>Marketing</span>-->
                         </a>
@@ -200,8 +220,8 @@ $user_id = getLoggedUserID();
                     <!-- <a href="#"><i class="fa fa-cog" aria-hidden="true"></i> <span>Tools</span></a> -->
                     <div class="icons-list-navbar dropdown-toggle" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <a href="<?php //echo base_url('dashboard/blank/?page=More') ?>" >
-                            <img style="width:60px;" class="tools-static" src="<?php echo base_url('assets/css/icons/tools.svg') ?>" alt="" style="margin: 0 auto">
-                            <img style="width: 65px;" class="tools-active" src="<?php echo base_url('assets/css/icons/tools.svg') ?>" alt="">
+                            <img class="tools-static" src="<?php echo base_url('assets/css/icons/images/gear-1.1s-47px.svg') ?>" alt="" style="margin: 0 auto">
+                            <img class="tools-active" src="<?php echo base_url('assets/css/icons/images/gear-1.1s-47px-active.svg') ?>" alt="">
                             <span>Tools</span>
                             <!--                        <i class="fa fa-cog" aria-hidden="true"></i> <span>Tools</span>-->
                         </a>
@@ -221,8 +241,8 @@ $user_id = getLoggedUserID();
                 <li class="has-submenu">
                     <div class="icons-list-navbar dropdown-toggle" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <a href="<?php //echo base_url('dashboard/blank/?page=More') ?>">
-                            <img style="width:60px;" class="building-static" src="<?php echo base_url('assets/css/icons/company.svg') ?>" alt="" style="margin: 0 auto">
-                            <img style="width: 65px;" class="building-active" src="<?php echo base_url('assets/css/icons/company.svg') ?>" alt="">
+                            <img class="building-static" src="<?php echo base_url('assets/css/icons/images/building-1.1s-47px.svg') ?>" alt="" style="margin: 0 auto">
+                            <img class="building-active" src="<?php echo base_url('assets/css/icons/images/building-1.1s-47px-active.svg') ?>" alt="">
                             <span>Company</span>
                             <!--                        <i class="fa fa-building-o" aria-hidden="true"></i> <span>Company</span>-->
                         </a>
@@ -246,8 +266,8 @@ $user_id = getLoggedUserID();
                 <li class="has-submenu">
                     <div class="icons-list-navbar dropdown-toggle" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <a href="<?php //echo base_url('dashboard/blank/?page=More') ?>" >
-                            <img class="more-static" src="<?php echo base_url('assets/css/icons/more.svg') ?>" alt="" style="margin: 0 auto; width:60px; transform: rotate(180deg);">
-                            <img class="more-active" src="<?php echo base_url('assets/css/icons/more.svg') ?>" alt="" style="margin: 0 auto; width:65px; transform: rotate(180deg);">
+                            <img class="more-static" src="<?php echo base_url('assets/css/icons/images/ellipsis-1.1s-47px.svg') ?>" alt="" style="margin: 0 auto">
+                            <img class="more-active" src="<?php echo base_url('assets/css/icons/images/ellipsis-1.1s-47px-active.svg') ?>" alt="">
                             <span>More</span>
                             <!--                        <i class="fa fa fa-ellipsis-h" aria-hidden="true"></i> <span>More</span>-->
                         </a>
@@ -256,9 +276,9 @@ $user_id = getLoggedUserID();
                         <a class="dropdown-item" href="<?php echo url('/more/upgrades') ?>">
                             <i class="fa fa-level-up"></i> Upgrades
                         </a>
-                        <!-- <a class="dropdown-item" href="<?php echo url('/nsmart_plans/index') ?>">
+                        <a class="dropdown-item" href="<?php echo url('/nsmart_plans/index') ?>">
                             <i class="fa fa-cubes"></i> Plan Builder
-                        </a> -->
+                        </a>
                         <!-- <a class="dropdown-item" href="<?php //echo url('/more/addons') ?>">
                             <i class="fa fa-user-plus"></i> Add-on
                         </a> -->

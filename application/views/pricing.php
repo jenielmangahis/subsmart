@@ -588,7 +588,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <div class="ctext">
               <ul data-list="1" class="header-ul">
                   <li>
-                      <span class=""><span class="material-icons mdc-bottom-navigation__list-item__icon show-less hidden" data-height-value="60">remove</span><span class="material-icons mdc-bottom-navigation__list-item__icon show-more" data-height-value="60">add</span><strong>Trac 360</strong></span>
+                      <span class=""><span class="material-icons mdc-bottom-navigation__list-item__icon show-less hidden" data-height-value="60">remove</span><span class="material-icons mdc-bottom-navigation__list-item__icon show-more" data-height-value="60">add</span><strong>GPS Tracking</strong></span>
                   </li>
               </ul>
               <ul data-list="1" class="desc-ul hidden">
@@ -825,7 +825,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
               <div class="ctext">
                 <ul data-list="1" class="header-ul">
                     <li>
-                        <span class=""><span class="material-icons mdc-bottom-navigation__list-item__icon show-less hidden" data-height-value="60">remove</span><span class="material-icons mdc-bottom-navigation__list-item__icon show-more" data-height-value="60">add</span><strong>Trac 360</strong></span>
+                        <span class=""><span class="material-icons mdc-bottom-navigation__list-item__icon show-less hidden" data-height-value="60">remove</span><span class="material-icons mdc-bottom-navigation__list-item__icon show-more" data-height-value="60">add</span><strong>GPS Tracking</strong></span>
                     </li>
                 </ul>
                 <ul data-list="1" class="desc-ul hidden">
@@ -1106,7 +1106,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 <div class="ctext">
                   <ul data-list="1" class="header-ul">
                       <li>
-                          <span class=""><span class="material-icons mdc-bottom-navigation__list-item__icon show-less hidden" data-height-value="60">remove</span><span class="material-icons mdc-bottom-navigation__list-item__icon show-more" data-height-value="60">add</span><strong>Trac 360</strong></span>
+                          <span class=""><span class="material-icons mdc-bottom-navigation__list-item__icon show-less hidden" data-height-value="60">remove</span><span class="material-icons mdc-bottom-navigation__list-item__icon show-more" data-height-value="60">add</span><strong>GPS Tracking</strong></span>
                       </li>
                   </ul>
                   <ul data-list="1" class="desc-ul hidden">
@@ -1331,11 +1331,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </div>
                             </div>
                             <div class="blue-button default-product">
-                                <a href="<?= url('registration?plan=simple-start&type=discounted'); ?>" data-wa-link="ssbuynow_prem-diy" class="ctasecondary ctacenter" data-di-id="#ssbuynow_prem-diy"><span>Buy now</span></a>
+                                <a href="#" data-wa-link="ssbuynow_prem-diy" class="ctasecondary ctacenter" data-di-id="#ssbuynow_prem-diy"><span>Buy now</span></a>
                             </div>
                             <p class="or-text default-product">or</p>
                             <div class="tryit-free-link-url default-product">
-                                <a href="<?= url('registration?plan=simple-start&type=free'); ?>" data-wa-link="sstrial_prem-diy" class="ctasecondary" data-di-id="#sstrial_prem-diy"><span class="free-trial-text">Try it free</span></a>
+                                <a href="#" data-wa-link="sstrial_prem-diy" class="ctasecondary" data-di-id="#sstrial_prem-diy"><span class="free-trial-text">Try it free</span></a>
                             </div>
                         </div>
                         <div class="ctext-v2">
@@ -1483,11 +1483,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </div>
                             </div>
                             <div class="blue-button default-product">
-                                <a href="<?= url('registration?plan=essential&type=discounted'); ?>" data-wa-link="ssbuynow_prem-diy" class="ctasecondary ctacenter" data-di-id="#ssbuynow_prem-diy"><span>Buy now</span></a>
+                                <a href="#" data-wa-link="ssbuynow_prem-diy" class="ctasecondary ctacenter" data-di-id="#ssbuynow_prem-diy"><span>Buy now</span></a>
                             </div>
                             <p class="or-text default-product">or</p>
                             <div class="tryit-free-link-url default-product">
-                                <a href="<?= url('registration?plan=essential&type=free'); ?>" data-wa-link="sstrial_prem-diy" class="ctasecondary" data-di-id="#sstrial_prem-diy"><span class="free-trial-text">Try it free</span></a>
+                                <a href="#" data-wa-link="sstrial_prem-diy" class="ctasecondary" data-di-id="#sstrial_prem-diy"><span class="free-trial-text">Try it free</span></a>
                             </div>
                         </div>
                         <div class="ctext-v2">
@@ -1672,11 +1672,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </div>
                             </div>
                             <div class="blue-button default-product">
-                                <a href="<?= url('registration?plan=plus&type=discounted'); ?>" data-wa-link="esbuynow_prem-diy" class="ctasecondary ctacenter" data-di-id="#esbuynow_prem-diy"><span>Buy now</span></a>
+                                <a href="#" data-wa-link="esbuynow_prem-diy" class="ctasecondary ctacenter" data-di-id="#esbuynow_prem-diy"><span>Buy now</span></a>
                             </div>
                             <p class="or-text default-product">or</p>
                             <div class="tryit-free-link-url default-product">
-                                <a href="<?= url('registration?plan=plus&type=free'); ?>" data-wa-link="estrial_prem-diy" class="ctasecondary" data-di-id="#estrial_prem-diy"><span class="free-trial-text">Try it free</span></a>
+                                <a href="#" data-wa-link="estrial_prem-diy" class="ctasecondary" data-di-id="#estrial_prem-diy"><span class="free-trial-text">Try it free</span></a>
                             </div>
                         </div>
                         <div class="eCommerce-product-div">
@@ -1701,11 +1701,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </div>
                             </div>
                             <div class="blue-button default-product">
-                                <a href="<?= url('registration?plan=premier-pro&type=discounted'); ?>" data-wa-link="esbuynow_elite-diy" class="ctasecondary ctacenter" data-di-id="#esbuynow_elite-diy"><span>Buy now</span></a>
+                                <a href="#" data-wa-link="esbuynow_elite-diy" class="ctasecondary ctacenter" data-di-id="#esbuynow_elite-diy"><span>Buy now</span></a>
                             </div>
                             <p class="or-text default-product">or</p>
                             <div class="tryit-free-link-url default-product">
-                                <a href="<?= url('registration?plan=premier-pro&type=free'); ?>" data-wa-link="estrial_elite-diy" class="ctasecondary" data-di-id="#estrial_elite-diy"><span class="free-trial-text">Try it free</span></a>
+                                <a href="#" data-wa-link="estrial_elite-diy" class="ctasecondary" data-di-id="#estrial_elite-diy"><span class="free-trial-text">Try it free</span></a>
                             </div>
                         </div>
                         <div class="ctext-v2">
@@ -1885,7 +1885,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul class="ul-color-header" data-list="1">
                                 <li>
-                                    <a class="btn-show-less-more-desktop show-less" data-key="gps-tracking" href="javascript:void(0);"><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">remove</span><strong>Trac 360</strong></a>
+                                    <a class="btn-show-less-more-desktop show-less" data-key="gps-tracking" href="javascript:void(0);"><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">remove</span><strong>GPS Tracking</strong></a>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul ul-color-highlight gps-tracking-list">
@@ -1927,11 +1927,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </div>
                             </div>
                             <div class="blue-button default-product">
-                                <a href="<?= url('registration?plan=premier-pro&type=discounted'); ?>" data-wa-link="plbuynow_prem-diy" class="ctasecondary ctacenter" data-di-id="#plbuynow_prem-diy"><span>Buy now</span></a>
+                                <a href="#" data-wa-link="plbuynow_prem-diy" class="ctasecondary ctacenter" data-di-id="#plbuynow_prem-diy"><span>Buy now</span></a>
                             </div>
                             <p class="or-text default-product">or</p>
                             <div class="tryit-free-link-url default-product">
-                                <a href="<?= url('registration?plan=premier-pro&type=free'); ?>" data-wa-link="pltrial_prem-diy" class="ctasecondary" data-di-id="#pltrial_prem-diy"><span class="free-trial-text">Try it free</span></a>
+                                <a href="#" data-wa-link="pltrial_prem-diy" class="ctasecondary" data-di-id="#pltrial_prem-diy"><span class="free-trial-text">Try it free</span></a>
                             </div>
                         </div>
                         <div class="ctext-v2">
@@ -2111,7 +2111,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul data-list="1" class="bsc-margin">
                                 <li>
-                                    <span class=""><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Trac 360</strong></span>
+                                    <span class=""><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>GPS Tracking</strong></span>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul hidden">
@@ -2192,11 +2192,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </div>
                             </div>
                             <div class="blue-button default-product">
-                                <a href="<?= url('registration?plan=enterprise&type=discounted'); ?>" data-wa-link="plbuynow_prem-diy" class="ctasecondary ctacenter" data-di-id="#plbuynow_prem-diy"><span>Buy now</span></a>
+                                <a href="#" data-wa-link="plbuynow_prem-diy" class="ctasecondary ctacenter" data-di-id="#plbuynow_prem-diy"><span>Buy now</span></a>
                             </div>
                             <p class="or-text default-product">or</p>
                             <div class="tryit-free-link-url default-product">
-                                <a href="<?= url('registration?plan=enterprise&type=free'); ?>" data-wa-link="pltrial_prem-diy" class="ctasecondary" data-di-id="#pltrial_prem-diy"><span class="free-trial-text">Try it free</span></a>
+                                <a href="#" data-wa-link="pltrial_prem-diy" class="ctasecondary" data-di-id="#pltrial_prem-diy"><span class="free-trial-text">Try it free</span></a>
                             </div>
                         </div>
                         <div class="ctext-v2">
@@ -2375,7 +2375,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul data-list="1" class="bsc-margin">
                                 <li>
-                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Trac 360</strong></span>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>GPS Tracking</strong></span>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul hidden">
@@ -2536,12 +2536,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </div>
                             </div>
                             <div class="blue-button">
-                                <a href="<?= url('registration?plan=industry-specific&type=discounted'); ?>" data-wa-link="sebuynow-diy" class="ctasecondary ctacenter" data-object="sku" data-object-detail="Self Employed" data-action="buy now started" data-ui-object="button" data-ui-object-detail="Buy now" data-ui-action="clicked" data-ui-access-point="diy pricing group" data-di-id="#sebuynow-diy"><span>Buy
+                                <a href="javascript:void(0);" data-wa-link="sebuynow-diy" class="ctasecondary ctacenter" data-object="sku" data-object-detail="Self Employed" data-action="buy now started" data-ui-object="button" data-ui-object-detail="Buy now" data-ui-action="clicked" data-ui-access-point="diy pricing group" data-di-id="#sebuynow-diy"><span>Buy
                                         now</span></a>
                             </div>
                             <p class="or-text ">or</p>
                             <div class="tryit-free-link-url ">
-                                <a href="<?= url('registration?plan=industry-specific&type=free'); ?>" data-wa-link="setrial-diy" class="ctasecondary" data-object="sku" data-object-detail="Self Employed" data-action="trial started" data-ui-object="button" data-ui-object-detail="Try it free" data-ui-action="clicked" data-ui-access-point="diy pricing group" data-di-id="#setrial-diy"><span class="free-trial-text">Try it free</span></a>
+                                <a href="javascript:void(00;)" data-wa-link="setrial-diy" class="ctasecondary" data-object="sku" data-object-detail="Self Employed" data-action="trial started" data-ui-object="button" data-ui-object-detail="Try it free" data-ui-action="clicked" data-ui-access-point="diy pricing group" data-di-id="#setrial-diy"><span class="free-trial-text">Try it free</span></a>
                             </div>
                         </div>
                         <div class="ctext-v2">
@@ -2720,7 +2720,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul data-list="1" class="bsc-margin">
                                 <li>
-                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Trac 360</strong></span>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>GPS Tracking</strong></span>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul hidden">

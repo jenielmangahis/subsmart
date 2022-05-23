@@ -32,9 +32,6 @@ class FB extends MY_Controller {
 	}
 
 	public function index(){
-		$this->page_data['page']->title = 'My Forms';
-        $this->page_data['page']->parent = 'Tools';
-
 		add_footer_js(array(
 			'assets/fb/js/folder/move_folder_modal.js',
 			'assets/fb/js/form_delete_modal.js',
@@ -42,8 +39,7 @@ class FB extends MY_Controller {
 		));
 		$this->load->view('fb/folder/move_folder_modal.php', $this->page_data);
 		$this->load->view('fb/form_delete_modal.php', $this->page_data);
-		// $this->load->view('fb/index.php', $this->page_data);
-		$this->load->view('v2/pages/fb/index.php', $this->page_data);
+		$this->load->view('fb/index.php', $this->page_data);
 	}
 
 	public function thankYou(){

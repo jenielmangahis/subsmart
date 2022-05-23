@@ -9,7 +9,6 @@ class Items extends MY_Controller
     {
         parent::__construct();
         $this->checkLogin();
-        $this->hasAccessModule(20);
         $this->page_data['page']->title = 'items Management';
         $this->page_data['page']->menu = 'items';
     }
@@ -28,140 +27,7 @@ class Items extends MY_Controller
             }
             $gh = "'" . $row->title . "'," . $row->price . "," . $discount . "," . $row->id;
 
-            echo '<li class="testing" onClick="setitem(this,' . $gh . ')">' . $row->title . '</li>';
-        }
-        exit();
-    }
-
-    public function getitemsPackage()
-    {
-        $keyword = get('sk');
-        // $res = $this->items_model->getByLike('title',$keyword);
-        $company_id = logged('company_id');
-        $res = $this->db->where('company_id', $company_id)->like('title', $keyword, 'after')->get('items')->result();
-        foreach ($res as $row) {
-            if( $row->discount == '' ){
-                $discount = 0;
-            }else{
-                $discount = $row->discount;
-            }
-            $gh = "'" . $row->title . "'," . $row->price . "," . $discount . "," . $row->id;
-
-            echo '<li class="testing" onClick="setitemPackage(this,' . $gh . ')">' . $row->title . '</li>';
-        }
-        exit();
-    }
-
-    public function getitems2()
-    {
-        $keyword = get('sk');
-        // $res = $this->items_model->getByLike('title',$keyword);
-        $company_id = logged('company_id');
-        $res = $this->db->where('company_id', $company_id)->like('title', $keyword, 'after')->get('items')->result();
-        foreach ($res as $row) {
-            if( $row->discount == '' ){
-                $discount = 0;
-            }else{
-                $discount = $row->discount;
-            }
-            $gh = "'" . $row->title . "'," . $row->price . "," . $discount . "," . $row->id;
-
-            echo '<li onClick="setitem2(this,' . $gh . ')">' . $row->title . '</li>';
-        }
-        exit();
-    }
-
-    public function getitems_cm()
-    {
-        $keyword = get('sk');
-        // $res = $this->items_model->getByLike('title',$keyword);
-        $company_id = logged('company_id');
-        $res = $this->db->where('company_id', $company_id)->like('title', $keyword, 'after')->get('items')->result();
-        foreach ($res as $row) {
-            if( $row->discount == '' ){
-                $discount = 0;
-            }else{
-                $discount = $row->discount;
-            }
-            $gh = "'" . $row->title . "'," . $row->price . "," . $discount . "," . $row->id;
-
-            echo '<li onClick="setitemCM(this,' . $gh . ')">' . $row->title . '</li>';
-        }
-        exit();
-    }
-
-    public function getitems_sr()
-    {
-        $keyword = get('sk');
-        // $res = $this->items_model->getByLike('title',$keyword);
-        $company_id = logged('company_id');
-        $res = $this->db->where('company_id', $company_id)->like('title', $keyword, 'after')->get('items')->result();
-        foreach ($res as $row) {
-            if( $row->discount == '' ){
-                $discount = 0;
-            }else{
-                $discount = $row->discount;
-            }
-            $gh = "'" . $row->title . "'," . $row->price . "," . $discount . "," . $row->id;
-
-            echo '<li onClick="setitemsr(this,' . $gh . ')">' . $row->title . '</li>';
-        }
-        exit();
-    }
-
-    public function getitem_Receipt()
-    {
-        $keyword = get('sk');
-        // $res = $this->items_model->getByLike('title',$keyword);
-        $company_id = logged('company_id');
-        $res = $this->db->where('company_id', $company_id)->like('title', $keyword, 'after')->get('items')->result();
-        foreach ($res as $row) {
-            if( $row->discount == '' ){
-                $discount = 0;
-            }else{
-                $discount = $row->discount;
-            }
-            $gh = "'" . $row->title . "'," . $row->price . "," . $discount . "," . $row->id;
-
-            echo '<li onClick="setitemReceipt(this,' . $gh . ')">' . $row->title . '</li>';
-        }
-        exit();
-    }
-    
-    public function getitem_Credit()
-    {
-        $keyword = get('sk');
-        // $res = $this->items_model->getByLike('title',$keyword);
-        $company_id = logged('company_id');
-        $res = $this->db->where('company_id', $company_id)->like('title', $keyword, 'after')->get('items')->result();
-        foreach ($res as $row) {
-            if( $row->discount == '' ){
-                $discount = 0;
-            }else{
-                $discount = $row->discount;
-            }
-            $gh = "'" . $row->title . "'," . $row->price . "," . $discount . "," . $row->id;
-
-            echo '<li onClick="setitemCredit(this,' . $gh . ')">' . $row->title . '</li>';
-        }
-        exit();
-    }
-
-    public function getitem_Charge()
-    {
-        $keyword = get('sk');
-        // $res = $this->items_model->getByLike('title',$keyword);
-        $company_id = logged('company_id');
-        $res = $this->db->where('company_id', $company_id)->like('title', $keyword, 'after')->get('items')->result();
-        foreach ($res as $row) {
-            if( $row->discount == '' ){
-                $discount = 0;
-            }else{
-                $discount = $row->discount;
-            }
-            $gh = "'" . $row->title . "'," . $row->price . "," . $discount . "," . $row->id;
-
-            echo '<li onClick="setitemCharge(this,' . $gh . ')">' . $row->title . '</li>';
+            echo '<li onClick="setitem(this,' . $gh . ')">' . $row->title . '</li>';
         }
         exit();
     }
@@ -186,9 +52,9 @@ class Items extends MY_Controller
 
         if (!empty($get['search'])) {
             $this->page_data['search'] = $get['search'];
-            $this->page_data['items'] = $this->items_model->filterBy(['search' => $get['search']], $company_id);
+            // $this->page_data['items'] = $this->items_model->filterBy(['search' => $get['search']], $company_id);
         } else {
-            $this->page_data['items'] = $this->items_model->getByWhere(['company_id' => $company_id]);
+            // $this->page_data['items'] = $this->items_model->getByWhere(['company_id' => $company_id]);
         }
 
         $this->load->view('items/list', $this->page_data);
@@ -196,13 +62,13 @@ class Items extends MY_Controller
 
     public function add()
     {
-        /*$is_allowed = $this->isAllowedModuleAccess(20);
+        $is_allowed = $this->isAllowedModuleAccess(20);
         if( !$is_allowed ){
             $this->page_data['module'] = 'items_add';
             echo $this->load->view('no_access_module', $this->page_data, true);
             die();
         }
-        ifPermissions('items_add');*/
+        ifPermissions('items_add');
         $this->load->view('items/add', $this->page_data);
     }
 
@@ -335,29 +201,6 @@ class Items extends MY_Controller
         }
 
         $this->load->view('items/print/list', $this->page_data);
-    }
-
-    public function ajax_get_item_details()
-    {
-        $this->load->model('Items_model');
-
-        $post = $this->input->post();
-        $company_id = logged('company_id');
-        $item = $this->Items_model->getCompanyItemById($company_id, $post['itemid']);
-
-        if( $item ){
-            $is_exists = true;
-            $json_data = [
-                'is_exists' => true,
-                'item_name' => $item->title,
-                'item_id' => $item->id,
-                'item_price' => $item->price
-            ];
-        }else{
-            $json_data = ['is_exists' => false];
-        }
-
-        echo json_encode($json_data);
     }
 }
 

@@ -11,22 +11,22 @@ defined('BASEPATH') or exit('No direct script access allowed');
             <div class="row custom__border">
                 <div class="col-xl-12">
                     <div class="card">
-                        <div class="row margin-bottom-ter mb-2 align-items-center">
-                          <div class="col-auto vault__header">
-                              <h3 class="page-title mb-0 vault__title">Edit Photos</h3>
-                          </div>                          
-                        </div>
-                        <div class="pl-3 pr-3 mt-0 row">
-                            <div class="col mb-4 left alert alert-warning mt-0 mb-2">
-                                <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">
-                                    Upload your before and after photos. 
-                                </span>
-                            </div>
-                        </div>
-
                         <div class="card-body">
                         <?php echo form_open_multipart('before-after/update-before-after', ['class' => 'form-validate require-validation', 'id' => 'item_categories_form', 'autocomplete' => 'off']); ?>
-                            <input type="hidden" name="id" value="<?= $beforeAfter->id; ?>">
+                        <input type="hidden" name="id" value="<?= $beforeAfter->id; ?>">
+                            <h2 class="page-title text-left">Edit Photo</h2>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div style="padding-top: 8px;">
+                                        <p>Upload your photos.</p>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 text-right">
+                                    <div class="btn-group" role="group" aria-label="...">
+                                        <button class="btn btn-primary" data-to-customer="send" data-on-click-label="Sending..."><span class="fa fa-envelope-o fa-margin-right"></span> Send to Customer</button>
+                                    </div>
+                                </div>
+                            </div>
                             <hr>
                             <div class="col-md-12 col-lg-12 col-xl-9">
                                 <div>
@@ -67,14 +67,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                         <div class="set__box__title --off">Before</div>
                                                         <a class="set__box__delete" data-fileupload-delete="0,0" data-id="0" href=""><span class="fa fa-remove"></span></a>
                                                         <div class="set__box__icon " data-fileupload="upload" data-position="0,0"><span class="fa fa-camera"></span></div>
-                                                        <img data-fileupload-image="0,0" id="b1_img" src="<?php echo base_url() . "uploads/beforeandafter/" . $beforeAfter->before_image?>">
+                                                        <img data-fileupload-image="0,0" id="b1_img" src="<?php echo base_url() . "uploads/" . $beforeAfter->before_image?>">
                                                         <div class="set__box__date"></div>
                                                     </div>
                                                     <div class="set__box">
                                                         <div class="set__box__title --off">After</div>
                                                         <a class="set__box__delete" data-fileupload-delete="0,1" data-id="0" href=""><span class="fa fa-remove"></span></a>
                                                         <div class="set__box__icon " data-fileupload="upload" data-position="0,1"><span class="fa fa-camera"></span></div>
-                                                        <img data-fileupload-image="0,0" id="a1_img" src="<?php echo base_url() . "uploads/beforeandafter/" . $beforeAfter->after_image?>">
+                                                        <img data-fileupload-image="0,0" id="a1_img" src="<?php echo base_url() . "uploads/" . $beforeAfter->after_image?>">
                                                         <div class="set__box__date"></div>
                                                     </div>
                                                 </div>
@@ -92,8 +92,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         </div>
                                     </div>
                                     <hr class="card-hr">
-                                    <button type="submit" class="btn btn-primary" id="saveBtnAddPhotos">Save</button>
-                                    <a class="btn btn-primary" href="<?php echo base_url() . "vault/beforeafter"; ?>">Cancel</a>
+                                    <button type="submit" class="btn btn-primary margin-right" id="saveBtnAddPhotos">Save</button>
+                                    <a class="a-ter" href="<?php echo base_url() . "vault/beforeafter"; ?>">cancel this</a>
                                 </div>
                             </div>
                         </div>

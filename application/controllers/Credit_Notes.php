@@ -17,7 +17,7 @@ class Credit_Notes extends MY_Controller
         $this->load->model('Clients_model');
 
         $this->checkLogin();
-        
+
         $user_id = getLoggedUserID();
 
         add_css(array(
@@ -78,23 +78,22 @@ class Credit_Notes extends MY_Controller
                 array('#',  array()),
                 array("",   array('/accounting/chart_of_accounts','/accounting/reconcile')),
             );
-
-        $this->page_data['disable_accounting_modals'] = true;
         $this->page_data['menu_icon'] = array("fa-tachometer","fa-university","fa-credit-card","fa-money","fa-dollar","fa-bar-chart","fa-minus-circle","fa-file","fa-calculator");
     }
 
     public function index($tab = '')
     {
-
+        
         $status = $this->CreditNote_model->optionStatus();
 
         $statusSummary = array();
         $company_id    = logged('company_id');
         $role = logged('role');
         $total_all = 0;
-        if( $role == 1 || $role == 2 ){
+
+        if( $role == 1 || $role == 2 ){  
             foreach($status as $key => $value){
-                $total = $this->CreditNote_model->countAllByStatusAndCompanyId($key,$company_id);
+                $total = $this->CreditNote_model->countAllByStatus($key);
                 $total_all+= $total;
                 $statusSummary[$key] = $total;
             }
@@ -102,11 +101,10 @@ class Credit_Notes extends MY_Controller
             $this->page_data['statusSummary'] = $statusSummary;
             if( $tab > 0 ){
                 $this->page_data['creditNotes'] = $this->CreditNote_model->getAllByCompanyIdAndStatus($company_id,$tab);
-            }else{                            
-                $cc = $this->CreditNote_model->getAllByCompanyId($company_id);
-                $this->page_data['creditNotes'] = $this->CreditNote_model->getAllByCompanyId($company_id);
+            }else{
+                $this->page_data['creditNotes'] = $this->CreditNote_model->getAllByCompanyId($company_id);    
             }
-
+            
         }else{
             foreach($status as $key => $value){
                 $total = $this->CreditNote_model->countAllByStatusAndCompanyId($key,$company_id);
@@ -117,9 +115,9 @@ class Credit_Notes extends MY_Controller
             $this->page_data['total_all'] = $total_all;
             $this->page_data['statusSummary'] = $statusSummary;
             if( $tab > 0 ){
-                $this->page_data['creditNotes'] = $this->CreditNote_model->getAllByCompanyIdAndStatus($company_id,$tab);
+                $this->page_data['creditNotes'] = $this->CreditNote_model->getAllByStatus($tab);    
             }else{
-                $this->page_data['creditNotes'] = $this->CreditNote_model->getAllByCompanyId($company_id);
+                $this->page_data['creditNotes'] = $this->CreditNote_model->getAll();    
             }
         }
 
@@ -134,9 +132,12 @@ class Credit_Notes extends MY_Controller
 
         $company_id = logged('company_id');
         $role = logged('role');
-        $this->page_data['status'] = $this->CreditNote_model->optionStatus();
-        $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
-
+        if( $role == 1 || $role == 2 ){
+            $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
+        }else{
+            $this->page_data['customers'] = $this->AcsProfile_model->getAll();    
+        }
+        
         $this->load->view('credit_notes/add', $this->page_data);
     }
 
@@ -146,7 +147,7 @@ class Credit_Notes extends MY_Controller
 
         $user_id = logged('id');
         $post    = $this->input->post();
-
+        
         if( $post['customer_id'] > 0 && $post['job_name'] != '' ){
             $data = [
                 'user_id' => $user_id,
@@ -161,7 +162,7 @@ class Credit_Notes extends MY_Controller
                 'grand_total' => $post['total_due'],
                 'note_customer' => $post['customer_message'],
                 'terms_condition' => $post['terms_conditions'],
-                'status' => $post['status'],
+                'status' => $this->CreditNote_model->isDraft(),
                 'created' => date("Y-m-d H:i:s"),
                 'modified' => date("Y-m-d H:i:s")
             ];
@@ -183,8 +184,6 @@ class Credit_Notes extends MY_Controller
                     $this->CreditNoteItem_model->create($data);
                 }
 
-                customerAuditLog(logged('id'), $post['customer_id'], $credit_note_id, 'Credit Note', 'Created credit note #'.$post['credit_note_number']);
-
                 $this->session->set_flashdata('message', 'Credit Note was successful saved');
                 $this->session->set_flashdata('alert_class', 'alert-success');
 
@@ -205,11 +204,7 @@ class Credit_Notes extends MY_Controller
     {
         postAllowed();
 
-        $creditNote = $this->CreditNote_model->getById(post('eid'));
-        if( $creditNote ){
-            customerAuditLog(logged('id'), $creditNote->customer_id, $creditNote->id, 'Credit Note', 'Deleted credit note #'.$creditNote->credit_note_number);
-            $id = $this->CreditNote_model->deleteCreditNote(post('eid'));
-        }
+        $id = $this->CreditNote_model->deleteCreditNote(post('eid'));
 
         $this->session->set_flashdata('message', 'Credit Note has been Deleted Successfully');
         $this->session->set_flashdata('alert_class', 'alert-success');
@@ -226,12 +221,11 @@ class Credit_Notes extends MY_Controller
         if( $creditNote ){
             $creditNoteItems = $this->CreditNoteItem_model->getAllByCreditNoteId($creditNote->id);
             if( $role == 1 || $role == 2 ){
-                $this->page_data['customers'] = $this->AcsProfile_model->getAll();
-            }else{
                 $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
+            }else{
+                $this->page_data['customers'] = $this->AcsProfile_model->getAll();    
             }
 
-            $this->page_data['status'] = $this->CreditNote_model->optionStatus();
             $this->page_data['creditNote'] = $creditNote;
             $this->page_data['creditNoteItems'] = $creditNoteItems;
 
@@ -263,7 +257,6 @@ class Credit_Notes extends MY_Controller
                 'adjustment_amount' => $post['adjustment_total'],
                 'total_discount' => $post['total_discount'],
                 'grand_total' => $post['total_due'],
-                'status' => $post['status'],
                 'note_customer' => $post['customer_message'],
                 'terms_condition' => $post['terms_conditions'],
                 'modified' => date("Y-m-d H:i:s")
@@ -287,8 +280,6 @@ class Credit_Notes extends MY_Controller
                 $this->CreditNoteItem_model->create($data);
             }
 
-            customerAuditLog(logged('id'), $creditNote->customer_id, $creditNote->id, 'Credit Note', 'Updated credit note #'.$creditNote->credit_note_number);
-
             $this->session->set_flashdata('message', 'Credit Note was successful saved');
             $this->session->set_flashdata('alert_class', 'alert-success');
 
@@ -303,7 +294,7 @@ class Credit_Notes extends MY_Controller
     public function view($id)
     {
         $this->load->model('AcsProfile_model');
-
+        
         $creditNote = $this->CreditNote_model->getById($id);
         $company_id = logged('company_id');
 
@@ -312,7 +303,7 @@ class Credit_Notes extends MY_Controller
             $client   = $this->Clients_model->getById($company_id);
             $creditNoteItems = $this->CreditNoteItem_model->getAllByCreditNoteId($creditNote->id);
 
-            $this->page_data['status'] = $this->CreditNote_model->optionStatus();
+            $this->page_data['status'] = $this->CreditNote_model->optionStatus();   
             $this->page_data['customer'] = $customer;
             $this->page_data['client'] = $client;
             $this->page_data['creditNote'] = $creditNote;
@@ -343,22 +334,22 @@ class Credit_Notes extends MY_Controller
             $url = base_url('/estimate_customer_view/' . $eid);
             $customer = $this->AcsProfile_model->getByProfId($estimate->customer_id);
 
-            $subject = "NsmarTrac : Estimate";
+            $subject = "NsmarTrac : Estimate"; 
             $msg = "<p>Hi " . $customer->first_name . ",</p>";
             $msg .= "<p>Please check the estimate for your approval.</p>";
             $msg .= "<p>Click <a href='".$url."'>Your Estimate</a> to view and approve estimate.</p><br />";
             $msg .= "<p>Thank you <br /><br /> NsmarTrac Team</p>";
 
-            //Email Sending
-            $from      = 'webmaster@ficoheroes.com';
+            //Email Sending                 
+            $from      = 'webmaster@ficoheroes.com';            
             $recipient = $customer->email;
             $mail = new PHPMailer;
-            $mail->SMTPDebug = 4;
-            //$mail->isSMTP();
-            $mail->From = $from;
+            $mail->SMTPDebug = 4;                         
+            //$mail->isSMTP();       
+            $mail->From = $from; 
             $mail->FromName = 'NsmarTrac';
-            $mail->addAddress($recipient, $recipient);
-            $mail->isHTML(true);
+            $mail->addAddress($recipient, $recipient);  
+            $mail->isHTML(true);                          
             $mail->Subject = $subject;
             $mail->Body    = $msg;
             if(!$mail->Send()) {
@@ -366,8 +357,6 @@ class Credit_Notes extends MY_Controller
                 $this->session->set_flashdata('alert', 'Cannot send email.');
             }else {
                 $this->estimate_model->update($estimate->id, ['status' => 'Submitted']);
-
-                customerAuditLog(logged('id'), $creditNote->customer_id, $creditNote->id, 'Credit Note', 'Sent to email credit note #'.$creditNote->credit_note_number);
 
                 $this->session->set_flashdata('alert-type', 'success');
                 $this->session->set_flashdata('alert', 'Your credit note was successfully sent');
@@ -395,7 +384,7 @@ class Credit_Notes extends MY_Controller
             if( $role == 1 || $role == 2 ){
                 $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
             }else{
-                $this->page_data['customers'] = $this->AcsProfile_model->getAll();
+                $this->page_data['customers'] = $this->AcsProfile_model->getAll();    
             }
 
             $eid = hashids_encrypt($creditNote->id, '', 15);
@@ -423,55 +412,46 @@ class Credit_Notes extends MY_Controller
         $post = $this->input->post();
 
         if( count($post['customer_id']) > 0 && $post['mail_subject'] != '' && $post['mail_body'] != '' ){
-            $creditNote = $this->CreditNote_model->getById($post['cid']);
-
-            //Email Sending
+            //Email Sending     
             $server    = MAIL_SERVER;
             $port      = MAIL_PORT ;
             $username  = MAIL_USERNAME;
             $password  = MAIL_PASSWORD;
-            $from      = MAIL_FROM;
+            $from      = MAIL_FROM;        
             $recipient = $post['customer_id'];
-            $subject   = $post['mail_subject'];
-            $eid = hashids_encrypt($creditNote->id, '', 15);
-            $url       = base_url('/tracker/imageTracker?id=' . $eid);
-            //$url       = 'https://nsmartrac.com/tracker/imageTracker?id=' . $eid;
+            $subject   = $post['mail_subject']; 
             $msg       = $post['mail_body'];
-            $msg       = $msg . "<br />" . '<img src="'.$url.'"/>';
 
             $mail = new PHPMailer;
-            //$mail->SMTPDebug = 4;
-            $mail->isSMTP();
-            $mail->Host = $server;
-            $mail->SMTPAuth = true;
-            $mail->Username   = $username;
+            //$mail->SMTPDebug = 4;                         
+            $mail->isSMTP();                                     
+            $mail->Host = $server; 
+            $mail->SMTPAuth = true;    
+            $mail->Username   = $username; 
             $mail->Password   = $password;
             $mail->getSMTPInstance()->Timelimit = 5;
-            $mail->SMTPSecure = 'ssl';
+            $mail->SMTPSecure = 'ssl';    
             $mail->Timeout    =   10; // set the timeout (seconds)
             $mail->Port = $port;
-            $mail->From = $from;
+            $mail->From = $from; 
             $mail->FromName = 'NsmarTrac';
 
-            //$mail->addAddress('bryann.revina03@gmail.com', 'bryann.revina03@gmail.com');
-            foreach( $post['customer_id'] as $value ){
-                $mail->addAddress($value, $value);
-            }
-            if( isset($post['email_bcc']) ){
-               if( count($post['email_bcc']) > 0 ){
-                    $bcc = implode(",", $post['email_bcc']);
-                    $mail->addBcc($bcc);
-                }
+            $mail->addAddress('bryann.revina03@gmail.com', 'bryann.revina03@gmail.com');  
+            /*foreach( $post['customer_id'] as $value ){
+                $mail->addAddress($value, $value);  
+            }*/
+
+            if( count($post['email_bcc']) > 0 ){
+                $bcc = implode(",", $post['email_bcc']);
+                $mail->addBcc($bcc);
             }
 
-            if( isset($post['email_cc']) ){
-                if( count($post['email_cc']) > 0 ){
-                    $cc = implode(",", $post['email_cc']);
-                    $mail->addCC($cc);
-                }
+            if( count($post['email_cc']) > 0 ){
+                $cc = implode(",", $post['email_cc']);
+                $mail->addCC($cc);
             }
 
-            $mail->isHTML(true);
+            $mail->isHTML(true);                          
             $mail->Subject = $subject;
             $mail->Body    = $msg;
 
@@ -479,11 +459,10 @@ class Credit_Notes extends MY_Controller
                 $this->session->set_flashdata('alert-type', 'danger');
                 $this->session->set_flashdata('alert', 'Cannot send email.');
             }else {
-                $this->CreditNote_model->update($creditNote->id, ['status' => $this->CreditNote_model->isSubmitted()]);
-                customerAuditLog(logged('id'), $creditNote->customer_id, $creditNote->id, 'Credit Note', 'Sent to email credit note #'.$creditNote->credit_note_number);
+                $this->estimate_model->update($estimate->id, ['status' => 'Submitted']);
 
                 $this->session->set_flashdata('alert-type', 'success');
-                $this->session->set_flashdata('alert', 'Your credit note was successfully sent');
+                $this->session->set_flashdata('alert', 'Your estimate was successfully sent');
             }
         }else{
             $this->session->set_flashdata('alert-type', 'danger');
@@ -494,13 +473,13 @@ class Credit_Notes extends MY_Controller
     }
 
     public function pdf_credit_note($id)
-    {
+    {        
 
         $creditNote = $this->CreditNote_model->getById($id);
-
+        
 
         if( $creditNote ){
-
+            
             $this->load->helper('pdf_helper');
             $this->load->model('AcsProfile_model');
 
@@ -537,7 +516,7 @@ class Credit_Notes extends MY_Controller
                           <tr>
                             <td>Expire Due :</td>
                             <td>'.date("Y-m-d",strtotime($creditNote->expiry_date)).'</td>
-                          </tr>
+                          </tr>                              
                           <tr>
                             <td><b>Credits Remaining :</b></td>
                             <td><b>'.$creditNote->grand_total.'</b></td>
@@ -561,7 +540,7 @@ class Credit_Notes extends MY_Controller
             </thead>
             <tbody>';
             $total_tax = 0;
-            $row = 1;
+            $row = 1; 
             foreach($creditNoteItems as $item){
                 $html .= '<tr>
                     <td valign="top" style="width:5%;">'.$row.'</td>
@@ -575,7 +554,7 @@ class Credit_Notes extends MY_Controller
                 $total_tax += $item->tax;
                 $row++;
             }
-
+            
             $html .= '<tr><td colspan="6"><hr/></td></tr>
             <tr>
               <td colspan="5" style="text-align: right;">Taxes</td>
@@ -640,8 +619,6 @@ class Credit_Notes extends MY_Controller
 
             $this->CreditNote_model->update($creditNote->id, $data);
 
-            customerAuditLog(logged('id'), $creditNote->customer_id, $creditNote->id, 'Credit Note', 'Updated credit note #'.$creditNote->credit_note_number.' set status to Closed');
-
             $this->session->set_flashdata('message', 'Credit Note was successful updated');
             $this->session->set_flashdata('alert_class', 'alert-success');
 
@@ -656,7 +633,7 @@ class Credit_Notes extends MY_Controller
     public function print_credit_note($id)
     {
         $this->load->model('AcsProfile_model');
-
+        
         $creditNote = $this->CreditNote_model->getById($id);
         $company_id = logged('company_id');
 
@@ -665,7 +642,7 @@ class Credit_Notes extends MY_Controller
             $client   = $this->Clients_model->getById($company_id);
             $creditNoteItems = $this->CreditNoteItem_model->getAllByCreditNoteId($creditNote->id);
 
-            $this->page_data['status'] = $this->CreditNote_model->optionStatus();
+            $this->page_data['status'] = $this->CreditNote_model->optionStatus();   
             $this->page_data['customer'] = $customer;
             $this->page_data['client'] = $client;
             $this->page_data['creditNote'] = $creditNote;
@@ -698,25 +675,23 @@ class Credit_Notes extends MY_Controller
             unset($data_credit_note['company_id']);
 
             $credit_note_id = $this->CreditNote_model->saveCreditNote($data_credit_note);
-            if( $credit_note_id > 0 ){
+            if( $credit_note_id > 0 ){                
                 foreach($creditNoteItems as $key => $values){
                     $data_credit_note_items = (array) $values;
                     $data_credit_note_items['credit_note_id'] = $credit_note_id;
-                    unset($data_credit_note_items['id']);
+                    unset($data_credit_note_items['id']);                    
                     unset($data_credit_note_items['title']);
                     unset($data_credit_note_items['description']);
 
                     $this->CreditNoteItem_model->create($data_credit_note_items);
                 }
 
-                customerAuditLog(logged('id'), $creditNote->customer_id, $creditNote->id, 'Credit Note', 'Cloned credit note #'.$creditNote->credit_note_number);
-
                 $this->session->set_flashdata('message', 'Credit Note was successful clone');
                 $this->session->set_flashdata('alert_class', 'alert-success');
 
                 redirect('credit_notes/edit/' . $credit_note_id);
             }else{
-                redirect('credit_notes');
+                redirect('credit_notes');    
             }
 
         }else{
@@ -728,14 +703,15 @@ class Credit_Notes extends MY_Controller
 
     public function credit_note_settings()
     {
-        $this->load->model('CreditNoteSettings_model');
+        $this->load->model('CreditNoteSettings_model');        
 
         $company_id = logged('company_id');
+        $user_id    = getLoggedUserID();
         $settings   = $this->CreditNoteSettings_model->getByCompanyId($company_id);
 
         if( empty($settings) ){
             $data_settings = [
-                'company_id' => $company_id,
+                'user_id' => $user_id,
                 'credit_note_number_prefix' => 'CN',
                 'credit_note_number_next_number' => 1,
                 'default_message' => '',
@@ -746,35 +722,8 @@ class Credit_Notes extends MY_Controller
             $settings_id = $this->CreditNoteSettings_model->create($data_settings);
             $settings    = $this->CreditNoteSettings_model->getById($settings_id);
         }
-
+        
         $this->page_data['settings'] = $settings;
         $this->load->view('credit_notes/settings', $this->page_data);
-    }
-
-    public function ajax_update_credit_note_settings()
-    {
-        $this->load->model('CreditNoteSettings_model');
-
-        $is_success = false;
-        $post       = $this->input->post();
-
-        $company_id = logged('company_id');
-        $settings   = $this->CreditNoteSettings_model->getByCompanyId($company_id);
-        if( $settings ){
-            $data_settings = [
-                'credit_note_number_prefix' => $post['credit_note_number_prefix'],
-                'credit_note_number_next_number' => $post['credit_note_number_next_number'],
-                'default_message' => $post['credit_note_message'],
-                'default_terms_conditions' => $post['credit_note_terms'],
-                'modified' => date("Y-m-d H:i:s")
-            ];
-
-            $this->CreditNoteSettings_model->update($settings->id, $data_settings);
-
-            $is_success = true;
-        }
-
-        $json_data = ['is_success' => $is_success];
-        echo json_encode($json_data);
     }
 }

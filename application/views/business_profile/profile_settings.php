@@ -1,145 +1,58 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-<style>
-.input-group-addon:first-child {
-    border-right: 0;
-}
-.input-group-addon:last-child {
-    border-left: 0;
-}
-.input-group-addon {
-    padding: 14px 12px;
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 1;
-    color: #555;
-    text-align: center;
-    background-color: #eee;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-.input-group-addon, .input-group-btn {
-    /* width: 1%; */
-    white-space: nowrap;
-    vertical-align: middle;
-}
-.page-title {
-  font-family: Sarabun, sans-serif !important;
-  font-size: 1.75rem !important;
-  font-weight: 600 !important;
-}
-.pr-b10 {
-  position: relative;
-  bottom: 10px;
-}
-.p-40 {
-  padding-top: 40px !important;
-}
-@media only screen and (max-width: 600px) {
-  .p-40 {
-    padding-top: 0px !important;
-  }
-  .pr-b10 {
-    position: relative;
-    bottom: 0px;
-  }
-}
-.list-icon{
-  list-style: none;
-  height: 400px;
-  overflow: auto;
-  padding: 6px;
-}
-.list-icon li{
-  display: inline-block;
-  /*width: 30%;*/
-  height:100px;
-  margin: 3px;
-}
-.mtc-18 {
-  margin-top: 32px;
-}
-.mt-18 {
-  margin-top: 10px;
-}
-#company-cover-photo{
-  background-size: cover;
-  background-position: center;
-  height: 50vh;
-  width: 100%;
-}
-.bootstrap-tagsinput .tag {    
-    background-color: #aaa;
-    padding: 5px;
-}
-.bootstrap-tagsinput {
-  padding: 11px 6px !important;
-}
-</style>
+
 <?php include viewPath('includes/header'); ?>
 <!-- page wrapper start -->
-<?php echo form_open_multipart('users/update_profile_setting', [ 'id'=> '', 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
 <div role="wrapper">
    <?php include viewPath('includes/sidebars/business'); ?>
    <div wrapper__section>
-      <div class="col-md-24 col-lg-24 col-xl-18">        
+      <div class="col-md-24 col-lg-24 col-xl-18">
+        <?php echo form_open_multipart('users/savebusinessdetail', [ 'id'=> 'form-business-details', 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
         <div class="row">
             <div class="col-md-12">
+                <form id="form-business-credentials" method="post" action="#">
+                <div class="validation-error" style="display: none;"></div>
                 <div class="card">
+
+<h1>Profile Settings</h1>
+
 <div class="row">
-    <div class="col-md-12 col-lg-12 col-xl-12">
+    <div class="col-md-24 col-lg-24 col-xl-18">
+<form id="form-business-profile" method="post" action="#">
     <div class="validation-error" style="display: none;"></div>
-    <div class="row">
-      <div class="col-sm-6 left">
-        <h3 class="page-title">Profile Settings</h3>
-      </div>
-    </div>
-    <div class="alert alert-warning mt-2 mb-4" role="alert">
-        <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">
-          Your settings let you control how the business profile is shown to customers. Take a quick look and make sure all of your settings are correct.
-        </span>
-    </div>
-    <div class="card mtc-18 pl-4">
+
+    <div class="card">
+        <p class="margin-bottom">
+           Your settings let you control how the business profile is shown to customers. Take a quick look and make sure all of your settings are correct.
+        </p>
         <div class="form-group">
             <div class="row">
                 <div class="col-sm-12">
                     <label>Your Business Profile URL</label> <span class="form-required">*</span>
                     <div class="help help-block help-sm">Customize your profile URL so it can be easy to remember.</div>
                     <div class="profile-url">
-                        <?php 
-                          $slug = '';
-                          if( isset($profiledata) && $profiledata->profile_slug != ''){
-                            $slug = $profiledata->profile_slug;
-                          }
-                        ?>
-                        <?php if( $slug != '' ){ ?>
-                          <span class="profile-url-prefix"><a href="<?= base_url('business/' . $slug . "/" . $profiledata->company_id); ?>" style="color:#45a73c;" target="_new"><?= base_url('business/' . $slug); ?></a></span>
-                        <?php }else{ ?>
-                          <span class="profile-url-prefix"><?= base_url('business/'); ?></span>
-                        <?php } ?>
-                        
+                        <span class="profile-url-prefix">nsmartrac.com/business/</span>
                         <div class="profile-url-input">
-                            <input type="text" name="profile_slug"  value="<?= isset($profiledata) ? $profiledata->profile_slug : '';  ?>" class="form-control" autocomplete="off" data-profile-url="input">
+                            <input type="text" name="profile_slug"  value="<?= isset($profile_data) ? $profile_data->profile_slug : '';  ?>" class="form-control" autocomplete="off" data-profile-url="input">
                         </div>
                     </div>
                     <span class="validation-error-field" data-formerrors-for-name="profile_slug" data-formerrors-message="true" style="display: none;"></span>
                 </div>
-                <!-- <div class="col-sm-12">
+                <div class="col-sm-12">
                     <label>Preview</label>
                     <div class="help help-block help-sm">Click to preview your profile or copy the URL</div>
                     <div class="form-control-text">
                         <a data-profile-url="preview" href="https://www.nsmatrac.com/users/businessprofile" target="_blank">nsmatrac.com/business/<span data-profile-url="slug"><?= isset($profile_data) ? $profile_data->profile_slug : '';  ?></span></a>
                         <div class="text-ter hide" data-profile-url="change">...click Save below to update</div>
                     </div>
-                </div> -->
+                </div>
             </div>
         </div>
         <div class="form-group">
             <label>Business Tags</label>
             <div class="help help-sm help-block">Enter tags/keywords and get better visibility. This helps customers find you on search. Example: cleaner, plumber</div>
-            <div class="tagsinput">
-              <input type="text" data-role="tagsinput" value="<?= isset($profiledata) ? $profiledata->business_tags : ''; ?>" name="company_tags" />
-            </div>            
+            <div class="bootstrap-tagsinput"><span class="tag label label-default">Honeywell Security<span data-role="remove"></span></span> <input type="text" placeholder="add tag"></div><input type="text" name="profile_tags" value="Honeywell Security" class="form-control" autocomplete="off" placeholder="add tag" required="" style="display: none;">
+            <span class="validation-error-field" data-formerrors-for-name="profile_tags" data-formerrors-message="true" style="display: none;"></span>
         </div>
         <div class="form-group">
             <label>Cover Picture</label>
@@ -148,35 +61,81 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             </div>
             <div class="row">
                 <div class="col-sm-12">
-                    <div class="margin-bottom">            
-                    <?php
-                      $company_id = 0; 
-                      if($profiledata){
-                        $company_id = $profiledata->company_id;
-                      }  
-                    ?>
-
-                    <div class="img-responsive" id="company-cover-photo" style="background-image: url('<?= getCompanyCoverPhoto($company_id); ?>');"></div>
+                    <div class="margin-bottom">
+    <img class="img-responsive" data-coveruploadmodal="image-parent" src="https://www.markate.com/assets/images/app/public/pros/wallpaper_0.jpg">
 </div>
 <div>
-    <input type='file' id='coverphoto_image' name="cover_photo" style="display: none;" />
     <span class="fileinput-button vertical-top">
-        <a class="profile-cover-upload-link" href="javascript:void(0);">
+        <a class="profile-cover-upload-link" data-coveruploadmodal="open-modal" href="#">
             <span class="fa fa-camera"></span>
             Upload Cover Picture
         </a>
 	</span>
 </div>
+<div class="modal coveruploadmodal-modal" id="coveruploadmodal-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title">Upload Cover Picture</h4>
+            </div>
+            <div class="modal-body">
 
+                <div class="clearfix">
+                    <span class="btn btn-primary-flat fileinput-button vertical-top">Upload Image <input id="coveruploadmodal-file" name="filewallpaper" type="file"></span>
+                    <button class="btn btn-danger pull-right" id="coveruploadmodal-btn-delete" type="button" style="display: none;">Delete Image</button>
+                </div>
+
+                <div class="alert alert-danger" id="coveruploadmodal-error" role="alert" style="display: none;"></div>
+
+                <div class="" id="coveruploadmodal-progressbar" style="display: none;">
+                    <div class="text">Uploading</div>
+                    <div class="progress">
+                        <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
+                    </div>
+                </div>
+
+                <div class="coveruploadmodal-crop-container" id="coveruploadmodal-crop-container" style="display: none;">
+                    <hr>
+                    <div class="help help-sm">To crop this image, move or resize the cropping area then click "Save Image"</div>
+                    <div class="coveruploadmodal-crop-wrapper">
+                        <img class="coveruploadmodal-crop-image" id="coveruploadmodal-image-preview" data-name="" src="">
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-success pull-left" id="coveruploadmodal-crop-btn" type="button" data-label-on-submit="Saving ..." style="display: none;">Save Image</button>
+                <button class="btn btn-default" type="button" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div><div class="hide" data-fileupload="progressbar-wallpaper">
+    <div class="text">Uploading</div>
+    <div class="progress">
+        <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
+    </div>
+</div>
+<div class="alert alert-danger hide" data-fileupload="error-wallpaper" role="alert"></div>                </div>
+            </div>
+        </div>
+
+    </div>
 
     <hr class="card-hr">
 <div class="card">
     <div class="row">
     	<div class="col-md-8">
-    		<button class="btn btn-primary btn-lg" name="btn-save" type="submit">Save</button>
-    	</div>    	
+    		    		<button class="btn btn-default btn-lg" name="btn-save" type="button">Save</button> <span class="alert-inline-text margin-left hide">Saved</span>
+    		    	</div>
+    	<div class="col-md-4 text-right">
+    		    		<a class="btn btn-default btn-lg" href="workpictures">« Back</a>
+    		    		    		<a href="socialMedia" class="btn btn-primary btn-lg margin-left" name="btn-continue">Next »</a>
+    		    	</div>
     </div>
-</div>
+</div></form>
 
     </div>
 </div>
@@ -186,24 +145,27 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
       </div>
    </div>
 </div>
-</form>
+<div class="mdc-top-app-bar-fixed-adjust demo-container demo-container-1 d-flex d-lg-none">
+   <div class="mdc-bottom-navigation">
+      <nav class="mdc-bottom-navigation__list">
+         <span class="mdc-bottom-navigation__list-item mdc-ripple-surface mdc-ripple-surface--primary" data-mdc-auto-init="MDCRipple" data-mdc-ripple-is-unbounded>
+         <span class="material-icons mdc-bottom-navigation__list-item__icon">history</span>
+         <span class="mdc-bottom-navigation__list-item__text">Recents</span>
+         </span>
+         <span class="mdc-bottom-navigation__list-item mdc-bottom-navigation__list-item--activated mdc-ripple-surface mdc-ripple-surface--primary" data-mdc-auto-init="MDCRipple" data-mdc-ripple-is-unbounded>
+         <span class="material-icons mdc-bottom-navigation__list-item__icon">favorite</span>
+         <span class="mdc-bottom-navigation__list-item__text">Favourites</span>
+         </span>
+         <span class="mdc-bottom-navigation__list-item mdc-ripple-surface mdc-ripple-surface--primary" data-mdc-auto-init="MDCRipple" data-mdc-ripple-is-unbounded>
+            <span class="material-icons mdc-bottom-navigation__list-item__icon">
+               <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+                  <path d="M12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,12.5A1.5,1.5 0 0,1 10.5,11A1.5,1.5 0 0,1 12,9.5A1.5,1.5 0 0,1 13.5,11A1.5,1.5 0 0,1 12,12.5M12,7.2C9.9,7.2 8.2,8.9 8.2,11C8.2,14 12,17.5 12,17.5C12,17.5 15.8,14 15.8,11C15.8,8.9 14.1,7.2 12,7.2Z"></path>
+               </svg>
+            </span>
+            <span class="mdc-bottom-navigation__list-item__text">Nearby</span>
+         </span>
+      </nav>
+   </div>
+</div>
 <?php include viewPath('includes/footer'); ?>
-<script>
-$(function(){
-  //$('#coverphoto_image').hide();
-  $('.profile-cover-upload-link').on('click', function () {
-        $('#coverphoto_image').click();
-  });
-  $('#coverphoto_image').change(function () {
-      var file = this.files[0];
-      var reader = new FileReader();
-      reader.onloadend = function () {
-         $('#company-cover-photo').css('background-image', 'url("' + reader.result + '")');
-      }
-      if (file) {
-          reader.readAsDataURL(file);
-      } else {
-      }
-  });
-});
-</script>
+

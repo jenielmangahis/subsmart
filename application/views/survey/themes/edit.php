@@ -26,8 +26,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 		display: flex;
 		overflow: none;
 		padding: 10px 0;
-		height: 100%;
-		width: 100% !important;
+		height: 100%: 
 	}
 
 	.theme-sample-content{
@@ -76,8 +75,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 												<h1 id="sampleHeaderText">Lorem Ipsum</h1>
 												<div id="sampleLineSeparator" class="line-separator"></div>
 												<p id="sampleParagraph">This is where the text will be placed. Another sentence to fill in the spaces of your survey.</p>
-												<button id="samplePrimaryButton" type="button" class="btn ">Primary</button>
-												<button id="sampleSecondaryButton" type="button" class="btn ">Secondary</button>
+												<button id="samplePrimaryButton" type="button" class="btn ">Button</button>
+												<button id="sampleSecondaryButton" type="button" class="btn ">Button</button>
 											</div>
 									
 									</div>
@@ -100,31 +99,31 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 									<label>Theme colors:</label>
 									<div class="form-row">
 											<div class="form-group col text-center">
-												<input class="form-control" type="color" name="sth_primary_color" id="colPrimary" value="#9D344B" data-toggle="tooltip" data-placement="top" title="Primary Button Color">
+												<input class="form-control" type="color" name="sth_primary_color" id="colPrimary" value="#9D344B" data-toggle="tooltip" data-placement="top" title="Primary Color">
 												<small>Primary</small>
 											</div>
 											<div class="form-group col text-center">
-												<input class="form-control" type="color" name="sth_secondary_color" id="colSecondary" value="#257059" data-toggle="tooltip" data-placement="top" title="Secondary Button Color">
+												<input class="form-control" type="color" name="sth_secondary_color" id="colSecondary" value="#257059" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
 												<small>Secondary</small>
 											</div>
-											<div class="form-group col text-center" style="display: none;">
+											<div class="form-group col text-center">
 												<input class="form-control" type="color" name="sth_tertiary_color" id="colTertiary" value="#8AA236" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
 												<small>Tertiary</small>
 											</div>
 											<div class="form-group col text-center">
-												<input class="form-control" type="color" name="sth_success_color" id="colSuccess" value="#00BC0C" data-toggle="tooltip" data-placement="top" title="Alert : Success Message Color">
+												<input class="form-control" type="color" name="sth_success_color" id="colSuccess" value="#00BC0C">
 												<small>Success</small>
 											</div>
 											<div class="form-group col text-center">
-												<input class="form-control" type="color" name="sth_info_color" id="colInfo" value="#045899" data-toggle="tooltip" data-placement="top" title="Alert : Info Message Color">
+												<input class="form-control" type="color" name="sth_info_color" id="colInfo" value="#045899">
 												<small>Info</small>
 											</div>
 											<div class="form-group col text-center">
-												<input class="form-control" type="color" name="sth_warning_color" id="colWarning" value="#EF6C00" data-toggle="tooltip" data-placement="top" title="Alert : Warning Message Color">
+												<input class="form-control" type="color" name="sth_warning_color" id="colWarning" value="#EF6C00">
 												<small>Warning</small>
 											</div>
 											<div class="form-group col text-center">
-												<input class="form-control" type="color" name="sth_danger_color" id="colDanger" value="#EF0000" data-toggle="tooltip" data-placement="top" title="Alert : Danger Message Color">
+												<input class="form-control" type="color" name="sth_danger_color" id="colDanger" value="#EF0000">
 												<small>Danger</small>
 											</div>
 									</div>
@@ -166,13 +165,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 								document.querySelector('#colDanger').value = `<?=$theme->sth_danger_color?>`;
 								document.querySelector('#colTextMain').value = `<?=$theme->sth_text_color?>`;
 								document.querySelector('#colTextDark').value = `<?=$theme->sth_dark_text_color?>`;
-
-								<?php if( $theme->company_id > 0 ){ ?>
-									imageContainer.src = `<?=base_url()?>uploads/survey/themes/<?= $theme->company_id; ?>/<?=$theme->sth_primary_image?>`;
-								<?php }else{ ?>
-									imageContainer.src = `<?=base_url()?>uploads/survey/themes/<?=$theme->sth_primary_image?>`;
-								<?php } ?>
-								
+								imageContainer.src = `<?=base_url()?>uploads/survey/themes/<?=$theme->sth_primary_image?>`;
 								document.querySelector('#sampleHeaderText').style.color = `<?=$theme->sth_text_color?>`;
 								document.querySelector('#sampleParagraph').style.color = `<?=$theme->sth_text_color?>`;
 								document.querySelector('#sampleLineSeparator').style.backgroundColor = `<?=$theme->sth_secondary_color?>`;

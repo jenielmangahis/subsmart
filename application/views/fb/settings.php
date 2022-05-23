@@ -285,7 +285,7 @@
                                             <input class="form-check-input" type="checkbox" value=""
                                                 id="formSecurityBadge">
                                             <label class="form-check-label" for="formSecurityBadge">
-                                                Show "Secured By nSmarTrac" badge
+                                                Show "Secured By Nsmartrac" badge
                                             </label>
                                         </div>
                                         <div class="form-group w-50 mt-3">

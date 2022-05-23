@@ -63,7 +63,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
             </div>
             <!-- end row -->
             <?php echo form_open_multipart('credit_notes/_send', ['class' => 'form-validate require-validation', 'id' => 'estimate_form', 'autocomplete' => 'off']); ?>
-            <input type="hidden" name="cid" value="<?= $creditNote->id; ?>">
             <div class="card">
                     <div class="row">
                     <div class="col-lg-18 col-xl-12">

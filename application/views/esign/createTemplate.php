@@ -1,7 +1,7 @@
 <?php
-error_reporting(E_ALL ^ E_WARNING); 
 defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header');
+
 ini_set('max_input_vars', 30000);
 
 ?>
@@ -100,10 +100,10 @@ ini_set('max_input_vars', 30000);
                                         <button type="submit" class="btn btn-primary" ><span class="fa fa-paper-plane-o"></span> Save</button>
                                          <button type="button" class="btn btn-primary" onclick="printHtml()"> <span class="fa fa-print"></span> Print </button>
                                         <form id="upload_library_form" enctype="multipart/form-data" method="post">
-                                            <label for="file-upload" class="btn btn-primary esign_upload" style="margin-bottom: 0;">
-                                                <span class="fa fa-upload"></span> Upload Document
-                                            </label>
-                                            </form>
+                                        <label for="file-upload" class="btn btn-primary esign_upload">
+                                            <span class="fa fa-upload"></span> Upload Document
+                                        </label>
+                                        </form>
                                         <input id="file-upload" type="file" accept=".docx,.pdf,.doc,.html">
                                     </div>
                                 <?=form_close(); ?>

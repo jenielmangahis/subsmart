@@ -23,13 +23,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 .p-40 {
   padding-top: 40px !important;
 }
-img.event-marker {
-    display: block;
-    margin: 0 auto;
-}
-tr.odd {
-    background: #f1f1f1 !important;
-}
 table.table tbody tr td {
     width: 15%;
     text-align: right;
@@ -37,20 +30,6 @@ table.table tbody tr td {
 table.table tbody tr td:first-child {
     width: 85%;
     text-align: left;
-}
-table.dataTable {
-    border-collapse: collapse;
-    margin-top: 5px;
-}
-table.dataTable thead tr th {
-    border: 1px solid black !important;
-}
-svg#svg-sprite-menu-close {
-    position: relative;
-    bottom: 52px !important;
-}
-table.dataTable tbody tr td {
-    border: 1px solid black !important;
 }
 @media only screen and (max-width: 600px) {
   .p-40 {
@@ -61,14 +40,9 @@ table.dataTable tbody tr td {
     bottom: 0px;
   }
 }
-.event-marker{
-  height: 50px;
-  width: 50px;
-  border: 1px solid #dee2e6;
-}
 </style>
 <div class="wrapper" role="wrapper">
-    <?php include viewPath('includes/sidebars/events'); ?>
+    <?php include viewPath('includes/sidebars/schedule'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
         <div class="container-fluid p-40">
@@ -82,44 +56,29 @@ table.dataTable tbody tr td {
                           </div>
                           <div class="col-sm-6 right dashboard-container-1">
                               <div class="text-right">
-                                  <a class="btn btn-primary btn-sm" href="<?php echo base_url('event_types/add_new'); ?>"><i class="fa fa-file"></i> Add New</a>
+                                  <a class="btn btn-info" href="<?php echo base_url('event_types/add_new'); ?>"><i class="fa fa-file"></i> Add New</a>
                               </div>
                           </div>
                         </div>
                         <div class="alert alert-warning mt-2 mb-4" role="alert">
-                            <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Event types can be separated into seminars, conference, trade show, work shop, corporate, private, or charity. Event types can also be track for categories where an invoice will not be submit like estimates, tasks, demos and reminders. With our Crm you can choose, create or delete the appropriate classification for your business model.
+                            <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Schedule adds the ability to create and track events in CRM; An event can be scheduled for single or multiple days; Staff, venue and equipment resources can all be schedule for a given event; The visual event calendar lets you see events by type and venue. To create a new event type. Click Add New; To edit an existing event type simply click edit.
                             </span>
                         </div>
                         <?php include viewPath('flash'); ?>
-                        <table class="" id="eventTypeTable">
+                        <table class="table table-hover" data-id="coupons">
                             <thead>
                                 <tr>
-                                    <th></th>
-                                    <th>Event Type Name</th>
-                                    <th>Manage</th>
+                                    <th style="width: 80%;">Event Type Name</th>
+                                    <th style="width: 10%;"></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php foreach($eventTypes as $et){ ?>
                                     <tr>
-                                        <td width="10%">
-                                          <?php
-                                              if( $et->icon_marker != '' ){
-                                                  if($et->is_marker_icon_default_list == 1){
-                                                      $marker = base_url("uploads/icons/" . $et->icon_marker);
-                                                  }else{
-                                                      $marker = base_url("uploads/event_types/" . $et->company_id . "/" . $et->icon_marker);
-                                                  }
-                                              }else{
-                                                  $marker = base_url("uploads/event_types/default_no_image.jpg");
-                                              }
-                                          ?>
-                                          <img src="<?= $marker; ?>" class="event-marker">
-                                        </td>
-                                        <td width="65%"><?= $et->title; ?></td>
-                                        <td width="25%">
-                                            <a class="btn btn-primary btn-sm" href="<?php echo base_url('event_types/edit/'.$et->id); ?>"><i class="fa fa-edit"></i> Edit</a>
-                                            <a class="btn btn-primary btn-sm btn-delete-event-type" href="javascript:void(0);" data-id="<?= $et->id; ?>"><i class="fa fa-trash"></i> Delete</a>
+                                        <td><?= $et->event_type_name; ?></td>
+                                        <td>
+                                            <a class="btn btn-info btn-sm" href="<?php echo base_url('event_types/edit/'.$et->id); ?>"><i class="fa fa-pencil"></i> Edit</a>
+                                            <a class="btn btn-sm btn-danger btn-delete-event-type" href="javascript:void(0);" data-id="<?= $et->id; ?>"><i class="fa fa-trash"></i> Delete</a>
                                         </td>
                                     </tr>
                                 <?php } ?>
@@ -164,53 +123,11 @@ table.dataTable tbody tr td {
 
 <script type="text/javascript">
 $(function(){
-    $('#eventTypeTable').DataTable({
-        "lengthChange": true,
-        "searching" : false,
-        "pageLength": 10,
-        "order": [],
-         "aoColumnDefs": [
-          { "sWidth": "5%", "aTargets": [ 0 ] },
-          { "sWidth": "80%", "aTargets": [ 1 ] },
-          { "sWidth": "10%", "aTargets": [ 2 ] }
-        ]
-    });
-    /*$(".btn-delete-event-type").click(function(){
+    $(".btn-delete-event-type").click(function(){
         var event_type_id = $(this).attr("data-id");
         $("#eid").val(event_type_id);
 
         $("#modalDeleteEventType").modal("show");
-    });*/
-
-    $(document).on('click', '.btn-delete-event-type', function(){
-      var eid = $(this).attr("data-id");
-        Swal.fire({
-            title: 'Delete selected Event Type?',
-            text: "",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#32243d',
-            confirmButtonText: 'Yes',
-            cancelButtonText: 'No',
-        }).then((result) => {
-            if (result.value) {
-                $.ajax({
-                    type: "POST",
-                    url: base_url + "/event_types/delete",
-                    data: {eid : eid}, // serializes the form's elements.
-                    success: function(data)
-                    {
-                        /*Swal.fire(
-                          'Deleted!',
-                          'Your file has been deleted.',
-                          'success'
-                        );*/
-                        window.location.reload();
-                    }
-                });
-            }
-        });
     });
 });
 </script>

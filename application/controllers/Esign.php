@@ -3,16 +3,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 ini_set('max_input_vars', 30000);
 
 class Esign extends MY_Controller {
-    const ONE_MB = 1048576;
 
 	public function __construct()
     {
         parent::__construct();
 		$this->checkLogin();
-		$this->hasAccessModule(49);
 		$this->load->model('Esign_model', 'Esign_model');
 		$this->load->model('Activity_model', 'activity');
-		add_css(array(
+		add_css(array( 
             'assets/textEditor/summernote-bs4.css',
         ));
 
@@ -41,25 +39,25 @@ class Esign extends MY_Controller {
 
 	public function addDefaultEsignTemplate($userId){
 		try {
-			$defaultData = $this->Esign_model->getAllDefaultLibrary($userId);
+			$defaultData = $this->Esign_model->getAllDefaultLibrary($userId);		
 			$insertedData = $this->Esign_model->insertBatchUserWiseTemplate($defaultData);
 			if($insertedData){
 				return true;
 			}else {
 				return false;
 			}
-
+			
 		}
 		catch(Exception $e) {
 			return false;
 		}
 	}
-
+	
 	public function addDefaultEsignTemplateToExistingUsers(){
 		try {
 			$this->load->model('Users_model', 'Users_model');
 			$getAllId = $this->Users_model->getAllUserId();
-			$defaultData = $this->Esign_model->getAllDefaultLibrary(0);
+			$defaultData = $this->Esign_model->getAllDefaultLibrary(0);		
 			$allData = [];
 			foreach($getAllId as $id ){
 				$currentDefaultData = $defaultData;
@@ -196,66 +194,30 @@ class Esign extends MY_Controller {
 		}
 
 		//$this->page_data['users'] = $this->User_docphoto_model->getUser(logged('id'));
-
+		
 		$this->load->view('esign/photos', $this->page_data);
 	}
 
 	public function Files(){
-
+		
 		$this->load->model('User_docflies_model', 'User_docflies_model');
 		$this->page_data['users'] = $this->users_model->getUser(logged('id'));
 		$this->page_data['file_id'] = $this->input->get('id');
-
-		$queries = array();
-		parse_str($_SERVER['QUERY_STRING'], $queries);
-		$isTemplate = array_key_exists('template_id', $queries);
-		$isSelfSigning = array_key_exists('signing_id', $queries);
-
-		$this->page_data['is_self_signing'] = false;
-		if ($isSelfSigning) {
-			$this->page_data['file_id'] = $queries['signing_id'];
-			$this->page_data['is_self_signing'] = true;
-		}
-
 		$this->page_data['file_url'] = "";
 		if($this->page_data['file_id'] > 0) {
 			$query = $this->db->from('user_docfile')->where('id',$this->page_data['file_id'])->get();
 			$this->page_data['file_url'] = $query->row()->name;
-		}
+		} 
 		$this->page_data['next_step'] = ($this->input->get('next_step') == '')?0:$this->input->get('next_step');
+		$queryRecipients = $this->db->from('user_docfile_recipients')->where('docfile_id',$this->page_data['file_id'])->get();
+		$this->page_data['recipients'] = $queryRecipients->result_array();
 
-
-		$recipients = [];
-		if ($isTemplate) { // :( this shouldn't be here
-			$this->db->where('template_id', $queries['template_id']);
-			$recipients = $this->db->get('user_docfile_templates_recipients')->result_array();
-		} else if (!$isSelfSigning) {
-			$queryRecipients = $this->db->from('user_docfile_recipients')->where('docfile_id',$this->page_data['file_id'])->get();
-			$recipients = $queryRecipients->result_array();
-		}
-
-		$recipients = array_map(function ($recipient, $index) {
-			$index += 1;
-			if (empty($recipient['name'])) { // doesnt have name
-				$recipient['name'] = $recipient['role_name'];
-			}
-
-			return $recipient;
-		}, $recipients, array_keys($recipients));
-		$this->page_data['recipients'] = $recipients;
-
-		add_css([
-			'assets/css/esign/esign-builder/esign-builder.css',
-			'assets/css/esign/docusign/docusign.css'
-		]);
-
+		add_css('assets/css/esign/esign-builder/esign-builder.css');
 		add_footer_js([
-			// 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js',
+			'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js',
 			'assets/js/esign/libs/pdf.js',
 			'assets/js/esign/libs/pdf.worker.js',
-            'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js',
 
-			'assets/js/esign/docusign/input.autoresize.js',
 			'assets/js/esign/step1.js',
 			'assets/js/esign/step2.js',
 			'assets/js/esign/step3.js',
@@ -282,113 +244,51 @@ class Esign extends MY_Controller {
 		$payload = json_decode(file_get_contents('php://input'), true);
 
 		$coordinates = json_encode($payload['coordinates']);
-		$specs = $payload['specs'] ? json_encode($payload['specs']) : null;
 		$docPage = $payload['doc_page'];
-		$field = $payload['field'] ?? $payload['field_name'];
-		$recipientId = $payload['recipient_id'];
-		$userId = logged('id');
-		$docfileDocumentId = $payload['docfile_document_id'];
-		$docfileId = $payload['docfile_id'];
+		$docId = $payload['docfile_id'];
+		$field = $payload['field'];
 		$uniqueKey = $payload['unique_key'];
+		$userId = logged('id');
 
-		$this->db->where('docfile_id', $docfileId);
+		$this->db->where('docfile_id', $docId);
 		$this->db->where('user_id', $userId);
 		$this->db->where('unique_key', $uniqueKey);
 		$record = $this->db->get('user_docfile_fields')->row();
-		$isCreated = false;
 
 		if (is_null($record)) {
-			$isCreated = true;
 			$this->db->insert('user_docfile_fields', [
 				'coordinates' => $coordinates,
 				'doc_page' => $docPage,
-				'docfile_id' => $docfileId,
-				'docfile_document_id' => $docfileDocumentId,
+				'docfile_id' => $docId,
 				'field_name' => $field,
 				'unique_key' => $uniqueKey,
 				'user_id' => $userId,
-                'user_docfile_recipients_id' => $recipientId,
-				'specs' => $specs,
 			]);
 		} else {
 			$this->db->where('id', $record->id);
 			$this->db->update('user_docfile_fields', [
 				'coordinates' => $coordinates,
 				'doc_page' => $docPage,
-				'docfile_id' => $docfileId,
-				'docfile_document_id' => $docfileDocumentId,
+				'docfile_id' => $docId,
 				'field_name' => $field,
 				'unique_key' => $uniqueKey,
 				'user_id' => $userId,
-				'specs' => is_null($specs) ? $record->specs : $specs,
-                // 'user_docfile_recipients_id' => $recipientId,
 			]);
 		}
 
-		$query = <<<SQL
-        SELECT `user_docfile_fields`.*, `user_docfile_recipients`.`color` FROM `user_docfile_fields`
-        LEFT JOIN `user_docfile_recipients` ON `user_docfile_recipients`.`id` = `user_docfile_fields`.`user_docfile_recipients_id`
-        WHERE `user_docfile_fields`.`id` = ?
-SQL;
-
-		$recordId = $isCreated ? $this->db->insert_id() : $record->id;
-		$record = $this->db->query($query, [$recordId])->row();
-		echo json_encode(['record' => $record, 'is_created' => $isCreated]);
+		echo json_encode(['success' => true]);
 	}
 
 	public function apiGetUserDocfileFields($docId)
 	{
-        $query = <<<SQL
-        SELECT `user_docfile_fields`.*, `user_docfile_recipients`.`color` FROM `user_docfile_fields`
-        LEFT JOIN `user_docfile_recipients` ON `user_docfile_recipients`.`id` = `user_docfile_fields`.`user_docfile_recipients_id`
-        WHERE `user_docfile_fields`.`docfile_id` = ? AND `user_docfile_fields`.`user_id` = ?
-SQL;
+		$userId = logged('id');
 
-		$records = (array) $this->db->query($query, [$docId, logged('id')])->result();
+		$this->db->where('docfile_id', $docId);
+		$this->db->where('user_id', $userId);
+		$records = $this->db->get('user_docfile_fields')->result();
 
     	header('content-type: application/json');
 		echo json_encode(['fields' => $records]);
-	}
-
-    public function apiDeleteDocfileField($uniqueKey) {
-        if ($_SERVER['REQUEST_METHOD'] !== 'DELETE') {
-            echo json_encode(['success' => false]);
-            return;
-        }
-
-        $this->db->where('user_id', logged('id'));
-        $this->db->where('unique_key', $uniqueKey);
-        $this->db->delete('user_docfile_fields');
-
-        header('content-type: application/json');
-        echo json_encode(['success' => true]);
-    }
-
-	public function apiDocumentFile($id)
-	{
-		$this->db->where('docfile_id', $id);
-        $this->db->order_by('id', 'ASC');
-        $records = $this->db->get('user_docfile_documents')->result_array();
-
-		$this->db->where('docfile_id', $id);
-        $sequence = $this->db->get('user_docfile_document_sequence')->row();
-        $sorted = null;
-
-        if ($sequence) {
-            $sorted = [];
-            $sequence = explode(',', $sequence->sequence);
-            foreach ($sequence as $recordId) {
-                foreach ($records as $record) {
-                    if ($record['id'] == $recordId) {
-                        $sorted[] = $record;
-                        break;
-                    }
-                }
-            }
-        }
-
-        header('content-type: application/json');
-        echo json_encode(['data' => is_null($sorted) ? $records : $sorted]);
 	}
 
 	public function changeFavoriteStatus($id,$isFavorite){
@@ -405,7 +305,7 @@ SQL;
 		echo json_encode($result);
 		return true;
 	}
-
+	
 	public function deleteLibrary($id){
 		$whereClouser['user_id'] = logged('id');
 		$whereClouser['isActive'] = 1;
@@ -437,9 +337,9 @@ SQL;
 	public function createTemplate(){
 		// $this->load->model('Esign_model', 'Esign_model');
 		$loggedInUser = logged('id');
-		$this->page_data['categories'] = $this->Esign_model->getLibraryCategory($loggedInUser);
-		$this->page_data['libraries'] = $this->Esign_model->getLibraries($loggedInUser);
-
+		$this->page_data['categories'] = $this->Esign_model->getLibraryCategory($loggedInUser);		
+		$this->page_data['libraries'] = $this->Esign_model->getLibraries($loggedInUser);	
+		
 		add_css('assets/css/esign/esign-editor/esign-editor.css');
 		$this->load->view('esign/createTemplate', $this->page_data);
 	}
@@ -447,13 +347,13 @@ SQL;
 		// $this->load->model('Esign_model', 'Esign_model');
 		$loggedInUser = logged('id');
 		$this->page_data['templates'] = $this->Esign_model->getLibraryWithCategory($loggedInUser);
-		$this->page_data['libraries'] = $this->Esign_model->getLibraries($loggedInUser);
+		$this->page_data['libraries'] = $this->Esign_model->getLibraries($loggedInUser); 
 		// echo $this->db->last_query();
 		// exit;
 		add_css('assets/css/esign/library/library.css');
 		$this->load->view('esign/templateLibrary', $this->page_data);
 	}
-
+	
 	public function addCategory(){
 		$loggedInUser = logged('id');
 		$this->page_data['libraries'] = $this->Esign_model->getLibraries($loggedInUser);
@@ -481,7 +381,7 @@ SQL;
 		$this->activity->addEsignActivity($activity);
 	 	echo json_encode($result);
 	}
-
+	
 	public function createLibrary(){
 		$result['status'] = false;
 		$loggedInUser = logged('id');
@@ -581,7 +481,7 @@ SQL;
 		$activity['activity'] = "Category ID : ".$categoryId." Updated By User ".logged('username');
 		$activity['user_id'] = logged('id');
 		$this->activity->addEsignActivity($activity);
-
+		
 		echo json_encode($result);
 		return true;
 	}
@@ -600,20 +500,20 @@ SQL;
 			redirect('esign/esignmain');
 		}
 		$getTemplate = $this->Esign_model->editTemplate($loggedInUser, $queryParams['id']);
-
+		
 		if(!$getTemplate->num_rows()){
 			redirect('esign/esignmain');
 		}
-
+		
 		$this->page_data['template'] = $getTemplate->row();
-		$this->page_data['categories'] = $this->Esign_model->getLibraryCategory($loggedInUser);
-		$this->page_data['libraries'] = $this->Esign_model->getLibraries($loggedInUser);
+		$this->page_data['categories'] = $this->Esign_model->getLibraryCategory($loggedInUser);		
+		$this->page_data['libraries'] = $this->Esign_model->getLibraries($loggedInUser);		
 		// echo '<pre>';
 		// print_r($this->page_data);
 		// exit;
 		$this->load->view('esign/createTemplate', $this->page_data);
 	}
-
+	
 	public function saveCreatedTemplate(){
 		$loggedInUser = logged('id');
 		extract($this->input->post());
@@ -655,8 +555,8 @@ SQL;
 	public function tempDefaultTemplate(){
 		// $this->load->model('Esign_model', 'Esign_model');
 		$loggedInUser = logged('id');
-		$this->page_data['categories'] = $this->Esign_model->getLibraryCategory($loggedInUser);
-		$this->page_data['libraries'] = $this->Esign_model->getLibraries($loggedInUser);
+		$this->page_data['categories'] = $this->Esign_model->getLibraryCategory($loggedInUser);		
+		$this->page_data['libraries'] = $this->Esign_model->getLibraries($loggedInUser);		
 		$this->load->view('esign/tempInsertDefaultTemplate', $this->page_data);
 	}
 
@@ -682,7 +582,7 @@ SQL;
 			redirect('esign/tempDefaultTemplate?isSuccess=1');
 		}else{
 				redirect('esign/esignmain');
-		}
+		}		
 	}
 	*/
 
@@ -711,9 +611,9 @@ SQL;
 				$this->db->delete('user_docfile_recipients');
 			}
 		}
-
+		
 		foreach ($payload['recipients'] as $recipient) {
-			//['id' => $id, 'name' => $name, 'email' => $email, 'color' => $color, 'role' => $role] = $recipient;
+			['id' => $id, 'name' => $name, 'email' => $email, 'color' => $color, 'role' => $role] = $recipient;
 
 			$this->db->where('id', $id);
 			$this->db->where('docfile_id', $docId);
@@ -764,7 +664,7 @@ SQL;
         // further validation/sanitation of the filename may be appropriate
         $name = time()."_".rand(1,9999999)."_".basename($_FILES["docPhoto"]["name"]);
 		move_uploaded_file($tmp_name, "./uploads/DocPhoto/$name");
-
+		
 		// $config['upload_path']          = $_SERVER['DOCUMENT_ROOT'] .'/nsmartrac/uploads/DocPhoto/';
 		// $config['allowed_types']        = 'gif|jpg|png|jpeg';
 		// $config['max_size'] = 2000;
@@ -787,110 +687,82 @@ SQL;
 			'user_id' => $id,
 			'docphoto' => $name,
 			'company_id' => $cid
-		]);
-
+		]); 
+		
 		// print_r("expression");
 		redirect('esign/Photos');
 	}
 
 	public function fileSave(){
-		header('content-type: application/json');
 
-		if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            echo json_encode(['success' => false]);
-            return;
-        }
+		$this->load->model('User_docflies_model', 'User_docflies_model');
+		//$id = logged('id');
+		
+		// $extension	 = strtolower(end(explode('.',$_FILES['docFile']['name'])));
+		// $filename = time()."_".rand(1,9999999)."_"."DocFiles".".".$extension;
+		// $location = "../../uploads/DocFiles";
+		// echo move_uploaded_file($filename, $location);
 
-		$filepath = FCPATH . 'uploads/DocFiles/';
-		if (!file_exists($filepath)) {
-			mkdir($filepath, 0777, true);
-		}
+		
+		if(isset($_FILES['docFile']) && $_FILES['docFile']['tmp_name'] != '') {
+				
+			$tmp_name = $_FILES['docFile']['tmp_name'];
+			$extension	 = strtolower(end(explode('.',$_FILES['docFile']['name'])));
+			// basename() may prevent filesystem traversal attacks;
+			// further validation/sanitation of the filename may be appropriate
+			$name = time()."_".rand(1,9999999)."_".basename($_FILES["docFile"]["name"]);
+			move_uploaded_file($tmp_name, "./uploads/DocFiles/$name");
+			$id = 0;
+			
+		
 
-		$files = $_FILES['files'];
-        $count = count($files['name']);
+			if($_POST['file_id'] > 0)
+			{
+				$this->db->where('id', $_POST['file_id']);
+				$this->db->update($this->User_docflies_model->table, [
+					'name' => $name
+				]);
+					
+				$id = $_POST['file_id'];
+			} else {
+				
+				$id = $this->User_docflies_model->create([
+					'user_id' => logged('id'),
+					'name' => $name
+				]);
+			}
 
-        for ($i = 0; $i < $count; $i++) {
-            if ($files['size'][$i] <= self::ONE_MB * 8) {
-                continue;
-            }
+			if(isset($_POST['next_step']) && $_POST['next_step'] == 0)
+			{
+				redirect('esign/Files?id='.$id);
+			}
+			if(isset($_POST['next_step']) && $_POST['next_step'] == 1)
+			{
+				redirect('esign/Files?id='.$id.'&next_step=2');
+			}
 
-            echo json_encode(['success' => false, 'reason' => 'Maximum file size is less than 8MB']);
-            return;
-        }
-
-		//['subject' => $subject, 'message' => $message] = $this->input->post();
-
-		$this->db->insert('user_docfile', [
-			'name' => $subject,
-			'type' => 'Single',
-			'status' => 'Draft',
-			'subject' => $subject,
-			'message' => $message,
-			'user_id' => logged('id'),
-			'company_id' => logged('company_id'),
-			'updated_at' => date('Y-m-d H:i:s'),
-		]);
-
-		$insertedId = $this->db->insert_id();
-
-		for ($i = 0; $i < $count; $i++) {
-			$tempName = $files['tmp_name'][$i];
-			$filename = $files['name'][$i];
-			$filename = time() . "_" . rand(1, 9999999) . "_" . basename($filename);
-			$documentPath = $filepath . $filename;
-
-			$this->db->insert('user_docfile_documents', [
-				'name' => $filename,
-				'path' => str_replace(FCPATH, '/', $documentPath),
-				'docfile_id' => $insertedId,
-			]);
-
-			move_uploaded_file($tempName, $filepath . $filename);
-		}
-
-		// save sequence
-		$this->db->where('docfile_id', $insertedId);
-        $record = $this->db->get('user_docfile_document_sequence')->row();
-
-        //['document_sequence' => $sequence] = $this->input->post();
-        //['sequence' => $sequence] = json_decode($sequence, true);
-		$sequence = is_array($sequence) ? $sequence : [];
-
-        $this->db->where('docfile_id', $insertedId);
-        $documents = $this->db->get('user_docfile_documents')->result_array();
-
-        $sequenceIds = [];
-        foreach ($sequence as $documentName) {
-            foreach ($documents as $document) {
-                if (strpos($document['name'], $documentName) !== false) {
-                    $sequenceIds[] = $document['id'];
-                    break;
-                }
-            }
-        }
-
-        $payload = ['docfile_id' => $insertedId, 'sequence' => implode(',', $sequenceIds)];
-        if (!$record) {
-            $this->db->insert('user_docfile_document_sequence', $payload);
-        } else {
-            $this->db->where('docfile_id', $insertedId);
-            $this->db->update('user_docfile_document_sequence', $payload);
-        }
-
-		$this->db->where('id', $insertedId);
-		$record = $this->db->get('user_docfile')->row();
-		echo json_encode(['data' => $record, 'is_created' => true]);
+		} else if (isset($_POST['file_id']) && $_POST['file_id'] > 0) {
+			
+			if(isset($_POST['next_step']) && $_POST['next_step'] == 0)
+			{
+				redirect('esign/Files?id='.$_POST['file_id']);
+			}
+			if(isset($_POST['next_step']) && $_POST['next_step'] == 1)
+			{
+				redirect('esign/Files?id='.$_POST['file_id'].'&next_step=2');
+			}
+		}	
 	}
-
+	
 	private function _get_datatables_query($postData){
 		$tableName = 'esign_library_template';
 		$column_search = array( 'title', 'categoryName');
 		$column_order = array( 'title', 'status', 'categoryName' );
 		$order = array('esignLibraryTemplateId' => 'desc');
-
+		
         $this->db->from($tableName);
         $i = 0;
-        // loop searchable columns
+        // loop searchable columns 
         foreach($column_search as $item){
             // if datatable send POST for search
             if($postData['search']['value']){
@@ -902,7 +774,7 @@ SQL;
                 }else{
                     $this->db->or_like($item, $postData['search']['value']);
                 }
-
+                
                 // last loop
                 if(count($column_search) - 1 == $i){
                     // close bracket
@@ -911,7 +783,7 @@ SQL;
             }
             $i++;
         }
-
+         
         if(isset($postData['order'])){
             $this->db->order_by($column_order[$postData['order']['0']['column']], $postData['order']['0']['dir']);
         }else if(isset($order)){
@@ -924,7 +796,7 @@ SQL;
 	// 	$query = $this->db->get();
     //     return $query->num_rows();
 	// }
-
+    
 	public function getRows($postData, $userId, $libraryId){
 		$this->_get_datatables_query($postData);
 		$this->db->where('esign_library_template.user_id',$userId )
@@ -937,7 +809,7 @@ SQL;
 			$this->db->where('esign_library_category.fk_esignLibraryMaster', $libraryId);
 		}
 		$res['count'] = $this->db->get()->num_rows();
-
+		
 		$this->_get_datatables_query($postData);
 		$this->db->select('esignLibraryTemplateId, title, categoryName, isFavorite, status')
 		->where('esign_library_template.user_id',$userId )
@@ -972,15 +844,15 @@ SQL;
 				<a class="trashColor" href="#"><i id="deleteId-'.$member->esignLibraryTemplateId.'" class="fa fa-trash"></i></a>
 			';
 			$title = '<a style="cursor: pointer;" redirectUrl="'.$editUrl.'" ondblclick="redirectOnDoubleClickToTitle(this)">'.$member->title.'</a>';
-			$data[] = array(
-				$title,
-				$status,
-				$member->categoryName,
+			$data[] = array( 
+				$title, 
+				$status, 
+				$member->categoryName, 
 				$fav,
 				$action
 			);
 		}
-
+		
 		// print_r($data);
 
         $countFiltered = $queryData['count'];
@@ -990,7 +862,7 @@ SQL;
             "recordsFiltered" => $countFiltered,
             "data" => $data,
         );
-
+        
         // Output to JSON format
         echo json_encode($output);
 	}

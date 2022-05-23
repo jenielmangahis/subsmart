@@ -12,35 +12,22 @@ class Survey extends MY_Controller
       $this->page_data['page']->menu = 'Survey';
       $this->load->model('Survey_model', 'survey_model');
 
-      /*add_css(array(
+
+
+      add_css(array(
         'https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css',
         'https://cdn.jsdelivr.net/jquery.jssocials/1.4.0/jssocials-theme-minima.css',
         'https://cdn.jsdelivr.net/jquery.jssocials/1.4.0/jssocials.css',
         'https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css',
         'assets/css/survey.css',
-      ));*/
+      ));
 
-      /*add_footer_js(array(
+      add_footer_js(array(
         'https://cdnjs.cloudflare.com/ajax/libs/dragula/3.7.2/dragula.min.js',
         'https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js',
         'https://cdnjs.cloudflare.com/ajax/libs/tributejs/5.1.3/tribute.min.js',
         'assets/js/survey.js',
         'assets/js/social.js',
-      ));*/
-
-      add_css(array(
-        'https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css',
-        'assets/plugins/jssocial/jssocials-theme-flat.css',
-        'assets/plugins/jssocial/jssocials.css',
-        'https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css',
-        'assets/css/survey.css',
-      ));
-
-      add_footer_js(array(
-        'assets/plugins/jssocial/jssocials.min.js',
-        'https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js',
-        'https://cdnjs.cloudflare.com/ajax/libs/tributejs/5.1.3/tribute.min.js',
-        'assets/js/survey.js'        
       ));
 
       if(!isset($_GET['st'])){
@@ -68,10 +55,6 @@ class Survey extends MY_Controller
   }
 
   public function index(){
-    $this->page_data['page']->title = 'Survey Wizard';
-    $this->page_data['page']->parent = 'Marketing';
-    $this->page_data['page']->message = 'What would you like to do?';
-
     $templates = file_get_contents('application/views/survey/survey_templates.json')    ;
 
     $this->page_data['surveys'] = $this->survey_model->list();
@@ -79,17 +62,16 @@ class Survey extends MY_Controller
       $survey->survey_theme = $this->survey_model->getThemes($survey->theme_id);
     }
     
-    $company_id = logged('company_id');
-    $this->page_data['survey_workspaces'] = $this->survey_model->getWorkspacesByCompanyId($company_id);
+    $this->page_data['survey_workspaces'] = $this->survey_model->getWorkspaces();
     $this->page_data['survey_templates'] = json_decode($templates);
     $this->page_data['survey_question_templates'] = $this->survey_model->getTemplateQuestions();
     $this->page_data['template_categories'] = array_unique(array_column(json_decode($templates), 'category'));
-    $this->page_data["survey_themes"] = $this->survey_model->getThemesByCompanyIdAndIsDefault($company_id);
-    // $this->load->view('survey/index.php', $this->page_data);
-    $this->load->view('v2/pages/survey/index.php', $this->page_data);
+    $this->page_data["survey_themes"] = $this->survey_model->getThemes();
+    $this->load->view('survey/index.php', $this->page_data);
   }
 
-  public function add($settings = null){    
+  public function add($settings = null){
+    
     $data = array(
       'created_by' => $_SESSION['uid'],
       'title' => $this->input->post('title'),
@@ -129,7 +111,7 @@ class Survey extends MY_Controller
     $this->page_data['survey_workspaces'] = $this->survey_model->getWorkspaces();
     $this->page_data['survey_logic'] = $this->survey_model->getSurveyLogics($id);
     $this->page_data['questions'] = $this->survey_model->getQuestions($id);
-    $this->page_data['qTemplate'] = $this->survey_model->getEnabledTemplateQuestions();
+    $this->page_data['qTemplate'] = $this->survey_model->getTemplateQuestions();
     $this->page_data['themes'] = $this->survey_model->getThemes();
     $this->load->view('survey/edit', $this->page_data);
   }
@@ -197,7 +179,6 @@ class Survey extends MY_Controller
     $result = array(
       'success' => 1,
       'data' => $data,
-      'sid' => $id,
     );
     // add_footer_js(array(
     //     'assets/js/survey.js',
@@ -212,7 +193,6 @@ class Survey extends MY_Controller
     $result = array(
       'success' => 1,
       'data' => $data,
-      'sid' => $id
     );
     // add_footer_js(array(
     //     'assets/js/survey.js',
@@ -278,16 +258,35 @@ class Survey extends MY_Controller
     $data = $this->survey_model->addQuestionChoice($id, $tid);
     $result = array(
       'success' => 1,
-      'data' => $data,
-      'tid' => $tid
+      'data' => $data
     );
     echo json_encode($result);
     exit;
   }
 
-  public function addQuestionUpload($id){   
+  public function addQuestionUpload($id){
+    $path = 'uploads/survey/image_db/';
+    if(file_exists($path."image_".$id.".". explode('.', $_FILES['image_background']['name'])[1])){
+      echo unlink($path."image_".$id.".". explode('.', $_FILES['image_background']['name'])[1]);
+    }
+    $config = [
+      'upload_path' 		=> $path,
+      'allowed_types' 	=> '*',
+      'overwrite' 		=> false
+    ];
+
+    
+    $_FILES['image_background']["name"] = "image_".$id.".". explode('.', $_FILES['image_background']['name'])[1];
+
+    $test = $this->upload->initialize($config);
+    if ( ! $this->upload->do_upload('image_background') ){
+
+    }else{
+      $upload_data = $this->upload->data();
+    }
+
     $data = array(
-      'image_background' => $this->moveUploadedFile($id),
+      'image_background' => $_FILES['image_background']['name'],
     );
 
     $this->survey_model->addQuestionImage($id, $data);
@@ -296,24 +295,8 @@ class Survey extends MY_Controller
     ));
     exit;
   }
-
-  public function moveUploadedFile( $survey_id ) {
-      if(isset($_FILES['file']) && $_FILES['file']['tmp_name'] != '') {
-          $target_dir = "./uploads/survey/image_db/" . $survey_id . "/";
-          if(!file_exists($target_dir)) {
-              mkdir($target_dir, 0777, true);
-          }
-
-          $tmp_name = $_FILES['file']['tmp_name'];
-          $extension = strtolower(end(explode('.',$_FILES['file']['name'])));
-          $name = 'attached_image_'.time().".".$extension;
-          move_uploaded_file($tmp_name, $target_dir . $name);
-
-          return $name;
-      }
-  }
-
   public function preview($id){
+
     add_css(array(
         'assets/dashboard/css/bootstrap.min.css',
     ));
@@ -326,7 +309,7 @@ class Survey extends MY_Controller
 
   public function answer($id){
     // payment
-    /*if($this->input->post('stripeToken') != NULL){
+    if($this->input->post('stripeToken') != NULL){
       require_once('application/libraries/stripe-php/init.php');
       \Stripe\Stripe::setApiKey("sk_test_mMoB3fX3PZwWzdDGj1EwGr9E004bgLdyLv");
       
@@ -339,7 +322,16 @@ class Survey extends MY_Controller
       
       unset($_POST['answer']);
       unset($_POST['stripeToken']);
-    }*/
+    }
+    
+		foreach ($_POST as $key => $value) {
+      $datas = array(
+        'answer' => $value,
+        'survey_id' => 2,
+        // 'question_id' => (int)$question_id
+      );
+    }
+    
     $answered = $this->survey_model->saveAnswer($_POST, $_FILES,$id);
     echo json_encode($answered);
     exit;
@@ -348,8 +340,7 @@ class Survey extends MY_Controller
 
   public function orderUpdate(){
 
-    $data = array_unique($_POST['id']);
-    $data = $this->survey_model->orderUpdate($data);
+    $data = $this->survey_model->orderUpdate($_POST['id']);
     $result = array(
       'success' => 1
     );
@@ -409,8 +400,7 @@ class Survey extends MY_Controller
   /* THEMES */
   public function themeIndex(){
     
-    $company_id = logged('company_id');
-    $this->page_data['themes'] = $this->survey_model->getThemesByCompanyId($company_id);
+    $this->page_data['themes'] = $this->survey_model->getThemes();
     $this->load->view('survey/themes/list', $this->page_data);
   }
   
@@ -440,25 +430,14 @@ class Survey extends MY_Controller
 
   public function addTheme(){
     
-    //$filename   = $_POST["sth_theme_name"];
-    $filename   = 'theme_image_'.time();
-    $company_id = logged('company_id');
-
-    //$path = 'uploads/survey/themes';
-    $path = "./uploads/survey/themes/$company_id/";
-      
-    if(!file_exists($path)) {
-      mkdir($path, 0777, true);
-    }
-
+    $filename = $_POST["sth_theme_name"];
+    $path = 'uploads/survey/themes';
     $config = [
       'file_name' => strtolower($filename),
       'upload_path' 		=> $path,
       'allowed_types' 	=> '*',
       'overwrite' 		=> false,
     ];
-
-    $_POST['company_id'] = $company_id;
     $_POST["sth_primary_image"] = strtolower($filename).".jpg";
     $test = $this->upload->initialize($config);
     $this->upload->do_upload('filePrimaryImage');
@@ -467,33 +446,20 @@ class Survey extends MY_Controller
   }
 
   public function updateTheme($id){
-
-    $theme = $this->survey_model->getThemes($id);
-
-    $filename   = 'theme_image_'.time();
-    $company_id = logged('company_id');
-
-    $path = "./uploads/survey/themes/$company_id/";
-    if(!file_exists($path)) {
-      mkdir($path, 0777, true);
-    }
-
+    $filename = $_POST["sth_theme_name"];
+    $path = 'uploads/survey/themes';
     if($_FILES["filePrimaryImage"]["name"] !== "" || $_FILES["filePrimaryImage"]["size"] !== 0){
-      $config = [
-        'file_name' => strtolower($filename),
-        'upload_path'     => $path,
-        'allowed_types'   => '*',
-        'overwrite'     => false,
-      ];
-
-      $_POST['company_id'] = $company_id;
-      $_POST["sth_primary_image"] = strtolower($filename).".jpg";
-      $test = $this->upload->initialize($config);
-      $this->upload->do_upload('filePrimaryImage');
-    }else{
-      $_POST["sth_primary_image"] = $theme->sth_primary_image;
+      unlink($path.'/'.strtolower($filename).'.jpg');
     }
-
+    $config = [
+      'file_name' => strtolower($filename),
+      'upload_path' 		=> $path,
+      'allowed_types' 	=> '*',
+      'overwrite' 		=> false,
+    ];
+    $_POST["sth_primary_image"] = strtolower($filename).".jpg";
+    $test = $this->upload->initialize($config);
+    $this->upload->do_upload('filePrimaryImage');
     $this->survey_model->updateTheme($id, $_POST);
     redirect('survey/themes');
   }  
@@ -512,9 +478,7 @@ class Survey extends MY_Controller
     
     $data = array(
       "name" => $this->input->post('txtWorkspaceName'),
-      "users" => '',
-      "company_id" => logged('company_id')
-
+      "users" => json_encode(array(0))
     );
     $this->survey_model->addWorkspace($data);
     $result = array(
@@ -523,8 +487,7 @@ class Survey extends MY_Controller
     );
     echo json_encode($result);
     if(isset($_GET['redirect'])){
-      //redirect('survey/workspace');
-      redirect('survey');
+      redirect('survey/workspace');
     }
   }
 
@@ -574,168 +537,9 @@ class Survey extends MY_Controller
     exit;
   }
 
-  public function ajax_load_survey_questions()
-  {
-    $post       = $this->input->post();
-    $survey_id = $post['survey_id'];
-    $this->page_data['questions'] = $this->survey_model->getQuestions($survey_id);
-    $this->load->view('survey/ajax_load_survey_questions', $this->page_data);
-  }
+  
 
-  public function ajax_delete_template_answer()
-  {
-    $post = $this->input->post();    
-    $this->survey_model->deleteSurveyTemplateAnswer($post['staid']);
 
-    $result = array(
-      'success' => 1
-    );
 
-    echo json_encode($result);
-    exit;
-  }
-
-  public function ajax_update_settings()
-  {
-      $is_success = false;
-      $post = $this->input->post();   
-
-      if( $post['sid'] > 0 ){
-        $survey = $this->survey_model->view($post['sid']);
-        if( $survey ){
-
-          $isScoreMonitored = 0;
-          if( isset($post['isScoreMonitored']) ){
-            $isScoreMonitored = 1;
-          }
-
-          $canRedirectOnComplete = 0;
-          $redirectionLink = '';
-          if( isset($post['can_redirect_oncomplete']) ){
-            $canRedirectOnComplete = 1;
-            $redirectionLink = $post['txtRedirectionLink'];
-          }
-
-          $hasProgressBar = 0;
-          if( isset($post['show_progress']) ){
-            $hasProgressBar = 1;
-          }
-
-          $data = [
-            'title' => $post['txtSurveyTitle'],
-            'workspace_id' => $post['selWorkspace'],
-            'isScoreMonitored' => $isScoreMonitored,
-            'hasProgressBar' => $hasProgressBar,
-            'canRedirectOnComplete' => $canRedirectOnComplete,
-            'redirectionLink' => $redirectionLink,
-          ];
-
-          $this->survey_model->update($post['sid'], $data);
-
-          $is_success = true;
-        }
-      }
-
-      $json_data = ['is_success' => $is_success];
-      echo json_encode($json_data);
-  }
-
-  public function ajax_delete_survey()
-  {
-    $is_success = 0;
-
-    $post = $this->input->post();
-    $survey = $this->survey_model->view($post['survey_id']);
-    if( $survey ){
-      $deleteSurvey = $this->survey_model->delete($post['survey_id']);
-      $deleteQuestions = $this->survey_model->deleteQuestion($post['survey_id'], "survey");
-
-      $is_success = 1;
-    }
-    
-    $json_data = ['is_success' => $is_success];
-
-    echo json_encode($json_data);
-  }
-
-  public function ajax_delete_theme()
-  {
-    $is_success = 0;
-
-    $post = $this->input->post();    
-    $theme      = $this->survey_model->getThemes($post['tid']);
-    $company_id = logged('company_id');
-
-    if( $theme ){
-      if( $theme->company_id == $company_id ){
-        $this->survey_model->deleteThemeBySthRecNo($post['tid']); 
-        $is_success = 1;   
-      }
-    }    
-
-    $result = array(
-      'success' => $is_success
-    );
-
-    echo json_encode($result);
-    exit;
-  }
-
-  public function ajax_load_survey_logic_jump()
-  {
-    $post = $this->input->post();    
-
-    $id = $post['survey_id'];    
-    $this->page_data['survey'] = $this->survey_model->view($id);
-    $this->page_data['survey_logic'] = $this->survey_model->getSurveyLogics($id);
-    $this->page_data['questions'] = $this->survey_model->getQuestions($id);
-    $this->load->view('survey/ajax_load_survey_logic_jump', $this->page_data);
-  }
-
-  public function ajax_logic_add()
-  {
-    $post = $this->input->post();    
-
-    $id = $post['survey_id'];    
-    $this->page_data['survey'] = $this->survey_model->view($id);
-    $this->page_data['questions'] = $this->survey_model->getQuestions($id);
-    $this->load->view('survey/ajax_logic_add', $this->page_data);
-  }
-
-  public function ajax_update_survey_logic()
-  {
-    $is_success = 0;
-    $msg        = '';
-
-    $post = $this->input->post();
-
-    foreach( $post['selectIfQuestionFrom'] as $key => $value ){
-      if( $post['selectCondition'][$key] != '' && $post['selectAnswer'][$key] != '' && $post['selectAnswer'][$key] != '' ){
-        $data[] = [
-          'sl_survey_id' => $post['survey_id'],
-          'sl_question_id_from' => $value,
-          'sl_question_id_to' => $post['selectJumpQuestion'][$key],
-          'sl_value' => $post['selectAnswer'][$key],
-          'sl_condition' => $post['selectCondition'][$key]
-        ];
-
-      }else{
-        $msg = 'Please check your entries and try again.';
-        break;
-      }
-    }
-
-    if( $msg == '' ){
-      $this->survey_model->deleteAllSurveyLogicBySurveyId($post['survey_id']);
-      foreach($data as $values){
-        $this->survey_model->addSurveyLogic($values);
-        $is_success = 1;
-      }  
-    }
-
-    $json_data = ['is_success' => $is_success, 'msg' => $msg];
-    echo json_encode($json_data);
-
-  }
 
 }

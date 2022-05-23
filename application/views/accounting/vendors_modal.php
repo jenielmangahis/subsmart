@@ -100,13 +100,9 @@
                            <tr>
                               <th></th>
                               <th>#</th>
-                              <th>EXPENSE NAME</th>
                               <th>CATEGORY</th>
                               <th>DESCRIPTION</th>
                               <th>AMOUNT</th>
-                              <th>RATE</th>
-                              <th>UNITS</th>
-                              <th>TOTAL</th>
                               <th></th>
                            </tr>
                         </thead>
@@ -116,30 +112,16 @@
                               <td><span id="line-counter-expense">1</span></td>
                               <td>
                                  <div id="" style="display:;">
-                                    <select name="expname[]" id="expname" class="form-control expenseCategory select2-expense-category">
+                                    <select name="category[]" id="" class="form-control expenseCategory select2-expense-category">
                                        <option></option>
-                                       <option value="00">+ Add new</option>
                                        <?php foreach ($list_categories as $list): ?>
                                        <option value="<?php echo $list->id?>"><?php echo $list->category_name;?></option>
                                        <?php endforeach;?>
                                     </select>
                                  </div>
                               </td>
-                              <td>
-                                 <div id="" style="display:;">
-                                    <select name="category[]" id="" class="form-control expenseCategory select2-expense-category">
-                                       <option></option>
-                                       <option value="1">Fixed Cost</option>
-                                       <option value="2">Variable Cost</option>
-                                       <option value="3">Periodic Cost</option>
-                                    </select>
-                                 </div>
-                              </td>
                               <td><input type="text" name="description[]" class="form-control expenseDescription" id="" style="display: ;"></td>
                               <td><input type="text" name="amount[]" class="form-control expenseAmount" id="" style="display: ;"></td>
-                              <td><input type="text" name="rate[]" class="form-control expenserate" id="" style="display: ;"></td>
-                              <td><input type="text" name="units[]" class="form-control expenseunits" id="" style="display: ;"></td>
-                              <td><input type="text" name="total[]" class="form-control expensetotal" id="" style="display: ;"></td>
                               <td style="text-align: center"><a href="#" id="delete-row-expense"><i class="fa fa-trash"></i></a></td>
                            </tr>
                            <tr id="tableLine-expense">
@@ -149,28 +131,14 @@
                                  <div id="" style="display:;">
                                     <select name="category[]" id="" class="form-control expenseCategory select2-expense-category">
                                        <option></option>
-                                       <option value="00">+ Add new</option>
                                        <?php foreach ($list_categories as $list): ?>
                                        <option value="<?php echo $list->id?>"><?php echo $list->category_name;?></option>
                                        <?php endforeach;?>
                                     </select>
                                  </div>
                               </td>
-                              <td>
-                                 <div id="" style="display:;">
-                                    <select name="category[]" id="" class="form-control expenseCategory select2-expense-category">
-                                       <option></option>
-                                       <option value="1">Fixed Cost</option>
-                                       <option value="2">Variable Cost</option>
-                                       <option value="3">Periodic Cost</option>
-                                    </select>
-                                 </div>
-                              </td>
                               <td><input type="text" name="description[]" class="form-control expenseDescription" id="" style="display: ;"></td>
                               <td><input type="text" name="amount[]" class="form-control expenseAmount" id="" style="display: ;"></td>
-                              <td><input type="text" name="rate[]" class="form-control expenserate" id="" style="display: ;"></td>
-                              <td><input type="text" name="units[]" class="form-control expenseunits" id="" style="display: ;"></td>
-                              <td><input type="text" name="total[]" class="form-control expensetotal" id="" style="display: ;"></td>
                               <td style="text-align: center"><a href="#" id="delete-row-expense"><i class="fa fa-trash"></i></a></td>
                            </tr>
                         </tbody>
@@ -1426,4 +1394,3 @@
 
 
     <?php include viewPath('accounting/add_new_term'); ?>
-    <?php include viewPath('accounting/modal_add_expense_name'); ?>

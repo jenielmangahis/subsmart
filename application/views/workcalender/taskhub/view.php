@@ -19,9 +19,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
 		padding: 0 !important;
 		margin-bottom: 15px !important;
 	}
-	.p-40 {
-  	padding-top: 40px !important;
-	}
 </style>
 
 <div class="wrapper" role="wrapper">
@@ -29,20 +26,28 @@ defined('BASEPATH') or exit('No direct script access allowed');
     <!-- page wrapper start -->
     <div wrapper__section>
     	<div class="container-fluid">
-    		<div class="row p-40">
-            <div class="col">
-                <h3 class="m-0">
-                    Task Hub
-                    <a href="<?php echo base_url('taskhub') ?>" class="btn btn-primary" aria-expanded="false" style="float: right;">
-                    <i class="mdi mdi-settings mr-2"></i> Go Back to TaskHub
-                </a>
-                </h3>
-            </div>
-            <div style="background-color:#fdeac3;padding:.5%;margin-bottom:5px;margin-top:5px;margin-bottom:10px; width:100%;margin-left: 10px;">
-                Show task details and comments   
-            </div>
-        </div>
     		<div class="card card_holder">
+    			<div class="page-title-box">
+                    <div class="row align-items-center">
+                        <div class="col-sm-6">
+                            <h1 class="page-title">Task Hub</h1>
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item active">Show task details and comments</li>
+                            </ol>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="float-right d-none d-md-block">
+                                <div class="dropdown">
+                                    <?php ////if (hasPermissions('add_plan')): ?>
+                                    <a href="<?php echo base_url('taskhub'); ?>" class="btn btn-primary"><i
+                                                class="fa fa-plus"></i> Go Back to TaskHub</a>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end row -->
                 <section class="content">
                 	<!-- Default box -->
                 	<div class="row">
@@ -51,7 +56,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 		                    	<div class="box-header with-border">
 		                            <h5 class="box-title"><?php echo $task->subject; ?>
 		                            	<span class="font-weight-lighter">&ensp;#<?php echo $task->task_id; ?></span>
-		                            	&ensp;<span class="font-weight-lighter border border-dark px-2 rounded" style='color: #ffffff;background-color: <?php echo $task->status_color; ?>'><?php echo $task->status_text; ?></span>
+		                            	&ensp;<span class="font-weight-lighter border border-dark px-2 rounded" style='background-color: <?php echo $task->status_color; ?>'><?php echo $task->status_text; ?></span>
 		                        	</h5>
 		                        </div>
 		                        <div class="box-body">
@@ -104,10 +109,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
 		                				<tr>
 			                				<td class="taskhub_sidebar_details_caption font-weight-bold">Created By :</td>
 			                				<td class="taskhub_sidebar_details_values"><?php echo $task->created_by_name; ?></td>
-			                			</tr>
-			                			<tr>
-			                				<td class="taskhub_sidebar_details_caption font-weight-bold">Customer :</td>
-			                				<td class="taskhub_sidebar_details_values"><?php echo $task->customer_name; ?></td>
 			                			</tr>
 			                			<tr>
 			                				<td class="taskhub_sidebar_details_caption font-weight-bold">Assigned To :</td>

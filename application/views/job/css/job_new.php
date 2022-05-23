@@ -2,15 +2,11 @@
     .wrapper *{
         font-size: 14px;
     }
-    #map  {
+    #map {
         height: 210px;
         width: 100%;
-        padding-left: 15px;
+        padding: 0;
     }
-    #streetView img{
-        height: 200px;
-    }
-
 
     .left-sidebar-main .card {
         padding: 0px;

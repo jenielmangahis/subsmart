@@ -35,7 +35,6 @@ class Event extends MY_Controller
 
     public function save()
     {
-        $this->load->model('EventType_model');
         include APPPATH . 'libraries/google-api-php-client/Google/vendor/autoload.php';
 
         $company_id = logged('company_id');
@@ -47,25 +46,12 @@ class Event extends MY_Controller
             $is_recurring = 0;
         }
 
-        $event_address = '';
-        $event_zip_code = '';
-        $event_state    = '';
-
-        if( isset($post['event_add_address']) ){
-            $event_address  = $post['event_address'];
-            $event_zip_code = $post['event_zip_code'];
-            $event_state    = $post['event_state'];
-        }
-
-        $eventType = $this->EventType_model->getById($post['what_of_even']);
-
         $data = array(
             'company_id' => $company_id,
             'customer_id' => $post['customer_id'],
-            'event_type_id' => $eventType->id,
             'gevent_id' => 0,
             'employee_id' => $post['user_id'][0],
-            'what_of_even' => ($post['what_of_even']) ? $eventType->title : '',
+            'what_of_even' => ($post['what_of_even']) ? $post['what_of_even'] : '',
             'description' => $post['description'],
             'start_date' => date('Y-m-d', strtotime($post['start_date'])),
             'start_time' => $post['start_time'],
@@ -75,10 +61,7 @@ class Event extends MY_Controller
             'notify_at' => $post['notify_at'],
             'event_description' => $post['description'],
             'instructions' => $post['instructions'],
-            'is_recurring' => $is_recurring,
-            'event_address' => $event_address,
-            'event_zip_code' => $event_zip_code,
-            'event_state' => $event_state
+            'is_recurring' => $is_recurring
         );
 
         if (!empty(post('event_id'))) {
@@ -123,7 +106,7 @@ class Event extends MY_Controller
         //Add to app default google calendar
         $this->load->model('GoogleAccounts_model');
         $google_user_api    = $this->GoogleAccounts_model->getByAuthUser();
-        $google_credentials = google_credentials();
+        $google_credentials = google_credentials();        
         $access_token = "";
         $refresh_token = "";
         $google_client_id = "";
@@ -211,7 +194,7 @@ class Event extends MY_Controller
 
         if ($this->event_model->delete(post('event_id'))) {
 
-            // remove user events
+            // remove user events            
             $this->load->model('UserEvent_model', 'UserEvent_model');
 
             $userEvents = $this->UserEvent_model->getByEventId(post('event_id'));
@@ -240,21 +223,21 @@ class Event extends MY_Controller
 
 
     public function get_event_form()
-    {
+    {        
         $this->load->model('ColorSettings_model');
         $this->load->model('EventType_model');
         $this->load->model('AcsProfile_model');
 
-        $post = $this->input->post();
+        $get = $this->input->get();
 
         // popup open request to edit a particular event
-        if (!empty($post['event_id'])) {
+        if (!empty($get['event_id'])) {
 
-            $this->page_data['event'] = $this->event_model->getById($post['event_id']);
+            $this->page_data['event'] = $this->event_model->getById($get['event_id']);
 
             // load the event users
             $this->load->model('UserEvent_model', 'UserEvent_model');
-            $users = $this->UserEvent_model->getByEventId($post['event_id']);
+            $users = $this->UserEvent_model->getByEventId($get['event_id']);
 
             // load one user for the event
             if (!empty($users)) {
@@ -265,15 +248,14 @@ class Event extends MY_Controller
         // print_r($this->page_data['event']); die;
         $user_id = logged('id');
         $role_id = logged('role');
-        $company_id = logged('company_id');
         if( $role_id == 1 || $role_id == 2 ){
             $args = array();
             $eventTypes = $this->EventType_model->getAll();
-            $customers = $this->AcsProfile_model->getAllByCompanyId($company_id);
+            $customers  = $this->AcsProfile_model->getAll();
         }else{
-            $customers = $this->AcsProfile_model->getAll();
             $args = array('company_id' => logged('company_id'));
             $eventTypes = $this->EventType_model->getAllByCompanyId(logged('company_id'));
+            $customers  = $this->AcsProfile_model->getAllByCompanyId(logged('company_id'));
         }
 
         $colorSettings = $this->ColorSettings_model->getByWhere($args);
@@ -281,7 +263,7 @@ class Event extends MY_Controller
         $this->page_data['customers'] = $customers;
         $this->page_data['eventTypes'] = $eventTypes;
         $this->page_data['colorSettings'] = $colorSettings;
-
+        
         die($this->load->view('event/event_form', $this->page_data, true));
     }
 
@@ -532,12 +514,12 @@ class Event extends MY_Controller
         if($event){
             if( $event->description != '' ){
                 $details = get_customer_by_id($event->customer_id)->contact_name . " - " . $event->description;
-            }else{
+            }else{  
                 $details = get_customer_by_id($event->customer_id)->contact_name;
             }
             $event_date_from = date("Ymd\THis\Z", strtotime($event->start_date . ' ' . $event->start_time));
             $event_date_to   = date("Ymd\THis\Z", strtotime($event->end_date . ' ' . $event->end_time));
-
+            
             header('Content-type: text/calendar; charset=utf-8');
             header('Content-Disposition: attachment; filename=calendar.ics');
 
@@ -557,6 +539,6 @@ class Event extends MY_Controller
         }
 
         exit;
-
+        
     }
 }

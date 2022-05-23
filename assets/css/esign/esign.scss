@@ -57,32 +57,3 @@ $sizeItem: 300px;
     }
   }
 }
-
-.esignActionRequired {
-  display: none;
-
-  &--show {
-    display: block;
-  }
-
-  &__inner {
-    display: flex;
-    align-items: center;
-    font-size: 0.9rem;
-  }
-
-  &__icon {
-    margin-right: 0.5rem;
-    font-size: 18px;
-  }
-
-  &__body {
-    margin-bottom: 0;
-    color: #004085;
-
-    &:hover {
-      color: #004085;
-      text-decoration: underline;
-    }
-  }
-}

@@ -18,10 +18,6 @@
   padding-right: 20px !important;
   padding-left: 20px !important;
 }
-svg#svg-sprite-menu-close {
-    position: relative;
-    bottom: 63px;
-}
 @media only screen and (max-width: 600px) {
   .p-40 {
     padding-top: 0px !important;
@@ -31,174 +27,201 @@ svg#svg-sprite-menu-close {
     bottom: 0px;
   }
 }
-.dropdown .btn {
-    padding: 6px 12px;
-}
-.dropdown .btn {
-    padding: 6px 12px;
-}
-.btn-default {
-    color: #363636;
-    background: #fff;
-    border: 1px solid #cccccc;
-}
-.btn {
-    padding: 10px 25px;
-    border: 1px solid transparent;
-    border-radius: 2px;
-    box-shadow: none;
-    font-size: 16px;
-    transition: none;
-}
-.btn-default {
-    color: #333;
-    background-color: #fff;
-    border-color: #ccc;
-}
-.btn {
-    display: inline-block;
-    margin-bottom: 0;
-    font-weight: 400;
-    text-align: center;
-    vertical-align: middle;
-    -ms-touch-action: manipulation;
-    touch-action: manipulation;
-    cursor: pointer;
-    border: 1px solid transparent;
-    white-space: nowrap;
-    padding: 6px 12px;
-    font-size: 14px;
-    line-height: 1.42857143;
-    border-radius: 4px;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-}
-.left {
-  float: left;
-}
 </style>
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
     <!-- page wrapper start -->
     <div class="wrapper" role="wrapper">
-<?php
-  $url =  base_url(uri_string());
-  if( $map_type == 'jobs' ) {
-    include viewPath('includes/sidebars/job');
-  }else{
-    include viewPath('includes/sidebars/schedule');
-  }
-?>
-<style>
-.gm-style-iw-d{
-  overflow: hidden !important;
-  padding: 10px;
-}
-</style>
+<?php include viewPath('includes/sidebars/schedule'); ?>
     <div wrapper__section>
         <?php include viewPath('includes/notifications'); ?>
-        <form id="map-filter">
-        <input type="hidden" name="map_type" id="map_type" value="<?= $map_type; ?>">
         <div class="container-fluid p-40">
             <!-- end row -->
             <div class="row">
                 <div class="col-xl-12">
-                    <div class="card p-20">
-                        <div class="col-sm-12 pl-0 pr-0">
-                            <h3 class="mt-0 page-title pb-0 mb-0">Bird's Eye View</h3>
-                            <span style="margin-top:4px;margin-bottom: 8px;display: block;font-size: 14px;color: rgba(42, 49, 66, 0.7);">Manage Bird's Eye View</span>
+                    <div class="card mt-0 p-20">
+                      <div class="page-title-box pt-0 pb-2">
+                          <div class="row align-items-center">
+                              <div class="col-sm-6">
+                                  <h3 class="page-title">Bird's Eye View</h3>
+                                  <ol class="breadcrumb">
+                                      <li class="breadcrumb-item active">Manage Bird's Eye View</li>
+                                  </ol>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="alert alert-warning mt-0 mb-3" role="alert">
+                          <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.</span>
+                      </div>
+                        <div class="filter-container mb-2">
+                            <div class="dropdown dropdown-inline filter-date magbottompad">
+                                <div class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+                                    <span class="fa fa-calendar margin-right-sec"></span><span data-filter-date="selected-item-name"></span> <span class="caret"></span>
+                                </div>
+                                <ul class="dropdown-menu btn-block" role="menu">
+                                            <li data-filter-date="item" data-date-start="2020-01-01" data-date-end="2020-12-31" data-name="This Year" role="presentation">
+                                        <a role="menuitem" tabindex="-1" href="#">This Year</a>
+                                    </li>
+                                            <li data-filter-date="item" data-date-start="2020-10-01" data-date-end="2020-12-31" data-name="This Year - Q4" role="presentation">
+                                        <a role="menuitem" tabindex="-1" href="#">This Year - Q4</a>
+                                    </li>
+                                            <li data-filter-date="item" data-date-start="2020-07-01" data-date-end="2020-09-30" data-name="This Year - Q3" role="presentation">
+                                        <a role="menuitem" tabindex="-1" href="#">This Year - Q3</a>
+                                    </li>
+                                            <li data-filter-date="item" data-date-start="2020-04-01" data-date-end="2020-06-30" data-name="This Year - Q2" role="presentation">
+                                        <a role="menuitem" tabindex="-1" href="#">This Year - Q2</a>
+                                    </li>
+                                            <li data-filter-date="item" data-date-start="2020-01-01" data-date-end="2020-03-31" data-name="This Year - Q1" role="presentation">
+                                        <a role="menuitem" tabindex="-1" href="#">This Year - Q1</a>
+                                    </li>
+                                            <li data-filter-date="item" data-date-start="2020-10-01" data-date-end="2020-10-31" data-name="This Month" role="presentation">
+                                        <a role="menuitem" tabindex="-1" href="#">This Month</a>
+                                    </li>
+                                            <li data-filter-date="item" data-date-start="2020-10-26" data-date-end="2020-11-01" data-name="This Week" role="presentation">
+                                        <a role="menuitem" tabindex="-1" href="#">This Week</a>
+                                    </li>
+                                            <li data-filter-date="item" data-date-start="2019-01-01" data-date-end="2019-12-31" data-name="Previous Year" role="presentation">
+                                        <a role="menuitem" tabindex="-1" href="#">Previous Year</a>
+                                    </li>
+                                            <li data-filter-date="item" data-date-start="2019-10-01" data-date-end="2019-12-31" data-name="Previous Year - Q4" role="presentation">
+                                        <a role="menuitem" tabindex="-1" href="#">Previous Year - Q4</a>
+                                    </li>
+                                            <li data-filter-date="item" data-date-start="2019-07-01" data-date-end="2019-09-30" data-name="Previous Year - Q3" role="presentation">
+                                        <a role="menuitem" tabindex="-1" href="#">Previous Year - Q3</a>
+                                    </li>
+                                            <li data-filter-date="item" data-date-start="2019-04-01" data-date-end="2019-06-30" data-name="Previous Year - Q2" role="presentation">
+                                        <a role="menuitem" tabindex="-1" href="#">Previous Year - Q2</a>
+                                    </li>
+                                            <li data-filter-date="item" data-date-start="2019-01-01" data-date-end="2019-03-31" data-name="Previous Year - Q1" role="presentation">
+                                        <a role="menuitem" tabindex="-1" href="#">Previous Year - Q1</a>
+                                    </li>
+                                            <li data-filter-date="item" data-date-start="2020-09-01" data-date-end="2020-09-30" data-name="Previous Month" role="presentation">
+                                        <a role="menuitem" tabindex="-1" href="#">Previous Month</a>
+                                    </li>
+                                            <li data-filter-date="item" data-date-start="2020-10-19" data-date-end="2020-10-25" data-name="Previous Week" role="presentation">
+                                        <a role="menuitem" tabindex="-1" href="#">Previous Week</a>
+                                    </li>
+                                            <li data-filter-date="item" data-date-start="2018-01-01" data-date-end="2018-12-31" data-name="FY 2018" role="presentation">
+                                        <a role="menuitem" tabindex="-1" href="#">FY 2018</a>
+                                    </li>
+                                            <li data-filter-date="item" data-date-start="2017-01-01" data-date-end="2017-12-31" data-name="FY 2017" role="presentation">
+                                        <a role="menuitem" tabindex="-1" href="#">FY 2017</a>
+                                    </li>
+                                            <li data-filter-date="item" data-date-start="2016-01-01" data-date-end="2016-12-31" data-name="FY 2016" role="presentation">
+                                        <a role="menuitem" tabindex="-1" href="#">FY 2016</a>
+                                    </li>
+                                        </ul>
+                            </div>
+                            <span class="margin-left" data-report="date-interval"></span>
+                            <span class="middot">&middot;</span> <a class="margin-right-sec" data-filter="date-range" href="#">Custom Dates</a>
+
+                            <div class="dropdown dropdown-inline filter margin-right-sec" data-filter="filter" data-filter-id="type_service">
+                                <div class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+                                    <span data-filter="selected-item-name"></span> <span class="caret"></span>
+                                </div>
+                                <ul class="dropdown-menu btn-block" role="menu">
+                                            <li data-filter="item" data-value="" role="presentation">
+                                        <a role="menuitem" tabindex="-1" href="#">All Types</a>
+                                    </li>
+                                            <li data-filter="item" data-value="1" role="presentation">
+                                        <a role="menuitem" tabindex="-1" href="#">Residential (R)</a>
+                                    </li>
+                                            <li data-filter="item" data-value="2" role="presentation">
+                                        <a role="menuitem" tabindex="-1" href="#">Commercial (C)</a>
+                                    </li>
+                                        </ul>
+                            </div>
+                            <div class="dropdown dropdown-inline filter margin-right-sec" data-filter="filter" data-filter-id="status">
+                                <div class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+                                    <span data-filter="selected-item-name"></span> <span class="caret"></span>
+                                </div>
+                                <ul class="dropdown-menu btn-block" role="menu">
+                                            <li data-filter="item" data-value="" role="presentation">
+                                        <a role="menuitem" tabindex="-1" href="#">All Statuses</a>
+                                    </li>
+                                            <li data-filter="item" data-value="1" role="presentation">
+                                        <a role="menuitem" tabindex="-1" href="#">New</a>
+                                    </li>
+                                            <li data-filter="item" data-value="2" role="presentation">
+                                        <a role="menuitem" tabindex="-1" href="#">Scheduled</a>
+                                    </li>
+                                            <li data-filter="item" data-value="8" role="presentation">
+                                        <a role="menuitem" tabindex="-1" href="#">Started</a>
+                                    </li>
+                                            <li data-filter="item" data-value="7" role="presentation">
+                                        <a role="menuitem" tabindex="-1" href="#">Paused</a>
+                                    </li>
+                                            <li data-filter="item" data-value="3" role="presentation">
+                                        <a role="menuitem" tabindex="-1" href="#">Completed</a>
+                                    </li>
+                                            <li data-filter="item" data-value="6" role="presentation">
+                                        <a role="menuitem" tabindex="-1" href="#">Invoiced</a>
+                                    </li>
+                                            <li data-filter="item" data-value="5" role="presentation">
+                                        <a role="menuitem" tabindex="-1" href="#">Withdrawn</a>
+                                    </li>
+                                            <li data-filter="item" data-value="4" role="presentation">
+                                        <a role="menuitem" tabindex="-1" href="#">Closed</a>
+                                    </li>
+                                        </ul>
+                            </div>
+                            <div class="dropdown dropdown-inline filter margin-right-sec" data-filter="filter" data-filter-id="employee_id">
+                                <div class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+                                    <span data-filter="selected-item-name"></span> <span class="caret"></span>
+                                </div>
+                                <ul class="dropdown-menu btn-block" role="menu">
+                                            <li data-filter="item" data-value="" role="presentation">
+                                        <a role="menuitem" tabindex="-1" href="#">All Employees</a>
+                                    </li>
+                                            <li data-filter="item" data-value="14278" role="presentation">
+                                        <a role="menuitem" tabindex="-1" href="#">Alarm Direct</a>
+                                    </li>
+                                            <li data-filter="item" data-value="14291" role="presentation">
+                                        <a role="menuitem" tabindex="-1" href="#">Brannon Nguyen</a>
+                                    </li>
+                                            <li data-filter="item" data-value="14281" role="presentation">
+                                        <a role="menuitem" tabindex="-1" href="#">TC Nguyen</a>
+                                    </li>
+                                            <li data-filter="item" data-value="14285" role="presentation">
+                                        <a role="menuitem" tabindex="-1" href="#">Tommy Nguyen</a>
+                                    </li>
+                                        </ul>
+                            </div>
                         </div>
-                        <div class="pl-3 pr-3 mt-1 row">
-                          <div class="col mb-4 left alert alert-warning mt-0 mb-2">
-                              <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Get a birds-eye view of your calendar events and jobs’ location scheduled for the day.  With this tool your be able to see your team location and better position them to maximize the current day.</span>
-                          </div>
+
+                        <div class="map-container">
+                            <style>#map-canvas {width: 100%;height: 50vh;}</style>
+                            <div id="map-canvas"></div>
+                            <script>
+                                function initMap() {
+                                  var myLatLng = {lat: 1.523208409167528, lng: 103.67841453967287};
+
+                                  // Create a map object and specify the DOM element for display.
+                                  var map = new google.maps.Map(document.getElementById('map-canvas'), {
+                                    center: myLatLng,
+                                    // scrollwheel: false,
+                                    zoom: 16
+                                  });
+
+                                  // Create a marker and set its position.
+                                  var marker = new google.maps.Marker({
+                                    map: map,
+                                    position: myLatLng,
+                                    title: 'Regalia large and amazing room!'
+                                  });
+                                }
+                            </script>
+                            <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAzt0c6Rxf0SJo6bsCc046g7671s7TEj_U&callback=initMap&sensor=false" async defer></script>
                         </div>
-                        <div class="filter-container mb-3">
-                          <div class="col-md-2 pl-0 left">
-                            <input type="text" id="" name="date_from" class="form-control single-datepicker" placeholder="Date From">
-                          </div>
-                          <div class="col-md-2 pl-0 left">
-                            <input type="text" id="" name="date_to" class="form-control single-datepicker" placeholder="Date To">
-                          </div>
-                          <div class="col-md-4 left">
-                            <select class="form-control" name="job_status" id="job-status">
-                                <option value="all">All Statuses</option>
-                                <?php foreach($job_status as $key => $value){ ?>
-                                  <option value="<?= $key; ?>"><?= $value; ?></option>
-                                <?php } ?>
-                            </select>
-                          </div>
-                          <div class="col-md-4 pr-0 left">
-                            <select class="form-control" name="user" id="filter-user">
-                                <option value="">- Select Employee -</option>
-                                <option value="all">All Employees</option>
-                                <?php foreach($companyUsers as $u){ ?>
-                                  <option value="<?= $u->id; ?>"><?= $u->FName . ' ' . $u->LName; ?></option>
-                                <?php } ?>
-                            </select>
-                          </div>
-                        </div>
-                        <div class="map-container"></div>
+
                     </div>
                     <!-- end card -->
                 </div>
             </div>
             <!-- end row -->
         </div>
-        </form>
         <!-- end container-fluid -->
     </div>
     <!-- page wrapper end -->
 <?php include viewPath('includes/footer'); ?>
-<script>
-$(function(){
-    $('#date-range-picker').daterangepicker({
-        "timePicker": false
-    }, function(start, end, label) {
-      //load_map_route();
-      //console.log("New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')");
-    });
-
-    $('.single-datepicker').daterangepicker({
-      singleDatePicker: true,
-      showDropdowns: true,
-      minYear: 1901,
-      maxYear: parseInt(moment().format('YYYY'),10)
-    }, function(start, end, label) {
-      var years = moment().diff(start, 'years');
-      load_map_route();
-      //alert("You are " + years + " years old!");
-    });
-
-    load_map_route();
-
-    function load_map_route(){
-        var msg = '<div class="alert alert-info" role="alert"><img style="display:inline-block;" src="'+base_url+'/assets/img/spinner.gif" /> Loading map...</div>';
-        var url = base_url + '/workorder/_load_map_routes';
-
-        $(".map-container").html(msg);
-        setTimeout(function () {
-            $.ajax({
-               type: "POST",
-               url: url,
-               data: $("#map-filter").serialize(),
-               success: function(o)
-               {
-                  $(".map-container").html(o);
-               }
-            });
-        }, 1000);
-    }
-
-    $("#filter-user").change(function(){
-      load_map_route();
-    });
-
-    $("#job-status").change(function(){
-      load_map_route();
-    });
-});
-</script>

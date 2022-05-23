@@ -37,27 +37,6 @@ class JobType_model extends MY_Model
 
         return $query->result();
     }
-
-    public function getById($id)
-    {
-        $user_id = logged('id');
-
-        $this->db->select('*');
-        $this->db->from($this->table);
-
-        $this->db->where('id', $id);
-
-        $query = $this->db->get()->row();
-        return $query;
-    }
-
-    public function updateJobTypeById($id, $data)
-    {
-        $this->db->from($this->table);
-        $this->db->set($data);
-        $this->db->where('id', $id);
-        $this->db->update();
-    }
 }
 
 /* End of file JobType_model.php */

@@ -267,7 +267,7 @@ h3.sc-title {
                     <div class="row">
                <div class="col-xs-16 text-right submit-onboard">
                   <a class="btn btn-default btn-lg margin-right" href="<?php echo base_url("/dashboard");?>">Skip</a>
-                  <a class="btn btn-default btn-lg" href="<?php echo base_url("/onboarding/industry_type");?>">« Back</a>
+                  <a class="btn btn-default btn-lg" href="<?php echo base_url("/onboarding/add_ons");?>">« Back</a>
                   <button class="btn btn-primary btn-lg margin-left" name="action" value="availability" type="submit">Next »</button>
                </div>
             </div>

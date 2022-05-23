@@ -18,7 +18,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             </div>
         </div>
         <div class="col-sm-12 form-line">
-            <textarea type="text" class="form-controls" name="notes" id="notes" cols="100%" rows="5"> </textarea>
+            <textarea type="text" class="form-controls" name="notes" id="notes" cols="70" rows="5"> </textarea>
         </div>
         <div class="col-md-12 form-line">
             <div class="row">

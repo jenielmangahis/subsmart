@@ -91,30 +91,12 @@ if (!function_exists('userProfile')) {
                 $url = base_url('uploads/users/default.png');
             }else{
                 $url = urlUpload('users/user-profile/' . $CI->users_model->getRowById($id, 'profile_img') . '?' . time());
-            }
+            }            
         // $url = 'http://nsmartrac.com/uploads/users/'.$id.'.'.$CI->users_model->getRowById($id, 'img_type').'?'.time();
 
         return $url;
     }
 }
-
-if (!function_exists('userSignature')) {
-
-    function userSignature($uid)
-    {
-        $CI  = &get_instance();
-        $url = base_url('uploads/image/noimage.jpg');        
-        if ($uid > 0){            
-            $signature_image = $CI->users_model->getRowById($uid, 'img_signature');
-            if( file_exists(FCPATH."uploads/signatures/user/$uid/" . $signature_image) ){
-                $url = base_url('uploads/signatures/user/'.$uid.'/'.$signature_image);
-            }
-        }
-
-        return $url;
-    }
-}
-
 
 
 if (!function_exists('userProfileImage')) {
@@ -140,28 +122,6 @@ if (!function_exists('userProfileImage')) {
     }
 }
 
-if (!function_exists('userProfilePicture')) {
-
-    function userProfilePicture($id)
-    {
-
-        $CI = &get_instance();
-        $url = urlUpload('users/user-profile/p_' . $id . '.png?' . time());
-        $user = $CI->users_model->getUser($id);
-        $img_ext = 'png';
-
-        if ($user->profile_img) {
-            $url = urlUpload('users/user-profile/' . $user->profile_img);
-            if( !file_exists(FCPATH."uploads/users/user-profile/" . $user->profile_img) ){
-                $url = urlUpload('users/default.png');
-            }
-            return $url;
-        } 
-        
-        return NULL;
-    }
-}
-
 if (!function_exists('companyProfileImage')) {
 
     function companyProfileImage($id)
@@ -180,53 +140,19 @@ if (!function_exists('companyProfileImage')) {
     }
 }
 
-if (!function_exists('getCompanyCoverPhoto')) {
-
-    function getCompanyCoverPhoto($company_id)
-    {
-
-        $CI         = &get_instance();
-        $res = $CI->business_model->getByCompanyCoverPhoto($company_id);
-        if( $res ){
-            $url = urlUpload('company_cover_photo/' . $res->company_id . '/' . $res->business_cover_photo . '?' . time());
-        }else{
-            $url = urlUpload('company_cover_photo/default.png');
-        }
-
-        return $url;
-    }
-}
-
 if (!function_exists('businessProfileImage')) {
 
     function businessProfileImage($id)
     {
 
         $CI = &get_instance();
+        // $url = urlUpload('users/business_profile/' . $id . '.png?' . time());
 
-        if( !file_exists(FCPATH.'uploads/users/business_profile/' . $id . '/' . $CI->business_model->getRowByWhere(['id' => $id], 'business_image')) ){
-            $url = base_url('assets/img/onboarding/profile-avatar.png');
-        }else{
-            $url = base_url('uploads/users/business_profile/' . $id . '/' . $CI->business_model->getRowByWhere(['id' => $id], 'business_image') . '?' . time());
-        }
+        // $res= $CI->business_model->getRowByWhere(['user_id'=>$id], ['b_image']);
+        // echo "<pre>fhdfhdfh"; print_r($res); die;
 
-        return $url;
-    }
-}
-
-if (!function_exists('getCompanyBusinessProfileImage')) {
-
-    function getCompanyBusinessProfileImage()
-    {
-
-        $CI         = &get_instance();
-        $company_id = logged('company_id');
-        $res = $CI->business_model->getByCompanyProfileImage($company_id);
-        if( $res ){
-            $url = urlUpload('users/business_profile/' . $res->id . '/' . $res->business_image . '?' . time());
-        }else{
-            $url = urlUpload('users/business_profile/default.png');
-        }
+        if ($id != 'default')
+            $url = urlUpload('users/business_profile/' . $id . '/' . $CI->business_model->getRowByWhere(['id' => $id], 'business_image') . '?' . time());
 
         return $url;
     }
@@ -246,7 +172,7 @@ if (!function_exists('licenseImage')) {
         if ($id != 'default'){
             $image =  $CI->business_model->getRowByWhere(['id' => $id], 'license_image');
             if( $image != '' ){
-                $url = urlUpload('users/business_profile/' . $id . '/' . $image . '?' . time());
+                $url = urlUpload('users/business_profile/' . $id . '/' . $image . '?' . time());    
             }else{
                 $url = urlUpload('users/business_profile/img_default.png');
             }
@@ -270,7 +196,7 @@ if (!function_exists('bondImage')) {
         if ($id != 'default'){
             $image =  $CI->business_model->getRowByWhere(['id' => $id], 'bond_image');
             if( $image != '' ){
-                $url = urlUpload('users/business_profile/' . $id . '/' . $image . '?' . time());
+                $url = urlUpload('users/business_profile/' . $id . '/' . $image . '?' . time());    
             }else{
                 $url = urlUpload('users/business_profile/img_default.png');
             }
@@ -294,7 +220,7 @@ if (!function_exists('insuranceImage')) {
         if ($id != 'default'){
             $image =  $CI->business_model->getRowByWhere(['id' => $id], 'insurance_image');
             if( $image != '' ){
-                $url = urlUpload('users/business_profile/' . $id . '/' . $image . '?' . time());
+                $url = urlUpload('users/business_profile/' . $id . '/' . $image . '?' . time());    
             }else{
                 $url = urlUpload('users/business_profile/img_default.png');
             }
@@ -475,6 +401,7 @@ if (!function_exists('logged')) {
 
         $CI = &get_instance();
 
+
         if (!is_logged())
 
             return false;
@@ -486,29 +413,6 @@ if (!function_exists('logged')) {
         if (!$logged) {
 
             $logged = $CI->users_model->getById(json_decode(get_cookie('logged'))->id);
-        }
-
-        //print_r($logged);die;
-
-        return (!$key) ? $logged : $logged->{$key};
-    }
-}
-
-if (!function_exists('adminLogged')) {
-
-
-    function adminLogged($key = false)
-
-    {
-
-        $CI = &get_instance();
-        
-        $logged = !empty($CI->session->userdata('admin_login')) ? $CI->users_model->getById($CI->session->userdata('admin_logged')['id']) : false;
-
-
-        if (!$logged) {
-
-            $logged = $CI->users_model->getById(json_decode(get_cookie('admin_logged'))->id);
         }
 
         //print_r($logged);die;
@@ -835,19 +739,6 @@ if (!function_exists('getLoggedFullName')) {
     }
 }
 
-if (!function_exists('getLoggedNameInitials')) {
-
-    function getLoggedNameInitials($userId)
-    {
-        $finalUserId = ($userId) ? $userId : logged('id');
-        $CI =& get_instance();
-        $CI->load->model('Users_model', 'user_model');
-        $result = $CI->user_model->getByWhere(array('id' => $finalUserId));
-
-        return ucwords($result[0]->FName[0]).ucwords($result[0]->LName[0]);
-    }
-}
-
 if (!function_exists('getCustomerFullName')) {
 
     function getCustomerFullName($customerId)
@@ -892,21 +783,6 @@ if (!function_exists('getLoggedUserID')) {
     }
 }
 
-if (!function_exists('getLoggedIsPlanActive')) {
-
-
-    function getLoggedIsPlanActive()
-    {
-
-        $CI = &get_instance();
-        $user = $CI->session->userdata('logged');
-
-        if (!is_null($user)) {
-            return ((object) $user)->is_plan_active;
-        }
-    }
-}
-
 if (!function_exists('getLoggedCompanyID')) {
 
 
@@ -916,19 +792,6 @@ if (!function_exists('getLoggedCompanyID')) {
         $CI = &get_instance();
         $company_id = logged('company_id');
         return $company_id;
-    }
-}
-
-if (!function_exists('isCompanyPlanActive')) {
-
-
-    function isCompanyPlanActive()
-    {
-
-        $ci = &get_instance();
-        $ci->load->library('session');
-        $is_plan_active = $ci->session->userdata('is_plan_active');
-        return $is_plan_active;
     }
 }
 
@@ -1002,13 +865,6 @@ if (!function_exists('getCompany')){
         return $CI->db->query('select * from business_profile where id = ' . $company_id);
     }
 }
-if (!function_exists('convertDecimal_to_Time')){
-    function convertDecimal_to_Time($dec,$requet){
-        $CI = &get_instance();
-
-        return $CI->timesheet_model->convertDecimal_to_Time($dec,$requet);
-    }
-}
 
 if (!function_exists('getCompanyFolder')){
     function getCompanyFolder(){
@@ -1025,24 +881,24 @@ if (!function_exists('getCompanyFolder')){
             if(empty($company->folder_name)){
                 $folder_name = generateRandomString();
                 while(file_exists('./uploads/' . $folder_name . '/')){
-                    $folder_name = generateRandomString();
+                    $folder_name = generateRandomString();  
                 }
-
+    
                 $data = array('folder_name' => $folder_name);
-
+    
                 if($CI->business_model->trans_update($data, array('id' => $company->id))){
                     mkdir('./uploads/' . $folder_name . '/');
-
+    
                     $company_folder = $folder_name;
                 }
             } else {
                 if(!file_exists('./uploads/' . $company->folder_name . '/')){
-                    mkdir('./uploads/' . $company->folder_name . '/');
+                    mkdir('./uploads/' . $company->folder_name . '/');    
                 }
-
+    
                 $company_folder = $company->folder_name;
             }
-        }
+        } 
 
         return $company_folder;
     }
@@ -1050,10 +906,10 @@ if (!function_exists('getCompanyFolder')){
 
 if (!function_exists('getFolders')) {
 
-    function getFolders($parent_id = -1,
-                        $getallparent = false,
-                        $getallchild = false,
-                        $asArray = false,
+    function getFolders($parent_id = -1, 
+                        $getallparent = false, 
+                        $getallchild = false, 
+                        $asArray = false, 
                         $trashed = false,
                         $ofUser = false,
                         $ofCategorized = false)
@@ -1091,7 +947,7 @@ if (!function_exists('getFolders')) {
             $category_filter = 'and (a.category_id is null or a.category_id <= 0) ';
         }
 
-        $sql = 'select ' .
+        $sql = 'select ' . 
 
                'a.*, '.
                'b.FName as FCreatedBy, b.LName as LCreatedBy, '.
@@ -1124,7 +980,7 @@ if (!function_exists('getFolders')) {
         } else {
             $return = $CI->db->query($sql);
         }
-
+        
         return $return;
     }
 
@@ -1157,7 +1013,7 @@ if (!function_exists('getFiles')) {
             $category_filter = 'and (a.category_id is null or a.category_id <= 0) ';
         }
 
-        $sql = 'select ' .
+        $sql = 'select ' . 
 
                'a.*, '.
                'b.FName as FCreatedBy, b.LName as LCreatedBy, '.
@@ -1170,7 +1026,7 @@ if (!function_exists('getFiles')) {
                'left join business_profile c on c.id = a.company_id '.
                'left join file_folders_categories d on d.category_id = a.category_id '.
 
-               'where a.company_id = ' . $company_id . ' and a.softdelete '. $softdelete . $user_filter . $category_filter .
+               'where a.company_id = ' . $company_id . ' and a.softdelete '. $softdelete . $user_filter . $category_filter . 
 
                'order by created ASC';
 
@@ -1179,7 +1035,7 @@ if (!function_exists('getFiles')) {
         } else {
             $return = $CI->db->query($sql);
         }
-
+        
         return $return;
     }
 
@@ -1191,7 +1047,7 @@ if (!function_exists('searchFilesOrFolders')) {
         $CI = &get_instance();
         $uid = logged('id');
         $company_id = logged('company_id');
-
+        
         $user_filter_folder = '';
         $user_filter_file = '';
 
@@ -1267,17 +1123,10 @@ if (!function_exists('getClockInSession')){
     }
 }
 if (!function_exists('getEmployeeLogs')){
-    function getEmployeeLogs($attendance_id){
+    function getEmployeeLogs(){
         $CI = &get_instance();
 //        return $CI->timesheet_model->getTSLogsByUser();
-        return $CI->timesheet_model->getUserLogs($attendance_id);
-    }
-}
-if (!function_exists('getUserLogs')){
-    function getUserLogs($attendance_id){
-        $CI = &get_instance();
-//        return $CI->timesheet_model->getTSLogsByUser();
-        return $CI->timesheet_model->getUserLogs($attendance_id);
+        return $CI->timesheet_model->getUserLogs();
     }
 }
 if (!function_exists('getEmployeeAttendance')){
@@ -1290,12 +1139,6 @@ if (!function_exists('getEmpTSsettings')){
     function getEmpTSsettings(){
         $CI = &get_instance();
         return $CI->timesheet_model->getTimeSettingsByUser();
-    }
-}
-if (!function_exists('getNotification')){
-    function getNotification($user_id){
-        $CI = &get_instance();
-        return $CI->timesheet_model->getNotification($user_id);
     }
 }
 if (!function_exists('getEmpSched')){
@@ -1325,7 +1168,7 @@ if (!function_exists('getNewTasks')){
                  'and b.is_assigned = 1 ' .
                  'and a.view_count <= 0';
 
-        return $CI->db->query($sql)->result_array();
+        return $CI->db->query($sql)->result_array();    
     }
 }
 if (!function_exists('getTasks')){
@@ -1335,15 +1178,14 @@ if (!function_exists('getTasks')){
         $uid = logged('id');
 
         $sql = 'select '.
+
                'a.task_id, '.
                'a.subject, '.
                'a.date_created, '.
-               //'DATE_FORMAT(a.estimated_date_complete,"%b %d, %Y %h:%i:%s") as estimated_date_complete_formatted, '.
-               //'DATE_FORMAT(a.date_created,"%b %d, %Y %h:%i:%s") as date_created_formatted, '.
-               'DATE_FORMAT(a.estimated_date_complete,"%b %d, %Y") as estimated_date_complete_formatted, '.
-               'DATE_FORMAT(a.date_created,"%b %d, %Y") as date_created_formatted, '.
-               'b.status_color, '.
+               'DATE_FORMAT(a.date_created,"%b %d, %Y %h:%i:%s") as date_created_formatted, '.
+
                'b.status_text '.
+
                'from tasks a '.
                'left join tasks_status b on b.status_id = a.status_id '.
                'left join tasks_participants c on c.task_id = a.task_id '.
@@ -1359,33 +1201,6 @@ if (!function_exists('getTasks')){
     }
 
 }
-
-if (!function_exists('getCompanyNewTasks')){
-
-    function getCompanyNewTasks(){
-        $CI = &get_instance();
-        $company_id = logged('company_id');
-        $date_today = date("Y-m-d");
-
-        $sql = 'select '.
-               'a.task_id, '.
-               'a.subject, '.
-               'a.date_created, '.
-               //'DATE_FORMAT(a.estimated_date_complete,"%b %d, %Y %h:%i:%s") as estimated_date_complete_formatted, '.
-               //'DATE_FORMAT(a.date_created,"%b %d, %Y %h:%i:%s") as date_created_formatted, '.
-               'DATE_FORMAT(a.estimated_date_complete,"%b %d, %Y") as estimated_date_complete_formatted, '.
-               'DATE_FORMAT(a.date_created,"%b %d, %Y") as date_created_formatted '.
-               'from tasks a '.
-               ' where a.company_id = '. $company_id . 
-               ' AND DATE_FORMAT(a.date_created,"%Y-%m-%d")="' . $date_today . '"' .
-               ' AND a.status_id <> 6' .
-               ' order by a.date_created desc';
-
-        return $CI->db->query($sql)->result();
-    }
-
-}
-
 if (!function_exists('getAllTasks')){
 
     function getAllTasks(){
@@ -1431,7 +1246,7 @@ if (!function_exists('getAllCompanyTasks')){
                'left join tasks_status b on b.status_id = a.status_id '.
                'left join tasks_participants c on c.task_id = a.task_id '.
 
-               'where a.company_id = '. $company_id . ' ' .
+               'where a.company_id = '. $company_id . ' ' .  
 
                'group by a.task_id '.
 
@@ -1465,7 +1280,7 @@ if (!function_exists('getUserFileVaultPermissions')){
                 return $user_permissions;
             } else if(!empty($role_permissions)){
                 $role_permissions['user_id'] = $uid;
-                return $role_permissions;
+                return $role_permissions;    
             } else {
                 return array(
                     'create_folder' => 0,
@@ -1476,7 +1291,7 @@ if (!function_exists('getUserFileVaultPermissions')){
                     'remove_folder_file' => 0,
                     'user_id' => $uid,
                     'role_id' => $role_id
-                );
+                );    
             }
         } else if(!empty($role_permissions)){
             $role_permissions['user_id'] = $uid;
@@ -1559,24 +1374,13 @@ function get_user_by_id($user_id)
 function get_customer_by_id($customer_id, $key = '')
 {
     $CI =& get_instance();
-    $CI->load->model('Customer_model', 'customer');    
-    if (!empty($key)) {        
-        return $CI->customer->getCustomer($customer_id)->$key;
-    }
-    $customer = $CI->customer->getCustomer($customer_id);
-    return $customer;
-}
-
-function get_users_by_id($user_id, $key = '')
-{
-    $CI =& get_instance();
-    $CI->load->model('Users_model', 'user');
+    $CI->load->model('Customer_model', 'customer');
 
     if (!empty($key)) {
-        return $CI->user->getUser($user_id)->$key;
+        return $CI->customer->getCustomer($customer_id)->$key;
     }
 
-    return $CI->user->getUser($user_id);
+    return $CI->customer->getCustomer($customer_id);
 }
 
 /**
@@ -1584,11 +1388,12 @@ function get_users_by_id($user_id, $key = '')
  */
 function acs_prof_get_customer_by_prof_id($customer_id)
 {
-    //Get Customer data
     $CI =& get_instance();
-    $CI->load->model('AcsProfile_model');
-    return $CI->AcsProfile_model->getByProfId($customer_id);
+    $CI->load->model('AcsProfile_model', 'customer');
+
+    return $CI->customer->getByProfId($customer_id);
 }
+
 
 /**
  * all customers based on company or user id
@@ -2010,6 +1815,36 @@ function make_calender_wordorder_label($settings, $workorder)
     return $title;
 }
 
+/**
+ * @param $settings
+ * @param $workorder
+ * @param $customer
+ * @return string
+ */
+function acs_prof_make_calender_wordorder_label($settings, $workorder)
+{
+    $settings = unserialize($settings);
+
+    $date = date('a', strtotime($workorder->date_issued));
+    $date = substr($date, -2, 1);
+    $title = date('g', strtotime($workorder->date_issued)) . $date;
+
+    if (!empty($settings['work_order_show_customer'])) {
+        $title .= ' ' . $workorder->customer['first_name'] . ' ' . $workorder->customer['last_name'] . ', ';
+        $title .= $workorder->customer['contact_mobile'];
+    }
+
+    if (!empty($settings['work_order_show_details'])) {
+        $title .= ', ' . $workorder->customer['monitored_location'];
+    }
+
+    if (!empty($settings['work_order_show_price'])) {
+        $title .= ', $' . $workorder->total['eqpt_cost'];
+    }
+
+    return $title;
+}
+
 
 /**
  * @return mixed
@@ -2181,9 +2016,9 @@ function get_estimate_status_total($status = 0, $count_only = false)
         if (!empty($status)) {
             if ($count_only) {
 
-                return count($CI->estimate_model->getByWhere(array('company_id' => $company_id, 'status' => $status)));
+                return count($CI->estimate_model->getByWhere(array('status' => $status)));
             } else {
-                return $CI->estimate_model->getByWhere(array('company_id' => $company_id, 'status' => $status));
+                return $CI->estimate_model->getByWhere(array('status' => $status));
             }
         }
 
@@ -2191,14 +2026,14 @@ function get_estimate_status_total($status = 0, $count_only = false)
             return count($CI->estimate_model->getByWhere(array()));
         }else{
             return $CI->estimate_model->getByWhere(array());
-        }
+        }  
     }else{
         if (!empty($status)) {
             if ($count_only) {
 
-                return count($CI->estimate_model->getByWhere(array('company_id' => $company_id, 'status' => $status)));
+                return count($CI->estimate_model->getByWhere(array('status' => $status)));
             } else {
-                return $CI->estimate_model->getByWhere(array('company_id' => $company_id, 'status' => $status));
+                return $CI->estimate_model->getByWhere(array('status' => $status));
             }
         }
 
@@ -2206,9 +2041,9 @@ function get_estimate_status_total($status = 0, $count_only = false)
             return count($CI->estimate_model->getByWhere(array('company_id' => $company_id)));
         }else{
             return $CI->estimate_model->getByWhere(array('company_id' => $company_id));
-        }
+        }  
     }
-
+    
 }
 
 
@@ -2319,14 +2154,14 @@ function check_upcoming_date($date)
     $tomorrow = date('Y-m-d', strtotime(' +1 day'));
     $new_date = date_format(date_create($date),"Y-m-d");
 
-    $dateTimestamp1 = strtotime($tomorrow);
-    $dateTimestamp2 = strtotime($new_date);
+    $dateTimestamp1 = strtotime($tomorrow); 
+    $dateTimestamp2 = strtotime($new_date); 
 
     // dd($tomorrow . " " . $new_date);
-    if ($dateTimestamp1 == $dateTimestamp2)
+    if ($dateTimestamp1 == $dateTimestamp2) 
         return true;
     else
-        return false;
+        return false; 
 }
 
 /**
@@ -2396,7 +2231,7 @@ function get_invoice_amount($type)
     switch ($type) {
         case "year":
             $result = $CI->invoice_model->getByWhere(array('company_id' => $company_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date));
-            return total_invoice_amount($result);
+            return total_invoice_amount($result); 
 
         case "pending":
             $result = $CI->invoice_model->getByWhere(array('company_id' => $company_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status' => 'Draft'));
@@ -2411,42 +2246,14 @@ function get_invoice_amount($type)
 /**
  * @return mixed
  */
-function get_customer_invoice_amount($type, $customer_id)
-{
-    $CI =& get_instance();
-    $CI->load->model('Invoice_model', 'invoice_model');
-    $company_id = logged('company_id');
-    $result = 0;
-    $start_date = date("Y") . "-01-01";
-    $end_date = date("Y") . "-12-31";
-
-    switch ($type) {
-        case "year":
-            $result = $CI->invoice_model->getByWhere(array('customer_id' => $customer_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date));
-            return total_invoice_amount($result);
-
-        case "pending":
-            $result = $CI->invoice_model->getByWhere(array('customer_id' => $customer_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status' => 'Draft'));
-            return total_invoice_amount($result);
-
-        default:
-            $result = $CI->invoice_model->getByWhere(array('customer_id' => $customer_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status !=' => 'Draft'));
-            return total_invoice_amount($result);
-    }
-}
-
-/**
- * @return mixed
- */
 function total_invoice_amount($invoices)
 {
     $grand_total = 0;
     foreach ($invoices as $invoice) {
-        // if ($invoice->invoice_totals) {
-            // $totals = unserialize($invoice->invoice_totals);
-            // $grand_total += floatval($totals['grand_total']);
-            $grand_total += $invoice->grand_total;
-        // }
+        if ($invoice->invoice_totals) {
+            $totals = unserialize($invoice->invoice_totals);
+            $grand_total += floatval($totals['grand_total']);
+        }
     }
 
     return number_format($grand_total, 2, '.', ',');
@@ -2483,7 +2290,7 @@ function get_reports_by_date($start_date, $end_date, $month, $action)
             $result = $CI->estimate_model->getByWhere(array('company_id' => $company_id, 'estimate_date >=' => $start_date, 'estimate_date <=' => $end_date));
             $final_res = report_totals_by_month($result, $month, $action);
             break;
-
+        
         case 'estimate_amount':
             $result = $CI->estimate_model->getByWhere(array('company_id' => $company_id, 'estimate_date >=' => $start_date, 'estimate_date <=' => $end_date));
             $final_res = report_totals_by_month($result, $month, $action);
@@ -2493,7 +2300,7 @@ function get_reports_by_date($start_date, $end_date, $month, $action)
             $result = $CI->invoice_model->getByWhere(array('company_id' => $company_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date));
             $final_res = report_totals_by_month($result, $month, 'num_invoice');
             break;
-
+        
         case 'invoice_amount':
             $result = $CI->invoice_model->getByWhere(array('company_id' => $company_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date));
             $final_res = report_totals_by_month($result, $month, "invoice_amount");
@@ -2524,11 +2331,11 @@ function get_invoice_amount_by_date($type, $start_date, $end_date)
     $company_id = logged('company_id');
     $result = 0;
 
-    // switch ($type) {
-    //     case "Paid":
+    switch ($type) {
+        case "paid":
             $result = $CI->invoice_model->getByWhere(array('company_id' => $company_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status' => 'Paid'));
             return total_invoice_amount($result);
-    // }
+    }
 }
 
 /**
@@ -2585,7 +2392,7 @@ function report_totals_by_month($results, $month, $action)
  */
 function setPageName($type) {
     $title = '';
-
+    
     switch($type) {
         case "monthly-closeout":
             $title = "Monthly Closeout";
@@ -2674,69 +2481,65 @@ function setPageName($type) {
         case "payment-by-customer":
             $title = "Sales Summary By Customer";
             break;
-
+        
         case "customer-sales":
             $title = "Sales By Customer";
             break;
-
+                
         case "payment-by-customer-group":
             $title = "Sales By Customer Groups";
             break;
-
+                
         case "customer-source":
             $title = "Sales By Customer Source";
             break;
-
+                        
         case "customer-tax-by-month":
             $title = "Tax Paid by Customers";
             break;
-
+                                    
         case "customer-by-city-state":
             $title = "Customer Demographics";
             break;
-
+                                                
         case "customer-by-source":
             $title = "Customer Source";
             break;
-
+        
         case "employee-payroll-summary":
             $title = "Payroll Summary";
             break;
-
+                    
         case "employee-payroll-by-employee":
             $title = "Payroll By Employee";
             break;
-
+                                
         case "employee-payroll-log":
             $title = "Payroll Log Details";
             break;
-
+                                            
         case "employee-payroll-percent-commission":
             $title = "Percent Sales Commission Report";
             break;
-
+                                                        
         case "summary-by-period":
             $title = "Time Log Summary";
             break;
-
+                                                                    
         case "timesheet-entries":
             $title = "Time Log Details";
             break;
-
+                                                                            
         case "work-order-status":
             $title = "Work Order Status";
             break;
-
+                                                                                        
         case "sales-tax":
             $title = "Sales Tax";
             break;
-
+                                                                                        
         case "invoice-items-no-tax":
             $title = "Non Taxable Sales";
-            break;
-
-        case "expense-by-month-by-vendor":
-            $title = "Expense by Vendor";
             break;
     }
 
@@ -2798,13 +2601,9 @@ function getPaymentByMethod($start_date, $end_date, $month) {
                 case "cash":
                     $cash += floatval($result->invoice_amount);
                     break;
-
+                
                 case "check":
                     $check += floatval($result->invoice_amount);
-                    break;
-                    
-                case "paypal":
-                    $paypal += floatval($result->invoice_amount);
                     break;
             }
         }
@@ -2816,7 +2615,6 @@ function getPaymentByMethod($start_date, $end_date, $month) {
     ($cc > 0) ? array_push($fn, array("Credit Card", dollar_format($cc))) : $cc = 0;
     ($cash > 0) ? array_push($fn, array("Cash", dollar_format($cash))) : $cash = 0;
     ($check > 0) ? array_push($fn, array("Check", dollar_format($check))) : $check = 0;
-    ($paypal > 0) ? array_push($fn, array("Paypal", dollar_format($paypal))) : $paypal = 0;
 
     return $fn;
 }
@@ -2834,13 +2632,13 @@ function getPaymentByMonth($start_date, $end_date, $month) {
         $date = explode("-",$result->payment_date);
         if ($date[1] == $month) {
             $total += floatval($result->invoice_amount);
-            // if (!in_array($result->customer_id, $company_id)) {
-            //     array_push($company_id, $result->customer_id);
-            //     array_push($fn, array(get_customer_by_id($result->customer_id)->contact_name, '', '', ''));
-            //     array_push($fn, array('', $result->payment_date, $result->invoice_number, getPaymentType($result->payment_method), dollar_format($result->invoice_amount)));
-            // } else {
+            if (!in_array($result->customer_id, $company_id)) {
+                array_push($company_id, $result->customer_id);
+                array_push($fn, array(get_customer_by_id($result->customer_id)->contact_name, '', '', ''));
                 array_push($fn, array('', $result->payment_date, $result->invoice_number, getPaymentType($result->payment_method), dollar_format($result->invoice_amount)));
-            // }
+            } else {
+                array_push($fn, array('', $result->payment_date, $result->invoice_number, getPaymentType($result->payment_method), dollar_format($result->invoice_amount)));
+            }
         }
     }
     if (count($fn) > 0) {
@@ -2872,7 +2670,7 @@ function getAccountReceivable($start_date, $end_date, $month) {
             $monthly_fees = 0;
             $num_invoice += 1;
             $totals = unserialize($result->invoice_totals);
-            $total_invoice += floatval($result->grand_total);
+            $total_invoice += floatval($totals['grand_total']);
             $invoices = $CI->payment_records_model->getByWhere(array("invoice_number" => $result->invoice_number));
             foreach ($invoices as $inv) {
                 $tip_invoice += $inv->invoice_tip;
@@ -2880,10 +2678,10 @@ function getAccountReceivable($start_date, $end_date, $month) {
                 $paid_invoice += $inv->invoice_amount;
                 $monthly_paid += $inv->invoice_amount;
             }
-            $monthly_due = floatval(floatval($result->grand_total) - floatval($monthly_paid));
+            $monthly_due = floatval(floatval($totals['grand_total']) - floatval($monthly_paid));
             $due_invoice += $monthly_due;
             $new_date=date_format(date_create($result->date_issued),"d-M-Y");
-            array_push($fn, array($new_date,"Invoice #".$result->invoice_number. "(".$result->status.")", get_customer_by_id($result->customer_id)->first_name .' '.get_customer_by_id($result->customer_id)->last_name, dollar_format(floatval($result->grand_total)), dollar_format($monthly_paid), dollar_format($monthly_due), dollar_format($monthly_tip), dollar_format($monthly_fees)));
+            array_push($fn, array($new_date,"Invoice #".$result->invoice_number. "(".$result->status.")", get_customer_by_id($result->customer_id)->contact_name, dollar_format(floatval($totals['grand_total'])), dollar_format($monthly_paid), dollar_format($monthly_due), dollar_format($monthly_tip), dollar_format($monthly_fees)));
         }
     }
     if (count($results) > 0 && count($fn) > 1) {
@@ -2968,7 +2766,7 @@ function getAccountReceivableResCom($start_date, $end_date, $month) {
     return $fn;
 }
 
-function getInvoiceByDate_($start_date, $end_date, $month) {
+function getInvoiceByDate($start_date, $end_date, $month) {
     $CI =& get_instance();
     $CI->load->model('Invoice_model', 'invoice_model');
     $CI->load->model('Payment_records_model', 'payment_records_model');
@@ -3020,7 +2818,6 @@ function getInvoiceByDate_($start_date, $end_date, $month) {
     return $fn;
 }
 
-
 function getPaymentByCustomer($start_date, $end_date) {
     $CI =& get_instance();
     $CI->load->model('Invoice_model', 'invoice_model');
@@ -3047,13 +2844,11 @@ function getPaymentByCustomer($start_date, $end_date) {
                     $grand_paid_invoice += 1;
 
                     $totals1 = unserialize($result2->invoice_totals);
-                    // $total_invoice += floatval($totals1['grand_total']);
-                    $total_invoice += floatval($result->grand_total);
-                    // $grand_total += floatval($totals1['grand_total']);
-                    $grand_total += floatval($result->grand_total);
+                    $total_invoice += floatval($totals1['grand_total']);
+                    $grand_total += floatval($totals1['grand_total']);
                 }
             }
-            array_push($fn, array(get_customer_by_id($result->customer_id)->first_name .' '.get_customer_by_id($result->customer_id)->last_name, substr(get_customer_by_id($result->customer_id)->customer_type,0,1), $num_invoice, $paid_invoice, dollar_format($total_invoice)));
+            array_push($fn, array(get_customer_by_id($result->customer_id)->contact_name, substr(get_customer_by_id($result->customer_id)->customer_type,0,1), $num_invoice, $paid_invoice, dollar_format($total_invoice)));
         }
     }
 
@@ -3061,7 +2856,7 @@ function getPaymentByCustomer($start_date, $end_date) {
     return $fn;
 }
 
-function getPaymentByItem_old($start_date, $end_date) {
+function getPaymentByItem($start_date, $end_date) {
     $CI =& get_instance();
     $CI->load->model('Invoice_model', 'invoice_model');
     $company_id = logged('company_id');
@@ -3098,441 +2893,6 @@ function getPaymentByItem_old($start_date, $end_date) {
     }
 
     array_push($fn, array("Total", "", $grand_num_invoice, $grand_paid_invoice, dollar_format($grand_total)));
-    return $fn;
-}
-
-function getPaymentByItem($start_date, $end_date) {
-    $CI =& get_instance();
-    // $CI->load->database();
-    $CI->load->model('Invoice_model', 'invoice_model');
-    $CI->load->model('Invoice_items_model', 'invoice_items_model');
-    $CI->load->model('Items_model', 'items_model');
-    $company_id = logged('company_id');
-
-    // $CI->db->where('company_id', $company_id);
-    // $CI->db->where('date_issued >', $start_date);
-    // $CI->db->where('date_issued <', $end_date);
-    // $CI->db->where('status', 'Paid');
-    // $CI->db->where('is_recurring', 0);
-    // $results = $CI->db->get('invoices');
-    
-
-    $results = $CI->invoice_model->getByWhere(array('company_id' => $company_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status' => 'Paid', 'is_recurring' => 0));
-    $fn = [];
-    $comp_user = [];
-    $grand_total = 0;
-    $grand_num_invoice = 0;
-    $grand_paid_invoice = 0;
-    $item = 0;
-    
-
-    foreach ($results as $result) {
-        $items = unserialize($result2->invoice_items);
-
-
-        if (!in_array($result->customer_id, $comp_user)) {
-            array_push($comp_user, $result->customer_id);
-            $num_invoice = 0;
-            $total_invoice = 0;
-            $paid_invoice = 0;
-
-            foreach ($results as $result2) {
-                if ($result2->customer_id === $result->customer_id) {
-                    $item += 1;
-                    $num_invoice += 1;
-                    $paid_invoice += 1;
-                    $grand_num_invoice += 1;
-                    // $grand_paid_invoice += 1;
-
-                    $totals1 = unserialize($result2->invoice_totals);
-                    $total_invoice += floatval($totals1['grand_total']);
-                    // $grand_total += floatval($result2->grand_total);
-                }
-            }
-            // array_push($fn, array(get_customer_by_id($result->customer_id)->contact_name, substr(get_customer_by_id($result->customer_id)->first_name,0), $num_invoice, $paid_invoice, dollar_format($total_invoice)));
-            
-        
-        $items = $CI->invoice_items_model->getByWhere(array('invoice_id' => $result->id));
-        foreach($items as $itemDet)
-        {
-            $itemsName = $CI->items_model->getByWhere(array('id' => $itemDet->items_id));
-            foreach($itemsName as $name)
-            {
-                $title = $name->title;
-                $grand_total += floatval($itemDet->total);
-                $grand_paid_invoice += $itemDet->qty;
-                
-                array_push($fn, array($title, $result->invoice_number, $result->date_issued, $itemDet->qty, dollar_format($itemDet->total)));
-            }
-        }
-
-            // array_push($fn, array(get_customer_by_id($result->customer_id)->first_name, $result->invoice_number, $result->date_issued, $paid_invoice, dollar_format($result->grand_total)));
-            // array_push($fn, array($title, $result->invoice_number, $result->date_issued, $paid_invoice, dollar_format($result->grand_total)));
-        }
-    }
-
-    array_push($fn, array("Total", "", "", $grand_paid_invoice, dollar_format($grand_total)));
-    return $fn;
-}
-
-
-function getInvoiceByDate($start_date, $end_date, $month) {
-    $CI =& get_instance();
-    $CI->load->model('Invoice_model', 'invoice_model');
-    $CI->load->model('Payment_records_model', 'payment_records_model');
-    $company_id = logged('company_id');
-    $results = $CI->invoice_model->getByWhere(array('company_id' => $company_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status !=' => 'Draft', 'is_recurring' => 0));
-    $fn = [];
-    $day = [];
-    $num_invoice = 0;
-    $total_invoice = 0;
-    $paid_invoice = 0;
-    $due_invoice = 0;
-    $tip_invoice = 0;
-    $fees_invoice = 0;
-
-    foreach ($results as $result) {
-        $date = explode("-",$result->date_issued);
-        if ($date[1] == $month) {
-            if (!in_array($result->date_issued, $day)) {
-                array_push($day, $result->date_issued);
-                $counter = 0;
-                array_push($fn, array(date_format(date_create($result->date_issued),"d-M-Y")));
-                foreach ($results as $result1) {
-                    if ($result->date_issued == $result1->date_issued) {
-                        $monthly_paid = 0;
-                        $monthly_tip = 0;
-                        $monthly_fees = 0;
-                        $num_invoice += 1;
-                        $counter += 1;
-                        $totals = unserialize($result1->grand_total);
-                        $total_invoice += floatval($result1->grand_total);
-                        $invoices = $CI->payment_records_model->getByWhere(array("invoice_number" => $result1->invoice_number));
-                        foreach ($invoices as $inv) {
-                            $tip_invoice += $inv->invoice_tip;
-                            $monthly_tip += $inv->invoice_tip;
-                            $paid_invoice += $inv->grand_total;
-                            $monthly_paid += $inv->grand_total;
-                        }
-                        $monthly_due = floatval(floatval($totals['grand_total']) - floatval($monthly_paid));
-                        $due_invoice += $monthly_due;
-                        $new_date=date_format(date_create($result1->date_issued),"d-M-Y");
-                        array_push($fn, array($new_date,"Invoice #".$result1->invoice_number. "(".$result1->status.")", get_customer_by_id($result1->customer_id)->first_name, dollar_format(floatval($result1->grand_total)), dollar_format($monthly_paid), dollar_format($monthly_due), dollar_format($monthly_tip), dollar_format($monthly_fees)));
-                    }
-                }
-                $fn[count($fn) - ($counter + 1)] = array_merge($fn[count($fn) - ($counter + 1)], array($num_invoice, "", dollar_format($total_invoice), dollar_format($paid_invoice), dollar_format($due_invoice), dollar_format($tip_invoice), dollar_format($fees_invoice)));
-            }
-        }
-    }
-
-    return $fn;
-}
-
-function getworkOrderByEmployee($start_date, $end_date) 
-{
-    $CI =& get_instance();
-    // $CI->load->database();
-    $CI->load->model('Invoice_model', 'invoice_model');
-    // $CI->load->model('Invoice_items_model', 'invoice_items_model');
-    // $CI->load->model('Items_model', 'items_model');
-    $CI->load->model('Jobs_model', 'jobs_model'); //jobs
-    $CI->load->model('Users_model', 'user_model');
-
-    $company_id = logged('company_id');
-    // $results = $CI->user_model->getByWhere(array('company_id' => $company_id, 'date_hired >=' => $start_date, 'date_hired <=' => $end_date, 'status' => '1'));
-    $results = $CI->user_model->getByWhere(array('company_id' => $company_id));
-
-    // $CI->db->where('company_id', $company_id);
-    // $CI->db->where('date_issued >', $start_date);
-    // $CI->db->where('date_issued <', $end_date);
-    // $CI->db->where('status', 'Paid');
-    // $CI->db->where('is_recurring', 0);
-    // $results = $CI->db->get('invoices');
-    
-
-    $resultsJobs = $CI->jobs_model->getByWhere(array('company_id' => $company_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status' => 'Completed'));
-    $fn = [];
-    // $comp_user = [];
-    // $grand_total = 0;
-    // $grand_num_invoice = 0;
-    // $grand_paid_invoice = 0;
-    // $item = 0;
-    
-
-    foreach ($results as $result) {
-        // $items = unserialize($result2->invoice_items);
-
-
-        // if (!in_array($result->id, $comp_user)) {
-        //     array_push($comp_user, $result->employee_id);
-        //     $num_invoice = 0;
-        //     $total_invoice = 0;
-        //     $paid_invoice = 0;
-
-            // foreach ($results as $result2) {
-            //     if ($result2->customer_id === $result->customer_id) {
-            //         $item += 1;
-            //         $num_invoice += 1;
-            //         $paid_invoice += 1;
-            //         $grand_num_invoice += 1;
-            //         // $grand_paid_invoice += 1;
-
-            //         $totals1 = unserialize($result2->invoice_totals);
-            //         $total_invoice += floatval($totals1['grand_total']);
-            //         // $grand_total += floatval($result2->grand_total);
-            //     }
-            // }
-            // array_push($fn, array(get_customer_by_id($result->customer_id)->contact_name, substr(get_customer_by_id($result->customer_id)->first_name,0), $num_invoice, $paid_invoice, dollar_format($total_invoice)));
-            
-        
-        $jobs = $CI->jobs_model->getByWhere(array('employee_id' => $result->id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date));
-        foreach($jobs as $job)
-        {
-            $invoices = $CI->invoice_model->getByWhere(array('job_number' => $job->job_number, 'status' => 'Paid'));
-            foreach($invoices as $inv)
-            {
-                array_push($fn, array($result->FName.' '.$result->LName, $job->job_number, dollar_format($inv->grand_total), dollar_format($inv->grand_total)));
-            }
-            // array_push($fn, array($result->FName.' '.$result->LName, "", dollar_format($itemDet->grand_total), dollar_format($itemDet->grand_total)));
-            // array_push($fn, array($result->FName.' '.$result->LName, $job->job_number, "", ""));
-        }
-
-        // array_push($fn, array($result->FName.' '.$result->LName, $result->job_number, "", ""));
-
-            // array_push($fn, array(get_users_by_id($result->employee_id)->FName.' '.get_users_by_id($result->employee_id)->LName , $result->job_number, "", $paid_invoice, dollar_format($result->grand_total)));
-            // array_push($fn, array($title, $result->invoice_number, $result->date_issued, $paid_invoice, dollar_format($result->grand_total)));
-        // }
-        // array_push($fn, array(get_users_by_id($result->employee_id)->FName.' '.get_users_by_id($result->employee_id)->LName , $result->job_number, "", $paid_invoice, dollar_format($result->grand_total)));
-    }
-
-    // array_push($fn, array(get_users_by_id($result->employee_id)->FName.' '.get_users_by_id($result->employee_id)->LName, "", $grand_paid_invoice, dollar_format($grand_total)));
-    // array_push($fn, array($result->job_number, "", "", $grand_paid_invoice, dollar_format($grand_total)));
-    return $fn;
-}
-
-function getworkOrderByStatus($start_date, $end_date)
-{
-    $CI =& get_instance();
-    // $CI->load->database();
-    $CI->load->model('Invoice_model', 'invoice_model');
-    // $CI->load->model('Invoice_items_model', 'invoice_items_model');
-    // $CI->load->model('Items_model', 'items_model');
-    $CI->load->model('Jobs_model', 'jobs_model'); //jobs
-    $CI->load->model('Workorder_model', 'workorder_model');
-
-    $company_id = logged('company_id');
-    $results = $CI->workorder_model->getByWhere(array('company_id' => $company_id));
-
-    $resultsJobs = $CI->jobs_model->getByWhere(array('company_id' => $company_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status' => 'Completed'));
-    $fn = [];
-    // $comp_user = [];
-    // $grand_total = 0;
-    // $grand_num_invoice = 0;
-    // $grand_paid_invoice = 0;
-    // $item = 0;
-    
-
-    foreach ($results as $result) {
-        
-        // $jobs = $CI->jobs_model->getByWhere(array('employee_id' => $result->id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date));
-        // foreach($jobs as $job)
-        // {
-        //     $invoices = $CI->invoice_model->getByWhere(array('job_number' => $job->job_number, 'status' => 'Paid'));
-        //     foreach($invoices as $inv)
-        //     {
-                array_push($fn, array($result->work_order_number, $result->date_issued, get_customer_by_id($result->customer_id)->first_name .' '. get_customer_by_id($result->customer_id)->last_name, $result->status));
-            // }
-            // array_push($fn, array($result->FName.' '.$result->LName, "", dollar_format($itemDet->grand_total), dollar_format($itemDet->grand_total)));
-            // array_push($fn, array($result->FName.' '.$result->LName, $job->job_number, "", ""));
-        // }
-
-    }
-    return $fn;
-}
-
-function getcustomerTaxByMonth($start_date, $end_date, $month) {
-    $CI =& get_instance();
-    $CI->load->model('Invoice_model', 'invoice_model');
-    $CI->load->model('Payment_records_model', 'payment_records_model');
-    $company_id = logged('company_id');
-    $results = $CI->invoice_model->getByWhere(array('company_id' => $company_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status !=' => 'Draft', 'is_recurring' => 0));
-    $fn = [];
-    $day = [];
-    $num_invoice = 0;
-    $total_invoice = 0;
-    $paid_invoice = 0;
-    $due_invoice = 0;
-    $tip_invoice = 0;
-    $fees_invoice = 0;
-
-    foreach ($results as $result) {
-        $date = explode("-",$result->date_issued);
-        if ($date[1] == $month) {
-            if (!in_array($result->date_issued, $day)) {
-                array_push($day, $result->date_issued);
-                $counter = 0;
-                array_push($fn, array(date_format(date_create($result->date_issued),"d-M-Y")));
-                foreach ($results as $result1) {
-                    if ($result->date_issued == $result1->date_issued) {
-                        $monthly_paid = 0;
-                        $monthly_tip = 0;
-                        $monthly_fees = 0;
-                        $num_invoice += 1;
-                        $counter += 1;
-                        $totals = unserialize($result1->invoice_totals);
-                        $total_invoice += floatval($totals['grand_total']);
-                        $invoices = $CI->payment_records_model->getByWhere(array("invoice_number" => $result1->invoice_number));
-                        foreach ($invoices as $inv) {
-                            $tip_invoice += $inv->invoice_tip;
-                            $monthly_tip += $inv->invoice_tip;
-                            $paid_invoice += $inv->invoice_amount;
-                            $monthly_paid += $inv->invoice_amount;
-                        }
-                        $monthly_due = floatval(floatval($totals['grand_total']) - floatval($monthly_paid));
-                        $due_invoice += $monthly_due;
-                        $new_date=date_format(date_create($result1->date_issued),"d-M-Y");
-                        array_push($fn, array($new_date,"Invoice #".$result1->invoice_number. "(".$result1->status.")", get_customer_by_id($result1->customer_id)->contact_name, dollar_format(floatval($totals['grand_total'])), dollar_format($monthly_paid), dollar_format($monthly_due), dollar_format($monthly_tip), dollar_format($monthly_fees)));
-                    }
-                }
-                $fn[count($fn) - ($counter + 1)] = array_merge($fn[count($fn) - ($counter + 1)], array($num_invoice, "", dollar_format($total_invoice), dollar_format($paid_invoice), dollar_format($due_invoice), dollar_format($tip_invoice), dollar_format($fees_invoice)));
-            }
-        }
-    }
-
-    return $fn;
-}
-
-function getworkOrderByEmployee_old($start_date, $end_date, $month) 
-{
-    $CI =& get_instance();
-    // $CI->load->database();
-    $CI->load->model('Invoice_model', 'invoice_model');
-    // $CI->load->model('Invoice_items_model', 'invoice_items_model');
-    // $CI->load->model('Items_model', 'items_model');
-    $CI->load->model('Jobs_model', 'jobs_model'); //jobs
-    $CI->load->model('Users_model', 'user_model');
-
-    $company_id = logged('company_id');
-    $results = $CI->user_model->getByWhere(array('company_id' => $company_id));
-
-    // $CI->db->where('company_id', $company_id);
-    // $CI->db->where('date_issued >', $start_date);
-    // $CI->db->where('date_issued <', $end_date);
-    // $CI->db->where('status', 'Paid');
-    // $CI->db->where('is_recurring', 0);
-    // $results = $CI->db->get('invoices');
-    
-
-    $resultsJobs = $CI->jobs_model->getByWhere(array('company_id' => $company_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status' => 'Completed'));
-    $fn = [];
-    $comp_user = [];
-    $grand_total = 0;
-    $grand_num_invoice = 0;
-    $grand_paid_invoice = 0;
-    $item = 0;
-    
-
-    foreach ($results as $result) {
-        // $items = unserialize($result2->invoice_items);
-
-
-        if (!in_array($result->employee_id, $comp_user)) {
-            array_push($comp_user, $result->employee_id);
-            $num_invoice = 0;
-            $total_invoice = 0;
-            $paid_invoice = 0;
-
-            // foreach ($results as $result2) {
-            //     if ($result2->customer_id === $result->customer_id) {
-            //         $item += 1;
-            //         $num_invoice += 1;
-            //         $paid_invoice += 1;
-            //         $grand_num_invoice += 1;
-            //         // $grand_paid_invoice += 1;
-
-            //         $totals1 = unserialize($result2->invoice_totals);
-            //         $total_invoice += floatval($totals1['grand_total']);
-            //         // $grand_total += floatval($result2->grand_total);
-            //     }
-            // }
-            // array_push($fn, array(get_customer_by_id($result->customer_id)->contact_name, substr(get_customer_by_id($result->customer_id)->first_name,0), $num_invoice, $paid_invoice, dollar_format($total_invoice)));
-            
-        
-        $items = $CI->invoice_model->getByWhere(array('job_number' => $result->job_number));
-        foreach($items as $itemDet)
-        {
-            // $itemsName = $CI->items_model->getByWhere(array('id' => $itemDet->items_id));
-            // foreach($itemsName as $name)
-            // {
-            //     $title = $name->title;
-            //     $grand_total += floatval($itemDet->total);
-            //     $grand_paid_invoice += $itemDet->qty;
-                
-            //     // array_push($fn, array($title, $result->invoice_number, $result->date_issued, $itemDet->qty));
-            // }
-            array_push($fn, array($result->FName.' '.$result->LName, $result->job_number, dollar_format($itemDet->grand_total), dollar_format($itemDet->grand_total)));
-        }
-
-            // array_push($fn, array(get_users_by_id($result->employee_id)->FName.' '.get_users_by_id($result->employee_id)->LName , $result->job_number, "", $paid_invoice, dollar_format($result->grand_total)));
-            // array_push($fn, array($title, $result->invoice_number, $result->date_issued, $paid_invoice, dollar_format($result->grand_total)));
-        }
-        // array_push($fn, array(get_users_by_id($result->employee_id)->FName.' '.get_users_by_id($result->employee_id)->LName , $result->job_number, "", $paid_invoice, dollar_format($result->grand_total)));
-    }
-
-    // array_push($fn, array(get_users_by_id($result->employee_id)->FName.' '.get_users_by_id($result->employee_id)->LName, "", $grand_paid_invoice, dollar_format($grand_total)));
-    // array_push($fn, array($result->job_number, "", "", $grand_paid_invoice, dollar_format($grand_total)));
-    return $fn;
-}
-
-function getInvoiceEmployee($start_date, $end_date, $month) {
-    $CI =& get_instance();
-    $CI->load->model('Invoice_model', 'invoice_model');
-    $CI->load->model('Payment_records_model', 'payment_records_model');
-    $company_id = logged('company_id');
-    $results = $CI->invoice_model->getByWhere(array('company_id' => $company_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status !=' => 'Draft', 'is_recurring' => 0));
-    $fn = [];
-    $day = [];
-    $num_invoice = 0;
-    $total_invoice = 0;
-    $paid_invoice = 0;
-    $due_invoice = 0;
-    $tip_invoice = 0;
-    $fees_invoice = 0;
-
-    foreach ($results as $result) {
-        $date = explode("-",$result->date_issued);
-        if ($date[1] == $month) {
-            if (!in_array($result->date_issued, $day)) {
-                array_push($day, $result->date_issued);
-                $counter = 0;
-                array_push($fn, array(date_format(date_create($result->date_issued),"d-M-Y")));
-                foreach ($results as $result1) {
-                    if ($result->date_issued == $result1->date_issued) {
-                        $monthly_paid = 0;
-                        $monthly_tip = 0;
-                        $monthly_fees = 0;
-                        $num_invoice += 1;
-                        $counter += 1;
-                        $totals = unserialize($result1->grand_total);
-                        $total_invoice += floatval($result1->grand_total);
-                        $invoices = $CI->payment_records_model->getByWhere(array("invoice_number" => $result1->invoice_number));
-                        foreach ($invoices as $inv) {
-                            $tip_invoice += $inv->invoice_tip;
-                            $monthly_tip += $inv->invoice_tip;
-                            $paid_invoice += $inv->grand_total;
-                            $monthly_paid += $inv->grand_total;
-                        }
-                        $monthly_due = floatval(floatval($totals['grand_total']) - floatval($monthly_paid));
-                        $due_invoice += $monthly_due;
-                        $new_date=date_format(date_create($result1->date_issued),"d-M-Y");
-                        array_push($fn, array($new_date,"Invoice #".$result1->invoice_number. "(".$result1->status.")", get_customer_by_id($result1->customer_id)->first_name, dollar_format(floatval($result1->grand_total)), dollar_format($monthly_paid), dollar_format($monthly_due), dollar_format($monthly_tip), dollar_format($monthly_fees)));
-                    }
-                }
-                $fn[count($fn) - ($counter + 1)] = array_merge($fn[count($fn) - ($counter + 1)], array($num_invoice, "", dollar_format($total_invoice), dollar_format($paid_invoice), dollar_format($due_invoice), dollar_format($tip_invoice), dollar_format($fees_invoice)));
-            }
-        }
-    }
-
     return $fn;
 }
 
@@ -3610,240 +2970,7 @@ function getCustomerSource($start_date, $end_date) {
     }
 
     array_push($fn, array("Total", $res_total, dollar_format($res_invoice_total), $com_total, dollar_format($com_invoice_total)));
-
-    return $fn;
-}
-
-//A
-function getExpenseCategory($start_date, $end_date) {
-    // $CI =& get_instance();
-    // $CI->load->model('Invoice_model', 'invoice_model');
-    // $company_id = logged('company_id');
-    // $cusGroups = get_customer_groups();
-    // $results = $CI->invoice_model->getByWhere(array('company_id' => $company_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status' => 'Paid', 'is_recurring' => 0));
-    // $fn = [];
-    // $grand_count = 0;
-    // $grand_total = 0;
-
-    // foreach ($cusGroups as $cusGroup) {
-    //     $count = 0;
-    //     $total_sales = 0;
-    //     foreach ($results as $result) {
-    //         if (get_customer_by_id($result->customer_id)->customer_group) {
-    //             $groups = unserialize(get_customer_by_id($result->customer_id)->customer_group);
-    //             foreach ($groups as $group) {
-    //                 if ($group === $cusGroup->title) {
-    //                     $count += 1;
-    //                     $grand_count += 1;
-    //                     $totals1 = unserialize($result2->invoice_totals);
-    //                     $total_invoice += floatval($totals1['grand_total']);
-    //                     $total_sales += floatval($totals1['grand_total']);
-    //                     $grand_total += floatval($totals1['grand_total']);
-    //                 }
-    //             }
-    //         }
-    //     }
-    //     array_push($fn, array($cusGroup->title, $count, dollar_format($total_sales)));
-    // }
-
-
-    // array_push($fn, array("Total", $grand_count, dollar_format($grand_total)));
-    // return $fn;
-
-    $CI =& get_instance();
-    $CI->load->model('Accounting_expense', 'accounting_expense');
-    $CI->load->model('Accounting_expense_category', 'accounting_expense_category');
-    $CI->load->model('Accounting_list_category', 'accounting_list_category');
-    $CI->load->model('AccountingVendors_model', 'accountingVendors_model');
-    $company_id = logged('company_id');
-    $results = $CI->accounting_expense->getByWhere(array('company_id' => $company_id, 'payment_date >=' => $start_date, 'payment_date <=' => $end_date));
-    $fn = [];
-    $comp_user = [];
-    $grand_total = 0;
-    $grand_num_invoice = 0;
-    $grand_paid_invoice = 0;
-
     
-        
-        // $vendors = $CI->accountingVendors_model->getByWhere(array('vendor_id' => $result->vendor_id));
-        // foreach($vendors as $vendor) 
-        // {
-        //     array_push($fn, array($vendor->f_name. ' ' .$vendor->l_name, $result->payment_date, $result->payment_method, $result->ref_number, dollar_format($result->amount)));
-        // }
-
-
-        $lists = $CI->accounting_list_category->get();
-        foreach($lists as $list) 
-        {
-            array_push($fn, array("-",$list->category_name, "", "", "", "", ""));
-            
-            foreach ($results as $result) {
-                $categories = $CI->accounting_expense_category->getByWhere(array('category_id' => $list->id,'expenses_id' => $result->vendor_id));
-                foreach($categories as $category) 
-                {
-
-                //array_push($fn, array($vendor->f_name. ' ' .$vendor->l_name, $result->payment_date, $result->payment_method, $result->ref_number, dollar_format($result->amount)));
-                // $lists = $CI->accounting_list_category->getByWhere(array('id' => $category->category_id));
-                // foreach($lists as $list) 
-                // {
-                    //array_push($fn, array($vendor->f_name. ' ' .$vendor->l_name, $result->payment_date, $result->payment_method, $result->ref_number, dollar_format($result->amount)));
-                    $vendors = $CI->accountingVendors_model->getByWhere(array('vendor_id' => $result->vendor_id));
-                    foreach($vendors as $vendor) 
-                    {
-                        array_push($fn, array(" "," ", $vendor->f_name. ' ' .$vendor->l_name, $result->payment_date, $result->payment_method, $result->ref_number, dollar_format($result->amount)));
-                    }
-                }
-        }
-
-    }
-
-    // array_push($fn, array("Total", "", "", "", ""));
-    return $fn;
-}
-
-function getExpense($start_date, $end_date) {
-    $CI =& get_instance();
-    $CI->load->model('Accounting_expense', 'accounting_expense');
-    $CI->load->model('AccountingVendors_model', 'accountingVendors_model');
-    $company_id = logged('company_id');
-    $results = $CI->accounting_expense->getByWhere(array('company_id' => $company_id, 'payment_date >=' => $start_date, 'payment_date <=' => $end_date));
-    $fn = [];
-    $comp_user = [];
-    $grand_total = 0;
-    $grand_num_invoice = 0;
-    $grand_paid_invoice = 0;
-
-    foreach ($results as $result) {
-        // if (!in_array($result->customer_id, $comp_user)) {
-        //     array_push($comp_user, $result->customer_id);
-        //     $num_invoice = 0;
-        //     $total_invoice = 0;
-        //     $paid_invoice = 0;
-
-        //     foreach ($results as $result2) {
-        //         if ($result2->customer_id === $result->customer_id) {
-        //             $num_invoice += 1;
-        //             $paid_invoice += 1;
-        //             $grand_num_invoice += 1;
-        //             $grand_paid_invoice += 1;
-
-        //             $totals1 = unserialize($result2->invoice_totals);
-        //             // $total_invoice += floatval($totals1['grand_total']);
-        //             $total_invoice += floatval($result->grand_total);
-        //             // $grand_total += floatval($totals1['grand_total']);
-        //             $grand_total += floatval($result->grand_total);
-        //         }
-        //     }
-        $vendors = $CI->accountingVendors_model->getByWhere(array('vendor_id' => $result->vendor_id));
-        foreach($vendors as $vendor) 
-        {
-            array_push($fn, array($vendor->f_name. ' ' .$vendor->l_name, $result->payment_date, $result->payment_method, $result->ref_number, dollar_format($result->amount)));
-        }
-
-            // array_push($fn, array($result->vendor_id, $result->payment_date, $result->payment_method, $result->ref_number, dollar_format($result->amount)));
-        // }
-    }
-
-    // array_push($fn, array("Total", "", "", "", ""));
-    return $fn;
-}
-
-function getExpenseVendor($start_date, $end_date) {
-    $CI =& get_instance();
-    $CI->load->model('Accounting_expense', 'accounting_expense');
-    $CI->load->model('AccountingVendors_model', 'accountingVendors_model');
-    $company_id = logged('company_id');
-    $results = $CI->accounting_expense->getByWhere(array('company_id' => $company_id, 'payment_date >=' => $start_date, 'payment_date <=' => $end_date));
-    $fn = [];
-    $comp_user = [];
-    $grand_total = 0;
-    $grand_num_invoice = 0;
-    $grand_paid_invoice = 0;
-
-    foreach ($results as $result) {
-        // if (!in_array($result->customer_id, $comp_user)) {
-        //     array_push($comp_user, $result->customer_id);
-        //     $num_invoice = 0;
-        //     $total_invoice = 0;
-        //     $paid_invoice = 0;
-
-        //     foreach ($results as $result2) {
-        //         if ($result2->customer_id === $result->customer_id) {
-        //             $num_invoice += 1;
-        //             $paid_invoice += 1;
-        //             $grand_num_invoice += 1;
-        //             $grand_paid_invoice += 1;
-
-        //             $totals1 = unserialize($result2->invoice_totals);
-        //             // $total_invoice += floatval($totals1['grand_total']);
-        //             $total_invoice += floatval($result->grand_total);
-        //             // $grand_total += floatval($totals1['grand_total']);
-        //             $grand_total += floatval($result->grand_total);
-        //         }
-        //     }
-        $vendors = $CI->accountingVendors_model->getByWhere(array('vendor_id' => $result->vendor_id));
-        foreach($vendors as $vendor) 
-        {
-            array_push($fn, array($vendor->f_name. ' ' .$vendor->l_name, $result->payment_date, $result->payment_method, $result->ref_number, dollar_format($result->amount)));
-        }
-
-            // array_push($fn, array($result->vendor_id, $result->payment_date, $result->payment_method, $result->ref_number, dollar_format($result->amount)));
-        // }
-    }
-
-    // array_push($fn, array("Total", "", "", "", ""));
-    return $fn;
-}
-
-function getSalesTax($start_date, $end_date, $month) {
-    $CI =& get_instance();
-    $CI->load->model('Invoice_model', 'invoice_model');
-    $CI->load->model('Payment_records_model', 'payment_records_model');
-    $company_id = logged('company_id');
-    $results = $CI->invoice_model->getByWhere(array('company_id' => $company_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status !=' => 'Draft', 'is_recurring' => 0));
-    $fn = [];
-    $day = [];
-    $num_invoice = 0;
-    $total_invoice = 0;
-    $paid_invoice = 0;
-    $due_invoice = 0;
-    $tip_invoice = 0;
-    $fees_invoice = 0;
-
-    foreach ($results as $result) {
-        $date = explode("-",$result->date_issued);
-        if ($date[1] == $month) {
-            if (!in_array($result->date_issued, $day)) {
-                array_push($day, $result->date_issued);
-                $counter = 0;
-                array_push($fn, array(date_format(date_create($result->date_issued),"d-M-Y")));
-                foreach ($results as $result1) {
-                    if ($result->date_issued == $result1->date_issued) {
-                        $monthly_paid = 0;
-                        $monthly_tip = 0;
-                        $monthly_fees = 0;
-                        $num_invoice += 1;
-                        $counter += 1;
-                        $totals = unserialize($result1->invoice_totals);
-                        $total_invoice += floatval($totals['grand_total']);
-                        $invoices = $CI->payment_records_model->getByWhere(array("invoice_number" => $result1->invoice_number));
-                        foreach ($invoices as $inv) {
-                            $tip_invoice += $inv->invoice_tip;
-                            $monthly_tip += $inv->invoice_tip;
-                            $paid_invoice += $inv->invoice_amount;
-                            $monthly_paid += $inv->invoice_amount;
-                        }
-                        $monthly_due = floatval(floatval($totals['grand_total']) - floatval($monthly_paid));
-                        $due_invoice += $monthly_due;
-                        $new_date=date_format(date_create($result1->date_issued),"d-M-Y");
-                        array_push($fn, array($new_date,"Invoice #".$result1->invoice_number. "(".$result1->status.")", get_customer_by_id($result1->customer_id)->contact_name, dollar_format(floatval($totals['grand_total'])), dollar_format($monthly_paid), dollar_format($monthly_due), dollar_format($monthly_tip), dollar_format($monthly_fees)));
-                    }
-                }
-                $fn[count($fn) - ($counter + 1)] = array_merge($fn[count($fn) - ($counter + 1)], array($num_invoice, "", dollar_format($total_invoice), dollar_format($paid_invoice), dollar_format($due_invoice), dollar_format($tip_invoice), dollar_format($fees_invoice)));
-            }
-        }
-    }
-
     return $fn;
 }
 
@@ -3881,7 +3008,7 @@ function getCustomerBySource() {
     }
 
     array_push($fn, array("Total", $cus_total, $res_total, $com_total));
-
+    
     return $fn;
 }
 
@@ -3889,15 +3016,12 @@ function getPaymentType($type) {
     switch($type) {
         case "cc":
             return "Credit Card";
-
+        
         case "check":
             return "Check";
-
+            
         case "cash":
             return "Cash";
-
-        case "paypal":
-            return "Paypal";
     }
 }
 
@@ -4070,31 +3194,31 @@ function google_get_oauth2_token($code, $googleClientId, $googleSecretId) {
 
     $json_response = curl_exec($curl);
     error_log($json_response);
-    curl_close($curl);
+    curl_close($curl);   
     $refreshToken = '';
-    $authObj = json_decode($json_response);
+    $authObj = json_decode($json_response);  
     if (isset($authObj->refresh_token)){
         //refresh token only granted on first authorization for offline access
-        //save to db for future use (db saving not included in example)
+        //save to db for future use (db saving not included in example)            
         $refreshToken = $authObj->refresh_token;
     }
 
-    $accessToken = $authObj->access_token;
+    $accessToken = $authObj->access_token;    
     $accessUserProfile = "https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=" . $accessToken;
     $curl = curl_init($accessUserProfile);
 
 
-    curl_setopt($curl, CURLOPT_POST, false);
+    curl_setopt($curl, CURLOPT_POST, false);        
     curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
     curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
 
     $json_response = curl_exec($curl);
     error_log($json_response);
-    curl_close($curl);
-    $googleUser = json_decode($json_response);
+    curl_close($curl);   
+    $googleUser = json_decode($json_response);   
     $gData['user'] = $googleUser;
-    $gData['access_token'] = $accessToken;
+    $gData['access_token'] = $accessToken; 
     $gData['refreshToken'] = $refreshToken;
     return $gData;
 }
@@ -4103,7 +3227,7 @@ function google_credentials(){
     $credentials = [
         'client_id' => '646859198620-ll9trm7obk2olgaoigae4s2hshpf3sle.apps.googleusercontent.com',
         'client_secret' => '-plXDxYZRwx6c1ttmNXE5L2p',
-        'api_key' => 'AIzaSyAXhOG7zvDz1l8tOrdMnmyrhCOL4Uc-Ink'
+        'api_key' => 'AIzaSyBg27wLl6BoSPmchyTRgvWuGHQhUUHE5AU'
     ];
 
     return $credentials;
@@ -4116,12 +3240,12 @@ if (!function_exists('getReorderItemsCount')){
         $uid = logged('id');
         $company_id = logged('company_id');
 
-        $sql = 'SELECT * ,(SELECT SUM(qty) AS total FROM `items_has_storage_loc` WHERE `item_id` = items.id ) AS total_count FROM items WHERE items.company_id = ' . $company_id . ' AND items.reorder_point != 0 ORDER BY `items`.`id` ASC';
+        $sql = 'SELECT * ,(SELECT SUM(qty) AS total FROM `items_has_storage_loc` WHERE `item_id` = items.id ) AS total_count FROM items WHERE items.company_id = ' . $company_id . ' AND items.reorder_point != 0 ORDER BY `items`.`id` ASC'; 
 
-        $sql1 =  'select * , (select sum(qty) as total from `items_has_storage_loc` WHERE `item_id` = items.id ) as total_count from items where company_id = ' . $company_id .' order by `id` asc' ;
+        $sql1 =  'select * , (select sum(qty) as total from `items_has_storage_loc` WHERE `item_id` = items.id ) as total_count from items where company_id = ' . $company_id .' order by `id` asc' ; 
 
 
-        return   $CI->db->query($sql1)->result_array();
+        return   $CI->db->query($sql1)->result_array();    
 
     }
 }
@@ -4182,409 +3306,4 @@ function statesList(){
     ];
 
     return $states;
-}
-
-function getUserType($id){
-    $types = userTypes();
-    if( isset($types[$id]) ){
-        $type = $types[$id];
-    }else{
-        $type = 'Standard User';
-    }
-
-    return $type;
-}
-
-function userTypes(){
-    $types = [
-        1 => 'Office Manager',
-        2 => 'Partner',
-        3 => 'Team Leader',
-        4 => 'Standard User',
-        5 => 'Field Sales',
-        6 => 'Field Tech',
-        7 => 'Admin'
-    ];
-
-    return $types;
-}
-
-function maskCreditCardNumber($cc, $maskFrom = 0, $maskTo = 4, $maskChar = 'X', $maskSpacer = '-')
-{
-    // Clean out
-    $cc       = str_replace(array('-', ' '), '', $cc);
-    $ccLength = strlen($cc);
-
-    // Mask CC number
-    if (empty($maskFrom) && $maskTo == $ccLength) {
-        $cc = str_repeat($maskChar, $ccLength);
-    } else {
-        $cc = substr($cc, 0, $maskFrom) . str_repeat($maskChar, $ccLength - $maskFrom - $maskTo) . substr($cc, -1 * $maskTo);
-    }
-
-    // Format
-    if ($ccLength > 4) {
-        $newCreditCard = substr($cc, -4);
-        for ($i = $ccLength - 5; $i >= 0; $i--) {
-            // If on the fourth character add the mask char
-            if ((($i + 1) - $ccLength) % 4 == 0) {
-                $newCreditCard = $maskSpacer . $newCreditCard;
-            }
-
-            // Add the current character to the new credit card
-            $newCreditCard = $cc[$i] . $newCreditCard;
-        }
-    } else {
-        $newCreditCard = $cc;
-    }
-
-    return $newCreditCard;
-}
-
-function createSlug($str, $delimiter = '-'){
-
-    $slug = strtolower(trim(preg_replace('/[\s-]+/', $delimiter, preg_replace('/[^A-Za-z0-9-]+/', $delimiter, preg_replace('/[&]/', 'and', preg_replace('/[\']/', '', iconv('UTF-8', 'ASCII//TRANSLIT', $str))))), $delimiter));
-    return $slug;
-
-} 
-
-function replaceSmartTags($message){
-    $cid  = logged('company_id');
-
-    $CI =& get_instance();
-    $CI->load->model('Clients_model');
-    $CI->load->model('Payment_records_model', 'payment_records_model');
-    $company_id = logged('company_id');
-    $company = $CI->Clients_model->getById($cid);
-
-    $message = str_replace("{{customer.name}}", 'John Doe', $message);
-    $message = str_replace("{{customer.first_name}}", 'John', $message);
-    $message = str_replace("{{customer.last_name}}", 'Doe', $message);
-    $message = str_replace("{{business.email}}", $company->email_address, $message);
-    $message = str_replace("{{business.phone}}", $company->phone_number, $message);
-    $message = str_replace("{{business.name}}", $company->business_name, $message);
-
-    return $message;
-}
-
-/**
- * Function to check if the user is loggedIn
- *
- * @return boolean
- *
-
- */
-
-if (!function_exists('is_admin_logged')) {
-
-
-    function is_admin_logged()
-
-    {
-
-        $CI = &get_instance();
-
-
-        $login_token_match = false;
-
-
-        $isLogged = !empty($CI->session->userdata('admin_login')) && !empty($CI->session->userdata('admin_logged')) ? (object)$CI->session->userdata('admin_logged') : false;
-
-        $_token = $isLogged && !empty($CI->session->userdata('admin_login_token')) ? $CI->session->userdata('login_token') : false;
-
-
-        if (!$isLogged) {
-
-            $isLogged = get_cookie('admin_login') && !empty(get_cookie('admin_logged')) ? json_decode(get_cookie('admin_logged')) : false;
-
-            $_token = $isLogged && !empty(get_cookie('admin_login_token')) ? get_cookie('admin_login_token') : false;
-        }
-
-
-        if ($isLogged) {
-
-            $user = $CI->users_model->getById($CI->db->escape((int)$isLogged->id));
-
-            // verify login_token
-
-            $login_token_match = (sha1($user->id . $user->password . $isLogged->time) == $_token);
-        }
-
-        return $isLogged && $login_token_match;
-    }
-
-    function isAdminBypass(){
-        $CI = &get_instance();
-
-        $bypass = false;
-        if( $CI->session->userdata('admin_bypass') ){
-            $bypass = true;
-        }
-
-        return $bypass;
-    }
-
-    function customerQrCode($profile_id){
-        $CI =& get_instance();
-        $CI->load->model('AcsProfile_model');
-        $customer = $CI->AcsProfile_model->getByProfId($profile_id);
-        $qr_image = base_url('uploads/customer_qr/' . $customer->qr_img);
-        if( !file_exists($qr_image) ){
-            return $qr_image;
-        }else{
-            return false;
-        }
-    }
-
-    function check_cc_type($cc, $extra_check = false){
-        $cards = array(
-            "visa" => "(4\d{12}(?:\d{3})?)",
-            "amex" => "(3[47]\d{13})",
-            "jcb" => "(35[2-8][89]\d\d\d{10})",
-            "maestro" => "((?:5020|5038|6304|6579|6761)\d{12}(?:\d\d)?)",
-            "solo" => "((?:6334|6767)\d{12}(?:\d\d)?\d?)",
-            "mastercard" => "(5[1-5]\d{14})",
-            "switch" => "(?:(?:(?:4903|4905|4911|4936|6333|6759)\d{12})|(?:(?:564182|633110)\d{10})(\d\d)?\d?)",
-            "diners" =>  "(^3(?:0[0-5]|[68][0-9])[0-9]{4,}$)",
-            "discover" => "(^6(?:011|5[0-9]{2})[0-9]{3,}$)"
-        );
-        $names = array("Visa", "American Express", "JCB", "Maestro", "Solo", "Mastercard", "Switch", "Diners", "Discover");
-        $matches = array();
-        $pattern = "#^(?:".implode("|", $cards).")$#";
-        $result = preg_match($pattern, str_replace(" ", "", $cc), $matches);
-        if($extra_check && $result > 0){
-            $result = (validatecard($cc))?1:0;
-        }
-        return ($result>0)?$names[sizeof($matches)-2]:false;
-    }
-
-    function customer_list_headers(){
-        $headers = [
-            'name' => 'Name',
-            'industry' => 'Industry',
-            'city' => 'City',
-            'state' => 'State',
-            'source' => 'Source',
-            'email' => 'Email',
-            'added' => 'Added',
-            'sales_rep' => 'Sales Rep',
-            'tech' => 'Tech',
-            'plan_type' => 'Plan Type',
-            'subscription_amount' => 'Subscription Amount',
-            'phone' => 'Phone',
-            'status' => 'Status'
-        ];
-
-        return $headers;
-    }
-
-    function plan_default_features(){
-        $plan = [
-            'simple-start' => ['Management', 'Finances', 'Insights', 'Marketing'],
-            'essential' => ['Management', 'Finances', 'Insights', 'Marketing', 'Time Sheets', 'Reports', 'Accounting', 'Taskhub'],
-            'plus' => ['Management', 'Finances', 'Insights', 'Marketing', 'Time Sheets', 'Reports', 'Accounting', 'Taskhub', 'API Connectors', 'Campaign Builder', 'Trac 360'],
-            'premier-pro' => ['Management', 'Finances', 'Insights', 'Marketing', 'Time Sheets', 'Reports', 'Accounting', 'Taskhub', 'API Connectors', 'Campaign Builder', 'Trac 360', 'Mobile Tools', 'Survery Builder', 'Inventory Management'],
-            'enterprise' => ['Management', 'Finances', 'Insights', 'Marketing', 'Time Sheets', 'Reports', 'Accounting', 'Taskhub', 'API Connectors', 'Campaign Builder', 'Trac 360', 'Mobile Tools', 'Survery Builder', 'Inventory Management', 'Credit Score', 'Form Builder', 'Accounting', 'eSign', 'Campaign Blast'],
-            'industry-specific' => ['Management', 'Finances', 'Insights', 'Marketing', 'Time Sheets', 'Reports', 'Accounting', 'Taskhub', 'API Connectors', 'Campaign Builder', 'Trac 360', 'Mobile Tools', 'Survery Builder', 'Inventory Management', 'Credit Score', 'Form Builder', 'Accounting', 'eSign', 'Wizard', 'Branding']
-        ];
-
-        return $plan;
-    }
-
-    function sendEmail( $data ){
-        $is_valid = true;
-
-        $CI =& get_instance();
-        $CI->load->model('MailSendTo_model');
-
-        if( $data['subject'] == '' ){            
-            $is_valid = false;
-            $err_msg  = 'Please specify email subject';
-        }
-
-        if( $data['to'] == '' && $data['bcc'] == '' && $data['cc'] == '' ){
-            $is_valid = false; 
-            $err_msg = 'Please specify recipient';           
-        }
-
-        if( $data['body'] == '' ){
-            $is_valid == false;
-            $err_msg = 'Please specify email body';
-        }
-
-        $to = '';
-        if( isset($data['to']) && $data['to'] != '' ){
-            $to = $data['to'];
-        }
-
-        $bcc = '';
-        if( isset($data['bcc']) && $data['bcc'] != '' ){
-            $bcc = $data['bcc'];
-        }
-
-        $cc = '';
-        if( isset($data['cc']) && $data['cc'] != '' ){
-            $cc = $data['cc'];
-        }
-
-        $attachment = '';
-        if( isset($data['attachment']) && $data['attachment'] != '' ){
-            $attachment = $data['attachment'];
-        }
-
-        if( $is_valid ){
-            $data_mail_send = [
-                'email_subject' => $data['subject'],
-                'email_to' => $to,
-                'email_bcc' => $bcc,          
-                'email_cc' => $cc,
-                'email_body' => $data['body'],
-                'is_sent' => 0,
-                'is_with_error' => 0,
-                'note' => '',
-                'email_attachment' => $attachment,
-                'created' => date('Y-m-d H:i:s'),
-            ];
-
-            $CI->MailSendTo_model->create($data_mail_send);
-        } 
-
-        $return = ['is_valid' => $is_valid, 'err_msg' => $err_msg];
-        return $return;
-    }
-
-    /*Exempted to account renewal*/
-    function exempted_company_ids(){
-        $exempted_company_ids = [1,58,52];
-        return $exempted_company_ids;
-    }
-
-    function customerAuditLog($user_id, $prof_id, $obj_id, $module, $remarks){
-        $CI =& get_instance();
-        $CI->load->model('CustomerAuditLog_model');
-
-        $data_log = [
-            'user_id' => $user_id,
-            'prof_id' => $prof_id,
-            'obj_id' => $obj_id,
-            'module' => $module,
-            'remarks' => $remarks,
-            'date_created' => date('Y-m-d H:i:s')
-        ];
-
-        $CI->CustomerAuditLog_model->create($data_log);
-    }
-}
-
-if (!function_exists('getTaskAssignedUser')) {
-
-    function getTaskAssignedUser($task_id)
-    {
-        $CI =& get_instance();
-        $CI->db->select('tasks_participants.*, CONCAT(users.FName, " ", users.LName)AS assigned_user');
-        $CI->db->from('tasks_participants');
-        $CI->db->join('users','tasks_participants.user_id = users.id','left');
-        $CI->db->where('task_id', $task_id);
-        $CI->db->where('is_assigned', 1);
-        $taskAssigned = $CI->db->get()->row();
-
-        if ($taskAssigned) {
-            return ucwords($taskAssigned->assigned_user);
-        }
-    }
-}
-
-if(!function_exists('set_expense_graph_data')) {
-    
-    function set_expense_graph_data($data)
-    {
-        $CI =& get_instance();
-        $CI->load->model('chart_of_accounts_model');
-        $CI->load->model('expenses_model');
-        $CI->load->model('vendors_model');
-
-        $accounts = $CI->chart_of_accounts_model->get_company_active_accounts(logged('company_id'));
-        $endDate = date("m/d/Y");
-        $startDate = date("m/d/Y", strtotime("$endDate -30 days"));
-
-        foreach($accounts as $key => $account) {
-            $categories = $CI->expenses_model->get_categories_by_expense_account($account->id);
-
-            $expenseAmount = 0.00;
-            foreach($categories as $category) {
-                switch($category->transaction_type) {
-                    case 'Expense' :
-                        $transaction = $CI->vendors_model->get_expense_by_id($category->transaction_id);
-                        $date = date("m/d/Y", strtotime($transaction->payment_date));
-                    break;
-                    case 'Check' :
-                        $transaction = $CI->vendors_model->get_check_by_id($category->transaction_id);
-                        $date = date("m/d/Y", strtotime($transaction->payment_date));
-                    break;
-                    case 'Bill' :
-                        $transaction = $CI->vendors_model->get_bill_by_id($category->transaction_id);
-                        $date = date("m/d/Y", strtotime($transaction->bill_date));
-                    break;
-                    case 'Purchase Order' :
-                        $transaction = $CI->vendors_model->get_purchase_order_by_id($category->transaction_id);
-                        $date = date("m/d/Y", strtotime($transaction->purchase_order_date));
-                    break;
-                    case 'Vendor Credit' :
-                        $transaction = $CI->vendors_model->get_vendor_credit_by_id($category->transaction_id);
-                        $date = date("m/d/Y", strtotime($transaction->payment_date));
-                    break;
-                    case 'Credit Card Credit' :
-                        $transaction = $CI->vendors_model->get_credit_card_credit_by_id($category->transaction_id);
-                        $date = date("m/d/Y", strtotime($transaction->payment_date));
-                    break;
-                }
-
-                if($transaction->recurring !== '1' && $transaction->status !== "0") {
-                    if(strtotime($date) >= strtotime($startDate) && strtotime($date) <= strtotime($endDate)) {
-                        switch($category->transaction_type) {
-                            case 'Expense' :
-                                $expenseAmount += floatval($category->amount);
-                            break;
-                            case 'Check' :
-                                $expenseAmount += floatval($category->amount);
-                            break;
-                            case 'Bill' :
-                                $expenseAmount += floatval($category->amount);
-                            break;
-                            case 'Vendor Credit' :
-                                $expenseAmount -= floatval($category->amount);
-                            break;
-                            case 'Credit Card Credit' :
-                                $expenseAmount -= floatval($category->amount);
-                            break;
-                        }
-                    }
-                }
-            }
-
-            $accounts[$key]->expense_amount = $expenseAmount;
-        }
-
-        usort($accounts, function ($a, $b) {
-            return floatval($a->expense_amount) < floatval($b->expense_amount);
-        });
-
-        $accounts = array_slice($accounts, 0, 10);
-
-        $accountNames = array_column($accounts, 'name');
-        $accountExpenses = array_column($accounts, 'expense_amount');
-
-        $tempNames = array_map(function($value) {
-            return '"' . addcslashes($value, "\0..\37\"\\") . '"';
-        }, $accountNames);
-
-        $tempExpenses = array_map(function($value) {
-            return '"' . addcslashes($value, "\0..\37\"\\") . '"';
-        }, $accountExpenses);
-
-        $data['account_names'] = '[' . implode(',', $tempNames) . ']';
-        $data['account_expenses'] = '[' . implode(',', $tempExpenses) . ']';
-
-        return $data;
-    }
 }

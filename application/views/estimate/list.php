@@ -26,7 +26,7 @@ button#dropdown-edit {
     padding-top: 55px !important;
 }
 .card.p-20 {
-    padding-top: 25px !important;
+    padding-top: 15px !important;
 }
 .col.col-4.pd-17.left.alert.alert-warning.mt-0.mb-2 {
     position: relative;
@@ -68,31 +68,35 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         <div class="card p-20">
             <div class="container-fluid pt-0 pl-0" style="font-size:14px;">
                 <div class="row">
-                    <div class="col-sm-6 left">
-                      <h3 class="page-title mt-0">Estimates</h3>
+                    <div class="col">
+                        <h3 class="page-title">Estimates</h3>
                     </div>
-                    <div class="col-sm-6 right dashboard-container-1">
-                      <div class="float-right d-none d-md-block">
-                        <div class="col-auto">
-                            <div class="h1-spacer">
-                                 <?php if (isset($estimates) && count($estimates)>0) { ?>
-                                                    <a class="btn btn-primary btn-md btn-mobile" href="<?php echo base_url('estimate/print') ?>">
-                                                        <span class="fa fa-print "></span> Print
-                                                    </a>
-                                                <?php } ?>
+                    <div style="background-color:#fdeac3; width:100%;padding:.5%;margin-bottom:5px;margin-top:5px;margin-bottom:10px;">
+                        Create an estimate when you want to give your customer a quote, bid, or proposal for work you plan to do. There are 3 forms of estimate:  standard, options and bundle (package)  The estimate can later be turned into a sales order or an invoice.  With this layout you will be able to monitor the status of each estimate. 
+                    </div>
+                </div>
+                <div class="row" style="margin-bottom:20px;">
+                    <div class="col">
+                        <!-- <h1 class="m-0">Estimates</h1> -->
+                    </div>
+                    <div class="col-auto">
+                        <div class="h1-spacer">
+                             <?php if (isset($estimates) && count($estimates)>0) { ?>
+                                                <a class="btn btn-primary btn-md btn-mobile" href="<?php echo base_url('estimate/print') ?>">
+                                                    <span class="fa fa-print "></span> Print
+                                                </a>
+                                            <?php } ?>
 
-                                <a class="btn btn-primary btn-md btn-mobile" data-toggle="modal" data-target="#newJobModal" href="<?php echo url('job/new_job') ?>">
-                                    <span class="fa fa-plus"></span> New Estimate
-                                </a>
-                            </div>
+                            <a class="btn btn-primary btn-md btn-mobile" data-toggle="modal" data-target="#newJobModal" href="<?php echo url('job/new_job') ?>">
+                                <span class="fa fa-plus"></span> New Estimate
+                            </a>
                         </div>
-                      </div>
                     </div>
                 </div>
-                <div class="col mb-4 left alert alert-warning mt-0 mb-2">
-                    <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Create an estimate when you want to give your customer a quote, bid, or proposal for work you plan to do. There are 3 forms of estimate:  standard, options and bundle (package)  The estimate can later be turned into a sales order or an invoice.  With this layout you will be able to monitor the status of each estimate.</span>
-                </div>
-                <br style="clear:both;"/><br/>
+                <!-- <div class="col mb-3 left alert alert-warning mt-0 mb-2">
+                    <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Listing your estimates.</span>
+                </div> -->
+                <br style="clear:both;"/>
                 <div class="align-items-center mb-4 margin-bottom-ter">
                     <div class="row pl-0 pr-0">
                       <div class="col col-4 ">
@@ -201,7 +205,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                     <th>Estinate#</th>
                                     <th>Date</th>
                                     <th>Job & Customer</th>
-                                    <th>Type</th>
                                     <th>Status</th>
                                     <th>Amount</th>
                                     <th></th>
@@ -245,40 +248,14 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                         <td>
                                             <div><a href="#"><?php echo $estimate->job_name; ?></a></div>
                                             <a href="<?php echo base_url('customer/view/' . $estimate->customer_id) ?>">
-                                                <?php echo get_customer_by_id($estimate->customer_id)->first_name .' '.get_customer_by_id($estimate->customer_id)->last_name ?>
+                                                <?php echo get_customer_by_id($estimate->customer_id)->contact_name ?>
                                             </a>
                                         </td>
+                                        <td><?php echo $estimate->status ?></td>
                                         <td>
-                                                <?php echo $estimate->estimate_type; ?>
-                                        </td>
-                                        <td>
-                                          <?php
-                                            if( $estimate->is_mail_open == 1 ){
-                                              echo "<i class='fa fa-eye'></i>  ";
-                                            }
-                                            echo $estimate->status;
-                                          ?>
-
-                                        </td>
-                                        <td>
-                                                <?php 
-                                                $total1 = $estimate->option1_total + $estimate->option2_total;
-                                                $total2 = $estimate->bundle1_total + $estimate->bundle2_total;
-
-                                                if($estimate->estimate_type == 'Option')
-                                                {
-                                                    echo '$ '.$total1;
-                                                }
-                                                elseif($estimate->estimate_type == 'Bundle')
-                                                {
-                                                    echo '$ '.$total2;
-                                                }
-                                                else
-                                                {
-                                                    echo '$ '.$estimate->grand_total; 
-                                                }
-                                                
-                                                ?>
+                                            <?php if (is_serialized($estimate->estimate_eqpt_cost)) { ?>
+                                                $<?php echo unserialize($estimate->estimate_eqpt_cost)['eqpt_cost'] ?>
+                                            <?php } ?>
                                         </td>
                                         <td class="text-right">
                                             <div class="dropdown dropdown-btn">
@@ -288,63 +265,42 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                 <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
                                                     <li role="presentation"><a role="menuitem" tabindex="-1"
                                                                                href="<?php echo base_url('estimate/view/' . $estimate->id) ?>"><span
-                                                                    class="fa fa-file-text-o icon"></span> View Estimate</a></li>
-
-                                                    <?php if($estimate->estimate_type == 'Standard'){ ?>
+                                                                    class="fa fa-file-text-o icon"></span> View</a></li>
                                                     <li role="presentation"><a role="menuitem" tabindex="-1"
                                                                                href="<?php echo base_url('estimate/edit/' . $estimate->id) ?>"><span
                                                                     class="fa fa-pencil-square-o icon"></span> Edit</a>
                                                     </li>
-                                                    <?php }elseif($estimate->estimate_type == 'Option'){ ?>
-                                                    <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                               href="<?php echo base_url('estimate/editOption/' . $estimate->id) ?>"><span
-                                                                    class="fa fa-pencil-square-o icon"></span> Edit</a>
-                                                    </li>
-                                                    <?php }else{ ?>
-                                                    <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                               href="<?php echo base_url('estimate/editBundle/' . $estimate->id) ?>"><span
-                                                                    class="fa fa-pencil-square-o icon"></span> Edit</a>
-                                                    </li>
-                                                    <?php } ?>
-
                                                     <li role="separator" class="divider"></li>
                                                     <li role="presentation"><a role="menuitem"
                                                                                tabindex="-1"
                                                                                href="#"
                                                                                data-toggle="modal"
-                                                                               data-target="#modalCloneEstimate"
+                                                                               data-target="#modalCloneWorkorder"
                                                                                data-id="<?php echo $estimate->id ?>"
-                                                                               data-wo_num="<?php echo $estimate->estimate_number ?>"
-                                                                               data-name="WO-00433" class="clone-estimate"><span
-                                                                    class="fa fa-files-o icon">
+                                                                               data-name="WO-00433"><span
+                                                                    class="fa fa-files-o icon clone-workorder">
 
-                                                        </span> Clone Estimate</a>
+                                                        </span> Clone Work Order</a>
                                                     </li>
                                                     <li role="presentation"><a role="menuitem" tabindex="-1"
                                                                                href="<?php echo base_url('invoice') ?>"
                                                                                data-convert-to-invoice-modal="open"
                                                                                data-id="161983"
                                                                                data-name="WO-00433"><span
-                                                                    class="fa fa-money icon"></span> Convert to Invoice</a>
+                                                                    class="fa fa-money icon"></span> Create Invoice</a>
                                                     </li>
                                                     <li role="presentation">
-                                                        <a role="menuitem" target="_new" href="<?php echo base_url('estimate/view_pdf/' . $estimate->id) ?>" class="">
+                                                        <a role="menuitem" href="<?php echo base_url('estimate/view_pdf/' . $estimate->id) ?>" class="">
                                                         <span class="fa fa-file-pdf-o icon"></span>  View PDF</a></li>
                                                     <li role="presentation">
                                                         <a role="menuitem" target="_new" href="<?php echo base_url('estimate/print/' . $estimate->id) ?>" class="">
                                                         <span class="fa fa-print icon"></span>  Print</a></li>
                                                     <li role="presentation">
-                                                        <!-- <a role="menuitem" href="javascript:void(0);" class="btn-send-customer" data-id="<?= $estimate->id; ?>">
-                                                        <span class="fa fa-envelope-open-o icon"></span>  Send to Customer</a></li> -->
-                                                        <a href="" acs-id="<?php echo $estimate->customer_id; ?>" est-id="<?php echo $estimate->id; ?>" class="send_to_customer"><span class="fa fa-envelope-o icon"></span> Send to Customer</a>
+                                                        <a role="menuitem" href="javascript:void(0);" class="btn-send-customer" data-id="<?= $estimate->id; ?>">
+                                                        <span class="fa fa-envelope-open-o icon"></span>  Send to Customer</a></li>
                                                     <li><div class="dropdown-divider"></div></li>
                                                     <li role="presentation">
-                                                        <!-- <a role="menuitem" href="<?php //echo base_url('estimate/delete/' . $estimate->id) ?>>" onclick="return confirm('Do you really want to delete this item ?')" data-delete-modal="open"><span class="fa fa-trash-o icon"></span> Delete</a> -->
-                                                        <a href="#" est-id="<?php echo $estimate->id; ?>" id="delete_estimate"><span class="fa fa-trash-o icon"></span> Delete </a>
-                                                    </li>
-                                                    <li role="presentation">
-                                                        <a role="menuitem" href="<?= base_url('job/estimate_job/'. $estimate->id) ?>">
-                                                            <span class="fa fa-briefcase icon"></span> Convert to Job</a>
+                                                        <a role="menuitem" href="<?php echo base_url('estimate/delete/' . $estimate->id) ?>>" onclick="return confirm('Do you really want to delete this item ?')" data-delete-modal="open"><span class="fa fa-trash-o icon"></span> Delete</a>
                                                     </li>
                                                 </ul>
                                             </div>
@@ -392,37 +348,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
     <!-- end container-fluid -->
 </div>
-
-<!-- MODAL CLONE estimate -->
-<div class="modal fade" id="modalCloneEstimate" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                    <!-- <h4 class="modal-title">Clone Estimate</h4> -->
-                </div>
-                <div class="modal-body">
-                    <form name="clone-modal-form">
-                        <div class="validation-error" style="display: none;"></div>
-                        <p>
-                            You are going create a new Estimate based on <b>Estimate #<span
-                                        class="work_order_no"></span> <input type="hidden" id="wo_id" name="est_id"> </b>.<br>
-                            Afterwards you can edit the newly created Estimate.
-                        </p>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-default" type="button" data-dismiss="modal">Close</button>
-                    <button id="clone_estimate" class="btn btn-primary" type="button" data-clone-modal="submit">Clone
-                    Estimate
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
 
 <!-- CONVERT ESTIMATE MODAL -->
 <div class="modal fade" id="modalConvertEstimate" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
@@ -483,8 +408,12 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             <div class="help help-sm">Customers can select only one package</div>
             <a class="btn btn-primary add-modal__btn-primary" href="<?php echo base_url('estimate/add?type=3') ?>"><span class="fa fa-cubes"></span> Packages Estimate</a>
         </div>
-      </div> -->
-      <div class="modal-body text-center">
+      </div>
+      <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+    </div> -->
+    <div class="modal-body text-center">
         <p class="text-lg margin-bottom">
             What type of estimate you want to create
         </p><center>
@@ -493,7 +422,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             <a class="btn btn-primary add-modal__btn-success" style="background-color: #2ab363 !important" href="<?php echo base_url('estimate/add') ?>"><span class="fa fa-file-text-o"></span> Standard Estimate</a>
         </div>
         <div class="margin-bottom" style="width:60%;">
-            <div class="help help-sm">Customers can select all <br>or only certain options</div>
+            <div class="help help-sm">Customers can select all or only certain options</div>
             <a class="btn btn-primary add-modal__btn-success" style="background-color: #2ab363 !important" href="<?php echo base_url('estimate/addoptions?type=2') ?>"><span class="fa fa-list-ul fa-margin-right"></span> Options Estimate</a>
         </div>
         <div  class="margin-bottom" style="width:60%;">
@@ -501,60 +430,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             <a class="btn btn-primary add-modal__btn-success" style="background-color: #2ab363 !important" href="<?php echo base_url('estimate/addbundle?type=3') ?>"><span class="fa fa-cubes"></span> Bundle Estimate</a>
         </div></center>
       </div>
-      <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        </div>
-    </div>
+  </div>
 </div>
-
-
-<script>
-$(document).on('click touchstart','.clone-estimate',function(){
-
-    // alert('id');
-var num = $(this).attr('data-wo_num');
-var id = $(this).attr('data-id');
-$('.work_order_no').text(num)
-$('#wo_id').val(id)
-
-
-});
-
-$(document).on('click touchstart','#clone_estimate',function(){
-
-// var num = $(this).attr('data-wo_num');
-// var wo_num = $('.work_order_no').text();
-var est_num = $('#wo_id').val();
-// alert(id);
-// $('.work_order_no').text(num);
-$.ajax({
-    type : 'POST',
-    url : "<?php echo base_url(); ?>estimate/duplicate_estimate",
-    data : {est_num: est_num},
-    success: function(result){
-        sucess("Data Cloned Successfully!");
-    },
-    });
-
-
-});
-
-function sucess(information,$id){
-            Swal.fire({
-                title: 'Good job!',
-                text: information,
-                icon: 'success',
-                showCancelButton: false,
-                confirmButtonColor: '#32243d',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Ok'
-            }).then((result) => {
-                if (result.value) {
-                    location.reload();
-                }
-            });
-        }
-</script>
 <style>
     .hid-deskx {
         display: none !important;
@@ -625,112 +502,4 @@ function sucess(information,$id){
             location.href = $(this).attr('data-link');
         });
     });
-</script>
-
-
-<script>
-// $(document).on('click','#delete_workorder',function(){
-//     // alert('test');
-    
-// });
-
-// function myFunction() {
-// $('#delete_workorder').on('click', function(){
-$(document).on('click touchstart','#delete_estimate',function(){
-
-    var id = $(this).attr('est-id');
-    // alert(id);
-  
-  var r = confirm("Are you sure you want to delete this Estimate?");
-
-  if (r == true) {
-    $.ajax({
-    type : 'POST',
-    url : "<?php echo base_url(); ?>estimate/delete_estimate",
-    data : {id: id},
-    success: function(result){
-        // $('#res').html('Signature Uploaded successfully');
-        // if (confirm('Some message')) {
-        //     alert('Thanks for confirming');
-        // } else {
-        //     alert('Why did you press cancel? You should have confirmed');
-        // }
-
-        // location.reload();
-        sucess("Data Deleted Successfully!");
-    },
-    });
-  } 
-  else 
-  {
-    alert('no');
-  }
-
-});
-
-function sucess(information,$id){
-            Swal.fire({
-                title: 'Good job!',
-                text: information,
-                icon: 'success',
-                showCancelButton: false,
-                confirmButtonColor: '#32243d',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Ok'
-            }).then((result) => {
-                if (result.value) {
-                    location.reload();
-                }
-            });
-        }
-</script>
-
-<script>
-$(document).on('click touchstart','.send_to_customer',function(){
-
-var id = $(this).attr('acs-id');
-var est_id = $(this).attr('est-id');
-alert(id);
-
-var r = confirm("Send this to customer?");
-
-if (r == true) {
-	$.ajax({
-	type : 'POST',
-	url : "<?php echo base_url(); ?>estimate/sendEstimateToAcs",
-	data : {id: id, est_id: est_id},
-	success: function(result){
-		//sucess("Email Successfully!");
-		// alert('Email Successfully!');
-        sucess("Successfully sent to Customer!");
-	},
-	error: function () {
-      alert("An error has occurred");
-    },
-
-	});
-
-	} 
-
-    function sucess(information,$id){
-            Swal.fire({
-                title: 'Good job!',
-                text: information,
-                icon: 'success',
-                showCancelButton: false,
-                confirmButtonColor: '#32243d',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Ok'
-            }).then((result) => {
-                if (result.value) {
-                    location.reload();
-                }
-            });
-        }
-// else 
-// {
-// 	alert('no');
-// }
-
-});
 </script>

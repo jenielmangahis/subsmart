@@ -1,59 +1,6 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-<style>
-.page-title {
-  font-family: Sarabun, sans-serif !important;
-  font-size: 1.75rem !important;
-  font-weight: 600 !important;
-}
-.pr-b10 {
-  position: relative;
-  bottom: 10px;
-}
-.p-40 {
-  padding-top: 40px !important;
-}
-div#cat-selected {
-    padding-top: 4px;
-}
-.label-default {
-		background-color: #6a4a85 !important;
-		font-size: 13px;
-		line-height: 13px;
-		color: white;
-    margin-bottom: 6px;
-		border-radius: 26px;
-		padding: 5px 15px !important;
-}
-@media only screen and (max-width: 600px) {
-  .p-40 {
-    padding-top: 0px !important;
-  }
-  .pr-b10 {
-    position: relative;
-    bottom: 0px;
-  }
-}
-.list-icon{
-  list-style: none;
-  height: 400px;
-  overflow: auto;
-  padding: 6px;
-}
-.list-icon li{
-  display: inline-block;
-  /*width: 30%;*/
-  height:100px;
-  margin: 3px;
-}
-#form-business-details .card {
-    padding: 30px 25px !important;
-    border-radius: 6px;
-}
-.mt-18 {
-  margin-top: 10px;
-}
-</style>
+
 <?php include viewPath('includes/header'); ?>
 <!-- page wrapper start -->
 <div role="wrapper">
@@ -67,19 +14,17 @@ div#cat-selected {
                 <div class="validation-error" style="display: none;"></div>
                 <div class="card">
 
-<div class="row pl-0 pr-0">
+<h1>Services</h1>
+
+<div class="row">
     <div class="col-md-24 col-lg-24 col-xl-18"><form id="form-business-services" method="post" action="#">
 
-    <div class="card mt-0">
-        <h3 class="page-title mb-0 mt-18">Services</h3>
+    <div class="card">
         <div class="margin-bottom">
             Selected services:
             <div class="cat-selected" id="cat-selected">
-            <?php foreach($selectedCategories as $s){ ?>
-                <span class="label label-default tag"><?= $s->service_name; ?><!-- <a class="cat-tag-remove" id="cat-tag-remove-93" href="#"><span class="icon fa fa-remove"></span></a> --></span>
-            <?php } ?>
-            <script async="" src="https://www.google-analytics.com/analytics.js"></script><script id="cat-selected-tag" type="text/x-handlebars-template">
-
+            <span class="label label-default tag">Security<a class="cat-tag-remove" id="cat-tag-remove-93" href="#"><span class="icon fa fa-remove"></span></a></span>            <script async="" src="https://www.google-analytics.com/analytics.js"></script><script id="cat-selected-tag" type="text/x-handlebars-template">
+            <span class="label label-default tag">{{name}}<a class="cat-tag-remove" id="cat-tag-remove-{{id}}" href="#"><span class="icon fa fa-remove"></span></a></span>
             </script>
             </div>
         </div>
@@ -130,16 +75,16 @@ div#cat-selected {
 
     </div>
 
-    <hr class="card-hr mt-2">
+    <hr class="card-hr">
 <div class="card">
     <div class="row">
     	<div class="col-md-8">
-    		    		<button class="btn btn-primary btn-lg" name="btn-save" type="submit">Save</button> <span class="alert-inline-text margin-left hide">Saved</span>
+    		    		<button class="btn btn-default btn-lg" name="btn-save" type="submit">Save</button> <span class="alert-inline-text margin-left hide">Saved</span>
     		    	</div>
-    	<!-- <div class="col-md-4 text-right">
+    	<div class="col-md-4 text-right">
     		    		<a class="btn btn-default btn-lg" href="businessdetail">« Back</a>
     		    		    		<a href="credentials" class="btn btn-primary btn-lg margin-left" name="btn-continue">Next »</a>
-    		    	</div> -->
+    		    	</div>
     </div>
 </div>
 </form>

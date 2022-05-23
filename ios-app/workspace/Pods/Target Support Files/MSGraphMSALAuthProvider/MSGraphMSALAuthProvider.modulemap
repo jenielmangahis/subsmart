@@ -1,6 +1,0 @@
-framework module MSGraphMSALAuthProvider {
-  umbrella header "MSGraphMSALAuthProvider-umbrella.h"
-
-  export *
-  module * { export * }
-}

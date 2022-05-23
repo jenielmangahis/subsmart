@@ -31,7 +31,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </div>
                         </div>
                     </div>
-                    <form method="post">
+                    <?php echo form_open('customer/group/save', ['class' => 'form-validate', 'method' => 'post']); ?>
                     <div class="row custom__border">
                         <div class="col-xl-12">
                             <div class="card">
@@ -70,7 +70,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </div>
                         </div>
                     </div>
-                    </form>
+
+                    <?php echo form_close(); ?>
                 </div>
                 <!-- /.box -->
             </section>

@@ -99,7 +99,7 @@
 </div>
 
 <div class="modal fade" id="NewEvent" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="addWidgets" aria-hidden="true">
-    <div class="modal-dialog modal-md" role="document" style="max-width: 592px; margin-top:125px;">
+    <div class="modal-dialog modal-md" role="document" style="max-width: 592px; margin-top:230px;">
         <div class="modal-content">
             <div class="modal-header">
                 <h6 class="modal-title" id="exampleModalLabel">Quick Links</h6>

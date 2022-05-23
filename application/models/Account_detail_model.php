@@ -37,19 +37,4 @@ class Account_detail_model extends MY_Model {
 		$query = $this->db->get($this->table);
 		return $query->result();
 	}
-	function update($id, $data)
-	{
-		$this->db->where('acc_detail_id', $id);
-		return $this->db->update($this->table, $data);
-	}
-	function getById($id)
-	{
-		$this->db->where('acc_detail_id', $id);
-		return $this->db->get($this->table)->row();
-	}
-	public function getByName($name)
-	{
-		$this->db->where('acc_detail_name', $name);
-		return $this->db->get($this->table)->row();
-	}
 }

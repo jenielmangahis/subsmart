@@ -10,11 +10,11 @@ class CreditNote_model extends MY_Model
     public $status_closed  = 2;
     public $status_expired = 3;
     public $status_draft   = 4;
-    public $status_submitted = 5;
 
 
     public function getAllByCompanyId($company_id)
-    {        
+    {
+
         $this->db->select('credit_notes.*, users.id AS uid, users.company_id,acs_profile.first_name,acs_profile.last_name,acs_profile.prof_id');
         $this->db->from($this->table);
         $this->db->join('users', 'credit_notes.user_id = users.id', 'LEFT');
@@ -106,8 +106,7 @@ class CreditNote_model extends MY_Model
             $this->status_open => 'Open',
             $this->status_closed => 'Closed',
             $this->status_expired => 'Expired',
-            $this->status_draft => 'Draft',
-            $this->status_submitted => 'Submitted'
+            $this->status_draft => 'Draft'
         ];
 
         return $status;
@@ -116,11 +115,6 @@ class CreditNote_model extends MY_Model
     public function isDraft()
     {
         return $this->status_draft;
-    }
-
-    public function isSubmitted()
-    {
-        return $this->status_submitted;
     }
 
     public function saveCreditNote($post_data)

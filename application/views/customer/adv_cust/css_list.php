@@ -5,6 +5,7 @@
     .hid-deskx {
         display: none !important;
     }
+
     body {
         margin: 0;
         padding: 0;
@@ -12,6 +13,8 @@
         font-weight: 400;
         font-size: 13px;
     }
+
+
     .indata {
         width : 100%;
         float: left;
@@ -21,6 +24,7 @@
         justify-content: space-around;
         flex-flow: wrap;
     }
+
     .module{
         border: 2px solid #e4e4e4 !important;
         border-radius: 10px;
@@ -35,6 +39,7 @@
         margin-bottom: 10px;
         background: #ffffff !important;
     }
+
     .module_med{
         border: 1px solid #32243d;
         border-radius: 10px;
@@ -49,6 +54,7 @@
         margin-bottom: 10px;
         background: #ffffff !important;
     }
+
     .module_lg{
         border: 1px solid #32243d;
         border-radius: 10px;
@@ -63,6 +69,7 @@
         margin-bottom: 10px;
         background: #ffffff !important;
     }
+
     @media only screen and (max-width: 954px){
         .module {
             width: 590px;
@@ -76,6 +83,7 @@
             max-width: 100%;
         }
     }
+
     @media (min-width: 600px) and (max-width: 767px){
         .module {
             width: 460px ;
@@ -88,9 +96,11 @@
             max-width: 90%;
         }
     }
+
     @media only screen and (max-width: 900px){
         #container2 { width: 90%; }
     }
+
     .individual-module h6 {
         transform: rotate(-90deg);
         width: 190px;
@@ -105,6 +115,7 @@
         border-radius: 10px 10px 0px 0;
         cursor: pointer;
     }
+
     .client {
         background-image: url('https://app.creditrepaircloud.com/application/images/client_new.png');
         width: 530px;
@@ -123,6 +134,7 @@
         cursor: pointer;
         color: #0070c8;
     }
+
     .contactrighttab {
         height: 35px;
         margin-top: 6px;
@@ -130,7 +142,9 @@
         padding-bottom: 3px;
         float: left;
         border: 1px solid #fff;
+
     }
+
     .contactrighttxt {
         width: 207px;
         font-size: 12px;
@@ -147,6 +161,7 @@
         padding: 2px;
         width: 35px;
     }
+
     .project {
         background-image: url('https://app.creditrepaircloud.com/application/images/scores_new.png');
         width: 530px;
@@ -198,6 +213,8 @@
         clear: both;
         height: 10px;
     }
+
+
     .paperwork {
         background-image: url('https://app.creditrepaircloud.com/application/images/documents_new.png');
         background-repeat: no-repeat;
@@ -207,6 +224,7 @@
         margin: 10px 0 0 10px;
         padding: 0 0 0 50px;
     }
+
     .statusbg {
         background-image: url('https://app.creditrepaircloud.com/application/images/status_new.png');
         height: 340px;
@@ -241,6 +259,7 @@
     .chart2, .signin {
         border-top-right-radius: 10px;
     }
+
     .reminder {
         background-image: url('https://app.creditrepaircloud.com/application/images/reminder_new.png');
         width: 480px;
@@ -274,6 +293,8 @@
         float: left;
         width: 50%;
     }
+
+
     .memo {
         background-image: url('https://app.creditrepaircloud.com/application/images/memo1_new.png');
         width: 480px;
@@ -323,6 +344,7 @@
         margin: 10px 0 0 50px;
         line-height: 27px;
     }
+
     .assigncontactbg {
         background-image: url('https://app.creditrepaircloud.com/application/images/contacts-bg.png');
         height: 265px;
@@ -334,6 +356,7 @@
         background-repeat: no-repeat;
         padding-top: 10px;
     }
+
     @media (max-width: 767px) {
         .client, .project {
             height: auto !important;
@@ -362,10 +385,12 @@
             height: auto;
         }
     }
+
     @media only screen and (max-width: 600px) {
         .hid-desk {
             display: none !important;
         }
+
         .hid-deskx {
             display: block !important;
         }

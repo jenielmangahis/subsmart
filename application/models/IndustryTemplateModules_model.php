@@ -106,11 +106,6 @@ class IndustryTemplateModules_model extends MY_Model
         $query = $this->db->get();
         return $query->result();
     }
-
-    public function batchInsert( $data )
-    {
-        $this->db->insert_batch($this->table, $data); 
-    }
 }
 
 /* End of file IndustryTemplateModules_model.php */

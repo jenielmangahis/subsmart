@@ -589,7 +589,7 @@ function SignaturePad (selector, options) {
    */
   function validateForm () {
     var valid = true
-      , errors = {drawInvalid: true, nameInvalid: false}
+      , errors = {drawInvalid: false, nameInvalid: false}
       , onBeforeArguments = [context, settings]
       , onErrorArguments = [errors, context, settings]
 
@@ -601,7 +601,7 @@ function SignaturePad (selector, options) {
 
     if (settings.drawOnly && output.length < 1) {
       errors.drawInvalid = true
-      valid = true
+      valid = false
     }
 
     if ($(settings.name, context).val() === '') {

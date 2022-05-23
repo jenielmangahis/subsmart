@@ -16,10 +16,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
     /* margin-bottom: 20px; */
     /* border-radius: 8px; */
 }
-.dropdown .btn {
-    position: relative;
-    top:12px;
-}
 .subtle-txt {
     color: rgba(42, 49, 66, 0.7);
 }
@@ -79,7 +75,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
     <div wrapper__section>
         <div class="container-fluid p-40">
             <!-- end row -->
-            <?php echo form_open_multipart('credit_notes/save', ['class' => 'form-validate require-validation', 'id' => 'estimate_form', 'autocomplete' => 'off']); ?>
+            <?php echo form_open_multipart('credit_notes/update', ['class' => 'form-validate require-validation', 'id' => 'estimate_form', 'autocomplete' => 'off']); ?>
             <input type="hidden" id="inst_cost" value="0">
             <input type="hidden" id="one_time" value="0">
             <input type="hidden" id="m_monitoring" value="0">
@@ -91,6 +87,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <div class="row align-items-center">
                               <div class="col-sm-6">
                                   <h3 class="page-title mt-0">New Credit Note</h3>
+                                  <span class="subtle-txt">Add a new credit note.</span>
                               </div>
                               <div class="col-sm-6">
                                   <div class="float-right d-none d-md-block">
@@ -105,12 +102,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                   </div>
                               </div>
                             </div>
-                            <div class="pl-3 pr-3 mt-2 row">
-                              <div class="col mb-4 left alert alert-warning mt-0 mb-0">
-                                  <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Add a new credit note.</span>
-                              </div>
-                            </div>
-                            <div class="row mt-2">
+                            <div class="row mt-4">
                                 <div class="col-md-6 form-group">
                                     <label for="customers">Customer</label>
                                     <select id="sel-customer" name="customer_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
@@ -128,14 +120,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <input type="text" class="form-control" name="job_name" id="job_name"
                                            placeholder="" required/>
                                 </div>
-                                <div class="col-md-3 form-group">
-                                    <label for="estimate_date">Status</label>
-                                    <select class="form-control" name="status">
-                                        <?php foreach($status as $key => $value){ ?>
-                                            <option value="<?= $key; ?>"><?= $value; ?></option>
-                                        <?php } ?>
-                                    </select>
-                                </div>
                             </div>
 
                             <div class="row">
@@ -145,7 +129,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                            required placeholder="" autofocus value="<?php echo $auto_increment_estimate_id; ?>"
                                            onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
                                 </div>
-                                <div class="col-md-3 form-group">
+                                <div class="col-md-4 form-group">
                                     <label for="estimate_date">Date Issued</label>
                                     <div class="input-group date" data-provide="datepicker">
                                         <input type="text" class="form-control" name="date_issued" id="estimate_date"
@@ -155,7 +139,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-3 form-group">
+                                <div class="col-md-4 form-group">
                                     <label for="expiry_date">Expiry Date</label>
                                     <div class="input-group date" data-provide="datepicker">
                                         <input type="text" class="form-control" name="expiry_date" id="expiry_date"
@@ -164,7 +148,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <span class="glyphicon glyphicon-th"></span>
                                         </div>
                                     </div>
-                                </div>                                
+                                </div>
                             </div>
 
                             <div class="row" id="plansItemDiv">
@@ -284,7 +268,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
                             <div class="row">
                                 <div class="col-md-4 form-group">
-                                    <button type="submit" class="btn btn-flat btn-primary">Save</button>
+                                    <button type="submit" class="btn btn-flat btn-primary">Save as Draft</button>
                                     <a href="<?php echo url('credit_notes') ?>" class="btn btn-danger">Cancel this</a>
                                 </div>
                             </div>

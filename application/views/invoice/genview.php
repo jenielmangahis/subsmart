@@ -30,7 +30,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <?php if(strtolower($invoice->status) === 'paid') : ?>
                                         <a class="btn btn-primary margin-right-sec" href="<?php echo base_url('invoice/send/'. $invoice->id) ?>"><span class="fa fa-paper-plane-o fa-margin-right"></span> Send Invoice</a>
                                         <?php elseif(strtolower($invoice->status) === 'due') : ?>
-                                            <a class="btn btn-primary margin-right-sec" class="link-modal-open openPayNow" href="javascript:void(0)" data-toggle="modal" data-target="#modalPayNow_" data-id="<?php echo $invoice->id ?>" data-invoice-number="<?php echo $invoice->invoice_number ?>"><span class="fa fa-usd fa-margin-right"></span> Pay Now</a>
+                                            <a class="btn btn-primary margin-right-sec" class="link-modal-open openPayNow" href="javascript:void(0)" data-toggle="modal" data-target="#modalPayNow" data-id="<?php echo $invoice->id ?>" data-invoice-number="<?php echo $invoice->invoice_number ?>"><span class="fa fa-usd fa-margin-right"></span> Pay Now</a>
                                             <a class="btn btn-primary margin-right-sec" class="link-modal-open recordPaymentBtn" href="javascript:void(0)" data-toggle="modal" data-target="#modalRecordPayment" data-id="<?php echo $invoice->id ?>"><span class="fa fa-usd fa-margin-right"></span> Record Payment</a>
                                         <?php else : ?>
                                             <a class="btn btn-primary margin-right-sec" href="<?php echo base_url('invoice/send/'. $invoice->id) ?>"><span class="fa fa-paper-plane-o fa-margin-right"></span> Send Invoice</a>
@@ -38,10 +38,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 Schedule
                                             </a>
                                             <a class="btn btn-primary margin-right-sec" class="link-modal-open recordPaymentBtn" href="javascript:void(0)" data-toggle="modal" data-target="#modalRecordPayment" data-id="<?php echo $invoice->id ?>"><span class="fa fa-usd fa-margin-right"></span> Record Payment</a>
-                                            <a class="btn btn-primary margin-right-sec" class="link-modal-open openPayNow" href="javascript:void(0)" data-toggle="modal" data-target="#modalPayNow_" data-id="<?php echo $invoice->id ?>" data-invoice-number="<?php echo $invoice->invoice_number ?>"><span class="fa fa-usd fa-margin-right"></span> Pay Now</a>
+                                            <a class="btn btn-primary margin-right-sec" class="link-modal-open openPayNow" href="javascript:void(0)" data-toggle="modal" data-target="#modalPayNow" data-id="<?php echo $invoice->id ?>" data-invoice-number="<?php echo $invoice->invoice_number ?>"><span class="fa fa-usd fa-margin-right"></span> Pay Now</a>
                                         <?php endif; ?>
                                         <div class="btn-group" role="group" aria-label="...">
-                                            <a class="btn btn-sec" href="<?php echo base_url('invoice/invoice_edit/' . $invoice->id) ?>"><span class="fa fa-edit"></span> Edit</a>
+                                            <a class="btn btn-sec" href="<?php echo base_url('invoice/edit/'. $invoice->id) ?>"><span class="fa fa-edit"></span> Edit</a>
                                             <a class="btn btn-sec" href="<?php echo base_url('invoice/preview/'. $invoice->id . '?format=pdf') ?>" target="_blank"><span class="fa fa-file-pdf-o fa-margin-right"></span> PDF</a>
                                             <a class="btn btn-sec" href="<?php echo base_url('invoice/preview/'. $invoice->id . '?format=print') ?>" target="_blank"><span class="fa fa-print fa-margin-right"></span> Print</a>
                                         </div>
@@ -60,22 +60,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 <?php else: ?>
                                                 <li role="presentation"><a role="menuitem" class="openMarkAsSent" tabindex="-1"  href="javascript:void(0)" data-toggle="modal" data-target="#markAsSent" data-invoice-number="<?php echo $invoice->invoice_number ?>" data-id="<?php echo $invoice->id ?>"><span class="fa fa-check-square-o icon"></span> Mark as Sent</a></li>
                                                 <?php endif; ?>    
-                                                <li role="presentation"><a role="menuitem" class="openConvertToWorkOrder_" tabindex="-1"  
-                                                                                href="<?php echo base_url('workorder/invoice_workorder/' . $invoice->id) ?>"
-                                                                                data-convert-to-invoice-modal="open"
-                                                                                data-id="<?php echo $invoice->id ?>"
-                                                                                data-invoice-number="<?php echo $invoice->invoice_number ?>"><span class="fa fa-file-text-o icon"></span> Convert to Work Order</a></li>
+                                                <li role="presentation"><a role="menuitem" class="openConvertToWorkOrder" tabindex="-1"  href="javascript:void(0)" data-toggle="modal" data-target="#convertToWorkOrder" data-invoice-number="<?php echo $invoice->invoice_number ?>" data-id="<?php echo $invoice->id ?>"><span class="fa fa-file-text-o icon"></span> Convert to Work Order</a></li>
                                                 <li role="presentation"><a role="menuitem" class="openCloneInvoice" tabindex="-1" href="javascript:void(0)" data-toggle="modal" data-target="#cloneModal" data-invoice-number="<?php echo $invoice->invoice_number ?>" data-id="<?php echo $invoice->id ?>"><span class="fa fa-files-o icon"></span> Clone Invoice</a></li>
-                                                <!-- <li role="presentation"><a role="menuitem" class="openDeleteInvoice" tabindex="-1" href="javascript:void(0)" data-toggle="modal" data-target="#cancelModal" data-invoice-number="<?php echo $invoice->invoice_number ?>" data-id="<?php echo $invoice->id ?>"><span class="fa fa-trash-o icon"></span> Delete Invoice</a></li> -->
-                                                <li role="presentation">
-                                                    <a role="menuitem" class="openDeleteInvoice" tabindex="-1"
-                                                        href="javascript:void(0)"
-                                                        data-invoice-number="<?php echo $invoice->invoice_number ?>"
-                                                        data-id="<?php echo $invoice->id ?>"
-                                                        id="deleteInvoiceBtnNew">
-                                                        <span class="fa fa-trash-o icon"></span> Delete Invoice
-                                                    </a>
-                                                </li>
+                                                <li role="presentation"><a role="menuitem" class="openDeleteInvoice" tabindex="-1" href="javascript:void(0)" data-toggle="modal" data-target="#cancelModal" data-invoice-number="<?php echo $invoice->invoice_number ?>" data-id="<?php echo $invoice->id ?>"><span class="fa fa-trash-o icon"></span> Delete Invoice</a></li>
                                             </ul>
                                         </div>
                                     </div>
@@ -94,14 +81,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                     <tr>
                                                         <td id="presenter-col-left" class="presenter-col-left" style="width: 50%" valign="top">
                                                             <div style="margin-bottom: 20px;">
-                                                                <!-- <img class="invoice-print-logo" style="max-width: 230px; max-height: 200px;" src="<?php echo base_url() .'uploads/'. (($setting) ? $setting->logo : '') ?>"> -->
-                                                                <img src="<?= getCompanyBusinessProfileImage(); ?>" class="invoice-print-logo"  style="max-width: 230px; max-height: 200px;" />
+                                                                <img class="invoice-print-logo" style="max-width: 230px; max-height: 200px;" src="<?php echo base_url() .'uploads/'. (($setting) ? $setting->logo : '') ?>">
                                                             </div>
                                                             
                                                             <div id="presenter-from">
                                                                 <b>FROM:</b>
                                                                 <br>
-                                                                <b><?php echo $user->FName . ' ' . $user->LName ?></b><br>
+                                                                <b><?php echo ($setting) ? $setting->check_payable_to : $user->FName . ' ' . $user->LName ?></b><br>
                                                                 <?php echo strtolower($user->address) ?><br>
                                                                 Email: <?php echo strtolower($user->email) ?><br>
                                                                 
@@ -152,7 +138,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                                         </tr>
                                                                         <tr>
                                                                             <td style="text-align: right;"><b>Balance Due:</b></td>
-                                                                            <td style="width: 180px; text-align: right;" class="text-right"><b>$<?php echo number_format($invoice->grand_total - $invoice->deposit_request,2); ?></b></td>
+                                                                            <td style="width: 180px; text-align: right;" class="text-right"><b>$0.00</b></td>
                                                                         </tr>
                                                                     </tbody>
                                                                 </table>
@@ -166,7 +152,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                     <tr>
                                                     <td style="width: 50%" valign="top">
                                                         <b>TO:</b><br>
-                                                        <b><?php echo get_customer_by_id($invoice->customer_id)->first_name.' '.get_customer_by_id($invoice->customer_id)->last_name ?></b>
+                                                        <b><?php echo get_customer_by_id($invoice->customer_id)->contact_name ?></b>
                                                         <span class="middot">·</span>
                                                         <a href="<?php echo base_url('customer/genview/' . $invoice->customer_id) ?>">view</a><br>
                                                         <?php echo get_customer_by_id($invoice->customer_id)->suite_unit ?>
@@ -208,7 +194,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <br>
                                             <div class="table-items-container">
                                                 <?php $total_tax = 0; ?>
-                                                <?php //if (false) : ?>
+                                                <?php if (false) : ?>
                                                 <table class="table-print table-items" style="width: 100%; border-collapse: collapse;">
                                                     <thead>
                                                         <tr>
@@ -222,67 +208,39 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                    <?php foreach ($items as $item ) { ?>
-                                                    <!-- <tr class="table-items__tr">
-                                                        <td style="width:30px; text-align:center;" valign="top">
-                                                            <?php //echo intval($key) + 1 ?>
-                                                        </td>
-                                                        <td valign="top">
-                                                            <?php //echo $value['item'] 
-                                                            echo $item->title; ?>
-                                                        </td>
-                                                        <td style="width: 50px; text-align: right;" valign="top">
-                                                            <?php //echo $value['quantity'] 
-                                                            echo $item->qty;?>                    
-                                                        </td>
-                                                        <td style="width: 80px; text-align: right;" valign="top">
-                                                            $ <?php //echo number_format($value['price'], 2, '.', ',') 
-                                                            echo number_format($item->costing, 2); ?>                    
-                                                        </td>
-                                                        <td style="width: 80px; text-align: right;" valign="top">
-                                                            $ <?php echo number_format($item->discount, 2); ?>
-                                                        </td>
-                                                        <td style="width: 80px; text-align: right;" valign="top">
-                                                            <?php //$total_tax += floatval($value['tax']); ?>      
-                                                            <?php echo number_format($item->tax, 2); ?>             
-                                                        </td>
-                                                        <td style="width: 90px; text-align: right;" valign="top">
-                                                            $ <?php //echo number_format($value['total'], 2, '.', ',') ?>   
-                                                            <?php echo number_format($item->total, 2); ?>                 
-                                                        </td>
-                                                    </tr> -->
-                                                    <?php if($item->items_id != 0){ ?>
-																		<tr class="table-items__tr">
-																			<td style="width: 30px; text-align: center;" valign="top">  # </td>
-																			<td valign="top"> <?php echo $item->title; ?>   </td>
-																			<td style="width: 50px; text-align: right;" valign="top"> <?php echo $item->qty ?>  </td>
-																			<td style="width: 80px; text-align: right;" valign="top">$<?php echo number_format($item->costing,2) ?></td>
-																			<td class="hidden_mobile_view" style="width: 80px; text-align: right;" valign="top">
-																				$ 0<?php //echo $item->discount ?>
-																				</td>
-																			<td class="hidden_mobile_view" style="width: 80px; text-align: right;" valign="top">
-																				$<?php echo number_format($item->tax,2) ?>
-																				</td>
-																			<td style="width: 90px; text-align: right;" valign="top">$<?php $a = $item->qty * $item->costing; $b = $a + $item->tax; echo number_format($b,2); ?></td>
-																		</tr>
-																	<?php }else{ ?>
-																		<tr class="table-items__tr">
-																			<td style="width: 30px; text-align: center;" valign="top">  # </td>
-																			<td valign="top" colspan="5"> <div id="PaName_<?php echo $item->package_id; ?>"></div> <br>
-																			<div id="packageItemsTitle<?php echo  $item->package_id; ?>" style="padding-left:5%;">
-																			<div id="packageItems<?php echo  $item->package_id; ?>" style="padding-left:5%;"></div>
-																			</td>
-																			<td style="width: 90px; text-align: right;" valign="top">$<?php $a = $item->qty * $item->costing; $b = $a + $item->tax; echo number_format($b,2); ?></td>
-																		</tr>
-																	<?php } ?>
-                                                    <tr class="table-items__tr-last">
-                                                        <td></td>
-                                                        <td colspan="6"></td>
-                                                    </tr>
-                                                    <?php } ?>
+                                                        <?php foreach ($invoice->invoice_items as $key => $value ) : ?>
+                                                        <tr class="table-items__tr">
+                                                            <td style="width:30px; text-align:center;" valign="top">
+                                                                <?php echo intval($key) + 1 ?>
+                                                            </td>
+                                                            <td valign="top">
+                                                                <?php echo $value['item'] ?>
+                                                            </td>
+                                                            <td style="width: 50px; text-align: right;" class="<?php echo ($setting && $setting->invoice_template["item_qty"]) ? 'hide-th': ''?>" valign="top">
+                                                                <?php echo $value['quantity'] ?>                    
+                                                            </td>
+                                                            <td style="width: 80px; text-align: right;" class="<?php echo ($setting && $setting->invoice_template["item_price"]) ? 'hide-th': ''?>" valign="top">
+                                                                $<?php echo number_format($value['price'], 2, '.', ',') ?>                    
+                                                            </td>
+                                                            <td style="width: 80px; text-align: right;" class="<?php echo ($setting && $setting->invoice_template["item_discount"]) ? 'hide-th': ''?>" valign="top">
+                                                                $0.00                    
+                                                            </td>
+                                                            <td style="width: 80px; text-align: right;" class="<?php echo ($setting && $setting->invoice_template["item_tax"]) ? 'hide-th': ''?>" valign="top">
+                                                                $<?php echo number_format($value['tax'], 2, '.', ',') ?> <br>(7.5%) 
+                                                                <?php $total_tax += floatval($value['tax']); ?>                   
+                                                            </td>
+                                                            <td style="width: 90px; padding: 8px 8px 8px 0; text-align: right;" class="<?php echo ($setting && $setting->invoice_template["item_total"]) ? 'hide-th': ''?>" valign="top">
+                                                                $<?php echo number_format($value['total'], 2, '.', ',') ?>                    
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="table-items__tr-last">
+                                                            <td></td>
+                                                            <td colspan="6"></td>
+                                                        </tr>
+                                                        <?php endforeach; ?>
                                                     </tbody>
                                                 </table>
-                                                <?php //endif; ?>
+                                                <?php endif; ?>
                                                 <table class="table-print table-totals" style="width: 100%; margin-top: 10px;">
                                                     <tbody>
                                                         <tr>
@@ -292,15 +250,15 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                                     <tbody>
                                                                         <tr>
                                                                             <td style="padding: 8px 0; text-align: right;" class="text-right">Subtotal (without tax)</td>
-                                                                            <td style="padding: 8px 8px 8px 0; text-align: right;" class="text-right">$<?php echo (true) ? number_format(floatval($invoice->sub_total), 2, '.', ',') : '' ?></td>
+                                                                            <td style="padding: 8px 8px 8px 0; text-align: right;" class="text-right">$<?php echo (false) ? number_format(floatval($invoice->invoice_totals['sub_total'] - $total_tax), 2, '.', ',') : '' ?></td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td style="padding: 8px 0; text-align: right;" class="text-right">Taxes</td>
-                                                                            <td style="padding: 8px 8px 8px 0; text-align: right;" class="text-right">$<?php echo number_format($invoice->taxes, 2, '.', ',') ?></td>
+                                                                            <td style="padding: 8px 8px 8px 0; text-align: right;" class="text-right">$<?php echo number_format($total_tax, 2, '.', ',') ?></td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td style="padding: 8px 0; text-align: right; background: #f4f4f4;" class="text-right"><b>Grand Total ($)</b></td>
-                                                                            <td style="width: 120px; padding: 8px 8px 8px 0; text-align: right; background: #f4f4f4;" class="text-right"><b>$<?php echo (true) ? number_format($invoice->grand_total, 2, '.', ',') : '' ?></b></td>
+                                                                            <td style="width: 120px; padding: 8px 8px 8px 0; text-align: right; background: #f4f4f4;" class="text-right"><b>$<?php echo (false) ? number_format($invoice->invoice_totals['grand_total'], 2, '.', ',') : '' ?></b></td>
                                                                         </tr>
                                                                     </tbody>
                                                                 </table>
@@ -312,12 +270,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                                 <table style="width: 100%; border-collapse: collapse;">
                                                                     <tbody>
                                                                         <tr>
-                                                                            <td style="padding: 4px 0; text-align: right;" class="text-right"><b>Deposit</b></td>
-                                                                            <td style="width: 120px; padding: 4px 8px 4px 0; text-align: right;" class="text-right"><b>$<?php echo number_format($invoice->deposit_request,2); ?></b></td>
-                                                                        </tr>
-                                                                        <tr>
                                                                             <td style="padding: 4px 0; text-align: right;" class="text-right"><b>Balance Due</b></td>
-                                                                            <td style="width: 120px; padding: 4px 8px 4px 0; text-align: right;" class="text-right"><b>$<?php echo number_format($invoice->grand_total - $invoice->deposit_request,2); ?></b></td>
+                                                                            <td style="width: 120px; padding: 4px 8px 4px 0; text-align: right;" class="text-right"><b>$0.00</b></td>
                                                                         </tr>
                                                                     </tbody>
                                                                 </table>
@@ -355,69 +309,16 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <div class="offset-1 col-md-5">
                                     <div class="panel-info margin-bottom">
                                         <div class="weight-medium margin-bottom-sec">Payments Received</div>
-                                        <?php if(empty($payments)){ ?>
                                         <p class="text-ter">No payments have been recorded</p>
-                                        <?php }else{ ?>
-                                        <table class="table">
-                                            <?php foreach($payments as $pay){ ?>
-                                            <tr>
-                                                <td><b>Customer: </b></td>
-                                                <td><?php echo $pay->first_name.' '.$pay->last_name; ?></td>
-                                            </tr>
-                                            <tr>
-                                                <td><b>Amount: </b></td>
-                                                <td>$<?php echo number_format($pay->invoice_amount,2); ?></td>
-                                            </tr>
-                                            <tr>
-                                                <td><b>Tip: </b></td>
-                                                <td>$<?php echo number_format($pay->invoice_tip,2); ?></td>
-                                            </tr>
-                                            <tr>
-                                                <td><b>Payment Date: </b></td>
-                                                <td><?php echo $pay->payment_date; ?></td>
-                                            </tr>
-                                            <tr>
-                                                <td><b>Payment Method: </b></td>
-                                                <td><div class="text-uppercase"><?php echo $pay->payment_method; ?></div></td>
-                                            </tr>
-                                            <tr>
-                                                <td><b>Reference number: </b></td>
-                                                <td><?php echo $pay->reference_number; ?></td>
-                                            </tr>
-                                            <tr>
-                                                <td><b>Notes: </b></td>
-                                                <td><?php echo $pay->notes; ?></td>
-                                            </tr>
-
-                                        <?php 
-                                            } ?>
-                                        </table>
-                                       <?php } ?>
                                     </div>
 
                                     <div class="panel-info">
-                                        <div class="weight-medium margin-bottom-sec">Logs</div>
+                                        <div class="weight-medium margin-bottom-sec">Log</div>
                                         <div class="row margin-bottom-sec">
-                                            <div class="col-xl-5"><?php echo $invoice->date_created; ?></div>
+                                            <div class="col-xl-5">16-Apr-2020 16:56</div>
                                             <div class="col-xl-7">
                                                 Invoice draft &nbsp;
-                                                <span class="text-ter">by <?php echo $clients->business_name; ?></span>
-                                                <div class="text-ter">(created by pro)</div>
-                                            </div>
-                                        </div>
-                                        <div class="row margin-bottom-sec">
-                                            <div class="col-xl-5"><?php echo '2021-09-13 01:22:20'; ?></div>
-                                            <div class="col-xl-7">
-                                                Invoice Submitted &nbsp;
-                                                <span class="text-ter">by <?php echo $clients->business_name; ?></span>
-                                                <div class="text-ter">(created by pro)</div>
-                                            </div>
-                                        </div>
-                                        <div class="row margin-bottom-sec">
-                                            <div class="col-xl-5"><?php echo '2021-09-14 09:06:24'; ?></div>
-                                            <div class="col-xl-7">
-                                                Invoice Approved &nbsp;
-                                                <span class="text-ter">by <?php echo $clients->business_name; ?></span>
+                                                <span class="text-ter">by Alarm Direct</span>
                                                 <div class="text-ter">(created by pro)</div>
                                             </div>
                                         </div>
@@ -436,10 +337,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <div class="modal-content">
                                     <?php echo form_open('invoice/save_payment_record', ['class' => 'form-validate require-validation', 'id' => 'payment_form', 'autocomplete' => 'off']); ?>
                                         <div class="modal-header">
-                                            <h4 class="modal-title">Record Payment</h4>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                             </button>
+                                            <h4 class="modal-title">Record Payment</h4>
                                         </div>
                                         <div class="modal-body">
                                         </div>
@@ -453,143 +354,17 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         </div>
 
                         <!-- Modal Pay Now -->
-                        <div class="modal in" id="modalPayNow_" tabindex="-1" role="dialog">
+                        <div class="modal in" id="modalPayNow" tabindex="-1" role="dialog">
                             <div class="modal-dialog pay-now-modal" role="document">
                                 <div class="modal-content">
                                 <?php echo form_open('invoice/stripePost', ['class' => 'form-validate require-validation', 'id' => 'payment_form', 'autocomplete' => 'off']); ?>
                                     <div class="modal-header">
-                                        <h4 class="modal-title">Pay Now</h4>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                         </button>
+                                        <h4 class="modal-title">Pay Now</h4>
                                     </div>
                                     <div class="modal-body">
-                                    <div class="row" id="plansItemDiv">
-                                            <div class="col-md-12 table-responsive">
-                                                <table class="table table-hover">
-                                                    <input type="hidden" name="count" value="0" id="count">
-                                                    <thead>
-                                                    <tr>
-                                                        <th>Item</th>
-                                                        <th width="100px" id="qty_type_value">Quantity</th>
-                                                        <th width="100px">Price</th>
-                                                        <th width="100px">Discount</th>
-                                                        <th>Tax(%)</th>
-                                                        <th>Total</th>
-                                                    </tr>
-                                                    </thead>
-                                                    <tbody id="table_body">
-                                                    <?php $total_tax = 0; ?>
-                                                    <?php foreach ($items as $item ) { ?>
-                                                        <tr class="table-items__tr">
-                                                            <td valign="top">
-                                                                <?php //echo $value['item'] 
-                                                                echo $item->title; ?>
-                                                            </td>
-                                                            <td style="width: 100px;" valign="top">
-                                                                <?php //echo $value['quantity'] 
-                                                                echo $item->qty;?>                    
-                                                            </td>
-                                                            <td style="width: 100px;" valign="top">
-                                                                $ <?php //echo number_format($value['price'], 2, '.', ',') 
-                                                                echo number_format($item->costing, 2); ?>                    
-                                                            </td>
-                                                            <td style="width: 100px;" valign="top">
-                                                                <!-- $0.00                     -->
-                                                                $ <?php echo number_format($item->discount, 2); ?>
-                                                            </td>
-                                                            <td style="width: ;" valign="top">
-                                                                <!-- $<?php //echo number_format($value['tax'], 2, '.', ',') ?> <br> (7.5%)  -->
-                                                                <?php //$total_tax += floatval($value['tax']); ?>      
-                                                                <?php echo number_format($item->tax, 2); ?>             
-                                                            </td>
-                                                            <td style="width: ;" valign="top">
-                                                                $ <?php //echo number_format($value['total'], 2, '.', ',') ?>   
-                                                                <?php echo number_format($item->total, 2); ?>                 
-                                                            </td>
-                                                        </tr>
-                                                        <tr class="table-items__tr-last">
-                                                            <td></td>
-                                                            <td colspan="6"></td>
-                                                        </tr>
-                                                    <?php } ?>
-                                                    </tbody>
-                                                </table>
-                                                <!-- <div class="row">
-                                                    <a class="link-modal-open pt-1 pl-2" href="javascript:void(0)" id="add_another_invoice"><span
-                                                                class="fa fa-plus-square fa-margin-right"></span>Add Items</a>
-                                                    <hr style="display:inline-block; width:91%">
-                                                </div> -->
-                                                <div class="row">
-                                                    <div class="col-md-7">
-                                                    &nbsp;
-                                                    </div>
-                                                    <div class="col-md-5 row pr-0">
-                                                        <div class="col-sm-5">
-                                                            <label style="padding: 0 .75rem;">Subtotal</label>
-                                                        </div>
-                                                        <div class="col-sm-6 text-right pr-3">
-                                                            <label id="invoice_sub_total">$<?php echo number_format(floatval($invoice->sub_total), 2, '.', ',') ?></label>
-                                                            <input type="hidden" name="sub_total" id="sub_total_form_input" value='<?php echo $invoice->sub_total; ?>'>
-                                                        </div>
-                                                        <div class="col-sm-12">
-                                                            <hr>
-                                                        </div>
-                                                        <div class="col-sm-5">
-                                                            <label style="padding: 0 .75rem;">Taxes</label>
-                                                        </div>
-                                                        <div class="col-sm-6 text-right pr-3">
-                                                            <label id="invoice_sub_total">$<?php echo number_format(floatval($invoice->taxes), 2, '.', ',') ?></label>
-                                                            <input type="hidden" name="taxes" id="taxes_form_input" value='<?php echo $invoice->taxes; ?>'>
-                                                        </div>
-                                                        <div class="col-sm-12">
-                                                            <hr>
-                                                        </div>
-                                                        <div class="col-sm-4">
-                                                            <input type="text" name="adjustment_name" value="<?php echo $invoice->adjustment_name;?>" placeholder="Adjustment" class="form-control" style="width:200px; display:inline; border: 1px dashed #d1d1d1">
-                                                        </div>
-                                                        <div class="col-sm-4">
-                                                            <input type="text" name="adjustment_total" id="adjustment_input" value="<?php echo $invoice->adjustment_value; ?>" class="form-control" style="width:100px; display:inline-block">
-                                                        </div>
-                                                        <div class="col-sm-3 text-right pt-2">
-                                                            <label id="adjustment_amount">$<?php echo number_format($invoice->adjustment_value, 2, '.', ',') ?></label>
-                                                            <input type="hidden" name="adjustment_amount" id="adjustment_amount_form_input" value='<?php echo $invoice->adjustment_value; ?>'>
-                                                        </div>
-                                                        <div class="col-sm-12">
-                                                            <hr>
-                                                        </div>
-                                                        <div class="col-sm-5">
-                                                            <label style="padding: .375rem .75rem;">Grand Total ($)</label>
-                                                        </div>
-                                                        <div class="col-sm-6 text-right pr-3">
-                                                            <label id="invoice_grand_total">$<?php echo number_format($invoice->grand_total, 2, '.', ',') ?></label>
-                                                            <input type="hidden" name="grand_total" id="grand_total_form_input" value='<?php echo $invoice->grand_total; ?>'>
-                                                        </div>
-                                                        <div class="col-sm-12">
-                                                            <hr>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <h5>Payment Options</h5>
-                                                <span class="help help-sm help-block">Select type of payment you're comfortable.</span>
-                                            </div>
-                                            <div class="col-md-4 form-group">
-                                                <select name="deposit_request" class="form-control">
-                                                    <option value="1" selected="selected">Stripe</option>
-                                                    <option value="2">Paypal</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-md-12">
-                                                <label class="float-left mini-stat-img mr-4">Accept Credit Cards</label>
-                                                <div class="float-left mini-stat-img mr-4"><img src="<?php echo $url->assets ?>frontend/images/credit_cards.png" alt=""></div>
-                                            </div>
-                                        </div>
-
                                     </div>
                                     <div class="modal-footer">
                                         <button type="submit" class="btn btn-primary">Pay Now</button>
@@ -713,103 +488,3 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 
 <?php include viewPath('includes/footer'); ?>
-
-<script>
-// $(document).on('click','#delete_workorder',function(){
-//     // alert('test');
-    
-// });
-
-// function myFunction() {
-// $('#delete_workorder').on('click', function(){
-$(document).on('click touchstart','#deleteInvoiceBtnNew',function(){
-
-    var id = $(this).attr('data-id');
-    // alert(id);
-  
-  var r = confirm("Are you sure you want to delete this Invoice?");
-
-  if (r == true) {
-    $.ajax({
-    type : 'POST',
-    url : "<?php echo base_url(); ?>invoice/deleteInvoiceBtnNew",
-    data : {id: id},
-    success: function(result){
-        // $('#res').html('Signature Uploaded successfully');
-        // if (confirm('Some message')) {
-        //     alert('Thanks for confirming');
-        // } else {
-        //     alert('Why did you press cancel? You should have confirmed');
-        // }
-
-        // location.reload();
-        sucess("Data Deleted Successfully!");
-    },
-    });
-  }
-
-});
-
-function sucess(information,$id){
-            Swal.fire({
-                title: 'Good job!',
-                text: information,
-                icon: 'success',
-                showCancelButton: false,
-                confirmButtonColor: '#32243d',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Ok'
-            }).then((result) => {
-                if (result.value) {
-                    location.reload();
-                }
-            });
-        }
-</script>
-
-<script>
-// $("#packageID").click(function () {
-$(document).ready(function()
-{
-    // $( "#packageID" ).each(function(i) {
-    //     $(this).on("click", function(){
-    //     var packId = $(this).attr('pack-id');
-    //     alert(packId);
-        $.ajax({
-            type : 'POST',
-            url : "<?php echo base_url(); ?>invoice/getPackageItemsById",
-            // data : {packId: packId },
-            dataType: 'json',
-            success: function(response){
-                var inputs = "";
-						markup = "<tr>" +
-                                "<td></td>"+
-								"<td></td>"+
-                                "<td>Item Name</td>"+
-                                "<td>Quantity</td>"+
-                                "<td>Price</td>"+
-                            "</tr>";
-                        tableBody = $("#packageItemsTitle");
-                        tableBody.append(markup);
-
-                $.each(response['pItems'], function (i, v) {
-                    // inputs += v.package_name ;
-                    markup2 = "<tr>" +
-                                "<td></td>"+
-								"<td></td>"+
-                                "<td>"+ v.title +"</td>"+
-                                "<td>"+ v.quantity +"</td>"+
-                                "<td>"+ v.price +"</td>"+
-                            "</tr>";
-                        tableBody2 = $("#packageItems"+v.package_id);
-                        tableBody2.append(markup2);
-                });
-            },
-        // });
-        // });
-    });
-
-	
-	// var changed = $("#view_ssn").text();
-});
-</script>

@@ -117,37 +117,4 @@ class Wizard_model extends MY_Model {
 		return $query->result();
 	}
 
-    public function getCompanyAllIndustries($company_id) {
-        $this->db->select('*');
-        $this->db->from($this->tableWorkspaces);
-        $this->db->where('company_id', $company_id);
-        $query = $this->db->get();
-        return $query->result();
-    }
-
-    public function getCompanyWorkSpaceById($company_id, $id)
-    {
-
-        $this->db->select('*');
-        $this->db->from($this->tableWorkspaces);
-        $this->db->where('company_id', $company_id);
-        $this->db->where('id', $id);
-
-        $query = $this->db->get();
-        return $query->row();
-    }
-
-    public function updateWorkspace($id, $data)
-    {
-        $this->db->from($this->tableWorkspaces);
-        $this->db->set($data);
-        $this->db->where('id', $id);
-        $this->db->update();
-    }
-
-    public function deleteWorkspace($id){
-        $user_id = logged('id');
-        $this->db->delete($this->tableWorkspaces, array('id' => $id));
-    } 
-
 }

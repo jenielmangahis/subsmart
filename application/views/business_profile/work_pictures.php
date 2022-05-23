@@ -1,312 +1,101 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
+
 <?php include viewPath('includes/header'); ?>
-<style>
-.cell-active{
-    background-color: #5bc0de;
-}
-.page-title {
-  font-family: Sarabun, sans-serif !important;
-  font-size: 1.75rem !important;
-  font-weight: 600 !important;
-}
-.cell-inactive{
-    background-color: #d9534f;
-}
-.left {
-  float: left;
-}
-.option-container {
-    position: relative;
-    top: 37px;
-    float: right;
-    background-color: #000000;
-    width: 16%;
-    padding: 5px;
-}
-.pr-b10 {
-  position: relative;
-  bottom: 10px;
-}
-.p-40 {
-  padding-top: 40px !important;
-}
-img.event-marker {
-    display: block;
-    margin: 0 auto;
-}
-tr.odd {
-    background: #f1f1f1 !important;
-}
-table.table tbody tr td {
-    width: 15%;
-    text-align: right;
-}
-table.table tbody tr td:first-child {
-    width: 85%;
-    text-align: left;
-}
-table.dataTable {
-    border-collapse: collapse;
-    margin-top: 5px;
-}
-table.dataTable thead tr th {
-    border: 1px solid black !important;
-}
-table.dataTable tbody tr td {
-    border: 1px solid black !important;
-}
-@media only screen and (max-width: 600px) {
-  .p-40 {
-    padding-top: 0px !important;
-  }
-  .pr-b10 {
-    position: relative;
-    bottom: 0px;
-  }
-}
-.event-marker{
-  height: 50px;
-  width: 50px;
-  border: 1px solid #dee2e6;
-}
-.gallery li{
-  width: 30%;
-  display: inline-block;
-  margin: 10px;
-  height: 286px;
-  float: left;
-}
-div.picture-container div.img img {
-    object-fit: cover;
-    height: 286px;
-    width: 100% !important;
-}
-.img-delete{
-    color: #ffffff;
-    font-size: 18px;
-}
-.img-caption{
-    float: left;
-    margin-right: 7px;
-    color: #ffffff !important;
-    font-size: 18px;
-}
-.img-zoom{
-  margin-right: 7px;
-  color: #ffffff !important;
-  font-size: 18px;
-}
-.image-caption{
-  position: relative;
-  top: -31px;
-  /*left: 16px;*/
-  color: #ffffff;
-  background-color: #000000;
-  height: 31px;
-  padding: 5px;
-}
-</style>
-<div class="wrapper" role="wrapper">
-    <?php include viewPath('includes/sidebars/business'); ?>
-    <!-- page wrapper start -->
-    <div wrapper__section>
-        <div class="container-fluid p-40">
-            <!-- end row -->
-            <div class="row">
-                <div class="col-xl-12">
-                    <div class="card mt-0" style="min-height: 400px !important;">
-                        <div class="row">
-                          <div class="col-sm-6 left">
-                            <h3 class="page-title">Work Pictures</h3>
-                          </div>
-                          <div class="col-sm-6 right dashboard-container-1">
-                              <div class="text-right">
-                                  <a href="<?php echo url('users/add_work_pictures') ?>" class="btn btn-primary btn-md"><i class="fa fa-camera"></i> Upload Image</a><br />
-                              </div>
-                          </div>
-                        </div>
-                        <div class="alert alert-warning mt-2 mb-4" role="alert">
-                            <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">
-                              Add photos to spotlight features of your business or past projects pictures.
-                            </span>
-                        </div>
-                        <?php include viewPath('flash'); ?>
-                        <!-- Main content -->
-                        <section class="content">
-                           <?php
-                            $images = array();
-                            if( $profiledata->work_images != '' ){
-                              $images = unserialize($profiledata->work_images);
-                            }
-                           ?>
-                           <?php if($images){ ?>
-                           <ul class="gallery ui-sortable" id="gallery">
-                              <?php foreach($images as $key => $i){ ?>
-                                <li class="col-image-<?= $key ?>">
-                                  <div class="picture-container ui-sortable-handle">
-                                    <div class="img">
-                                        <div class="option-container" style="background-color: #000000;">
-                                          <a class="img-zoom" href="<?= url("uploads/work_pictures/" . $profiledata->company_id . "/" . $i['file']); ?>" data-fancybox="gallery" data-caption="<?= $i['caption']; ?>"><i class="fa fa-search-plus"></i></a>
-                                          <a class="img-caption" data-caption="<?= $i['caption']; ?>" data-id="<?= $key; ?>" href="javascript:void(0);"><i class="fa fa-pencil"></i></a>
-                                          <a class="img-delete" data-name="<?= $i['file']; ?>" data-id="<?= $key; ?>" href="javascript:void(0);"><i class="fa fa-trash-o icon"></i></a>
-                                        </div>
-                                        <img src="<?= url("uploads/work_pictures/" . $profiledata->company_id . "/" . $i['file']); ?>">
-                                        <div class="image-caption image-caption-container-<?= $key; ?>">
-                                          <?= $i['caption']; ?>
-                                        </div>
-                                    </div>
-                                  </div>
-                                </li>
-                              <?php } ?>
-                            </ul>
-                          <?php } ?>
-                        </section>
-                        <!-- /.content -->
-                    </div>
+<!-- page wrapper start -->
+<div role="wrapper">
+   <?php include viewPath('includes/sidebars/business'); ?>
+   <div wrapper__section>
+      <div class="col-md-12 col-lg-12">
+        <?php echo form_open_multipart('users/savebusinessdetail', [ 'id'=> 'form-business-details', 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+        <div class="row">
+            <div class="col-md-12">
+                <form id="form-business-credentials" method="post" action="#">
+                <div class="validation-error" style="display: none;"></div>
+                <div class="card">
 
-                    <!-- Modal Delete Work Picture  -->
-                    <div class="modal fade bd-example-modal-sm" id="modalDeleteImage" tabindex="-1" role="dialog" aria-labelledby="modalDeleteImageTitle" aria-hidden="true">
-                      <div class="modal-dialog modal-md" role="document">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-trash"></i> Delete</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                              <span aria-hidden="true">&times;</span>
-                            </button>
-                          </div>
-                          <?php echo form_open_multipart('', ['class' => 'form-validate', 'id' => 'form-delete-image', 'autocomplete' => 'off' ]); ?>
-                          <?php echo form_input(array('name' => 'image_name', 'type' => 'hidden', 'value' => '', 'id' => 'image_name'));?>
-                          <?php echo form_input(array('name' => 'image_key', 'type' => 'hidden', 'value' => '', 'id' => 'image_key'));?>
-                          <div class="modal-body">
-                              <p>Are you sure you want delete the selected image?</p>
-                          </div>
-                          <div class="modal-footer close-modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                            <button type="submit" class="btn btn-danger btn-delete-image">Yes</button>
-                          </div>
-                          <?php echo form_close(); ?>
-                        </div>
-                      </div>
-                    </div>
+<h1>Work Pictures</h1>
 
-                    <!-- Modal Updated Work Picture Caption  -->
-                    <div class="modal fade bd-example-modal-sm" id="modalAddCaptionImage" tabindex="-1" role="dialog" aria-labelledby="modalAddCaptionImageTitle" aria-hidden="true">
-                      <div class="modal-dialog modal-md" role="document">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-pencil"></i> Edit Caption</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                              <span aria-hidden="true">&times;</span>
-                            </button>
-                          </div>
-                          <?php echo form_open_multipart('', ['class' => 'form-validate', 'id' => 'form-edit-image-caption', 'autocomplete' => 'off' ]); ?>
-                          <?php echo form_input(array('name' => 'image_key', 'type' => 'hidden', 'value' => '', 'id' => 'caption_image_key'));?>
-                          <div class="modal-body">
-                              <div class="col-md-12 form-group">
-                                  <label for="image_caption">Caption</label>
-                                  <input type="text" class="form-control" name="image_caption" id="image_caption" required placeholder="" autofocus/>
-                              </div>
-                          </div>
-                          <div class="modal-footer close-modal-footer">
-                            <button type="submit" class="btn btn-primary btn-update-caption">Update</button>
-                          </div>
-                          <?php echo form_close(); ?>
-                        </div>
-                      </div>
-                    </div>
+<div class="row">
+    <div class="col-md-12 col-lg-12">
+<form id="form-business-credentials" method="post" action="#">
+    <div class="validation-error hide"></div>
 
-                    <!-- end card -->
-                </div>
+    <div class="card">
+        <p>Add photos to spotlight features of your business or past projects pictures.  You can upload up to <b>25 images.</b></p>
+        <p><b>Tips</b> - Click and drag the images to reorder them, and click on "Set caption" to describe the image.
 
-            </div>
-            <!-- end row -->
+        </p><hr>
+
+        <div class="alert alert-danger gallery-alert" data-fileupload="error" role="alert" style="display: none;"></div>
+
+        <ul class="gallery ui-sortable" id="gallery">
+        <li id="picture-id-9083">
+    <div class="picture-container ui-sortable-handle">
+        <div class="img">
+            <img src="https://markate.blob.core.windows.net/cdn/20200412/buspor_13050_a138193f55_md.jpg">
+            <a class="delete" data-fileupload="delete" data-id="9083" href=""><span class="fa fa-remove"></span></a>
         </div>
-        <!-- end container-fluid -->
+        <div class="caption editable editable-pre-wrapped editable-click" data-id="9083" data-emptytext="Set caption..." data-placeholder="" data-title="Set Caption">Lorem</div>
     </div>
-    <!-- page wrapper end -->
+</li>
+        </ul>
+
+        <hr>
+
+        <div class="" data-fileupload="progressbar" style="display: none;">
+            <div class="text">Uploading</div>
+            <div class="progress">
+                <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <span class="btn btn-default fileinput-button vertical-top"><span class="fa fa-camera"></span> Upload Image <input data-fileupload="file" name="fileimage" type="file"></span>
+        </div>
+    </div>
+
+    <hr class="card-hr">
+<div class="card">
+    <div class="row">
+    	<div class="col-md-8">
+    		    	</div>
+    	<div class="col-md-4 text-right">
+    		    		<a class="btn btn-default btn-lg" href="availability">« Back</a>
+    		    		    		<a href="profilesetting" class="btn btn-primary btn-lg margin-left" name="btn-continue">Next »</a>
+    		    	</div>
+    </div>
+</div>
+</form>
+
+    </div>
+</div>
+    </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<div class="mdc-top-app-bar-fixed-adjust demo-container demo-container-1 d-flex d-lg-none">
+   <div class="mdc-bottom-navigation">
+      <nav class="mdc-bottom-navigation__list">
+         <span class="mdc-bottom-navigation__list-item mdc-ripple-surface mdc-ripple-surface--primary" data-mdc-auto-init="MDCRipple" data-mdc-ripple-is-unbounded>
+         <span class="material-icons mdc-bottom-navigation__list-item__icon">history</span>
+         <span class="mdc-bottom-navigation__list-item__text">Recents</span>
+         </span>
+         <span class="mdc-bottom-navigation__list-item mdc-bottom-navigation__list-item--activated mdc-ripple-surface mdc-ripple-surface--primary" data-mdc-auto-init="MDCRipple" data-mdc-ripple-is-unbounded>
+         <span class="material-icons mdc-bottom-navigation__list-item__icon">favorite</span>
+         <span class="mdc-bottom-navigation__list-item__text">Favourites</span>
+         </span>
+         <span class="mdc-bottom-navigation__list-item mdc-ripple-surface mdc-ripple-surface--primary" data-mdc-auto-init="MDCRipple" data-mdc-ripple-is-unbounded>
+            <span class="material-icons mdc-bottom-navigation__list-item__icon">
+               <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+                  <path d="M12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,12.5A1.5,1.5 0 0,1 10.5,11A1.5,1.5 0 0,1 12,9.5A1.5,1.5 0 0,1 13.5,11A1.5,1.5 0 0,1 12,12.5M12,7.2C9.9,7.2 8.2,8.9 8.2,11C8.2,14 12,17.5 12,17.5C12,17.5 15.8,14 15.8,11C15.8,8.9 14.1,7.2 12,7.2Z"></path>
+               </svg>
+            </span>
+            <span class="mdc-bottom-navigation__list-item__text">Nearby</span>
+         </span>
+      </nav>
+   </div>
 </div>
 <?php include viewPath('includes/footer'); ?>
-<script>
-$(function(){
-    $(".img-caption").click(function(){
-      var image_caption = $(this).attr("data-caption");
-      var image_key  = $(this).attr("data-id");
 
-      $("#image_caption").val(image_caption);
-      $("#caption_image_key").val(image_key);
-      $(".btn-update-caption").html('Update');
-      $("#modalAddCaptionImage").modal('show');
-    });
-
-    $(".img-delete").click(function(){
-      var image_name = $(this).attr("data-name");
-      var image_key  = $(this).attr("data-id");
-
-      $("#image_name").val(image_name);
-      $("#image_key").val(image_key);
-      $(".btn-delete-image").html('Yes');
-      $("#modalDeleteImage").modal('show');
-    });
-
-    $("#form-edit-image-caption").submit(function(e){
-      e.preventDefault();
-      var url = base_url + 'users/_update_work_image_caption';
-      $(".btn-update-caption").html('<span class="spinner-border spinner-border-sm m-0"></span>');
-      setTimeout(function () {
-        $.ajax({
-           type: "POST",
-           url: url,
-           data : $("#form-edit-image-caption").serialize(),
-           dataType:"json",
-           success: function(o)
-           {
-             $("#modalAddCaptionImage").modal('hide');
-             var image_key = $("#caption_image_key").val();
-             var image_caption = $("#image_caption").val();
-             $(".image-caption-container-" + image_key).html(image_caption);
-
-             Swal.fire({
-              icon: 'success',
-              title: 'Image caption was successfully updated',
-              showConfirmButton: false,
-              timer: 1500
-             });
-
-           }
-        });
-      }, 800);
-    });
-
-    $("#form-delete-image").submit(function(e){
-      e.preventDefault();
-      var url = base_url + 'users/_delete_work_picture';
-      $(".btn-delete-image").html('<span class="spinner-border spinner-border-sm m-0"></span>');
-      setTimeout(function () {
-        $.ajax({
-           type: "POST",
-           url: url,
-           data : $("#form-delete-image").serialize(),
-           dataType:"json",
-           success: function(o)
-           {
-             $("#modalDeleteImage").modal('hide');
-             var image_key = $("#image_key").val();
-             var li_image  = $(".col-image-" + image_key);
-             Swal.fire({
-              icon: 'success',
-              title: 'Image was successfully deleted',
-              showConfirmButton: false,
-              timer: 1500
-             });
-             li_image.fadeOut(300, function(){
-               li_image.remove();
-            });
-
-           }
-        });
-      }, 800);
-    });
-});
-
-</script>

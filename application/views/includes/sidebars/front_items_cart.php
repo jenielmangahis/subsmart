@@ -3,15 +3,26 @@
       <div class="widget-cnt-right__child">
          <div class="business">
             <?php
-              $profile_image = businessProfileImage($bussinessProfile->id);
-              if( $profile_image == null ) {
+              $profile_image = $userProfile->profile_img;
+              if(file_exists('uploads/users/user-profile/' . $profile_image) == FALSE || $profile_image == null) {
+
                   $profile_image = base_url('/assets/dashboard/images/online-booking.png');
+                  if(isset($service_item_thumb)){
+                    if(file_exists('uploads/service_item/' . $service_item_thumb) == FALSE || $service_item_thumb == null) {
+                        $profile_image = base_url('/assets/dashboard/images/online-booking.png');
+                    }else {
+                        $profile_image = base_url('uploads/users/user-profile/'.$profile_image);
+                    }
+                  }
+
+              } else {
+                  $profile_image = base_url('uploads/users/user-profile/'.$profile_image);
               }
             ?>
             <img class="business__logo" src="<?php echo $profile_image; ?>">
             <div class="business__cnt">
-               <div class="business__name"><b><?php echo $bussinessProfile->business_name; ?></b></div>
-               <div class="business__phone"><?php echo isset($bussinessProfile->business_phone) ? $bussinessProfile->business_phone : ''; ?></div>
+               <div class="business__name"><?php echo $userProfile->FName . ' ' . $userProfile->LName; ?></div>
+               <div class="business__phone"><?php echo isset($userProfile->phone) ? $userProfile->phone : ''; ?></div>
             </div>
          </div>
          <div class="widget-cart margin-bottom-sec" data-cart="cart">
@@ -19,21 +30,17 @@
             <div style="font-size: 18px; margin-bottom: 15px;">
 
                 <?php 
-                  $discounted_amount = 0;
                   if(isset($coupon)) {
                     
                     if(isset($coupon['coupon']['type'])){ 
                       if($coupon['coupon']['type'] == 1) {
-                        $new_total_amount  = ($coupon['coupon']['coupon_amount'] / 100) * $cart_data['total_amount'];                        
+                        $new_total_amount =  ($coupon['coupon']['coupon_amount'] / 100) * $cart_data['total_amount'];
                       }else {
                         $new_total_amount =  $cart_data['total_amount'] - $coupon['coupon']['coupon_amount'];
                       } 
                     }else {
                         $new_total_amount =  $cart_data['total_amount'] - $coupon['coupon']['coupon_amount'];
                     }
-
-                    $discounted_amount = $cart_data['total_amount'] - $new_total_amount;
-
                   }else{
                     $new_total_amount =  $cart_data['total_amount'] ;
                   }  
@@ -59,15 +66,14 @@
                     $item_total_arr['grand_total'] = $item_sub_total;
                   ?>
                 <?php } ?>
-                <?php $is_with_coupon = 0;  ?>
+
                 <?php if(isset($coupon)){  ?>
-                    <?php $is_with_coupon = 1;  ?>
                     <div style="position: relative; margin-bottom: 10px;">
                       <div style="color: #487ca6;"><?php echo "Coupon name: ". $coupon['coupon']['coupon_name']; ?></div>
                       <div class="text-ter" style="margin-bottom: 3px; padding-right: 20px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><?php echo "Coupon code: ". $coupon['coupon']['coupon_code'] ; ?></div>
                       <?php if(isset($coupon['coupon']['type'])){
                                 if($coupon['coupon']['type'] == 1) { ?>
-                                <div><?php echo $coupon['coupon']['coupon_amount'] . "% off" ; ?> / less <?php echo number_format($discounted_amount, 2); ?></div>
+                                <div><?php echo $coupon['coupon']['coupon_amount'] . "% off" ; ?></div>
                           <?php } else { ?>
                                  <div><?php echo "$". number_format($coupon['coupon']['coupon_amount'],2). " off" ; ?></div>
                           <?php } ?>
@@ -88,29 +94,20 @@
                     $is_cont_button_enable = true;
                   }
                 ?>
-            </div>            
-            <?php if( !empty($booking_schedule) ){ ?>
-              <hr />
-              <div class="schedule-container">
-                <div style="color: #487ca6;">Selected Schedule</div>
-                <div class="text-ter"><?php echo date("F d, Y", strtotime($booking_schedule['date'])) . ' - ' . $booking_schedule['time_start'] . ' - ' . $booking_schedule['time_end']; ?></div>
-              </div>
-            <?php } ?>
+            </div>
+            <br />
             <?php if($booking_settings->minimum_price_for_entier_booking >= 1) { ?>
-              <hr />
               <div class="alert alert-danger">
                 Minimum booking amount is <strong>$<?php echo number_format($booking_settings->minimum_price_for_entier_booking,2); ?></strong>
               </div>
             <?php } ?>
          </div>
-          <?php if( $is_with_coupon == 0 ){ ?>
           <div class="coupon">
               <div class="coupon__code">
                  <input type="text" name="coupon_code" id="coupon_code" value="" class="form-control form-control-md" placeholder="Enter coupon code" data-coupon="coupon_code">
               </div>
-              <a class="btn btn-default btn-md coupon__btn btn-apply-coupon" data-id="<?php echo $eid; ?>" href="javascript:void(0);">Apply</a>
+              <button class="btn btn-default btn-md coupon__btn btn-add-coupon" data-coupon="btn_submit" name="coupon_btn" type="submit">Apply</button>
           </div> 
-          <?php } ?>
           <hr class="margin-top margin-bottom">
           <?php if($uri_segment_method_name != 'products') { ?>
                   <a class="btn btn-default btn-back left" href="javascript:history.go(-1);">« Back</a>

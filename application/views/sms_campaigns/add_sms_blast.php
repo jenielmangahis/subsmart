@@ -2,24 +2,6 @@
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
 <style>
-.page-title {
-  font-family: Sarabun, sans-serif !important;
-  font-size: 1.75rem !important;
-  font-weight: 600 !important;
-}
-.cell-inactive{
-    background-color: #d9534f;
-}
-.left {
-  float: left;
-}
-.pr-b10 {
-  position: relative;
-  bottom: 10px;
-}
-.p-40 {
-  padding-top: 40px !important;
-}
 .tabs-menu {
     margin-bottom: 20px;
     padding: 0;
@@ -29,12 +11,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     list-style: none;
     margin: 0;
     padding: 0;
-}
-.md-right {
-  float: right;
-  width: max-content;
-  display: block;
-  padding-right: 0px;
 }
 .tabs-menu .active, .tabs-menu .active a {
     color: #2ab363;
@@ -51,8 +27,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <?php include viewPath('includes/sidebars/marketing'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
-        <div class="container-fluid p-40">
-          <!--
+        <div class="container-fluid">
             <div class="page-title-box">
                 <div class="row align-items-center">
                     <div class="col-sm-6">
@@ -72,37 +47,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     </div>
                 </div>
             </div>
-            -->
             <!-- end row -->
             <?php echo form_open_multipart('users/save', ['class' => 'form-validate', 'id' => 'create_sms_blast', 'autocomplete' => 'off']); ?>
             <div class="row">
                 <div class="col-xl-12">
-                    <div class="card mt-0">
-
-                        <div class="row">
-                          <div class="col-sm-6 left">
-                            <h3 class="page-title">Create SMS Campaign</h3>
-                          </div>
-                          <div class="col-sm-6 right dashboard-container-1">
-                            <div class="float-right d-none d-md-block">
-                                <div class="dropdown">
-                                        <a href="<?php echo url('sms_campaigns') ?>" class="btn btn-primary" aria-expanded="false">
-                                            <i class="mdi mdi-settings mr-2"></i> Go Back to SMS Blast list
-                                        </a>
-                                </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="alert alert-warning mt-2 mb-0" role="alert">
-                            <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Start a new SMS campaign to promote your business.
-                            </span>
-                        </div>
-
+                    <div class="card">
                         <div class="card-body">
                             <div class="validation-error" style="display: none;"></div>
                             <div class="tabs-menu">
                                 <ul class="clearfix">
-                                  <li class="active">1. Create Campaign</li>
+                                  <li class="active">1. Edit Campaign</li>
                                   <li>2. Select Customers</li>
                                   <li>3. Build SMS</li>
                                   <li>4. Preview</li>
@@ -110,17 +64,17 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </ul>
                             </div>
                             <hr />
-                            <div>
+                            <div class="row">
                                 <div class="col-md-12 form-group">
                                     <label for="formClient-Name">Campaign Name</label>
                                     <input type="text" class="form-control" name="sms_camapaign_name" id="" required placeholder="" autofocus/>
                                 </div>
                             </div>
                             <hr />
-                            <div>
-                                <div class="col-md-4 form-group md-right">
-                                    <a class="btn btn-default" href="<?php echo url('sms_campaigns') ?>" style="float: left;margin-right: 10px;">Cancel</a>
-                                    <button type="submit" class="btn btn-flat btn-primary margin-right btn-campaign-save-draft" style="float: left;margin-right: 0px;">Continue »</button>
+                            <div class="row">
+                                <div class="col-md-4 form-group">
+                                    <button type="submit" class="btn btn-flat btn-primary margin-right btn-campaign-save-draft">Save as Draft</button>
+                                    <a href="<?php echo url('sms_campaigns') ?>">cancel this</a>
                                 </div>
                             </div>
                         </div>
@@ -140,13 +94,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 $(function(){
     $("#create_sms_blast").submit(function(e){
         e.preventDefault();
-        var url = base_url + 'sms_campaigns/save_draft_campaign';
-        $(".btn-campaign-save-draft").html('<span class="spinner-border spinner-border-sm m-0"></span>  Saving');
+        var url = base_url + '/sms_campaigns/save_draft_campaign';
+        $(".btn-campaign-save-draft").html('<span class="spinner-border spinner-border-sm m-0"></span>  saving');
         setTimeout(function () {
           $.ajax({
              type: "POST",
-             url: url,
-             dataType: "json",
+             url: url,    
+             dataType: "json",      
              data: $("#create_sms_blast").serialize(),
              success: function(o)
              {
@@ -154,12 +108,12 @@ $(function(){
                     $(".validation-error").hide();
                     $(".validation-error").html('');
                     //redirect to step2
-                    location.href = base_url + "sms_campaigns/add_campaign_send_to";
+                    location.href = base_url + "/sms_campaigns/add_campaign_send_to";
                 }else{
                     $(".validation-error").show();
                     $(".validation-error").html(o.err_msg);
-                    $(".btn-campaign-save-draft").html('Continue »');
                 }
+                $(".btn-campaign-save-draft").html('Save as Draft');
              }
           });
         }, 1000);

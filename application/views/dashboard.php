@@ -4,28 +4,71 @@
 <!--<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.css">
 </link>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.css" integrity="sha512-/zs32ZEJh+/EO2N1b0PEdoA10JkdC3zJ8L5FTiQu82LR9S/rOQNfQN7U59U9BC12swNeRAz3HSzIL2vpp4fv3w==" crossorigin="anonymous" />
- page wrapper start -->
+<link rel="stylesheet" href="<?= base_url("assets/plugins/morris.js/morris.css") ?>">
+<!-- page wrapper start -->
+
 <style>
-    #overlay {
-        display: none;
-        background: rgba(255, 255, 255, 0.7);
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        top: 0;
-        z-index: 9998;
+    h1, .breadcrumb-item, h5, .tbl-employee-name, p, .qUickStartde > span, .header-title, a, .modal-title{
+        font-family: Sarabun, sans-serif !important;
+    }
+
+    .pointer{
+        cursor: pointer;
+    }
+
+    .dynamic-widget .card{
+        height: 400px !important
+    }
+
+    .card-header{
+        border-bottom: 1px solid gray !important;
+        font-family: Sarabun, sans-serif !important;
+    }
+
+    .card-body h6{
+        font-size: 16px;
+        font-family: Open sans, Lato, Arial, sans-serif;
+        font-weight: 400;
+        line-height: 1.5;
+    }
+
+    .card-body .job-status{
+        width:100%;
+        background:#a5d8ff;
+        color: rgb(33, 150, 243);
+        text-align: center;
+        font-size: 12px;
+        line-height: 1.5;
+        margin-top:10px;
+    }
+
+    .card-body .job-caption{
+        color: #616161;
+        font-size: 10px;
+        font-family: Roboto, Lato, Arial, sans-serif;
+        font-weight: 800;
+        line-height: 1.3;
+        text-transform: uppercase;
+    }
+    .smart__grid{
+        background: #fff;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-gap: 10px;
+        height: 78vh;
+        padding: 10px;
+    }
+    .smart__grid > div{
+        background: #f2f2f2;
+        text-align: center;
+        display: flex;
         align-items: center;
         justify-content: center;
-        margin: auto;
     }
 </style>
-<link rel="stylesheet" href="<?= base_url("assets/css/dashboard-responsive.css") ?>">
-
 <div class="wrapper" style="padding: 80px 14px;">
-    <div class="bg-white" style=" border-radius: 30px 30px 0 0;margin-top: 15px;">
-        <?php $this->load->view('includes/sidebars/dashboard/dashboard', $sidebar); ?>
-        <div id="main" class="container-fluid">
+    <div class="bg-white" style="margin-top:20px; border-radius: 30px 30px 0 0;">
+        <div class="container-fluid">
             <div class="page-title-box">
                 <div class="row col-12 align-items-center d-flex">
                     <div class="col-sm-2 col-lg-3">
@@ -35,12 +78,12 @@
                         </ol>
                     </div>
                     <div class="col-lg-6 justify-content-center d-none d-lg-block">
-                        <div class="col-lg-12" style="background: #ffffff; height:50px; height:130px; margin:0 auto; top:-27px; border-radius: 0 0 60px 60px; padding-top:25px;">
-                            <div onclick="document.location = '<?php echo base_url('customer/add_advance') ?>'" class="float-left col-lg-2 no-padding text-center pointer">
+                        <div class="col-lg-12" style="background: #dcdddc; height:50px; height:130px; margin:0 auto; top:-25px; border-radius: 0 0 60px 60px; padding-top:25px;">
+                            <div onclick="document.location = '<?php echo base_url('/customer/add_lead') ?>'" class="float-left col-lg-2 no-padding text-center pointer">
                                 <img class="col-lg-8" src="<?= assets_url('img/shortcuts/') . 'new_customer_qs.png' ?>" style="margin: 0 auto;" />
                                 <p>Add Customer</p>
                             </div>
-                            <div class="float-left col-lg-2 no-padding text-center pointer" onclick="document.location = '<?= base_url('customer') ?>'">
+                            <div class="float-left col-lg-2 no-padding text-center pointer" onclick="$('#modal_customer').modal('show')">
                                 <img class="col-lg-8" src="<?= assets_url('img/shortcuts/') . 'find_customer_qs.png' ?>" style="margin: 0 auto;"  />
                                 <p>Find Customer</p>
                             </div>
@@ -62,36 +105,20 @@
                             </div>
                         </div>
                     </div>
-
-                    <div class="modal fade" id="companyChecklist" tabindex="-1" role="dialog" aria-labelledby="companyChecklist" aria-hidden="true">
-                        <div class="modal-dialog modal-lg" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h6 class="modal-title" id="exampleModalLabel"><i class="fa fa-check-square"></i> Checklist</h6>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
                     <div class="modal fade" id="newFeed" tabindex="-1" role="dialog" aria-labelledby="addWidgets" aria-hidden="true">
                         <div class="modal-dialog modal-md" role="document" style="max-width: 592px; margin-top:230px;">
                             <div class="modal-content" style="border-radius: 30px;">
                                 <div class="modal-header">
-                                    <input type="text" placeholder="Title" id="feedSubject" class="form-control" required/>
+                                    <input type="text" placeholder="Subject Line" class="form-control" />
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
                                 <div class="modal-body text-center">
-                                    <textarea style="height:130px;" id="feedMessage" class="form-control" placeholder="Message" required></textarea>
+                                    <textarea style="height:130px;" class="form-control" placeholder="Feed Message" ></textarea>
                                 </div>
                                 <div class="modal-footer">
-                                    <button onclick="sendFeed()" class="float-right btn btn-success btn-small"><span class="fa fa-paper-plane"></span> Save Feed</button>
+                                    <button class="float-right btn btn-success btn-small">Send Feed</button>
                                 </div>
                             </div>
                         </div>
@@ -107,78 +134,17 @@
 
                                 </div>
                                 <div class="modal-body text-center">
-                                    <textarea style="height:130px;" class="form-control" id="news" placeholder="News Bulletin" required></textarea>
+                                    <textarea style="height:130px;" class="form-control" placeholder="News Bulletin" ></textarea>
                                     <br />
-                                    <input class="float-left" id="file" type="file" value="Upload File" required/>
+                                    <input class="float-left" type="file" value="Upload File" />
                                 </div>
                                 <div class="modal-footer">
-                                    <button onclick="sendNewsLetter()" class="float-right btn btn-success btn-small"><span class="fa fa-paper-plane"></span> Send Newsletter</button>
+                                    <button class="float-right btn btn-success btn-small">Send Newsletter</button>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div id="overlay">
-                        <div>
-                            <img src="<?=base_url()?>/assets/img/uploading.gif" class="" style="width: 80px;" alt="" />
-                            <center><p>Processing...</p></center></div>
-                    </div>
-                    <script type="text/javascript">
-                        function sendFeed()
-                        {
-                            $.ajax({
-                                type: "POST",
-                                url: "<?= base_url() ?>/dashboard/sendFeed",
-                                dataType: 'json',
-                                data: {
-                                    subject : $('#feedSubject').val(),
-                                    message : $('#feedMessage').val()
-                                }, // serializes the form's elements.
-                                success: function (data) {
-                                    document.getElementById('overlay').style.display = "none";
-                                    $('#newFeed').modal('hide');
-                                    if(data.success){
-                                        notifyUser('Nice!',data.msg,'success');
-                                    }
-                                    console.log(data);
-                                }, beforeSend: function() {
-                                    document.getElementById('overlay').style.display = "flex";
-                                }
-                            });
-                        }
-                        
-                        function _(el){
-                           return document.getElementById(el);
-                        }
-                        
-                        function sendNewsLetter()
-                        {
-                            var file = _("file").files[0];
-	
-                            var formdata = new FormData();
-                            formdata.append("file", file);
-                            formdata.append('news',$('#news').val());
 
-                            $.ajax({
-                                url: '<?= base_url(); ?>newsletter/saveNewsBulletin',
-                                method: 'POST',
-                                data: formdata,
-                                cache: false,
-                                contentType: false,
-                                processData: false,
-                                dataType: 'json',
-                                success: function (response) {
-                                    if(response.success){
-                                        notifyUser('Nice!',response.msg,'success');
-                                    }
-                                    console.log(response);
-                                    document.getElementById('overlay').style.display = "none";
-                                    $('#addNewsLetter').modal('hide');
-                                }, beforeSend: function() {
-                                    document.getElementById('overlay').style.display = "flex";
-                                }
-                            });
-                        }
-                    </script>    
                     <?php include viewPath('flash'); ?>
                     <div class="col-12 d-md-none d-block p-0">
                         <div class="smart__grid" id="1">
@@ -211,55 +177,43 @@
                 </div>
             </div>
             <!-- end row -->
-            <div class="col-sm-12">
-                <div class="col-sm-12 text-right-sm" style="align:right;">
-                    <span class="text-ter" style="position: absolute; right: 83px !important; top: 8px;">Customize</span>
-                    <div class="onoffswitch grid-onoffswitch" style="position: relative; margin-top: 7px;">
-                        <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" data-customize="open" id="onoff-customize">
-                        <label class="onoffswitch-label" for="onoff-customize">
-                            <span class="onoffswitch-inner"></span> <span class="onoffswitch-switch"></span>
-                        </label>
-                    </div>
-                </div>
-            </div>
             <div class="row-tablet-mobile mb-fix">
-                <div class="row d-none d-lg-flex" style="width:99%">
-                    <?php //$this->load->view('widgets/quick_start', $quick_start_data); ?>
-                    <div class="col-md-12">
-                        <div class="row cus-dashboard-div sortable2 isMain">
+                <div class="row d-none d-lg-flex">
+                    <?php $this->load->view('widgets/quick_start', $quick_start_data); ?>
+                    <div class="col-md-8">
+                        <div class="row cus-dashboard-div">
                             <?php
                             foreach ($widgets as $wids):
                                 if ($wids->wu_is_main):
-                                    $data['class'] = 'col-lg-4 col-md-4 col-sm-12 main_widget_header';
-                                    $data['rawHeight'] = '420';
-                                    $data['height'] = 'height: 420px;';
-                                    $data['isMain'] = True;
+                                    $data['class'] = 'col-lg-6 col-md-6 col-sm-12';
+                                    $data['height'] = 'height: 250px;';
                                     $data['id'] = $wids->w_id;
-                                    $data['isGlobal'] = ($wids->wu_company_id == '0' ? false : true);
                                     $this->load->view($wids->w_view_link, $data);
                                 endif;
                             endforeach;
+//                            $this->load->view('widgets/upcoming_jobs');
+//                            $this->load->view('widgets/upcoming_estimates');
+//                            $this->load->view('widgets/upcoming_events');
+//                            $this->load->view('widgets/task_hub');
                             ?>
-
                         </div>
                     </div>
                 </div>
-                <div class="row d-none d-lg-flex cus-dashboard-div dynamic-widget sortableWidget" id="widgetWrapper">
+                <div class="row d-none d-lg-flex cus-dashboard-div dynamic-widget" id="widgetWrapper">
                     <?php
                     foreach ($widgets as $wids):
                         if (!$wids->wu_is_main):
-                            $data['class'] = 'col-lg-3 col-md-6 col-sm-12 widget_header';
-                            $data['rawHeight'] = '360';
-                            $data['height'] = 'height: 360px;';
-                            $data['isMain'] = False;
+                            $data['class'] = 'col-lg-3 col-md-6 col-sm-12';
+                            $data['rawHeight'] = '310';
+                            $data['height'] = 'height: 310px;';
                             $data['id'] = $wids->w_id;
-                            $data['isGlobal'] = ($wids->wu_company_id == '0' ? false : true);
                             $this->load->view($wids->w_view_link, $data);
                         endif;
                     endforeach;
                     $this->load->view('widgets/add_widgets');
                     ?>
                 </div>
+
                 <!-- end row -->
                 <br>
                 <div class="row d-none d-lg-flex">
@@ -391,75 +345,14 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                <div class="wid_header col-md-6" data-id=""  id="widget">
-                    <div class="card" style="border: 2px solid #30233d; margin-top:0; border-radius: 40px; padding:5px;">
-                        <div style="border: 5px solid #30233d; margin-top:0; border-radius: 40px; box-shadow: 1px 0 15px 5px rgb(48, 35, 61);">
-                            <div class="card-body mt-2" style="padding:5px 10px;overflow: hidden">
-                                <div class="row" style="overflow-y: scroll; padding:5px 20px;">
-                                    <div id="" class="col-lg-12 text-center">
-                                        <h6 class="text-center"><strong>Feeds</strong></h6>
-                                        <table class="table table-responsive-sm table-striped">
-                                            <thead>
-                                                <tr>
-                                                    <th>Title</th>
-                                                    <th>Message</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <?php foreach($feeds as $feed): ?>
-                                                    <tr>
-                                                        <td class="text-left"><small><strong><?= $feed->title ?></strong></small><br /></td>
-                                                        <td><?= $feed->message ?></td>
-                                                    </tr>
-                                                <?php endforeach; ?>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="wid_header col-md-6" data-id=""  id="widget">
-                    <div class="card" style="border: 2px solid #30233d; margin-top:0; border-radius: 40px; padding:5px;">
-                        <div style="border: 5px solid #30233d; margin-top:0; border-radius: 40px; box-shadow: 1px 0 15px 5px rgb(48, 35, 61);">
-                            <div class="card-body mt-2" style="padding:5px 10px;overflow: hidden">
-                                <div class="row" style="overflow-y: scroll; padding:5px 20px;">
-                                    <div id="" class="col-lg-12 text-center">
-                                        <h6 class="text-center"><strong>Bulletins</strong></h6>
-                                        <table class="table table-responsive-sm table-striped">
-                                            <thead>
-                                                <tr>
-                                                    <th>File</th>
-                                                    <th>News</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                            <?php foreach($news as $new): ?>
-                                                <tr>
-                                                    <td class="text-left"><small><a href="<?= base_url(''.$new->file_link) ?>" target="_blank"><?= $new->file_link ?></a></small><br /></td>
-                                                    <td><?= $new->message ?></td>
-                                                </tr>
-                                            <?php endforeach; ?>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                </div>
             </div>
+            <!-- Earnings Display -->
+            <!-- end row -->
+            <!-- end container-fluid -->
         </div>
     </div>
+
     <!-- page wrapper end -->
-</div>
-<!-- floating action button -->
-<div class="col-12 d-md-none d-block p-0">
-    <?php $this->load->view('dashboard/ringCentralActionButton'); ?>
 </div>
 
 <div style="display: none;" class="floating-btn-div div9">
@@ -871,142 +764,60 @@
 
 
 <script type="text/javascript">
-
-    function load_checklist(){
-    var url = base_url + 'users/_load_checklist';
-    $("#companyChecklist").modal('show');
-    setTimeout(function () {
-    $.ajax({
-    type: "POST",
-            url: url,
-            dataType: "json",
-            success: function(o)
-            {
-            $("#companyChecklist").modal('show');
-            }
-    });
-    }, 1000);
-    }
-
     function waitForClockInOut() {
     $.ajax({
-        type: "GET",
-                url: "<?= base_url() ?>/Timesheet/getClockInOutNotification",
-                async: true,
-                cache: false,
-                timeout: 10000,
-                success: function (data) {
+    type: "GET",
+            url: "/Timesheet/getClockInOutNotification",
+            async: true,
+            cache: false,
+            timeout: 10000,
+            success: function (data) {
 
-                var obj = JSON.parse(data);
-                console.log(obj);
-                $.each(obj, function (currentIndex, currentElem) {
-                $('#in_now').html(currentElem.ClockIn);
-                $('#out_now').html(currentElem.ClockOut);
-                });
-                setTimeout(waitForClockInOut, 2000);
-                },
-                error: function (XMLHttpRequest, textStatus, errorThrown) {
-                addmsg("error", textStatus + " (" + errorThrown + ")");
-                setTimeout(waitForClockInOut, 15000);
-                }
-        });
+            var obj = JSON.parse(data);
+            console.log(obj);
+            $.each(obj, function (currentIndex, currentElem) {
+            $('#in_now').html(currentElem.ClockIn);
+            $('#out_now').html(currentElem.ClockOut);
+            });
+            setTimeout(waitForClockInOut, 2000);
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+            addmsg("error", textStatus + " (" + errorThrown + ")");
+            setTimeout(waitForClockInOut, 15000);
+            }
+    });
     };
     $(document).ready(function () {
-        var TimeStamp = null;
-        waitForClockInOut();
-        
-       console.log("Your screen resolution is: " + screen.width + "x" + screen.height);
-        
-        $('#onoff-customize').change(function () {
-            if (this.checked) {
-                $('.widget').mouseover(function(){
-                    if($(this).attr('id')=='addWidget'){
-                        $(".sortable2").sortable("disable");
-                        $(".sortableWidget").sortable("disable");
-                    }else{
-                        $(".sortable2").sortable("enable");
-                        $(".sortableWidget").sortable("enable");
-                    }
-                });
-            } else {
-                $(".sortable2").sortable("disable");
-                $(".sortableWidget").sortable("disable");
-            }
-
-        });
-
-
-
-        $(".sortable2").sortable({
-            start: function (e, ui) {
-                // creates a temporary attribute on the element with the old index
-                $(this).attr('data-previndex', ui.item.index());
-                $(this).attr('style', 'top:0;cursor: grabbing', 'z-index:10000');
-
-            },
-            change(event, ui)
-            {
-                $(this).attr('style', 'top:0;cursor: grabbing ', 'z-index:10000');
-            },
-            update: function (e, ui)
-            {
-                var isMain = ($(this).hasClass('isMain')?'1':'0');
-                $(this).attr('style', 'top:0;cursor: pointer');
-                var oldOrder = $(this).attr('data-previndex');
-                var idsInOrder = $(".sortable2").sortable("toArray",{ attribute: 'data-id' });
-                var filteredArray = idsInOrder.filter(function(e){return e});
-
-                $.ajax({
-                    type: "POST",
-                    url: "<?= base_url() ?>/widgets/changeOrder",
-                    data: {ids: filteredArray.toString(), isMain: isMain}, // serializes the form's elements.
-                    success: function (data)
-                    {
-                        console.log(data);
-                    }
-                });
-
-                console.log(filteredArray.toString());
-            }
-        });
-
-        //$(".sortable2").sortable("disable");
-
-
-        $(".sortableWidget").sortable({
-            start: function (e, ui) {
-                // creates a temporary attribute on the element with the old index
-                $(this).attr('data-previndex', ui.item.index());
-                $(this).attr('style', 'top:0;cursor: grabbing', 'z-index:10000');
-
-            },
-            change(event, ui)
-            {
-                $(this).attr('style', 'top:0;cursor: grabbing ', 'z-index:10000');
-            },
-            update: function (e, ui)
-            {
-                var isMain = ($(this).hasClass('isMain')?'1':'0');
-                $(this).attr('style', 'top:0;cursor: pointer');
-                var oldOrder = $(this).attr('data-previndex');
-                var idsInOrder = $(".sortableWidget").sortable("toArray",{ attribute: 'data-id' });
-                var filteredArray = idsInOrder.filter(function(e){return e});
-
-                $.ajax({
-                    type: "POST",
-                    url: "<?= base_url() ?>/widgets/changeOrder",
-                    data: {ids: filteredArray.toString(), isMain: isMain}, // serializes the form's elements.
-                    success: function (data)
-                    {
-                        console.log(data);
-                    }
-                });
-
-                console.log(filteredArray.toString());
-            }
-        });
-
-        //$(".sortableWidget").sortable("disable");
+    var TimeStamp = null;
+    waitForClockInOut();
     });
-
-</script>
+    $('#onoff-customize').click(function() {
+    if (this.checked) {
+    //var current = 1;
+    // $( ".short_id" ).each(function( index ) {
+    //     $('this').attr('id', 'item_'+current);
+    //     current++;
+    // });
+    $("#sortable").sortable({
+    /*stop: function(event, ui) {
+     alert("New position: " + ui.item.index());
+     }*/
+    start: function(e, div) {
+    // creates a temporary attribute on the element with the old index
+    $(this).attr('data-previndex', div.item.index());
+    },
+            update: function(e, div) {
+            // gets the new and old index then removes the temporary attribute
+            var newIndex = div.item.index();
+            var oldIndex = $(this).attr('data-previndex');
+            var element_id = div.item.attr('id');
+            //alert('id of Item moved = '+element_id+' old position = '+oldIndex+' new position = '+newIndex);
+            $(this).removeAttr('data-previndex');
+            }
+    });
+    $("#sortable").disableSelection();
+    } else{
+    $("#sortable").sortable("disable");
+    //$( "#sortable" ).disableSelection();
+    }
+    });</script>

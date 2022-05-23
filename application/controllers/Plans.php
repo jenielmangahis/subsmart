@@ -8,26 +8,27 @@ class Plans extends MY_Controller {
 	{
 		parent::__construct();
 		$this->checkLogin();
-		$this->hasAccessModule(22); 
 		$this->page_data['page']->title = 'Plans Management';
 		$this->page_data['page']->menu = 'Plans';
 	}
 	 
 	public function index()
-	{ 		
-		$this->page_data['page']->title = 'Plans';
-        $this->page_data['page']->parent = 'Sales';
+	{
+ 		$is_allowed = $this->isAllowedModuleAccess(22);
+        if( !$is_allowed ){
+            $this->page_data['module'] = 'plans';
+            echo $this->load->view('no_access_module', $this->page_data, true);
+            die();
+        }
+
         $role = logged('role');
-        /*if( $role == 1 || $role == 2 ){
+        if( $role == 1 || $role == 2 ){
         	$this->page_data['plans'] = $this->plans_model->getByWhere([]);
         }else{
         	$company_id =  logged('company_id');
 			$this->page_data['plans'] = $this->plans_model->getByWhere(['company_id'=>$company_id]);
-        }*/
+        }
         
-        $company_id =  logged('company_id');
-        $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id'=>$company_id]);
-
 		// ifPermissions('plan_list');
 
 		// $this->page_data['items'] = $this->items_model->get();
@@ -35,7 +36,7 @@ class Plans extends MY_Controller {
 		// $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id'=>$company_id]);
 		//$this->page_data['plans'] = array();
 		/* echo "<pre>"; print_r($this->page_data['items']); die; */
-		$this->load->view('v2/pages/plans/list', $this->page_data);
+		$this->load->view('plans/list', $this->page_data);
 	}
 	
 	public function add(){
@@ -45,7 +46,6 @@ class Plans extends MY_Controller {
             echo $this->load->view('no_access_module', $this->page_data, true);
             die();
         }
-		$this->page_data['items'] = $this->items_model->getItemlist();
 		// ifPermissions('add_plan');
 		$this->load->view('plans/add', $this->page_data);
 	}
@@ -59,44 +59,35 @@ class Plans extends MY_Controller {
 	
 	public function edit($id){
 
-		//ifPermissions('plan_edit');
-		$this->page_data['items'] = $this->items_model->getItemlist();
+		ifPermissions('plan_edit');
 		$this->page_data['plan'] = $this->plans_model->getById($id);
 		$this->load->view('plans/edit', $this->page_data);
 	}
 
-	public function view($id){
 
-		$this->page_data['items'] = $this->items_model->getItemlist();
-		$this->page_data['plan'] = $this->plans_model->getById($id);
-		$this->load->view('plans/view', $this->page_data);
-	}
 
 	public function save(){		
 
 		postAllowed();		
-		//ifPermissions('add_plan');		
-		$post = $this->input->post();
-		if(count(post('items')) > 0) {
+		ifPermissions('add_plan');		
+		
+		if(count(post('item')) > 0) {
 
-			$items = post('items');
-			$item_ids = post('item_id');
+			$items = post('item');
 			$quantity = post('quantity');
 			$price = post('price');
 			$discount = post('discount');
 			$type = post('item_type');
 			$location = post('location');
-			$tax = post('tax');
 
-			foreach(post('items') as $key=>$val) {
+			foreach(post('item') as $key=>$val) {
 
 				$itemArray[] = array(
-					'item_id' => $item_ids[$key],
+
 					'item' => $items[$key],
 					'item_type' => $type[$key],
 					'quantity'=> $quantity[$key],
-					//'location'=> $location[$key],
-					'tax' => $tax[$key],
+					'location'=> $location[$key],
 					'discount'=> $discount[$key],
 					'price' => $price[$key]
 				);
@@ -106,6 +97,7 @@ class Plans extends MY_Controller {
 		} else {
 			$paln_items = '';
 		}
+		
 		
 		$company_id =  logged('company_id');
 		$permission = $this->plans_model->create([
@@ -122,45 +114,51 @@ class Plans extends MY_Controller {
 		redirect('plans');
 	}
 
+
+
 	public function update($id){		
 
 		postAllowed();
-		//ifPermissions('plan_edit');
-		$post = $this->input->post();
-		if(count(post('items')) > 0) {
-			$items = post('items');
-			$item_ids = post('item_id');
+		ifPermissions('plan_edit');
+		
+		if(count(post('item')) > 0) {
+
+			$items = post('item');
 			$quantity = post('quantity');
-			$price    = post('price');
+			$price = post('price');
 			$discount = post('discount');
-			$type     = post('item_type');
+			$type = post('item_type');
 			$location = post('location');
-			$tax      = post('tax');
-			
-			foreach($items as $key=> $val) {				
+
+			foreach(post('item') as $key=>$val) {
+
 				$itemArray[] = array(
-					'item' => $val,
-					'item_id' => $item_ids[$key],
+
+					'item' => $items[$key],
 					'item_type' => $type[$key],
 					'quantity'=> $quantity[$key],
-					'tax' => $tax[$key],
-					//'location'=> $location[$key],
+					'location'=> $location[$key],
 					'discount'=> $discount[$key],
 					'price' => $price[$key]
 				);
 			}
-			$plan_items = serialize($itemArray);
-		} else {
-			$plan_items = '';
-		}
 
+			$paln_items = serialize($itemArray);
+		} else {
+			$paln_items = '';
+		}
+		
+		// echo "<pre>"; print_r($itemArray); die;
 		$company_id =  logged('company_id');
 		$data = [
 			'company_id' => $company_id,
 			'plan_name' => $this->input->post('plan_name'),
 			'status' => $this->input->post('status'),
-			'items' => $plan_items				
+			'items' => $paln_items	
+			
 		];
+
+
 
 		$permission = $this->plans_model->update($id, $data);
 		$this->activity_model->add("plan #$id Updated by User: #".logged('id'));
@@ -182,14 +180,10 @@ class Plans extends MY_Controller {
 		redirect('items');
 	}
 
-	public function delete_plan_v2(){
-		// Delete plan via ajax request
 
-		$id = $this->input->post('id');
-		$delete = $this->plans_model->deletePlan($id);
-        echo true;
-	}
 
+	
+	
 	public function checkIfUnique(){		
 
 		$code = get('code');
@@ -209,15 +203,6 @@ class Plans extends MY_Controller {
 			die('false');
 		else
 			die('true');
-	}
-
-	public function delete_plan(){
-        $this->plans_model->deletePlan(post('pid'));
-
-        $this->session->set_flashdata('message', 'Plan has been Deleted Successfully');
-        $this->session->set_flashdata('alert_class', 'alert-success');
-
-        redirect('plans');
 	}
 
 }

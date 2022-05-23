@@ -1,7 +1,7 @@
 <?php
-defined('BASEPATH') or exit('No direct script access allowed');?>
+defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
-<?php include viewPath('includes/header');?>
+<?php include viewPath('includes/header'); ?>
 <!-- page wrapper start -->
 <div class="wrapper esign">
 	<br />
@@ -11,33 +11,27 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
 				<h1 class="esign__title">eSign Tools</h1>
 				<div class="alert alert-warning mt-2" role="alert">
 					<span style="color:black;">
-						Electronic signatures, or e-signatures, are transforming the ways companies do business. Not only do they eliminate the hassle of manually routing paper agreements, but they also dramatically speed up the signature and approval process. Implementing e-signatures into your existing workflows is easier than you think.  Explore all various tools.
+						Sign and send documents for signing from your automated workflows on any device. Quickly configure
+						templates & deploy legally-binding e-signatures for your documents, contracts, and web-forms. Draw or
+						create your unique e-signature in a few clicks and sign documents online with your own ready-made
+						templates.
 					</span>
-				</div>
-
-				<div class="esignActionRequired alert alert-primary">
-					<div class="esignActionRequired__inner">
-						<i class="fa fa-info-circle esignActionRequired__icon"></i>
-						<a class="esignActionRequired__body" href="<?php echo base_url('eSign/manage?view=action_required') ?>">
-							Your action is required for <span class="esignActionRequired__count">0</span> of your eSign documents.
-						</a>
-					</div>
 				</div>
 			</div>
 
 			<div class="col-md-2 esign__item" style="margin-top:12px;">
-				<a href="<?php echo base_url('eSign/templateCreate') ?>">
+				<a href="<?php echo base_url('esign/Files') ?>">
 					<div class="shadow" style="background-color: white;text-align:center;">
-						<img src="<?=url("");?>uploads/image/esign/envelope_builder.png" style="margin:0 auto;" height="150" width="180" title="Scan">
+						<img src="<?= url(""); ?>uploads/image/esign/envelope_builder.png" style="margin:0 auto;" height="150" width="180" title="Scan">
 						<button type="button" class="form-control btn btn-success">eSign Builder</button>
 					</div>
 				</a>
 			</div>
 
 			<div class="col-md-2 esign__item" style="margin-top:12px;">
-				<a href="<?php echo base_url('EsignEditor/create') ?>">
+				<a href="<?php echo base_url('esign/createTemplate') ?>">
 					<div class="shadow" style="background-color: white;text-align:center;">
-						<img src="<?=url("");?>uploads/image/esign/editor.png" style="margin:0 auto;" height="150" width="180" title="Scan">
+						<img src="<?= url(""); ?>uploads/image/esign/editor.png" style="margin:0 auto;" height="150" width="180" title="Scan">
 						<button type="button" class="form-control btn btn-success">eSign Editor</button>
 					</div>
 				</a>
@@ -46,7 +40,7 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
 			<!-- <div class="col-md-2 " style="margin-top:12px;">
 				<a href="<?php echo base_url('esign/Photos') ?>">
 					<div class="shadow" style="background-color: white;text-align:center;">
-						<img style="margin:0 auto;" src="<?=url("");?>uploads/image/gallery.jpg" height="150" width="180" title="Photos">
+						<img style="margin:0 auto;" src="<?= url(""); ?>uploads/image/gallery.jpg" height="150" width="180" title="Photos">
 						<button type="button" class="form-control btn btn-success">Photos</button>
 					</div>
 				</a>
@@ -54,7 +48,7 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
 			<!-- <div class="col-md-2 " style="margin-top:12px;">
 				<a href="<?php echo base_url('esign/Files') ?>">
 					<div class="shadow" style="background-color: white;text-align:center;">
-						<img style="margin:0 auto;" src="<?=url("");?>uploads/image/folder.png" height="150" width="180" title="Files">
+						<img style="margin:0 auto;" src="<?= url(""); ?>uploads/image/folder.png" height="150" width="180" title="Files">
 						<button type="button" class="form-control btn btn-success">Files</button>
 					</div>
 				</a>
@@ -62,39 +56,36 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
 			<div class="col-md-2 esign__item" style="margin-top:12px;">
 				<a href="<?php echo base_url('vault/mylibrary') ?>">
 					<div class="shadow" style="background-color: white;text-align:center;">
-						<img style="margin:0 auto;" src="<?=url("");?>uploads/image/esign/templates.png" height="150" width="180" title="Template">
+						<img style="margin:0 auto;" src="<?= url(""); ?>uploads/image/esign/templates.png" height="150" width="180" title="Template">
 						<button type="button" class="form-control btn btn-success">Templates</button>
 					</div>
 				</a>
 			</div>
 			<div class="col-md-2 esign__item" style="margin-top:12px;">
-				<a href="<?php echo base_url('EsignEditor/letters') ?>">
+				<a href="<?php echo base_url('esign/templateLibrary') ?>">
 					<div class="shadow" style="background-color: white;text-align:center;">
-						<img style="margin:0 auto;" src="<?=url("");?>uploads/image/esign/library.png" height="150" width="180" title="Library">
+						<img style="margin:0 auto;" src="<?= url(""); ?>uploads/image/esign/library.png" height="150" width="180" title="Library">
 						<button type="button" class="form-control btn btn-success">Library</button>
 					</div>
 				</a>
 			</div>
 			<div class="col-md-2 esign__item" style="margin-top:12px;">
-
-				<a href="<?php echo base_url('dropbox') ?>">
 				<div class="shadow" style="background-color: white;text-align:center;">
-					<img style="margin:0 auto;" src="<?=url("");?>uploads/image/esign/dropbox.png" height="150" width="180" title="Dropbox">
+					<img style="margin:0 auto;" src="<?= url(""); ?>uploads/image/esign/dropbox.png" height="150" width="180" title="Dropbox">
 					<button type="button" class="form-control btn btn-success">Dropbox</button>
 				</div>
-                                </a>
 			</div>
 
 			<div class="col-md-2 esign__item" style="margin-top:12px;">
 				<div class="shadow" style="background-color: white;text-align:center;">
-					<img style="margin:0 auto;" src="<?=url("");?>uploads/image/esign/google_drive.png" height="150" width="180" title="Box">
+					<img style="margin:0 auto;" src="<?= url(""); ?>uploads/image/esign/google_drive.png" height="150" width="180" title="Box">
 					<button type="button" class="form-control btn btn-success">Google Drive</button>
 				</div>
 			</div>
 
 			<div class="col-md-2 esign__item" style="margin-top:12px;">
 				<div class="shadow" style="background-color: white;text-align:center;">
-					<img style="margin:0 auto;" src="<?=url("");?>uploads/image/esign/box.png" height="150" width="180" title="Box">
+					<img style="margin:0 auto;" src="<?= url(""); ?>uploads/image/esign/box.png" height="150" width="180" title="Box">
 					<button type="button" class="form-control btn btn-success">Box</button>
 				</div>
 			</div>
@@ -102,16 +93,16 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
 			<div class="col-md-2 esign__item" style="margin-top:12px;">
 				<a href="<?php echo base_url('FillAndSign/step1') ?>">
 					<div class="shadow" style="background-color: white;text-align:center;">
-						<img style="margin:0 auto;" src="<?=url("");?>uploads/image/esign/fill_and_esign.png" height="150" width="180" title="Sign">
+						<img style="margin:0 auto;" src="<?= url(""); ?>uploads/image/esign/fill_and_esign.png" height="150" width="180" title="Sign">
 						<button type="button" class="form-control btn btn-success">Fill & eSign</button>
 					</div>
 				</a>
 			</div>
 
 			<div class="col-md-2 esign__item" style="margin-top:12px;">
-				<a href="<?php echo base_url('eSign/manage?view=inbox') ?>">
+				<a href="#">
 					<div class="shadow" style="background-color: white;text-align:center;">
-						<img style="margin:0 auto;" src="<?=url("");?>uploads/image/esign/esign.png" height="150" width="180" title="Sign">
+						<img style="margin:0 auto;" src="<?= url(""); ?>uploads/image/esign/esign.png" height="150" width="180" title="Sign">
 						<button type="button" class="form-control btn btn-success">eSign</button>
 					</div>
 				</a>
@@ -125,19 +116,4 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
 	</div>
 </div><!-- page wrapper end -->
 
-
-<script>
-window.addEventListener('DOMContentLoaded', async (event) => {
-  const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
-  const response = await fetch(`${prefixURL}/DocuSign/apiGetActionRequired`);
-  const { data } = await response.json();
-
-  if (data.length === 0) return;
-
-  const $alert = document.querySelector(".esignActionRequired");
-  const $count = $alert.querySelector(".esignActionRequired__count");
-  $count.textContent = data.length;
-  $alert.classList.add("esignActionRequired--show");
-});
-</script>
-<?php include viewPath('includes/footer');?>
+<?php include viewPath('includes/footer'); ?>

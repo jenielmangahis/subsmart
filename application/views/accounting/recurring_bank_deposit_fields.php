@@ -18,7 +18,7 @@
                 <div class="row m-0 h-100 d-flex">
                     <div class="align-self-end d-flex align-items-center">
                         <span>Create &nbsp;</span>
-                        <input type="number" name="days_in_advance" id="dayInAdvance" class="form-control" style="width: 20%">
+                        <input type="number" name="day_in_advance" id="dayInAdvance" class="form-control" style="width: 20%">
                         <span>&nbsp; days in advance</span>
                     </div>
                 </div>
@@ -32,13 +32,12 @@
             <div class="col-md-3 form-group">
                 <label for="bankAccount">Account</label>
                 <select name="bank_account" id="bankAccount" class="form-control" required="">
-                    <?php foreach($accounts as $key => $value) : ?>
-                        <optgroup label="<?= $key ?>">
-                            <?php foreach($value as $account) : ?>
-                                <option value="<?= $account['value'] ?>" <?= $account['selected'] === true ? 'selected' : '' ?>><?= $account['text'] ?></option>
-                            <?php endforeach; ?>
-                        </optgroup>
-                    <?php endforeach; ?>
+                    <optgroup label="Bank">
+                        <option value="bank-1">Cash on hand</option>
+                    </optgroup>
+                    <optgroup label="Other Current Assets">
+                        <option value="ocassets-1">Payroll Refunds</option>
+                    </optgroup>
                 </select>
             </div>
         </div>
@@ -49,7 +48,7 @@
         <div class="form-row">
             <div class="col-md-2 form-group">
                 <label>Interval</label>
-                <select class="form-control" name="recurring_interval" id="recurringInterval">
+                <select class="form-control" name="recurring_mode" id="recurringMode">
                     <option value="daily">Daily</option>
                     <option value="weekly">Weekly</option>
                     <option value="monthly" selected="">Monthly</option>
@@ -74,18 +73,18 @@
                             <?php endforeach; ?>
                         </select>
                         <span>&nbsp; of every &nbsp;</span>
-                        <input type="number" value="1" class="form-control" name="recurr_every" style="width: 15%">
+                        <input type="number" value="1" class="form-control" name="recurring_interval" style="width: 15%">
                         <span>&nbsp; month(s)</span>
                     </div>
                 </div>
             </div>
             <div class="col-md-2 form-group">
                 <label for="startDate">Start date</label>
-                <input type="text" class="form-control date" name="start_date" id="startDate"/>
+                <input type="text" class="form-control date" name="recurring_start_date" id="startDate"/>
             </div>
             <div class="col-md-1 form-group">
                 <label for="endType">End</label>
-                <select name="end_type" class="form-control" id="endType">
+                <select name="recurring_end_type" class="form-control" id="endType">
                     <option value="none">None</option>
                     <option value="by">By</option>
                     <option value="after">After</option>

@@ -30,11 +30,6 @@ class Settings_model extends MY_Model {
 		]);
 	}
 
-	public function getCompanyValueByKey($key = '', $company_id)
-	{
-		return ($query = $this->db->get_where($this->table, ['key' => $key, 'company_id' => $company_id], 1)) && $query->num_rows() > 0 ? $query->row()->value : null;
-	}
-
 
 }
 

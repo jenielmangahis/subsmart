@@ -20,7 +20,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <h3 class="page-title">Invoices & Payments</h3>
 
                                 </div>
-                                <!-- <div class="col-sm-6">
+                                <div class="col-sm-6">
                                     <div class="float-right d-md-block">
                                         <div class="dropdown">
                                             <?php if (hasPermissions('WORKORDER_MASTER')): ?>
@@ -30,25 +30,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <?php endif ?>
                                         </div>
                                     </div>
-                                </div> -->
-                            </div>
-                            
-                            <div style="background-color:#fdeac3; width:100%;padding:.5%;margin-bottom:5px;margin-top:5px;margin-bottom:10px;">
-                            An invoice provides customers with a detailed description and cost of the products or services that you have provided. Invoices are required for sales where the customers do not pay you immediately.  Our invoices are tracked so that you know how much each customer owes you and when payment is due.  This listing and our dashboard widget will help you keep your eyes on your money. 
-                            </div>
-                            
-                            <div class="row">
-                                <div class="col-md-12" style="text-align:right;padding-bottom:10px;">
-                                    <a class="btn btn-primary" href="<?php echo base_url('invoice/add') ?>"><span class="fa fa-plus fa-margin-right"></span> Add New Invoice</a>
                                 </div>
                             </div>
-                            
                             <div class="row margin-bottom-ter align-items-center">
-                                <!-- <div class="col-auto">
+                                <div class="col-auto">
                                     <p>
                                         Listing all invoices.
                                     </p>
-                                </div> -->
+                                </div>
                                 <div class="col text-right-sm d-flex justify-content-end align-items-center">
                                     <form style="display: inline-flex;" class="form-inline form-search"
                                           name="form-search"
@@ -406,7 +395,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <div class="page-empty-container">
                                         <h5 class="page-empty-header">There are no invoices</h5>
                                         <p class="text-ter margin-bottom">Manage your invoice.</p>
-                                       
+                                        <a class="btn btn-primary"
+                                        href="<?php echo base_url('invoice/add') ?>"><span
+                                                    class="fa fa-plus fa-margin-right"></span> Add New Invoice</a>
                                     </div>
                                 <?php } ?>
                             </div>

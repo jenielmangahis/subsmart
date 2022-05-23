@@ -136,7 +136,7 @@ input#datepicker_startdate {
 </style>
 <form name="calendar-event-modal-form" id="frm_create_event">
     <input name="type" type="hidden" value="1">
-
+    <div class="event-form-message"></div>
     <?php if (!empty($event)) { ?>
         <input name="event_id" type="hidden" value="<?php echo $event->id; ?>">
     <?php } ?>
@@ -145,14 +145,9 @@ input#datepicker_startdate {
         <div class="row">
             <div class="col-md-6 col-sm-12">
                 <label class="left">Customer</label> <span class="form-required left">*</span>
-                <select name="customer_id" id="acs-customer" class="form-control" placeholder="Select customer" tabindex="-1" aria-hidden="true">
-                  <option></option>
+                <select name="customer_id" id="business-customer-a" class="form-control select2-hidden-accessible" aria-hidden="true">
                   <?php foreach($customers as $c){ ?>
-                    <?php if (!empty($event)) { ?>
-                      <option <?= $event->customer_id == $c->prof_id ? 'selected="selected"' : ''; ?> value="<?= $c->prof_id; ?>"><?= $c->first_name . ' ' . $c->last_name; ?></option>
-                    <?php }else{ ?>
-                      <option value="<?= $c->prof_id; ?>"><?= $c->first_name . ' ' . $c->last_name; ?></option>
-                    <?php } ?>
+                    <option value="<?= $c->prof_id; ?>"><?= $c->first_name . ' ' . $c->last_name; ?></option>
                   <?php } ?>
                 </select>
             </div>
@@ -161,11 +156,7 @@ input#datepicker_startdate {
                 <select name="what_of_even" id="what_of_even" class="form-control gray-first">
                     <option value="">Select type of event</option>
                     <?php foreach($eventTypes as $e){ ?>
-                      <?php if (!empty($event)) { ?>
-                        <option <?= $event->what_of_even == $e->title ? 'selected="selected"' : ''; ?> value="<?= $e->id; ?>"><?= $e->title; ?></option>
-                      <?php }else{ ?>
-                        <option value="<?= $e->id; ?>"><?= $e->title; ?></option>
-                      <?php } ?>
+                      <option value="<?= $e->event_type_name; ?>"><?= $e->event_type_name; ?></option>
                     <?php } ?>
                 </select>
             </div>
@@ -174,59 +165,11 @@ input#datepicker_startdate {
 
     <div class="form-group">
         <div class="row">
-            <?php
-              $is_checked = '';
-              $container_hidden = 'display: none;';
-              if( !empty($event) ){
-                $event_address = '';
-                $event_zip_code = '';
-                $event_state = '';
-                
-                if( $event->event_address != '' ){
-                  $event_address = $event->event_address;
-                  $event_zip_code = $event->event_zip_code;
-                  $event_state = $event->event_state;
-                  $is_checked = 'checked="checked"';
-                  $container_hidden = '';
-                }
-              }
-
-            ?>
             <div class="col-md-12 col-sm-12">
                 <label class="left">Schedule Description</label> <span class="form-required left">*</span><!-- &nbsp;<span class="help help-sm left">(write few words about this)</span> -->
-                <input placeholder="Write few words about this..." type="text" name="description" value="<?php echo (!empty($event)) ? $event->description : '' ?>"
+                <input placeholder="Write few words about this..." required="" id="event-description" type="text" name="description" value="<?php echo (!empty($event)) ? $event->description : '' ?>"
                        class="form-control" autocomplete="off">
-                <div class="checkbox checkbox-sec" style="margin-bottom: 22px;text-align: left; ">
-                    <input type="checkbox" <?= $is_checked; ?> class="chk-event-address" id="event-add-address" name="event_add_address" />
-                    <label class="" style="font-weight: 500;" for="event-add-address">Add Address</label>
-                </div>
             </div>
-        </div>
-        <div class="event-location" style="<?= $container_hidden; ?>">
-          <div class="row">
-              <div class="col-md-12 col-sm-12">
-                  <label class="left">Address</label>
-                  <input placeholder="" required="" id="event-location" type="text" name="event_address" value="<?php echo $event_address; ?>"
-                         class="form-control" autocomplete="off">
-              </div>
-          </div>
-          <div class="row">
-              <div class="col-md-6 col-sm-6">
-                  <label class="left">Zip / Postal Code</label>
-                  <input placeholder="" required="" id="event-location" type="text" name="event_zip_code" value="<?php echo $event_zip_code; ?>"
-                         class="form-control" autocomplete="off">
-              </div>
-              <div class="col-md-6 col-sm-6">
-                  <label class="left">State / Province</label>
-                  <select name="event_state" id="customer_address_modal_state" class="form-control state-province">
-                    <option value="" selected="selected">- select -</option>
-                    <?php $states = statesList(); ?>
-                    <?php foreach($states as $key => $value){ ?>
-                      <option <?= $event_state == $key ? 'selected="selected"' : ''; ?> value="<?= $key; ?>"><?= $value; ?></option>
-                    <?php } ?>
-                  </select>
-              </div>
-          </div>
         </div>
     </div>
     <div class="form-group">
@@ -566,8 +509,6 @@ input#datepicker_startdate {
     $(document).ready(function () {
 
         // select the customer
-        $('#acs-customer').select2();
-        $('.state-province').select2();
         $('#business-customer')
             .empty() //empty select
             .append($("<option/>") //add option tag in select
@@ -576,6 +517,7 @@ input#datepicker_startdate {
             .val("<?php echo $event->customer_id ?>") //select option of select2
             .trigger("change"); //apply to select2
 
+        $("#business-customer-a").select2();
 
         // select the employee / user
         $('#assign_users')
@@ -586,12 +528,4 @@ input#datepicker_startdate {
             .val("<?php echo $event->user->user_id ?>") //select option of select2
             .trigger("change"); //apply to select2
         });
-
-    $(".chk-event-address").change(function(){
-      if($(this).prop("checked") == true){
-        $(".event-location").show();
-      }else{
-        $(".event-location").hide();
-      }
-    });
 </script>

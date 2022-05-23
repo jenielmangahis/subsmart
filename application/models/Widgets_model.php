@@ -3,100 +3,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Widgets_model extends MY_Model {
     
-    function loadTechLeaderboard($comp_id)
-    {
-        $this->db->from('users');
-        $this->db->select('users.id,users.FName,users.LName,count(*) as totalJobs');
-        $this->db->where('users.company_id', $comp_id);
-        $this->db->join('jobs', 'jobs.employee_id = users.id','right');
-        $this->db->where('jobs.status', 'Completed');
-        $this->db->group_by('jobs.employee_id');
-        $this->db->order_by('totalJobs', 'DESC');
-        return $this->db->get()->result();
-
-    }
-    
-    function getOverdueInvoices($comp_id)
-    {
-        $this->db->join('acs_profile', 'invoices.customer_id = acs_profile.prof_id','right');
-        $this->db->where('invoices.company_id', $comp_id);
-        $this->db->where('due_date <', date('Y-m-d'));
-        return $this->db->get('invoices')->result();
-    }
-    
-    function getTags()
-    {
-        $this->db->where('company_id' , getLoggedCompanyID());
-        return $this->db->get('job_tags')->result();
-    }
-
-    function rawGetTagsWithCount($company_id)
-    {
-        $sql = '
-            SELECT jt.`id`,jt.`name`,jt.`company_id`, (
-                SELECT COUNT(*)
-              FROM jobs j 
-              WHERE j.tags = jt.id
-            )AS total_job_tags 
-            FROM job_tags jt 
-            WHERE jt.company_id = '.$company_id.'
-        ';
-        $query = $this->db->query($sql);
-        return $query->result();
-    }
-    
-    function getLeadSource($comp_id)
-    {
-         $this->db->select('fk_lead_id, COUNT(fk_lead_id) as leadSource, lead_name');
-         $this->db->where('company_id', $comp_id);
-         $this->db->join('ac_leadtypes', 'ac_leads.fk_lead_id = ac_leadtypes.lead_id','right');
-         $this->db->group_by('fk_lead_id');
-         return $this->db->get('ac_leads')->result();
-    }
-    
-    function changeOrder($id, $user_id, $isMain, $details)
-    {
-        $this->db->where('wu_user_id', $user_id);
-        $this->db->where('wu_widget_id', $id);
-        $this->db->where('wu_is_main', $isMain);
-        return $this->db->update('widgets_users', $details);
-        
-    }
-    
-    function addToMain($user_id, $id)
-    {
-        $this->db->where('wu_user_id', $user_id);
-        $this->db->where('wu_widget_id', $id);
-        $q = $this->db->get('widgets_users');
-        if($q->num_rows() > 0):
-            $isMain = $q->row()->wu_is_main;
-            if($isMain==0):
-                $details = array('wu_is_main' => 1);
-                
-                $this->db->where('wu_user_id', $user_id);
-                $this->db->where('wu_widget_id', $id);
-                if($this->db->update('widgets_users', $details)):
-                    return true;
-                endif;
-            else:
-                $details = array('wu_is_main' => 0);
-                
-                $this->db->where('wu_user_id', $user_id);
-                $this->db->where('wu_widget_id', $id);
-                if($this->db->update('widgets_users', $details)):
-                    return true;
-                endif;
-            endif;
-        else:
-            $details = array('wu_user_id'=> $user_id, 'wu_widget_id'=> $id, 'wu_is_main' => 1);
-                
-            if($this->db->insert('widgets_users', $details)):
-                return true;
-            endif;
-            
-        endif;
-    }
-    
     function getWidgetByID($id)
     {
         $this->db->where('w_id', $id);
@@ -105,45 +11,13 @@ class Widgets_model extends MY_Model {
     
     function removeWidget($id, $user_id)
     {
-        $this->db->where('wu_company_id !=', 0);
         $this->db->where('wu_widget_id', $id);
-        $isCompany = $this->db->get('widgets_users');
-        if($isCompany->num_rows() > 0):
-            
-            $this->db->where('wu_company_id !=', 0);
-            $this->db->where('wu_widget_id', $id);
-            $this->db->where('wu_user_id', $user_id);
-            
-            $isCompany = $this->db->get('widgets_users');
-            if($isCompany->num_rows() > 0):
-                $details = array(
-                    'success' => true,
-                    'message' => 'Successfully removed'
-                );
-            else:
-                $details = array(
-                    'success' => false,
-                    'message' => 'Sorry you cannot remove a widget set by the company'
-                );
-            endif;
-            
+        $this->db->where('wu_user_id', $user_id);
+        if($this->db->delete('widgets_users')):
+            return true;
         else:
-            $this->db->where('wu_widget_id', $id);
-            $this->db->where('wu_user_id', $user_id);
-            if($this->db->delete('widgets_users')):
-                $details = array(
-                    'success' => true,
-                    'message' => 'Successfully removed'
-                );
-            else:
-                $details = array(
-                    'success' => false,
-                    'message' => 'Something went wrong'
-                );
-            endif;
+            return false;
         endif;
-        
-        return json_encode($details);
     }
 
     function addWidgets($details)

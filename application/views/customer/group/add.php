@@ -2,50 +2,39 @@
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
 <!-- page wrapper start -->
-<style>
-    div[wrapper__section] {
-        padding: 60px 10px !important;
-    }
-    .card{
-        box-shadow: 0 0 13px 0 rgb(116 116 117 / 44%) !important;
-    }
-</style>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/notifications'); ?>
     <?php include viewPath('includes/sidebars/customer'); ?>
     <div wrapper__section>
-        <div class="container-fluid p-40">
-             <form method="post">
+        <div class="container-fluid">
+            <section class="content">
+                <!-- Default box -->
+                <div class="box">
+
+                    <div class="page-title-box">
+                        <div class="row align-items-center">
+                            <div class="col-sm-6">
+                                <h1 class="page-title">Add Group</h1>
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item active">Enter the name for the new group.</li>
+                                </ol>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="float-right d-none d-md-block">
+                                    <div class="dropdown">
+                                        <a href="<?php echo url('customer/group/') ?>" class="btn btn-primary"
+                                           aria-expanded="false">
+                                            <i class="mdi mdi-settings mr-2"></i> Go Back to Groups
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <form method="post">
                         <div class="row custom__border">
                             <div class="col-xl-12">
                                 <div class="card">
-                                    <div class="page-title-box">
-                                        <div class="row align-items-center">
-                                            <div class="col-sm-6">
-                                                <h3 class="box-title">Add Group</h3>
-                                                <ol class="breadcrumb">
-                                                    <li class="breadcrumb-item active">Enter the name for the new group.</li>
-                                                </ol>
-                                            </div>
-                                            <div class="col-sm-6">
-                                                <div class="float-right d-none d-md-block">
-                                                    <div class="dropdown">
-                                                        <a style="position: relative;bottom: 16px;" href="<?php echo url('customer/group/') ?>" class="btn btn-primary"
-                                                           aria-expanded="false">
-                                                            <i class="mdi mdi-settings mr-2"></i> Go Back to Groups
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="alert alert-warning col-md-12 mt-4" role="alert">
-                                        <span style="color:black;">
-                                            A customer group is a way of aggregating customers that are similar in some way.  For example, you may
-                                            use them to distinguish between retail and wholesale customers or between company employees and external customers etc. ...
-                                            For example, a customer may have registered through the application as a wholesale customer.
-                                        </span>
-                                        </div>
-                                    </div>
                                     <div class="card-body">
                                         <div class="row">
                                             <div class="col-sm-6">
@@ -73,6 +62,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </div>
                         </div>
                     </form>
+                </div>
+                <!-- /.box -->
+            </section>
             <!-- end row -->
         </div>
         <!-- end container-fluid -->

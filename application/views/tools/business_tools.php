@@ -1,11 +1,5 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-<style>
-svg#svg-sprite-menu-close {
-    position: relative;
-    bottom: 112px !important;
-}
-</style>
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">
     <?php $this->load->view('includes/sidebars/api_connectors', $sidebars)?>
@@ -36,7 +30,7 @@ svg#svg-sprite-menu-close {
             </div>
             <!-- end row -->
             <div class="row">
-
+                
             </div>
             <!-- end row -->
         </div>

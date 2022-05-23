@@ -3,45 +3,39 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
 <!-- page wrapper start -->
 <div class="wrapper" role="wrapper">
-<?php include viewPath('includes/sidebars/workorder'); ?>
-    <div wrapper__section style="padding-left:1%;padding-top:2.5%;">
+    <?php include viewPath('includes/sidebars/workorder'); ?>
+    <div wrapper__section>
         <?php include viewPath('includes/notifications'); ?>
         <div class="card"> 
             <div class="container-fluid" style="font-size:14px;">
-
                 <div class="row">
                     <div class="col">
                         <h3 class="m-0">Work Orders</h3>
                     </div>
-                </div>
-                
                     <div style="background-color:#fdeac3; width:100%;padding:.5%;margin-bottom:5px;margin-top:5px;margin-bottom:10px;">
-                        Work order are are crucial to an organization’s maintenance operation. They help everyone from maintenance managers to technicians organize, assign, prioritize, track, and complete key tasks. When done well, work orders allow you to capture information, share it, and use it to get the work done as efficiently as possible.  Our work order has legal headers and two (2) places where you can outline specific terms.  This form will empower you team to move forward with each project without looking backward. Signature place holders and specific term(s) statements will help make this work order into a binding agreement.
+                        Work order are are crucial to an organization’s maintenance operation. They help everyone from maintenance managers to technicians organize, assign, prioritize, track, and complete key tasks. When done well, work orders allow you to capture information, share it, and use it to get the work done as efficiently as possible.  Our work order has legal headers and two (2) places where you can outline specific terms.  This form will empower you team to move forward with each project without looking backward. Signature place holders and specific term(s) statements will help make this work order into a binding agreement.  
                     </div>
+                </div>
                 <div class="row" style="margin-bottom:20px;">
                     <div class="col">
                         <!-- <h1 class="m-0">Work Orders</h1> -->
                     </div>
                     <div class="col-auto">
                         <div class="h1-spacer">
-                            <a href="<?php echo base_url('workorder/settings') ?>" style="padding-right:20px;"><i class="fa fa-cog" style="font-size:24px;"></i> Settings </a>
-                             <a class="btn btn-primary btn-md" href="<?php echo base_url('workorder/work_order_templates') ?>">
-                             <i class="fa fa-address-book-o"></i> &nbsp; Industry Templates
+                             <a class="btn btn-primary btn-md" href="<?php echo base_url('/builder?form_id=27') ?>">
+                                <span class="fa fa-pencil"></span> &nbsp; Customize Form
                             </a>
-                            <!-- <a class="btn btn-primary btn-md" href="#" data-toggle="modal" data-target="#workordermodal">
+                            <!-- <a class="btn btn-primary btn-md" href="<?php echo base_url('/workorder/add') ?>">
                                 <span class="fa fa-plus"></span> &nbsp; New Work Order
                             </a> -->
-                            <a href="#" class="btn btn-primary btn-md" data-toggle="modal" data-target="#workordermodal">
-                                <span class="fa fa-plus"></span> &nbsp; New Work Order
-                            </a>
+                            <a href="#" class=" btn-primary btn-md" data-toggle="modal" data-target="#workordermodal"><span class="fa fa-plus"></span> &nbsp; New Work Order</a>
                         </div>
                     </div>
                 </div>
-            
 
                 <div class="row align-items-center mb-4 margin-bottom-ter">
                     <div class="col">
-                        <!-- <p class="m-0">Listing all your work orders.</p> -->
+                        <p class="m-0">Listing all your work orders.</p>
                     </div>
                     <div class="col-auto text-right-sm d-flex align-items-center">
                         <form style="display: inline;" class="form-inline form-search" name="form-search"
@@ -75,7 +69,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <li role="presentation"><a role="menuitem" tabindex="-1"
                                                            href="<?php echo base_url('workorder') ?>?order=date-issued-asc">Date
                                         Issued: Oldest</a></li>
-                                <!-- <li role="presentation"><a role="menuitem" tabindex="-1"
+                                <li role="presentation"><a role="menuitem" tabindex="-1"
                                                            href="<?php echo base_url('workorder') ?>?order=event-date-desc">Scheduled
                                         Date: Newest </a></li>
                                 <li role="presentation"><a role="menuitem" tabindex="-1"
@@ -86,7 +80,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         Date: Newest </a></li>
                                 <li role="presentation"><a role="menuitem" tabindex="-1"
                                                            href="<?php echo base_url('workorder') ?>?order=date-completed-asc">Completed
-                                        Date: Oldest </a></li> -->
+                                        Date: Oldest </a></li>
                                 <!--                                <li role="presentation"><a role="menuitem" tabindex="-1"-->
                                 <!--                                                           href="<?php echo base_url('workorder') ?>?order=name-asc">Job:-->
                                 <!--                                        A to Z</a></li>-->
@@ -99,12 +93,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <li role="presentation"><a role="menuitem" tabindex="-1"
                                                            href="<?php echo base_url('workorder') ?>?order=number-desc">Work
                                         Order #: Z to A</a></li>
-                                <!-- <li role="presentation"><a role="menuitem" tabindex="-1"
+                                <li role="presentation"><a role="menuitem" tabindex="-1"
                                                            href="<?php echo base_url('workorder') ?>?order=priority-asc">Priority:
                                         A to Z</a></li>
                                 <li role="presentation"><a role="menuitem" tabindex="-1"
                                                            href="<?php echo base_url('workorder') ?>?order=priority-desc">Priority:
-                                        Z to A</a></li> -->
+                                        Z to A</a></li>
                             </ul>
                         </div>
                     </div>
@@ -112,54 +106,73 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 </div>
 
                 <div class="tabs">
-                    <ul class="clearfix work__order" id="myTab" role="tablist">                        
-                        <li class="<?= $tab_status == 'all' ? 'active' : '' ?>">
+                    <ul class="clearfix work__order" id="myTab" role="tablist">
+                        <?php foreach ($workorderStatusFilters as $key => $statusFilter) { ?>
+                            <?php if ($key === 0) { ?>
+                                <li <?php echo (empty($tab_index)) ? 'class="active"' : '' ?>>
+                                    <a class="nav-link active"
+                                       href="<?php echo base_url('workorder') ?>"
+                                       aria-controls="tab1" aria-selected="true">All
+                                        (<?php echo get_workorder_count() ?>)</a>
+                                </li>
+                            <?php } ?>
+                            <li <?php echo ((!empty($tab_index)) && $statusFilter->id === $tab_index) ? "class='active'" : "" ?>>
+                                <a class="nav-link"
+                                   id="profile-tab"
+                                   data-toggle="tab<?php echo $key ?>"
+                                   href="<?php echo base_url('workorder/tab/' . $statusFilter->id) ?>"
+                                   role="tab"
+                                   aria-controls="profile" aria-selected="false"><?php echo $statusFilter->title ?>
+                                    (<?php echo $statusFilter->total ?>)</a>
+                            </li>
+                        <?php } ?>
+                        <li class="active">
                             <a class="nav-link active"
                                 href="<?php echo base_url('workorder') ?>"
                                 aria-controls="tab1" aria-selected="true">All
-                                (<span class="w-count w-count-all">0</span>)</a>
+                                (0)</a>
                         </li>
-                        <li class="<?= $tab_status == 'new' ? 'active' : '' ?>">
+                        <li>
                             <a class="nav-link active"
-                                href="<?php echo base_url('workorder?status=new') ?>"
+                                href="<?php echo base_url('workorder') ?>"
                                 aria-controls="tab1" aria-selected="true">New
-                                (<span class="w-count w-count-new">0</span>)</a>
+                                (0)</a>
                         </li>
-                        <li class="<?= $tab_status == 'scheduled' ? 'active' : '' ?>">
+                        <li>
                             <a class="nav-link active"
-                                href="<?php echo base_url('workorder?status=scheduled') ?>"
+                                href="<?php echo base_url('workorder') ?>"
                                 aria-controls="tab1" aria-selected="true">Scheduled
-                                (<span class="w-count w-count-scheduled">0</span>)</a>
+                                (0)</a>
                         </li>
-                        <li class="<?= $tab_status == 'started' ? 'active' : '' ?>">
+                        <li>
                             <a class="nav-link active"
-                                href="<?php echo base_url('workorder?status=started') ?>"
+                                href="<?php echo base_url('workorder') ?>"
                                 aria-controls="tab1" aria-selected="true">Started
-                                (<span class="w-count w-count-started">0</span>)</a>
+                                (0)</a>
                         </li>
-                        <li class="<?= $tab_status == 'paused' ? 'active' : '' ?>">
+                        <li>
                             <a class="nav-link active"
-                                href="<?php echo base_url('workorder?status=paused') ?>"
+                                href="<?php echo base_url('workorder') ?>"
                                 aria-controls="tab1" aria-selected="true">Paused
-                                (<span class="w-count w-count-paused">0</span>)</a>
+                                (0)</a>
                         </li>
-                        <li class="<?= $tab_status == 'invoiced' ? 'active' : '' ?>">
+                        <li>
                             <a class="nav-link active"
-                                href="<?php echo base_url('workorder?status=invoiced') ?>"
+                                href="<?php echo base_url('workorder') ?>"
                                 aria-controls="tab1" aria-selected="true">Invoiced
-                                (<span class="w-count w-count-invoiced">0</span>)</a>
+                                (0)</a>
                         </li>
-                        <li class="<?= $tab_status == 'withdrawn' ? 'active' : '' ?>">
+                        <li>
                             <a class="nav-link active"
-                                href="<?php echo base_url('workorder?status=withdrawn') ?>"
+                                href="<?php echo base_url('workorder') ?>"
                                 aria-controls="tab1" aria-selected="true">Withdrawn
-                                (<span class="w-count w-count-withdrawn">0</span>)</a>
+                                (0)</a>
                         </li>
-                        <li class="<?= $tab_status == 'closed' ? 'active' : '' ?>">
+                        <li>
                             <a class="nav-link active"
-                                href="<?php echo base_url('workorder?status=closed') ?>"
+                                href="<?php echo base_url('workorder') ?>"
                                 aria-controls="tab1" aria-selected="true">Closed
-                                (<span class="w-count w-count-closed">0</span>)</a>
+                                (0)</a>
                         </li>
                     </ul>
                 </div>
@@ -181,20 +194,20 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <div class="table-nowrap">Work Order#</div>
                                         </div>
                                     </th>
-                                    <!-- <th>Job</th> -->
+                                    <th>Job</th>
                                     <th>Date Issued</th>
                                     <th>Customer</th>
                                     <th>Employees</th>
                                     <th>Priority</th>
                                     <th>Status</th>
-                                    <th class="text-center">Action</th>
+                                    <th></th>
                                 </tr>
                                 </thead>
 
                                 <tbody>
 
                                 <?php foreach ($workorders as $workorder) { ?>
-                                    <tr id="w-row-<?= $workorder->id; ?>">
+                                    <tr>
                                         <td>
                                             <div class="table-name">
                                                 <div class="checkbox checkbox-sm">
@@ -205,41 +218,32 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     <label for="work_order_id_<?php echo $workorder->id ?>"></label>
                                                 </div>
                                                 <div><a class="a-default table-nowrap" href="">
-                                                        <?php echo $workorder->work_order_number ?>
+                                                        WO-00<?php echo $workorder->id ?>
                                                     </a>
                                                 </div>
                                             </div>
                                         </td>
-                                        <!-- <td>
+                                        <td>
                                             <a class="a-default"
                                                href="#">
-                                                <?php //echo get_customer_by_id($workorder->customer_id)->contact_name ?>
+                                                <?php echo get_customer_by_id($workorder->customer_id)->contact_name ?>
                                             </a>
-                                        </td> -->
+                                        </td>
                                         <td>
                                             <div class="table-nowrap">
-                                                <?php echo date('M d, Y', strtotime($workorder->date_created)) ?>
+                                                <?php echo date('M d, Y', strtotime($workorder->date_issued)) ?>
                                             </div>
                                         </td>
                                         <td>
                                             <a href="<?php echo base_url('customer/view/' . $workorder->customer_id) ?>">
-                                                <?php //echo get_customer_by_id($workorder->customer_id)->contact_name 
-                                                if(empty($workorder->first_name)){
-                                                    echo $workorder->contact_name;
-                                                }else{
-
-                                                    echo $workorder->first_name . ' ' .  $workorder->middle_name . ' ' . $workorder->last_name;
-                                                }
-                                                ?>
+                                                <?php echo get_customer_by_id($workorder->customer_id)->contact_name ?>
                                             </a>
                                             <div>Scheduled on: 30 Mar 2020, 2:00 pm to 4:00 pm</div>
                                         </td>
-                                        <td><?php echo get_user_by_id($workorder->employee_id)->FName .' '. get_user_by_id($workorder->employee_id)->LName ?></td>
-                                        <td><?php echo $workorder->priority; ?></td>
-                                        <td><?php  if( $workorder->is_mail_open == 1 ){
-                                              echo "<i class='fa fa-eye'></i>  ";
-                                            } echo $workorder->w_status;  ?></td>
-                                        <td class="text-center">
+                                        <td><?php echo get_user_by_id($workorder->user_id)->name ?></td>
+                                        <td><?php echo ($workorder->priority_id > 0)?get_priority_by_id($workorder->priority_id)->title:'' ?></td>
+                                        <td><?php echo ($workorder->status_id > 0)?get_status_by_id($workorder->status_id)->title:''; ?></td>
+                                        <td class="text-right">
                                             <div class="dropdown dropdown-btn">
                                                 <button class="btn btn-default dropdown-toggle" type="button"
                                                         id="dropdown-edit"
@@ -253,12 +257,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     <li role="presentation"><a role="menuitem" tabindex="-1"
                                                                                href="<?php echo base_url('workorder/view/' . $workorder->id) ?>"><span
                                                                     class="fa fa-file-text-o icon"></span> View</a></li>
-                                                    <li role="presentation">
-                                                    <?php if($workorder->work_order_type_id == '2'){ ?>
-                                                        <a role="menuitem" tabindex="-1" href="<?php echo base_url('workorder/editAlarm/' . $workorder->id) ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
-                                                    <?php }else{ ?>
-                                                        <a role="menuitem" tabindex="-1" href="<?php echo base_url('workorder/edit/' . $workorder->id) ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
-                                                    <?php } ?>
+                                                    <li role="presentation"><a role="menuitem" tabindex="-1"
+                                                                               href="<?php echo base_url('workorder/edit/' . $workorder->id) ?>"><span
+                                                                    class="fa fa-pencil-square-o icon"></span> Edit</a>
                                                     </li>
                                                     <li role="separator" class="divider"></li>
                                                     <li role="presentation"><a role="menuitem"
@@ -267,32 +268,25 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                                data-toggle="modal"
                                                                                data-target="#modalCloneWorkorder"
                                                                                data-id="<?php echo $workorder->id ?>"
-                                                                               data-wo_num="<?php echo $workorder->work_order_number ?>" class="clone-workorder">
-                                                                               <span class="fa fa-files-o icon clone-workorder">
+                                                                               data-name="WO-00433"><span
+                                                                    class="fa fa-files-o icon clone-workorder">
 
                                                         </span> Clone Work Order</a>
                                                     </li>
                                                     <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                               href="<?php echo base_url('invoice/add?workorder=' . $workorder->work_order_number); ?>"
+                                                                               href="<?php echo base_url('invoice') ?>"
                                                                                data-convert-to-invoice-modal="open"
                                                                                data-id="161983"
                                                                                data-name="WO-00433"><span
                                                                     class="fa fa-money icon"></span> Create Invoice</a>
                                                     </li>
-                                                    <!-- <li role="presentation"><a role="menuitem"
+                                                    <li role="presentation"><a role="menuitem"
                                                                                tabindex="-1"
                                                                                href="<?php echo base_url('workorder/delete/' . $workorder->id) ?>>"
                                                                                onclick="return confirm('Do you really want to delete this item ?')"
                                                                                data-delete-modal="open" data-id="161983"
                                                                                data-name="WO-00433"><span
-                                                                    class="fa fa-trash-o icon"></span> Delete</a></li> -->
-                                                    <li role="presentation">
-                                                        <a href="javascript:void(0);" data-id="<?= $workorder->id; ?>" data-name="<?= $workorder->work_order_number; ?>" class="btn-delete-work-order"><span class="fa fa-trash-o icon"></span> Delete </a></li>
-                                                    <li role="presentation">
-                                                        <a role="menuitem" tabindex="-1" href="<?php echo base_url('job/work_order_job/'. $workorder->id) ?>">
-                                                            <span class="fa fa-briefcase icon"></span> Convert To Jobs
-                                                        </a>
-                                                    </li>
+                                                                    class="fa fa-trash-o icon"></span> Delete</a></li>
                                                 </ul>
                                             </div>
                                         </td>
@@ -320,62 +314,30 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Clone Work Order</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
-                    </button>                    
+                    </button>
+                    <h4 class="modal-title">Clone Work Order</h4>
                 </div>
                 <div class="modal-body">
                     <form name="clone-modal-form">
                         <div class="validation-error" style="display: none;"></div>
                         <p>
                             You are going create a new work order based on <b>Work Order #<span
-                                        class="work_order_no"></span> <input type="hidden" id="wo_id" name="wo_id"> </b>.<br>
+                                        class="data_workorder_id"></span></b>.<br>
                             Afterwards you can edit the newly created work order.
                         </p>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-default" type="button" data-dismiss="modal">Close</button>
-                    <a id="btn_clone_workorder" class="btn btn-primary" href="javascript:void(0);" data-clone-modal="submit">Clone
-                        Work Order</a>
+                    <button id="clone_workorder" class="btn btn-primary" type="button" data-clone-modal="submit">Clone
+                        Work Order
+                    </button>
                 </div>
             </div>
         </div>
     </div>
-
-    <div class="modal fade" id="workordermodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">New Work Order</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body text-center">
-              <p class="text-lg margin-bottom">
-                  What type of Work Order you want to create
-              </p><center>
-              <div class="margin-bottom text-center" style="width:60%;">
-                  <div class="help help-sm">Create new work Order</div>
-                  <?php if(empty($company_work_order_used->work_order_template_id)){ ?>
-                  <a class="btn btn-primary add-modal__btn-success" style="background-color: #2ab363 !important" href="<?php echo base_url('workorder/NewworkOrder') ?>"><span class="fa fa-file-text-o"></span> New Work Order</a>
-                  <?php }
-                  elseif($company_work_order_used->work_order_template_id == '0'){ ?>
-                  <a class="btn btn-primary add-modal__btn-success" style="background-color: #2ab363 !important" href="<?php echo base_url('workorder/NewworkOrder') ?>"><span class="fa fa-file-text-o"></span> New Work Order</a>
-                  <?php }
-                  elseif($company_work_order_used->work_order_template_id == '1'){ ?>
-                  <a class="btn btn-primary add-modal__btn-success" style="background-color: #2ab363 !important" href="<?php echo base_url('workorder/NewworkOrderAlarm') ?>"><span class="fa fa-file-text-o"></span> New Work Order</a>
-                  <?php } ?>
-              </div>
-              <div class="margin-bottom" style="width:60%;">
-                  <div class="help help-sm">Existing Work Order</div>
-                  <a class="btn btn-primary add-modal__btn-success" style="background-color: #2ab363 !important" href="<?php echo base_url('workorder/NewworkOrder?type=2') ?>"><span class="fa fa-list-ul fa-margin-right"></span> Existing </a>
-              </div></center>
-        </div>
-    </div>
-</div>
 
     <div class="modal fade" id="newJobModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -416,186 +378,33 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             </div>
         </div>
     </div>
-    <!-- page wrapper end -->
+    
+    
+<div class="modal fade" id="workordermodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">New Work Order</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body text-center">
+                <p class="text-lg margin-bottom">
+                    What type of Work Order you want to create
+                </p><center>
+                <div class="margin-bottom text-center" style="width:60%;">
+                    <div class="help help-sm">Create new work Order</div>
+                    <a class="btn btn-primary add-modal__btn-success" style="background-color: #2ab363 !important" href="<?php echo base_url('workorder/add_new') ?>"><span class="fa fa-file-text-o"></span> New Work Order</a>
+                </div>
+                <div class="margin-bottom" style="width:60%;">
+                    <div class="help help-sm">Existing Work Order</div>
+                    <a class="btn btn-primary add-modal__btn-success" style="background-color: #2ab363 !important" href="#"><span class="fa fa-list-ul fa-margin-right"></span> Existing </a>
+                </div></center>
+        </div>
+    </div>
+</div>   
+
+ <!-- page wrapper end -->
     <?php include viewPath('includes/footer'); ?>
 </div>
-
-<script>
-// $(document).on('click','#delete_workorder',function(){
-//     // alert('test');
-    
-// });
-
-// function myFunction() {
-// $('#delete_workorder').on('click', function(){
-$(document).on('click touchstart','#delete_workorder',function(){
-
-    var id = $(this).attr('work-id');
-    // alert(id);
-  
-  var r = confirm("Are you sure you want to delete this Work Order?");
-
-  if (r == true) {
-    $.ajax({
-    type : 'POST',
-    url : "<?php echo base_url(); ?>workorder/delete_workorder",
-    data : {id: id},
-    success: function(result){
-        // $('#res').html('Signature Uploaded successfully');
-        // if (confirm('Some message')) {
-        //     alert('Thanks for confirming');
-        // } else {
-        //     alert('Why did you press cancel? You should have confirmed');
-        // }
-
-        // location.reload();
-        sucess("Data Deleted Successfully!");
-    },
-    });
-  } 
-  else 
-  {
-    alert('no');
-  }
-
-});
-
-$(document).on('click', '.btn-delete-work-order', function(){
-    var id = $(this).attr('data-id');
-    var workoder_number = $(this).attr('data-name');
-
-    Swal.fire({
-      title: 'Do you want to delete workorder number ' + workoder_number + '?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Delete',
-      confirmButtonColor: '#ec4561'
-    }).then((result) => {          
-      if (result.isConfirmed) {
-        var url = base_url + 'workorder/delete_workorder';
-
-        $.ajax({
-           type: "POST",
-           url: url,
-           dataType: 'json',
-           data: {id:id},
-           success: function(o)
-           {     
-                if( o ){
-                    Swal.fire({
-                      title: 'Success',
-                      text: 'Workorder successfully deleted.',
-                      icon: 'success',
-                      showCancelButton: false,
-                      confirmButtonColor: '#32243d',
-                      cancelButtonColor: '#d33',
-                      confirmButtonText: 'Ok'
-                    }).then((result) => {
-                      if (result.value) {
-                        $("#w-row-" + id).fadeOut("normal", function() {
-                            $(this).remove();
-                        });
-                      }
-                    });
-                }else{
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Cannot find data.',
-                        text: o.msg
-                    });
-                }            
-           }
-        });
-      } 
-    });
-});
-
-load_workorder_count_summary();
-
-function load_workorder_count_summary(){
-    var url = base_url + 'workorder/_load_count_summary';
-    //$('.w-count').html('<span class="spinner-border spinner-border-sm m-0"></span>');
-    setTimeout(function () {
-        $.ajax({
-           type: 'POST',
-           url: url,
-           data: {},
-           dataType: 'json',
-           success: function(o)
-           {
-
-                $('.w-count-all').html(o.count_all);
-                $('.w-count-new').html(o.count_new);
-                $('.w-count-scheduled').html(o.count_scheduled);
-                $('.w-count-started').html(o.count_started);
-                $('.w-count-paused').html(o.count_paused);
-                $('.w-count-invoiced').html(o.count_invoiced);
-                $('.w-count-withdrawn').html(o.count_withdrawn);
-                $('.w-count-closed').html(o.count_closed);
-           }
-        });
-    }, 800);
-}
-
-function sucess(information,$id){
-            Swal.fire({
-                title: 'Good job!',
-                text: information,
-                icon: 'success',
-                showCancelButton: false,
-                confirmButtonColor: '#32243d',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Ok'
-            }).then((result) => {
-                if (result.value) {
-                    location.reload();
-                }
-            });
-        }
-</script>
-
-<script>
-$(document).on('click touchstart','.clone-workorder',function(){
-
-var num = $(this).attr('data-wo_num');
-var id = $(this).attr('data-id');
-// alert(id);
-$('.work_order_no').text(num)
-$('#wo_id').val(id)
-
-
-});
-
-$(document).on('click','#btn_clone_workorder',function(){
-    // var num = $(this).attr('data-wo_num');
-    // var wo_num = $('.work_order_no').text();
-    var wo_num = $('#wo_id').val();
-    // alert(id);
-    // $('.work_order_no').text(num);
-    $.ajax({
-        type : 'POST',
-        url : "<?php echo base_url(); ?>workorder/duplicate_workorder",
-        data : {wo_num: wo_num},
-        success: function(result){
-            $("#modalCloneWorkorder").modal('hide');
-            sucess("Data Cloned Successfully!");
-        },
-    });
-});
-
-function sucess(information,$id){
-            Swal.fire({
-                title: 'Good job!',
-                text: information,
-                icon: 'success',
-                showCancelButton: false,
-                confirmButtonColor: '#32243d',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Ok'
-            }).then((result) => {
-                if (result.value) {
-                    location.reload();
-                }
-            });
-        }
-</script>

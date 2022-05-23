@@ -31,55 +31,9 @@ class Accounting_journal_entries_model extends MY_Model {
 		return $this->db->insert_id();
 	}
 
-	function getById($id, $companyId = null) {
-		if($companyId) {
-			$this->db->where('company_id', $companyId);
-		}
-		$this->db->where('id', $id);
-
-		$query = $this->db->get($this->table);
-		return $query->row();
-	}
-
-	function getEntries($journal_entry_id) {
-		return $this->db->where('journal_entry_id', $journal_entry_id)->get('accounting_journal_entry_items')->result();
-	}
-
-	function update($id, $data) {
-		$this->db->where('company_id', getLoggedCompanyID());
-		$this->db->where('id', $id);
-		$update = $this->db->update($this->table, $data);
-		if($update) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	function deleteEntries($journal_entry_id) {
-		return $this->db->where('journal_entry_id', $journal_entry_id)->delete('accounting_journal_entry_items');
-	}
-
-	public function update_entry($id, $journalId, $data)
+	function insertRecurringDetails($data)
 	{
-		$this->db->where('id', $id);
-		$this->db->where('journal_entry_id', $journalId);
-		$update = $this->db->update('accounting_journal_entry_items', $data);
-		return $update ? true : false;
-	}
-
-	public function get_company_journal_entries($filters = [])
-	{
-		$this->db->where('company_id', $filters['company_id']);
-		$this->db->where('status !=', 0);
-		$this->db->where('recurring', null);
-		$query = $this->db->get($this->table);
-		return $query->result();
-	}
-
-	public function delete_entry($id)
-	{
-		$this->db->where('id', $id);
-		return $this->db->delete($this->table);
+		$this->db->insert('accounting_recurring_journal_entries', $data);
+		return $this->db->insert_id();
 	}
 }

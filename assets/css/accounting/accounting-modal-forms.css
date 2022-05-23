@@ -1,48 +1,50 @@
-#modal-container .modal .modal-header .dropdown-header {
-    font-size: 1.25rem !important;
-}
-
-#modal-container .modal .modal-body table {
-    background: #f4f5f8;
-}
-
-#modal-container .modal .attachments-container span.select2.select2-container, #existing-attachments-modal .attachments-container span.select2.select2-container {
-    width: 50% !important;
-}
-
-span.select2-selection.select2-selection--single {
-    min-width: unset !important;
-}
-
-#modal-container .btn-transparent:hover {
-    background: #d4d7dc !important;
-    border-color: #6B6C72 !important;
-}
-#modal-container .btn-transparent {
-    color: #6B6C72 !important;
-}
-#modal-container .btn-transparent:focus {
-    border-color: #6B6C72 !important;
-}
-
 /* Bank Deposit Modal */
 .modal textarea[name="memo"], .modal textarea[name="description"] {
     height: auto !important;
 }
 
-#modal-container div.modal div.table-footer button.btn {
+#depositModal div.funds-table-container div.funds-table-footer button.btn,
+#journalEntryModal div.journal-table-container div.journal-table-footer button.btn,
+#inventoryModal div.inventory-table-container div.inventory-table-footer button.btn,
+#weeklyTimesheetModal div.timesheet-table-container div.timesheet-table-footer button.btn {
     border-radius: 5px;
     border-color: #6c757d !important;
     padding: 5px 15px;
     height: auto;
 }
 
-#modal-container div.modal div.table-footer button.btn:focus {
+#depositModal div.funds-table-container div.funds-table-footer button.btn:focus,
+#journalEntryModal div.journal-table-container div.journal-table-footer button.btn:focus,
+#inventoryModal div.inventory-table-container div.inventory-table-footer button.btn:focus,
+#weeklyTimesheetModal div.timesheet-table-container div.timesheet-table-footer button.btn:focus {
     color: #6c757d !important;
 }
 
 #depositModal textarea[name="cash_back_memo"] {
     height: 46px !important;
+}
+
+div.attachments button {
+    border: none;
+    height:auto;
+    background: none;
+    margin: 0 10px;
+}
+
+div.attachments div.attachments-list div.attachments-container {
+    padding: 14px;
+    margin-top: 5px;
+    text-align: center;
+    cursor: pointer;
+}
+
+div.attachments div.attachments-list div.attachments-container:hover {
+    border: 1px dashed #dee2e6 !important;
+}
+
+div.attachments div.attachments-list div.attachments-container div.attachments-container-label {
+    font-style: italic;
+    padding: 5px;
 }
 
 /* Transfer Modal */
@@ -56,7 +58,6 @@ span.select2-selection.select2-selection--single {
     display: inline-flex;
     border-radius: 20px;
     border: 1px solid #6b6c72;
-    width: auto !important;
 }
 
 #statementModal #recipientsTab li:first-child {
@@ -76,8 +77,7 @@ span.select2-selection.select2-selection--single {
 #statementModal #recipientsTab li a.active {
     border-bottom: none !important;
     font-weight: 900;
-    background-color: transparent !important;
-    color: #495057;
+    background-color: #fff !important;
 }
 
 #statementModal #recipientsTab li a:hover,
@@ -130,25 +130,8 @@ div.modal.right .modal-content {
     border-radius: 0 !important;
 }
 
-div.modal.right:not(#existing-attachments-modal) .modal-body {
-    padding: 0 30px 80px;
-}
-
-#existing-attachments-modal .modal-body {
-    padding: 30px 40px !important;
-}
-
-#existing-attachments-modal button[data-dismiss="modal"] {
-    padding: 10px;
-    position: absolute;
-    left: 0;
-    top: 0;
-    border: 1px solid #e3e3e3;
-    border-radius: 0;
-}
-
-#existing-attachments-modal button[data-dismiss="modal"]:hover {
-    color: unset;
+div.modal.right .modal-body {
+    padding: 15px 15px 80px;
 }
 
 div.modal.right.fade .modal-dialog {
@@ -174,101 +157,8 @@ div#tags-modal button.btn-outline-secondary {
     border-left: 1px solid #dee2e6 !important;
 }
 
-div#payrollModal .graph-color, div#commission-payroll-modal .graph-color, div#bonus-payroll-modal .graph-color {
+div#payrollModal .graph-color {
     height: 45px;
     width: 1px;
     border: 2px solid black;
-}
-
-.full-screen-modal .modal .btn[data-toggle="collapse"]:hover, .full-screen-modal .modal .btn[data-toggle="collapse"]:focus {
-    color: unset;
-}
-
-/* Single Time Activity Modal */
-#singleTimeModal .modal-header button#time-activity-settings-button, #weeklyTimesheetModal .modal-header button#time-activity-settings-button {
-    border: none;
-    font-size: 1.5rem;
-    font-weight: 700;
-    opacity: 0.5;
-    line-height: 1;
-    color: #000;
-    text-shadow: 0 1px 0 #fff;
-    padding: 1rem 1rem;
-    margin: -1rem -1rem -1rem auto;
-}
-
-#singleTimeModal .modal-header button#time-activity-settings-button:hover, #weeklyTimesheetModal .modal-header button#time-activity-settings-button:hover {
-    opacity: .75;
-}
-
-#modal-container .modal:not(#item-modal) .action-bar ul li a:after {
-    width: 0;
-}
-
-#modal-container .modal:not(#item-modal) .action-bar ul li a {
-    font-size: 20px;
-}
-
-#modal-container .modal:not(#item-modal) .action-bar ul li {
-    margin-right: 5px;
-}
-
-#modal-container #add-payee-modal {
-    display: flex !important;
-}
-
-#modal-container #add-payee-modal .modal-dialog {
-    width: 25%;
-    height: 40%;
-    margin: auto;
-}
-
-#item-modal #types-table .type-icon {
-    height: 100%;
-    background-position: center;
-    border-radius: 100%;
-    background-repeat: no-repeat;
-    background-color: #0077c5;
-}
-
-#item-modal #types-table tr:hover {
-    background-color: #fff;
-}
-
-#item-modal #types-table tr:last-child td {
-    border-bottom: 1px solid #dee2e6;
-}
-
-#item-modal #types-table tr td {
-    padding: 12px 30px;
-}
-
-#item-modal .no-icon {
-    background-image: url('/uploads/accounting/attachments/default-item.png');
-    height: 100%;
-    background-repeat: no-repeat;
-    background-position: center;
-}
-
-#item-modal .no-icon:hover,
-#item-modal .preview-uploaded:hover {
-    cursor: pointer;
-    border-color: #8d9096 !important;
-}
-
-#item-modal .preview-uploaded {
-    height: 100%;
-}
-
-#item-modal .type-icon {
-    height: 100%;
-    background-position: center;
-    border-radius: 100%;
-    background-repeat: no-repeat;
-    background-color: #0077c5;
-}
-
-#item-modal .modal-footer .dropdown-toggle {
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
 }

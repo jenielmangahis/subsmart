@@ -4,7 +4,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class Customer_model extends MY_Model
 {
 
-    public $table = 'acs_profile';
+    public $table = 'customers';
 
 
     public function getAll()
@@ -13,7 +13,7 @@ class Customer_model extends MY_Model
         
         $role = logged('role');
 
-        if ($role == 2 || $role == 3 || $role == 6) {
+        if ($role == 2 || $role == 3) {
 
             $company_id = logged('company_id');
             
@@ -36,7 +36,7 @@ class Customer_model extends MY_Model
 
             if (isset($filter['q'])) {
 
-                $this->db->like('first_name', $filter['q'], 'both');
+                $this->db->like('contact_name', $filter['q'], 'both');
             }
         }
 
@@ -50,7 +50,7 @@ class Customer_model extends MY_Model
         $this->db->select('*');
         $this->db->from($this->table);
         $this->db->where('company_id', $company_id);
-        $this->db->where('phone_m !=', '');
+        $this->db->where('mobile !=', '');
 
         $query = $this->db->get();
         return $query->result();
@@ -77,20 +77,20 @@ class Customer_model extends MY_Model
         $this->db->from($this->table);
 
         if (!$uid) {
-            $this->db->where('fk_user_id', $user_id);
+            $this->db->where('user_id', $user_id);
         } else {
-            $this->db->where('fk_user_id', $uid);
+            $this->db->where('user_id', $uid);
         }
 
         if (!empty($filter)) {
 
             if (isset($filter['q'])) {
 
-                $this->db->like('first_name', $filter['q'], 'both');
+                $this->db->like('contact_name', $filter['q'], 'both');
             }
         }
 
-        $this->db->order_by('prof_id', 'DESC');
+        $this->db->order_by('id', 'DESC');
 
         $query = $this->db->get();
         return $query->result();
@@ -102,7 +102,7 @@ class Customer_model extends MY_Model
 
         $this->db->select('*');
         $this->db->from($this->table);
-        $this->db->where('prof_id', $customer_id);
+        $this->db->where('id', $customer_id);
 
         $query = $this->db->get();
         return $query->row();
@@ -304,6 +304,7 @@ class Customer_model extends MY_Model
         if (isset($company_id)) {
             $this->db->where('company_id', $company_id);
         } else {
+
             $this->db->where('user_id', getLoggedUserID());
         }
 
@@ -327,9 +328,9 @@ class Customer_model extends MY_Model
                 $this->db->where('status', $filters['status']);
             } elseif (isset($filters['search'])) {
                 $this->db->group_start();
-                $this->db->or_like('acs_profile.first_name', $filters['search']);
-                $this->db->or_like('acs_profile.email', $filters['search']);
-                $this->db->or_like('acs_profile.phone_h', $filters['search']);
+                $this->db->or_like('customers.contact_name', $filters['search']);
+                $this->db->or_like('customers.contact_email', $filters['search']);
+                $this->db->or_like('customers.phone', $filters['search']);
                 $this->db->group_end();
             } elseif (!empty($filters['type'])) {
 
@@ -350,27 +351,27 @@ class Customer_model extends MY_Model
             switch ($filters['order']) {
 
                 case 'name-asc':
-                    $this->db->order_by('first_name', 'asc');
+                    $this->db->order_by('contact_name', 'asc');
                     break;
 
                 case 'name-desc':
-                    $this->db->order_by('first_name', 'desc');
+                    $this->db->order_by('contact_name', 'desc');
                     break;
 
                 case 'last-name-asc':
-                    $this->db->order_by("(SUBSTR(first_name, INSTR(first_name, ' ')))", '');
+                    $this->db->order_by("(SUBSTR(contact_name, INSTR(contact_name, ' ')))", '');
                     break;
 
                 case 'last-name-desc':
-                    $this->db->order_by("(SUBSTR(first_name, INSTR(first_name, ' '))) DESC", '');
+                    $this->db->order_by("(SUBSTR(contact_name, INSTR(contact_name, ' '))) DESC", '');
                     break;
 
                 case 'email-asc':
-                    $this->db->order_by('email', 'asc');
+                    $this->db->order_by('contact_email', 'asc');
                     break;
 
                 case 'email-desc':
-                    $this->db->order_by('email', 'desc');
+                    $this->db->order_by('contact_email', 'desc');
                     break;
             }
         }
@@ -447,84 +448,6 @@ class Customer_model extends MY_Model
         }
         return false;
     }
-
-    public function getuserIbiz($id)
-    {
-        $this->db->select('*');
-        $this->db->from('user_ibiz');
-        $this->db->where('id', $id);
-
-        $query = $this->db->get();
-        return $query->row();
-    }
-
-    public function getuserIB($uid)
-    {
-        $this->db->select('*');
-        $this->db->from('users');
-        $this->db->where('id', $uid);
-
-        $query = $this->db->get();
-        return $query->row();
-    }
-
-    public function getibizDetailsAdd($id)
-    {
-        $where = array(
-            'ibiz_id'       => $id,
-            'name'          => 'address'
-          );
-
-        $this->db->select('*');
-        $this->db->from('user_ibiz_items');
-        $this->db->where($where);
-        $query = $this->db->get();
-        return $query->row();
-    }
-
-    public function getibizDetailsPh($id)
-    {
-        $where = array(
-            'ibiz_id'       => $id,
-            'name'          => 'phone'
-          );
-
-        $this->db->select('*');
-        $this->db->from('user_ibiz_items');
-        $this->db->where($where);
-        $query = $this->db->get();
-        return $query->row();
-    }
-
-    public function ibizDetailsEmail($id)
-    {
-        $where = array(
-            'ibiz_id'       => $id,
-            'name'          => 'email'
-          );
-
-        $this->db->select('*');
-        $this->db->from('user_ibiz_items');
-        $this->db->where($where);
-        $query = $this->db->get();
-        return $query->row();
-    }
-
-    public function update_ibiz_details($data)
-    {
-        extract($data);
-        $this->db->where('id', $id);
-        $query = $this->db->update('user_ibiz_items', array('value' => $value));
-        return $query;
-    }
-
-    // public function update_ibiz_phone($data)
-    // {
-    //     extract($data);
-    //     $this->db->where('id', $id);
-    //     $query = $this->db->update('user_ibiz_items', array('value' => $value));
-    //     return $query;
-    // }
 }
 
 /* End of file Customer_model.php */

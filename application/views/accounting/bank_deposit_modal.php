@@ -50,7 +50,7 @@
                                     <label for="tags">Tags</label>
                                     <span class="float-right"><a href="#" class="text-info" data-toggle="modal" data-target="#tags-modal" id="open-tags-modal">Manage tags</a></span>
                                 </div>
-                                <select name="tags[]" id="tags" class="form-control" multiple="multiple"></select>
+                                <select name="tags[]" id="tags" class="form-control js-example-basic-multiple js-data-example-ajax" multiple="multiple"></select>
                             </div>
                         </div>
                     </div>
@@ -82,7 +82,7 @@
                                                 <td>1</td>
                                                 <td>
                                                     <select name="received_from[]" class="form-control">
-                                                        <option value="" disabled selected>&nbsp;</option>
+                                                        <option value=""></option>
                                                         <?php if(count($dropdown['customers']) !== 0) : ?>
                                                         <optgroup label="Customers">
                                                             <?php foreach($dropdown['customers'] as $customer) :?>
@@ -108,7 +108,7 @@
                                                 </td>
                                                 <td>
                                                     <select name="account[]" class="form-control" required>
-                                                        <option value="" disabled selected>&nbsp;</option>
+                                                        <option value=""></option>
                                                         <?php foreach($accounts as $key => $value) : ?>
                                                             <optgroup label="<?= $key ?>">
                                                                 <?php foreach($value as $account) : ?>
@@ -122,7 +122,7 @@
                                                 <td><input type="text" name="description[]" class="form-control"></td>
                                                 <td>
                                                     <select name="payment_method[]" class="form-control">
-                                                        <option value="" disabled selected>&nbsp;</option>
+                                                        <option value=""></option>
                                                         <option value="1">Cash</option>
                                                         <option value="2">Check</option>
                                                         <option value="3">Credit Card</option>

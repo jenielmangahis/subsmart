@@ -25,22 +25,163 @@
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
 
     <title>eSign</title>
-
-    <?php echo put_header_assets(); ?>
-
     <style>
-        .fillAndSign__signatureDraw {
-            max-height: 40px;
+        .hideElement {
+            display: none;
         }
 
-        .signing__signatureInput {
-            width: 100% !important;
+        .ui-draggable {
+            width: auto !important;
         }
 
-        .modal-backdrop.in {
-            opacity: 0.5 !important;
+        .menu_listItem-disabledFeature .menu_item.disabled:hover {
+            color: #999999;
         }
+
+        .menu_listItem-disabledFeature .menu_item.disabled .menu_hoverAction {
+            position: absolute;
+            right: 12px;
+        }
+
+        .menu_item-smartContractInfo {
+            position: absolute;
+            right: 2px;
+            visibility: hidden;
+            color: #999999;
+        }
+
+        .menu_item-smartContractInfoShow:hover * {
+            visibility: visible;
+        }
+
+        .tab-badge-left-margin {
+            margin-left: auto;
+        }
+
+        .document-page {
+            border: 2px solid black;
+            margin-top: 30px;
+        }
+
+        .document-page:first-child {
+            margin-top: 50px !important;
+        }
+
+        /* *** Sidebar *** */
+        .edit-sidebar-1 {
+            background: #fff;
+            width: 300px;
+            height: 100vh;
+            overflow: auto;
+            position: fixed;
+            right: 0%;
+            top: 0;
+            z-index: 10;
+            background: #f5f5f5;
+            padding: 95px 0 30px;
+            transition: .4s linear;
+        }
+
+        .edit-sidebar {
+            background: #fff;
+            width: 300px;
+            height: 100vh;
+            overflow: auto;
+            position: fixed;
+            right: 0%;
+            top: 0;
+            z-index: 10;
+            background: #f5f5f5;
+            padding: 95px 0 30px;
+            transition: .4s linear;
+        }
+
+        .edit-sidebar-open {
+            right: 0 !important;
+            transition: .4s linear;
+        }
+
+        .edit-sidebar h3 {
+            padding: 15px 30px;
+            border-bottom: 1px solid #e0e0e0;
+            font-weight: normal;
+            font-size: 16px;
+            color: #333;
+            margin: 0;
+        }
+
+        .edit-sidebar h3 i {
+            margin-right: 5px;
+        }
+
+        .edit-sidebar-1 h3 i {
+            margin-right: 5px;
+        }
+
+        .collapsible-section-card {
+            background-color: #f4f4f4;
+        }
+
+        .collapsible-section-card .actions {
+            display: none;
+        }
+
+        .collapsible-section-card:hover .actions {
+            display: block;
+        }
+
+        .collapsible-section-card:focus-within .actions {
+            display: block;
+        }
+
+        .collapsible-section-card:hover .action-wrapper {
+            border-top: 1px solid #e9e9e9;
+        }
+
+        .collapsible-section-card textarea {
+            border: 0px;
+            resize: none;
+        }
+
+        .collapsible-section-card:hover .section-label-header {
+            display: block;
+        }
+
+        .collapsible-section-card:focus-within .section-label-header {
+            display: block;
+        }
+
+        .collapsible-section-card .section-label-header {
+            display: none;
+        }
+
+        .absolute-div-properties-panel {
+            position: absolute;
+            z-index: 2;
+            width: 100%;
+            height: 100%;
+        }
+
+        body {
+            padding-bottom: 0px !important;
+        }
+
+        .resize-x-handle-flip {
+            transform: rotateX(180deg);
+        }
+
+        .x-text-flip-back {
+            transform: rotateX(180deg);
+        }
+
+        .vertical-scroll {
+            min-height: 20px;
+            resize: vertical;
+            overflow: auto;
+        }
+        select { font-family: 'FontAwesome', Verdana }
     </style>
+    <?php echo put_header_assets(); ?>
 </head>
 
 <body style="background: white !important;">
@@ -51,7 +192,7 @@
         <?php echo form_open_multipart('esign/fileSave', ['id' => 'upload_file', 'class' => 'form-validate esignBuilder', 'autocomplete' => 'off', 'data-form-step' => '1']); ?>
         <input type="hidden" value="1" name="next_step" />
         <input type="hidden" value="<?php echo isset($file_id) && $file_id > 0 ? $file_id : 0 ?>" name="file_id" />
-        <header style="margin-top: 81px;" class="d-none">
+        <header style="margin-top: 81px;">
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-md-6 col-sm-6">
@@ -91,29 +232,35 @@
                     </span>
                 </div>
 
-                <div class="d-flex fileupload" id="sortable">
+                <div class="d-flex">
                     <div class="custome-fileup">
+
                         <div class="upload-btn-wrapper">
                             <button class="btn">
                                 <img src="<?php echo $url->assets ?>esign/images/fileup-ic.png" alt="">
                                 <span>Upload</span>
                             </button>
-                            <input multiple type="file" name="docFile" id="docFile" name="docFile" accept="application/pdf,application/vnd.ms-excel" required/>
+                            <input type="file" name="docFile" id="docFile" name="docFile" accept="application/pdf,application/vnd.ms-excel" required/>
                         </div>
-                    </div>
-                </div>
 
-                <div class="mt-5">
-                    <h2 class="form__title">Message to All Recipients</h2>
-                    <div class="form-group">
-                        <label for="subject">Subject</label>
-                        <input class="form-control" id="subject" placeholder="Please eSign:" maxlength="100" require>
-                        <small class="form-text text-muted d-none">Characters remaining: <span class="limit">100</span></small>
+                        <!-- <div class="dropdown">
+                                <button class="btn-upl dropdown-toggle" type="button" data-toggle="dropdown">Get from Cloud
+                                <span class="caret"></span></button>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#"><img src="<?php echo $url->assets ?>esign/images/clude-ic1.png" alt=""> Box</a></li>
+                                    <li><a href="#"><img src="<?php echo $url->assets ?>esign/images/clude-ic2.png" alt=""> Dropbox</a></li>
+                                    <li><a href="#"><img src="<?php echo $url->assets ?>esign/images/clude-ic3.png" alt=""> Google Drive</a></li>
+                                    <li><a href="#"><img src="<?php echo $url->assets ?>esign/images/clude-ic4.png" alt=""> One Drive</a></li>
+                                </ul>
+                            </div> -->
                     </div>
-                    <div class="form-group">
-                        <label for="message">Message</label>
-                        <textarea class="form-control" id="message" rows="3" placeholder="Enter Message" maxlength="10000"></textarea>
-                        <small class="form-text text-muted d-none">Characters remaining: <span class="limit">10000</span></small>
+
+                    <div class="ml-3 esignBuilder__docPreview d-none">
+                        <canvas></canvas>
+                        <div class="esignBuilder__docInfo">
+                            <h5 class="esignBuilder__docTitle"></h5>
+                            <span class="esignBuilder__docPageCount"></span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -123,11 +270,8 @@
         <footer>
             <div class="container-fluid">
                 <ul>
-                    <li>
-                        <button type="submit" class="btn esignBuilder__submit btn-success" disabled>
-                            Next
-                        </button>
-                    </li>
+                    <!-- <li><a href="#">Send Now</a></li> -->
+                    <li><button type="submit" class="next-btn esignBuilder__submit">next</button></li>
                 </ul>
             </div>
         </footer>
@@ -153,7 +297,7 @@
         <?php echo form_open_multipart('esign/recipients', ['id' => 'upload_file', 'class' => 'form-validate esignBuilder', 'autocomplete' => 'off', 'data-form-step' => '2']); ?>
         <input type="hidden" value="3" name="next_step" />
         <input type="hidden" value="<?php echo isset($file_id) && $file_id > 0 ? $file_id : 0 ?>" name="file_id" />
-        <header style="margin-top: 81px; z-index : 1" class="d-none">
+        <header style="margin-top: 81px; z-index : 1">
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-md-6 col-sm-6">
@@ -201,7 +345,7 @@
                                 <p>As the sender, you automatically receive a copy of the completed envelope.</p>
                             </div>
                         </div>
-                        <div class="col-md-6 col-sm-6 d-none">
+                        <div class="col-md-6 col-sm-6">
                             <div class="quick-act">
                                 <ul>
                                     <li><a href="#"><i class="fa fa-address-book"></i> Add from contacts</a></li>
@@ -215,7 +359,7 @@
                         <div class="row">
                             <div class="col-md-8 col-sm-8">
                                 <div class="left-wnvofrm">
-                                    <div class="cust-check d-none">
+                                    <div class="cust-check">
                                         <input type="checkbox" id="html">
                                         <label for="html">Set signing order</label>
                                     </div>
@@ -238,8 +382,8 @@
         <footer>
             <div class="container-fluid">
                 <ul class="d-flex align-items-center justify-content-end">
-                    <li class="d-none"><a onClick='onbackclick("<?php echo url('esign/Files?id=' . $file_id . '&next_step=0') ?>")'>Back</a></li>
-                    <li><button class="esignBuilder__submit btn-success" type="submit">Next</button></li>
+                    <li><a onClick='onbackclick("<?php echo url('esign/Files?id=' . $file_id . '&next_step=0') ?>")'>Back</a></li>
+                    <li><button class="esignBuilder__submit" type="submit">next</button></li>
                 </ul>
             </div>
         </footer>
@@ -249,55 +393,26 @@
 
 
     <?php if (isset($next_step) && $next_step == 3): ?>
-        <?php echo form_open_multipart('esign/recipients', ['id' => 'upload_file', 'class' => 'form-validate mb-0 esignBuilder esignBuilder--step3 esignBuilder--loading', 'autocomplete' => 'off', 'data-form-step' => '3', 'data-doc-url' => base_url('uploads/DocFiles/' . $file_url)]); ?>
+        <?php echo form_open_multipart('esign/recipients', ['id' => 'upload_file', 'class' => 'form-validate mb-0 esignBuilder esignBuilder--step3', 'autocomplete' => 'off', 'data-form-step' => '3', 'data-doc-url' => base_url('uploads/DocFiles/' . $file_url)]); ?>
 
         <input type="hidden" value="3" name="next_step" />
         <input type="hidden" value="<?php echo isset($file_id) && $file_id > 0 ? $file_id : 0 ?>" name="file_id" />
 
-        <div class="loader">
-            <div class="spinner-border" role="status">
-                <span class="sr-only">Loading...</span>
-            </div>
-        </div>
 
         <div class="card p-0 mb-0">
             <div class="site_content">
                 <div class="content_wrap" style="position: relative;">
-                    <div class="content_sidebar content_sidebar-left resizable" style="overflow-x: hidden" id="fieldsSidebar">
+                    <div class="content_sidebar content_sidebar-left resizable" style="overflow-x: hidden">
+                        <div class="resize-horizontal resize-right resize-line"></div>
+
+                        <div class="sidebar_footer"></div>
+
                         <div class="sidebar-fields sidebar-flex">
                             <div class="sidebar_main">
-                                <div class="dropdown esignBuilder__recipientSelect <?=$is_self_signing ? "d-none" : ""?>">
-                                    <button
-                                        data-recipient-color="<?=$recipients[0]['color'];?>"
-                                        data-recipient-id="<?=$recipients[0]['id'];?>"
-                                        class="btn btn-secondary dropdown-toggle"
-                                        type="button"
-                                        id="recipientsSelect"
-                                        data-toggle="dropdown"
-                                        aria-haspopup="true"
-                                        aria-expanded="false"
-                                    >
-                                        <i class="fa fa-circle mr-1"></i>
-                                        <span><?=$recipients[0]['name'];?></span>
-                                    </button>
-                                    <div class="dropdown-menu" aria-labelledby="recipientsSelect">
-                                        <?php foreach ($recipients as $recipient): ?>
-                                            <a
-                                                href="#"
-                                                class="dropdown-item"
-                                                data-recipient-color="<?=$recipient['color'];?>"
-                                                data-recipient-id="<?=$recipient['id'];?>"
-                                            >
-                                                <?=$recipient['name'];?>
-                                            </a>
-                                        <?php endforeach;?>
-                                    </div>
-                                </div>
-
-                                <div class="sidebar-fields">
+                                <div class="sidebar-fields" style="box-shadow: rgba(0, 0, 0, 0.18) 0px -7px 7px -7px inset">
                                     <div class="sidebar_group l-flex-between">
                                         <h5>
-                                            <span tabindex="-1" class="ng-binding">Fields</span>
+                                            <span tabindex="-1" class="ng-binding">Standard Fields</span>
                                         </h5>
                                     </div>
                                     <div class="sidebar_item">
@@ -310,7 +425,7 @@
                                                     </div>
                                                 </li>
 
-                                                <!-- <li class="menu_listItem">
+                                                <li class="menu_listItem">
                                                     <div class="fields menu_item">
                                                         <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-initial"></i></span>
                                                         <span class="u-ellipsis ng-binding">Initial</span>
@@ -322,7 +437,7 @@
                                                         <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-stamp"></i></span>
                                                         <span class="u-ellipsis ng-binding">Stamp</span>
                                                     </div>
-                                                </li> -->
+                                                </li>
 
                                                 <li class="menu_listItem">
                                                     <div class="fields menu_item">
@@ -379,21 +494,21 @@
                                                     </div>
                                                 </li>
 
-                                                <li class="menu_listItem <?=$is_self_signing ? "d-none" : ""?>">
+                                                <li class="menu_listItem">
                                                     <div class="fields menu_item">
                                                         <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-checkbox"></i></span>
                                                         <span class="u-ellipsis ng-binding">Checkbox</span>
                                                     </div>
                                                 </li>
 
-                                                <li class="menu_listItem <?=$is_self_signing ? "d-none" : ""?>">
+                                                <li class="menu_listItem">
                                                     <div class="fields menu_item">
                                                         <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-dropdown"></i></span>
                                                         <span class="u-ellipsis ng-binding">Dropdown</span>
                                                     </div>
                                                 </li>
 
-                                                <li class="menu_listItem <?=$is_self_signing ? "d-none" : ""?>">
+                                                <li class="menu_listItem">
                                                     <div class="fields menu_item">
                                                         <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-radio"></i></span>
                                                         <span class="u-ellipsis ng-binding">Radio</span>
@@ -403,7 +518,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="sidebar_item <?=$is_self_signing ? "d-none" : ""?>">
+                                    <div class="sidebar_item">
                                         <div class="menu-fields">
                                             <ul class="menu_list">
                                                 <li class="menu_listItem">
@@ -420,12 +535,12 @@
                                                     </div>
                                                 </li>
 
-                                                <!-- <li class="menu_listItem">
+                                                <li class="menu_listItem">
                                                     <div class="fields menu_item">
                                                         <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-note"></i></span>
                                                         <span class="u-ellipsis ng-binding">Note</span>
                                                     </div>
-                                                </li> -->
+                                                </li>
 
                                                 <li class="menu_listItem">
                                                     <div class="fields menu_item">
@@ -448,11 +563,14 @@
                         </div>
                     </div>
 
-                    <div class="main-pdf-render__container" role="region">
-                        <div id="main-pdf-render" style="display:flex; flex-direction:column; align-items:center;"  ></div>
-                    </div>
+                    <div
+                        class="content_main"
+                        id="main-pdf-render"
+                        style="height: 887px;overflow: auto; position: relative;margin: 0 auto; text-align: center;"
+                        role="region"
+                    ></div>
 
-                    <div class="ng-scope content_sidebar content_sidebar-right ml-auto">
+                    <div class="ng-scope content_sidebar content_sidebar-right">
                         <div class="docsWrapper">
                             <div class="singleDocument">
                                 <div id="main-pdf-render-preview"></div>
@@ -463,194 +581,8 @@
             </div>
         </div>
 
-        <div class="esignBuilder__footer">
-            <button type="button" class="btn btn-secondary mr-3 d-none">Back</button>
-            <button type="button" class="btn esignBuilder__submit btn-success" id="submitBUtton">
-                <div class="spinner-border spinner-border-sm mt-0 mr-1 d-none" role="status">
-                    <span class="sr-only">Loading...</span>
-                </div>
-                Send
-            </button>
-        </div>
-
-
-        <div class="esignBuilder__optionsSidebar">
-            <p class="esignBuilder__optionsSidebarFieldId">
-                Field ID: <span></span>
-            </p>
-
-            <div class="options mt-3">
-                <div class="mt-2 mb-2">
-                    <div>
-                        <input type="checkbox" name="optionsRequired" id="optionsRequired">
-                        <label for="optionsRequired">Required Field</label>
-                    </div>
-
-                    <hr/>
-
-                    <div>
-                        <label for="optionsFieldName">Field name</label>
-                        <input type="text" name="optionsFieldName" id="optionsFieldName" class="w-100">
-                    </div>
-
-                    <div class="options__values">
-                        <label>Values</label>
-                        <div class="options__valuesItem d-flex align-items-center">
-                            <input class="mt-0 mr-2" type="checkbox">
-                            <input style="flex-grow: 1;" type="text">
-                        </div>
-                        <div class="options__valuesSubItems"></div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="dropdown mt-3">
-                <div class="mt-2 mb-2">
-                    <div>
-                        <input type="checkbox" name="requiredDropdown" id="requiredDropdown">
-                        <label for="requiredDropdown">Required Field</label>
-                    </div>
-
-                    <hr/>
-
-                    <div>
-                        <label for="dropdownName">Field name</label>
-                        <input type="text" name="dropdownName" id="dropdownName" class="w-100">
-                    </div>
-
-                    <div>
-                        <label>Options</label>
-                        <div class="options__values"></div>
-                    </div>
-
-                    <div>
-                        <button class="btn btn-block btn-primary mt-2" id="addDropdownOption">+ Add Option</button>
-                    </div>
-
-                    <!-- <div>
-                        <label>Default Value</label>
-                        <select class="custom-select" id="dropdownDefaultValue">
-                            <option selected>Select</option>
-                            <option value="1">One</option>
-                            <option value="2">Two</option>
-                            <option value="3">Three</option>
-                        </select>
-                    </div> -->
-                </div>
-            </div>
-
-            <div class="text">
-                <div class="mt-2 mb-2">
-                    <div>
-                        <input type="checkbox" name="requiredText" id="requiredText">
-                        <label for="requiredText">Required Field</label>
-                    </div>
-                    <div>
-                        <input type="checkbox" name="readOnlyText" id="readOnlyText">
-                        <label for="readOnlyText">Read Only</label>
-                    </div>
-
-                    <hr/>
-
-                    <div>
-                        <label for="textFieldName">Field name</label>
-                        <input type="text" name="textFieldName" id="textFieldName" class="w-100">
-                    </div>
-
-                    <div>
-                        <label for="textFieldValue">Add Text</label>
-                        <textarea  class="w-100" id="textFieldValue"></textarea>
-                    </div>
-                </div>
-            </div>
-
-            <div class="formula">
-                <p class="mt-2 mb-2">
-                    Build a formula from number and date fields in your envelope.
-                    Field names must be enclosed in square brackets ("[]").
-                </p>
-
-                <textarea style="width: 100%;" id="formulaInput"></textarea>
-                <small class="form-text text-muted">Example: [16160]-[23502]</small>
-            </div>
-
-            <div class="note">
-                <p class="mt-2 mb-2">Add Text</p>
-                <textarea style="width: 100%;" id="noteInput"></textarea>
-            </div>
-
-            <div class="footer">
-                <button type="button" class="btn btn-success btn-block" id="saveOption">
-                    <div class="spinner-border spinner-border-sm mt-0 mr-1 d-none" role="status">
-                        <span class="sr-only">Loading...</span>
-                    </div>
-                    Save
-                </button>
-
-                <button type="button" class="btn btn-danger btn-block" id="deleteOption">
-                    <div class="spinner-border spinner-border-sm mt-0 mr-1 d-none" role="status">
-                        <span class="sr-only">Loading...</span>
-                    </div>
-                    Delete
-                </button>
-
-                <button type="button" class="btn btn-secondary btn-block" id="closeOption">
-                    Close
-                </button>
-            </div>
-        </div>
         <?php echo form_close(); ?>
         <?php include viewPath('esign/esign-page-preview-step-4-style');?>
-        <div class="modal fade" id="selfSigningSend" tabindex="-1" role="dialog" aria-labelledby="selfSigningSendLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="selfSigningSendLabel">Sign and Return</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form class="form">
-                        <div>
-                            <div class="form-group">
-                                <label for="selfSigningSend__name">Full Name</label>
-                                <input class="form-control" id="selfSigningSend__name">
-                                <div class="invalid-feedback">Invalid recipient name</div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="selfSigningSend__email">Email</label>
-                                <input class="form-control" id="selfSigningSend__email">
-                                <div class="invalid-feedback">Invalid recipient email</div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="form-group">
-                                <label for="selfSigningSend__subject">Subject</label>
-                                <input class="form-control" id="selfSigningSend__subject" maxlength="100">
-                            </div>
-
-                            <div class="form-group">
-                                <label for="selfSigningSend__message">Message</label>
-                                <textarea class="form-control" id="selfSigningSend__message" rows="3" maxlength="10000"></textarea>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary">No Thanks</button>
-                    <button type="button" class="btn btn-primary d-flex align-items-center">
-                        <div class="spinner-border spinner-border-sm mt-0 d-none" role="status">
-                            <span class="sr-only">Loading...</span>
-                        </div>
-                        Send And Close
-                    </button>
-                </div>
-                </div>
-            </div>
-        </div>
     <?php endif;?>
 
     <script type="text/javascript" src="<?php echo $url->assets ?>/esign/js/jquery.min.js"></script>
@@ -659,34 +591,50 @@
 </body>
 
 </html>
-<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script>
+    var current_target = 0;
 
-<?php if (isset($next_step) && $next_step == 0): ?>
-    <script src="//code.jquery.com/jquery-1.12.4.js"></script>
-<?php endif;?>
-
-<?php echo put_footer_assets(); ?>
+    // $('.next-btn').click(function() {
+    //     current_target = current_target + 1;
+    //     if (current_target == 0) {
+    //         $('#custome-fileup').show();
+    //         $("#add-recipeit").hide();
+    //         $("#tagspreview").hide();
+    //         $('#all-recipients-wrp').hide();
+    //     } else if (current_target == 1) {
+    //         $('#custome-fileup').hide();
+    //         $("#add-recipeit").show();
+    //         $("#tagspreview").hide();
+    //         $('#all-recipients-wrp').hide();
+    //     } else if (current_target == 2) {
+    //         $('#custome-fileup').hide();
+    //         $("#add-recipeit").hide();
+    //         $("#tagspreview").show();
+    //         $('#all-recipients-wrp').hide();
+    //     } else if (current_target == 3) {
+    //         $('#custome-fileup').hide();
+    //         $("#add-recipeit").hide();
+    //         $("#tagspreview").hide();
+    //         $('#all-recipients-wrp').show();
+    //     }
+    // });
+</script>
 <style>
-    .esignBuilder__field,
-    .ui-draggable-dragging {
-        width: initial;
+    .main-wrapper {
+        padding: 213px 0 292px;
+        width: 100%;
     }
 
-    .ui-draggable-dragging {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 3px !important;
+    #all-recipients-wrp {
+        padding: 213px 0 292px;
     }
 
-    .ui-draggable-dragging .swatch {
-        margin-right: 8px !important;
-        background-color: #ffd65b !important;
-        display: none !important;
-    }
 
-    .menu_item:hover {
-        background: unset;
+    /* reception list */
+    #setup-recipient-list .form-box {
+        margin: 13px 0 13px 0;
     }
 </style>
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<?php echo put_footer_assets(); ?>

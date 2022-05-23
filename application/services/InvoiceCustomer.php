@@ -42,7 +42,7 @@ class InvoiceCustomer
         }
 
 
-        $this->app->page_data['customer'] = $this->app->customer_model->getAll();
+        $this->app->page_data['customer'] = $this->app->custome_model->getAll();
         $this->app->load->view('invoice/customer/list', $this->app->page_data);
     }
 

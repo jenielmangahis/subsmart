@@ -27,18 +27,18 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <div style="float:left; width:75%;">
                                                 <input type="hidden" name="paperwork_id" value="1">
                                                 <input type="hidden" name="paperworktxt" value="Client Agreement">
-                                                <label title="Client Agreement" for="chk_paperwork_1">&nbsp; Client Agreement</label>&nbsp;<br>
+                                                <label title="Client Agreement" for="chk_paperwork_1"> Client Agreement</label>&nbsp;<br>
 
                                                 <input type="file" name="upload_document" id="upload_document_1" style="visibility:hidden; width:2px; height:1px;">
                                             </div>
                                             <div style="float:right;  width:70px;">
-                                                <a href="#" style="text-decoration:none;display:inline-block;"  title="Choose File" class="js-qwynlraxz">
+                                                <a href="javascript:void(0);" style="text-decoration:none;display:inline-block;"  title="Choose File" class="js-qwynlraxz">
                                                     <img width="16px" height="16px" border="0" src="https://app.creditrepaircloud.com/application/images/file-upload.png" style="vertical-align:middle;">
                                                 </a>
-                                                <a href="#" style="text-decoration:none;display:inline-block;" title="Download Document" class="js-qwynlraxz">
+                                                <a href="" style="text-decoration:none;display:inline-block;" title="Download Document" class="js-qwynlraxz">
                                                     <img width="16px" height="16px" border="0" src="https://app.creditrepaircloud.com/application/images/download-icon.png">
                                                 </a>
-                                                <a href="#" style="text-decoration:none;display:inline-block;" title="Delete Document" class="js-qwynlraxz">
+                                                <a href="" style="text-decoration:none;display:inline-block;" title="Delete Document" class="js-qwynlraxz">
                                                     <img width="16px" height="16px" border="0" src="https://app.creditrepaircloud.com/application/images/cross.png">
                                                 </a>
                                             </div>
@@ -54,17 +54,17 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <div style="float:left; width:75%;">
                                                 <input type="hidden" name="paperwork_id" value="4">
                                                 <input type="hidden" name="paperworktxt" value="Photo ID Copy">
-                                                <label title="Photo ID Copy" for="chk_paperwork_4">&nbsp; Photo ID Copy</label>&nbsp;<br>
+                                                <label title="Photo ID Copy" for="chk_paperwork_4"> Photo ID Copy</label>&nbsp;<br>
                                                 <input type="file" name="upload_document" id="upload_document_4" style="visibility:hidden; width:2px; height:1px;">
                                             </div>
                                             <div style="float:right;  width:70px;">
-                                                <a href="#" style="text-decoration:none;display:inline-block;"  title="Choose File" class="js-qwynlraxz">
+                                                <a href="javascript:void(0);" style="text-decoration:none;display:inline-block;"  title="Choose File" class="js-qwynlraxz">
                                                     <img width="16px" height="16px" border="0" src="https://app.creditrepaircloud.com/application/images/file-upload.png" style="vertical-align:middle;">
                                                 </a>
-                                                <a href="#" style="text-decoration:none;display:inline-block;" title="Download Document" class="js-qwynlraxz">
+                                                <a href="" style="text-decoration:none;display:inline-block;" title="Download Document" class="js-qwynlraxz">
                                                     <img width="16px" height="16px" border="0" src="https://app.creditrepaircloud.com/application/images/download-icon.png">
                                                 </a>
-                                                <a href="#" style="text-decoration:none;display:inline-block;" title="Delete Document" class="js-qwynlraxz">
+                                                <a href="" style="text-decoration:none;display:inline-block;" title="Delete Document" class="js-qwynlraxz">
                                                     <img width="16px" height="16px" border="0" src="https://app.creditrepaircloud.com/application/images/cross.png">
                                                 </a>
                                             </div>
@@ -83,18 +83,18 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <div style="float:left; width:75%;">
                                                 <input type="hidden" name="paperwork_id" value="6">
                                                 <input type="hidden" name="paperworktxt" value="Social Security Card (optional)">
-                                                <label title="Social Security Card (optional)" for="chk_paperwork_6">&nbsp; Proof of Residency</label>&nbsp;<br>
+                                                <label title="Social Security Card (optional)" for="chk_paperwork_6"> Proof of Residency</label>&nbsp;<br>
 
                                                 <input type="file" name="upload_document" id="upload_document_6" style="visibility:hidden; width:2px; height:1px;">
                                             </div>
                                             <div style="float:right;  width:70px;">
-                                                <a href="#" style="text-decoration:none;display:inline-block;"  title="Choose File" class="js-qwynlraxz">
+                                                <a href="javascript:void(0);" style="text-decoration:none;display:inline-block;"  title="Choose File" class="js-qwynlraxz">
                                                     <img width="16px" height="16px" border="0" src="https://app.creditrepaircloud.com/application/images/file-upload.png" style="vertical-align:middle;">
                                                 </a>
-                                                <a href="#" style="text-decoration:none;display:inline-block;" title="Download Document" class="js-qwynlraxz">
+                                                <a href="" style="text-decoration:none;display:inline-block;" title="Download Document" class="js-qwynlraxz">
                                                     <img width="16px" height="16px" border="0" src="https://app.creditrepaircloud.com/application/images/download-icon.png">
                                                 </a>
-                                                <a href="#" style="text-decoration:none;display:inline-block;" title="Delete Document" class="js-qwynlraxz">
+                                                <a href="" style="text-decoration:none;display:inline-block;" title="Delete Document" class="js-qwynlraxz">
                                                     <img width="16px" height="16px" border="0" src="https://app.creditrepaircloud.com/application/images/cross.png">
                                                 </a>
                                             </div>
@@ -113,18 +113,18 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <div style="float:left; width:75%;">
                                                 <input type="hidden" name="paperwork_id" value="6">
                                                 <input type="hidden" name="paperworktxt" value="Social Security Card (optional)">
-                                                <label title="Social Security Card (optional)" for="chk_paperwork_6">&nbsp; Personal Guarantee</label>&nbsp;<br>
+                                                <label title="Social Security Card (optional)" for="chk_paperwork_6"> Personal Guarantee</label>&nbsp;<br>
 
                                                 <input type="file" name="upload_document" id="upload_document_6" style="visibility:hidden; width:2px; height:1px;">
                                             </div>
                                             <div style="float:right;  width:70px;">
-                                                <a href="#" style="text-decoration:none;display:inline-block;"  title="Choose File" class="js-qwynlraxz">
+                                                <a href="javascript:void(0);" style="text-decoration:none;display:inline-block;"  title="Choose File" class="js-qwynlraxz">
                                                     <img width="16px" height="16px" border="0" src="https://app.creditrepaircloud.com/application/images/file-upload.png" style="vertical-align:middle;">
                                                 </a>
-                                                <a href="#" style="text-decoration:none;display:inline-block;" title="Download Document" class="js-qwynlraxz">
+                                                <a href="" style="text-decoration:none;display:inline-block;" title="Download Document" class="js-qwynlraxz">
                                                     <img width="16px" height="16px" border="0" src="https://app.creditrepaircloud.com/application/images/download-icon.png">
                                                 </a>
-                                                <a href="#" style="text-decoration:none;display:inline-block;" title="Delete Document" class="js-qwynlraxz">
+                                                <a href="" style="text-decoration:none;display:inline-block;" title="Delete Document" class="js-qwynlraxz">
                                                     <img width="16px" height="16px" border="0" src="https://app.creditrepaircloud.com/application/images/cross.png">
                                                 </a>
                                             </div>

@@ -1,4 +1,10 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: ADMIN
+ * Date: 1/11/2021
+ * Time: 7:27 PM
+ */
 
 class General_model extends MY_Model {
 
@@ -18,9 +24,6 @@ class General_model extends MY_Model {
             return $query->row();
         }
     }
-    public function check_if_exist($elem = array(), $resutl=true){
-        
-    }
 
     public function get_data_with_param($params = array(),$result=TRUE){
 
@@ -38,31 +41,7 @@ class General_model extends MY_Model {
 
         if(array_key_exists("where", $params)){
             foreach($params['where'] as $key => $val){
-                if( $val != '' ){
-                    $this->db->where($key, $val);    
-                }else{
-                    if( $val == 0 ){
-                        $this->db->where($key, $val);  
-                    }else{
-                        $this->db->where($key); 
-                    }
-                }
-                
-            }
-        }
-
-        if(array_key_exists("or_where", $params)){
-            foreach($params['or_where'] as $key => $val){
-                if( $val != '' ){
-                    $this->db->or_where($key, $val);    
-                }else{
-                    if( $val == 0 ){
-                        $this->db->or_where($key, $val);  
-                    }else{
-                        $this->db->or_where($key); 
-                    }
-                }
-                
+                $this->db->where($key, $val);
             }
         }
 
@@ -90,34 +69,6 @@ class General_model extends MY_Model {
         }
     }
 
-    public function get_column_sum($params = array())
-    {
-
-        if(array_key_exists("table",$params) && $params['table'] != NULL ){
-            $this->db->from($params['table']);
-        }else{
-            return FALSE;
-        }
-
-        if(array_key_exists("select",$params) && $params['select'] != NULL ){
-            $this->db->select($params['select']);
-        }else{
-            $this->db->select('*');
-        }
-
-        if(array_key_exists("where", $params)){
-            foreach($params['where'] as $key => $val){
-                $this->db->where($key, $val);
-            }
-        }
-        if(array_key_exists("group_by",$params) && $params['group_by'] != NULL ){
-            $this->db->group_by($params['group_by']);
-        }
-
-        $query = $this->db->get();
-        return $query->result();
-    }
-
     public function delete_($params = array()) {
         if(array_key_exists("where", $params)){
             foreach($params['where'] as $key => $val){
@@ -135,7 +86,6 @@ class General_model extends MY_Model {
     {
         //$input['date_modified'] = date('Y-m-d H:i:s');;
         if ($this->db->update($table, $input, array('id' => $id))) {
-            echo "pasok";
             return true;
         } else {
             return false;

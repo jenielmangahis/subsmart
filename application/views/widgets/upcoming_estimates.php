@@ -4,69 +4,51 @@
     }
 </style>
 
-<div class="<?= $class ?>"  data-id="<?= $id ?>" id="widget_<?= $id ?>">
-    <div  class="wid_header">
-        <i class="fa fa-calendar" aria-hidden="true"></i> Open Estimates
-        
-        <div class="float-right">
-            <div class="dropdown" style="position: relative;float: right;display: inline-block;margin-left: 10px;">
-                <span type="button" data-toggle="dropdown" style="border-radius: 0 36px 36px 0;margin-left: -5px;">
-                    &nbsp;<span class="fa fa-ellipsis-v"></span></span>
-                <ul class="dropdown-menu dropdown-menu-right">
-                    <li><a href="#" class="dropdown-item" onclick="removeWidget('<?= $id ?>')">Close</a></li>
-                    <li><a href="#" class="dropdown-item" onclick="addToMain('<?= $id ?>',<?php echo ($isMain?'1':'0') ?>,'<?= $isGlobal ?>' )"><?php echo ($isMain?'Remove From Main':'Add to Main') ?></a></li>
-                    <li><a href="#" class="dropdown-item">Move</a></li>
-                </ul>
-            </div>
+<div class="<?= $class ?>"  id="widget_<?= $id ?>">
+    <div class="card" style="margin-top:0;">
+        <div class="card-header" style="background: #40c057; color:white;">
+            <i class="fa fa-calendar" aria-hidden="true"></i> Open Estimates
         </div>
-    </div>
-    <div class="card" style="border: 2px solid #30233d; margin-top:0; border-radius: 40px; padding:5px;">
-        <div style="border: 5px solid #30233d; margin-top:0; border-radius: 40px; box-shadow: 1px 0px 15px 5px rgb(48, 35, 61);">
-            <div class="card-body mt-2" style="padding:5px 10px; height: 363px; overflow: hidden">
-                <div style="height:<?= $rawHeight-30; ?>px; overflow-y: scroll; padding:5px 15px;">
-                    <div class="mb-2 col-lg-12 float-left">
-                        <table class="table table-striped table-hover">
-                            <tr>
-                                <th class="col-lg-2"></th>
-                                <th class="text-left">Estimate #</th>
-                                <th class="text-center">Amount</th>
-                                <th class="text-center">Status</th>
-                                <th class="text-center">Last Update</th>
-                            </tr>
-                            <?php
-                            $jobCounter = 0;
-                            if ($job) {
-                                foreach ($job as $jb) :
-                                    ?>
-                                    <tr style="cursor:pointer;">
-                                        <td>    
-                                            <img src="<?= base_url() ?>uploads/users/default.png" alt="user" class="rounded-circle nav-user-img vertical-center">
-                                        </td>
-                                        <td>
-                                            <b style="font-weight:700; margin:0;"><?php echo strtoupper('EST-00001'); ?></b>
-                                            <p style="color: #9d9e9d; "><?php echo ucwords(strtolower($jb->job_location)); ?></p>
-                                        </td>
-                                        <td class="text-center">
-                                            <h6 style="margin:0;"><?php echo strtoupper('$1,000'); ?></h6>
-                                        </td>
-                                        <td class="text-center">
-                                            <h6 style="margin:0;"><?php echo strtoupper('Submitted'); ?></h6>
-                                        </td>
-                                        <td class="text-center">
-                                            <p style="margin:0;"><?php echo strtoupper('02/12/2021'); ?></p>
-                                        </td>
-                                    </tr>
-                                    <?php
-                                endforeach;
-                            }
-                            ?>
-                        </table>
-                    </div>
-                </div>
-                <div class="text-center">
-                    <a class="text-info" href="<?= base_url() ?>job">SEE ALL ESTIMATES</a>
-                </div>
+        <div class="card-body" style="padding:5px 10px;">
+            <div style="height: 250px; overflow-y: scroll">
+            <?php
+                $jobCounter = 0;
+                if ($job) {
+                    foreach ($job as $jb) :
+                        ?>
+                        <div class="mb-2 col-lg-12 float-left jobsRow" style="border-bottom: 1px solid #ccc; padding-bottom: 5px; cursor: pointer">
+
+                            <div class="col-lg-3 float-left no-padding text-center" style="border-right:1px solid #ccc; padding-right:5px;">
+                                <time style="font-size: 10px; text-align: left;" datetime="2021-02-09" class="icon-calendar-live">
+                                    <em><?= date('D', strtotime($jb->date_created)) ?></em>
+                                    <strong><?= date('M', strtotime($jb->date_created)) ?></strong>
+                                    <span><?= date('d', strtotime($jb->date_created)) ?></span>
+                                </time>
+                                <div class="job-status text-center mb-2" style="background:<?= $jb->event_color?>; color:white;"><?php echo strtoupper($jb->status); ?></div>
+                                <span style="font-family: Sarabun, sans-serif !important;color: #9d9e9d;font-weight: 700;" class="text-center">ARRIVAL WINDOW</span><br/>
+                                <span class="job-caption text-center" style="font-weight:700; color: black; font-family: Sarabun, sans-serif !important; font-size:12px">
+                                    <?php echo get_format_time($jb->date_created); ?>-<?php echo get_format_time_plus_hours($jb->date_created); ?>
+                                </span>
+                            </div>
+                            <div class="col-lg-7 float-left mt-2" style="padding-right: 0;">
+                                <h6 style="font-weight:700; margin:0;"><?php echo strtoupper($jb->job_type . ' - ' . $jb->job_description); ?></h6>
+                                <p style="color: #9d9e9d;font-weight: 700; margin-bottom: 0; "><?php echo strtoupper($jb->job_name); ?></p>
+                                <p style="color: #9d9e9d; "><?php echo ucwords(strtolower($jb->job_location)); ?></p>
+                            </div>
+                            <div class="col-lg-2 float-right" style="margin-top:40px !important; ">
+                                <img src="<?= base_url() ?>uploads/users/default.png" alt="user" class="rounded-circle nav-user-img vertical-center">
+                            </div>
+                        </div>
+
+                        <?php
+                    endforeach;
+                }
+                ?>
             </div>
+            <div class="text-center">
+                <a class="text-info" href="<?= base_url() ?>job">SEE ALL ESTIMATES</a>
+            </div>
+           
         </div>
 
     </div>

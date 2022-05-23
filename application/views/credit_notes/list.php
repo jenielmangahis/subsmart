@@ -2,10 +2,6 @@
 button#dropdown-edit {
     width: 100px;
 }
-label>input {
-  visibility: initial !important;
-  position: initial !important; 
-}
 .dropdown-toggle::after {
     display: block;
     position: absolute;
@@ -47,10 +43,6 @@ label>input {
 .subtle-txt {
     color: rgba(42, 49, 66, 0.7);
 }
-svg#svg-sprite-menu-close {
-    position: relative;
-    bottom: 180px !important;
-}
 @media only screen and (max-width: 600px) {
   .p-40 {
     padding-top: 0px !important;
@@ -68,11 +60,13 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/notifications'); ?>
     <div wrapper__section class="p-40">
+        <?php include viewPath('includes/notifications'); ?>
         <div class="card p-20">
             <div class="container-fluid" style="font-size:14px;">
                 <div class="row">
                     <div class="col">
                       <h3 class="page-title mt-0">Credit Notes</h3>
+                      <span class="subtle-txt">Listing all credit notes</span>
                     </div>
                     <div class="col-auto">
                         <div class="h1-spacer">
@@ -85,12 +79,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                         </div>
                     </div>
                 </div>
-                <div class="pl-3 pr-3 mt-2 row" style="position: relative;top: 7px;">
-                  <div class="col mb-4 left alert alert-warning mt-0 mb-0">
-                      <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Give your customer a credit or refund in our Desktop for Windows. From the Customers menu, select Create Credit Notes/Refunds.  From the Customer:  Job drop-down, select your customer.  Enter the items you're giving a credit for, then select Save & Close.</span>
-                  </div>
-                </div>
-                <div class="tabs mt-2">
+
+                <div class="tabs mt-4">
                     <ul class="clearfix work__order ul-mobile" id="myTab" role="tablist">
                             <li class="<?= $tab == '' ? 'active' : ''; ?>">
                                 <a class="nav-link" id="profile-tab" href="<?php echo base_url('credit_notes/'); ?>" role="tab" aria-controls="profile" aria-selected="false">All(<?= $total_all; ?>)</a>
@@ -139,17 +129,16 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                 </button>
                                                 <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
                                                     <li role="presentation">
-                                                        <a role="menuitem" href="<?php echo base_url('credit_notes/send/' . $c->id) ?>" class="btn-send-customer" data-id="<?= $c->id; ?>">
+                                                        <a role="menuitem" href="<?php echo base_url('credit_notes/send_customer/' . $c->id) ?>" class="btn-send-customer" data-id="<?= $c->id; ?>">
                                                         <span class="fa fa-envelope-open-o icon"></span>  Send to Customer</a></li>
                                                     <li role="presentation"><a role="menuitem" tabindex="-1"
                                                                                href="<?php echo base_url('credit_notes/view/' . $c->id) ?>"><span
                                                                     class="fa fa-file-text-o icon"></span> View</a></li>
                                                     </li>
                                                     <li role="separator" class="divider"></li>
-                                                    <li role="presentation"><a role="menuitem" tabindex="-1"
+                                                     <li role="presentation"><a role="menuitem" tabindex="-1"
                                                                                href="<?php echo base_url('credit_notes/edit/' . $c->id) ?>"><span
                                                                     class="fa fa-pencil-square-o icon"></span> Edit</a>
-                                                    </li>
                                                     <li role="presentation">
                                                         <a role="menuitem" class="clone-credit-note" href="javascript:void(0);" data-name="<?= $c->credit_note_number; ?>" data-id="<?= $c->id; ?>">
                                                         <span class="fa fa-files-o icon"></span>  Clone</a></li>
@@ -181,20 +170,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 <p class="text-ter margin-bottom">Manage your credit notes.</p>
                                 <a class="btn btn-primary" href="<?php echo base_url('credit_notes/add_new') ?>"><span class="fa fa-plus fa-margin-right"></span> New Credit Note</a>
                             </div>
-                        <?php }else{ ?>
-                          <table class="table table-hover table-to-list" data-id="work_orders">
-                                <thead>
-                                <tr>
-                                    <th>Credit Note#</th>
-                                    <th>Date Issued</th>
-                                    <th>Job & Customer</th>
-                                    <th>Status</th>
-                                    <th>Amount</th>
-                                    <th style="width: 5%;"></th>
-                                </tr>
-                                </thead>
-                                <tbody></tbody>
-                          </table>
                         <?php } ?>
                         <?php } ?>
                     </div>
@@ -319,9 +294,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     }
 </style>
 <!-- page wrapper end -->
-<?php include viewPath('includes/footer'); ?>
+<?php include viewPath('includes/footer_accounting'); ?>
 <script>
-    $('.table-to-list').DataTable({
+    $('#dataTable1').DataTable({
+
         "ordering": false
     });
 

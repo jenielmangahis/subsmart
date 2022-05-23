@@ -36,9 +36,6 @@ class Marketing extends MY_Controller
 
     public function index()
     {
-        $this->page_data['page']->title = 'Marketing Features';
-		$this->page_data['page']->parent = 'Marketing';
-
         $is_allowed = $this->isAllowedModuleAccess(47);
         if( !$is_allowed ){
             $this->page_data['module'] = 'marketing';
@@ -46,6 +43,6 @@ class Marketing extends MY_Controller
             die();
         }
 
-        $this->load->view('v2/pages/marketing/main', $this->page_data);
+        $this->load->view('marketing/main', $this->page_data);
     }
 }

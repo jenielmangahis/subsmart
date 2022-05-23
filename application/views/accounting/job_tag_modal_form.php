@@ -1,9 +1,9 @@
 <div class="modal-content" id="tag-form">
     <div class="modal-header">
-    <a href="#" class="text-info" onclick="showTagsList(this)"><i class="fa fa-chevron-left"></i> Back</a>
+        <a href="#" class="text-info" onclick="showTagsList(this)"><i class="fa fa-chevron-left"></i> Back</a>
         <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
     </div>
-    <div class="modal-body pt-3">
+    <div class="modal-body">
         <div class="row">
             <div class="col-12">
                 <h5>Create new tag</h5>
@@ -12,12 +12,6 @@
                 <div class="form-group">
                     <label for="tagName">Tag name</label>
                     <input type="text" name="tag_name" id="tagName" class="form-control" required>
-                </div>
-                <div class="form-group">
-                    <label for="tagGroup">Group</label>
-                    <select class="form-control" name="group_id" id="tagGroup">
-                        <option></option>
-                    </select>
                 </div>
             </div>
         </div>

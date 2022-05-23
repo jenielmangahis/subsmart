@@ -29,24 +29,23 @@ defined('BASEPATH') or exit('No direct script access allowed');
         </div>
         <div class="col-md-12 form-line">
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label for="rebate1"><span>Rebate Received</span>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-1">
                     <input type="radio" name="rebate[]" value="1" id="rebate1" <?php if(isset($office_info)){ echo $office_info->rebate == 1 ? 'checked': ''; } ?> >
-                <!-- </div>
-                <div class="col-md-3"> -->
+                </div>
+                <div class="col-md-3">
                     <label for="rebate"><span>Rebate Paid</span>
                 </div>
                 <div class="col-md-1">
                     <input type="radio" name="rebate[]" value="0"  id="rebate" <?php if(isset($office_info)){ echo $office_info->rebate == 0 ? 'checked': ''; } ?>>
                 </div>
-                <div class="col-md-4"></div>
             </div>
         </div>
         <div class="col-md-12 form-line">
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-5">
                     <label for="">Commision Scheme Override</label>
                 </div>
                 <div class="col-md-7">

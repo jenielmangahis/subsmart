@@ -1,5 +1,5 @@
 <div class="modal fade" id="modalEditAccount" tabindex="-1" role="dialog" aria-labelledby="addLocationLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg w-50 m-auto" role="document">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <?php echo form_open_multipart('accounting/chart_of_accounts/update', ['class' => 'form-validate', 'autocomplete' => 'off']); ?>
                 <div class="modal-header">

@@ -1,37 +1,39 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-<?php include viewPath('includes/header_front_booking'); ?>
-<style>
-.booking-category-name{
-  background-color: #32243d;
-  color: #ffffff;
-  font-size: 16px;
-  padding: 10px;
-  margin: 0px;
-}
-</style>
+<?php include viewPath('includes/header'); ?>
 <div>
     <!-- page wrapper start -->
-    <div class="col-xl-9 left">
+    <div class="col-xl-8 left">
         <div class="container-fluid">
             <div class="page-title-box">
                 <div class="row align-items-center">
-                    <div class="col-12">
-                        <h1 class="page-title-v2"><?php echo $booking_settings ? $booking_settings->page_title : 'Online Booking'; ?></h1>
-                        <div class="pl-3 pr-3 mt-2 row" style="position: relative;top: 7px;">
-                          <div class="col mb-4 left alert alert-warning mt-0 mb-0">
-                              <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;"><?php echo $booking_settings->page_instruction; ?></span>
-                          </div>
-                        </div>
+                    <div class="col-sm-6">
+                        <h1 class="page-title-v2">Online Booking</h1>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item active">Manage your online booking</li>
+                        </ol>
                     </div>
                 </div>
             </div>
-            <div class="row" style="margin-bottom: 15px;">
-              <div class="col-xl-12" style="text-align:right;">                
-                 <a class="view-grid active btn btn-sm btn-primary" href="<?php echo base_url('booking/products/'.$eid.'?style=grid') ?>" style="margin-right: 10px;"><span class="fa fa-th fa-margin-right"></span> Grid view</a>
-                 <a class="view-grid btn btn-sm btn-primary" href="<?php echo base_url('booking/products/'.$eid) ?>"><span class="fa fa-list-ul fa-margin-right"></span> List view</a>
-                </div>                
-              </div>              
+            <div class="row">
+              <div class="col-xl-12">
+                <?php echo form_open_multipart('booking/products/'.$eid.'?style=grid', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+                <div class="col-9 right-menu">
+                  <div class="col-4 left pr-0 ml-4">
+                    <input type="text" class="form-control-search left" value="<?php echo $search_query; ?>" name="search" placeholder="Search...">
+                  </div>
+                  <div class="col-1 left pl-1">
+                    <button type="submit" class="search-booking-btn"><span class="fa fa-search"></span></button>
+                  </div>
+                  <div class="col-3 left pl-0 pr-0 pos-rlt-cs left-20">
+                    <a class="view-grid" href="<?php echo base_url('booking/products/'.$eid.'?style=grid') ?>"><span class="fa fa-th fa-margin-right"></span> Grid view</a>
+                  </div>
+                  <div class="col-3 left pl-0 pr-0 pos-rlt-cs">
+                    <a class="view-grid active" href="<?php echo base_url('booking/products/'.$eid) ?>"><span class="fa fa-list-ul fa-margin-right"></span> List view</a>
+                  </div>
+                </div>
+                <?php echo form_close(); ?>
+              </div>
             </div>
             <!-- end row -->
             <div class="row">
@@ -40,7 +42,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                   <ul class="category-grid">
                   <?php foreach($products as $key => $value){ ?>            
                     <li class="category-li">
-                        <div class="category__name booking-category-name"><?php echo $value['category']->name; ?></div>
+                        <div class="category__name"><?php echo $value['category']->name; ?></div>
                         <ul class="row row-list product-list">
                           <?php foreach( $value['products'] as $p ){ ?>
                             <li class="col-lg-4 product-li">
@@ -77,7 +79,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                           <input class="form-control-qty product__qty" id="qty-input-<?php echo $p->id; ?>" type="text" name="qty[<?php echo $p->id; ?>]" value="1">
                                           <button class="btn qty_plus product__qty-btn"  data-id="<?php echo $p->id; ?>" type="button"><span class="fa fa-plus"></span></button>
                                        </div>
-                                       <button class="btn btn-sm btn-primary btn-add-cart" data-id="<?php echo $p->id; ?>">Add to Cart</button>
+                                       <button class="btn btn-green btn-sm btn-add-cart" data-id="<?php echo $p->id; ?>">Add to Cart</button>
                                     </div>
                                     <div class="product__view">
                                        <a href="#" data-product-modal="open" data-product-id="<?php echo $p->id; ?>">view more</a>
@@ -109,6 +111,8 @@ var base_url = "<?php echo base_url(); ?>";
 <?php include viewPath('includes/footer_front_booking'); ?>
 
 <script>  
+  var base_url = "<?php echo base_url(); ?>";
+
   function continue_cart(){    
       var eid = "<?php echo $eid; ?>";
       window.location.href = base_url + "booking/products_schedule/"+eid;

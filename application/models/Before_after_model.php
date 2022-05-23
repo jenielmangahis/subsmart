@@ -45,8 +45,7 @@ class Before_after_model extends MY_Model
      */
     public function deleteBeforeAfter($id)
     {
-        //$this->db->delete($this->table, array("group_number" => $id));
-        $this->db->delete($this->table, array("id" => $id));
+        $this->db->delete($this->table, array("group_number" => $id));
     }
 
     public function getById($id)

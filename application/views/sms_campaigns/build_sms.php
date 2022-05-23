@@ -44,40 +44,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     width: 350px;
     height: 530px;
 }
-.page-title {
-  font-family: Sarabun, sans-serif !important;
-  font-size: 1.75rem !important;
-  font-weight: 600 !important;
-}
-.cell-inactive{
-    background-color: #d9534f;
-}
-.left {
-  float: left;
-}
-.pr-b10 {
-  position: relative;
-  bottom: 10px;
-}
-.p-40 {
-  padding-top: 40px !important;
-}
-.tabs-menu {
-    margin-bottom: 20px;
-    padding: 0;
-    margin-top: 20px;
-}
-.tabs-menu ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
-.md-right {
-  float: right;
-  width: max-content;
-  display: block;
-  padding-right: 0px;
-}
 .phone__cnt {
     margin: 190px 65px 0 50px;
 }
@@ -108,8 +74,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <?php include viewPath('includes/sidebars/marketing'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
-        <div class="container-fluid p-40">
-          <!--
+        <div class="container-fluid">
             <div class="page-title-box">
                 <div class="row align-items-center">
                     <div class="col-sm-6">
@@ -129,27 +94,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     </div>
                 </div>
             </div>
-          -->
             <!-- end row -->
             <?php echo form_open_multipart('users/save', ['class' => 'form-validate', 'id' => 'build_sms', 'autocomplete' => 'off']); ?>
-            <div class="card mt-0">
-                <div class="row">
-                  <div class="col-sm-6 left">
-                    <h3 class="page-title">SMS Blast</h3>
-                  </div>
-                  <div class="col-sm-6 right dashboard-container-1">
-                    <div class="float-right d-none d-md-block">
-                        <div class="dropdown">
-                                <a href="<?php echo url('sms_campaigns') ?>" class="btn btn-primary" aria-expanded="false">
-                                    <i class="mdi mdi-settings mr-2"></i> Go Back to SMS Blast list
-                                </a>
-                        </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="alert alert-warning mt-2 mb-0" role="alert">
-                    <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Build and preview the SMS.</span>
-                </div>
+            <div class="card">
                 <div class="card-body">
                     <div class="validation-error" style="display: none;"></div>
                     <div class="tabs-menu">
@@ -161,18 +108,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                           <li>5. Purchase</li>
                         </ul>
                     </div>
-                    <hr />
+                    <hr />  
                     <div class="row">
                         <div class="col-md-6">
                             <div class="campaign__text">
                                 <label>SMS message</label>
-                                <?php 
-                                    $sms_text = 'Sms from ' . $company->business_name;
-                                    if( $smsCampaign->sms_text != '' ){
-                                        $sms_text = $smsCampaign->sms_text;
-                                    }
-                                ?>
-                                <textarea name="sms_text" cols="40" class="form-control" id="sms-txt" style="height: 150px !important;" autocomplete="off"><?= $sms_text; ?></textarea>
+                                <textarea name="sms_text" cols="40" class="form-control" id="sms-txt" style="height: 150px !important;" autocomplete="off">Sms from ADi</textarea>
                             </div>
                             <div class="help help-sm margin-bottom-sec">
                                 message characters: <span class="margin-right-sec char-counter">0</span>
@@ -193,11 +134,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     </div>
                     <hr>
                     <div class="row margin-top">
-                        <div class="col-sm-6">
+                        <div class="col-sm-12">
                             <a class="btn btn-default margin-right btn-preview-sms" href="javascript:void(0);">Preview SMS</a>
                         </div>
-                        <div class="col-sm-6 text-right">
-                            <a class="btn btn-default margin-right" href="<?php echo url('sms_campaigns/add_campaign_send_to/'); ?>" style="margin-right: 10px;">&laquo; Back</a>
+                        <div class="col-sm-12 text-right">
+                            <a class="btn btn-default margin-right" href="javascript:void(0);">&laquo; Back</a>
                             <button class="btn btn-primary btn-create-sms-msg" type="submit">Continue &raquo;</button>
                         </div>
                     </div>
@@ -255,7 +196,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             </div>
 
             <div class="modal fade" id="modalPreviewSms" tabindex="-1" role="dialog" aria-labelledby="modalPreviewSmsTitle" aria-hidden="true">
-                <div class="modal-dialog" role="document" style="margin-top:5%;">
+                <div class="modal-dialog" role="document">
                     <div class="modal-content">
                       <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLongTitle">Preview SMS</h5>
@@ -263,8 +204,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                           <span aria-hidden="true">&times;</span>
                         </button>
                       </div>
-                      <div class="modal-body" style="padding: 0px 30px;text-align:center;">
-                        <div class="phone" style="margin-top:20px;">
+                      <div class="modal-body" style="padding: 0px 30px;">
+                        <div class="phone">
                             <div class="phone__cnt">
                                 <div class="sms-blast-msg"></div>
                             </div>
@@ -329,13 +270,13 @@ $(function(){
 
     $("#build_sms").submit(function(e){
         e.preventDefault();
-        var url = base_url + 'sms_campaigns/create_sms_message';
-        $(".btn-create-sms-msg").html('<span class="spinner-border spinner-border-sm m-0"></span>  Saving');
+        var url = base_url + '/sms_campaigns/create_sms_message';
+        $(".btn-create-sms-msg").html('<span class="spinner-border spinner-border-sm m-0"></span>  saving');
         setTimeout(function () {
           $.ajax({
              type: "POST",
-             url: url,
-             dataType: "json",
+             url: url,    
+             dataType: "json",      
              data: $("#build_sms").serialize(),
              success: function(o)
              {
@@ -343,7 +284,7 @@ $(function(){
                     $(".validation-error").hide();
                     $(".validation-error").html('');
                     //redirect to step2
-                    location.href = base_url + "sms_campaigns/preview_sms_message";
+                    location.href = base_url + "/sms_campaigns/preview_sms_message";
                 }else{
                     $(".validation-error").show();
                     $(".validation-error").html(o.err_msg);

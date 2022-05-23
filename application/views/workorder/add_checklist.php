@@ -48,7 +48,7 @@
                           </div>                      
                           <div class="col-md-5" style="padding: 0px;">
                             <a class="btn btn-default" href="<?php echo base_url('workorder/checklists'); ?>">Cancel</a>
-                            <button type="submit" class="btn btn-primary">Continue</button>
+                            <button type="submit" class="btn btn-primary">Submit</button>
                           </div>
                       </div>
                       <?php echo form_close(); ?>

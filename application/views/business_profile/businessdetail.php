@@ -1,55 +1,17 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-<style>
-.page-title {
-  font-family: Sarabun, sans-serif !important;
-  font-size: 1.75rem !important;
-  font-weight: 600 !important;
-}
-.pr-b10 {
-  position: relative;
-  bottom: 10px;
-}
-.p-40 {
-  padding-top: 40px !important;
-}
-@media only screen and (max-width: 600px) {
-  .p-40 {
-    padding-top: 0px !important;
-  }
-  .pr-b10 {
-    position: relative;
-    bottom: 0px;
-  }
-}
-.list-icon{
-  list-style: none;
-  height: 400px;
-  overflow: auto;
-  padding: 6px;
-}
-.list-icon li{
-  display: inline-block;
-  /*width: 30%;*/
-  height:100px;
-  margin: 3px;
-}
-.mt-18 {
-  margin-top: 15px;
-}
-</style>
+
 <?php include viewPath('includes/header'); ?>
 <!-- page wrapper start -->
 <div role="wrapper">
    <?php include viewPath('includes/sidebars/business'); ?>
-   <div wrapper__section class="p-40">
+   <div wrapper__section>
       <div class="col-md-24 col-lg-24 col-xl-18">
          <?php echo form_open_multipart('users/savebusinessdetail', [ 'id'=> 'form-business-details', 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
 			<input type="hidden" name="id" value="<?php echo $profiledata->id; ?>">
 			<input type="hidden" name="user_id" value="<?php echo $profiledata->user_id; ?>">
-            <div class="card mt-0">
-               <h3 class="page-title mb-0 mt-18">Basic Info</h3>
-               <hr class="mt-2"/>
+            <div class="card">
+               <h3>Basic Info</h3>
                <div class="row">
                   <div class="col-md-6">
                      <div class="form-group">
@@ -109,7 +71,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                      </div>
                      <div class="col-md-4">
                         <label>State/Province</label> <span class="form-required">*</span>
-                        <input type="text" name="state" value="<?php echo $profiledata->state ?>" class="form-control" id="state"/>
+                        <input type="text" name="state" value="<?php echo $profiledata->zip ?>" class="form-control" id="state"/>
                      </div>
                   </div>
                </div>
@@ -263,10 +225,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                   <div class="col-md-12">
                      <div class="form-group">
                         <div class="clearfix">
-                           <label>Business Short Description</label><span class="help help-sm help-bold pull-right">characters left: <span class="char-counter-left">1962</span></span>
+                           <label>Business Short Description</label><span class="help help-sm help-bold pull-right">characters left: <span data-char="counter" data-char-max="2000">1962</span></span>
                         </div>
                         <div class="help help-block help-sm">Give customers more details on what your business actually does. Describe your company's values and goals. Minimum 25 characters.</div>
-                        <textarea name="business_desc" cols="40" rows="8" class="form-control businessdetail-desc" autocomplete="off"><?php echo ($profiledata) ? $profiledata->business_desc: ''; ?> </textarea>
+                        <textarea name="business_desc" cols="40" rows="8" class="form-control" autocomplete="off"><?php echo ($profiledata) ? $profiledata->business_desc: ''; ?> </textarea>
                         <span class="validation-error-field" data-formerrors-for-name="about" data-formerrors-message="true" style="display: none;"></span>
                      </div>
                   </div>
@@ -276,7 +238,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <div class="card">
                <div class="row">
                   <div class="col-xs-16 text-right">
-                     <button class="btn btn-primary btn-lg margin-left" name="btn-continue" type="submit">Save</button>
+                     <button class="btn btn-primary btn-lg margin-left" name="btn-continue" type="submit">Submit</button>
                   </div>
                </div>
             </div>
@@ -391,27 +353,3 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
    </div>
 </div>
 <?php include viewPath('includes/footer'); ?>
-<script>
-$(function(){
-   function descriptionCharCounter(){
-        var chars_max   = 1962;
-        var chars_total = $(".businessdetail-desc").val().length;
-        var chars_left  = chars_max - chars_total;
-
-        $(".char-counter-left").html(chars_left);
-
-        return chars_left;
-   }
-
-   $(".businessdetail-desc").keydown(function(e){
-        var chars_left = descriptionCharCounter();
-        if( chars_left <= 0 ){
-            if (e.keyCode != 46 && e.keyCode != 8 ) return false;
-        }else{
-            return true;
-        }
-   });
-
-   descriptionCharCounter();
-});
-</script>

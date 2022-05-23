@@ -20,39 +20,4 @@ class Accounting_single_time_activity_model extends MY_Model {
     {
         return $this->db->get($this->table)->result();
     }
-
-    public function update($id, $data)
-    {
-        $this->db->where('company_id', logged('company_id'));
-        $this->db->where('id', $id);
-        $update = $this->db->update($this->table, $data);
-
-		return $update;
-    }
-
-    public function delete_multiple_by_id($ids)
-    {
-        $this->db->where('company_id', logged('company_id'));
-        $this->db->where_in('id', $ids);
-        $delete = $this->db->delete($this->table);
-
-        return $delete;
-    }
-
-    public function get_by_id($id)
-    {
-        $this->db->where('company_id', logged('company_id'));
-        $this->db->where('id', $id);
-        $query = $this->db->get($this->table);
-        
-        return $query->row();
-    }
-
-    public function get_company_time_activities($filters = [])
-    {
-        $this->db->where('company_id', $filters['company_id']);
-        $this->db->where('status !=', 0);
-        $query = $this->db->get($this->table);
-        return $query->result();
-    }
 }

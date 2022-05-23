@@ -1,5 +1,5 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') OR exit('No direct script access allowed'); 
 error_reporting(0);
 ?>
 <style>
@@ -53,9 +53,6 @@ error_reporting(0);
     color: #888;
     margin-right: 8px;
 }
-div[wrapper__section] [role="white__holder"] .profile-subtitle {
-		font-size: 24px !important;
-}
 .fa {
     display: inline-block;
     font: normal normal normal 14px/1 FontAwesome;
@@ -65,7 +62,7 @@ div[wrapper__section] [role="white__holder"] .profile-subtitle {
     -moz-osx-font-smoothing: grayscale;
 }
 .credential-verification span{
-	display: inline-block !important;
+	display: inline-block !important; 
 }
 .credential .credential-cnt .credential-img {
     width: 37px;
@@ -75,52 +72,11 @@ div[wrapper__section] [role="white__holder"] .profile-subtitle {
     border-radius: 4px;
     display: inline-block;
 }
-.cat-selected .tag {
-    margin-right: 5px;
-    display: inline-block;
-}
-.label-default {
-		background-color: #6a4a85 !important;
-		font-size: 13px;
-		line-height: 13px;
-		color: white;
-		border-radius: 26px;
-		margin-bottom: 6px;
-		display: inline-block;
-		padding: 5px 15px !important;
-}
-
-.nav-close{
-        margin-top: 2% !important;
-    }
-
-.gallery li {
-    width: 30%;
-    display: inline-flex;
-    margin-right: 10px;
-    margin-bottom: 10px;
-    height: 392px;
-}
-div.picture-container div.img img {
-    object-fit: cover;
-    height: 286px;
-    width: 100% !important;
-}
-.image-caption, .deals-caption{
- 	background: linear-gradient(to right, #2d1a3e 0%, #4a385d 100%);
-	color: #ffffff;
-	padding: 8px;
-	height: 41px;
-}
-.gallery-img{
-	display: inline-block;
-	height: 126px;
-}
 </style>
 <?php include viewPath('includes/header'); ?>
     <!-- page wrapper start -->
-
-
+     
+	 
 	<div role="wrapper">
 
         <?php include viewPath('includes/sidebars/business'); ?>
@@ -147,10 +103,7 @@ div.picture-container div.img img {
 									<a class="a-alert a-edit" href="services"><span class="fa fa-edit"></span> edit</a>
 									<div class="margin-bottom-sec">
 										<div class="profile-service-title">Residential Services Offered</div>
-										<br />
-										<?php foreach($selectedCategories as $s){ ?>
-											<span class="label label-default tag"><?= $s->service_name; ?><!-- <a class="cat-tag-remove" id="cat-tag-remove-93" href="#"><span class="icon fa fa-remove"></span></a> --></span>
-										<?php } ?>
+										<span class="profile-service-category-item"><img class="profile-service-icon" width="36" src="<?= $url->assets . "img/camera_check.png"; ?>"> <span class="profile-service-item"><?php //echo $profiledata->service_loc ?></span></span>
 									</div>
 								</div>
 							</div>
@@ -166,7 +119,7 @@ div.picture-container div.img img {
 											</div>
 											<?php if( $profiledata->is_licensed == 1 ){ ?>
 												<div class="credential-cnt">
-													<span>State/Province : <?= $profiledata->license_state; ?>, Expires on: <?= date("m/d/Y",strtotime($profiledata->license_expiry_date)); ?></span>
+													<span>State/Province : <?= $profiledata->license_state; ?>, Expires on: <?= date("Y-m-d",strtotime($profiledata->license_expiry_date)); ?></span>
 													<span>Class : <?= $profiledata->license_class; ?>, Nr:<?= $profiledata->license_number; ?></span>
 													<?php if( $profiledata->license_image != '' ){ ?>
 														<img class="credential-img" src="<?php echo (licenseImage($profiledata->id)) ? licenseImage($profiledata->id) : $url->assets ?>">
@@ -186,7 +139,7 @@ div.picture-container div.img img {
 											<?php if( $profiledata->is_bonded == 1 ){ ?>
 												<div class="credential-cnt">
 													<span>Insured Amount: $<?= number_format($profiledata->bond_amount,2); ?></span>
-													<span>Expires on: <?= date("m/d/Y",strtotime($profiledata->bond_expiry_date)); ?></span>
+													<span>Expires on: <?= date("Y-m-d",strtotime($profiledata->bond_expiry_date)); ?></span>
 													<?php if( $profiledata->bond_image != '' ){ ?>
 														<img class="credential-img" src="<?php echo (bondImage($profiledata->id)) ? bondImage($profiledata->id) : $url->assets ?>">
 														<a style="color:#888;" href="<?php echo (bondImage($profiledata->id)) ? bondImage($profiledata->id) : $url->assets ?>" target="_blank">View Bonded</a>
@@ -205,7 +158,7 @@ div.picture-container div.img img {
 											<?php if( $profiledata->is_business_insured == 1 ){ ?>
 												<div class="credential-cnt">
 													<span>Insured amount: $<?= number_format($profiledata->insured_amount,2); ?></span>
-													<span>Expires on: <?= date("m/d/Y",strtotime($profiledata->insurance_expiry_date)); ?></span>
+													<span>Expires on: <?= date("Y-m-d",strtotime($profiledata->insurance_expiry_date)); ?></span>
 												</div>
 											<?php }else{ ?>
 												<div class="credential-cnt">Not Insured</div>
@@ -257,7 +210,7 @@ div.picture-container div.img img {
 										<div class="credential">
 											<div class="credential-badge">
 												<div class="credential-badge-year">
-													<img src="<?= $url->assets . "img/badge_5.png" ?>">
+													<img src="<?= $url->assets . "img/badge_5.png" ?>"> 
 													<div class="credential-badge-year-text"><?= $profiledata->year_est > 0 ? $profiledata->year_est : ''; ?></div>
 												</div>
 												<span class="badge-label">Since</span>
@@ -265,13 +218,13 @@ div.picture-container div.img img {
 											<?php if( $profiledata->year_est > 0 ){ ?>
 												<div class="credential-cnt">
 													<span>Business since:<b> <?= $profiledata->year_est; ?></b></span>
-														<?php
+														<?php 
 															$total_years = date("Y") - $profiledata->year_est;
 														?>
                                                     <span></span>
 												</div>
 											<?php } ?>
-
+											
 										</div>
 									</div>
 								</div>
@@ -280,73 +233,13 @@ div.picture-container div.img img {
 						<div role="white__holder_section_holder" class="no_border">
 							<div class="profile-content-section">
 								<h3 class="profile-subtitle">Deals <a class="a-alert a-edit" href="<?php echo base_url('promote/deals'); ?>"><span class="fa fa-edit"></span> edit</a></h3>
-								<?php if($dealsSteals){ ?>
-									<ul class="gallery">
-				                    <?php foreach($dealsSteals as $ds){ ?>
-				                      <li class="col-image-<?= $key ?>" style="width:19%;margin-right: 48px;text-align: center;height: auto;margin-bottom:38px;">
-				                        <div class="">
-				                          <div class="img">
-				                          	<?php
-				                              $slug = createSlug($ds->title,'-');
-				                              $deal_url = url('deal/' . $slug . '/' . $ds->id);
-				                            ?>
-				                          	<a href="<?= $deal_url; ?>" target="_new">
-				                          		<?php 
-				                          			if( $ds->photos != '' ){
-				                          				$deals_image = base_url("uploads/deals_steals/" . $ds->company_id . "/" . $ds->photos);
-					                          			 if( !file_exists(FCPATH."uploads/deals_steals/"  . $ds->company_id . "/" . $ds->photos) ){
-					                          				$deals_image = base_url("assets/img/default-deals.jpg");
-					                          			}	
-				                          			}else{
-				                          				$deals_image = base_url("assets/img/default-deals.jpg");
-				                          			}
-				                          			
-				                          		?>
-				                            	<img class="gallery-img" src="<?= $deals_image; ?>" style="width: 100%;">
-				                                <div class="image-caption deals-caption">
-				                                 <b><?= $ds->title; ?></b>
-				                                </div>
-				                            </a>
-				                          </div>
-				                        </div>
-				                      </li>
-				                    <?php } ?>
-				                 </ul>
-								<?php }else{ ?>
-									<p class="profile-content-margin">No deals at this moment.</p>
-								<?php } ?>								
+								<p class="profile-content-margin">No deals at this moment.</p>
 							</div>
 						</div>
 						<div role="white__holder_section_holder" class="no_border">
 							<div class="profile-content-section">
 								<h3 class="profile-subtitle">Portfolio <a class="a-alert a-edit" href="<?php echo base_url('users/portfolio'); ?>"><span class="fa fa-edit"></span> edit</a></h3>
-								<?php
-				                  $images = array();
-				                  if( $profiledata->work_images != '' ){
-				                    $images = unserialize($profiledata->work_images);
-				                  }
-				                ?>
-				                <?php if($images){ ?>
-				                	<ul class="gallery">
-					                    <?php foreach($images as $key => $i){ ?>
-					                      <li>
-					                        <div class="picture-container">
-					                          <div class="img">
-					                          	<a href="<?= url("uploads/work_pictures/" . $profiledata->company_id . "/" . $i['file']); ?>" data-fancybox="gallery" data-caption="<?= $i['caption']; ?>">
-					                            	<img class="gallery-img" src="<?= url("uploads/work_pictures/" . $profiledata->company_id . "/" . $i['file']); ?>">
-					                                <div class="image-caption image-caption-container-<?= $key; ?>">
-					                                 <?= $i['caption']; ?>
-					                                </div>
-					                            </a>
-					                          </div>
-					                        </div>
-					                      </li>
-					                    <?php } ?>
-					                 </ul>
-				                <?php }else{ ?>
-				                	<p class="profile-content-margin">No photos have been added yet.</p>
-				                <?php } ?>
-								
+								<p class="profile-content-margin">No photos have been added yet.</p>
 							</div>
 						</div>
 						<div role="white__holder_section_holder" class="no_border">
@@ -358,13 +251,7 @@ div.picture-container div.img img {
 						<div role="white__holder_section_holder" class="no_border">
 							<div class="profile-content-section">
 								<h3 class="profile-subtitle">Business Tags <a class="a-alert a-edit" href="<?php echo base_url('users/profilesetting'); ?>"><span class="fa fa-edit"></span> edit</a></h3>
-								<?php if( $profiledata->business_tags != '' ){ ?>
-									<?php $tags = explode(",", $profiledata->business_tags); ?>
-									<?php foreach($tags as $t){ ?>
-										<span class="label label-default tag"><?= $t; ?><!-- <a class="cat-tag-remove" id="cat-tag-remove-93" href="#"><span class="icon fa fa-remove"></span></a> --></span>
-									<?php } ?>
-								<?php } ?>
-								
+								<p class="profile-content-margin"></p>
 							</div>
 						</div>
 					</div>
@@ -413,7 +300,7 @@ div.picture-container div.img img {
 							<?php $schedules = unserialize($profiledata->working_days); ?>
 							<?php if( !empty($schedules) ){ ?>
 								<ul class="list-availability">
-								<?php
+								<?php 
 									$days = array();
 									foreach( $schedules as $s ){
 										$days[] = date("D",strtotime($s['day']));
@@ -424,22 +311,13 @@ div.picture-container div.img img {
 									</li>
 									<li>
 										<span>Time Off</span>
-										<?php 
-											$start_date = str_replace("-", "/", $profiledata->start_time_of_day);
-											$end_date   = str_replace("-", "/", $profiledata->end_time_of_day);											
-										?>
-										<?php if( strtotime($start_date) > 0 && strtotime($end_date) > 0 ){ ?>
-											<div class="text-ter"><?= date("F j, Y", strtotime($start_date)) . ' to ' . date("F j, Y", strtotime($end_date)); ?></div>
-										<?php }else{ ?>
-											<div class="text-ter">---</div>
-										<?php } ?>
-										
+										<div class="text-ter"><?= date("F j, Y", strtotime($profiledata->start_time_of_day)) . ' to ' . date("F j, Y", strtotime($profiledata->end_time_of_day)); ?></div>
 									</li>
 								</ul>
 							<?php }else{ ?>
 								<div class="margin-bottom-sec text-ter">Not Specified</div>
 							<?php } ?>
-
+							
 						</div>
 					</div>
 				</div>
@@ -474,7 +352,7 @@ div.picture-container div.img img {
 					<label>Profile Picture</label>
 					<div>
 						<a class="profile-avatar-img" data-fileuploadmodal="open-modal" href="#"><img height="100" data-fileuploadmodal="image-parent" id="img_profile" src="<?php echo (businessProfileImage($profiledata->id)) ? businessProfileImage($profiledata->id) : $url->assets ?>"></a>
-					</div>
+					</div>                           
 					<div class="margin-top margin-bottom ">
 					<input type="file" class="form-control" name="image" id="formClient-Image" placeholder="Upload Image" accept="image/*" onchange="readURL(this);">
 					</div>
@@ -528,6 +406,7 @@ div.picture-container div.img img {
           <span class="mdc-bottom-navigation__list-item__text">Nearby</span>
         </span>
       </nav>
-    </div>
+    </div> 
 </div>
 <?php include viewPath('includes/footer'); ?>
+  

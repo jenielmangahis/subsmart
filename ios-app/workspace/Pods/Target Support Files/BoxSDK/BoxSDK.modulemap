@@ -1,6 +1,0 @@
-framework module BoxSDK {
-  umbrella header "BoxSDK-umbrella.h"
-
-  export *
-  module * { export * }
-}

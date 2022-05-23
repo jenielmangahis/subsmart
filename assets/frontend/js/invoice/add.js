@@ -365,9 +365,6 @@ $(document).ready(function () {
         }
 
         $("#modalNewCustomer").modal("hide");
-        // $('#sel-customer').selectmenu('refresh');
-        // alert('inv/js');
-        $('#sel-customer').load(window.location.href +  ' #sel-customer');
       },
     });
   });

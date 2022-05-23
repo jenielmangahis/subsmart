@@ -5,7 +5,7 @@
                 <h4 class="modal-title">Manage your tags</h4>
                 <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
             </div>
-            <div class="modal-body pt-3">
+            <div class="modal-body">
                 <div class="row">
                     <div class="col-6 d-flex">
                         <button type="button" class="btn btn-outline-secondary m-auto" onclick="getTagForm({}, 'create')">Create Tag</button>

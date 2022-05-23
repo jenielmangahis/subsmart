@@ -15,9 +15,6 @@ class Nsmart_Plans extends MY_Controller {
 		$this->load->library('session');
 
 		$this->load->model('NsmartPlan_model');
-		$cid  = logged('id');
-		$profiledata = $this->business_model->getByWhere(array('user_id'=>$cid));
-		$this->page_data['profiledata'] = ($profiledata) ? $profiledata[0] : null;
 	}
 
 	public function index() {
@@ -34,7 +31,7 @@ class Nsmart_Plans extends MY_Controller {
 		$nSmartPlans   = $this->NsmartPlan_model->getAll();
 		$option_status = $this->NsmartPlan_model->getPlanStatus();
 		$option_discount_types = $this->NsmartPlan_model->getDiscountTypes();
-
+		
 		$this->page_data['option_status'] = $option_status;
 		$this->page_data['option_discount_types'] = $option_discount_types;
 		$this->page_data['nSmartPlans'] = $nSmartPlans;

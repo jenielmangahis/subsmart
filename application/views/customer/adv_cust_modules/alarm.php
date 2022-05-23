@@ -2,8 +2,8 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 ?>
 <div class="alarm module_med ui-state-default"  data-id="<?= $id ?>"  id="<?= $id ?>">
-    <div class="col-sm-12 individual-module-big">
-        <h6>Alarm</h6>
+    <div class="col-sm-12">
+        <h6></h6>
         <div class="row">
             <div class="col-sm-6">
                 <div class="contacttext">
@@ -23,7 +23,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_label"> <span >Install Date :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b> <?php if(isset($office_info)){ echo $office_info->install_date; } ?></b> </label>
+                                <label class="alarm_answer"><b> <?php if(isset($alarm_info)){ echo $alarm_info->install_date; } ?></b> </label>
                             </td>
                         </tr>
                         <tr>
@@ -42,6 +42,31 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_label"><b> <?php if(isset($alarm_info)){ echo $alarm_info->passcode; } ?></b> </label>
                             </td>
                         </tr>
+
+                        <tr>
+                            <td width="50%" align="right" valign="top">
+                                <label class="alarm_label"> <span >Contact #1 :</span> </label>
+                            </td>
+                            <td width="50%" align="right" valign="top">
+                                <label class="alarm_answer"><b> <?php if(isset($alarm_info)){ echo $alarm_info->contact1; } ?></b> </label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="50%" align="right" valign="top">
+                                <label class="alarm_label"> <span >Contact #2 :</span> </label>
+                            </td>
+                            <td width="50%" align="right" valign="top">
+                                <label class="alarm_answer"><b> <?php if(isset($alarm_info)){ echo $alarm_info->contact2; } ?></b> </label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="50%" align="right" valign="top">
+                                <label class="alarm_label"> <span >Contact #3 :</span> </label>
+                            </td>
+                            <td width="50%" align="right" valign="top">
+                                <label class="alarm_answer"><b> <?php if(isset($alarm_info)){ echo $alarm_info->contact3; } ?></b> </label>
+                            </td>
+                        </tr>
                         <tr>
                             <td width="50%" align="right" valign="top">
                                 <label class="alarm_label"> <span >Panel Type :</span> </label>
@@ -52,10 +77,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         </tr>
                         <tr>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_label"> <span>Mon. Waived :</span> </label>
+                                <label class="alarm_label"> <span>$ Waived :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b> <?php if(isset($office_info)){ echo $office_info->monitoring_waived; } ?></b> </label>
+                                <label class="alarm_answer"><b> <?php if(isset($alarm_info)){ echo $alarm_info->mon_waived; } ?></b> </label>
                             </td>
                         </tr>
                         <tr>
@@ -71,7 +96,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_label"> <span >Warranty Type :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b> <?php if(isset($alarm_info)){ echo $alarm_info->warranty_type; } ?></b> </label>
+                                <label class="alarm_answer"><b> <?php if(isset($office_info)){ echo $office_info->warranty_type; } ?></b> </label>
                             </td>
                         </tr>
                         <tr>
@@ -127,6 +152,31 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_answer"><b> <?php if(isset($alarm_info)){ echo $alarm_info->install_code; } ?></b> </label>
                             </td>
                         </tr>
+
+                        <tr>
+                            <td width="50%" align="right" valign="top">
+                                <label class="alarm_label"> <span >ContactName 1 :</span> </label>
+                            </td>
+                            <td width="50%" align="right" valign="top">
+                                <label class="alarm_answer"><b> <?php if(isset($alarm_info)){ echo $alarm_info->contact_name1; } ?></b> </label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="50%" align="right" valign="top">
+                                <label class="alarm_label"> <span >ContactName 2 :</span> </label>
+                            </td>
+                            <td width="50%" align="right" valign="top">
+                                <label class="alarm_answer"><b> <?php if(isset($alarm_info)){ echo $alarm_info->contact_name2; } ?></b> </label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="50%" align="right" valign="top">
+                                <label class="alarm_label"> <span >ContactName 3 :</span> </label>
+                            </td>
+                            <td width="50%" align="right" valign="top">
+                                <label class="alarm_answer"><b> <?php if(isset($alarm_info)){ echo $alarm_info->contact_name3; } ?></b> </label>
+                            </td>
+                        </tr>
                         <tr>
                             <td width="50%" align="right" valign="top">
                                 <label class="alarm_label"> <span >System Type : </span> </label>
@@ -157,6 +207,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             </td>
                             <td width="50%" align="right" valign="top">
                                 <label class="alarm_answer"><b> <?php if(isset($office_info)){ echo $office_info->rebate_check2; } ?></b> </label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="50%" align="right" valign="top">
+                                <label class="alarm_label"> <span >CustomField 1 :</span> </label>
+                            </td>
+                            <td width="50%" align="right" valign="top">
+                                <label class="alarm_answer"><b> <?php if(isset($office_info)){ echo $office_info->office_custom_field1; } ?></b> </label>
                             </td>
                         </tr>
                         <tr>

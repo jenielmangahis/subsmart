@@ -7,22 +7,24 @@ class Color_Settings extends MY_Controller {
 
 		parent::__construct();
 		$this->checkLogin();
-        $this->hasAccessModule(8);
 
 		$this->load->model('ColorSettings_model');
 		$this->load->helper(array('form', 'url', 'hashids_helper'));
 		$this->load->library('session');
 
 		$this->page_data['page']->title = 'Color Settings ';
-		$this->page_data['page']->menu = 'color_settings';
+		$this->page_data['page']->menu = 'color_settings';		
 	}
 
 
-	public function index(){
+	public function index(){			
 		$user_id = logged('id');
         $role_id = logged('role');
-        
-        $args = array('company_id' => logged('company_id'));
+        if( $role_id == 1 || $role_id == 2 ){
+            $args = array();
+        }else{
+            $args = array('company_id' => logged('company_id'));
+        }
 		$colorSettings = $this->ColorSettings_model->getByWhere($args);
 
 		$this->page_data['colorSettings'] = $colorSettings;
@@ -40,7 +42,7 @@ class Color_Settings extends MY_Controller {
         ));
 
 		$this->load->view('color_settings/add_new', $this->page_data);
-	}
+	}	
 
 	public function create_color_setting(){
 		postAllowed();
@@ -130,7 +132,7 @@ class Color_Settings extends MY_Controller {
         	redirect('color_settings/edit_color_setting/'.$post['cid']);
 
         }
-	}
+	}	
 
 	public function delete_color(){
 		$id = $this->ColorSettings_model->deleteColorById(post('cid'));

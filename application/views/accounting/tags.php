@@ -36,42 +36,22 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <div class="row align-items-center">
                                 <div class="col-md-12">
-                                    <div class="row action-buttons-cont">
-                                        <div class="col-md-6 d-flex align-items-center"><a href="#" class="text-info" id="see-untagged-transactions">See all untagged transactions</a></div>
-                                        <div class="col-md-6">
-                                            <div class="form-row">
-                                                <div class="col d-flex justify-content-end">
-                                                    <input type="text" name="search" id="search" class="form-control w-25" placeholder="Search by tag name">
-                                                </div>
-                                                <div class="col-2 d-flex justify-content-end">
-                                                    <div class="dropdown w-100">
-                                                        <button style="padding:6px 30px" type="button" class="btn btn-success w-100" data-toggle="dropdown"><span>New</span>&nbsp;&nbsp;<span class="fa fa-caret-down"></span></button>
-                                                        <ul class="dropdown-menu dropdown-menu-right">
-                                                            <li><a href="#" class="dropdown-item" data-toggle="modal" data-target="#createTagGroup" >Tag Group</a></li>
-                                                            <li><a href="#" class="dropdown-item" data-toggle="modal" data-target="#createTag">Tag</a></li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
+                                    <div class="row">
+                                        <div class="col-md-6"><a href="#">See all untagged transactions</a></div>
+                                        <div class="col-md-6" style="text-align: right">
+                                            <div class="dropdown" style="position: relative;float: right;display: inline-block;margin-left: 10px;">
+                                                <button style="padding:6px 30px" type="button" class="btn btn-success" data-toggle="dropdown"><span>New</span>&nbsp;&nbsp;<span class="fa fa-caret-down"></span></button>
+                                                <ul class="dropdown-menu dropdown-menu-right">
+                                                    <li><a href="#" class="dropdown-item" data-toggle="modal" data-target="#createTagGroup" >Tag Group</a></li>
+                                                    <li><a href="#" class="dropdown-item" data-toggle="modal" data-target="#createTag">Tag</a></li>
+                                                </ul>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row hide delete-button-cont">
-                                        <div class="col-12">
-                                            <button class="btn btn-success" id="delete-tags-button">Delete tags</button>
-                                        </div>
-                                    </div>
                                     <!--                        DataTables-->
-                                    <table id="tags_table" class="table table-bordered mt-3" style="width:100%">
+                                    <table id="rules_table" class="table table-bordered mt-5" style="width:100%">
                                         <thead>
                                             <tr>
-                                                <th width="2%">
-                                                    <div class="d-flex justify-content-center">
-                                                        <div class="checkbox checkbox-sec m-0">
-                                                            <input type="checkbox" id="select-all-tags">
-                                                            <label for="select-all-tags" class="p-0" style="width: 24px; height: 24px"></label>
-                                                        </div>
-                                                    </div>
-                                                </th>
                                                 <th>TAGS AND TAG GROUPS</th>
                                                 <th>TRANSACTIONS</th>
                                                 <th>ACTION</th>
@@ -98,8 +78,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     <form class="mb-3" id="tags_group_form">
                                                         <div class="form-row mb-3">
                                                             <div class="col-md-8">
-                                                                <label for="tag-group-name">Group name</label>
-                                                                <input type="text" name="tags_group_name" id="tag-group-name" class="form-control">
+                                                                <label for="tag_group_name">Group name</label>
+                                                                <input type="text" name="tags_group_name" id="tag_group_name" class="form-control">
                                                             </div>
                                                             <div class="col-md-4">
                                                                 <label for="">&nbsp;</label>
@@ -269,3 +249,67 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 <!-- page wrapper end -->
 <?php include viewPath('includes/footer_accounting'); ?>
+<script>
+    //dropdown checkbox
+    var expanded = false;
+    function showCheckboxes() {
+        var checkboxes = document.getElementById("checkboxes");
+        if (!expanded) {
+            checkboxes.style.display = "block";
+            expanded = true;
+        } else {
+            checkboxes.style.display = "none";
+            expanded = false;
+        }
+    }
+    //DataTables JS
+    $(document).ready(function() {
+        $('#group-tags-select2').select2({
+            ajax: {
+                url: '/accounting/get-group-tags',
+                dataType: 'json'
+            }
+        });
+
+        $('#rules_table').DataTable({
+            autoWidth: false,
+            searching: false,
+            processing: true,
+            serverSide: true,
+            lengthChange: false,
+            ordering: false,
+            info: false,
+            paging: false,
+            ajax: {
+                url: 'load-all-tags/',
+                dataType: 'json',
+                contentType: 'application/json', 
+                type: 'POST',
+                data: function(d) {
+                    return JSON.stringify(d);
+                },
+                pagingType: 'full_numbers',
+            },
+            columns: [
+                {
+                    data: 'name',
+                    name: 'name',
+                },
+                {
+                    data: 'transactions',
+                    name: 'transactions',
+                },
+                {
+                    data: 'actions',
+                    name: 'actions',
+                }
+            ],
+            fnCreatedRow: function(nRow, aData, iDataIndex) {
+                if(aData['type'] === 'group-tag') {
+                    $(nRow).attr('id', `child-${aData['parentIndex']}`);
+                    $(nRow).addClass('collapse bg-muted');
+                }
+            }
+        });
+    } );
+</script>

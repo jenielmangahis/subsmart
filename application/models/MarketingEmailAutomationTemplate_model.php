@@ -3,8 +3,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class MarketingEmailAutomationTemplate_model extends MY_Model
 {
-    public $table = 'email_automation_template';
-    public $is_active = 1;
+    public $table = 'marketing_email_automation_template';
 
     public function getAll($filters=array())
     {
@@ -24,26 +23,7 @@ class MarketingEmailAutomationTemplate_model extends MY_Model
 
         $query = $this->db->get();
         return $query->result();
-    }  
-
-    public function getAllByCompanyId($company_id, $filters=array())
-    {
-
-        $this->db->select('email_automation_template.*, users.id AS uid, users.company_id');
-        $this->db->from($this->table);
-        $this->db->join('users', 'email_automation_template.user_id = users.id', 'LEFT');
-
-        if ( !empty($filters) ) {
-            if ( !empty($filters['search']) ) {
-                $this->db->like('name', $filters['search'], 'both');
-            }
-        }
-
-        $this->db->where('users.company_id', $company_id);
-
-        $query = $this->db->get();
-        return $query->result();
-    }  
+    }    
 
     public function getByUserId($user_id)
     {
@@ -57,11 +37,13 @@ class MarketingEmailAutomationTemplate_model extends MY_Model
 
     public function getById($id)
     {
-        $this->db->select('email_automation_template.*, users.company_id');
-        $this->db->from($this->table);
-        $this->db->join('users', 'email_automation_template.user_id = users.id', 'LEFT');
+        $user_id = logged('id');
 
-        $this->db->where('email_automation_template.id', $id);
+        $this->db->select('*');
+        $this->db->from($this->table);
+
+        $this->db->where('user_id', $user_id);
+        $this->db->where('id', $id);
         $query = $this->db->get()->row();
         return $query;
     }
@@ -78,16 +60,7 @@ class MarketingEmailAutomationTemplate_model extends MY_Model
     {
         $user_id = logged('id');
         $this->db->delete($this->table, array('user_id' => $user_id, 'id' => $id));
-    } 
-
-    public function isActive()
-    {
-        return $this->is_active;
-    } 
-
-    public function deleteById($id){
-        $this->db->delete($this->table, array('id' => $id));
-    }    
+    }     
 
 }
 

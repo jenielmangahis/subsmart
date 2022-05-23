@@ -893,8 +893,8 @@
     showMeridian: true,
     template: 'dropdown',
     appendWidgetTo: '.bootstrap-timepicker',
-	upArrowStyle: 'fa fa-chevron-up',
-	downArrowStyle: 'fa fa-chevron-down',
+	upArrowStyle: 'glyphicon glyphicon-chevron-up',
+	downArrowStyle: 'glyphicon glyphicon-chevron-down',
 	containerClass: 'bootstrap-timepicker'
   };
 

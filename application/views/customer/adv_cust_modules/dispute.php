@@ -2,8 +2,7 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 ?>
 <div class="dispute module_med ui-state-default"  data-id="<?= $id ?>" id="<?= $id ?>">
-    <div class="col-sm-12 individual-module-big">
-        <h6>Dispute</h6>
+    <div class="col-sm-12">
         <div class="row">
             <div class="statuscontent">
                 <table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -135,6 +134,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
     </div>
     <div style="margin-left:50px;  padding-top:30px;" align="left" class="normaltext1">
         <a href="#" style="color:#58bc4f;">Last Letter Sent</a>&nbsp;&nbsp;
-        <a href="<?= base_url('EsignEditor/wizard?customer_id=' . $this->uri->segment(3)); ?>" style="color:#58bc4f;">Letter Wizard</a>
+        <!--  <a href="javascript:void(0);">Action/Notes</a>-->
     </div>
 </div>

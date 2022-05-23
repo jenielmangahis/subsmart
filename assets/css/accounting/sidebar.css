@@ -34,7 +34,7 @@
   padding: 0;
 }
 #sidebar ul li {
-  font-size: 14px;
+  font-size: 16px;
 }
 
 #sidebar ul li > ul li {
@@ -66,8 +66,6 @@
 }
 #sidebar ul li .dropdown-toggle::after {
   right: 10px;
-  top: 50% !important;
-  transform: translateY(-50%);
   border-top: 0.4em solid transparent;
   border-right: 0;
   border-bottom: 0.4em solid transparent;

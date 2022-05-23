@@ -16,10 +16,6 @@ ini_set('max_input_vars', 30000);
     .notFavorite {
         color : black;
     }
-    label>input {
-      visibility: initial !important;
-      position: initial !important; 
-    }
 </style>
 <div class="wrapper library" role="wrapper">
 		<div>
@@ -31,7 +27,7 @@ ini_set('max_input_vars', 30000);
                 <h1 class="library__title">Library</h1>
                 <div class="alert alert-warning mt-2" role="alert">
                     <span style="color:black;">
-                        Library is used to interact with the with our eSign Tools.  These ready made templates include placeholders for quick delivery.  Choose from these various industry types of letters and save time.
+                        Sign and send documents for signing from your automated workflows on any device. Quickly configure templates & deploy legally-binding e-signatures for your documents, contracts, and web-forms.
                     </span>
                 </div>
 
@@ -50,7 +46,7 @@ ini_set('max_input_vars', 30000);
                     </select>
                 </div>
             </div>
-            <table id="esign-table" class="display">
+            <table id="myTable" class="display">
                 <thead>
                     <tr>
                         <th>Title</th>
@@ -118,7 +114,7 @@ ini_set('max_input_vars', 30000);
                 reloadDataTable();
             });
 
-            let table = $('#esign-table').DataTable({
+            let table = $('#myTable').DataTable({
                 columnDefs: [
                   { orderable: false, targets: -1 },
                   { orderable: false, targets: -2 }
@@ -133,7 +129,7 @@ ini_set('max_input_vars', 30000);
             });
              
  
-            $('#esign-table tbody').on( 'click', 'i.fa-trash', function () {
+            $('#myTable tbody').on( 'click', 'i.fa-trash', function () {
                 console.log('Delete');   
                 table
                 .row( $(this).parents('tr') )

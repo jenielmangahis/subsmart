@@ -1,276 +1,165 @@
 @media (max-width: 1024px) {
-  .menu-extras.topbar-custom ul li div.clock {
-    height: 40px !important;
-    width: 40px !important;
-  }
-  .menu-extras.topbar-custom ul li div.clock .hour,
-  .hr {
-    transform: rotateZ(180deg);
-  }
-  .menu-extras.topbar-custom ul li div.clock .minute,
-  .min {
-    transform: rotateZ(180deg);
-  }
-  .menu-extras.topbar-custom ul li div.clock .second,
-  .sec {
-    transform: rotateZ(180deg);
-  }
+    .menu-extras.topbar-custom ul li div.clock{
+        height: 40px!important;
+        width: 40px!important;
+    }
+    .menu-extras.topbar-custom ul li div.clock .hour, .hr{
+        transform: rotateZ(180deg);
+    }
+    .menu-extras.topbar-custom ul li div.clock .minute, .min{
+        transform: rotateZ(180deg);
+    }
+    .menu-extras.topbar-custom ul li div.clock .second, .sec{
+        transform: rotateZ(180deg);
+    }
 }
-.clock {
-  cursor: pointer;
-  width: 50px;
-  height: 50px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 50%;
-  border: 4px solid rgb(228, 240, 249);
-  box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.1), 0 10px 10px rgba(0, 0, 0, 0.2),
-    0 0 0 4px rgb(228, 240, 249);
-  vertical-align: middle;
+.clock{
+    cursor: pointer;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: url("/assets/img/timesheet/clock-face-digital-clock-alarm-clocks-clock-png-clip-art.png");
+    background-size: cover;
+    border-radius: 50%;
+    border: 4px solid rgb(228,240,249);
+    box-shadow: inset 0 0 8px rgba(0,0,0,.1),0 10px 10px rgba(0,0,0,.2),0 0 0 4px rgb(228,240,249);
+    vertical-align: middle;
 }
-.clock::before {
-  content: "";
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  background: grey;
-  border: 1px solid grey;
-  z-index: 50000;
-  border-radius: 50%;
+.clock::before{
+    content: '';
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    background: grey;
+    border: 1px solid grey;
+    z-index: 50000;
+    border-radius: 50%;
 }
 .hour,
 .minute,
-.second {
-  position: absolute;
+.second{
+    position: absolute;
 }
-.hour,
-.hr {
-  width: 20px;
-  height: 20px;
+.hour, .hr{
+    width: 20px;
+    height: 20px;
 }
-.minute,
-.min {
-  width: 30px;
-  height: 30px;
+.minute, .min{
+    width: 30px;
+    height: 30px;
 }
-.second,
-.sec {
-  width: 33px;
-  height: 33px;
+.second, .sec{
+    width: 33px;
+    height: 33px;
 }
-.hr,
-.min,
-.sec {
-  display: flex;
-  justify-content: center;
-  position: absolute;
-  border-radius: 50%;
+.hr, .min, .sec{
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    border-radius: 50%;
 }
-.hr::before {
-  content: "";
-  position: absolute;
-  width: 2px;
-  height: 8px;
-  background: grey;
-  z-index: 10;
-  border-radius: 6px 6px 0 0;
+.hr::before{
+    content: '';
+    position: absolute;
+    width: 2px;
+    height: 8px;
+    background: grey;
+    z-index: 10;
+    border-radius: 6px 6px 0 0;
 }
-.min::before {
-  content: "";
-  position: absolute;
-  width: 1px;
-  height: 13px;
-  background: black;
-  z-index: 10;
-  border-radius: 6px 6px 0 0;
+.min::before{
+    content: '';
+    position: absolute;
+    width: 1px;
+    height: 13px;
+    background: black;
+    z-index: 10;
+    border-radius: 6px 6px 0 0;
 }
-.sec::before {
-  content: "";
-  position: absolute;
-  width: 1px;
-  height: 14px;
-  background: red;
-  z-index: 10;
-  border-radius: 6px 6px 0 0;
+.sec::before{
+    content: '';
+    position: absolute;
+    width: 1px;
+    height: 14px;
+    background: red;
+    z-index: 10;
+    border-radius: 6px 6px 0 0;
 }
 .clock:active {
-  box-shadow: none;
-  width: 45px;
-  height: 45px;
+    box-shadow: none;
+    width: 45px;
+    height: 45px;
 }
-.clock-active {
-  border-color: greenyellow !important;
+.clock-active{
+    border-color:greenyellow!important;
 }
-.clock-break {
-  border-color: yellow !important;
+.clock-break{
+    border-color:yellow!important;
 }
 /*Clock preview css*/
 .clock-users {
-  position: relative;
-  display: contents;
+    position: relative;
+    display: contents;
 }
 
 .clock-users + .preview-clock-details {
-  visibility: hidden;
-  width: 170px;
-  height: 110px;
-  background-color: #ffffff;
-  color: black;
-  text-align: center;
-  border-radius: 6px;
-  position: absolute;
-  z-index: 20;
-  top: 125%;
-  margin-left: -60px;
-  padding: 5px;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    visibility: hidden;
+    width: 170px;
+    height: 110px;
+    background-color: #ffffff;
+    color: black;
+    text-align: center;
+    border-radius: 6px;
+    position: absolute;
+    z-index: 20;
+    top: 125%;
+    margin-left: -60px;
+    padding: 5px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
 }
 .clock-users:hover + .preview-clock-details {
-  visibility: visible;
+    visibility: visible;
 }
-.visible {
-  visibility: visible;
+.visible{
+    visibility: visible;
 }
 
 .clock-users + .preview-clock-details::after {
-  content: " ";
-  position: absolute;
-  bottom: 100%;
-  left: 50%;
-  margin-left: -5px;
-  border-width: 5px;
-  border-style: solid;
-  border-color: transparent transparent #ffffff transparent;
+    content: " ";
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent #ffffff transparent;
 }
-.clock-details-title {
-  width: 50%;
-  font-weight: bold;
-  float: left;
-  white-space: nowrap;
+.clock-details-title{
+    width: 50%;
+    font-weight: bold;
+    float: left;
+    white-space: nowrap;
 }
-.clock-details-text {
-  width: 50%;
-  color: grey;
-  float: right;
+.clock-details-text{
+    width: 50%;
+    color: grey;
+    float: right;
 }
-.clock-section {
-  display: block;
+.clock-section{
+    display: block;
 }
-#startBreak:disabled {
-  cursor: not-allowed;
+#startBreak:disabled{
+    cursor: not-allowed;
 }
-#stopBreak {
-  margin-right: 10px;
-  color: grey;
+#stopBreak{
+    margin-right: 10px;
+    color:grey
 }
 /*Sweet Alert css*/
-.swal2-image {
-  height: 120px;
-  width: 120px;
-  border-radius: 50%;
-}
-
-#my-attendance-logs a {
-  margin: 5px;
-}
-div#my-attendance-logs_filter {
-  display: none;
-}
-#my-attendance-logs a {
-  color: #ffffff;
-}
-#my-attendance-logs a:hover {
-  cursor: pointer;
-  opacity: 0.8;
-}
-/* Sidebar Modal */
-.modal-right-side .modal.right.fade .modal-dialog {
-  right: 0;
-  -webkit-transition: opacity 0.3s linear, right 0.3s ease-out;
-  -moz-transition: opacity 0.3s linear, right 0.3s ease-out;
-  -o-transition: opacity 0.3s linear, right 0.3s ease-out;
-  transition: opacity 0.3s linear, right 0.3s ease-out;
-}
-
-.modal-right-side .modal.right .modal-dialog {
-  position: fixed;
-  margin: auto;
-  min-width: 520px;
-  height: 100%;
-  -webkit-transform: translate3d(0%, 0, 0);
-  -ms-transform: translate3d(0%, 0, 0);
-  -o-transform: translate3d(0%, 0, 0);
-  transform: translate3d(0%, 0, 0);
-}
-
-.modal-right-side .modal-footer {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  background-color: #ffffff;
-}
-
-.modal-right-side .modal.right .modal-content {
-  height: 100%;
-  overflow-y: auto;
-}
-
-.modal-right-side .modal-content {
-  border-radius: 0;
-  border: none;
-}
-
-.modal-right-side .modal-body {
-  margin-bottom: 30px;
-}
-#edit_attendance_log span {
-  font-size: 10px;
-  font-weight: normal;
-}
-#edit_attendance_log label {
-  width: 100%;
-  font-size: 25px;
-  font-weight: bold;
-}
-.modal-body {
-  padding-top: 25px;
-}
-.center {
-  text-align: center;
-}
-form#formNewProject td {
-  height: 20px;
-}
-table td label.gray {
-  background-color: #e9ecef;
-  padding-left: 5px;
-  padding-right: 6px;
-  border-radius: 10px;
-  width: 80px;
-  font-size: 12px;
-  margin-bottom: 10px;
-}
-table.dataTable.no-footer {
-  border-bottom: 1px solid #dee2e6;
-}
-
-#my_correction_requests td a,
-#my_leave_requests td a {
-  color: #ffffff;
-  cursor: pointer;
-}
-div#show_my_attendance_remarks_info {
-  display: none;
-}
-#show_my_attendance_remarks tbody tr td {
-  height: 20px;
-}
-.navbar-side .nav .nav-close {
-  margin-top: 0px !important;
-  top: 0px;
-}
-#my_correction_requests_filter,
-#pto-table-list_filter {
-  display: none;
+.swal2-image{
+    height: 120px;
+    width: 120px;
+    border-radius: 50%;
 }

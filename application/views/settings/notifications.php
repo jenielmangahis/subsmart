@@ -1,25 +1,19 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
-<style>
-.p-40 {
-  padding-top: 40px !important;
-}
-.fileinput-button{
-    width: 100%;
-}
-</style>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/setting'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
         <div class="container-fluid">
-            <div class="row p-40">
-                <div class="col">
-                    <h3 class="m-0">Notifications</h3>
-                </div>
-                <div style="background-color:#fdeac3;padding:.5%;margin-bottom:5px;margin-top:5px;margin-bottom:10px; width:100%;margin-left: 10px;">
-                    Manage your notification options.
+            <div class="page-title-box">
+                <div class="row align-items-center">
+                    <div class="col-sm-6">
+                        <h1 class="page-title">Notifications</h1>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item active">Manage your notification options.</li>
+                        </ol>
+                    </div>
                 </div>
             </div>
             <!-- end row -->
@@ -317,61 +311,35 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                         
                         <div class="card">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <h3 class="margin-bottom">Job</h3>
-                                    <div class="margin-bottom-sec">
-                                        <div class="checkbox checkbox-sec margin-right">
-                                            <?php 
-                                                $is_checked = "";
-                                                if(isset($setting_data['work_order_notify_on_employee_action']) && $setting_data['work_order_notify_on_employee_action'] == 1) {
-                                                    $is_checked = 'checked="checked"';
-                                                }
-                                            ?>                                     
-                                            <input type="checkbox" name="work_order_notify_on_employee_action" <?php echo $is_checked; ?> value="1" id="work_order_notify_on_employee_action">
-                                            <label for="work_order_notify_on_employee_action"><span>Notify when employees Arrive to the job, Start, Pause and Complete the job</span></label>
-                                        </div>
-                                        <div class="help help-sm help-block">Receive a push notification everytime when employees arrive to the job, start, pause or complete the job.</div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="checkbox checkbox-sec margin-right">
-                                            <?php 
-                                                $is_checked = "";
-                                                if(isset($setting_data['event_notify_customer_address']) && $setting_data['event_notify_customer_address'] == 1) {
-                                                    $is_checked = 'checked="checked"';
-                                                }
-                                            ?>                                     
-                                            <input type="checkbox" <?php echo $is_checked; ?> name="event_notify_customer_address" value="1" id="event_notify_customer_address">
-                                            <label for="event_notify_customer_address"><span>Notify tenant from service address when scheduling an appointment</span></label>
-                                        </div>
-                                        <div class="help help-sm help-block">
-                                            If you've set a service address on job order, we'll notify the tenant from that service address.
-                                        </div>
-                                    </div>
+                            <h3 class="margin-bottom">Work Order</h3>
+                            <div class="margin-bottom-sec">
+                                <div class="checkbox checkbox-sec margin-right">
+                                    <?php 
+                                        $is_checked = "";
+                                        if(isset($setting_data['work_order_notify_on_employee_action']) && $setting_data['work_order_notify_on_employee_action'] == 1) {
+                                            $is_checked = 'checked="checked"';
+                                        }
+                                    ?>                                     
+                                    <input type="checkbox" name="work_order_notify_on_employee_action" <?php echo $is_checked; ?> value="1" id="work_order_notify_on_employee_action">
+                                    <label for="work_order_notify_on_employee_action"><span>Notify when employees Arrive to the work, Start, Pause and Complete the work</span></label>
                                 </div>
-
-                                <div class="col-md-6">
-                                    <h3 class="margin-bottom">Events</h3>
-                                    <div class="margin-bottom-sec">
-                                        <div class="checkbox checkbox-sec margin-right">
-                                            <?php 
-                                                $is_checked = "";
-                                                if(isset($setting_data['events_notify_user']) && $setting_data['events_notify_user'] == 1) {
-                                                    $is_checked = 'checked="checked"';
-                                                }
-                                            ?>                                     
-                                            <input type="checkbox" name="events_notify_user" <?= $is_checked; ?> value="1" id="events_notify_user">
-                                            <label for="events_notify_user"><span>Notify upcoming and ongoing events</span></label>
-                                        </div>
-                                        <div class="help help-sm help-block">Receive a push notification of events.</div>
-                                    </div>
+                                <div class="help help-sm help-block">Receive a push notification everytime when employees arrive to the work, start, pause or complete the work.</div>
+                            </div>
+                            <div class="form-group">
+                                <div class="checkbox checkbox-sec margin-right">
+                                    <?php 
+                                        $is_checked = "";
+                                        if(isset($setting_data['event_notify_customer_address']) && $setting_data['event_notify_customer_address'] == 1) {
+                                            $is_checked = 'checked="checked"';
+                                        }
+                                    ?>                                     
+                                    <input type="checkbox" <?php echo $is_checked; ?> name="event_notify_customer_address" value="1" id="event_notify_customer_address">
+                                    <label for="event_notify_customer_address"><span>Notify tenant from service address when scheduling an appointment</span></label>
+                                </div>
+                                <div class="help help-sm help-block">
+                                    If you've set a service address on work order, we'll notify the tenant from that service address.
                                 </div>
                             </div>
-                            
-                        </div>
-
-                        <div class="card">
-                            
                         </div>
 
                         

@@ -9,43 +9,52 @@ class Vault extends MY_Controller {
 	{
 		parent::__construct();
 		$this->checkLogin();
-		$this->hasAccessModule(46); 
 		$this->page_data['page']->title = 'Files Management';
 		$this->page_data['page']->menu = 'vault';
-		
+
 		$this->company_folder = getCompanyFolder();
 		add_css('assets/css/vault/vault.css');
 	}
 
 	public function index()
-	{
+	{	
+		$is_allowed = $this->isAllowedModuleAccess(46);
+        if( !$is_allowed ){
+            $this->page_data['module'] = 'vault';
+            echo $this->load->view('no_access_module', $this->page_data, true);
+            die();
+        }
+
 		$this->page_data['folder_manager'] = getFolderManagerView();
 		$this->load->view('vault/shared_library', $this->page_data);
 	}
 
 	public function mylibrary()
-	{
+	{	
 		$this->page_data['folder_manager'] = getFolderManagerView(true, true);
-		add_footer_js(['assets/js/vaults/dataTables.checkboxes.min.js']);
 		$this->load->view('vault/list', $this->page_data);
 	}
 
 	public function beforeafter()
-	{
+	{	
         $this->load->model('Before_after_model', 'before_after_model');
 		$comp_id = logged('company_id');
-		$this->page_data['photos'] = $this->before_after_model->getAllByCompanyId($comp_id);
+		if( $role == 1 || $role == 2 ){
+			$this->page_data['photos'] = $this->before_after_model->getAll();
+		}else{
+			$this->page_data['photos'] = $this->before_after_model->getAllByCompanyId($comp_id);	
+		}
 		$this->load->view('vault/beforeafter', $this->page_data);
 	}
 
 	public function businessformtemplates()
-	{
+	{	
 		$this->page_data['folder_manager'] = getFolderManagerView(true, false, true);
 		$this->load->view('vault/businessformtemplates', $this->page_data);
 	}
 
 	public function add()
-	{
+	{	
 		$return = array(
 			'error' => ''
 		);
@@ -84,7 +93,7 @@ class Vault extends MY_Controller {
 							$return['error'] .= ' in recycle bin.';
 						} else if(!empty($record->category_id)){
 							$return['error'] .= ' in <strong>Business Form Templates</strong> section';
-						}
+						}	
 					} else {
 						if($folder_id > 0){
 							$folder = $this->folders_model->getById($folder_id);
@@ -98,11 +107,6 @@ class Vault extends MY_Controller {
 						]);
 
 						$file = $this->uploadlib->uploadImage('fullfile', $this->company_folder . $folder_path);
-
-						if ($file['status'] === false) {
-							echo json_encode($file);
-							return;
-						}
 
 						if($file['status']){
 							$data = array(
@@ -124,7 +128,7 @@ class Vault extends MY_Controller {
 							if(!$this->vault_model->trans_create($data)){
 								$return['error'] = 'Error in uploading file';
 							}
-						}
+						}	
 					}
 				} else {
 					$return['error'] = 'File is larger than 8mb';
@@ -145,22 +149,22 @@ class Vault extends MY_Controller {
 		$return = array(
 			'folder_id' => 0,
 			'error' => ''
-		);
+		);		
 
 		$permissions = getUserFileVaultPermissions();
 		if($permissions['trash_folder_file'] == 1){
 			$section = $_POST['section'];
 			$file_id = $_POST['file_id'];
 			$file = $this->vault_model->getById($file_id);
-
+			
 			if(($file->user_id != $uid) && (($section == 'sharedlibrary')||($section == 'businessformtemplates'))){
 				$return['error'] = 'Cannot delete file. File is not yours.';
 			} else {
 				$data = array(
 					'softdelete' => 1,
 					'softdelete_date' => date('Y-m-d h:i:s'),
-					'softdelete_by' => $uid
-				);
+					'softdelete_by' => $uid	
+				);	
 
 				if(!$this->vault_model->trans_update($data, array('file_id' => $file_id))){
 					$return['error'] = 'Error in deleting file';
@@ -177,7 +181,7 @@ class Vault extends MY_Controller {
 		$return = array(
 			'folder_id' => 0,
 			'error' => ''
-		);
+		);		
 
 		$permissions = getUserFileVaultPermissions();
 		if($permissions['remove_folder_file'] == 1){
@@ -207,7 +211,7 @@ class Vault extends MY_Controller {
 	public function most_downloads_files(){
 		$company_id = logged('company_id');
 
-		$sql = 'select ' .
+		$sql = 'select ' . 
 
                'a.*, '.
                'b.FName as FCreatedBy, b.LName as LCreatedBy, '.
@@ -217,19 +221,19 @@ class Vault extends MY_Controller {
                'left join users b on b.id = a.user_id '.
                'left join business_profile c on c.id = a.company_id '.
 
-               'where a.company_id = ' . $company_id . ' and a.downloads_count is not null and a.category_id is null ' .
+               'where a.company_id = ' . $company_id . ' and a.downloads_count is not null and a.category_id is null ' . 
 
                'order by downloads_count DESC limit 10';
 
         $return = $this->db->query($sql)->result_array();
 
-        echo json_encode($return);
+        echo json_encode($return);							
 	}
 
 	public function most_previewed_files(){
 		$company_id = logged('company_id');
 
-		$sql = 'select ' .
+		$sql = 'select ' . 
 
                'a.*, '.
                'b.FName as FCreatedBy, b.LName as LCreatedBy, '.
@@ -239,19 +243,19 @@ class Vault extends MY_Controller {
                'left join users b on b.id = a.user_id '.
                'left join business_profile c on c.id = a.company_id '.
 
-               'where a.company_id = ' . $company_id . ' and a.previews_count is not null and a.category_id is null ' .
+               'where a.company_id = ' . $company_id . ' and a.previews_count is not null and a.category_id is null ' . 
 
                'order by previews_count DESC limit 10';
 
         $return = $this->db->query($sql)->result_array();
 
-        echo json_encode($return);
+        echo json_encode($return);	
 	}
 
 	public function recently_uploaded_files_old(){
 		$company_id = logged('company_id');
 
-		$sql = 'select ' .
+		$sql = 'select ' . 
 
                'a.*, '.
                'DATEDIFF(NOW(), a.created) as `days`, '.
@@ -262,13 +266,13 @@ class Vault extends MY_Controller {
                'left join users b on b.id = a.user_id '.
                'left join business_profile c on c.id = a.company_id '.
 
-               'where a.company_id = ' . $company_id . ' and (DATEDIFF(NOW(), a.created) <= 3) and a.category_id is null ' .
+               'where a.company_id = ' . $company_id . ' and (DATEDIFF(NOW(), a.created) <= 3) and a.category_id is null ' . 
 
                'order by created DESC limit 10';
 
         $return = $this->db->query($sql)->result_array();
 
-        echo json_encode($return);
+        echo json_encode($return);		
 	}
 
 	public function recently_uploaded_files()
@@ -277,7 +281,7 @@ class Vault extends MY_Controller {
 		$companyId = logged('company_id');
 		$limit = 7;
 
-		$sql = 'select ' .
+		$sql = 'select ' . 
                'a.*, '.
                'DATEDIFF(NOW(), a.created) as `days`, '.
                'b.FName as FCreatedBy, b.LName as LCreatedBy, '.
@@ -287,7 +291,7 @@ class Vault extends MY_Controller {
                'left join users b on b.id = a.user_id '.
                'left join business_profile c on c.id = a.company_id '.
 
-               'where a.company_id = ' . $companyId . ' and a.category_id is null ' .
+               'where a.company_id = ' . $companyId . ' and a.category_id is null ' . 
 			   'order by created DESC limit ' . $limit;
 
 		$results = $this->db->query($sql)->result_array();
@@ -314,7 +318,7 @@ class Vault extends MY_Controller {
 			'previews_count' => $file->previews_count + 1
 		);
 
-		$status = $this->vault_model->trans_update($data, array('file_id' => $file_id));
+		$status = $this->vault_model->trans_update($data, array('file_id' => $file_id));	
 	}
 
 	public function search_files_and_folders($getByCurrentUser = 0, $getByCategory = 0){
@@ -380,7 +384,7 @@ class Vault extends MY_Controller {
 		$return = array(
 			'error' => ''
 		);
-
+		
 		$permissions = getUserFileVaultPermissions();
 		if($permissions['edit_folder_file'] == 1){
 			$new_file = false;
@@ -423,7 +427,7 @@ class Vault extends MY_Controller {
 				$return['error'] = 'File already exists';
 				if(!empty($record->category_id)){
 					$return['error'] .= ' in <strong>Business Form Templates</strong> section';
-				}
+				}	
 			} else {
 
 				$data = array(
@@ -467,13 +471,13 @@ class Vault extends MY_Controller {
 					}
 				} else {
 					$return['error'] = 'Error uploading new file';
-				}
+				}	
 			}
 		} else {
 			$return['error'] = 'You dont have permission to update a file';
 		}
 
-		echo json_encode($return);
+		echo json_encode($return);	
 	}
 
 	public function getRolesAndUsers(){
@@ -537,7 +541,7 @@ class Vault extends MY_Controller {
 			'remove_folder_file' => $_POST['remove_folder_file'],
 			'company_id' => $company_id
 		);
-
+		
 		if($type == 'role'){
 			$count = $this->db->query('select * from file_folders_permissions_roles where role_id = ' . $id . ' and company_id = ' . $company_id);
 		} else {
@@ -555,16 +559,16 @@ class Vault extends MY_Controller {
 				if(!$this->file_folders_permissions_users_model->trans_create($data)){
 					$return['error'] = 'Error in saving user permissions';
 				}
-			}
+			}	
 		} else {
 			if($type == 'role'){
 				if(!$this->file_folders_permissions_roles_model->trans_update($data, array('role_id' => $id, 'company_id' => $company_id))){
 					$return['error'] = 'Error in saving role permissions';
-				}
+				}	
 			} else {
 				if(!$this->file_folders_permissions_users_model->trans_update($data, array('user_id' => $id, 'company_id' => $company_id))){
 					$return['error'] = 'Error in saving role permissions';
-				}
+				}	
 			}
 		}
 
@@ -580,11 +584,6 @@ class Vault extends MY_Controller {
 
 		echo json_encode($return);
 	}
-
-	public function filesvault()
-    {
-        $this->load->view('vault/filesvault', $this->page_data);
-    }
 }
 
 /* End of file Permissions.php */

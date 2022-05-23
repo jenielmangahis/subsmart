@@ -1,67 +1,81 @@
 <script>
-    var memo_note = '';
-
         $(document).ready(function () {
-            try{
-            var table_dispute_items =$('#dispute_table').DataTable({
-                "lengthChange": false,
-                "searching" : false,
-                "pageLength": 20,
-                "info": false,
-                "order": [],
-                initComplete: function () {
-                }
-            });
+        var table_lt = $('#leadtype').DataTable({
+            "lengthChange": false,
+            "searching" : false,
+            "pageLength": 5
+        });
+        var table_sa =$('#salesarea').DataTable({
+            "lengthChange": false,
+            "searching" : false,
+            "pageLength": 5
+        });
 
-            var table_notes =$('#internal_notes_table').DataTable({
-                "lengthChange": false,
-                "searching" : false,
-                "pageLength": 20,
-                "info": false,
-                "order": [],
-            });
+        var table_ls =$('#leadsource').DataTable({
+            "lengthChange": false,
+            "searching" : false,
+            "pageLength": 5
+        });
 
-            var table_quick_list =$('#customer_list_quick').DataTable({
-                "lengthChange": false,
-                "searching" : false,
-                "pageLength": 20,
-                "info": false
-            });
+        var table_dispute_items =$('#dispute_table').DataTable({
+            "lengthChange": false,
+            "searching" : false,
+            "pageLength": 20,
+            "info": false,
+            "order": [],
+            initComplete: function () {
+            }
+        });
 
-            var table_cust_list =$('#customer_list_table').DataTable({
-                "lengthChange": true,
-                "searching" : true,
-                "pageLength": 10,
-                "info": true,
-                "responsive": true,
+        var table_notes =$('#internal_notes_table').DataTable({
+            "lengthChange": false,
+            "searching" : false,
+            "pageLength": 20,
+            "info": false,
+            "order": [],
+        });
 
-                "order": [],
-                initComplete: function () {
-                    this.api().columns([11]).every( function () {
-                        var column = this;
-                        var select = $('<select class="input_select" style="padding: 5px;border-radius: 5px;display: inline-block !important;"><option value="">All</option></select>').appendTo($(".dataTables_filter"))
-                            .on( 'change', function () {
-                                var val = $.fn.dataTable.util.escapeRegex($(this).val());
-                                column.search( val ? val : '', false, true ).draw();
-                                $(this).val();
-                            } );
-                        column.data().unique().sort().each( function ( d, j ) {
-                            //var val = $('<div/>').html(d).text();
-                            //select.append( '<option value="' + val + '">' + val + '</option>' );
-                            select.append( '<option value="'+d+'">'+d+'</option>' )
-                            //console.log(val);
-                        });
-                    } );
-                }
-            });
-        }
-        catch(e){}
+        var table_quick_list =$('#customer_list_quick').DataTable({
+            "lengthChange": false,
+            "searching" : false,
+            "pageLength": 20,
+            "info": false
+        });
+
+        var table_cust_list =$('#customer_list_table').DataTable({
+            "lengthChange": true,
+            "searching" : true,
+            "pageLength": 10,
+            "info": true,
+            "responsive": true,
+
+            "order": [],
+            initComplete: function () {
+                this.api().columns([11]).every( function () {
+                    var column = this;
+                    var select = $('<select class="input_select" style="padding: 5px;border-radius: 5px;display: inline-block !important;"><option value="">All</option></select>').appendTo($(".dataTables_filter"))
+                        .on( 'change', function () {
+                            var val = $.fn.dataTable.util.escapeRegex($(this).val());
+                            column.search( val ? val : '', false, true ).draw();
+                            $(this).val();
+                        } );
+                    column.data().unique().sort().each( function ( d, j ) {
+                        //var val = $('<div/>').html(d).text();
+                        //select.append( '<option value="' + val + '">' + val + '</option>' );
+                        select.append( '<option value="'+d+'">'+d+'</option>' )
+                        //console.log(val);
+                    });
+                } );
+            }
+        });
         // var table_clt =$('#customerListTable').DataTable({
         //     "lengthChange": false,
         //     "searching" : true,
         //     "pageLength": 20
         // });
-
+        display_leadtype_data();
+        display_salesarea_data();
+        display_leadsource_data();
         function display_leadtype_data(){
             table_lt.clear();
             $.ajax({
@@ -252,55 +266,21 @@
             var note = $('#memo_txt').val();
             $.ajax({
                 type: "POST",
-                url: base_url + "/customer/update_customer_profile",
-                data: { notes : note , memo_note:memo_note, id : <?= isset($customer_profile_id) ? $customer_profile_id : 0; ?> }, // serializes the form's elements.
-                success: function(data)
-                {
-                    if(data === "Success"){
-                        memo_note = $('#memo_txt').val();
-                        $('#memo_txt').attr('disabled', true);
-                        $('#memo_txt').attr('readonly', true);
-
-                        $('.memo-edit-tools').show();
-                        $('.memo-update-tools').hide();
-                       //$('#momo_edit_btn').text("");
-                       //$('#momo_edit_btn').text(note);
-                       // $('#memo_txt').text(note);
-                       //document.getElementById('memo_input_div').style.display = "none";
-                       //document.getElementById('momo_edit_btn').style.display = "block";
-                    }
-                }
-            });
-        });
-
-        $("#clear_memo").on( "click", function( event ) {
-            var note = '';
-            $.ajax({
-                type: "POST",
-                url: base_url + "/customer/update_customer_profile",
+                url: "/customer/update_customer_profile",
                 data: { notes : note , id : <?= isset($customer_profile_id) ? $customer_profile_id : 0; ?> }, // serializes the form's elements.
                 success: function(data)
                 {
                     if(data === "Success"){
-                        $('#memo_txt').attr('disabled', false);
-                        $('#memo_txt').attr('readonly', false);
-
-                        $('#memo_txt').val(note);
-
-                        $('#memo_txt').attr('disabled', true);
-                        $('#memo_txt').attr('readonly', true);
+                        //$('#momo_edit_btn').text("");
+                        $('#momo_edit_btn').text(note);
+                       // $('#memo_txt').text(note);
+                        document.getElementById('memo_input_div').style.display = "none";
+                        document.getElementById('momo_edit_btn').style.display = "block";
+                    }else {
+                        console.log(data);
                     }
                 }
             });
-        });
-
-        $('#edit_memo').on('click', function(e){
-            memo_note = $('#memo_txt').val();
-            $('.memo-edit-tools').hide();
-            $('.memo-update-tools').show();
-
-            $('#memo_txt').attr('disabled', false);
-            $('#memo_txt').attr('readonly', false);
         });
 
         $("#momo_edit_btn").on( "click", function( event ) {
@@ -309,15 +289,8 @@
         });
 
         $("#memo_cancel").on( "click", function( event ) {
-            $('#memo_txt').val(memo_note);
-
-            $('.memo-edit-tools').show();
-            $('.memo-update-tools').hide();
-
-            $('#memo_txt').attr('disabled', true);
-            $('#memo_txt').attr('readonly', true);
-            //document.getElementById('memo_input_div').style.display = "none";
-            //document.getElementById('momo_edit_btn').style.display = "block";
+            document.getElementById('memo_input_div').style.display = "none";
+            document.getElementById('momo_edit_btn').style.display = "block";
         });
 
         $("#add_ls").on( "click", function( event ) {
@@ -327,7 +300,6 @@
         });
 
         $("#add_task").on( "click", function( event ) {
-            alert(4);
             $('#task_form')[0].reset();
             //$('#lead_source_header').text('Add Lead Source');
             $('#modal_task').modal('show');
@@ -396,16 +368,12 @@
                 }
             });
         });
-
-        try{
-            var table_reasons = $('#reasons_table').DataTable({
-                "lengthChange": false,
-                "searching" : false,
-                "paging": false,
-                "ordering": false,
-            });
-        }
-        catch(e){}
+        var table_reasons = $('#reasons_table').DataTable({
+            "lengthChange": false,
+            "searching" : false,
+            "paging": false,
+            "ordering": false,
+        });
 
         function display_reasons(url){
             if(url === "/customer/fetch_all_reasons_data"){
@@ -543,6 +511,103 @@
             });
         });
 
+        $("#leadTypeForm").submit(function(e) {
+                e.preventDefault(); // avoid to execute the actual submit of the form.
+                var form = $(this);
+            //var url = form.attr('action');
+            $.ajax({
+                type: "POST",
+                url: "/customer/add_leadtype_ajax",
+                data: form.serialize(), // serializes the form's elements.
+                success: function(data)
+                {
+                    if(data === "Updated"){
+                        alert("Updated Succesfully");
+                    }else{
+                        document.getElementById('alert_box').style.display = "block";
+                        setTimeout(function () {
+                            document.getElementById('alert_box').style.display = 'none'
+                        }, 5000);
+                        display_leadtype_data();
+                    }
+                    $('#modal_lead_type').modal('hide');
+                    $('[id="lead_name"]').val("");
+                    $('[id="lead_id"]').val("");
+                }
+            });
+        });
+
+        $("#leadSourceForm").submit(function(e) {
+            e.preventDefault(); // avoid to execute the actual submit of the form.
+            var form = $(this);
+            //var url = form.attr('action');
+            $.ajax({
+                type: "POST",
+                url: "/customer/add_leadsource_ajax",
+                data: form.serialize(), // serializes the form's elements.
+                success: function(data)
+                {
+                    console.log(data);
+                    if(data === "Updated"){
+                        document.getElementById('alert_box').style.display = "block";
+                        setTimeout(function () {
+                            document.getElementById('alert_box').style.display = 'none'
+                        }, 5000);
+                        display_salesarea_data();
+                    }else{
+                        $('#alert_box').removeClass('invisible');
+                        if(data === "Sales Area Added!"){
+                            document.getElementById('alert_box').style.display = "block";
+                            setTimeout(function () {
+                                document.getElementById('alert_box').style.display = 'none'
+                            }, 5000);
+                            display_salesarea_data();
+                        }
+                        // $('.toast').toast('show');
+                    }
+                    $('#modal_lead_source').modal('hide');
+                    $('#leadSourceForm')[0].reset();
+                    //$('[id="lead_name"]').val("");
+                    //$('[id="lead_id"]').val("");
+                }
+            });
+        });
+
+        $("#salesAreaForm").submit(function(e) {
+            e.preventDefault(); // avoid to execute the actual submit of the form.
+            var form = $(this);
+            //var url = form.attr('action');
+            $.ajax({
+                type: "POST",
+                url: "/customer/add_salesarea_ajax",
+                data: form.serialize(), // serializes the form's elements.
+                success: function(data)
+                {
+                    console.log(data);
+                    if(data === "Updated"){
+                        document.getElementById('alert_box').style.display = "block";
+                        setTimeout(function () {
+                            document.getElementById('alert_box').style.display = 'none'
+                        }, 5000);
+                        display_salesarea_data();
+                    }else{
+                        $('#alert_box').removeClass('invisible');
+                        if(data === "Sales Area Added!"){
+                            document.getElementById('alert_box').style.display = "block";
+                            setTimeout(function () {
+                                document.getElementById('alert_box').style.display = 'none'
+                            }, 5000);
+                            display_salesarea_data();
+                        }
+                        // $('.toast').toast('show');
+                    }
+                    $('#modal_sales_area').modal('hide');
+                    $('#salesAreaForm')[0].reset();
+                    //$('[id="lead_name"]').val("");
+                    //$('[id="lead_id"]').val("");
+                }
+            });
+        });
 
         $(".edit_leadtype").on( "click", function( event ) {
             var ID=this.id;
@@ -698,23 +763,20 @@
 
     });
 
-    try{
-        $('#dataTable1').DataTable({
-            columnDefs: [{
-                orderable: true,
-                className: 'select-checkbox',
-                targets: 0,
-                checkboxes: {
-                    selectRow: true
-                }
-            }],
-            select: {
-                'style': 'multi'
-            },
-            order: [[1, 'asc']],
-        });
-    }
-    catch(e){}
+    $('#dataTable1').DataTable({
+        columnDefs: [{
+            orderable: true,
+            className: 'select-checkbox',
+            targets: 0,
+            checkboxes: {
+                selectRow: true
+            }
+        }],
+        select: {
+            'style': 'multi'
+        },
+        order: [[1, 'asc']],
+    });
 
     var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
 

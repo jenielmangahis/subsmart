@@ -1,6 +1,7 @@
 <?php
    defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
 <div class="wrapper" role="wrapper">
   <style>
@@ -53,11 +54,6 @@
     .data-section{
       display: none;
     }
-
-    .jssocials-share-logo {
-        width: 3em;     
-        font-size: 2.5em;
-    }
   </style>
    <?php include viewPath('includes/sidebars/marketing'); ?>
    <!-- page wrapper start -->
@@ -102,12 +98,7 @@
         $length--;
       }
     }
-
-    if( $total_score > 0 && $survey_completion_rate > 0){
-      $survey_completion_rate = $total_score / $length;
-    }else{
-      $survey_completion_rate = 0;
-    }
+    $survey_completion_rate = $total_score / $length;
     
   }
   
@@ -123,8 +114,17 @@
               <div class="card">
                 <div class="row mb-5">
                   <div class="col-sm-12">
+                    
+                    
+                    <nav aria-label="breadcrumb">
+                      <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="<?php echo base_url()?>survey">Surveys</a></li>
+                        <li class="breadcrumb-item"><a href="<?php echo base_url()?>survey/workspace">Workspace</a></li>
+                        <li class="breadcrumb-item active" aria-current="page"><?=$survey->title?></li>
+                      </ol>
+                    </nav>
 
-                    <div class="d-flex flex-row mb-10">
+                    <div class="d-flex flex-row justify-content-center">
                         <h2 class="font-weight-normal text-gray">Survey Title: <span class="font-weight-bold"><?= $survey->title ?></span> </h2>
                     </div>
 
@@ -184,12 +184,14 @@
                             <a href="<?php echo base_url()?>survey/edit/<?php echo $survey->id?>" class="btn-block btn btn-success"><i class="fa fa-edit"></i> Edit</a>
                           </div>
                           <div class="col-xs-12 col-sm-6 col-md-4">
-                            <a href="javascript:void(0);" class="btn-block btn btn-info btn-share-survey"><i class="fa fa-share"></i> Share</a>
+                            <a href="<?php echo base_url()?>survey/share/<?php echo $survey->id?>" class="btn-block btn btn-info"><i class="fa fa-share"></i> Share</a>
                           </div>
                           <div class="col-xs-12 col-sm-6 col-md-4">
-                            <a href="javascript:void(0);" class="btn-block btn btn-danger btn-delete-survey" data-id="<?= $survey->id; ?>"><i class="fa fa-trash"></i> Delete</a>
+                            <a href="<?php echo base_url()?>survey/delete/<?php echo $survey->id?>" class="btn-block btn btn-danger"><i class="fa fa-trash"></i> Delete</a>
                           </div>
                         </div>
+                        
+                        
 
                         <div class="card my-1">
                           <!-- <div class="card-body"> -->
@@ -223,13 +225,11 @@
                                   <!-- show when questions are loaded -->
                                   <div class="row ">
                                     <div class="col-sm-12 ">
-                                      <div class="tool-icon" style="display:block;margin-bottom: 42px;">
-                                        <button id="toggle-chart-data" onclick="toggleDataChart()" class="btn btn-primary btn-sm animate__animated animate__heartBeat" style="float: right;"><i class="fa fa-navicon"></i> Expand</button>          
-                                      </div>
                                       <ul class="list-group survey-kpi-card">
                                         <li class="list-group-item d-flex justify-content-between">
                                           <h5 >Question</h5>
-                                          <h5>Percentage</h5>                                                                      
+                                          <h5>Percentage</h5>
+                                          <button id="toggle-chart-data" onclick="toggleDataChart()" class="btn btn-primary btn-sm animate__animated animate__heartBeat"><i class="fa fa-navicon"></i> Expand</button>                                      
                                         </li>
                                         <?php foreach ($questions as $key => $question){ ?>
 
@@ -310,8 +310,7 @@
                                                             scales: {
                                                               yAxes: [{
                                                                   ticks: {
-                                                                      beginAtZero: true,
-                                                                      precision: 0
+                                                                      beginAtZero: true
                                                                   }
                                                               }]
                                                             }
@@ -362,8 +361,7 @@
                                                             scales: {
                                                               yAxes: [{
                                                                   ticks: {
-                                                                      beginAtZero: true,
-                                                                      precision: 0
+                                                                      beginAtZero: true
                                                                   }
                                                               }]
                                                             }
@@ -418,15 +416,6 @@
                                                       }
                                                     break;
                                                     case 7: //images
-                                                      echo '<div class="alert alert-dark">';
-                                                      foreach($question->survey_answer as $answers){
-                                                        if($answers->answer !== ''){
-                                                          ?>
-                                                          <img src="<?= base_url('uploads/survey/files/'.$survey->id.'/'.$answers->answer); ?>" class="img img-fluid" style="width:22%;display: inline-block;margin:5px;">
-                                                          <?php
-                                                        }
-                                                      }
-                                                      echo '</div>';
                                                     break;
                                                     case 8: // phone number
                                                       foreach($question->survey_answer as $answers){
@@ -470,101 +459,7 @@
                                                             scales: {
                                                               yAxes: [{
                                                                   ticks: {
-                                                                      beginAtZero: true,
-                                                                      precision: 0
-                                                                  }
-                                                              }]
-                                                            }
-                                                          }
-                                                          const checkboxChart_<?=$question->id?> = new Chart(ctx_<?=$question->id?>,{
-                                                            type: 'bar',
-                                                            data: chartData_<?=$question->id?>,
-                                                            options: chartOptions_<?=$question->id?>
-                                                          });
-                                                          <?php $choices = [0 => 'Yes', 1 => 'No']; ?>
-                                                          <?php foreach( $choices as $value ){ ?>
-                                                            chartData_<?=$question->id?>.labels.push('<?= $value; ?>');                                                            
-                                                            <?php 
-                                                              $count = 0;
-                                                              foreach($question->survey_answer as $answers){
-                                                                
-                                                                if($answers->answer == $value){
-                                                                  $count++;
-                                                                }
-                                                              }
-                                                            ?>
-                                                            chartData_<?=$question->id?>.datasets[0].data.push(<?= $count ?>);
-                                                          <?php } ?>
-                                                          checkboxChart_<?=$question->id?>.update();
-                                                        </script>
-                                                      <?php
-                                                    break;
-                                                    case 12: //rating //to be checked
-                                                      ?>
-                                                        <?php foreach($question->survey_answer as $answers){ ?>
-                                                          <div class="alert alert-dark">
-                                                            <?php for($x = 1; $x <= $answers->answer; $x++){ ?>
-                                                              <button type="button" class="btnrating btn btn-warning btn-lg" data-attr="1" id="rating-star-1">
-                                                                  <i class="fa fa-star" aria-hidden="true"></i>
-                                                              </button>
-                                                            <?php } ?>
-
-                                                            <?php for($x = $answers->answer; $x < 5; $x++){ ?>
-                                                              <button type="button" class="btnrating btn btn-default btn-lg" data-attr="1" id="rating-star-1">
-                                                                  <i class="fa fa-star" aria-hidden="true"></i>
-                                                              </button>
-                                                            <?php } ?>
-                                                            <h2 class="bold rating-header" style="display: inline-block;font-size: 21px;margin-left: 19px;">
-                                                              <span class="selected-rating"><?= $answers->answer; ?></span><small> / 5</small>
-                                                            </h2>                                                            
-                                                          </div>
-                                                        <?php } ?>                                                        
-                                                      <?php
-                                                    break;
-                                                    case 13: // statement
-                                                      foreach($question->survey_answer as $answers){
-                                                        if($answers->answer !== ''){
-                                                          ?>
-                                                            <div class="alert alert-dark">
-                                                              <?=$answers->answer?>
-                                                            </div>
-                                                          <?php
-                                                        }
-                                                      }
-                                                    break;
-                                                    case 14: // websites
-                                                      foreach($question->survey_answer as $answers){
-                                                        if($answers->answer !== ''){
-                                                          ?>
-                                                            <div class="alert alert-dark">
-                                                              <?=$answers->answer?>
-                                                            </div>
-                                                          <?php
-                                                        }
-                                                      }
-                                                    break;
-                                                    case 15: //Dropdown
-                                                      ?>
-                                                        <canvas id="drop-down-canvas-<?= $question->template_id?>-<?= $question->id?>" height="50"></canvas>
-                                                        <script>
-                                                          let ctx_<?=$question->id?> = document.querySelector('#drop-down-canvas-<?= $question->template_id?>-<?= $question->id?>')
-                                                          let chartData_<?=$question->id?> = {
-                                                            labels: [],
-                                                            datasets: [
-                                                              {
-                                                                label: ['Question: <?= $question->question?>'],
-                                                                data: [],
-                                                                
-                                                                borderWidth: 1
-                                                              }
-                                                            ]
-                                                          }
-                                                          let chartOptions_<?=$question->id?> = {
-                                                            scales: {
-                                                              yAxes: [{
-                                                                  ticks: {
-                                                                      beginAtZero: true,
-                                                                      precision: 0
+                                                                      beginAtZero: true
                                                                   }
                                                               }]
                                                             }
@@ -595,6 +490,130 @@
                                                         </script>
                                                       <?php
                                                     break;
+                                                    case 12: //rating //to be checked
+                                                      ?>
+                                                        <canvas id="rating-canvas-<?= $question->template_id?>-<?= $question->id?>" height="50"></canvas>
+                                                        <script>
+                                                          let ctx_<?=$question->id?> = document.querySelector('#rating-canvas-<?= $question->template_id?>-<?= $question->id?>')
+                                                          let chartData_<?=$question->id?> = {
+                                                            labels: [],
+                                                            datasets: [
+                                                              {
+                                                                label: ['Question: <?= $question->question?>'],
+                                                                data: [],
+                                                                
+                                                                borderWidth: 1
+                                                              }
+                                                            ]
+                                                          }
+                                                          let chartOptions_<?=$question->id?> = {
+                                                            scales: {
+                                                              yAxes: [{
+                                                                  ticks: {
+                                                                      beginAtZero: true
+                                                                  }
+                                                              }]
+                                                            }
+                                                          }
+                                                          const checkboxChart_<?=$question->id?> = new Chart(ctx_<?=$question->id?>,{
+                                                            type: 'bar',
+                                                            data: chartData_<?=$question->id?>,
+                                                            options: chartOptions_<?=$question->id?>
+                                                          });
+                                                          <?php
+                                                            foreach($question->questions as $choices){
+                                                              ?>
+                                                                chartData_<?=$question->id?>.labels.push('<?= $choices->choices_label?>');
+                                                              <?php
+                                                              $count = 0;
+                                                              foreach($question->survey_answer as $answers){
+                                                                
+                                                                if($answers->answer == $choices->choices_label){
+                                                                  $count++;
+                                                                }
+                                                              }
+                                                              ?>
+                                                                chartData_<?=$question->id?>.datasets[0].data.push(<?= $count ?>);
+                                                              <?php
+                                                            }
+                                                            ?>
+                                                            checkboxChart_<?=$question->id?>.update();
+                                                        </script>
+                                                      <?php
+                                                    break;
+                                                    case 13: // statement
+                                                      foreach($question->survey_answer as $answers){
+                                                        if($answers->answer !== ''){
+                                                          ?>
+                                                            <div class="alert alert-dark">
+                                                              <?=$answers->answer?>
+                                                            </div>
+                                                          <?php
+                                                        }
+                                                      }
+                                                    break;
+                                                    case 14: // websites
+                                                      foreach($question->survey_answer as $answers){
+                                                        if($answers->answer !== ''){
+                                                          ?>
+                                                            <div class="alert alert-dark">
+                                                              <?=$answers->answer?>
+                                                            </div>
+                                                          <?php
+                                                        }
+                                                      }
+                                                    break;
+                                                    case 15: //radial
+                                                      ?>
+                                                        <canvas id="radial-canvas-<?= $question->template_id?>-<?= $question->id?>" height="50"></canvas>
+                                                        <script>
+                                                          let ctx_<?=$question->id?> = document.querySelector('#checkbox-canvas-<?= $question->template_id?>-<?= $question->id?>')
+                                                          let chartData_<?=$question->id?> = {
+                                                            labels: [],
+                                                            datasets: [
+                                                              {
+                                                                label: ['Question: <?= $question->question?>'],
+                                                                data: [],
+                                                                
+                                                                borderWidth: 1
+                                                              }
+                                                            ]
+                                                          }
+                                                          let chartOptions_<?=$question->id?> = {
+                                                            scales: {
+                                                              yAxes: [{
+                                                                  ticks: {
+                                                                      beginAtZero: true
+                                                                  }
+                                                              }]
+                                                            }
+                                                          }
+                                                          const checkboxChart_<?=$question->id?> = new Chart(ctx_<?=$question->id?>,{
+                                                            type: 'bar',
+                                                            data: chartData_<?=$question->id?>,
+                                                            options: chartOptions_<?=$question->id?>
+                                                          });
+                                                          <?php
+                                                            foreach($question->questions as $choices){
+                                                              ?>
+                                                                chartData_<?=$question->id?>.labels.push('<?= $choices->choices_label?>');
+                                                              <?php
+                                                              $count = 0;
+                                                              foreach($question->survey_answer as $answers){
+                                                                
+                                                                if($answers->answer == $choices->choices_label){
+                                                                  $count++;
+                                                                }
+                                                              }
+                                                              ?>
+                                                                chartData.datasets[0].data.push(<?= $count ?>);
+                                                              <?php
+                                                            }
+                                                            ?>
+                                                            checkboxChart.update();
+                                                        </script>
+                                                      <?php
+                                                    break;
                                                     case 16: // payment // to be checked
                                                       foreach($question->survey_answer as $answers){
                                                         if($answers->answer !== ''){
@@ -617,16 +636,7 @@
                                                         }
                                                       }
                                                     break;
-                                                    case 18: //File
-                                                      echo '<div class="alert alert-dark">';
-                                                      foreach($question->survey_answer as $answers){
-                                                        if($answers->answer !== ''){
-                                                          ?>
-                                                          <a target="_blank" class="btn btn-sm btn-primary" href="<?= base_url('uploads/survey/files/'.$survey->id.'/'.$answers->answer); ?>"><i class="fa fa-file"></i> <?= $answers->answer; ?></a>
-                                                          <?php
-                                                        }
-                                                      }
-                                                      echo '</div>';
+                                                    case 18:
                                                     break;
                                                     case 19:
                                                     break;
@@ -656,8 +666,8 @@
 
                       <!-- preview section of the survey -->
                       <div class="col-sm-12 col-md-6">
-                        <iframe src="<?php echo base_url()?>survey/preview/<?php echo $survey->id?>?mode=preview&src=results" frameborder="0" style="width: 100%; height: 500px"></iframe>
-                        <a href="<?php echo base_url()?>survey/preview/<?php echo $survey->id?>?mode=preview" class="btn btn-primary btn-block text-center" target="_blank"><i class="fa fa-eye"></i> Preview on another page</a>
+                        <iframe src="<?php echo base_url()?>survey/preview/<?php echo $survey->id?>?mode=preview&src=results" frameborder="0" style="width: 100%; height: 600px"></iframe>
+                        <a href="<?php echo base_url()?>survey/preview/<?php echo $survey->id?>?mode=preview" class="btn btn-outline-primary btn-block text-center" target="_blank"><i class="fa fa-eye"></i> Preview on another page</a>
                       </div>
                     </div>                      
                     </div>
@@ -667,31 +677,6 @@
               </div>
             </div>
             <!-- end card -->
-
-            <!-- Modal Share  -->
-            <div class="modal fade bd-example-modal-sm" id="modal-share-survey" tabindex="-1" role="dialog" aria-labelledby="modalShareSurveyTitle" aria-hidden="true">
-              <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-share"></i> Share</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                    </button>
-                  </div>
-                  <?php echo form_open_multipart('plan_headings/delete_plan_heading', ['class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
-                  <?php echo form_input(array('name' => 'phid', 'type' => 'hidden', 'value' => '', 'id' => 'phid'));?>
-                  <div class="modal-body">        
-                      <div class=" col-12">
-                        <h5 class="font-weight-normal">More Ways to Share</h5>
-                        <div id="shared" class=" d-flex"></div>
-                      </div>
-                  </div>
-                  <?php echo form_close(); ?>
-                </div>
-              </div>
-            </div>
-
-
         </div>
       </div>
       <!-- end row -->
@@ -763,53 +748,6 @@
     document.querySelector("#btnCopyLink").disabled = true;
 
   }
-
-  $(document).on('click', '.btn-delete-survey', function(){
-    var survey_id = $(this).attr('data-id');
-
-    Swal.fire({
-        title: 'Delete Survey',
-        text: "Are you sure you want to delete this survey?",
-        icon: 'question',
-        confirmButtonText: 'Proceed',
-        showCancelButton: true,
-        cancelButtonText: "Cancel"
-    }).then((result) => {
-        if (result.value) {
-            $.ajax({
-                type: 'POST',
-                url: "<?php echo base_url(); ?>survey/_delete",
-                dataType:'json',
-                data:{ survey_id:survey_id },
-                success: function(result) {
-                    if( result.is_success == 1 ){
-                      Swal.fire({
-                          title: 'Good job!',
-                          text: "Survey was successfully deleted!",
-                          icon: 'success',
-                          showCancelButton: false,
-                          confirmButtonText: 'Okay'
-                      }).then((result) => {
-                          location.href = surveyBaseUrl + '/survey';
-                      });
-                    }else{
-                      Swal.fire({
-                          title: 'Error',
-                          text: 'Cannot find data',
-                          icon: 'error',
-                          showCancelButton: false,
-                          confirmButtonText: 'Okay'
-                      });
-                    }                    
-                },
-            });
-        }
-    });
-  });
-
-  $(document).on('click', '.btn-share-survey', function(){
-    $('#modal-share-survey').modal('show');
-  });
 
 </script>
 <?php echo put_footer_assets(); ?>

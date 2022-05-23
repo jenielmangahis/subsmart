@@ -3,10 +3,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 <?php include viewPath('frontcommon/header'); ?>
 <script src="https://js.stripe.com/v3/"></script>
-<script src="https://checkout.stripe.com/checkout.js"></script>
-<script src="https://www.paypal.com/sdk/js?client-id=<?= $paypal_client_id; ?>&currency=USD"></script>
-<script src="https://api.convergepay.com/hosted-payments/PayWithConverge.js"></script> <!-- Production --> 
-<!-- <script src="https://demo.convergepay.com/hosted-payments/PayWithConverge.js"></script> --> <!-- Demo -->
 <style>
 	.steps-form {
 	    display: table;
@@ -139,7 +135,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 		list-style: none;
 	}
 	.payment-method li{
-		margin-bottom: 8px;
+		margin-bottom: 35px;
 	}
 	.payment-method li input{
 		margin-right: 10px;
@@ -215,29 +211,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 	.terms-content{
 		/*margin-left: 17px;*/
 	}
-	#stripe-button{
-		width: 100%;
-	    color: #ffffff;
-	    font-weight: bold;
-	    padding: 12px;
-	    background-color: #5469d4;
-	}
-	#converge-button{
-		width: 100%;
-	    color: #ffffff;
-	    font-weight: bold;
-	    padding: 12px;
-	    background-color: #0070ba;
-	}
-	.has-error{
-		border: 1px solid red;
-	}
-	.input-group-prepend {
-	    height: 48px !important;
-	}
-	.form_line{
-	    margin-bottom: 10px;
-	}
 </style>
 <section page="register" message="" class="ng-isolate-scope">
 	<div class="f-height-v2">
@@ -291,8 +264,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 									<?php } ?>
 
 						    		<?php echo form_open_multipart('register/subscribe', [ 'class' => 'form-validate subscribe-form-payment', 'id' => 'subscribe-form-payment', 'autocomplete' => 'off' ]); ?>
-						    		<input type="hidden" name="payment_method" id="payment-method" value="">
-						    		<input type="hidden" name="payment_method_status" id="payment-method-status" value="">
 							      	<input type="hidden" name="plan_id" id="plan_id" value="">
 						            <input type="hidden" name="plan_price" id="plan_price" value="">
 						            <input type="hidden" name="plan_price_discounted" id="plan_price_discounted" value="">
@@ -304,8 +275,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 				                      			<div class="reg-s1">
 				  						          <h4 class="font-weight-bold pl-0 my-4 sc-pl-2"><strong>Step 1 : Select Plan</strong></h4>
 				  						          <select name="subscription_type" id="subscription_type" class="form-control-dr subscription-type" style="width: 100%;margin: 33px auto;max-width: 380px;">
-				  						          	<option value="prospect" <?= $default_type == 'discounted' ? 'selected="selected"' : ''; ?>><?= REGISTRATION_MONTHS_DISCOUNTED; ?> months 50% off</option>
-				  						          	<option value="trial" <?= $default_type == 'free' ? 'selected="selected"' : ''; ?>>Free Trial (30 Days)</option>
+				  						          	<option value="prospect">3 months 50% off</option>
+				  						          	<option value="trial">Free Trial (30 Days)</option>
 				  						          </select>
 				  						          <ul class="plan-list">
 				  						          <?php foreach($ns_plans as $p){ ?>
@@ -327,11 +298,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 					  						          			<p class="plan-list-price">$<?= number_format($p->price, 2); ?>/mo</p>
 					  						          		</div>
 				  						          			<br />
-				  						          			<?php 
-				  						          				$btn_identifier = "btn-" . strtolower($p->plan_name);
-				  						          				$btn_identifier = str_replace(" ", "-", $btn_identifier);
-				  						          			?>
-				  						          			<a class="btn btn-info step2-btn <?= $btn_identifier; ?>" href="javascript:void(0);" data-id="<?= $p->nsmart_plans_id; ?>" data-plan="<?= $p->plan_name; ?>" data-price="<?= $p->price; ?>" data-price-discounted="<?= $p->discount; ?>">Select Plan</a>
+				  						          			<a class="btn btn-info step2-btn" href="javascript:void(0);" data-id="<?= $p->nsmart_plans_id; ?>" data-plan="<?= $p->plan_name; ?>" data-price="<?= $p->price; ?>" data-price-discounted="<?= $p->discount; ?>">Select Plan</a>
 				  						          		<?php //} else { ?>
 				  						          			<!-- <p style="font-size: 14px !important;" class="plan-list-price">for demo & other info.</p>
 				  						          			<a class="btn btn-info" href="<?php //echo url('/contact') ?>">Contact Us</a> -->
@@ -354,108 +321,91 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 								        <div class="col-md-12">
 								          	<h4 class="font-weight-bold pl-0 my-4 sc-pl-2"><strong>Step 2 : Personal Information</strong></h4>
 								          	<div class="step-2-error-msg"></div>
-
-								          	<div class="row">
-									          	<div class="col-md-6 z-100">
-													<div class="input-group z-100">
-														<input autocomplete="off" type="text" name="firstname" id="firstname" class="form-control ng-pristine ng-untouched ng-valid ng-empty" placeholder="First Name" required="">
-													</div>
-												</div>
-
-
-												<div class="col-md-6 z-100">
-													<div class="input-group z-100">
-														<input autocomplete="off" type="text" name="lastname" id="lastname" class="form-control ng-pristine ng-untouched ng-valid ng-empty" placeholder="Last Name" required="">
-													</div>
+								          	<div class="col-md-6 float-left z-100">
+												<div class="input-group z-100">
+													<input autocomplete="off" type="text" name="firstname" class="form-control ng-pristine ng-untouched ng-valid ng-empty" placeholder="First Name" required="">
 												</div>
 											</div>
 
-											<div class="row">
-												<div class="col-md-6">
-													<div class="input-group z-100">
-														<input autocomplete="off" type="email" name="email" id="email_address" class="email_address form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="Your email address" placeholder="Email address" required="">
-													</div>
-												</div>
 
-												<div class="col-md-6">
-													<div class="input-group z-100">
-														<input autocomplete="off" type="text" name="phone" id="phone" class="form-control ng-pristine ng-untouched ng-valid ng-empty" placeholder="Phone number" required="">
-													</div>
+											<div class="col-md-6 float-left z-100">
+												<div class="input-group z-100">
+													<input autocomplete="off" type="text" name="lastname" class="form-control ng-pristine ng-untouched ng-valid ng-empty" placeholder="Last Name" required="">
 												</div>
 											</div>
 
-											<div class="row">
-												<div class="col-md-6">
-													<div class="input-group z-100">
-														<input id="google_search_place" type="text" name="business_name" class="business_name form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="Your Business Name" placeholder="Business Name" autocomplete="on" runat="server" required="" />
-													</div>
-												</div>
-
-												<div class="col-md-6">
-													<div class="input-group">
-														<select class="reg-select z-100" id="number_of_employee" name="number_of_employee" required="">
-																<option value="0">Number of Employees</option>
-																<option value="1 (Just Me)">1 (Just Me)</option>
-																<option value="2-3">2-3</option>
-																<option value="4-10">4-10</option>
-																<option value="11-15">11-15</option>
-																<option value="16-20">16-20</option>
-																<option value="20+">20+</option>
-														</select>
-													</div>
+											<div class="col-md-6 float-left">
+												<div class="input-group z-100">
+													<input autocomplete="off" type="email" name="email" id="email_address" class="email_address form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="Your email address" placeholder="Email address" required="">
 												</div>
 											</div>
 
-											<div class="row">
-												<div class="col-md-12">
-													<div class="input-group z-100">
-														<input id="business_address" type="text" name="business_address" class="form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="Your Business Address" placeholder="Business Address" required="" />
-													</div>
+											<div class="col-md-6 float-left">
+												<div class="input-group z-100">
+													<input autocomplete="off" type="number" name="phone" class="form-control ng-pristine ng-untouched ng-valid ng-empty" placeholder="Phone number">
 												</div>
 											</div>
 
-											<div class="row">
-												<div class="col-md-6">
-													<div class="input-group z-100">
-														<input autocomplete="off" type="text" name="zip_code" id="zip_code" class="form-control ng-pristine ng-untouched ng-valid ng-empty" placeholder="Zip Code" required="">
-													</div>
-												</div>
-
-												<div class="col-md-6">
-													<div class="input-group">
-														<select class="reg-select z-100 cmb-industry" id="industry_type_id" name="industry_type_id" required="">
-															<option>--Select your Industry--</option>
-							                                <?php $businessTypeName  = "";
-							                                     foreach($industryTypes  as $industryType ){ ?>
-							                                           <?php if ($businessTypeName!== $industryType->business_type_name ) { ?> 
-							                                           			<optgroup label="<?php echo $industryType->business_type_name; ?>">
-							                                           <?php  $businessTypeName =  $industryType->business_type_name; }      ?>  
-							                                            <option value="<?php echo $industryType->id; ?>"><?php echo $industryType->name; ?></option>
-							                                <?php  }   ?>						                                
-														</select>
-													</div>
+											<div class="col-md-6 float-left">
+												<div class="input-group z-100">
+													<input id="google_search_place" type="text" name="business_name" class="business_name form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="Your Business Name" placeholder="Business Name" autocomplete="on" runat="server" required="" />
 												</div>
 											</div>
 
-											<div class="row">
-												<div class="col-md-6">
-													<div class="input-group z-100">
-														<input autocomplete="off" type="password" name="password" class="form-control ng-pristine ng-untouched ng-valid ng-empty" placeholder="Create your password" required="">
-													</div>
-												</div>
-
-												<div class="col-md-6">&nbsp;</div>
-											</div>
-
-											<div class="row">
-												<div class="col-md-12">
-													<div id="ajax-authentication-alert-container"></div>
+											<div class="col-md-6 float-left">
+												<div class="input-group">
+													<select class="reg-select z-100" id="number_of_employee" name="number_of_employee" required="">
+															<option value="0">Number of Employees</option>
+															<option value="1 (Just Me)">1 (Just Me)</option>
+															<option value="2-3">2-3</option>
+															<option value="4-10">4-10</option>
+															<option value="11-15">11-15</option>
+															<option value="16-20">16-20</option>
+															<option value="20+">20+</option>
+													</select>
 												</div>
 											</div>
 
-		                      			<div class="pl-3 pr-3 float-right">		                      				
-		  						          	<button class="reg-wbtn btn btn-indigo btn-rounded prevBtn" data-key="step-1" type="button">Previous</button>
-		  						          	<button class="reg-wbtn btn btn-indigo btn-rounded nextBtn" data-key="step-3" type="button">Next</button>
+											<div class="col-md-12 float-left">
+												<div class="input-group z-100">
+													<input id="business_address" type="text" name="business_address" class="form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="Your Business Address" placeholder="Business Address" required="" />
+												</div>
+											</div>
+
+											<div class="col-md-6 float-left">
+												<div class="input-group">
+													<select class="reg-select z-100 cmb-industry" id="industry_type_id" name="industry_type_id" required="">
+														<option>--Select your Industry--</option>
+						                                <?php $businessTypeName  = "";
+						                                     foreach($industryTypes  as $industryType ){ ?>
+						                                           <?php if ($businessTypeName!== $industryType->business_type_name ) { ?> 
+						                                           			<optgroup label="<?php echo $industryType->business_type_name; ?>">
+						                                           <?php  $businessTypeName =  $industryType->business_type_name; }      ?>  
+						                                            <option value="<?php echo $industryType->id; ?>"><?php echo $industryType->name; ?></option>
+						                                <?php  }   ?>						                                
+													</select>
+												</div>
+											</div>
+
+											<div class="col-md-6 float-left z-100">
+												<div class="input-group z-100">
+													<input autocomplete="off" type="password" name="password" class="form-control ng-pristine ng-untouched ng-valid ng-empty" placeholder="Create your password" required="">
+												</div>
+											</div>
+
+											<div class="col-md-12">
+												&nbsp;
+												<!-- <div class="input-group">
+													<input autocomplete="off" type="password" name="email" class="form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="Create your password" placeholder="Create your password">
+												</div> -->
+											</div>
+
+											<div class="col-md-12">
+												<div id="ajax-authentication-alert-container"></div>
+											</div>
+		                      			<div class="pl-3 pr-3">
+		  						          	<button class="reg-wbtn btn btn-indigo btn-rounded prevBtn float-left" data-key="step-1" type="button">Previous</button>
+		  						          	<button class="reg-wbtn btn btn-indigo btn-rounded nextBtn float-right" data-key="step-3" type="button">Next</button>
 		                      			</div>
 								        </div>
 							      	</div>
@@ -468,43 +418,65 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 								          	<label>Plan : <b><span class="plan-selected"></span> / <span class="plan-price"></span></b></label><br />
 								          	<label>Total Amount : <b><span class="total-amount"></span></b></label><br />
 								          	<hr />
-								          	<div class="payment-method-container">
-									          	<p><b>Payment Method</b></p>
-									          	<ul class="payment-method">
-									          		<li><div id="paypal-button-container"></div></li>
-									          		<li><a class="btn btn-primary" id="stripe-button" href="javascript:void(0);">PAY VIA STRIPE</a></li>
-									          		<li><a class="btn btn-primary" id="converge-button" href="javascript:void(0);">PAY VIA CONVERGE</a></li>
-									          		<li>
-									          			<div class="form-row align-items-center" style="margin-top: 30px;">
-										          			<!-- Grid column -->
-														    <div class="col-auto">
-														      <!-- Material input -->
-														      <label class="sr-only" for="inlineFormInputGroupMD">Username</label>
-														      <div class="md-form input-group mb-3">
-														        <div class="input-group-prepend">
-														          <span class="input-group-text md-addon">Use Offer Code</span>
-														        </div>
-														        <input type="text" class="form-control pl-2 rounded-0" name="offer_code" id="offer-code"
-														          placeholder="">
-														      </div>
-														    </div>
-													    	<!-- Grid column -->
+								          	<p><b>Payment Method</b></p>
+								          	<ul class="payment-method">
+								          		<li>
+								          			<input type="radio" id="paypal" name="payment_method" value="paypal">
+								          			<img src="<?php echo $url->assets ?>img/paypal-logo.png" alt="" style="height: 62px;">
+								          		</li>
+								          		<li>
+								          			<input type="radio" id="stripe" name="payment_method" value="stripe">
+								          			<img src="<?php echo $url->assets ?>img/stripe-logo.png" alt="" style="height: 62px;">
+								          		</li>
+								          		<li>
+								          			<input type="radio" id="converge" name="payment_method" value="converge">
+								          			<img src="<?php echo $url->assets ?>img/converge-logo.png" alt="" style="height: 62px;">
+								          		</li>
+								          	</ul>	
+								          	<hr />
+								          	<!-- Grid row -->
+											  <div class="form-row align-items-center" style="margin-top: 30px;">
+											    <!-- Grid column -->
+											    <div class="col-auto">
+											      <!-- Material input -->
+											      <label class="sr-only" for="inlineFormInputGroupMD">Username</label>
+											      <div class="md-form input-group mb-3">
+											        <div class="input-group-prepend">
+											          <span class="input-group-text md-addon">Use Offer Code</span>
+											        </div>
+											        <input type="text" class="form-control pl-2 rounded-0" name="offer_code" id="offer-code"
+											          placeholder="">
+											      </div>
+											    </div>
+											    <!-- Grid column -->
 
-														    <!-- Grid column -->
-														    <div class="col-auto">
-														      <button type="button" class="btn btn-primary mb-0 btn-use-offer-code" style="position: relative;top: -12px;">Use Code</button>
-														    </div>
-														    <!-- Grid column -->
-														</div>
-									          		</li>
-									          	</ul>	
-								          	</div>
-											<a href="javascript:void(0);" class="btn-terms-agreement" style="margin-top: 29px;display: block;">Service Subscription License Agreement</a>
-								      	  </div>								      	  
+											    <!-- Grid column -->
+											    <div class="col-auto">
+											      <button type="button" class="btn btn-primary mb-0 btn-use-offer-code" style="position: relative;top: -12px;">Use Code</button>
+											    </div>
+											    <!-- Grid column -->
+											  </div>
+											  <!-- Grid row -->
+											  <a href="javascript:void(0);" class="btn-terms-agreement" style="margin-top: 29px;display: block;">Service Subscription License Agreement</a>
+
+								      	  </div>
 								          <button class="btn btn-indigo btn-rounded prevBtn float-left" data-key="step-2" type="button">Previous</button>
-								          <button class="btn btn-indigo btn-rounded trial-register-btn float-left" type="button" style="margin-left: 10px;">Register</button>
-								          <!-- <button type="submit" class="btn btn-default btn-rounded float-right step3-btn-processPayment" data-key="step-4">Proceed to Payment</button> -->
+								          <button type="submit" class="btn btn-default btn-rounded float-right step3-btn-processPayment" data-key="step-4">Proceed to Payment</button>
 								        </div>
+							      	</div>
+
+							      	<div class="stripe-form" style="display: none;">
+							      		<div class="col-md-12">
+							      			<h3 class="font-weight-bold pl-0 my-4"><strong>Step 3 : Stripe Payment Method</strong></h3>
+									          <div class="payment-method" style="display: block;margin-bottom: 16px;">
+									          	<label>Plan : <b><span class="plan-selected"></span> / <span class="plan-price"></span></b></label><br />
+									          	<label>Total Amount : <b><span class="total-amount"></span></b></label><br />
+									          	<hr />
+									          </div>
+											  <div id="card-element"></div>											  
+											  <div id="card-errors" role="alert"></div>
+											  <button class="stripe-btn">Submit Payment</button>`
+							      		</div>
 							      	</div>
 
 							      	<!-- 4th Step -->
@@ -684,110 +656,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 		</div>
 	</div>
 </div>
-
-<div class="modal fade" id="modal-converge-subscribe" tabindex="-1" role="dialog" aria-labelledby="modalLoadingMsgTitle" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="">Pay Subscription Plan</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <form id="frm-pay-subscription" method="post">
-        <div class="modal-body">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="card-body">                            
-                        <div id="credit_card">
-                            <div class="row form_line">
-                                <div class="col-md-4">
-                                    Card Number
-                                </div>
-                                <div class="col-md-8">
-                                    <input type="text" class="form-control" name="card_number" id="cardnumber" value="" required/>
-                                </div>
-                            </div>
-                            <div class="row form_line">
-                                <div class="col-md-4">
-                                    <label for="">Expiration 
-                                </div>
-                                <div class="col-md-8">
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            <select id="exp_month" name="exp_month" class="form-control exp_month" required>
-                                                <option  value="">Month</option>
-                                                <option  value="01">01</option>
-                                                <option  value="02">02</option>
-                                                <option  value="03">03</option>
-                                                <option  value="04">04</option>
-                                                <option  value="05">05</option>
-                                                <option  value="06">06</option>
-                                                <option  value="07">07</option>
-                                                <option  value="08">08</option>
-                                                <option  value="09">09</option>
-                                                <option  value="10">10</option>
-                                                <option  value="11">11</option>
-                                                <option  value="12">12</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <select id="exp_year" name="exp_year" class="form-control exp_year" required>
-                                                <option  value="">Year</option>
-                                                <option  value="2021">2021</option>
-                                                <option  value="2022">2022</option>
-                                                <option  value="2023">2023</option>
-                                                <option  value="2024">2024</option>
-                                                <option  value="2025">2025</option>
-                                                <option  value="2026">2026</option>
-                                                <option  value="2027">2027</option>
-                                                <option  value="2028">2028</option>
-                                                <option  value="2029">2029</option>
-                                                <option  value="2030">2030</option>
-                                                <option  value="2031">2031</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <input type="text" maxlength="3" class="form-control" name="cvc" id="cvc" value="" placeholder="CVC" required/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <hr />
-                            <div class="row form_line">
-                                <div class="col-md-4">
-                                    Total Amount
-                                </div>
-                                <div class="col-md-8">
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text" id="basic-addon1">$</span>
-                                        </div>
-                                        <input type="number" class="form-control" name="plan_amount" id="plan_amount" value="<?= number_format($plan->price,2); ?>" disabled="">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <button class="btn btn-indigo" type="button" data-dismiss="modal">Close</button>
-            <button class="btn btn-indigo btn-modal-pay-subscription" type="submit">Pay</button>
-        </div>
-        </form>
-      </div>
-    </div>
-</div>
-
 </section>
 <?php include viewPath('frontcommon/footer'); ?>
 <script>
 $(function(){
-	var default_plan = "<?= $default_plan; ?>";
-	var default_type = "<?= $default_type; ?>";
-
 	base_url = '<?php echo base_url(); ?>';
 	var allWells = $('.setup-content'),
         allNextBtn = $('.nextBtn'),
@@ -819,143 +691,6 @@ $(function(){
     	$("#modalTermsAgreement").modal('show');
     });
 
-    default_plan_selected();
-
-    function default_plan_selected(){
-    	if( default_plan != '' ){
-    		if( default_plan == 'essential' ){
-	    		var plan_id = 2;
-		    	var plan_price = "59.99";
-		    	var plan_price_discounted = "49.99";
-		    	var plan_name  = "Essential";
-	    	}else if( default_plan == 'simple-start' ){
-	    		var plan_id = 1;
-		    	var plan_price = "24.99";
-		    	var plan_price_discounted = "19.99";
-		    	var plan_name  = "Simple Start";
-	    	}else if( default_plan == 'plus' ){
-	    		var plan_id = 3;
-		    	var plan_price = "79.99";
-		    	var plan_price_discounted = "69.99";
-		    	var plan_name  = "Plus";
-	    	}else if( default_plan == 'premier-pro' ){
-	    		var plan_id = 4;
-		    	var plan_price = "99.99";
-		    	var plan_price_discounted = "89.99";
-		    	var plan_name  = "PremierPro";
-	    	}else if( default_plan == 'enterprise' ){
-	    		var plan_id = 6;
-		    	var plan_price = "299.99";
-		    	var plan_price_discounted = "249.99";
-		    	var plan_name  = "Enterprise";
-	    	}else if( default_plan == 'industry-specific' ){
-	    		var plan_id = 5;
-		    	var plan_price = "179.99";
-		    	var plan_price_discounted = "149.99";
-		    	var plan_name  = "Industry Specific";
-	    	} 
-
-	    	var subscription_type = $(".subscription-type").val();
-
-	    	//alert(plan_price);
-	    	//alert(plan_price_discounted);
-	    	//alert(subscription_type);
-
-	    	$("#plan_id").val(plan_id);
-	    	$("#plan_price").val(plan_price);
-	    	$("#plan_price_discounted").val(plan_price_discounted);
-	        $("#plan_name").val(plan_name);
-	    	$(".plan-selected").text(plan_name);
-	    	$(".plan-price").text("$" + plan_price);
-
-	    	step1Container.hide();
-
-	    	$("span.step-1").removeClass('btn-indigo');
-		    $("span.step-1").addClass("btn-default");
-
-	    	if( subscription_type == 'trial' ){
-	    		$(".total-amount").text("0.00 (Free Trial)");
-	    		$("#plan_type").val('trial');
-	    		$(".payment-method-container").hide();
-	    		$(".trial-register-btn").show();
-
-	    		//$("#plan_price").val(0);
-	    		/*step3Container.show(); 
-	    		$("span.step-3").addClass('btn-indigo');*/
-
-	    		step2Container.show();
-		    	$("span.step-2").addClass('btn-indigo');
-
-	    	}else{
-	    		$("#subscription_type").val('discounted');
-	    		$(".total-amount").text("$" + plan_price_discounted  + " (3 months 50% off)");
-	    		$(".payment-method-container").show();
-	    		$(".trial-register-btn").hide();
-	    		step2Container.show();
-		    	$("span.step-2").addClass('btn-indigo');
-	    	}
-    	}
-    }
-
-    $("#frm-pay-subscription").submit(function(e){
-    	e.preventDefault();
-
-    	var total_amount = $("#plan_price_discounted").val();
-        var firstname = $("#firstname").val();
-        var lastname  = $("#lastname").val();
-        var email_add = $("#email_address").val();
-        var zipcode   = $("#zip_code").val();
-        var ccnumber  = $("#cardnumber").val();
-        var expmonth  = $("#exp_month").val();
-        var expyear   = $("#exp_year").val();
-        var cvc       = $("#cvc").val();
-        var plan_id   = $("#plan_id").val();
-        var address   = $("#business_address").val();
-        var url 	  = base_url + 'registration/_pay_subscription';
-
-        $(".btn-modal-pay-subscription").html('<span class="spinner-border spinner-border-sm m-0"></span>');
-
-        setTimeout(function () {
-            $.ajax({
-               type: "POST",
-               url: url,
-               dataType: "json",
-               data: {
-               	total_amount:total_amount,
-               	firstname:firstname,
-               	lastname:lastname,
-               	email_add:email_add,
-               	zipcode:zipcode,
-               	address:address,
-               	ccnumber:ccnumber,
-               	expmonth:expmonth,
-               	expyear:expyear,
-               	plan_id:plan_id,
-               	cvc:cvc
-               },
-               success: function(o)
-               {
-                    $("#frm-pay-subscription").modal('hide'); 
-
-                    if( o.is_success == 1 ){
-                      $("#modal-converge-subscribe").modal('hide');
-                      $("#payment-method").val('converge');
-			          $("#payment-method-status").val('COMPLETED');
-			          activate_registration();
-                    }else{
-                      Swal.fire({
-                        icon: 'error',
-                        title: 'Cannot process payment',
-                        text: o.message
-                      });
-                    }
-
-                    $(".btn-modal-pay-subscription").html('Pay');
-                }
-            });
-        }, 1000);
-    });
-
     allNextBtn.click(function(){
 
         var step = $(this).attr("data-key");
@@ -965,8 +700,10 @@ $(function(){
 
         var curInputs  = curStep.find("input[type='text'],input[type='email'],input[type='password']");
         var curInputEmail  = curStep.find("input[type='email']");
-        //console.log("Test Validation");
-        //console.log(curInputs);
+        console.log("Test Validation");
+        console.log(curInputs);
+
+
 
         var isValid = true;
         var isValidEmail = true;
@@ -980,9 +717,7 @@ $(function(){
             if (!curInputs[i].validity.valid){
                 isValid = false;
                 req_inc++;
-                $(curInputs[i]).closest(".input-group").addClass("has-error");
-            }else{
-            	$(curInputs[i]).closest(".input-group").removeClass("has-error");
+                $(curInputs[i]).closest(".form-group").addClass("has-error");
             }
         }
 
@@ -993,14 +728,11 @@ $(function(){
             }
         }
 
-        $("#ajax-authentication-alert-container").html('');
-
         if( isValid ){
         	var firstname 			= $("input[name=firstname]").val();
         	var lastname 			= $("input[name=lastname]").val();
         	var phone 				= $("input[name=phone]").val();
         	var business_address 	= $("#business_address").val(); 
-        	var zip_code            = $("#zip_code").val(); 
         	//var number_of_employee 	= $('#number_of_employee').find(":selected").val();
         	//var industry_type_id 	= $('#industry_type_id').find(":selected").val();
         	var a_email = $("#email_address").val(); 
@@ -1021,7 +753,6 @@ $(function(){
 	               		lastname:lastname,
 	               		phone:phone,
 	               		business_address:business_address,
-	               		zip_code:zip_code
 	               	},
 	               success: function(o)
 	               {
@@ -1084,9 +815,6 @@ $(function(){
 
     	if( subscription_type == 'trial' ){
     		$(".total-amount").text("0.00 (Free Trial)");
-    		$("#plan_type").val('trial');
-    		$(".payment-method-container").hide();
-    		$(".trial-register-btn").show();
 
     		//$("#plan_price").val(0);
     		/*step3Container.show(); 
@@ -1096,13 +824,12 @@ $(function(){
 	    	$("span.step-2").addClass('btn-indigo');
 
     	}else{
-    		$("#subscription_type").val('discounted');
     		$(".total-amount").text("$" + plan_price_discounted  + " (3 months 50% off)");
-    		$(".payment-method-container").show();
-    		$(".trial-register-btn").hide();
     		step2Container.show();
 	    	$("span.step-2").addClass('btn-indigo');
     	}
+
+
     });
 
     step3bBtnPrcPayment.click(function(e){
@@ -1114,10 +841,6 @@ $(function(){
     		$("#step-3").hide();
     		$(".stripe-form").show();
     	}
-   	});
-
-   	$(".trial-register-btn").click(function(){
-   		activate_registration();
    	});
 
     $('div.setup-panel div a.btn-indigo').trigger('click');
@@ -1147,10 +870,8 @@ $(function(){
 
     $(".btn-use-offer-code").click(function(){
     	var url = base_url + 'registration/_use_offer_code';
-    	var aut_msg = '<div class="alert alert-info" role="alert"><img src="'+base_url+'assets/img/spinner.gif" /> Verifiying code...</div>';
 
     	$("#modalVerifyOfferCode").modal("show");
-    	$("#modalVerifyOfferCode .modal-body").html(aut_msg);
 
     	setTimeout(function () {
 	        $.ajax({
@@ -1179,184 +900,75 @@ $(function(){
     });
 
 
-    //Stripe
-    var handler = StripeCheckout.configure({
-		key: '<?= STRIPE_PUBLISH_KEY; ?>',
-		image: '',
-		token: function(token) {
-			$("#payment-method").val('stripe');
-            $("#payment-method-status").val('COMPLETED');
-            activate_registration();   
-			/*$("#stripeToken").val(token.id);
-			$("#stripeEmail").val(token.email);
-			$("#amountInCents").val(Math.floor($("#amountInDollars").val() * 100));
-			$("#myForm").submit();*/
+    // Create a Stripe client.
+	var stripe = Stripe('pk_test_51Hzgs3IDqnMOqOtpSskepkfFhP2rFNJ0wTtuKB6Ye6wJA75uHL5rMOi7JwWajcag33ScyPywLTKMGNbgdsPxVJiG00kZxZnPNu');
 
-		}
+	// Create an instance of Elements.
+	var elements = stripe.elements();
+
+	// Custom styling can be passed to options when creating an Element.
+	// (Note that this demo uses a wider set of styles than the guide below.)
+	var style = {
+	  base: {
+	    color: '#32325d',
+	    fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+	    fontSmoothing: 'antialiased',
+	    fontSize: '16px',
+	    '::placeholder': {
+	      color: '#aab7c4'
+	    }
+	  },
+	  invalid: {
+	    color: '#fa755a',
+	    iconColor: '#fa755a'
+	  }
+	};
+
+	// Create an instance of the card Element.
+	var card = elements.create('card', {style: style});
+
+	// Add an instance of the card Element into the `card-element` <div>.
+	card.mount('#card-element');
+
+	// Handle real-time validation errors from the card Element.
+	card.on('change', function(event) {
+	  var displayError = document.getElementById('card-errors');
+	  if (event.error) {
+	    displayError.textContent = event.error.message;
+	  } else {
+	    displayError.textContent = '';
+	  }
 	});
 
-	$('#stripe-button').on('click', function(e) {
-	var amountInCents = Math.floor($("#plan_price_discounted").val() * 100);
-	var displayAmount = parseFloat(Math.floor($("#plan_price_discounted").val() * 100) / 100).toFixed(2);
-	// Open Checkout with further options
-	handler.open({
-		name: 'nSmarTrac',
-		description: 'Subscription amount ($' + displayAmount + ')',
-		amount: amountInCents,
-	});
-	e.preventDefault();
-	});
+	// Handle form submission.
+	var form = document.getElementById('subscribe-form-payment');
+	form.addEventListener('submit', function(event) {
+	  event.preventDefault();
 
-	// Close Checkout on page navigation
-	$(window).on('popstate', function() {
-	handler.close();
-	});
-
-	//Converge payment
-	$("#converge-button").click(function(){
-		//initiateLightbox();
-		var total_amount = $("#plan_price_discounted").val();
-		$("#plan_amount").val(total_amount);
-		$("#modal-converge-subscribe").modal('show');
+	  stripe.createToken(card).then(function(result) {
+	    if (result.error) {
+	      // Inform the user if there was an error.
+	      var errorElement = document.getElementById('card-errors');
+	      errorElement.textContent = result.error.message;
+	    } else {
+	      // Send the token to your server.
+	      stripeTokenHandler(result.token);
+	    }
+	  });
 	});
 
-	function initiateLightbox () {
-	  var job_id = $("#jobid").val();
-	  var total_amount = $("#plan_price_discounted").val();
-	  var firstname = $("#firstname").val();
-	  var lastname  = $("#lastname").val();
-	  var business_address   = $("#business_address").val();
-	  var zip_code = $("#zip_code").val();
+	// Submit the form with the token ID.
+	function stripeTokenHandler(token) {
+	  // Insert the token ID into the form so it gets submitted to the server
+	  var form = document.getElementById('subscribe-form-payment');
+	  var hiddenInput = document.createElement('input');
+	  hiddenInput.setAttribute('type', 'hidden');
+	  hiddenInput.setAttribute('name', 'stripeToken');
+	  hiddenInput.setAttribute('value', token.id);
+	  form.appendChild(hiddenInput);
 
-	  var url = base_url + 'registration/_converge_request_token';
-	  $("#converge-button").html('<span class="spinner-border spinner-border-sm m-0"></span>');
-	  setTimeout(function () {
-	    $.ajax({
-	       type: "POST",
-	       url: url,
-	       dataType: "json",
-	       data: {firstname:firstname, lastname:lastname, business_address:business_address, zip_code:zip_code, total_amount:total_amount},
-	       success: function(o)
-	       {
-	          if( o.is_success ){
-	              openLightbox(o.token)
-	          }else{
-	            Swal.fire({
-	              icon: 'error',
-	              title: 'Cannot Process Payment',
-	              text: o.msg
-	            });
-	          }
-
-	          $("#converge-button").html('PAY VIA CONVERGE');
-	       }
-	    });
-	  }, 500);
+	  // Submit the form
+	  form.submit();
 	}
-
-	function openLightbox (token) {
-	  var paymentFields = {
-	          ssl_txn_auth_token: token
-	  };
-	  var callback = {
-	      onError: function (error) {
-	          //showResult("error", error);
-	          Swal.fire({
-	            icon: 'error',
-	            title: 'Error',
-	            text: error
-	          });
-	      },
-	      onCancelled: function () {
-	          //showResult("cancelled", "");
-	      },
-	      onDeclined: function (response) {
-	        Swal.fire({
-	          icon: 'error',
-	          title: 'Declined',
-	          text: 'Please check your entries and try again'
-	        });
-	        //showResult("declined", JSON.stringify(response, null, '\t'));
-	      },
-	      onApproval: function (response) {	          
-	          $("#payment-method").val('converge');
-	          $("#payment-method-status").val('COMPLETED');
-	          activate_registration();
-	          //showResult("approval", JSON.stringify(response, null, '\t'));
-	      }
-	  };
-	  PayWithConverge.open(paymentFields, callback);
-	  return false;
-	}
-
-
-	//Paypal
-	// Render the PayPal button into #paypal-button-container
-    paypal.Buttons({
-    	style: {
-            layout: 'horizontal',
-            tagline: false,
-            //height:25,
-            color:'blue'
-        },
-        // Set up the transaction
-        createOrder: function(data, actions) {
-            return actions.order.create({
-            	payer: {
-					name: {
-					  given_name: $("#firstname").val() + " " + $("#lastname").val()
-					},
-					email_address: $("#email_address").val(),
-				},
-                purchase_units: [{
-                    amount: {
-                        value: $("#plan_price_discounted").val()
-                    }
-                }],
-                application_context: {
-			    	shipping_preference: 'NO_SHIPPING'
-			    }
-            });
-        },
-        // Finalize the transaction
-        onApprove: function(data, actions) {
-            return actions.order.capture().then(function(details) {
-                // Show a success message to the buyer
-                //console.log(details);
-                $("#payment-method").val('paypal');
-                $("#payment-method-status").val(details.status);
-                activate_registration();                
-            });
-        }
-    }).render('#paypal-button-container');
-
-    function activate_registration(){
-    	$(".payment-method-container").hide();
-        var url = base_url + 'registration/_create_registration';
-        setTimeout(function () {
-	        $.ajax({
-	           type: "POST",
-	           url: url,
-	           dataType: "json",
-	           data: $("#subscribe-form-payment").serialize(),
-	           success: function(o)
-	           {	
-	           		Swal.fire({
-		                title: 'Registration Completed!',
-		                text: 'You can now login to your account',
-		                icon: 'success',
-		                showCancelButton: false,
-		                confirmButtonColor: '#32243d',
-		                cancelButtonColor: '#d33',
-		                confirmButtonText: 'Login'
-		            }).then((result) => {
-		                if (result.value) {
-		                    window.location.href= base_url + 'login';
-		                }
-		            });
-	           }
-	        });
-	    }, 500);
-    }
 });
 </script>

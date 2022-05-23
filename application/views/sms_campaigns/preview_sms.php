@@ -12,32 +12,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     margin: 0;
     padding: 0;
 }
-.left {
-  float: left;
-}
-.pr-b10 {
-  position: relative;
-  bottom: 10px;
-}
-.p-40 {
-  padding-top: 40px !important;
-}
-.tabs-menu {
-    margin-bottom: 20px;
-    padding: 0;
-    margin-top: 20px;
-}
-.tabs-menu ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
-.md-right {
-  float: right;
-  width: max-content;
-  display: block;
-  padding-right: 0px;
-}
 .tabs-menu .active, .tabs-menu .active a {
     color: #2ab363;
 }
@@ -84,8 +58,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <?php include viewPath('includes/sidebars/marketing'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
-        <div class="container-fluid p-40">
-            <!--
+        <div class="container-fluid">
             <div class="page-title-box">
                 <div class="row align-items-center">
                     <div class="col-sm-6">
@@ -104,132 +77,100 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                     </div>
                 </div>
-            </div> -->
+            </div>
             <!-- end row -->
-            <?php echo form_open_multipart('sms_campaigns/save_send_to', ['class' => 'form-validate', 'id' => 'campaign_send_schedule', 'autocomplete' => 'off']); ?>
+            <?php echo form_open_multipart('sms_campaigns/save_send_to', ['class' => 'form-validate', 'id' => 'create_campaign_send_to', 'autocomplete' => 'off']); ?>
             <div class="row">
-              <div class="col-xl-12">
-                  <div class="card mt-0">
-                    <div class="row">
-                      <div class="col-sm-6 left">
-                        <h3 class="page-title">Preview & Confirm</h3>
-                      </div>
-                      <div class="col-sm-6 right dashboard-container-1">
-                        <div class="float-right d-none d-md-block">
-                            <div class="dropdown">
-                                    <a href="<?php echo url('sms_campaigns') ?>" class="btn btn-primary" aria-expanded="false">
-                                        <i class="mdi mdi-settings mr-2"></i> Go Back to SMS Blast list
-                                    </a>
+                <div class="col-md-4">
+
+                    <div class="panel-info">
+                        <div class="phone" style="margin-left: 38px;">
+                            <div class="phone__cnt">
+                                <div class="sms-blast-msg"><?= $sms_text; ?></div>
                             </div>
                         </div>
-                      </div>
                     </div>
-                    <div class="alert alert-warning mt-2 mb-3" role="alert">
-                        <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Preview and select when to send the SMS-es.
-                        </span>
-                    </div>
-                    <div class="tabs-menu">
-                        <ul class="clearfix">
-                          <li>1. Edit Campaign</li>
-                          <li>2. Select Customers</li>
-                          <li>3. Build SMS</li>
-                          <li class="active">4. Preview</li>
-                          <li>5. Purchase</li>
-                        </ul>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-4 pl-0 pr-0 left" style="background-color: #ffffff !important;">
 
-                          <div class="panel-info" style="background-color: #ffffff;">
-                              <div class="phone" style="margin-left: 38px;">
-                                  <div class="phone__cnt">
-                                      <div class="sms-blast-msg"><?= $sms_text; ?></div>
-                                  </div>
-                              </div>
-                          </div>
+                </div>
+                <div class="col-8">
 
-                      </div>
-                      <div class="col-md-8 pl-0 pr-0 left">
+                    <div class="panel-info">
                         <form class="form" name="plan-form" data-shop="form">
-                          <div class="panel-info" style="margin-top: 29px;">
-                                  <div class="margin-bottom">
-                                      <div class="form-msg" style="display: none;"></div>
-                                      <div>
-                                          <label>Price for service: $<?= number_format($service_price, 2); ?></label>
-                                      </div>
-                                      <div style="margin-bottom: 10px;">
-                                          <?php ?>
-                                          <label>Price for all SMSes: $<?= number_format($total_sms_price, 2); ?></label> (<?= $total_recipients; ?> x $<?= number_format($price_per_sms, 2); ?>)
-                                      </div>
-                                      <div class="help help-sm help-block">Pay a flat fee to use the service and only $0.05 for each message (segment).
-                                      The SMSes will be sent to your customers upon confirmation.</div>
-                                  </div>
-                                  <div class="form-group">
-                                      <div class="checkbox checkbox-sec">
-                                          <?php 
+                            <div class="validation-error" style="display: none;"></div>
+                            <div class="tabs-menu">
+                                <ul class="clearfix">
+                                  <li>1. Edit Campaign</li>
+                                  <li>2. Select Customers</li>
+                                  <li>3. Build SMS</li>
+                                  <li class="active">4. Preview</li>
+                                  <li>5. Purchase</li>
+                                </ul>
+                            </div>
+                            <hr />  
 
-                                            if($smsBlast->price_variables != ''){ 
-                                              $is_scheduled = 'checked="checked"';
-                                              $send_date = date("m/d/Y",strtotime($smsBlast->send_date));
-                                              $send_time = date("H:i A", strtotime($smsBlast->send_time));
-                                            }else{
-                                              $is_scheduled = "";
-                                              $send_date = date("m/d/Y");
-                                              $send_time = date("H:i A");
-                                            }
-
-                                          ?>
-                                          <input type="checkbox" name="is_scheduled" value="1"  id="is_scheduled" <?= $is_scheduled; ?> />
-                                          <label style="font-weight: 500;" for="is_scheduled">Schedule Campaign</label>
-                                      </div>
-                                      <div class="select-date-time" style="display: none;">
-                                          <br />
-                                          <div class="help help-sm help-block">Select this to set a date if you would like to schedule this campaign.</div>
-                                          <div class="hide" id="scheduled">
-                                              <div class="row">
-                                                  <div class="col-sm-8">
-                                                      <div class="input-group mb-3">
-                                                        <div class="input-group-prepend">
-                                                          <span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span>
-                                                          <input type="text" name="send_date" value="<?= $send_date; ?>"  class="form-control default-datepicker" autocomplete="off" required />
-                                                        </div>
-                                                      </div>
-                                                  </div>
-                                                  <div class="col-sm-8">
-                                                      <div class="input-group mb-3">
-                                                        <div class="input-group-prepend bootstrap-timepicker timepicker">
-                                                          <span class="input-group-text" id="basic-addon1"><i class="fa fa-clock-o"></i></span>
-                                                          <input id="smsTimepicker" name="send_time" value="<?= $send_time; ?>" type="text" class="form-control input-small">
-                                                        </div>
-                                                  </div>
+                            <div class="margin-bottom">
+                                <div>
+                                    <label>
+                                        Price for service: $5.00                        </label>
+                                </div>
+                                <div style="margin-bottom: 10px;">
+                                    <label>
+                                        Price for all SMSes: $26.40                        </label> (528 x 1 x $0.05)
+                                </div>
+                                <div class="help help-sm help-block">Pay a flat fee to use the service and only $0.05 for each message (segment).
+                                The SMSes will be sent to your customers upon confirmation.</div>
+                            </div>
+                            <div class="form-group">
+                                 <div class="checkbox checkbox-sec">
+                                    <input type="checkbox" name="is_scheduled" value="1"  id="is_scheduled" />
+                                    <label style="font-weight: 500;" for="is_scheduled">Schedule Campaign</label>
+                                </div>
+                                <div class="help help-sm help-block">Select this to set a date if you would like to schedule this campaign.</div>
+                                <div class="hide" id="scheduled">
+                                    <div class="row">
+                                        <div class="col-sm-8">
+                                            <div class="form-group" style="text-align: left;">
+                                              <input type="text" name="gevent_date_from" value="<?= date("Y-m-d"); ?>"  class="form-control default-datepicker" required="" autocomplete="off" required />
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-8">
+                                            <div class="form-group" style="text-align: left;">
+                                              <div class="form-group">
+                                                <div class='input-group date' id='campaign-time'>
+                                                   <input type='text' value="6:00am" name="gevent_start_time" class="form-control" />
+                                                   <span class="input-group-addon">
+                                                   </span>
+                                                </div>
                                               </div>
-                                          </div>
-                                      </div>
-                                  </div>
-                                  <hr>
-                                  <div class="margin-bottom">
-                                      <span class="bold margin-right" style="font-size: 19px;">Total: $<?= number_format($grand_total, 2); ?></span>
-                                  </div>
-                          </div>
-                        </div>
-                          <div class="row margin-top" style="bottom: 55px;">
-                              <div class="col-sm-12"></div>
-                              <div class="col-sm-12 text-right">
-                                  <a class="btn btn-default margin-right" href="<?php echo url('sms_campaigns/build_sms/'); ?>">&laquo; Back</a>
-                                  <button class="btn btn-primary btn-campaign-update-send-schedule" data-form="submit" data-shop="to-cart" data-on-click-label="Saving...">Continue &raquo;</button>
-                              </div>
-                          </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-8">
+                                            <div style="padding-top: 8px;">
+                                                Central Time                                </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="margin-bottom">
+                                <span class="bold margin-right">Total: $31.40</span>
+                            </div>
                         </form>
 
-                      </div>
-                  </div>
-                </div>
-                <hr>
+                    </div>
 
-                <?php echo form_close(); ?>
-                <!-- end row -->
+                </div>
             </div>
-          </div>
+            <hr>
+            <div class="row margin-top">
+                <div class="col-sm-12"></div>
+                <div class="col-sm-12 text-right">
+                    <a class="btn btn-default margin-right" href="https://www.markate.com/pro/marketing/sms_campaigns/main/build_sms/id/1161">&laquo; Back</a>
+                    <button class="btn btn-primary" data-form="submit" data-shop="to-cart" data-on-click-label="Saving...">Continue &raquo;</button>
+                </div>
+            </div>
+            <?php echo form_close(); ?>
+            <!-- end row -->
         </div>
         <!-- end container-fluid -->
     </div>
@@ -238,55 +179,73 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/footer'); ?>
 <script>
 $(function(){
-    $("#campaign_send_schedule").submit(function(e){
+    $("#to_type_2").change(function(){
+        if( $(this).attr('checked', 'checked') ){
+            $(".sending-option-1").hide();
+            $(".sending-option-2").show();
+            $(".sending-option-3").hide();
+        }
+    });
+
+    $("#to_type_1").change(function(){
+        if( $(this).attr('checked', 'checked') ){
+            $(".sending-option-1").show();
+            $(".sending-option-2").hide();
+            $(".sending-option-3").hide();
+        }
+    });
+
+    $("#to_type_3").change(function(){
+        if( $(this).attr('checked', 'checked') ){
+            $(".sending-option-1").hide();
+            $(".sending-option-2").hide();
+            $(".sending-option-3").show();
+        }
+    });
+
+    $(".chk-contact").change(function(){
+        var contact_selected = $(".chk-contact:checked").length;
+        $(".contact-selected-count").html(contact_selected);
+    });
+
+    $(".chk-contact-group").change(function(){
+        var contact_group_selected = $(".chk-contact-group:checked").length;
+        $(".contact-group-selected-count").html(contact_group_selected);
+    });
+
+    $("#create_campaign_send_to").submit(function(e){
         e.preventDefault();
-
-        $('.form-msg').hide().html("");
-
-        var url = base_url + 'sms_campaigns/create_send_schedule';
-        $(".btn-campaign-update-send-schedule").html('<span class="spinner-border spinner-border-sm m-0"></span>  Saving');
+        var url = base_url + '/sms_campaigns/create_campaign_send_to';
+        $(".btn-campaign-save-send-settings").html('<span class="spinner-border spinner-border-sm m-0"></span>  saving');
         setTimeout(function () {
           $.ajax({
              type: "POST",
-             url: url,
-             dataType: "json",
-             data: $("#campaign_send_schedule").serialize(),
+             url: url,    
+             dataType: "json",      
+             data: $("#create_campaign_send_to").serialize(),
              success: function(o)
              {
-                if( o.is_success == 1 ){
-                    $('.form-msg').hide().html("<p class='alert alert-info'>"+o.msg+"</p>").fadeIn(500);
-                    location.href = base_url + "sms_campaigns/payment";
-                    //$(".btn-campaign-update-send-schedule").html('<span class="spinner-border spinner-border-sm m-0"></span>  Redirecting to list');
-                    /*setTimeout(function() {
-                        location.href = base_url + "sms_campaigns";
-                    }, 2500);*/
+                if( o.is_success ){
+                    $(".validation-error").hide();
+                    $(".validation-error").html('');
+                    //redirect to step2
+                    location.href = base_url + "/sms_campaigns/build_sms";
                 }else{
-                    $('.form-msg').hide().html("<p class='alert alert-danger'>"+o.msg+"</p>").fadeIn(500);
-                    $(".btn-campaign-update-send-schedule").html('Save');
+                    $(".validation-error").show();
+                    $(".validation-error").html(o.err_msg);
                 }
+                $(".btn-campaign-save-send-settings").html('Continue »');
              }
           });
         }, 1000);
     });
 
-    <?php if($smsBlast->price_variables != ''){  ?>
-      $(".select-date-time").fadeIn();
-    <?php } ?>
-
-    $("#is_scheduled").change(function(){
-        if ($(this).is(':checked')) {
-            $(".select-date-time").fadeIn();
-        }else{
-            $(".select-date-time").fadeOut();
-        }
+    $('#campaign-time').datetimepicker({
+       format: 'LT',
+       allowInputToggle: true
     });
-
-    $('#smsTimepicker').timepicker({
-        showInputs: false
-    });
-
     $('.default-datepicker').datepicker({
-        format: 'mm/dd/yyyy',
+        format: 'yyyy-mm-dd',
         autoclose: true
     });
 });

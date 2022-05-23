@@ -1,54 +1,14 @@
 @font-face {
   font-family: "Southam";
-  src: url(./fonts/SouthamDemo.otf);
-}
-
-@font-face {
-  font-family: "AuthenticSignature";
-  src: url(./fonts/AuthenticSignature.ttf);
-}
-
-@font-face {
-  font-family: "HolligateSignature";
-  src: url(./fonts/HolligateSignatureDemo.ttf);
-}
-
-@font-face {
-  font-family: "Richness";
-  src: url(./fonts/RichnessDemoRegular.ttf);
-}
-
-@font-face {
-  font-family: "ShorelinesScript";
-  src: url(./fonts/ShorelinesScriptBold.otf);
+  src: url(./SouthamDemo.otf) format("truetype");
 }
 
 body {
   background-color: #fff !important;
 }
 
-#signatureModal {
-  .modal-footer {
-    flex-direction: column;
-    align-items: initial;
-    text-align: initial;
-
-    &__buttonContainer {
-      display: flex;
-      justify-content: flex-end;
-    }
-  }
-}
-
-#selectDocumentModal {
-  .modal-body,
-  .tab-content {
-    min-height: 200px;
-  }
-}
-
 .fillAndSign {
-  margin-top: 80px; // height of fvcking header
+  margin-top: 90px;
   padding-top: 20px;
 
   // step 1
@@ -64,15 +24,6 @@ body {
       width: 250px;
       border: 0;
       border-radius: 0;
-    }
-
-    &--completed {
-      .fillAndSign__docInfo {
-        .fillAndSign__docTitle,
-        .fillAndSign__docPageCount {
-          display: block;
-        }
-      }
     }
   }
 
@@ -100,13 +51,11 @@ body {
     margin: 0;
     font-size: 13px;
     color: #797979;
-    display: none;
   }
 
   &__docPageCount {
     font-size: 12px;
     color: #797979;
-    display: none;
   }
 
   &__modal {
@@ -135,10 +84,6 @@ body {
     .alert-warning {
       color: #f8b425;
       background-color: #fdeac3;
-
-      span {
-        font-family: "Open Sans", sans-serif;
-      }
     }
   }
 
@@ -167,19 +112,17 @@ body {
       align-items: center;
       justify-content: center;
       flex-direction: column;
-      outline: 0 !important;
-      box-shadow: none !important;
+    }
 
-      & > span {
-        padding: 5px 15px;
-        color: #fff;
-        background-color: #2463d1;
-        font-size: 14px;
-        font-weight: bold;
-        text-transform: uppercase;
-        margin-top: 10px;
-        width: 150px;
-      }
+    span {
+      padding: 5px 15px;
+      color: #fff;
+      background-color: #2463d1;
+      font-size: 14px;
+      font-weight: bold;
+      text-transform: uppercase;
+      margin-top: 10px;
+      width: 150px;
     }
   }
 
@@ -195,37 +138,21 @@ body {
     padding: 15px;
     border-top: 1px solid #d9d9d9;
 
-    .btn.dropdown-toggle {
-      --bg-color: #ffce00;
-      --fg-color: #1e1e1e;
-
-      color: var(--fg-color);
-      background-color: var(--bg-color);
-      border: 1px solid var(--bg-color);
+    .btn {
+      color: #1e1e1e;
+      background-color: #ffce00;
+      border: 1px solid #ffce00;
       font-size: 14px;
       font-weight: 600;
       text-transform: uppercase;
       padding: 5px 20px;
       border-radius: 3px;
-      display: flex;
-      align-items: center;
 
       &:active,
-      &:focus,
-      &:disabled:hover {
-        background-color: var(--bg-color) !important;
-        border: 1px solid var(--bg-color) !important;
+      &:focus {
+        background-color: #ffce00 !important;
+        border: 1px solid #ffce00 !important;
         color: #1e1e1e !important;
-      }
-
-      &.btn-success {
-        --bg-color: #28a745;
-        --fg-color: #fff;
-      }
-
-      .spinner-border {
-        margin: 0;
-        margin-right: 5px;
       }
     }
   }
@@ -234,8 +161,6 @@ body {
     border-bottom: 1px solid #d9d9d9;
     padding: 5px 0;
     background-color: #fff;
-    z-index: 1;
-    position: relative;
 
     .container {
       display: flex;
@@ -260,13 +185,7 @@ body {
       display: flex;
       align-items: center;
       justify-content: center;
-      flex-direction: column;
       padding: 0 10px;
-
-      span {
-        font-size: 12px;
-        font-family: "Ubuntu", "Trebuchet MS", sans-serif;
-      }
     }
   }
 
@@ -274,7 +193,6 @@ body {
     margin-top: 20px;
     display: flex;
     justify-content: center;
-    min-height: 100vh;
   }
 
   &__canvasContainer {
@@ -282,7 +200,6 @@ body {
   }
 
   &__document {
-    width: 100%;
     box-shadow: 0 3px 1px -2px rgb(0 0 0 / 20%), 0 2px 2px 0 rgb(0 0 0 / 14%),
       0 1px 5px 0 rgb(0 0 0 / 12%);
   }
@@ -290,15 +207,6 @@ body {
   &__field {
     display: flex;
     align-items: center;
-    position: relative;
-
-    &Options {
-      position: absolute;
-      top: -32px;
-      display: flex;
-      align-items: center;
-      background-color: #333;
-    }
 
     &--focused {
       background-color: #ffeb3b;
@@ -306,7 +214,7 @@ body {
 
     &Input {
       min-width: 200px;
-      min-height: 30px;
+      height: 30px;
       display: flex;
       align-items: center;
       padding: 0 8px;
@@ -318,25 +226,23 @@ body {
       box-sizing: border-box;
     }
 
-    &Close,
-    &Enlarge,
-    &Reduce {
+    &Close {
+      background-color: #dc3545;
       color: #fff;
       height: 30px;
       width: 30px;
       display: flex;
       align-items: center;
       justify-content: center;
+      border: var(--border-width) solid #dc3545;
       cursor: pointer;
       box-sizing: border-box;
-
-      &:hover {
-        background-color: #3e3d3d;
-      }
     }
+  }
 
-    &Reduce {
-      font-size: 9px;
+  #signatureModal {
+    .modal-body {
+      min-height: 200px;
     }
   }
 
@@ -355,30 +261,6 @@ body {
     &::-webkit-input-placeholder {
       font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
       font-size: 20px;
-    }
-
-    &[data-font="font-1"] {
-      font-family: "Southam";
-    }
-
-    &[data-font="font-2"] {
-      font-family: "AuthenticSignature";
-      font-size: 80px;
-    }
-
-    &[data-font="font-3"] {
-      font-family: "HolligateSignature";
-      font-size: 50px;
-    }
-
-    &[data-font="font-4"] {
-      font-family: "Richness";
-      font-size: 50px;
-    }
-
-    &[data-font="font-5"] {
-      font-family: "ShorelinesScript";
-      font-size: 50px;
     }
   }
 
@@ -418,37 +300,10 @@ body {
 
   &__signatureContainer {
     border: 1px solid #e2e2e2;
-    position: relative;
-
-    .fillAndSign__signatureOptions {
-      position: absolute;
-      top: -32px;
-      display: flex;
-      align-items: center;
-      background-color: #333;
-    }
 
     &.ui-draggable-dragging {
       background-color: #ffeb3b;
       cursor: move;
-    }
-
-    .ui-resizable-handle {
-      --size: 13px;
-
-      position: absolute;
-      right: calc((var(--size) / 2) * -1);
-      top: 50%;
-      transform: translateY(-50%);
-      height: var(--size);
-      width: var(--size);
-      border-radius: var(--size);
-      background-color: #e2e2e2;
-      cursor: e-resize;
-    }
-
-    img {
-      width: 100%;
     }
   }
 
@@ -466,21 +321,12 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    position: absolute;
+    top: 0;
+    right: -30px;
+    background-color: #dc3545;
     color: #fff;
     cursor: pointer;
-
-    &:hover {
-      background-color: #3e3d3d;
-    }
-  }
-
-  &__signatureTime {
-    color: #fff;
-    background-color: #333;
-    padding: 0 2px;
-    font-family: Verdana;
-    font-size: 10px;
-    white-space: nowrap;
   }
 
   .action--draggable.action--hasField {
@@ -520,231 +366,5 @@ body {
       border: 0 !important;
       outline: 0 !important;
     }
-  }
-
-  .fillAndSign__readonly {
-    display: none;
-  }
-
-  &--readonly {
-    .fillAndSign__actions {
-      display: none !important;
-    }
-
-    .fillAndSign__readonly {
-      background-color: #17a2b8;
-      height: 30px;
-      display: flex;
-      align-items: center;
-      padding: 0 10px;
-      position: relative;
-      top: -1px;
-
-      p {
-        font-family: "Open Sans", sans-serif;
-        margin-bottom: 0;
-        color: #fff;
-      }
-    }
-
-    .fillAndSign__canvasContainer {
-      pointer-events: none;
-    }
-
-    .fillAndSign__signatureContainer,
-    .fillAndSign__fieldInput {
-      border: 0;
-    }
-
-    .fillAndSign__signatureClose,
-    .fillAndSign__fieldClose,
-    .ui-resizable-handle,
-    .fillAndSign__fieldOptions {
-      display: none !important;
-    }
-  }
-
-  &__uploadProgress {
-    opacity: 1;
-    pointer-events: none;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    height: 16px;
-    width: 120px;
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: 8px;
-    overflow: hidden;
-
-    span {
-      background: linear-gradient(to bottom, #666, #444);
-      position: absolute;
-      top: 0;
-      left: 0;
-      bottom: 0;
-      width: 0;
-      opacity: 0;
-    }
-
-    &--completed {
-      span {
-        opacity: 1;
-        width: 100%;
-        transition: 300ms ease-in-out;
-      }
-    }
-  }
-
-  &__uploadProgressCheck {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    svg {
-      opacity: 0;
-      transform: translateY(30px);
-    }
-
-    &--completed {
-      svg {
-        opacity: 1;
-        transform: translateY(0);
-        transition: 300ms ease-in-out;
-      }
-    }
-  }
-
-  &__preview {
-    position: fixed;
-    right: 0;
-    top: 0;
-    height: 100%;
-    width: 200px;
-    background-color: #848484;
-    padding: 160px 35px 0 35px;
-
-    &Item {
-      position: relative;
-    }
-
-    canvas {
-      width: 100%;
-    }
-
-    span {
-      position: absolute;
-      left: 0;
-      bottom: 5px;
-      width: 100%;
-      height: 30px;
-      display: flex;
-      align-items: center;
-      padding: 0 10px;
-      font-size: 13px;
-      font-family: monospace;
-      background-color: #666;
-      color: #fff;
-    }
-  }
-
-  &__vault {
-    .fa {
-      font-size: 30px;
-    }
-
-    &Item {
-      padding: 10px;
-      margin: 10px 0;
-      border: 1px solid #f3f3f3;
-      color: #797979;
-      border-radius: 4px;
-      font-family: "Open Sans", sans-serif;
-      cursor: pointer;
-
-      &--selected {
-        background-color: #e8f0fe;
-
-        .fillAndSign__vaultItemTitle {
-          color: #1967d2;
-        }
-      }
-
-      &Info {
-        font-size: 13px;
-      }
-
-      &Title {
-        margin-bottom: 0;
-        font-weight: 600;
-        font-size: 14px;
-      }
-    }
-  }
-
-  &__selectFile {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 200px;
-
-    .custom-file {
-      max-width: 300px;
-    }
-
-    .custom-file-label__inner {
-      width: 200px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      display: block;
-    }
-  }
-}
-
-#fill_esign {
-  .fillandesign__step2,
-  #fillAndSignSave {
-    display: none;
-  }
-
-  &[data-current-step="2"] {
-    .fillandesign__step2,
-    #fillAndSignSave {
-      display: block;
-    }
-
-    .fillandesign__step1,
-    #fillAndSignNext {
-      display: none;
-    }
-  }
-}
-
-.fillAndSign--job {
-  margin-top: 0;
-  padding-top: 0;
-
-  .tab-content {
-    min-height: 200px;
-  }
-
-  #documentContainer {
-    min-height: 200px;
-  }
-
-  .fillAndSign__topnav {
-    position: relative !important;
-    top: 0 !important;
-  }
-
-  .fillAndSign__footer {
-    position: relative;
-    border-top: 0;
   }
 }

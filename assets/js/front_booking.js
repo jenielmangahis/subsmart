@@ -47,77 +47,36 @@ $(document).ready(function() {
       var url = base_url + '/booking/_add_cart_item';
       var msg = '<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" style="display:inline;" /> Adding item to cart...</div>';
 
-      $(this).html('<span class="spinner-border spinner-border-sm m-0"></span>');
-
+      $("#modalBookingInfo").modal("show");
+      $(".booking-info").html(msg);
       setTimeout(function () {
           $.ajax({
              type: "POST",
              url: url,
              data: {pid:pid,qty:qty},
-             dataType: "json",
              success: function(o)
              {
-                $('.btn-add-cart').html('Add to cart');
-
-                if( o.is_success == 1 ){
-                    Swal.fire({
-                        text: 'Your cart was successfully updated',
-                        icon: 'success',
-                        showCancelButton: false,
-                        confirmButtonColor: '#32243d',
-                        cancelButtonColor: '#d33',
-                        confirmButtonText: 'Ok'
-                    }).then((result) => {                        
-                        location.reload();
-                    });                
-                }else{
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: o.msg
-                    });
-                }                
+                location.reload();
              }
           });
       }, 1000);
     });
 
-     $(".btn-apply-coupon").click(function(){
+     $(".btn-add-coupon").click(function(){
       var coupon_code = $("#coupon_code").val();
-      var eid = $(this).attr('data-id');
       var url = base_url + '/booking/_add_cart_coupon';
       var msg = '<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" style="display:inline;" /> Adding item to cart...</div>';
 
-      $(this).html('<span class="spinner-border spinner-border-sm m-0"></span>');
-
+      $("#modalBookingInfo").modal("show");
+      $(".booking-info").html(msg);
       setTimeout(function () {
           $.ajax({
              type: "POST",
              url: url,
-             dataType: "json",
-             data: {coupon_code:coupon_code, eid:eid},
+             data: {coupon_code:coupon_code},
              success: function(o)
              {
-                $('.btn-apply-coupon').html('Apply');
-
-                if( o.is_success == 1 ){
-                  Swal.fire({
-                      text: 'Coupon code applied',
-                      icon: 'success',
-                      showCancelButton: false,
-                      confirmButtonColor: '#32243d',
-                      cancelButtonColor: '#d33',
-                      confirmButtonText: 'Ok'
-                  }).then((result) => {
-                      location.reload();
-                  });  
-                }else{
-                  Swal.fire({
-                    icon: 'error',
-                    title: 'Coupon Error',                    
-                    text: o.msg
-                  });
-                }
+                location.reload();
              }
           });
       }, 1000);
@@ -128,8 +87,8 @@ $(document).ready(function() {
       var url = base_url + '/booking/_delete_cart_item';
       var msg = '<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" style="display:inline;" /> Updating cart items...</div>';
 
-      $(this).html('<span class="spinner-border spinner-border-sm m-0"></span>');
-
+      $("#modalBookingInfo").modal("show");
+      $(".booking-info").html(msg);
       setTimeout(function () {
           $.ajax({
              type: "POST",
@@ -137,17 +96,7 @@ $(document).ready(function() {
              data: {pid:pid},
              success: function(o)
              {
-                $(this).html('<span class="fa fa-trash"></span>');
-                Swal.fire({
-                    text: 'Your cart was successfully updated',
-                    icon: 'success',
-                    showCancelButton: false,
-                    confirmButtonColor: '#32243d',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Ok'
-                }).then((result) => {
-                    location.reload();
-                });
+                location.reload();
              }
           });
       }, 1000);
@@ -159,8 +108,9 @@ $(document).ready(function() {
       var url = base_url + '/booking/_delete_coupon';
       var msg = '<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" style="display:inline;" /> Removing coupon...</div>';
 
-      $(this).html('<span class="spinner-border spinner-border-sm m-0"></span>');
-      
+      $("#modalBookingInfo").modal("show");
+      $(".booking-info").html(msg);
+
       setTimeout(function () {
           $.ajax({
              type: "POST",
@@ -168,16 +118,7 @@ $(document).ready(function() {
              data: {pid:pid},
              success: function(o)
              {
-                Swal.fire({
-                    text: 'Coupon code was successfully removed',
-                    icon: 'success',
-                    showCancelButton: false,
-                    confirmButtonColor: '#32243d',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Ok'
-                }).then((result) => {
-                    location.reload();
-                });
+                location.reload();
              }
           });
       }, 1000);

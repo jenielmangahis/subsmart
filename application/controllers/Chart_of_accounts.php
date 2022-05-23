@@ -13,14 +13,12 @@ class Chart_of_accounts extends MY_Controller {
             "assets/css/accounting/accounting.modal.css?v='rand()'",
             "assets/css/accounting/sidebar.css",
 			"assets/css/accounting/sales.css",
-            "assets/plugins/dropzone/dist/dropzone.css",
-            "assets/css/accounting/accounting-modal-forms.css"
+            "assets/plugins/dropzone/dist/dropzone.css"
         ));
 
         add_footer_js(array(
             "assets/js/accounting/main.js",
-            "assets/plugins/dropzone/dist/dropzone.js",
-            "assets/js/accounting/modal-forms.js"
+            "assets/plugins/dropzone/dist/dropzone.js"
         ));
 
 		$this->page_data['menu_name'] =

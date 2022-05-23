@@ -25,45 +25,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     white-space: nowrap;
     vertical-align: middle;
 }
-.page-title {
-  font-family: Sarabun, sans-serif !important;
-  font-size: 1.75rem !important;
-  font-weight: 600 !important;
-}
-.pr-b10 {
-  position: relative;
-  bottom: 10px;
-}
-.p-40 {
-  padding-top: 40px !important;
-}
-@media only screen and (max-width: 600px) {
-  .p-40 {
-    padding-top: 0px !important;
-  }
-  .pr-b10 {
-    position: relative;
-    bottom: 0px;
-  }
-}
-.list-icon{
-  list-style: none;
-  height: 400px;
-  overflow: auto;
-  padding: 6px;
-}
-.list-icon li{
-  display: inline-block;
-  /*width: 30%;*/
-  height:100px;
-  margin: 3px;
-}
-.mtc-18 {
-  margin-top: 36px;
-}
-.mt-18 {
-  margin-top: 10px;
-}
 </style>
 <!-- page wrapper start -->
 <div role="wrapper">
@@ -76,15 +37,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <div class="col-md-12">
     <div class="validation-error" style="display: none;"></div>
 
-    <div class="card mtc-18">
-       <h3 class="page-title mb-0 mt-18">Credentials</h3>
-        <h5 style="font-size: 18px;">Showcase Your Business Credentials</h5>
+    <div class="card">
+        <h2>Credentials</h2>
+        <h5>Showcase Your Business Credentials</h5>
 
         <p>
-            Pick from the sections below if your business is Licensed/Bonded/Insured/BBB. Adding your professional Credentials will help you attract more customers.
+            Pick from the sections below if your business is Licensed/Bonded/Insured/BBB.<br> Adding your professional Credentials will help you attract more customers.
         </p>
         <hr>
-        <?php
+        <?php 
             $licensed_checked = "";
             if( $profiledata->is_licensed == 1 ){
                 $licensed_checked = "checked='checked'";
@@ -152,7 +113,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 
         <hr>
-        <?php
+        <?php 
             $bonded_checked = "";
             if( $profiledata->is_bonded == 1 ){
                 $bonded_checked = "checked='checked'";
@@ -198,13 +159,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <div class="col-md-6">
                         <input type="file" class="form-control" name="bond_image" id="" placeholder="Upload Image" accept="image/*" onchange="readImageURL(this,'bond-image');">
                     </div>
-
+                   
                 </div>
             </div>
         </div>
 
         <hr>
-        <?php
+        <?php 
             $insured_checked = "";
             if( $profiledata->is_business_insured == 1 ){
                 $insured_checked = "checked='checked'";
@@ -268,7 +229,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         </div>
 
         <hr>
-        <?php
+        <?php 
             $bbb_acredited_checked = "";
             if( $profiledata->is_bbb_acredited == 1 ){
                 $bbb_acredited_checked = "checked='checked'";
@@ -297,13 +258,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <hr class="card-hr">
 <div class="card">
     <div class="row">
-      <div class="col-md-8">
-                <button class="btn btn-primary btn-lg" name="btn-continue" type="submit" value="credentials">Save</button> <span class="alert-inline-text margin-left hide" style="display:none;">Saved</span>
-              </div>
-      <!-- <div class="col-md-4 text-right">
-                <a class="btn btn-default btn-lg" href="services">« Back</a>
-                        <a href="availability" class="btn btn-primary btn-lg margin-left" name="btn-continue">Next »</a>
-              </div> -->
+    	<div class="col-md-8">
+    		    		<button class="btn btn-default btn-lg" name="btn-continue" type="submit" value="credentials">Save</button> <span class="alert-inline-text margin-left hide" style="display:none;">Saved</span>
+    		    	</div>
+    	<div class="col-md-4 text-right">
+    		    		<a class="btn btn-default btn-lg" href="services">« Back</a>
+    		    		    		<a href="availability" class="btn btn-primary btn-lg margin-left" name="btn-continue">Next »</a>
+    		    	</div>
     </div>
 </div>
 </form>    </div>
@@ -467,3 +428,4 @@ $(function(){
     });
 });
 </script>
+
