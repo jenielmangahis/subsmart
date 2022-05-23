@@ -653,8 +653,9 @@ class Vendors_model extends MY_Model {
 
 	public function get_bill_payments_by_bill_id($billId)
 	{
-		$this->db->select('*');
-		$this->db->where('accounting_bill_payments.company_id', logged('company_id'));
+		$companyId = logged('company_id');
+		$this->db->select('accounting_bill_payments.*');
+		$this->db->where('accounting_bill_payments.company_id', $companyId);
 		$this->db->where('accounting_bill_payment_items.bill_id', $billId);
 		$this->db->from('accounting_bill_payments');
 		$this->db->join('accounting_bill_payment_items', 'accounting_bill_payment_items.bill_payment_id = accounting_bill_payments.id');

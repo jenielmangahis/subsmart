@@ -213,9 +213,16 @@ class Event_model extends MY_Model
             return false;
         }
     }
-    public function getAllPayment()
+
+    public function getTodayStats()
     {
-        $query = $this->db->get_where('accounting_receive_payment', array('company_id' => logged('company_id')));
+        $company_id = logged('company_id');
+        $this->db->from('jobs');
+        $this->db->select('job_payments.amount,jobs.date_issued,jobs.status');
+        $this->db->join('job_payments', 'job_payments.job_id = jobs.id', 'left');
+        $this->db->where("jobs.company_id", $company_id);
+        $this->db->where("jobs.date_issued", date('Y-m-d'));
+        $query = $this->db->get();
 
         if ($query) {
             return $query->result();
@@ -224,6 +231,23 @@ class Event_model extends MY_Model
         }
     }
 
+    public function getAccountSituation($toCheck = 'collect_date')
+    {
+        $company_id = logged('company_id');
+        $this->db->from('acs_profile');
+        $this->db->select('acs_profile.prof_id, COUNT(acs_profile.prof_id) as total');
+        $this->db->join('acs_office', 'acs_office.fk_prof_id = acs_profile.prof_id', 'left');
+        $this->db->where("acs_profile.company_id", $company_id);
+        $this->db->where("acs_office.".$toCheck, date('m/d/Y'));
+        $query = $this->db->get();
+        //dd($this->db->last_query());
+
+        if ($query) {
+            return $query->result();
+        } else {
+            return false;
+        }
+    }
 
 
     public function getSalesLeaderboardItems($company_id)

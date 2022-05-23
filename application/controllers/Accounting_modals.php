@@ -11458,6 +11458,9 @@ class Accounting_modals extends MY_Controller
     private function update_bill($billId, $data)
     {
         $bill = $this->vendors_model->get_bill_by_id($billId, logged('company_id'));
+        $diff = floatval($bill->total_amount) - floatval($bill->remaining_balance);
+        $newTotal = floatval($data['total_amount']) + $diff;
+
         $billData = [
             'vendor_id' => $data['vendor_id'],
             'mailing_address' => $data['mailing_address'],
@@ -11467,13 +11470,25 @@ class Accounting_modals extends MY_Controller
             'bill_no' => $data['bill_no'] !== "" ? $data['bill_no'] : null,
             'permit_no' => $data['permit_number'] !== "" ? $data['permit_number'] : null,
             'memo' => $data['memo'],
-            'remaining_balance' => $data['total_amount'],
-            'total_amount' => $data['total_amount']
+            'remaining_balance' => floatval($data['total_amount']) <= 0 ? 0 : floatval($data['total_amount']),
+            'total_amount' => $newTotal,
+            'status' => floatval($data['total_amount']) <= 0 ? 2 : 1
         ];
 
         $update = $this->vendors_model->update_bill($billId, $billData);
 
         if ($update) {
+            if(floatval($data['total_amount']) < 0) {
+                $vendor = $this->vendors_model->get_vendor_by_id($data['vendor_id']);
+
+                $vendorCredits = floatval($vendor->vendor_credits) - floatval($data['total_amount']);
+                $vendorData = [
+                    'vendor_credits' => $vendorCredits
+                ];
+
+                $this->vendors_model->updateVendor($data['vendor_id'], $vendorData);
+            }
+
             $attachments = $this->accounting_attachments_model->get_attachments('Bill', $bill->id);
             $tags = $this->tags_model->get_transaction_tags('Bill', $bill->id);
             $this->accounting_linked_transactions_model->unlink_all_from_linked_to('bill', $billId);

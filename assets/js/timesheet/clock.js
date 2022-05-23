@@ -61,12 +61,14 @@ $(document).ready(function() {
             success: function(data) {
                 if (data.resClock.length > 0) {
                     if (data.resClock[0]['allow_5min'] == 1) {
+
                         if (data.attend.length > 0) {
                             let day = new Date();
                             let dayShift = new Date(data.attend[0]["shift_start"]);
                             let numberOfMinutes = dayShift.getMinutes() - day.getMinutes();
                             let numberOfHours = dayShift.getHours() - day.getHours();
-                            if (numberOfHours <= 0 && numberOfMinutes <= 5) {
+
+                            if (numberOfHours <= 0 && numberOfMinutes <= 0) {
                                 let selected = this;
                                 Swal.fire({
                                     title: "Clock in?",

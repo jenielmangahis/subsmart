@@ -37,14 +37,7 @@ endif;
                         <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
                             <h3>$<?php $totalPayments = 0;
                                     foreach ($payment as $p) {
-                                        if(date("Y-m-d")==date("Y-m-d",strtotime($p->created_at))){
-                                            $totalPayments += $p->amount;
-                                        }
-                                    }
-                                    foreach ($paymentInvoices as $PI) {
-                                        if(date("Y-m-d")==date("Y-m-d",strtotime($PI->created_at))){
-                                            $totalPayments += $PI->payment_amount;
-                                        }
+                                        $totalPayments += $p->amount;
                                     }
                                     echo $totalPayments;
                                     ?></h3>
@@ -61,12 +54,6 @@ endif;
                         </div>
                         <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
                             <h3>$<?php $totalPayments = 0;
-                                    foreach ($payment as $p) {
-                                        if(date("Y-m-d")==date("Y-m-d",strtotime($p->created_at))){
-                                            $totalPayments += $p->amount;
-                                        }
-                                        
-                                    }
                                     foreach ($paymentInvoices as $PI) {
                                         if(date("Y-m-d")==date("Y-m-d",strtotime($PI->created_at))){
                                             $totalPayments += $PI->payment_amount;
@@ -132,8 +119,7 @@ endif;
                             <i class='bx bx-task-x'></i>
                         </div>
                         <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
-                            <h2>0
-                            </h2>
+                            <h2><?= print_r($lostAccounts['total']); ?> </h2>
                             <span>Lost Accounts</span>
                         </div>
                     </div>
@@ -146,20 +132,7 @@ endif;
                             <i class='bx bx-box'></i>
                         </div>
                         <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
-                            <h2>
-                                <?php
-                                $totalInvoices = 0;
-                                foreach ($upcomingInvoice as $UI) {
-                                    if ($UI->status == "Due"){
-                                        if(date("Y-m-d") == date("Y-m-d", strtotime($UI->due_date))){
-                                            $totalInvoices++;
-                                        }
-                                        
-                                    }
-                                }
-                                echo $totalInvoices;
-                                ?>
-                            </h2>
+                            <h2> <h2><?= print_r($collectedAccounts['total']); ?> </h2></h2>
                             <span>Collections</span>
                         </div>
                     </div>

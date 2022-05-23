@@ -803,23 +803,80 @@ $(function() {
     });
 
     $(document).on('click', '#modal-container .modal-body #category-details-table tbody tr td a.deleteRow', function() {
-        $(this).parent().parent().parent().remove();
+        var el = $(this);
 
-        if ($('#category-details-table tbody tr').length < rowCount) {
-            $('#category-details-table tbody').append(`<tr>${catDetailsBlank}</tr>`);
-            if ($('#category-details-table thead tr th').length > $('#category-details-table tbody tr:last-child td').length) {
-                $('<td></td>').insertBefore($('#category-details-table tbody tr:last-child td:last-child'));
+        if(el.parent().parent().parent().find('input[name="category_linked_transaction[]"]').length < 1) {
+            el.parent().parent().parent().remove();
+
+            if ($('#category-details-table tbody tr').length < rowCount) {
+                $('#category-details-table tbody').append(`<tr>${catDetailsBlank}</tr>`);
+                if ($('#category-details-table thead tr th').length > $('#category-details-table tbody tr:last-child td').length) {
+                    $('<td></td>').insertBefore($('#category-details-table tbody tr:last-child td:last-child'));
+                }
             }
+
+            var num = 1;
+
+            $('#category-details-table tbody tr').each(function() {
+                $(this).children('td:nth-child(2)').html(num);
+                num++;
+            });
+
+            computeTransactionTotal();
+        } else {
+            var linkedTransac = el.parent().parent().parent().find('input[name="category_linked_transaction[]"]').val();
+            var linkedTransacType = linkedTransac.split('-')[0].replace('_', ' ');
+            var type = linkedTransacType.charAt(0).toUpperCase() + linkedTransacType.slice(1);
+            var transacType = $('#modal-container form .modal').attr('id').replace('Modal', '');
+
+            var linkedItemCount = $(`#modal-container form .modal #item-details-table input[name="item_linked_transaction[]"][value="${linkedTransac}"]`).length;
+            var linkedCategCount = $(`#modal-container form .modal #category-details-table input[name="category_linked_transaction[]"][value="${linkedTransac}"]`).length;
+
+            var count = linkedItemCount + linkedCategCount;
+
+            if(count > 1) {
+                var message = `There are multiple lines for ${type}. Would you like to remove this line from the ${transacType} or unlink the whole transaction?`;
+                var confirmButtonText = 'Unlink it';
+                var cancelButtonText = 'Remove line';
+            } else {
+                var message = `Would you also like to unlink ${type}`;
+                var confirmButtonText = 'Yes, unlink it';
+                var cancelButtonText = 'No, keep it';
+            }
+
+            Swal.fire({
+                title: message,
+                icon: 'warning',
+                showCloseButton: false,
+                confirmButtonColor: '#2ca01c',
+                confirmButtonText: confirmButtonText,
+                showCancelButton: true,
+                cancelButtonText: cancelButtonText,
+                cancelButtonColor: '#d33'
+            }).then((result) => {
+                if(result.isConfirmed) {
+                    el.parent().parent().parent().find('.unlink-transaction').trigger('click');
+                } else {
+                    el.parent().parent().parent().remove();
+
+                    if ($('#category-details-table tbody tr').length < rowCount) {
+                        $('#category-details-table tbody').append(`<tr>${catDetailsBlank}</tr>`);
+                        if ($('#category-details-table thead tr th').length > $('#category-details-table tbody tr:last-child td').length) {
+                            $('<td></td>').insertBefore($('#category-details-table tbody tr:last-child td:last-child'));
+                        }
+                    }
+
+                    var num = 1;
+
+                    $('#category-details-table tbody tr').each(function() {
+                        $(this).children('td:nth-child(2)').html(num);
+                        num++;
+                    });
+
+                    computeTransactionTotal();
+                }
+            });
         }
-
-        var num = 1;
-
-        $('#category-details-table tbody tr').each(function() {
-            $(this).children('td:nth-child(2)').html(num);
-            num++;
-        });
-
-        computeTransactionTotal();
     });
 
     $(document).on('click', '#modal-container #item-details-table tbody tr td a.deleteRow', function() {
@@ -830,10 +887,17 @@ $(function() {
             var linkedTransac = $(this).parent().parent().parent().find('input[name="item_linked_transaction[]"]').val();
             var linkedTransacType = linkedTransac.split('-')[0].replace('_', ' ');
             var type = linkedTransacType.charAt(0).toUpperCase() + linkedTransacType.slice(1);
-            if($(`#modal-container form .modal #item-details-table input[name="item_linked_transaction[]"][value="${linkedTransac}"]`).length > 1) {
-                var message = `There are multiple lines for ${type}. Would you like to remove this line from the invoice or unlink the whole transaction?`;
+            var transacType = $('#modal-container form .modal').attr('id').replace('Modal', '');
+
+            var linkedItemCount = $(`#modal-container form .modal #item-details-table input[name="item_linked_transaction[]"][value="${linkedTransac}"]`).length;
+            var linkedCategCount = $(`#modal-container form .modal #category-details-table input[name="category_linked_transaction[]"][value="${linkedTransac}"]`).length;
+
+            var count = linkedItemCount + linkedCategCount;
+
+            if(count > 1) {
+                var message = `There are multiple lines for ${type}. Would you like to remove this line from the ${transacType} or unlink the whole transaction?`;
                 var confirmButtonText = 'Unlink it';
-                var cancelButtonText = 'Remove it';
+                var cancelButtonText = 'Remove line';
             } else {
                 var message = `Would you also like to unlink ${type}`;
                 var confirmButtonText = 'Yes, unlink it';
@@ -5750,6 +5814,18 @@ $(function() {
         $('#new-popup #accounting_vendors .ajax-print_checks_modal').trigger('click');
     });
 
+    $(document).on('click', '#modal-container form #billPaymentModal #print-check', function(e) {
+        e.preventDefault();
+
+        $('#modal-container form #billPaymentModal #print_later').prop('checked', true).trigger('change');
+
+        submitType = 'save-and-close';
+
+        $('#modal-container form#modal-form').submit();
+
+        $('#new-popup #accounting_vendors .ajax-print_checks_modal').trigger('click');
+    });
+
     $(document).on('click', '#modal-container form #billModal #copy-bill', function(e) {
         e.preventDefault();
 
@@ -5773,6 +5849,30 @@ $(function() {
 
         $.ajax({
             url: `/accounting/delete-transaction/bill/${split[1]}`,
+            type: 'DELETE',
+            success: function(result) {
+                location.reload();
+            }
+        });
+    });
+
+    $(document).on('click', '#modal-container form #billPaymentModal #void-bill-payment', function(e) {
+        e.preventDefault();
+
+        var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
+
+        $.get('/accounting/void-transaction/bill-payment/'+split[1], function(res) {
+            location.reload();
+        });
+    });
+
+    $(document).on('click', '#modal-container form #billPaymentModal #delete-bill-payment', function(e) {
+        e.preventDefault();
+
+        var split = $('#modal-container form#modal-form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
+
+        $.ajax({
+            url: `/accounting/delete-transaction/bill-payment/${split[1]}`,
             type: 'DELETE',
             success: function(result) {
                 location.reload();
@@ -9519,6 +9619,12 @@ const computeTransactionTotal = () => {
         total = parseFloat(parseFloat(total) + parseFloat(value)).toFixed(2);
     });
 
+    if($('#modal-container #modal-form .modal').attr('id') === 'billModal') {
+        if($('#billModal #total-payment-amount').length > 0) {
+            total = parseFloat(total) - parseFloat($('#billModal #total-payment-amount').html());
+        }
+    }
+
     $('#modal-container .transaction-total-amount').html(formatter.format(parseFloat(total)));
 }
 
@@ -9867,7 +9973,7 @@ const updateTransaction = (event, el) => {
     if(vendorModals.includes(modalId)) {
         var count = 0;
         var totalAmount = $(`${modalId} span.transaction-total-amount`).html().replace('$', '');
-        data.append('total_amount', totalAmount);
+        data.append('total_amount', totalAmount.trim());
 
         $(`${modalId} table#category-details-table tbody tr`).each(function() {
             var billable = $(this).find('input[name="category_billable[]"]');
