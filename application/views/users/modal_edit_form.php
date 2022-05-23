@@ -1,6 +1,23 @@
 <style>
+    
+    .add_new_address_map_clock_in:after, #edit_address_map:after, #edit_address_map1:after {
+    width: 22px;
+    height: 40px;
+    display: block;
+    content: ' ';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -40px 0 0 -11px;
+    animation: ease;
+    animation-duration: 20s;
+    background: url(https://maps.gstatic.com/mapfiles/api-3/images/spotlight-poi_hdpi.png);
+    background-size: 22px 40px;
+    pointer-events: none;
+}
     .add_new_address_map_clock_in:after,
-    #edit_address_map:after {
+    #edit_address_map:after,
+    #edit_address_map1:after {
         width: 22px;
         height: 40px;
         display: block;
@@ -17,7 +34,8 @@
     }
 
     .new_address_radius_container,
-    .edit_address_radius_container {
+    .edit_address_radius_container,
+    .edit_address_radius_container1 {
         position: absolute;
         z-index: 1;
         padding: 20px 10px;
@@ -25,7 +43,9 @@
     }
 
     label.radius_number_view,
-    label.edit_radius_number_view {
+    label.radius_number_view1,
+    label.edit_radius_number_view,
+    label.edit_radius_number_view1 {
         background-color: #FFFFFF;
         padding: 5px 30px;
         font-size: 13px;
@@ -37,7 +57,8 @@
     }
 
     input#new_address_radius,
-    input#edit_address_radius {
+    input#edit_address_radius,
+    input#edit_address_radius1 {
         width: 200px;
         height: 2px;
         float: right;
@@ -249,8 +270,8 @@
                         <div class="col-lg-12">
                             <div class="custom-control custom-switch">
 
-                                <input type="checkbox" value=0 class="custom-control-input allow_clock_in" id="allow_clock_in">
-                                <label class="custom-control-label allow_clock_in" for="allow_clock_in"> <span id="status">Enable</span> user <b>cannot clock in 5 minutes</b> early.</label>
+                                <input type="checkbox" value=0 class="custom-control-input allow_clock_in" id="allow_clock_in_input">
+                                <label class="custom-control-label allow_clock_in" for="allow_clock_in_input"> <span id="status">Enable</span> user <b>cannot clock in 5 minutes</b> early.</label>
 
 
                                 <br><label class="est_wage_privacy_editor" for="est_wage_privacy2" style="font-size: 11px;font-weight:100;">
@@ -274,6 +295,8 @@
                             <div class="form-group">
                                 <label for="">Enter an address or drag the map to find your place</label>
                                 <input id="new_formatted_address" type="text" name="new_formatted_address" class="form-control ts-start-date" value="" onchange="new_formatted_address_changed()" required>
+                                <input type="text" name="clock_in_location_latitude" id="allow_clock_in_lat" style="display:none">
+                                <input type="text" name="clock_in_location_longtitude" id="allow_clock_in_lng" style="display:none">
                             </div>
                         </div>
                     </div>
@@ -282,7 +305,30 @@
                             <label class="edit_radius_number_view">250 ft zone</label>
                             <input type="range" class="form-range" min="76.2" max="3218.688" step="0.001" id="edit_address_radius" value="76.2">
                         </div>
-                        <div id="add_new_address_map_clock_in" style="height:400px;width:100%;"></div>
+                        <div id="add_new_address_map_clock_in" class="add_new_address_map_clock_in" style="height:400px;width:100%;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <label>Set Clock In Location</label>
+                            <div class="form-group">
+                                <label for="">Enter an address or drag the map to find your place</label>
+                                <input id="new_formatted_address1" type="text" name="new_formatted_address1" class="form-control ts-start-date" value="" onchange="new_formatted_address_changed1()" required>
+                                <input type="text" name="clock_out_location_latitude" id="allow_clock_out_lat" style="display:none">
+                                <input type="text" name="clock_out_location_longtitude" id="allow_clock_out_lng" style="display:none">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group map-canva" style="position: relative;">
+                        <div class="edit_address_radius_container1">
+                            <label class="edit_radius_number_view1">250 ft zone</label>
+                            <input type="range" class="form-range" min="76.2" max="3218.688" step="0.001" id="edit_address_radius1" value="76.2">
+                        </div>
+                        <div id="add_new_address_map_clock_out" class="add_new_address_map_clock_in" style="height:400px;width:100%;"></div>
                     </div>
                 </div>
             </div>
@@ -368,18 +414,51 @@
     var radius_edit_address = 76.2;
     var edit_created_by;
 
-    var current_lat = 0;
-    var current_lng = 0;
+    var current_lat_clock_in = 0;
+    var current_lng_clock_in = 0;
+    var current_lat_clock_out = 0;
+    var current_lng_clock_out = 0;
     var antennasCircle_new_adress;
     var radius_new_address = 76.2;
     var current_notify_settings;
 
     function initMap() {
+
+
+        $(document).ready(function() {
+            $.ajax({
+                url: base_url + 'users/getData_for_clock_in_out_location',
+                type: "POST",
+                dataType: "json",
+                data: {
+                    user_id: $("#editUserID").val()
+                },
+                success: function(data) {
+                    if (data.cLocation != 0) {
+                        console.log('pasok')
+                        if (data.cLocation[0]['clock_in_latitude'] != "" && data.cLocation[0]['clock_in_longtitude'] != "") {
+                            current_lat_clock_in = data.cLocation[0]['clock_in_latitude'];
+                            current_lng_clock_in = data.cLocation[0]['clock_in_longtitude'];
+                        }
+
+                        if (data.cLocation[0]['clock_out_latitude'] != "" && data.cLocation[0]['clock_out_longtitude'] != "") {
+                            current_lat_clock_out = data.cLocation[0]['clock_out_latitude'];
+                            current_lng_clock_out = data.cLocation[0]['clock_out_longtitude'];
+                        }
+                    } else {
+
+
+                    }
+                }
+            });
+        })
+
+
         get_current_user_location();
+
     }
 
     function get_current_user_location() {
-        console.log(navigator.geolocation);
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(show_current_user_position);
         } else {
@@ -388,8 +467,16 @@
     }
 
     function show_current_user_position(position) {
-        current_lat = position.coords.latitude;
-        current_lng = position.coords.longitude;
+        if (current_lat_clock_in == 0 && current_lng_clock_in == 0) {
+            current_lat_clock_in = position.coords.latitude;
+            current_lng_clock_in = position.coords.longitude;
+        }
+        if (current_lat_clock_out == 0 && current_lat_clock_out == 0) {
+            current_lat_clock_out = position.coords.latitude;
+            current_lng_clock_out = position.coords.longitude;
+        }
+
+
         initMap_new_address_map();
     }
 
@@ -572,8 +659,30 @@
 
         add_new_address_map_clock_in = new google.maps.Map(document.getElementById("add_new_address_map_clock_in"), {
             center: {
-                lat: current_lat,
-                lng: current_lng
+                lat: current_lat_clock_in,
+                lng: current_lng_clock_in
+            },
+            zoom: 17,
+            mapTypeControlOptions: {
+                mapTypeIds: [
+                    "roadmap",
+                    "satellite",
+                    "hybrid",
+                    "terrain",
+                    "styled_map",
+                ],
+            },
+            mapTypeControl: false,
+            overviewMapControl: false,
+            zoomControl: true,
+            draggable: true,
+            fullscreenControl: false,
+            streetViewControl: false,
+        });
+        add_new_address_map_clock_out = new google.maps.Map(document.getElementById("add_new_address_map_clock_out"), {
+            center: {
+                lat: current_lat_clock_out,
+                lng: current_lng_clock_out
             },
             zoom: 17,
             mapTypeControlOptions: {
@@ -596,27 +705,37 @@
         add_new_address_map_clock_in.mapTypes.set("styled_map", styledMapType);
         add_new_address_map_clock_in.setMapTypeId("styled_map");
 
+        add_new_address_map_clock_out.mapTypes.set("styled_map", styledMapType);
+        add_new_address_map_clock_out.setMapTypeId("styled_map");
+
         google.maps.event.addListener(add_new_address_map_clock_in, 'dragend', function() {
             $("#new_formatted_address").val("Loading address...");
             $('#add_new_address_map_clock_in').addClass("add_new_address_map_clock_in");
             new_address_map_changed();
         });
-        google.maps.event.addListener(edit_address_map, 'dragend', function() {
-            $("#edit_formatted_address").val("Loading address...");
-            edit_address_map_changed();
+        google.maps.event.addListener(add_new_address_map_clock_out, 'dragend', function() {
+            $("#new_formatted_address1").val("Loading address...");
+            $('#add_new_address_map_clock_out').addClass("add_new_address_map_clock_in");
+            new_address_map_changed1();
         });
-        setMapCenter("add_new", current_lat, current_lng, true);
+
+        setMapCenter("add_new_address_map_clock_in", current_lat_clock_in, current_lng_clock_in, true);
+        setMapCenter1("add_new_address_map_clock_out", current_lat_clock_out, current_lng_clock_out, true);
     }
 
     function new_address_map_changed() {
         var center = add_new_address_map_clock_in.getCenter()
         var lat = center.lat();
+
         var lng = center.lng();
-        if (current_lat != lat && current_lng != lng) {
-            current_lat = lat;
-            current_lng = lng;
-            edit_lat = lat;
-            edit_lng = lng;
+
+        if (current_lat_clock_in != lat && current_lng_clock_in != lng) {
+
+            current_lat_clock_in = lat;
+            current_lng_clock_in = lng;
+            $('#allow_clock_in_lat').val(current_lat_clock_in);
+            $('#allow_clock_in_lng').val(current_lng_clock_in);
+            console.log("CLOCK IN:" + current_lat_clock_in + " " + current_lng_clock_in)
 
             if (antennasCircle_new_adress != null) {
                 antennasCircle_new_adress.setMap(null);
@@ -630,14 +749,14 @@
                 fillOpacity: 0.35,
                 map: add_new_address_map_clock_in,
                 center: {
-                    lat: current_lat,
-                    lng: current_lng
+                    lat: current_lat_clock_in,
+                    lng: current_lng_clock_in
                 },
                 radius: radius_new_address
             });
             add_new_address_map_clock_in.fitBounds(antennasCircle_new_adress.getBounds());
 
-            var latlng = new google.maps.LatLng(current_lat, current_lng);
+            var latlng = new google.maps.LatLng(current_lat_clock_in, current_lng_clock_out);
             // This is making the Geocode request
             var geocoder = new google.maps.Geocoder();
             geocoder.geocode({
@@ -655,19 +774,59 @@
             });
         }
     }
-    $(document).ready(function() {
-        $('#edit_address_radius').on('input', function() {
-            var center = add_new_address_map_clock_in.getCenter();
-            edit_lat = center.lat();
-            edit_lng = center.lng();
-            $(".edit_radius_number_view").html(parseInt($("#edit_address_radius").val() * 3.28084, 10) + " ft zone");
-            radius_edit_address = $("#edit_address_radius").val() * 1;
-            setMapCenter("add_new_address_map_clock_in", parseFloat(edit_lat), parseFloat(edit_lng));
 
-        });
+    function new_address_map_changed1() {
+        var center = add_new_address_map_clock_out.getCenter()
+        var lat = center.lat();
 
-       
-    })
+        var lng = center.lng();
+
+        if (current_lat_clock_out != lat && current_lng_clock_out != lng) {
+
+            current_lat_clock_out = lat;
+            current_lng_clock_out = lng;
+            $('#allow_clock_out_lat').val(current_lat_clock_out);
+            $('#allow_clock_out_lng').val(current_lng_clock_out);
+            console.log("CLOCK OUT: " + current_lat_clock_out + " " + current_lng_clock_out)
+
+            if (antennasCircle_new_adress != null) {
+                antennasCircle_new_adress.setMap(null);
+                add_new_address_map_clock_out.fitBounds(antennasCircle_new_adress.getBounds());
+            }
+            antennasCircle_new_adress = new google.maps.Circle({
+                strokeColor: "#0275FF",
+                strokeOpacity: 0.8,
+                strokeWeight: 2,
+                fillColor: "#8DC740",
+                fillOpacity: 0.35,
+                map: add_new_address_map_clock_out,
+                center: {
+                    lat: current_lat_clock_out,
+                    lng: current_lng_clock_out
+                },
+                radius: radius_new_address
+            });
+            add_new_address_map_clock_out.fitBounds(antennasCircle_new_adress.getBounds());
+
+            var latlng = new google.maps.LatLng(current_lat_clock_out, current_lng_clock_out);
+            // This is making the Geocode request
+            var geocoder = new google.maps.Geocoder();
+            geocoder.geocode({
+                'latLng': latlng
+            }, (results, status) => {
+                if (status !== google.maps.GeocoderStatus.OK) {
+                    // alert(status);
+                }
+                // This is checking to see if the Geoeode Status is OK before proceeding
+                if (status == google.maps.GeocoderStatus.OK) {
+                    var address = (results[0].formatted_address);
+                    $("#new_formatted_address").val(address);
+
+                }
+            });
+        }
+    }
+
 
     function new_formatted_address_changed() {
 
@@ -680,9 +839,30 @@
 
                 var latitude = results[0].geometry.location.lat();
                 var longitude = results[0].geometry.location.lng();
-                current_lat = latitude;
-                current_lng = longitude;
+                current_lat_clock_in = latitude;
+                current_lng_clock_in = longitude;
+
                 setMapCenter("add_new_address_map_clock_in", current_lat, current_lng);
+
+            }
+        });
+    }
+
+    function new_formatted_address_changed() {
+
+        var geocoder = new google.maps.Geocoder();
+        var address = $("#new_formatted_address").val();
+        geocoder.geocode({
+            'address': address
+        }, function(results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+
+                var latitude = results[0].geometry.location.lat();
+                var longitude = results[0].geometry.location.lng();
+                current_lat_clock_out = latitude;
+                current_lng_clock_out = longitude;
+
+                setMapCenter1("add_new_address_map_clock_out", current_lat_clock_out, current_lng_clock_out);
 
             }
         });
@@ -763,5 +943,105 @@
             lng: the_lng,
         });
     }
+
+    function setMapCenter1(update_the_map, the_lat, the_lng, first = false) {
+        var the_map = map;
+        if (update_the_map == "add_new_address_map_clock_out") {
+            the_map = add_new_address_map_clock_in;
+        } else if (update_the_map == "edit_map") {
+            the_map = edit_address_map;
+        }
+        if (update_the_map == "add_new_address_map_clock_out") {
+            if (antennasCircle_new_adress != null) {
+                antennasCircle_new_adress.setMap(null);
+                add_new_address_map_clock_in.fitBounds(antennasCircle_new_adress.getBounds());
+            }
+            antennasCircle_new_adress = new google.maps.Circle({
+                strokeColor: "#0275FF",
+                strokeOpacity: 0.8,
+                strokeWeight: 2,
+                fillColor: "#8DC740",
+                fillOpacity: 0.35,
+                map: the_map,
+                center: {
+                    lat: the_lat,
+                    lng: the_lng
+                },
+                radius: radius_new_address
+            });
+            the_map.fitBounds(antennasCircle_new_adress.getBounds());
+
+            if (first) {
+                the_map.setZoom(13);
+            }
+            add_new_address_map_clock_out = the_map;
+            var latlng = new google.maps.LatLng(the_lat, the_lng);
+            // This is making the Geocode request
+            var geocoder = new google.maps.Geocoder();
+            geocoder.geocode({
+                'latLng': latlng
+            }, (results, status) => {
+                if (status !== google.maps.GeocoderStatus.OK) {
+                    // alert(status);
+                }
+                // This is checking to see if the Geoeode Status is OK before proceeding
+                if (status == google.maps.GeocoderStatus.OK) {
+                    var address = (results[0].formatted_address);
+                    $("#new_formatted_address1").val(address);
+                }
+            });
+
+
+
+            if (antennasCircle_edit_map != null) {
+                antennasCircle_edit_map.setMap(null);
+                edit_address_map.fitBounds(antennasCircle_edit_map.getBounds());
+            }
+            antennasCircle_edit_map = new google.maps.Circle({
+                strokeColor: "#0275FF",
+                strokeOpacity: 0.8,
+                strokeWeight: 2,
+                fillColor: "#8DC740",
+                fillOpacity: 0.35,
+                map: edit_address_map,
+                center: {
+                    lat: the_lat,
+                    lng: the_lng
+                },
+                radius: radius_edit_address
+            });
+            edit_address_map.fitBounds(antennasCircle_edit_map.getBounds());
+            // edit_address_map.setZoom(18);
+        }
+
+        the_map.setCenter({
+            lat: the_lat,
+            lng: the_lng,
+        });
+    }
+    $(document).ready(function() {
+        $('#edit_address_radius').on('input', function() {
+            var center = add_new_address_map_clock_in.getCenter();
+            edit_lat = center.lat();
+            edit_lng = center.lng();
+
+            $(".edit_radius_number_view").html(parseInt($("#edit_address_radius").val() * 3.28084, 10) + " ft zone");
+            radius_edit_address = $("#edit_address_radius").val() * 1;
+            setMapCenter("add_new_address_map_clock_in", parseFloat(edit_lat), parseFloat(edit_lng));
+
+        });
+
+        $("#allow_clock_in_input").on('change', function() {
+
+            if ($("#allow_clock_in_input").val() == "0") {
+                $("#allow_clock_in_input").val(1);
+                $(".allow_clock_in_map").show();
+            } else {
+                $("#allow_clock_in_input").val(0);
+                $(".allow_clock_in_map").hide();
+            }
+
+        })
+    })
 </script>
 <script src="<?= "https://maps.googleapis.com/maps/api/js?key=" . GOOGLE_MAP_API_KEY . "&callback=initMap&libraries=&v=weekly" ?>" async></script>

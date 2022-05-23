@@ -19,6 +19,7 @@
                 </div>
                 <div class="col-md-6">
                     <input type="text" class="form-control" name="" id=""/>
+                    <a href="#" target="_blank"  style="color:#58bc4f;font-size: 10px;"><span class="fa fa-plus"></span> Manage Type</a>&nbsp;&nbsp;
                 </div>
             </div>
             <div class="row form_line">
@@ -27,6 +28,7 @@
                 </div>
                 <div class="col-md-6">
                     <input type="text" class="form-control" name="" id=""/>
+                    <a href="#" target="_blank"  style="color:#58bc4f;font-size: 10px;"><span class="fa fa-plus"></span> Manage Size</a>&nbsp;&nbsp;
                 </div>
             </div>
             <div class="row form_line">
@@ -35,6 +37,7 @@
                 </div>
                 <div class="col-md-6">
                     <input type="text" class="form-control" name="" id=""/>
+                    <a href="#" target="_blank"  style="color:#58bc4f;font-size: 10px;"><span class="fa fa-plus"></span> Manage Modules</a>&nbsp;&nbsp;
                 </div>
             </div>
             <div class="row form_line">
@@ -43,6 +46,7 @@
                 </div>
                 <div class="col-md-6">
                     <input type="text" class="form-control" name="" id=""/>
+                    <a href="#" target="_blank"  style="color:#58bc4f;font-size: 10px;"><span class="fa fa-plus"></span> Manage Inverter</a>&nbsp;&nbsp;
                 </div>
             </div>
             <div class="row form_line">
@@ -50,7 +54,13 @@
                     Proposed Offset
                 </div>
                 <div class="col-md-6">
-                    <input type="text" class="form-control" name="" id=""/>
+                <select name="acct_type" id="acct_type" class="input_select">
+                        <option  value=""></option>
+                        <option  value="1">Less than 30%</option>
+                        <?php for($x=31;$x<=120;$x++): ?>
+                            <option  value="<?= $x ?>"><?= $x ?>%</option>
+                        <?php endfor; ?>
+                    </select>
                 </div>
             </div>
             <div class="row form_line">
@@ -58,7 +68,12 @@
                     Proposed Solar $
                 </div>
                 <div class="col-md-6">
-                    <input type="text" class="form-control" name="" id=""/>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">$</span>
+                        </div>
+                        <input type="number" class="form-control input_select" name="" value="">
+                    </div>
                 </div>
             </div>
             <div class="row form_line">
@@ -66,7 +81,12 @@
                     Proposed Utility $
                 </div>
                 <div class="col-md-6">
-                    <input type="text" class="form-control" name="" id=""/>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">$</span>
+                        </div>
+                        <input type="number" class="form-control input_select" name="" value="">
+                    </div>
                 </div>
             </div>
             <div class="row form_line">
@@ -74,7 +94,12 @@
                     Proposed FTC
                 </div>
                 <div class="col-md-6">
-                    <input type="text" class="form-control" name="" id=""/>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">$</span>
+                        </div>
+                        <input type="number" class="form-control input_select" name="" value="">
+                    </div>
                 </div>
             </div>
             <div class="row form_line">
@@ -82,7 +107,12 @@
                     Annual Income
                 </div>
                 <div class="col-md-6">
-                    <input type="text" class="form-control" name="" id=""/>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">$</span>
+                        </div>
+                        <input type="number" class="form-control input_select" name="" value="">
+                    </div>
                 </div>
             </div>
             <hr>

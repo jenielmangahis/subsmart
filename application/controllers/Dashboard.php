@@ -159,8 +159,16 @@ class Dashboard extends Widgets {
         $this->page_data['jobsStatus']=$this->event_model->getAllJobsByCompanyId(logged('company_id'));
         $this->page_data['upcomingInvoice']=$this->event_model->getAllInvoices();
         $this->page_data['subs']=$this->event_model->getAllsubs();
-        $this->page_data['payment']=$this->event_model->getAllPayment();
+        $this->page_data['payment']=$this->event_model->getTodayStats(); // fetch current data sales on jobs , amount is on job_payments.amount
         $this->page_data['paymentInvoices']=$this->event_model->getAllPInvoices();
+
+        $this->page_data['lostAccounts']=$this->event_model->getAccountSituation('cancel_date'); // lost account count, if Cancel Date Office Info is set
+        $this->page_data['collectedAccounts']=$this->event_model->getAccountSituation(); // collection account count, if Collection Date Office Info is set
+
+        $this->page_data['techLeaderboards']=$this->event_model->getAccountSituation(); // collection account count, if Collection Date Office Info is set
+
+
+
         $this->page_data['jobsDone']= $this->event_model->getAllJobs();
         $this->page_data['salesLeaderboard']=$this->event_model->getSalesLeaderboard();
         $this->page_data['sales']=$this->event_model->getAllSales();
@@ -279,7 +287,7 @@ class Dashboard extends Widgets {
         $this->db->from('acs_billing billing');
         $this->db->join('acs_profile profile', 'profile.prof_id = billing.fk_prof_id', 'left');
         $this->db->where('profile.company_id', $companyId);
-        $this->db->where("STR_TO_DATE(billing.recurring_end_date, '%m/%d/%Y') < ADDDATE(STR_TO_DATE(recurring_end_date, '%m/%d/%Y'), INTERVAL 30 DAY)");
+        $this->db->where("STR_TO_DATE(billing.recurring_end_date, '%m/%d/%Y') BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 30 DAY)");
         $query = $this->db->get();
         $result = $query->row();
         return $result->total;

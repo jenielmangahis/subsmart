@@ -364,6 +364,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             $.each($('#editEmployeeForm').serializeArray(), function(i, field) {
                 values[field.name] = field.value;
             });
+            
             if (values['firstname'] && values['lastname'] && values['email'] && values['username'] && values['role']) {
                 $.ajax({
                     url: base_url + 'users/_update_employee',
@@ -377,7 +378,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             $("#modalEditEmployee").modal('hide');
                             Swal.fire({
                                 title: 'Success',
-                                text: "Employee record has been Updated.",
+                                text: "Employee record s has been Updated.",
                                 icon: 'success',
                                 showCancelButton: false,
                                 confirmButtonColor: '#32243d',
@@ -385,7 +386,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 confirmButtonText: 'Ok'
                             }).then((result) => {
                                 if (result.value) {
-                                    location.reload();
+                                location.reload()
                                 }
                             });
                         } else {

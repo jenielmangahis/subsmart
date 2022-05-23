@@ -304,7 +304,6 @@ class Customer_model extends MY_Model
         if (isset($company_id)) {
             $this->db->where('company_id', $company_id);
         } else {
-
             $this->db->where('user_id', getLoggedUserID());
         }
 

@@ -1106,6 +1106,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             $.each($('#editEmployeeForm').serializeArray(), function(i, field) {
                 values[field.name] = field.value;
             });
+            console.log(values);
             if (values['firstname'] && values['lastname'] && values['email'] && values['username'] && values['role']) {
                 $.ajax({
                     url: base_url + 'users/_update_employee',
@@ -1127,7 +1128,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 confirmButtonText: 'Ok'
                             }).then((result) => {
                                 if (result.value) {
-                                    location.reload();
                                 }
                             });
                         } else {

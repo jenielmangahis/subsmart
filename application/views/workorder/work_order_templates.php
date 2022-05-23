@@ -54,6 +54,17 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <!-- <span>Restore Balance</span> -->
                         </span>
                     </div>
+                    <div class="product active-template" style="border: solid #F8F8F8 2px;border-radius: 25px;box-shadow: 3px 6px #E7E6E6;" id="solar-template">
+                        <div class="effect-1"></div>
+                        <div class="effect-2"></div>
+                        <!-- <div class="content">
+                        <div class="sleep"></div>
+                        </div> -->
+                        <span class="title">
+                        Solar Template
+                        <!-- <span>Restore Balance</span> -->
+                        </span>
+                    </div>
                     <div class="product active-template" style="border: solid #F8F8F8 2px;border-radius: 25px;box-shadow: 3px 6px #E7E6E6;" id="other-template">
                         <div class="effect-1"></div>
                         <div class="effect-2"></div>
@@ -208,6 +219,38 @@ $(document).on('click','#alarm-template',function(){
     var template = $('#template_id').val();
     // alert(template);
     var temptitle = $('#temptitle').html('Alarm System');
+    $("#myModal").modal("show");
+
+    $(".set_template").click(function() {
+        $.ajax({
+            url:"<?php echo base_url(); ?>workorder/changeTemplate",
+            type: "POST",
+            data: {template : template },
+            success: function(dataResult){
+              // alert('success');
+                $("#myModal").modal("hide");
+                $("#successm").modal("show");
+                $('#selecting_form').load(window.location.href +  ' #selecting_form');
+            },
+                error: function(response){
+                alert('Error'+response);
+       
+                }
+	    });
+    });
+
+    $(".workordermodal").click(function() {
+        $("#successm").modal("hide");
+    });
+});
+
+$(document).on('click','#solar-template',function(){
+    // alert('alarm');
+    var template1 = '1';
+    var temp = $('#template_id').val(template1);
+    var template = $('#template_id').val();
+    // alert(template);
+    var temptitle = $('#temptitle').html('Solar System');
     $("#myModal").modal("show");
 
     $(".set_template").click(function() {

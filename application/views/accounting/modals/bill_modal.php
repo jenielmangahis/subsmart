@@ -112,17 +112,17 @@
                                             <h2 class="text-right">
                                                 <?php if(isset($bill)) : ?>
                                                     <?php if(!$is_copy) : ?>
+                                                        <span class="transaction-total-amount">
                                                         <?php if($bill->status === "1") : ?>
-                                                            <span class="transaction-total-amount">
                                                             <?php
                                                                 $amount = '$'.number_format(floatval($bill->remaining_balance), 2, '.', ',');
                                                                 $amount = str_replace('$-', '-$', $amount);
                                                                 echo $amount;
                                                             ?>
-                                                            </span>
                                                         <?php else : ?>
                                                             PAID
                                                         <?php endif; ?>
+                                                        </span>
                                                     <?php else : ?>
                                                         <span class="transaction-total-amount">
                                                             <?php
@@ -149,40 +149,40 @@
                                             <?php if(isset($bill)) : ?>
                                                 <?php if(!$is_copy) : ?>
                                                     <?php if($bill->status === "1") : ?>
-                                                        <div class="d-flex justify-content-end">
-                                                            <button class="btn btn-secondary mr-3" type="button">
-                                                                Schedule online payment
-                                                            </button>
-                                                            <button class="btn btn-transparent" type="button">
-                                                                Mark as paid
+                                                    <div class="d-flex justify-content-end">
+                                                        <button class="btn btn-secondary mr-3" type="button">
+                                                            Schedule online payment
                                                         </button>
-                                                        </div>
-                                                        <?php if(count($bill_payments) > 0) : ?>
-                                                        <div class="btn-group dropleft d-inline-block float-right">
-                                                            <button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="btn text-info p-0">
-                                                                <?=count($bill_payments)?> payment made (<?=$total_payment?>)
-                                                            </button>
-                                                            <div class="dropdown-menu p-3" id="payments-dropdown" style="min-width: 275px">
-                                                                <table class="table bg-white m-0">
-                                                                    <thead>
+                                                        <button class="btn btn-transparent" type="button">
+                                                            Mark as paid
+                                                    </button>
+                                                    </div>
+                                                    <?php endif; ?>
+                                                    <?php if(count($bill_payments) > 0) : ?>
+                                                    <div class="btn-group dropleft d-inline-block float-right">
+                                                        <button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="btn text-info p-0">
+                                                            <?=count($bill_payments)?> payment made (<span id="total-payment-amount"><?=$total_payment?></span>)
+                                                        </button>
+                                                        <div class="dropdown-menu p-3" id="payments-dropdown" style="min-width: 275px">
+                                                            <table class="table bg-white m-0">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>Date</th>
+                                                                        <th>Amount applied</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <?php foreach($bill_payments as $payment) : ?>
+                                                                        <?php $paymentDetails = $this->vendors_model->get_bill_payment_item_by_bill_id($payment->id, $bill->id); ?>
                                                                         <tr>
-                                                                            <th>Date</th>
-                                                                            <th>Amount applied</th>
+                                                                            <td><a href="#" class="text-info"><?=date("m/d/Y", strtotime($payment->payment_date))?></a></td>
+                                                                            <td class="text-right">$<?=number_format(floatval($paymentDetails->total_amount), 2, '.', ',')?></td>
                                                                         </tr>
-                                                                    </thead>
-                                                                    <tbody>
-                                                                        <?php foreach($bill_payments as $payment) : ?>
-                                                                            <?php $paymentDetails = $this->vendors_model->get_bill_payment_item_by_bill_id($payment->id, $bill->id); ?>
-                                                                            <tr>
-                                                                                <td><a href="#" class="text-info"><?=date("m/d/Y", strtotime($payment->payment_date))?></a></td>
-                                                                                <td class="text-right">$<?=number_format(floatval($paymentDetails->total_amount), 2, '.', ',')?></td>
-                                                                            </tr>
-                                                                        <?php endforeach; ?>
-                                                                    </tbody>
-                                                                </table>
-                                                            </div>
+                                                                    <?php endforeach; ?>
+                                                                </tbody>
+                                                            </table>
                                                         </div>
-                                                        <?php endif; ?>
+                                                    </div>
                                                     <?php endif; ?>
                                                 <?php endif; ?>
                                             <?php endif; ?>
