@@ -1028,7 +1028,8 @@
           url: base_url + "trac360/getusergeoposition/" + vUser.user_id,
           success: function(data){
             var result = jQuery.parseJSON(data);
-            if(result.length > 0){
+            //if(result.length > 0){
+            if(data){
               var new_lat = result.latitude;
               var new_lng = result.longitude;
 

@@ -24,13 +24,6 @@
         border: solid 2px #adff2f !important;
         color:#adff2f;
     }
-    #sidebar ul li.active > a {
-        background: #45a73c !important;
-        color: #fff !important;
-    }
-    #sidebar ul li:active{
-        background: #45a73c;
-    }
     .dropdown-toggle::after {
         top: 25px !important;
     }
@@ -50,22 +43,71 @@
                 <path d="M3.3 4H15c.6 0 1 .4 1 1s-.4 1-1 1H3.3l2.2 2.2c.4.4.4 1.1 0 1.5-.4.4-1.1.4-1.5 0L.3 6c-.2-.3-.3-.6-.3-.9V5v-.1c0-.3.1-.6.3-.9L4 .3c.4-.4 1.1-.4 1.5 0 .4.4.4 1.1 0 1.5L3.3 4zM8 8h7c.6 0 1 .4 1 1s-.4 1-1 1H8c-.6 0-1-.4-1-1s.4-1 1-1zm0 4h7c.6 0 1 .4 1 1s-.4 1-1 1H8c-.6 0-1-.4-1-1s.4-1 1-1z"></path>
             </svg>
         </span>
-        <br><br>
-        <li class="submenus <?= ($this->uri->uri_string() == 'job' || $this->uri->uri_string() == 'job/new_job1') ? "active" : "";  ?>">
-            <a href="<?= base_url('job') ?>" title="Jobs"><span class="fa fa-briefcase"></span>Jobs</a>
+        <li class="nav-header desktop-only">
+			<a href="<?php echo url('/job/new_job')?>" class="btn btn-tranparent acct-btn-add text-center" style="border: 2px solid white;"><i class="fa fa-plus" style="margin-right: 20px;"></i> New</a>
         </li>
-        <li class="submenus <?= ($this->uri->uri_string() == 'job/job_tags') ? "active" : "";  ?>">
-            <a href="<?= base_url('job/job_tags') ?>" title="Job Tags"><span class="fa fa-tags"></span>Job Tags</a>
+        <li class="submenus dropright">
+            <a href="#submenuJob" onclick="dropdownAccounting(this)" class="dropdown-toggle"><i class="fa fa-briefcase" style="margin-right: 20px"></i>Job</a>
+            <ul class="collapse list-unstyled" id="submenuJob">
+				<li>
+					<a href="<?php echo url('/job')?>">Job List</a>
+                </li>
+                <li>
+                    <a href="<?php echo url('/job/new_job')?>">New Job</a>
+                </li>
+            </ul>
         </li>
-        <li class="submenus <?= ($this->uri->uri_string() == 'job/job_types') ? "active" : "";  ?>">
-            <a href="<?= base_url('job/job_types') ?>" title="Job Types"><span class="fa fa-book"></span>Job Types</a>
+        <li class="submenus dropright">
+            <a href="#submenuForm" onclick="dropdownAccounting(this)" class="dropdown-toggle"><i class="fa fa-credit-card" style="margin-right: 20px"></i>Forms</a>
+            <ul class="collapse list-unstyled" id="submenuForm">
+				<li>
+					<a href="<?php echo url('/estimate')?>">Estimate</a>
+                </li>
+                <li>
+                     <a href="<?php echo url('/workorder')?>">Work Orders</a>
+                </li>
+                <li>
+                     <a href="<?php echo url('/invoice')?>">Invoice</a>
+                </li>
+             </ul>
         </li>
-        <li class="submenus <?= ($this->uri->uri_string() == 'job/bird_eye_view') ? "active" : "";  ?>">
-            <a href="<?= base_url('job/bird_eye_view') ?>" title="Bird Eye View"><span class="fa fa-users"></span>Bird Eye View</a>
+        <li class="submenus dropright">
+            <a href="#submenuSetting" onclick="dropdownAccounting(this)" class="dropdown-toggle"><i class="fa fa-cogs" style="margin-right: 20px"></i>Settings</a>
+                <ul class="collapse list-unstyled" id="submenuSetting">
+                    <li>
+                        <a href="<?php echo base_url();?>job/job_types">Job Type</a>
+                    </li>
+                    <li>
+                        <a href="#">Priority</a>
+                    </li>
+                    <li>
+                        <a href="#">Status</a>
+                    </li>
+                    <li>
+                        <a href="#">Custom Form</a>
+                    </li>
+                </ul>
         </li>
-
-        <!-- <li class="submenus <?= ($this->uri->uri_string() == 'job/job_typess') ? "active" : "";  ?>">
-            <a href="<?= base_url('job/job_time_settings') ?>" title="Profile Settings"><span class="fa fa-clock-o"></span>Time Window Settings</a>
-        </li> -->
     </ul>
 </nav>
+
+<!-- Modal -->
+<div class="modal fade" id="addBtnModal" tabindex="-1" role="dialog" aria-labelledby="addBtnModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>

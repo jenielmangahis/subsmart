@@ -135,7 +135,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 		list-style: none;
 	}
 	.payment-method li{
-		margin-bottom: 35px;
+		margin-bottom: 10px;
 	}
 	.payment-method li input{
 		margin-right: 10px;
@@ -195,21 +195,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 	    float: left;
 	    margin-left: 12px;
 	    margin-top: 28px;
-	}
-	.terms{
-		overflow-y: scroll;
-		height: 500px;
-		width: 100%;
-		border: 1px solid #DDD;
-		padding: 10px;
-	}
-	.terms-heading{
-		display: inline-block;
-		margin-bottom: 12px;
-		font-weight: 300;
-	}
-	.terms-content{
-		/*margin-left: 17px;*/
 	}
 </style>
 <section page="register" message="" class="ng-isolate-scope">
@@ -428,10 +413,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 								          			<input type="radio" id="stripe" name="payment_method" value="stripe">
 								          			<img src="<?php echo $url->assets ?>img/stripe-logo.png" alt="" style="height: 62px;">
 								          		</li>
-								          		<li>
-								          			<input type="radio" id="converge" name="payment_method" value="converge">
-								          			<img src="<?php echo $url->assets ?>img/converge-logo.png" alt="" style="height: 62px;">
-								          		</li>
 								          	</ul>	
 								          	<hr />
 								          	<!-- Grid row -->
@@ -457,7 +438,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 											    <!-- Grid column -->
 											  </div>
 											  <!-- Grid row -->
-											  <a href="javascript:void(0);" class="btn-terms-agreement" style="margin-top: 29px;display: block;">Service Subscription License Agreement</a>
 
 								      	  </div>
 								          <button class="btn btn-indigo btn-rounded prevBtn float-left" data-key="step-2" type="button">Previous</button>
@@ -505,126 +485,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 						            </div>
 						            <div class="modal-body">
 						                <p>Verifying code...</p>
-						            </div>
-						        </div>
-
-						    </div>
-						</div>
-
-						<!-- MODAL USE OFFER CODE -->
-						<div id="modalTermsAgreement" class="modal fade" role="dialog">
-						    <div class="modal-dialog modal-lg">
-						        <!-- Modal content-->
-						        <div class="modal-content">
-						            <div class="modal-header">
-						                <h4 class="modal-title">Software as a Service Subscription License Agreement</h4>
-						                <button type="button" class="close" data-dismiss="modal">&times;</button>
-						            </div>
-						            <div class="modal-body" style="padding: 0px;">
-						                <div class="terms">
-										  	<p>Software as a Service Subscription License Agreement</p>
-											<p>DEFINITIONS</p>
-											<ol style="list-style-position:inside;padding: 5px;">
-												<li>a. Service(s) - Value-added software applications that nSmarTrac licenses to Customer on a subscription basis.</li>
-												<li>b. Customer - Party to which nSmarTrac licenses Services.</li>
-												<li>c. End-User - Party that uses nSmarTrac Services.</li>
-												<li>d. Activation - Process by which nSmarTrac provides Customer with access to the Service.</li>
-											</ol>
-
-											<ol style="list-style-position:inside;padding: 5px;">
-												<li>
-													<h5 class="terms-heading">FEES, ACTIVATION, BILLING START DATE, TERMINATION DATE</h5>
-													<p class="terms-content">
-														FEES AND ACTIVATION. The amount indicated as Monthly Charge (Min.) on this Agreement represents the minimum amount due from Customer on a monthly basis nSmarTrac will invoice customer in advance for each billing period (e.g. monthly, quarterly or annually) based on the Services in use at the start of the period, but not less than the Monthly Charge (Min). nSmarTrac will invoice customer in arrears for any Services added during the previous billing period.
-													</p>
-
-													<p class="terms-content">
-														BILLING START DATE. Billing Start Date shall be the date of Activation or three (3) calendar days from the date of the last signature on this Agreement, whichever is earlier.
-													</p>
-												</li>
-											</ol>
-											<p>TERMINATION DATE. Termination date (Term Date) of this Agreement shall be up to SIXTY (60) calendar months from the Billing Start Date.</p>
-
-											<ol style="list-style-position:inside;padding: 5px;">
-											 <li>
-											 	<h5 class="terms-heading">RENEWAL & REFUNDS</h5>
-												<p class="terms-content">This Agreement shall be renewed automatically for successive ONE (1) Full term periods from the termination date (Term Date) of this Agreement unless Customer provides nSmarTrac with at least 90 days notice indicating that the Agreement shall not be renewed automatically. nSmarTrac will not provide a refund for partial months and will stop providing the Service on the termination date without a written cancellation notice. nSmarTrac shall have the right to revise the per user fee at the expiration of this Agreement, by providing a written notice to Customer 15 days prior to the Term Date. Upon renewal the Monthly Charge (Min) shall automatically adjust to reflect the then current charges based on usage.</p>
-											 </li>
-											 <li>
-											 	<h5 class="terms-heading">INTELLECTUAL AND PROPERTY RIGHTS</h5>
-												<p class="terms-content">nSmarTrac or its suppliers maintain all Intellectual and Property rights to the Services that it sells to the Customer. Customer is granted only a personal, nontransferable, nonsublicensable, nonexclusive right to use the Services solely for the internal purposes of Customer. Customer agrees not to resell, rent or lease the Services or create derivative works from the Services either directly or through a third party, or to reverse assemble, decompile, or otherwise attempt to derive source code from the Service. Customer will not remove or alter any trademarks, or other proprietary notices, legends, symbols, or labels appearing on or in copies of materials delivered to Customer in connection with the Services. nSmarTrac eserves the right to change and enhance the Services at any time. • If the supplier or licensor of any component of the Service limits the right or ability of nSmarTrac to provide such components to Customer, nSmarTrac shall have the right to replace the component with a reasonably equivalent alternative. Customer agrees not to directly license any component of the Service from a third party without the written permission of nSmarTrac, and any such direct license shall not alter Customer’s obligations under this Agreement.</p>
-											 </li>
-											 <li>
-											 	<h5 class="terms-heading">WARRANTY</h5>
-											    <p class="terms-content">nSmarTrac warrants that it has full power and authority to sell Services to Customer.</p>
-											 </li>
-											</ol>
-
-											<ol style="list-style-position:inside;padding: 5px;">
-												<li>
-													<h5 class="terms-heading">COMPLIANCE WITH LAW</h5>
-													<p class="terms-content">Both parties shall comply with all applicable laws relating to the Services, including without limitation export and re-export restrictions and regulations of the Department of Commerce or other United States agency or authority.</p>
-												</li>
-												<li>
-												 	<h5 class="terms-heading">DISCLAIMER</h5>
-													<p class="terms-content">EXCEPT AS SET FORTH IN THIS AGREEMENT, NSMARTRAC DISCLAIMS ALL WARRANTIES WITH REGARD TO THE SERVICES, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR USE, OR NON-INFRINGEMENT. NSMARTRAC DOES NOT ENDORSE ANY TOOL OR SOFTWARE AS BEING IDEAL FOR A PARTICULAR USE. IN ADDITION, NSMARTRAC OFFERS NO GUARANTEES OR WARRANTIES WITH REGARD TO THE RESULTS OF USING ITS SERVICES.</p>
-												 </li>
-												 <li>
-												 	<h5 class="terms-heading">CONFIDENTIALITY</h5>
-													<p class="terms-content">nSmarTrac and Customer both acknowledge that in the course of this Agreement, either party may obtain certain confidential and/or propriety information of the other. Each party hereby agrees that all such information communicated to it by the other party, its affiliates, or customers, whether before or after the Effective Date, shall be used only for the purpose of this Agreement, and shall not be disclosed without the prior written consent of the other party, except as may be necessary by reason of legal, accounting, or regulatory requirements beyond either party's reasonable control, but each party subject to any such requirements shall give prompt notice thereof to the other party to permit it nSmarTrac to seek a protective order or other legal remedy to prevent such disclosure. Customer grants nSmarTrac the right to publicly disclose Customer's use of nSmarTrac services. In no case shall such disclosure include the Terms and Conditions of this Agreement. Each party agrees that a remedy of damages may not be sufficient for a breach of this Section 6, and agrees that either party may obtain a temporary restraining order or temporary or permanent injunction against any breach or threatened breach of this Section 6.</p>
-												 </li>
-												 <li>
-												 	<h5 class="terms-heading">SERVICE SUPPORT</h5>
-													<p class="terms-content">All support will be limited to the usage of nSmarTrac Services alone, and will not include any support on other Customer services. Support provided by nSmarTrac is described in nSmarTrac ' support procedure, which will be provided to Customer upon completion of Activation. Customer is responsible for providing support to Customer's End-Users.</p>
-												 </li>
-												 <li>
-												 	<h5 class="terms-heading">TERMINATION; DAMAGES</h5>
-													<p class="terms-content">Either party may terminate this Agreement upon written notice if the other party fails to cure any material breach of this Agreement within 30 days after receiving written notice of such breach; provided, however, that the period to cure breach with respect to payment shall be 10 days. In the event of such a termination by Customer, nSmarTrac shall refund to Customer any prepaid amounts applicable to the period following the effective date of termination, but such termination shall be Customer’s sole and exclusive remedy in case of a material breach of this Agreement by nSmarTrac. nSmarTrac assumes no responsibility for any problems or damages that may occur on the Customer's hardware.</p>
-												 </li>
-												 <li>
-												 	<h5 class="terms-heading">LIMITATION OF LIABILITY</h5>
-													<p class="terms-content">nSmarTrac and its suppliers and licensors shall have no liability, pursuant to this agreement or otherwise, for special, incidental, consequential, punitive, or exemplary damages, even if nSmarTrac or such suppliers and licensors have been advised of the possibility of such damages. In no event shall nSmarTrac ' liability for any reason and upon any cause of action whatsoever exceed the payments made by Customer to nSmarTrac during the twelve months preceding the date of the event giving rise to liability. Neither party shall be liable to the other pursuant to this Agreement for any amounts representing loss of profits or loss of business.</p>
-												 </li>
-												 <li>
-												 	<h5 class="terms-heading">FORCE MAJEURE</h5>
-													<p class="terms-content">nSmarTrac shall not be liable to the Customer for any delay or failure to provide access to the Service due to causes beyond its reasonable control.</p>
-												 </li>
-												 <li>
-												 	<h5 class="terms-heading">ASSIGNMENT</h5>
-													<p class="terms-content">Customer may not assign, without prior written consent of nSmarTrac its rights, duties or obligations under this Agreement, in whole or in part, to any person or entity. Any such attempted assignment or sub-license shall be void and shall constitute a material breach of this Agreement.</p>
-												 </li>
-												 <li>
-												 	<h5 class="terms-heading">NO WAIVER</h5>
-													<p class="terms-content">The waiver or failure of either party to exercise any right in any respect provided for herein shall not be deemed a waiver of any further right hereunder.</p>
-												 </li>
-												 <li>
-												 	<h5 class="terms-heading">ENTIRE AGREEMENT</h5>
-													<p class="terms-content">This Agreement, and the schedules attached hereto constitute the entire Agreement between the parties hereto pertaining to the subject matter hereof, and any and all other written or oral agreements existing between the parties hereto are expressly canceled. The schedules attached to this Agreement are an integral part of this Agreement and are incorporated into this Agreement.</p>
-												 </li>
-												 <li>
-												 	<h5 class="terms-heading">GOVERNING LAW.</h5>
-													<p class="terms-content">This Agreement and all acts and transactions pursuant hereto and the rights and obligations of the parties hereto shall be governed, construed and interpreted in accordance with the laws of the State of Texas without giving effect to principles of conflicts of law. Subject to the Section titled "Arbitration", the parties hereto consent to the jurisdiction of the state and federal courts located in Travis County, Texas.</p>
-												 </li>
-												 <li>
-												 	<h5 class="terms-heading">ARBITRATION</h5>
-													<p class="terms-content">Any controversies arising out of the terms of this Agreement or its interpretation shall be settled through a mediation-arbitration approach in Escambia County, Florida. The parties agree to first try to resolve the dispute informally with the help of a mutually agreed-upon mediator.</p>
-												 </li>
-												 <li>
-												 	<h5 class="terms-heading">ATTORNEY'S FEES</h5>
-													<p class="terms-content">If any action at law or in equity (including mediation and arbitration) is necessary to enforce or interpret the terms of any of this Agreement, the prevailing party shall be entitled to reasonable attorney's fees, costs and necessary disbursements in addition to any other relief to which such party may be entitled.</p>
-												 </li>
-												 <li>
-												 	<h5 class="terms-heading">ENFORCEABILITY</h5>
-													<p class="terms-content">If one or more provisions of this Agreement are held to be unenforceable under applicable law, the parties agree to renegotiate such provision in good faith. In the event that the parties cannot reach a mutually agreeable and enforceable replacement for such provision, then (a) such provision shall be excluded from this Agreement, (b) the balance of this Agreement shall be interpreted as if such provision were so excluded, and (c) the balance of this Agreement shall be enforceable in accordance with its terms.</p>
-												 </li>
-											</ol>
-											<ol style="list-style-position:inside;padding: 5px;">
-												<li>
-													<h5 class="terms-heading">THIRD PARTY BENEFICIARY</h5>
-													<p class="terms-content">The suppliers of any products and services used in the Services and their licensors shall be deemed to be third party beneficiaries of this Agreement.</p>
-												</li>
-											</ol>
-										  </div>
 						            </div>
 						        </div>
 
@@ -685,10 +545,6 @@ $(function(){
         $("span." + step).addClass("btn-indigo");
         $("#" + step).show();
         $("#" + curStepBtn).hide();
-    });
-
-    $(".btn-terms-agreement").click(function(){
-    	$("#modalTermsAgreement").modal('show');
     });
 
     allNextBtn.click(function(){
@@ -768,7 +624,7 @@ $(function(){
 					        $("." + curStepBtn + "-error-msg").html("");	
 					        $("#ajax-authentication-alert-container").html("");               			
 	               		} else {
-	               			$("#ajax-authentication-alert-container").html('<div class="alert alert-danger" role="alert">Your credential already register to our system, please try another.</div>');
+	               			$("#ajax-authentication-alert-container").html('<div class="alert alert-info" role="alert">Your credential already register to our system, please try another.</div>');
 	               		}
 	                  	
 	               }
@@ -835,7 +691,7 @@ $(function(){
     step3bBtnPrcPayment.click(function(e){
     	e.preventDefault();
     	var payment_method = $('input[name="payment_method"]:checked').val();    	    	
-    	if( payment_method == 'paypal' || payment_method == 'converge' ){
+    	if( payment_method == 'paypal' ){
     		$( "#subscribe-form-payment" ).submit();
     	}else{
     		$("#step-3").hide();

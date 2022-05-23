@@ -1,12 +1,12 @@
 .form-san-marino-blue .form-header {
-    background-color:#4C6BB5  /* !important */;
+    background-color:#4C6BB5 !important;
 }
 
 form.form-san-marino-blue button, .form-san-marino-blue div.Signature div.container button {
-    background-color: #E8BC63  /* !important */;
-    color: #fff  /* !important */;
+    background-color: #E8BC63 !important;
+    color: #fff !important;
 }
 
 .form-san-marino-blue input, .form-san-marino-blue textarea, .form-san-marino-blue select, .form-san-marino-blue div.Signature div.container {
-    border-color: #4C6BB5  /* !important */;
+    border-color: #4C6BB5 !important;
 }

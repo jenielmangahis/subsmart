@@ -1,51 +1,22 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
-<style>
-.page-title, .box-title {
-  font-family: Sarabun, sans-serif !important;
-  font-size: 1.75rem !important;
-  font-weight: 600 !important;
-  padding-top: 5px;
-}
-.pr-b10 {
-  position: relative;
-  bottom: 10px;
-}
-.p-40 {
-  padding-top: 40px !important;
-}
-.p-20 {
-  padding-top: 25px !important;
-  padding-bottom: 25px !important;
-  padding-right: 20px !important;
-  padding-left: 20px !important;
-}
-@media only screen and (max-width: 600px) {
-  .p-40 {
-    padding-top: 0px !important;
-  }
-  .pr-b10 {
-    position: relative;
-    bottom: 0px;
-  }
-}
-</style>
+
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/schedule'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
-        <div class="container-fluid p-40">
-            <div class="card card_holder mt-0 p-20">
+        <div class="container-fluid">
+            <div class="card card_holder">
                 <div class="page-title-box">
                     <div class="row align-items-center">
                         <div class="col-sm-6">
-                            <h3 class="page-title">Task Hub</h3>
+                            <h1 class="page-title">Task Hub</h1>
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item active">Listing tasks associated to the user.</li>
                             </ol>
                         </div>
-                        <div class="col-sm-6 pr-b10">
+                        <div class="col-sm-6">
                             <div class="float-right d-none d-md-block">
                                 <div class="dropdown">
                                     <a href="#" class="btn btn-primary" id="btn-th-open-search"><i class="fa fa-search"></i> Search Task</a>
@@ -54,9 +25,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="alert alert-warning mt-0 mb-2" role="alert">
-                    <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">You can set up Tasks for yourself and assign them to other people in your organization. To Add a Task, in the Account, click on the ‘ + Add ‘ button. There are dropdown options for each field and a date picker.</span>
                 </div>
                 <!-- end row -->
                 <section class="content">
@@ -112,7 +80,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     <!-- /.box -->
                 </section>
                 <!-- end row -->
-            </div>
+            </div>  
         </div>
         <!-- end container-fluid -->
     </div>
@@ -142,7 +110,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     <option value="<?php echo $status->status_id; ?>"><?php echo $status->status_text; ?></option>
                 <?php } ?>
               </select>
-            </div>
+            </div>  
         </div>
         <h6 class="mt-1">Filter By Date Created</h6>
         <div class="row mt-4">
@@ -153,13 +121,13 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             <div class="col-md-6 form-group">
                 <label for="ts-to-date">To</label>
                 <input type="date" class="form-control" name="ts-to-date" id="ts-to-date" required autofocus />
-            </div>
+            </div>    
         </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" id="btn-modal-taskhub-search">Search</button>
       </div>
-    </div>
+    </div>  
   </div>
 </div>
 
@@ -173,7 +141,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
       <div class="modal-body">
-        <p id="modal-taskhub-entry-error-alert-message"><?php if(isset($error)){ echo trim($error); } ?></p>
+        <p id="modal-taskhub-entry-error-alert-message"><?php if(isset($error)){ echo trim($error); } ?></p>  
       </div>
     </div>
 
@@ -191,7 +159,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         $('#btn-th-open-search').click(function(e){
             e.preventDefault();
 
-            $('#modal-taskhub-search').modal('show');
+            $('#modal-taskhub-search').modal('show');    
         });
 
         $('#btn-modal-taskhub-search').click(function(){
@@ -219,14 +187,14 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                             append += '<td>'+ task.status_text +'</td>';
                             append += '<td>'+ task.date_created_formatted + '</td>';
                             append += '<td>' +
-                                      '<a href="'+ base_url +'taskhub/entry/'+ task.task_id +'" class="btn btn-sm btn-default" title="Edit Task" data-toggle="tooltip"><i class="fa ' +
+                                      '<a href="'+ base_url +'taskhub/entry/'+ task.task_id +'" class="btn btn-sm btn-default" title="Edit Task" data-toggle="tooltip"><i class="fa ' + 
                                       'fa-pencil"></i></a>' +
 
                                       '<a href="'+ base_url +'taskhub/addupdate/'+ task.task_id +'" class="btn btn-sm btn-default" title="Add Update" data-toggle="tooltip"><i class="fa ' +
                                       'fa-sticky-note-o"></i></a>' +
 
                                       '<a href="'+ base_url +'taskhub/view/'+ task.task_id +'" class="btn btn-sm btn-default" title="View Comments" data-toggle="tooltip"><i class="fa fa-commenting-o"></i></a>' +
-
+                                            
                                       '</td>';
                         append += '</tr>';
                     });
@@ -243,8 +211,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     $('#modal-taskhub-entry-error-alert-title').text(textStatus);
                     $('#modal-taskhub-entry-error-alert-message').text(errorThrown);
                     $('#modal-taskhub-entry-error-alert').modal('show');
-                }
-            });
+                } 
+            }); 
         });
     });
 </script>

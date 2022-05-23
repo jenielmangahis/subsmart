@@ -101,21 +101,62 @@
         #container2 { width: 90%; }
     }
 
-    .individual-module h6 {
-        transform: rotate(-90deg);
-        width: 190px;
-        text-align: center;
-        background: #34203f;
-        padding: 5px;
-        position: absolute;
-        float: left;
-        left: -120px;
-        top: 58px;
-        color: white;
-        border-radius: 10px 10px 0px 0;
-        cursor: pointer;
+    .profile {
+        /**background-color: #a4508b;
+        background-image: linear-gradient(326deg, #a4508b 0%, #5f0a87 74%); */
+        background-image: url('/assets/img/customer/profile2.png') !important;
     }
-
+    .customizable {
+        background-image: url('/assets/img/customer/customizable.png') !important;
+    }
+    .billings {
+        background-image: url('/assets/img/customer/billing2.png') !important;
+    }
+    .alarm {
+        background-image: url('/assets/img/customer/alarm_im.png') !important;
+    }
+    .tech {
+        background-image: url('/assets/img/customer/tech2.png') !important;
+    }
+    .access {
+        background-image: url('/assets/img/customer/access2.png') !important;
+    }
+    .admin {
+        background-image: url('/assets/img/customer/admin.png') !important;
+    }
+    .office {
+        background-image: url('/assets/img/customer/office2.png') !important;
+    }
+    .owner {
+        background-image: url('/assets/img/customer/owner2.png') !important;
+    }
+    .contract {
+        background-image: url('/assets/img/customer/contract2.png') !important;
+    }
+    .clients {
+        background-image: url('/assets/img/customer/client.png') !important;
+    }
+    .score {
+        background-image: url('/assets/img/customer/scores.png') !important;
+    }
+    .documents {
+        background-image: url('/assets/img/customer/documents.png') !important;
+    }
+    .tasks {
+        background-image: url('/assets/img/customer/tasks.png') !important;
+    }
+    .dispute {
+        background-image: url('/assets/img/customer/dispute_stat.png') !important;
+    }
+    .memos {
+        background-image: url('/assets/img/customer/memo.png') !important;
+    }
+    .invoices {
+        background-image: url('/assets/img/customer/invoices.png')!important;
+    }
+    .assigned {
+        background-image: url('/assets/img/customer/assigned.png')!important;
+    }
     .client {
         background-image: url('https://app.creditrepaircloud.com/application/images/client_new.png');
         width: 530px;
@@ -358,32 +399,32 @@
     }
 
     @media (max-width: 767px) {
-        .client, .project {
-            height: auto !important;
-            width: 100% !important;
-            padding: 30px 30px;
-            margin-bottom: 40px;
-        }
-        div.ui-state-default div a {
-            margin-left: 16px;
-        }
-        table.widget_client {
-            position: relative;
-            right: 25px;
-        }
-        div#chart_column, .contactrighttxt {
-            position: relative;
-            left: 20px;
-        }
-        .assigncontactlist.normaltext1 img {
-            margin: 0 auto;
-        }
-        div.ui-state-default {
-            padding: 30px 10px;
-            clear: both;
-            margin-bottom: 40px;
-            height: auto;
-        }
+      .client, .project {
+          height: auto !important;
+          width: 100% !important;
+          padding: 30px 30px;
+          margin-bottom: 40px;
+      }
+      div.ui-state-default div a {
+          margin-left: 16px;
+      }
+      table.widget_client {
+          position: relative;
+          right: 25px;
+      }
+      div#chart_column, .contactrighttxt {
+          position: relative;
+          left: 20px;
+      }
+      .assigncontactlist.normaltext1 img {
+          margin: 0 auto;
+      }
+      div.ui-state-default {
+          padding: 30px 10px;
+          clear: both;
+          margin-bottom: 40px;
+          height: auto;
+      }
     }
 
     @media only screen and (max-width: 600px) {

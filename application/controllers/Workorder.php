@@ -15,11 +15,11 @@ class Workorder extends MY_Controller
         parent::__construct();
 
         $this->checkLogin();
-        $this->load->model('accounting_invoices_model');
+
         $this->page_data['page']->title = 'Workorder Management';
 
         $this->page_data['page']->menu = (!empty($this->uri->segment(2))) ? $this->uri->segment(2) : 'workorder';
-        $this->load->model('Workorder_model', 'workorder_model');
+        // $this->load->model('Workorder_model', 'workorder_model');
         $this->load->model('Jobs_model', 'jobs_model');
 
         $user_id = getLoggedUserID();
@@ -269,23 +269,6 @@ class Workorder extends MY_Controller
         }
 
         $this->load->view('workorder/add2', $this->page_data);
-    }
-
-    public function add_new()
-    {
-
-        $user_id = logged('id');
-        // $parent_id = $this->db->query("select parent_id from users where id=$user_id")->row();
-
-        // if ($parent_id->parent_id == 1) { // ****** if user is company ******//
-
-        //     $this->page_data['users'] = $this->users_model->getAllUsersByCompany($user_id);
-        // } else {
-
-        //     $this->page_data['users'] = $this->users_model->getAllUsersByCompany($parent_id->parent_id, $user_id);
-        //}
-        $this->page_data['customers'] = $this->accounting_invoices_model->getCustomers();
-        $this->load->view('workorder/add', $this->page_data);
     }
 
     public function addnew()
@@ -1099,128 +1082,6 @@ class Workorder extends MY_Controller
         redirect('workorder/edit_checklist/'.$cid);
 
     }
-
-    public function savenewWorkOrder(){
-        postAllowed();
-
-        $post = $this->input->post();
-
-//        echo '<pre>'; print_r($post); die;
-
-        $user = (object)$this->session->userdata('logged');
-
-        //
-        if (is_array(post('item'))) {
-
-            $items = post('item');
-            $quantity = post('quantity');
-            $price = post('price');
-            $discount = post('discount');
-            $type = post('item_type');
-            $location = post('location');
-
-            $itemArray = array();
-
-            foreach (post('item') as $key => $val) {
-
-                $itemArray[] = array(
-
-                    'item' => $items[$key],
-                    'item_type' => $type[$key],
-                    'quantity' => $quantity[$key],
-                    'location' => $location[$key],
-                    'discount' => $discount[$key],
-                    'price' => $price[$key]
-                );
-            }
-
-            $additional_services = serialize($itemArray);
-        } else {
-
-            $additional_services = '';
-        }
-
-//        print_r(post('customer')); die;
-
-        $eqpt_cost = array(
-
-            'eqpt_cost' => post('eqpt_cost') ? post('eqpt_cost') : 0,
-            'sales_tax' => post('sales_tax') ? post('sales_tax') : 0,
-            'inst_cost' => post('inst_cost') ? post('inst_cost') : 0,
-            'one_time' => post('one_time') ? post('one_time') : 0,
-            'm_monitoring' => post('m_monitoring') ? post('m_monitoring') : 0
-        );
-
-        $company_id = logged('company_id');
-
-        // create the workorder customer
-        $this->load->model('Customer_model', 'customer_model');
-        $customer_id = $this->customer_model->create([
-
-            'customer_type' => post('customer')['customer_type'],
-            'contact_name' => post('customer')['first_name'] . ' ' . post('customer')['last_name'],
-            'contact_email' => post('customer')['email'],
-            'mobile' => post('customer')['contact_mobile'],
-            'phone' => serialize(post('customer')['contact_phone']),
-            'notification_method' => serialize(post('customer')['notification_type']),
-            'street_address' => post('customer')['monitored_location'],
-            'suite_unit' => post('customer')['cross_street'],
-            'city' => post('customer')['city'],
-            'postal_code' => post('customer')['zip'],
-            'state' => post('customer')['state'],
-            'birthday' => date('Y-m-d', strtotime(post('customer')['contact_dob'])),
-            'company_id' => $company_id
-        ]);
-
-//        print_r(serialize(post('post_service_summary'))); die;
-
-
-        if ($customer_id) {
-
-            $id = $this->workorder_model->create([
-
-                'user_id' => $user->id,
-                'company_id' => $company_id,
-                'customer_id' => $customer_id,
-                'customer' => serialize(post('customer')),
-                'emergency_call_list' => serialize(post('emergency_call_list')),
-                'plan_type' => post('plan_type'),
-                'account_type' => serialize(post('account_type')),
-                'panel_type' => serialize(post('panel_type')),
-                'panel_communication' => post('panel_communication'),
-                'panel_location' => post('panel_location'),
-                'date_issued' => date('Y-m-d', strtotime(post('date_issued'))),
-                'job_type_id' => post('job_type_id'),
-                'status_id' => post('status_id'),
-                'priority_id' => post('job_priority'),
-                'ip_cameras' => serialize(post('ip_cameras')),
-                'dvr_nvr' => serialize(post('dvr_nvr')),
-                'doorlocks' => serialize(post('doorlocks')),
-                'automation' => serialize(post('automation')),
-                'pers' => serialize(post('pers')),
-                'additional_services' => $additional_services,
-                'total' => serialize($eqpt_cost),
-                'billing_date' => date('Y-m-d', strtotime(post('billing_date'))),
-                'payment_type' => post('payment_type'),
-                'billing_freq' => post('billing_freq'),
-                'card_info' => serialize(post('card')),
-                'company_rep_approval' => post('company_representative_approval_signature'),
-                'primary_account_holder' => post('primary_account_holder_signature'),
-                'secondary_account_holder' => post('secondery_account_holder_signature'),
-                'company_rep_name' => post('company_representative_printed_name'),
-                'primary_account_holder_name' => post('primary_account_holder_name'),
-                'secondary_account_holder_name' => post('secondery_account_holder_name'),
-                'post_service_summary' => serialize(post('post_service_summary')),
-            ]);
-
-            $this->activity_model->add('New User $' . $user->id . ' Created by User:' . logged('name'), logged('id'));
-            $this->session->set_flashdata('alert-type', 'success');
-            $this->session->set_flashdata('alert', 'New Workorder Created Successfully');
-
-            redirect('workorder');
-        }
-    }
-
 }
 
 

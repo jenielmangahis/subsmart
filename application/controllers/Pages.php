@@ -112,8 +112,8 @@ class Pages extends MY_Controller {
 		$this->load->model('Clients_model');
 		$this->load->model('Users_model');
 
-		/*$encrypted = hashids_encrypt(2, '', 15);
-    	$decrypted = hashids_decrypt($encrypted, '', 15);*/
+		$encrypted = hashids_encrypt(2, '', 15);
+    	$decrypted = hashids_decrypt($encrypted, '', 15);
 
 		$cid      = hashids_decrypt($eid, '', 15);
 		$client   = $this->Clients_model->getById($cid);
@@ -188,114 +188,5 @@ class Pages extends MY_Controller {
 		echo json_encode($data);
 		exit;
 	}
-
-	public function estimate_customer_view( $eid )
-    {
-    	$this->load->model('Estimate_model', 'estimate_model');
-        $this->load->model('AcsProfile_model');
-        $this->load->model('EstimateItem_model');
-        
-        $this->load->helper(array('hashids_helper'));
-        
-        $estimate_id = hashids_decrypt($eid, '', 15);
-        $estimate = $this->estimate_model->getEstimate($estimate_id);
-        if( $estimate ){            
-            $customer = $this->AcsProfile_model->getByProfId($estimate->customer_id);
-            $estimateItems = unserialize($estimate->estimate_items);
-
-            $this->page_data['estimate'] = $estimate;
-            $this->page_data['customer'] = $customer;
-            $this->page_data['estimateItems'] = $estimateItems;
-
-            $is_valid = true;
-        }else{
-            $is_valid = false;
-        }
-
-        $this->page_data['eid'] = $eid;
-        $this->page_data['is_valid'] = $is_valid;
-        $this->load->view('pages/estimate_customer_view', $this->page_data);
-    }
-
-    public function customer_approve_estimate()
-    {
-    	$this->load->model('Estimate_model', 'estimate_model');
-        
-        $this->load->helper(array('hashids_helper'));
-        
-    	$post = $this->input->post();
-    	$estimate_id = hashids_decrypt($post['eid'], '', 15);
-    	$estimate    = $this->estimate_model->getEstimate($estimate_id);
-    	if( $estimate ){
-    		$this->estimate_model->update($estimate->id, ['status' => 'Accepted']);
-    		$this->session->set_flashdata('message', 'Your estimate was successfully updated');
-        	$this->session->set_flashdata('alert_class', 'alert-success');
-    	}else{
-    		$this->session->set_flashdata('message', 'Cannot find estimate');
-        	$this->session->set_flashdata('alert_class', 'alert-danger');
-    	}
-
-    	redirect('estimate_customer_view/' . $post['eid']);
-    }
-
-    public function customer_update_estimate($type)
-    {
-    	$this->load->model('Estimate_model', 'estimate_model');
-        
-        $this->load->helper(array('hashids_helper'));
-        
-    	$post = $this->input->post();
-    	$estimate_id = hashids_decrypt($post['eid'], '', 15);
-    	$estimate    = $this->estimate_model->getEstimate($estimate_id);
-    	if( $estimate ){
-    		if( $type == 1 ){ //Accept
-    			$this->estimate_model->update($estimate->id, ['status' => 'Accepted']);
-    		}else{ //Declined
-    			$this->estimate_model->update($estimate->id, ['status' => 'Declined By Customer', 'remarks' => $post['reason']]);
-    		}
-    		
-    		$this->session->set_flashdata('message', 'Your estimate was successfully updated');
-        	$this->session->set_flashdata('alert_class', 'alert-success');
-    	}else{
-    		$this->session->set_flashdata('message', 'Cannot find estimate');
-        	$this->session->set_flashdata('alert_class', 'alert-danger');
-    	}
-
-    	redirect('estimate_customer_view/' . $post['eid']);
-    }
-
-    public function credit_note_customer_view( $eid )
-    {
-    	$this->load->model('CreditNote_model');
-    	$this->load->model('CreditNoteItem_model');
-    	$this->load->model('AcsProfile_model');
-    	$this->load->model('Clients_model');
-    	$this->load->model('Users_model');
-        
-        $this->load->helper(array('hashids_helper'));
-
-        $credit_note_id = hashids_decrypt($eid, '', 15);
-        $creditNote = $this->CreditNote_model->getById($credit_note_id);
-        if( $creditNote ){            
-        	$user     = $this->Users_model->getUser($creditNote->user_id);
-            $customer = $this->AcsProfile_model->getByProfId($creditNote->customer_id);
-            $client   = $this->Clients_model->getById($user->company_id);
-            $creditNoteItems = $this->CreditNoteItem_model->getAllByCreditNoteId($creditNote->id);
-
-            $this->page_data['status'] = $this->CreditNote_model->optionStatus();   
-            $this->page_data['customer'] = $customer;
-            $this->page_data['client'] = $client;
-            $this->page_data['creditNote'] = $creditNote;
-            $this->page_data['creditNoteItems'] = $creditNoteItems;
-
-            $is_valid = true;
-        }else{
-            $is_valid = false;
-        }
-
-        $this->page_data['eid'] = $eid;
-        $this->page_data['is_valid'] = $is_valid;
-        $this->load->view('pages/credit_note_customer_view', $this->page_data);
-    }
 
 }

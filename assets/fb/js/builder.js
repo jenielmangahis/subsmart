@@ -1,62 +1,5 @@
 let tempElements, tempStyle, tempColor, editor;
 const styles = ['default', 'big', 'bigger', 'slim', 'rounded', 'narrow', 'casual', 'modern', 'airy', 'bubbly'];
-const customize_items = {};
-const tab_assignment = {
-    'page-background' : 'customizeColorTab',
-    'page-background-size' : 'customizeBackgroundSizeTab',
-    'page-font-family' : 'customizeFontFamilyTab',
-    'page-font-size' : 'customizeFontSizeTab',
-    'page-link-color' : 'customizeColorTab',
-    'form-border-color' : 'customizeColorTab',
-    'form-border-rounding' : 'customizeBorderRoundingTab',
-    'form-border-width' : 'customizeBorderWidthTab',
-    'form-background' : 'customizeColorTab',
-    'form-background-size' : 'customizeBackgroundSizeTab',
-    'form-shadow' : 'customizeShadowTab',
-    'form-text-color' : 'customizeColorTab',
-    'heading-text-color' : 'customizeColorTab',
-    'heading-background' : 'customizeColorTab',
-    'heading-background-size' : 'customizeBackgroundSizeTab',
-    'heading-border-rounding' : 'customizeBorderRoundingTab',
-    'item-required-icon' : 'customizeRequiredIconTab',
-    'item-label-bold' : 'customizeBoldTab',
-    'item-highlight' : 'customizeColorTab',
-    'field-border-color' : 'customizeColorTab',
-    'field-border-rounding' : 'customizeBorderRoundingTab',
-    'field-border-width' : 'customizeBorderWidthTab',
-    'field-font-family' : 'customizeFontFamilyTab',
-    'field-font-size' : 'customizeFontSizeTab',
-    'field-background' : 'customizeColorTab',
-    'field-text-color' : 'customizeColorTab',
-    'field-spacing' : 'customizeSpacingTab',
-    'field-padding' : 'customizePaddingTab',
-    'item-spacing' : 'customizeSpacingTab',
-    'submit-background': 'customizeColorTab',
-    'submit-background-size': 'customizeBackgroundSizeTab',
-    'submit-bold': 'customizeBoldTab',
-    'submit-border-style': 'customizeBorderStyleTab',
-    'submit-border-width': 'customizeBorderWidthTab',
-    'submit-capitalization': 'customizeCapitalizationTab',
-    'submit-font-family': 'customizeFontFamilyTab',
-    'submit-font-size': 'customizeFontSizeTab',
-    'submit-height-padding': 'customizePaddingTab',
-    'submit-hide': 'customizeHideTab',
-    'submit-hover-background': 'customizeColorTab',
-    'submit-rounding': 'customizeBorderRoundingTab',
-    'submit-shadows': 'customizeShadowTab',
-    'submit-text-color': 'customizeColorTab',
-    'submit-width': 'customizeWidthTab',
-    'matrix-alt-row-color' : "customizeColorTab",
-    'matrix-alt-row-header-color' : "customizeColorTab",
-    'matrix-alt-row-text-color' : "customizeColorTab",
-    'matrix-grid-lines' : "customizeColorTab",
-    'matrix-header-background' : "customizeColorTab",
-    'matrix-header-text' : "customizeColorTab",
-    'matrix-row-color' : "customizeColorTab",
-    'matrix-row-header-color' : "customizeColorTab",
-    'matrix-row-text-color' : "customizeColorTab",
-    'matrix-sub-header-background' : "customizeColorTab",
-}
 const colors = ['primary', 'secondary', 'danger', 'warning', 'info', 'success', 'dark', 'light', 'orange', 'violet', 'sky-blue', 'persian-green', 'green', 'san-marino-blue', 'mulberry', 'valencia', 'sandy', 'terracotta', 'comet', 'jungle', 'light-brown', 'dark-theme'];
 var rule_item_el = $('div.rule-items').html();
 const ruleOrOperator = `<div class="row mt-2 operator-container"><div class="col-12"><h6>OR</h6></div></div>`;
@@ -102,6 +45,10 @@ $('#formBuilderContainer').sortable({
     },
     update: (event, ui) => {
         showLoading();
+<<<<<<< HEAD
+        const elements = $('#formBuilderContainer').sortable("toArray");
+        updateElementOrder(elements).then( async (res) => {
+=======
         let elements = $('#formBuilderContainer').sortable("toArray");
         if(start_elements.length > elements.length)return;
         if(start_elements.length < elements.length){
@@ -112,6 +59,7 @@ $('#formBuilderContainer').sortable({
         elements = $('#formBuilderContainer').sortable("toArray");
         console.log(elements);
         updateElementOrder(elements).then(async (res) => {
+>>>>>>> 0ef1e6ecd53eec5ee93a05253a014f84e36d84ff
             await loadElements(form.id, true).then(res => {
                 initBuilder();
                 initContainers();
@@ -204,15 +152,15 @@ $('.form-elements-template').draggable({
 
 $('.builder-tabs').on('shown.bs.tab', (e) => {
     const el = $(e.target) // newly activated tab
-    if (el.attr('href') === '#styleBuildTab') {
+    if(el.attr('href') === '#styleBuildTab') {
         $('#styleSaveContainer').show();
-        expandSidebar();
     } else {
         $('#styleSaveContainer').hide();
-        resetSidebar();
     }
 })
 
+<<<<<<< HEAD
+=======
 const initColorPicker = () => {
     // requirejs(['./colorjoe/colorjoe'], function(colorjoe) {
 
@@ -288,14 +236,15 @@ const resetSidebar = () => {
     $('#formBuilderContainer').removeClass('mx-1');
 }
 
+>>>>>>> 0ef1e6ecd53eec5ee93a05253a014f84e36d84ff
 const handleSaveEelement = (event) => {
     event.preventDefault();
-    if (editor) {
+    if(editor) {
         editor.save();
     }
     showLoading();
     const save_method = $('#elementSettingsModal #saveMethod').val();
-    if (save_method === 'create') {
+    if(save_method === 'create') {
         const index = tempElements.indexOf("");
         if (index > -1) {
             tempElements.splice(index, 1);
@@ -309,7 +258,6 @@ const handleSaveEelement = (event) => {
     saveElement(data, save_method).then(async (res) => {
         await loadElements(form.id, true).then(res1 => {
             initBuilder();
-            initContainers();
         });
         updateElementOrder(elements);
         $('#elementSettingsModal').modal('hide');
@@ -356,7 +304,6 @@ const handleDeleteElement = (id) => {
         }
         await loadElements(form.id, true).then(res => {
             initBuilder();
-            initContainers();
         });
         // await updateElementOrder(elements);
         showSuccess();
@@ -367,11 +314,11 @@ const handleDeleteElement = (id) => {
 }
 
 const initBuilder = () => {
-    $('.form-elements-template').hover((event) => {
+    $('.form-elements-template').hover((event) =>{
         $(event.target).addClass('hover');
     });
-
-    $('.form-elements-template').mouseout((event) => {
+    
+    $('.form-elements-template').mouseout((event) =>{
         $(event.target).removeClass('hover');
     });
     setStyleTabActives(form.style, form.color);
@@ -380,35 +327,35 @@ const initBuilder = () => {
 const initEditor = (id = 'elementQuestionEditor') => {
     if ($(`#${id}`).length) {
         editor = KothingEditor.create(`${id}`, {
-            height: '100px',
-            display: "block",
-            width: "100%",
-            popupDisplay: "full",
-            katex: katex,
-            toolbarItem: [
-                ["undo", "redo"],
-                ["font", "fontSize", "formatBlock"],
-                [
-                    "bold",
-                    "underline",
-                    "italic",
-                    "strike",
-                    "subscript",
-                    "superscript",
-                    "fontColor",
-                    "hiliteColor",
-                ],
-                ["outdent", "indent", "align", "list", "horizontalRule"],
-                ["link", "table", "image"],
-                ["lineHeight", "paragraphStyle", "textStyle"],
-                ["showBlocks", "codeView"],
-                ["math"],
-                ["preview", "print", "fullScreen"],
-                ["removeFormat"],
+          height: '100px',
+          display: "block",
+          width: "100%",
+          popupDisplay: "full",
+          katex: katex,
+          toolbarItem: [
+            ["undo", "redo"],
+            ["font", "fontSize", "formatBlock"],
+            [
+              "bold",
+              "underline",
+              "italic",
+              "strike",
+              "subscript",
+              "superscript",
+              "fontColor",
+              "hiliteColor",
             ],
-            charCounter: true,
+            ["outdent", "indent", "align", "list", "horizontalRule"],
+            ["link", "table", "image"],
+            ["lineHeight", "paragraphStyle", "textStyle"],
+            ["showBlocks", "codeView"],
+            ["math"],
+            ["preview", "print", "fullScreen"],
+            ["removeFormat"],
+          ],
+          charCounter: true,
         });
-    }
+      }
 }
 
 const handleElementEdit = (id) => {
@@ -500,10 +447,17 @@ const setElementRulesConfig = (element) => {
 
 const getModalValues = () => {
     const element_type = $('#elementType').val();
-    let span = $('#elementSpan').val();
+    let span =  $('#elementSpan').val();
     let question = $('#elementQuestionInput').val() ? $('#elementQuestionInput').val() : '';
+<<<<<<< HEAD
+    if(element_type === "Heading") {
+        span = $('#elementWidth').val();
+    }
+    if(element_type === "FormattedText") {
+=======
     let placeholder_text = $('#placeholderText').val() ? $('#placeholderText').val() : '';
     if (element_type === "FormattedText") {
+>>>>>>> 0ef1e6ecd53eec5ee93a05253a014f84e36d84ff
         question = $('#elementQuestionEditor').val() ? $('#elementQuestionEditor').val() : '';
     }
 
@@ -560,7 +514,7 @@ const getModalValues = () => {
         },
         element_rules: JSON.stringify(element_rule),
         choices: choicesParser($('#elementChoicesInput').val()),
-        choices_and_prices: choicesPriceParser($('#elementChoicesAndPricesChoiceInput').val(), $('#elementChoicesAndPricesPriceInput').val()),
+        choices_and_prices: choicesPriceParser($('#elementChoicesAndPricesChoiceInput').val(),$('#elementChoicesAndPricesPriceInput').val()),
         matrix_columns: choicesParser($('#elementMatrixColumnsInput').val()),
         matrix_rows: choicesParser($('#elementMatrixRowsInput').val()),
     }
@@ -574,10 +528,10 @@ const showModal = (element) => {
     $('.element-setting-container').hide();
     settings.forEach(setting => {
         $(`[tag=${setting}]`).show();
-        if (setting == 'preview') {
+        if(setting == 'preview') {
             const form_class_list = document.getElementById('formBuilderContainer').className.split(/\s+/);
             form_class_list.forEach(class_item => {
-                if (class_item !== 'row' && class_item !== 'ui-sortable') {
+                if(class_item !== 'row' && class_item !== 'ui-sortable'){
                     $('#elementPreview').addClass(class_item);
                 }
             });
@@ -585,7 +539,7 @@ const showModal = (element) => {
             $('#elementPreview').html(content);
         }
     });
-    $('#elementSettingsModal').modal({ backdrop: 'static', keyboard: false })
+    $('#elementSettingsModal').modal({backdrop: 'static', keyboard: false})  
 }
 
 const handleStyleChangePreview = (style) => {
@@ -655,7 +609,6 @@ const setFormStyleControlActive = (style) => {
 const handleFormStyleSave = async () => {
     showLoading();
     const data = {
-        customize_items,
         style: tempStyle,
         color: tempColor,
         id: form.id
@@ -663,7 +616,7 @@ const handleFormStyleSave = async () => {
 
     await updateForm(data).then((res) => {
         showBuilderTab('build');
-        handleOnLoad(form.id, false);
+        handleOnLoad(form.id, true);
         showSuccess();
     }).catch(err => {
         showDanger();
@@ -684,7 +637,7 @@ const setStyleTabActives = (style, color) => {
 }
 
 const handleQuestionInput = (val) => {
-    if ($('#elementPreview .heading-text').length) {
+    if($('#elementPreview .heading-text').length) {
         $('#elementPreview .heading-text').text(val);
     }
 }
@@ -755,9 +708,4 @@ const showFields = (el) => {
 const setPreviewBackgroundImage = (img) => {
     alert(img);
     $(`#elementPreview .form-header`).css('background-image', `url(${img})`);
-}
-
-const handlePreFillChoicesChanged = () => {
-    const val = $('#prefillChoices').val();
-    $('#elementChoicesInput').val(pre_fill_choices[val]);
 }

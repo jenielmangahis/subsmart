@@ -1,4 +1,5 @@
 <?php
+
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Wizard extends MY_Controller {
@@ -6,8 +7,7 @@ class Wizard extends MY_Controller {
     public function __construct() {
 
         parent::__construct();
-        $this->load->model('wizard_model');
-        $this->load->model('wizard_apps_model');
+        $this->load->model('Wizard_model', 'wizard_model');
         $user_id = getLoggedUserID();
 
         add_css(array(
@@ -35,215 +35,25 @@ class Wizard extends MY_Controller {
         $this->load->view('wizard/index', $this->page_data);
     }
     
-    
-    public function savepaymethod(){
-        
-        
-        $company_id  = getLoggedCompanyID();
-        $user_id  = getLoggedUserID();
-        $new_data = array(
-            'payment_method' => 'CASH',
-            'quick_name' => 'CASH',
-            'user_id' => $user_id,
-            'company_id' => $company_id,
-        );
-
-        $this->db->insert('payment_method', $new_data);
-        
-        
-        //fetch latest update
-
-        $this->load->library('wizardlib');
-        $details = $this->paymethodDetails($company_id);
-        $this->wizardlib->trigWiz('savepaymethod', $company_id, $details);
-        
-    }
-    
-    private function paymethodDetails($company_id)
+    public function addApp()
     {
-        $this->db->where('company_id', $company_id);
-        $q = $this->db->get('payment_method')->result();
-        
-        $details = '<table><tr><th>#</th><th>Payment Method</th></tr>';
-        $i = 0;
-        foreach ($q as $result):
-            $i++;
-            $details .= "<tr><td>$i</td><td>$result->quick_name</td></tr>";
-        endforeach;
-        $details .= '</table>';
-        
-        return $details;
-    }
-    
-    
-    public function myWiz() {
-        $this->load->library('wizardlib');
-        $company_id  = getLoggedCompanyID();
-        $this->page_data['wiz'] = $this->wizard_apps_model->getAppsByCompanyId($company_id);
-        $this->load->view('wizard/myWiz', $this->page_data);
-    }
-    
-    public function sendEmail() {
-        $this->load->library('wizardlib');
-        
-        $this->db->where('id', 3);
-        $q = $this->db->get('wizard_gmail_config')->row();
-        
-        $userId = getLoggedUserID();
-        $template = $q->wgc_body;
-        $map = array(
-            'username' => getLoggedFullName($userId),
-            'details'  => 'Added Cash as new method'
-        );
-        
-        echo $this->wizardlib->replace_tags($template, $map);
-        
-    }
-
-    public function saveCreatedWiz() {
-        $user_id = getLoggedUserID();
-        $company_id = getLoggedCompanyID();
-        $details = array(
-            'wa_user_id' => $user_id,
-            'wa_company_id' => $company_id,
-            'wa_name' => post('wizName'),
-            'wa_trigger_app_id' => post('wizTrigger'),
-            'wa_action_app_id' => post('wizAction'),
-            'wa_is_enabled' => post('wizEnabled'),
-            'wa_date_created' => date('Y-m-d g:i:s'),
-            'wa_date_enabled' => (post('wizEnabled') == 1 ? date('Y-m-d g:i:s') : '0000-00-00 00:00:00'),
-            'wa_config_data' => post('wizConfig')
-        );
-
-        $result = $this->wizard_model->saveCreatedWiz($details, $company_id, post('wizTrigger'), post('wizAction'));
-        if (json_decode($result)->status):
-            if (post('wizConfig') != 0):
-                $configName = post('configName');
-                $this->wizard_apps_model->updateConfigData(post('wizConfig'), json_decode($result)->id, $configName);
-            endif;
-        endif;
-
-        echo $result;
-    }
-
-    public function setupGmailSend() {
-        $this->page_data['img'] = $this->input->post('img');
-        $this->load->view('wizard/app_config/wiz_gmail', $this->page_data);
-    }
-
-    public function deleteApp() {
-        $id = $this->input->post('app_id');
-        if ($this->wizard_model->deleteApp($id)):
-            echo json_encode(array('success' => TRUE, 'msg' => 'Successfully Deleted'));
-        else:
-            echo json_encode(array('success' => FALSE, 'msg' => 'Sorry something went wrong'));
-        endif;
-    }
-
-    public function deleteAppFunc() {
-        $id = $this->input->post('fn_id');
-        if ($this->wizard_model->deleteAppFunc($id)):
-            echo json_encode(array('success' => TRUE, 'msg' => 'Successfully Deleted'));
-        else:
-            echo json_encode(array('success' => FALSE, 'msg' => 'Sorry something went wrong'));
-        endif;
-    }
-
-    public function getActionAppFuncById($fnId) {
-        $func = $this->wizard_model->fetchAppFunc($fnId);
-
-        foreach ($func as $fn):
-            $appConfig = $fn->config_fn;
-            ?>
-            <a onclick="$('#action_id').val('<?= $fn->wiz_app_func_id ?>'),
-                            $('#action_name').val('<?= $fn->wiz_app_nice_name ?>'),
-                            $('.trigFunc').removeClass('active'),
-                            $('#has_config').val('<?= $fn->has_config ?>'),
-                            $('#action_config').val('<?= $appConfig ?>'),
-                            $('#img_config').val('<?= $fn->app_img ?>'),
-                            $(this).addClass('active'), $('#actionNext').removeClass('disabled')" 
-
-               href="#" class="list-group-item list-group-item-action flex-column align-items-start trigFunc">
-
-                <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1"><?= $fn->wiz_app_nice_name ?></h5>
-                </div>
-                <p class="mb-1"><?= $fn->wiz_func_desc ?></p>
-            </a>
-            <?php
-        endforeach;
-    }
-
-    public function getTrigAppFuncById($fnId) {
-        $func = $this->wizard_model->fetchAppFunc($fnId);
-
-        foreach ($func as $fn):
-            ?>
-            <a onclick="$('#trig_id').val('<?= $fn->wiz_app_func_id ?>'), $('#trig_name').val('<?= $fn->wiz_app_nice_name ?>'), $('.trigFunc').removeClass('active'), $(this).addClass('active'), $('#triggerNext').removeClass('disabled')" href="#" class="list-group-item list-group-item-action flex-column align-items-start trigFunc">
-                <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1"><?= $fn->wiz_app_nice_name ?></h5>
-                </div>
-                <p class="mb-1"><?= $fn->wiz_func_desc ?></p>
-            </a>
-            <?php
-        endforeach;
-    }
-
-    public function fetchTriggerApp($details) {
-        $this->load->model('wizard_apps_model');
-        echo $this->wizard_apps_model->fetch_data($details);
-    }
-
-    public function fetchAppFunc() {
-        $fnId = $this->input->post('fn_id');
-        $func = $this->wizard_model->fetchAppFunc($fnId);
-
-        foreach ($func as $fn):
-            ?>
-            <tr id="appList_<?= $fn->wiz_app_func_id ?>">
-                <td></td>
-                <td><?= $fn->wiz_app_nice_name ?></td>
-                <td><?= $fn->wiz_app_function ?></td>
-                <td><?= $fn->wiz_func_desc ?></td>
-                <td title="Delete" class="text-center"><a onmouseover="$('#deleteAppFuncID').val('<?= $fn->wiz_app_func_id ?>')" href="#deleteAppFunc" data-toggle="modal" class="text-danger"><i class="fa fa-trash-o"></i></a></td>
-            </tr>
-            <?php
-        endforeach;
-    }
-
-    public function addAppFunc() {
-        $fn_nice = $this->input->post('fn_nice');
-        $fn_name = $this->input->post('fn_name');
-        $fn_desc = $this->input->post('fn_desc');
-        $fn_id = $this->input->post('fn_id');
-
-        $result = $this->wizard_model->addAppFunc($fn_nice, $fn_name, $fn_desc, $fn_id);
-        if ($result == 1):
-            echo 'Successfully Added';
-        elseif ($result == 2):
-            echo 'App Already Exist';
-        else:
-            echo 'Something went wrong, Please try again later';
-        endif;
-    }
-
-    public function addApp() {
         $app_name = $this->input->post('app_name');
         $app_icon = $this->input->post('app_icon');
         $result = $this->wizard_model->addApp($app_name, $app_icon);
-        if ($result == 1):
+        if($result==1):
             echo 'Successfully Added';
-        elseif ($result == 2):
+        elseif($result==2):
             echo 'App Already Exist';
         else:
             echo 'Something went wrong, Please try again later';
         endif;
     }
-
-    public function addWizardApp() {
+    
+    public function addWizardApp()
+    {
         $apps = $this->wizard_model->getWizApps();
         $this->page_data['wiz_apps'] = $apps;
-
+        
         $this->load->view('wizard/add_wizard_app_function', $this->page_data);
     }
 

@@ -31,9 +31,4 @@
 <script type="text/javascript" src="<?= base_url('assets/fb/js/form-elements/product-ordering.js'); ?>"></script>
 <script type="text/javascript" src="<?= base_url('assets/fb/js/form-elements/zone-list.js'); ?>"></script>
 <script type="text/javascript" src="<?= base_url('assets/fb/js/form-elements/short-answer-group.js'); ?>"></script>
-<script type="text/javascript" src="<?= base_url('assets/fb/js/form-elements/customer-select.js'); ?>"></script>
-<script type="text/javascript" src="<?= base_url('assets/fb/js/form-elements/job-location.js'); ?>"></script>
-<script type="text/javascript" src="<?= base_url('assets/fb/js/form-elements/payment-methods.js'); ?>"></script>
-<script type="text/javascript" src="<?= base_url('assets/fb/js/form-elements/estimate-ordering.js'); ?>"></script>
-<script type="text/javascript" src="<?= base_url('assets/fb/js/form-elements/estimate-package-ordering.js'); ?>"></script>
 <script type="text/javascript" src="<?= base_url('assets/fb/js/form-elements/element-types.js'); ?>"></script>

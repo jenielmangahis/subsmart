@@ -16,11 +16,10 @@ class CheckboxMatrix extends MatrixElement {
             `
         });
         element_container.content += `</tr></thead><tbody>`;
-        this.matrix_rows.forEach((row, i) => {
-            const tr_class = (i % 2 === 0) ? 'matrix-tr' : 'matrix-tr-alt';
-            element_container.content += `<tr class="${tr_class}">`;
+        this.matrix_rows.forEach(row => {
+            element_container.content += `<tr>`;
             element_container.content += `
-                <td class="matrix-tr-header">${row.text}</td>
+                <td>${row.text}</td>
             `
             this.matrix_columns.forEach(column => {
                 element_container.content += `

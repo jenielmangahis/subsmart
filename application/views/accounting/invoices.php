@@ -82,7 +82,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 										</tr>
 										</thead>
 										<tbody>
-										<!-- <tr>
+										<tr>
 											<td><input type="checkbox"></td>
 											<td>1234</td>
 											<td>John Meyer</td>
@@ -92,20 +92,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 											<td>$42</td>
 											<td>Open</td>
 											<td><a href="">View</a></td>
-										</tr> -->
-										<?php foreach($invoices as $invoice) : ?>
-										<tr>
-											<td><input type="checkbox"></td>
-											<td><?php echo $invoice->id; ?></td>
-											<td><?php echo $invoice->customer_id; ?></td>
-											<td><?php echo $invoice->created_at; ?></td>
-											<td><?php echo $invoice->due_date; ?></td>
-											<td><?php echo $invoice->id; ?></td>
-											<td><?php //echo $invoice->amoungt; ?></td>
-											<td><?php echo $invoice->status; ?></td>
-											<td><a href="" class="btn btn-info">View</a></td>
 										</tr>
-										<?php endforeach; ?>
 										</tbody>
 								</table>
 							</div>

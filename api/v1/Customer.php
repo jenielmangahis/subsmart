@@ -196,14 +196,13 @@ function getAllEvents($customer_id) {
         // get customer
         // check
         if ($customer_id > 0) {
-            $customer = $db->fetchRow("select * from customers where id = $customer_id");
-            $address = $db->fetchRow("select * from address where customer_id = $customer_id");
+            $customer = $db->fetchRow("select *, concat(first_name, ' ', last_name) as contact_name, concat(mail_add, '::', city, ', ', state, ' ', zip_code) as contact_address from acs_profile where prof_id = $customer_id");
 
-            $event['customer_name'] = $customer['contact_name'];
-            $event['customer_email'] = $customer['contact_email'];
-            $event['customer_phone'] = $customer['phone'];
-            $event['customer_mobile'] = $customer['mobile'];
-            $event['customer_address'] = $address['address1'] ." ". $address['address2'] ."::". $address['city'] .", ". $address['state'] ." ". $address['postal_code'];
+            $row['customer_name'] = $customer['contact_name'];
+            $row['customer_email'] = $customer['email'];
+            $row['customer_phone'] = $customer['phone_h'];
+            $row['customer_mobile'] = $customer['phone_m'];
+            $row['customer_address'] = $customer['contact_address'];
         }
 
         // event type
@@ -236,14 +235,13 @@ function getAllWorkOrders($customer_id) {
         // get customer
         // check
         if ($customer_id > 0) {
-            $customer = $db->fetchRow("select * from customers where id = $customer_id");
-            $address = $db->fetchRow("select * from address where customer_id = $customer_id");
+            $customer = $db->fetchRow("select *, concat(first_name, ' ', last_name) as contact_name, concat(mail_add, '::', city, ', ', state, ' ', zip_code) as contact_address from acs_profile where prof_id = $customer_id");
 
             $row['customer_name'] = $customer['contact_name'];
-            $row['customer_email'] = $customer['contact_email'];
-            $row['customer_phone'] = $customer['phone'];
-            $row['customer_mobile'] = $customer['mobile'];
-            $row['customer_address'] = $address['address1'] ." ". $address['address2'] ."::". $address['city'] .", ". $address['state'] ." ". $address['postal_code'];
+            $row['customer_email'] = $customer['email'];
+            $row['customer_phone'] = $customer['phone_h'];
+            $row['customer_mobile'] = $customer['phone_m'];
+            $row['customer_address'] = $customer['contact_address'];
         }
 
         // get items
@@ -285,14 +283,13 @@ function getAllEstimates($customer_id) {
         // get customer
         // check
         if ($customer_id > 0) {
-            $customer = $db->fetchRow("select * from customers where id = $customer_id");
-            $address = $db->fetchRow("select * from address where customer_id = $customer_id");
+            $customer = $db->fetchRow("select *, concat(first_name, ' ', last_name) as contact_name, concat(mail_add, '::', city, ', ', state, ' ', zip_code) as contact_address from acs_profile where prof_id = $customer_id");
 
             $row['customer_name'] = $customer['contact_name'];
-            $row['customer_email'] = $customer['contact_email'];
-            $row['customer_phone'] = $customer['phone'];
-            $row['customer_mobile'] = $customer['mobile'];
-            $row['customer_address'] = $address['address1'] ." ". $address['address2'] ."::". $address['city'] .", ". $address['state'] ." ". $address['postal_code'];
+            $row['customer_email'] = $customer['email'];
+            $row['customer_phone'] = $customer['phone_h'];
+            $row['customer_mobile'] = $customer['phone_m'];
+            $row['customer_address'] = $customer['contact_address'];
         }
 
         // get items
@@ -334,14 +331,13 @@ function getAllInvoices($customer_id) {
         // get customer
         // check
         if ($customer_id > 0) {
-            $customer = $db->fetchRow("select * from customers where id = $customer_id");
-            $address = $db->fetchRow("select * from address where customer_id = $customer_id");
+            $customer = $db->fetchRow("select *, concat(first_name, ' ', last_name) as contact_name, concat(mail_add, '::', city, ', ', state, ' ', zip_code) as contact_address from acs_profile where prof_id = $customer_id");
 
             $row['customer_name'] = $customer['contact_name'];
-            $row['customer_email'] = $customer['contact_email'];
-            $row['customer_phone'] = $customer['phone'];
-            $row['customer_mobile'] = $customer['mobile'];
-            $row['customer_address'] = $address['address1'] ." ". $address['address2'] ."::". $address['city'] .", ". $address['state'] ." ". $address['postal_code'];
+            $row['customer_email'] = $customer['email'];
+            $row['customer_phone'] = $customer['phone_h'];
+            $row['customer_mobile'] = $customer['phone_m'];
+            $row['customer_address'] = $customer['contact_address'];
         }
 
         // get items

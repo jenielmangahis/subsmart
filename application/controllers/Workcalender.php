@@ -68,21 +68,21 @@ class Workcalender extends MY_Controller
 
             foreach ($events as $key => $event) {
 
-                $customer = acs_prof_get_customer_by_prof_id($event->customer_id);
+                $customer = get_customer_by_id($event->customer_id);
 
                 // label of the event
                 if (!empty($customer)) {
 
                     if (!empty($calender_settings)) {
 
-                        $title = acs_prof_make_calender_event_label($calender_settings, $event, $customer);
+                        $title = make_calender_event_label($calender_settings, $event, $customer);
 
                     } else {
 
                         $date = date('a', strtotime($event->start_time));
                         $date = substr($date, -2, 1);
                         $title = date('g', strtotime($event->start_time)) . $date;
-                        $title .= ' ' . $customer->first_name . ' ' . $customer->last_name . ', ' . $customer->phone_m;
+                        $title .= ' ' . $customer->contact_name . ', ' . $customer->mobile;
                     }
                 }
 
@@ -215,15 +215,9 @@ class Workcalender extends MY_Controller
             $is_mobile = 0;
         }
 
-        $company_id = logged('company_id');
-        if ($role == 2 || $role == 3) {
-           $get_users  = $this->Users_model->getAllUsers();
-           $get_recent_users = $this->Users_model->getAllRecentUsers();
-        }else{
-           $get_users  = $this->Users_model->getUsers();
-           $get_recent_users = $this->Users_model->getAllUsersByCompany($company_id); 
-        }
-        
+        $get_users = $this->Users_model->getUsers();
+        $get_recent_users = $this->Users_model->getRecentUsers();
+
         $resources_users = array();
         $resources_user_events = array();
 
@@ -859,21 +853,14 @@ class Workcalender extends MY_Controller
         $post = $this->input->post();
         $role = logged('role');
         
-        /*if ($role == 2 || $role == 3 || $role == 22) {
+        if ($role == 2 || $role == 3 || $role == 22) {
             $company_id = logged('company_id');
             $events = $this->event_model->getAllByCompany($company_id);
-        }*/
-
-        if( $role == 1 || $role == 2 ){
-           $events = $this->event_model->getAllEvents(); 
-        }else{
-           $company_id = logged('company_id');
-           $events = $this->event_model->getAllByCompany($company_id); 
         }
 
-        /*if ($role == 4) {
+        if ($role == 4) {
             $events = $this->event_model->getAllByUserId();
-        }*/
+        }
 
         if(empty($events) && $role == 1) {
             $events = $this->event_model->getAllByUserId();
@@ -894,31 +881,27 @@ class Workcalender extends MY_Controller
             foreach($events as $event) {
 
                 if($event->employee_id > 0) {
-                    if( $event->event_description != '' ){
+                    $start_date_time = date('Y-m-d H:i:s',strtotime($event->start_date . " " . $event->start_time));
+                    $start_date_end  = date('Y-m-d H:i:s',strtotime($event->end_date . " " . $event->end_time));
+                    $resources_user_events[$inc]['eventId'] = $event->id;
+                    $resources_user_events[$inc]['resourceId'] = 'user' . $event->employee_id;
+                    $resources_user_events[$inc]['title'] = $event->event_description;
+                    $resources_user_events[$inc]['start'] = $start_date_time;
+                    $resources_user_events[$inc]['end'] = $start_date_end;
+                    $resources_user_events[$inc]['backgroundColor'] = $event->event_color;
+
+                $inc++;
+                }elseif($event->employee_id == 0) {
+                    foreach($get_users as $get_user) {
                         $start_date_time = date('Y-m-d H:i:s',strtotime($event->start_date . " " . $event->start_time));
                         $start_date_end  = date('Y-m-d H:i:s',strtotime($event->end_date . " " . $event->end_time));
                         $resources_user_events[$inc]['eventId'] = $event->id;
-                        $resources_user_events[$inc]['resourceId'] = 'user' . $event->employee_id;
+                        $resources_user_events[$inc]['resourceId'] = 'user' . $get_user->id;
                         $resources_user_events[$inc]['title'] = $event->event_description;
                         $resources_user_events[$inc]['start'] = $start_date_time;
                         $resources_user_events[$inc]['end'] = $start_date_end;
                         $resources_user_events[$inc]['backgroundColor'] = $event->event_color;
-
-                        $inc++;
-                    }                    
-                }elseif($event->employee_id == 0) {
-                    foreach($get_users as $get_user) {
-                        if( $event->event_description != '' ){
-                            $start_date_time = date('Y-m-d H:i:s',strtotime($event->start_date . " " . $event->start_time));
-                            $start_date_end  = date('Y-m-d H:i:s',strtotime($event->end_date . " " . $event->end_time));
-                            $resources_user_events[$inc]['eventId'] = $event->id;
-                            $resources_user_events[$inc]['resourceId'] = 'user' . $get_user->id;
-                            $resources_user_events[$inc]['title'] = $event->event_description;
-                            $resources_user_events[$inc]['start'] = $start_date_time;
-                            $resources_user_events[$inc]['end'] = $start_date_end;
-                            $resources_user_events[$inc]['backgroundColor'] = $event->event_color;
-                            $inc++; 
-                        }                        
+                    $inc++; 
                     }
                    
                 }
@@ -1389,18 +1372,13 @@ class Workcalender extends MY_Controller
         $this->load->model('Event_model', 'event_model', 'settings_model');
 
         $settings = $this->settings_model->getByWhere(['key' => DB_SETTINGS_TABLE_KEY_SCHEDULE]);
-        if( $settings[0] ){              
-            date_default_timezone_set($settings['calendar_timezone']);
+        if( $settings[0] ){       
+            $a_settings = unserialize($settings[0]->value);
+            date_default_timezone_set($a_settings['calendar_timezone']);
         }
 
-        $role_id = logged('role');
-        if( $role_id == 1 || $role_id == 2 ){
-            $upcoming_events = $this->event_model->getAllUpComingEvents();
-        }else{
-            $company_id = logged('company_id');
-            $upcoming_events = $this->event_model->getAllUpComingEventsByCompanyId($company_id);
-        }
-        
+        $company_id = logged('company_id');
+        $upcoming_events = $this->event_model->getAllUpComingEventsByCompanyId($company_id);
 
         //Google Events
         $settings = $this->settings_model->getByWhere(['key' => DB_SETTINGS_TABLE_KEY_SCHEDULE]);

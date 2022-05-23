@@ -14,7 +14,7 @@ class Accounting_sales_receipt_model extends MY_Model {
 	    $query = $this->db->get('accounting_sales_receipt');
 	    return $query->result();
     }
-	public function createSalesReceipts($data){
+	public function createSalesReceipt($data){
 	    $query = $this->db->insert('accounting_sales_receipt', $data);
 	    $insert_id = $this->db->insert_id();
 

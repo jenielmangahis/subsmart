@@ -1,6 +1,5 @@
 <!-- Modal for bank deposit-->
 <div class="full-screen-modal">
-<form onsubmit="submitModalForm(event, this)" id="modal-form">
     <div id="weeklyTimesheetModal" class="modal fade modal-fluid" role="dialog">
         <div class="modal-dialog">
             <!-- Modal content-->
@@ -12,30 +11,18 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-3">
-                            <select name="person_tracking" id="person_tracking" class="form-control" required>
-                                <option value="" disabled selected>Whose time are you tracking?</option>
-                                <optgroup label="Employees">
-                                    <?php foreach($dropdown['employees'] as $employee):?>
-                                        <option value="employee-<?php echo $employee->id;?>"><?php echo $employee->FName . ' ' . $employee->LName;?></option>
-                                    <?php endforeach; ?> 
-                                </optgroup>
-                                <optgroup label="Vendors">
-                                    <?php foreach($dropdown['vendors'] as $vendor):?>
-                                        <option value="vendor-<?php echo $vendor->id;?>"><?php echo $vendor->f_name . ' ' . $vendor->l_name;?></option>
-                                    <?php endforeach; ?> 
-                                </optgroup>
+                            <select name="employee" id="employee" class="form-control">
+                                <option value="">Joshua Pemberton</option>
                             </select>
                         </div>
                         <div class="col-md-3">
-                            <select name="week_dates" id="weekDates" class="form-control" required onchange="tableWeekDate()">
-                                <?php foreach($dropdown['weeks'] as $week): ?>
-                                    <option value="<?php echo $week['firstDay'] . '-' . $week['lastDay']; ?>" <?php echo ($week['selected']) ? 'selected' : ''?>><?php echo $week['firstDay'] . ' to ' . $week['lastDay']; ?></option>
-                                <?php endforeach; ?>
+                            <select name="week_dates" id="weekDates" class="form-control">
+                                <option value="">1/3/2021 to 1/9/2021</option>
                             </select>
                         </div>
                         <div class="col text-right">
                             <p class="m-0">TOTAL HOURS</p>
-                            <h2 class="m-0" id="totalHours">00:00</h2>
+                            <h2 class="m-0">0:00</h2>
                         </div>
                     </div>
 
@@ -51,10 +38,10 @@
                         <div class="col-md-12">
                             <div class="timesheet-table-container">
                                 <div class="timesheet-table">
-                                    <table class="table table-bordered table-hover" id="timesheet-table">
+                                    <table class="table table-bordered table-hover">
                                         <thead>
                                             <th>#</th>
-                                            <th width="45%">DETAILS</th>
+                                            <th class="w-50">DETAILS</th>
                                             <th class="text-right">
                                                 <p class="m-0">SUN</p>
                                                 <p class="m-0">3</p>
@@ -92,105 +79,102 @@
                                                 <td>
                                                     <div class="row m-0">
                                                         <div class="col-md-6 p-0">
-                                                            <select name="customer[]" class="form-control">
-                                                                <option value="" disabled selected>Choose a customer</option>
-                                                                <?php foreach($dropdown['customers'] as $customer):?>
-                                                                    <option value="<?php echo $customer->prof_id;?>"><?php echo $customer->first_name . ' ' . $customer->last_name;?></option>
-                                                                <?php endforeach; ?>
+                                                            <select name="customer" id="customer" class="form-control">
+                                                                <option value="">Betty Fuller</option>
                                                             </select>
-                                                            <select name="service[]" class="form-control">
-                                                                <option value="" disabled selected>Choose the service worked on</option>
+                                                            <select name="service" id="service" class="form-control">
                                                                 <option value="">Credit</option>
                                                             </select>
-                                                            <textarea name="description[]" class="form-control" placeholder="Description"></textarea>
+                                                            <textarea name="description" id="description" class="form-control"></textarea>
                                                         </div>
-                                                        <div class="col-md-6 d-flex align-items-end pr-0">
+                                                        <div class="col-md-6 d-flex align-items-end">
                                                             <div class="form-check form-check-inline">
-                                                                <input class="form-check-input weekly-billable" type="checkbox" name="billable[]" value="1" onclick="showHiddenFields(this)">
+                                                                <input class="form-check-input" type="checkbox" name="billable" id="billable" value="0">
                                                                 <label class="form-check-label" for="billable">Billable(/hr)</label>
+                                                                <input type="number" name="hourly_rate" id="hourlyRate" class="ml-2 w-25 form-control hide">
+                                                                <input type="checkbox" name="taxable" id="taxable" class="ml-2 form-check-input hide" value="0">
+                                                                <label class="form-check-label hide" for="taxable">Taxable</label>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td><input type="text" name="sunday_hours[]" class="form-control day-input"></td>
-                                                <td><input type="text" name="monday_hours[]" class="form-control day-input"></td>
-                                                <td><input type="text" name="tuesday_hours[]" class="form-control day-input"></td>
-                                                <td><input type="text" name="wednesday_hours[]" class="form-control day-input"></td>
-                                                <td><input type="text" name="thursday_hours[]" class="form-control day-input"></td>
-                                                <td><input type="text" name="friday_hours[]" class="form-control day-input"></td>
-                                                <td><input type="text" name="saturday_hours[]" class="form-control day-input"></td>
-                                                <td class="total-cell"></td>
-                                                <td><a href="#" class="deleteRow h4"><i class="fa fa-trash"></i></a></td>
+                                                <td><input type="number" name="sunday_hours" id="sundayHours" class="form-control"></td>
+                                                <td><input type="number" name="monday_hours" id="mondayHours" class="form-control"></td>
+                                                <td><input type="number" name="tuesday_hours" id="tuesdayHours" class="form-control"></td>
+                                                <td><input type="number" name="wednesday_hours" id="wednesdayHours" class="form-control"></td>
+                                                <td><input type="number" name="thursday_hours" id="thursdayHours" class="form-control"></td>
+                                                <td><input type="number" name="friday_hours" id="fridayHours" class="form-control"></td>
+                                                <td><input type="number" name="saturday_hours" id="saturdayHours" class="form-control"></td>
+                                                <td></td>
+                                                <td><a href="#" class="h4"><i class="fa fa-trash"></i></a></td>
                                             </tr>
                                             <tr>
                                                 <td>2</td>
                                                 <td>
                                                     <div class="row m-0">
                                                         <div class="col-md-6 p-0">
-                                                            <select name="customer[]" class="form-control">
-                                                                <option value="" disabled selected>Choose a customer</option>
-                                                                <?php foreach($dropdown['customers'] as $customer):?>
-                                                                    <option value="<?php echo $customer->prof_id;?>"><?php echo $customer->first_name . ' ' . $customer->last_name;?></option>
-                                                                <?php endforeach; ?>
+                                                            <select name="customer" id="customer" class="form-control">
+                                                                <option value="">Betty Fuller</option>
                                                             </select>
-                                                            <select name="service[]" class="form-control">
-                                                                <option value="" disabled selected>Choose the service worked on</option>
+                                                            <select name="service" id="service" class="form-control">
                                                                 <option value="">Credit</option>
                                                             </select>
-                                                            <textarea name="description[]" class="form-control" placeholder="Description"></textarea>
+                                                            <textarea name="description" id="description" class="form-control"></textarea>
                                                         </div>
-                                                        <div class="col-md-6 d-flex align-items-end pr-0">
+                                                        <div class="col-md-6 d-flex align-items-end">
                                                             <div class="form-check form-check-inline">
-                                                                <input class="form-check-input weekly-billable" type="checkbox" name="billable[]" value="1" onclick="showHiddenFields(this)">
+                                                                <input class="form-check-input" type="checkbox" name="billable" id="billable" value="0">
                                                                 <label class="form-check-label" for="billable">Billable(/hr)</label>
+                                                                <input type="number" name="hourly_rate" id="hourlyRate" class="ml-2 w-25 form-control hide">
+                                                                <input type="checkbox" name="taxable" id="taxable" class="ml-2 form-check-input hide" value="0">
+                                                                <label class="form-check-label hide" for="taxable">Taxable</label>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td><input type="text" name="sunday_hours[]" class="form-control day-input"></td>
-                                                <td><input type="text" name="monday_hours[]" class="form-control day-input"></td>
-                                                <td><input type="text" name="tuesday_hours[]" class="form-control day-input"></td>
-                                                <td><input type="text" name="wednesday_hours[]" class="form-control day-input"></td>
-                                                <td><input type="text" name="thursday_hours[]" class="form-control day-input"></td>
-                                                <td><input type="text" name="friday_hours[]" class="form-control day-input"></td>
-                                                <td><input type="text" name="saturday_hours[]" class="form-control day-input"></td>
-                                                <td class="total-cell"></td>
-                                                <td><a href="#" class="deleteRow h4"><i class="fa fa-trash"></i></a></td>
+                                                <td><input type="number" name="sunday_hours" id="sundayHours" class="form-control"></td>
+                                                <td><input type="number" name="monday_hours" id="mondayHours" class="form-control"></td>
+                                                <td><input type="number" name="tuesday_hours" id="tuesdayHours" class="form-control"></td>
+                                                <td><input type="number" name="wednesday_hours" id="wednesdayHours" class="form-control"></td>
+                                                <td><input type="number" name="thursday_hours" id="thursdayHours" class="form-control"></td>
+                                                <td><input type="number" name="friday_hours" id="fridayHours" class="form-control"></td>
+                                                <td><input type="number" name="saturday_hours" id="saturdayHours" class="form-control"></td>
+                                                <td></td>
+                                                <td><a href="#" class="h4"><i class="fa fa-trash"></i></a></td>
                                             </tr>
                                             <tr>
                                                 <td>3</td>
                                                 <td>
                                                     <div class="row m-0">
                                                         <div class="col-md-6 p-0">
-                                                            <select name="customer[]" class="form-control">
-                                                                <option value="" disabled selected>Choose a customer</option>
-                                                                <?php foreach($dropdown['customers'] as $customer):?>
-                                                                    <option value="<?php echo $customer->prof_id;?>"><?php echo $customer->first_name . ' ' . $customer->last_name;?></option>
-                                                                <?php endforeach; ?>
+                                                            <select name="customer" id="customer" class="form-control">
+                                                                <option value="">Betty Fuller</option>
                                                             </select>
-                                                            <select name="service[]" class="form-control">
-                                                                <option value="" disabled selected>Choose the service worked on</option>
+                                                            <select name="service" id="service" class="form-control">
                                                                 <option value="">Credit</option>
                                                             </select>
-                                                            <textarea name="description[]" class="form-control" placeholder="Description"></textarea>
+                                                            <textarea name="description" id="description" class="form-control"></textarea>
                                                         </div>
-                                                        <div class="col-md-6 d-flex align-items-end pr-0">
+                                                        <div class="col-md-6 d-flex align-items-end">
                                                             <div class="form-check form-check-inline">
-                                                                <input class="form-check-input weekly-billable" type="checkbox" name="billable[]" value="1" onclick="showHiddenFields(this)">
+                                                                <input class="form-check-input" type="checkbox" name="billable" id="billable" value="0">
                                                                 <label class="form-check-label" for="billable">Billable(/hr)</label>
+                                                                <input type="number" name="hourly_rate" id="hourlyRate" class="ml-2 w-25 form-control hide">
+                                                                <input type="checkbox" name="taxable" id="taxable" class="ml-2 form-check-input hide" value="0">
+                                                                <label class="form-check-label hide" for="taxable">Taxable</label>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td><input type="text" name="sunday_hours[]" class="form-control day-input"></td>
-                                                <td><input type="text" name="monday_hours[]" class="form-control day-input"></td>
-                                                <td><input type="text" name="tuesday_hours[]" class="form-control day-input"></td>
-                                                <td><input type="text" name="wednesday_hours[]" class="form-control day-input"></td>
-                                                <td><input type="text" name="thursday_hours[]" class="form-control day-input"></td>
-                                                <td><input type="text" name="friday_hours[]" class="form-control day-input"></td>
-                                                <td><input type="text" name="saturday_hours[]" class="form-control day-input"></td>
-                                                <td class="total-cell"></td>
-                                                <td><a href="#" class="deleteRow h4"><i class="fa fa-trash"></i></a></td>
+                                                <td><input type="number" name="sunday_hours" id="sundayHours" class="form-control"></td>
+                                                <td><input type="number" name="monday_hours" id="mondayHours" class="form-control"></td>
+                                                <td><input type="number" name="tuesday_hours" id="tuesdayHours" class="form-control"></td>
+                                                <td><input type="number" name="wednesday_hours" id="wednesdayHours" class="form-control"></td>
+                                                <td><input type="number" name="thursday_hours" id="thursdayHours" class="form-control"></td>
+                                                <td><input type="number" name="friday_hours" id="fridayHours" class="form-control"></td>
+                                                <td><input type="number" name="saturday_hours" id="saturdayHours" class="form-control"></td>
+                                                <td></td>
+                                                <td><a href="#" class="h4"><i class="fa fa-trash"></i></a></td>
                                             </tr>
                                         </tbody>
                                         <tfoot>
@@ -204,7 +188,7 @@
                                                 <td></td>
                                                 <td></td>
                                                 <td></td>
-                                                <td>00:00</td>
+                                                <td>0:00</td>
                                                 <td></td>
                                             </tr>
                                         </tfoot>
@@ -214,8 +198,8 @@
                                 <div class="timesheet-table-footer">
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <button type="button" id="add-table-line" class="btn btn-outline-secondary border" data-target="#timesheet-table">Add lines</button>
-                                            <button type="button" id="clear-table-line" class="btn btn-outline-secondary border" data-target="#timesheet-table">Clear all lines</button>
+                                            <button type="button" class="btn btn-outline-secondary border">Add lines</button>
+                                            <button type="button" class="btn btn-outline-secondary border">Clear all lines</button>
                                         </div>
                                     </div>
                                 </div>
@@ -234,7 +218,7 @@
                         <div class="col-md-4">
                             <!-- Split dropup button -->
                             <div class="btn-group dropup float-right">
-                                <button type="submit" class="btn btn-success">
+                                <button type="button" class="btn btn-success">
                                     Save and new
                                 </button>
                                 <button type="button" class="btn btn-success dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -245,7 +229,7 @@
                                 </div>
                             </div>
 
-                            <button type="submit" class="btn btn-secondary btn-rounded border float-right mr-2">Save</button>
+                            <button type="button" class="btn btn-secondary btn-rounded border float-right mr-2" data-dismiss="modal">Save</button>
                         </div>
                     </div>
                 </div>
@@ -254,5 +238,4 @@
         </div>
     </div>
     <!--end of modal-->
-</form>
 </div>

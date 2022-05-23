@@ -81,11 +81,10 @@ function getItems(obj) {
     },
   });
 }
-function setitem(obj, title, price, discount, itemid) {
+function setitem(obj, title, price, discount) {
   jQuery(obj).parent().parent().find(".getItems").val(title);
   jQuery(obj).parent().parent().parent().find(".price").val(price);
   jQuery(obj).parent().parent().parent().find(".discount").val(discount);
-  jQuery(obj).parent().parent().parent().find(".itemid").val(itemid);
   var counter = jQuery(obj)
     .parent()
     .parent()
@@ -149,14 +148,6 @@ function calculation(counter) {
   $("#total_" + counter).val(total);
   $("#span_tax_" + counter).text(tax1);
   $("#tax_" + counter).val(tax1);
-
-  if( $('#tax_'+ counter).length ){
-    $('#tax_'+counter).val(tax1);
-  }
-
-  if( $('#item_total_'+ counter).length ){
-    $('#item_total_'+counter).val(total);
-  }
 
   var eqpt_cost = 0;
   var subtotal = 0;
@@ -227,11 +218,10 @@ function getItems(obj) {
     },
   });
 }
-function setitem(obj, title, price, discount, itemid) {
+function setitem(obj, title, price, discount) {
   jQuery(obj).parent().parent().find(".getItems").val(title);
   jQuery(obj).parent().parent().parent().find(".price").val(price);
   jQuery(obj).parent().parent().parent().find(".discount").val(discount);
-  jQuery(obj).parent().parent().parent().find(".itemid").val(itemid);
   var counter = jQuery(obj)
     .parent()
     .parent()
@@ -284,10 +274,6 @@ function calculation(counter) {
   var tax1 = (((parseFloat(price) * 7.5) / 100) * parseFloat(quantity)).toFixed(
     2
   );
-  if( discount == '' ){
-    discount = 0;
-  }
-  
   var total = (
     (parseFloat(price) + parseFloat(tax)) * parseFloat(quantity) -
     parseFloat(discount)
@@ -295,34 +281,20 @@ function calculation(counter) {
 
   $("#span_total_" + counter).text(total);
   $("#span_tax_" + counter).text(tax1);
-  $("#discount_" + counter).val(discount);
-
-  if( $('#tax_'+ counter).length ){
-    $('#tax_'+counter).val(tax1);
-  }
-
-  if( $('#item_total_'+ counter).length ){
-    $('#item_total_'+counter).val(total);
-  }
 
   var eqpt_cost = 0;
   var cnt = $("#count").val();
-  var total_discount = 0;
+
   for (var p = 0; p <= cnt; p++) {
     var prc = $("#price_" + p).val();
     var quantity = $("#quantity_" + p).val();
-    var discount = $("#discount_" + p).val();
     // var discount= $('#discount_' + p).val();
     // eqpt_cost += parseFloat(prc) - parseFloat(discount);
     eqpt_cost += parseFloat(prc) * parseFloat(quantity);
-    total_discount += parseFloat(discount);
   }
 
   eqpt_cost = parseFloat(eqpt_cost).toFixed(2);
-  total_discount = parseFloat(total_discount).toFixed(2);
-
   $("#eqpt_cost").val(eqpt_cost);
-  $("#total_discount").val(total_discount);
 
   var sls = (parseFloat(eqpt_cost).toFixed(2) * 7.5) / 100;
   sls = parseFloat(sls).toFixed(2);
@@ -376,184 +348,11 @@ $(document).on("click", "#add_another", function (e) {
     '">0.00</span>\n' +
     "</td>\n" +
     "<td>\n" +
-    '<a href="#" class="remove btn btn-sm btn-success"><i class="fa fa-trash" aria-hidden="true"></i></a>\n' +
+    '<a href="#" class="remove">X</a>\n' +
     "</td>\n" +
     "</tr> ";
 
   $("#table_body").append(html);
-});
-
-$(document).on("click", "#add_another_workOr", function (e) 
-{
-  // alert('yeah');
-  e.preventDefault();
-  var count = parseInt($("#count").val()) + 1;
-  $("#count").val(count);
-
-  var html =
-    "<tr>\n" +
-    '<td><input type="text" class="form-control" name="order_items[]"></td>\n' +
-    "<td>\n" +
-    '<input type="text" class="form-control quantity" name="quantity[]" data-counter="' +
-    count +
-    '" id="quantity_' +
-    count +
-    '" value="1">\n' +
-    "</td>\n" +
-    "<td>\n" +
-    '<input type="number" class="form-control price" name="price[]" data-counter="' +
-    count +
-    '" id="price_' +
-    count +
-    '" min="0" value="0">\n' +
-    "</td>\n" +
-    "<td>\n" +
-    '<a href="#" class="remove btn btn-sm btn-success"><i class="fa fa-trash" aria-hidden="true"></i></a>\n' +
-    "</td>\n" +
-    "</tr> ";
-
-  $("#table_body_work").append(html);
-});
-
-
-$(document).on("click", "#add_another_option1", function (e) { 
-  e.preventDefault();
-  var count = parseInt($("#count").val()) + 1;
-  $("#count").val(count);
-
-  var html =
-    "<tr>\n" +
-    '<td><select name="item_type[]" class="form-control"><option value="product">Product</option><option value="material">Material</option><option value="service">Service</option></select></td>\n' +   
-    "<td>\n" +
-    '<input type="text" class="form-control quantity" name="quantity[]" data-counter="' +
-    count +
-    '" id="quantity_' +
-    count +
-    '" value="1">\n' +
-    "</td>\n" +
-    "<td>\n" +
-    '<input type="number" class="form-control price" name="price[]" data-counter="' +
-    count +
-    '" id="price_' +
-    count +
-    '" min="0" value="0">\n' +
-    "</td>\n" +
-    "<td>\n" +
-    '<span id="span_total_' +
-    count +
-    '">0.00</span>\n' +
-    "</td>\n" +
-    "<td>\n" +
-    '<a href="#" class="remove btn btn-sm btn-success"><i class="fa fa-trash" aria-hidden="true"></i></a>\n' +
-    "</td>\n" +
-    "</tr> ";
-
-  $("#table_body_option1").append(html);
-});
-
-$(document).on("click", "#add_another_option2", function (e) { 
-  e.preventDefault();
-  var count = parseInt($("#count").val()) + 1;
-  $("#count").val(count);
-
-  var html =
-    "<tr>\n" +
-    '<td><select name="item_type[]" class="form-control"><option value="product">Product</option><option value="material">Material</option><option value="service">Service</option></select></td>\n' +   
-    "<td>\n" +
-    '<input type="text" class="form-control quantity" name="quantity[]" data-counter="' +
-    count +
-    '" id="quantity_' +
-    count +
-    '" value="1">\n' +
-    "</td>\n" +
-    "<td>\n" +
-    '<input type="number" class="form-control price" name="price[]" data-counter="' +
-    count +
-    '" id="price_' +
-    count +
-    '" min="0" value="0">\n' +
-    "</td>\n" +
-    "<td>\n" +
-    '<span id="span_total_' +
-    count +
-    '">0.00</span>\n' +
-    "</td>\n" +
-    "<td>\n" +
-    '<a href="#" class="remove btn btn-sm btn-success"><i class="fa fa-trash" aria-hidden="true"></i></a>\n' +
-    "</td>\n" +
-    "</tr> ";
-
-  $("#table_body_option2").append(html);
-});
-
-$(document).on("click", "#add_another_bundle1", function (e) { 
-  e.preventDefault();
-  var count = parseInt($("#count").val()) + 1;
-  $("#count").val(count);
-
-  var html =
-    "<tr>\n" +
-    '<td><select name="item_type[]" class="form-control"><option value="product">Product</option><option value="material">Material</option><option value="service">Service</option></select></td>\n' +   
-    "<td>\n" +
-    '<input type="text" class="form-control quantity" name="quantity[]" data-counter="' +
-    count +
-    '" id="quantity_' +
-    count +
-    '" value="1">\n' +
-    "</td>\n" +
-    "<td>\n" +
-    '<input type="number" class="form-control price" name="price[]" data-counter="' +
-    count +
-    '" id="price_' +
-    count +
-    '" min="0" value="0">\n' +
-    "</td>\n" +
-    "<td>\n" +
-    '<span id="span_total_' +
-    count +
-    '">0.00</span>\n' +
-    "</td>\n" +
-    "<td>\n" +
-    '<a href="#" class="remove btn btn-sm btn-success"><i class="fa fa-trash" aria-hidden="true"></i></a>\n' +
-    "</td>\n" +
-    "</tr> ";
-
-  $("#table_body_bundle1").append(html);
-});
-
-$(document).on("click", "#add_another_bundle2", function (e) { 
-  e.preventDefault();
-  var count = parseInt($("#count").val()) + 1;
-  $("#count").val(count);
-
-  var html =
-    "<tr>\n" +
-    '<td><select name="item_type[]" class="form-control"><option value="product">Product</option><option value="material">Material</option><option value="service">Service</option></select></td>\n' +   
-    "<td>\n" +
-    '<input type="text" class="form-control quantity" name="quantity[]" data-counter="' +
-    count +
-    '" id="quantity_' +
-    count +
-    '" value="1">\n' +
-    "</td>\n" +
-    "<td>\n" +
-    '<input type="number" class="form-control price" name="price[]" data-counter="' +
-    count +
-    '" id="price_' +
-    count +
-    '" min="0" value="0">\n' +
-    "</td>\n" +
-    "<td>\n" +
-    '<span id="span_total_' +
-    count +
-    '">0.00</span>\n' +
-    "</td>\n" +
-    "<td>\n" +
-    '<a href="#" class="remove btn btn-sm btn-success"><i class="fa fa-trash" aria-hidden="true"></i></a>\n' +
-    "</td>\n" +
-    "</tr> ";
-
-  $("#table_body_bundle2").append(html);
 });
 
 $(document).on("click", "#add_another_zone", function (e) {
@@ -602,11 +401,11 @@ function cal_total_due() {
   var inst_cost = parseFloat($("#inst_cost").val());
   var one_time = parseFloat($("#one_time").val());
   var m_monitoring = parseFloat($("#m_monitoring").val());
-  var total_discount = parseFloat($("#total_discount").val());
-  var total_due = parseFloat((eqpt_cost + sales_tax + inst_cost + one_time + m_monitoring) - total_discount).toFixed(2);
-  
+
+  var total_due = parseFloat(
+    eqpt_cost + sales_tax + inst_cost + one_time + m_monitoring
+  ).toFixed(2);
   $("#total_due").text(total_due);
-  $("#g_total_due").val(total_due);
 }
 
 $(document).ready(function () {
@@ -676,121 +475,20 @@ $(document).ready(function () {
   //   },
   // });
 
-  // tinymce.init({
-  //   selector: "textarea#send-email",
-  //   height: 500,
-  //   menubar: false,
-  //   plugins: [
-  //     "advlist autolink lists link image charmap print preview anchor",
-  //     "searchreplace visualblocks code fullscreen",
-  //     "insertdatetime media table paste code help wordcount",
-  //   ],
-  //   toolbar:
-  //     "undo redo | formatselect | " +
-  //     "bold italic backcolor | alignleft aligncenter " +
-  //     "alignright alignjustify | bullist numlist outdent indent | " +
-  //     "removeformat | help",
-  //   content_css: "//www.tiny.cloud/css/codepen.min.css",
-  // });
+  tinymce.init({
+    selector: "textarea#send-email",
+    height: 500,
+    menubar: false,
+    plugins: [
+      "advlist autolink lists link image charmap print preview anchor",
+      "searchreplace visualblocks code fullscreen",
+      "insertdatetime media table paste code help wordcount",
+    ],
+    toolbar:
+      "undo redo | formatselect | " +
+      "bold italic backcolor | alignleft aligncenter " +
+      "alignright alignjustify | bullist numlist outdent indent | " +
+      "removeformat | help",
+    content_css: "//www.tiny.cloud/css/codepen.min.css",
+  });
 });
-
-$(document).on("click", "#add_another_new_invoice", function (e) {
-  e.preventDefault();
-  var count = parseInt($("#count").val()) + 1;
-  $("#count").val(count);
-
-  var html =
-    "<tr>\n" +
-    "<td>\n" +
-    '<input type="text" autocomplete="off" class="form-control getItems" onKeyup="getItems(this)" name="item[]"><ul class="suggestions"></ul>\n' +
-    "</td>\n" +
-    '<td><select name="item_type[]" class="form-control"><option value="service">Service</option><option value="material">Material</option><option value="product">Product</option></select></td>\n' +
-    "<td>\n" +
-    '<input type="text" class="form-control quantity" name="quantity[]" data-counter="' +
-    count +
-    '" id="quantity_' +
-    count +
-    '" value="1">\n' +
-    "</td>\n" +
-    "<td>\n" +
-    '<input type="number" class="form-control price" name="price[]" data-counter="' +
-    count +
-    '" id="price_' +
-    count +
-    '" min="0" value="0">\n' +
-    "</td>\n" +
-    "<td>\n" +
-    '<input type="number" class="form-control discount" name="discount[]" data-counter="' +
-    count +
-    '" id="discount_' +
-    count +
-    '" min="0" value="0.00" readonly>\n' +
-    "</td>\n" +
-    "<td>\n" +
-    '<input type="hidden" class="form-control tax" name="tax[]" data-counter="' +
-    count +
-    '" id="tax_' +
-    count +
-    '" min="0" value="0">\n' +
-    '<span id="span_tax_' +
-    count +
-    '">0.00 (7.5%)</span>\n' +
-    "</td>\n" +
-    "<td>\n" +
-    '<input type="hidden" class="form-control total" name="total[]" data-counter="' +
-    count +
-    '" id="total_' +
-    count +
-    '" min="0" value="0">\n' +
-    '<span id="span_total_' +
-    count +
-    '">0.00</span>\n' +
-    "</td>\n" +
-    "<td>\n" +
-    '<a href="#" class="remove"><span class="fa fa-trash" /></a>\n' +
-    "</td>\n" +
-    "</tr> ";
-
-  $("#table_body_new").append(html);
-});
-
-// signature for Technician
-$("#smoothed1a").signaturePad({
-  drawOnly: true,
-  drawBezierCurves: true,
-  lineTop: 200,
-});
-$("#company_representative_approval_signature1a").on("click touchstart",
-  function () {
-    var canvas = document.getElementById(
-      "company_representative_approval_signature1a"
-    );
-    var dataURL = canvas.toDataURL("image/png");
-    $("#saveCompanySignatureDB1a").val(dataURL);
-  }
-);
-
-// signature for Technician
-$("#smoothed2a").signaturePad({
-  drawOnly: true,
-  drawBezierCurves: true,
-  lineTop: 200,
-});
-$("#primary_account_holder_signature2a").on("click touchstart", function () {
-  var canvas = document.getElementById("primary_account_holder_signature2a");
-  var dataURL = canvas.toDataURL("image/png");
-  $("#savePrimaryAccountSignatureDB2a").val(dataURL);
-});
-
-// signature for Technician
-$("#smoothed3a").signaturePad({
-  drawOnly: true,
-  drawBezierCurves: true,
-  lineTop: 200,
-});
-$("#secondary_account_holder_signature3a").on("click touchstart", function () {
-  var canvas = document.getElementById("secondary_account_holder_signature3a");
-  var dataURL = canvas.toDataURL("image/png");
-  $("#saveSecondaryAccountSignatureDB3a").val(dataURL);
-});
-

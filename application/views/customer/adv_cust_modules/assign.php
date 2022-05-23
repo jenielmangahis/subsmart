@@ -1,9 +1,8 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 ?>
-<div class="assigned module ui-state-default"  data-id="<?= $id ?>"  id="<?= $id ?>">
-    <div class="col-sm-12 individual-module">
-        <h6>Assign</h6>
+<div class="assigned module ui-state-default" id="assign">
+    <div class="col-sm-12">
         <div class="row">
             <div class="assigncontactlistbox">
                 <div class="assigncontactlist normaltext1">

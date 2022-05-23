@@ -17,15 +17,6 @@ class Estimate_model extends MY_Model
         return $query->result();
     }
 
-    public function getAllEstimates()
-    {
-
-        $this->db->select('*');
-        $this->db->from($this->table);
-        $query = $this->db->get();
-        return $query->result();
-    }
-
     public function getAllByUserId($type = '', $status = '', $emp_id = 0, $uid = 0)
     {
         $user_id = getLoggedUserID();
@@ -105,10 +96,10 @@ class Estimate_model extends MY_Model
      * @param int $company_id
      * @return mixed
      */
-    public function filterBy($filters = array(), $company_id = 0, $role_id = 0)
+    public function filterBy($filters = array(), $company_id = 0)
     {
 
-        $this->db->select('estimates.id, estimates.estimate_number, estimates.job_name, estimates.estimate_eqpt_cost, estimates.user_id, estimates.estimate_date, estimates.customer_id, estimates.company_id, estimates.status');
+        $this->db->select('estimates.id, estimates.job_name, estimates.estimate_eqpt_cost, estimates.user_id, estimates.estimate_date, estimates.customer_id, estimates.company_id, estimates.status');
 
 //        $this->db->select("*");
         $this->db->from($this->table);
@@ -121,8 +112,7 @@ class Estimate_model extends MY_Model
                 $items = get_config_item('estimate_status');
 
                 // if search successful, use the data position as status
-                $this->db->where('estimates.status', $filters['status']);
-                //$this->db->where('status', array_search($filters['status'], array_map('strtolower', $items)));
+                $this->db->where('status', array_search($filters['status'], array_map('strtolower', $items)));
 
             } elseif (isset($filters['search'])) {
 
@@ -150,17 +140,14 @@ class Estimate_model extends MY_Model
                 }
             }
         }
-        //
-        if( $role_id > 3 ){
-            $this->db->where('estimates.company_id', $company_id);
-        }
 
-        /*if (isset($company_id)) {
+        //
+        if (isset($company_id)) {
             $this->db->where('estimates.company_id', $company_id);
         } else {
 
             $this->db->where('estimates.user_id', getLoggedUserID());
-        }*/
+        }
 
         $query = $this->db->get();
         $results = $query->result();
@@ -198,47 +185,6 @@ class Estimate_model extends MY_Model
 
         return $results;
     }
-
-    public function getAllPendingEstimatesByUserId($user_id = 0)
-    {
-        $this->db->select('estimates.id, estimates.estimate_number, estimates.job_name, estimates.estimate_eqpt_cost, estimates.user_id, estimates.estimate_date, estimates.customer_id, estimates.company_id, estimates.status, acs_profile.prof_id, acs_profile.first_name, acs_profile.last_name');
-
-        $this->db->from($this->table);
-        $this->db->join('acs_profile', 'estimates.customer_id = acs_profile.prof_id');
-
-        $start_date = date('Y-m-d');
-        $end_date   = date('Y-m-d', strtotime($start_date . ' +5 day'));
-        
-        $this->db->where('estimate_date BETWEEN "'. $start_date . '" and "'. $end_date .'"');
-        $this->db->where('estimates.status', 'Submitted');
-        $this->db->where('estimates.user_id', $user_id);
-        $this->db->order_by('id', 'DESC');
-        $query = $this->db->get();
-        return $query->result();
-    }
-
-    public function getAllPendingEstimates()
-    {
-        $this->db->select('estimates.id, estimates.estimate_number, estimates.job_name, estimates.estimate_eqpt_cost, estimates.user_id, estimates.estimate_date, estimates.customer_id, estimates.company_id, estimates.status, acs_profile.prof_id, acs_profile.first_name, acs_profile.last_name');
-
-        $this->db->from($this->table);
-        $this->db->join('acs_profile', 'estimates.customer_id = acs_profile.prof_id');
-
-        $start_date = date('Y-m-d');
-        $end_date   = date('Y-m-d', strtotime($start_date . ' +5 day'));
-        
-        $this->db->where('estimate_date BETWEEN "'. $start_date . '" and "'. $end_date .'"');
-        $this->db->where('estimates.status', 'Submitted');
-        $this->db->order_by('id', 'DESC');
-        $query = $this->db->get();
-        return $query->result();
-    }
-
-    public function save_estimate($data){
-		$vendor = $this->db->insert('accounting_estimate', $data);
-	    $insert = $this->db->insert_id();
-		return  $insert;
-	}
 }
 
 /* End of file Estimate_model.php */

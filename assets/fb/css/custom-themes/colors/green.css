@@ -1,12 +1,12 @@
 .form-green .form-header {
-    background-color:#7DBD78/*  !important */;
+    background-color:#7DBD78 !important;
 }
 
 form.form-green button, .form-green div.Signature div.container button {
-    background-color: #565CAC/*  !important */;
-    color: #fff/*  !important */;
+    background-color: #565CAC !important;
+    color: #fff !important;
 }
 
 .form-green input, .form-green textarea, .form-green select, .form-green div.Signature div.container {
-    border-color: #7DBD78/*  !important */;
+    border-color: #7DBD78 !important;
 }

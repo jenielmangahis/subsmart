@@ -97,7 +97,7 @@ $(document).ready(function(){
 
       if(current_process != ''){
         showFolderManagerNotif('Confirm Delete',
-                                'Trash' + confirm_text + '?<br>' + confirm_path, 'confirm');
+                               'Trash' + confirm_text + '?<br>' + confirm_path, 'confirm');
       }
     } else {
       showFolderManagerNotif('Error','Please select a file or a folder to trash','error');
@@ -267,7 +267,7 @@ $(document).ready(function(){
         confirm_text = ' File ' + div.attr('fnm');
 
         showFolderManagerNotif('Confirm Remove',
-                                'Remove' + confirm_text + '?<br>' + confirm_path + '<br>Note: The file or folder will be removed permanently','confirm');
+                               'Remove' + confirm_text + '?<br>' + confirm_path + '<br>Note: The file or folder will be removed permanently','confirm');
       }
     } else {
       showFolderManagerNotif('Information','Please select a folder or file from the recycle bin','info');
@@ -279,8 +279,8 @@ $(document).ready(function(){
     current_process = 'empty_trash';
 
     showFolderManagerNotif('Confirm Empty Recycle Bin',
-                            'Are you sure you want to empty recycle bin?<br>Please note that only files and folders that you have created will be removed.',
-                            'confirm');  
+                           'Are you sure you want to empty recycle bin?<br>Please note that only files and folders that you have created will be removed.',
+                           'confirm');  
   });
 
 // open general permissions form entry
@@ -700,11 +700,6 @@ $(document).ready(function(){
               showFolderManagerNotif('Error', result.error, 'error');  
             } else {
               getFoldersAndFiles(current_selected_folder);
-
-              const isUpdateOnRecentlyUploaded = $('.vault__item--isActive').closest('#recentlyUploaded').length >= 1;
-              if (isUpdateOnRecentlyUploaded) {
-                get_recently_uploaded_files();
-              }
 
               closeEntry();
             }
@@ -1178,7 +1173,7 @@ $(document).ready(function(){
         },
         error: function(jqXHR, textStatus, errorThrown){   
           hideUploading();
-                    
+                   
           showFolderManagerNotif(textStatus, errorThrown, 'error');  
         }
       });
@@ -1240,7 +1235,7 @@ $(document).ready(function(){
         },
         error: function(jqXHR, textStatus, errorThrown){   
           hideUploading();
-                    
+                   
           showFolderManagerNotif(textStatus, errorThrown, 'error');  
         }
       });  
@@ -1321,7 +1316,7 @@ function getFoldersAndFiles(parent_id = 0){
 }
 
 //setFoldersAndFiles - Shared Library
-function setFoldersAndFiles_old(folders, files){
+function setFoldersAndFiles(folders, files){
   $('#folders_and_files').empty();
 
   selected = 0;
@@ -1343,7 +1338,7 @@ function setFoldersAndFiles_old(folders, files){
         append += '<div class="row row-' + row_trace + ' mt-4">';
         append += '<div class="col-md-2">';
           append += '<div class="table-responsive shadow-sm rounded border border-secondary h-100 py-2 node" isFolder="1" fid="'+ folder.folder_id +'" created_date="'+ folder.create_date +
-                    '" created_by="'+ folder.FCreatedBy + ' ' + folder.LCreatedBy + '" fnm="'+ folder.folder_name +'" path="'+ folder.c_folder + folder.path +'" path_temp="'+ folder.path +'">';
+                   '" created_by="'+ folder.FCreatedBy + ' ' + folder.LCreatedBy + '" fnm="'+ folder.folder_name +'" path="'+ folder.c_folder + folder.path +'" path_temp="'+ folder.path +'">';
           append += '<table class="border border-0 mb-0 h-100" style="width: 95%"><tbody><tr class="node" isFolder="1" fid="'+ folder.folder_id +'">';
           append += '<td style="width: 15%"><i class="fa fa-folder-open-o fa-2x align-middle text-primary ml-2"></i></td>';
           append += '<td style="width: 65%" class="pl-2">' + folder.folder_name + '</td>';
@@ -1354,7 +1349,7 @@ function setFoldersAndFiles_old(folders, files){
     } else {
       append += '<div class="col-md-2">';
         append += '<div class="table-responsive shadow-sm rounded border border-secondary h-100 py-2 node" isFolder="1" fid="'+ folder.folder_id +'" created_date="'+ folder.create_date +
-                    '" created_by="'+ folder.FCreatedBy + ' ' + folder.LCreatedBy + '" fnm="'+ folder.folder_name +'" path="'+ folder.c_folder + folder.path +'" path_temp="'+ folder.path +'">';
+                   '" created_by="'+ folder.FCreatedBy + ' ' + folder.LCreatedBy + '" fnm="'+ folder.folder_name +'" path="'+ folder.c_folder + folder.path +'" path_temp="'+ folder.path +'">';
         append += '<table class="border border-0 mb-0 h-100" style="width: 95%"><tbody><tr class="node" isFolder="1" fid="'+ folder.folder_id +'">';
         append += '<td style="width: 15%"><i class="fa fa-folder-open-o fa-2x align-middle text-primary ml-2"></i></td>';
         append += '<td style="width: 65%" class="pl-2">' + folder.folder_name + '</td>';
@@ -1383,7 +1378,7 @@ function setFoldersAndFiles_old(folders, files){
         append += '<div class="row row-' + row_trace + ' mt-4">';
         append += '<div class="col-md-2">';
           append += '<div class="table-responsive shadow-sm rounded border border-secondary h-100 py-2 node" isFolder="0" fid="'+ file.file_id +'" created_date="'+ file.created +
-                      '" created_by="'+ file.FCreatedBy + ' ' + file.LCreatedBy + '" fnm="'+ file.title +'" path="'+ file.folder_name + file.file_path +'" path_temp="'+ file.file_path +'">';
+                     '" created_by="'+ file.FCreatedBy + ' ' + file.LCreatedBy + '" fnm="'+ file.title +'" path="'+ file.folder_name + file.file_path +'" path_temp="'+ file.file_path +'">';
           append += '<table class="border border-0 mb-0 h-100" style="width: 95%"><tbody><tr class="node" isFolder="0" fid="'+ file.file_id +'">';
           append += '<td style="width: 15%"><i class="'+ ex_infos['icon'] +' fa-2x align-middle '+ ex_infos['color'] +' ml-2"></i></td>';
           append += '<td style="width: 85%" class="pl-2">' + file.title + '</td>';
@@ -1393,7 +1388,7 @@ function setFoldersAndFiles_old(folders, files){
     } else {
       append += '<div class="col-md-2">';
         append += '<div class="table-responsive shadow-sm rounded border border-secondary h-100 py-2 node" isFolder="0" fid="'+ file.file_id +'" created_date="'+ file.created +
-                      '" created_by="'+ file.FCreatedBy + ' ' + file.LCreatedBy + '" fnm="'+ file.title +'" path="'+ file.folder_name + file.file_path +'" path_temp="'+ file.file_path +'">';
+                     '" created_by="'+ file.FCreatedBy + ' ' + file.LCreatedBy + '" fnm="'+ file.title +'" path="'+ file.folder_name + file.file_path +'" path_temp="'+ file.file_path +'">';
         append += '<table class="border border-0 mb-0 h-100" style="width: 95%"><tbody><tr class="node" isFolder="0" fid="'+ file.file_id +'">';
         append += '<td style="width: 15%"><i class="'+ ex_infos['icon'] +' fa-2x align-middle '+ ex_infos['color'] +' ml-2"></i></td>';
         append += '<td style="width: 85%" class="pl-2">' + file.title + '</td>';
@@ -1478,7 +1473,7 @@ function setFoldersAndFiles_old(folders, files){
 }
 
 //setFoldersAndFiles - My Library
-function setFoldersAndFiles_MyLibrary_old(folders, files){
+function setFoldersAndFiles_MyLibrary(folders, files){
   $('#folders_and_files').empty();
 
   selected = 0;
@@ -1506,7 +1501,7 @@ function setFoldersAndFiles_MyLibrary_old(folders, files){
       } 
 
       append += '<td class="fname">' + folder.folder_name + '</td>';
-      append += '<td class="fpath">/home' + folder.path + '</td>';
+      append += '<td class="fpath">/root' + folder.path + '</td>';
 
     append += '</tr>';
   });
@@ -1527,7 +1522,7 @@ function setFoldersAndFiles_MyLibrary_old(folders, files){
       } 
 
       append += '<td class="fname">' + file.title + '</td>';
-      append += '<td class="fpath">/home' + file.file_path + '</td>';
+      append += '<td class="fpath">/root' + file.file_path + '</td>';
 
     append += '</tr>';
   });
@@ -1616,24 +1611,24 @@ function setFoldersAndFiles_BusinessFormTemplates(folders, files){
         card_append = '<div class="card" id="bft_' + category + '">';
 
         card_append += '<div class="card-header">'+
-                        '<a class="card-link font-weight-bold" data-toggle="collapse" href="#div_bft_'+ category +'" >'+
-                        '<i class="fa fa-plus mr-2"></i>'+ folder.category_name +
-                        '</a><br>';
+                       '<a class="card-link font-weight-bold" data-toggle="collapse" href="#div_bft_'+ category +'" >'+
+                       '<i class="fa fa-plus mr-2"></i>'+ folder.category_name +
+                       '</a><br>';
 
         if((folder.category_desc != "") && (folder.category_desc != null)){
           card_append += '<a class="card-link" data-toggle="collapse" href="#div_bft_'+ category +'" >'+
-                          '<i class="fa fa-plus mr-2 font-weight-none" style="color: transparent"></i><small>'+ folder.category_desc +
-                          '</small></a>';
+                         '<i class="fa fa-plus mr-2 font-weight-none" style="color: transparent"></i><small>'+ folder.category_desc +
+                         '</small></a>';
         }
         
         card_append += '</div>';
 
         card_append += '<div id="div_bft_'+ category +'" class="collapse">'+
-                        '<div class="card-body" id="'+ cur_body_id +'">'+
-                        '<div class="row row-' + categories[category]['row'] + ' mt-4" id="'+ cur_row_id +'">'+
-                        '</div>'+ 
-                        '</div>'+
-                        '</div>';
+                       '<div class="card-body" id="'+ cur_body_id +'">'+
+                       '<div class="row row-' + categories[category]['row'] + ' mt-4" id="'+ cur_row_id +'">'+
+                       '</div>'+ 
+                       '</div>'+
+                       '</div>';
 
         card_append += '</div>';
 
@@ -1647,7 +1642,7 @@ function setFoldersAndFiles_BusinessFormTemplates(folders, files){
       if(folders.length >= cur_count){
         append += '<div class="col-md-2">';
           append += '<div class="table-responsive shadow-sm rounded border border-secondary h-100 py-2 node" isFolder="1" fid="'+ folder.folder_id +'" created_date="'+ folder.create_date +
-                    '" created_by="'+ folder.FCreatedBy + ' ' + folder.LCreatedBy + '" fnm="'+ folder.folder_name +'" path="'+ folder.c_folder + folder.path +'" path_temp="'+ folder.path +'">';
+                   '" created_by="'+ folder.FCreatedBy + ' ' + folder.LCreatedBy + '" fnm="'+ folder.folder_name +'" path="'+ folder.c_folder + folder.path +'" path_temp="'+ folder.path +'">';
           append += '<table class="border border-0 mb-0 h-100" style="width: 95%"><tbody><tr class="node" isFolder="1" fid="'+ folder.folder_id +'">';
           append += '<td style="width: 15%"><i class="fa fa-folder-open-o fa-2x align-middle text-primary ml-2"></i></td>';
           append += '<td style="width: 65%" class="pl-2">' + folder.folder_name + '</td>';
@@ -1669,7 +1664,7 @@ function setFoldersAndFiles_BusinessFormTemplates(folders, files){
     } else {
       append += '<div class="col-md-2">';
         append += '<div class="table-responsive shadow-sm rounded border border-secondary h-100 py-2 node" isFolder="1" fid="'+ folder.folder_id +'" created_date="'+ folder.create_date +
-                    '" created_by="'+ folder.FCreatedBy + ' ' + folder.LCreatedBy + '" fnm="'+ folder.folder_name +'" path="'+ folder.c_folder + folder.path +'" path_temp="'+ folder.path +'">';
+                   '" created_by="'+ folder.FCreatedBy + ' ' + folder.LCreatedBy + '" fnm="'+ folder.folder_name +'" path="'+ folder.c_folder + folder.path +'" path_temp="'+ folder.path +'">';
         append += '<table class="border border-0 mb-0 h-100" style="width: 95%"><tbody><tr class="node" isFolder="1" fid="'+ folder.folder_id +'">';
         append += '<td style="width: 15%"><i class="fa fa-folder-open-o fa-2x align-middle text-primary ml-2"></i></td>';
         append += '<td style="width: 65%" class="pl-2">' + folder.folder_name + '</td>';
@@ -1714,24 +1709,24 @@ function setFoldersAndFiles_BusinessFormTemplates(folders, files){
         card_append = '<div class="card" id="bft_' + category + '">';
 
         card_append += '<div class="card-header">'+
-                        '<a class="card-link font-weight-bold" data-toggle="collapse" href="#div_bft_'+ category +'">'+
-                        '<i class="fa fa-plus mr-2"></i>'+ file.category_name +
-                        '</a><br>';
+                       '<a class="card-link font-weight-bold" data-toggle="collapse" href="#div_bft_'+ category +'">'+
+                       '<i class="fa fa-plus mr-2"></i>'+ file.category_name +
+                       '</a><br>';
 
         if((file.category_desc != "") && (file.category_desc != null)){
           card_append += '<a class="card-link" data-toggle="collapse" href="#div_bft_'+ category +'" >'+
-                          '<i class="fa fa-plus mr-2 font-weight-none" style="color: transparent"></i><small>'+ file.category_desc +
-                          '</small></a>';
+                         '<i class="fa fa-plus mr-2 font-weight-none" style="color: transparent"></i><small>'+ file.category_desc +
+                         '</small></a>';
         }
         
         card_append += '</div>';
 
         card_append += '<div id="div_bft_'+ category +'" class="collapse">'+
-                        '<div class="card-body" id="'+ cur_body_id +'">'+
-                        '<div class="row row-' + categories[category]['row'] + ' mt-4" id="'+ cur_row_id +'">'+
-                        '</div>'+ 
-                        '</div>'+
-                        '</div>';
+                       '<div class="card-body" id="'+ cur_body_id +'">'+
+                       '<div class="row row-' + categories[category]['row'] + ' mt-4" id="'+ cur_row_id +'">'+
+                       '</div>'+ 
+                       '</div>'+
+                       '</div>';
 
         card_append += '</div>';
 
@@ -1745,7 +1740,7 @@ function setFoldersAndFiles_BusinessFormTemplates(folders, files){
       if(files.length >= cur_count){
         append += '<div class="col-md-2">';
           append += '<div class="table-responsive shadow-sm rounded border border-secondary h-100 py-2 node" isFolder="0" fid="'+ file.file_id +'" created_date="'+ file.created +
-                        '" created_by="'+ file.FCreatedBy + ' ' + file.LCreatedBy + '" fnm="'+ file.title +'" path="'+ file.folder_name + file.file_path +'" path_temp="'+ file.file_path +'">';
+                       '" created_by="'+ file.FCreatedBy + ' ' + file.LCreatedBy + '" fnm="'+ file.title +'" path="'+ file.folder_name + file.file_path +'" path_temp="'+ file.file_path +'">';
           append += '<table class="border border-0 mb-0 h-100" style="width: 95%"><tbody><tr class="node" isFolder="0" fid="'+ file.file_id +'">';
           append += '<td style="width: 15%"><i class="'+ ex_infos['icon'] +' fa-2x align-middle '+ ex_infos['color'] +' ml-2"></i></td>';
           append += '<td style="width: 85%" class="pl-2">' + file.title + '</td>';
@@ -1766,7 +1761,7 @@ function setFoldersAndFiles_BusinessFormTemplates(folders, files){
     } else {
       append += '<div class="col-md-2">';
         append += '<div class="table-responsive shadow-sm rounded border border-secondary h-100 py-2 node" isFolder="0" fid="'+ file.file_id +'" created_date="'+ file.created +
-                      '" created_by="'+ file.FCreatedBy + ' ' + file.LCreatedBy + '" fnm="'+ file.title +'" path="'+ file.folder_name + file.file_path +'" path_temp="'+ file.file_path +'">';
+                     '" created_by="'+ file.FCreatedBy + ' ' + file.LCreatedBy + '" fnm="'+ file.title +'" path="'+ file.folder_name + file.file_path +'" path_temp="'+ file.file_path +'">';
         append += '<table class="border border-0 mb-0 h-100" style="width: 95%"><tbody><tr class="node" isFolder="0" fid="'+ file.file_id +'">';
         append += '<td style="width: 15%"><i class="'+ ex_infos['icon'] +' fa-2x align-middle '+ ex_infos['color'] +' ml-2"></i></td>';
         append += '<td style="width: 85%" class="pl-2">' + file.title + '</td>';
@@ -2033,7 +2028,7 @@ function get_most_previewd_files(){
   });
 }
 
-function get_recently_uploaded_files_old(){
+function get_recently_uploaded_files(){
   $.ajax({
     type: 'GET',
     url: base_url + 'vault/recently_uploaded_files',
@@ -2261,9 +2256,8 @@ function showFileDetail(vS, vSiF, vIsTrash, vIsMyLibrary){
 
     fpath = div.attr('path');
     fpath = base_url + 'uploads/' + fpath;
-    const createdAt = moment(div.attr('created_date')).format("MM/DD/YYYY");
 
-    $('#view-image-date-created').text(createdAt);
+    $('#view-image-date-created').text(div.attr('created_date'));
     $('#view-image-created-by').text(div.attr('created_by'));
 
     $('#modal-folder-manager-view-image-file').attr('src', fpath);
@@ -2293,13 +2287,11 @@ function showFolderDetails(vS, vSiF, vIsTrash, vIsMyLibrary, vDiv = ""){
     var fpath = $('#folders_path').text();
     fpath = fpath.trim() + div.attr('fnm');
   } else {
-    var fpath = '/home' + div.attr('path_temp');
+    var fpath = '/root' + div.attr('path_temp');
   }
 
-  const createdAt = moment(div.attr('created_date')).format("MM/DD/YYYY");
-
   $('#view-folder-path').text(fpath);
-  $('#view-folder-date-uploaded').text(createdAt);
+  $('#view-folder-date-uploaded').text(div.attr('created_date'));
   $('#view-folder-uploaded-by').text(div.attr('created_by'));
 
   $('#modal-folder-manager-view-folder-title').text(div.attr('fnm'));
@@ -2462,7 +2454,7 @@ function getTrashRecords(vShowRecycleBin = true, vUpdateMain = false, vFolder_id
   });
 }
 
-function setTrashRecords_old(folders, files){
+function setTrashRecords(folders, files){
   $('#recycle_bin').empty();
 
   selected_trash = 0;
@@ -2484,7 +2476,7 @@ function setTrashRecords_old(folders, files){
         append += '<div class="row row-' + row_trash_trace + ' mt-4">';
         append += '<div class="col-md-2">';
           append += '<div class="table-responsive shadow-sm rounded border border-secondary h-100 py-2 node_trash" isFolder="1" fid="'+ folder.folder_id +'" created_date="'+ folder.create_date +
-                    '" created_by="'+ folder.FCreatedBy + ' ' + folder.LCreatedBy + '" fnm="'+ folder.folder_name +'" path="'+ folder.c_folder + folder.path +'" path_temp="'+ folder.path +'">';
+                   '" created_by="'+ folder.FCreatedBy + ' ' + folder.LCreatedBy + '" fnm="'+ folder.folder_name +'" path="'+ folder.c_folder + folder.path +'" path_temp="'+ folder.path +'">';
           append += '<table class="border border-0 mb-0 h-100"><tbody><tr class="node_trash" isFolder="1" fid="'+ folder.folder_id +'">';
           append += '<td style="width: 15%"><i class="fa fa-folder-open-o fa-2x align-middle text-primary ml-2"></i></td>';
           append += '<td style="width: 85%" class="pl-2">' + folder.folder_name + '</td>';
@@ -2494,7 +2486,7 @@ function setTrashRecords_old(folders, files){
     } else {
       append += '<div class="col-md-2">';
         append += '<div class="table-responsive shadow-sm rounded border border-secondary h-100 py-2 node_trash" isFolder="1" fid="'+ folder.folder_id +'" created_date="'+ folder.create_date +
-                    '" created_by="'+ folder.FCreatedBy + ' ' + folder.LCreatedBy + '" fnm="'+ folder.folder_name +'" path="'+ folder.c_folder + folder.path +'" path_temp="'+ folder.path +'">';
+                   '" created_by="'+ folder.FCreatedBy + ' ' + folder.LCreatedBy + '" fnm="'+ folder.folder_name +'" path="'+ folder.c_folder + folder.path +'" path_temp="'+ folder.path +'">';
         append += '<table class="border border-0 mb-0 h-100"><tbody><tr class="node_trash" isFolder="1" fid="'+ folder.folder_id +'">';
         append += '<td style="width: 15%"><i class="fa fa-folder-open-o fa-2x align-middle text-primary ml-2"></i></td>';
         append += '<td style="width: 85%" class="pl-2">' + folder.folder_name + '</td>';
@@ -2522,7 +2514,7 @@ function setTrashRecords_old(folders, files){
         append += '<div class="row row-' + row_trash_trace + ' mt-4">';
         append += '<div class="col-md-2">';
           append += '<div class="table-responsive shadow-sm rounded border border-secondary h-100 py-2 node_trash" isFolder="0" fid="'+ file.file_id +'" created_date="'+ file.created +
-                      '" created_by="'+ file.FCreatedBy + ' ' + file.LCreatedBy + '" fnm="'+ file.title +'" path="'+ file.folder_name + file.file_path +'" path_temp="'+ file.file_path +'">';
+                     '" created_by="'+ file.FCreatedBy + ' ' + file.LCreatedBy + '" fnm="'+ file.title +'" path="'+ file.folder_name + file.file_path +'" path_temp="'+ file.file_path +'">';
           append += '<table class="border border-0 mb-0 h-100"><tbody><tr class="node_trash" isFolder="0" fid="'+ file.file_id +'">';
           append += '<td><i class="'+ ex_infos['icon'] +' fa-2x align-middle '+ ex_infos['color'] +' ml-2"></i></td>';
           append += '<td class="pl-2">' + file.title + '</td>';
@@ -2532,7 +2524,7 @@ function setTrashRecords_old(folders, files){
     } else {
       append += '<div class="col-md-2">';
         append += '<div class="table-responsive shadow-sm rounded border border-secondary h-100 py-2 node_trash" isFolder="0" fid="'+ file.file_id +'" created_date="'+ file.created +
-                      '" created_by="'+ file.FCreatedBy + ' ' + file.LCreatedBy + '" fnm="'+ file.title +'" path="'+ file.folder_name + file.file_path +'" path_temp="'+ file.file_path +'">';
+                     '" created_by="'+ file.FCreatedBy + ' ' + file.LCreatedBy + '" fnm="'+ file.title +'" path="'+ file.folder_name + file.file_path +'" path_temp="'+ file.file_path +'">';
         append += '<table class="border border-0 mb-0 h-100"><tbody><tr class="node_trash" isFolder="0" fid="'+ file.file_id +'">';
         append += '<td><i class="'+ ex_infos['icon'] +' fa-2x align-middle '+ ex_infos['color'] +' ml-2"></i></td>';
         append += '<td class="pl-2">' + file.title + '</td>';
@@ -2580,7 +2572,7 @@ function setTrashRecords_old(folders, files){
     selected_trash_isFolder = isFolder;
 
     $('#recycle_bin_selected_name').text(div.attr('fnm'));
-    $('#recycle_bin_selected_path').text('/home' + div.attr('path_temp'));
+    $('#recycle_bin_selected_path').text('/root' + div.attr('path_temp'));
   });
 
 // On double click trash folder or file
@@ -2641,7 +2633,7 @@ function showFolderManagerRecycleBin(){
 // 2 - Uploaded
 // 3 - Upload Invalid
 
-function displayDroppedFiles_old(e){
+function displayDroppedFiles(e){
   e.preventDefault();
 
   $('#mfm-dtu-file-list > tbody').empty();
@@ -2860,428 +2852,4 @@ function fileSelectedIsNotEmpty() {
 
 function modalIsOpen(modal_id){
   return ($(modal_id).data('bs.modal') || {})._isShown;
-}
-
-
-// herbert's code
-function onClickFolder({ folder_id, folder_name }) {
-  selected = folder_id;
-  selected_isFolder = 1;
-  $('#folders_name').html(folder_name)
-}
-
-function onDoubleClickFolder({ folder_id }) {
-  current_selected_folder = folder_id;
-  getFoldersAndFiles(folder_id);
-}
-
-function onClickFile({ file_id, title }) {
-  selected = file_id;
-  selected_isFolder = 0;
-  $('#folders_name').html(title);
-}
-
-function onDoubleClickFile({ file_id, title }) {
-  if (!$('#fs_selected_file').length) {
-    showFileDetail(file_id, 0, false, false);
-    return;
-  }
-
-  const folderPath = $('#folders_path').text().trim() + title;
-  $('#fs_selected_file_text').val(folderPath);
-  $('#fs_selected_file').val(file_id);
-  $('#modal-folder-manager').modal('hide');
-}
-
-function setFoldersAndFiles(folders, files) {
-  const currPath = $('#folders_path').text();
-  const currPathWithoutSlash = currPath.replace(/^\/|\/$/g, '');
-  const $quickAccess = $("#quick_access");
-
-  if (currPathWithoutSlash !== 'home') {
-    $quickAccess.hide();
-  } else {
-    $quickAccess.show();
-  }
-
-  $('#folders_and_files').empty();
-  $('#folders_and_files').append(`
-    <div class="row vault">
-      <div class="vault__folders">
-          <h6 class="vault__title">Folders</h6>
-          <div class="vault__spacer"></div>
-          <div class="vault__foldersGrid"></div>
-      </div>
-      <div class="vault__spacer vault__spacer--isLarge"></div>
-      <div class="vault__files">
-          <h6 class="vault__title">Files</h6>
-          <div class="vault__spacer"></div>
-          <div class="vault__filesGrid"></div>
-      </div>
-    </div>
-  `);
-
-  const folderElements = folders.map((folder) => (
-    createFolder(folder, { 
-      onClick: onClickFolder, 
-      onDoubleClick: onDoubleClickFolder
-    })
-  ));
-
-  const fileElements = files.map((file) => (
-    createFile(file, {
-      onClick: onClickFile,
-      onDoubleClick: onDoubleClickFile
-    })
-  ));
-
-  $('#folders_and_files .vault__foldersGrid').append(
-    folderElements.length > 0 ? folderElements : emptyMessage()
-  );
-
-  $('#folders_and_files .vault__filesGrid').append(
-    fileElements.length > 0 ? fileElements : emptyMessage()
-  );
-}
-
-function setFoldersAndFiles_MyLibrary(folders, files) {
-  setFoldersAndFiles(folders, files);
-}
-
-function emptyMessage() {
-  return `<div class="vault__emptyMessage">🤷‍♀️ Nothing to display here</div>`;
-}
-
-function get_recently_uploaded_files() {
-  $('#quick_access').empty();
-  $('#quick_access').append(`
-    <div class="row vault" id="recentlyUploaded">
-      <div class="vault__files">
-          <h6 class="vault__title">Recently Uploaded</h6>
-          <div class="vault__spacer"></div>
-          <div class="vault__filesGrid"></div>
-      </div>
-    </div>
-    <div class="vault__spacer vault__spacer--isLarge"></div>
-  `);
-
-  $grid = $('#recentlyUploaded .vault__filesGrid');
-  $grid.append(fileLoader(7));
-
-  $.ajax({
-    type: 'GET',
-    url: base_url + 'vault/recently_uploaded_files',
-    success: function(data){
-      const result = jQuery.parseJSON(data);
-      const fileElements = result.map((file) => (
-        createFile(file, {
-          showCreatedDate: true,
-          onClick: onClickFile,
-          onDoubleClick: onDoubleClickFile,
-        })
-      ));
-
-      $grid.empty();
-      $grid.append(fileElements.length > 0 ? fileElements : emptyMessage());
-    },
-    error: function(_, textStatus, errorThrown){
-      $('span[target="recent_uploads"]').removeClass('fa-spin');
-      showFolderManagerNotif(textStatus, errorThrown, 'error');
-    }   
-  });
-}
-
-function fileLoader(count = 3) {
-  return [...Array(count)].map(() => (
-    '<div class="vault__fileLoader"><span></span></div>'
-  ));
-}
-
-function createFile(file, options = {}) {
-  const { title, FCreatedBy, LCreatedBy, folder_name, file_path, file_id, created } = file;
-  const { isTrash = false, showCreatedDate = false, onClick = null, onDoubleClick = null } = options;
-
-  const { icon, color: iconColor, isImage } = getfileExInfos(title);
-  const createdString = moment(created).format("MMMM DD, YYYY");
-  const previewUrl = isImage ? `${base_url}uploads/${folder_name}${file_path}` : null;
-
-  const html = `
-  <div class="col-md-2 vault__file" title="${title}">
-    <div
-      class="table-responsive shadow-sm rounded border border-secondary h-100 py-2 ${isTrash ? "node_trash " : "node"} vault__fileInner"
-      isfolder="0"
-      fid="${file_id}" 
-      created_date="${created}"
-      created_by="${FCreatedBy} ${LCreatedBy}"
-      fnm="${title}"
-      path="${folder_name}${file_path}"
-      path_temp="${file_path}"
-    >
-        <table class="border border-0 mb-0 h-100" style="width: 95%">
-          <tbody>
-              <tr class="node" isfolder="0" fid="${file_id}">
-                <td
-                  style="--bg-image: url('${previewUrl}')"
-                  isfolder="0"
-                  fid="${file_id}" 
-                  created_date="${created}"
-                  created_by="${FCreatedBy} ${LCreatedBy}"
-                  fnm="${title}"
-                  path="${folder_name}${file_path}"
-                  path_temp="${file_path}"
-                >
-                  ${isImage ? '' : `<i class="${icon} fa-2x ${iconColor}"></i>`}
-                </td>
-                <td style="width: 85%" class="pl-2">
-                  <div>
-                    <i class="${icon} fa-2x align-middle ${iconColor} ml-2"></i>
-                    <span class="vault__fileName">${title}</span>
-                  </div>
-                  ${showCreatedDate ? `<span class="vault__fileDate">${createdString}</span>` : ''}
-                </td>
-              </tr>
-          </tbody>
-        </table>
-    </div>
-  </div>
-  `;
-
-  const element = createElementFromHTML(html);
-  const $element = $(element);
-  const $elementInner = $element.find('.vault__fileInner');
-
-  $element.click(function () {
-    removeCurrentHighlighted();
-    $element.addClass('vault__item--isActive');
-    $elementInner.addClass('bg-info');
-    $elementInner.addClass('text-white');
-
-    if (onClick) onClick(file);
-  });
-
-  $element.dblclick(function() {
-    if (onDoubleClick) onDoubleClick(file);
-  });
-
-  return element;
-}
-
-function createFolder(folder, options = {}) {
-  const { folder_id, create_date, FCreatedBy, LCreatedBy, folder_name, c_folder, path, total_contents } = folder;
-  const { isTrash = false, onClick = null, onDoubleClick = null } = options;
-
-  const html = `
-  <div class="col-md-2 vault__folder" title="${folder_name}">
-    <div
-      class="table-responsive shadow-sm rounded border border-secondary h-100 py-2 ${isTrash ? "node_trash " : "node"} vault__folderInner"
-      isfolder="1"
-      fid="${folder_id}"
-      created_date="${create_date}"
-      created_by="${FCreatedBy} ${LCreatedBy}"
-      fnm="${folder_name}"
-      path="${c_folder}${path}"
-      path_temp="${path}"
-    >
-        <table class="border border-0 mb-0 h-100" style="width: 95%">
-          <tbody>
-              <tr class="node" isfolder="1" fid="21">
-                <td 
-                isfolder="1"
-                fid="${folder_id}"
-                created_date="${create_date}"
-                created_by="${FCreatedBy} ${LCreatedBy}"
-                fnm="${folder_name}"
-                path="${c_folder}${path}"
-                path_temp="${path}"
-                style="width: 15%"
-              ><i class="fa fa-folder fa-2x align-middle text-primary ml-2"></i></td>
-                <td style="width: 65%" class="pl-2">${folder_name}</td>
-                <td style="width: 20%" class="text-right" id="td_total_contents">(${total_contents})</td>
-              </tr>
-          </tbody>
-        </table>
-    </div>
-  </div>
-  `;
-
-  const element = createElementFromHTML(html);
-  const $element = $(element);
-  const $elementInner = $element.find('.vault__folderInner');
-
-  $element.click(function () {
-    removeCurrentHighlighted();
-    $element.addClass('vault__item--isActive');
-    $elementInner.addClass('bg-info');
-    $elementInner.addClass('text-white');
-
-    if (onClick) onClick(folder);
-  });
-
-  $element.dblclick(function() {
-    if (onDoubleClick) onDoubleClick(folder);
-  });
-
-  return element;
-}
-
-// https://stackoverflow.com/a/494348/8062659
-function createElementFromHTML(htmlString) {
-  var div = document.createElement('div');
-  div.innerHTML = htmlString.trim();
-  return div.firstChild; 
-}
-
-function removeCurrentHighlighted() {
-  $('.vault__item--isActive').removeClass('vault__item--isActive');
-
-  $folderActive = $('.vault__folderInner.bg-info.text-white');
-  $folderActive.removeClass('bg-info');
-  $folderActive.removeClass('text-white');
-
-  $fileActive = $('.vault__fileInner.bg-info.text-white');
-  $fileActive.removeClass('bg-info');
-  $fileActive.removeClass('text-white');
-}
-
-function displayDroppedFiles(event) {
-  event.preventDefault();
-  $('#mfm-dtu-file-list > tbody').empty();
-
-  // these are from Uploadlib.php
-  let validExtensions = 'gif|jpg|png|jpeg|doc|pdf|rtf|docx|xls|xlsx';
-  validExtensions = validExtensions.split('|');
-
-  const { files: fileList } = event.dataTransfer;
-  const files = [...fileList];
-
-  const validFiles = files.filter(({ name }) => {
-    const fileExtension = name.split('.').pop();
-    return validExtensions.includes(fileExtension);
-  });
-
-  if (validFiles.length === 0) {
-    return;
-  }
-
-  dtu_files = files;
-  var append = '';
-  $.each(validFiles, function(index,  file){
-    append += '<tr>';
-    append += '<td class="d-none upstat" uploadstatus="1"></td>';
-    append += '<td class="d-none"></td>'
-    append += '<td>' + file.name + '</td>';
-    append += '<td></td>';
-    append += '<td class="text-center"><button type="button" class="btn btn-sm btn-default fs_dtu" title="Exclude"><i class="fa fa-times"></i></button></td>';
-    append += '</tr>';
-  });
-
-  $('#mfm-dtu-file-list > tbody').append(append);
-  $('#mfm-dtu-drop-area').addClass('d-none');
-  $('#mfm-dtu-file-list-area').removeClass('d-none');
-
-  $('button.fs_dtu').click(function(){
-    var tr = $(this).parent('td').parent('tr')
-    var td = tr.children('td:eq(0)');
-    if(td.attr('uploadstatus') <= 1){
-      var td_status_original = tr.children('td:eq(1)');
-      var td_status = tr.children('td:eq(3)');
-
-      if($(this).attr('title') == 'Exclude'){
-        $(this).attr('title', 'Include');
-        $(this).removeClass('btn-default');
-        $(this).addClass('btn-danger');
-
-        var status_new = 'Will not be uploaded';
-        var status_original = td_status.text();
-
-        status_original = status_original.trim();
-
-        td.attr('uploadstatus', "0");
-        td_status_original.text(status_original);
-        td_status.text(status_new);
-
-      } else {
-        $(this).attr('title', 'Exclude');
-        $(this).removeClass('btn-danger');
-        $(this).addClass('btn-default');
-
-        var status_original = td_status_original.text();
-
-        status_original = status_original.trim();
-
-        td.attr('uploadstatus', "1");
-        td_status_original.text("");
-        td_status.text(status_original);
-      }
-    }
-  });
-}
-
-function setTrashRecords(folders, files) {
-  $('#recycle_bin').empty();
-  $('#recycle_bin').append(`
-    <div class="row vault">
-      <div class="vault__folders">
-          <h6 class="vault__title">Folders</h6>
-          <div class="vault__spacer"></div>
-          <div class="vault__foldersGrid"></div>
-      </div>
-      <div class="vault__spacer vault__spacer--isLarge"></div>
-      <div class="vault__files">
-          <h6 class="vault__title">Files</h6>
-          <div class="vault__spacer"></div>
-          <div class="vault__filesGrid"></div>
-      </div>
-    </div>
-  `);
-
-  const onClickFolder = ({ folder_id, folder_name, path }) => {
-    selected_trash = folder_id;
-    selected_trash_isFolder = 1;
-    $('#recycle_bin_selected_name').text(folder_name);
-    $('#recycle_bin_selected_path').text('/home' + path);
-  };
-
-  const onDoubleClickFolder = ({ folder_id }) => {
-    selected_trash = folder_id;
-    selected_trash_isFolder = 1;
-    showFolderDetails(selected_trash, selected_trash_isFolder, true, false);
-  }
-
-  const onClickFile = ({ file_id, title, file_path }) => {
-    selected_trash = file_id;
-    selected_trash_isFolder = 0;
-    $('#recycle_bin_selected_name').text(title);
-    $('#recycle_bin_selected_path').text('/home' + file_path);
-  };
-
-  const onDoubleClickFile = ({ file_id }) => {
-    selected_trash = file_id;
-    selected_trash_isFolder = 0;
-    showFileDetail(selected_trash, selected_trash_isFolder, true, false);
-  }
-
-  const folderElements = folders.map((folder) => (
-    createFolder(folder, {
-      isTrash: true, 
-      onClick: onClickFolder, 
-      onDoubleClick: onDoubleClickFolder
-    })
-  ));
-
-  const fileElements = files.map((file) => (
-    createFile(file, {
-      isTrash: true,
-      onClick: onClickFile,
-      onDoubleClick: onDoubleClickFile
-    })
-  ));
-
-  $('#recycle_bin .vault__foldersGrid').append(
-    folderElements.length > 0 ? folderElements : emptyMessage()
-  );
-
-  $('#recycle_bin .vault__filesGrid').append(
-    fileElements.length > 0 ? fileElements : emptyMessage()
-  );
 }

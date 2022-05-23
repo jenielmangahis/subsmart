@@ -28,7 +28,7 @@
         <li class="nav-header">CUSTOMERS</li>
         <li class="submenus <?php if($this->uri->segment(2) == "index" || ($this->uri->segment(1) == "customer" && $this->uri->segment(2) == "") || $this->uri->segment(2) == "add_advance" ) {echo "active";} ?> "><a href="<?php echo base_url('customer') ?>" title="My Customers" style="color: #fff;"><span
                         class="fa fa-user"></span>My Customers</a></li>
-        <li class="submenus"><a href="<?php echo base_url('customer/group') ?>" title="Services"><span class="fa fa-users"></span>Customer Groups</a></li>
+        <li class="submenus <?= $this->uri->segment(1) == "customer" && $this->uri->segment(2) == "group" ? 'active' : ''; ?>"><a href="<?php echo base_url('customer/group'); ?>" title="Services"><span class="fa fa-users"></span>Customer Groups</a></li>
         <li class="submenus"><a href="<?php echo base_url('customer/source') ?>" title="Credentials"><span class="fa fa-cube"></span>Customer Source</a></li>
         <li class="submenus"><a href="<?php echo base_url('customer/types') ?>" title="Credentials"><span class="fa fa-cube"></span>Customer Types</a></li>
         <li class="submenus <?php if($this->uri->segment(2) == "leads" || $this->uri->segment(2) == "add_lead"){echo "active";} ?> ">

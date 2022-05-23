@@ -10,10 +10,9 @@
       <form onsubmit="handleCreateForm(event)">
         <div class="modal-body">
           <p>Start with this form. You'll be able to customize it in the editor.</p>
-          <input type="hidden" name="addTemplateID">
           <div class="form-group">
               <label for="name">Name:</label>
-              <input type="text" id="addName" name="name" class="form-control form-control-sm">
+              <input type="text" id="name" name="name" required class="form-control form-control-sm">
           </div>
         </div>
         <div class="modal-footer">

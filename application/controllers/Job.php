@@ -9,19 +9,31 @@ class Job extends MY_Controller
     {
         parent::__construct();
         $this->checkLogin();
-        //$this->load->library('paypal_lib');
+        $this->page_data['page']->title = 'Job Management';
+        $this->page_data['page']->menu = 'job';
+        $this->load->library('paypal_lib');
         $this->load->model('Jobs_model', 'jobs_model');
-        //$this->load->model('Invoice_model', 'invoice_model');
-        //$this->load->model('Roles_model', 'roles_model');
-        $this->load->model('General_model', 'general');
+        $this->load->model('Invoice_model', 'invoice_model');
+        $this->load->model('Roles_model', 'roles_model');
 
-    }
-    
-    public function loadStreetView($address = NULL)
-    {
-        $this->load->library('wizardlib');
-        $addr = ($address==NULL?post('address'):$address);
-        return $this->wizardlib->getStreetView($addr);
+
+        add_css(array( 
+            'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css',
+            'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
+            'https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css',
+            'https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css',
+			"assets/css/accounting/sidebar.css",
+        ));
+
+        // JS to add only Job module
+        add_footer_js(array(
+            'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js',
+            'https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js',
+            'https://code.jquery.com/ui/1.12.1/jquery-ui.js',
+            'https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js',
+            'assets/frontend/js/job_creation/main.js'
+        ));
     }
 
     public function index() {
@@ -32,299 +44,71 @@ class Job extends MY_Controller
             echo $this->load->view('no_access_module', $this->page_data, true);
             die();
         }
-        $this->page_data['jobs'] = $this->jobs_model->get_all_jobs();
-        $this->page_data['title'] = 'Jobs';
+
+
+        $get = $this->input->get();
+
+        $this->page_data['items'] = $this->items_model->get();
+        $comp_id = logged('company_id');
+
+        $comp = array(
+            'company_id' => $comp_id
+        );
+        $this->page_data['items_categories'] = $this->db->get_where($this->items_model->table_categories, $comp)->result();
+
+        if (!empty($get['search'])) {
+            $this->page_data['search'] = $get['search'];
+            $this->page_data['jobs'] = $this->jobs_model->filterBy(['search' => $get['search']], $comp_id);
+        } else {
+            $this->page_data['jobs'] = $this->jobs_model->getByWhere(['company_id' => $comp_id]);
+        }
+
         $this->load->view('job/list', $this->page_data);
     }
 
-    public function new_job1() {
+    public function new_job() {
+        $get = $this->input->get();
         $comp_id = logged('company_id');
-        // get all employees
-        $get_employee = array(
-            'where' => array(
+
+        $this->page_data['items'] = $this->items_model->get();
+        $this->page_data['emp_roles'] = $this->roles_model->getRoles();
+        $this->page_data['employees'] = $this->db->get_where($this->jobs_model->table_employees, array('company_id' => $comp_id))->result();
+        $this->page_data['customers'] = $this->db->get_where($this->jobs_model->table_customers, array('company_id' => $comp_id))->result();
+        if (empty($get['job_num'])) {
+            $comp = array(
                 'company_id' => $comp_id
-            ),
-            'table' => 'users',
-            'select' => 'id,FName,LName',
-        );
-        $this->page_data['employees'] = $this->general->get_data_with_param($get_employee);
-
-        // get all job tags
-        $get_job_tags = array(
-            'table' => 'job_tags',
-            'select' => 'id,name',
-        );
-        $this->page_data['tags'] = $this->general->get_data_with_param($get_job_tags);
-        //echo logged('company_id');
-
-        // get color settings
-        $get_color_settings = array(
-            'where' => array(
-                'company_id' => logged('company_id')
-            ),
-            'table' => 'color_settings',
-            'select' => '*',
-        );
-        $this->page_data['color_settings'] = $this->general->get_data_with_param($get_color_settings);
-
-        $get_job_types = array(
-            'table' => 'job_types',
-            'select' => 'id,title',
-            'order' => array(
-                'order_by' => 'id',
-                'ordering' => 'DESC',
-            ),
-        );
-        $this->page_data['job_types'] = $this->general->get_data_with_param($get_job_types);
-
-        $get_company_info = array(
-            'where' => array(
-                'id' => logged('company_id'),
-            ),
-            'table' => 'business_profile',
-            'select' => 'business_phone,business_name',
-        );
-        $this->page_data['company_info'] = $this->general->get_data_with_param($get_company_info,FALSE);
-
-        // get items
-        $get_items = array(
-            'where' => array(
-                'company_id' => logged('company_id'),
-                'is_active' => 1,
-            ),
-            'table' => 'items',
-            'select' => 'id,title,price,units',
-        );
-        $this->page_data['items'] = $this->general->get_data_with_param($get_items);
-
-        // get estimates
-        $get_estimates = array(
-            'where' => array(
-                'company_id' => logged('company_id'),
-            ),
-            'table' => 'estimates',
-            'select' => 'id,estimate_number,estimate_date,job_name',
-        );
-        $this->page_data['estimates'] = $this->general->get_data_with_param($get_estimates);
-
-        $this->load->view('job/job_new', $this->page_data);
-    }
-
-    public function new_job_edit($id) {
-        $comp_id = logged('company_id');
-        // get all employees
-        $get_employee = array(
-            'where' => array(
-                'company_id' => $comp_id
-            ),
-            'table' => 'users',
-            'select' => 'id,FName,LName',
-        );
-        $this->page_data['employees'] = $this->general->get_data_with_param($get_employee);
-
-        // get all job tags
-        $get_job_tags = array(
-            'table' => 'job_tags',
-            'select' => 'id,name',
-        );
-        $this->page_data['tags'] = $this->general->get_data_with_param($get_job_tags);
-        //echo logged('company_id');
-
-        // get color settings
-        $get_color_settings = array(
-            'where' => array(
-                'company_id' => logged('company_id')
-            ),
-            'table' => 'color_settings',
-            'select' => '*',
-        );
-        $this->page_data['color_settings'] = $this->general->get_data_with_param($get_color_settings);
-        $this->page_data['jobs_data'] = $this->jobs_model->get_specific_job($id);
-        $this->load->view('job/job_new', $this->page_data);
-    }
-
-    public function get_customer_selected(){
-        $id = $_POST['id'];
-        $get_customer = array(
-            'where' => array(
-                'prof_id' => $id
-            ),
-            'table' => 'acs_profile',
-            'select' => 'prof_id,first_name,last_name,middle_name,email,phone_h,city,state,mail_add,zip_code',
-        );
-        echo json_encode($this->general->get_data_with_param($get_customer,FALSE),TRUE);
-    }
-
-    public function get_esign_selected(){
-        $id = $_POST['id'];
-        $get_template = array(
-            'where' => array(
-                'esignLibraryTemplateId' => $id
-            ),
-            'table' => 'esign_library_template',
-            'select' => 'content',
-        );
-        echo json_encode($this->general->get_data_with_param($get_template,FALSE),TRUE);
-    }
-
-    public function get_tag_selected(){
-        $id = $_POST['id'];
-        $get_template = array(
-            'where' => array(
-                'id' => $id
-            ),
-            'table' => 'job_tags',
-            'select' => 'name',
-        );
-        echo json_encode($this->general->get_data_with_param($get_template,FALSE),TRUE);
-    }
-
-    public function save_esign() {
-       // echo json_encode($_POST);
-        echo date("d-m-Y h:i A");
-    }
-
-    public function get_customers(){
-        $get_customer = array(
-            'table' => 'acs_profile',
-            'select' => 'prof_id,first_name,last_name,middle_name',
-            'order' => array(
-                'order_by' => 'prof_id',
-                'ordering' => 'DESC',
-            ),
-        );
-        echo json_encode($this->general->get_data_with_param($get_customer),TRUE);
-    }
-
-    public function get_esign_template(){
-        $get_esign_template = array(
-            'where' => array(
-                'category_id' => 26, // 26 = category id of Jobs template in esign_library_category table
-                'isActive' => 1
-            ),
-            'table' => 'esign_library_template',
-            'select' => 'esignLibraryTemplateId,title,content',
-        );
-        echo json_encode($this->general->get_data_with_param($get_esign_template),TRUE);
-    }
-
-    public function job_tags() {
-        $get_job_settings = array(
-            'where' => array(
-                'company_id' => logged('company_id')
-            ),
-            'table' => 'job_tags',
-            'select' => '*',
-            'order' => array(
-                'order_by' => 'id',
-                'ordering' => 'DESC',
-            ),
-        );
-        $this->page_data['job_tags'] = $this->general->get_data_with_param($get_job_settings);
-        $this->load->view('job/job_settings/job_tags', $this->page_data);
-    }
-
-    public function job_types() {
-        $get_job_types = array(
-            'where' => array(
-                'company_id' => logged('company_id'),
-                'status' => 1
-            ),
-            'table' => 'job_types',
-            'select' => '*',
-            'order' => array(
-                'order_by' => 'id',
-                'ordering' => 'DESC',
-            ),
-        );
-        $this->page_data['job_types'] = $this->general->get_data_with_param($get_job_types);
-        $this->load->view('job/job_settings/job_types', $this->page_data);
-    }
-
-    public function bird_eye_view() {
-
-        $this->page_data['title'] = 'Bird Eye View';
-        $this->load->view('job/job_settings/bird_eye_view', $this->page_data);
-    }
-
-    public function delete_tag() {
-        $remove_tag = array(
-            'where' => array(
-                'id' => $_POST['tag_id']
-            ),
-            'table' => 'job_tags'
-        );
-        if($this->general->delete_($remove_tag)){
-            echo '1';
+            );
+        } else { 
+            $comp = array(
+                'company_id' => $comp_id,
+                'job_number' => $get['job_num']
+            );
         }
-    }
-
-    public function delete_job_type() {
-        $remove_jobtype = array(
-            'where' => array(
-                'id' => $_POST['type_id']
-            ),
-            'table' => 'job_types'
-        );
-        if($this->general->delete_($remove_jobtype)){
-            echo '1';
+        $this->page_data['job_settings'] = $this->db->get_where($this->jobs_model->table_job_settings, array('company_id' => $comp_id))->result();
+        $this->page_data['items_categories'] = $this->db->get_where($this->items_model->table_categories, array('company_id' => $comp_id))->result();
+        $job_num_query = $this->db->order_by("jobs_id", "desc")->get_where($this->jobs_model->table, $comp)->row();
+        if ($job_num_query && empty($get['job_num'])) {
+            $this->page_data['job_number'] = intval($this->db->order_by("jobs_id", "desc")->get_where($this->jobs_model->table, array('company_id' => $comp_id))->row()->job_number) + 1;
+        } else {
+            if (!empty($get['job_num'])) {
+                $job_id = $this->db->get_where($this->jobs_model->table, array('job_number' => $get['job_num']))->row()->jobs_id;
+                $this->page_data['jobItems'] = $this->jobs_model->getJobInvoiceItems($job_id);
+                $this->page_data['estimates'] = $this->jobs_model->getEstimateByJobId($job_id);
+                $this->page_data['invoices'] = $this->invoice_model->getByWhere(['job_id' => $job_id]);
+                $this->page_data['assignEmployees'] = $this->jobs_model->getAssignEmp($job_id);
+            }
+            
+           $this->page_data['job_other_info'] = (!empty($get['job_num'])) ? $this->jobs_model->getJobDetails($get['job_num']) : null;
+           $this->page_data['job_number'] = (!empty($get['job_num'])) ? $get['job_num'] : 1000;
+           $this->page_data['job_data'] = $job_num_query;
         }
-    }
-
-    public function delete_job() {
-        $remove_job = array(
-            'where' => array(
-                'id' => $_POST['job_id']
-            ),
-            'table' => 'jobs'
-        );
-        if($this->general->delete_($remove_job)){
-            echo '1';
-        }
-    }
-
-    public function add_tag() {
-        $input = $this->input->post();
-        $input['company_id'] =  logged('company_id');
-        if($this->general->add_($input,"job_tags")){
-            echo "1";
-        }else{
-            echo "0";
-        }
-    }
-
-    public function add_job_type() {
-        $input = $this->input->post();
-        $input['company_id'] =  logged('company_id');
-        $input['status'] =  1;
-        $input['user_id'] =  logged('id');
-        if($this->general->add_($input,"job_types")){
-            echo "1";
-        }else{
-            echo "0";
-        }
-    }
-
-    public function add_job_attachments(){
-
-        if ( 0 < $_FILES['file']['error'] ) {
-            echo 'Error: ' . $_FILES['file']['error'] . '<br>';
-        }
-        else {
-            $uniquesavename=time().uniqid(rand());
-            $path = $_FILES['file']['name'];
-            $ext = pathinfo($path, PATHINFO_EXTENSION);
-            $destination = 'uploads/jobs/attachment/' .$uniquesavename.'.'.$ext;
-            move_uploaded_file($_FILES['file']['tmp_name'], $destination);
-            $sourceFile = $_SERVER['DOCUMENT_ROOT'].'/'.$destination;
-            //$content = file_get_contents($sourceFile,FILE_USE_INCLUDE_PATH);
-            echo $destination;
-        }
-
+        
+        $this->load->view('job/job', $this->page_data);
     }
 
     public function settings() {
         $get = $this->input->get();
+
         $this->page_data['items'] = $this->items_model->get();
         $comp_id = logged('company_id');
         $this->page_data['invoices'] = $this->invoice_model->getByWhere(['company_id' => $comp_id]);
@@ -349,144 +133,136 @@ class Job extends MY_Controller
            $this->page_data['job_number'] = (!empty($get['job_num'])) ? $get['job_num'] : 1000;
            $this->page_data['job_data'] = $job_num_query;
         }
+
         $this->load->view('job/job_settings/prefix', $this->page_data);
     }
 
-    public function job_time_settings() {
-        $get_job_settings = array(
-            'where' => array(
-                'company_id' => logged('company_id')
-            ),
-            'table' => 'job_tags',
-            'select' => '*',
-        );
-        $this->page_data['title'] ='Job Time Settings';
-        $this->load->view('job/job_settings/job_time_settings', $this->page_data);
+    public function job_types() {
+        $this->page_data['jobtypes'] = $this->jobs_model->getJobType();
+        $this->load->view('job/job_settings/job_type', $this->page_data);
     }
 
-    public function save_job() {
-        $input = $this->input->post();
+    public function saveJobType() {
+        postAllowed();
         $comp_id = logged('company_id');
-        $get_job_settings = array(
-            'where' => array(
-                'company_id' => $comp_id
-            ),
-            'table' => 'job_settings',
-            'select' => '*',
-            'limit' => 1,
-            'order' => array(
-                'order_by' => 'id'
-            ),
-        );
-        $job_settings = $this->general->get_data_with_param($get_job_settings);
-        $job_number = $job_settings[0]->job_num_prefix.'-000'.$job_settings[0]->job_num_next;
 
-        $jobs_data = array(
-            'job_number' => $job_number,
-            'customer_id' => $input['customer_id'],
-            'employee_id' => $input['employee_id'],
-            'employee2_id' => $input['employee2_id'],
-            'employee3_id' => $input['employee3_id'],
-            'employee4_id' => $input['employee4_id'],
-            'job_name' => $input['job_name'],
-            'job_description' => $input['job_description'],
-            'start_date' => $input['start_date'],
-            'start_time' => $input['start_time'],
-            'end_date' => $input['end_date'],
-            'end_time' => $input['end_time'],
-            'event_color' => $input['event_color'],
-            'customer_reminder_notification' => $input['customer_reminder_notification'],
-            //'job_type' => $this->input->post('job_type'),
-            'priority' => 'Standard',//$this->input->post('job_priority'),
-            'tags' => $input['tags'],//$this->input->post('job_priority'),
-            'status' => 'New',//$this->input->post('job_status'),
-            'message' => $input['message'],
+        $data = array(
             'company_id' => $comp_id,
-            'date_created' => date('Y-m-d H:i:s'),
-            'notes' => $input['notes'],
-            'attachment' => $input['attachment'],
+            'setting_type' => "job_type",
+            'value' => $this->input->post('settingType'),
+            'status' => 1,
+            'created_at' => date('Y-m-d H:i:s')
         );
-        $jobs_id = $this->general->add_return_id($jobs_data, 'jobs');
 
-        $jobs_links_data = array(
-            'link' => $input['link'],
-            'job_id' => $jobs_id,
-        );
-        $this->general->add_($jobs_links_data, 'job_url_links');
-
-        $jobs_approval_data = array(
-            'authorize_name' => $input['authorize_name'],
-            'signature_link' => $input['signature_link'],
-            'datetime_signed' => $input['datetime_signed'],
-            'jobs_id' => $jobs_id,
-        );
-        $this->general->add_($jobs_approval_data, 'jobs_approval');
-
-        $method = $input['method'];
-        $jobs_payments_data = array();
-        $jobs_payments_data['jobs_id'] =  $jobs_id;
-        $jobs_payments_data['method'] =  $method;
-        $jobs_payments_data['amount'] =  $input['amount'];
-
-        if($method == 'CHECK'){
-            $jobs_payments_data['route_num'] = $input['route_number'];
-            $jobs_payments_data['account_num'] = $input['account_number'];
-        }else if($method == 'CC'|| $method == 'OCCP'){
-            $jobs_payments_data['account_name'] = $input['account_holder_name'];
-            $jobs_payments_data['card_number'] = $input['card_number'];
-            $jobs_payments_data['card_mmyy'] = $input['card_expiry'];
-            $jobs_payments_data['card_cvc'] = $input['card_cvc'];
-            $jobs_payments_data['is_save_file'] = $input['onoffswitch'];
-        }else if($method === 'CASH'){
-            $jobs_payments_data['is_collected'] = $input['is_collected'];
-        }else if($method === 'ACH'){
-            $jobs_payments_data['route_num'] = $input['route_number'];
-            $jobs_payments_data['account_num'] = $input['account_number'];
-            $jobs_payments_data['day_of_month'] = $input['day_of_month'];
-        }else if($method === 'OPT' || $method === 'WW'){
-            $jobs_payments_data['acct_credential'] = $input['acct_credential'];
-            $jobs_payments_data['acct_note'] = $input['acct_note'];
-            $jobs_payments_data['is_signed'] = $input['is_signed'];
-        }else if($method === 'SQ' || $method === 'PP' || $method === 'VENMO'){
-            $jobs_payments_data['acct_credential'] = $input['acct_credential'];
-            $jobs_payments_data['acct_note'] = $input['acct_note'];
-            $jobs_payments_data['acct_confirm'] = $input['acct_confirm'];
-        }else{
-
+        if ($this->input->post('type') == "update") {
+            $this->jobs_model->updateJobType($this->input->post('id'), $data);
+        } else {
+            $is_exist = count($this->jobs_model->getJobSettingByName($this->input->post('settingType')));
+            
+            if(!$is_exist) {
+                $this->db->insert($this->jobs_model->table_job_settings, $data);
+                $job_type_id = $this->db->insert_id();
+            }
         }
-        $this->general->add_($jobs_payments_data, 'jobs_pay_details');
 
-        $jobs_settings_data = array(
-            'job_num_prefix' => 'JOB',
-            'job_num_next' => $job_settings[0]->job_num_next + 1,
-            'company_id' => $comp_id
+        
+        $arr = $this->jobs_model->getJobType();
+
+        echo json_encode($arr);
+    }
+
+    public function saveJob() {
+        postAllowed();
+        $comp_id = logged('company_id');
+
+        $data = array(
+            'company_id' => $comp_id,
+            'job_number' => $this->input->post('jobNumber'),
+            'job_name' => $this->input->post('job_name'),
+            'job_type' => $this->input->post('job_type'),
+            'priority' => $this->input->post('job_priority'),
+            'status' => $this->input->post('job_status'),
+            'description' => $this->input->post('job_description'),
+            'created_by' => $this->input->post('createdBy'),
+            'created_date' => date('Y-m-d H:i:s')
         );
-        $this->general->add_($jobs_settings_data, 'job_settings');
+        $this->db->insert($this->jobs_model->table, $data);
+        $jobs_id = $this->db->insert_id();
 
-//        $events_data = array(
-//            'customer_id' => $input['customer_id'],
-//            'event_description' => $input['job_name'],
-//            'employee_id' => $input['employee_id'],
-//            'start_date' => $input['start_date'],
-//            'start_time' => $input['start_time'],
-//            'end_date' => $input['end_date'],
-//            'end_time' => $input['end_time'],
-//            'event_color' => $jobs_id,
-//            'customer_reminder_notification' => $jobs_id,
-//            'company_id' => $jobs_id,
-//            'description' => $jobs_id,
-//            'tags' => $jobs_id,
-//            'notify_at' => $jobs_id,
-//        );
-//        $this->general->add_($events_data, 'events');
+        $address_data = array(
+            'jobs_id' => $jobs_id,
+            'address_id' => $this->input->post('job_location_id')
+        );
+        $this->db->insert($this->jobs_model->table_jobs_has_address, $address_data);
 
-        echo $jobs_id;
+        $customers_data = array(
+            'jobs_id' => $jobs_id,
+            'id' => $this->input->post('job_customer_id')
+        );
+        $this->db->insert($this->jobs_model->table_jobs_has_customers, $customers_data);
+
+        $this->saveCreditCard();
+
+        $this->activity_model->add("New Job #$categories Created by User: #" . logged('id'));
+        $this->session->set_flashdata('alert-type', 'success');
+        $this->session->set_flashdata('alert', 'New Job Created Successfully');
+
+        redirect('job');
     }
 
     public function delete () {
         $get = $this->input->get();
+        
         $this->jobs_model->deleteJob($get['id']);
+
         redirect('job');
+    }
+
+        public function deleteJobType() {
+        $get = $this->input->get();
+        
+        $this->jobs_model->deleteJobType($get['id']);
+
+        redirect('job/job_types');
+    }
+
+    public function updateJob() {
+        postAllowed();
+        $comp_id = logged('company_id');
+        $id = $this->input->post('jobId');
+
+        $data = array(
+            'company_id' => $comp_id,
+            'job_number' => $this->input->post('jobNumber'),
+            'job_name' => $this->input->post('job_name'),
+            'job_type' => $this->input->post('job_type'),
+            'priority' => $this->input->post('job_priority'),
+            'status' => $this->input->post('job_status'),
+            'description' => $this->input->post('job_description'),
+            'created_by' => $this->input->post('createdBy'),
+            'created_date' => date('Y-m-d H:i:s')
+        );
+        $this->jobs_model->updateJob($id, $data);
+
+        $this->activity_model->add("Updated Job #$categories Created by User: #" . logged('id'));
+        $this->session->set_flashdata('alert-type', 'success');
+        $this->session->set_flashdata('alert', 'Job Updated Successfully');
+
+        redirect('job');
+    }
+
+    public function getCustomers() {
+
+        $result = $this->jobs_model->getCustomers();
+
+        echo json_encode($result);
+    }
+    
+    public function getAddresses() {
+
+        $result = $this->jobs_model->getAddresses();
+
+        echo json_encode($result);
     }
 
     public function getItems() {
@@ -645,7 +421,7 @@ class Job extends MY_Controller
             'estimate_date' => date("Y-m-d", strtotime($this->input->post('estimate_date'))),
             'expiry_date' => date("Y-m-d", strtotime($this->input->post('expiry_date'))),
             'description' => $this->input->post('description'),
-            'employee_ids' => $this->input->post('employee_id'),
+            'employee_id' => $this->input->post('employee_id'),
             'status' => $this->input->post('status'),
             'job_id' => $this->input->post('job_id'),
             'estimate_value' => $this->input->post('estimate_value'),
@@ -740,42 +516,8 @@ class Job extends MY_Controller
         echo json_encode($data);
     }
 
-    function details($id){
-        $this->load->model('Estimate_model');
-        $this->load->model('EstimateItem_model');
-        $this->load->model('Customer_model');
-
-        $estimate = $this->Estimate_model->getEstimate($id);
-
-        if( $estimate ){
-            $customer      = $this->Customer_model->getCustomer($estimate->customer_id);
-            $estimateItems = $this->EstimateItem_model->getAllByEstimateId($estimate->id);
-
-            $this->page_data['estimate'] = $estimate;
-            $this->page_data['customer'] = $customer;
-            $this->page_data['estimateItems'] = $estimateItems;
-            $this->load->view('job/details', $this->page_data);
-
-        }else{
-           redirect('dashboard'); 
-        }
-    }
-
-    public function ajax_load_upcoming_jobs()
-    {
-        $role    = logged('role');
-        $user_id = getLoggedUserID();
-        $comp_id = logged('company_id');
-
-        if( $role == 1 || $role == 2 ){
-            $upcomingJobs = $this->jobs_model->getAllUpcomingJobs();
-        }else{
-            $upcomingJobs = $this->jobs_model->getAllUpcomingJobsByCompanyId($comp_id);
-        }
-        
-        $this->page_data['upcomingJobs'] = $upcomingJobs;
-        $this->load->view('job/ajax_load_upcoming_jobs', $this->page_data);
-
+    function details(){
+    	$this->load->view('job/details', $this->page_data);
     }
 }
 

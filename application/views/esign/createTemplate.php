@@ -40,15 +40,7 @@ ini_set('max_input_vars', 30000);
 				<div class="container-fluid">
                     <!-- Main Selection -->
                         <!-- Main Selection -->
-                    <div class="container esignEditor">
-
-                    <h1 class="esignEditor__title">eSign Editor</h1>
-                    <div class="alert alert-warning mt-2" role="alert">
-                        <span style="color:black;">
-                            Build and automate e-signature workflows in seconds. Speed up e-signing processes. Assign roles, set up steps and send documents for signing.
-                        </span>
-                    </div>
-
+                    <div class="container">
                     <a href="<?=base_url('esign/templateLibrary')?>"> Go Back To Library </a>
                     <a style="float:right" href="categoryList">Manage template category</a>
 

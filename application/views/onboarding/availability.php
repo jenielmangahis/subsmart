@@ -276,7 +276,6 @@ h3.sc-title {
       </div>
     </div>
 </div>
-<script src="<?php echo $url->assets ?>dashboard/js/jquery.min.js"></script>
 <?php include viewPath('includes/footer'); ?>
 <script>
 $(function(){
@@ -284,22 +283,6 @@ $(function(){
         format: 'mm-dd-yyyy',
         autoclose: true
     });
-
-    $('#mondayHoursFromAvail').timepicker();
-    $('#tuesdayHoursFromAvail').timepicker();
-    $('#wednesdayHoursFromAvail').timepicker();
-    $('#thursdayHoursFromAvail').timepicker();
-    $('#fridayHoursFromAvail').timepicker();
-    $('#saturdayHoursFromAvail').timepicker();
-    $('#sundayHoursFromAvail').timepicker();
-
-    $('#mondayHoursToAvail').timepicker();
-    $('#tuesdayHoursToAvail').timepicker();
-    $('#wednesdayHoursToAvail').timepicker();
-    $('#thursdayHoursToAvail').timepicker();
-    $('#fridayHoursToAvail').timepicker();
-    $('#saturdayHoursToAvail').timepicker();
-    $('#sundayHoursToAvail').timepicker();
 
     $("#form-business-availability").submit(function(e){
       e.preventDefault();

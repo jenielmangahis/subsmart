@@ -89,31 +89,13 @@ div.attachments div.attachments-list div.attachments-container div.attachments-c
     border-bottom: 1px solid #6b6c72 !important;
 }
 
-#statementModal .apply-button {
-    border: 1px solid #6b6c72 !important;
-}
-
-#statementModal .apply-button:hover {
-    background-color: white;
-    border: 2px solid #6b6c72 !important;
-    color: inherit;
-}
-
-#statementModal .apply-button:focus {
-    color: inherit;
-}
-
 /* Weekly Timesheet Modal */
 #weeklyTimesheetModal div.timesheet-table table select {
     margin-bottom: 5px !important;
 }
 
-#weeklyTimesheetModal div.timesheet-table table#timesheet-table input.day-input {
-    font-size: 14px !important;
-}
-
 /* Tags Modal */
-div.modal.right .modal-dialog {
+div#tags-modal.modal.right .modal-dialog {
     position: fixed;
     margin: auto;
     width: 30%;
@@ -124,17 +106,17 @@ div.modal.right .modal-dialog {
     transform: translate3d(0%, 0, 0);
 }
 
-div.modal.right .modal-content {
+div#tags-modal.modal.right .modal-content {
     height: 100%;
     overflow-y: auto;
     border-radius: 0 !important;
 }
 
-div.modal.right .modal-body {
+div#tags-modal.modal.right .modal-body {
     padding: 15px 15px 80px;
 }
 
-div.modal.right.fade .modal-dialog {
+div#tags-modal.modal.right.fade .modal-dialog {
     right: 0;
     -webkit-transition: opacity 0.3s linear, right 0.3s ease-out;
     -moz-transition: opacity 0.3s linear, right 0.3s ease-out;
@@ -142,23 +124,10 @@ div.modal.right.fade .modal-dialog {
     transition: opacity 0.3s linear, right 0.3s ease-out;
 }
 
-div.modal.right.fade.in .modal-dialog {
+div#tags-modal.modal.right.fade.in .modal-dialog {
     right: 0;
 }
 
 div#tags-modal button.btn-outline-secondary {
     border-color: #6c757d !important;
-}
-
-/* Payroll Modal */
-.divider {
-    height: 100%;
-    width: 1px;
-    border-left: 1px solid #dee2e6 !important;
-}
-
-div#payrollModal .graph-color {
-    height: 45px;
-    width: 1px;
-    border: 2px solid black;
 }

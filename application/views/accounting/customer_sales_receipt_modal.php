@@ -10,23 +10,22 @@
                </div>
                <button type="button" class="close" id="closeModalExpense" data-dismiss="modal" aria-label="Close"><i class="fa fa-times fa-lg"></i></button>
             </div>
-                <form action="<?php echo site_url()?>accounting/addSalesReceipt" method="post">
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-6">
                             <div class="row">
                                 <div class="col-md-3">
                                     Customer
-                                    <select class="form-control" name="customer_id">
+                                    <select class="form-control">
                                         <option></option>
-                                        <?php foreach($customers as $customer) : ?>
-                                            <option value="<?php echo $customer->prof_id; ?>"><?php echo $customer->first_name . ' ' . $customer->last_name; ?></option>
-                                            <?php endforeach; ?>
+                                        <option>Add New</option>
+                                        <option>John Doe</option>
+                                        <option>Alpha</option>
                                     </select>
                                 </div>
                                 <div class="col-md-6">
                                     Email
-                                    <input type="text" class="form-control" name="email">
+                                    <input type="text" class="form-control">
                                     <input type="checkbox"> Send later
                                 </div>
                             </div>
@@ -34,64 +33,45 @@
                             <div class="row">
                                 <div class="col-md-3">
                                     Billing address
-                                    <textarea style="height:100px;width:100%;" name="billing_address"></textarea>
+                                    <textarea style="height:100px;width:100%;"></textarea>
                                 </div>
                                 <div class="col-md-3">
                                     Sales Receipt date<br>
-                                    <input type="text" class="form-control" name="sales_receipt_date" id="datepickerinv8"><br>
+                                    <input type="text" class="form-control"><br>
                                     Ship via<br>
-                                    <input type="text" class="form-control" name="ship_via">
+                                    <input type="text" class="form-control">
                                 </div>
                                 <div class="col-md-3">
-                                    <br><br><br><br>
+                                    <br>
+                                    <input type="text" class="form-control"><br>
                                     Shipping date<br>
-                                    <input type="text" class="form-control" name="shipping_date" id="datepickerinv9">
+                                    <input type="text" class="form-control">
                                 </div>
                                 <div class="col-md-3">
-                                    <br><br><br><br>
+                                    <br><br>
                                     Tracking no.<br>
-                                    <input type="text" class="form-control" name="tracking_no">
+                                    <input type="text" class="form-control">
                                 </div>
                                 
                             </div>
                             <div class="row">
                                 <div class="col-md-3">
                                     Shipping to
-                                    <textarea style="height:100px;width:100%;" name="shipping_to"></textarea>
+                                    <textarea style="height:100px;width:100%;"></textarea>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-3">
-                                    Payment method<br>
-                                    <select class="form-control" name="payment_method" id="payment_method">
-                                        <option></option>
-                                        <option value="0">Add New</option>
-                                        <?php foreach($paymethods as $paymethod) { ?>
-                                            <option value="<?php echo $paymethod->payment_method_id ; ?>"> <?php echo $paymethod->quick_name; ?></option>
-                                            <?php } ?>
-                                    </select>
-                                </div>
-                                <div class="col-md-3">
-                                    Reference no.
-                                    <input type="text" class="form-control" name="ref_number">
-                                </div>
-                                <div class="col-md-3">
-                                    Deposit to
-                                    <select class="form-control" name="deposit_to">
-                                        <option></option>
-                                        <option value="1">Cash on hand</option>
-                                        <option value="2">A</option>
-                                        <option value="3">B</option>
-                                        <option value="4">C</option>
-                                    </select>
+                                <div class="col-md-12">
+                                    Tags <a href="#" style="float:right">Manage tags</a>
+                                    <input type="text" class="form-control">
                                 </div>
                             </div>
                             
                         </div>
                         <div class="col-md-6" align="right">
-                            AMOUNT<h2><input type="text" class="form-control" style="font-size:36px;border: 0px;background: transparent;text-align:right;" name="total_amount" value="0.00" readonly></h2><br>
+                            AMOUNT<h2>$0.00</h2><br>
                             Location of sale<br>
-                            <input type="text" class="form-control" style="width:200px;" name="location_scale">
+                            <input type="text" class="form-control" style="width:200px;">
                         </div>
                     </div>
                     <hr>
@@ -112,29 +92,29 @@
                                 <tr>
                                     <td></td>
                                     <td>1</td>
-                                    <td><input type="text" class="form-control" name="prod[]"></td>
-                                    <td><input type="text" class="form-control" name="desc[]"></td>
-                                    <td><input type="text" class="form-control" name="qty[]"></td>
-                                    <td><input type="text" class="form-control" name="rate[]"></td>
-                                    <td><input type="text" class="form-control" name="amount[]"></td>
-                                    <td><input type="text" class="form-control" name="tax[]"></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
                                     <td></td>
                                 </tr>
                                 <tr>
                                     <td></td>
                                     <td>2</td>
-                                    <td><input type="text" class="form-control" name="prod[]"></td>
-                                    <td><input type="text" class="form-control" name="desc[]"></td>
-                                    <td><input type="text" class="form-control" name="qty[]"></td>
-                                    <td><input type="text" class="form-control" name="rate[]"></td>
-                                    <td><input type="text" class="form-control" name="amount[]"></td>
-                                    <td><input type="text" class="form-control" name="tax[]"></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
                                     <td></td>
                                 </tr>
                             </table>
                         <div>
                     </div>
-                    <hr>
+                <hr>
                 
                     <div class="row">
                         <div class="col-md-1">
@@ -159,27 +139,23 @@
 
                     <div class="row">
                         <div class="col-md-2">
-                            Message displayed on sales receipt<br>
-                            <textarea style="height:100px;width:100%;" name="message_displayed_on_sales_receipt"></textarea><br>
-                            Message displayed on statement<br>
-                            <textarea style="height:100px;width:100%;" name="message_on_statement"></textarea>
+                            Message on invoice<br>
+                            <textarea style="height:100px;width:100%;"></textarea><br>
+                            Message on statement<br>
+                            <textarea style="height:100px;width:100%;"></textarea>
                         </div>
-                        <div class="col-md-7">
+                        <div class="col-md-8">
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             Taxable subtotal <b>$0.00</b><br>
-                            <table class="table table-borderless" style="text-align:right;">
+                            <table class="table table-borderless">
                                 <tr>
-                                    <td>
-                                        <select class="form-control" name="tax_rate">
-                                            <option value="1">Based on location</option>
-                                        </select>
-                                    </td>
+                                    <td></td>
                                     <td><b>$0.00</b><br><a href="">See the math</a></td>
                                 </tr>
                                 <tr>
                                     <td>Shipping</td>
-                                    <td align="right"><input type="text" class="form-control" style="width:100px!important;"></td>
+                                    <td><input type="text" class="form-control"></td>
                                 </tr>
                                 <tr>
                                     <td>Tax on shipping</td>
@@ -220,40 +196,10 @@
                         </div>
                     </div>
                     <hr>
-                    
 
 
-                    </div>
+                </div>
                 
-                    <hr>
-                        <div class="modal-footer-check">
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <button class="btn btn-dark cancel-button" id="closeCheckModal" type="button">Cancel</button>
-                                    
-                                </div>
-                                <div class="col-md-5" align="center">
-                                    <div class="middle-links">
-                                        <a href="">Print or Preview</a>
-                                    </div>
-                                    <div class="middle-links end">
-                                        <a href="">Make recurring</a>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="dropdown" style="float: right">
-                                        <button class="btn btn-dark cancel-button px-4" type="submit">Save</button>
-                                        <button type="button" class="btn btn-success" data-dismiss="modal" id="checkSaved" style="border-radius: 20px 0 0 20px">Save and new</button>
-                                        <button class="btn btn-success" type="button" data-toggle="dropdown" style="border-radius: 0 20px 20px 0;margin-left: -5px;">
-                                            <span class="fa fa-caret-down"></span></button>
-                                        <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                                            <li><a href="#" data-dismiss="modal" id="checkSaved" >Save and close</a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                </form>
                 <div style="margin: auto;">
                     <span style="font-size: 14px"><i class="fa fa-lock fa-lg" style="color: rgb(225,226,227);margin-right: 15px"></i>At nSmartrac, the privacy and security of your information are top priorities.</span>
                 </div>
@@ -266,16 +212,3 @@
     </div>
     <!--end of modal-->
 </div>
-
-<script>
-  function totalfunc(){
-    var inputs = document.getElementsByName('amount[]');
-    // alert(inputs);
-    var sum = 0;
-    for(var i = 0; i<inputs.length; i++){
-      sum += parseInt(inputs[i].value);
-    }
-    document.getElementById('total_amount').value = sum;
-
-  }
-</script>

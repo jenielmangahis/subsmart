@@ -1,9 +1,8 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 ?>
-<div class="office module ui-state-default" data-id="<?= $id ?>"   id="<?= $id ?>">
-    <div class="col-sm-12 individual-module">
-        <h6>Office</h6>
+<div class="office module ui-state-default" id="office">
+    <div class="col-sm-12">
         <div class="row">
             <div class="col-sm-6">
                 <div class="contacttext">

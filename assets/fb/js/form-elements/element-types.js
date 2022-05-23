@@ -31,9 +31,4 @@ const element_types = {
     ProductOrdering,
     ZoneList,
     ShortAnswerGroup,
-    CustomerSelect,
-    JobLocation,
-    PaymentMethods,
-    EstimateOrdering,
-    EstimatePackageOrdering,
 }

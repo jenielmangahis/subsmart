@@ -95,18 +95,3 @@ defined('ESTIMATE_STATUS_INVOICED')      OR define('ESTIMATE_STATUS_INVOICED', '
 defined('ESTIMATE_STATUS_DECLINED')      OR define('ESTIMATE_STATUS_DECLINED', 'Declined by customer');
 defined('ESTIMATE_STATUS_LOST')      OR define('ESTIMATE_STATUS_LOST', 'Lost');
 defined('ESTIMATE_STATUS_DRAFT')      OR define('ESTIMATE_STATUS_DRAFT', 'Draft');
-
-//Converge
-define('CONVERGE_MERCHANTID', '011515');
-define('CONVERGE_MERCHANTUSERID', 'webpage');
-define('CONVERGE_MERCHANTPIN', 'YR886MCFH163U7C0GTNY527E69WJHX2DLKXR70MJ7Q5523AK09JXZVO504SNJES2');
-define('CONVERGE_TOKENURL', 'https://api.demo.convergepay.com/hosted-payments/transaction_token');
-define('CONVERGE_HPPURL', 'https://api.demo.convergepay.com/hosted-payments');
-
-
-//PHPMAILER
-define('MAIL_SERVER', 'mail.nsmartrac.com');
-define('MAIL_PORT', 465);
-define('MAIL_USERNAME', 'webmaster@nsmartrac.com');
-define('MAIL_PASSWORD', 'Lol123lol!@#');
-define('MAIL_FROM', 'webmaster@nsmartrac.com');

@@ -389,8 +389,8 @@ $(document).ready(function () {
                             }
                         });
                     }
-                    if (result.dismiss === Swal.DismissReason.timer) { 
-                        autoClockOut(); 
+                    if (result.dismiss === Swal.DismissReason.timer) {
+                        autoClockOut();
                     }
                 });
             }

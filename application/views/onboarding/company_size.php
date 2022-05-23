@@ -34,7 +34,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
          <?php echo form_close(); ?>
    </div>
 </div>
-<script src="<?php echo $url->assets ?>dashboard/js/jquery.min.js"></script>
 <?php include viewPath('includes/footer'); ?> 
 
 

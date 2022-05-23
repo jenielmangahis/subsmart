@@ -11,22 +11,16 @@ class Timesheet_model extends MY_Model {
     private $tbl_ts_settings = 'timesheet_schedule';
 
     public function getNotifyCount(){
-        
         $user_id = $this->session->userdata('logged')['id'];
         $qry = $this->db->get_where('user_notification',array('user_id'=>$user_id,'status'=>1))->num_rows();
         return $qry;
     }
-    public function getTSNotification(){
-		$user_id = $this->session->userdata('logged')['id'];
-        $this->db->select('n.*,u.FName,u.LName');
-        $this->db->from('user_notification n');
-        $this->db->join('users u', 'n.user_id = u.id', 'left');
-        $this->db->where('n.status =', 1);
-        $this->db->order_by('n.id',"desc");
-        $query = $this->db->get();
-        $qry = $query->result();
-        return $qry;
 
+    public function getTSNotification(){
+        $user_id = $this->session->userdata('logged')['id'];
+        $this->db->order_by('id',"desc");
+        $qry = $this->db->get_where('user_notification',array('user_id'=>$user_id))->result();
+        return $qry;
     }
     public function getClockInSession(){
 //        $this->db->or_where('date_in',date('Y-m-d'));

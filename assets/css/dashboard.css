@@ -62362,7 +62362,6 @@ td.k-state-focused {
   display: flex;
   flex-wrap: wrap;
   box-sizing: border-box;
-  height: 100%;
 }
 .c66 {
   flex: 0 0 auto;
@@ -63316,7 +63315,6 @@ body .ab-feed-buttons-wrapper {
 }
 .progress-fill-card .card {
   padding: 20px;
-  height: 118px;
 }
 .sortable2  .tile-container {
   top: 10px !important;
@@ -63368,66 +63366,3 @@ body .ab-feed-buttons-wrapper {
     width: 100% !important;
   }
 }
-
-
-/* dashboard main css start */
-
-.block-invoicing-main .invoicing-block {
-  width: 50%;
-  text-align: center;
-  border-right: 1px solid #e0e0e0;
-}
-.block-invoicing-main .invoicing-block:nth-child(2) {
-  border: none;
-}
-.invoicing-block h6 {
-  border-bottom: 1px solid #e0e0e0;
-  padding: 10px 0px;
-}
-.block-detail h5 {
-    border-bottom: 1px solid #e0e0e0;
-    padding: 5px 0px;
-    margin: 10px;
-}
-.btn-fifty .MuiCardActions-root {
-    width: 50%;
-}
-.height-full-custom {
-  height: 100%;
-}
-.row-tablet-mobile .sortable2 [class*="col-"] {
-  padding: 0px 8px;
-  height: 100%;
-}
-.row-tablet-mobile .sortable2 [class*="col-"] .tile-container {
-  -webkit-border-radius: 8px;
-  -moz-border-radius: 8px;
-  -ms-border-radius: 8px;
-  -o-border-radius: 8px;
-  border-radius: 8px;
-}
-.MuiGrid-tab-custom .MuiGrid-spacing-xs-3 {
-  width: 100%;
-  margin-left: 0px;
-}
-.MuiGrid-tab-custom .jss88 {
-  border: none;
-  background: none;
-}
-.custom-tabs .nav-tabs {
-  border: none;
-}
-.custom-tabs .nav-tabs .nav-item .nav-link {
-  padding: 10px 25px;
-  border: none;
-  background-color: aliceblue;
-}
-.custom-tabs .nav-tabs .nav-item .nav-link.active {
-  background: linear-gradient(60deg,#6a4a86,#6a4a86);
-  color: #fff;
-}
-.custom-tabs .tab-content .MuiCardContent-root.jss60 {
-  padding-left: 0px;
-  padding-right: 0px;
-}
-/* dashboard main css end */

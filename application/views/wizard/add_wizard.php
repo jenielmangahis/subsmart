@@ -16,39 +16,6 @@
     .app-listing-box ul li {
         width: 17% !important;
     }
-    
-    .wizDetails {
-        margin: 0 0 10px 40px;
-    }
-    .wizDetails > li {
-        list-style: disc;
-    }
-    
-    .trigFunc:hover, .trigFunc > p:hover{
-        background: #007bff;
-        color: white;
-    }
-    
-    
-    #triggers{
-        position: relative;
-        margin: 0 auto;
-    }
-    
-    .trigFunc h5{
-        font-size: 18px !important;
-    }
-    
-    
-    .trigFunc p{
-        margin-left:20px;
-        text-align: left;
-    }
-    
-    .text-bold{
-        font-weight: bold;
-    }
-    
 </style>
 <div class="row">
     <div class="col-md-2">
@@ -64,7 +31,7 @@
                     <div class="col-lg-2 col-md-3 col-sm-4">
                         <div class="wizard-leftbar ziper-sidebar">
                             <div class="wizard-title creatwibx">
-                                <a href="#createWizard" data-toggle="modal"><h2>Create a WiZ</h2></a>
+                                <a href="#createWizard" data-toggle="modal"><h2>Create a Wizard</h2></a>
                             </div>
                             <div class="wizard-tabs">
                                 <ul class="nav nav-tabs">
@@ -75,15 +42,14 @@
                                         <a class="nav-link" data-toggle="tab" href="#tb1">Wizard Builder</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link"  href="<?php echo base_url('wizard/myWiz') ?>">My Wiz</a>
+                                        <a class="nav-link" data-toggle="tab" href="#tb2">My work space</a>
                                     </li>
                                 </ul>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-10 col-md-9 col-sm-8">
-                        <h1 style="font-size: 32px; font-weight: bold; color: #111; margin: 0 0 45px; text-align: center;">
-                            <img src="<?php echo $url->assets ?>wizard/img/wizard-ic.png" alt="" style="    display: block; margin: 0 auto 20px;width:85px;"> Welcome to Wizard</h1>
+                        <h1 style="font-size: 32px; font-weight: bold; color: #111; margin: 0 0 45px; text-align: center;"><img src="<?php echo $url->assets ?>wizard/img/wizard-ic.png" alt="" style="    display: block; margin: 0 auto 20px;width:85px;"> Welcome to Wizard</h1>
 <!--                        <div class="app-search-block">
                             <h4>Select the apps you want to connect to create your own custom workflow.</h4>
                             <div class="search-compair-bx">

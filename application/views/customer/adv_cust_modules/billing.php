@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 ?>
-<div class="billings module_med ui-state-default"  data-id="<?= $id ?>" id="<?= $id ?>">
+<div class="billings module_med ui-state-default" id="billing">
     <div class="col-sm-12">
         <div class="row">
             <div class="col-sm-6">

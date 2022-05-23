@@ -40,7 +40,7 @@ class ProductOrdering extends FormElement {
 
     initTable(){
         return `<table class="table-sm table" id="${this.element_type}-${this.id}">
-                    <thead style="background-color: lightgray">
+                    <thead>
                         <tr style="height: 50px">
                             <th class="font-weight-bold" style="width: 40%; text-overflow: ellipsis">${this.question ? this.question : ''}</th>
                             <th class="font-weight-bold" style="width: 10%">QTY</th>

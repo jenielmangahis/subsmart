@@ -18,9 +18,9 @@ class MY_Controller extends CI_Controller {
 			$this->users_model->logout();
 			die('Database is not configured');
 		}
-		
-		$this->setNewtimezone();
 
+		$this->setNewtimezone();
+		
 		//date_default_timezone_set( setting('timezone') );
 
 		/* if(!is_logged()){
@@ -46,36 +46,23 @@ class MY_Controller extends CI_Controller {
 			$company = getCompanyFolder();
 		}
 	}
-
 	public function gtMyIpGlobal(){
 		return $ipaddress = $this->timesheet_model->gtMyIpGlobal();
 	}
 	
 	public function setNewtimezone() {
 
-		/*$user_id =  logged('id');
-
-		$table = $this->users_model->table;
-		$this->db->where('id', $user_id); 
-
-		$userData = $this->db->get($table)->row();
-
-		$utimezone = '';
-		if($userData > 0){
-			//$utimezone = $userData->user_time_zone ;	
-		}
-		if($utimezone == ""){
-
-			$ipaddress = $this->timesheet_model->gtMyIpGlobal();
-	        $get_location = json_decode(file_get_contents('http://ip-api.com/json/'.$ipaddress)); 
-	        $lat = $get_location->lat;
-	        $lng = $get_location->lon;
-	        $utimezone = $get_location->timezone;
-		}
 		 
+	    $ipaddress = $this->timesheet_model->gtMyIpGlobal();
+	   
+
+        $get_location = json_decode(file_get_contents('http://ip-api.com/json/'.$ipaddress)); 
+        $lat = $get_location->lat;
+        $lng = $get_location->lon;
+
+        $utimezone = $get_location->timezone;
         //echo "->".$utimezone ;exit;
-        date_default_timezone_set($utimezone);*/
-		
+        date_default_timezone_set($utimezone);
     }
 
 	protected function checkLogin($is_front = '') {

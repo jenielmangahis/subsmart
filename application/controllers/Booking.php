@@ -50,15 +50,8 @@ class Booking extends MY_Controller {
 	}
 
 	public function products() {
-		$user_id = logged('id');
-        $role_id = logged('role');
-        if( $role_id == 1 || $role_id == 2 ){
-            $args = array();
-        }else{
-            $args = array('company_id' => logged('company_id'));
-        }
-        
-		$category = $this->BookingCategory_model->getByWhere($args);
+
+		$category = $this->BookingCategory_model->getAll();
 		$service_items = $this->BookingServiceItem_model->getAllItemsGroupByCategoryArray();
 
 		$this->page_data['category'] = $category;
@@ -397,7 +390,6 @@ class Booking extends MY_Controller {
 
         	$data = array(
         		'user_id' => $user['id'],
-        		'company_id' => logged('company_id'),
         		'name' => post('category_name'),
         		'date_created' => date("Y-m-d H:i:s")
         	);

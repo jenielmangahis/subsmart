@@ -204,11 +204,6 @@ a.top-1 {
   .calendar-tooltip .tooltip[x-placement^="left"] {
     margin-right: 5px;
   }
-  .page-title {
-    font-family: Sarabun, sans-serif !important;
-    font-size: 1.75rem !important;
-    font-weight: 600 !important;
-  }
   .calendar-tooltip .popper[x-placement^="left"] .popper__arrow,
   .calendar-tooltip .tooltip[x-placement^="left"] .tooltip-arrow {
     border-width: 5px 0 5px 5px;
@@ -261,35 +256,6 @@ a.top-1 {
     position: relative;
     bottom: 3px;
   }
-  .pr-b10 {
-    position: relative;
-    bottom: 10px;
-  }
-  .p-40 {
-    padding-top: 40px !important;
-  }
-  .p-20 {
-    padding-top: 25px !important;
-    padding-bottom: 25px !important;
-    padding-right: 20px !important;
-    padding-left: 20px !important;
-  }
-  .mt-40 {
-    margin-top: 55px !important;
-    border-radius: 5px;
-  }
-  @media only screen and (max-width: 600px) {
-    .p-40 {
-      padding-top: 0px !important;
-    }
-    .mt-40 {
-      margin-top: 0px !important;
-    }
-    .pr-b10 {
-      position: relative;
-      bottom: 0px;
-    }
-  }
   @media screen and (max-width: 1190px) {
     div#calender_toolbar div {
         width: 100%;
@@ -333,11 +299,6 @@ a.top-1 {
   .fc-datagrid-cell-main{
     text-align: center;
   }
-  .recent-contacts-container{
-    overflow-y: scroll;
-    height: 400px;
-    overflow-x: hidden;
-  }
 </style>
 <div class="wrapper" role="wrapper">
     <div class="row">
@@ -345,11 +306,11 @@ a.top-1 {
             <?php include viewPath('includes/sidebars/schedule'); ?>
             <?php include viewPath('includes/notifications'); ?>
             <div wrapper__section>
-                <div class="container-fluid p-40">
+                <div class="container-fluid">
                     <!-- end row -->
                     <div class="row">
                         <div class="col-xl-12">
-                            <div class="card p-20">
+                            <div class="card">
                                 <div class="d-block d-none">
                                     <?php
                                         if (count($wordorders) > 0) {
@@ -379,15 +340,15 @@ a.top-1 {
                                                 <?php
                                             }
                                         } else {
-                                            // Remove UI Improvement task echo "No Workorders";
+                                            echo "No Workorders";
                                         }
                                     ?>
                                 </div>
-                                <div class="card-body col-12 pt-0 pl-0 pr-0" style="text-align: left;">
+                                <div class="card-body col-12" style="text-align: left;">
                                     <a class="btn-right-nav-hide-show show-right" style="color:#45a73c !important; display:none !important;" href="javascript:void(0);"><i class="fa fa-gear"></i> Right Nav</a>
                                     <div class="calender-toolbar" id="calender_toolbar">
                                         <div class="stcs-2 left">
-                                          <h3 class="page-title left">Schedule</h3>
+                                          <h1 class="page-title left">Schedule</h1>
                                         </div>
                                         <div class="stcs-cover left">
                                           <form id="frm_calender_filter_events" method="post">
@@ -397,14 +358,10 @@ a.top-1 {
                                                         <option value='local' selected>local</option>
                                                         <option value='UTC'>UTC</option>
                                                     </select>-->
-                                                    <?php
-                                                      $aTimezone  = config_item('calendar_timezone');
+                                                    <?php 
                                                       $a_settings = unserialize($settings[0]->value);
                                                       if( $a_settings ){
-                                                        if( isset($aTimezone[$a_settings['calendar_timezone']]) ){
-                                                          $timezone = $aTimezone[$a_settings['calendar_timezone']];
-                                                        }
-                                                        //$timezone = $a_settings['calendar_timezone'];
+                                                        $timezone = $a_settings['calendar_timezone'];
                                                       }else{
                                                         $timezone = 'Central Time (UTC -5)';
                                                       }
@@ -435,8 +392,8 @@ a.top-1 {
                                               <div class="stcs-1 cs-float">
                                                 <div class="form-group margin-left-sec d-1" role="group" aria-label="...">
                                                     <a class="text-white btn btn-primary btn-md" data-calendar="print"
-                                                       href="<?php echo base_url('job/new_job1') ?>" target="_blank">
-                                                        <span class="fa fa-plus"></span>&nbsp;&nbsp;Create New Job
+                                                       href="<?php echo base_url('workorder/add') ?>" target="_blank">
+                                                        <span class="fa fa-plus"></span>&nbsp;&nbsp;Create Work Order
                                                     </a>
                                                 </div>
                                               </div>
@@ -471,10 +428,8 @@ a.top-1 {
                                               </div>
                                           </form>
                                         </div>
-                                        <br class="clearfix"/>
-                                        <div class="alert alert-warning mt-2 mb-4" role="alert">
-                                            <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">With Calendar, you can quickly schedule meetings and events and get reminders about upcoming activities, so you always know what’s next. Calendar is designed for teams, so it’s easy to share... </span>
-                                        </div>
+                                        <br class="clearfix"/><br/>
+
 
                                     </div>
                                     <div class="left-calendar-loading"></div>
@@ -485,15 +440,12 @@ a.top-1 {
                               <div class="calendar-menu" style="text-align: left;">
                                   <div style="background: #f2f2f2; padding: 20px;">
                                       <div class="margin-bottom">
-                                          <div class="margin-bottom"><h3 class="left-header"><i class="fa fa-calendar"></i> Upcoming Jobs</h3></div>
-                                          <div id="upcoming-jobs-container"></div>
                                           <div class="margin-bottom"><h3 class="left-header"><i class="fa fa-calendar"></i> Upcoming Events</h3></div>
                                           <div id="upcoming-events-container"></div>
-                                          <div class="margin-bottom"><h3 class="left-header"><i class="fa fa-calendar"></i> Unshceduled Estimates</h3></div>
-                                          <div id="scheduled-estimates-container"></div>
+                                          
                                       </div>
                                   </div>
-                              </div>
+                              </div>                                
                             </div>
                             <!-- end card -->
                         </div>
@@ -503,15 +455,15 @@ a.top-1 {
             </div>
         </div>
         <?php //if( !$is_mobile ){ ?>
-        <div class="col-12 col-md-3 mt-40 right-col" style="background-color: #ffffff;overflow-y: scroll;overflow-x: hidden;height: max-content;display: block !important;padding-bottom: 20px;">
+        <div class="col-12 col-md-3 right-col" style="background-color: #ffffff;overflow-y: scroll; max-height: 800px;">
             <div class="row" style="padding:10px;">
                 <div class="col-12">
                     <div class="right-calendar-loading"></div>
                     <h4  class="right-filter-header"><a class="btn-mini-calendar" href="javascript:void(0);"><i class="fa fa-minus cmini-icon icon-plus-cz"></i></a> <span class="pl-1">MINI CALENDAR</span></h4>
                     <div class="min-calendar-container">
-                      <div id="right-calendar"></div>
+                      <div id="right-calendar"></div>  
                     </div>
-
+                    
                     <div class="calendar-tooltip"></div>
                 </div>
                 <!-- <div class="col-12" style="margin-top: 15px;">
@@ -619,7 +571,7 @@ a.top-1 {
 
 
                     </ul>
-                    </div>
+                    </div>                    
                 </div>
             </div>
         </div>
@@ -665,7 +617,7 @@ a.top-1 {
             </div>
             <?php echo form_open_multipart('', ['id' => 'create-google-event', 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
             <div class="modal-body">
-                <input type="hidden" name="gevent_gcid" id="gevent_gcid" value="">
+                <input type="hidden" name="gevent_gcid" id="gevent_gcid" value="">                
         				<div class="form-group" style="text-align: left;">
         				  <label>Event Name</label> <span class="form-required">*</span>
         				  <input type="text" name="gevent_name" value=""  class="form-control" required="" autocomplete="off" required />
@@ -973,8 +925,8 @@ a.top-1 {
 
 
     function render_calender(calendarEl, timeZoneSelectorEl, events) {
-        var bc_events_url    = base_url + "calendar/_get_main_calendar_events";
-        var bc_resources_url = base_url + "calendar/_get_main_calendar_resources";
+        var bc_events_url    = base_url + "/calendar/_get_main_calendar_events";
+        var bc_resources_url = base_url + "/calendar/_get_main_calendar_resources";
 
         calendar = new FullCalendar.Calendar(calendarEl, {
            schedulerLicenseKey: '0531798248-fcs-1598103289',
@@ -1087,7 +1039,7 @@ a.top-1 {
                       }
                   });
                 }
-
+                
             },
             loading: function (isLoading) {
               if (isLoading) {
@@ -1221,7 +1173,7 @@ a.top-1 {
                dataType: 'json',
                success: function(o)
                {
-
+                  
 
                	  if( o.is_success ){
                     var msg = "<div class='alert alert-success'>"+ o.message +"</div>";
@@ -1331,13 +1283,13 @@ a.top-1 {
            data: {cid:cid},
            success: function(o)
            {
-              load_calendar();
+              load_calendar();              
            }
         });
     });
 
     function load_calendar(){
-        var events_url = base_url + "settings/_get_google_enabled_calendars";
+        var events_url = base_url + "/settings/_get_google_enabled_calendars";
         var calendarEl = document.getElementById('right-calendar');
 
         var calendar = new FullCalendar.Calendar(calendarEl, {
@@ -1399,7 +1351,7 @@ a.top-1 {
               // alter the remote JSON data, except to indicate that infinite
               // scrolling can be used
               params.page = params.page || 1;
-
+        
               return {
                 results: data,
                 // pagination: {
@@ -1432,7 +1384,7 @@ a.top-1 {
               // alter the remote JSON data, except to indicate that infinite
               // scrolling can be used
               params.page = params.page || 1;
-
+        
               return {
                 results: data,
                 // pagination: {
@@ -1449,11 +1401,9 @@ a.top-1 {
     });
 
     load_upcoming_events();
-    load_scheduled_estimates();
-    load_upcoming_jobs();
 
     function load_upcoming_events(){
-      var url = base_url + 'calendar/_load_upcoming_events';
+      var url = base_url + '/calendar/_load_upcoming_events';
        $("#upcoming-events-container").html('<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" style="display:inline;" /> Loading Upcoming Events...</div>');
 
       $.ajax({
@@ -1462,37 +1412,7 @@ a.top-1 {
          data: {},
          success: function(o)
          {
-            $("#upcoming-events-container").html(o);
-         }
-      });
-    }
-
-    function load_scheduled_estimates(){
-      var url = base_url + 'estimate/_load_scheduled_estimates';
-       $("#scheduled-estimates-container").html('<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" style="display:inline;" /> Loading Estimates...</div>');
-
-      $.ajax({
-         type: "POST",
-         url: url,
-         data: {},
-         success: function(o)
-         {
-            $("#scheduled-estimates-container").html(o);
-         }
-      });
-    }
-
-    function load_upcoming_jobs(){
-      var url = base_url + 'job/_load_upcoming_jobs';
-       $("#upcoming-jobs-container").html('<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" style="display:inline;" /> Loading Upcoming Jobs...</div>');
-
-      $.ajax({
-         type: "POST",
-         url: url,
-         data: {},
-         success: function(o)
-         {
-            $("#upcoming-jobs-container").html(o);
+            $("#upcoming-events-container").html(o);      
          }
       });
     }

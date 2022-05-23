@@ -1,4 +1,10 @@
 let forms = [];
+<<<<<<< HEAD
+const handleOnLoad = async (form_id) => {
+  await loadElements(form_id, true).then(res => {
+    initBuilder();
+    initSignPads();
+=======
 let background_color_picker, font_color_picker;
 const handleOnLoad = async (form_id, laodColorPicker = true) => {
   await loadElements(form_id, true).then(res => {
@@ -9,6 +15,7 @@ const handleOnLoad = async (form_id, laodColorPicker = true) => {
     if(laodColorPicker){
       initColorPicker();
     }
+>>>>>>> 0ef1e6ecd53eec5ee93a05253a014f84e36d84ff
 
     try {
       initEditor();      
@@ -16,7 +23,6 @@ const handleOnLoad = async (form_id, laodColorPicker = true) => {
       console.log(error);
     }
   });
-  setPageProperties();
   getAllForms().then(res => {
     forms = res.data;
     forms.forEach(el => {

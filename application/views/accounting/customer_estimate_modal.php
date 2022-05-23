@@ -11,23 +11,22 @@
                </div>
                <button type="button" class="close" id="closeModalExpense" data-dismiss="modal" aria-label="Close"><i class="fa fa-times fa-lg"></i></button>
             </div>
-            <form action="<?php echo site_url()?>accounting/saveEstimate" method="post">
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-6">
                             <div class="row">
                                 <div class="col-md-3">
                                     Customer
-                                    <select class="form-control" name="customer_id">
+                                    <select class="form-control">
                                         <option></option>
-                                        <?php foreach($customers as $customer) : ?>
-                                            <option value="<?php echo $customer->prof_id; ?>"><?php echo $customer->first_name . ' ' . $customer->last_name; ?></option>
-                                            <?php endforeach; ?>
+                                        <option>Add New</option>
+                                        <option>John Doe</option>
+                                        <option>Alpha</option>
                                     </select>
                                 </div>
                                 <div class="col-md-6">
                                     Email
-                                    <input type="email" class="form-control" name="email">
+                                    <input type="text" class="form-control">
                                     <input type="checkbox"> Send later
                                 </div>
                             </div>
@@ -35,24 +34,24 @@
                             <div class="row">
                                 <div class="col-md-3">
                                     Billing address
-                                    <textarea style="height:100px;width:100%;" name="billing_address"></textarea>
+                                    <textarea style="height:100px;width:100%;"></textarea>
                                 </div>
                                 <div class="col-md-3">
                                     Estimate date<br>
-                                    <input type="text" class="form-control" id="datepickerinv4" name="est_date"><br>
+                                    <input type="text" class="form-control"><br>
                                     Ship via<br>
-                                    <input type="text" class="form-control" name="ship_via">
+                                    <input type="text" class="form-control">
                                 </div>
                                 <div class="col-md-3">
                                     Expiration date<br>
-                                    <input type="text" class="form-control" id="datepickerinv5" name="ex_date"><br>
+                                    <input type="text" class="form-control"><br>
                                     Shipping date<br>
-                                    <input type="text" class="form-control" id="datepickerinv6" name="ship_date">
+                                    <input type="text" class="form-control">
                                 </div>
                                 <div class="col-md-3">
                                     <br><br>
                                     Tracking no.<br>
-                                    <input type="text" class="form-control" name="tracking_no">
+                                    <input type="text" class="form-control">
                                 </div>
                                 
                             </div>
@@ -60,14 +59,14 @@
                             <div class="row">
                                 <div class="col-md-3">
                                     Shipping to
-                                    <textarea style="height:100px;width:100%;"name="ship_to"></textarea>
+                                    <textarea style="height:100px;width:100%;"></textarea>
                                 </div>
                             </div>
                             <hr>
                             <div class="row">
                                 <div class="col-md-12">
                                     Tags <a href="#" style="float:right">Manage tags</a>
-                                    <input type="text" class="form-control" name="tags">
+                                    <input type="text" class="form-control">
                                 </div>
                             </div>
                             
@@ -96,29 +95,29 @@
                                 <tr>
                                     <td></td>
                                     <td>1</td>
-                                    <td><input type="text" class="form-control" name="prod[]"></td>
-                                        <td><input type="text" class="form-control" name="desc[]"></td>
-                                        <td><input type="text" class="form-control" name="qty[]"></td>
-                                        <td><input type="text" class="form-control" name="rate[]"></td>
-                                        <td><input type="text" class="form-control" name="amount[]"></td>
-                                        <td><input type="text" class="form-control" name="tax[]"></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
                                     <td></td>
                                 </tr>
                                 <tr>
                                     <td></td>
                                     <td>2</td>
-                                    <td><input type="text" class="form-control" name="prod[]"></td>
-                                        <td><input type="text" class="form-control" name="desc[]"></td>
-                                        <td><input type="text" class="form-control" name="qty[]"></td>
-                                        <td><input type="text" class="form-control" name="rate[]"></td>
-                                        <td><input type="text" class="form-control" name="amount[]"></td>
-                                        <td><input type="text" class="form-control" name="tax[]"></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
                                     <td></td>
                                 </tr>
                             </table>
                         <div>
                     </div>
-                    <hr>
+                <hr>
                 
                     <div class="row">
                         <div class="col-md-1">
@@ -144,9 +143,9 @@
                     <div class="row">
                         <div class="col-md-2">
                             Message on invoice<br>
-                            <textarea style="height:100px;width:100%;" name="message_invoice"></textarea><br>
+                            <textarea style="height:100px;width:100%;"></textarea><br>
                             Message on statement<br>
-                            <textarea style="height:100px;width:100%;"  name="message_statement"></textarea>
+                            <textarea style="height:100px;width:100%;"></textarea>
                         </div>
                         <div class="col-md-8">
                         </div>
@@ -199,38 +198,11 @@
                         <div class="col-md-8">
                         </div>
                     </div>
+                    <hr>
+
+
                 </div>
-                <hr>
-                        <div class="modal-footer-check">
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <button class="btn btn-dark cancel-button" id="closeCheckModal" type="button">Cancel</button>
-                                    
-                                </div>
-                                <div class="col-md-5" align="center">
-                                    <div class="middle-links">
-                                        <a href="">Print or Preview</a>
-                                    </div>
-                                    <div class="middle-links end">
-                                        <a href="">Make recurring</a>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="dropdown" style="float: right">
-                                        <button class="btn btn-dark cancel-button px-4" type="submit">Save</button>
-                                        <button type="button" class="btn btn-success" data-dismiss="modal" id="checkSaved" style="border-radius: 20px 0 0 20px">Save and new</button>
-                                        <button class="btn btn-success" type="button" data-toggle="dropdown" style="border-radius: 0 20px 20px 0;margin-left: -5px;">
-                                            <span class="fa fa-caret-down"></span></button>
-                                        <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                                            <li><a href="#" data-dismiss="modal" id="checkSaved" >Save and close</a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    
-            </form>
-                <!-- </div> -->
+                
                 <div style="margin: auto;">
                     <span style="font-size: 14px"><i class="fa fa-lock fa-lg" style="color: rgb(225,226,227);margin-right: 15px"></i>At nSmartrac, the privacy and security of your information are top priorities.</span>
                 </div>
@@ -243,16 +215,3 @@
     </div>
     <!--end of modal-->
 </div>
-
-<script>
-  function totalfunc(){
-    var inputs = document.getElementsByName('amount[]');
-    // alert(inputs);
-    var sum = 0;
-    for(var i = 0; i<inputs.length; i++){
-      sum += parseInt(inputs[i].value);
-    }
-    document.getElementById('total_amount').value = sum;
-
-  }
-</script>

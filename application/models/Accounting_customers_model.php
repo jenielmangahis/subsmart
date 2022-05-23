@@ -45,16 +45,6 @@ class Accounting_customers_model extends MY_Model {
 	public function getAllByCompany() {
 		$this->db->where('company_id', logged('company_id'));
 		$this->db->order_by('first_name', 'asc');
-		$this->db->order_by('last_name', 'asc');
-		$query = $this->db->get($this->table);
-
-		return $query->result();
-	}
-
-	public function getCompanyCustomersWithBalance() {
-		$this->db->where('company_id', logged('company_id'));
-		$this->db->order_by('last_name', 'asc');
-		$this->db->order_by('first_name', 'asc');
 		$query = $this->db->get($this->table);
 
 		return $query->result();

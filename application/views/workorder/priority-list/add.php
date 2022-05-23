@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <!-- page wrapper start -->
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/notifications'); ?>
-    <?php include viewPath('includes/sidebars/schedule'); ?>
+    <?php include viewPath('includes/sidebars/workorder'); ?>
     <div wrapper__section>
         <div class="container-fluid">
             <section class="content">

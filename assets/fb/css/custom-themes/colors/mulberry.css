@@ -1,12 +1,12 @@
 .form-mulberry .form-header {
-    background-color:#C55D8B  /* !important */;
+    background-color:#C55D8B !important;
 }
 
 form.form-mulberry button, .form-mulberry div.Signature div.container button {
-    background-color: #5D8BC5  /* !important */;
-    color: #fff  /* !important */;
+    background-color: #5D8BC5 !important;
+    color: #fff !important;
 }
 
 .form-mulberry input, .form-mulberry textarea, .form-mulberry select, .form-mulberry div.Signature div.container {
-    border-color: #C55D8B  /* !important */;
+    border-color: #C55D8B !important;
 }

@@ -98,22 +98,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 										</tr>
 										</thead>
 										<tbody>
-										<!-- <tr>
+										<tr>
 											<td><input type="checkbox"></td>
 											<td>John Meyer</td>
 											<td>1234567890</td>
 											<td>$32</td>
 											<td><a href="">View</a></td>
-										</tr> -->
-										<?php foreach($customers as $cus) : ?>
-										<tr>
-											<td><input type="checkbox"></td>
-											<td><?php echo $cus->first_name .' '.  $cus->middle_name .' '. $cus->last_name ?></td>
-											<td><?php echo $cus->phone_h; ?></td>
-											<td><?php //echo $cus->created_at; ?></td>
-											<td><a href="" class="btn btn-info">View</a></td>
 										</tr>
-										<?php endforeach; ?>
 										</tbody>
 								</table>
 							</div>

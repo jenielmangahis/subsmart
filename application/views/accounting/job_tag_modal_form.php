@@ -1,6 +1,6 @@
 <div class="modal-content" id="tag-form">
     <div class="modal-header">
-        <a href="#" class="text-info" onclick="showTagsList(this)"><i class="fa fa-chevron-left"></i> Back</a>
+        <a href="#" class="text-info" onclick="showTagsList(this)">< Back</a>
         <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
     </div>
     <div class="modal-body">

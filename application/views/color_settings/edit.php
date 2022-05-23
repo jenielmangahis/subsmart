@@ -1,52 +1,23 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
-<style>
-.page-title, .box-title {
-  font-family: Sarabun, sans-serif !important;
-  font-size: 1.75rem !important;
-  font-weight: 600 !important;
-  padding-top: 5px;
-}
-.pr-b10 {
-  position: relative;
-  bottom: 10px;
-}
-.p-40 {
-  padding-top: 40px !important;
-}
-.p-20 {
-  padding-top: 5px !important;
-  padding-bottom: 25px !important;
-  padding-right: 20px !important;
-  padding-left: 20px !important;
-}
-@media only screen and (max-width: 600px) {
-  .p-40 {
-    padding-top: 0px !important;
-  }
-  .pr-b10 {
-    position: relative;
-    bottom: 0px;
-  }
-}
-</style>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/schedule'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
-        <div class="container-fluid p-40">
+        <div class="container-fluid">
+            <div class="page-title-box">
+                <div class="row align-items-center">
+                    <div class="col-sm-6">
+                        <h1 class="page-title"><i class="fa fa-plus"></i> Edit Color</h1>
+                    </div>
+                </div>
+            </div>
             <!-- end row -->
             <div class="row">
                 <div class="col-xl-12">
-                    <div class="card p-20" style="min-height: 400px !important;">
-                      <div class="page-title-box">
-                          <div class="row align-items-center">
-                              <div class="col-sm-12">
-                                  <h3 class="page-title"><i class="fa fa-plus"></i> Edit Color</h3>
-                              </div>
-                            </div>
-                        </div>
+                    <div class="card" style="min-height: 400px !important;">
+                        <hr />
                         <?php include viewPath('flash'); ?>
                         <?php echo form_open_multipart('color_settings/update_color_setting', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
                           <input type="hidden" name="cid" value="<?= $colorSetting->id; ?>">

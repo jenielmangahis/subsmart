@@ -4,37 +4,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Wizard_apps_model extends MY_Model {
 
 	public $table = 'wizard_apps';
-        
-        function getAppsByfunction($func_id)
-        {
-            $this->db->join('wizard_apps','wizard_app_function.wiz_app_id = wizard_apps.id','left');
-            $this->db->where('wiz_app_func_id', $func_id);
-            return $this->db->get('wizard_app_function')->row();
-        }
-        
-        function getAppsByCompanyId($company_id)
-        {
-            $this->db->where('wa_company_id', $company_id);
-            $this->db->where('wa_is_enabled', 1);
-            $q = $this->db->get('wizard_automate');
-            return $q->result();
-        }
-        
-        function updateConfigData($configData, $func_id, $configName)
-        {
-            $this->db->where('id',$configData );
-            return $this->db->update('wizard_'.$configName.'_config', array('appfunc_id' => $func_id));
-        }
-        
-        function saveGmailSetup($details)
-        {
-            if($this->db->insert('wizard_gmail_config', $details)):
-                return json_encode(array('status' => true, 'app_func_id' => $this->db->insert_id()));
-            else:
-                return json_encode(array('status' => false));
-            endif;
-        }
-        
 
 	function fetch_data($query)
 	 {

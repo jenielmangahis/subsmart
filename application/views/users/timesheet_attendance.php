@@ -301,7 +301,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <div class="col-md-12 banking-tab-container">
                         <a href="<?php echo url('/timesheet/attendance')?>" class="banking-tab<?php echo ($this->uri->segment(1)=="attendance")?:'-active';?>" style="text-decoration: none">Attendance</a>
                         <?php if ($this->session->userdata('logged')['role'] < 5):?>
-                            <a href="<?php echo url('/timesheet/notification')?>" class="banking-tab">Notification</a>
                             <a href="<?php echo url('/timesheet/employee')?>" class="banking-tab">Employee</a>
                             <a href="<?php echo url('/timesheet/schedule')?>" class="banking-tab">Schedule</a>
                             <a href="<?php echo url('/timesheet/list')?>" class="banking-tab">List</a>
@@ -331,12 +330,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                 <span>In Now</span>
                                                             </div>
                                                             <div class="card-data">
-                                                                <span id="employee-in-now"><?php //echo $in_now;?></span>
+                                                                <span id="employee-in-now"><?php echo $in_now;?></span>
                                                             </div>
                                                             <div class="progress">
-                                                                <div id="progressInNow" class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="<?php //    echo $in_now;?>"
-                                                                     aria-valuemin="0" aria-valuemax="100" style="width: <?php //echo round(($in_now / $total_users) * 100,0).'%';?>">
-                                                                    <?php //echo round(($in_now / $total_users) * 100,2).'%';?>
+                                                                <div id="progressInNow" class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="<?php echo $in_now;?>"
+                                                                     aria-valuemin="0" aria-valuemax="100" style="width: <?php echo round(($in_now / $total_users) * 100,0).'%';?>">
+                                                                    <?php echo round(($in_now / $total_users) * 100,2).'%';?>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -355,12 +354,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                 <span>Out Now</span>
                                                             </div>
                                                             <div class="card-data">
-                                                                <span id="employee-out-now"><?php //echo $out_now?></span>
+                                                                <span id="employee-out-now"><?php echo $out_now?></span>
                                                             </div>
                                                             <div class="progress">
                                                                 <div id="progressOutNow" class="progress-bar progress-bar-danger progress-bar-striped active" role="progressbar" aria-valuenow="<?php echo $out_now?>"
-                                                                     aria-valuemin="0" aria-valuemax="100" style="width: <?php //echo round(($out_now / $total_users) * 100,0).'%';?>">
-                                                                    <?php //echo round(($out_now / $total_users) * 100,2).'%';?>
+                                                                     aria-valuemin="0" aria-valuemax="100" style="width: <?php echo round(($out_now / $total_users) * 100,0).'%';?>">
+                                                                    <?php echo round(($out_now / $total_users) * 100,2).'%';?>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1369,41 +1368,5 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             });
         });
     });
-   function waitForClockInOutattendance() {
 
-    var einnow="<?php echo round(($in_now / $total_users) * 100,2).'%';?>";
-    var eoutnow="<?php echo round(($out_now / $total_users) * 100,2).'%';?>";
-                                                                
-                                                            
-        $.ajax({
-            type: "GET", 
-            url: "/Timesheet/getClockInOutNotification",
-            async: true,
-            cache: false,
-            timeout: 10000,
-            success: function (data) { 
-
-                var obj = JSON.parse(data); 
-                $.each(obj, function (currentIndex, currentElem) {
-
-                    //$("#employee-in-now").css({"width": einnow});
-                    //$('#progressInNow').html(currentElem.ClockIn + "%");
-                    //$('#progressOutNow').html(currentElem.ClockOut + "%");
-
-                    $('#employee-in-now').html(currentElem.ClockIn);
-                    $('#employee-out-now').html(currentElem.ClockOut);
-                });
-                setTimeout(waitForClockInOutattendance,2000);
-            },  
-            error: function (XMLHttpRequest, textStatus, errorThrown) {
-                addmsg("error", textStatus + " (" + errorThrown + ")");
-                setTimeout(waitForClockInOutattendance,15000);
-            }
-        });
-    };
-
-    $(document).ready(function () {
-        var TimeStamp = null;
-        waitForClockInOutattendance();
-    });
 </script>

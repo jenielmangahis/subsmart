@@ -52,17 +52,8 @@ class Before_after extends MY_Controller
         $this->load->view('before_after/main', $this->page_data);
     }
 
-    public function addPhoto() {       
-       $this->load->model('AcsProfile_model'); 
-
-       $comp_id = logged('company_id');       
-       $role = logged('role');
-        if( $role == 1 || $role == 2 ){
-            $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($comp_id);
-        }else{
-            $this->page_data['customers'] = $this->AcsProfile_model->getAll();    
-        }
-
+    public function addPhoto() {
+       $comp_id = logged('company_id');
        $group_num_query = $this->db->order_by("id", "desc")->get_where($this->before_after_model->table, $comp_id)->row();
        $this->page_data['group_number'] = 1;
        if ($group_num_query) {
@@ -72,9 +63,8 @@ class Before_after extends MY_Controller
     }
 
     public function saveBeforeAfter() {
-        //postAllowed();
-
-        $this->uploadBeforeAfter($this->input->post('customer_id'), $this->input->post('group_number'), $this->input->post('note'));
+        postAllowed();
+        $this->uploadBeforeAfter($this->input->post('customer_id'), $this->input->post('group_number'));
 
         $this->activity_model->add("New Before/After Created by User: #" . logged('id'));
         $this->session->set_flashdata('alert-type', 'success');
@@ -84,63 +74,27 @@ class Before_after extends MY_Controller
     }
 
     public function updateBeforeAfter() {
-        //postAllowed();
-        $post = $this->input->post();
-        $beforeAfter = $this->before_after_model->getById($post['id']);
-        if( $beforeAfter ){
-            $config = array(
-                'upload_path' => "./uploads/",
-                'allowed_types' => "gif|jpg|png|jpeg",
-                'overwrite' => FALSE,
-                'encrypt_name' => TRUE,
-                'max_size' => "2048000",
-                'max_height' => "768",
-                'max_width' => "1024"
-            );
+        postAllowed();
+        $this->uploadBeforeAfter($this->input->post('customer_id'), $this->input->post('group_number'));
 
-            if($this->upload->do_upload("b1_img")) {
-                $draftlogo = array('upload_data' => $this->upload->data());
-                $b_image = $draftlogo['upload_data']['file_name'];
-            }
-
-            if($this->upload->do_upload("a1_img")) {
-                $draftlogo = array('upload_data' => $this->upload->data());
-                $a_image = $draftlogo['upload_data']['file_name'];
-            }
-
-            $data = [
-                'customer_id' => $post['customer_id'],
-                'before_image' => $b_image,
-                'after_image' => $a_image,
-                "note" => $post['note']
-            ];
-
-            $this->before_after_model->update($beforeAfter->id, $data);
-
-            $this->activity_model->add("Before/After Updated by User: #" . logged('id'));
-            $this->session->set_flashdata('alert-type', 'success');
-            $this->session->set_flashdata('alert', 'Before/After Updated Successfully');    
-        }else{
-            $this->session->set_flashdata('alert-type', 'danger');
-            $this->session->set_flashdata('alert', 'Cannot find data');
-        }
-
+        $this->activity_model->add("Before/After Updated by User: #" . logged('id'));
+        $this->session->set_flashdata('alert-type', 'success');
+        $this->session->set_flashdata('alert', 'Before/After Updated Successfully');
+        
         redirect('vault/beforeafter');
     }
 
-    public function uploadBeforeAfter($customer_id, $group_number, $notes) {
+    public function uploadBeforeAfter($customer_id, $group_number) {
         $config = array(
             'upload_path' => "./uploads/",
             'allowed_types' => "gif|jpg|png|jpeg",
-            'overwrite' => FALSE,
-            'encrypt_name' => TRUE,
+            'overwrite' => TRUE,
             'max_size' => "2048000",
             'max_height' => "768",
             'max_width' => "1024"
         );
         $this->load->library('upload', $config);
 
-        $user_id = logged('id');
         $comp_id = logged('company_id');
         $uploadFields = array("b1_img","a1_img","b2_img","a2_img","b3_img","a3_img","b4_img","a4_img","b5_img","a5_img");
         
@@ -159,18 +113,13 @@ class Before_after extends MY_Controller
             }
 
             if ($b_image != "") {
-                $note = '';
-                if( isset($notes[$i-1]) ){
-                    $note = $notes[$i-1];
-                }
                 $data = array(
-                    'user_id' => $user_id,
                     'company_id' => $comp_id,
-                    'customer_id' => $customer_id,
+                    'customer_id' => ($customer_id) ? $customer_id : 0,
                     'before_image' => $b_image,
                     'after_image' => $a_image,
                     'group_number' => $group_number,
-                    "note" => $note
+                    "note" => ""
                 );
 
                 $this->db->insert($this->before_after_model->table, $data);
@@ -179,23 +128,11 @@ class Before_after extends MY_Controller
     }
 
     public function edit($id) {
-        $this->load->model('AcsProfile_model'); 
-
-        $comp_id = logged('company_id');     
-        $role = logged('role');
-
-        $beforeAfter = $this->before_after_model->getById($id);
-
-        if( $role == 1 || $role == 2 ){
-            $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($comp_id);
-        }else{
-            $this->page_data['customers'] = $this->AcsProfile_model->getAll();    
-        }
-
-        $this->page_data['beforeAfter']  = $beforeAfter;
+        $comp_id = logged('company_id');
         $this->page_data['group_number'] = $id;
+
 		$this->page_data['photos'] = $this->before_after_model->getByWhere(['company_id' => $comp_id, 'group_number' => $id]);
-		$this->load->view('before_after/edit_photo', $this->page_data);
+		$this->load->view('before_after/add_photo', $this->page_data);
 
     }
 

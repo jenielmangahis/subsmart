@@ -37,18 +37,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <div class="row">
                                             <div class="col-sm-6">
                                                 <label>Customer</label> <span class="help">(optional, assign this session to a customer)</span>
-                                                <select id="sel-customer" name="customer_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
-                                                    <option></option>
-                                                    <?php foreach($customers as $c){ ?>
-                                                        <option value="<?= $c->prof_id; ?>"><?= $c->first_name . ' ' . $c->last_name; ?></option>
-                                                    <?php } ?>
-                                                </select>                                                
-                                                <input type="hidden" id="job_customer_id" name=""">
+                                                <input id="job_customer" class="form-control" type="text" placeholder="Customer">
+                                                <input type="hidden" id="job_customer_id" name="customer_id"">
                                                 <input type="hidden" id="group_number" name="group_number" value="<?php echo $group_number;?>">
                                             </div>
                                             <div class="col-sm-6">
                                                 <div style="padding-top: 40px">
-                                                    <a href="<?php echo base_url() . 'customer/add_advance' ?>"><span class="fa fa-plus"></span> New Customer</a>
+                                                    <a href="<?php echo base_url() . 'customer/add' ?>"><span class="fa fa-plus"></span> New Customer</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -282,10 +277,3 @@ defined('BASEPATH') or exit('No direct script access allowed');
     <!-- page wrapper end -->
 </div>
 <?php include viewPath('includes/footer'); ?>
-<script>
-$(function(){
-    $("#sel-customer").select2({
-        placeholder: "Select Customer"
-    });
-});
-</script>

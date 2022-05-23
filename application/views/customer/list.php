@@ -1,17 +1,6 @@
-<?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-
 <?php
-// CSS to add only Customer module
-add_css(array(
-    'assets/css/jquery.signaturepad.css',
-    'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css',
-    'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css',
-    'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
-    'https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css',
-    'assets/css/accounting/sales.css',
-    'assets/textEditor/summernote-bs4.css',
-));
-?>
+defined('BASEPATH') OR exit('No direct script access allowed'); ?>
+
 <?php include viewPath('includes/header'); ?>
 
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
@@ -99,13 +88,6 @@ add_css(array(
     .required{
         color : red!important;
     }
-    .msg-count-cus {
-        height: 30px;
-        width: 30px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
 </style>
 
 <div class="wrapper" role="wrapper">
@@ -121,72 +103,58 @@ add_css(array(
             <div class="row">
                 <div class="col-xl-12">
                     <div class="card">
-                        <div class="card-body" >
+                        <div class="card-body" style="padding-bottom:0px;">
                             <div class="row align-items-center pt-3 bg-white">
                                 <div class="col-md-12">
                                     <!-- Nav tabs -->
-                                    <h3 class="page-title">Customers List</h3>
-                                    <div class="alert alert-warning col-md-12 mt-4 mb-4" role="alert">
-                                        <span style="color:black;">
-                                            A great process of managing interactions with existing as well as past and potential customers is to have one powerful platform that can provide an immediate response to your customer needs.
-                                            Try our quick action icons to create invoices, scheduling, communicating and more with all your customers.
-                                        </span>
-                                    </div>
-                                    <div class="float-right d-md-block">
-                                        <div class="dropdown">
-                                            <!--<input type="file" name="file" /> -->
-                                            <a href="<?= url('customer/import_customer') ?>">
-                                                <button type="button" class="btn btn-primary btn-md" id="exportCustomers"><span class="fa fa-download"></span> Import</button>
-                                            </a>
-                                            <a href="<?= url('customer/customer_export') ?>">
-                                                <button type="button" class="btn btn-primary btn-md" id="exportCustomers"><span class="fa fa-upload"></span> Export</button>
-                                            </a>
-                                            <!--<a class="btn btn-primary btn-md" href="<?php echo base_url('/builder?form_id=28') ?>">
-                                                                                <span class="fa fa-pencil"></span> &nbsp; Customize Form
-                                                                            </a>-->
-                                            <!--<a class="btn btn-primary btn-md" href="<?php echo base_url('customer/print') ?>">
-                                                                                    <span class="fa fa-print "></span> Print
-                                                                            </a>-->
-                                            <a class="btn btn-primary btn-md" href="<?php echo url('customer/add_lead') ?>"><span class="fa fa-plus"></span> Add Lead</a>
-                                            <a class="btn btn-primary btn-md" href="<?php echo url('customer/add_advance') ?>">
-                                                <span class="fa fa-plus"></span> New Customer
-                                            </a>
-                                            <?php //endif ?>
-                                        </div>
-                                    </div>
-
                                     <div class="banking-tab-container">
                                         <div class="rb-01">
                                             <ul class="nav nav-tabs border-0">
                                                 <li class="nav-item">
-                                                    <a class="h6 mb-0 nav-link banking-sub-tab <?php if ($cust_tab == 'tab1') {
-                                                echo "active";
-                                            } ?>" data-toggle="tab" href="#basic">Customer Manager</a>
+                                                    <a class="h6 mb-0 nav-link banking-sub-tab <?php if($cust_tab=='tab1' || $cust_tab==''){echo "active";} ?>" data-toggle="tab" href="#basic">Customer Manager</a>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a class="h6 mb-0 nav-link banking-sub-tab <?php if ($cust_tab == 'tab2' || $cust_tab == '') {
-                                                echo "active";
-                                            } ?>" data-toggle="tab" href="#advance">Customer Module Layout</a>
+                                                    <a class="h6 mb-0 nav-link banking-sub-tab <?php if($cust_tab=='tab2'){echo "active";} ?>" data-toggle="tab" href="#advance">Customer Module Layout</a>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a class="h6 mb-0 nav-link banking-sub-tab <?php if ($cust_tab == 'tab3') {
-                                                echo "active";
-                                            } ?>" data-toggle="tab" href="#settings">Settings</a>
+                                                    <a class="h6 mb-0 nav-link banking-sub-tab <?php if($cust_tab=='tab3'){echo "active";} ?>" data-toggle="tab" href="#settings">Settings</a>
                                                 </li>
                                             </ul>
                                         </div>
                                     </div>
-                                    <div class="tab-content">
-                                        <div class="tab-pane <?php if ($cust_tab == 'tab1') {
-                                                echo "active";
-                                            } else {
-                                                echo "fade";
-                                            } ?> standard-accordion" id="basic">
+                                    <div class="tab-content mt-4">
+                                        <div class="tab-pane <?php if($cust_tab=='tab1' || $cust_tab==''){echo "active";}else{echo "fade";} ?> standard-accordion" id="basic">
                                             <div class="row">
                                                 <div class="col-xl-12">
                                                     <div class="card card-mobile">
                                                         <div class="card-body">
+                                                            <div class="col-sm-12">
+                                                                <h6 class="page-title">Customers List</h6>
+                                                            </div>
                                                             <div class="col-sm-6 col-md-12">
+                                                                <div class="float-right d-md-block">
+                                                                    <div class="dropdown">
+                                                                            <!--<input type="file" name="file" /> -->
+                                                                            <a href="<?= url('customer/import_customer') ?>">
+                                                                                <button type="button" class="btn btn-primary btn-md" id="exportCustomers"><span class="fa fa-download"></span> Import</button>
+                                                                            </a>
+                                                                            <a href="<?= url('customer/customer_export') ?>">
+                                                                                <button type="button" class="btn btn-primary btn-md" id="exportCustomers"><span class="fa fa-upload"></span> Export</button>
+                                                                            </a>
+                                                                            <!--<a class="btn btn-primary btn-md" href="<?php echo base_url('/builder?form_id=28') ?>">
+                                                                                <span class="fa fa-pencil"></span> &nbsp; Customize Form
+                                                                            </a>-->
+                                                                            <!--<a class="btn btn-primary btn-md" href="<?php echo base_url('customer/print') ?>">
+                                                                                    <span class="fa fa-print "></span> Print
+                                                                            </a>-->
+                                                                            <a class="btn btn-primary btn-md" href="<?php echo url('customer/add_lead') ?>"><span class="fa fa-plus"></span> Add Lead</a>
+                                                                            <a class="btn btn-primary btn-md" href="<?php echo url('customer/add_advance') ?>">
+                                                                                <span class="fa fa-plus"></span> New Customer
+                                                                            </a>
+                                                                            <?php //endif ?>
+                                                                    </div>
+                                                                </div>
+                                                                <br><br><br>
                                                                 <div class="tab-content" id="myTabContent">
                                                                     <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1">
                                                                         <div id="status_sorting"  class=""></div>
@@ -209,60 +177,60 @@ add_css(array(
                                                                                 </tr>
                                                                             </thead>
                                                                             <tbody>
-<?php if (isset($profiles) && !empty($profiles)) : ?>
-    <?php foreach ($profiles as $customer) : ?>
-                                                                                        <tr>
-                                                                                            <td>
-                                                                                                <a href="<?= base_url('/customer/index/tab2/' . $customer->prof_id) . ''; ?>" style="color:#32243d;">
-        <?= ($customer) ? $customer->first_name . ' ' . $customer->last_name : ''; ?>
-                                                                                                </a>
-                                                                                            </td>
-                                                                                            <td><?php echo $customer->city; ?></td>
-                                                                                            <td><?php echo $customer->state; ?></td>
-                                                                                            <td><?php echo $customer->lead_source; ?></td>
-                                                                                            <td><?php echo $customer->email; ?></td>
-                                                                                            <td><?php echo $customer->entered_by; ?></td>
-                                                                                            <td><?php echo ($customer) ? $customer->FName . ' ' . $customer->LName : ''; ?></td>
-                                                                                            <td><?php echo $customer->technician; ?></td>
-                                                                                            <td><?php echo $customer->system_type; ?></td>
-                                                                                            <td><?php echo $customer->mmr; ?></td>
-                                                                                            <td><?php echo $customer->phone_h; ?></td>
-                                                                                            <td><?php echo $customer->status; ?></td>
-                                                                                            <td>
-                                                                                                <a href="<?php echo url('/customer/add_advance/' . $customer->prof_id); ?>" style="text-decoration:none;display:inline-block;" title="Edit Customer">
-                                                                                                    <img src="/assets/img/customer/actions/ac_edit.png" width="16px" height="16px" border="0" title="Edit Customer">
-                                                                                                </a>
-                                                                                                <!--<a href="#"  style="text-decoration:none;display:inline-block;" id="<?php echo $customer->prof_id; ?>" title="Delete Customer" class="delete_cust">
-                                                                                                    <img src="https://app.creditrepaircloud.com/application/images/cross.png" width="16px" height="16px" border="0">
-                                                                                                </a>-->
-                                                                                                <a href="mailto:<?= $customer->email; ?>" style="text-decoration:none; display:inline-block;" >
-                                                                                                    <img src="/assets/img/customer/actions/ac_email.png" width="16px" height="16px" border="0" title="Email Customer">
-                                                                                                </a>
-                                                                                                <a href="#" style="text-decoration:none; display:inline-block;" >
-                                                                                                    <img src="/assets/img/customer/actions/ac_call.png" width="16px" height="16px" border="0" title="Call Customer">
-                                                                                                </a>
-                                                                                                <a href="#" style="text-decoration:none; display:inline-block;">
-                                                                                                    <img src="/assets/img/customer/actions/ac_invoice.png" width="16px" height="16px" border="0" title="Invoice Customer">
-                                                                                                </a>
-                                                                                                <a href="#" style="text-decoration:none; display:inline-block;" >
-                                                                                                    <img src="/assets/img/customer/actions/ac_work.png" width="16px" height="16px" border="0" title="Create Work Order">
-                                                                                                </a>
-                                                                                                <a href="#" style="text-decoration:none; display:inline-block;" >
-                                                                                                    <img src="/assets/img/customer/actions/ac_ticket.png" width="16px" height="16px" border="0" title="Create Service Ticket">
-                                                                                                </a>
-                                                                                                <a href="#" style="text-decoration:none; display:inline-block;" >
-                                                                                                    <img src="/assets/img/customer/actions/ac_sched.png" width="16px" height="16px" border="0" title="Schedule">
-                                                                                                </a>
-                                                                                                <a href="#" style="text-decoration:none; display:inline-block;" >
-                                                                                                    <img src="/assets/img/customer/actions/ac_sms.png" width="16px" height="16px" border="0" title="Message Customer">
-                                                                                                </a>
-                                                                                                <!--<a href="<?php echo url('/customer/index/tab2/' . $customer->prof_id); ?>"  style="text-decoration:none; display:inline-block;">
-                                                                                                    <img src="https://app.creditrepaircloud.com/application/images/assign-contact.png" border="0" title="View Profile">
-                                                                                                </a>-->
-                                                                                            </td>
-                                                                                        </tr>
-    <?php endforeach; ?>
-<?php endif; ?>
+                                                                                <?php if (isset($profiles) && !empty($profiles)) :  ?>
+                                                                                <?php foreach ($profiles as $customer) : ?>
+                                                                                    <tr>
+                                                                                        <td>
+                                                                                            <a href="<?= base_url('/customer/index/tab2/'.$customer->prof_id).''; ?>" style="color:#32243d;">
+                                                                                                <?= ($customer) ? $customer->first_name.' '.$customer->last_name : ''; ?>
+                                                                                            </a>
+                                                                                        </td>
+                                                                                        <td><?php echo  $customer->city; ?></td>
+                                                                                        <td><?php echo  $customer->state; ?></td>
+                                                                                        <td><?php echo $customer->lead_source; ?></td>
+                                                                                        <td><?php echo $customer->email; ?></td>
+                                                                                        <td><?php echo $customer->entered_by; ?></td>
+                                                                                        <td><?php echo ($customer) ? $customer->FName. ' ' .$customer->LName : ''; ?></td>
+                                                                                        <td><?php echo $customer->technician; ?></td>
+                                                                                        <td><?php echo $customer->system_type; ?></td>
+                                                                                        <td><?php echo $customer->mmr; ?></td>
+                                                                                        <td><?php echo $customer->phone_h; ?></td>
+                                                                                        <td><?php echo $customer->status; ?></td>
+                                                                                        <td>
+                                                                                            <a href="<?php echo url('/customer/add_advance/'.$customer->prof_id); ?>" style="text-decoration:none;display:inline-block;" title="Edit Customer">
+                                                                                                <img src="/assets/img/customer/actions/ac_edit.png" width="16px" height="16px" border="0" title="Edit Customer">
+                                                                                            </a>
+                                                                                            <!--<a href="#"  style="text-decoration:none;display:inline-block;" id="<?php echo $customer->prof_id; ?>" title="Delete Customer" class="delete_cust">
+                                                                                                <img src="https://app.creditrepaircloud.com/application/images/cross.png" width="16px" height="16px" border="0">
+                                                                                            </a>-->
+                                                                                            <a href="mailto:<?= $customer->email; ?>" style="text-decoration:none; display:inline-block;" >
+                                                                                                <img src="/assets/img/customer/actions/ac_email.png" width="16px" height="16px" border="0" title="Email Customer">
+                                                                                            </a>
+                                                                                            <a href="#" style="text-decoration:none; display:inline-block;" >
+                                                                                                <img src="/assets/img/customer/actions/ac_call.png" width="16px" height="16px" border="0" title="Call Customer">
+                                                                                            </a>
+                                                                                            <a href="#" style="text-decoration:none; display:inline-block;">
+                                                                                                <img src="/assets/img/customer/actions/ac_invoice.png" width="16px" height="16px" border="0" title="Invoice Customer">
+                                                                                            </a>
+                                                                                            <a href="#" style="text-decoration:none; display:inline-block;" >
+                                                                                                <img src="/assets/img/customer/actions/ac_work.png" width="16px" height="16px" border="0" title="Create Work Order">
+                                                                                            </a>
+                                                                                            <a href="#" style="text-decoration:none; display:inline-block;" >
+                                                                                                <img src="/assets/img/customer/actions/ac_ticket.png" width="16px" height="16px" border="0" title="Create Service Ticket">
+                                                                                            </a>
+                                                                                            <a href="#" style="text-decoration:none; display:inline-block;" >
+                                                                                                <img src="/assets/img/customer/actions/ac_sched.png" width="16px" height="16px" border="0" title="Schedule">
+                                                                                            </a>
+                                                                                            <a href="#" style="text-decoration:none; display:inline-block;" >
+                                                                                                <img src="/assets/img/customer/actions/ac_sms.png" width="16px" height="16px" border="0" title="Message Customer">
+                                                                                            </a>
+                                                                                            <!--<a href="<?php echo url('/customer/index/tab2/'.$customer->prof_id); ?>"  style="text-decoration:none; display:inline-block;">
+                                                                                                <img src="https://app.creditrepaircloud.com/application/images/assign-contact.png" border="0" title="View Profile">
+                                                                                            </a>-->
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                <?php endforeach; ?>
+                                                                            <?php endif; ?>
                                                                             </tbody>
                                                                         </table>
                                                                     </div>
@@ -278,11 +246,7 @@ add_css(array(
                                                 }
                                             </style>
                                         </div>
-                                        <div class="tab-pane <?php if ($cust_tab == 'tab2' || $cust_tab == '') {
-                                            echo "active";
-                                        } else {
-                                            echo "fade";
-                                        } ?> standard-accordion" id="advance">
+                                        <div class="tab-pane <?php if($cust_tab=='tab2'){echo "active";}else{echo "fade";} ?> standard-accordion" id="advance">
                                             <div class="col-sm-12">
                                                 <div class="float-right d-md-block">
                                                     <div class="dropdown">
@@ -291,204 +255,144 @@ add_css(array(
                                                         <a class="btn btn-primary btn-md" href="<?php echo url('customer/add_advance') ?>"><span class="fa fa-plus"></span> New Customer</a>-->
                                                     </div>
                                                 </div>
-                                                <br>
-                                                <div class="alert alert-warning col-md-12 mt-4 mb-4" role="alert">
-                                                    <span style="color:black;">
-                                                        Our customer dashboard is Visual and Easy-To-Use. Simply add a widget and quickly see the information you need to help better assist and maintain a well organized business.
-                                                        Need us to create a customize widget with the table geared around your business.  Send us a request and our support team will be glad to get you a quote.
-                                                    </span>
-                                                </div>
+                                                <br/><br/><br/>
                                                 <div class="col-md-12">
 
-                                                    <div class="col-sm-12">
-                                                        <div class="col-sm-12 text-right-sm" style="align:right;">
-                                                            <span class="text-ter" style="position: absolute; right: 83px !important; top: 8px;">Customize</span>
-                                                            <div class="onoffswitch grid-onoffswitch" style="position: relative; margin-top: 7px;">
-                                                                <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" data-customize="open" id="onoff-customize">
-                                                                <label class="onoffswitch-label" for="onoff-customize">
-                                                                    <span class="onoffswitch-inner"></span> <span class="onoffswitch-switch"></span>
-                                                                </label>
+                                                            <div class="col-sm-12">
+                                                                <div class="col-sm-12 text-right-sm" style="align:right;">
+                                                                    <span class="text-ter" style="position: absolute; right: 83px !important; top: 8px;">Customize</span>
+                                                                    <div class="onoffswitch grid-onoffswitch" style="position: relative; margin-top: 7px;">
+                                                                        <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" data-customize="open" id="onoff-customize">
+                                                                        <label class="onoffswitch-label" for="onoff-customize">
+                                                                            <span class="onoffswitch-inner"></span> <span class="onoffswitch-switch"></span>
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="indata sortable2" id="sorting">
-                                                        <?php
-                                                            $modules = explode(",", $module_sort->ams_values);
-                                                            if($module_sort->ams_values!=""):
-                                                                foreach ($modules as $m):
-                                                                    $view = $this->wizardlib->getModuleById($m);
-                                                                    //echo $view;
-                                                                    $data['id'] = $view->ac_id;
-                                                                    $this->load->view($view->ac_view_link, $data);
-                                                                endforeach;
-                                                            endif;
-                                                            $datas['module_sort'] = $module_sort;
-                                                            $this->load->view('customer/adv_cust_modules/add_module', $datas);
-                                                        ?>
-                                                        <input type="hidden" id="custom_modules" value="<?= $module_sort->ams_values ?>" />
-                                                    </div>
+                                                            <div class="indata sortable2" id="sorting">
+
+                                                                <?php
+                                                                $modules = explode(",", $module_sort->ams_values);
+                                                                for($x=0;$x<count($modules);$x++){
+                                                                    if(!empty($modules[$x])){
+                                                                        include viewPath('customer/adv_cust_modules/'.$modules[$x]);
+                                                                    }
+                                                                }
+                                                                ?>
+                                                                <!--<div class="contract module ui-state-default" id="contact">
+                                                                    <h5>Contact Module</h5>
+                                                                    <div class="col-sm-12">
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="clients module ui-state-default" id="client">
+                                                                    <h5>Client Module</h5>
+                                                                    <div class="col-sm-12">
+                                                                    </div>
+                                                                </div>-->
+                                                            </div>
                                                 </div>
                                             </div>
                                         </div>
 
-                                        <div class="tab-pane <?php if ($cust_tab == 'tab3') {
-echo "active";
-} else {
-echo "fade";
-} ?> standard-accordion" id="settings">
+                                        <div class="tab-pane <?php if($cust_tab=='tab3'){echo "active";}else{echo "fade";} ?> standard-accordion" id="settings">
                                             <div class="banking-tab-container">
                                                 <div class="rb-01">
                                                     <ul class="nav nav-tabs border-0">
                                                         <li class="nav-item">
-                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?php if ($minitab == 'mt2' || $minitab == '') {
-echo "active";
-} ?>" data-toggle="tab" href="#widget1">Import/Audit</a>
+                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?php if($minitab=='mt2' || $minitab=='' ){echo "active";} ?>" data-toggle="tab" href="#widget1">Import/Audit</a>
                                                         </li>
                                                         <li class="nav-item">
-                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?php if ($minitab == 'mt3' || $minitab == 'mt3-cdl') {
-echo "active";
-} ?>" data-toggle="tab" href="#widget2">Dispute Wizard</a>
+                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?php if($minitab=='mt3' || $minitab=='mt3-cdl'){echo "active";} ?>" data-toggle="tab" href="#widget2">Dispute Wizard</a>
                                                         </li>
                                                         <li class="nav-item">
-                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?php if ($minitab == 'mt4' || $minitab == 'mt4-2') {
-echo "active";
-} ?>" data-toggle="tab" href="#widget3">Dispute Items</a>
+                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?php if($minitab=='mt4' || $minitab=='mt4-2'){echo "active";} ?>" data-toggle="tab" href="#widget3">Dispute Items</a>
                                                         </li>
                                                         <li class="nav-item">
-                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?php if ($minitab == 'mt5') {
-echo "active";
-} ?>" data-toggle="tab" href="#profle">Profile</a>
+                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?php if($minitab=='mt5'){echo "active";} ?>" data-toggle="tab" href="#profle">Profile</a>
                                                         </li>
                                                         <li class="nav-item">
-                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?php if ($minitab == 'mt6') {
-echo "active";
-} ?>" data-toggle="tab" href="#educate">Educate</a>
+                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?php if($minitab=='mt6'){echo "active";} ?>" data-toggle="tab" href="#educate">Educate</a>
                                                         </li>
                                                         <li class="nav-item">
-                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?php if ($minitab == 'mt7') {
-                                                        echo "active";
-                                                    } ?>" data-toggle="tab" href="#messages">Messages</a>
+                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?php if($minitab=='mt7'){echo "active";} ?>" data-toggle="tab" href="#messages">Messages</a>
                                                         </li>
                                                         <li class="nav-item">
-                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?php if ($minitab == 'mt8') {
-                                                        echo "active";
-                                                    } ?>" data-toggle="tab" href="#notes">Internal Notes</a>
+                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?php if($minitab=='mt8'){echo "active";} ?>" data-toggle="tab" href="#notes">Internal Notes</a>
                                                         </li>
                                                         <li class="nav-item">
-                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?php if ($minitab == 'mt9') {
-                                                        echo "active";
-                                                    } ?>" data-toggle="tab" href="#invoices">Invoices</a>
+                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?php if($minitab=='mt9'){echo "active";} ?>" data-toggle="tab" href="#invoices">Invoices</a>
                                                         </li>
                                                         <li class="nav-item">
-                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?php if ($minitab == 'mt10') {
-                                                        echo "active";
-                                                    } ?>" data-toggle="tab" href="#activity">Activity</a>
+                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?php if($minitab=='mt10'){echo "active";} ?>" data-toggle="tab" href="#activity">Activity</a>
                                                         </li>
                                                         <li class="nav-item">
-                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?php if ($minitab == 'mt11') {
-                                                        echo "active";
-                                                    } ?>" data-toggle="tab" href="#details">Detail Sheet</a>
+                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?php if($minitab=='mt11'){echo "active";} ?>" data-toggle="tab" href="#details">Detail Sheet</a>
                                                         </li>
                                                         <li class="nav-item">
-                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?php if ($minitab == 'mt12') {
-                                                                echo "active";
-                                                            } ?>" data-toggle="tab" href="#custom">Customizable</a>
+                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?php if($minitab=='mt12'){echo "active";} ?>" data-toggle="tab" href="#custom">Customizable</a>
                                                         </li>
                                                         <li class="nav-item">
-                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?php if ($minitab == 'mt13') {
-                                                                echo "active";
-                                                            } ?>" data-toggle="tab" href="#others">Others</a>
+                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?php if($minitab=='mt13'){echo "active";} ?>" data-toggle="tab" href="#others">Others</a>
                                                         </li>
                                                     </ul>
                                                 </div>
                                             </div>
                                             <div class="tab-content mt-4" >
-                                                <div class="tab-pane <?php if ($minitab == 'mt2' || $minitab == '') {
-                                                                echo "active";
-                                                            } else {
-                                                                echo "fade";
-                                                            } ?> standard-accordion" id="widget1">
-                                                <?php
-                                                include viewPath('customer/adv_cust_modules/settings_widget1');
-                                                ?>
+                                                <div class="tab-pane <?php if($minitab=='mt2' || $minitab=='' ){ echo "active";}else{echo "fade";} ?> standard-accordion" id="widget1">
+                                                    <?php
+                                                        include viewPath('customer/adv_cust_modules/settings_widget1');
+                                                    ?>
                                                 </div>
-                                                <div class="tab-pane <?php if ($minitab == 'mt3' || $minitab == 'mt3-cdl') {
-                                                        echo "active";
-                                                    } else {
-                                                        echo "fade";
-                                                    } ?> standard-accordion" id="widget2">
-<?php
-if ($minitab == 'mt3') {
-include viewPath('customer/adv_cust_modules/settings_widget2');
-} else if (isset($letter_id) && $letter_id != "") {
-include viewPath('customer/adv_cust_modules/settings_widget2-2');
-} else {
-include viewPath('customer/adv_cust_modules/settings_widget2-1');
-}
-?>
+                                                <div class="tab-pane <?php if($minitab=='mt3' || $minitab=='mt3-cdl' ){ echo "active";}else{echo "fade";} ?> standard-accordion" id="widget2">
+                                                    <?php
+                                                        if($minitab== 'mt3'){
+                                                            include viewPath('customer/adv_cust_modules/settings_widget2');
+                                                        }else if(isset($letter_id) && $letter_id!=""){
+                                                            include viewPath('customer/adv_cust_modules/settings_widget2-2');
+                                                        }else{
+                                                            include viewPath('customer/adv_cust_modules/settings_widget2-1');
+                                                        }
+                                                    ?>
                                                 </div>
-                                                <div class="tab-pane <?php if ($minitab == 'mt4' || $minitab == 'mt4-2') {
-echo "active";
-} else {
-echo "fade";
-} ?> standard-accordion" id="widget3">
-<?php
-include viewPath('customer/adv_cust_modules/settings_widget3');
-?>
+                                                <div class="tab-pane <?php if($minitab=='mt4' || $minitab=='mt4-2'){ echo "active";}else{echo "fade";} ?> standard-accordion" id="widget3">
+                                                    <?php
+                                                        include viewPath('customer/adv_cust_modules/settings_widget3');
+                                                    ?>
                                                 </div>
-                                                <div class="tab-pane <?php if ($minitab == 'mt5') {
-echo "active";
-} else {
-echo "fade";
-} ?> standard-accordion" id="profle">
+                                                <div class="tab-pane <?php if($minitab=='mt5'){ echo "active";}else{echo "fade";} ?> standard-accordion" id="profle">
                                                     <div class="card">
                                                         <div class="card-body hid-desk" style="padding-bottom:0px;">
-<?php
-include viewPath('customer/adv_cust_modules/settings_profile');
-?>
+                                                            <?php
+                                                                include viewPath('customer/adv_cust_modules/settings_profile');
+                                                            ?>
                                                         </div>
                                                     </div>
                                                 </div>
 
-                                                <div class="tab-pane <?php if ($minitab == 'mt6') {
-echo "active";
-} else {
-echo "fade";
-} ?> standard-accordion" id="educate">
-<?php
-include viewPath('customer/adv_cust_modules/settings_educate');
-?>
+                                                <div class="tab-pane <?php if($minitab=='mt6'){ echo "active";}else{echo "fade";} ?> standard-accordion" id="educate">
+                                                    <?php
+                                                        include viewPath('customer/adv_cust_modules/settings_educate');
+                                                    ?>
                                                 </div>
 
-                                                <div class="tab-pane <?php if ($minitab == 'mt7') {
-echo "active";
-} else {
-echo "fade";
-} ?> standard-accordion" id="messages">
+                                                <div class="tab-pane <?php if($minitab=='mt7'){ echo "active";}else{echo "fade";} ?> standard-accordion" id="messages">
                                                     <div class="card">
                                                         <div class="card-body hid-desk" style="padding-bottom:0px;">
-                                                            <div class="col-lg-12">
-                                                                <h6>Messages</h6>
-                                                            </div>
+                                                            <?php
+                                                            include viewPath('customer/adv_cust_modules/settings_messages');
+                                                            ?>
                                                         </div>
                                                     </div>
                                                 </div>
 
-                                                <div class="tab-pane <?php if ($minitab == 'mt8') {
-echo "active";
-} else {
-echo "fade";
-} ?> standard-accordion" id="notes">
-<?php
-include viewPath('customer/adv_cust_modules/settings_notes');
-?>
+                                                <div class="tab-pane <?php if($minitab=='mt8'){ echo "active";}else{echo "fade";} ?> standard-accordion" id="notes">
+                                                    <?php
+                                                        include viewPath('customer/adv_cust_modules/settings_notes');
+                                                    ?>
                                                 </div>
 
-                                                <div class="tab-pane <?php if ($minitab == 'mt9') {
-echo "active";
-} else {
-echo "fade";
-} ?> standard-accordion" id="invoices">
+                                                <div class="tab-pane <?php if($minitab=='mt9'){ echo "active";}else{echo "fade";} ?> standard-accordion" id="invoices">
                                                     <div class="card">
                                                         <div class="card-body hid-desk" style="padding-bottom:0px;">
                                                             <div class="col-lg-12">
@@ -498,62 +402,31 @@ echo "fade";
                                                     </div>
                                                 </div>
 
-                                                <div class="tab-pane <?php if ($minitab == 'mt10') {
-echo "active";
-} else {
-echo "fade";
-} ?> standard-accordion" id="activity">
+                                                <div class="tab-pane <?php if($minitab=='mt10'){ echo "active";}else{echo "fade";} ?> standard-accordion" id="activity">
                                                     <div class="card">
-                                                        <div class="card-body hid-desk">
-
-                                                            <div class="col-lg-8">
-                                                                <!-- <h6>Activity</h6> -->
-                                                                <div class="MuiCardContent-root">
+                                                        <div class="card-body hid-desk" style="padding-bottom:0px;">
+                                                            <div class="col-lg-12">
+                                                                <div class="MuiCardContent-root jss60" style="height: 309px;">
                                                                     <div class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-column">
-                                                                        <table id="customer_info" class="table">
-                                                                            <thead>
-                                                                                <tr>
-
-                                                                                </tr>
-                                                                            </thead>
-                                                                            <tbody>
-                                                                                <tr>
-                                                                                    <td>
-                                                                                        <div class="user-img position-relative d-inline-block mr-2">
-                                                                                            <span class="round text-white text-center rounded-circle bg-danger msg-count-cus">WH</span>
-                                                                                        </div>
-                                                                                        Welyelf Hisula
-                                                                                    </td>
-                                                                                    <td>Job scheduled SMS sent to (970) 691-9018</td>
-                                                                                    <td>Thu 1/21/21
-                                                                                        6:20pm</td>
-                                                                                </tr>
-                                                                                <tr>
-                                                                                    <td>
-                                                                                        <div class="user-img position-relative d-inline-block mr-2">
-                                                                                            <span class="round text-white text-center rounded-circle bg-danger msg-count-cus">WH</span>
-                                                                                        </div>
-                                                                                        Welyelf Hisula
-                                                                                    </td>
-                                                                                    <td>Job scheduled SMS sent to (970) 691-9018</td>
-                                                                                    <td>Thu 1/21/21
-                                                                                        6:20pm</td>
-                                                                                </tr>
-                                                                            </tbody>
-                                                                        </table>
+                                                                        <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12" style="padding: 30px;">
+                                                                            <ul class="timeline">
+                                                                                <?php foreach($activity_list as $al) { ?>
+                                                                                    <li class="timeline-item">
+                                                                                        <p class="timeline-content"><?=$al['activity']?></p>
+                                                                                        <p class="event-time"><?=$al['createdAt']?></p>
+                                                                                    </li>
+                                                                                <?php } ?>
+                                                                            </ul>
+                                                                        </div>
+                                                                    
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <div class="col-lg-4"></div>
                                                         </div>
                                                     </div>
                                                 </div>
 
-                                                <div class="tab-pane <?php if ($minitab == 'mt11') {
-echo "active";
-} else {
-echo "fade";
-} ?> standard-accordion" id="details">
+                                                <div class="tab-pane <?php if($minitab=='mt11'){ echo "active";}else{echo "fade";} ?> standard-accordion" id="details">
                                                     <div class="card">
                                                         <div class="card-body hid-desk" style="padding-bottom:0px;">
                                                             <div class="col-lg-12">
@@ -563,23 +436,19 @@ echo "fade";
                                                     </div>
                                                 </div>
 
-                                                <div class="tab-pane <?php if ($minitab == 'mt12') {
-echo "active";
-} else {
-echo "fade";
-} ?> standard-accordion" id="custom">
+                                                <div class="tab-pane <?php if($minitab=='mt12'){ echo "active";} else{echo "fade";} ?> standard-accordion" id="custom">
                                                     <div class="card">
                                                         <div class="card-body hid-desk" style="padding-bottom:0px;">
                                                             <div class="col-lg-12">
                                                                 <h6>Customizable</h6>
                                                             </div>
-<?php if (isset($profile_info)) : ?>
+                                                            <?php if(isset($profile_info)) : ?>
                                                             <div class="col-md-12">
                                                                 <div style="margin-right:15px; padding-top:1px;font-size: 12px !important;" align="left" class="normaltext1">
                                                                     <button type="button" class="btn btn-secondary more_custom" ><span class="fa fa-plus"></span> Add New </button>
                                                                 </div>
                                                                 <br>
-                                                                <form id="customizable_form">
+                                                                 <form id="customizable_form">
                                                                     <table class="table table-hover table-bordered" id="custom_table">
                                                                         <thead>
                                                                             <tr>
@@ -589,48 +458,42 @@ echo "fade";
                                                                             </tr>
                                                                         </thead>
                                                                         <tbody>
-<?php
-$custom_fields = json_decode($profile_info->custom_fields);
-if (!empty($custom_fields)) {
-    foreach ($custom_fields as $key => $custom) {
-        ?>
-                                                                                    <tr>
-                                                                                        <td>
-                                                                                            <input type="text" class="form-control col-md-12" value="<?= !empty($custom->field_name) ? $custom->field_name : ''; ?>" name="fieldname[]" id="fieldname" />
-                                                                                        </td>
-                                                                                        <td>
-                                                                                            <input type="text" class="form-control col-md-12" value="<?= !empty($custom->field_value) ? $custom->field_value : ''; ?>" name="fieldvalue[]" id="fieldvalue" />
-                                                                                        </td>
-                                                                                        <td>
-                                                                                            <a href="javascript:void(0);" type="button" class="delete_custom"><span class="fa fa-trash-o"></span></a>
-                                                                                        </td>
-                                                                                    </tr>
-        <?php
-    }
-}
-?>
+                                                                            <?php
+                                                                                $custom_fields = json_decode( $profile_info->custom_fields);
+                                                                                if (!empty($custom_fields)) {
+                                                                                    foreach ($custom_fields as $key => $custom) {
+                                                                                        ?>
+                                                                                            <tr>
+                                                                                                <td>
+                                                                                                    <input type="text" class="form-control col-md-12" value="<?= !empty($custom->field_name) ? $custom->field_name : '' ; ?>" name="fieldname[]" id="fieldname" />
+                                                                                                </td>
+                                                                                                <td>
+                                                                                                    <input type="text" class="form-control col-md-12" value="<?= !empty($custom->field_value) ? $custom->field_value : '' ; ?>" name="fieldvalue[]" id="fieldvalue" />
+                                                                                                </td>
+                                                                                                <td>
+                                                                                                    <a href="javascript:void(0);" type="button" class="delete_custom"><span class="fa fa-trash-o"></span></a>
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                        <?php
+                                                                                    }
+                                                                                }
+                                                                            ?>
                                                                         </tbody>
                                                                     </table>
-                                                                    <div class="modal-footer">
-                                                                        <button type="submit" class="btn btn-primary"><span class="fa fa-paper-plane-o"></span> Save / Update</button>
-                                                                    </div>
-                                                                    <input type="hidden" class="form-control" value="<?php if (isset($profile_info)) {
-    echo $profile_info->prof_id;
-} ?>" name="prof_id" id="prof_id" />
-                                                                </form>
+                                                                     <div class="modal-footer">
+                                                                         <button type="submit" class="btn btn-primary"><span class="fa fa-paper-plane-o"></span> Save / Update</button>
+                                                                     </div>
+                                                                     <input type="hidden" class="form-control" value="<?php if(isset($profile_info)){ echo $profile_info->prof_id; } ?>" name="prof_id" id="prof_id" />
+                                                                 </form>
                                                             </div>
-<?php else : ?>
-                                                            <span>No customer selected. Go to Customer Manager and select one.</span>
-<?php endif; ?>
+                                                            <?php else :?>
+                                                                <span>No customer selected. Go to Customer Manager and select one.</span>
+                                                            <?php endif; ?>
                                                         </div>
                                                     </div>
                                                 </div>
 
-                                                <div class="tab-pane <?php if ($minitab == 'mt13') {
-echo "active";
-} else {
-echo "fade";
-} ?> standard-accordion" id="others">
+                                                <div class="tab-pane <?php if($minitab=='mt13'){ echo "active";}else{echo "fade";} ?> standard-accordion" id="others">
                                                     <div class="row">
                                                         <div class="col-md-12">
                                                             <div class="alert alert-success" id="alert_box" style="display:none;">
@@ -648,10 +511,10 @@ echo "fade";
                                                                 </button>
                                                                 <table id="leadtype" class="table table-bordered table-striped">
                                                                     <thead>
-                                                                        <tr>
-                                                                            <th>Lead Type Name</th>
-                                                                            <th>Action</th>
-                                                                        </tr>
+                                                                    <tr>
+                                                                        <th>Lead Type Name</th>
+                                                                        <th>Action</th>
+                                                                    </tr>
                                                                     </thead>
                                                                     <tbody id="leadtype_table_data">
                                                                     </tbody>
@@ -670,20 +533,20 @@ echo "fade";
                                                                 </button>
                                                                 <table id="salesarea" class="table table-bordered table-striped">
                                                                     <thead>
-                                                                        <tr>
-                                                                            <th>Id</th>
-                                                                            <th>Action</th>
-                                                                        </tr>
+                                                                    <tr>
+                                                                        <th>Id</th>
+                                                                        <th>Action</th>
+                                                                    </tr>
                                                                     </thead>
                                                                     <tbody>
-<?php foreach ($sales_area as $sa) { ?>
+                                                                    <?php foreach ($sales_area as $sa) { ?>
                                                                         <tr>
                                                                             <td><?= $sa->sa_name; ?></td>
                                                                             <td>
                                                                                 <a href="" class="btn btn-sm btn-default" title="Edit User" data-toggle="tooltip"><i class="fa fa-pencil"></i></a>
                                                                             </td>
                                                                         </tr>
-<?php } ?>
+                                                                    <?php } ?>
                                                                     </tbody>
                                                                 </table>
                                                             </div>
@@ -715,10 +578,10 @@ echo "fade";
                                                                 </button>
                                                                 <table id="leadsource" class="table table-bordered table-striped">
                                                                     <thead>
-                                                                        <tr>
-                                                                            <th>Lead Source</th>
-                                                                            <th>Action</th>
-                                                                        </tr>
+                                                                    <tr>
+                                                                        <th>Lead Source</th>
+                                                                        <th>Action</th>
+                                                                    </tr>
                                                                     </thead>
                                                                     <tbody id="tb_leadsource">
 
@@ -746,43 +609,28 @@ echo "fade";
 
 <!-- Modals -->
 
-<!-- Lead Type Modal -->
-<?php include viewPath('customer/adv_modals/modal_lead_type'); ?>
+    <!-- Lead Type Modal -->
+    <?php include viewPath('customer/adv_modals/modal_lead_type'); ?>
 
-<!-- Sales Area Modal -->
-<?php include viewPath('customer/adv_modals/modal_sales_area'); ?>
+    <!-- Sales Area Modal -->
+    <?php include viewPath('customer/adv_modals/modal_sales_area'); ?>
 
-<!-- Lead Source Modal -->
-<?php include viewPath('customer/adv_modals/modal_lead_source'); ?>
+    <!-- Lead Source Modal -->
+    <?php include viewPath('customer/adv_modals/modal_lead_source'); ?>
 
-<!-- Task Modal -->
-<?php include viewPath('customer/adv_modals/modal_task'); ?>
+    <!-- Task Modal -->
+    <?php include viewPath('customer/adv_modals/modal_task'); ?>
 
-<!-- Impoer Credit Modal -->
-<?php include viewPath('customer/adv_modals/modal_import_credit'); ?>
+    <!-- Impoer Credit Modal -->
+    <?php include viewPath('customer/adv_modals/modal_import_credit'); ?>
 
-<!-- Fusnishers Modal -->
-<?php include viewPath('customer/adv_modals/modal_furnishers'); ?>
+    <!-- Fusnishers Modal -->
+    <?php include viewPath('customer/adv_modals/modal_furnishers'); ?>
 
-<!-- Reasons Modal -->
-<?php include viewPath('customer/adv_modals/modal_reasons'); ?>
+    <!-- Reasons Modal -->
+    <?php include viewPath('customer/adv_modals/modal_reasons'); ?>
 <!-- End Modals -->
 
-
-<?php
-// JS to add only Customer module
-add_footer_js(array(
-'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js',
- 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js',
- 'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js',
- 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js',
- 'https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js',
- 'https://code.jquery.com/ui/1.12.1/jquery-ui.js',
- 'assets/textEditor/summernote-bs4.js'
-    // 'assets/frontend/js/creditcard.js',
-    // 'assets/frontend/js/customer/add.js',
-));
-?>
 <!-- page wrapper end -->
 <?php include viewPath('includes/footer'); ?>
 
@@ -816,7 +664,7 @@ add_footer_js(array(
 </style>
 
 <script>
-    $(document).ready(function () {
+    $(document).ready(function() {
 
         $(".date_picker").datetimepicker({
             format: "l",
@@ -827,75 +675,72 @@ add_footer_js(array(
 
         //$(".module").draggable({axis:"y"});
         ///$( ".sortable2" ).sortable("disable");
-        $('#onoff-customize').change(function () {
-            if (this.checked) {
-                $('.module').mouseover(function(){
-                   if($(this).attr('id')=='addModuleBody'){
-                        $(".sortable2").sortable("disable");
-                   }else{
-                    $(".sortable2").sortable("enable");
-                   }
-                });
-            } else {
-                $(".sortable2").sortable("disable");
+        $('#onoff-customize').change(function() {
+            if(this.checked) {
+                $( ".sortable2" ).sortable( "enable" );
+            }else{
+                $( ".sortable2" ).sortable( "disable" );
             }
 
         });
-        
-        
 
-        $(".sortable2").sortable({
-            start: function (e, ui) {
+        $( ".sortable2" ).sortable({
+            start: function(e, ui) {
                 // creates a temporary attribute on the element with the old index
                 $(this).attr('data-previndex', ui.item.index());
-                $(this).attr('style', 'top:0;cursor: grabbing');
+            },
+            update: function(e, ui) {
+                // gets the new and old index then removes the temporary attribute
+                var newIndex = ui.item.index();
+                var oldIndex = $(this).attr('data-previndex');
+                var element_id = ui.item.attr('id');
+                console.log('id of Item moved = '+element_id+' old position = '+oldIndex+' new position = '+newIndex);
+                $(this).removeAttr('data-previndex');
+                console.log("Module Changed!");
 
-            },
-            change(event, ui)
-            {
-                $(this).attr('style', 'top:0;cursor: grabbing ');
-            },
-            update: function (e, ui) 
-            {
-                $(this).attr('style', 'top:0;cursor: pointer');
-                var oldOrder = $(this).attr('data-previndex');
-                var idsInOrder = $(".sortable2").sortable("toArray",{ attribute: 'data-id' });
-                var filteredArray = idsInOrder.filter(function(e){return e});
-                
+                var idsInOrder = $(".sortable2").sortable("toArray");
+                console.log(idsInOrder);
+
+                var new_module_sort = "";
+                for(var x=0;x<idsInOrder.length;x++){
+                    if(x===0){
+                        new_module_sort = new_module_sort + idsInOrder[x];
+                    }else{
+                        new_module_sort = new_module_sort +","+idsInOrder[x];
+                    }
+                    console.log(idsInOrder[x]);
+                }
+                //console.log(new_module_sort);
                 $.ajax({
                     type: "POST",
-                    url: "<?= base_url() ?>/customer/ac_module_sort",
-                    data: {ams_values: filteredArray.toString(), ams_id: <?php echo $module_sort->ams_id; ?>}, // serializes the form's elements.
-                    success: function (data)
+                    url: "/customer/ac_module_sort",
+                    data: {ams_values : new_module_sort,ams_id : <?php echo $module_sort->ams_id; ?>}, // serializes the form's elements.
+                    success: function(data)
                     {
                         console.log(data);
                     }
                 });
-                
-                console.log(filteredArray.toString());
             }
         });
 
-        $(".sortable2").sortable("disable");
+        $( ".sortable2" ).sortable( "disable" );
 
-        $(".remove_task").on("click", function (event) {
-            var ID = this.id;
+        $(".remove_task").on( "click", function( event ) {
+            var ID=this.id;
             //alert(ID);
             $.ajax({
                 type: "POST",
                 url: "/customer/remove_task",
-                data: {id: ID}, // serializes the form's elements.
-                success: function (data) {
-                    if (data === "Done") {
+                data: {id : ID}, // serializes the form's elements.
+                success: function(data){
+                    if(data === "Done"){
                         window.location.reload();
-                    } else {
+                    }else{
                         console.log(data);
                     }
                 }
             });
         });
-
-
 
 
     });

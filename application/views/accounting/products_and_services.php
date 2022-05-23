@@ -4,10 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <div class="wrapper" role="wrapper" >
         <!-- page wrapper start -->
            <div wrapper__section>
-        <div class="container-fluid" style="background-color:white;">
-					<div style="padding-top:1%;">
-						<h3 style="font-family: Sarabun, sans-serif">Products and Services</h3>
-					</div>
+        <div class="container-fluid">
 			<div class="page-title-box mx-4">
 				<div class="row pb-2">
 					<div class="col-md-12 banking-tab-container">
@@ -22,7 +19,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 				
 				<div class="row pt-3">
 					<div class="col-lg-6 px-0">
-						<!-- <h2>Products and Services</h2> -->
+						<h2>Products and Services</h2>
 					</div>
 					<div class="col-lg-6">
 						<div class="pull-right">

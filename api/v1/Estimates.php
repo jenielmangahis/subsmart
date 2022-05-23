@@ -131,18 +131,18 @@ function GET($id, $flag = "ALL") {
         $customer_id = $row['customer_id'];
         // check
         if ($customer_id > 0) {
-            $customer = $db->fetchRow("select * from customers where id = $customer_id");
-            $address = $db->fetchRow("select * from address where customer_id = $customer_id");
+            $customer = $db->fetchRow("select *, concat(first_name, ' ', last_name) as contact_name, concat(mail_add, '::', city, ', ', state, ' ', zip_code) as contact_address from acs_profile where prof_id = $customer_id");
 
             $row['customer_name'] = $customer['contact_name'];
-            $row['customer_email'] = $customer['contact_email'];
-            $row['customer_phone'] = $customer['phone'];
-            $row['customer_mobile'] = $customer['mobile'];
-            $row['customer_address'] = $address['address1'] ." ". $address['address2'] ."::". $address['city'] .", ". $address['state'] ." ". $address['postal_code'];
+            $row['customer_email'] = $customer['email'];
+            $row['customer_phone'] = $customer['phone_h'];
+            $row['customer_mobile'] = $customer['phone_m'];
+            $row['customer_address'] = $customer['contact_address'];
         }
 
         // init items array
         $items = array();
+        $option2_items = array();
 
         // get items
         $estimate_id = $row['id'];
@@ -154,7 +154,6 @@ function GET($id, $flag = "ALL") {
 
             $item['descriptionn']    = $item['description'];
             $item['cost_per']        = $item['cost per'];
-            $item['option_message']  = $temp['option_message'];
 
             // unset
             unset($item['description']);
@@ -168,6 +167,29 @@ function GET($id, $flag = "ALL") {
         }
         // assign
         $row['items']   = $items;
+
+        // get option2_items
+        $estimates_option_items = $db->fetchAll("select * from estimates_option_items where estimates_id = $estimate_id");
+        // iterate to get real items
+        foreach ($estimates_option_items as $temp) {
+            $item_id = $temp['items_id'];
+            $item = $db->fetchRow("select * from items where id = $item_id");
+
+            $item['descriptionn']    = $item['description'];
+            $item['cost_per']        = $item['cost per'];
+
+            // unset
+            unset($item['description']);
+            unset($item['cost per']);
+
+            // add to array based on qty
+            $qty = $temp['qty'];
+            for ($x=0; $x<$qty; $x++) {
+                array_push($option2_items, $item);
+            }
+        }
+        // assign
+        $row['option2_items']   = $option2_items;
 
         // get photos
         $photos = $db->fetchAll("select *, concat('https://nsmartrac.com/', path) as path from estimates_photo where estimate_id = $estimate_id");
@@ -226,6 +248,8 @@ function UPDATE($id, $deleteItems = "") {
         if ($deleteItems == "DELETE_ITEMS") {
             // delete estimate_items
             $delete = $db->executeQuery("delete from estimates_items where estimates_id = $id");
+            // delete estimates_option_items
+            $delete2 = $db->executeQuery("delete from estimates_option_items where estimates_id = $id");
         }
 
         $response = array("Status" => "success", "Code" => "200", "Message" => "Updating data successful.");

@@ -88,7 +88,7 @@ function INSERT() {
             header("HTTP/1.0 400 Bad Request");
         }
     } else {
-        $response = array("Status" => "error", "Code" => 400, "Message" => "Uploading image failed!", "Params" => $params, "File" => $_FILES);
+        $response = array("Status" => "error", "Code" => 400, "Message" => "Uploading image failed!");
         header("HTTP/1.0 400 Bad Request");
     }
 

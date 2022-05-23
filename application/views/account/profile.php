@@ -234,7 +234,7 @@
                                   <div class="form-group">
                                     <label for="formUser-Image" class="col-sm-2 control-label">User Profile Image</label>
                                     <div class="col-sm-10">
-                                      <input type="file" class="form-control" name="file" id="formUser-Image" placeholder="Upload Image" required accept="image/*" onchange="previewImage(this, '#imagePreview')">
+                                      <input type="file" class="form-control" name="image" id="formUser-Image" placeholder="Upload Image" required accept="image/*" onchange="previewImage(this, '#imagePreview')">
                                     </div>
                                   </div>       
                                   <div class="form-group" id="imagePreview">

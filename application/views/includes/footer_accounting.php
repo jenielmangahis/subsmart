@@ -61,20 +61,6 @@ Chartist Chart-->
 <script>
 jQuery(document).ready(function () {
 $('#reportstable').DataTable();
-var elements = document.getElementsByName("amount[]");
-var element_array = Array.prototype.slice.call(elements);
-
-for(var i=0; i < element_array.length; i++){
-    element_array[i].addEventListener("keyup", sum_values);
-}
-
-function sum_values(){
-    var sum = 0;
-    for(var i=0; i < element_array.length; i++){
-        sum += parseFloat(element_array[i].value, 10);
-    }
-    document.getElementsByName("total_amount")[0].value = 100;
-}
 });
 </script>
 
@@ -88,10 +74,14 @@ function sum_values(){
 		$('.to-hide-div').show();
 	});
 // });
+$('#e2').on('click', function(){
+    var title = $(this).val();
+    $(this).css('background-color', title);
+});
 
 $('.ajax-modal_invoice').click(function(e){
   e.preventDefault(); 
-//   alert("sana all");
+  alert("sana all");
 //   $.ajax({
 //    type: "POST",
 //    url: '<?php //echo base_url('/accounting/modal_invoice') ?>',
@@ -103,6 +93,8 @@ $('.ajax-modal_invoice').click(function(e){
 //    }
 //   });
 });
+<<<<<<< HEAD
+=======
 
 
 function readURL(input) {
@@ -149,66 +141,17 @@ $(document).ready(function () {
 	$('#datepickerinv3').datepicker({
       uiLibrary: 'bootstrap'
     });
-	$('#rp_payment_date').datepicker({
-      uiLibrary: 'bootstrap'
-    });
-	$('#datepickerinv4').datepicker({
-      uiLibrary: 'bootstrap'
-    });
-	$('#datepickerinv5').datepicker({
-      uiLibrary: 'bootstrap'
-    });
-	$('#datepickerinv6').datepicker({
-      uiLibrary: 'bootstrap'
-    });
-	$('#datepickerinv7').datepicker({
-      uiLibrary: 'bootstrap'
-    });
-	$('#datepickerinv8').datepicker({
-      uiLibrary: 'bootstrap'
-    });
-	$('#datepickerinv9').datepicker({
-      uiLibrary: 'bootstrap'
-    });
-	$('#datepickerinv10').datepicker({
-      uiLibrary: 'bootstrap'
-    });
-	$('#datepickerinv11').datepicker({
-      uiLibrary: 'bootstrap'
-    });
-	$('#datepickerinv12').datepicker({
-      uiLibrary: 'bootstrap'
-    });
 
 	document.getElementById("addNewTerms").onchange = function() {
     if (this.value == '0') {
-        // alert('in');
-		$('#exampleModal').modal('toggle');
-    	}
-	}
-
-	document.getElementById("addNewTerms1").onchange = function() {
-    if (this.value == '0') {
-        // alert('in');
-		$('#exampleModal').modal('toggle');
-    	}
-	}
-
-	document.getElementById("rp_payment_method").onchange = function() {
-    if (this.value == '0') {
         // alert('yeah');
-		$('#add_new_payment_method').modal('toggle');
-    	}
-	}
-	document.getElementById("rr_payment_method").onchange = function() {
-    if (this.value == '0') {
-        // alert('yeah');
-		$('#add_new_payment_method').modal('toggle');
+		$('#exampleModal').modal('toggle');
     	}
 	}
 });
 
 
+>>>>>>> ad3fe0ffd9ca5a6a5044ee0f7e0dffa46146fa80
 </script>
 
 <script>

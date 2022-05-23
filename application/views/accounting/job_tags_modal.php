@@ -7,11 +7,8 @@
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-6 d-flex">
+                    <div class="col-12 d-flex">
                         <button type="button" class="btn btn-outline-secondary m-auto" onclick="getTagForm({}, 'create')">Create Tag</button>
-                    </div>
-                    <div class="col-6 d-flex">
-                        <button type="button" class="btn btn-outline-secondary m-auto" onclick="getGroupTagForm()">Create Group</button>
                     </div>
                     <div class="col-12 py-3">
                         <input type="text" name="search_tag" id="search-tag" class="form-control" placeholder="Find tag by name">

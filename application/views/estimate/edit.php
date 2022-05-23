@@ -43,15 +43,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <div class="card">
                         <div class="card-body">
                             <div class="row">
+
                                 <div class="col-md-6 form-group">
                                     <label for="customers">Customer</label>
-                                    <select id="sel-customer" name="customer_id" data-customer-source="dropdown"
+                                    <select id="customers" name="customer_id" data-customer-source="dropdown"
                                             class="form-control searchable-dropdown" placeholder="Select">
                                         <option value="0">- none -</option>
-                                        <?php foreach($customers as $c){ ?>
-                                            <?php echo "<pre>";print_r($c); ?>
-                                            <option <?= $c->prof_id == $estimate->customer_id ? 'selected="selected"' : ''; ?> value="<?= $c->prof_id; ?>"><?= $c->first_name . ' ' . $c->last_name; ?></option>
-                                        <?php } ?>
                                     </select>
                                 </div>
 
@@ -72,7 +69,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <div class="row">
                                 <div class="col-md-4 form-group">
                                     <label for="estimate">Estimate#</label>
-                                    <input type="text" value="<?= $estimate->estimate_number; ?>" class="form-control" name="estimate_number" id="estimate" required placeholder="Enter Estimate#"/>
+                                    <input type="text" value="" class="form-control" name="estimate" id="estimate"
+                                           required placeholder="Enter Estimate#" autofocus
+                                           onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
                                 </div>
                                 <div class="col-md-4 form-group">
                                     <label for="estimate_date">Estimate Date</label>
@@ -153,12 +152,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <table class="table table-hover">
                                         <input type="hidden" name="count" value="0" id="count">
                                         <thead>
-                                        <tr>                                            
+                                        <tr>
+                                            <th>DESCRIPTION</th>
                                             <th>Type</th>
-                                            <th>Description</th>
                                             <th width="100px">Quantity</th>
-                                            <th>Location</th>
-                                            <th width="100px">Cost</th>
+                                            <th>LOCATION</th>
+                                            <th width="100px">COST</th>
                                             <th width="100px">Discount</th>
                                             <th>Tax(%)</th>
                                             <th>Total</th>
@@ -172,7 +171,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <?php $i = 0;
                                             foreach ($estimate_items as $row) { ?>
 
-                                                <tr>                                                    
+                                                <tr>
+                                                    <td>
+                                                        <input type="text" class="form-control getItems"
+                                                               onKeyup="getItems(this)" name="item[]"
+                                                               value="<?php echo $row['item']; ?>">
+                                                        <ul class="suggestions"></ul>
+                                                    </td>
                                                     <td><select name="item_type[]" class="form-control">
 
                                                             <option value="material" <?php if ($row['item_type'] == 'material') echo 'selected'; ?>>
@@ -185,12 +190,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                                 Service
                                                             </option>
                                                         </select></td>
-                                                    <td>
-                                                        <input type="text" class="form-control getItems"
-                                                               onKeyup="getItems(this)" name="item[]"
-                                                               value="<?php echo $row['item']; ?>">
-                                                        <ul class="suggestions"></ul>
-                                                    </td>
                                                     <td>
                                                         <input type="text" class="form-control quantity"
                                                                name="quantity[]" data-counter="<?php echo $i; ?>"
@@ -223,7 +222,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                             echo number_format($price, 2); ?></span>
                                                     </td>
                                                     <td>
-                                                        <a href="#" class="remove btn btn-sm btn-danger">x</a>
+                                                        <a href="#" class="remove">X</a>
                                                     </td>
                                                 </tr>
                                                 <?php $i++;
@@ -231,16 +230,16 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
                                         <?php } else { ?>
                                             <input type="hidden" name="count" value="0" id="count">
-                                            <tr>                                                
+                                            <tr>
+                                                <td><input type="text" class="form-control getItems"
+                                                           onKeyup="getItems(this)" name="item[]">
+                                                    <ul class="suggestions"></ul>
+                                                </td>
                                                 <td><select name="item_type[]" class="form-control">
                                                         <option value="service">Service</option>
                                                         <option value="material">Material</option>
                                                         <option value="product">Product</option>
                                                     </select></td>
-                                                <td><input type="text" class="form-control getItems"
-                                                           onKeyup="getItems(this)" name="item[]">
-                                                    <ul class="suggestions"></ul>
-                                                </td>
                                                 <td><input type="text" class="form-control quantity" name="quantity[]"
                                                            data-counter="0" id="quantity_0" value="1"></td>
                                                 <td><input type="text" class="form-control" name="location[]"></td>
@@ -398,7 +397,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <div class="row">
                                 <div class="col-md-4 form-group">
                                     <button type="submit" class="btn btn-flat btn-primary">Save</button>
-                                    <a href="<?php echo url('estimate') ?>" class="btn btn-danger">Cancel this</a>
+                                    <a href="<?php echo url('workorder') ?>" class="btn btn-danger">Cancel this</a>
                                 </div>
                             </div>
                         </div>
@@ -497,14 +496,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
     }
 
     $(document).ready(function () {
-        $('#sel-customer').select2();
+
         // $("#customer_source").select2().select2('val', 1);
-        /*$('#customers')
+        $('#customers')
             .empty() //empty select
             .append($("<option/>") //add option tag in select
                 .val("<?php echo $estimate->customer_id ?>") //set value for option to post it
                 .text("<?php echo $estimate->customer->contact_name ?>")) //set a text for show in select
             .val("<?php echo $estimate->customer_id ?>") //select option of select2
-            .trigger("change"); //apply to select2*/
+            .trigger("change"); //apply to select2
     });
 </script>

@@ -1,9 +1,8 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 ?>
-<div class="invoices module ui-state-default" data-id="<?= $id ?>"  id="<?= $id ?>">
-    <div class="col-sm-12 individual-module">
-        <h6>Invoice</h6>
+<div class="invoices module ui-state-default" id="invoice">
+    <div class="col-sm-12">
         <div class="row">
             <div class="col-sm-12">
                 <div style="position:relative;display: inline-block;float: left;" class="boverdue">Balance</div>

@@ -8,16 +8,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <div wrapper__section>
         <?php include viewPath('includes/notifications'); ?>
         <div class="container-fluid">
-            <!-- <div class="page-title-box">
-            </div> -->
+            <div class="page-title-box">
+            </div>
             <!-- end row -->
             <div class="row">
                 <div class="col-xl-12">
                     <div class="card">
-                        <div class="card-body hid-desk p-0" style="padding-bottom:0px;">
-                            <div class="row margin-bottom-ter align-items-center vault__header mb-0">
+                        <div class="card-body hid-desk" style="padding-bottom:0px;">
+                            <div class="row margin-bottom-ter align-items-center">
                                 <div class="col-auto">
-                                    <h2 class="page-title vault__title">Before and After Photos</h2>
+                                    <h2 class="page-title">Before and After Photos</h2>
                                 </div>
                                 <div class="col text-right-sm d-flex justify-content-end align-items-center">
                                     <div class="float-right d-md-block">
@@ -29,12 +29,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <div class="float-right d-md-block">
                                     </div>
                                 </div>
-                            </div>
-
-                            <div class="alert alert-warning mt-2" role="alert">
-                                <span style="color:black;">
-                                    One of the best way for prospect to process information is with visual data.  Before and after photos serve as proof that the product (or service) works.  Start sharing your success photos to others to grow your business. 
-                                </span>
                             </div>
                         </div>
                         <div class="tab-content" id="myTabContent">
@@ -52,7 +46,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <tbody>
                                     <?php $group=array();?>
                                      <?php foreach($photos as $photo) : ?>
-                                        <?php //if(!in_array($photo->group_number, $group)) : ?>
+                                        <?php if(!in_array($photo->group_number, $group)) : ?>
                                         <?php array_push($group, $photo->group_number);?>
                                         <tr>
                                             <td class="pl-3">
@@ -66,21 +60,21 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 </div>
                                             </td>
                                             <td class="pl-3"><?php echo date_format(date_create($photo->created_at),"d-M-Y H:m"); ?></td>
-                                            <td class="pl-3"><?php echo $photo->first_name . ' ' . $photo->last_name; ?></td>
+                                            <td class="pl-3"><?php echo getLoggedFullName($photo->customer_id); ?></td>
                                             <td class="pl-3">
                                                 <div class="dropdown dropdown-btn text-center">
                                                     <button class="btn btn-default dropdown-toggle" type="button" id="dropdown-edit" data-toggle="dropdown" aria-expanded="true">
                                                         <span class="btn-label">Manage</span><span class="caret-holder"><span class="caret"></span></span>
                                                     </button>
                                                     <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
-                                                        <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo base_url('before-after/edit/'. $photo->id); ?>" class="editDeleteBeforeAfterBtn"><span class="fa fa-pencil-square-o icon"></span> Edit</a></li>
+                                                        <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo base_url('before-after/edit/'. $photo->group_number); ?>" class="editDeleteBeforeAfterBtn"><span class="fa fa-pencil-square-o icon"></span> Edit</a></li>
                                                         <li role="separator" class="divider"></li>
                                                         <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo base_url('before-after/delete/'. $photo->group_number); ?>" class="editDeleteBeforeAfterBtn"><span class="fa fa-trash-o icon"></span> Delete</a></li>
                                                     </ul>
                                                 </div>
                                             </td>
                                         </tr>
-                                        <?php //endif;?>
+                                        <?php endif;?>
                                     <?php endforeach; ?>
                                     </tbody>
                                 </table>  

@@ -126,17 +126,6 @@ class Users_model extends MY_Model {
 		return $query->result();
 	}
 
-	public function getActiveCompanyUsers($company_id) {
-		$this->db->select('*');
-		$this->db->from($this->table);
-		$this->db->where('company_id', $company_id);
-		$this->db->where('status', 1);
-		$this->db->order_by('LName', 'asc');
-		$this->db->order_by('FName', 'asc');
-		$query = $this->db->get();
-		return $query->result();
-	}
-
 	public function getTotalUsers(){
         $this->db->where('id', getLoggedUserID());
 	    $this->db->or_where('company_id',logged('company_id'));
@@ -191,7 +180,8 @@ class Users_model extends MY_Model {
 		$this->db->where('id', $user_id);
 		// $this->db->where('role !=', 1);
 		$query = $this->db->get();
-		// echo $this->db->last_query(); die;
+		/*echo $this->db->last_query(); 
+		print_r($query->row()); die;*/
 		return $query->row();
 	}
 
@@ -415,7 +405,7 @@ class Users_model extends MY_Model {
 	    $query = $this->db->get_where('users',array('email'=>$add['email'],'username'=>$add['username']))->num_rows();
 	    if ($query == 0){
 	        $this->db->insert('users',$add);
-	        return $this->db->insert_id();
+	        return true;
         }else{
 	        return false;
         }
@@ -454,6 +444,16 @@ class Users_model extends MY_Model {
 		$this->db->where('username', $user_name);
 		$query = $this->db->get();
 		return $query->row();
+	}
+
+	public function generateRandomEmployeeNumber($length = 14) {
+	    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+	    $charactersLength = strlen($characters);
+	    $randomString = '';
+	    for ($i = 0; $i < $length; $i++) {
+	        $randomString .= $characters[rand(0, $charactersLength - 1)];
+	    }
+	    return $randomString;
 	}
 }
 

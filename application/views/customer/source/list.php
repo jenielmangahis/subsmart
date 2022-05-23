@@ -52,7 +52,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <?php echo $customerSource->title ?>
                                             </td>
                                             <td>
-                                                <?php echo date('M d, Y'. strtotime($customerSource->created_at)) ?>
+                                                <?php echo date('M d, Y',strtotime($customerSource->created_at)) ?>
                                             </td>
                                             <td>
                                                 <?php //if (hasPermissions('plan_edit')): ?>

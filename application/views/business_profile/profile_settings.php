@@ -51,7 +51,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <div class="form-group">
             <label>Business Tags</label>
             <div class="help help-sm help-block">Enter tags/keywords and get better visibility. This helps customers find you on search. Example: cleaner, plumber</div>
-            <div class="bootstrap-tagsinput"><span class="tag label label-default">Honeywell Security<span data-role="remove"></span></span> <input type="text" placeholder="add tag"></div><input type="text" name="profile_tags" value="Honeywell Security" class="form-control" autocomplete="off" placeholder="add tag" required="" style="display: none;">
+            <div class="bootstrap-tagsinput">
+                <span class="tag label label-default">Honeywell Security<span data-role="remove"></span></span>
+                <input type="text" placeholder="add tag"></div><input type="text" name="profile_tags" value="Honeywell Security" class="form-control" autocomplete="off" placeholder="add tag" required="" style="display: none;">
             <span class="validation-error-field" data-formerrors-for-name="profile_tags" data-formerrors-message="true" style="display: none;"></span>
         </div>
         <div class="form-group">
@@ -128,14 +130,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <div class="card">
     <div class="row">
     	<div class="col-md-8">
-    		    		<button class="btn btn-default btn-lg" name="btn-save" type="button">Save</button> <span class="alert-inline-text margin-left hide">Saved</span>
+    		    		<button class="btn btn-default btn-lg" name="btn-save" type="submit">Save</button> <span class="alert-inline-text margin-left hide">Saved</span>
+</form>
     		    	</div>
     	<div class="col-md-4 text-right">
     		    		<a class="btn btn-default btn-lg" href="workpictures">« Back</a>
     		    		    		<a href="socialMedia" class="btn btn-primary btn-lg margin-left" name="btn-continue">Next »</a>
     		    	</div>
     </div>
-</div></form>
+</div>
 
     </div>
 </div>

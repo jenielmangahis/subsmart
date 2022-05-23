@@ -1,9 +1,8 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 ?>
-<div class="documents module ui-state-default" data-id="<?= $id ?>"  id="<?= $id ?>">
-    <div class="col-sm-12 individual-module">
-        <h6>Documents</h6>
+<div class="documents module ui-state-default" id="docu">
+    <div class="col-sm-12">
         <div class="row">
             <table width="100%" border="0" cellspacing="0" cellpadding="0">
                 <tbody>

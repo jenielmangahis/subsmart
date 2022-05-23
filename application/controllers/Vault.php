@@ -13,7 +13,6 @@ class Vault extends MY_Controller {
 		$this->page_data['page']->menu = 'vault';
 
 		$this->company_folder = getCompanyFolder();
-		add_css('assets/css/vault/vault.css');
 	}
 
 	public function index()
@@ -39,11 +38,8 @@ class Vault extends MY_Controller {
 	{	
         $this->load->model('Before_after_model', 'before_after_model');
 		$comp_id = logged('company_id');
-		if( $role == 1 || $role == 2 ){
-			$this->page_data['photos'] = $this->before_after_model->getAll();
-		}else{
-			$this->page_data['photos'] = $this->before_after_model->getAllByCompanyId($comp_id);	
-		}
+
+		$this->page_data['photos'] = $this->before_after_model->getByWhere(['company_id' => $comp_id]);
 		$this->load->view('vault/beforeafter', $this->page_data);
 	}
 
@@ -84,10 +80,10 @@ class Vault extends MY_Controller {
 					$ext = pathinfo($filename, PATHINFO_EXTENSION);
 
 					$record = $this->db->query(
-						'select count(file_id) as `existing`, category_id, softdelete from filevault where folder_id = ' . $folder_id . ' and lower(title) = "' . strtolower($filename) . '" and company_id = ' . $company_id . ' GROUP BY file_id'
+						'select count(*) as `existing`, category_id, softdelete from filevault where folder_id = ' . $folder_id . ' and lower(title) = "' . strtolower($filename) . '" and company_id = ' . $company_id
 					)->row();
 
-					if($record && $record->existing > 0){
+					if($record->existing > 0){
 						$return['error'] = 'File already exists';
 						if($record->softdelete > 0){
 							$return['error'] .= ' in recycle bin.';
@@ -252,7 +248,7 @@ class Vault extends MY_Controller {
         echo json_encode($return);	
 	}
 
-	public function recently_uploaded_files_old(){
+	public function recently_uploaded_files(){
 		$company_id = logged('company_id');
 
 		$sql = 'select ' . 
@@ -273,29 +269,6 @@ class Vault extends MY_Controller {
         $return = $this->db->query($sql)->result_array();
 
         echo json_encode($return);		
-	}
-
-	public function recently_uploaded_files()
-	{
-		// herbert's code
-		$companyId = logged('company_id');
-		$limit = 7;
-
-		$sql = 'select ' . 
-               'a.*, '.
-               'DATEDIFF(NOW(), a.created) as `days`, '.
-               'b.FName as FCreatedBy, b.LName as LCreatedBy, '.
-               'c.folder_name '.
-
-               'from filevault a '.
-               'left join users b on b.id = a.user_id '.
-               'left join business_profile c on c.id = a.company_id '.
-
-               'where a.company_id = ' . $companyId . ' and a.category_id is null ' . 
-			   'order by created DESC limit ' . $limit;
-
-		$results = $this->db->query($sql)->result_array();
-        echo json_encode($results);
 	}
 
 	public function download_file($file_id){
@@ -420,10 +393,10 @@ class Vault extends MY_Controller {
 			}
 
 			$record = $this->db->query(
-				'select count(file_id) as `existing`, category_id from filevault where folder_id = ' . $folder_id . ' and lower(title) = "' . strtolower($filename) . '" and company_id = ' . $company_id . ' and file_id <> ' . $file_id . ' GROUP BY file_id'
+				'select count(*) as `existing`, category_id from filevault where folder_id = ' . $folder_id . ' and lower(title) = "' . strtolower($filename) . '" and company_id = ' . $company_id . ' and file_id <> ' . $file_id
 			)->row();
 
-			if($record && $record->existing > 0){
+			if($record->existing > 0){
 				$return['error'] = 'File already exists';
 				if(!empty($record->category_id)){
 					$return['error'] .= ' in <strong>Business Form Templates</strong> section';

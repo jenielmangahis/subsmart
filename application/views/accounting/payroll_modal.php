@@ -1,6 +1,5 @@
 <!-- Modal for bank deposit-->
 <div class="full-screen-modal">
-<form onsubmit="submitModalForm(event, this)" id="modal-form">
     <div id="payrollModal" class="modal fade modal-fluid" role="dialog">
         <div class="modal-dialog">
             <!-- Modal content-->
@@ -15,7 +14,7 @@
                             <div class="form-group">
                                 <label for="payFrom">Pay from</label>
                                 <select name="pay_from" id="payFrom" class="form-control">
-                                    <option value="1">Corporate Account(XXXXXX 5850)</option>
+                                    <option value="">Corporate Account(XXXXXX 5850)</option>
                                 </select>
                             </div>
                         </div>
@@ -26,21 +25,19 @@
                             <div class="form-group">
                                 <label for="payPeriod">Pay period</label>
                                 <select name="pay_period" id="payPeriod" class="form-control">
-                                    <?php foreach($payPeriods as $period) : ?>
-                                        <option value="<?php echo $period['first_day'] . '-' . $period['last_day']; ?>" <?php echo $period['selected'] === true ? 'selected' : ''; ?>><?php echo $period['first_day'] . ' to ' . $period['last_day']; ?></option>
-                                    <?php endforeach; ?>
+                                    <option value="">01/05/2021 to 01/11/2021</option>
                                 </select>
                             </div>
                         </div>
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="payDate">Pay date</label>
-                                <input type="text" class="form-control date" name="pay_date" id="payDate" value="<?php echo date('m/d/Y') ?>"/>
+                                <input type="date" name="pay_date" id="payDate" class="form-control">
                             </div>
                         </div>
                         <div class="col text-right">
                             <p class="mb-1">TOTAL PAY</p>
-                            <h2 class="total-pay">$0.00</h2>
+                            <h2>$0.00</h2>
                         </div>
                     </div>
 
@@ -48,49 +45,40 @@
                         <div class="col-md-12">
                             <div class="employees-table-container">
                                 <div class="employees-table">
-                                    <table class="table table-bordered table-hover" id="payroll-table">
+                                    <table class="table table-bordered table-hover">
                                         <thead>
-                                            <th>
-                                                <div class="form-group d-flex" style="margin-bottom: 0 !important">
-                                                    <input class="m-auto" type="checkbox" name="select_all" value="1" checked>
-                                                </div>
-                                            </th>
+                                            <th></th>
                                             <th>EMPLOYEE</th>
-                                            <th>PAY METHOD</th>
-                                            <th width="15%">REGULAR PAY HRS</th>
-                                            <th width="15%">COMMISSION</th>
+                                            <th>PAYMENT METHOD</th>
+                                            <th>REGULAR PAY HRS</th>
+                                            <th>COMMISSION</th>
                                             <th>MEMO</th>
-                                            <th>TOTAL HOURS</th>
                                             <th>TOTAL PAY</th>
                                         </thead>
                                         <tbody>
-                                            <?php if(count($employees) > 0) : 
-                                                foreach($employees as $employee) : ?>
-                                                <tr>
-                                                    <td>
-                                                        <div class="form-group d-flex" style="margin-bottom: 0 !important">
-                                                            <input class="m-auto" type="checkbox" name="select[]" value="<?php echo $employee->id; ?>" checked>
+                                            <tr>
+                                                <td></td>
+                                                <td>
+                                                    <a href="#" class="text-info">Pemberton, Joshua S</a>
+                                                    <p class="m-0"><span>Commission</span></p>
+                                                </td>
+                                                <td><a href="#" class="text-info">Paper check</a></td>
+                                                <td>
+                                                    <input type="number" name="" id="" class="form-control w-50 float-right text-right">
+                                                </td>
+                                                <td>
+                                                    <div class="row m-0">
+                                                        <label for="commission" class="col-sm-6 col-form-label text-right">$</label>
+                                                        <div class="col-sm-6">
+                                                            <input type="number" class="form-control" id="commission" name="commission">
                                                         </div>
-                                                    </td>
-                                                    <td>
-                                                        <a href="#" class="text-info"><?php echo $employee->LName . ', ' . $employee->FName?></a>
-                                                        <p class="m-0">$<span class="pay-rate"><?php echo $employee->pay_rate; ?></span> / hour</p>
-                                                    </td>
-                                                    <td><a href="#" class="text-info">Paper check</a></td>
-                                                    <td>
-                                                        <input type="number" name="reg_pay_hours[]" step="0.01" class="form-control w-75 float-right text-right regular-pay-hours">
-                                                    </td>
-                                                    <td>
-                                                        <input type="number" name="commission[]" step="0.01" class="form-control w-75 float-right text-right employee-commission">
-                                                    </td>
-                                                    <td>
-                                                        <input type="text" name="memo[]" class="form-control">
-                                                    </td>
-                                                    <td><p class="text-right m-0">0.00</p></td>
-                                                    <td><p class="text-right m-0">$<span class="total-pay">0.00</span></p></td>
-                                                </tr>
-                                            <?php endforeach; 
-                                                endif; ?>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <input type="text" name="memo" id="memo" class="form-control">
+                                                </td>
+                                                <td>$0.00</td>
+                                            </tr>
                                         </tbody>
                                         <tfoot>
                                             <tr class="text-right">
@@ -100,8 +88,7 @@
                                                 <td>0.00</td>
                                                 <td>$0.00</td>
                                                 <td></td>
-                                                <td>0.00</td>
-                                                <td><p class="text-right m-0">$0.00</p></td>
+                                                <td>$0.00</td>
                                             </tr>
                                         </tfoot>
                                     </table>
@@ -117,7 +104,7 @@
                 <div class="modal-footer bg-secondary">
                     <div class="row w-100">
                         <div class="col-md-4">
-                            <button type="button" class="btn btn-secondary btn-rounded border" data-dismiss="modal" id="close-payroll-modal">Close</button>
+                            <button type="button" class="btn btn-secondary btn-rounded border" data-dismiss="modal">Close</button>
                         </div>
                         <div class="col-md-4">
                             
@@ -125,7 +112,7 @@
                         <div class="col-md-4">
                             <!-- Split dropup button -->
                             <div class="btn-group dropup float-right">
-                                <button type="button" class="btn btn-success" id="preview-payroll">
+                                <button type="button" class="btn btn-success">
                                     Preview payroll
                                 </button>
                                 <button type="button" class="btn btn-success dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -143,5 +130,4 @@
         </div>
     </div>
     <!--end of modal-->
-</form>
 </div>

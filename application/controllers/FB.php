@@ -26,8 +26,6 @@ class FB extends MY_Controller {
 		$this->load->model('FB_model', 'form_builder');
 		$this->load->model('FB_elements_model', 'form_elements');
 		$this->load->model('FB_folders_model', 'form_folders');
-		$this->load->model('FB_template_folders_model', 'form_template_folders');
-		$this->load->model('FB_templates_model', 'form_templates');
 
 	}
 
@@ -40,10 +38,6 @@ class FB extends MY_Controller {
 		$this->load->view('fb/folder/move_folder_modal.php', $this->page_data);
 		$this->load->view('fb/form_delete_modal.php', $this->page_data);
 		$this->load->view('fb/index.php', $this->page_data);
-	}
-
-	public function thankYou(){
-		$this->load->view('fb/thank_you.php', $this->page_data);
 	}
 	
 	public function getByActiveUser() {
@@ -67,25 +61,13 @@ class FB extends MY_Controller {
 		$response = $this->form_folders->getByUserID($user->id);
 		$this->output->set_status_header($response['code'])->set_content_type('application/json')->set_output(json_encode($response));
 	}
-
-	public function getAllTemplateFolders() {
-		$response = $this->form_template_folders->getAll();
-		$this->output->set_status_header($response['code'])->set_content_type('application/json')->set_output(json_encode($response));
-	}
-
-	public function getAllTemplates() {
-		$response = $this->form_templates->getAll();
-		$this->output->set_status_header($response['code'])->set_content_type('application/json')->set_output(json_encode($response));
-	}
     
     public function add(){
 		add_footer_js(array(
-			'assets/fb/js/custom-style.js',
 			'assets/fb/js/add.js',
 		));
 		$this->load->view('fb/add_form_modal.php', $this->page_data);
 		$this->load->view('fb/add.php', $this->page_data);
-		$this->load->view('fb/form_elements.php', $this->page_data);
 	}
 
 	public function create() {
@@ -106,22 +88,15 @@ class FB extends MY_Controller {
 			'assets/fb/css/edit.css',
 			'assets/terms_and_conditions/css/kothing-editor.min.css',
 			'assets/terms_and_conditions/css/main.css',
-			'assets/fb/css/colorjoe/colorjoe.css',
-			'assets/fb/css/colorjoe/iehacks.css',
-			'assets/fb/css/colorjoe/pygment_trac.css',
-			'assets/fb/css/colorjoe/styles.css',
 			'assets/fb/css/form-color-pallete.css'
 		));
 		add_footer_js(array(
 			'assets/terms_and_conditions/js/common.js',
 			'assets/fb/js/jquery-sortable.js',
 			'assets/fb/js/jquery-ui.js',
-			'assets/fb/js/colorjoe/colorjoe.js',
 			'assets/fb/js/copy_from_form.js',
-			'assets/fb/js/pre-fill-choices.js',
 			'assets/terms_and_conditions/js/katex.min.js',
 			'assets/terms_and_conditions/js/kothing-editor.min.js',			
-			'assets/fb/js/custom-style.js',
 			'assets/fb/js/edit.js',
 			'assets/fb/js/builder.js',
 		));
@@ -200,12 +175,6 @@ class FB extends MY_Controller {
 		$this->output->set_status_header($response['code'])->set_content_type('application/json')->set_output(json_encode($response));
 	}
 
-	public function getByFormTemplateID($id) {
-		$response = $this->form_templates->getByFormTemplateID($id);
-		$this->output->set_status_header($response['code'])->set_content_type('application/json')->set_output(json_encode($response));
-		// $this->output->set_status_header(200)->set_content_type('application/json')->set_output(json_encode(['id'=>$id]));
-	}
-
 	public function createFormElement() {
 		$data = $this->input->post();
 		// $this->output->set_status_header(200)->set_content_type('application/json')->set_output(json_encode($data));
@@ -238,7 +207,6 @@ class FB extends MY_Controller {
 
 		$response = $this->form_builder->update($data, $id);
 
-		// $this->output->set_status_header(200)->set_content_type('application/json')->set_output(json_encode($data));
 		$this->output->set_status_header($response['code'])->set_content_type('application/json')->set_output(json_encode($response));
 	}
 
@@ -269,19 +237,6 @@ class FB extends MY_Controller {
 
 	public function destroyFolder($id) {
 		$response = $this->form_folders->destroy($id);
-		$this->output->set_status_header($response['code'])->set_content_type('application/json')->set_output(json_encode($response));
-	}
-
-	
-	function generateFormFromTemplate($form_id) {
-		$name = $this->input->post('name');
-		$response = $this->form_builder->generateFormFromTemplate($form_id, $name);
-		$this->output->set_status_header($response['code'])->set_content_type('application/json')->set_output(json_encode($response));
-	}
-
-	function generateTemplateFromForm($form_id) {
-		$name = $this->input->post('name');
-		$response = $this->form_builder->generateTemplateFromForm($form_id, $name);
 		$this->output->set_status_header($response['code'])->set_content_type('application/json')->set_output(json_encode($response));
 	}
 }

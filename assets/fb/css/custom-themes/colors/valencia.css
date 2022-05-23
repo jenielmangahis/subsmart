@@ -1,12 +1,12 @@
 .form-valencia .form-header {
-    background-color:#D64550  /* !important */;
+    background-color:#D64550 !important;
 }
 
 form.form-valencia button, .form-valencia div.Signature div.container button {
-    background-color: #FFCC00  /* !important */;
-    color: #2a3142  /* !important */;
+    background-color: #FFCC00 !important;
+    color: #2a3142 !important;
 }
 
 .form-valencia input, .form-valencia textarea, .form-valencia select, .form-valencia div.Signature div.container {
-    border-color: #D64550  /* !important */;
+    border-color: #D64550 !important;
 }

@@ -3,11 +3,11 @@
     src:url("/assets/css/accounting/fonts/Depot-Regular.otf");
 }
 body{
-    /* font-family: fontStyle;   */ /*The standard font as per sir tom is Sarabun, sans-serif*/
+    font-family: fontStyle;
 
 }
 body h1,h2,h3,h4,h5,h6{
-    /* font-family: fontStyle; */ /*The standard font as per sir tom is Sarabun, sans-serif*/
+    font-family: fontStyle;
 }
 input[type='checkbox']{
     width: 15px;
@@ -1086,10 +1086,9 @@ button {
     color: #2a3142;
 }
 
-.gold-bond{
-    background-color: #fdeac3;
-    width: 100%;
-    padding: .5%;
-    margin-bottom: 28px;
-    margin-top: 13px;
+.add-check-line, .remove-check-line, .add-check-item-line, .remove-check-item-line{
+    height: 30px;
+    padding: 5px;
+    border: 1px solid black;
+    border-radius: 36px;
 }

@@ -37,7 +37,7 @@
         <?php // additional menus for Schedule ?>
         <li class="submenus <?php echo (!empty($page->menu) && $page->menu === 'taskhub')  ? "active" : ""; ?>">
             <a href="<?php echo base_url('taskhub') ?>" title="Taskhub">
-                <span class="fa fa-clipboard"></span><span class="total-taskhub left-sidebar-badge"></span> TaskHub
+                <span class="fa fa-clipboard"></span><span class="total-taskhub left-sidebar-badge"></span> Taskhub
             </a>
         </li>
         <li class="submenus"<?php //echo (!empty($page->menu) && $page->menu === 'settings')  ? "class='active'" : ""; ?>>
@@ -45,22 +45,15 @@
                 <span class="fa fa-book"></span><span class="total-online-booking left-sidebar-badge"></span>Online Booking
             </a>
         </li>
-        <li class="submenus <?php echo (!empty($page->menu) && ($page->menu === 'priority' ))  ? "active" : ""; ?>"><a href="<?php echo base_url('workorder/priority/') ?>" title="Credentials"><span class="fa fa-cube"></span>Priority List</a></li>
-        <li class="submenus <?php echo (!empty($page->menu) && ($page->menu === 'map' ))  ? "active" : ""; ?>"><a href="<?php echo base_url('workorder/map') ?>" title="Services"><span class="fa fa-users"></span>Bird Eye View</a></li>
-        <li class="submenus <?php echo (!empty($page->menu) && $page->menu === 'event_types')  ? "active" : ""; ?>">
-            <a href="<?php echo base_url('event_types/index') ?>" title="Event Types">
-                <span class="fa fa-gear"></span><span class="left-sidebar-badge"></span>Event Types
-            </a>
-        </li>
         <li class="submenus <?php echo (!empty($page->menu) && $page->menu === 'color_settings')  ? "active" : ""; ?>">
-            <a href="<?php echo base_url('color_settings/index') ?>" title="Color Settings">
+            <a href="<?php echo base_url('color_settings/index') ?>" title="Online Booking">
                 <span class="fa fa-gear"></span><span class="left-sidebar-badge"></span>Color Settings
             </a>
         </li>
         <li class="submenus <?php echo (!empty($page->menu) && $page->menu === 'settings')  ? "active" : ""; ?>">
             <a href="<?php echo base_url('settings/schedule') ?>" title="Services">
                 <span class="fa fa-gear"></span>
-                Calendar Settings
+                Settings
             </a>
         </li>        
     </ul>

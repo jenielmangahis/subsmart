@@ -90,11 +90,9 @@ ini_set('max_input_vars', 30000);
 			$('#output').val(data);
 
 			var url = 'esign/saveSign';
-			$.ajax({
-                url: url,
-                type: "POST",
-                data:{base64: data}
-			}).done(function(e){
+
+			$.ajax({url: url, type: "POST", data:{base64: data}})
+			  	.done(function(e){
 			   location.reload();
 			});
 		})

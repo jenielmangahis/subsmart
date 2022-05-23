@@ -4,14 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <div class="wrapper" role="wrapper">
     <!-- page wrapper start -->
     <div wrapper__section>
-        <div class="container-fluid" style="background-color:white;">
-                            <div style="padding-top:1%;">
-                                <h3 style="font-family: Sarabun, sans-serif">Vendors</h3>
-                            </div>
-                            
-                <div style="background-color:#fdeac3; width:100%;padding:.5%;margin-bottom:5px;margin-top:28px;">
-                Vendors are people or companies that you owe money to or subcontractors that work for you.   You can use the vendors tab to add and track them.   Hover over Expenses in the left menu and then click Vendors. Just Click New vendor in the upper right corner and get started. 
-                </div>
+        <div class="container-fluid">
             <div class="page-title-box mx-4">
                 <div class="row pb-2">
                     <div class="col-md-12 banking-tab-container">
@@ -23,7 +16,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <div class="col-md-12 px-0" >
                         <div class="row">
                             <div class="col-md-6">
-                                <!-- <h2>Vendors</h2> -->
+                                <h2>Vendors</h2>
                             </div>
                             <div class="col-md-6" style="text-align: right">
                                 <div class="dropdown" style="position: relative;display: inline-block;">

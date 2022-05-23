@@ -3,16 +3,16 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Register extends MY_Controller {
 
-    public function __construct(){
-        parent::__construct();
+	public function __construct(){
+		parent::__construct();
 
+        $this->load->model('Customer_advance_model', 'customer_ad_model');
         $this->load->model('NsmartPlan_model');
         $this->load->model('Clients_model');
         $this->load->model('Users_model');
         $this->load->model('IndustryType_model');
         $this->load->model('OfferCodes_model');
         $this->load->helper(array('paypal_helper'));
-        $this->load->model('Customer_advance_model');
 
         // Load Paypal SDK
         include APPPATH . 'libraries/paypal-php-sdk/vendor/autoload.php';        
@@ -20,10 +20,10 @@ class Register extends MY_Controller {
         // Stripe SDK
         include APPPATH . 'libraries/stripe/init.php';   
 
-        $this->page_data['page']->title = 'nSmart - Registration';
-    }
+		$this->page_data['page']->title = 'nSmart - Registration';
+	}
 
-    public function index(){
+	public function index(){
 
         $get_data = $this->input->get();  
 
@@ -59,8 +59,8 @@ class Register extends MY_Controller {
                     $payment_status = $get_data['status'];
                     $is_success = true;
                 } catch (Exception $ex) {
-                    $is_success = false;
-                    $payment_message = 'Cannot process payment';
+                	$is_success = false;
+                	$payment_message = 'Cannot process payment';
                     /*
                     var_dump($ex);
                     exit();*/
@@ -74,18 +74,18 @@ class Register extends MY_Controller {
                 $payment = $plan->getPaymentDefinitions()[0];
 
                 if( $is_success ){
-                    $cid = $this->session->userdata('regiserClientId');
-                    $uid = $this->session->userdata('regiserUserId');
+                	$cid = $this->session->userdata('regiserClientId');
+                	$uid = $this->session->userdata('regiserUserId');
 
-                    $this->Clients_model->update($cid, array(
-                        'is_plan_active' => 1,
+                	$this->Clients_model->update($cid, array(
+		        		'is_plan_active' => 1,
                         'is_startup' => 1,
                         'plan_date_registered' => date("Y-m-d H:i:s")
-                    ));
+		    		));
 
-                    $this->users_model->update($uid,[
-                        'status' => 1
-                    ]);
+		    		$this->users_model->update($uid,[
+			            'status' => 1
+			        ]);
 
                     $reg_temp_user_id = $this->session->userdata('reg_temp_user_id');
                     if(isset($reg_temp_user_id) && $reg_temp_user_id > 0)
@@ -93,13 +93,13 @@ class Register extends MY_Controller {
                         $leads_input['tablename']   = "ac_leads";
                         $leads_input['field_name']  = "leads_id";
                         $leads_input['id']          = $reg_temp_user_id;
-                        $this->Customer_advance_model->delete($leads_input);
+                        $this->customer_ad_model->delete($leads_input);
 
                         $this->session->unset_userdata('reg_temp_user_id');
                     }
 
-                    $payment_complete = true;
-                    $payment_message  = 'Registration Complete. You can start using Nsmart Trac by logging to your account.';
+                	$payment_complete = true;
+                	$payment_message  = 'Registration Complete. You can start using Nsmart Trac by logging to your account.';
 
                     $this->session->set_flashdata('alert-type', 'success');
                     $this->session->set_flashdata('alert', 'Registration Sucessful. You can login to your account.'); 
@@ -123,7 +123,7 @@ class Register extends MY_Controller {
         }
         //Paypal subscription process after success - End
 
-        $ns_plans = $this->NsmartPlan_model->getAll();      
+		$ns_plans = $this->NsmartPlan_model->getAll();      
 
 
         $ip_address = getValidIpAddress();
@@ -146,14 +146,14 @@ class Register extends MY_Controller {
 
         $this->page_data['industryTypes'] = $industryTypes; 
         $this->page_data['ip_exist'] = $ip_exist; 
-        $this->page_data['payment_complete'] = $payment_complete; 
-        $this->page_data['payment_message']  = $payment_message;
+		$this->page_data['payment_complete'] = $payment_complete; 
+		$this->page_data['payment_message']  = $payment_message;
         $this->page_data['payment_status']   = $payment_status;
-        $this->page_data['ns_plans'] = $ns_plans;
-        $this->page_data['business'] = getIndustryBusiness();
-        $this->page_data['roles']    = getRegistrationRoles();
-        $this->load->view('registration', $this->page_data);
-    }
+		$this->page_data['ns_plans'] = $ns_plans;
+		$this->page_data['business'] = getIndustryBusiness();
+		$this->page_data['roles']    = getRegistrationRoles();
+		$this->load->view('registration', $this->page_data);
+	}
 
     
     public function authenticating_registrationBackup()
@@ -223,7 +223,6 @@ class Register extends MY_Controller {
             $client_ip_address = getValidIpAddress();
 
             $edata = $this->Clients_model->getByEmail($aemail); 
-            $udata = $this->Users_model->getUserByUsernname($aemail);
             $edata_business = $this->Clients_model->getByBusinessName($abname); 
             $edata_ip = $this->Clients_model->getByIPAddress($client_ip_address);
 
@@ -234,12 +233,7 @@ class Register extends MY_Controller {
                     $count_exist_email++;
                 }
             }
-
             if($count_exist_email > 0) {
-                $is_authentic = 0;
-            }
-
-            if( $udata ){
                 $is_authentic = 0;
             }
 
@@ -279,16 +273,16 @@ class Register extends MY_Controller {
         if(isset($reg_temp_user_id) && $reg_temp_user_id > 0)
         {
             $leads_input['leads_id'] = $reg_temp_user_id;
-            $this->Customer_advance_model->update_data($leads_input, "ac_leads", "leads_id");
+            $this->customer_ad_model->update_data($leads_input, "ac_leads", "leads_id");
         }
         else
         {
-            $reg_temp_user_id = $this->Customer_advance_model->add($leads_input, "ac_leads");
+            $reg_temp_user_id = $this->customer_ad_model->add($leads_input, "ac_leads");
 
             $this->session->set_userdata('reg_temp_user_id', $reg_temp_user_id);
         }
 
-        //$is_authentic = 1;
+        $is_authentic = 1;
         $json_data = array('is_authentic' => $is_authentic);
         echo json_encode($json_data);        
     }
@@ -335,7 +329,7 @@ class Register extends MY_Controller {
 
         postAllowed();
         $post = $this->input->post(); 
-       
+
         $cid = $this->Clients_model->create([
             'first_name' => $post['firstname'],
             'last_name'  => $post['lastname'],
@@ -349,8 +343,7 @@ class Register extends MY_Controller {
             'ip_address' => getValidIpAddress(),
             'date_created'  => date("Y-m-d H:i:s"),
             'date_modified' => date("Y-m-d H:i:s"),
-            'is_trial' => 0,
-            'is_startup' => 1
+            'is_trial' => 0
         ]);
 
         $uid = $this->users_model->create([
@@ -371,44 +364,25 @@ class Register extends MY_Controller {
         $subscription_price = $post['plan_price'];
         $subscription_price_discounted = $post['plan_price_discounted'];
         $subscription_type  = $post['subscription_type'];
-        
-        if( $post['payment_method'] == 'stripe' ){
-            if( isset($post['stripeToken']) ){
-                //Stripe
 
-                \Stripe\Stripe::setApiKey("sk_test_51Hzgs3IDqnMOqOtppC8BX169Po3GOnczNSNqhneK3rjKzpyGbgzoeSD7ns1qEVkAoPvc3dtyBMh0MRbls0PSvBkq00Dm8c28GY");      
-                $plan      = $this->NsmartPlan_model->getById($subscription_id);
-                $plan_name = strtolower($plan->plan_name);
-                $plan_name = str_replace(" ", "_", $plan_name);
-                $plan_id   = "price_test2_" . $plan_name . "_" . $plan->id;
+        if( isset($post['stripeToken']) ){
+            //Stripe
 
-                if( $post['subscription_type'] == 'prospect' ){
-                    $stripe_coupon = 'w1sqO9YX';
-                }else{
-                    $stripe_coupon = 'xlglClNy';
-                }
+            \Stripe\Stripe::setApiKey("sk_test_51Hzgs3IDqnMOqOtppC8BX169Po3GOnczNSNqhneK3rjKzpyGbgzoeSD7ns1qEVkAoPvc3dtyBMh0MRbls0PSvBkq00Dm8c28GY");      
+            $plan      = $this->NsmartPlan_model->getById($subscription_id);
+            $plan_name = strtolower($plan->plan_name);
+            $plan_name = str_replace(" ", "_", $plan_name);
+            $plan_id   = "price_test2_" . $plan_name . "_" . $plan->id;
 
-                if($plan->stripe_price_id != ''){
-                    $stripePlan = \Stripe\Plan::retrieve($plan->stripe_price_id);
-                    if( !$stripePlan ){
-                         //create new plan
-                        $stripePlan = \Stripe\Plan::create(array(
-                          //"amount" => round($plan->price,2)*100,
-                            "amount" => round($plan->price,2),
-                          "interval" => "month",
-                          "product" => array(
-                            "name" => $plan->plan_name
-                          ),
-                          "currency" => "usd",
-                          "id" => $plan_id
-                        ));
+            if( $post['subscription_type'] == 'prospect' ){
+                $stripe_coupon = 'w1sqO9YX';
+            }else{
+                $stripe_coupon = 'xlglClNy';
+            }
 
-                        $this->NsmartPlan_model->updatePlan($plan->nsmart_plans_id,array(
-                            'stripe_plan_id' => $stripePlan->product,
-                            'stripe_price_id' => $plan_id
-                        ));
-                    }
-                }else{
+            if($plan->stripe_price_id != ''){
+                $stripePlan = \Stripe\Plan::retrieve($plan->stripe_price_id);
+                if( !$stripePlan ){
                      //create new plan
                     $stripePlan = \Stripe\Plan::create(array(
                       "amount" => round($plan->price,2)*100,
@@ -425,50 +399,62 @@ class Register extends MY_Controller {
                         'stripe_price_id' => $plan_id
                     ));
                 }
-
-                $stripe = new \Stripe\StripeClient('sk_test_51Hzgs3IDqnMOqOtppC8BX169Po3GOnczNSNqhneK3rjKzpyGbgzoeSD7ns1qEVkAoPvc3dtyBMh0MRbls0PSvBkq00Dm8c28GY');
-                $customer = $stripe->customers->create([
-                    'description' => $post['firstname'] . " " . $post['lastname'],
-                    'email' => $post['email'],
-                    'source' => $post['stripeToken'],
-                ]);
-
-                $subscription = \Stripe\Subscription::create(array(
-                    'customer' => $customer->id,
-                    'items' => array(array('plan' => $stripePlan->id)),
-                    'coupon' => $stripe_coupon
-                ));
-
-                $this->Clients_model->update($cid, array(
-                    'paypal_plan_id' => $plan_id,
-                    'nsmart_plan_id' => $post['plan_id'],
-                    'stripe_token' => $post['stripeToken'],
-                    'is_plan_active' => 1
-                ));
-
-                $this->users_model->update($uid, array('status' => 1));
-
-                $reg_temp_user_id = $this->session->userdata('reg_temp_user_id');
-                if(isset($reg_temp_user_id) && $reg_temp_user_id > 0)
-                {
-                    $leads_input['tablename'] = "ac_leads";
-                    $leads_input['field_name'] = "leads_id";
-                    $leads_input['id'] = $reg_temp_user_id;
-                    $this->Customer_advance_model->delete($leads_input);
-
-                    $this->session->unset_userdata('reg_temp_user_id');
-                }
-
-                $this->session->set_flashdata('alert-type', 'success');
-                $this->session->set_flashdata('alert', 'Registration Sucessful. You can login to your account.'); 
-
-                redirect('login');
             }else{
-                $this->session->set_flashdata('alert-type', 'danger');
-                $this->session->set_flashdata('alert', 'Cannot process payment.'); 
-                redirect('registration');
+                 //create new plan
+                $stripePlan = \Stripe\Plan::create(array(
+                  "amount" => round($plan->price,2)*100,
+                  "interval" => "month",
+                  "product" => array(
+                    "name" => $plan->plan_name
+                  ),
+                  "currency" => "usd",
+                  "id" => $plan_id
+                ));
+
+                $this->NsmartPlan_model->updatePlan($plan->nsmart_plans_id,array(
+                    'stripe_plan_id' => $stripePlan->product,
+                    'stripe_price_id' => $plan_id
+                ));
             }
-        }elseif( $post['payment_method'] == 'paypal' ){
+
+            $stripe = new \Stripe\StripeClient('sk_test_51Hzgs3IDqnMOqOtppC8BX169Po3GOnczNSNqhneK3rjKzpyGbgzoeSD7ns1qEVkAoPvc3dtyBMh0MRbls0PSvBkq00Dm8c28GY');
+            $customer = $stripe->customers->create([
+                'description' => $post['firstname'] . " " . $post['lastname'],
+                'email' => $post['email'],
+                'source' => $post['stripeToken'],
+            ]);
+
+            $subscription = \Stripe\Subscription::create(array(
+                'customer' => $customer->id,
+                'items' => array(array('plan' => $stripePlan->id)),
+                'coupon' => $stripe_coupon
+            ));
+
+            $this->Clients_model->update($cid, array(
+                'paypal_plan_id' => $plan_id,
+                'nsmart_plan_id' => $post['plan_id'],
+                'stripe_token' => $post['stripeToken'],
+                'is_plan_active' => 1
+            ));
+
+            $this->users_model->update($uid, array('status' => 1));
+
+            $reg_temp_user_id = $this->session->userdata('reg_temp_user_id');
+            if(isset($reg_temp_user_id) && $reg_temp_user_id > 0)
+            {
+                $leads_input['tablename'] = "ac_leads";
+                $leads_input['field_name'] = "leads_id";
+                $leads_input['id'] = $reg_temp_user_id;
+                $this->customer_ad_model->delete($leads_input);
+
+                $this->session->unset_userdata('reg_temp_user_id');
+            }
+
+            $this->session->set_flashdata('alert-type', 'success');
+            $this->session->set_flashdata('alert', 'Registration Sucessful. You can login to your account.'); 
+
+            redirect('login');
+        }else{
             //Add custom data such as item/subscription id etc.
             //$userID = 123456;        
 
@@ -634,88 +620,7 @@ class Register extends MY_Controller {
 
             /*
              *  Paypal Process Here - End
-            */ 
-        }else{
-            $plan      = $this->NsmartPlan_model->getById($subscription_id);
-            //Converge
-            // Provide Converge Credentials
-            $merchantID =  CONVERGE_MERCHANTID; // "2159250"; //Converge 6-Digit Account ID *Not the 10-Digit Elavon Merchant ID*
-            $merchantUserID = CONVERGE_MERCHANTUSERID; // "nsmartapi"; //Converge User ID *MUST FLAG AS HOSTED API USER IN CONVERGE UI*
-            $merchantPIN = CONVERGE_MERCHANTPIN; // "UJN5ASLON7DJGDET68VF4JQGJILOZ8SDAWXG7SQRDEON0YY8ARXFXS6E19UA1E2X"; //Converge PIN (64 CHAR A/N)
-
-            //$url = "https://api.demo.convergepay.com/hosted-payments/transaction_token"; // URL to Converge demo session token server
-            $url    = CONVERGE_TOKENURL; // URL to Converge production session token server
-            $hppurl = CONVERGE_HPPURL; // URL to the demo Hosted Payments Page            
-
-            /*Payment Field Variables*/
-
-            // In this section, we set variables to be captured by the PHP file and passed to Converge in the curl request.
-
-            //$amount = $post['plan_price']; //Hard-coded transaction amount for testing.
-            $amount = $plan->discount; //Hard-coded transaction amount for testing.
-
-            //$amount  = $_POST['ssl_amount'];   //Capture ssl_amount as POST data
-            //$firstname  = $_POST['ssl_first_name'];   //Capture ssl_first_name as POST data
-            //$lastname  = $_POST['ssl_last_name'];   //Capture ssl_last_name as POST data
-            //$merchanttxnid = $_POST['ssl_merchant_txn_id']; //Capture ssl_merchant_txn_id as POST data
-            //$invoicenumber = $_POST['ssl_invoice_number']; //Capture ssl_invoice_number as POST data
-
-            if( $post['subscription_type'] == 'prospect' ){
-                $next_billing = date("m/d/Y",strtotime("+60 days"));
-            }else{
-                $next_billing = date("m/d/Y",strtotime("+30 days"));
-            }
-
-            $ssl_description = $plan->plan_name . " / " . $plan->price;
-            $ssl_firstname = $post['firstname'];
-            $ssl_lastname  = $post['lastname'];
-            $ssl_email = $post['email'];
-            $ssl_phone = $post['phone'];
-            $ssl_companyname = $post['business_name'];
-
-            //Follow the above pattern to add additional fields to be sent in curl request below.
-            //$merchanttxnid = "3234342343";
-            $ch = curl_init();    // initialize curl handle
-            curl_setopt($ch, CURLOPT_URL,$url); // set POST target URL
-            curl_setopt($ch,CURLOPT_POST, true); // set POST method
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-            //Build the request for the session id. Make sure all payment field variables created above get included in the CURLOPT_POSTFIELDS section below.  ccsale
-
-            curl_setopt($ch,CURLOPT_POSTFIELDS,
-            "ssl_merchant_id=$merchantID".
-            "&ssl_user_id=$merchantUserID".
-            "&ssl_pin=$merchantPIN".
-            "&ssl_transaction_type=ccaddrecurring".
-            "&ssl_billing_cycle=MONTHLY".
-            "&ssl_next_payment_date=$next_billing".
-            "&ssl_description=$ssl_description".
-            "&ssl_phone=$ssl_phone".
-            "&ssl_company=$ssl_companyname".
-            "&ssl_first_name=$ssl_firstname".
-            "&ssl_last_name=$ssl_lastname".
-            "&ssl_email=$ssl_email".
-            "&ssl_test_mode=TRUE".
-            //"&ssl_txn_id=$merchanttxnid".
-            "&ssl_amount=$amount"
-            );
-
-            $result = curl_exec($ch); // run the curl to post to Converge
-            curl_close($ch); // Close cURL
-
-            $sessiontoken= urlencode($result);
-
-            $this->session->set_userdata('regiserUserId', $uid);
-            $this->session->set_userdata('regiserClientId', $cid);
-
-            /*echo "<pre>";
-            print_r($sessiontoken);
-            exit;*/
-            /* Now we redirect to the HPP */
-            //header("Location: https://api.demo.convergepay.com/hosted-payments?ssl_txn_auth_token=$sessiontoken");  //Demo Redirect
-            header("Location: https://api.demo.convergepay.com/hosted-payments?ssl_txn_auth_token=$sessiontoken"); //Prod Redirect 
+            */        
         }
     }
 
@@ -773,7 +678,7 @@ class Register extends MY_Controller {
                 $leads_input['tablename'] = "ac_leads";
                 $leads_input['field_name'] = "leads_id";
                 $leads_input['id'] = $reg_temp_user_id;
-                $this->Customer_advance_model->delete($leads_input);
+                $this->customer_ad_model->delete($leads_input);
 
                 $this->session->unset_userdata('reg_temp_user_id');
             }
@@ -792,132 +697,7 @@ class Register extends MY_Controller {
 
         echo json_encode($json_data);
     }
-    
-    public function converge_payment()
-    {
-         // Provide Converge Credentials
-          $merchantID =  "0019127"; // "2159250"; //Converge 6-Digit Account ID *Not the 10-Digit Elavon Merchant ID*
-          $merchantUserID = "webpage"; // "nsmartapi"; //Converge User ID *MUST FLAG AS HOSTED API USER IN CONVERGE UI*
-          $merchantPIN = "IJFZ3DQUK9MPLHGUS618ZJ9KWH7EI3G0QTQ5IGI6NY3701LZ1E5SHMBE1MEMG7UA"; // "UJN5ASLON7DJGDET68VF4JQGJILOZ8SDAWXG7SQRDEON0YY8ARXFXS6E19UA1E2X"; //Converge PIN (64 CHAR A/N)
 
-          //$url = "https://api.demo.convergepay.com/hosted-payments/transaction_token"; // URL to Converge demo session token server
-          $url = "https://api.demo.convergepay.com/hosted-payments/transaction_token"; // URL to Converge production session token server
-
-          //$hppurl = "https://demo.api.convergepay.com/hosted-payments"; // URL to the demo Hosted Payments Page
-          $hppurl = "https://api.demo.convergepay.com/hosted-payments"; // URL to the production Hosted Payments Page
-
-          /*Payment Field Variables*/
-
-          // In this section, we set variables to be captured by the PHP file and passed to Converge in the curl request.
-
-          $amount= '19.00'; //Hard-coded transaction amount for testing.
-
-          //$amount  = $_POST['ssl_amount'];   //Capture ssl_amount as POST data
-          //$firstname  = $_POST['ssl_first_name'];   //Capture ssl_first_name as POST data
-          //$lastname  = $_POST['ssl_last_name'];   //Capture ssl_last_name as POST data
-          //$merchanttxnid = $_POST['ssl_merchant_txn_id']; //Capture ssl_merchant_txn_id as POST data
-          //$invoicenumber = $_POST['ssl_invoice_number']; //Capture ssl_invoice_number as POST data
-
-          //Follow the above pattern to add additional fields to be sent in curl request below.
-          //$merchanttxnid = "3234342343";
-          $ch = curl_init();    // initialize curl handle
-          curl_setopt($ch, CURLOPT_URL,$url); // set POST target URL
-          curl_setopt($ch,CURLOPT_POST, true); // set POST method
-          curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-          curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-          curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-          //Build the request for the session id. Make sure all payment field variables created above get included in the CURLOPT_POSTFIELDS section below.  ccsale
-
-          curl_setopt($ch,CURLOPT_POSTFIELDS,
-          "ssl_merchant_id=$merchantID".
-          "&ssl_user_id=$merchantUserID".
-          "&ssl_pin=$merchantPIN".
-          "&ssl_transaction_type=ccaddrecurring".
-          "&ssl_billing_cycle=MONTHLY".
-          "&ssl_next_payment_date=03/25/2021".
-          "&ssl_amount=$amount"
-          );
-
-          $result = curl_exec($ch); // run the curl to post to Converge
-          curl_close($ch); // Close cURL
-
-          $sessiontoken= urlencode($result);
-          /*echo "<pre>";
-          print_r($sessiontoken);
-          exit;*/
-          /* Now we redirect to the HPP */
-          //header("Location: https://api.demo.convergepay.com/hosted-payments?ssl_txn_auth_token=$sessiontoken");  //Demo Redirect
-          header("Location: https://api.demo.convergepay.com/hosted-payments?ssl_txn_auth_token=$sessiontoken"); //Prod Redirect
-
-    }
-
-    public function converge_payment_test()
-    {
-
-        $cURLConnection = curl_init();
-         
-        curl_setopt($cURLConnection, CURLOPT_URL, 'https://demo.convergepay.com/hosted-payments/myip');
-        curl_setopt($cURLConnection, CURLOPT_RETURNTRANSFER, true);
-         
-        $response = curl_exec($cURLConnection);
-        curl_close($cURLConnection);
-         
-        echo $response;
-
-    }
-
-    public function converge_success_payment()
-    {
-        $cid = $this->session->userdata('regiserClientId');
-        $uid = $this->session->userdata('regiserUserId');
-
-        $this->Clients_model->update($cid, array(
-            'converge_ssl_transaction_type' => $_GET['ssl_transaction_type'],
-            'converge_ssl_recurring_id' => $_GET['ssl_recurring_id'],
-            'is_plan_active' => 1,
-            'is_startup' => 1,
-            'plan_date_registered' => date("Y-m-d H:i:s")
-        ));
-
-        $this->users_model->update($uid,[
-            'status' => 1
-        ]);
-
-        $reg_temp_user_id = $this->session->userdata('reg_temp_user_id');
-        if(isset($reg_temp_user_id) && $reg_temp_user_id > 0)
-        {
-            $leads_input['tablename']   = "ac_leads";
-            $leads_input['field_name']  = "leads_id";
-            $leads_input['id']          = $reg_temp_user_id;
-            $this->Customer_advance_model->delete($leads_input);
-
-            $this->session->unset_userdata('reg_temp_user_id');
-        }
-
-        $payment_complete = true;
-        $payment_message  = 'Registration Complete. You can start using Nsmart Trac by logging to your account.';
-
-        $this->session->set_flashdata('message_type', 'success');
-        $this->session->set_flashdata('message', 'Registration Sucessful. You can login to your account.'); 
-
-        redirect('login');
-    }
-
-    public function cancel_converge_payment()
-    {
-        $cid = $this->session->userdata('regiserClientId');
-        $uid = $this->session->userdata('regiserUserId');
-
-        //Delete data
-        $this->Clients_model->deleteClient($cid);
-        $this->Users_model->deleteUser($uid);
-
-        $this->session->set_flashdata('message_type', 'danger');
-        $this->session->set_flashdata('message', 'Registration cancelled.');
-
-        redirect('login');
-    }
 }
 
 /* End of file Register.php */

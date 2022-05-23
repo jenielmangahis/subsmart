@@ -44,7 +44,6 @@ class FB_elements_model extends MY_Model {
 			if($data['choices']) {
 				foreach ($data['choices'] as $i => $choice) {
 					$choiceData = [
-						'id'			=> null,
 						'element_id' 	=> $newID,
 						'choice_text'	=> ( gettype($choice) === 'array' ? $choice['choice_text'] : $choice )
 					];
@@ -52,19 +51,17 @@ class FB_elements_model extends MY_Model {
 				}
 			}
 			
-			if(isset($data['choices_and_prices'])) {
+			if($data['choices_and_prices']) {
 				foreach ($data['choices_and_prices'] as $i => $row) {
 					$items_data = $row;
-					$items_data['id'] = null;
 					$items_data['element_id'] = $newID;
 					$this->db->insert($this->form_element_items->table, $items_data);			
 				}
 			}
 
-			if(isset($data['matrix_rows'])) {
+			if($data['matrix_rows']) {
 				foreach ($data['matrix_rows'] as $i => $matrixRow) {
 					$matrixRowData = [
-						'id' 	=> null,
 						'element_id' 	=> $newID,
 						'text'	=> ( gettype($matrixRow) === 'array' ? $matrixRow['text'] : $matrixRow )
 					];
@@ -72,7 +69,6 @@ class FB_elements_model extends MY_Model {
 				}
 				foreach ($data['matrix_columns'] as $i => $matrixColumn) {
 					$matrixColumnData = [
-						'id' 	=> null,
 						'element_id' 	=> $newID,
 						'text'	=> ( gettype($matrixColumn) === 'array' ? $matrixColumn['text'] : $matrixColumn )
 					];
@@ -80,7 +76,7 @@ class FB_elements_model extends MY_Model {
 				}	
 			}		
 
-			if(isset($data['element_rules'])) {
+			if($data['element_rules']) {
 				$elementRules = json_decode($data['element_rules']);
 	
 				foreach($elementRules as $elementRule) {
@@ -97,7 +93,7 @@ class FB_elements_model extends MY_Model {
 			$response = [
 				'code' 		=> 200,
 				'message' 	=> 'created',
-				'data'		=> ['new_id' => $newID]
+				'data'		=> []
 			];
 		} catch(\Exception $e) {
 			$response = [
