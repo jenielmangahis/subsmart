@@ -234,11 +234,12 @@ class Event_model extends MY_Model
     public function getAccountSituation($toCheck = 'collect_date')
     {
         $company_id = logged('company_id');
+        $this->db->select('COUNT(*) as total');
         $this->db->from('acs_profile');
-        $this->db->select('acs_profile.prof_id, COUNT(acs_profile.prof_id) as total');
         $this->db->join('acs_office', 'acs_office.fk_prof_id = acs_profile.prof_id', 'left');
         $this->db->where("acs_profile.company_id", $company_id);
         $this->db->where("acs_office.".$toCheck, date('m/d/Y'));
+        $this->db->group_by('prof_id');
         $query = $this->db->get();
         //dd($this->db->last_query());
 
@@ -247,6 +248,60 @@ class Event_model extends MY_Model
         } else {
             return false;
         }
+    }
+
+    public function getTechLeaderboards()
+    {
+        $cid=logged('company_id');
+        $this->db->select('users.id,FName,LName, count(technician) as customerCount');
+        $this->db->from('users');
+        $this->db->join('acs_office', 'acs_office.technician = users.id', 'left');
+        //$this->db->where('id', $parent_id);
+        $this->db->where('users.company_id', $cid);
+        $this->db->group_by('users.id');
+        $this->db->order_by('customerCount', 'desc');
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function getSalesLeaderboards()
+    {
+        $cid=logged('company_id');
+        $this->db->select('users.id,FName,LName, count(fk_sales_rep_office) as customerCount');
+        $this->db->from('users');
+        $this->db->join('acs_office', 'acs_office.fk_sales_rep_office = users.id', 'left');
+        //$this->db->where('id', $parent_id);
+        $this->db->where('users.company_id', $cid);
+        $this->db->group_by('users.id');
+        $this->db->order_by('customerCount', 'desc');
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function getTechRevenue($techId)
+    {
+        $this->db->select('SUM(job_payments.amount) as techRev');
+        $this->db->from('job_payments');
+        $this->db->join('jobs', ' job_payments.job_id = jobs.id', 'left');
+        $this->db->join('acs_profile', 'jobs.customer_id = acs_profile.prof_id', 'left');
+        $this->db->join('acs_office', 'acs_office.fk_prof_id = acs_profile.prof_id', 'left');
+        $this->db->where('acs_office.technician', $techId);
+        $this->db->group_by('jobs.customer_id');
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function getTechCustomerCount($techId)
+    {
+        $this->db->select('SUM(job_payments.amount) as techRev');
+        $this->db->from('job_payments');
+        $this->db->join('jobs', ' job_payments.job_id = jobs.id', 'left');
+        $this->db->join('acs_profile', 'jobs.customer_id = acs_profile.prof_id', 'left');
+        $this->db->join('acs_office', 'acs_office.fk_prof_id = acs_profile.prof_id', 'left');
+        $this->db->where('acs_office.technician', $techId);
+        $this->db->group_by('jobs.customer_id');
+        $query = $this->db->get();
+        return $query->result();
     }
 
 

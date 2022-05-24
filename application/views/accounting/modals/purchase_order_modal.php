@@ -248,10 +248,10 @@
                                                                             </select>
                                                                         </td>
                                                                         <?php if(isset($purchaseOrder) && !$is_copy) : ?>
-                                                                        <td class="text-right">0.00</td>
+                                                                        <td class="text-right"><?=number_format(floatval($category->received), 2, '.', ',')?></td>
                                                                         <td>
                                                                             <div class="d-flex align-items-center justify-content-center">
-                                                                                <input type="checkbox" name="category_closed[]" class="form-check" value="1">
+                                                                                <input type="checkbox" name="category_closed[]" class="form-check" value="1" <?=floatval($category->received) === floatval($category->amount) ? 'checked' : ''?>>
                                                                             </div>
                                                                         </td>
                                                                         <?php endif; ?>
@@ -367,10 +367,10 @@
                                                                                     </span>
                                                                                 </td>
                                                                                 <?php if(isset($purchaseOrder) && !$is_copy) : ?>
-                                                                                <td class="text-right">0</td>
+                                                                                <td class="text-right"><?=number_format(floatval($item->received), 2, '.', ',')?></td>
                                                                                 <td>
                                                                                     <div class="d-flex align-items-center justify-content-center">
-                                                                                        <input type="checkbox" name="item_closed[]" class="form-check" value="1">
+                                                                                        <input type="checkbox" name="item_closed[]" class="form-check" value="1" <?=floatval($item->received) === floatval($item->total) ? 'checked' : ''?>>
                                                                                     </div>
                                                                                 </td>
                                                                                 <?php endif; ?>

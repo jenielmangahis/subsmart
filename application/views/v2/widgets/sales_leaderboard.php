@@ -56,13 +56,14 @@ endif;
 
     <div class="nsm-card-content jobs_stat">
         <div class="nsm-widget-table">
+            <?php foreach($salesLeaderboards as $sales): ?>
             <div class="widget-item">
                 <div class="nsm-profile">
-                    <span>WH</span>
+                    <span><?= strtoupper($sales->FName[0].''.$sales->LName[0]) ?></span>
                 </div>
                 <div class="content">
                     <div class="details">
-                        <span class="content-title">Welyelf Hisula</span>
+                        <span class="content-title"><?= $sales->FName .' '. $sales->LName ?></span>
                         <span class="content-subtitle d-block">Sales Rep</span>
                     </div>
                     <div style="padding-top: 5px;">
@@ -70,53 +71,12 @@ endif;
                         <span class="content-subtitle d-block">revenue</span>
                         </div>
                     <div class="controls">
-                        <span class="content-subtitle nsm-text-success fw-bold" style="font-size:12px;">50</span>
+                        <span class="content-subtitle nsm-text-success fw-bold" style="font-size:12px;"><?= $sales->customerCount; ?></span>
                         <span class="content-subtitle d-block">customers</span>
                     </div>
                 </div>
             </div>
-
-            <div class="widget-item">
-                <div class="nsm-profile">
-                    <span>BR</span>
-                </div>
-                <div class="content">
-                    <div class="details">
-                        <span class="content-title">Bryann Revina</span>
-                        <span class="content-subtitle d-block">Sales Rep</span>
-                    </div>
-                    <div style="padding-top: 5px;">
-                        <span class="content-subtitle nsm-text-success fw-bold" style="font-size:12px;">$1,500.35</span>
-                        <span class="content-subtitle d-block">revenue</span>
-                        </div>
-                    <div class="controls">
-                        <span class="content-subtitle nsm-text-success fw-bold" style="font-size:12px;">1502</span>
-                        <span class="content-subtitle d-block">customers</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="widget-item">
-                <div class="nsm-profile">
-                    <span>BR</span>
-                </div>
-                <div class="content">
-                    <div class="details">
-                        <span class="content-title">Tommy Nguyen</span>
-                        <span class="content-subtitle d-block">Sales Rep</span>
-                    </div>
-                    <div style="padding-top: 5px;">
-                        <span class="content-subtitle nsm-text-success fw-bold" style="font-size:12px;">$0.00</span>
-                        <span class="content-subtitle d-block">revenue</span>
-                        </div>
-                    <div class="controls">
-                        <span class="content-subtitle nsm-text-success fw-bold" style="font-size:12px;">1</span>
-                        <span class="content-subtitle d-block">customers</span>
-                    </div>
-                </div>
-            </div>
-
-
+            <?php endforeach; ?>
         </div>
     </div>      
 

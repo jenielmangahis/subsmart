@@ -161,13 +161,10 @@ class Dashboard extends Widgets {
         $this->page_data['subs']=$this->event_model->getAllsubs();
         $this->page_data['payment']=$this->event_model->getTodayStats(); // fetch current data sales on jobs , amount is on job_payments.amount
         $this->page_data['paymentInvoices']=$this->event_model->getAllPInvoices();
-
         $this->page_data['lostAccounts']=$this->event_model->getAccountSituation('cancel_date'); // lost account count, if Cancel Date Office Info is set
         $this->page_data['collectedAccounts']=$this->event_model->getAccountSituation(); // collection account count, if Collection Date Office Info is set
-
-        $this->page_data['techLeaderboards']=$this->event_model->getAccountSituation(); // collection account count, if Collection Date Office Info is set
-
-
+        $this->page_data['techLeaderboards']=$this->event_model->getTechLeaderboards(); // fetch Technicians and customer they are assigned to
+        $this->page_data['salesLeaderboards']=$this->event_model->getSalesLeaderboards(); // fetch Sales Rep and customer they are assigned to
 
         $this->page_data['jobsDone']= $this->event_model->getAllJobs();
         $this->page_data['salesLeaderboard']=$this->event_model->getSalesLeaderboard();
@@ -268,6 +265,18 @@ class Dashboard extends Widgets {
         $this->load->view('dashboard_v2', $this->page_data);
     }
 
+    private function getActiveCustomerStatuses()
+    {
+        return [
+            'draft',
+            'installed',
+            'active',
+            'lead',
+            'scheduled',
+            'service customer',
+        ];
+    }
+
     private function getTotalRecurringPayment()
     {
         $companyId = logged('company_id');
@@ -275,6 +284,7 @@ class Dashboard extends Widgets {
         $this->db->from('acs_billing billing');
         $this->db->join('acs_profile profile', 'profile.prof_id = billing.fk_prof_id', 'left');
         $this->db->where('profile.company_id', $companyId);
+        $this->db->where_in('LOWER(profile.status)', $this->getActiveCustomerStatuses());
         $query = $this->db->get();
         $result = $query->row();
         return '$' . number_format($result->total, 2);
@@ -288,9 +298,39 @@ class Dashboard extends Widgets {
         $this->db->join('acs_profile profile', 'profile.prof_id = billing.fk_prof_id', 'left');
         $this->db->where('profile.company_id', $companyId);
         $this->db->where("STR_TO_DATE(billing.recurring_end_date, '%m/%d/%Y') BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 30 DAY)");
+        $this->db->where_in('LOWER(profile.status)', $this->getActiveCustomerStatuses());
         $query = $this->db->get();
         $result = $query->row();
         return $result->total;
+    }
+
+    public function apiGetRecurringPaymentCustomers()
+    {
+        $companyId = logged('company_id');
+        $this->db->select('profile.prof_id, profile.customer_type, profile.business_name, profile.first_name, profile.last_name, profile.email', false);
+        $this->db->from('acs_billing billing');
+        $this->db->join('acs_profile profile', 'profile.prof_id = billing.fk_prof_id', 'left');
+        $this->db->where('profile.company_id', $companyId);
+        $this->db->where_in('LOWER(profile.status)', $this->getActiveCustomerStatuses());
+        $query = $this->db->get();
+
+        header('content-type: application/json');
+        echo json_encode(['data' => $query->result()]);
+    }
+
+    public function apiGetAgreementsToExpireIn30DaysCustomers()
+    {
+        $companyId = logged('company_id');
+        $this->db->select('profile.prof_id, profile.customer_type, profile.business_name, profile.first_name, profile.last_name, profile.email', false);
+        $this->db->from('acs_billing billing');
+        $this->db->join('acs_profile profile', 'profile.prof_id = billing.fk_prof_id', 'left');
+        $this->db->where('profile.company_id', $companyId);
+        $this->db->where("STR_TO_DATE(billing.recurring_end_date, '%m/%d/%Y') BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 30 DAY)");
+        $this->db->where_in('LOWER(profile.status)', $this->getActiveCustomerStatuses());
+        $query = $this->db->get();
+
+        header('content-type: application/json');
+        echo json_encode(['data' => $query->result()]);
     }
     
     public function getInbox(){

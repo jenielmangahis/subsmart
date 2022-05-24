@@ -79,7 +79,7 @@
                 <select id="technician" name="technician"  class="input_select" data-value="<?= isset($office_info->technician) ? $office_info->technician : "" ?>">
                     <option value="">Select</option>
                     <?php foreach ($users as $user): ?>
-                        <option <?php if(isset($office_info)){ if($office_info->technician == $user->FName.' '.$user->LName){ echo 'selected'; } } ?> value="<?= $user->FName.' '.$user->LName; ?>"><?= $user->FName.' '.$user->LName; ?></option>
+                        <option <?php if(isset($office_info)){ if($office_info->technician == $user->id ){ echo 'selected'; } } ?> value="<?= $user->id ?>"><?= $user->FName.' '.$user->LName; ?></option>
                     <?php endforeach ?>
                 </select>
             </div>

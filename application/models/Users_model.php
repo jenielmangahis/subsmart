@@ -105,16 +105,18 @@ class Users_model extends MY_Model
 
     public function getData_of_Clock_In_Out_Lat_Long($user_id){
         $query = $this->db->get_where('timesheet_location_for_clock_in_out', array('user_id' => $user_id, 'company_id'=>logged('company_id')));
-        return $query->result();
+        return $query->row();
     }
     public function insertClock_In_Out_Lat_Long($user_id, $data){
         $query_data_exist = $this->getData_of_Clock_In_Out_Lat_Long($user_id);
-
-        if(count($query_data_exist)>0){
+        
+        if($query_data_exist){
             $this->db->where('user_id',$user_id);
             $this->db->update('timesheet_location_for_clock_in_out',$data);
+            return 'success update';
         }else{
             $this->db->insert('timesheet_location_for_clock_in_out',$data);
+            return 'success inserting';
         }
     }
 

@@ -1471,14 +1471,34 @@ class Users extends MY_Controller
 		$query = $this->Users_model->getData_of_Clock_In_Out_Lat_Long($user_id);
 
 		$data = new stdClass();
-		if (count($query) > 0) {
-			
-			$data->cLocation = $query;
-		}else{
-			
+		if ($query) {
+			$data->cLocation = 1;
+			$data->clock_in_latitude  = floatval($query->clock_in_latitude) ;
+			$data->clock_in_longtitude = floatval($query->clock_in_longtitude);
+			$data->clock_out_latitude = floatval($query->clock_out_latitude);
+			$data->clock_out_longtitude = floatval($query->clock_out_longtitude);
+			$data->clock_in_address = $query->clock_in_address;
+			$data->clock_out_address = $query->clock_out_address;
+			$data->clock_in_radius =  floatval($query->clock_in_radius);
+			$data->clock_out_radius =  floatval($query->clock_out_radius);
+			$data->allow_gps_clock_in = $query->allow_gps_clock_in;
+			$data->allow_gps_clock_out = $query->allow_gps_clock_out;
+		} else {
 			$data->cLocation = 0;
 		}
 		echo json_encode($data);
+	}
+
+	public function saveClockInOp(){
+		$user_id = $this->input->post('user_id');
+		$data = [
+			'user_id'   => $user_id,
+			'allow_gps' => $this->input->post('data'),
+			'company_id'=> logged('company_id')
+		];
+
+		$query = $this->Users_model->insertClock_In_Out_Lat_Long($user_id, $data);
+		echo json_encode($query);
 	}
 	public function ajaxUpdateEmployee()
 	{
@@ -1542,6 +1562,12 @@ class Users extends MY_Controller
 			'clock_in_longtitude' => $this->input->post('values[clock_in_location_longtitude]'),
 			'clock_out_latitude' => $this->input->post('values[clock_out_location_latitude]'),
 			'clock_out_longtitude' => $this->input->post('values[clock_out_location_longtitude]'),
+			'allow_gps_clock_in' => $this->input->post('values[allow_clock_in_toggle_btn]'),
+			'allow_gps_clock_out' => $this->input->post('values[allow_clock_out_toggle_btn]'),
+			'clock_in_address' => $this->input->post('values[clock_in_formatted_address]'),
+			'clock_out_address' => $this->input->post('values[clock_out_formatted_address]'),
+			'clock_in_radius' => $this->input->post('values[clock_in_radius_field]'),
+			'clock_out_radius' => $this->input->post('values[clock_out_radius_field]'),
 		);
 		$user = $this->Users_model->update($user_id, $data);
 		$data_location = $this->Users_model->insertClock_In_Out_Lat_Long($user_id, $data2);
