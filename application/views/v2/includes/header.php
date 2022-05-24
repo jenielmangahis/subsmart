@@ -41,16 +41,13 @@ if ($this->session->userdata('usertimezone') == null) {
         var base_url = '<?= base_url() ?>';
         var surveyBaseUrl = '<?= base_url() ?>';
     </script>
-</head>
-<script>
-    $(document).ready(function() {
-        if ($('.Btn').attr('id') == 'clockOut') {
-            $('.cBtn').css({
-                'color': "green"
-            });
+    <style>
+        .nsm-nav-items #clockOut i{
+            color: "green";
         }
-    })
-</script>
+    </style>
+</head>
+
 
 <body>
     <div class="nsm-container">

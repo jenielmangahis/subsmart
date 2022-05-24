@@ -997,6 +997,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 text: "Employee record has been Updated",
                                 icon: 'success'
                             });
+
                             location.reload();
                         } else {
                             Swal.fire({

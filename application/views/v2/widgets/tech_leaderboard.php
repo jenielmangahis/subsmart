@@ -27,25 +27,27 @@
     </div>
     <div class="nsm-card-content jobs_stat">
         <div class="nsm-widget-table">
+            <?php foreach($techLeaderboards as $tech): ?>
             <div class="widget-item">
                 <div class="nsm-profile">
-                    <span>TN</span>
+                    <span><?= strtoupper($tech->FName[0].''.$tech->LName[0]) ?></span>
                 </div>
                 <div class="content">
                     <div class="details">
-                        <span class="content-title">Tommy Nguyen</span>
+                        <span class="content-title"><?= $tech->FName .' '. $tech->LName ?></span>
                         <span class="content-subtitle d-block">Technician</span>
                     </div>
                     <div style="padding-top: 5px;">
-                        <span class="content-subtitle nsm-text-success fw-bold" style="font-size:12px;">$100.23</span>
+                        <span class="content-subtitle nsm-text-success fw-bold" style="font-size:12px;">$<?=  number_format(floatval(get_tech_revenue($tech->id)[0]->techRev), 2, '.', ','); ?></span>
                         <span class="content-subtitle d-block">revenue</span>
                         </div>
                     <div class="controls">
-                        <span class="content-subtitle nsm-text-success fw-bold" style="font-size:12px;">23</span>
+                        <span class="content-subtitle nsm-text-success fw-bold" style="font-size:12px;"><?= $tech->customerCount; ?></span>
                         <span class="content-subtitle d-block">customers</span>
                     </div>
                 </div>
             </div>
+            <?php endforeach; ?>
         </div>
     </div>
 </div>

@@ -94,6 +94,24 @@ if (!function_exists('get_employee_name')){
     }
 }
 
+if (!function_exists('get_tech_revenue')){
+    function get_tech_revenue($id){
+        $CI = &get_instance();
+        $CI->load->model('event_model');
+        //$this->page_data['employees'] = $this->general->get_data_with_param($get_employee);
+        return $CI->event_model->getTechRevenue($id);
+    }
+}
+
+if (!function_exists('get_tech_customer_count')){
+    function get_tech_customer_count($id){
+        $CI = &get_instance();
+        $CI->load->model('event_model');
+        //$this->page_data['employees'] = $this->general->get_data_with_param($get_employee);
+        return $CI->event_model->getTechRevenue($id);
+    }
+}
+
 if (!function_exists('get_total_item_qty')){
     function get_total_item_qty($id=null){
         $CI = &get_instance();

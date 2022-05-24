@@ -22,8 +22,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     }
 
     label>input {
-      visibility: initial !important;
-      position: initial !important; 
+        visibility: initial !important;
+        position: initial !important;
     }
 
     #employeeTable tr>th {
@@ -257,7 +257,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                             </div>
                         </div>
                         <br />
-                        <div class="card-body" style="padding:0px !important;">                            
+                        <div class="card-body" style="padding:0px !important;">
                             <div class="row">
                                 <div class="col-lg-12 table-responsive">
                                     <table id="employeeTable" data-page-length='25' class="table table-bordered table-striped">
@@ -265,7 +265,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                             <tr>
                                                 <th>User</th>
                                                 <th>Email</th>
-                                                <?php if( $show_pass == 1 ){ ?>
+                                                <?php if ($show_pass == 1) { ?>
                                                     <th>Password</th>
                                                 <?php } ?>
                                                 <th>Title</th>
@@ -281,12 +281,12 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                             <?php foreach ($users as $cnt => $row) : ?>
                                                 <tr>
                                                     <td class="center">
-                                                        <?php 
-                                                            if( $row->profile_img != '' ){
-                                                                $data_img = $row->profile_img;
-                                                            }else{
-                                                                $data_img = 'default.png';
-                                                            }
+                                                        <?php
+                                                        if ($row->profile_img != '') {
+                                                            $data_img = $row->profile_img;
+                                                        } else {
+                                                            $data_img = 'default.png';
+                                                        }
                                                         ?>
                                                         <a href="javascript:void(0)" data-id="<?php echo $row->id ?>" id="editEmployeeProfile" title="Change User Photo" data-toggle="tooltip" data-img="<?php echo $data_img; ?>">
                                                             <span>
@@ -307,7 +307,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                         </div>
                                                     </td>
                                                     <td class="center"><?php echo $row->email ?></td>
-                                                    <?php if( $show_pass == 1 ){ ?>
+                                                    <?php if ($show_pass == 1) { ?>
                                                         <td class="center pw-row-<?= $row->id; ?>"><?php echo $row->password_plain ?></td>
                                                     <?php } ?>
                                                     <td class="center"><?php echo ($row->role) ? ucfirst($this->roles_model->getById($row->role)->title) : '' ?></td>
@@ -330,19 +330,19 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                     </td>
                                                     <td class="text-center">
                                                         <!-- <i class="fa fa-lg fa-mobile"></i> -->
-                                                        <?php if( $row->has_app_access == 1 ){ ?>
+                                                        <?php if ($row->has_app_access == 1) { ?>
                                                             <a class="btn btn-sm btn-primary" href="javascript:void(0);" title="Has mobile app access" data-toggle="tooltip"><i class="fa fa-lg fa-check"></i></a>
-                                                        <?php }else{ ?>
+                                                        <?php } else { ?>
                                                             <a class="btn btn-sm btn-danger" href="javascript:void(0);" title="Has no mobile app access" data-toggle="tooltip"><i class="fa fa-lg fa-close"></i></a>
-                                                        <?php } ?>                                                        
+                                                        <?php } ?>
                                                     </td>
                                                     <td class="text-center">
                                                         <!-- <span class="fa fa-lg fa-desktop"></span> -->
-                                                        <?php if( $row->has_web_access == 1 ){ ?>
+                                                        <?php if ($row->has_web_access == 1) { ?>
                                                             <a class="btn btn-sm btn-primary" href="javascript:void(0);" title="Has web app access" data-toggle="tooltip"><i class="fa fa-lg fa-check"></i></a>
-                                                        <?php }else{ ?>
+                                                        <?php } else { ?>
                                                             <a class="btn btn-sm btn-danger" href="javascript:void(0);" title="Has no web app access" data-toggle="tooltip"><i class="fa fa-lg fa-close"></i></a>
-                                                        <?php } ?>  
+                                                        <?php } ?>
                                                     </td>
                                                     <td class="center">
                                                         <?php //if (hasPermissions('users_edit')){ 
@@ -770,6 +770,112 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         </div>
     </div>
 </div>
+
+
+<div id="manage_timsheet_clockin_clockout_gps_html_setter" style="display: none;">
+    <div class="section-title">Manage Clock In & Clock Out Location</div>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="custom-control custom-switch">
+
+                                    <input type="checkbox" value=0 class="custom-control-input allow_clock_in" id="allow_clock_in_input" name="allow_clock_in_toggle_btn">
+                                    <label class="custom-control-label allow_clock_in disabled" for="allow_clock_in_input"> <span id="status">Enable</span> User <b>GPS Clock In</b> </label>
+
+
+                                    <br><label class="est_wage_privacy_editor" for="est_wage_privacy2" style="font-size: 11px;font-weight:100;">
+                                        <p>Latest
+                                            update by <span id="update"></span></p>
+                                    </label>
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 allow_clock_in_map" style="display:none;">
+                <div class="row">
+                    <div class="col">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <label>Set Clock In Location</label>
+                                <div class="form-group">
+                                    <label for="">Enter an address or drag the map to find your place</label>
+                                    <input id="clock_in_formatted_address" type="text" name="clock_in_formatted_address" class="form-control ts-start-date" value="" required>
+                                    <input type="text" name="clock_in_location_latitude" id="allow_clock_in_lat" style="display:none">
+                                    <input type="text" name="clock_in_location_longtitude" id="allow_clock_in_lng" style="display:none">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group map-canva" style="position: relative;">
+                            <div class="clock_in_address_radius_container">
+                                <label class="clock_in_radius_number_view">250 ft zone</label>
+                                <input type="range" class="form-range" name="clock_in_radius_field" min="76.2" max="3218.688" step="0.001" id="clock_in_address_radius" value="76.2">
+                                <!-- <input type="text" name="clock_in_radius_field" style="display:none;"> -->
+                            </div>
+                            <div id="clock_in_address_map" class="clock_in_address_map" style="height:400px;width:100%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="custom-control custom-switch">
+
+                                    <input type="checkbox" value=0 class="custom-control-input allow_clock_in" id="allow_clock_out_input" name="allow_clock_out_toggle_btn">
+                                    <label class="custom-control-label allow_clock_in disabled" for="allow_clock_out_input"> <span id="status">Enable</span> User <b>GPS Clock Out</b> </label>
+
+
+                                    <br><label class="est_wage_privacy_editor" for="est_wage_privacy2" style="font-size: 11px;font-weight:100;">
+                                        <p>Latest
+                                            update by <span id="update"></span></p>
+                                    </label>
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 allow_clock_out_map" style="display:none;">
+                <div class="row">
+                    <div class="col">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <label>Set Clock Out Location</label>
+                                <div class="form-group">
+                                    <label for="">Enter an address or drag the map to find your place</label>
+                                    <input id="clock_out_formatted_address" type="text" name="clock_out_formatted_address" class="form-control ts-start-date" value="" required>
+                                    <input type="text" name="clock_out_location_latitude" id="allow_clock_out_lat" style="display:none">
+                                    <input type="text" name="clock_out_location_longtitude" id="allow_clock_out_lng" style="display:none">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group map-canva" style="position: relative;">
+                            <div class="clock_out_address_radius_container">
+                                <label class="clock_out_radius_number_view">250 ft zone</label>
+                                <input type="range" name="clock_out_radius_field" class="form-range" min="76.2" max="3218.688" step="0.001" id="clock_out_address_radius" value="76.2">
+                                <!-- <input type="text" name="clock_out_radius_field" style="display:none;"> -->
+                            </div>
+                            <div id="clock_out_address_map" class="clock_out_address_map" style="height:400px;width:100%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!--end of modal-->
 <?php include viewPath('includes/footer'); ?>
 <script>
@@ -779,8 +885,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             "sort": false
         });
 
-        $(".btn-export-list").click(function(){
-            window.location.href= base_url + 'users/export_list';
+        $(".btn-export-list").click(function() {
+            window.location.href = base_url + 'users/export_list';
         });
 
         $("#shareEmployeeForm").click(function() {
@@ -797,41 +903,42 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             $(".label-public-url").fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(100);
         });
 
-        $(document).on('change', '#upload-employee-photo', function(e){
-          var reader = new FileReader();
-          reader.onload = function(){
-            var output = document.getElementById('img_profile');
-            output.src = reader.result;
-          };
-          reader.readAsDataURL(e.target.files[0]);
+        $(document).on('change', '#upload-employee-photo', function(e) {
+            var reader = new FileReader();
+            reader.onload = function() {
+                var output = document.getElementById('img_profile');
+                output.src = reader.result;
+            };
+            reader.readAsDataURL(e.target.files[0]);
         });
 
-        $("#btn-modal-delete-user").click(function(){
+        $("#btn-modal-delete-user").click(function() {
             var eid = $("#eid").val();
             $.ajax({
                 url: base_url + 'users/_delete_user',
-                type:"POST",
-                dataType:"json",
-                data:{eid:eid},
-                success:function (data) {
-                    if (data.is_success){
+                type: "POST",
+                dataType: "json",
+                data: {
+                    eid: eid
+                },
+                success: function(data) {
+                    if (data.is_success) {
                         $("#modalDeleteUser").modal('hide');
                         Swal.fire({
-                          title: 'Success',
-                          text: "User was successfully deleted.",
-                          icon: 'success',
-                          showCancelButton: false,
-                          confirmButtonColor: '#32243d',
-                          cancelButtonColor: '#d33',
-                          confirmButtonText: 'Ok'
+                            title: 'Success',
+                            text: "User was successfully deleted.",
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonColor: '#32243d',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Ok'
                         }).then((result) => {
-                          if (result.value) {
-                              location.reload();
-                          }
+                            if (result.value) {
+                                location.reload();
+                            }
                         });
-                    }else{
-                        Swal.fire(
-                        {
+                    } else {
+                        Swal.fire({
                             showConfirmButton: false,
                             timer: 2000,
                             title: 'Failed',
@@ -857,13 +964,13 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         });
         $(document).on('click', '#editEmployeeProfile', function() {
             var data_img = $(this).attr('data-img');
-            if( data_img == 'default.png' ){
+            if (data_img == 'default.png') {
                 var default_img = base_url + 'uploads/users/' + data_img;
-            }else{
+            } else {
                 var default_img = base_url + 'uploads/users/user-profile/' + data_img;
             }
 
-            $("#img_profile").attr("src",default_img);
+            $("#img_profile").attr("src", default_img);
 
             $('#modalEditEmployeeProfile').modal({
                 backdrop: 'static',
@@ -1066,7 +1173,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 icon: 'success'
                             });
                             location.reload();
-                        }else if( data == 3 ){
+                        } else if (data == 3) {
                             Swal.fire({
                                 title: 'Failed',
                                 text: 'Insufficient license. Please purchase license to continue adding user',
@@ -1077,7 +1184,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 confirmButtonText: 'Purchase License'
                             }).then((result) => {
                                 if (result.value) {
-                                   window.location.href= base_url + 'mycrm/membership';
+                                    window.location.href = base_url + 'mycrm/membership';
                                 }
                             });
                         } else {
@@ -1102,65 +1209,90 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             }
         });
         $(document).on('click', '#updateEmployee', function() {
-            let values = {};
-            $.each($('#editEmployeeForm').serializeArray(), function(i, field) {
-                values[field.name] = field.value;
-            });
-            console.log(values);
-            if (values['firstname'] && values['lastname'] && values['email'] && values['username'] && values['role']) {
-                $.ajax({
-                    url: base_url + 'users/_update_employee',
-                    type: "POST",
-                    dataType: "json",
-                    data: {
-                        values: values
-                    },
-                    success: function(data) {
-                        if (data == 1) {
-                            $("#modalEditEmployee").modal('hide');
-                            Swal.fire({
-                                title: 'Success',
-                                text: "Employee record has been Updated.",
-                                icon: 'success',
-                                showCancelButton: false,
-                                confirmButtonColor: '#32243d',
-                                cancelButtonColor: '#d33',
-                                confirmButtonText: 'Ok'
-                            }).then((result) => {
-                                if (result.value) {
+
+
+            Swal.fire({
+                title: "Save?",
+                html: "Are your sure you want to save this changes? ",
+                imageUrl: baseURL + "/assets/img/trac360/map_with_marker1.png",
+                showCancelButton: true,
+                confirmButtonColor: "#2ca01c",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Save changes",
+            }).then((result) => {
+                if (result.value) {
+                    ////saving the map long-lat
+
+                    var center = clock_in_address_map.getCenter();
+                    $("#allow_clock_in_lat").val(center.lat());
+                    $("#allow_clock_in_lng").val(center.lng());
+
+                    center = clock_out_address_map.getCenter();
+                    $("#allow_clock_out_lat").val(center.lat());
+                    $("#allow_clock_out_lng").val(center.lng());
+                    ///end saving map
+
+                    let values = {};
+                    $.each($('#editEmployeeForm').serializeArray(), function(i, field) {
+                        values[field.name] = field.value;
+                    });
+                    if (values['firstname'] && values['lastname'] && values['email'] && values['username'] && values['role']) {
+                        $.ajax({
+                            url: base_url + 'users/_update_employee',
+                            type: "POST",
+                            dataType: "json",
+                            data: {
+                                values: values
+                            },
+                            success: function(data) {
+                                if (data == 1) {
+                                    $("#modalEditEmployee").modal('hide');
+                                    Swal.fire({
+                                        title: 'Success',
+                                        text: "Employee record has been Updated.",
+                                        icon: 'success',
+                                        showCancelButton: false,
+                                        confirmButtonColor: '#32243d',
+                                        cancelButtonColor: '#d33',
+                                        confirmButtonText: 'Ok'
+                                    }).then((result) => {
+                                        if (result.value) {
+                                            // location.reload();
+                                        }
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        showConfirmButton: false,
+                                        timer: 2000,
+                                        title: 'Failed',
+                                        text: "Something is wrong in the process",
+                                        icon: 'warning'
+                                    });
                                 }
-                            });
-                        } else {
-                            Swal.fire({
-                                showConfirmButton: false,
-                                timer: 2000,
-                                title: 'Failed',
-                                text: "Something is wrong in the process",
-                                icon: 'warning'
-                            });
-                        }
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            showConfirmButton: false,
+                            timer: 2000,
+                            title: 'Failed',
+                            text: "Something is wrong in the process",
+                            icon: 'warning'
+                        });
                     }
-                });
-            } else {
-                Swal.fire({
-                    showConfirmButton: false,
-                    timer: 2000,
-                    title: 'Failed',
-                    text: "Something is wrong in the process",
-                    icon: 'warning'
-                });
-            }
+                }
+            });
         });
 
         $(document).on('click', '#updateEmployeeProfilePhoto', function() {
-            var formData = new FormData($("#editEmployeeProfileForm")[0]);   
+            var formData = new FormData($("#editEmployeeProfileForm")[0]);
             $.ajax({
                 url: base_url + 'users/ajaxUpdateEmployeeProfilePhoto',
                 type: "POST",
                 dataType: "json",
                 contentType: false,
                 cache: false,
-                processData:false,
+                processData: false,
                 data: formData,
                 success: function(data) {
                     if (data == 1) {
@@ -1251,7 +1383,45 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     user_id: user_id
                 },
                 success: function(data) {
+                    if ($(" #manage_timsheet_clockin_clockout_gps_html_setter").html() == "") {
+                        $("#manage_timsheet_clockin_clockout_gps_html_setter").html($(".modal-edit-employee #manage_timsheet_clockin_clockout_gps").html());
+                        $(".modal-edit-employee #manage_timsheet_clockin_clockout_gps").html("");
+                    }
                     $(".modal-edit-employee").html(data);
+                    $(".modal-edit-employee #manage_timsheet_clockin_clockout_gps").html($("#manage_timsheet_clockin_clockout_gps_html_setter").html());
+                    $("#manage_timsheet_clockin_clockout_gps_html_setter").html("");
+
+                    initMap();
+                    $.ajax({
+                        url: base_url + 'users/getData_for_clock_in_out_location',
+                        type: "POST",
+                        dataType: "json",
+                        data: {
+                            user_id: $("#editUserID").val()
+                        },
+                        success: function(data) {
+                            if (data.cLocation > 0) {
+                                if (data.allow_gps_clock_in > 0) {
+                                    $('#allow_clock_in_input').prop('checked', true);
+                                } else {
+                                    $('#allow_clock_in_input').prop('checked', false);
+                                }
+                                if (data.allow_gps_clock_out > 0) {
+                                    $('#allow_clock_out_input').prop('checked', true);
+                                } else {
+                                    $('#allow_clock_out_input').prop('checked', false);
+                                }
+
+                            } else {
+                                $('#allow_clock_in_input').prop('checked', false);
+                                $('#allow_clock_out_input').prop('checked', false);
+                            }
+
+
+                            toogle_btn_gps_clock("#allow_clock_in_input", ".allow_clock_in_map");
+                            toogle_btn_gps_clock("#allow_clock_out_input", ".allow_clock_out_map");
+                        }
+                    });
                 }
             });
         });
@@ -1262,6 +1432,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         });
 
         $(document).on('click', '#closeEditEmployeeModal', function() {
+            if ($("#manage_timsheet_clockin_clockout_gps_html_setter").html() == "") {
+                $("#manage_timsheet_clockin_clockout_gps_html_setter").html($(".modal-edit-employee #manage_timsheet_clockin_clockout_gps").html());
+                $(".modal-edit-employee #manage_timsheet_clockin_clockout_gps").html("");
+            }
+
             $("#modalEditEmployee").modal('hide');
         });
 
@@ -1394,4 +1569,447 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             }
         });
     });
+
+
+    var user_id = 0;
+    var map;
+    var clock_in_address_map;
+    var new_map_marker;
+    var antennasCircle_main_map;
+    var main_map_marker;
+
+    var antennasCircle_clock_out_map;
+    var clock_out_address_map;
+    var edit_lat;
+    var edit_lng;
+    var radius_clock_out_address = 76.2;
+    var edit_created_by;
+
+    var current_lat = 0;
+    var current_lng = 0;
+
+    var clock_in_map_lat;
+    var clock_in_map_lng;
+    var clock_out_map_lat;
+    var clock_out_map_lng;
+
+    var antennasCircle_clock_in_map;
+    var radius_clock_in_address = 76.2;
+    var current_notify_settings;
+
+
+    function initMap() {
+        if (antennasCircle_clock_in_map != null) {
+            antennasCircle_clock_in_map.setMap(null);
+            clock_in_address_map.fitBounds(antennasCircle_clock_in_map.getBounds());
+        }
+        if (antennasCircle_clock_out_map != null) {
+            antennasCircle_clock_out_map.setMap(null);
+            clock_out_address_map.fitBounds(antennasCircle_clock_out_map.getBounds());
+        }
+        get_current_user_location();
+    }
+
+    function get_current_user_location() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(show_current_user_position);
+        } else {
+            console.log("Geolocation is not supported by this browser.");
+        }
+    }
+
+    function show_current_user_position(position) {
+
+        current_lat = position.coords.latitude;
+        current_lng = position.coords.longitude;
+        get_employee_map_coords();
+    }
+
+    function get_employee_map_coords() {
+        // Create a new StyledMapType object, passing it an array of styles,
+        // and the name to be displayed on the map type control.
+        $("#map-loader").hide();
+        $("#map-holder").show();
+        clock_in_map_lat = current_lat;
+        clock_in_map_lng = current_lng;
+        clock_out_map_lat = current_lat;
+        clock_out_map_lng = current_lng;
+
+        $.ajax({
+            url: base_url + 'users/getData_for_clock_in_out_location',
+            type: "POST",
+            dataType: "json",
+            data: {
+                user_id: $("#editUserID").val()
+            },
+            success: function(data) {
+                if (data.cLocation > 0) {
+                    if (data.allow_gps_clock_in > 0) {
+                        $('#allow_clock_in_input').prop('checked', true);
+                        clock_in_map_lat = data.clock_in_latitude;
+                        clock_in_map_lng = data.clock_in_longtitude;
+                        radius_clock_in_address = data.clock_in_radius;
+                        $("#clock_in_address_radius").val(radius_clock_in_address);
+                        $(".clock_in_radius_number_view").html(parseInt($("#clock_in_address_radius").val() * 3.28084, 10) + " ft zone");
+
+                        $("#clock_in_formatted_address").val(data.clock_in_address);
+                    }
+                    if (data.allow_gps_clock_out > 0) {
+                        $('#allow_clock_out_input').prop('checked', true);
+                        clock_out_map_lat = data.clock_out_latitude;
+                        clock_out_map_lng = data.clock_out_longtitude;
+                        radius_clock_out_address = data.clock_out_radius;
+                        $("#clock_out_address_radius").val(radius_clock_out_address);
+                        $(".clock_out_radius_number_view").html(parseInt($("#clock_out_address_radius").val() * 3.28084, 10) + " ft zone");
+
+                        $("#clock_out_formatted_address").val(data.clock_out_address);
+                    }
+                }
+
+                toogle_btn_gps_clock("#allow_clock_in_input", ".allow_clock_in_map");
+                toogle_btn_gps_clock("#allow_clock_out_input", ".allow_clock_out_map");
+                initMap_clock_in_out_address_map();
+            }
+        });
+    }
+
+
+    function initMap_clock_in_out_address_map() {
+
+        console.log("after success");
+        clock_in_address_map = new google.maps.Map(document.getElementById("clock_in_address_map"), {
+            center: {
+                lat: clock_in_map_lat,
+                lng: clock_in_map_lng
+            },
+            zoom: 18,
+            mapTypeControlOptions: {
+                mapTypeIds: [
+                    "roadmap",
+                    "satellite",
+                    "hybrid",
+                    "terrain",
+                    "styled_map",
+                ],
+            },
+            mapTypeControl: false,
+            overviewMapControl: false,
+            zoomControl: true,
+            draggable: true,
+            fullscreenControl: false,
+            streetViewControl: false,
+        });
+        clock_out_address_map = new google.maps.Map(document.getElementById("clock_out_address_map"), {
+            center: {
+                lat: clock_out_map_lat,
+                lng: clock_out_map_lng
+            },
+            zoom: 18,
+            mapTypeControlOptions: {
+                mapTypeIds: [
+                    "roadmap",
+                    "satellite",
+                    "hybrid",
+                    "terrain",
+                    "styled_map",
+                ],
+            },
+            mapTypeControl: false,
+            overviewMapControl: false,
+            zoomControl: true,
+            draggable: true,
+            fullscreenControl: false,
+            streetViewControl: false,
+        });
+        var center = clock_in_address_map.getCenter();
+        setMapCenter("clock_in", center.lat(), center.lng());
+
+        center = clock_out_address_map.getCenter();
+        setMapCenter("clock_out", center.lat(), center.lng());
+
+        google.maps.event.addListener(clock_in_address_map, 'dragend', function() {
+            $("#clock_in_formatted_address").val("Loading address...");
+            clock_in_address_map_changed();
+        });
+        google.maps.event.addListener(clock_out_address_map, 'dragend', function() {
+            $("#clock_out_formatted_address").val("Loading address...");
+            clock_out_address_map_changed();
+        });
+    }
+
+    function clock_in_address_map_changed() {
+
+        var center = clock_in_address_map.getCenter()
+        var lat = center.lat();
+        var lng = center.lng();
+        if (current_lat != lat && current_lng != lng) {
+            current_lat = lat;
+            current_lng = lng;
+
+            if (antennasCircle_clock_in_map != null) {
+                antennasCircle_clock_in_map.setMap(null);
+                clock_in_address_map.fitBounds(antennasCircle_clock_in_map.getBounds());
+            }
+            antennasCircle_clock_in_map = new google.maps.Circle({
+                strokeColor: "#0275FF",
+                strokeOpacity: 0.8,
+                strokeWeight: 2,
+                fillColor: "#8DC740",
+                fillOpacity: 0.35,
+                map: clock_in_address_map,
+                center: {
+                    lat: current_lat,
+                    lng: current_lng
+                },
+                radius: radius_clock_in_address
+            });
+            clock_in_address_map.fitBounds(antennasCircle_clock_in_map.getBounds());
+
+            var latlng = new google.maps.LatLng(current_lat, current_lng);
+            // This is making the Geocode request
+            var geocoder = new google.maps.Geocoder();
+            geocoder.geocode({
+                'latLng': latlng
+            }, (results, status) => {
+                if (status !== google.maps.GeocoderStatus.OK) {
+                    // alert(status);
+                }
+                // This is checking to see if the Geoeode Status is OK before proceeding
+                if (status == google.maps.GeocoderStatus.OK) {
+                    var address = (results[0].formatted_address);
+                    $("#clock_in_formatted_address").val(address);
+
+                }
+            });
+        }
+    }
+
+    function clock_out_address_map_changed() {
+        var center = clock_out_address_map.getCenter()
+        var lat = center.lat();
+        var lng = center.lng();
+        if (edit_lat != lat && edit_lng != lng) {
+            edit_lat = lat;
+            edit_lng = lng;
+
+            if (antennasCircle_clock_out_map != null) {
+                antennasCircle_clock_out_map.setMap(null);
+                clock_out_address_map.fitBounds(antennasCircle_clock_out_map.getBounds());
+            }
+            antennasCircle_clock_out_map = new google.maps.Circle({
+                strokeColor: "#0275FF",
+                strokeOpacity: 0.8,
+                strokeWeight: 2,
+                fillColor: "#8DC740",
+                fillOpacity: 0.35,
+                map: clock_out_address_map,
+                center: {
+                    lat: edit_lat,
+                    lng: edit_lng
+                },
+                radius: radius_clock_out_address
+            });
+            clock_out_address_map.fitBounds(antennasCircle_clock_out_map.getBounds());
+
+            var latlng = new google.maps.LatLng(edit_lat, edit_lng);
+            // This is making the Geocode request
+            var geocoder = new google.maps.Geocoder();
+            geocoder.geocode({
+                'latLng': latlng
+            }, (results, status) => {
+                if (status !== google.maps.GeocoderStatus.OK) {
+                    // alert(status);
+                }
+                // This is checking to see if the Geoeode Status is OK before proceeding
+                if (status == google.maps.GeocoderStatus.OK) {
+                    var address = (results[0].formatted_address);
+                    $("#clock_out_formatted_address").val(address);
+
+                }
+            });
+        }
+    }
+
+    function formatted_address_changed(e, map_locator) {
+
+        var geocoder = new google.maps.Geocoder();
+        var address = $(e).val();
+        geocoder.geocode({
+            'address': address
+        }, function(results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+                var latitude = results[0].geometry.location.lat();
+                var longitude = results[0].geometry.location.lng();
+                current_lat = latitude;
+                current_lng = longitude;
+                setMapCenter(map_locator, current_lat, current_lng);
+            }
+        });
+    }
+
+
+    function toogle_btn_gps_clock(input_id = "", classes = "") {
+        if ($(input_id).is(":checked")) {
+            $(classes).show();
+            $(input_id).val(1);
+        } else {
+            $(classes).hide();
+            $(input_id).val(0);
+        }
+
+
+    }
+
+
+    function setMapCenter(update_the_map, the_lat, the_lng, first = false) {
+        var the_map = map;
+        if (update_the_map == "clock_in") {
+            the_map = clock_in_address_map;
+        } else if (update_the_map == "clock_out") {
+            the_map = clock_out_address_map;
+        }
+        if (update_the_map == "clock_in") {
+            if (antennasCircle_clock_in_map != null) {
+                antennasCircle_clock_in_map.setMap(null);
+                clock_in_address_map.fitBounds(antennasCircle_clock_in_map.getBounds());
+            }
+            antennasCircle_clock_in_map = new google.maps.Circle({
+                strokeColor: "#0275FF",
+                strokeOpacity: 0.8,
+                strokeWeight: 2,
+                fillColor: "#8DC740",
+                fillOpacity: 0.35,
+                map: the_map,
+                center: {
+                    lat: the_lat,
+                    lng: the_lng
+                },
+                radius: radius_clock_in_address
+            });
+            the_map.fitBounds(antennasCircle_clock_in_map.getBounds());
+
+            if (first) {
+                the_map.setZoom(13);
+            }
+            clock_in_address_map = the_map;
+            var latlng = new google.maps.LatLng(the_lat, the_lng);
+            // This is making the Geocode request
+            var geocoder = new google.maps.Geocoder();
+            geocoder.geocode({
+                'latLng': latlng
+            }, (results, status) => {
+                if (status !== google.maps.GeocoderStatus.OK) {
+                    // alert(status);
+                }
+                // This is checking to see if the Geoeode Status is OK before proceeding
+                if (status == google.maps.GeocoderStatus.OK) {
+                    var address = (results[0].formatted_address);
+                    $("#new_formatted_address").val(address);
+                }
+            });
+
+        } else if (update_the_map == "clock_out") {
+            if (antennasCircle_clock_out_map != null) {
+                antennasCircle_clock_out_map.setMap(null);
+                clock_out_address_map.fitBounds(antennasCircle_clock_out_map.getBounds());
+            }
+            antennasCircle_clock_out_map = new google.maps.Circle({
+                strokeColor: "#0275FF",
+                strokeOpacity: 0.8,
+                strokeWeight: 2,
+                fillColor: "#8DC740",
+                fillOpacity: 0.35,
+                map: clock_out_address_map,
+                center: {
+                    lat: the_lat,
+                    lng: the_lng
+                },
+                radius: radius_clock_out_address
+            });
+            clock_out_address_map.fitBounds(antennasCircle_clock_out_map.getBounds());
+
+            var latlng = new google.maps.LatLng(the_lat, the_lng);
+            // This is making the Geocode request
+            var geocoder = new google.maps.Geocoder();
+            geocoder.geocode({
+                'latLng': latlng
+            }, (results, status) => {
+                if (status !== google.maps.GeocoderStatus.OK) {
+                    // alert(status);
+                }
+                // This is checking to see if the Geoeode Status is OK before proceeding
+                if (status == google.maps.GeocoderStatus.OK) {
+                    var address = (results[0].formatted_address);
+                    $("#edit_formatted_address").val(address);
+                }
+            });
+
+            if (antennasCircle_clock_out_map != null) {
+                antennasCircle_clock_out_map.setMap(null);
+                clock_out_address_map.fitBounds(antennasCircle_clock_out_map.getBounds());
+            }
+            antennasCircle_clock_out_map = new google.maps.Circle({
+                strokeColor: "#0275FF",
+                strokeOpacity: 0.8,
+                strokeWeight: 2,
+                fillColor: "#8DC740",
+                fillOpacity: 0.35,
+                map: clock_out_address_map,
+                center: {
+                    lat: the_lat,
+                    lng: the_lng
+                },
+                radius: radius_clock_out_address
+            });
+            clock_out_address_map.fitBounds(antennasCircle_clock_out_map.getBounds());
+            // clock_out_address_map.setZoom(18);
+        }
+
+        the_map.setCenter({
+            lat: the_lat,
+            lng: the_lng,
+        });
+    }
+
+
+
+    $(document).ready(function() {
+
+        $(document).on('change', "#clock_in_formatted_address", function() {
+            formatted_address_changed(this, "clock_in");
+        });
+        $(document).on('change', "#clock_out_formatted_address", function() {
+            formatted_address_changed(this, "clock_out");
+        });
+
+        $(document).on('input', "#clock_in_address_radius", function() {
+            $(".clock_in_radius_number_view").html(parseInt($("#clock_in_address_radius").val() * 3.28084, 10) + " ft zone");
+            radius_clock_in_address = $("#clock_in_address_radius").val() * 1;
+            var center = clock_in_address_map.getCenter();
+            setMapCenter("clock_in", center.lat(), center.lng());
+        });
+
+        $(document).on('input', '#clock_out_address_radius', function() {
+            $(".clock_out_radius_number_view").html(parseInt($("#clock_out_address_radius").val() * 3.28084, 10) + " ft zone");
+            radius_clock_out_address = $("#clock_out_address_radius").val() * 1;
+            var center = clock_out_address_map.getCenter();
+            // console.log(center.lat());
+            setMapCenter("clock_out", center.lat(), center.lng());
+        });
+
+        $(document).on('change', "#allow_clock_in_input", function() {
+            toogle_btn_gps_clock("#allow_clock_in_input", ".allow_clock_in_map");
+        });
+        $(document).on('change', '#allow_clock_out_input', function() {
+            toogle_btn_gps_clock("#allow_clock_out_input", ".allow_clock_out_map");
+        });
+        $('#modalEditEmployee').on('hidden.bs.modal', function() {
+            if ($(" #manage_timsheet_clockin_clockout_gps_html_setter").html() == "") {
+                $("#manage_timsheet_clockin_clockout_gps_html_setter").html($(".modal-edit-employee #manage_timsheet_clockin_clockout_gps").html());
+                $(".modal-edit-employee #manage_timsheet_clockin_clockout_gps").html("");
+            }
+        })
+    });
 </script>
+
+<script src="<?= "https://maps.googleapis.com/maps/api/js?key=" . GOOGLE_MAP_API_KEY . "&callback=initMap&libraries=&v=weekly" ?>" async></script>

@@ -767,8 +767,8 @@ add_css(array(
                                                         </td>
                                                         <td><?php echo ($customer) ? $customer->FName . ' ' . $customer->LName : ''; ?>
                                                         </td>
-                                                        <td><?= $customer->technician != null ? $customer->technician : 'Not Assigned'; ?>
-                                                        </td>
+                                                        <?php $techician = !empty($customer->technician) ?  get_employee_name($customer->technician)->FName : 'Not Assigned'; ?>
+                                                        <td><?= $techician; ?> </td>
                                                         <td><?php echo $customer->system_type; ?>
                                                         </td>
                                                         <td>$<?= $customer->total_amount; ?></td>

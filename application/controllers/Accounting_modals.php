@@ -3450,7 +3450,8 @@ class Accounting_modals extends MY_Controller
                 'bill_no' => !isset($data['template_name']) || $data['bill_no'] !== "" ? $data['bill_no'] : null,
                 'permit_no' => $data['permit_number'] === "" ? null : $data['permit_number'],
                 'memo' => $data['memo'],
-                'remaining_balance' => $data['total_amount'],
+                'remaining_balance' => floatval($data['total_amount']) < 0 ? 0.00 : $data['total_amount'],
+                'added_credits' => floatval($data['total_amount']) < 0 ? floatval(str_replace('-', '', $data['total_amount'])) : 0.00,
                 'total_amount' => $data['total_amount'],
                 'recurring' => isset($data['template_name']) ? 1 : null,
                 'status' => 1
@@ -3460,6 +3461,17 @@ class Accounting_modals extends MY_Controller
 
             if ($billId) {
                 if(!isset($data['template_name'])) {
+                    if(floatval($data['total_amount']) < 0) {
+                        $vendor = $this->vendors_model->get_vendor_by_id($data['vendor_id']);
+        
+                        $vendorCredits = floatval($vendor->vendor_credits) - floatval($data['total_amount']);
+                        $vendorData = [
+                            'vendor_credits' => $vendorCredits
+                        ];
+        
+                        $this->vendors_model->updateVendor($data['vendor_id'], $vendorData);
+                    }
+
                     if(!is_null($data['linked_transaction'])) {
                         $linkedTransacsData = [];
                         foreach($data['linked_transaction'] as $linkedTransac) {
@@ -3942,6 +3954,20 @@ class Accounting_modals extends MY_Controller
                 $appliedVCredits = [];
                 foreach ($itemKeys as $key) {
                     $paymentTotal += floatval($data['payment_amount'][$key]);
+
+                    if (!is_null($vendor->vendor_credits) && floatval($vendor->vendor_credits) > 0) {
+                        $openVCredits = $this->expenses_model->get_vendor_unapplied_vendor_credits($payee);
+                        $vCreditPercentage = number_format(floatval($data['credit_applied'][$key]) / floatval($vendor->vendor_credits) * 100, 2, '.', ',');
+    
+                        foreach ($openVCredits as $vCredit) {
+                            $subtracted = number_format($balance / 100 * $vCreditPercentage, 2, '.', ',');
+                            if (array_key_exists($vCredit->id, $appliedVCredits)) {
+                                $appliedVCredits[$vCredit->id] += $subtracted;
+                            } else {
+                                $appliedVCredits[$vCredit->id] = $subtracted;
+                            }
+                        }
+                    }
                 }
 
                 $mailingAddress = $vendor->title !== "" ? $vendor->title." " : "";
@@ -4010,11 +4036,11 @@ class Accounting_modals extends MY_Controller
                             foreach ($openVCredits as $vCredit) {
                                 $balance = floatval($vCredit->remaining_balance);
                                 $subtracted = number_format($balance / 100 * $vCreditPercentage, 2, '.', ',');
-                                if (array_key_exists($vCredit->id, $appliedVCredits)) {
-                                    $appliedVCredits[$vCredit->id] += $subtracted;
-                                } else {
-                                    $appliedVCredits[$vCredit->id] = $subtracted;
-                                }
+                                // if (array_key_exists($vCredit->id, $appliedVCredits)) {
+                                //     $appliedVCredits[$vCredit->id] += $subtracted;
+                                // } else {
+                                //     $appliedVCredits[$vCredit->id] = $subtracted;
+                                // }
                                 $remainingBal = $balance - $subtracted;
         
                                 $vCreditData = [
@@ -11470,7 +11496,8 @@ class Accounting_modals extends MY_Controller
             'bill_no' => $data['bill_no'] !== "" ? $data['bill_no'] : null,
             'permit_no' => $data['permit_number'] !== "" ? $data['permit_number'] : null,
             'memo' => $data['memo'],
-            'remaining_balance' => floatval($data['total_amount']) <= 0 ? 0 : floatval($data['total_amount']),
+            'remaining_balance' => floatval($data['total_amount']) < 0 ? 0.00 : $data['total_amount'],
+            'added_credits' => floatval($data['total_amount']) < 0 ? floatval(str_replace('-', '', $data['total_amount'])) : 0.00,
             'total_amount' => $newTotal,
             'status' => floatval($data['total_amount']) <= 0 ? 2 : 1
         ];
@@ -11478,6 +11505,17 @@ class Accounting_modals extends MY_Controller
         $update = $this->vendors_model->update_bill($billId, $billData);
 
         if ($update) {
+            if($bill->vendor_id !== $data['vendor_id']) {
+                $pVendor = $this->vendors_model->get_vendor_by_id($bill->vendor_id);
+
+                $pVendorCredits = floatval($pVendor->vendor_credits) - floatval($bill->added_credits);
+                $pVendorData = [
+                    'vendor_credits' => $pVendorCredits
+                ];
+
+                $this->vendors_model->updateVendor($bill->vendor_id, $pVendorData);
+            }
+
             if(floatval($data['total_amount']) < 0) {
                 $vendor = $this->vendors_model->get_vendor_by_id($data['vendor_id']);
 
@@ -11591,11 +11629,11 @@ class Accounting_modals extends MY_Controller
     private function update_purchase_order($purchaseOrderId, $data)
     {
         $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($purchaseOrderId, logged('company_id'));
+        $diff = floatval($purchaseOrder->total_amount) - floatval($purchaseOrder->remaining_balance);
 
         $purchOrder = [
             'vendor_id' => $data['vendor_id'],
             'email' => $data['email'],
-            'ref_no' => $data['ref_no'] === "" ? null : $data['ref_no'],
             'permit_no' => $data['permit_number'] === "" ? null : $data['permit_number'],
             'mailing_address' => nl2br($data['mailing_address']),
             'customer_id' => $data['customer'],
@@ -11604,6 +11642,7 @@ class Accounting_modals extends MY_Controller
             'ship_via' => $data['ship_via'],
             'message_to_vendor' => $data['message_to_vendor'],
             'memo' => $data['memo'],
+            'remaining_balance' => floatval($data['total_amount']) - $diff,
             'total_amount' => $data['total_amount']
         ];
 
@@ -12220,6 +12259,10 @@ class Accounting_modals extends MY_Controller
 
                 if (!is_null($categories[$index])) {
                     $this->vendors_model->update_transaction_category_details($categories[$index]->id, $categoryDetails);
+
+                    if($transactionType === 'Purchase Order' && $categories[$index]->expense_account_id !== $value) {
+
+                    }
                 } else {
                     $categoryDetails['transaction_type'] = $transactionType;
                     $categoryDetails['transaction_id'] = $transactionId;

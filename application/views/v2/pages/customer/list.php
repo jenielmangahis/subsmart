@@ -145,7 +145,8 @@
                                         <td><?php echo ($customer) ? $customer->FName . ' ' . $customer->LName : ''; ?></td>
                                     <?php endif; ?>
                                     <?php if (in_array('tech', $enabled_table_headers)) : ?>
-                                        <td><?= $customer->technician != null ? $customer->technician : 'Not Assigned'; ?></td>
+                                        <?php $techician = !empty($customer->technician) ?  get_employee_name($customer->technician)->FName : 'Not Assigned'; ?>
+                                        <td><?= $techician; ?></td>
                                     <?php endif; ?>
                                     <?php if (in_array('plan_type', $enabled_table_headers)) : ?>
                                         <td><?php echo $customer->system_type; ?></td>
@@ -290,7 +291,10 @@
                                         <td><?= $customer->lead_source != "" ? $customer->lead_source : 'n/a'; ?></td>
                                         <td><?php echo $customer->entered_by; ?></td>
                                         <td><?php echo ($customer) ? $customer->FName . ' ' . $customer->LName : ''; ?></td>
-                                        <td><?= $customer->technician != null ? $customer->technician : 'Not Assigned'; ?></td>
+
+                                        <?php $techician = !empty($customer->technician) ?  get_employee_name($customer->technician)->FName : $customer->technician.'Not Assigned'; ?>
+                                        <td><?= $techician; ?></td>
+
                                         <td><?php echo $customer->system_type; ?></td>
                                         <td>$<?= $customer->total_amount; ?></td>
                                         <td>$<?= $customer->total_amount ? $customer->total_amoun : '0.00'; ?></td>
