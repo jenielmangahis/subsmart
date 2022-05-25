@@ -186,7 +186,7 @@ foreach ($report_settings as $settings) {
                                 <div class="col-md-12">
                                     <ul class="nav nav-tabs">
                                         <li class="nav-item">
-                                            <a class="nav-link timesheet_report_settings active" data-toggle="tab" href="#timesheet_report_settings">Timesheet Report Settings</a>
+                                            <a class="nav-link timesheet_report_settings active" data-toggle="tab" href="#timesheet_report_settings">Timesheet Settings</a>
                                         </li>
 
                                     </ul>
@@ -217,6 +217,8 @@ foreach ($report_settings as $settings) {
                                                         </div>
                                                     </div>
                                                 </div>
+
+
                                                 <!--
                                                 <div class="row">
                                                     <div class="col-md-6">
@@ -270,7 +272,89 @@ foreach ($report_settings as $settings) {
 
                                             </form>
 
+                                            <div class="row " style="">
+                                                <div class="col-md-12">
+                                                    <div class="form-group" style="">
+                                                        <label for="from_date_correction_requests" class="week-label" style="font-weight: bold;">Select Start Day Of The Week</label>
+                                                        <br>
+                                                        <!-- <input class="Payday" type="date" value="<?php echo date('Y-m-d') ?>" style="text-align: center;padding: 8px 20px;font-weight: bold;width: 183px;letter-spacing: 3px;border-radius: 11px;"> -->
+                                                        <div class="row report_schedule">
+                                                            <div class="col-md-1">
+                                                                <div class="form-group">
+                                                                    <div class="custom-control custom-switch">
+                                                                        <input type="radio" on="" name="payday" value="Sunday" class="custom-control-input" id="Sunday">
+                                                                        <label class="custom-control-label" for="Sunday" style="display:flex;">Sun</label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-1">
+                                                                <div class="form-group">
+                                                                    <div class="custom-control custom-switch">
+                                                                        <input type="radio" on="" name="payday" value="Monday" class="custom-control-input" id="Monday">
+                                                                        <label class="custom-control-label" for="Monday" style="display:flex;">Mon</label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-1">
+                                                                <div class="form-group">
+                                                                    <div class="custom-control custom-switch">
+                                                                        <input type="radio" on="" name="payday" value="Tuesday" class="custom-control-input" id="Tuesday">
+                                                                        <label class="custom-control-label" for="Tuesday" style="display:flex;">Tue</label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-1">
+                                                                <div class="form-group">
+                                                                    <div class="custom-control custom-switch">
+                                                                        <input type="radio" on="" name="payday" value="Wednesday" class="custom-control-input" id="Wednesday">
+                                                                        <label class="custom-control-label" for="Wednesday" style="display:flex;">Wed</label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-1">
+                                                                <div class="form-group">
+                                                                    <div class="custom-control custom-switch">
+                                                                        <input type="radio" on="" name="payday" value="Thursday" class="custom-control-input" id="Thursday">
+                                                                        <label class="custom-control-label" for="Thursday" style="display:flex;">Thu</label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-1">
+                                                                <div class="form-group">
+                                                                    <div class="custom-control custom-switch">
+                                                                        <input type="radio" on="" name="payday" value="Friday" class="custom-control-input" id="Friday">
+                                                                        <label class="custom-control-label" for="Friday" style="display:flex;">Fri</label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-1">
+                                                                <div class="form-group">
+                                                                    <div class="custom-control custom-switch">
+                                                                        <input type="radio" on="" name="payday" value="Saturday" class="custom-control-input" id="Saturday">
+                                                                        <label class="custom-control-label" for="Saturday" style="display:flex;">Sat</label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div> <!-- last -->
+                                            <div class="row">
+                                                <div class="col-3">
+                                                    <label class="est_wage_privacy_editor" for="est_wage_privacy2">
+                                                        <p>Latest
+                                                            update by <span id="update2"></span></p>
+                                                    </label>
+
+                                                </div>
+                                                <div class="col">
+                                                    <button id="submit" style="    color: #fff;/* background-color: #2ab363; */background-color: #3a004cc2; border:none; border-radius:20px;  width: 93px;float:left">save</button>
+                                                </div>
+                                            </div>
+                                            <hr style="margin-top:50px; margin-bottom:50px">
                                         </div>
+                                    
+
                                         <div class="col-md-12">
                                             <form id="timezone_settings_form" action="">
                                                 <div class="row">
@@ -454,97 +538,12 @@ foreach ($report_settings as $settings) {
                                                     <button type="submit" id="tz_form_submit" class="btn btn-primary " style="float:left;">Save</button><img class="tz-form-img-loader" style="float:left; display:none;" src="<?= base_url(); ?>/assets/css/timesheet/images/ring-loader.svg" alt="">
                                                 </div>
                                             </form>
-                                            <div class="row " style="margin-top: 96px;">
-                                                <div class="col-md-12">
-                                                    <div class="form-group" style="padding-left:1.25rem;">
-                                                        <label for="from_date_correction_requests" class="week-label" style="font-weight: bold;">Select Start Day Of The Week</label>
-                                                        <br>
-                                                        <!-- <input class="Payday" type="date" value="<?php echo date('Y-m-d') ?>" style="text-align: center;padding: 8px 20px;font-weight: bold;width: 183px;letter-spacing: 3px;border-radius: 11px;"> -->
-                                                        <div class="row report_schedule">
-                                                            <div class="col-md-1">
-                                                                <div class="form-group">
-                                                                    <div class="custom-control custom-switch">
-                                                                        <input type="radio" on="" name="payday" value="Sunday" class="custom-control-input" id="Sunday">
-                                                                        <label class="custom-control-label" for="Sunday" style="display:flex;">Sun</label>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-1">
-                                                                <div class="form-group">
-                                                                    <div class="custom-control custom-switch">
-                                                                        <input type="radio" on="" name="payday" value="Monday" class="custom-control-input" id="Monday">
-                                                                        <label class="custom-control-label" for="Monday" style="display:flex;">Mon</label>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-1">
-                                                                <div class="form-group">
-                                                                    <div class="custom-control custom-switch">
-                                                                        <input type="radio" on="" name="payday" value="Tuesday" class="custom-control-input" id="Tuesday">
-                                                                        <label class="custom-control-label" for="Tuesday" style="display:flex;">Tue</label>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-1">
-                                                                <div class="form-group">
-                                                                    <div class="custom-control custom-switch">
-                                                                        <input type="radio" on="" name="payday" value="Wednesday" class="custom-control-input" id="Wednesday">
-                                                                        <label class="custom-control-label" for="Wednesday" style="display:flex;">Wed</label>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-1">
-                                                                <div class="form-group">
-                                                                    <div class="custom-control custom-switch">
-                                                                        <input type="radio" on="" name="payday" value="Thursday" class="custom-control-input" id="Thursday">
-                                                                        <label class="custom-control-label" for="Thursday" style="display:flex;">Thu</label>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-1">
-                                                                <div class="form-group">
-                                                                    <div class="custom-control custom-switch">
-                                                                        <input type="radio" on="" name="payday" value="Friday" class="custom-control-input" id="Friday">
-                                                                        <label class="custom-control-label" for="Friday" style="display:flex;">Fri</label>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-1">
-                                                                <div class="form-group">
-                                                                    <div class="custom-control custom-switch">
-                                                                        <input type="radio" on="" name="payday" value="Saturday" class="custom-control-input" id="Saturday">
-                                                                        <label class="custom-control-label" for="Saturday" style="display:flex;">Sat</label>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div> <!-- last -->
-                                            <div class="row">
-                                                <div class="col-3">
-                                                    <label class="est_wage_privacy_editor" for="est_wage_privacy2">
-                                                        <p>Latest
-                                                            update by <span id="update2"></span></p>
-                                                    </label>
-
-                                                </div>
-                                                <div class="col">
-                                                    <button id="submit" style="    color: #fff;/* background-color: #2ab363; */background-color: #32243d;  width: 93px;float:left">save</button>
-                                                </div>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
 
 
 
-
-                                <div class="tab-pane container" id="timesheet_report_settings2">
-                                    <div class="row" style="padding-top: 20px;">
-
-                                    </div>
-                                </div>
                             </div>
                             <!-- end row -->
                         </div>

@@ -550,14 +550,26 @@ SQL;
             [
                 'code' => 'creditor_name',
                 'description' => 'Creditor/Furnisher name',
+                'get' => function () {
+                    $company = $this->getCurrentCompany();
+                    return $company->business_name;
+                },
             ],
             [
                 'code' => 'creditor_address',
                 'description' => 'Creditor/Furnisher address',
+                'get' => function () {
+                    $company = $this->getCurrentCompany();
+                    return $company->business_address;
+                },
             ],
             [
                 'code' => 'creditor_phone',
                 'description' => 'Creditor/Furnisher phone number',
+                'get' => function () {
+                    $company = $this->getCurrentCompany();
+                    return $company->phone_number;
+                },
             ],
             [
                 'code' => 'creditor_city',
@@ -570,6 +582,10 @@ SQL;
             [
                 'code' => 'creditor_zip',
                 'description' => 'Creditor/Furnisher zip',
+                'get' => function () {
+                    $company = $this->getCurrentCompany();
+                    return $company->zip_code;
+                },
             ],
             [
                 'code' => 'report_number',
@@ -633,6 +649,19 @@ SQL;
         }
 
         return $placeholders;
+    }
+
+    private function getCurrentCompany()
+    {
+        static $retval = null;
+        if (!is_null($retval)) {
+            return $retval;
+        }
+
+        $companyId = logged('company_id');
+        $this->db->where('id', $companyId);
+        $retval = $this->db->get('clients')->row();
+        return $retval;
     }
 
     public function apiSeedPlaceholders()

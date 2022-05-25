@@ -307,30 +307,77 @@ class Dashboard extends Widgets {
     public function apiGetRecurringPaymentCustomers()
     {
         $companyId = logged('company_id');
-        $this->db->select('profile.prof_id, profile.customer_type, profile.business_name, profile.first_name, profile.last_name, profile.email', false);
+        $this->db->select('profile.prof_id, profile.customer_type, profile.business_name, profile.first_name, profile.last_name, profile.email, billing.transaction_amount AS info', false);
         $this->db->from('acs_billing billing');
         $this->db->join('acs_profile profile', 'profile.prof_id = billing.fk_prof_id', 'left');
         $this->db->where('profile.company_id', $companyId);
         $this->db->where_in('LOWER(profile.status)', $this->getActiveCustomerStatuses());
         $query = $this->db->get();
+        $results = $query->result();
+
+        foreach ($results as $result) {
+            $result->info = '$' . number_format($result->info, 2);
+        }
 
         header('content-type: application/json');
-        echo json_encode(['data' => $query->result()]);
+        echo json_encode(['data' => $results]);
     }
 
     public function apiGetAgreementsToExpireIn30DaysCustomers()
     {
         $companyId = logged('company_id');
-        $this->db->select('profile.prof_id, profile.customer_type, profile.business_name, profile.first_name, profile.last_name, profile.email', false);
+        $this->db->select('profile.prof_id, profile.customer_type, profile.business_name, profile.first_name, profile.last_name, profile.email, billing.recurring_end_date AS info', false);
         $this->db->from('acs_billing billing');
         $this->db->join('acs_profile profile', 'profile.prof_id = billing.fk_prof_id', 'left');
         $this->db->where('profile.company_id', $companyId);
         $this->db->where("STR_TO_DATE(billing.recurring_end_date, '%m/%d/%Y') BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 30 DAY)");
         $this->db->where_in('LOWER(profile.status)', $this->getActiveCustomerStatuses());
         $query = $this->db->get();
+        $results = $query->result();
+
+        foreach ($results as $result) {
+            $dateTime = DateTime::createFromFormat('m/d/Y', $result->info);
+            $dateTimeStr = $dateTime->format('M d, Y');
+            $result->info = $dateTimeStr;
+        }
 
         header('content-type: application/json');
-        echo json_encode(['data' => $query->result()]);
+        echo json_encode(['data' => $results]);
+    }
+
+    public function apiRenameWidget()
+    {
+        header('content-type: application/json');
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['success' => false]);
+            return;
+        }
+
+        $payload = json_decode(file_get_contents('php://input'), true);
+        ['id' => $widgetId, 'name' => $widgetName] = $payload;
+        $companyId = logged('company_id');
+
+        $this->db->where('company_id', $companyId);
+        $this->db->where('widget_id', $widgetId);
+        $name = $this->db->get('widget_custom_names')->row();
+
+        if ($name) {
+            $this->db->where('id', $name->id);
+            $this->db->update('widget_custom_names', [
+                'name' => $widgetName,
+            ]);
+
+        } else {
+            $this->db->insert('widget_custom_names', [
+                'company_id' => $companyId,
+                'widget_id' => $widgetId,
+                'name' => $widgetName,
+            ]);
+        }
+
+        $this->db->where('id', $name ? $name->id : $this->db->insert_id());
+        $name = $this->db->get('widget_custom_names')->row();
+        echo json_encode(['data' => $name]);
     }
     
     public function getInbox(){

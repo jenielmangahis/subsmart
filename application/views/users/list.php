@@ -81,6 +81,13 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         display: inline;
     }
 
+    .col-md-12.allow_clock_out_map {
+        padding: 7px 47px;
+    }
+    .col-md-12.allow_clock_in_map {
+    padding: 7px 47px;
+}
+
     .check-if-exist {
         margin-left: 10px;
     }
@@ -784,13 +791,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 <div class="custom-control custom-switch">
 
                                     <input type="checkbox" value=0 class="custom-control-input allow_clock_in" id="allow_clock_in_input" name="allow_clock_in_toggle_btn">
-                                    <label class="custom-control-label allow_clock_in disabled" for="allow_clock_in_input"> <span id="status">Enable</span> User <b>GPS Clock In</b> </label>
-
-
-                                    <br><label class="est_wage_privacy_editor" for="est_wage_privacy2" style="font-size: 11px;font-weight:100;">
-                                        <p>Latest
-                                            update by <span id="update"></span></p>
-                                    </label>
+                                    <label class="custom-control-label allow_clock_in disabled" for="allow_clock_in_input"> <span id="status_clock_in">Enable</span> User <b>GPS Clock In</b> </label>
 
 
                                 </div>
@@ -832,13 +833,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 <div class="custom-control custom-switch">
 
                                     <input type="checkbox" value=0 class="custom-control-input allow_clock_in" id="allow_clock_out_input" name="allow_clock_out_toggle_btn">
-                                    <label class="custom-control-label allow_clock_in disabled" for="allow_clock_out_input"> <span id="status">Enable</span> User <b>GPS Clock Out</b> </label>
-
-
-                                    <br><label class="est_wage_privacy_editor" for="est_wage_privacy2" style="font-size: 11px;font-weight:100;">
-                                        <p>Latest
-                                            update by <span id="update"></span></p>
-                                    </label>
+                                    <label class="custom-control-label allow_clock_in disabled" for="allow_clock_out_input"> <span id="status_clock_out">Enable</span> User <b>GPS Clock Out</b> </label>
 
 
                                 </div>
@@ -1646,6 +1641,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 if (data.cLocation > 0) {
                     if (data.allow_gps_clock_in > 0) {
                         $('#allow_clock_in_input').prop('checked', true);
+                        $('#allow_clock_in_input').val(1);
+                        $('#status_clock_in').html('Disable');
                         clock_in_map_lat = data.clock_in_latitude;
                         clock_in_map_lng = data.clock_in_longtitude;
                         radius_clock_in_address = data.clock_in_radius;
@@ -1656,6 +1653,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     }
                     if (data.allow_gps_clock_out > 0) {
                         $('#allow_clock_out_input').prop('checked', true);
+                        $('#allow_clock_out_input').val(1);
+                        $('#status_clock_out').html('Disable');
                         clock_out_map_lat = data.clock_out_latitude;
                         clock_out_map_lng = data.clock_out_longtitude;
                         radius_clock_out_address = data.clock_out_radius;
@@ -1666,8 +1665,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     }
                 }
 
+
                 toogle_btn_gps_clock("#allow_clock_in_input", ".allow_clock_in_map");
                 toogle_btn_gps_clock("#allow_clock_out_input", ".allow_clock_out_map");
+
                 initMap_clock_in_out_address_map();
             }
         });
@@ -1852,9 +1853,13 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         if ($(input_id).is(":checked")) {
             $(classes).show();
             $(input_id).val(1);
+
         } else {
             $(classes).hide();
             $(input_id).val(0);
+
+
+
         }
 
 
@@ -1998,10 +2003,22 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         });
 
         $(document).on('change', "#allow_clock_in_input", function() {
+
             toogle_btn_gps_clock("#allow_clock_in_input", ".allow_clock_in_map");
+            if ($('#allow_clock_in_input').val() == 0) {
+                $('#status_clock_in').html('Enable');
+            } else {
+                $('#status_clock_in').html('Disable');
+            }
         });
         $(document).on('change', '#allow_clock_out_input', function() {
+
             toogle_btn_gps_clock("#allow_clock_out_input", ".allow_clock_out_map");
+            if ($('#allow_clock_out_input').val() == 0) {
+                $('#status_clock_out').html('Enable');
+            } else {
+                $('#status_clock_out').html('Disable');
+            }
         });
         $('#modalEditEmployee').on('hidden.bs.modal', function() {
             if ($(" #manage_timsheet_clockin_clockout_gps_html_setter").html() == "") {
