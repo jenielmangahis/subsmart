@@ -65,7 +65,7 @@
 
                     $mail->From = $from;
                     $mail->FromName = 'NsmarTrac';
-                    $mail->addAddress('bryan.yobi@gmail.com', 'Bryann');  
+                    $mail->addAddress('bryann.revina03@gmail.com', 'Bryann');  
                     $mail->isHTML(true);                          
                     $mail->Subject = 'Sample SMTP Sending';
                     $mail->Body    = 'This is the HTML message body <b>in bold!</b>';
@@ -652,6 +652,56 @@
             print_r($response);
             //echo '<p>'.$response->toString();
             exit;
+        }
+
+        public function testSms()
+        {
+            $to_number = '+8504638629';
+            $result = $this->sendSms($to_number, 'this is a test sms');
+            echo "<pre>";
+            print_r($result);
+            exit;
+        }
+
+        public function sendSms($to_number, $message)
+        {
+            include_once APPPATH . 'libraries/ringcentral_lite/src/ringcentrallite.php';
+
+            $message = replaceSmartTags($message);
+
+            $rc = new RingCentralLite(
+                RINGCENTRAL_CLIENT_ID, //Client id
+                RINGCENTRAL_CLIENT_SECRET, //Client secret
+                RINGCENTRAL_DEV_URL //server url
+            );
+             
+            $res = $rc->authorize(
+                RINGCENTRAL_USER, //username
+                RINGCENTRAL_PASSWORD, //extension
+                RINGCENTRAL_EXT
+            ); //password
+
+            $params = array(
+                'json'     => array(
+                    'to'   => array( array('phoneNumber' => $to_number) ), //Send to
+                    'from' => array('phoneNumber' => RINGCENTRAL_USER), //Username
+                    'text' => $message
+                )
+            );
+
+            $res = $rc->post('/restapi/v1.0/account/~/extension/~/sms', $params);
+            $is_sent = false;
+            $msg     = '';
+
+            if (isset($res['errorCode'])) {
+                $msg = $res['errorCode'] . " " . $res['message'];
+            } else {
+                $is_sent = true;
+            }
+
+            $return = ['is_sent' => $is_sent, 'msg' => $msg];
+
+            return $return;
         }
     }
     /* End of file Debug.php */

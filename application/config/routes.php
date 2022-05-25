@@ -1290,3 +1290,9 @@ $route['taskhub/_add_new_task'] = 'Taskhub/ajax_add_new_task';
 $route['taskhub/_save_task'] = 'Taskhub/ajax_save_task';
 $route['taskhub/_task_mark_completed'] = 'Taskhub/ajax_complete_task';
 $route['taskhub/_mark_all_completed'] = 'Taskhub/ajax_company_complete_all_tasks';
+
+//SMS
+$route['sms/_company_send'] = 'Sms/ajax_company_send_sms';
+$route['sms/_company_delete'] = 'Sms/ajax_company_delete_sms';
+$route['sms/_company_resend_form'] = 'Sms/ajax_company_resend_form';
+
