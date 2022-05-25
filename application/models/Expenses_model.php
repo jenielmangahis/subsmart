@@ -1051,4 +1051,22 @@ class Expenses_model extends MY_Model
         $query = $this->db->get('accounting_vendor_transaction_categories');
         return $query->result();
     }
+
+    public function get_categories_by_linked_data($transacType, $transacId, $transacCatId)
+    {
+        $this->db->where('linked_transaction_type', $transacType);
+        $this->db->where('linked_transaction_id', $transacId);
+        $this->db->where('linked_transaction_category_id', $transacCatId);
+        $query = $this->db->get('accounting_vendor_transaction_categories');
+        return $query->result();
+    }
+
+    public function get_items_by_linked_data($transacType, $transacId, $transacItemId)
+    {
+        $this->db->where('linked_transaction_type', $transacType);
+        $this->db->where('linked_transaction_id', $transacId);
+        $this->db->where('linked_transaction_item_id', $transacItemId);
+        $query = $this->db->get('accounting_vendor_transaction_items');
+        return $query->result();
+    }
 }

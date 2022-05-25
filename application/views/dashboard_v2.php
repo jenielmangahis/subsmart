@@ -273,6 +273,49 @@
             </div>
         </div>
     </div>
+</div>
 
+<div class="modal fade nsm-modal" tabindex="-1" role="dialog" id="drw--modal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Rename Widget</h5>
+        <button type="button" data-bs-dismiss="modal" aria-label="Close">
+            <i class="bx bx-fw bx-x m-0"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form class="mb-3">
+            <style>
+                #drw--modal .widget-form {
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    gap: 8px;
+                }
+                #drw--modal .widget-form input {
+                    border-radius: .25rem !important;
+                }
+                #drw--modal .widget-form button {
+                    border-radius: 5px !important;
+                    margin-bottom: 0 !important;
+                }
+            </style>
+            <div class="col-12 col-md">
+                <label class="content-subtitle fw-bold mb-2">Widget Name</label>
+                <div class="input-group widget-form">
+                    <input placeholder="Enter widget name" class="form-control nsm-field">
+                    <button type="button" class="nsm-button primary">
+                        Rename
+                    </button>
+                </div>
+                <small class="form-text text-muted"></small>
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 
-    <?php include viewPath('v2/includes/footer'); ?>
+<script type="module"  src="<?= base_url("assets/js/dashboard/index.js") ?>"></script>
+<?php include viewPath('v2/includes/footer'); ?>

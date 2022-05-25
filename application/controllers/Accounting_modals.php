@@ -12235,6 +12235,11 @@ class Accounting_modals extends MY_Controller
                     'linked_transaction_category_id' => !is_null($linkedTransacCat) ? $data['transac_category_id'][$index] : null
                 ];
 
+                $key =  array_search($value, array_column($categories, 'expense_account_id'));
+                if($transactionType === 'Purchase Order' && $key !== false) {
+                    $categoryDetails['received'] = $categories[$key]->received;
+                }
+
                 if(isset($data['linked_transaction']) && $data['category_linked'][$index] !== '' && !in_array($transactionType, ['Vendor Credit', 'Credit Card Credit', 'Purchase Order'])) {
                     $linkedCat = $this->expenses_model->get_vendor_transaction_category_by_id($data['transac_category_id'][$index]);
 
@@ -12259,10 +12264,6 @@ class Accounting_modals extends MY_Controller
 
                 if (!is_null($categories[$index])) {
                     $this->vendors_model->update_transaction_category_details($categories[$index]->id, $categoryDetails);
-
-                    if($transactionType === 'Purchase Order' && $categories[$index]->expense_account_id !== $value) {
-
-                    }
                 } else {
                     $categoryDetails['transaction_type'] = $transactionType;
                     $categoryDetails['transaction_id'] = $transactionId;
@@ -12431,6 +12432,21 @@ class Accounting_modals extends MY_Controller
 
         if (count($categories) > 0) {
             foreach ($categories as $index => $category) {
+                $key = array_search($category->expense_account_id, $data['expense_account']);
+                if($transactionType === 'Purchase Order' && $key === false) {
+                    $linked = $this->expenses_model->get_categories_by_linked_data('purchase_order', $transactionId, $category->id);
+
+                    foreach($linked as $li) {
+                        $linkedData = [
+                            'linked_transaction_type' => null,
+                            'linked_transaction_id' => null,
+                            'linked_transaction_category_id' => null
+                        ];
+
+                        $this->vendors_model->update_transaction_category_details($li->id, $linkedData);
+                    }
+                }
+
                 if(!is_null($category->linked_transaction_type) && !is_null($category->linked_transaction_id) && !in_array($transactionType, ['Vendor Credit', 'Credit Card Credit', 'Purchase Order'])) {
                     $linkedCat = $this->expenses_model->get_vendor_transaction_category_by_id($category->linked_transaction_category_id);
 
@@ -12519,7 +12535,7 @@ class Accounting_modals extends MY_Controller
             foreach ($data['item'] as $index => $value) {
                 $linkedTransacItem = $data['item_linked'][$index] !== '' ? explode('-', $data['item_linked'][$index]) : null;
 
-                $itemDetails[] = [
+                $itemDetails = [
                     'item_id' => $value,
                     'location_id' => $data['location'][$index],
                     'quantity' => $data['quantity'][$index],
@@ -12532,12 +12548,17 @@ class Accounting_modals extends MY_Controller
                     'linked_transaction_item_id' => !is_null($linkedTransacItem) ? $data['transac_item_id'][$index] : null
                 ];
 
+                $key =  array_search($value, array_column($items, 'item_id'));
+                if($transactionType === 'Purchase Order' && $key !== false) {
+                    $itemDetails['received'] = $items[$key]->received;
+                }
+
                 if(isset($data['linked_transaction']) && $data['category_linked'][$index] !== '' && !in_array($transactionType, ['Vendor Credit', 'Credit Card Credit', 'Purchase Order'])) {
                     $linkedItem = $this->expenses_model->get_vendor_transaction_item_by_id($data['transac_item_id'][$index]);
 
                     $received = floatval($linkedCat->received) + floatval($data['item_total'][$index]);
 
-                    $itemDetail = [
+                    $itemDetails = [
                         'received' => number_format($received, 2, '.', ',')
                     ];
 
@@ -12784,6 +12805,21 @@ class Accounting_modals extends MY_Controller
 
         if (count($items) > 0) {
             foreach ($items as $index => $item) {
+                $key = array_search($item->item_id, $data['item']);
+                if($transactionType === 'Purchase Order' && $key === false) {
+                    $linked = $this->expenses_model->get_items_by_linked_data('purchase_order', $transactionId, $item->id);
+
+                    foreach($linked as $li) {
+                        $linkedData = [
+                            'linked_transaction_type' => null,
+                            'linked_transaction_id' => null,
+                            'linked_transaction_item_id' => null
+                        ];
+
+                        $this->vendors_model->update_transaction_item($li->id, $linkedData);
+                    }
+                }
+
                 if(!is_null($item->linked_transaction_type) && !is_null($item->linked_transaction_id) && !in_array($transactionType, ['Vendor Credit', 'Credit Card Credit', 'Purchase Order'])) {
                     $linkedItem = $this->expenses_model->get_vendor_transaction_item_by_id($item->linked_transaction_item_id);
 
