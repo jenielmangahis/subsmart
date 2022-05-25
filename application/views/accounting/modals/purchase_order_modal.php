@@ -205,12 +205,8 @@
                                                                             <select name="category_customer[]" class="form-control"></select>
                                                                         </td>
                                                                         <?php if(isset($purchaseOrder) && !$is_copy) : ?>
-                                                                        <td><span class="float-right">0.00</span></td>
-                                                                        <td>
-                                                                            <div class="d-flex align-items-center justify-content-center">
-                                                                                <input type="checkbox" name="category_closed[]" class="form-check" value="1">
-                                                                            </div>
-                                                                        </td>
+                                                                        <td></td>
+                                                                        <td></td>
                                                                         <?php endif; ?>
                                                                         <td>
                                                                             <div class="d-flex align-items-center justify-content-center">

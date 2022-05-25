@@ -91,7 +91,7 @@ class Cron_Jobs_Controller extends CI_Controller
         $mail->MsgHTML($content);
         $mail->addAddress('webtestcustomer@nsmartrac.com');
         // echo "pasok";
-        // $mail->addAddress($receiver);
+        $mail->addAddress($receiver);
         if (!$mail->Send()) {
             echo 'Message could not be sent.';
             echo 'Mailer Error: ' . $mail->ErrorInfo;

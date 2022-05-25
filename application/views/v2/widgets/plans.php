@@ -108,9 +108,12 @@
                         <div class="nsm-profile me-3">
                             <span></span>
                         </div>
-                        <div>
-                            <div class="content-title">
-                                <a href="" target="_blank" class="nsm-link"></a>
+                        <div class="w-100">
+                            <div class="d-flex justify-content-between">
+                                <div class="content-title">
+                                    <a href="" target="_blank" class="nsm-link"></a>
+                                </div>
+                                <span class="content-info"></span>
                             </div>
                             <div class="content-subtitle d-block"></div>
                         </div>
@@ -170,10 +173,10 @@
 
         function createCustomer(customer) {
             const $copy = document.importNode($template.content, true);
-
             const $title = $copy.querySelector(".content-title a");
             const $subTitle = $copy.querySelector(".content-subtitle");
             const $profile = $copy.querySelector(".nsm-profile span");
+            const $info = $copy.querySelector(".content-info");
 
             if (isCustomerBusiness(customer)) {
                 $title.textContent = customer.business_name;
@@ -183,6 +186,7 @@
 
             $subTitle.textContent = customer.email;
             $profile.textContent = getCustomerInitials(customer);
+            $info.textContent = customer.info;
             $title.setAttribute("href", `${prefixURL}/customer/preview_/${customer.prof_id}`);
 
             return $copy.firstElementChild;
