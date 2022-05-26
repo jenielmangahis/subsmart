@@ -16437,6 +16437,27 @@ class Accounting_modals extends MY_Controller
                 ];
 
                 $this->chart_of_accounts_model->updateBalance($expenseAccData);
+
+                if(!is_null($category->linked_transaction_category_id) && $category->linked_transaction_category_id !== "") {
+                    $linkedCat = $this->expenses_model->get_vendor_transaction_category_by_id($category->linked_transaction_category_id);
+                    $receivedAmount = floatval($category->amount) > floatval($linkedCat->amount) ? 0.00 : floatval($linkedCat->received) - floatval($category->amount);
+
+                    $linkedCatData = [
+                        'received' => $receivedAmount
+                    ];
+
+                    $this->vendors_model->update_transaction_category_details($category->linked_transaction_category_id, $linkedCatData);
+
+                    $linkedTransac = $this->vendors_model->get_purchase_order_by_id($category->linked_transaction_id, $expense->company_id);
+                    $balance = floatval($category->amount) > floatval($linkedCat->amount) ? floatval($linkedTransac->remaining_balance) + floatval($linkedCat->amount) : floatval($linkedTransac->remaining_balance) + floatval($category->amount);
+
+                    $purchOrderData = [
+                        'remaining_balance' => $balance,
+                        'status' => 1
+                    ];
+
+                    $this->vendors_model->update_purchase_order($linkedTransac->id, $purchOrderData);
+                }
             }
         }
 
@@ -16463,8 +16484,32 @@ class Accounting_modals extends MY_Controller
 
                     $this->chart_of_accounts_model->updateBalance($invAssetAccData);
                 }
+
+                if(!is_null($item->linked_transaction_item_id) && $item->linked_transaction_item_id !== "") {
+                    $linkedItem = $this->expenses_model->get_vendor_transaction_item_by_id($item->linked_transaction_item_id);
+                    $receivedAmount = floatval($item->total) > floatval($linkedItem->received) ? 0.00 : floatval($linkedItem->received) - floatval($item->total);
+
+                    $linkedItemData = [
+                        'received' => $receivedAmount
+                    ];
+
+                    $this->vendors_model->update_transaction_item($item->linked_transaction_item_id, $linkedItemData);
+
+                    $linkedTransac = $this->vendors_model->get_purchase_order_by_id($item->linked_transaction_id, $expense->company_id);
+                    $balance = floatval($item->total) > floatval($linkedItem->total) ? floatval($linkedTransac->remaining_balance) + floatval($linkedItem->total) : floatval($linkedTransac->remaining_balance) + floatval($item->total);
+
+                    $purchOrderData = [
+                        'remaining_balance' => $balance,
+                        'status' => 1
+                    ];
+
+                    $this->vendors_model->update_purchase_order($linkedTransac->id, $purchOrderData);
+                }
             }
         }
+
+        $this->expenses_model->delete_vendor_transaction_categories('Expense', $expenseId);
+        $this->expenses_model->delete_vendor_transaction_items('Expense', $expenseId);
 
         $removeAttachments = $this->accounting_attachments_model->unlink_attachments('Expense', $expenseId);
         $removeTags = $this->tags_model->remove_transaction_tags('Expense', $expenseId);
@@ -16513,6 +16558,27 @@ class Accounting_modals extends MY_Controller
                 ];
 
                 $this->chart_of_accounts_model->updateBalance($expenseAccData);
+
+                if(!is_null($category->linked_transaction_category_id) && $category->linked_transaction_category_id !== "") {
+                    $linkedCat = $this->expenses_model->get_vendor_transaction_category_by_id($category->linked_transaction_category_id);
+                    $receivedAmount = floatval($category->amount) > floatval($linkedCat->amount) ? 0.00 : floatval($linkedCat->received) - floatval($category->amount);
+
+                    $linkedCatData = [
+                        'received' => $receivedAmount
+                    ];
+
+                    $this->vendors_model->update_transaction_category_details($category->linked_transaction_category_id, $linkedCatData);
+
+                    $linkedTransac = $this->vendors_model->get_purchase_order_by_id($category->linked_transaction_id, $expense->company_id);
+                    $balance = floatval($category->amount) > floatval($linkedCat->amount) ? floatval($linkedTransac->remaining_balance) + floatval($linkedCat->amount) : floatval($linkedTransac->remaining_balance) + floatval($category->amount);
+
+                    $purchOrderData = [
+                        'remaining_balance' => $balance,
+                        'status' => 1
+                    ];
+
+                    $this->vendors_model->update_purchase_order($linkedTransac->id, $purchOrderData);
+                }
             }
         }
 
@@ -16539,8 +16605,32 @@ class Accounting_modals extends MY_Controller
 
                     $this->chart_of_accounts_model->updateBalance($invAssetAccData);
                 }
+
+                if(!is_null($item->linked_transaction_item_id) && $item->linked_transaction_item_id !== "") {
+                    $linkedItem = $this->expenses_model->get_vendor_transaction_item_by_id($item->linked_transaction_item_id);
+                    $receivedAmount = floatval($item->total) > floatval($linkedItem->received) ? 0.00 : floatval($linkedItem->received) - floatval($item->total);
+
+                    $linkedItemData = [
+                        'received' => $receivedAmount
+                    ];
+
+                    $this->vendors_model->update_transaction_item($item->linked_transaction_item_id, $linkedItemData);
+
+                    $linkedTransac = $this->vendors_model->get_purchase_order_by_id($item->linked_transaction_id, $expense->company_id);
+                    $balance = floatval($item->total) > floatval($linkedItem->total) ? floatval($linkedTransac->remaining_balance) + floatval($linkedItem->total) : floatval($linkedTransac->remaining_balance) + floatval($item->total);
+
+                    $purchOrderData = [
+                        'remaining_balance' => $balance,
+                        'status' => 1
+                    ];
+
+                    $this->vendors_model->update_purchase_order($linkedTransac->id, $purchOrderData);
+                }
             }
         }
+
+        $this->expenses_model->delete_vendor_transaction_categories('Check', $checkId);
+        $this->expenses_model->delete_vendor_transaction_items('Check', $checkId);
 
         $removeAttachments = $this->accounting_attachments_model->unlink_attachments('Check', $checkId);
         $removeTags = $this->tags_model->remove_transaction_tags('Check', $checkId);
@@ -16575,6 +16665,27 @@ class Accounting_modals extends MY_Controller
                 ];
 
                 $this->chart_of_accounts_model->updateBalance($expenseAccData);
+
+                if(!is_null($category->linked_transaction_category_id) && $category->linked_transaction_category_id !== "") {
+                    $linkedCat = $this->expenses_model->get_vendor_transaction_category_by_id($category->linked_transaction_category_id);
+                    $receivedAmount = floatval($category->amount) > floatval($linkedCat->amount) ? 0.00 : floatval($linkedCat->received) - floatval($category->amount);
+
+                    $linkedCatData = [
+                        'received' => $receivedAmount
+                    ];
+
+                    $this->vendors_model->update_transaction_category_details($category->linked_transaction_category_id, $linkedCatData);
+
+                    $linkedTransac = $this->vendors_model->get_purchase_order_by_id($category->linked_transaction_id, $expense->company_id);
+                    $balance = floatval($category->amount) > floatval($linkedCat->amount) ? floatval($linkedTransac->remaining_balance) + floatval($linkedCat->amount) : floatval($linkedTransac->remaining_balance) + floatval($category->amount);
+
+                    $purchOrderData = [
+                        'remaining_balance' => $balance,
+                        'status' => 1
+                    ];
+
+                    $this->vendors_model->update_purchase_order($linkedTransac->id, $purchOrderData);
+                }
             }
         }
 
@@ -16601,8 +16712,32 @@ class Accounting_modals extends MY_Controller
 
                     $this->chart_of_accounts_model->updateBalance($invAssetAccData);
                 }
+
+                if(!is_null($item->linked_transaction_item_id) && $item->linked_transaction_item_id !== "") {
+                    $linkedItem = $this->expenses_model->get_vendor_transaction_item_by_id($item->linked_transaction_item_id);
+                    $receivedAmount = floatval($item->total) > floatval($linkedItem->received) ? 0.00 : floatval($linkedItem->received) - floatval($item->total);
+
+                    $linkedItemData = [
+                        'received' => $receivedAmount
+                    ];
+
+                    $this->vendors_model->update_transaction_item($item->linked_transaction_item_id, $linkedItemData);
+
+                    $linkedTransac = $this->vendors_model->get_purchase_order_by_id($item->linked_transaction_id, $expense->company_id);
+                    $balance = floatval($item->total) > floatval($linkedItem->total) ? floatval($linkedTransac->remaining_balance) + floatval($linkedItem->total) : floatval($linkedTransac->remaining_balance) + floatval($item->total);
+
+                    $purchOrderData = [
+                        'remaining_balance' => $balance,
+                        'status' => 1
+                    ];
+
+                    $this->vendors_model->update_purchase_order($linkedTransac->id, $purchOrderData);
+                }
             }
         }
+
+        $this->expenses_model->delete_vendor_transaction_categories('Bill', $billId);
+        $this->expenses_model->delete_vendor_transaction_items('Bill', $billId);
 
         $removeAttachments = $this->accounting_attachments_model->unlink_attachments('Bill', $billId);
         $removeTags = $this->tags_model->remove_transaction_tags('Bill', $billId);
@@ -16614,17 +16749,47 @@ class Accounting_modals extends MY_Controller
 
     private function delete_purchase_order($purchaseOrderId)
     {
-        $items = $this->expenses_model->get_transaction_items($purchaseOrderId, 'Check');
+        $categories = $this->expenses_model->get_transaction_categories($purchaseOrderId, 'Purchase Order');
+        $items = $this->expenses_model->get_transaction_items($purchaseOrderId, 'Purchase Order');
 
         if (count($items) > 0) {
+            foreach($categories as $category) {
+                $linked = $this->expenses_model->get_categories_by_linked_data('purchase_order', $purchaseOrderId, $category->id);
+
+                foreach($linked as $li) {
+                    $linkedData = [
+                        'linked_transaction_type' => null,
+                        'linked_transaction_id' => null,
+                        'linked_transaction_category_id' => null
+                    ];
+
+                    $this->vendors_model->update_transaction_category_details($li->id, $linkedData);
+                }
+            }
+
             foreach ($items as $item) {
                 $itemAccDetails = $this->items_model->getItemAccountingDetails($item->item_id);
 
                 $newQtyPO = intval($itemAccDetails->qty_po) + intval($item->quantity);
 
                 $this->items_model->updateItemAccountingDetails(['qty_po' => $newQtyPO], $item->item_id);
+
+                $linked = $this->expenses_model->get_items_by_linked_data('purchase_order', $purchaseOrderId, $item->id);
+
+                foreach($linked as $li) {
+                    $linkedData = [
+                        'linked_transaction_type' => null,
+                        'linked_transaction_id' => null,
+                        'linked_transaction_item_id' => null
+                    ];
+
+                    $this->vendors_model->update_transaction_item($li->id, $linkedData);
+                }
             }
         }
+
+        $this->expenses_model->delete_vendor_transaction_categories('Purchase Order', $purchaseOrderId);
+        $this->expenses_model->delete_vendor_transaction_items('Purchase Order', $purchaseOrderId);
 
         $removeAttachments = $this->accounting_attachments_model->unlink_attachments('Purchase Order', $purchaseOrderId);
         $removeTags = $this->tags_model->remove_transaction_tags('Purchase Order', $purchaseOrderId);
@@ -16703,6 +16868,9 @@ class Accounting_modals extends MY_Controller
             }
         }
 
+        $this->expenses_model->delete_vendor_transaction_categories('Vendor Credit', $vendorCreditId);
+        $this->expenses_model->delete_vendor_transaction_items('Vendor Credit', $vendorCreditId);
+
         $removeAttachments = $this->accounting_attachments_model->unlink_attachments('Vendor Credit', $vendorCreditId);
         $removeTags = $this->tags_model->remove_transaction_tags('Vendor Credit', $vendorCreditId);
 
@@ -16772,6 +16940,9 @@ class Accounting_modals extends MY_Controller
                 }
             }
         }
+
+        $this->expenses_model->delete_vendor_transaction_categories('Credit Card Credit', $ccCreditId);
+        $this->expenses_model->delete_vendor_transaction_items('Credit Card Credit', $ccCreditId);
 
         $removeAttachments = $this->accounting_attachments_model->unlink_attachments('CC Credit', $ccCreditId);
         $removeTags = $this->tags_model->remove_transaction_tags('CC Credit', $ccCreditId);
@@ -17553,6 +17724,8 @@ class Accounting_modals extends MY_Controller
 
         $this->chart_of_accounts_model->updateBalance($paymentAccData);
 
+        $this->accounting_linked_transactions_model->unlink_all_from_linked_to('expense', $expenseId);
+
         $data = [
             'memo' => 'Voided',
             'status' => 4,
@@ -17588,6 +17761,8 @@ class Accounting_modals extends MY_Controller
         ];
 
         $this->chart_of_accounts_model->updateBalance($bankAccData);
+
+        $this->accounting_linked_transactions_model->unlink_all_from_linked_to('check', $checkId);
 
         $data = [
             'memo' => 'Voided',
@@ -17775,10 +17950,34 @@ class Accounting_modals extends MY_Controller
                 $this->chart_of_accounts_model->updateBalance($expenseAccData);
 
                 $categoryDetails = [
-                    'amount' => 0.00
+                    'amount' => 0.00,
+                    'linked_transaction_type' => null,
+                    'linked_transaction_id' => null,
+                    'linked_transaction_category_id' => null
                 ];
 
                 $this->vendors_model->update_transaction_category_details($category->id, $categoryDetails);
+
+                if(!is_null($category->linked_transaction_category_id) && $category->linked_transaction_category_id !== "" && $transactionType !== 'Credit Card Credit') {
+                    $linkedCat = $this->expenses_model->get_vendor_transaction_category_by_id($category->linked_transaction_category_id);
+                    $receivedAmount = floatval($category->amount) > floatval($linkedCat->amount) ? 0.00 : floatval($linkedCat->received) - floatval($category->amount);
+
+                    $linkedCatData = [
+                        'received' => $receivedAmount
+                    ];
+
+                    $this->vendors_model->update_transaction_category_details($category->linked_transaction_category_id, $linkedCatData);
+
+                    $linkedTransac = $this->vendors_model->get_purchase_order_by_id($category->linked_transaction_id, $expense->company_id);
+                    $balance = floatval($category->amount) > floatval($linkedCat->amount) ? floatval($linkedTransac->remaining_balance) + floatval($linkedCat->amount) : floatval($linkedTransac->remaining_balance) + floatval($category->amount);
+
+                    $purchOrderData = [
+                        'remaining_balance' => $balance,
+                        'status' => 1
+                    ];
+
+                    $this->vendors_model->update_purchase_order($linkedTransac->id, $purchOrderData);
+                }
             }
         }
     }
@@ -17826,10 +18025,34 @@ class Accounting_modals extends MY_Controller
                     'rate' => 0.00,
                     'discount' => 0.00,
                     'tax' => 0.00,
-                    'total' => 0.00
+                    'total' => 0.00,
+                    'linked_transaction_type' => null,
+                    'linked_transaction_id' => null,
+                    'linked_transaction_item_id' => null
                 ];
 
-                $this->vendors_model->update_transaction_category_details($item->id, $itemDetails);
+                $this->vendors_model->update_transaction_item($item->id, $itemDetails);
+
+                if(!is_null($item->linked_transaction_item_id) && $item->linked_transaction_item_id !== "" && $transactionType !== 'Credit Card Credit') {
+                    $linkedItem = $this->expenses_model->get_vendor_transaction_item_by_id($item->linked_transaction_item_id);
+                    $receivedAmount = floatval($item->total) > floatval($linkedItem->received) ? 0.00 : floatval($linkedItem->received) - floatval($item->total);
+
+                    $linkedItemData = [
+                        'received' => $receivedAmount
+                    ];
+
+                    $this->vendors_model->update_transaction_item($item->linked_transaction_item_id, $linkedItemData);
+
+                    $linkedTransac = $this->vendors_model->get_purchase_order_by_id($item->linked_transaction_id, $expense->company_id);
+                    $balance = floatval($item->total) > floatval($linkedItem->total) ? floatval($linkedTransac->remaining_balance) + floatval($linkedItem->total) : floatval($linkedTransac->remaining_balance) + floatval($item->total);
+
+                    $purchOrderData = [
+                        'remaining_balance' => $balance,
+                        'status' => 1
+                    ];
+
+                    $this->vendors_model->update_purchase_order($linkedTransac->id, $purchOrderData);
+                }
             }
         }
     }
