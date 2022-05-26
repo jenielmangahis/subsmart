@@ -1,7 +1,23 @@
+const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
+
 window.document.addEventListener("DOMContentLoaded", async () => {
   const widgets = document.querySelectorAll("[id^=widget_]");
+
+  const { data: customNames } = await getCustomWidgetName();
+  widgets.forEach(($widget) => setCustomName($widget, customNames));
   widgets.forEach(addRenameOption);
 });
+
+function setCustomName($widget, customNames) {
+  const widgetId = $widget.dataset.id;
+  const match = customNames.find(({ widget_id }) => widget_id == widgetId);
+
+  if (match) {
+    const $header = $widget.querySelector(".nsm-card-header");
+    const $title = $header.querySelector(".nsm-card-title span");
+    $title.textContent = match.name;
+  }
+}
 
 function addRenameOption($widget) {
   const $header = $widget.querySelector(".nsm-card-header");
@@ -74,7 +90,6 @@ async function onFormSubmit(event) {
 }
 
 async function renameWidget(payload) {
-  const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
   const response = await fetch(`${prefixURL}/Dashboard/apiRenameWidget`, {
     method: "post",
     body: JSON.stringify(payload),
@@ -83,5 +98,10 @@ async function renameWidget(payload) {
       "content-type": "application/json",
     },
   });
+  return response.json();
+}
+
+async function getCustomWidgetName() {
+  const response = await fetch(`${prefixURL}/Dashboard/apiGetWidgetNames`);
   return response.json();
 }

@@ -93,9 +93,18 @@
             #rsp_users--modal .modal-body:not(.loading) .users-loader {
                 display: none !important;
             }
+            #rsp_users--modal .nsm-empty {
+                min-height: 200px;
+            }
         </style>
         <div>
             <div class="users-wrapper"></div>
+
+            <div class="nsm-empty d-none">
+                <i class="bx bx-meh-blank"></i>
+                <span>Customer list is empty</span>
+            </div>
+
             <div class="users-loader d-flex align-items-center justify-content-center" style="min-height: 200px;">
                 <div class="spinner-border" role="status"></div>
             </div>
@@ -150,11 +159,18 @@
         };
 
         async function showUsersModal(event) {
+            $($modal).modal("show");
+
+            if (window.__dashboardRSPModalLoading === true) return;
+            window.__dashboardRSPModalLoading = true;
+
             const $modalTitle = $modal.querySelector(".modal-title");
             const $targetTitle = this.querySelector("[data-type=title]");
+            const $emptyMessage = $modal.querySelector(".nsm-empty");
 
             $wrapper.innerHTML = "";
             $modalBody.classList.add("loading");
+            $emptyMessage.classList.add("d-none");
             $modalTitle.textContent = $targetTitle.textContent.trim();
 
             const config = modalConfig[this.dataset.customers];
@@ -166,9 +182,15 @@
                 $fragment.appendChild(createCustomer(customer));
             });
 
+            window.__dashboardRSPModalLoading = false;
             $modalBody.classList.remove("loading");
             $wrapper.appendChild($fragment);
-            $($modal).modal("show");
+
+            if (json.data.length) {
+                $emptyMessage.classList.add("d-none");
+            } else {
+                $emptyMessage.classList.remove("d-none");
+            }
         }
 
         function createCustomer(customer) {
@@ -184,7 +206,12 @@
                 $title.textContent = `${customer.first_name} ${customer.last_name}`;
             }
 
-            $subTitle.textContent = customer.email;
+            if (customer.email && customer.email.length) {
+                $subTitle.textContent = customer.email;
+            } else {
+                $subTitle.textContent = customer.phone_m;
+            }
+
             $profile.textContent = getCustomerInitials(customer);
             $info.textContent = customer.info;
             $title.setAttribute("href", `${prefixURL}/customer/preview_/${customer.prof_id}`);

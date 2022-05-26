@@ -307,7 +307,7 @@ class Dashboard extends Widgets {
     public function apiGetRecurringPaymentCustomers()
     {
         $companyId = logged('company_id');
-        $this->db->select('profile.prof_id, profile.customer_type, profile.business_name, profile.first_name, profile.last_name, profile.email, billing.transaction_amount AS info', false);
+        $this->db->select('profile.prof_id, profile.customer_type, profile.business_name, profile.first_name, profile.last_name, profile.email, billing.transaction_amount AS info, profile.phone_m', false);
         $this->db->from('acs_billing billing');
         $this->db->join('acs_profile profile', 'profile.prof_id = billing.fk_prof_id', 'left');
         $this->db->where('profile.company_id', $companyId);
@@ -326,7 +326,7 @@ class Dashboard extends Widgets {
     public function apiGetAgreementsToExpireIn30DaysCustomers()
     {
         $companyId = logged('company_id');
-        $this->db->select('profile.prof_id, profile.customer_type, profile.business_name, profile.first_name, profile.last_name, profile.email, billing.recurring_end_date AS info', false);
+        $this->db->select('profile.prof_id, profile.customer_type, profile.business_name, profile.first_name, profile.last_name, profile.email, billing.recurring_end_date AS info, profile.phone_m', false);
         $this->db->from('acs_billing billing');
         $this->db->join('acs_profile profile', 'profile.prof_id = billing.fk_prof_id', 'left');
         $this->db->where('profile.company_id', $companyId);
@@ -378,6 +378,21 @@ class Dashboard extends Widgets {
         $this->db->where('id', $name ? $name->id : $this->db->insert_id());
         $name = $this->db->get('widget_custom_names')->row();
         echo json_encode(['data' => $name]);
+    }
+
+    public function apiGetWidgetNames()
+    {
+        $companyId = logged('company_id');
+
+        $this->db->select('names.*, widgets.w_name AS default_name', false);
+        $this->db->from('widget_custom_names names');
+        $this->db->join('widgets', 'widgets.w_id = names.widget_id', 'left');
+        $this->db->where('names.company_id', $companyId);
+        $query = $this->db->get();
+        $results = $query->result();
+
+        header('content-type: application/json');
+        echo json_encode(['data' => $results]);
     }
     
     public function getInbox(){
