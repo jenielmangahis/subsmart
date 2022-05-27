@@ -48,7 +48,7 @@
                     </div>
                 </div>
                 <?php if (!empty($enabled_table_headers)) : ?>
-                    <table class="nsm-table customer-list">
+                    <table class="nsm-table customer-list" id="customer-list">
                         <thead>
                             <tr>
                                 <td class="table-icon"></td>
@@ -221,7 +221,9 @@
                             <tr>
                                 <td class="table-icon"></td>
                                 <td data-name="Name">Name</td>
+                                <?php if($companyId == 1): ?>
                                 <td data-name="Name">Industry</td>
+                                <?php endif; ?>
                                 <td data-name="City">City</td>
                                 <td data-name="State">State</td>
                                 <td data-name="Source">Source</td>
@@ -285,7 +287,9 @@
                                             </label>
                                             <label class="nsm-link default content-subtitle fst-italic d-block"><?php echo $customer->email; ?></label>
                                         </td>
+                                        <?php if($companyId == 1): ?>
                                         <td>test</td>
+                                        <?php endif; ?>
                                         <td><?php echo $customer->city; ?></td>
                                         <td><?php echo $customer->state; ?></td>
                                         <td><?= $customer->lead_source != "" ? $customer->lead_source : 'n/a'; ?></td>

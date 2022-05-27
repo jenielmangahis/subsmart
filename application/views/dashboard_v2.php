@@ -304,7 +304,7 @@
             <div class="col-12 col-md">
                 <label class="content-subtitle fw-bold mb-2">Widget Name</label>
                 <div class="input-group widget-form">
-                    <input placeholder="Enter widget name" class="form-control nsm-field">
+                    <input placeholder="Enter widget name" class="form-control nsm-field" maxlength="50">
                     <button type="button" class="nsm-button primary">
                         Rename
                     </button>

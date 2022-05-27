@@ -382,17 +382,27 @@ class Dashboard extends Widgets {
 
     public function apiGetWidgetNames()
     {
-        $companyId = logged('company_id');
 
-        $this->db->select('names.*, widgets.w_name AS default_name', false);
-        $this->db->from('widget_custom_names names');
-        $this->db->join('widgets', 'widgets.w_id = names.widget_id', 'left');
-        $this->db->where('names.company_id', $companyId);
-        $query = $this->db->get();
-        $results = $query->result();
+
+        $widgets = $this->db->get('widgets')->result();
+
+        $companyId = logged('company_id');
+        $this->db->where('company_id', $companyId);
+        $customNames = $this->db->get('widget_custom_names')->result();
+
+        $customNamesMap = [];
+        foreach ($customNames as $customName) {
+            $customNamesMap[$customName->widget_id] = $customName;
+        }
+
+        foreach ($widgets as $widget) {
+            if (array_key_exists($widget->w_id, $customNamesMap)) {
+                $widget->custom = $customNamesMap[$widget->w_id];
+            }
+        }
 
         header('content-type: application/json');
-        echo json_encode(['data' => $results]);
+        echo json_encode(['data' => $widgets]);
     }
     
     public function getInbox(){

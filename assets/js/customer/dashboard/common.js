@@ -21,6 +21,7 @@ export function setupEmailTemplateModal(category) {
   const $modal = document.getElementById(modalSelector);
   const $triggerBtn = document.getElementById(modalTriggerSelector);
   const $submitBtn = $modal.querySelector("button.primary");
+  const $createLink = $modal.querySelector(".letters-loader + .d-flex");
 
   $triggerBtn.addEventListener("click", function () {
     $($modal).modal("show");
@@ -64,8 +65,10 @@ export function setupEmailTemplateModal(category) {
 
     if ($wrapper.childElementCount) {
       $submitBtn.classList.remove("d-none");
+      $createLink.classList.remove("d-none");
     } else {
       $submitBtn.classList.add("d-none");
+      $createLink.classList.add("d-none");
       $wrapper.innerHTML = `
         <div class="nsm-empty" style="height: 200px;">
           <i class="bx bx-meh-blank"></i>

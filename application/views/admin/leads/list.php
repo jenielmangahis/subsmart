@@ -1,7 +1,7 @@
 <?php include viewPath('v2/includes/header_admin'); ?>
 <style>
 .select2-container--open {
-    z-index: 9999999
+    z-index: 9999999;  
 }
 .select2-container{
     width: 100% !important; 

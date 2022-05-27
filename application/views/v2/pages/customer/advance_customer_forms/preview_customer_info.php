@@ -36,12 +36,14 @@
             <div class="col-12 col-md-6">
                 <label class="content-subtitle"><?= isset($profile_info) && !empty($profile_info->business_name) ? $profile_info->business_name : '---'; ?></label>
             </div>
+            <?php if($companyId == 1): ?>
             <div class="col-12 col-md-6">
                 <label class="content-subtitle fw-bold">Industry Type</label>
             </div>
             <div class="col-12 col-md-6">
                 <label class="content-subtitle"><?= $industryType ? $industryType->name : 'Not Specified'; ?></label>
             </div>
+            <?php endif; ?>
             <div class="col-12 col-md-6">
                 <label class="content-subtitle fw-bold">First Name</label>
             </div>

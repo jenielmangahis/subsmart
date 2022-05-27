@@ -47,6 +47,7 @@
                 </select>
             </div>
         </div>
+        <?php if($company_id == 1): ?>
         <div class="row form_line">
             <div class="col-md-4">
                 Industry Type
@@ -75,6 +76,7 @@
                 </select>
             </div>
         </div>
+        <?php endif; ?>
         <div class="row form_line">
             <div class="col-md-4">
                 Sales Area <span class="required"> *</span>

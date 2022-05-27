@@ -159,6 +159,7 @@ class Customer extends MY_Controller
         $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE,"","ASC","ac_salesarea","sa_id");
         $this->page_data['employees'] = $this->customer_ad_model->get_all(FALSE,"","ASC","users","id");
         $this->page_data['users'] = $this->users_model->getUsers();
+        $this->page_data['companyId'] = logged('company_id');
 
         $this->load->view('v2/pages/customer/preview', $this->page_data);
     }

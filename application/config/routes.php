@@ -659,6 +659,8 @@ $route['accounting/expenses/attach/(:any)/(:any)']['post'] = 'accounting_control
 $route['accounting/expenses/print-transactions']['post'] = 'accounting_controllers/expenses/print_transactions';
 $route['accounting/expenses/export']['post'] = 'accounting_controllers/expenses/export';
 
+$route['accounting/reports'] = 'accounting_controllers/reports/index';
+
 $route['accounting/vendor-details/(:any)'] = 'accounting/vendordetails/$1';
 $route['accounting/taxes/edit-settings'] = 'taxes/edit_settings';
 
