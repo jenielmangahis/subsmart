@@ -4,6 +4,9 @@
     .nsm-table {
         display: none;
     }
+    .nsm-badge.primary-enhanced {
+        background-color: #6a4a86;
+    }
 </style>
 
 <?php
@@ -98,20 +101,29 @@ foreach ($jobs as $job) {
                             <?php
                             foreach ($jobs as $job) :
                                 switch($job->status):
-                                    case "Scheduled":
-                                        $badge = "secondary";
+                                    case "New":
+                                        $badgeCount = 1;
                                         break;
+                                    case "Scheduled":
+                                        $badgeCount = 2;
+                                        break;
+                                    case "Arrival":
+                                        $badgeCount = 3;
+                                        break;          
                                     case "Started":
-                                        $badge = "primary";
+                                        $badgeCount = 4;
                                         break;
                                     case "Approved":
-                                        $badge = "success";
+                                        $badgeCount = 5;
+                                        break;
+                                    case "Closed":
+                                        $badgeCount = 6;
                                         break;
                                     case "Invoiced":
-                                        $badge = "primary";
+                                        $badgeCount = 7;
                                         break;
                                     case "Completed":
-                                        $badge = "success";
+                                        $badgeCount = 8;
                                         break;
                                 endswitch;
                             ?>
@@ -126,7 +138,20 @@ foreach ($jobs as $job) {
                                     <td><?= $job->first_name . ' ' . $job->last_name; ?></td>
                                     <td><?= $job->FName . ' ' . $job->LName; ?></td>
                                     <td></td>
-                                    <td><span class="nsm-badge <?= $badge ?>"><?= $job->status; ?></span></td>
+                                    <td>
+                                        <?php
+                                            for($x=1;$x<=$badgeCount;$x++){
+                                                ?>
+                                                    <span class="nsm-badge primary-enhanced"></span>
+                                                <?php
+                                            }
+                                            for($y=1;$y < 8 - $badgeCount;$y++){
+                                                ?>
+                                                    <span class="nsm-badge primary"></span>
+                                                <?php
+                                            }
+                                        ?>
+                                    </td>
                                     <td>$<?= number_format((float)$job->amount, 2, '.', ',');  ?></td>
                                     <td><?php echo $job->job_type; ?></td>
                                     <td><?php echo $job->name; ?></td>

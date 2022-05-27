@@ -291,6 +291,18 @@ class Event_model extends MY_Model
         return $query->result();
     }
 
+    public function getSalesRepRevenue($salesRepId)
+    {
+        $this->db->select('SUM(job_payments.amount) as salesRepRev');
+        $this->db->from('job_payments');
+        $this->db->join('jobs', ' job_payments.job_id = jobs.id', 'left');
+        $this->db->join('users', 'users.id = jobs.employee_id', 'left');
+        $this->db->where('jobs.employee_id', $salesRepId);
+        $this->db->group_by('jobs.employee_id');
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function getTechCustomerCount($techId)
     {
         $this->db->select('SUM(job_payments.amount) as techRev');

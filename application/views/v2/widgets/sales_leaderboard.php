@@ -67,7 +67,7 @@ endif;
                         <span class="content-subtitle d-block">Sales Rep</span>
                     </div>
                     <div style="padding-top: 5px;">
-                        <span class="content-subtitle nsm-text-success fw-bold" style="font-size:12px;">$10.25</span>
+                        <span class="content-subtitle nsm-text-success fw-bold" style="font-size:12px;">$<?=  number_format(floatval(get_sales_rep_revenue($sales->id)[0]->salesRepRev), 2, '.', ','); ?></span>
                         <span class="content-subtitle d-block">revenue</span>
                         </div>
                     <div class="controls">

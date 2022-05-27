@@ -7,6 +7,9 @@
                 <div class="row">
                     <div class="col-12 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
+                            <button type="button" class="nsm-button" onclick="location.href='<?php echo base_url('customer'); ?>'">
+                                <i class='bx bx-fw bx-search-alt'></i> Find Customer
+                            </button>
                             <button type="button" class="nsm-button" onclick="location.href='<?php echo base_url('customer/module/' . $this->uri->segment(3)); ?>'">
                                 <i class='bx bx-fw bx-tachometer'></i> Customer Dashboard
                             </button>

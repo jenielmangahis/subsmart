@@ -65,7 +65,7 @@
                         </div>
                     </div>
 
-                    <div class="col-12" data-document-type="photo_id_copy">
+                    <!-- <div class="col-12" data-document-type="photo_id_copy">
                         <div class="row g-2 align-items-center">
                             <div class="col-12 col-md-6 position-relative">
                                 <div class="form-check d-inline-block">
@@ -135,7 +135,7 @@
                                 </button>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
 
                     <div class="documents-loader d-flex align-items-center justify-content-center" style="padding-top: 1rem;">
                         <div class="spinner-border" role="status"></div>
@@ -247,7 +247,7 @@
                     </div>
                 </div>
 
-                <div class="nsm-card mb-2 h-auto" data-document-type="photo_id_copy">
+                <!-- <div class="nsm-card mb-2 h-auto" data-document-type="photo_id_copy">
                     <div class="nsm-card-content">
                         <div class="d-flex">
                             <div>
@@ -296,7 +296,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
 
                 <div class="documents-loader d-flex align-items-center justify-content-center" style="padding: 1rem 0;">
                     <div class="spinner-border" role="status"></div>

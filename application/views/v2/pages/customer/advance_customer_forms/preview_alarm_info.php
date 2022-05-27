@@ -3,71 +3,162 @@
         <div class="row mb-3">
             <div class="col-12">
                 <div class="nsm-card-title">
-                    <span>Alarm Information</span>
+                    <?php if($companyId == 58): ?>
+                        <span>Solar Information</span>
+                    <?php else: ?>
+                        <span>Alarm Information</span>
+                    <?php endif; ?>  
+                    
                 </div>
             </div>
         </div>
         <div class="row g-1 mb-5">
-            <div class="col-12 col-md-6">
-                <label class="content-subtitle fw-bold">Monitoring Company</label>
-            </div>
-            <div class="col-12 col-md-6">
-                <label class="content-subtitle"><?= !empty($alarm_info->monitor_comp) ? $alarm_info->monitor_comp : '---'; ?></label>
-            </div>
-            <div class="col-12 col-md-6">
-                <label class="content-subtitle fw-bold">Monitoring ID</label>
-            </div>
-            <div class="col-12 col-md-6">
-                <label class="content-subtitle"><?= !empty($alarm_info->monitor_id) ? $alarm_info->monitor_id : '---'; ?></label>
-            </div>
-            <div class="col-12 col-md-6">
-                <label class="content-subtitle fw-bold">Account Type</label>
-            </div>
-            <div class="col-12 col-md-6">
-                <label class="content-subtitle"><?= !empty($alarm_info->acct_type) ? $alarm_info->acct_type : '---'; ?></label>
-            </div>
-            <div class="col-12 col-md-6">
-                <label class="content-subtitle fw-bold">Abort/Password Code</label>
-            </div>
-            <div class="col-12 col-md-6">
-                <label class="content-subtitle"><?= !empty($alarm_info->passcode) ? $alarm_info->passcode : '---'; ?></label>
-            </div>
-            <div class="col-12 col-md-6">
-                <label class="content-subtitle fw-bold">Installer Code</label>
-            </div>
-            <div class="col-12 col-md-6">
-                <label class="content-subtitle"><?= !empty($alarm_info->install_code) ? $alarm_info->install_code : '---'; ?></label>
-            </div>
-            <div class="col-12 col-md-6">
-                <label class="content-subtitle fw-bold">Monitoring Confirm #</label>
-            </div>
-            <div class="col-12 col-md-6">
-                <label class="content-subtitle"><?= !empty($alarm_info->mcn) ? $alarm_info->mcn : '---'; ?></label>
-            </div>
-            <div class="col-12 col-md-6">
-                <label class="content-subtitle fw-bold">Signal Confirm #</label>
-            </div>
-            <div class="col-12 col-md-6">
-                <label class="content-subtitle"><?= !empty($alarm_info->scn) ? $alarm_info->scn : '---'; ?></label>
-            </div>
-            <div class="col-12 col-md-6">
-                <label class="content-subtitle fw-bold">Panel Type</label>
-            </div>
-            <div class="col-12 col-md-6">
-                <label class="content-subtitle"><?= !empty($alarm_info->panel_type) ? $alarm_info->panel_type : '---'; ?></label>
-            </div>
-            <div class="col-12 col-md-6">
-                <label class="content-subtitle fw-bold">System Package Type</label>
-            </div>
-            <div class="col-12 col-md-6">
-                <label class="content-subtitle"><?= !empty($alarm_info->system_type) ? $alarm_info->system_type : '---'; ?></label>
-            </div>
-            <div class="col-12 col-md-6">
-                <label class="content-subtitle fw-bold">Warranty Type</label>
-            </div>
-            <div class="col-12 col-md-6">
-                <label class="content-subtitle"><?= !empty($alarm_info->warranty_type) ? $alarm_info->warranty_type : '---'; ?></label>
-            </div>
+            <?php if($companyId == 58): ?>
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle fw-bold">Project ID</label>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle">---</label>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle fw-bold">Lender Type</label>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle">---</label>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle fw-bold">Proposed System Size</label>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle">---</label>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle fw-bold">Proposed Modules</label>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle">---</label>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle fw-bold">Proposed Inverter</label>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle">---</label>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle fw-bold">Proposed Offset</label>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle">---</label>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle fw-bold">Proposed Solar $</label>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle">---</label>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle fw-bold">Proposed Utility $</label>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle">---</label>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle fw-bold">Proposed FTC</label>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle">---</label>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle fw-bold">Annual Income</label>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle">---</label>
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle fw-bold">Utility Account #</label>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle">---</label>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle fw-bold">Utility Login</label>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle">---</label>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle fw-bold">Utility Password</label>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle">---</label>
+                </div>
+            <?php else: ?>
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle fw-bold">Monitoring Company</label>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle"><?= !empty($alarm_info->monitor_comp) ? $alarm_info->monitor_comp : '---'; ?></label>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle fw-bold">Monitoring ID</label>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle"><?= !empty($alarm_info->monitor_id) ? $alarm_info->monitor_id : '---'; ?></label>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle fw-bold">Account Type</label>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle"><?= !empty($alarm_info->acct_type) ? $alarm_info->acct_type : '---'; ?></label>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle fw-bold">Abort/Password Code</label>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle"><?= !empty($alarm_info->passcode) ? $alarm_info->passcode : '---'; ?></label>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle fw-bold">Installer Code</label>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle"><?= !empty($alarm_info->install_code) ? $alarm_info->install_code : '---'; ?></label>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle fw-bold">Monitoring Confirm #</label>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle"><?= !empty($alarm_info->mcn) ? $alarm_info->mcn : '---'; ?></label>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle fw-bold">Signal Confirm #</label>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle"><?= !empty($alarm_info->scn) ? $alarm_info->scn : '---'; ?></label>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle fw-bold">Panel Type</label>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle"><?= !empty($alarm_info->panel_type) ? $alarm_info->panel_type : '---'; ?></label>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle fw-bold">System Package Type</label>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle"><?= !empty($alarm_info->system_type) ? $alarm_info->system_type : '---'; ?></label>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle fw-bold">Warranty Type</label>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle"><?= !empty($alarm_info->warranty_type) ? $alarm_info->warranty_type : '---'; ?></label>
+                </div>
+            <?php endif; ?>    
+            
+
+
+
             <div class="col-12">
                 <hr>
             </div>
@@ -246,3 +337,4 @@
         </div>
     </div>
 </div>
+

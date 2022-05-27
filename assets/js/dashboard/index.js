@@ -3,19 +3,20 @@ const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
 window.document.addEventListener("DOMContentLoaded", async () => {
   const widgets = document.querySelectorAll("[id^=widget_]");
 
-  const { data: customNames } = await getCustomWidgetName();
-  widgets.forEach(($widget) => setCustomName($widget, customNames));
+  const { data: widgetNames } = await getCustomWidgetName();
+  widgets.forEach(($widget) => setCustomName($widget, widgetNames));
   widgets.forEach(addRenameOption);
 });
 
-function setCustomName($widget, customNames) {
+function setCustomName($widget, widgetNames) {
   const widgetId = $widget.dataset.id;
-  const match = customNames.find(({ widget_id }) => widget_id == widgetId);
+  const match = widgetNames.find(({ w_id }) => w_id == widgetId);
+  $widget.__data = match;
 
-  if (match) {
+  if (match.custom) {
     const $header = $widget.querySelector(".nsm-card-header");
     const $title = $header.querySelector(".nsm-card-title span");
-    $title.textContent = match.name;
+    $title.textContent = match.custom.name;
   }
 }
 
@@ -55,6 +56,7 @@ function onClickRename(event) {
   $input.value = widgetName;
   $text.innerHTML = `You are about to rename the <i>${widgetName}</i> widget.`;
 
+  $input.setAttribute("placeholder", $widget.__data.w_name);
   $modal.setAttribute("data-id", $widget.dataset.id);
   $($modal).modal("show");
 }

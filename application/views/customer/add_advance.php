@@ -36,6 +36,9 @@ add_css(array(
                                       </span>
                                   </div>
                                 </div>
+                                <a href="<?php echo base_url('customer') ?>">
+                                    <button type="button" class="btn btn-primary pull-right"><span class="fa fa-arrow-left"></span> Back to Customer List </button> &nbsp;
+                                </a>
                             </div>
                         </div>
                       </div>
