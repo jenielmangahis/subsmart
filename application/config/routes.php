@@ -1294,7 +1294,11 @@ $route['taskhub/_task_mark_completed'] = 'Taskhub/ajax_complete_task';
 $route['taskhub/_mark_all_completed'] = 'Taskhub/ajax_company_complete_all_tasks';
 
 //SMS
-$route['sms/_company_send'] = 'Sms/ajax_company_send_sms';
-$route['sms/_company_delete'] = 'Sms/ajax_company_delete_sms';
-$route['sms/_company_resend_form'] = 'Sms/ajax_company_resend_form';
+$route['messages'] = 'Sms/index';
+$route['messages/_company_send'] = 'Sms/ajax_company_send_sms';
+$route['messages/_company_delete'] = 'Sms/ajax_company_delete_sms';
+$route['messages/_company_resend_form'] = 'Sms/ajax_company_resend_form';
+$route['messages/_company_resend_form'] = 'Sms/ajax_company_resend_form';
+$route['customer/_update_customer_mobile_number'] = 'Customer/ajax_update_customer_mobile_number';
+$route['messages/_load_customer_sent_messages'] = 'Sms/ajax_customer_sent_messages';
 
