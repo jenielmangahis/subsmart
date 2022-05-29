@@ -168,7 +168,10 @@ endif;
             <span>Jobs Status</span>
         </div>
         <div class="nsm-card-controls">
-            <a role="button" class="nsm-button btn-sm m-0 me-2" id="table-modal">
+            <!--<a role="button" class="nsm-button btn-sm m-0 me-2" id="table-modal">
+                See More
+            </a>-->
+            <a href="<?= base_url('job') ?>" role="button" class="nsm-button btn-sm m-0 me-2" id="table-modal">
                 See More
             </a>
             <div class="dropdown">
@@ -196,39 +199,24 @@ endif;
                             </div>
                         </div>
                     </div>
+                    <?php foreach($jobsStatus as $status): ?>
                     <div class="row js-row-dash">
                         <div class="col">
                             <div class="row">
                                 <div class="col-9 marg-top">
-                                    <div class="jname"> Completed</div>
+                                    <div class="jname"> <?= $status->status; ?></div>
                                 </div>
                                 <div class="col-3 col-center">
                                     <div class="row">
                                         <div class="col col-align">
-                                            <span class="nsm-badge success" style="font-size:12px;">21</span>
+                                            <span class="nsm-badge success" style="font-size:12px;"><?= $status->statusCount; ?></span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-                    <div class="row js-row-dash">
-                        <div class="col">
-                            <div class="row">
-                                <div class="col-9 marg-top">
-                                    <div class="jname"> Pending</div>
-                                </div>
-                                <div class="col-3 col-center">
-                                    <div class="row">
-                                        <div class="col col-align">
-                                            <span class="nsm-badge secondary" style="font-size:12px;">2</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <?php endforeach; ?>
                 </div>
             </div>
         </div>

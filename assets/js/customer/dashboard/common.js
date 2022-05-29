@@ -33,6 +33,7 @@ export function setupEmailTemplateModal(category) {
     const $wrapper = $modal.querySelector(".letters-wrapper");
     $wrapper.innerHTML = "";
     $body.classList.add("loading");
+    $createLink.classList.add("d-none");
 
     const $template = $modal.querySelector("template");
     const $fragment = document.createDocumentFragment();
@@ -69,10 +70,14 @@ export function setupEmailTemplateModal(category) {
     } else {
       $submitBtn.classList.add("d-none");
       $createLink.classList.add("d-none");
+
+      const $createLinkHref = $modal.querySelector(".letters-loader + .d-flex > a"); // prettier-ignore
+      const href = $createLinkHref.getAttribute("href");
+
       $wrapper.innerHTML = `
         <div class="nsm-empty" style="height: 200px;">
           <i class="bx bx-meh-blank"></i>
-          <span>Your email template is empty, click <a target="_blank" href="${api.prefixURL}/EsignEditor/create">here</a> to create.</span>
+          <span>Your email template is empty, click <a target="_blank" href="${href}">here</a> to create.</span>
         </div>
       `;
     }

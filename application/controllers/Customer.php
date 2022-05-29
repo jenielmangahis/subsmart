@@ -4912,4 +4912,38 @@ class Customer extends MY_Controller
         $json_data = ['is_success' => $is_success, 'msg' => $msg];
         echo json_encode($json_data);     
     }
+
+    public function ajax_update_customer_mobile_number()
+    {
+        $this->load->model('Customer_advance_model');
+
+        $is_success = 0;
+        $msg = 'Cannot save data.';
+
+        $cid  = logged('company_id');
+        $post = $this->input->post();
+
+        $customer = $this->Customer_advance_model->get_data_by_id('prof_id',$post['cid'],'acs_profile');
+        if( $post['customer_phone'] != '' ){
+            if( $customer && $customer->company_id == $cid ){
+                $data = [
+                    'prof_id' => $post['cid'],
+                    'phone_m' => $post['customer_phone']
+                ];
+                $this->Customer_advance_model->update_data($data, 'acs_profile', 'prof_id');
+
+                $msg = '';
+                $is_success = 1;
+            
+            }else{
+                $msg = 'Cannot find customer data';
+            } 
+        }else{
+            $msg = 'Please specify customer mobile number';
+        }        
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+
+        echo json_encode($json_data);
+    }
 }

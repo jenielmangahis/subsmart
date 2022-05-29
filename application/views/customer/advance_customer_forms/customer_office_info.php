@@ -65,7 +65,7 @@
             <div class="col-md-6">
                 <select id="fk_sales_rep_office" name="fk_sales_rep_office" data-customer-source="dropdown" class="input_select" >
                     <option value="">Select</option>
-                    <?php foreach ($users as $user): ?>
+                    <?php foreach ($sales_reps as $user): ?>
                         <option <?php if(isset($office_info)){ echo $office_info->fk_sales_rep_office ==  $user->id ? 'selected' : ''; } ?> value="<?= $user->id; ?>"><?= $user->FName.' '.$user->LName; ?></option>
                     <?php endforeach ?>
                 </select>
@@ -78,7 +78,7 @@
             <div class="col-md-6">
                 <select id="technician" name="technician"  class="input_select" data-value="<?= isset($office_info->technician) ? $office_info->technician : "" ?>">
                     <option value="">Select</option>
-                    <?php foreach ($users as $user): ?>
+                    <?php foreach ($technicians as $user): ?>
                         <option <?php if(isset($office_info)){ if($office_info->technician == $user->id ){ echo 'selected'; } } ?> value="<?= $user->id ?>"><?= $user->FName.' '.$user->LName; ?></option>
                     <?php endforeach ?>
                 </select>
@@ -117,7 +117,8 @@
                 Lead Source
             </div>
             <div class="col-md-6">
-                <select id="lead_source" name="lead_source" data-customer-source="dropdown" class="input_select">
+                <select id="lead_source" name="lead_source" data-customer-source="dropdown" class="input_select"> 
+
                     <option <?php if(isset($office_info)){ if($office_info->lead_source == ""){ echo 'selected'; } } ?> value="">Select</option>
                     <option <?php if(isset($office_info)){ if($office_info->lead_source == "Customer Referral"){ echo 'selected'; } } ?> value="Customer Referral">Customer Referral</option>
                     <option <?php if(isset($office_info)){ if($office_info->lead_source == "Door"){ echo 'selected'; } } ?> value="Door">Door</option>
@@ -394,7 +395,7 @@
                 Activation Fee
             </div>
             <div class="col-md-5">
-                <select data-value="<?= isset($office_info) ? $office_info->activation_fee : "" ?>" name="activation_fee" data-type="funding_info_activation_fee" class="form-control" required>
+                <select data-value="<?= isset($office_info) ? $office_info->activation_fee : "" ?>" name="activation_fee" data-type="funding_info_activation_fee" class="form-control">
                     <option><?= isset($office_info) ? $office_info->activation_fee : "" ?></option>
                 </select>
                 <a href="<?= base_url() ?>customer/settings/activationFee" target="_blank"  style="color:#58bc4f;font-size: 10px;"><span class="fa fa-plus"></span> Manage Fee</a>&nbsp;&nbsp;

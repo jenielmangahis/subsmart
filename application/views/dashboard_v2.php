@@ -112,7 +112,9 @@
                         $data = set_expense_graph_data($data);
                     }
 
+                
                     $this->load->view("v2/" . $wids->w_view_link, $data);
+                    
                     echo '</div>';
                 endif;
             endforeach;
@@ -138,9 +140,11 @@
                     if($wids->w_name === 'Expense') {
                         $data = set_expense_graph_data($data);
                     }
+                    
 
                     $this->load->view("v2/" . $wids->w_view_link, $data);
                     echo '</div>';
+                    
                 endif;
             endforeach;
             ?>

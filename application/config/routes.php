@@ -660,6 +660,8 @@ $route['accounting/expenses/print-transactions']['post'] = 'accounting_controlle
 $route['accounting/expenses/export']['post'] = 'accounting_controllers/expenses/export';
 
 $route['accounting/reports'] = 'accounting_controllers/reports/index';
+$route['accounting/reports/add-to-favorites/(:any)'] = 'accounting_controllers/reports/add_to_favorites/$1';
+$route['accounting/reports/remove-to-favorites/(:any)'] = 'accounting_controllers/reports/remove_to_favorites/$1';
 
 $route['accounting/vendor-details/(:any)'] = 'accounting/vendordetails/$1';
 $route['accounting/taxes/edit-settings'] = 'taxes/edit_settings';
@@ -1294,7 +1296,11 @@ $route['taskhub/_task_mark_completed'] = 'Taskhub/ajax_complete_task';
 $route['taskhub/_mark_all_completed'] = 'Taskhub/ajax_company_complete_all_tasks';
 
 //SMS
-$route['sms/_company_send'] = 'Sms/ajax_company_send_sms';
-$route['sms/_company_delete'] = 'Sms/ajax_company_delete_sms';
-$route['sms/_company_resend_form'] = 'Sms/ajax_company_resend_form';
+$route['messages'] = 'Sms/index';
+$route['messages/_company_send'] = 'Sms/ajax_company_send_sms';
+$route['messages/_company_delete'] = 'Sms/ajax_company_delete_sms';
+$route['messages/_company_resend_form'] = 'Sms/ajax_company_resend_form';
+$route['messages/_company_resend_form'] = 'Sms/ajax_company_resend_form';
+$route['customer/_update_customer_mobile_number'] = 'Customer/ajax_update_customer_mobile_number';
+$route['messages/_load_customer_sent_messages'] = 'Sms/ajax_customer_sent_messages';
 

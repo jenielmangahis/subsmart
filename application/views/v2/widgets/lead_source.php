@@ -35,50 +35,22 @@
                             </div>
                         </div>
                     </div>
+                    <?php foreach($leadSources as $source): ?>
                     <div class="row js-row-dash">
                         <div class="col">
                             <div class="row">
                                 <div class="col-9 marg-top">
-                                    <div class="jname"> Customer Referral</div>
+                                    <div class="jname"> <?= $source->ls_name; ?></div>
                                 </div>
                                 <div class="col-3 col-center">
                                     <div class="row">
-                                        <div class="col" style="padding-top: 5px;"> 50 </div>
+                                        <div class="col" style="padding-top: 5px;"> <?= $source->leadSourceCount; ?> </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-                    <div class="row js-row-dash">
-                        <div class="col">
-                            <div class="row">
-                                <div class="col-9 marg-top">
-                                    <div class="jname"> Door</div>
-                                </div>
-                                <div class="col-3 col-center">
-                                    <div class="row">
-                                        <div class="col" style="padding-top: 5px;"> 2 </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row js-row-dash">
-                        <div class="col">
-                            <div class="row">
-                                <div class="col-9 marg-top">
-                                    <div class="jname"> Door Hanger</div>
-                                </div>
-                                <div class="col-3 col-center">
-                                    <div class="row">
-                                        <div class="col" style="padding-top: 5px;"> 25 </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <?php endforeach; ?>
                 </div>
             </div>
         </div>

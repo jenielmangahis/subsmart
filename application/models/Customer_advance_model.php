@@ -74,6 +74,42 @@ class Customer_advance_model extends MY_Model {
         $query = $this->db->get();
         return $query->result();
     }
+
+    public function getByLeadId($lead_id)
+    {
+        $this->db->from("ac_leads");
+        $this->db->select('ac_leads.*,users.FName,users.LName, business_profile.business_name, ac_leadtypes.lead_name AS lead_type');
+        $this->db->join('users', 'users.id = ac_leads.fk_assign_id','left');
+        $this->db->join('business_profile', 'business_profile.company_id = ac_leads.company_id','left');
+        $this->db->join('ac_leadtypes', 'ac_leads.fk_lead_id = ac_leadtypes.lead_id','left');
+        $this->db->where('ac_leads.leads_id', $lead_id);
+        $query = $this->db->get($tablename);
+        return $query->row();
+    }
+
+    public function get_all_leads_data($filters=array(), $search=array()){
+        $this->db->from("ac_leads");
+        $this->db->select('ac_leads.*,users.FName,users.LName, business_profile.business_name');
+        $this->db->join('users', 'users.id = ac_leads.fk_assign_id','left');
+        $this->db->join('business_profile', 'business_profile.company_id = ac_leads.company_id','left');
+
+        if ( !empty($filters) ) {
+            if ( !empty($filters['search']) ) {                            
+                $this->db->like('ac_leads.firstname', $filters['search'], 'both');
+                $this->db->or_like('ac_leads.lastname', $filters['search'], 'both');
+                $this->db->or_like('business_profile.business_name', $filters['search'], 'both');
+            }
+        }
+
+        if( !empty($search) ){
+            $this->db->where($search['field'], $search['value']);
+        }
+
+        $this->db->order_by('ac_leads.leads_id', "DESC");
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function check_customer($search){
         $this->db->from("acs_profile");
         $this->db->select('prof_id');
@@ -182,6 +218,52 @@ class Customer_advance_model extends MY_Model {
         return $query->result();
     }
 
+    public function admin_get_customer_data($search=null){
+        $this->db->from("acs_profile");
+        //$this->db->where("fk_user_id", $user_id);
+        $this->db->select('users.id,acs_profile.prof_id,acs_profile.first_name,acs_profile.last_name,acs_profile.email,acs_profile.phone_m,acs_profile.status,acs_b.mmr,
+        acs_alarm.system_type,acs_office.entered_by,acs_office.lead_source,acs_profile.city,acs_profile.state,users.LName,users.FName,acs_profile.customer_type,
+        acs_profile.business_name,acs_office.technician,acs_b.transaction_amount as total_amount,industry_type.name AS industry_type, acs_profile.industry_type_id, business_profile.business_name');
+        $this->db->join('users', 'users.id = acs_profile.fk_user_id','left');
+        $this->db->join('business_profile', 'business_profile.company_id = acs_profile.company_id','left');
+        $this->db->join('acs_billing as acs_b', 'acs_b.fk_prof_id = acs_profile.prof_id','left');
+        $this->db->join('acs_subscriptions as acs_s', 'acs_s.customer_id = acs_profile.prof_id','left');
+        $this->db->join('acs_alarm', 'acs_alarm.fk_prof_id = acs_profile.prof_id','left');
+        $this->db->join('acs_office', 'acs_office.fk_prof_id = acs_profile.prof_id','left');
+        $this->db->join('acs_office as ao', 'ao.fk_prof_id = users.id','left');
+        $this->db->join('industry_type', 'acs_profile.industry_type_id = industry_type.id','left');
+
+        if(!empty($search)){
+            $this->db->like('acs_profile.first_name', $search['value'], 'both');
+            $this->db->or_like('acs_profile.last_name', $search['value'], 'both');
+            $this->db->or_like('acs_profile.email', $search['value'], 'both');
+            $this->db->or_like('business_profile.business_name', $search['value'], 'both');
+        }
+        
+        $this->db->order_by('prof_id', "DESC");
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function get_company_customer_data($company_id, $search=null){
+        $this->db->from("acs_profile");
+        //$this->db->where("fk_user_id", $user_id);
+        $this->db->select('users.id,acs_profile.prof_id,acs_profile.first_name,acs_profile.last_name,acs_profile.email,acs_profile.phone_m, acs_profile.industry_type_id');
+        $this->db->join('users', 'users.id = acs_profile.fk_user_id','left');
+        $this->db->where('acs_profile.company_id', $company_id);
+
+        if(!empty($search)){
+            $this->db->like('acs_profile.first_name', $search['value'], 'both');
+            $this->db->or_like('acs_profile.last_name', $search['value'], 'both');
+            $this->db->or_like('acs_profile.email', $search['value'], 'both');
+        }
+
+        $this->db->order_by('prof_id', "DESC");
+        //$this->db->limit(20);
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function get_customer_details($id=null){
         $this->db->from("acs_profile");
         $this->db->select('acs_profile.city,acs_profile.state,users.LName,users.FName');
@@ -220,11 +302,16 @@ class Customer_advance_model extends MY_Model {
         return $result;
     }
 
-    public function get_all($limit = FALSE, $start = 0, $sort = 'ASC',$tablename,$orderBy)
+    public function get_all($limit = FALSE, $start = 0, $sort = 'ASC',$tablename,$orderBy,$search=array())
     {
+        if( !empty($search) ){
+            $this->db->like($search['field'], $search['value'], 'both');
+        }
+
         if(!empty($orderBy) || $orderBy!= null){
             $this->db->order_by($orderBy, $sort);
         }
+
         if ($query = $this->db->get($tablename, $limit, $start)) {
             return $query->result();
         } else {

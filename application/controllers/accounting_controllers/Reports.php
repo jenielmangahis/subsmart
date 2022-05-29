@@ -8,6 +8,9 @@ class Reports extends MY_Controller {
 		parent::__construct();
         $this->checkLogin();
 
+        $this->load->model('accounting_report_groups_model');
+        $this->load->model('accounting_report_types_model');
+
         $this->load->model('accounting_customers_model');
         $this->load->model('vendors_model');
         $this->load->model('timesheet_model');
@@ -104,12 +107,13 @@ class Reports extends MY_Controller {
 
     public function index()
     {
-        add_css([
-            'assets/css/accounting/reports/management_reports.css'
-        ]);
+        // add_css([
+        //     'assets/css/accounting/reports/management_reports.css'
+        // ]);
 
         add_footer_js([
-            'assets/js/accounting/reports/management_reports.js'
+            'assets/js/accounting/reports/index.js'
+            // 'assets/js/accounting/reports/management_reports.js'
         ]);
 
         $reportGroups = $this->accounting_report_groups_model->get_report_groups();
@@ -122,11 +126,22 @@ class Reports extends MY_Controller {
             }
         }
 
+        $this->page_data['reportGroups'] = $reportGroups;
         $this->page_data['company_details'] = $this->timesheet_model->get_user_and_company_details(logged('id'));
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['employees'] = $this->vendors_model->getEmployees(logged('company_id'));
         $this->page_data['page_title'] = "Reports";
         $this->page_data['management_reports'] = $this->accounting_management_reports->get_management_reports_by_company(logged('company_id'));
         $this->load->view('accounting/reports/index', $this->page_data);
+    }
+
+    public function add_to_favorites($reportTypeId)
+    {
+
+    }
+
+    public function remove_to_favorites($reportTypeId)
+    {
+        
     }
 }

@@ -22,6 +22,10 @@
     <script type="text/javascript" src="<?= base_url("assets/js/v2/bootstrap-datepicker.min.js") ?>"></script>
     <!-- Select2 -->
     <script src="<?= base_url("assets/plugins/select2/dist/js/select2.full.min.js"); ?>"></script>
+    <!-- Input Mask -->
+    <?php if( isset($enable_input_mask) ){ ?>
+    <script src="<?= base_url("assets/plugins/input-mask/jquery.inputmask.bundle.js"); ?>"></script>
+    <?php } ?>
     <!-- Ckeditor -->
     <script type="text/javascript" src="<?= base_url("assets/ckeditor/ckeditor.js"); ?>"></script>
     <!-- Main Script -->
