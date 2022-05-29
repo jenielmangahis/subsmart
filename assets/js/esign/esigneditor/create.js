@@ -77,9 +77,23 @@ function appendPlaceholderInList(placeholder) {
 }
 
 async function initCategories() {
+  const params = new Proxy(new URLSearchParams(window.location.search), {
+    get: (searchParams, prop) => searchParams.get(prop),
+  });
+
   const categories = await window.api.getCategories();
   categories.data.forEach(appendCategoryInSelect);
   categories.data.forEach(appendCategoryInManageModal);
+
+  if (params.category) {
+    const selected = categories.data.find(({ name }) => {
+      return name === params.category;
+    });
+    if (selected) {
+      const $select = document.getElementById("category");
+      $select.value = selected.id;
+    }
+  }
 }
 
 function appendCategoryInSelect(category) {

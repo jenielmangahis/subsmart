@@ -172,7 +172,7 @@ $(document).ready(function() {
             </div>
 
             <div class="d-flex justify-content-end mb-3">
-                <a target="_blank" href="<?= base_url('EsignEditor/create') ?>" class="nsm-link">Create Letter</a>
+                <a target="_blank" href="<?= base_url('EsignEditor/create?category=Welcome Letters') ?>" class="nsm-link">Create Letter</a>
             </div>
             <button type="button" class="nsm-button primary w-100 ms-0">
                 <i class="bx bx-fw bx-send"></i> Send Welcome Email

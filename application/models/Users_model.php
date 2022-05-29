@@ -153,6 +153,18 @@ class Users_model extends MY_Model
         return $query->result();
     }
 
+    public function getUsersByRole($role=3)
+    {
+        $cid=logged('company_id');
+        $this->db->select('*');
+        $this->db->from('users');
+        //$this->db->where('parent_id', $parent_id);
+        $this->db->where('role', $role);
+        $this->db->where('company_id', $cid);
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function getAllUsers()
     {
         $this->db->select('users.*, clients.business_name');

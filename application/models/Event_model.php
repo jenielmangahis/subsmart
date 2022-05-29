@@ -258,6 +258,7 @@ class Event_model extends MY_Model
         $this->db->join('acs_office', 'acs_office.technician = users.id', 'left');
         //$this->db->where('id', $parent_id);
         $this->db->where('users.company_id', $cid);
+        $this->db->where('users.role', 7);
         $this->db->group_by('users.id');
         $this->db->order_by('customerCount', 'desc');
         $query = $this->db->get();
@@ -272,8 +273,78 @@ class Event_model extends MY_Model
         $this->db->join('acs_office', 'acs_office.fk_sales_rep_office = users.id', 'left');
         //$this->db->where('id', $parent_id);
         $this->db->where('users.company_id', $cid);
+        $this->db->where('users.role', 8);
         $this->db->group_by('users.id');
         $this->db->order_by('customerCount', 'desc');
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    /**
+     * This function will fetch lead source data with count of customer connected to it
+     * 
+     * @return object List of Lead Source per company ID with count on customer
+    */
+    public function getLeadSourceWithCount()
+    {
+        $this->db->select('ac_leadsource.*, count(acs_office.lead_source) as leadSourceCount');
+        $this->db->from('ac_leadsource');
+        $this->db->join('acs_office', 'acs_office.lead_source = ac_leadsource.ls_name', 'left');
+        $this->db->group_by('lead_source');
+        $this->db->order_by('leadSourceCount', 'desc');
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    /**
+     * This function will fetch jobs status with count
+     * 
+     * @return object List of JOB STATUS with number of count
+    */
+    public function getJobStatusWithCount()
+    {
+        $cid=logged('company_id');
+        $this->db->select('status, count(status) as statusCount');
+        $this->db->from('jobs');
+        $this->db->group_by('status');
+        $this->db->order_by('status', 'desc');
+        $this->db->where('company_id', $cid);
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+      /**
+     * This function will fetch latest jobs of each company
+     * 
+     * @return object List of LATEST JOB limit 10
+    */
+    public function getLatestJobs()
+    {
+        $cid=logged('company_id');
+        $this->db->select('jobs.id,status,job_number,job_type,start_date,amount');
+        $this->db->from('jobs');
+        $this->db->join('job_payments', 'job_payments.job_id = jobs.id', 'left');
+        $this->db->order_by('jobs.id', 'desc');
+        $this->db->where('company_id', $cid);
+        $this->db->limit(10);
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    /**
+     * This function will fetch jobs status with count
+     * 
+     * @return object List of JOB STATUS with number of count
+    */
+    public function getCustomerStatusWithCount()
+    {
+        $cid=logged('company_id');
+        $this->db->select('status, count(status) as statusCount');
+        $this->db->from('acs_profile');
+        $this->db->group_by('status');
+        $this->db->order_by('statusCount', 'desc');
+        $this->db->where('company_id', $cid);
+        $this->db->where('status !=', null);
         $query = $this->db->get();
         return $query->result();
     }
@@ -433,7 +504,7 @@ class Event_model extends MY_Model
 
     public function getAllSales()
     {
-        $query = $this->db->get_where('accounting_sales_receipt', array('company_id' => logged('company_id')));
+        $query = $this->db->get_where('invoices', array('company_id' => logged('company_id'), 'status' => 'Paid'));
 
         if ($query) {
             return $query->result();

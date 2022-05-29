@@ -72,15 +72,15 @@ endif;
 
 
     foreach ($sales as $s) {
-        if (date("Y-m-d", strtotime("-30 days")) <= date("Y-m-d", strtotime($s->date_created)) && date("Y-m-d", strtotime("-25 days")) >= date("Y-m-d", strtotime($s->date_created))) {
+        if (date("Y-m-d", strtotime("-30 days")) <= date("Y-m-d", strtotime($s->paid_date)) && date("Y-m-d", strtotime("-25 days")) >= date("Y-m-d", strtotime($s->paid_date))) {
             $amountFirst += $s->grand_total;
-        } else if (date("Y-m-d", strtotime("-24 days")) <= date("Y-m-d", strtotime($s->date_created)) && date("Y-m-d", strtotime("-18 days")) >= date("Y-m-d", strtotime($s->date_created))) {
+        } else if (date("Y-m-d", strtotime("-24 days")) <= date("Y-m-d", strtotime($s->paid_date)) && date("Y-m-d", strtotime("-18 days")) >= date("Y-m-d", strtotime($s->paid_date))) {
             $amountSecond += $s->grand_total;
-        } else if (date("Y-m-d", strtotime("-17 days")) <= date("Y-m-d", strtotime($s->date_created)) && date("Y-m-d", strtotime("-12 days")) >= date("Y-m-d", strtotime($s->date_created))) {
+        } else if (date("Y-m-d", strtotime("-17 days")) <= date("Y-m-d", strtotime($s->paid_date)) && date("Y-m-d", strtotime("-12 days")) >= date("Y-m-d", strtotime($s->paid_date))) {
             $amountThird += $s->grand_total;
-        } else if (date("Y-m-d", strtotime("-11 days")) <= date("Y-m-d", strtotime($s->date_created)) && date("Y-m-d", strtotime("-6 days")) >= date("Y-m-d", strtotime($s->date_created))) {
+        } else if (date("Y-m-d", strtotime("-11 days")) <= date("Y-m-d", strtotime($s->paid_date)) && date("Y-m-d", strtotime("-6 days")) >= date("Y-m-d", strtotime($s->paid_date))) {
             $amountFourth += $s->grand_total;
-        } else if (date("Y-m-d", strtotime("-5 days")) <= date("Y-m-d", strtotime($s->date_created)) && date("Y-m-d") >= date("Y-m-d", strtotime($s->date_created))) {
+        } else if (date("Y-m-d", strtotime("-5 days")) <= date("Y-m-d", strtotime($s->paid_date)) && date("Y-m-d") >= date("Y-m-d", strtotime($s->paid_date))) {
             $amountFifth += $s->grand_total;
         }
     }

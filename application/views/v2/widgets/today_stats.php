@@ -36,9 +36,11 @@ endif;
                         </div>
                         <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
                             <h3>$<?php $totalPayments = 0;
-                                    foreach ($payment as $p) {
-                                        $totalPayments += $p->amount;
-                                    }
+                                    if(!empty($payment)):
+                                        foreach ($payment as $p) {
+                                            $totalPayments += $p->amount;
+                                        }
+                                    endif;
                                     echo $totalPayments;
                                     ?></h3>
                             <span>Earned</span>
@@ -54,12 +56,13 @@ endif;
                         </div>
                         <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
                             <h3>$<?php $totalPayments = 0;
-                                    foreach ($paymentInvoices as $PI) {
-                                        if(date("Y-m-d")==date("Y-m-d",strtotime($PI->created_at))){
-                                            $totalPayments += $PI->payment_amount;
+                                    if(!empty($paymentInvoices)):
+                                        foreach ($paymentInvoices as $PI) {
+                                            if(date("Y-m-d")==date("Y-m-d",strtotime($PI->created_at))){
+                                                $totalPayments += $PI->payment_amount;
+                                            }
                                         }
-                                        
-                                    }
+                                    endif;
                                     echo $totalPayments;
                                     ?></h3>
                             <span>Collected</span>
