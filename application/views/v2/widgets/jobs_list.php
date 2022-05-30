@@ -172,7 +172,7 @@ endif;
 <div class="<?= $class ?>" data-id="<?= $id ?>" id="widget_<?= $id ?>" draggable="true">
     <div class="nsm-card-header">
         <div class="nsm-card-title">
-            <span>Latest Jobs</span>
+            <span>Jobs Activities</span>
         </div>
         <div class="nsm-card-controls">
             <!--<a role="button" class="nsm-button btn-sm m-0 me-2" id="table-modal">
@@ -194,33 +194,16 @@ endif;
     </div>
     <div class="nsm-card-content jobs_stat">
         <div class="nsm-widget-table">
-            <div class="row timesheet-header">
-                <div class="col-12">
-                    <div class="widget-item timesheet-item">
-                        <div class="content">
-                            <div class="details">
-                                <span class="content-subtitle fw-bold">Job Number</span>
-                            </div>
-                            <div class="controls">
-                                <div class="timesheet-group">
-                                    <div class="timesheet-time">
-                                        <span class="content-subtitle fw-bold d-block">Amount</span>
-                                    </div>
-                                </div>
-                                <div class="timesheet-group">
-                                    <!--<div class="timesheet-time">
-                                        <span class="content-subtitle fw-bold d-block">Date</span>
-                                    </div>-->
-                                    <div class="timesheet-time">
-                                        <span class="content-subtitle fw-bold d-block">Status</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-12">
+            <table class="table responsive">
+                <thead>
+                    <th>Updated</th>
+                    <th>Name</th>
+                    <th>Address</th>
+                    <th>Job Number</th>
+                    <th>Status</th>
+                    <th>Amount</th>
+                </thead>
+                <tbody>
                 <?php foreach($latestJobs as $job): 
                     switch($job->status):
                         case "New":
@@ -249,27 +232,12 @@ endif;
                             break;
                     endswitch;
                     ?>
-                    
-                <div class="widget-item timesheet-item" onclick="location.href='<?= base_url('job/job_preview/').$job->id ?>'">
-                    <div class="content">
-                        <div class="details">
-                            <span class="content-title"><?= $job->job_number; ?></span>
-                            <span class="content-subtitle d-block"><?= $job->job_type; ?></span>
-                            <!--<small class="content-subtitle d-block"><?= date_format(date_create($job->start_date), "m/d/Y"); ?></small>-->
-                        </div>
-                        <div class="controls">
-                            <div class="timesheet-group">
-                                <div class="timesheet-time">
-                                    <span class="content-subtitle d-block"><span class="timesheet-labels">$<?= $job->amount; ?> </span>
-                                </div>
-                            </div>
-                            <div class="timesheet-group">
-                                <!--<div class="timesheet-time">
-                                    <span class="content-subtitle "><span class="timesheet-labels"><?= date_format(date_create($job->start_date), "m/d/Y"); ?></span>
-                                </div>-->
-                                <div class="timesheet-time">
-                                    <span class="content-subtitle "><span class="timesheet-labels">
-                                    <?php
+                    <tr onclick="location.href='<?= base_url('job/job_preview/').$job->id ?>'">
+                        <td >May 28</td>
+                        <td ><?= $job->first_name. '<br>' . $job->last_name ; ?></td>
+                        <td ><?= $job->city. ',<br>'. $job->state ; ?></td>
+                        <td ><?= $job->job_number; ?></td>
+                        <td ><?php
                                             for($x=1;$x<=$badgeCount;$x++){
                                                 ?>
                                                     <span class="nsm-badge primary-enhanced"></span>
@@ -280,15 +248,12 @@ endif;
                                                     <span class="nsm-badge primary"></span>
                                                 <?php
                                             }
-                                        ?>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <?php endforeach; ?>
-            </div>
+                                        ?></td>
+                        <td >$<?= $job->amount; ?></td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
         </div>
     </div>      
 </div>

@@ -27,7 +27,20 @@ class Login extends CI_Controller
     }
 
     public function index()
-    {
+    {   
+        $remember_me = false;
+        $remember_username = '';
+        $remember_password = '';
+
+        if( $this->input->cookie('remember_me') && $this->input->cookie('username') ){
+            $remember_me = true;
+            $remember_username = $this->input->cookie('username');
+            $remember_password = $this->input->cookie('password');
+        } 
+
+        $this->data['remember_username'] = $remember_username;
+        $this->data['remember_password'] = $remember_password;
+        $this->data['remember_me'] = $remember_me;
         $this->load->view('account/login', $this->data, false);
     }
 
@@ -67,6 +80,16 @@ class Login extends CI_Controller
 
         if ($is_recaptcha_enabled) {
             $this->form_validation->set_rules('g-recaptcha-response', 'Google Recaptcha', 'callback_validate_recaptcha');
+        }   
+
+        if( post('remember_me') ){
+            set_cookie('username', post('username'), 604800);
+            set_cookie('password', post('password'), 604800);
+            set_cookie('remember_me', true, 604800);
+        }else{
+            delete_cookie('username');
+            delete_cookie('password');
+            delete_cookie('remember_me');
         }
 
         if ($this->form_validation->run() == false) {

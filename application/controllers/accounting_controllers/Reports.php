@@ -8,6 +8,7 @@ class Reports extends MY_Controller {
 		parent::__construct();
         $this->checkLogin();
 
+        $this->load->model('accounting_favorite_reports_model');
         $this->load->model('accounting_report_groups_model');
         $this->load->model('accounting_report_types_model');
 
@@ -137,11 +138,71 @@ class Reports extends MY_Controller {
 
     public function add_to_favorites($reportTypeId)
     {
+        $favoriteId = $this->accounting_favorite_reports_model->add_to_favorites($reportTypeId, logged('company_id'));
 
+        echo json_encode([
+            'data' => $favoriteId,
+            'success' => $favoriteId ? true : false
+        ]);
     }
 
-    public function remove_to_favorites($reportTypeId)
+    public function remove_from_favorites($reportTypeId)
     {
-        
+        $delete = $this->accounting_favorite_reports_model->remove_from_favorites($reportTypeId, logged('company_id'));
+
+        echo json_encode([
+            'data' => $reportTypeId,
+            'success' => $delete ? true : false
+        ]);
+    }
+
+    public function custom()
+    {
+        $this->page_data['company_details'] = $this->timesheet_model->get_user_and_company_details(logged('id'));
+        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->page_data['employees'] = $this->vendors_model->getEmployees(logged('company_id'));
+        $this->page_data['page_title'] = "Reports";
+        $this->page_data['management_reports'] = $this->accounting_management_reports->get_management_reports_by_company(logged('company_id'));
+        $this->load->view('accounting/reports/custom', $this->page_data);
+    }
+
+    public function management()
+    {
+        $this->page_data['company_details'] = $this->timesheet_model->get_user_and_company_details(logged('id'));
+        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->page_data['employees'] = $this->vendors_model->getEmployees(logged('company_id'));
+        $this->page_data['page_title'] = "Reports";
+        $this->page_data['management_reports'] = $this->accounting_management_reports->get_management_reports_by_company(logged('company_id'));
+        $this->load->view('accounting/reports/management_reports', $this->page_data);
+    }
+
+    public function activities()
+    {
+        $this->page_data['company_details'] = $this->timesheet_model->get_user_and_company_details(logged('id'));
+        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->page_data['employees'] = $this->vendors_model->getEmployees(logged('company_id'));
+        $this->page_data['page_title'] = "Reports";
+        $this->page_data['management_reports'] = $this->accounting_management_reports->get_management_reports_by_company(logged('company_id'));
+        $this->load->view('accounting/reports/activities', $this->page_data);
+    }
+
+    public function analytics()
+    {
+        $this->page_data['company_details'] = $this->timesheet_model->get_user_and_company_details(logged('id'));
+        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->page_data['employees'] = $this->vendors_model->getEmployees(logged('company_id'));
+        $this->page_data['page_title'] = "Reports";
+        $this->page_data['management_reports'] = $this->accounting_management_reports->get_management_reports_by_company(logged('company_id'));
+        $this->load->view('accounting/reports/analytics', $this->page_data);
+    }
+
+    public function payscale()
+    {
+        $this->page_data['company_details'] = $this->timesheet_model->get_user_and_company_details(logged('id'));
+        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->page_data['employees'] = $this->vendors_model->getEmployees(logged('company_id'));
+        $this->page_data['page_title'] = "Reports";
+        $this->page_data['management_reports'] = $this->accounting_management_reports->get_management_reports_by_company(logged('company_id'));
+        $this->load->view('accounting/reports/payscale', $this->page_data);
     }
 }

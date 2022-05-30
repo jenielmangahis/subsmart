@@ -16,7 +16,7 @@ class Accounting_favorite_reports_model extends MY_Model {
         return $this->db->insert_id();
     }
 
-    public function remove_to_favorites($reportTypeId, $companyId)
+    public function remove_from_favorites($reportTypeId, $companyId)
     {
         $this->db->where('report_type_id', $reportTypeId);
         $this->db->where('company_id', $companyId);

@@ -47,14 +47,14 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     <?php echo form_open('/login/check', ['method' => 'POST', 'autocomplete' => 'off']); ?>
     <div class="form-group has-feedback">
       <input type="text" class="form-control" placeholder="Enter Username or Email..."
-        value="<?php echo post('username') ?>"
+        value="<?php echo post('username') == '' ? $remember_username : post('username'); ?>"
         name="username" autofocus />
       <span class="fa fa-user form-control-feedback"></span>
       <?php echo form_error('username', '<div class="error" style="color: red;">', '</div>'); ?>
     </div>
 
     <div class="form-group has-feedback">
-      <input type="password" class="form-control" placeholder="Password" name="password">
+      <input type="password" class="form-control" placeholder="Password" value="<?php echo $remember_password != '' ? $remember_password : ''; ?>" name="password">
       <span class="fa fa-lock form-control-feedback"></span>
       <?php echo form_error('password', '<div class="error" style="color: red;">', '</div>'); ?>
     </div>
@@ -78,7 +78,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       <div class="col-xs-8">
         <div class="checkbox icheck mr-top-6">
           <label>
-            <input type="checkbox" <?php echo post('remember_me') ? 'checked' : '' ?>
+            <input type="checkbox" <?php echo $remember_me ? 'checked' : '' ?>
             name="remember_me" /> Remember Me
           </label>
         </div>
