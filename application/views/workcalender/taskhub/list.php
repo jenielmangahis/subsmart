@@ -66,6 +66,7 @@ label>input {
                         <div class="col-sm-6 pr-b10">
                             <div class="float-right d-none d-md-block">
                                 <div class="dropdown">
+                                    <a href="#" class="btn btn-primary btn-complete-all" id=""><i class="fa fa-check"></i> Clear All</a>
                                     <a href="#" class="btn btn-primary" id="btn-th-open-search"><i class="fa fa-search"></i> Search Task</a>
                                     <a href="<?php echo base_url('taskhub/entry'); ?>" class="btn btn-primary"><i class="fa fa-plus"></i> Add Task</a>
                                 </div>
@@ -297,6 +298,48 @@ label>input {
                     $('#modal-taskhub-entry-error-alert').modal('show');
                 }
             });
+        });
+    });
+
+    $(document).on('click', '.btn-complete-all', function(){
+        var url = base_url + 'taskhub/_mark_all_completed';
+
+        Swal.fire({
+            title: 'Clear All',
+            html: "This will mark all tasks as completed. Proceed with action?",
+            icon: 'question',
+            confirmButtonText: 'Proceed',
+            showCancelButton: true,
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    dataType: 'json',
+                    success: function(o) {
+                        if( o.is_success == 1 ){   
+                            Swal.fire({
+                                title: 'Update Successful!',
+                                text: "Taskhub Data Successfully Updated!",
+                                icon: 'success',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            }).then((result) => {
+                                //if (result.value) {
+                                    location.reload();
+                                //}
+                            });
+                        }else{
+                          Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            html: o.msg
+                          });
+                        }
+                    },
+                });
+            }
         });
     });
 
