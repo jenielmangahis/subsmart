@@ -1,17 +1,27 @@
-$('a.add-to-favorites').on('mouseover', function() {
-    $(this).children('i').removeClass('fa-star-o').addClass('fa-star');
+$('a.add-to-favorites').on('click', function(e) {
+    e.preventDefault();
+    var el = $(this);
+    var id = e.currentTarget.dataset.id;
+
+    $.get('/accounting/reports/add-to-favorites/'+id, function(res) {
+        var result = JSON.parse(res);
+
+        if(result.success) {
+            location.reload();
+        }
+    });
 });
 
-$('a.add-to-favorites').on('mouseout', function() {
-    $(this).children('i').removeClass('fa-star').addClass('fa-star-o');
-});
+$('a.remove-from-favorites').on('click', function(e) {
+    e.preventDefault();
+    var el = $(this);
+    var id = e.currentTarget.dataset.id;
 
-$('a.remove-to-favorites').on('mouseover', function() {
-    $(this).children('i').removeClass('fa-star').addClass('fa-star-o');
-    $(this).addClass('text-secondary');
-});
+    $.get('/accounting/reports/remove-from-favorites/'+id, function(res) {
+        var result = JSON.parse(res);
 
-$('a.remove-to-favorites').on('mouseout', function() {
-    $(this).children('i').removeClass('fa-star-o').addClass('fa-star');
-    $(this).removeClass('text-secondary');
+        if(result.success) {
+            location.reload();
+        }
+    });
 });

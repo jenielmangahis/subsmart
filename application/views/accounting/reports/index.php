@@ -1,44 +1,33 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <style type="text/css">
-    .report-group-items li {
-        margin-bottom: 15px;
-    }
-
-    .report-group-items li a {
-        color: #259e57;
-        text-decoration: none;
-        outline: none;
-        font-size: 16px
-    }
-
-    .report-group {
-        font-size: 20px;
-        font-weight: normal;
-        margin-bottom: 25px;
-        color: #2c3659;
-    }
-
-    .report-group span {
-        margin-right: 10px;
-    }
-
-    .report-group-items {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-    }
-
-    ul li .cursor-pointer a {
-        font-size: 12px;
-    }
-
-    #myTabContent a.remove-to-favorites {
+    #myTabContent a.remove-from-favorites {
         color: #28a745;
     }
 
-    #myTabContent a.add-to-favorites:hover {
-        color: #28a745!important;
+    #myTabContent a.remove-from-favorites:hover, #myTabContent a.remove-from-favorites:focus {
+        color: #6c757d;
+    }
+
+    #myTabContent a.remove-from-favorites:hover i::before, #myTabContent a.remove-from-favorites:focus i::before {
+        content: "\f006";
+    }
+
+    #myTabContent a.add-to-favorites {
+        color: #6c757d;
+    }
+
+    #myTabContent a.add-to-favorites:hover, #myTabContent a.add-to-favorites:focus {
+        color: #28a745;
+    }
+
+    #myTabContent a.add-to-favorites:hover i::before, #myTabContent a.add-to-favorites:focus i::before {
+        content: "\f005";
+    }
+
+    #myTabContent a.collapse-toggle:not(.collapsed) span.rotate-icon {
+        -webkit-transform: rotate(90deg);
+        transform: rotate(90deg);
     }
 </style>
 <?php include viewPath('includes/header'); ?>
@@ -69,11 +58,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div class="row pb-3">
                                 <div class="col-md-12 banking-tab-container">
                                     <a href="<?php echo url('/accounting/reports')?>" class="banking-tab-active text-decoration-none">Standard</a>
-                                    <a href="<?php echo url('/accounting/custom-reports')?>" class="banking-tab">Custom Reports</a>
-                                    <a href="<?php echo url('/accounting/management-reports')?>" class="banking-tab">Management Reports</a>
-                                    <a href="<?php echo url('/accounting/activities-reports')?>" class="banking-tab">Activities Reports</a>
-                                    <a href="<?php echo url('/accounting/analytics')?>" class="banking-tab">Analytics</a>
-                                    <a href="<?php echo url('/accounting/payscale')?>" class="banking-tab">PayScale</a>
+                                    <a href="<?php echo url('/accounting/reports/custom')?>" class="banking-tab">Custom Reports</a>
+                                    <a href="<?php echo url('/accounting/reports/management')?>" class="banking-tab">Management Reports</a>
+                                    <a href="<?php echo url('/accounting/reports/activities')?>" class="banking-tab">Activities Reports</a>
+                                    <a href="<?php echo url('/accounting/reports/analytics')?>" class="banking-tab">Analytics</a>
+                                    <a href="<?php echo url('/accounting/reports/payscale')?>" class="banking-tab">PayScale</a>
                                 </div>
                             </div>
                         </div>
@@ -84,12 +73,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <div id="<?=str_replace(' ', '-', strtolower($reportGroup->description))?>">
                                     <div class="card p-0">
                                         <div class="card-header p-4">
-                                            <a href="#<?=str_replace(' ', '-', strtolower($reportGroup->description))?>-collapse" class="card-link collapsed h5 text-dark" data-toggle="collapse" aria-expanded="false">
+                                            <a href="#<?=str_replace(' ', '-', strtolower($reportGroup->description))?>-collapse" class="card-link h5 text-dark collapse-toggle" data-toggle="collapse" aria-expanded="true">
                                                 <span class="fa fa-chevron-right rotate-icon"></span>
                                                 <span class="pl-3"><?=$reportGroup->description?></span>
                                             </a>
                                         </div>
-                                        <div class="collapse p-3" id="<?=str_replace(' ', '-', strtolower($reportGroup->description))?>-collapse" data-parent="#<?=str_replace(' ', '-', strtolower($reportGroup->description))?>" style="background-image: url(<?=assets_url($reportGroup->icon_link)?>); background-repeat: no-repeat; background-position: right bottom;">
+                                        <div class="collapse p-3 show" id="<?=str_replace(' ', '-', strtolower($reportGroup->description))?>-collapse" data-parent="#<?=str_replace(' ', '-', strtolower($reportGroup->description))?>" style="background-image: url(<?=assets_url($reportGroup->icon_link)?>); background-repeat: no-repeat; background-position: right bottom;">
                                             <div class="row">
                                                 <?php $reportTypesColumns = count($reportGroup->report_types) > 8 ? array_chunk($reportGroup->report_types, ceil(count($reportGroup->report_types) / 2)) : [$reportGroup->report_types]; ?>
                                                 <?php foreach($reportTypesColumns as $colRepTypes) : ?>
@@ -98,17 +87,23 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         <?php foreach($colRepTypes as $reportType) : ?>
                                                             <?php $favorite = $this->accounting_report_types_model->get_favorite_report_by_report_type_id($reportType->id, logged('company_id'));?>
                                                             <li class="border-bottom p-3 cursor-pointer">
-                                                                <a href="#" class=" font-weight-normal"><?=$reportType->description?></a>
+                                                                <a href="#" class=" font-weight-normal"><?=$reportType->name?></a>
                                                                 <a href="#" class="pl-1 text-secondary h6 position-relative top-1"><i class="fa fa-question-circle-o "></i></a>
-                                                                <div class="dropdown pull-right d-inline-block">
+                                                                <div class="dropdown pull-right d-inline-block" style="min-width: 4px; min-height: 1px">
+                                                                    <?php if($reportType->customizable) : ?>
                                                                     <span type="button" data-toggle="dropdown" aria-expanded="false">
                                                                         <i class="fa fa-ellipsis-v fa-lg"></i>
                                                                     </span>
                                                                     <ul class="dropdown-menu dropdown-menu-right" x-placement="bottom-end">
                                                                         <li><a href="#" class="dropdown-item">Customize</a></li>
                                                                     </ul>
+                                                                    <?php endif; ?>
                                                                 </div>
-                                                                <a href="#" data-id="<?=$reportType->id?>" class="pr-4 h6 pull-right <?=is_null($favorite) ? 'text-secondary add-to-favorites' : 'remove-to-favorites'?>"><i class="fa <?=is_null($favorite) ? 'fa-star-o' : 'fa-star'?> fa-lg"></i></a>
+                                                                <?php if($reportType->favoritable === "1") : ?>
+                                                                <a href="#" data-id="<?=$reportType->id?>" class="pr-4 h6 pull-right <?=is_null($favorite) ? 'add-to-favorites' : 'remove-from-favorites'?>">
+                                                                    <i class="fa <?=is_null($favorite) ? 'fa-star-o' : 'fa-star'?> fa-lg"></i>
+                                                                </a>
+                                                                <?php endif; ?>
                                                             </li>
                                                         <?php endforeach; ?>
                                                     </ul>
@@ -119,103 +114,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </div>
                                 </div>
                                 <?php endforeach; ?>
-                                <!-- <div id="favorites">
-                                    <div class="card p-0">
-                                        <div class="card-header p-4">
-                                            <a class="card-link collapsed h5 text-dark" data-toggle="collapse" href="#favoritesCollapse" aria-expanded="false">
-                                                <span class="fa fa-chevron-right rotate-icon"></span>
-                                                <span class="pl-3">Favorites</span>
-                                            </a>
-                                        </div>
-                                        <div id="favoritesCollapse" class="collapse" data-parent="#favorites">
-                                            <div class="row">
-                                                <div class="col-md-5">
-                                                    <ul class="list-unstyled">
-                                                        <li class="border-bottom p-3 cursor-pointer">
-                                                            <a href="<?php echo url('accounting/aging_summary_report')?>"
-                                                                class=" font-weight-normal">Accounts receivable
-                                                                aging summary</a>
-                                                            <a href="#"
-                                                                class="pl-1 text-secondary h6 position-relative top-1"><i
-                                                                    class="fa fa-question-circle-o "></i></a>
-
-                                                            <div class="dropdown pull-right d-inline-block">
-                                                                <span type="button" data-toggle="dropdown"
-                                                                    aria-expanded="false">
-                                                                    <i class="fa fa-ellipsis-v fa-lg"></i>
-                                                                </span>
-                                                                <ul class="dropdown-menu dropdown-menu-right"
-                                                                    x-placement="bottom-end">
-                                                                    <li><a href="#"
-                                                                            class="dropdown-item">Customize</a>
-                                                                    </li>
-                                                                </ul>
-                                                            </div>
-                                                            <a href="#" onclick="addToFavorites(this)"
-                                                                data-name="Accounts receivable aging summary"
-                                                                data-link="#"
-                                                                class="pr-4 text-secondary h6 pull-right"><i
-                                                                    class="fa fa-star-o fa-lg"></i></a>
-                                                        </li>
-                                                        <li class="border-bottom p-3 cursor-pointer">
-                                                            <a href="<?php echo url('accounting/balance_sheet')?>"
-                                                                class=" font-weight-normal">Balance Sheet</a>
-                                                            <a href="#"
-                                                                class="pl-1 text-secondary h6 position-relative top-1"><i
-                                                                    class="fa fa-question-circle-o "></i></a>
-
-                                                            <div class="dropdown pull-right d-inline-block">
-                                                                <span type="button" data-toggle="dropdown"
-                                                                    aria-expanded="false">
-                                                                    <i class="fa fa-ellipsis-v fa-lg"></i>
-                                                                </span>
-                                                                <ul class="dropdown-menu dropdown-menu-right"
-                                                                    x-placement="bottom-end">
-                                                                    <li><a href="#"
-                                                                            class="dropdown-item">Customize</a>
-                                                                    </li>
-                                                                </ul>
-                                                            </div>
-                                                            <a href="#" onclick="addToFavorites(this)"
-                                                                data-name="Balance Sheet" data-link="#"
-                                                                class="pr-4 text-secondary h6 pull-right"><i
-                                                                    class="fa fa-star-o fa-lg"></i></a>
-                                                        </li>
-                                                        <li class="border-bottom p-3 cursor-pointer">
-                                                            <a href="<?php echo url('accounting/profit_and_loss')?>"
-                                                                class=" font-weight-normal">Profit and Loss</a>
-                                                            <a href="#"
-                                                                class="pl-1 text-secondary h6 position-relative top-1"><i
-                                                                    class="fa fa-question-circle-o "></i></a>
-
-                                                            <div class="dropdown pull-right d-inline-block">
-                                                                <span type="button" data-toggle="dropdown"
-                                                                    aria-expanded="false">
-                                                                    <i class="fa fa-ellipsis-v fa-lg"></i>
-                                                                </span>
-                                                                <ul class="dropdown-menu dropdown-menu-right"
-                                                                    x-placement="bottom-end">
-                                                                    <li><a href="#"
-                                                                            class="dropdown-item">Customize</a>
-                                                                    </li>
-                                                                </ul>
-                                                            </div>
-                                                            <a href="#" onclick="addToFavorites(this)"
-                                                                data-name="Profit and Loss" data-link="#"
-                                                                class="pr-4 text-secondary h6 pull-right"><i
-                                                                    class="fa fa-star-o fa-lg"></i></a>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                                <div class="col-md-5">
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <img class="growth-icon-hover" src="<?php echo $url->assets; ?>/img/reportIcons/favorites.PNG" style="position: absolute;right: 0px;bottom: 0px;">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div> -->
                             </div>
                         </div>
                     </div>
