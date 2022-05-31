@@ -290,8 +290,9 @@ class Event_model extends MY_Model
         $this->db->select('ac_leadsource.*, count(acs_office.lead_source) as leadSourceCount');
         $this->db->from('ac_leadsource');
         $this->db->join('acs_office', 'acs_office.lead_source = ac_leadsource.ls_name', 'left');
-        $this->db->group_by('lead_source');
+        $this->db->group_by('ls_id');
         $this->db->order_by('leadSourceCount', 'desc');
+        $this->db->where('acs_office.lead_source !=', null);
         $query = $this->db->get();
         return $query->result();
     }
@@ -321,11 +322,12 @@ class Event_model extends MY_Model
     public function getLatestJobs()
     {
         $cid=logged('company_id');
-        $this->db->select('jobs.id,status,job_number,job_type,start_date,amount');
+        $this->db->select('first_name,last_name,city,state,jobs.id,jobs.status,job_number,job_type,start_date,amount');
         $this->db->from('jobs');
         $this->db->join('job_payments', 'job_payments.job_id = jobs.id', 'left');
+        $this->db->join('acs_profile', 'acs_profile.prof_id = jobs.customer_id', 'left');
         $this->db->order_by('jobs.id', 'desc');
-        $this->db->where('company_id', $cid);
+        $this->db->where('jobs.company_id', $cid);
         $this->db->limit(10);
         $query = $this->db->get();
         return $query->result();

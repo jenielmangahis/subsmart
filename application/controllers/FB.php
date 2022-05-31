@@ -54,7 +54,7 @@ class FB extends MY_Controller {
 		$user = (object)$this->session->userdata('logged');
 		$data = $this->input->get();
 		// $this->output->set_status_header(200)->set_content_type('application/json')->set_output(json_encode($data));
-		$response = $this->form_builder->getByUserID($user->id, $data);
+		$response = $this->form_builder->getByUserID($user->id ?? logged('id'), $data);
 		$this->output->set_status_header($response['code'])->set_content_type('application/json')->set_output(json_encode($response));
 	}
 
@@ -97,7 +97,7 @@ class FB extends MY_Controller {
 		$user = (object)$this->session->userdata('logged');
 		$data = [
 			'name' 		=> $this->input->post('name'),
-			'user_id'	=> $user->id
+			'user_id'	=> $user->id ?? logged('id')
 		];
 
 		$response = $this->form_builder->create($data);

@@ -39,78 +39,34 @@
                         </div>
                     </div>
                 </div>
-                <table class="nsm-table">
+                <table class="nsm-table" id="formbuildertable">
                     <thead>
                         <tr>
-                            <td class="table-icon"></td>
                             <td data-name="Form Name">Form Name</td>
                             <td data-name="Results">Results</td>
                             <td data-name="Favorite">Favorite</td>
                             <td data-name="Daily Results">Daily Results</td>
                             <td data-name="Modified">Modified</td>
+                            <td data-name="Actions"></td>
                         </tr>
                     </thead>
-                    <tbody>
-                        <?php
-                        if (!empty($estimates)) :
-                        ?>
-                            <?php
-                            foreach ($estimates as $estimate) :
-                            ?>
-                                <tr>
-                                    <td>
-                                        <div class="table-row-icon">
-                                            <i class='bx bx-add-to-queue'></i>
-                                        </div>
-                                    </td>
-                                    <td class="fw-bold nsm-text-primary"><?php echo $estimate->estimate_number; ?></td>
-                                    <td>
-                                        <label class="d-block"><?php echo $estimate->job_name; ?></label>
-                                        <a class="nsm-link" href="<?php echo base_url('customer/view/' . $estimate->customer_id) ?>">
-                                            <?php echo get_customer_by_id($estimate->customer_id)->first_name . ' ' . get_customer_by_id($estimate->customer_id)->last_name ?>
-                                        </a>
-                                    </td>
-                                    <td><?php echo date('M d, Y', strtotime($estimate->estimate_date)) ?></td>
-                                    <td><?php echo $estimate->estimate_type; ?></td>
-                                    <td><span class="nsm-badge <?= $badge ?>"><?= $estimate->status; ?></span></td>
-                                    <td>
-                                        <?php
-                                        $total1 = $estimate->option1_total + $estimate->option2_total;
-                                        $total2 = $estimate->bundle1_total + $estimate->bundle2_total;
-
-                                        if ($estimate->estimate_type == 'Option') {
-                                            echo '$ ' . floatval($total1);
-                                        } elseif ($estimate->estimate_type == 'Bundle') {
-                                            echo '$ ' . floatval($total2);
-                                        } else {
-                                            echo '$ ' . floatval($estimate->grand_total);
-                                        }
-
-                                        ?>
-                                    </td>
-                                </tr>
-                            <?php
-                            endforeach;
-                            ?>
-                        <?php
-                        else :
-                        ?>
-                            <tr>
-                                <td colspan="6">
-                                    <div class="nsm-empty">
-                                        <span>No results found.</span>
-                                    </div>
-                                </td>
-                            </tr>
-                        <?php
-                        endif;
-                        ?>
-                    </tbody>
                 </table>
             </div>
         </div>
     </div>
 </div>
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css">
+<style>
+    table.dataTable thead th, table.dataTable thead td,
+    table.dataTable tfoot th, table.dataTable tfoot td {
+        border-color: rgba(0, 0, 0, 0.3);
+    }
+</style>
+
+<script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+<script type="module"  src="<?= base_url("assets/js/formbuilder/index.js") ?>"></script>
 
 <script type="text/javascript">
     $(document).ready(function() {

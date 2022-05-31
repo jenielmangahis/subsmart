@@ -661,7 +661,12 @@ $route['accounting/expenses/export']['post'] = 'accounting_controllers/expenses/
 
 $route['accounting/reports'] = 'accounting_controllers/reports/index';
 $route['accounting/reports/add-to-favorites/(:any)'] = 'accounting_controllers/reports/add_to_favorites/$1';
-$route['accounting/reports/remove-to-favorites/(:any)'] = 'accounting_controllers/reports/remove_to_favorites/$1';
+$route['accounting/reports/remove-from-favorites/(:any)'] = 'accounting_controllers/reports/remove_from_favorites/$1';
+$route['accounting/reports/custom'] = 'accounting_controllers/reports/custom';
+$route['accounting/reports/management'] = 'accounting_controllers/reports/management';
+$route['accounting/reports/activities'] = 'accounting_controllers/reports/activities';
+$route['accounting/reports/analytics'] = 'accounting_controllers/reports/analytics';
+$route['accounting/reports/payscale'] = 'accounting_controllers/reports/payscale';
 
 $route['accounting/vendor-details/(:any)'] = 'accounting/vendordetails/$1';
 $route['accounting/taxes/edit-settings'] = 'taxes/edit_settings';
