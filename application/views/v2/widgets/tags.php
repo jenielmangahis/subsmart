@@ -31,10 +31,18 @@
 </div>
 
 <script type="text/javascript">
+    let stat_colors = [];
+    let stat_tags   = [];
+    let stat_tag_count = [];
     let badgeClasses = ["", "success", "error", "primary"];
     $(document).ready(function() {
         loadTodayStats();
     });
+
+    function generateRandomColor() {
+      color = "hsl(" + Math.random() * 360 + ", 100%, 75%)";
+      return color;
+    }
 
     function loadTodayStats() {
         $.ajax({
@@ -47,7 +55,14 @@
 
                 let _statsItems = $('.stats-item');
                 _statsItems.each(function() {
-                    $(this).addClass(badgeClasses[Math.floor(Math.random() * badgeClasses.length)]);
+                    //$(this).addClass(badgeClasses[Math.floor(Math.random() * badgeClasses.length)]);
+                    var tag_name   = $(this).attr('data-tag');
+                    var tag_count   = $(this).attr('data-tagcount');
+                    var stat_color = generateRandomColor();
+                    stat_colors.push(stat_color);
+                    stat_tags.push(tag_name);
+                    stat_tag_count.push(tag_count);
+                    $(this).css("background-color", stat_color);
                 });
             }
 
