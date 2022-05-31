@@ -7,6 +7,23 @@ let template_elements;
 let signpads;
 const element_objs = [];
 
+window.addEventListener("DOMContentLoaded", function () {
+    const isLocalhost = ["localhost", "127.0.0.1"].includes(location.hostname);
+    if (!isLocalhost) return;
+  
+    $.ajaxSetup({
+      beforeSend: function (_, settings) {
+        if (settings.url.startsWith("/fb/")) {
+          settings.url = settings.url.replace(
+            "/fb/",
+            "/nsmartrac/fb/"
+          );
+        }
+      },
+    });
+  });
+  
+
 const handleCreateForm = async (e) => {
     e.preventDefault()
     let url = '/fb/create';

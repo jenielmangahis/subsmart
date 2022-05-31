@@ -898,6 +898,22 @@ class Workorder_model extends MY_Model
         // return $query->result();
     }
 
+    public function getheaderSolarByID()
+    {
+        $cid = getLoggedCompanyID();
+
+        $where = array(
+            'company_id' => $cid,
+            'solar'   => '1'
+        );
+
+        $this->db->select('*');
+		$this->db->from('work_order_headers');
+		$this->db->where($where);
+		$query = $this->db->get();
+		return $query->row();
+    }
+
     public function save_header($data){
         $vendor = $this->db->insert('work_order_headers', $data);
 	    $insert = $this->db->insert_id();
