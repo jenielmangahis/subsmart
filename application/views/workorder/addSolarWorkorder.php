@@ -7,527 +7,52 @@ defined('BASEPATH') or exit('No direct script access allowed');
 <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
 <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
 <style>
-    label>input {
-      visibility: initial !important;
-      position: initial !important; 
-    }
-   .but:hover {
-    font-weight: 900;
-    color:black;
-    }
-    .but-red:hover {
-    font-weight: 900;
-    color:red;
-    }
-    .required:after {
-    content:" *";
-    color: red;
-    }
-    .navbar-side.closed{
-        padding-top:100px !important;
-    }
-    .pointer {cursor: pointer;}
-
-    .highlight{
-    background-color:#CAA1FC;
-    color:red;
-    padding:12px;
+.box-left-mini{
+    float:left;
+    background-image:url(website-content/hotcampaign.png);
+    width:292px;
+    /* height:141px; */
 }
 
-#signature-pad {min-height:200px;}
-#signature-pad canvas {background-color:white;left: 0;top: 0;width: 100%;min-height:250px;height: 100%}
-
-#signature-pad2 {min-height:200px;}
-#signature-pad2 canvas {background-color:white;left: 0;top: 0;width: 100%;min-height:250px;height: 100%}
-
-#signature-pad3 {min-height:200px;}
-#signature-pad3 canvas {background-color:white;left: 0;top: 0;width: 100%;min-height:250px;height: 100%}
-
-#signature-padM {min-height:200px;}
-#signature-padM canvas {background-color:white;left: 0;top: 0;width: 100%;min-height:250px;height: 100%}
-
-#signature-pad2M {min-height:200px;}
-#signature-pad2M canvas {background-color:white;left: 0;top: 0;width: 100%;min-height:250px;height: 100%}
-
-#signature-pad3M {min-height:200px;}
-#signature-pad3M canvas {background-color:white;left: 0;top: 0;width: 100%;min-height:250px;height: 100%}
-
-.switch {
-  position: relative;
-  display: inline-block;
-  width: 60px;
-  height: 34px;
-}
-
-.switch input { 
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-.slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #ccc;
-  -webkit-transition: .4s;
-  transition: .4s;
-}
-
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 26px;
-  width: 26px;
-  left: 4px;
-  bottom: 4px;
-  background-color: white;
-  -webkit-transition: .4s;
-  transition: .4s;
-}
-
-input:checked + .slider {
-  background-color: #10ab06;
-}
-
-input:focus + .slider {
-  box-shadow: 0 0 1px #10ab06;
-}
-
-input:checked + .slider:before {
-  -webkit-transform: translateX(26px);
-  -ms-transform: translateX(26px);
-  transform: translateX(26px);
-}
-
-/* Rounded sliders */
-.slider.round {
-  border-radius: 34px;
-}
-
-.slider.round:before {
-  border-radius: 50%;
-}
-
-.tr_qty{
-    width:150px;
-}
-
-
-nav > .nav.nav-tabs{
-
-border: none;
-  color:#fff;
-  background:#272e38;
-  border-radius:0;
-
-}
-nav > div a.nav-item.nav-link,
-nav > div a.nav-item.nav-link.active
-{
-border: none;
-  padding: 18px 25px;
-  color:#fff;
-  background:#272e38;
-  border-radius:0;
-}
-
-/* nav > div a.nav-item.nav-link.active:after
-{
-content: "";
-position: relative;
-bottom: -60px;
-left: -10%;
-border: 15px solid transparent;
-border-top-color: #e74c3c ;
-} */
-.tab-content{
-background: #fdfdfd;
-  line-height: 25px;
-  border: 1px solid #ddd;
-  border-top:5px solid #e74c3c;
-  border-bottom:5px solid #e74c3c;
-  padding:30px 25px;
-}
-
-nav > div a.nav-item.nav-link:hover,
-nav > div a.nav-item.nav-link:focus
-{
-border: none;
-  background: #e74c3c;
-  color:#fff;
-  border-radius:0;
-  transition:background 0.20s linear;
-}
-
-.signature_mobile
-{
-    display: none;
-}
-
-.show_mobile_view
-{
-    display: none;
-}
-
-@media only screen and (max-device-width: 600px) {
-    .label-element{
-        position:absolute;
-        top:-8px;
-        left:25px;
-        font-size:12px;
-        color:#666;
-        }
-    .input-element{
-        padding:30px 5px 10px 8px;
-        width:100%;
-        height:55px;
-        /* border:1px solid #CCC; */
-        font-weight: bold;
-        margin-top: -15px;
-    }
-
-        .mobile_qty
-    {
-        background: transparent !important;
-        border: none !important;
-        outline: none !important;
-        padding: 0px 0px 0px 0px !important;
-        text-align: center;
-    }
-
-    .select-wrap 
-    {
-    border: 2px solid #e0e0e0;
-    /* border-radius: 4px; */
-    margin-top: -10px;
-    /* margin-bottom: 10px; */
-    padding: 0 5px 5px;
-    width:100%;
-    /* background-color:#ebebeb; */
-    }
-
-    .select-wrap label
-    {
-    font-size:10px;
-    text-transform: uppercase;
-    color: #777;
-    padding: 2px 8px 0;
-    }
-
-    .m_select
-    {
-    /* background-color: #ebebeb;
-    border:0px; */
-    border-color: white !important;
-    border:0px !important;
-    outline:0px !important;
-    }
-    .select2 .select2-container .select2-container--default{
-        /* background-color: #ebebeb;
-    border:0px; */
-    border-color: white !important;
-    border:0px !important;
-    outline:0px !important;
-    }
-
-    .select2-container--default .select2-selection--single {
-    background-color: #fff;
-    border: 1px solid #fff !important;
-    border-radius: 4px;
-    }
-
-    .sub_label{
-        font-size:12px !important;
-    }
-
-    .signature_web
-    {
-        display: none;
-    }
-
-    .signature_mobile
-    {
-        display: block;
-    }
-
-    .hidden_mobile_view{
-        display: none;
-    }
-
-    .show_mobile_view
-    {
-        display: block;
-    }
-
-    .table_mobile
-    {
-        font-size:14px;
-    }
-
-    div.dropdown-wrapper select { 
-    width:115% /* This hides the arrow icon */; 
-    background-color:transparent /* This hides the background */; 
-    background-image:none; 
-    -webkit-appearance: none /* Webkit Fix */; 
-    border:none; 
-    box-shadow:none; 
-    padding:0.3em 0.5em; 
-    font-size:13px;
-    }
-    .signature-pad-canvas-wrapper {
-    margin: 15px 0 0;
-    border: 1px solid #cbcbcb;
-    border-radius: 3px;
-    overflow: hidden;
+.box-left-mini .front {
+    display: block;
+    z-index: 5;
     position: relative;
 }
-
-    .signature-pad-canvas-wrapper::after {
-        content: 'Name';
-        border-top: 1px solid #cbcbcb;
-        color: #cbcbcb;
-        width: 100%;
-        margin: 0 15px;
-        display: inline-flex;
-        position: absolute;
-        bottom: 10px;
-        font-size: 13px;
-        z-index: -1;
-    }
-
-    .tabs { list-style: none; }
-.tabs li { display: inline; }
-.tabs li a 
-{ 
-    color: black; 
-    float: left; 
-    display: block; 
-    /* padding: 4px 10px;  */
-    /* margin-left: -1px;  */
-    position: relative; 
-    /* left: 1px;  */
-    background: #a2a5a3; 
-    text-decoration: none; 
-}
-.tabs li a:hover 
-{ 
-    background: #ccc; 
-}
-.group:after 
-{ 
-    visibility: hidden; 
-    display: block; 
-    font-size: 0; 
-    content: " "; 
-    clear: both; 
-    height: 0; 
+.box-left-mini .front span {
+    background: #fff
 }
 
-.box-wrap 
-{ 
-    position: relative; 
-    min-height: 250px; 
+.box-left-mini .behind_container {
+    background-color: #ff0;
+    position: relative;
+    top: -18px;
 }
-.tabbed-area div div 
-{ 
-    background: white; 
-    padding: 20px; 
-    min-height: 250px; 
-    position: absolute; 
-    top: -1px; 
-    left: 0; 
-    width: 100%; 
+.box-left-mini .behind {
+    display: block;
+    z-index: 3;
 }
-
-.tabbed-area div div, .tabs li a 
-{ 
-    border: 1px solid #ccc; 
-}
-
-#box-one:target, #box-two:target, #box-three:target {
-  z-index: 1;
-}
-
-.group li.active a,
-.group li a:hover,
-.group li.active a:focus,
-.group li.active a:hover{
-  background-color: #52cc6e;
-  color: black; 
-}
-}
-
-.blockHead:after {
-  color: #00bcd4;
-  border-left: 20px solid;
-  border-top: 20px solid transparent;
-  border-bottom: 20px solid transparent;
-  display: inline-block;
-  content: '';
-  position: absolute;
-  right: -20px;
-  top: 0;
-}
-.blockHead {
-  background-color: #00bcd4;
-  /*width: 150px; */
-  height: 40px;
-  line-height: 40px;
-  display: inline-block;
-  position: relative;
-}
-.blocktext {
-  color: white;
-  font-weight: bold;
-  padding-left: 10px;
-  font-family: Arial;
-  font-size: 11;
-}
-
-.right-arrow {
-	display: inline-block;
-	position: relative;
-	background: #00bcd4;
-	padding: 15px;
-    color: white;
-}
-.right-arrow:after {
-	content: '';
-	display: block;  
-	position: absolute;
-	left: 100%;
-	top: 50%;
-	margin-top: -10px;
-	width: 0;
-	height: 0;
-	border-top: 10px solid transparent;
-	border-right: 10px solid transparent;
-	border-bottom: 10px solid transparent;
-	border-left: 10px solid #00bcd4;
-}
-
-.down-arrow {
-	display: inline-block;
-	position: relative;
-	background: darkcyan;
-	padding: 7px 0;
-	width: 150px;
-	text-align: center;
-}
-.down-arrow:after {
-	content: '';
-	display: block;  
-	position: absolute;
-	left: 0;
-	top: 100%;
-	width: 0;
-	height: 0;
-	border-top: 10px solid darkcyan;
-	border-right: 75px solid transparent;
-	border-bottom: 0 solid transparent;
-	border-left: 75px solid transparent;
-}
-
-.down-arrow2 {
-	display: inline-block;
-	position: relative;
-	background: #81167B;
-	padding: 7px 0;
-	width: 150px;
-	text-align: center;
-}
-.down-arrow2:after {
-	content: '';
-	display: block;  
-	position: absolute;
-	left: 0;
-	top: 100%;
-	width: 0;
-	height: 0;
-	border-top: 10px solid #81167B;
-	border-right: 75px solid transparent;
-	border-bottom: 0 solid transparent;
-	border-left: 75px solid transparent;
-}
-
-.down-arrow3 {
-	display: inline-block;
-	position: relative;
-	background: #F6B343;
-	padding: 7px 0;
-	width: 150px;
-	text-align: center;
-}
-.down-arrow3:after {
-	content: '';
-	display: block;  
-	position: absolute;
-	left: 0;
-	top: 100%;
-	width: 0;
-	height: 0;
-	border-top: 10px solid #F6B343;
-	border-right: 75px solid transparent;
-	border-bottom: 0 solid transparent;
-	border-left: 75px solid transparent;
-}
-
-.num{
-	position:relative;
-}
-
-.number{
-	position: absolute;
-}
-
-.value{
-	position: absolute;
-	top:0;
-	color: transparent !important;
-	background: transparent;
-	border:none;
-}
-
-#header_area {
-  width: 90%;
-  position: relative;
-}
-#header_area:hover > .btn-edit-header {
-  display: block;
-}
-.btn-edit-header {
-  display: none;
-  position: absolute;
-  top: 5px;
-  right: 5px;
-}
-.item-container{
-    background-color: #02a499;
-    padding: 5px;
-    color: #ffffff;
-    margin-right: 5px;
-    margin-top: 4px;
-}
-.selected-checklists{
-    width: 18%;
-}
-.selected-checklists li{
-    padding: 10px;
-}
-.selected-checklists li a{
-    float: right;
+img.company-logo2 {
+    width: 170px;
+    /* height: 70px; */
+    object-fit: contain;
+    margin: 0 auto;
+    margin-top: 8px;
 }
 </style>
+<style>
+#chartdiv {
+  width: 100%;
+  height: 400px;
+}
+</style>
+
     <!-- page wrapper start -->
     <div wrapper__section>
         <div class="container-fluid p-40">
           <div class="row" style="margin-top: 30px;">
             <div class="col">
-                <h3 class="m-0">Add New Work Order Solar</h3>
+                <h3 class="m-0">Solar Stimulus Data Control / 2024</h3>
             </div>
         </div>
 
@@ -542,19 +67,50 @@ border: none;
                 </div>
             </div>
             <br> -->
-            <?php echo form_open_multipart('workorder/savenewWorkorder', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?> 
+            <?php echo form_open_multipart('workorder/savenewWorkorderSolar', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?> 
                     <div class="row">
                         <div class="col-md-12">
                             <div id="header_area">
                                 <h4 class="mt-0 header-title mb-5">Header</h4>
                                 <div class="row">
-                                    <div class="col-md-12">
+                                    <div class="col-md-9">
                                         <ol class="breadcrumb" style="margin-top:-30px;"></i>
                                             <li class="breadcrumb-item active">
                                                 <label style="background-color:#E8E8E9;" id="headerContent"><?php echo $headers->content; ?></label>
                                                 <input type="hidden" id="headerID" name="header" value="<?php echo $headers->content; ?>">
                                             </li>
-                                        </ol>                                        
+                                        </ol>   
+                                        <div class="row">                   
+                                            <div class="col-md-3 form-group">
+                                                <label for="contact_name" class="label-element">Work Order #</label>
+                                                    <input type="text" class="form-control input-element" name="workorder_number" id="workorder_number" value="<?php echo "WO-"; 
+                                                            foreach ($number as $num):
+                                                                    $next = $num->work_order_number;
+                                                                    $arr = explode("-", $next);
+                                                                    $date_start = $arr[0];
+                                                                    $nextNum = $arr[1];
+                                                                //    echo $number;
+                                                            endforeach;
+                                                            $val = $nextNum + 1;
+                                                            echo str_pad($val,7,"0",STR_PAD_LEFT);
+                                                            ?>" required readonly/>
+                                                    <!-- <input type="text" class="form-control input-element" name="workorder_number" id="workorder-number" value="<?= $prefix . $val; ?>" required readonly/> -->
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                <div class="select-wrap">
+                                                    <label for="lead_source">Lead Source</label>
+                                                        <select id="lead_source" name="lead_source" class="form-control custom-select m_select">
+                                                            <option value="0">- none -</option>
+                                                            <?php foreach($lead_source as $lead){ ?>
+                                                                <option value="<?php echo $lead->ls_id; ?>"><?php echo $lead->ls_name; ?></option>
+                                                            <?php } ?>
+                                                        </select>
+                                                </div>    
+                                            </div>   
+                                        </div>                                     
+                                    </div> 
+                                    <div class="col-md-3">
+                                        <div style="margin-top:-30px;"><img src="<?= getCompanyBusinessProfileImage(); ?>" class="company-logo2"/> </div>                            
                                     </div> 
                                 </div>
                                 <br>
@@ -573,110 +129,214 @@ border: none;
                         </div>
                     </div>
 
-                    <div class="row">                   
-                        <div class="col-md-3 form-group">
-                            <label for="contact_name" class="label-element">Work Order #</label>
-                                <input type="text" class="form-control input-element" name="workorder_number" id="workorder_number" value="<?php echo "WO-"; 
-                                           foreach ($number as $num):
-                                                $next = $num->work_order_number;
-                                                $arr = explode("-", $next);
-                                                $date_start = $arr[0];
-                                                $nextNum = $arr[1];
-                                            //    echo $number;
-                                           endforeach;
-                                           $val = $nextNum + 1;
-                                           echo str_pad($val,7,"0",STR_PAD_LEFT);
-                                           ?>" required />
-                                <!-- <input type="text" class="form-control input-element" name="workorder_number" id="workorder-number" value="<?= $prefix . $val; ?>" required readonly/> -->
-                        </div>
-                        <div class="form-group col-md-4">
-                            <div class="select-wrap">
-                                <label for="lead_source">Lead Source</label>
-                                    <select id="lead_source" name="lead_source" class="form-control custom-select m_select">
-                                        <option value="0">- none -</option>
-                                        <?php foreach($lead_source as $lead){ ?>
-                                            <option value="<?php echo $lead->ls_id; ?>"><?php echo $lead->ls_name; ?></option>
-                                        <?php } ?>
-                                    </select>
-                            </div>    
-                        </div>   
+                    <div class="row" style="font-size:16px;">                   
+                        <div class=" col-md-6 box-left-mini">
+                            <center>
+                            <div class="front" style="text-align:center;background-color:#4a5594;color:white;padding:1%;border-radius:20px;width:95%;">
+                                <h4>Qualification Information for Solar</h4>
+                            </div>
+                            </center><br>
+                            <div class="behind_container" style="background-color:#ced4e4;margin-top:-20px;padding:20px;">
+                                <div class="row"> 
+                                    <div class="col-md-2">
+                                    <br><br>        
+                                        <div style="padding:20px;border-radius:5px;background-color:white;width:50%;">A</div>
+                                    </div>
+                                    <div class="col-md-10">
+                                    <br> <h6>Type of Roof</h6>
+                                    <input type="radio" name="hoa" class="form-"> Asphalt Single &emsp;
+                                    <input type="radio" name="hoa" class="form-"> Flat &emsp;
+                                    <input type="radio" name="hoa" class="form-"> Concrete Tile &emsp;
+                                    <input type="radio" name="hoa" class="form-"> Clay Tile &emsp; <br>
+                                    <input type="radio" name="hoa" class="form-"> Steel Single &emsp;
+                                    <input type="radio" name="hoa" class="form-"> Metal
+                                    <br><br><hr>
+                                    </div>
+                                </div>
+                                <div class="row"> 
+                                    <div class="col-md-2">
+                                        <div style="padding:20px;border-radius:5px;background-color:white;width:50%;">B</div>
+                                    </div>
+                                    <div class="col-md-10">
+                                    <h6>Square Footage of Home</h6>
+                                    <input type="text" name="sfoh" class="form-control">
+                                    <br><hr>
+                                    </div>
+                                </div>
+                                <div class="row"> 
+                                    <div class="col-md-2">
+                                        <div style="padding:20px;border-radius:5px;background-color:white;width:50%;">C</div>
+                                    </div>
+                                    <div class="col-md-10">
+                                    <h6>Age of Roof (Years)</h6>
+                                    <input type="radio" name="aor" class="form-"> 0-5 &emsp;
+                                    <input type="radio" name="aor" class="form-"> 5-10 &emsp;
+                                    <input type="radio" name="aor" class="form-"> 10-15 &emsp;
+                                    <input type="radio" name="aor" class="form-"> 15-20
+                                    <br><br><hr>
+                                    </div>
+                                </div>
+                                <div class="row"> 
+                                    <div class="col-md-2">
+                                        <div style="padding:20px;border-radius:5px;background-color:white;width:50%;">D</div>
+                                    </div>
+                                    <div class="col-md-10">
+                                    <h6>Solar Panel Mounting Preference</h6>
+                                    <input type="radio" name="spmp" class="form-"> Front Only &emsp;
+                                    <input type="radio" name="spmp" class="form-"> Back Only &emsp;
+                                    <input type="radio" name="spmp" class="form-"> Side Only &emsp;
+                                    <input type="radio" name="spmp" class="form-"> No Preference &emsp;
+                                    <input type="radio" name="spmp" class="form-"> Other
+                                    <br><br><hr>
+                                    </div>
+                                </div>
+                                <div class="row"> 
+                                    <div class="col-md-2">
+                                        <div style="padding:20px;border-radius:5px;background-color:white;width:50%;">E</div>
+                                    </div>
+                                    <div class="col-md-10">
+                                    <h6>Home Owner Associations</h6>
+                                    <input type="radio" name="hoa" class="form-"> Yes &emsp;
+                                    <input type="radio" name="hoa" class="form-"> No &emsp;
+                                    <br>
+                                    <b>If Yes: Contact Name/Number</b>
+                                    <input type="text" name="hoa_text" class="form-control">
+                                    <br><hr>
+                                    </div>
+                                </div><br>
+                                <div class="row"> 
+                                    <div class="col-md-2">
+                                        <div style="padding:20px;border-radius:5px;background-color:white;width:50%;">F</div>
+                                    </div>
+                                    <div class="col-md-10">
+                                        <div style="float:right;">
+                                            <!-- <center>$<input type="text" name="ebis_text" class="form-control" style="width:70%;"><br>
+                                            Estimated Bill</center> -->
+                                            <div class="input-group mb-3">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">$</span>
+                                            </div>
+                                            <input type="text" class="form-control" aria-label="Amount">
+                                            <!-- <div class="input-group-append">
+                                                <span class="input-group-text">.00</span>
+                                            </div> -->
+                                            </div>
+                                            <center>Estimated Bill</center>
+                                        </div>
+                                    <h6>Electric Bill is over $100</h6> 
+                                    <input type="radio" name="ebis" class="form-"> Yes &emsp;
+                                    <input type="radio" name="ebis" class="form-"> No &emsp;
+                                    <br>
+                                    <h6>How do you get your Invoice</h6>
+                                    <input type="radio" name="hdygi" class="form-"> Paper &emsp;
+                                    <input type="radio" name="hdygi" class="form-"> Paperless &emsp;
+                                    <input type="file" name="hdygi_file" class="form-control">
+                                    <br>
+                                    <h6>Electric Bill Account #</h6>
+                                    <input type="text" name="eba_text" class="form-control">
+                                    <br><hr>
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-bottom:70px;"> 
+                                    <div class="col-md-2">
+                                        <div style="padding:20px;border-radius:5px;background-color:white;width:50%;">G</div>
+                                    </div>
+                                    <div class="col-md-10">
+                                    <h6>Employment Status</h6>
+                                    <input type="radio" name="es" class="form-"> Employed &emsp;
+                                    <input type="radio" name="es" class="form-"> Unemployed &emsp;
+                                    <input type="radio" name="es" class="form-"> Retired &emsp;
+                                    <input type="radio" name="es" class="form-"> Retired with Income
+                                    <!-- <hr> -->
+                                    </div>
+                                </div>
+                            </div>
 
-                    </div>
-
-                    <div class="row">                   
-                        <div class="col-md-3 form-group">
-                            <label for="firstname" class="label-element">First Name</label>
-                            <input type="text" name="firstname" class="form-control">
                         </div>
-                        <div class="form-group col-md-3">
-                            <label for="lastname" class="label-element">Last Name</label>
-                            <input type="text" name="lastname" class="form-control">   
-                        </div>   
-                        <div class="form-group col-md-3">
-                            <label for="lastname" class="label-element">Address</label>
-                            <input type="text" name="lastname" class="form-control">   
-                        </div>   
-                        <div class="form-group col-md-3">
-                            <label for="lastname" class="label-element">Contact no.</label>
-                            <input type="text" name="lastname" class="form-control">   
-                        </div> 
-                    </div>
-
-                    <div class="row">                   
-                        <div class="col-md-3 form-group">
-                            <div class="select-wrap">
-                                <label for="lead_source">Type of roof</label>
-                                    <select id="lead_source" name="lead_source" class="form-control custom-select m_select">
-                                        <option value="0">Test</option>
-                                    </select>
-                            </div>   
+                        <div class=" col-md-6">
+                            <div style="padding:3%;border:solid black 1px;font-weight:bold;">
+                                Please fill in the form completely, and return it to a solar specialist or email to support@adtsolarpro.com for consideration.
+                            </div>
+                            <br><br>
+                            <center>
+                            <div class="front" style="text-align:center;background-color:#4a5594;color:white;padding:0.5%;border-radius:20px;width:100%;">
+                                <h6>Please Fill in the Details:</h6>
+                            </div>
+                            </center>
+                            <br>
+                                <div class="row"> 
+                                    <div class="col-md-12">
+                                        <input type="text" name="fullname" class="form-control border-top-0 border-right-0 border-left-0">
+                                        <b>Full name:</b>
+                                    </div>
+                                </div>
+                                <div class="row"> 
+                                    <div class="col-md-12">
+                                        <input type="text" name="address" class="form-control border-top-0 border-right-0 border-left-0">
+                                        <b>Address:</b>
+                                    </div>
+                                </div>
+                                <div class="row"> 
+                                    <div class="col-md-5">
+                                        <input type="text" name="postcode" class="form-control border-top-0 border-right-0 border-left-0">
+                                        <b>Postcode:</b>
+                                    </div>
+                                    <div class="col-md-7">
+                                        <input type="text" name="city" class="form-control border-top-0 border-right-0 border-left-0">
+                                        <b>City:</b>
+                                    </div>
+                                </div>
+                                <div class="row"> 
+                                    <div class="col-md-12">
+                                        <input type="text" name="country" class="form-control border-top-0 border-right-0 border-left-0">
+                                        <b>Country:</b>
+                                    </div>
+                                </div>
+                                <div class="row"> 
+                                    <div class="col-md-12">
+                                        <input type="text" name="phone1" class="form-control border-top-0 border-right-0 border-left-0">
+                                        <b>Phone:</b>
+                                    </div>
+                                </div>
+                                <div class="row"> 
+                                    <div class="col-md-12">
+                                        <input type="text" name="phone2" class="form-control border-top-0 border-right-0 border-left-0">
+                                        <b>Phone:</b>
+                                    </div>
+                                </div>
+                                <div class="row"> 
+                                    <div class="col-md-12">
+                                        <input type="text" name="email" class="form-control border-top-0 border-right-0 border-left-0">
+                                        <b>Email:</b>
+                                    </div>
+                                </div>
+                                <div class="row"> 
+                                    <div class="col-md-12">
+                                        <input type="text" name="email" class="form-control border-top-0 border-right-0 border-left-0">
+                                        <b>Comments:</b>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="row"> 
+                                    <div class="col-md-12" style="border: solid gray 1px;border-top-left-radius: 25px;border-top-right-radius: 25px;">
+                                    <center><h4>ENERGY USAGE HISTORY SAMPLE</h4></center>
+                                        <div id="chartdiv"></div>
+                                    </div>
+                                </div>
+                                <div class="row"> 
+                                    <div class="col-md-12" style="border: solid gray 1px;border-bottom-left-radius: 25px;border-bottom-right-radius: 25px;padding:2%;">
+                                        <b style="font-size:16px;">Options:</b><br>
+                                        <input type="checkbox" class="form-"> Roof &emsp;
+                                        <input type="checkbox" class="form-"> Tree Removal &emsp;
+                                        <input type="checkbox" class="form-"> Battery Package &emsp;
+                                        <input type="checkbox" class="form-"> Security &emsp;
+                                        <input type="checkbox" class="form-"> Others
+                                    </div>
+                                </div>
+                            
                         </div>
-                        <div class="form-group col-md-3">
-                            <label for="lastname" class="label-element">Square footage of home</label>
-                            <input type="text" name="lastname" class="form-control">   
-                        </div>   
-                        <div class="form-group col-md-3">
-                            <div class="select-wrap">
-                                <label for="lead_source">Age of roof (years)</label>
-                                    <select id="lead_source" name="lead_source" class="form-control custom-select m_select">
-                                        <option value="0"></option>
-                                    </select>
-                            </div>  
-                        </div>   
                     </div>
                     <br>
-                    <div class="row">                   
-                        <div class="form-group col-md-3">
-                            <label for="lastname" class="label-element">Home Owner Associations</label><br>
-                            <input type="radio" name="hoa" class="form-"> Yes
-                            <input type="radio" name="hoa" class="form-"> No
-                        </div> 
-                        <div class="form-group col-md-3">
-                            <label for="lastname" class="label-element">Electric Bill is over $100</label><br>
-                            <input type="radio" name="hoa" class="form-"> Yes
-                            <input type="radio" name="hoa" class="form-"> No
-                        </div> 
-                    </div>
-                    <br>
-                    <div class="row">                   
-                        <div class="col-md-3 form-group">
-                            <label for="firstname" class="label-element">Electric Bill Account no.</label>
-                            <input type="text" name="firstname" class="form-control">
-                        </div>
-                        <div class="form-group col-md-3">
-                            <label for="lastname" class="label-element">How to you get your invoice?</label>
-                            <input type="text" name="lastname" class="form-control">   
-                        </div>   
-                        <div class="form-group col-md-3">
-                            <label for="lastname" class="label-element">Instuctions</label>
-                            <input type="text" name="lastname" class="form-control">   
-                        </div>   
-                        <!-- <div class="form-group col-md-3">
-                            <label for="lastname" class="label-element">Contact no.</label>
-                            <input type="text" name="lastname" class="form-control">   
-                        </div>  -->
-                    </div>
-
                     <div class="row">                   
                         <div class="form-group col-md-4">
                             <div class="select-wrap">
@@ -705,16 +365,222 @@ border: none;
                                 <input type="text" class="form-control input-element" name="payment_amount" id="payment_amount"  />
                             </div>
                     </div>
+                    <div id="invoicing" style="display:none;">
+                                        
+                                        <input type="checkbox" id="same_as"> <b>Same as above Address</b> <br><br>
+                                        <div class="row">                   
+                                            <div class="col-md-4 form-group">
+                                                <label for="monitored_location" class="label-element">Mail Address</label>
+                                                <input type="text" class="form-control input-element" name="mail-address"
+                                                    id="mail-address" placeholder="Monitored Location"/>
+                                            </div>
+                                            <div class="col-md-4 form-group">
+                                                <label for="city" class="label-element">City</label>
+                                                    <input type="text" class="form-control input-element" name="mail_locality" id="mail_locality" placeholder="Enter Name" />
+                                            </div>
+                                            <div class="col-md-4 form-group">
+                                                <label for="state" class="label-element">State</label>
+                                                <input type="text" class="form-control input-element" name="mail_state"
+                                                    id="mail_state" 
+                                                    placeholder="Enter State"/>
+                                            </div>
+                                        </div>
+                                        <div class="row">  
+                                            <div class="col-md-4 form-group">
+                                                <label for="zip" class="label-element">ZIP</label> 
+                                                    <input type="text" id="mail_postcode" name="mail_postcode" class="form-control input-element"  placeholder="Enter Zip"/>
+                                            </div>
 
+                                            <div class="col-md-4 form-group">
+                                                <label for="cross_street" class="label-element">Cross Street</label>
+                                                <input type="text" class="form-control input-element" name="mail_cross_street"
+                                                    id="mail_cross_street" 
+                                                    placeholder="Cross Street"/>
+                                            </div>                                        
+                                        </div>
+                                    </div>
+                            <div id="check_area" style="display:none;">
+                                <div class="row">                   
+                                    <div class="form-group col-md-4">
+                                        <label for="job_type" class="label-element">Check Number</label>
+                                        <input type="text" class="form-control input-element" name="check_number" id="check_number"/>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="job_type" class="label-element">Routing Number</label>
+                                        <input type="text" class="form-control input-element" name="routing_number" id="routing_number"/>
+                                    </div>                                             
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-md-4">
+                                        <label for="job_type" class="label-element">Account Number</label>
+                                        <input type="text" class="form-control input-element" name="account_number" id="account_number"/>
+                                    </div>                                       
+                                </div>
+                            </div>
+                            <div id="credit_card" style="display:none;">
+                                <div class="row">                   
+                                    <div class="form-group col-md-4">
+                                        <label for="job_type" class="label-element">Credit Card Number</label>
+                                        <input type="text" class="form-control input-element" name="credit_number" id="credit_number" placeholder="0000 0000 0000 000" />
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <label for="job_type" class="label-element">Credit Card Expiration</label>
+                                        <input type="text" class="form-control input-element" name="credit_expiry" id="credit_expiry" placeholder="MM/YYYY"/>
+                                    </div>  
+                                    <div class="form-group col-md-3">
+                                        <label for="job_type" class="label-element">CVC</label>
+                                        <input type="text" class="form-control input-element" name="credit_cvc" id="credit_cvc" placeholder="CVC"/>
+                                    </div>                                             
+                                </div>
+                            </div>
+                            <div id="debit_card" style="display:none;">
+                                <div class="row">                   
+                                    <div class="form-group col-md-4">
+                                        <label for="job_type" class="label-element">Credit Card Number</label>
+                                        <input type="text" class="form-control input-element" name="debit_credit_number" id="credit_number2" placeholder="0000 0000 0000 000" />
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <label for="job_type" class="label-element">Credit Card Expiration</label>
+                                        <input type="text" class="form-control input-element" name="debit_credit_expiry" id="credit_expiry" placeholder="MM/YYYY"/>
+                                    </div>  
+                                    <div class="form-group col-md-3">
+                                        <label for="job_type" class="label-element">CVC</label>
+                                        <input type="text" class="form-control input-element" name="debit_credit_cvc" id="credit_cvc" placeholder="CVC"/>
+                                    </div>                                            
+                                </div>
+                            </div>
+                            <div id="ach_area" style="display:none;">
+                                <div class="row">                   
+                                    <div class="form-group col-md-4">
+                                        <label for="job_type" class="label-element">Routing Number</label>
+                                        <input type="text" class="form-control input-element" name="ach_routing_number" id="ach_routing_number" />
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <label for="job_type" class="label-element">Account Number</label>
+                                        <input type="text" class="form-control input-element" name="ach_account_number" id="ach_account_number" />
+                                    </div>  
+                                </div>
+                            </div>
+                            <div id="venmo_area" style="display:none;">
+                                <div class="row">                   
+                                    <div class="form-group col-md-4">
+                                        <label for="job_type" class="label-element">Account Credential</label>
+                                        <input type="text" class="form-control input-element" name="account_credentials" id="account_credentials"/>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <label for="job_type" class="label-element">Account Note</label>
+                                        <input type="text" class="form-control input-element" name="account_note" id="account_note"/>
+                                    </div>  
+                                    <div class="form-group col-md-3">
+                                        <label for="job_type" class="label-element">Confirmation</label>
+                                        <input type="text" class="form-control input-element" name="confirmation" id="confirmation"/>
+                                    </div>                                            
+                                </div>
+                            </div>
+                            <div id="paypal_area" style="display:none;">
+                                <div class="row">                   
+                                    <div class="form-group col-md-4">
+                                        <label for="job_type" class="label-element">Account Credential</label>
+                                        <input type="text" class="form-control input-element" name="paypal_account_credentials" id="paypal_account_credentials"/>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <label for="job_type" class="label-element">Account Note</label>
+                                        <input type="text" class="form-control input-element" name="paypal_account_note" id="paypal_account_note"/>
+                                    </div>  
+                                    <div class="form-group col-md-3">
+                                        <label for="job_type" class="label-element">Confirmation</label>
+                                        <input type="text" class="form-control input-element" name="paypal_confirmation" id="paypal_confirmation"/>
+                                    </div>                                            
+                                </div>
+                            </div>
+                            <div id="square_area" style="display:none;">
+                                <div class="row">                   
+                                    <div class="form-group col-md-4">
+                                        <label for="job_type" class="label-element">Account Credential</label>
+                                        <input type="text" class="form-control input-element" name="square_account_credentials" id="square_account_credentials"/>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <label for="job_type" class="label-element">Account Note</label>
+                                        <input type="text" class="form-control input-element" name="square_account_note" id="square_account_note"/>
+                                    </div>  
+                                    <div class="form-group col-md-3">
+                                        <label for="job_type" class="label-element">Confirmation</label>
+                                        <input type="text" class="form-control input-element" name="square_confirmation" id="square_confirmation"/>
+                                    </div>                                            
+                                </div>
+                            </div>
+                            <div id="warranty_area" style="display:none;">
+                                <div class="row">                   
+                                    <div class="form-group col-md-4">
+                                        <label for="job_type" class="label-element">Account Credential</label>
+                                        <input type="text" class="form-control input-element" name="warranty_account_credentials" id="warranty_account_credentials"/>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <label for="job_type" class="label-element">Account Note</label>
+                                        <input type="text" class="form-control input-element" name="warranty_account_note" id="warranty_account_note"/>
+                                    </div>                                         
+                                </div>
+                            </div>
+                            <div id="home_area" style="display:none;">
+                                <div class="row">                   
+                                    <div class="form-group col-md-4">
+                                        <label for="job_type" class="label-element">Account Credential</label>
+                                        <input type="text" class="form-control input-element" name="home_account_credentials" id="home_account_credentials"/>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <label for="job_type" class="label-element">Account Note</label>
+                                        <input type="text" class="form-control input-element" name="home_account_note" id="home_account_note"/>
+                                    </div>                                         
+                                </div>
+                            </div>
+                            <div id="e_area" style="display:none;">
+                                <div class="row">                   
+                                    <div class="form-group col-md-4">
+                                        <label for="job_type" class="label-element">Account Credential</label>
+                                        <input type="text" class="form-control input-element" name="e_account_credentials" id="e_account_credentials"/>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <label for="job_type" class="label-element">Account Note</label>
+                                        <input type="text" class="form-control input-element" name="e_account_note" id="e_account_note"/>
+                                    </div>                                         
+                                </div>
+                            </div>
+                            <div id="other_credit_card" style="display:none;">
+                                <div class="row">                   
+                                    <div class="form-group col-md-4">
+                                        <label for="job_type" class="label-element">Credit Card Number</label>
+                                        <input type="text" class="form-control input-element" name="other_credit_number" id="other_credit_number" placeholder="0000 0000 0000 000" />
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <label for="job_type" class="label-element">Credit Card Expiration</label>
+                                        <input type="text" class="form-control input-element" name="other_credit_expiry" id="other_credit_expiry" placeholder="MM/YYYY"/>
+                                    </div>  
+                                    <div class="form-group col-md-3">
+                                        <label for="job_type" class="label-element">CVC</label>
+                                        <input type="text" class="form-control input-element" name="other_credit_cvc" id="other_credit_cvc" placeholder="CVC"/>
+                                    </div>                                             
+                                </div>
+                            </div>
+                            <div id="other_payment_area" style="display:none;">
+                                <div class="row">                   
+                                    <div class="form-group col-md-4">
+                                        <label for="job_type">Account Credential</label>
+                                        <input type="text" class="form-control input-element" name="other_payment_account_credentials" id="other_payment_account_credentials"/>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <label for="job_type">Account Note</label>
+                                        <input type="text" class="form-control input-element" name="other_payment_account_note" id="other_payment_account_note"/>
+                                    </div>                                         
+                                </div>
+                            </div>
 
-                    <br><br><br>
+                    <br><br>
                              <!-- ====== SIGNATURE ====== -->
                              <div class="row">
                                 <div class=" col-md-12">
                                     <div class="work_nore">
-                                        <h6>Signature</h6>
-                                        <p> By Signing below you verify that the above information is true and complete,
-                                            and you authorize payment and confirmation with nSmarTrac. </p>
+                                        <h6>Use of Personal Information Collected</h6>
+                                        <p>We use the information we collect to provide you with our products and services and to respond to your questions. We also use the information for editorial and feedback purposes, for marketing and promotional purposes, to inform advertisers as to how many visitors have seen or clicked on their advertisements and to customize the content and layout of ClearCaptions' website. We also use the information we collect for statistical analysis of users' behavior, for product development, for content improvement, to ensure our product and services remain functioning and secure and to investigate and protect against any illegal activities or violations of our Terms of Service.</p>
                                     </div>
                                 </div>
                             </div>
@@ -722,22 +588,6 @@ border: none;
                             <div class="row signature_web">
                                 <div class="col-md-4">
                                     <h6>Company Representative Approval</h6> <a data-toggle="modal" data-target=".companySignature" class="btn btn-success"><span class="fa fa-plus-square fa-margin-right"></span> Add Signature</a>
-                                    <!-- <div class="sigPad" id="smoothed1a" style="width:100%;border:solid gray 1px;background-color:#00b300;">
-                                        <ul class="sigNav" style="">
-                                            <li class="drawIt"><a href="#draw-it">Draw It</a></li>
-                                            <li class="clearButton"><a href="#clear">Clear</a></li>
-                                        </ul>
-                                        <ul class="edit">
-                                            <li class="smoothed1a_pencil pointer"><a onclick="myFunction()" style="float:right;margin-right:10px;" class="smoothed1a_pencil"><i class="fa fa-pencil" aria-hidden="true"></i></a></li>
-                                        </ul>
-                                        <div class="sig sigWrapper" id="smoothed1a_pencil" style="height:auto;pointer-events: none;">
-                                            <div class="typed"></div>
-                                            <div id="signature-pad">
-                                            <canvas style="border:1px solid #000" id="sign"></canvas>
-                                            </div>
-                                            <input type="hidden" name="output-2" class="output">
-                                        </div>
-                                    </div> -->
                                     <div id="companyrep"></div>
 
                                     <input type="hidden" id="saveCompanySignatureDB1a"
@@ -761,22 +611,6 @@ border: none;
                                 </div>
                                 <div class="col-md-4">
                                     <h6>Primary Account Holder</h6><a data-toggle="modal" data-target=".primarySignature" class="btn btn-warning"><span class="fa fa-plus-square fa-margin-right"></span> Add Signature</a>
-                                    <!-- <div class="sigPad" id="smoothed2a" style="width:100%;border:solid gray 1px;background-color:#f7b900;">
-                                        <ul class="sigNav">
-                                            <li class="drawIt"><a href="#draw-it">Draw It</a></li>
-                                            <li class="clearButton"><a href="#clear">Clear</a></li>
-                                        </ul>
-                                        <ul class="edit">
-                                            <li class="smoothed1a_pencil pointer"><a onclick="myFunctiontwo()" style="float:right;margin-right:10px;" class="smoothed1a_pencil"><i class="fa fa-pencil" aria-hidden="true"></i></a></li>
-                                        </ul>
-                                        <div class="sig sigWrapper" style="height:auto;pointer-events: none;">
-                                            <div class="typed"></div>
-                                            <div id="signature-pad2">
-                                            <canvas style="border:1px solid #000" id="sign2"></canvas>
-                                            </div>
-                                            <input type="hidden" name="output-2" class="output">
-                                        </div>
-                                    </div> -->
                                     <div id="primaryrep"></div>
                                     <input type="hidden" id="savePrimaryAccountSignatureDB2a"
                                            name="primary_account_holder_signature2a">
@@ -797,22 +631,6 @@ border: none;
                                 </div>
                                 <div class="col-md-4">
                                     <h6>Secondary Account Holder</h6><a data-toggle="modal" data-target=".secondarySignature" class="btn btn-danger"><span class="fa fa-plus-square fa-margin-right"></span> Add Signature</a>
-                                    <!-- <div class="sigPad" id="smoothed3a" style="width:100%;border:solid gray 1px;background-color:#f75c1e;">
-                                        <ul class="sigNav">
-                                            <li class="drawIt"><a href="#draw-it">Draw It</a></li>
-                                            <li class="clearButton"><a href="#clear">Clear</a></li>
-                                        </ul>
-                                        <ul class="edit">
-                                            <li class="smoothed1a_pencil pointer"><a onclick="myFunctionthree()" style="float:right;margin-right:10px;" class="smoothed1a_pencil"><i class="fa fa-pencil" aria-hidden="true"></i></a></li>
-                                        </ul>
-                                        <div class="sig sigWrapper" style="height:auto;pointer-events: none;">
-                                            <div class="typed"></div>
-                                            <div id="signature-pad3">
-                                            <canvas style="border:1px solid #000" id="sign3"></canvas>
-                                            </div>
-                                            <input type="hidden" name="output-2" class="output">
-                                        </div>
-                                    </div> -->
                                     <div id="secondaryrep"></div>
                                     <input type="hidden" id="saveSecondaryAccountSignatureDB3a"
                                            name="secondary_account_holder_signature3a">
@@ -838,8 +656,8 @@ border: none;
                                 <div class="form-group">
                                         <button type="submit" name="action" class="btn btn-flat btn-primary" value="submit">Submit</button>
                                         <!-- <button type="submit" name="action" class="btn btn-flat btn-success pdf_sheet" target="_blank" value="preview">Preview</button> -->
-                                        <button type="submit" class="btn btn-flat btn-primary"><b>Save Template</b></button>
-                                        <a href="<?php echo url('workorder') ?>" class="btn btn-primary">Cancel this</a>
+                                        <!-- <button type="submit" class="btn btn-flat btn-primary"><b>Save Template</b></button> -->
+                                        <a href="<?php echo url('workorder') ?>" class="btn btn-danger">Cancel this</a>
                                 </div>
                             </div>
 
@@ -882,7 +700,7 @@ border: none;
                         <div class="modal-footer">
                         
                             <button id="clear" class="btn btn-danger">Clear</button>
-                            <button type="button" class="btn btn-success edit_first_signature" id="enter_signature">Update</button>
+                            <button type="button" class="btn btn-success edit_first_signature" id="enter_signature">Add</button>
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                             <!-- <input type="submit" value="save" id="btnSaveSign"> -->
                         </div>
@@ -921,7 +739,7 @@ border: none;
                         
                         <div class="modal-footer">
                             <button id="clear2" class="btn btn-danger">Clear</button>
-                            <button type="button" class="btn btn-success edit_second_signature" id="enter_signature">Update</button>
+                            <button type="button" class="btn btn-success edit_second_signature" id="enter_signature">Add</button>
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                             <!-- <input type="submit" value="save" id="btnSaveSign"> -->
                         </div>
@@ -960,7 +778,7 @@ border: none;
                         
                         <div class="modal-footer">
                             <button id="clear3" class="btn btn-danger">Clear</button>
-                            <button type="button" class="btn btn-success edit_third_signature" id="enter_signature">Update</button>
+                            <button type="button" class="btn btn-success edit_third_signature" id="enter_signature">Add</button>
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                             <!-- <input type="submit" value="save" id="btnSaveSign"> -->
                         </div>
@@ -973,6 +791,108 @@ border: none;
 <?php include viewPath('includes/footer'); ?>
 <script src="<?php echo $url->assets;?>js/jquery-input-mask-phone-number.js"></script>
 
+<!-- Resources -->
+<script src="//cdn.amcharts.com/lib/4/core.js"></script>
+<script src="//cdn.amcharts.com/lib/4/charts.js"></script>
+<script src="//cdn.amcharts.com/lib/4/themes/animated.js"></script>
+
+<!-- Chart code -->
+<script>
+/**
+ * ---------------------------------------
+ * This demo was created using amCharts 4.
+ *
+ * For more information visit:
+ * https://www.amcharts.com/
+ *
+ * Documentation is available at:
+ * https://www.amcharts.com/docs/v4/
+ * ---------------------------------------
+ */
+
+
+am4core.useTheme(am4themes_animated);
+
+// Create chart instance
+var chart = am4core.create("chartdiv", am4charts.XYChart);
+chart.paddingTop = 40;
+// Add data
+chart.data = [{
+  "category": "Jan",
+  "value": 1240
+}, {
+  "category": "Feb",
+  "value": 1000
+}, {
+  "category": "Mar",
+  "value": 450
+}, {
+  "category": "Apr",
+  "value": 700
+}, {
+  "category": "May",
+  "value": 800
+}, {
+  "category": "Jun",
+  "value": 800
+}, {
+  "category": "Jul",
+  "value": 780
+}, {
+  "category": "Aug",
+  "value": 500
+}, {
+  "category": "Sep",
+  "value": 100
+}, {
+  "category": "Oct",
+  "value": 1000
+}, {
+  "category": "Nov",
+  "value": 900
+}, {
+  "category": "Dec",
+  "value": 620
+}
+];
+
+// Create axes
+var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+categoryAxis.dataFields.category = "category";
+categoryAxis.renderer.grid.template.location = 0;
+
+function createValueAxis(title, showgrid) {
+  
+  // Create axis
+  var axis = chart.yAxes.push(new am4charts.ValueAxis());
+  axis.renderer.grid.template.disabled = !showgrid;
+    
+  // Set up axis title
+  axis.title.text = title;
+  
+  return axis;
+}
+
+function createSeries(key, title, axis) {
+  var series = chart.series.push(new am4charts.ColumnSeries());
+  series.dataFields.valueY = key;
+  series.dataFields.categoryX = "category";
+  series.yAxis = axis;
+  return series;
+}
+
+createSeries(
+  "value",
+  "Series #1",
+  createValueAxis("KWH", true)
+);
+
+// createSeries(
+//   "value2",
+//   "Series #2",
+//   createValueAxis("Funding", false)
+// );
+</script>
 <script>
 $('#security_number').keyup(function() {
         var val = this.value.replace(/\D/g, '');
@@ -1060,27 +980,6 @@ jQuery(document).ready(function () {
 });
 
 
-// $(document).on('click touchstart','#sign',function(){
-//     // alert('test');
-//     var canvas_web = document.getElementById("sign");    
-//     var dataURL = canvas_web.toDataURL("image/png");
-//     $("#saveCompanySignatureDB1aM_web").val(dataURL);
-// });
-
-// $(document).on('click touchstart','#sign2',function(){
-//     // alert('test');
-//     var canvas_web2 = document.getElementById("sign2");    
-//     var dataURL = canvas_web2.toDataURL("image/png");
-//     $("#saveCompanySignatureDB1aM_web2").val(dataURL);
-// });
-
-// $(document).on('click touchstart','#sign3',function(){
-//     // alert('test');
-//     var canvas_web3 = document.getElementById("sign3");    
-//     var dataURL = canvas_web3.toDataURL("image/png");
-//     $("#saveCompanySignatureDB1aM_web3").val(dataURL);
-// });
-
 $(document).on('click touchstart','#canvasb',function(){
     // alert('test');
     var canvas_web = document.getElementById("canvasb");    
@@ -1164,307 +1063,8 @@ $(document).on('click','.btn-edit-header',function(){
   } );
 </script>
 
-<script>
-// $('.addCreatePackage').on('click', function(){
-$(".addCreatePackage").click(function () {
-// var item = $("#itemidPackage").val();
-var item = $('input[name="itemidPackage[]"]').map(function () {
-    return this.value; // $(this).val()
-}).get();
-
-var type = $('input[name="item_typePackage[]"]').map(function () {
-    return this.value; // $(this).val()
-}).get();
-
-var quantity = $('input[name="quantityPackage[]"]').map(function () {
-    return this.value; // $(this).val()
-}).get();
-
-var price = $('input[name="pricePackage[]"]').map(function () {
-    return this.value; // $(this).val()
-}).get();
-
-var package_name =  $("#package_name").val();
-var package_price =  $("#package_price").val();
-var package_price_set =  $("#package_price_set").val();
-
-// console.log('items '+item);
-// console.log('type '+type);
-// console.log('quantity '+quantity);
-// console.log('price '+price);
-    $.ajax({
-        type : 'POST',
-        url : "<?php echo base_url(); ?>workorder/createPackage",
-        data : {item: item, type:type, quantity:quantity, price:price, package_price:package_price, package_name:package_name, package_price_set:package_price_set },
-        dataType: 'json',
-        success: function(response){
-
-        // console.log(result);
-        var Randnumber = 1 + Math.floor(Math.random() * 99999);
-
-        console.log(response['pName']);
-
-                    // var inputs1 = "";
-                        $.each(response['pName'], function (a, b) {
-                            // inputs1 += b.name;
-                            var pName = b.name;
-                            // var Rnumber = 3 + Math.floor(Math.random() * 9);
-                            var Rnumber = Math.floor(Math.random()*(9999-10000+1)+100);
-
-                        
-
-                markup = "<tr id=\"ss\">" +
-                        // "<td width=\"35%\"><input value='"+title+"' type=\"text\" name=\"items[]\" class=\"form-control getItems\" ><input type=\"hidden\" value='"+idd+"' name=\"item_id[]\"><div class=\"show_mobile_view\"><span class=\"getItems_hidden\">"+title+"</span></div><input type=\"hidden\" name=\"itemidPackage[]\" id=\"itemidPackage\" class=\"itemid\" value='"+idd+"'></td>\n" +
-                        // "<td width=\"25%\"><div class=\"dropdown-wrapper\"><select name=\"item_typePackage[]\" class=\"form-control\"><option value=\"product\">Product</option><option value=\"material\">Material</option><option value=\"service\">Service</option><option value=\"fee\">Fee</option></select></div></td>\n" +
-                        // "<td width=\"\"><input data-itemid='"+idd+"' id='quantity_package_"+idd+"' value='"+qty+"' type=\"number\" name=\"quantityPackage[]\" data-counter=\"0\"  min=\"0\" class=\"form-control quantityPackage2\"></td>\n" +
-                        // "<td width=\"\"><input data-itemid='"+idd+"' id='price_package_"+idd+"' value='"+price+"'  type=\"number\" name=\"pricePackage[]\" class=\"form-control price_package2 hidden_mobile_view\" placeholder=\"Unit Price\"><input type=\"hidden\" class=\"priceqty\" id='priceqty_package_"+idd+"' value='"+total_+"'><div class=\"show_mobile_view\"><span class=\"price\">"+price+"</span></div></td>\n" +
-                        // "<td>\n" +
-                        // "<a href=\"#\" class=\"remove btn btn-sm btn-success\" id='"+idd+"'><i class=\"fa fa-trash\" aria-hidden=\"true\"></i></a>\n" +
-                        // "</td>\n" +
-                        "<td colspan=\"6\" ><h6>"+ pName +"</h6><div><table class=\"table table-hover\" ><thead><th width=\"10%\" ></th><th>Item Name</th><th>Quantity</th><th>Price</th></thead> <tbody id='packageBody"+Randnumber+"'>" +
-                        "<input type=\"hidden\" class=\"priceqty\" id='priceqty_"+Rnumber+"' value='"+b.amount_set+"'><input type=\"hidden\" name=\"itemid[]\" value=\"0\"><input type=\"hidden\" name=\"packageID[]\" value='"+b.id+"'><input type=\"hidden\" name=\"quantity[]\" value=\"1\"><input type=\"hidden\" name=\"price[]\" value='"+b.amount_set+"'><input type=\"hidden\" name=\"tax[]\" value=\"0\"><input type=\"hidden\" name=\"discount[]\" value=\"0\">"+
-
-                        "</tbody></table></div></td>\n" +
-                        "<td style=\"text-align: center\" class=\"hidden_mobile_view\" width=\"15%\">$ <span data-subtotal='"+b.amount_set+"' id='span_total_"+Rnumber+"' class=\"total_per_item\">"+b.amount_set+
-                        "</span> <input type=\"hidden\" name=\"total[]\" id='sub_total_text"+Rnumber+"' value='"+b.amount_set+"'></td>" +
-                    "</tr>";
-                    tableBody = $("#jobs_items_table_body");
-                    tableBody.append(markup);
-                });
-                    
-                    var inputs = "";
-                        $.each(response['details'], function (i, v) {
-                            inputs += v.package_name ;
-                            // "<tr>"+
-                            // "<td>"+ v.item_id +"</td>"+
-                            // "<td>"+ v.quantity +"</td>"+
-                            // "<td>"+ v.price +"</td>"+
-                            // "</tr>"+
-                        // });
-
-                    markup2 = "<tr width=\"10%\" id=\"sss\">" +
-                        // "<tr>"+
-                            "<td></td>"+
-                            "<td>"+ v.title +"</td>"+
-                            "<td>"+ v.quantity +"</td>"+
-                            "<td>"+ v.price +"</td>"+
-                        "</tr>";
-                    tableBody2 = $("#packageBody"+Randnumber);
-                    tableBody2.append(markup2);
-
-                });
-
-
-                var priceqty2 = 0;
-                $('*[id^="priceqty_"]').each(function(){
-                priceqty2 += parseFloat($(this).val());
-                });
-                $("#item_total").val(priceqty2.toFixed(2));
-                $("#span_sub_total_invoice").text(priceqty2.toFixed(2));
-
-                
-                var subtotal = 0;
-                // $("#span_total_0").each(function(){
-                $('*[id^="span_total_"]').each(function(){
-                subtotal += parseFloat($(this).text());
-                });
-                var s_total = subtotal.toFixed(2);
-                var adjustment = $("#adjustment_input").val();
-                var grand_total = s_total - parseFloat(adjustment);
-                var markup = $("#markup_input_form").val();
-                var grand_total_w = grand_total + parseFloat(markup);
-                $("#grand_total_inputs").val(grand_total_w.toFixed(2));
-                $("#grand_total").text(grand_total_w.toFixed(2));
-                $("#grand_total_input").val(grand_total_w.toFixed(2));
-                $("#payment_amount").val(grand_total_w.toFixed(2));
-
-        },
-    });
-
-    
-
-    $(".createPackage").modal("hide");
-    // $('#divcreatePackage').load(window.location.href +  '#divcreatePackage');
-    // $(document.body).on('hidden.bs.modal', function () {
-    //     $('.createPackage').removeData('bs.modal')
-    // });
-    $("#divcreatePackage").load(" #divcreatePackage");
-
-});
-</script>
 
 <script>
-$(".addNewPackageToList").click(function () {
-    var packId = $(this).attr('pack-id');
-
-    $.ajax({
-        type : 'POST',
-        url : "<?php echo base_url(); ?>workorder/addNewPackageToList",
-        data : {packId: packId },
-        dataType: 'json',
-        success: function(response){
-
-        // console.log(result);
-        var Randnumber = 1 + Math.floor(Math.random() * 99999);
-
-        console.log(response['pName']);
-
-                    // var inputs1 = "";
-                        $.each(response['pName'], function (a, b) {
-                            // inputs1 += b.name;
-                            var pName = b.name;
-                            // var Rnumber = 3 + Math.floor(Math.random() * 9);
-                            var Rnumber = Math.floor(Math.random()*(9999-10000+1)+100);
-
-                        
-
-                markup = "<tr id=\"ss\">" +
-                        // "<td width=\"35%\"><input value='"+title+"' type=\"text\" name=\"items[]\" class=\"form-control getItems\" ><input type=\"hidden\" value='"+idd+"' name=\"item_id[]\"><div class=\"show_mobile_view\"><span class=\"getItems_hidden\">"+title+"</span></div><input type=\"hidden\" name=\"itemidPackage[]\" id=\"itemidPackage\" class=\"itemid\" value='"+idd+"'></td>\n" +
-                        // "<td width=\"25%\"><div class=\"dropdown-wrapper\"><select name=\"item_typePackage[]\" class=\"form-control\"><option value=\"product\">Product</option><option value=\"material\">Material</option><option value=\"service\">Service</option><option value=\"fee\">Fee</option></select></div></td>\n" +
-                        // "<td width=\"\"><input data-itemid='"+idd+"' id='quantity_package_"+idd+"' value='"+qty+"' type=\"number\" name=\"quantityPackage[]\" data-counter=\"0\"  min=\"0\" class=\"form-control quantityPackage2\"></td>\n" +
-                        // "<td width=\"\"><input data-itemid='"+idd+"' id='price_package_"+idd+"' value='"+price+"'  type=\"number\" name=\"pricePackage[]\" class=\"form-control price_package2 hidden_mobile_view\" placeholder=\"Unit Price\"><input type=\"hidden\" class=\"priceqty\" id='priceqty_package_"+idd+"' value='"+total_+"'><div class=\"show_mobile_view\"><span class=\"price\">"+price+"</span></div></td>\n" +
-                        // "<td>\n" +
-                        // "<a href=\"#\" class=\"remove btn btn-sm btn-success\" id='"+idd+"'><i class=\"fa fa-trash\" aria-hidden=\"true\"></i></a>\n" +
-                        // "</td>\n" +
-                        "<td colspan=\"6\" ><h6>"+ pName +"</h6><div><table class=\"table table-hover\" ><thead><th width=\"10%\" ></th><th>Item Name</th><th>Quantity</th><th>Price</th></thead> <tbody id='packageBody"+Randnumber+"'>" +
-                        "<input type=\"hidden\" class=\"priceqty\" id='priceqty_"+Rnumber+"' value='"+b.amount_set+"'><input type=\"hidden\" name=\"itemid[]\" value=\"0\"><input type=\"hidden\" name=\"packageID[]\" value='"+b.id+"'><input type=\"hidden\" name=\"quantity[]\" value=\"1\"><input type=\"hidden\" name=\"price[]\" value='"+b.amount_set+"'><input type=\"hidden\" name=\"tax[]\" value=\"0\"><input type=\"hidden\" name=\"discount[]\" value=\"0\">"+
-
-                        "</tbody></table></div></td>\n" +
-                        "<td style=\"text-align: center\" class=\"hidden_mobile_view\" width=\"15%\">$ <span data-subtotal='"+b.amount_set+"' id='span_total_"+Rnumber+"' class=\"total_per_item\">"+b.amount_set+
-                        "</span> <input type=\"hidden\" name=\"total[]\" id='sub_total_text"+Rnumber+"' value='"+b.amount_set+"'></td>" +
-                    "</tr>";
-                    tableBody = $("#jobs_items_table_body");
-                    tableBody.append(markup);
-                });
-                    
-                    var inputs = "";
-                        $.each(response['details'], function (i, v) {
-                            inputs += v.package_name ;
-                            // "<tr>"+
-                            // "<td>"+ v.item_id +"</td>"+
-                            // "<td>"+ v.quantity +"</td>"+
-                            // "<td>"+ v.price +"</td>"+
-                            // "</tr>"+
-                        // });
-
-                    markup2 = "<tr width=\"10%\" id=\"sss\">" +
-                        // "<tr>"+
-                            "<td></td>"+
-                            "<td>"+ v.title +"</td>"+
-                            "<td>"+ v.quantity +"</td>"+
-                            "<td>"+ v.price +"</td>"+
-                        "</tr>";
-                    tableBody2 = $("#packageBody"+Randnumber);
-                    tableBody2.append(markup2);
-
-                });
-
-
-                var priceqty2 = 0;
-                $('*[id^="priceqty_"]').each(function(){
-                priceqty2 += parseFloat($(this).val());
-                });
-                $("#item_total").val(priceqty2.toFixed(2));
-                $("#span_sub_total_invoice").text(priceqty2.toFixed(2));
-
-                
-                var subtotal = 0;
-                // $("#span_total_0").each(function(){
-                $('*[id^="span_total_"]').each(function(){
-                subtotal += parseFloat($(this).text());
-                });
-                var s_total = subtotal.toFixed(2);
-                var adjustment = $("#adjustment_input").val();
-                var grand_total = s_total - parseFloat(adjustment);
-                var markup = $("#markup_input_form").val();
-                var grand_total_w = grand_total + parseFloat(markup);
-                $("#grand_total_inputs").val(grand_total_w.toFixed(2));
-                $("#grand_total").text(grand_total_w.toFixed(2));
-                $("#grand_total_input").val(grand_total_w.toFixed(2));
-                $("#payment_amount").val(grand_total_w.toFixed(2));
-
-        },
-    });
-
-    $(".createPackage").modal("hide");
-    // $('#divcreatePackage').load(window.location.href +  '#divcreatePackage');
-    // $(document.body).on('hidden.bs.modal', function () {
-    //     $('.createPackage').removeData('bs.modal')
-    // });
-    // $("#divcreatePackage").load(" #divcreatePackage");
-
-});
-</script>
-
-<script>
-// $("#packageID").click(function () {
-$(document).ready(function()
-{
-    // $( "#packageID" ).each(function(i) {
-    //     $(this).on("click", function(){
-    //     var packId = $(this).attr('pack-id');
-    //     alert(packId);
-        $.ajax({
-            type : 'POST',
-            url : "<?php echo base_url(); ?>workorder/getPackageItemsById",
-            // data : {packId: packId },
-            dataType: 'json',
-            success: function(response){
-                var inputs = "";
-                $.each(response['pItems'], function (i, v) {
-                    // inputs += v.package_name ;
-                    markup2 = "<tr>" +
-                                "<td></td>"+
-                                "<td>"+ v.title +"</td>"+
-                                "<td>"+ v.quantity +"</td>"+
-                                "<td>"+ v.price +"</td>"+
-                            "</tr>";
-                        tableBody2 = $("#packageItems"+v.package_id);
-                        tableBody2.append(markup2);
-                });
-            },
-        // });
-        // });
-    });
-});
-</script>
-
-<script>
-// $("#company_representative_approval_signature1aM").on("click touchstart",
-//   function () {
-//     alert('yeah');
-//     var canvas = document.getElementById(
-//       "signM"
-//     );    
-//     var dataURL = canvas.toDataURL("image/png");
-//     $("#saveCompanySignatureDB1aM").val(dataURL);
-//     // console.log(dataURL);
-//   }
-// );
-
-// $(document).on('click','#signature-padM',function(){
-//        alert('yeah');
-//     // $('#item_group_type').val();
-// });
-// var canvas = document.getElementById('canvas');
-// var dataURL = canvas.toDataURL("image/png");
-// test = $("#saveCompanySignatureDB1aM").val(dataURL);
-// // var dataURL = canvas.toDataURL();
-// console.log(test);
-// jQuery(document).ready(function($){
-    
-//     var canvas = document.getElementById("canvas");
-//     var signaturePad = new SignaturePad(canvas);
-//     var dataURL = canvas.toDataURL("image/png");
-//     test = $("#saveCompanySignatureDB1aM").val(dataURL);
-
-//     onsole.log(test);
-    
-//     // $('#clear-signature').on('click', function(){
-//     //     signaturePad.clear();
-//     // });
-    
-// });
 
             $(document).ready(function() {
 				// $('#canvas').signaturePad({drawOnly:true, drawBezierCurves:true, lineTop:90});
@@ -1481,19 +1081,6 @@ $(document).ready(function()
                 var signaturePad4 = new SignaturePad(canvas_web);
 
 			});
-
-// $("#canvas").on("click touchstart",
-//   function () {
-//     // alert('yeah');
-//     var canvas = document.getElementById(
-//       "canvas"
-//     );    
-//     var signaturePad = new SignaturePad(canvas);
-//     var dataURL = canvas.toDataURL("image/png");
-//     $("#saveCompanySignatureDB1aM").val(dataURL);
-//     // console.log(dataURL);
-//   }
-// );
 
 $("#btnSaveSign").click(function(e){
     var canvas = document.getElementById("canvas");    
@@ -1664,78 +1251,6 @@ $(document).on('click','.groupChange',function(){
 </script>
 
 <script>
-//   $(function() {
-//     $("#rebatable_toggle").each(function(){
-//     $(this).change(function() {
-//     //   $('#console-event').html('Toggle: ' + $(this).prop('checked'))
-//     alert('yeah');
-//     })
-//   })
-$(document).ready(function () {
-
-//iterate through all the divs - get their ids, hide them, then call the on click
-$(".toggle").each(function () {
-    var $context = $(this);
-    var $button = $context.find("#rebatable_toggle");
-    //            $currentId = $button.attr('id');
-    // var $divOptions = $context.find('div').last();
-
-    //$($divOptions).hide();
-    $($button).on('change', function (event) {
-        // alert('yeah');
-        // $(this).click(function() {        
-        var id = $($button).attr("item-id");
-        var get_val = $($button).val();
-        // alert(id);
-
-        $.ajax({
-            type: 'POST',
-            url:"<?php echo base_url(); ?>accounting/changeRebate",
-            data: {id : id, get_val : get_val },
-            dataType: 'json',
-            success: function(response){
-                // alert('Successfully Change');
-                sucess("Rebate Updated Successfully!");
-                // $('.lamesa').load(window.location.href +  ' .lamesa');
-                // location.reload();
-                $('#item_list').modal('toggle');
-                // $("#item_list .modal-body").load(target, function() { 
-                // $("#item_list").modal("show"); 
-                // });
-                $('#item_list').on('hidden.bs.modal', function (e) {
-                    location.reload();
-                    });
-            },
-                error: function(response){
-                alert('Error'+response);
-       
-                }
-        });
-
-        function sucess(information,$id){
-            Swal.fire({
-                title: 'Good job!',
-                text: information,
-                icon: 'success',
-                showCancelButton: false,
-                confirmButtonColor: '#32243d',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Ok'
-            }).then((result) => {
-                if (result.value) {
-                    window.location.href="<?= base_url(); ?>customer/preview/"+$id;
-                }
-            });
-        }
-
-    // });
-    });
-});
-});
-</script>
-
-
-<script>
     $(function() {
         $("nav:first").addClass("closed");
     });
@@ -1873,15 +1388,6 @@ jQuery(document).ready(function () {
 </script>
 
 <script>
-// var value = $("#headerContent").text();
-// if(value.indexOf("agreement") != -1)
-// //   alert("true");
-// return $(this).text().replace("agreement", "yeahhhhh"); 
-// else
-//   alert("false");
-// $(".headerContent").text(function () {
-//     return $(this).text().replace("agreement", "yeahhhhh"); 
-// });​​​​​
 
 jQuery(function($){
 

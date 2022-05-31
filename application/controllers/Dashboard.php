@@ -359,8 +359,7 @@ class Dashboard extends Widgets {
         }
 
         $payload = json_decode(file_get_contents('php://input'), true);
-        //['id' => $widgetId, 'name' => $widgetName] = $payload;
-        $payload = ['id' => $widgetId, 'name' => $widgetName];
+        ['id' => $widgetId, 'name' => $widgetName] = $payload;
         $companyId = logged('company_id');
 
         $this->db->where('company_id', $companyId);
