@@ -20,6 +20,11 @@
     <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
     <!-- Datepicker -->
     <script type="text/javascript" src="<?= base_url("assets/js/v2/bootstrap-datepicker.min.js") ?>"></script>
+    <!-- TagsInput -->
+    <script type="text/javascript" src="<?= base_url("assets/plugins/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js") ?>"></script>
+    <!-- Datetimepicker -->
+    <script type="text/javascript" src="<?= base_url("assets/js/v2/moment.min.js") ?>"></script>
+    <script type="text/javascript" src="<?= base_url("assets/js/v2/bootstrap-datetimepicker.min.js") ?>"></script>
     <!-- Select2 -->
     <script src="<?= base_url("assets/plugins/select2/dist/js/select2.full.min.js"); ?>"></script>
     <!-- Input Mask -->

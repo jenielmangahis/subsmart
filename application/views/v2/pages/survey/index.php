@@ -22,6 +22,9 @@
 </div>
 
 <div class="row page-content g-0">
+    <div class="col-12 mb-3">
+        <?php include viewPath('v2/includes/page_navigations/marketing_tabs'); ?>
+    </div>
     <div class="col-12">
         <div class="nsm-page">
             <div class="nsm-page-content">
@@ -103,7 +106,7 @@
                                                         <label class="nsm-subtitle d-block">Showing recently created surveys in all workspace</label>
                                                     </div>
                                                 </div>
-                                                <div class="row" id="recent_surveys_container"></div>
+                                                <div class="row g-3" id="recent_surveys_container"></div>
                                             </div>
                                             <?php foreach ($survey_workspaces as $workspace) : ?>
                                                 <div class="tab-pane fade" id="workspace_item_<?= $workspace->id ?>" role="tabpanel" aria-labelledby="workspace-item-<?= $workspace->id ?>">

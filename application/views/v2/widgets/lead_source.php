@@ -21,45 +21,23 @@
             </div>
         </div>
     </div>
-    <div class="nsm-card-content jobs_stat">
-    <div class="nsm-widget-table">
-            <div class="stat_content">
-                <div class="row row-pad">
-                    <div class="col">
-                        <div class="row">
-                            <div class="col-9">
-                                <h6>Source</h6>
-                            </div>
-                            <div class="col-3" style="text-align: center;">
-                                <h6>Count</h6>
-                            </div>
-                        </div>
-                    </div>
-                    <?php foreach($leadSources as $source): ?>
-                    <div class="row js-row-dash">
-                        <div class="col">
-                            <div class="row">
-                                <div class="col-9 marg-top">
-                                    <div class="jname"> <?= $source->ls_name; ?></div>
-                                </div>
-                                <div class="col-3 col-center">
-                                    <div class="row">
-                                        <div class="col" style="padding-top: 5px;"> <?= $source->leadSourceCount; ?> </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <?php endforeach; ?>
-                </div>
-            </div>
-        </div>
+    <div class="nsm-card-content d-flex justify-content-center align-items-center">
+        <canvas id="lead_source_chart" class="nsm-chart" data-chart-type="expenses"></canvas>
     </div>
+    <?php
+    $sources = [];
+    $sourcesCount = [];
+    foreach($leadSources as $source): ?>
+        <?php 
+            $sources[] = "'".$source->ls_name."'";
+            $sourcesCount[] = $source->leadSourceCount;
+        ?>
+    <?php endforeach; ?>
 </div>
 
 <script type="text/javascript">
     $(document).ready(function(){
-        //initializeLeadSourceChart();
+        populateLeadSourceChart();
     });
 
     function initializeLeadSourceChart(){
@@ -74,21 +52,37 @@
         });
     }
 
-    function populateLeadSourceChart(leadSource, leadNames){
+    function populateLeadSourceChart(){
         var lead_source = $("#lead_source_chart");
-
+        
         new Chart(lead_source, {
           type: 'doughnut',
           data: {
-            labels: leadNames,
+            labels: <?php echo '[' . implode(',', $sources) . ']'; ?>,
             datasets: [{
-              data: leadSource,
+              data: <?php echo '[' . implode(',', $sourcesCount) . ']'; ?>,
               backgroundColor: [
                 'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgb(255, 205, 86, 0.2)',
+                'rgba(255, 159, 64, 0.2)',
                 'rgba(153, 102, 255, 0.2)',
               ],
               borderColor: [
                 'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 99, 132, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgb(255, 205, 86, 1)',
+                'rgba(255, 159, 64, 1)',
                 'rgba(153, 102, 255, 1)',
               ],
               borderWidth: 1

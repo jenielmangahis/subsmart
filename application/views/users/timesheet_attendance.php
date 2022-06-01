@@ -517,7 +517,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 <h6><i class="fa fa-calendar-alt"></i> Today: <span style="color: grey"><?php echo date('M d, Y') . " " ?></span>
                                 </h6>
                             </div>
-                            <?php if (logged("role") < 5) : ?>
+                            <?php if (true) : ?>
                             <div class="row" style="margin-bottom: 20px">
                                 <div class="col-md-3">
                                     <div class="tile-container">

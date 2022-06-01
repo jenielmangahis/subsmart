@@ -4,6 +4,9 @@
     <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/tools_tabs'); ?>
     </div>
+    <div class="col-12 mb-3">
+        <?php include viewPath('v2/includes/page_navigations/business_tools_subtabs'); ?>
+    </div>
     <div class="col-12">
         <div class="nsm-page">
             <div class="nsm-page-content">

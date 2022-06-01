@@ -87,8 +87,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         <?php foreach($colRepTypes as $reportType) : ?>
                                                             <?php $favorite = $this->accounting_report_types_model->get_favorite_report_by_report_type_id($reportType->id, logged('company_id'));?>
                                                             <li class="border-bottom p-3 cursor-pointer">
-                                                                <a href="#" class=" font-weight-normal"><?=$reportType->name?></a>
-                                                                <a href="#" class="pl-1 text-secondary h6 position-relative top-1"><i class="fa fa-question-circle-o "></i></a>
+                                                                <a href="<?=is_null($reportType->url) ? '/accounting/reports/view-report/'.$reportType->id : $reportType->url?>" class=" font-weight-normal"><?=$reportType->name?></a>
+                                                                <a href="#<?=str_replace(' ', '-', strtolower($reportGroup->description))?>-<?=$reportType->id?>-collapse" data-toggle="collapse" aria-expanded="false" class="collapse-toggle pl-1 text-secondary h6 position-relative top-1">
+                                                                    <i class="fa fa-question-circle-o "></i>
+                                                                </a>
                                                                 <div class="dropdown pull-right d-inline-block" style="min-width: 4px; min-height: 1px">
                                                                     <?php if($reportType->customizable) : ?>
                                                                     <span type="button" data-toggle="dropdown" aria-expanded="false">
@@ -104,6 +106,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                     <i class="fa <?=is_null($favorite) ? 'fa-star-o' : 'fa-star'?> fa-lg"></i>
                                                                 </a>
                                                                 <?php endif; ?>
+                                                                <div class="collapse py-3" id="<?=str_replace(' ', '-', strtolower($reportGroup->description))?>-<?=$reportType->id?>-collapse">
+                                                                    <p class="m-0"><?=$reportType->description?></p>
+                                                                </div>
                                                             </li>
                                                         <?php endforeach; ?>
                                                     </ul>

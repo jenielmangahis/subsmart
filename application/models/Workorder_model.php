@@ -722,6 +722,15 @@ class Workorder_model extends MY_Model
 		return $query->result();
     }
 
+    public function get_solar($id)
+    {
+        $this->db->select('*');
+		$this->db->from('workorder_solar_items');
+		$this->db->where('work_order_id', $id);
+		$query = $this->db->get();
+		return $query->row();
+    }
+
     public function deleteContacts($customer_id)
     {
         $this->db->where('customer_id',$customer_id);
@@ -1745,6 +1754,13 @@ class Workorder_model extends MY_Model
     public function save_alarm($data)
     {
         $vendor = $this->db->insert('acs_profile', $data);
+	    $insert_id = $this->db->insert_id();
+		return  $insert_id;
+    }
+
+    public function save_solar_items($data)
+    {
+        $vendor = $this->db->insert('workorder_solar_items', $data);
 	    $insert_id = $this->db->insert_id();
 		return  $insert_id;
     }

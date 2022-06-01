@@ -118,6 +118,34 @@
 	min-height: 150px;
 }
 
+.nsm-sm{
+	width: 75px;
+	height: 75px;
+	min-height: unset !important;
+}
+
+.nsm-md{
+	width: 100px;
+	height: 100px;
+	min-height: unset !important;
+}
+
+.nsm-lg{
+	width: 250px;
+	height: 250px;
+	min-height: unset !important;
+}
+
+.nsm-xl{
+	width: 500px;
+	height: 500px;
+	min-height: unset !important;
+}
+
+.nsm-img.img-circle{
+	border-radius: 100%;
+}
+
 .nsm-divider{
 	display: inline-block;
     border-radius: 5px;

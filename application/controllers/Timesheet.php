@@ -1217,6 +1217,9 @@ class Timesheet extends MY_Controller
     }
     public function attendance()
     {
+        $this->page_data['page']->title = 'Attendance';
+        $this->page_data['page']->parent = 'Company';
+
         $session = $this->session->userdata('logged');
         if ($session == null || $session == "") {
             $_SESSION['usertimezone'] = json_decode(get_cookie('logged'))->usertimezone;
@@ -1271,7 +1274,8 @@ class Timesheet extends MY_Controller
         $this->page_data['on_pendingleave'] = $this->timesheet_model->getLeaveList(date('Y-m-d'), "pending");
         $this->page_data['paydate'] = $this->timesheet_model->getData(logged('company_id'));
         // var_dump($this->page_data['out_now']);
-        $this->load->view('users/timesheet_attendance', $this->page_data);
+        // $this->load->view('users/timesheet_attendance', $this->page_data);
+        $this->load->view('v2/pages/users/timesheet_attendance', $this->page_data);
     }
 
     public function inNow()
@@ -4290,29 +4294,31 @@ class Timesheet extends MY_Controller
         $attendances = $this->timesheet_model->get_my_attendance($date_from, $date_to, $user_id);
         $display = '';
 
-        $display .= '<thead>';
-        $display .= '<tr>';
-        $display .= '<th>Shift Date</th>';
-        $display .= '<th>Shift Start</th>';
-        $display .= '<th>Shift End</th>';
-        $display .= '<th>Expected Work Hours</th>';
-        $display .= '<th>Clock in</th>';
-        $display .= '<th>Clock out</th>';
-        $display .= '<th>Worked Hours</th>';
-        $display .= '<th>Break Duration (minutes)</th>';
-        $display .= '<th>Late (minutes)</th>';
-        $display .= '<th>Overtime</th>';
-        $display .= '<th>OT Status</th>';
-        $display .= '<th>Action</th>';
-        $display .= '</tr>';
-        $display .= '</thead>';
-        $display .= '<tbody>';
+        // $display .= '<thead>';
+        // $display .= '<tr>';
+        // $display .= '<th>Shift Date</th>';
+        // $display .= '<th>Shift Start</th>';
+        // $display .= '<th>Shift End</th>';
+        // $display .= '<th>Expected Work Hours</th>';
+        // $display .= '<th>Clock in</th>';
+        // $display .= '<th>Clock out</th>';
+        // $display .= '<th>Worked Hours</th>';
+        // $display .= '<th>Break Duration (minutes)</th>';
+        // $display .= '<th>Late (minutes)</th>';
+        // $display .= '<th>Overtime</th>';
+        // $display .= '<th>OT Status</th>';
+        // $display .= '<th>Action</th>';
+        // $display .= '</tr>';
+        // $display .= '</thead>';
+        // $display .= '<tbody>';
         foreach ($attendances as $attendance) {
             $shift_date = date("m/d/Y", strtotime($this->datetime_zone_converter($attendance->date_created, "UTC", $this->session->userdata('usertimezone'))));
 
-            $display .= '<tr role="row" class="odd">';
-            $display .= '<td class="center">' . $shift_date . '</td>';
+            // $display .= '<tr role="row" class="odd">';
+            // $display .= '<td class="center">' . $shift_date . '</td>';
 
+            $display .= '<tr>';
+            $display .= '<td class="nsm-text-primary">' . $shift_date . '</td>';
 
             date_default_timezone_set("UTC");
             $shift_schedules = $this->timesheet_model->get_schedule_in_shift_date(date("Y-m-d", strtotime($attendance->date_created)), $attendance->user_id);
@@ -4347,10 +4353,11 @@ class Timesheet extends MY_Controller
                 $expected_work_hours = round((($expected_hours * 60) - $expected_break) / 60, 2);
             }
 
-            $display .= '<td class="center">' . $shift_start . '</td>';
-            $display .= '<td class="center">' . $shift_end . '</td>';
+            // $display .= '<td class="center">' . $shift_start . '</td>';
+            // $display .= '<td class="center">' . $shift_end . '</td>';
 
-
+            $display .= '<td>' . $shift_start . '</td>';
+            $display .= '<td>' . $shift_end . '</td>';
 
             $auxes = $this->timesheet_model->get_logs_of_attendance($attendance->id);
             $checkin = '';
@@ -4375,16 +4382,26 @@ class Timesheet extends MY_Controller
                 }
             }
 
-            $display .= '<td class="center">' . $expected_work_hours . '</td>';
-            $display .= '<td class="center">' . $checkin . '</td>';
-            $display .= '<td class="center">' . $checkout . '</td>';
-            $display .= '<td class="center num_only time-log">' . ($attendance->shift_duration + $attendance->overtime) . '</td>';
+            // $display .= '<td class="center">' . $expected_work_hours . '</td>';
+            // $display .= '<td class="center">' . $checkin . '</td>';
+            // $display .= '<td class="center">' . $checkout . '</td>';
+            // $display .= '<td class="center num_only time-log">' . ($attendance->shift_duration + $attendance->overtime) . '</td>';
+
+            $display .= '<td>' . $expected_work_hours . '</td>';
+            $display .= '<td>' . $checkin . '</td>';
+            $display .= '<td>' . $checkout . '</td>';
+            $display .= '<td>' . ($attendance->shift_duration + $attendance->overtime) . '</td>';
+
             $minutes_late = "";
             if ($shift_start != '') {
                 $minutes_late = $this->get_differenct_of_dates($shift_start, $checkin, true) * 60;
             }
-            $display .= '<td class="center num_only time-log">' . $attendance->break_duration . '</td>';
-            $display .= '<td class="center num_only time-log">' . round($minutes_late, 2) . '</td>';
+            // $display .= '<td class="center num_only time-log">' . $attendance->break_duration . '</td>';
+            // $display .= '<td class="center num_only time-log">' . round($minutes_late, 2) . '</td>';
+
+            $display .= '<td>' . $attendance->break_duration . '</td>';
+            $display .= '<td>' . round($minutes_late, 2) . '</td>';
+
             $overtime = 0;
             if ($expected_hours != '') {
                 if ($expected_work_hours < ($attendance->shift_duration + $attendance->overtime)) {
@@ -4397,15 +4414,20 @@ class Timesheet extends MY_Controller
             } else {
                 $overtime = $attendance->overtime;
             }
-            $display .= '<td class="center num_only time-log">' . $overtime . '</td>';
+            // $display .= '<td class="center num_only time-log">' . $overtime . '</td>';
+            $display .= '<td>' . $overtime . '</td>';
             if ($attendance->overtime_status == 1) {
                 $ot_status = "Pending";
+                $ot_badge = '<span class="nsm-badge text-capitalize">Pending</span>';
             } elseif ($attendance->overtime_status == 0) {
                 $ot_status = "Denied";
+                $ot_badge = '<span class="nsm-badge error text-capitalize">Pending</span>';
             } else {
                 $ot_status = "Approved";
+                $ot_badge = '<span class="nsm-badge success text-capitalize">Pending</span>';
             }
-            $display .= '<td class="center num_only">' . $ot_status . '</td>';
+            // $display .= '<td class="center num_only">' . $ot_status . '</td>';
+            $display .= '<td>' . $ot_badge . '</td>';
             $payable_hours = $attendance->shift_duration;
             if ($expected_hours != '') {
                 if ($payable_hours > $expected_work_hours) {
@@ -4415,17 +4437,34 @@ class Timesheet extends MY_Controller
             if ($ot_status === "Approved") {
                 $payable_hours = $payable_hours + $attendance->overtime;
             }
-            $display .= '<td class="center num_only time-log"><center>';
+            // $display .= '<td class="center num_only time-log"><center>';
+            // if ($checkout != "") {
+            //     $display .= '<a title="" data-shift-date="' . $shift_date . '" data-name="' . $attendance->FName . " " . $attendance->LName . '" data-user-id="' . $attendance->user_id . '" data-att-id="' . $attendance->id . '" data-toggle="tooltip" class="adjust-my-attendance-request btn btn-primary btn-sm" data-original-title="Approve"><i class="fa fa-adjust fa-lg"></i> Request Adjustment</a>';
+            //     if ($overtime > 0 && $attendance->overtime_status == 0) {
+            //         $display .= '<a title="" data-shift-date="' . $shift_date . '" data-user-id="' . $attendance->user_id . '" data-attn-id="' . $attendance->id . '" data-toggle="tooltip" class="request-my-ot btn btn-warning btn-sm" data-original-title="Deny"><i class="fa fa-clock-o fa-lg"></i> Request OT Approval</a>';
+            //     }
+            // }
+            // $display .= '</center></td>';
+
+            $display .= '<td class="text-end">';
             if ($checkout != "") {
-                $display .= '<a title="" data-shift-date="' . $shift_date . '" data-name="' . $attendance->FName . " " . $attendance->LName . '" data-user-id="' . $attendance->user_id . '" data-att-id="' . $attendance->id . '" data-toggle="tooltip" class="adjust-my-attendance-request btn btn-primary btn-sm" data-original-title="Approve"><i class="fa fa-adjust fa-lg"></i> Request Adjustment</a>';
+                $display .= '<a role="button" href="javascript:void(0);" class="nsm-button btn-sm primary btn-request-adjustment" data-shift-date="' . $shift_date . '" data-name="' . $attendance->FName . " " . $attendance->LName . '" data-user-id="' . $attendance->user_id . '" data-att-id="' . $attendance->id . '">Request Adjustment</a>';
                 if ($overtime > 0 && $attendance->overtime_status == 0) {
-                    $display .= '<a title="" data-shift-date="' . $shift_date . '" data-user-id="' . $attendance->user_id . '" data-attn-id="' . $attendance->id . '" data-toggle="tooltip" class="request-my-ot btn btn-warning btn-sm" data-original-title="Deny"><i class="fa fa-clock-o fa-lg"></i> Request OT Approval</a>';
+                    $display .= '<a role="button" href="javascript:void(0);" class="nsm-button btn-sm btn-ot-approval" data-shift-date="' . $shift_date . '" data-user-id="' . $attendance->user_id . '" data-attn-id="' . $attendance->id . '">Request OT Approval</a>';
                 }
             }
-            $display .= '</center></td>';
+            $display .= '</td>';
+            
             $display .= '</tr>';
         }
-        $display .= '</tbody>';
+        // $display .= '</tbody>';
+
+        if ($display == "") {
+            $display .= '<tr>';
+            $display .= '<td colspan="11"><div class="nsm-empty"><span>No results found.</span></div></td>';
+            $display .= '</tr>';
+        }
+
         echo json_encode($display);
     }
     public function request_my_ot()
@@ -4518,51 +4557,89 @@ class Timesheet extends MY_Controller
         $date_to = date("Y-m-d H:i:s", $the_date);
         $user_id = logged('id');
         $requests = $this->timesheet_model->get_my_correction_requests($date_from, $date_to, $user_id);
-        $display = '<thead>';
-        $display .= '<tr role="row">';
-        $display .= '<th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Shift Date</th>';
-        $display .= '<th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Login</th>';
-        $display .= '<th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Break</th>';
-        $display .= '<th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Worked Hours</th>';
-        $display .= '<th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Break</th>';
-        $display .= '<th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Request <br>Status</th>';
-        $display .= '<th class="sorting_disabled" rowspan="1" colspan="1" style="width: 100px;">Action</th>';
-        $display .= '</tr>';
-        $display .= '</thead>';
-        $display .= '<tbody>';
+        // $display = '<thead>';
+        // $display .= '<tr role="row">';
+        // $display .= '<th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Shift Date</th>';
+        // $display .= '<th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Login</th>';
+        // $display .= '<th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Break</th>';
+        // $display .= '<th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Worked Hours</th>';
+        // $display .= '<th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Break</th>';
+        // $display .= '<th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Request <br>Status</th>';
+        // $display .= '<th class="sorting_disabled" rowspan="1" colspan="1" style="width: 100px;">Action</th>';
+        // $display .= '</tr>';
+        // $display .= '</thead>';
+        // $display = '<tbody>';
+        $display = '';
         foreach ($requests as $request) {
-            $display .= '<tr role="row" class="odd">';
-            $display .= '<td><label class="gray">' . date('m-d-Y', strtotime($this->datetime_zone_converter($request->clock_in, "UTC", $this->session->userdata('usertimezone')))) . '</label></td>';
+            // $display .= '<tr role="row" class="odd">';
+            // $display .= '<td><label class="gray">' . date('m-d-Y', strtotime($this->datetime_zone_converter($request->clock_in, "UTC", $this->session->userdata('usertimezone')))) . '</label></td>';
+            // $display .= '<td>';
+            // $display .= '<center>';
+            // $display .= '<label class="gray"><strong>Clock in: </strong> ' . date('m-d-Y h:i A', strtotime($this->datetime_zone_converter($request->clock_in, "UTC", $this->session->userdata('usertimezone')))) . '</label>';
+            // $display .= '<label class="gray"><strong>Clock out: </strong> ' . date('m-d-Y h:i A', strtotime($this->datetime_zone_converter($request->clock_out, "UTC", $this->session->userdata('usertimezone')))) . '</label>';
+            // $display .= '</center>';
+            // $display .= '</td>';
+            // $display .= '<td>';
+            // $display .= '<center>';
+            // if ($request->break_in  != "0000-00-00 00:00:00") {
+            //     $display .= '<label class="gray"><strong>Break in: </strong> ' . date('m-d-Y h:i A', strtotime($this->datetime_zone_converter($request->break_in, "UTC", $this->session->userdata('usertimezone')))) . '</label>';
+            //     $display .= '<label class="gray"><strong>Break out: </strong>' . date('m-d-Y h:i A', strtotime($this->datetime_zone_converter($request->break_out, "UTC", $this->session->userdata('usertimezone')))) . '</label>';
+            // }
+            // $display .= '</center>';
+            // $display .= '</td>';
+            // $display .= '<td style="text-align:center;">' . round($this->get_differenct_of_dates($request->clock_in, $request->clock_out) - $this->get_differenct_of_dates($request->break_in, $request->break_out), 2) . '</td>';
+            // $display .= '<td style="text-align:center;">' . round($this->get_differenct_of_dates($request->break_in, $request->break_out), 2) . '</td>';
+
+            // $display .= '<td style="text-align:center;"><strong>' . $request->status . '</strong><br>';
+            // $display .= '<label class="gray">' . date('m-d-Y', strtotime($this->datetime_zone_converter($request->date_status_changed, "UTC", $this->session->userdata('usertimezone')))) . '</label>';
+            // $display .= '</td>';
+
+            // $display .= '<td style="text-align:center;">';
+            // if ($request->status == "pending") {
+            //     $display .= '<a title="" data-shift-date="' . date('m-d-Y', strtotime($this->datetime_zone_converter($request->clock_in, "UTC", $this->session->userdata('usertimezone')))) . '" data-timesheet-attendance-correction-id="' . $request->id . '" data-user-id="' . $request->user_id . '"  data-attn-id="' . $request->attendance_id . '" data-toggle="tooltip" class="cancel_my_correction_reqiest btn btn-danger btn-sm" data-original-title="Cancel Request"><i class="fa fa-times fa-lg"></i> Cancel</a>';
+            // }
+            // $display .= '</td>';
+            // $display .= '</tr>';
+
+            $display .= '<tr>';
+            $display .= '<td class="nsm-text-primary">' . date('m-d-Y', strtotime($this->datetime_zone_converter($request->clock_in, "UTC", $this->session->userdata('usertimezone')))) . '</td>';
             $display .= '<td>';
-            $display .= '<center>';
-            $display .= '<label class="gray"><strong>Clock in: </strong> ' . date('m-d-Y h:i A', strtotime($this->datetime_zone_converter($request->clock_in, "UTC", $this->session->userdata('usertimezone')))) . '</label>';
-            $display .= '<label class="gray"><strong>Clock out: </strong> ' . date('m-d-Y h:i A', strtotime($this->datetime_zone_converter($request->clock_out, "UTC", $this->session->userdata('usertimezone')))) . '</label>';
-            $display .= '</center>';
+            $display .= '<label class="d-block fw-bold">Clock in: ' . date('m-d-Y h:i A', strtotime($this->datetime_zone_converter($request->clock_in, "UTC", $this->session->userdata('usertimezone')))) . '</label>';
+            $display .= '<label class="content-subtitle d-block">Clock out: ' . date('m-d-Y h:i A', strtotime($this->datetime_zone_converter($request->clock_out, "UTC", $this->session->userdata('usertimezone')))) . '</label>';
             $display .= '</td>';
             $display .= '<td>';
-            $display .= '<center>';
             if ($request->break_in  != "0000-00-00 00:00:00") {
-                $display .= '<label class="gray"><strong>Break in: </strong> ' . date('m-d-Y h:i A', strtotime($this->datetime_zone_converter($request->break_in, "UTC", $this->session->userdata('usertimezone')))) . '</label>';
-                $display .= '<label class="gray"><strong>Break out: </strong>' . date('m-d-Y h:i A', strtotime($this->datetime_zone_converter($request->break_out, "UTC", $this->session->userdata('usertimezone')))) . '</label>';
+                $display .= '<label class="d-block fw-bold">Break in: ' . date('m-d-Y h:i A', strtotime($this->datetime_zone_converter($request->break_in, "UTC", $this->session->userdata('usertimezone')))) . '</label>';
+                $display .= '<label class="content-subtitle d-block">Break out: ' . date('m-d-Y h:i A', strtotime($this->datetime_zone_converter($request->break_out, "UTC", $this->session->userdata('usertimezone')))) . '</label>';
             }
-            $display .= '</center>';
             $display .= '</td>';
-            $display .= '<td style="text-align:center;">' . round($this->get_differenct_of_dates($request->clock_in, $request->clock_out) - $this->get_differenct_of_dates($request->break_in, $request->break_out), 2) . '</td>';
-            $display .= '<td style="text-align:center;">' . round($this->get_differenct_of_dates($request->break_in, $request->break_out), 2) . '</td>';
+            $display .= '<td>' . round($this->get_differenct_of_dates($request->clock_in, $request->clock_out) - $this->get_differenct_of_dates($request->break_in, $request->break_out), 2) . '</td>';
+            $display .= '<td>' . round($this->get_differenct_of_dates($request->break_in, $request->break_out), 2) . '</td>';
+            $display .= '<td>';
 
-            $display .= '<td style="text-align:center;"><strong>' . $request->status . '</strong><br>';
-            $display .= '<label class="gray">' . date('m-d-Y', strtotime($this->datetime_zone_converter($request->date_status_changed, "UTC", $this->session->userdata('usertimezone')))) . '</label>';
+            if ($request->status == 'approved') {
+                $display .= '<span class="nsm-badge success d-block text-capitalize">' . $request->status . '</span>';
+            } else {
+                $display .= '<span class="nsm-badge d-block text-capitalize">' . $request->status . '</span>';
+            }
+
+            $display .= '<label class="content-subtitle d-block mt-1">' . date('m-d-Y', strtotime($this->datetime_zone_converter($request->date_status_changed, "UTC", $this->session->userdata('usertimezone')))) . '</label>';
             $display .= '</td>';
-
-            $display .= '<td style="text-align:center;">';
+            $display .= '<td>';
             if ($request->status == "pending") {
-                $display .= '<a title="" data-shift-date="' . date('m-d-Y', strtotime($this->datetime_zone_converter($request->clock_in, "UTC", $this->session->userdata('usertimezone')))) . '" data-timesheet-attendance-correction-id="' . $request->id . '" data-user-id="' . $request->user_id . '"  data-attn-id="' . $request->attendance_id . '" data-toggle="tooltip" class="cancel_my_correction_reqiest btn btn-danger btn-sm" data-original-title="Cancel Request"><i class="fa fa-times fa-lg"></i> Cancel</a>';
+                $display .= '<a role="button" href="javascript:void(0);" class="nsm-button btn-sm error btn-cancel-correction" data-shift-date="' . date('m-d-Y', strtotime($this->datetime_zone_converter($request->clock_in, "UTC", $this->session->userdata('usertimezone')))) . '" data-timesheet-attendance-correction-id="' . $request->id . '" data-user-id="' . $request->user_id . '"  data-attn-id="' . $request->attendance_id . '">Cancel</a>';
             }
             $display .= '</td>';
             $display .= '</tr>';
         }
 
-        $display .= '</tbody>';
+        if ($display == "") {
+            $display .= '<tr>';
+            $display .= '<td colspan="7"><div class="nsm-empty"><span>No results found.</span></div></td>';
+            $display .= '</tr>';
+        }
+
+        // $display .= '</tbody>';
         echo json_encode($display);
     }
 
@@ -4589,45 +4666,79 @@ class Timesheet extends MY_Controller
         $hide_action = false;
         foreach ($leave_requests as $request) {
             $date_requested = date('m-d-Y', strtotime($this->datetime_zone_converter($request->date_created, "UTC", $this->session->userdata('usertimezone'))));
-            $display .= '<tr role="row" class="odd">';
-            $display .= '<td>
-            <label class="gray">' . $date_requested . '</label>
-            </td>';
-            $display .= '<td>
-                <label class="gray center"><strong>' . $request->name . '' . '</strong></label>';
+            // $display .= '<tr role="row" class="odd">';
+            // $display .= '<td>
+            // <label class="gray">' . $date_requested . '</label>
+            // </td>';
+            // $display .= '<td>
+            //     <label class="gray center"><strong>' . $request->name . '' . '</strong></label>';
+            // $leave_dates = $this->timesheet_model->get_leavedates($request->id);
+            // foreach ($leave_dates as $leave_date) {
+            //     $display .= '<label class="gray center">' . date('m-d-Y', strtotime($this->datetime_zone_converter($leave_date->date_time, "UTC", $this->session->userdata('usertimezone')))) . '</label>';
+            // }
+
+            // $display .= '</td>';
+            // $display .= '<td style="text-align:center;">';
+            // $action = true;
+            // if ($request->status == 0) {
+            //     $display .= '<label class="gray">Pending</label>';
+            //     $hide_action = true;
+            // } elseif ($request->status == 1) {
+            //     $display .= '<label class="gray">Approved</label>';
+            //     $action = false;
+            // } elseif ($request->status == 3) {
+            //     $display .= '<label class="gray">Canceled</label>';
+            //     $action = false;
+            // } else {
+            //     $display .= '<label class="gray">Denied</label>';
+            //     $action = false;
+            // }
+
+            // $display .= '</td>';
+            // $display .= '<td class="leave_request_action_td" style="text-align:center;">';
+            // if ($action) {
+            //     $display .= '<a title="" data-date-filed="' . $date_requested . '" data-leave-type="' . $request->name . '"data-user-id="' . $request->user_id . '" data-leave-id="' . $request->id . '" data-toggle="tooltip" class="cancel_my_leave_request btn btn-danger btn-sm" data-original-title="Cancel Request"><i class="fa fa-times fa-lg"></i> Cancel</a>';
+            // }
+            // $display .= '</td>';
+            // $display .= '</tr>';
+
+            $display .= '<tr>';
+            $display .= '<td class="nsm-text-primary">';
+            $display .= '<label class="d-block fw-bold">' . $request->name . '</label>';
+
             $leave_dates = $this->timesheet_model->get_leavedates($request->id);
             foreach ($leave_dates as $leave_date) {
-                $display .= '<label class="gray center">' . date('m-d-Y', strtotime($this->datetime_zone_converter($leave_date->date_time, "UTC", $this->session->userdata('usertimezone')))) . '</label>';
+                $display .= '<label class="content-subtitle fst-italic me-1">' . date('m-d-Y', strtotime($this->datetime_zone_converter($leave_date->date_time, "UTC", $this->session->userdata('usertimezone')))) . '</label>';
             }
-
             $display .= '</td>';
-            $display .= '<td style="text-align:center;">';
+            $display .= '<td>' . $date_requested . '</td>';
+
+            $display .= '<td>';
             $action = true;
             if ($request->status == 0) {
-                $display .= '<label class="gray">Pending</label>';
+                $display .= '<span class="nsm-badge">Pending</span>';
                 $hide_action = true;
             } elseif ($request->status == 1) {
-                $display .= '<label class="gray">Approved</label>';
+                $display .= '<span class="nsm-badge success">Approved</span>';
                 $action = false;
             } elseif ($request->status == 3) {
-                $display .= '<label class="gray">Canceled</label>';
+                $display .= '<span class="nsm-badge error">Canceled</span>';
                 $action = false;
             } else {
-                $display .= '<label class="gray">Denied</label>';
+                $display .= '<span class="nsm-badge secondary">Denied</span>';
                 $action = false;
             }
-
             $display .= '</td>';
-            $display .= '<td class="leave_request_action_td" style="text-align:center;">';
+            $display .= '<td class="text-end">';
             if ($action) {
-                $display .= '<a title="" data-date-filed="' . $date_requested . '" data-leave-type="' . $request->name . '"data-user-id="' . $request->user_id . '" data-leave-id="' . $request->id . '" data-toggle="tooltip" class="cancel_my_leave_request btn btn-danger btn-sm" data-original-title="Cancel Request"><i class="fa fa-times fa-lg"></i> Cancel</a>';
+                $display .= '<a role="button" href="javascript:void(0);" class="nsm-button btn-sm error btn-cancel-leave" data-date-filed="' . $date_requested . '" data-leave-type="' . $request->name . '" data-user-id="' . $request->user_id . '" data-leave-id="' . $request->id . '">Cancel</a>';
             }
             $display .= '</td>';
             $display .= '</tr>';
         }
         if ($display == "") {
-            $display .= '<tr role="row" class="odd">';
-            $display .= '<td colspan="4" class="center">No request submitted.</td>';
+            $display .= '<tr>';
+            $display .= '<td colspan="4"><div class="nsm-empty"><span>No results found.</span></div></td>';
             $display .= '</tr>';
         }
         $data = new stdClass();
@@ -4861,15 +4972,53 @@ class Timesheet extends MY_Controller
                 }
             }
         }
+        // $display = "";
+        // $display .= '<thead>';
+        // $display .= '<tr role="row">';
+        // $display .= '<th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;"> Monday<br>' . $date_this_week['Monday'] . '</th>';
+        // $display .= '<th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Tuesday<br>' . $date_this_week['Tuesday'] . '</th>';
+        // $display .= '<th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Wednesday<br>' . $date_this_week['Wednesday'] . '</th>';
+        // $display .= '<th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Thursday<br>' . $date_this_week['Thursday'] . '</th>';
+        // $display .= '<th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Friday<br>' . $date_this_week['Friday'] . '</th>';
+        // $display .= '<th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Saturday<br>' . $date_this_week['Saturday'] . '</th>';
+        // $display .= '<th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Sunday<br>' . $date_this_week['Sunday'] . '</th>';
+        // $display .= '</tr>';
+        // $display .= '</thead>';
+        // $display .= '<tbody>';
+        // $display .= '<tr role="row">';
+        // if ($remarks_ctr > 0) {
+        //     for ($i = 0; $i < count($remarks); $i++) {
+        //         $display .= '<td class="center">' . $remarks[$i] . '</td>';
+        //     }
+        // } else {
+        //     $display .= '<td class="center" colspan="7"> No data Available</td>';
+        // }
+        // $display .= '</tr>';
+        // $display .= '</tbody>';
 
+        $display = '<thead>';
+        $display .= '<tr>';
+        $display .= '<td data-name="Monday ' . $date_this_week['Monday'] . '" class="text-center">Monday <br>' . $date_this_week['Monday'] . '</td>';
+        $display .= '<td data-name="Tuesday ' . $date_this_week['Tuesday'] . '" class="text-center">Tuesday <br>' . $date_this_week['Tuesday'] . '</td>';
+        $display .= '<td data-name="Wednesday ' . $date_this_week['Wednesday'] . '" class="text-center">Wednesday <br>' . $date_this_week['Wednesday'] . '</td>';
+        $display .= '<td data-name="Thursday ' . $date_this_week['Thursday'] . '" class="text-center">Thursday <br>' . $date_this_week['Thursday'] . '</td>';
+        $display .= '<td data-name="Friday ' . $date_this_week['Friday'] . '" class="text-center">Friday <br>' . $date_this_week['Friday'] . '</td>';
+        $display .= '<td data-name="Saturday ' . $date_this_week['Saturday'] . '" class="text-center">Saturday <br>' . $date_this_week['Saturday'] . '</td>';
+        $display .= '<td data-name="Sunday ' . $date_this_week['Sunday'] . '" class="text-center">Sunday <br>' . $date_this_week['Sunday'] . '</td>';
+        $display .= '</tr>';
+        $display .= '</thead>';
         $display .= '<tbody>';
-        $display .= '<tr role="row">';
+        $display .= '<tr>';
         if ($remarks_ctr > 0) {
             for ($i = 0; $i < count($remarks); $i++) {
-                $display .= '<td class="center">' . $remarks[$i] . '</td>';
+                $display .= '<td class="text-center fw-bold">' . $remarks[$i] . '</td>';
             }
         } else {
-            $display .= '<td class="center" colspan="7"> No data Available</td>';
+            $display .= '<td class="text-center" colspan="7">';
+            $display .= '<div class="nsm-empty">';
+            $display .= '<span>No results found.</span>';
+            $display .= '</div>';
+            $display .= '</td>';
         }
         $display .= '</tr>';
         $display .= '</tbody>';

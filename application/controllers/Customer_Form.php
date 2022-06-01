@@ -135,4 +135,54 @@ class Customer_Form extends MY_Controller
         header('content-type: application/json');
         echo json_encode(['data' => $profile, 'message' => $message]);
     }
+
+    public function apiSaveFormFieldCustomName()
+    {
+        header('content-type: application/json');
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['success' => false]);
+            return;
+        }
+
+        $payload = json_decode(file_get_contents('php://input'), true);
+        ['default' => $default, 'name' => $name, 'form' => $form] = $payload;
+        $userId = logged('id');
+        $companyId = logged('company_id');
+
+        $this->db->where('company_id', $companyId);
+        $this->db->where('default_name', $default);
+        $this->db->where('form', $form);
+        $record = $this->db->get('customer_field_custom_names')->row();
+
+        if (is_null($record)) {
+            $this->db->insert('customer_field_custom_names', [
+                'user_id' => $userId,
+                'company_id' => $companyId,
+                'default_name' => $default,
+                'form' => $form,
+                'name' => $name,
+            ]);
+        } else {
+            $this->db->where('id', $record->id);
+            $this->db->update('customer_field_custom_names', [
+                'user_id' => $userId,
+                'name' => $name,
+            ]);
+        }
+
+        $this->db->where('id', is_null($record) ? $this->db->insert_id() : $record->id);
+        $name = $this->db->get('customer_field_custom_names')->row();
+        echo json_encode(['data' => $name]);
+    }
+
+    public function apiGetFormFieldCustomNames()
+    {
+        $companyId = logged('company_id');
+        $this->db->where('company_id', $companyId);
+        $records = $this->db->get('customer_field_custom_names')->result();
+
+        header('content-type: application/json');
+        echo json_encode(['data' => $records]);
+    }
 }

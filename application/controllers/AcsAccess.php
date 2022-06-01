@@ -8,37 +8,7 @@ class AcsAccess extends CI_Controller
     {
         parent::__construct();
 
-        date_default_timezone_set(setting('timezone'));
-
-        add_css(array(
-           // 'https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css',
-            "assets/css/accounting/accounting.css",
-            'assets/css/dashboard.css',
-            'assets/barcharts/css/chart.min.css',
-            'assets/barcharts/css/chart.min.css',
-            'assets/fa-5/css/fontawesome.min.css',
-            'assets/fa-5/css/all.min.css'
-        ));
-        add_header_js(array(
-            'assets/barcharts/js/chart.min.js',
-            'assets/barcharts/js/utils.js',
-            'assets/barcharts/js/chartjs-plugin-labels.js',
-            'assets/js/timeago/dist/timeago.min.js',
-            
-        ));
-        add_footer_js(array(
-            //'https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js',
-            'assets/frontend/js/dashboard/main.js',
-            'assets/ringcentral/config.js',
-            'assets/ringcentral/es6-promise.auto.js',
-            'assets/ringcentral/fetch.umd.js',
-            'assets/ringcentral/pubnub.4.20.1.js',
-            'assets/ringcentral/ringcentral.js',
-            'assets/ringcentral/rc_authentication.js'
-        ));
-
-        $customer_data   = $this->session->userdata('customer_data');
-
+        $customer_data    = $this->session->userdata('customer_data');
         $this->customer_id = $customer_data['prof_id'];
 
         $this->page_data = [
@@ -60,9 +30,9 @@ class AcsAccess extends CI_Controller
 
     public function messages()
     {
-        $this->load->model('CustomerMessages_model');
+        $this->load->model('CompanySms_model');
 
-        $messages   = $this->CustomerMessages_model->getAllByProfId($this->customer_id);
+        $messages   = $this->CompanySms_model->getAllUniqueSenderByProfId($this->customer_id);
 
         $this->page_data['page_title'] = 'Messages';
         $this->page_data['page_parent'] = 'Messages';
@@ -141,31 +111,128 @@ class AcsAccess extends CI_Controller
 
     public function ajax_send_message_reply()
     {
-        $this->load->model('CustomerMessages_model');
-        $this->load->model('CustomerMessageReply_model');
+        $this->load->model('CompanySms_model');
+        $this->load->model('Users_model');
 
         $is_success = 0;
-        $msg = 'Cannot save message';
+        $msg = 'Cannot save data.';
 
         $post = $this->input->post();
-        if( $post['message_reply'] != '' && $post['cid'] > 0 ){
 
-            $customer_data   = $this->session->userdata('customer_data');
-            $data_reply = [
-                'customer_message_id' => $post['cid'],
-                'prof_id' => $customer_data['prof_id'],
-                'user_id' => 0,
-                'message' => $post['message_reply'],
-                'date_created' => date("Y-m-d H:i:s")
-            ];
+        $customer_data = $this->session->userdata('customer_data');
+        $user = $this->Users_model->getUser($post['aid']);
+        if( $user ){
+            $enable_send_sms = 0; 
+            $is_with_phone_m = 1;       
+            if( isset($post['send_sms_notification']) ){
+                $enable_send_sms = 1;                    
+                if( $user->mobile != '' ){
+                    if( in_array($user->company_id, $this->CompanySms_model->ringCentralCompanyIds()) ){
+                        //Use ringcentral
+                        /*$is_sent = $this->smsRingCentral($user->mobile, $post['sms_txt_message']);
+                        if( $is_sent['is_success'] == 1 ){                    
+                            $is_success = 1;
+                        }else{
+                            $msg = $is_sent['msg'];
+                        }*/
 
-            $this->CustomerMessageReply_model->create($data_reply);
+                        $is_success = 1;
 
+                    }else{
+                        //Use twiio
+                    }
+                    $is_with_phone_m = 1;
+                }else{
+                    $is_with_phone_m = 0;
+                }
+            }else{
+                $is_success = 1;
+            }
+
+            if( $is_with_phone_m == 1 ){
+                if( $is_success == 1 ){
+                    $data_sms = [
+                        'company_id' => $customer_data['company_id'],
+                        'prof_id' => $customer_data['prof_id'],
+                        'user_id' => $post['aid'],
+                        'sender_id' => $customer_data['prof_id'],
+                        'sender_type' => 'customer',
+                        'from_number' => '',
+                        'to_number' => $user->mobile,
+                        'txt_message' => $post['sms_txt_message'],
+                        'enable_send_sms' => $enable_send_sms,
+                        'date_created' => date("Y-m-d H:i:s")
+                    ];
+
+                    $this->CompanySms_model->create($data_sms);
+
+                    $msg = '';
+                }
+            }else{
+                $msg = 'Current agent has no mobile number sent. Cannot send sms notification.';
+            }
+            
+        }else{
+            $msg = 'Cannot find agent data';
+        } 
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+
+        echo json_encode($json_data);
+    }
+
+    public function cleanMobileNumber($to_number)
+    {
+        $to_number = str_replace("-", "", $to_number);
+        $to_number = str_replace(" ", "", $to_number);
+        $to_number = str_replace("(", "", $to_number);
+        $to_number = str_replace(")", "", $to_number);
+
+        return $to_number;
+    }
+
+    public function smsRingCentral($to_number, $txt_message)
+    {
+        include_once APPPATH . 'libraries/ringcentral_lite/src/ringcentrallite.php';
+
+        $to_number = $this->cleanMobileNumber($to_number);
+        $to_number = '+1'.$to_number;
+
+        $message = replaceSmartTags($txt_message);
+
+        $rc = new RingCentralLite(
+            RINGCENTRAL_CLIENT_ID, //Client id
+            RINGCENTRAL_CLIENT_SECRET, //Client secret
+            RINGCENTRAL_DEV_URL //server url
+        );
+         
+        $res = $rc->authorize(
+            RINGCENTRAL_USER, //username
+            RINGCENTRAL_EXT, //extension
+            RINGCENTRAL_PASSWORD //password
+        ); //password
+
+        $params = array(
+            'json'     => array(
+                'to'   => array( array('phoneNumber' => $to_number) ), //Send to
+                'from' => array('phoneNumber' => RINGCENTRAL_FROM), //Username
+                'text' => $message
+            )
+        );
+
+        $res = $rc->post('/restapi/v1.0/account/~/extension/~/sms', $params);
+        $is_success = 0;
+        $msg     = '';
+
+        if (isset($res['errorCode'])) {
+            $msg = $res['errorCode'] . " " . $res['message'];
+        } else {
             $is_success = 1;
         }
 
-        $json_data = ['is_success' => $is_success, 'msg' => $msg];
-        echo json_encode($json_data);
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+
+        return $return;
     }
 }
 

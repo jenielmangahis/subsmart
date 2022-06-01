@@ -77,6 +77,8 @@ class Sms extends Widgets {
                         'company_id' => $cid,
                         'prof_id' => $post['cid'],
                         'user_id' => $uid,
+                        'sender_id' => $uid,
+                        'sender_type' => 'agent',
                         'from_number' => '',
                         'to_number' => $customer->phone_m,
                         'txt_message' => $post['sms_txt_message'],

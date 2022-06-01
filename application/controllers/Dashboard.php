@@ -152,8 +152,15 @@ class Dashboard extends Widgets {
             $status_arr[] = $status_selec->status_text . "@#@" . $task_status;
         }
         
+        $companyId = logged('company_id');
         $this->page_data['estimate'] = $this->estimate_model->getAllByCompany(logged('company_id'));
-        $this->page_data['upcomingJobs'] = $this->jobs_model->getAllUpcomingJobsByCompanyId(logged('company_id'));
+
+        if($companyId == 1){
+            $this->page_data['companies'] = $this->event_model->getCompanies();
+        }else{
+            $this->page_data['upcomingJobs'] = $this->event_model->getRecentCustomer();
+        }
+
         $this->page_data['events'] = $this->event_model->get_all_events(5);
         $this->page_data['upcomingEvents'] = $this->event_model->getAllUpComingEventsByCompanyId(logged('company_id'));
         $this->page_data['jobsStatus']=$this->event_model->getAllJobsByCompanyId(logged('company_id'));
@@ -170,6 +177,7 @@ class Dashboard extends Widgets {
 
         $this->page_data['latestJobs']=$this->event_model->getLatestJobs(); // fetch Sales Rep and customer they are assigned to
         $this->page_data['customerStatus']=$this->event_model->getCustomerStatusWithCount(); // fetch Sales Rep and customer they are assigned to
+        $this->page_data['company_id'] = logged('company_id'); // Company ID of the logged in USER
 
         $this->page_data['jobsDone']= $this->event_model->getAllJobs();
         $this->page_data['salesLeaderboard']=$this->event_model->getSalesLeaderboard();

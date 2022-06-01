@@ -8,7 +8,10 @@
 
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
-        <?php include viewPath('v2/includes/page_navigations/event_tabs'); ?>
+        <?php include viewPath('v2/includes/page_navigations/sales_tabs'); ?>
+    </div>
+    <div class="col-12 mb-3">
+        <?php include viewPath('v2/includes/page_navigations/event_subtabs'); ?>
     </div>
     <div class="col-12">
         <div class="nsm-page">
@@ -25,7 +28,7 @@
                     <div class="col-12 grid-mb text-end">
                         <div class="dropdown d-inline-block">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
-                                <span>Filter by <?= $filter_status != '' ? ucfirst($filter_status) : 'All' ; ?></span> <i class='bx bx-fw bx-chevron-down'></i>
+                                <span>Filter by <?= $filter_status != '' ? ucfirst($filter_status) : 'All'; ?></span> <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end">
                                 <li><a class="dropdown-item" href="<?= base_url('events'); ?>">All</a></li>

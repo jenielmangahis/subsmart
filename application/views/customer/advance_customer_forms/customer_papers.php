@@ -3,31 +3,31 @@
         <tbody>
         <tr>
             <td  class="table_head_customer">
-                <b>Rep Paper</b>
+                <field-custom-name default="Rep Paper" form="papers"></field-custom-name>
             </td>
             <td class="table_head_customer">
-                <b>Tech Paper</b>
+                <field-custom-name default="Tech Paper" form="papers"></field-custom-name>
             </td>
             <td class="table_head_customer" >
-                <b>Scanned</b>
+                <field-custom-name default="Scanned" form="papers"></field-custom-name>
             </td>
             <td class="table_head_customer">
-                <b>Paperwork</b>
+                <field-custom-name default="Paperwork" form="papers"></field-custom-name>
             </td>
             <td class="table_head_customer" >
-                <b>Submitted</b>
+                <field-custom-name default="Submitted" form="papers"></field-custom-name>
             </td>
             <td class="table_head_customer" >
-                <b>Rep Paid</b>
+                <field-custom-name default="Rep Paid" form="papers"></field-custom-name>
             </td>
             <td class="table_head_customer">
-                <b>Tech Paid</b>
+                <field-custom-name default="Tech Paid" form="papers"></field-custom-name>
             </td>
             <td class="table_head_customer" >
-                <b>Funded</b>
+                <field-custom-name default="Funded" form="papers"></field-custom-name>
             </td>
             <td class="table_head_customer" >
-                <b>Charged Back</b>
+                <field-custom-name default="Charged Back" form="papers"></field-custom-name>
             </td>
         </tr>
         <tr>

@@ -198,10 +198,9 @@ endif;
                 <thead>
                     <th>Updated</th>
                     <th>Name</th>
-                    <th>Address</th>
                     <th>Job Number</th>
                     <th>Status</th>
-                    <th>Amount</th>
+                    <th> <?= $company_id == 58 ? 'Proposed' : 'Amount' ?></th>
                 </thead>
                 <tbody>
                 <?php foreach($latestJobs as $job): 
@@ -234,21 +233,23 @@ endif;
                     ?>
                     <tr onclick="location.href='<?= base_url('job/job_preview/').$job->id ?>'">
                         <td >May 28</td>
-                        <td ><?= $job->first_name. '<br>' . $job->last_name ; ?></td>
-                        <td ><?= $job->city. ',<br>'. $job->state ; ?></td>
+                        <td >
+                            <b><?= $job->first_name . ', '  .  $job->last_name ; ?></b><br>
+                            <small><?= $job->city. ',<br>'. $job->state ; ?></small>
+                        </td>
                         <td ><?= $job->job_number; ?></td>
                         <td ><?php
-                                            for($x=1;$x<=$badgeCount;$x++){
-                                                ?>
-                                                    <span class="nsm-badge primary-enhanced"></span>
-                                                <?php
-                                            }
-                                            for($y=1;$y < 8 - $badgeCount;$y++){
-                                                ?>
-                                                    <span class="nsm-badge primary"></span>
-                                                <?php
-                                            }
-                                        ?></td>
+                            for($x=1;$x<=$badgeCount;$x++){
+                                ?>
+                                    <span class="nsm-badge primary-enhanced"></span>
+                                <?php
+                            }
+                            for($y=1;$y < 8 - $badgeCount;$y++){
+                                ?>
+                                    <span class="nsm-badge primary"></span>
+                                <?php
+                            }
+                        ?></td>
                         <td >$<?= $job->amount; ?></td>
                     </tr>
                     <?php endforeach; ?>

@@ -17,7 +17,7 @@
                 <?php foreach ($customer_status as $status) { ?>
                     <tr>
                         <td><?= $status->name; ?></td>
-                        <td><?= date("d-m-Y h:i A",strtotime($status->date_created)); ?></td>
+                        <td><?= date("m/d/Y",strtotime($status->date_created)); ?></td>
                         <td>
                             <button id="<?= $status->id; ?>" class="btn btn-sm btn-default deleteCustomerStatus">
                                 <i class="fa fa-trash"></i> Delete

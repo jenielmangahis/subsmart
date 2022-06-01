@@ -5,12 +5,15 @@
     <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/tools_tabs'); ?>
     </div>
+    <div class="col-12 mb-3">
+        <?php include viewPath('v2/includes/page_navigations/business_tools_subtabs'); ?>
+    </div>
     <div class="col-12">
         <div class="nsm-page">
             <div class="nsm-page-content">
                 <div class="row g-3 align-items-start">
                     <div class="col-12">
-                        <div class="nsm-card">
+                        <div class="nsm-card primary">
                             <div class="nsm-card-header d-block">
                                 <div class="nsm-card-title">
                                     <span>API Keys</span>

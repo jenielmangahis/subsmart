@@ -66,7 +66,9 @@
                             <div class="nsm-card-content">
                                 <div class="row g-3">
                                     <div class="col-12 col-md">
-                                        <label class="content-subtitle fw-bold mb-2">Rep Paper</label>
+                                        <label class="content-subtitle fw-bold mb-2">
+                                            <field-custom-name readonly default="Rep Paper" form="papers"></field-custom-name>
+                                        </label>
                                         <div class="input-group">
                                             <div class="input-group-text">
                                                 <input <?= isset($papers->rep_paper_date) ? "checked" : "" ?> class="form-check-input mt-0" type="checkbox" value="rep_paper_date" id="rep_paper" disabled>
@@ -75,7 +77,9 @@
                                         </div>
                                     </div>
                                     <div class="col-12 col-md">
-                                        <label class="content-subtitle fw-bold mb-2">Tech Paper</label>
+                                        <label class="content-subtitle fw-bold mb-2">
+                                            <field-custom-name readonly default="Tech Paper" form="papers"></field-custom-name>
+                                        </label>
                                         <div class="input-group">
                                             <div class="input-group-text">
                                                 <input <?= isset($papers->tech_paper_date) ? "checked" : "" ?> class="form-check-input mt-0" type="checkbox" value="tech_paper_date" disabled>
@@ -84,7 +88,9 @@
                                         </div>
                                     </div>
                                     <div class="col-12 col-md">
-                                        <label class="content-subtitle fw-bold mb-2">Scanned</label>
+                                        <label class="content-subtitle fw-bold mb-2">
+                                            <field-custom-name readonly default="Scanned" form="papers"></field-custom-name>
+                                        </label>
                                         <div class="input-group">
                                             <div class="input-group-text">
                                                 <input <?= isset($papers->scanned_date) ? "checked" : "" ?> class="form-check-input mt-0" type="checkbox" value="scanned_date" disabled>
@@ -93,7 +99,9 @@
                                         </div>
                                     </div>
                                     <div class="col-12 col-md">
-                                        <label class="content-subtitle fw-bold mb-2">Paperwork</label>
+                                        <label class="content-subtitle fw-bold mb-2">
+                                            <field-custom-name readonly default="Paperwork" form="papers"></field-custom-name>
+                                        </label>
                                         <div class="input-group">
                                             <div class="input-group-text">
                                                 <input class="form-check-input mt-0" type="checkbox" value="scanned_date">
@@ -109,7 +117,9 @@
                                         </div>
                                     </div>
                                     <div class="col-12 col-md">
-                                        <label class="content-subtitle fw-bold mb-2">Submitted</label>
+                                        <label class="content-subtitle fw-bold mb-2">
+                                            <field-custom-name readonly default="Submitted" form="papers"></field-custom-name>
+                                        </label>
                                         <div class="input-group">
                                             <div class="input-group-text">
                                                 <input <?= isset($papers->submitted) ? "checked" : "" ?> class="form-check-input mt-0" type="checkbox" value="submitted" disabled>
@@ -118,21 +128,27 @@
                                         </div>
                                     </div>
                                     <div class="col-12 col-md">
-                                        <label class="content-subtitle fw-bold mb-2">Rep Paid</label>
+                                        <label class="content-subtitle fw-bold mb-2">
+                                            <field-custom-name readonly default="Rep Paid" form="papers"></field-custom-name>
+                                        </label>
                                         <div class="input-group">
                                             <span class="input-group-text">$</span>
                                             <input type="number" class="form-control nsm-field" name="rep_paid" id="rep_paid" disabled min="0" step="0.01">
                                         </div>
                                     </div>
                                     <div class="col-12 col-md">
-                                        <label class="content-subtitle fw-bold mb-2">Tech Paid</label>
+                                        <label class="content-subtitle fw-bold mb-2">
+                                            <field-custom-name readonly default="Tech Paid" form="papers"></field-custom-name>
+                                        </label>
                                         <div class="input-group">
                                             <span class="input-group-text">$</span>
                                             <input type="number" class="form-control nsm-field" name="tech_paid" id="tech_paid" disabled min="0">
                                         </div>
                                     </div>
                                     <div class="col-12 col-md">
-                                        <label class="content-subtitle fw-bold mb-2">Funded</label>
+                                        <label class="content-subtitle fw-bold mb-2">
+                                            <field-custom-name readonly default="Funded" form="papers"></field-custom-name>
+                                        </label>
                                         <div class="input-group">
                                             <div class="input-group-text">
                                                 <input <?= isset($papers->funded) ? "checked" : "" ?> class="form-check-input mt-0" type="checkbox" value="funded" disabled>
@@ -141,7 +157,9 @@
                                         </div>
                                     </div>
                                     <div class="col-12 col-md">
-                                        <label class="content-subtitle fw-bold mb-2">Charged Back</label>
+                                        <label class="content-subtitle fw-bold mb-2">
+                                            <field-custom-name readonly default="Charged Back" form="papers"></field-custom-name>
+                                        </label>
                                         <div class="input-group">
                                             <div class="input-group-text">
                                                 <input <?= isset($papers->charged_back) ? "checked" : "" ?> class="form-check-input mt-0" type="checkbox" value="charged_back" disabled>
@@ -172,6 +190,8 @@
         </div>
     </div>
 </div>
+
+<script src="<?=base_url('assets/js/customer/components/FieldCustomName.js');?>"></script>
 
 <script type="text/javascript">
     $(document).ready(function() {

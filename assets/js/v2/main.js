@@ -75,7 +75,7 @@ $(document).ready(function () {
 
 	});
 
-	$(".nsm-img-upload .nsm-upload").on("change", function (e) {
+	$(document).on("change", ".nsm-img-upload .nsm-upload", function (e) {
 		let _this = $(this);
 		let reader = new FileReader();
 
@@ -191,4 +191,16 @@ function showLoader(_elem) {
 		'</div>' +
 		'</div>';
 	_elem.html(loader);
+}
+
+function showSwalLoading(){
+	Swal.fire({
+		title: 'Processing',
+		text: 'Request processing, please wait.',
+		allowEscapeKey: false,
+		allowOutsideClick: false,
+		didOpen: () => {
+			Swal.showLoading()
+		},
+	});
 }
