@@ -273,7 +273,7 @@ class Event_model extends MY_Model
         $this->db->join('acs_office', 'acs_office.fk_sales_rep_office = users.id', 'left');
         //$this->db->where('id', $parent_id);
         $this->db->where('users.company_id', $cid);
-        $this->db->where('users.role', 8);
+        $this->db->where_in('users.role', [8,28]);
         $this->db->group_by('users.id');
         $this->db->order_by('customerCount', 'desc');
         $query = $this->db->get();
@@ -292,7 +292,7 @@ class Event_model extends MY_Model
         $this->db->join('acs_office', 'acs_office.lead_source = ac_leadsource.ls_name', 'left');
         $this->db->group_by('ls_id');
         $this->db->order_by('leadSourceCount', 'desc');
-        $this->db->where('acs_office.lead_source !=', null);
+        //$this->db->where('acs_office.lead_source !=', null);
         $query = $this->db->get();
         return $query->result();
     }
@@ -328,7 +328,12 @@ class Event_model extends MY_Model
         $this->db->join('acs_profile', 'acs_profile.prof_id = jobs.customer_id', 'left');
         $this->db->order_by('jobs.id', 'desc');
         $this->db->where('jobs.company_id', $cid);
-        $this->db->limit(10);
+        if($cid == 58){
+            $this->db->limit(25); // for SOLAR COMPANY it needs to be 25
+        }else{
+            $this->db->limit(10);
+        }
+        
         $query = $this->db->get();
         return $query->result();
     }
@@ -349,6 +354,46 @@ class Event_model extends MY_Model
         $this->db->where('status !=', null);
         $query = $this->db->get();
         return $query->result();
+    }
+
+    /**
+     * This function will fetch recent customers per company id
+     * 
+     * @return object List of RECENT CUSTOMER added
+    */
+    public function getRecentCustomer()
+    {
+        $company_id = logged('company_id');
+        $this->db->from('acs_profile');
+        $this->db->where('company_id', $company_id);
+        $this->db->order_by('prof_id', 'desc');
+        $this->db->limit(10);
+        $query = $this->db->get();
+
+        if ($query) {
+            return $query->result();
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * This function will fetch companies
+     * 
+     * @return object List of companies
+    */
+    public function getCompanies()
+    {
+        $this->db->from('business_profile');
+        $this->db->order_by('id', 'asc');
+        $this->db->limit(10);
+        $query = $this->db->get();
+
+        if ($query) {
+            return $query->result();
+        } else {
+            return false;
+        }
     }
 
     public function getTechRevenue($techId)

@@ -1435,95 +1435,95 @@ class Accounting extends MY_Controller
         echo json_encode($data);
     }
 
-    public function aging_summary_report()
-    {
-        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
-        $this->page_data['customers'] = $this->accounting_invoices_model->getCustomersInv();
-        $this->page_data['page_title'] = "A/R Aging Summary Report";
+    // public function aging_summary_report()
+    // {
+    //     $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+    //     $this->page_data['customers'] = $this->accounting_invoices_model->getCustomersInv();
+    //     $this->page_data['page_title'] = "A/R Aging Summary Report";
 
-        add_css([
-            'assets/css/accounting/account_receivable/account_receivable.css'
-        ]);
+    //     add_css([
+    //         'assets/css/accounting/account_receivable/account_receivable.css'
+    //     ]);
 
-        add_footer_js([
-            'assets/js/accounting/account_receivable/account_receivable.js',
+    //     add_footer_js([
+    //         'assets/js/accounting/account_receivable/account_receivable.js',
 
-            // download
-            'assets/js/accounting/banking/rules/libs/download/download.min.js',
+    //         // download
+    //         'assets/js/accounting/banking/rules/libs/download/download.min.js',
 
-            // print
-            'https://cdn.datatables.net/buttons/2.1.0/js/buttons.print.min.js',
-            'https://cdn.datatables.net/buttons/2.1.0/js/dataTables.buttons.min.js',
+    //         // print
+    //         'https://cdn.datatables.net/buttons/2.1.0/js/buttons.print.min.js',
+    //         'https://cdn.datatables.net/buttons/2.1.0/js/dataTables.buttons.min.js',
 
-            'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js',
-        ]);
+    //         'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js',
+    //     ]);
 
-        $this->load->view('accounting/reports/aging_summary_report', $this->page_data);
-    }
+    //     $this->load->view('accounting/reports/aging_summary_report', $this->page_data);
+    // }
 
-    public function balance_sheet()
-    {
-        add_css([
-            'assets/css/accounting/balance_sheet/balance_sheet.css'
-        ]);
+    // public function balance_sheet()
+    // {
+    //     add_css([
+    //         'assets/css/accounting/balance_sheet/balance_sheet.css'
+    //     ]);
 
-        add_footer_js([
-            'assets/js/accounting/balance_sheet/balance_sheet.js',
-        ]);
+    //     add_footer_js([
+    //         'assets/js/accounting/balance_sheet/balance_sheet.js',
+    //     ]);
 
-        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
-        $this->page_data['customers'] = $this->accounting_invoices_model->getCustomers();
-        $this->page_data['page_title'] = "Balance Sheet Report";
-        $this->load->view('accounting/reports/balance_sheet', $this->page_data);
-    }
+    //     $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+    //     $this->page_data['customers'] = $this->accounting_invoices_model->getCustomers();
+    //     $this->page_data['page_title'] = "Balance Sheet Report";
+    //     $this->load->view('accounting/reports/balance_sheet', $this->page_data);
+    // }
 
-    public function profit_and_loss()
-    {
-        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
-        $this->page_data['customers'] = $this->accounting_invoices_model->getCustomers();
-        $this->page_data['page_title'] = "Profit and Loss Report";
-        $this->load->view('accounting/reports/profit_and_loss', $this->page_data);
-    }
+    // public function profit_and_loss()
+    // {
+    //     $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+    //     $this->page_data['customers'] = $this->accounting_invoices_model->getCustomers();
+    //     $this->page_data['page_title'] = "Profit and Loss Report";
+    //     $this->load->view('accounting/reports/profit_and_loss', $this->page_data);
+    // }
 
-    public function balance_sheet_comparison()
-    {
-        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
-        $this->page_data['customers'] = $this->accounting_invoices_model->getCustomers();
-        $this->page_data['page_title'] = "Balance Sheet Comparison Report";
-        $this->load->view('accounting/reports/balance_sheet_comparison', $this->page_data);
-    }
+    // public function balance_sheet_comparison()
+    // {
+    //     $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+    //     $this->page_data['customers'] = $this->accounting_invoices_model->getCustomers();
+    //     $this->page_data['page_title'] = "Balance Sheet Comparison Report";
+    //     $this->load->view('accounting/reports/balance_sheet_comparison', $this->page_data);
+    // }
 
-    public function audit_log_report()
-    {
-        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
-        $this->page_data['customers'] = $this->accounting_invoices_model->getCustomers();
-        $this->page_data['page_title'] = "Balance Sheet Comparison Report";
-        $this->load->view('accounting/reports/audit_log', $this->page_data);
-    }
+    // public function audit_log_report()
+    // {
+    //     $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+    //     $this->page_data['customers'] = $this->accounting_invoices_model->getCustomers();
+    //     $this->page_data['page_title'] = "Balance Sheet Comparison Report";
+    //     $this->load->view('accounting/reports/audit_log', $this->page_data);
+    // }
 
-    public function balance_sheet_detail()
-    {
-        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
-        $this->page_data['customers'] = $this->accounting_invoices_model->getCustomers();
-        $this->page_data['page_title'] = "Balance Sheet Comparison Report";
-        $this->load->view('accounting/reports/balance_sheet_detail', $this->page_data);
-    }
+    // public function balance_sheet_detail()
+    // {
+    //     $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+    //     $this->page_data['customers'] = $this->accounting_invoices_model->getCustomers();
+    //     $this->page_data['page_title'] = "Balance Sheet Comparison Report";
+    //     $this->load->view('accounting/reports/balance_sheet_detail', $this->page_data);
+    // }
 
-    public function balance_sheet_summary()
-    {
-        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
-        $this->page_data['customers'] = $this->accounting_invoices_model->getCustomers();
-        $this->page_data['page_title'] = "Balance Sheet Comparison Report";
-        $this->load->view('accounting/reports/balance_sheet_summary', $this->page_data);
-    }
+    // public function balance_sheet_summary()
+    // {
+    //     $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+    //     $this->page_data['customers'] = $this->accounting_invoices_model->getCustomers();
+    //     $this->page_data['page_title'] = "Balance Sheet Comparison Report";
+    //     $this->load->view('accounting/reports/balance_sheet_summary', $this->page_data);
+    // }
 
-    public function business_snapshot()
-    {
-        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
-        $this->page_data['customers'] = $this->accounting_invoices_model->getCustomers();
-        $this->page_data['page_title'] = "Business Snapshot";
-        $this->load->view('accounting/reports/business_snapshot', $this->page_data);
-    }
+    // public function business_snapshot()
+    // {
+    //     $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+    //     $this->page_data['customers'] = $this->accounting_invoices_model->getCustomers();
+    //     $this->page_data['page_title'] = "Business Snapshot";
+    //     $this->load->view('accounting/reports/business_snapshot', $this->page_data);
+    // }
 
     /* payscale */
 

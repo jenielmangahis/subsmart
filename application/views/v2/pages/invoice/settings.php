@@ -2,7 +2,10 @@
 
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
-        <?php include viewPath('v2/includes/page_navigations/invoice_tabs'); ?>
+        <?php include viewPath('v2/includes/page_navigations/sales_tabs'); ?>
+    </div>
+    <div class="col-12 mb-3">
+        <?php include viewPath('v2/includes/page_navigations/invoice_subtabs'); ?>
     </div>
     <div class="col-12">
         <div class="nsm-page">
@@ -20,7 +23,7 @@
                     <div class="col-12 col-md-3">
                         <div class="row g-3">
                             <div class="col-12">
-                                <div class="nsm-card">
+                                <div class="nsm-card primary">
                                     <div class="nsm-card-header d-block">
                                         <div class="nsm-card-title">
                                             <span>Logo</span>
@@ -44,7 +47,7 @@
                                 </div>
                             </div>
                             <div class="col-12">
-                                <div class="nsm-card">
+                                <div class="nsm-card primary">
                                     <div class="nsm-card-header d-block">
                                         <div class="nsm-card-title">
                                             <span>Invoice Number</span>
@@ -66,7 +69,7 @@
                                 </div>
                             </div>
                             <div class="col-12">
-                                <div class="nsm-card">
+                                <div class="nsm-card primary">
                                     <div class="nsm-card-header d-block">
                                         <div class="nsm-card-title">
                                             <span>Payment Fee</span>
@@ -105,7 +108,7 @@
                     <div class="col-12 col-md-9">
                         <div class="row g-3">
                             <div class="col-12">
-                                <div class="nsm-card">
+                                <div class="nsm-card primary">
                                     <div class="nsm-card-content">
                                         <div class="nsm-tab">
                                             <nav>
@@ -171,7 +174,7 @@
                                 </div>
                             </div>
                             <div class="col-12">
-                                <div class="nsm-card">
+                                <div class="nsm-card primary">
                                     <div class="nsm-card-content">
                                         <div class="row g-2">
                                             <div class="col-12 col-md-6">
@@ -207,7 +210,7 @@
                                 </div>
                             </div>
                             <div class="col-12">
-                                <div class="nsm-card">
+                                <div class="nsm-card primary">
                                     <div class="nsm-card-content">
                                         <div class="row g-2">
                                             <div class="col-12 col-md-6">
@@ -251,7 +254,7 @@
                                 </div>
                             </div>
                             <div class="col-12">
-                                <div class="nsm-card">
+                                <div class="nsm-card primary">
                                     <div class="nsm-card-content">
                                         <div class="row g-2">
                                             <div class="col-12 col-md-6">
@@ -311,7 +314,7 @@
                                 </div>
                             </div>
                             <div class="col-12">
-                                <div class="nsm-card">
+                                <div class="nsm-card primary">
                                     <div class="nsm-card-content">
                                         <div class="row g-2">
                                             <div class="col-12 col-md-6">
@@ -343,7 +346,7 @@
                                 </div>
                             </div>
                             <div class="col-12">
-                                <div class="nsm-card">
+                                <div class="nsm-card primary">
                                     <div class="nsm-card-content">
                                         <div class="row g-2">
                                             <div class="col-12">

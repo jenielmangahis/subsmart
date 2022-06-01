@@ -2,7 +2,10 @@
 
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
-        <?php include viewPath('v2/includes/page_navigations/estimate_tabs'); ?>
+        <?php include viewPath('v2/includes/page_navigations/sales_tabs'); ?>
+    </div>
+    <div class="col-12 mb-3">
+        <?php include viewPath('v2/includes/page_navigations/estimate_subtabs'); ?>
     </div>
     <div class="col-12">
         <div class="nsm-page">
@@ -18,7 +21,7 @@
                 <?php echo form_open_multipart('estimate/save_setting/', ['class' => 'form-validate require-validation', 'id' => 'settings_form', 'autocomplete' => 'off']); ?>
                 <div class="row g-3 align-items-start">
                     <div class="col-12 col-md-3">
-                        <div class="nsm-card">
+                        <div class="nsm-card primary">
                             <div class="nsm-card-header d-block">
                                 <div class="nsm-card-title">
                                     <span>Invoice Number</span>
@@ -40,7 +43,7 @@
                         </div>
                     </div>
                     <div class="col-12 col-md-9">
-                        <div class="nsm-card">
+                        <div class="nsm-card primary">
                             <div class="nsm-card-content">
                                 <div class="nsm-tab">
                                     <nav>

@@ -133,6 +133,10 @@
                     <option <?php if(isset($office_info)){ if($office_info->lead_source == "Website"){ echo 'selected'; } } ?> value="Website">Website</option>
                     <option <?php if(isset($office_info)){ if($office_info->lead_source == "Yard Sign"){ echo 'selected'; } } ?> value="Yard Sign">Yard Sign</option>
                     <option <?php if(isset($office_info)){ if($office_info->lead_source == "Affiliates"){ echo 'selected'; } } ?> value="Affiliates">Affiliates</option>
+                    <?php if($company_id == 58): ?>
+                    <option <?php if(isset($office_info)){ if($office_info->lead_source == "Lender Loan"){ echo 'selected'; } } ?> value="Lender Loan">Lender Loan</option>
+                    <option <?php if(isset($office_info)){ if($office_info->lead_source == "Security Client"){ echo 'selected'; } } ?> value="Security Client">Security Client</option>
+                    <?php endif; ?>
                 </select>
             </div>
         </div>

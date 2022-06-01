@@ -24,18 +24,25 @@ class Mycrm extends MY_Controller {
 
 	public function index()
 	{	
+		$this->page_data['page']->title = 'My Account';
+        $this->page_data['page']->parent = 'Company';
+
         $this->load->model('Business_model');
         
         $company_id = logged('company_id');
         $business   = $this->Business_model->getByCompanyId($company_id);
 
         $this->page_data['business'] = $business;
-		$this->load->view('mycrm/index', $this->page_data);
+		// $this->load->view('mycrm/index', $this->page_data);
+		$this->load->view('v2/pages/mycrm/index', $this->page_data);
 
     }
     
     public function membership()
 	{	
+		$this->page_data['page']->title = 'Monthly Membership';
+        $this->page_data['page']->parent = 'Company';
+
 		$this->load->model('Clients_model');
 		$this->load->model('NsmartPlan_model');
 		$this->load->model('SubscriberNsmartUpgrade_model');
@@ -107,7 +114,8 @@ class Mycrm extends MY_Controller {
         $this->page_data['default_plan_feature'] = $default_plan_feature;
 		$this->page_data['client'] = $client;
 		$this->page_data['offerCode'] = $offerCode;
-		$this->load->view('mycrm/membership', $this->page_data);
+		// $this->load->view('mycrm/membership', $this->page_data);
+		$this->load->view('v2/pages/mycrm/membership', $this->page_data);
 
     }
         
@@ -120,6 +128,9 @@ class Mycrm extends MY_Controller {
     
     public function orders()
 	{	
+		$this->page_data['page']->title = 'Orders';
+        $this->page_data['page']->parent = 'Company';
+
 		$this->load->model('CompanySubscriptionPayments_model');
 
         $company_id = logged('company_id');
@@ -137,7 +148,8 @@ class Mycrm extends MY_Controller {
 		$payments   = $this->CompanySubscriptionPayments_model->getAllByCompanyId($company_id);
 
 		$this->page_data['payments'] = $payments;
-		$this->load->view('mycrm/order', $this->page_data);
+		// $this->load->view('mycrm/order', $this->page_data);
+		$this->load->view('v2/pages/mycrm/order', $this->page_data);
 
     }
     

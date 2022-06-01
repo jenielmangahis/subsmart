@@ -458,6 +458,38 @@ li.multipleInput-email {
 	color: #fff;
 	font-size: 16px;
 }
+.box-left-mini{
+    /* float:left; */
+    background-image:url(website-content/hotcampaign.png);
+    /* width:292px; */
+    /* height:141px; */
+}
+
+.box-left-mini .front {
+    display: block;
+    z-index: 5;
+    position: relative;
+}
+.box-left-mini .front span {
+    background: #fff
+}
+
+.box-left-mini .behind_container {
+    background-color: #ff0;
+    position: relative;
+    top: -18px;
+}
+.box-left-mini .behind {
+    display: block;
+    z-index: 3;
+}
+img.company-logo2 {
+    width: 170px;
+    /* height: 70px; */
+    object-fit: contain;
+    margin: 0 auto;
+    margin-top: 8px;
+}
 </style>
     <!-- page wrapper start -->
     <input type="hidden" value="<?= $workorder->id; ?>" id="workorderId"/>
@@ -573,6 +605,7 @@ li.multipleInput-email {
 															<td align="left"><div style="">Priority: </div></td>
 															<td align="right"><?php echo $workorder->priority ?></td>
 														</tr>
+														<?php if($workorder->work_order_type_id == '3'){ }else{ ?>
 														</tr>
 															<td align="left"><div style="">Password: </div></td>
 															<td align="right"><?php echo $workorder->password ?></td>
@@ -581,6 +614,7 @@ li.multipleInput-email {
 															<td align="left"><div style="">Security Number: </div></td>
 															<td align="right"> <span id="view_ssn"><?php echo $workorder->security_number ?></span><input type="hidden" id="view_ssn_input" value="<?php echo $workorder->security_number ?>"></td>
 														</tr>
+														<?php } ?>
 														</tr>
 															<td align="left"><div style="">Source: </div></td>
 															<td align="right"><?php echo $lead->ls_name ?></td>
@@ -702,7 +736,7 @@ li.multipleInput-email {
 			         							   			
 			         							   			</ul>
 		         							   			</div>
-
+														<?php if($workorder->work_order_type_id == '3'){ } else{ ?>
 														<hr>
 														<div class="ul-info">
 			         							   			<b class="ul-head">Terms and Conditions </b><br><br>
@@ -710,11 +744,13 @@ li.multipleInput-email {
 																<?php echo $workorder->terms_and_conditions; ?>
 															</div>
 		         							   			</div>
+														<?php } ?>
 
 
 		         							   </div><br><br>
 		         							   <!--  user info end-->
-
+											
+											<?php if($workorder->work_order_type_id == '3'){ }else{ ?>
 		         							   <div class="table-inner">
 		         							   		<table class=" table table-print table-items" style="width: 100%; border-collapse: collapse;">
 											            <thead>
@@ -847,24 +883,152 @@ li.multipleInput-email {
 															</div>
 		         							   			</div>
 													<hr>
+
+									<?php } ?>	
+									<?php if($workorder->work_order_type_id == '3'){ ?>
+										<div class="row box-left-mini">
+											<div class="col-md-12">
+											<center>
+											<div class="front" style="text-align:center;background-color:#4a5594;color:white;padding:0.5%;border-radius:20px;width:95%;">
+												<h5>Qualification Information for Solar</h5>
+											</div>
+											</center><br>
+											<div class="behind_container" style="background-color:#ced4e4;margin-top:-20px;padding:20px;">
+												<div class="row"> 
+													<div class="col-md-2">
+													<br><br>        
+														<div style="padding:20px;border-radius:5px;background-color:white;width:50%;">A</div>
+													</div>
+													<div class="col-md-10">
+													<br> <h6>Type of Roof</h6>
+													<span style="font-size:16px;"><?php echo $solars->tor; ?></span>
+													<br><br><hr>
+													</div>
+												</div>
+												<div class="row"> 
+													<div class="col-md-2">
+														<div style="padding:20px;border-radius:5px;background-color:white;width:50%;">B</div>
+													</div>
+													<div class="col-md-10">
+													<h6>Square Footage of Home</h6>
+													<span style="font-size:16px;"><?php echo $solars->sfoh; ?></span>
+													<br><hr>
+													</div>
+												</div>
+												<div class="row"> 
+													<div class="col-md-2">
+														<div style="padding:20px;border-radius:5px;background-color:white;width:50%;">C</div>
+													</div>
+													<div class="col-md-10">
+													<h6>Age of Roof (Years)</h6>
+													<span style="font-size:16px;"><?php echo $solars->aor; ?></span>
+													<br><br><hr>
+													</div>
+												</div>
+												<div class="row"> 
+													<div class="col-md-2">
+														<div style="padding:20px;border-radius:5px;background-color:white;width:50%;">D</div>
+													</div>
+													<div class="col-md-10">
+													<h6>Solar Panel Mounting Preference</h6>
+													<span style="font-size:16px;"><?php echo $solars->spmp; ?></span>
+													<br><br><hr>
+													</div>
+												</div>
+												<div class="row"> 
+													<div class="col-md-2">
+														<div style="padding:20px;border-radius:5px;background-color:white;width:50%;">E</div>
+													</div>
+													<div class="col-md-10">
+													<h6>Home Owner Associations</h6>
+													<span style="font-size:16px;"><?php echo $solars->hoa; ?></span>
+													<br>
+													<b>If Yes: Contact Name/Number</b><br>
+													<span style="font-size:16px;"><?php echo $solars->hoa_text; ?></span>
+													<br><hr>
+													</div>
+												</div><br>
+												<div class="row"> 
+													<div class="col-md-2">
+														<div style="padding:20px;border-radius:5px;background-color:white;width:50%;">F</div>
+													</div>
+													<div class="col-md-10">
+														<div style="float:right;">
+															<!-- <center>$<input type="text" name="ebis_text" class="form-control" style="width:70%;"><br>
+															Estimated Bill</center> -->
+															<div class="input-group mb-3">
+															<div class="input-group-prepend">
+																<span class="input-group-text">$</span>
+															</div>
+															<input type="number" name="estimated_bill" class="form-control" value="<?php echo $solars->estimated_bill; ?>" aria-label="Amount" readonly>
+															<!-- <div class="input-group-append">
+																<span class="input-group-text">.00</span>
+															</div> -->
+															</div>
+															<center>Estimated Bill</center>
+														</div>
+													<h6>Electric Bill is over $100</h6> 
+													<span style="font-size:16px;"><?php echo $solars->ebis; ?></span>
+													<br>
+													<h6>How do you get your Invoice</h6>
+													<span style="font-size:16px;"><?php echo $solars->hdygi; ?></span>
+													<br>
+													<h6>Electric Bill Account #</h6>
+													<span style="font-size:16px;"><?php echo $solars->eba_text; ?></span>
+													<br><hr>
+													</div>
+												</div>
+												<div class="row" style="margin-bottom:70px;"> 
+													<div class="col-md-2">
+														<div style="padding:20px;border-radius:5px;background-color:white;width:50%;">G</div>
+													</div>
+													<div class="col-md-10">
+													<h6>Employment Status</h6>
+													<span style="font-size:16px;"><?php echo $solars->es; ?></span>
+													<!-- <hr> -->
+													</div>
+												</div>
+											</div>
+											</div>
+										</div>
+										<hr>
+											<div class="ul-info">
+			         						<b class="ul-head">Comments</b><br><br>
+												<div style="height:120px; overflow:auto; background:#FFFFFF; padding-left:10px;">
+													<?php echo $workorder->comments; ?>
+												</div>
+		         							 </div>
+										<hr>
+
+
+
+
+
+									<?php }else{ } ?>			
 														<div class="ul-info">
 			         							   			<b class="ul-head">ASSIGNED TO</b><br><br>
 																<div class="row">
+																<?php if(!empty($workorder->company_representative_signature)){ ?>
 																	<div class="col-md-4">
 																		<img src="<?php echo base_url($workorder->company_representative_signature); ?>" style="height: 150px;">
 																		<hr>
 																		<center><?php echo $first->FName.' '.$first->LName; ?></center>
 																	</div>
+																	<?php } ?>
+																	<?php if(!empty($workorder->primary_account_holder_signature)){ ?>
 																	<div class="col-md-4">
 																		<img src="<?php echo base_url($workorder->primary_account_holder_signature); ?>" style="height: 150px;">
 																		<hr>
 																		<center><?php echo $workorder->primary_account_holder_name; ?></center>
 																	</div>
+																	<?php } ?>
+																	<?php if(!empty($workorder->secondary_account_holder_signature)){ ?>
 																	<div class="col-md-4">
 																		<img src="<?php echo base_url($workorder->secondary_account_holder_signature); ?>" style="height: 150px;">
 																		<hr>
 																		<center><?php echo $workorder->secondary_account_holder_name; ?></center>
 																	</div>
+																	<?php } ?>
 																</div>
 		         							   			</div>
 

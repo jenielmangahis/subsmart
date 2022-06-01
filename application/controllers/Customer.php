@@ -1501,7 +1501,7 @@ class Customer extends MY_Controller
     public function leads()
     {   
         $this->page_data['page']->title = 'Leads Manager List';
-        $this->page_data['page']->parent = 'Sales';
+        $this->page_data['page']->parent = 'Customers';
 
         $this->hasAccessModule(14);
         
@@ -4491,7 +4491,7 @@ class Customer extends MY_Controller
     public function settings_sales_area()
     {
         $this->page_data['page']->title = 'Sales Area';
-        $this->page_data['page']->parent = 'Sales';
+        $this->page_data['page']->parent = 'Customers';
 
         $this->load->library('wizardlib');
         $this->hasAccessModule(9); 

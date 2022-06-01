@@ -35,7 +35,7 @@
                         <tr>
                             <td class="table-icon"></td>
                             <td data-name="Card">Card</td>
-                            <td data-name="Card holder">Card holder</td>
+                            <td data-name="Card Holder">Card Holder</td>
                             <td data-name="Primary Card">Primary Card</td>
                             <td data-name="Manage"></td>
                         </tr>

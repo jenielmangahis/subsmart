@@ -1,51 +1,51 @@
 <div class="nsm-page-nav">
     <ul>
-        <li class="<?php if($page->title == 'API Connectors'): echo 'active'; endif; ?>">
+        <li class="<?php if($page->title == 'Business Tools' || $page->title == 'API Connectors' || $page->title == 'Google Contacts' || $page->title == 'Quickbooks Payroll' || $page->title == 'Nice Job' || $page->title == 'MailChimp' || $page->title == 'Active Campaign' || $page->title == 'API Integration'): echo 'active'; endif; ?>">
+            <a class="nsm-page-link" href="<?= base_url('tools/business_tools') ?>">
+                <i class='bx bx-fw bx-wrench'></i>
+                <span>Business Tools</span>
+            </a>
+        </li>
+        <li class="<?php if($page->title == 'eSign Tools'): echo 'active'; endif; ?>">
+            <a class="nsm-page-link" href="<?= base_url('esignmain') ?>">
+                <i class='bx bx-fw bxl-palette'></i>
+                <span>eSign</span>
+            </a>
+        </li>
+        <li class="<?php if($page->title == 'Affiliate Partners' || $page->title == 'Affiliates Stats Dashboard'): echo 'active'; endif; ?>">
+            <a class="nsm-page-link" href="<?= base_url('affiliate') ?>">
+                <i class='bx bx-fw bx-group'></i>
+                <span>Affiliates</span>
+            </a>
+        </li>
+        <li class="<?php if($page->title == 'Inventory' || $page->title == 'Services' || $page->title == 'Fees' || $page->title == 'Vendors' || $page->title == 'Item Categories'): echo 'active'; endif; ?>">
+            <a class="nsm-page-link" href="<?= base_url('inventory') ?>">
+                <i class='bx bx-fw bx-box'></i>
+                <span>Inventory</span>
+            </a>
+        </li>
+        <li class="<?php if($page->title == 'My Forms'): echo 'active'; endif; ?>">
+            <a class="nsm-page-link" href="<?= base_url('fb') ?>">
+                <i class='bx bx-fw bx-add-to-queue'></i>
+                <span>Form Builder</span>
+            </a>
+        </li>
+        <li class="<?php if($page->title == ''): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="<?= base_url('tools/api_connectors') ?>">
-                <i class='bx bx-fw bx-git-repo-forked'></i>
+                <i class='bx bx-fw bx-code-alt'></i>
                 <span>API Connectors</span>
             </a>
         </li>
-        <li class="<?php if($page->title == 'Google Contacts'): echo 'active'; endif; ?>">
-            <a class="nsm-page-link" href="<?= base_url('tools/google_contacts') ?>">
-                <i class='bx bx-fw bxl-google'></i>
-                <span>Google Contacts</span>
+        <li class="<?php if($page->title == ''): echo 'active'; endif; ?>">
+            <a class="nsm-page-link" href="<?= base_url('tools/api_connectors') ?>">
+                <i class='bx bx-fw bx-mobile-alt'></i>
+                <span>Mobile Tools</span>
             </a>
         </li>
-        <li class="<?php if($page->title == 'Quickbooks Payroll'): echo 'active'; endif; ?>">
-            <a class="nsm-page-link" href="<?= base_url('tools/quickbooks') ?>">
-                <i class='bx bx-fw bx-extension'></i>
-                <span>Quickbooks Payroll</span>
-            </a>
-        </li>
-        <li class="<?php if($page->title == 'Nice Job'): echo 'active'; endif; ?>">
-            <a class="nsm-page-link" href="<?= base_url('tools/nicejob') ?>">
-                <i class='bx bx-fw bx-extension'></i>
-                <span>Nicejob</span>
-            </a>
-        </li>
-        <li class="<?php if($page->title == 'Zapier'): echo 'active'; endif; ?>">
-            <a class="nsm-page-link" href="<?= base_url('tools/zapier') ?>">
-                <i class='bx bx-fw bx-extension'></i>
-                <span>Zapier</span>
-            </a>
-        </li>
-        <li class="<?php if($page->title == 'MailChimp'): echo 'active'; endif; ?>">
-            <a class="nsm-page-link" href="<?= base_url('tools/mailchimp') ?>">
-                <i class='bx bx-fw bxl-mailchimp'></i>
-                <span>Mailchimp</span>
-            </a>
-        </li>
-        <li class="<?php if($page->title == 'Active Campaign'): echo 'active'; endif; ?>">
-            <a class="nsm-page-link" href="<?= base_url('tools/active_campaign') ?>">
-                <i class='bx bx-fw bxs-megaphone'></i>
-                <span>Active Campaign</span>
-            </a>
-        </li>
-        <li class="<?php if($page->title == 'API Integration'): echo 'active'; endif; ?>">
-            <a class="nsm-page-link" href="<?= base_url('tools/api_integration') ?>">
-                <i class='bx bx-fw bx-window-open'></i>
-                <span>API Integration</span>
+        <li class="<?php if($page->title == ''): echo 'active'; endif; ?>">
+            <a class="nsm-page-link" href="<?= base_url('trac360') ?>">
+                <i class='bx bx-fw bx-navigation'></i>
+                <span>Trac 360</span>
             </a>
         </li>
         <!-- Do not remove the last li -->

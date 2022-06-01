@@ -9,6 +9,7 @@ window.document.addEventListener("DOMContentLoaded", () => {
   import("./AlarmInfo.js");
 
   import("./Header.js");
+  import("../components/FieldCustomName.js");
 
   const selects = document.querySelectorAll("select[data-value]");
   selects.forEach(($select) => {

@@ -54,7 +54,7 @@
                     Proposed Offset
                 </div>
                 <div class="col-md-6">
-                <select name="acct_type" id="acct_type" class="input_select">
+                <select name="proposed_offset" id="proposed_offset" class="input_select">
                         <option  value=""></option>
                         <option  value="1">Less than 30%</option>
                         <?php for($x=31;$x<=120;$x++): ?>
@@ -91,7 +91,7 @@
             </div>
             <div class="row form_line">
                 <div class="col-md-6">
-                    Proposed FTC
+                    Proposed Payment
                 </div>
                 <div class="col-md-6">
                     <div class="input-group">
@@ -105,6 +105,32 @@
             <div class="row form_line">
                 <div class="col-md-6">
                     Annual Income
+                </div>
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">$</span>
+                        </div>
+                        <input type="number" class="form-control input_select" name="" value="">
+                    </div>
+                </div>
+            </div>
+            <div class="row form_line">
+                <div class="col-md-6">
+                    Tree Estimate
+                </div>
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">$</span>
+                        </div>
+                        <input type="number" class="form-control input_select" name="" value="">
+                    </div>
+                </div>
+            </div>
+            <div class="row form_line">
+                <div class="col-md-6">
+                    Roof Estimate
                 </div>
                 <div class="col-md-6">
                     <div class="input-group">
@@ -135,6 +161,38 @@
             <div class="row form_line">
                 <div class="col-md-6">
                     Utility Password
+                </div>
+                <div class="col-md-6">
+                    <input type="text" class="form-control" name="" id=""/>
+                </div>
+            </div>
+            <div class="row form_line">
+                <div class="col-md-6">
+                    Meter Number
+                </div>
+                <div class="col-md-6">
+                    <input type="text" class="form-control" name="" id=""/>
+                </div>
+            </div>
+            <div class="row form_line">
+                <div class="col-md-6">
+                    Insurance Name
+                </div>
+                <div class="col-md-6">
+                    <input type="text" class="form-control" name="" id=""/>
+                </div>
+            </div>
+            <div class="row form_line">
+                <div class="col-md-6">
+                    Insurance Number
+                </div>
+                <div class="col-md-6">
+                    <input type="text" class="form-control" name="" id=""/>
+                </div>
+            </div>
+            <div class="row form_line">
+                <div class="col-md-6">
+                    Policy Number
                 </div>
                 <div class="col-md-6">
                     <input type="text" class="form-control" name="" id=""/>

@@ -69,6 +69,9 @@
         $("#acct_type").select2({
             placeholder: "Select Account Type"
         });
+        $("#proposed_offset").select2({
+            placeholder: "Select Offset"
+        });
         $("#panel_type").select2({
             placeholder: "Select Panel Type"
         });

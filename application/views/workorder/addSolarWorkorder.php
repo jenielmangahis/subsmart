@@ -78,6 +78,14 @@ img.company-logo2 {
                                             <li class="breadcrumb-item active">
                                                 <label style="background-color:#E8E8E9;" id="headerContent"><?php echo $headers->content; ?></label>
                                                 <input type="hidden" id="headerID" name="header" value="<?php echo $headers->content; ?>">
+                                                <input type="hidden" id="current_date" name="current_date" value="<?php echo @date('m-d-Y'); ?>">
+                                                <input type="hidden" name="wo_id" value="<?php 
+                                                    foreach($ids as $id)
+                                                    {
+                                                        $add = $id->id + 1;
+                                                        echo $add;
+                                                    }
+                                                    ?>">
                                             </li>
                                         </ol>   
                                         <div class="row">                   
@@ -144,12 +152,12 @@ img.company-logo2 {
                                     </div>
                                     <div class="col-md-10">
                                     <br> <h6>Type of Roof</h6>
-                                    <input type="radio" name="hoa" class="form-"> Asphalt Single &emsp;
-                                    <input type="radio" name="hoa" class="form-"> Flat &emsp;
-                                    <input type="radio" name="hoa" class="form-"> Concrete Tile &emsp;
-                                    <input type="radio" name="hoa" class="form-"> Clay Tile &emsp; <br>
-                                    <input type="radio" name="hoa" class="form-"> Steel Single &emsp;
-                                    <input type="radio" name="hoa" class="form-"> Metal
+                                    <input type="radio" name="tor" value="Asphalt Single" class="form-"> Asphalt Single &emsp;
+                                    <input type="radio" name="tor" value="Flat" class="form-"> Flat &emsp;
+                                    <input type="radio" name="tor" value="Concrete Tile" class="form-"> Concrete Tile &emsp;
+                                    <input type="radio" name="tor" value="Clay Tile" class="form-"> Clay Tile &emsp; <br>
+                                    <input type="radio" name="tor" value="Steel Single" class="form-"> Steel Single &emsp;
+                                    <input type="radio" name="tor" value="Metal" class="form-"> Metal
                                     <br><br><hr>
                                     </div>
                                 </div>
@@ -169,10 +177,10 @@ img.company-logo2 {
                                     </div>
                                     <div class="col-md-10">
                                     <h6>Age of Roof (Years)</h6>
-                                    <input type="radio" name="aor" class="form-"> 0-5 &emsp;
-                                    <input type="radio" name="aor" class="form-"> 5-10 &emsp;
-                                    <input type="radio" name="aor" class="form-"> 10-15 &emsp;
-                                    <input type="radio" name="aor" class="form-"> 15-20
+                                    <input type="radio" name="aor" value="0-5" class="form-"> 0-5 &emsp;
+                                    <input type="radio" name="aor" value="5-10" class="form-"> 5-10 &emsp;
+                                    <input type="radio" name="aor" value="10-15" class="form-"> 10-15 &emsp;
+                                    <input type="radio" name="aor" value="15-20" class="form-"> 15-20
                                     <br><br><hr>
                                     </div>
                                 </div>
@@ -182,11 +190,11 @@ img.company-logo2 {
                                     </div>
                                     <div class="col-md-10">
                                     <h6>Solar Panel Mounting Preference</h6>
-                                    <input type="radio" name="spmp" class="form-"> Front Only &emsp;
-                                    <input type="radio" name="spmp" class="form-"> Back Only &emsp;
-                                    <input type="radio" name="spmp" class="form-"> Side Only &emsp;
-                                    <input type="radio" name="spmp" class="form-"> No Preference &emsp;
-                                    <input type="radio" name="spmp" class="form-"> Other
+                                    <input type="radio" name="spmp" value="Front Only" class="form-"> Front Only &emsp;
+                                    <input type="radio" name="spmp" value="Back Only" class="form-"> Back Only &emsp;
+                                    <input type="radio" name="spmp" value="Side Only" class="form-"> Side Only &emsp;
+                                    <input type="radio" name="spmp" value="No Preference" class="form-"> No Preference &emsp;
+                                    <input type="radio" name="spmp" value="Other" class="form-"> Other
                                     <br><br><hr>
                                     </div>
                                 </div>
@@ -196,8 +204,8 @@ img.company-logo2 {
                                     </div>
                                     <div class="col-md-10">
                                     <h6>Home Owner Associations</h6>
-                                    <input type="radio" name="hoa" class="form-"> Yes &emsp;
-                                    <input type="radio" name="hoa" class="form-"> No &emsp;
+                                    <input type="radio" name="hoa" value="Yes" class="form-"> Yes &emsp;
+                                    <input type="radio" name="hoa" value="No" class="form-"> No &emsp;
                                     <br>
                                     <b>If Yes: Contact Name/Number</b>
                                     <input type="text" name="hoa_text" class="form-control">
@@ -216,7 +224,7 @@ img.company-logo2 {
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text">$</span>
                                             </div>
-                                            <input type="text" class="form-control" aria-label="Amount">
+                                            <input type="number" name="estimated_bill" class="form-control" aria-label="Amount">
                                             <!-- <div class="input-group-append">
                                                 <span class="input-group-text">.00</span>
                                             </div> -->
@@ -224,12 +232,12 @@ img.company-logo2 {
                                             <center>Estimated Bill</center>
                                         </div>
                                     <h6>Electric Bill is over $100</h6> 
-                                    <input type="radio" name="ebis" class="form-"> Yes &emsp;
-                                    <input type="radio" name="ebis" class="form-"> No &emsp;
+                                    <input type="radio" name="ebis" value="Yes" class="form-"> Yes &emsp;
+                                    <input type="radio" name="ebis" value="No" class="form-"> No &emsp;
                                     <br>
                                     <h6>How do you get your Invoice</h6>
-                                    <input type="radio" name="hdygi" class="form-"> Paper &emsp;
-                                    <input type="radio" name="hdygi" class="form-"> Paperless &emsp;
+                                    <input type="radio" name="hdygi" value="Paper" class="form-"> Paper &emsp;
+                                    <input type="radio" name="hdygi" value="Paperless" class="form-"> Paperless &emsp;
                                     <input type="file" name="hdygi_file" class="form-control">
                                     <br>
                                     <h6>Electric Bill Account #</h6>
@@ -243,10 +251,10 @@ img.company-logo2 {
                                     </div>
                                     <div class="col-md-10">
                                     <h6>Employment Status</h6>
-                                    <input type="radio" name="es" class="form-"> Employed &emsp;
-                                    <input type="radio" name="es" class="form-"> Unemployed &emsp;
-                                    <input type="radio" name="es" class="form-"> Retired &emsp;
-                                    <input type="radio" name="es" class="form-"> Retired with Income
+                                    <input type="radio" name="es" value="Employed" class="form-"> Employed &emsp;
+                                    <input type="radio" name="es" value="Unemployed" class="form-"> Unemployed &emsp;
+                                    <input type="radio" name="es" value="Retired" class="form-"> Retired &emsp;
+                                    <input type="radio" name="es" value="Retired with Income" class="form-"> Retired with Income
                                     <!-- <hr> -->
                                     </div>
                                 </div>
@@ -265,9 +273,13 @@ img.company-logo2 {
                             </center>
                             <br>
                                 <div class="row"> 
-                                    <div class="col-md-12">
-                                        <input type="text" name="fullname" class="form-control border-top-0 border-right-0 border-left-0">
-                                        <b>Full name:</b>
+                                    <div class="col-md-6">
+                                        <input type="text" name="firstname" class="form-control border-top-0 border-right-0 border-left-0">
+                                        <b>First name:</b>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="text" name="lastname" class="form-control border-top-0 border-right-0 border-left-0">
+                                        <b>Last name:</b>
                                     </div>
                                 </div>
                                 <div class="row"> 
@@ -294,14 +306,14 @@ img.company-logo2 {
                                 </div>
                                 <div class="row"> 
                                     <div class="col-md-12">
-                                        <input type="text" name="phone1" class="form-control border-top-0 border-right-0 border-left-0">
+                                        <input type="text" name="phone" class="form-control border-top-0 border-right-0 border-left-0">
                                         <b>Phone:</b>
                                     </div>
                                 </div>
                                 <div class="row"> 
                                     <div class="col-md-12">
-                                        <input type="text" name="phone2" class="form-control border-top-0 border-right-0 border-left-0">
-                                        <b>Phone:</b>
+                                        <input type="text" name="mobile" class="form-control border-top-0 border-right-0 border-left-0">
+                                        <b>Mobile:</b>
                                     </div>
                                 </div>
                                 <div class="row"> 
@@ -312,7 +324,7 @@ img.company-logo2 {
                                 </div>
                                 <div class="row"> 
                                     <div class="col-md-12">
-                                        <input type="text" name="email" class="form-control border-top-0 border-right-0 border-left-0">
+                                        <input type="text" name="comments" class="form-control border-top-0 border-right-0 border-left-0">
                                         <b>Comments:</b>
                                     </div>
                                 </div>
@@ -326,11 +338,11 @@ img.company-logo2 {
                                 <div class="row"> 
                                     <div class="col-md-12" style="border: solid gray 1px;border-bottom-left-radius: 25px;border-bottom-right-radius: 25px;padding:2%;">
                                         <b style="font-size:16px;">Options:</b><br>
-                                        <input type="checkbox" class="form-"> Roof &emsp;
-                                        <input type="checkbox" class="form-"> Tree Removal &emsp;
-                                        <input type="checkbox" class="form-"> Battery Package &emsp;
-                                        <input type="checkbox" class="form-"> Security &emsp;
-                                        <input type="checkbox" class="form-"> Others
+                                        <input type="checkbox" name="options[]" value="roof" class="form-"> Roof &emsp;
+                                        <input type="checkbox" name="options[]" value="tree removal" class="form-"> Tree Removal &emsp;
+                                        <input type="checkbox" name="options[]" value="battery package" class="form-"> Battery Package &emsp;
+                                        <input type="checkbox" name="options[]" value="security" class="form-"> Security &emsp;
+                                        <input type="checkbox" name="options[]" value="others" class="form-"> Others
                                     </div>
                                 </div>
                             
