@@ -72,10 +72,10 @@ if ($this->session->userdata('usertimezone') == null) {
                         <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
                     </a>
                     <ul class="mt-3">
-                        <li class="<?php if ($page->title == 'SMS') : echo 'selected';
+                        <li class="<?php if ($page->title == 'Messages') : echo 'selected';
                                     endif; ?>">
-                            <a href="<?= base_url("sms") ?>">
-                                <i class='bx bx-fw bx-message-square-dots'></i> SMS
+                            <a href="<?= base_url("messages") ?>">
+                                <i class='bx bx-fw bx-message-square-dots'></i> Messages
                             </a>
                         </li>
                         <li class="<?php if ($page->title == 'Calls and Logs') : echo 'selected';
