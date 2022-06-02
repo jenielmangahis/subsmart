@@ -20,7 +20,7 @@
 }
 </style>
 <div class="row">
-    <!-- <canvas id="tags_chart" class="nsm-chart" data-chart-type="tags"></canvas> -->
+    <canvas id="tags_chart" class="nsm-chart" data-chart-type="tags"></canvas>
 <?php foreach ($tags as $tag){ ?>
     <div class="col-md-6">
         <a class="tagsData" href="javascript:void(0);" onclick="window.open('<?= base_url('job?job_tag='.$tag->id) ?>', '_blank', 'location=yes,height=1080,width=1280,scrollbars=yes,status=yes');">
@@ -31,7 +31,7 @@
 </div>
 <script>
 $(function(){
-    //initializeTagsChart();
+    initializeTagsChart();
 });
 function initializeTagsChart(){    
     var tagsChart = $("#tags_chart");

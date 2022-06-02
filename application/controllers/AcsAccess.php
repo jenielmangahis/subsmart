@@ -32,8 +32,16 @@ class AcsAccess extends CI_Controller
     {
         $this->load->model('CompanySms_model');
 
-        $messages   = $this->CompanySms_model->getAllUniqueSenderByProfId($this->customer_id);
-
+        $search = '';
+        if( get('search') != '' ){
+            $search  = trim(get('search'));
+            $search_param = ['search' => $search];
+            $messages   = $this->CompanySms_model->getAllUniqueSenderByProfId($this->customer_id, $search_param);
+        }else{
+            $messages   = $this->CompanySms_model->getAllUniqueSenderByProfId($this->customer_id);
+        }
+        
+        $this->page_data['search'] = $search;        
         $this->page_data['page_title'] = 'Messages';
         $this->page_data['page_parent'] = 'Messages';
         $this->page_data['messages'] = $messages;
@@ -127,21 +135,17 @@ class AcsAccess extends CI_Controller
             if( isset($post['send_sms_notification']) ){
                 $enable_send_sms = 1;                    
                 if( $user->mobile != '' ){
-                    if( in_array($user->company_id, $this->CompanySms_model->ringCentralCompanyIds()) ){
-                        //Use ringcentral
-                        /*$is_sent = $this->smsRingCentral($user->mobile, $post['sms_txt_message']);
+                    if( in_array($customer_data['company_id'], $this->CompanySms_model->ringCentralCompanyIds()) ){
+                        //Use ringcentral                        
+                        $is_sent = $this->smsRingCentral($user->mobile, $post['sms_txt_message']);
                         if( $is_sent['is_success'] == 1 ){                    
                             $is_success = 1;
                         }else{
                             $msg = $is_sent['msg'];
-                        }*/
-
-                        $is_success = 1;
-
+                        }
                     }else{
                         //Use twiio
                     }
-                    $is_with_phone_m = 1;
                 }else{
                     $is_with_phone_m = 0;
                 }
@@ -233,6 +237,28 @@ class AcsAccess extends CI_Controller
         $return = ['is_success' => $is_success, 'msg' => $msg];
 
         return $return;
+    }
+
+    public function ajax_load_sent_messages()
+    {
+        $this->load->model('CompanySms_model');
+        $this->load->model('Customer_advance_model');
+        $this->load->model('Users_model');
+
+        $uid  = logged('id');
+        $post = $this->input->post();
+
+        $customer_data = $this->session->userdata('customer_data');
+        $user = $this->Users_model->getUser($post['aid']);
+        
+        $sentMessages = $this->CompanySms_model->getAllByProfIdAndUserId($customer_data['prof_id'],$post['aid']);
+        $customer = $this->Customer_advance_model->get_data_by_id('prof_id',$customer_data['prof_id'],'acs_profile');
+        $agent = $this->Users_model->getUser($post['aid']);
+
+        $this->page_data['sentMessages'] = $sentMessages;
+        $this->page_data['customer'] = $customer;
+        $this->page_data['agent'] = $agent;
+        $this->load->view('customer_access/messages/ajax_sent_messages.php', $this->page_data);
     }
 }
 
