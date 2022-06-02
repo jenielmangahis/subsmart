@@ -112,6 +112,15 @@ if (!function_exists('get_sales_rep_revenue')){
     }
 }
 
+if (!function_exists('get_sales_rep_name')){
+    function get_sales_rep_name($id){
+        $CI = &get_instance();
+        $CI->load->model('users_model');
+        $user = $CI->users_model->getUserByID($id);
+        return $user->FName . ' '. $user->LName;
+    }
+}
+
 if (!function_exists('get_tech_customer_count')){
     function get_tech_customer_count($id){
         $CI = &get_instance();
@@ -243,5 +252,136 @@ if (!function_exists('transaction_categories')){
         }
         return $categories;
     }
+}
+
+function solar_info_header($name=null) {
+    $solar_info = array(
+        array(
+            'id' => 'project_id',
+            'description' => 'Project Id',
+        ),array(
+            'name' => 'lender_type',
+            'description' => 'Lender Type',
+        ),array(
+            'name' => 'proposed_system_size',
+            'description' => 'Proposed System Size',
+        ),array(
+            'name' => 'proposed_modules',
+            'description' => 'Proposed Modules',
+        ),array(
+            'name' => 'proposed_inverter',
+            'description' => 'Proposed Inverter',
+        ),array(
+            'name' => 'proposed_offset',
+            'description' => 'Proposed Offset',
+        ),array(
+            'name' => 'proposed_solar',
+            'description' => 'Proposed Solar',
+        ),array(
+            'name' => 'proposed_utility',
+            'description' => 'Proposed Utility',
+        ),array(
+            'name' => 'proposed_payment',
+            'description' => 'Proposed Payment',
+        ),array(
+            'name' => 'annual_income',
+            'description' => 'Annual Income',
+        ),array(
+            'name' => 'tree_estimate',
+            'description' => 'Tree Estimate',
+        ),array(
+            'name' => 'roof_estimate',
+            'description' => 'Roof Estimate',
+        ),array(
+            'name' => 'utility_account',
+            'description' => 'Utility Account',
+        ),array(
+            'name' => 'utility_login',
+            'description' => 'Utility Login',
+        ),array(
+            'name' => 'utility_pass',
+            'description' => 'Utility Pass',
+        ),array(
+            'name' => 'meter_number',
+            'description' => 'Meter Number',
+        ),array(
+            'name' => 'insurance_name',
+            'description' => 'Insurance Name',
+        ),array(
+            'name' => 'insurance_number',
+            'description' => 'Insurance Number',
+        ),array(
+            'name' => 'policy_number',
+            'description' => 'Policy Number',
+        )
+    );
+    if(isset($name)){
+        for($x=0;$x<count($solar_info);$x++){
+            if($solar_info[$x]['name'] == $name){
+                return $solar_info[$x];
+            }
+        }
+    }
+    return $solar_info;
+}
+
+
+function alarm_info_header($name=null) {
+    $alarm_fields = array(
+        array(
+            'id' => 'monitor_comp',
+            'description' => 'Monitoring Company',
+        ),array(
+            'name' => 'monitor_id',
+            'description' => 'Monitoring ID',
+        ),array(
+            'name' => 'acct_type',
+            'description' => 'Account Type',
+        ),array(
+            'name' => 'online',
+            'description' => 'Online',
+        ),array(
+            'name' => 'in_service',
+            'description' => 'In Service',
+        ),array(
+            'name' => 'equipment',
+            'description' => 'Equipment',
+        ),array(
+            'name' => 'mcn',
+            'description' => 'Monitoring Confirm#',
+        ),array(
+            'name' => 'scn',
+            'description' => 'Signal Confirm#',
+        ),array(
+            'name' => 'install_code',
+            'description' => 'Installer Code',
+        ),array(
+            'name' => 'panel_type',
+            'description' => 'Panel Type',
+        ),array(
+            'name' => 'warranty_type',
+            'description' => 'Warranty Type',
+        ),array(
+            'name' => 'dealer',
+            'description' => 'Dealer',
+        ),array(
+            'name' => 'alarm_login',
+            'description' => 'Login',
+        ),array(
+            'name' => 'alarm_customer_id',
+            'description' => 'Customer ID',
+        ),array(
+            'name' => 'alarm_cs_account',
+            'description' => 'CS Account',
+        )
+    );
+    if(isset($name)){
+        for($x=0;$x<count($alarm_fields);$x++){
+            if($alarm_fields[$x]['name'] == $name){
+                return $alarm_fields[$x];
+            }
+        }
+    }
+    return $alarm_fields;
 }
 ?>

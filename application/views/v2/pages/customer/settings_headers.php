@@ -45,6 +45,47 @@
                                                         </div>
                                                     </div>
                                                 <?php endforeach; ?>
+
+                                                <?php if($company_id == 58): ?>
+                                                    <div class="col-12 col-md-12"> </div>
+                                                    <br><br><br><hr><h3>Solar Fields</h3>
+                                                    <?php
+                                                        $solar_fields = solar_info_header();
+                                                        foreach($solar_fields as $solar):
+                                                            ?>
+                                                                <div class="col-12 col-md-3">
+                                                                    <div class="d-block">
+                                                                        <div class="form-check">
+                                                                            <input class="form-check-input" type="checkbox" name="headers[<?= $solar['id'] ?>]" id="<?= $solar['id'] ?>" >
+                                                                            <label class="form-check-label" for="51"><?= $solar['description'] ?></label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            <?php
+                                                        endforeach;
+                                                endif;
+                                                ?>
+                                                
+                                                
+                                                <?php if($company_id == 31): ?>
+                                                    <div class="col-12 col-md-12"> </div>
+                                                    <br><br><br><hr><h3>Alarm Fields</h3>
+                                                    <?php
+                                                        $alarm_fields = alarm_info_header();
+                                                        foreach($alarm_fields as $alarm):
+                                                            ?>
+                                                                <div class="col-12 col-md-3">
+                                                                    <div class="d-block">
+                                                                        <div class="form-check">
+                                                                            <input class="form-check-input" type="checkbox" name="headers[<?= $alarm['id'] ?>]" id="<?= $alarm['id'] ?>" >
+                                                                            <label class="form-check-label" for="51"><?= $alarm['description'] ?></label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            <?php
+                                                        endforeach;
+                                                endif;
+                                                ?>
                                             </div>
                                         </form>
                                     </div>

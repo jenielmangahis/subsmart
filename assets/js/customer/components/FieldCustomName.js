@@ -6,10 +6,13 @@ $template.innerHTML = `
 <link rel="stylesheet" href="${PREFIX_URL}/assets/plugins/font-awesome/css/font-awesome.min.css">
 
 <style>
+:host {
+  display: inline-block;
+}
+
 .form {
     display: flex;
     align-items: center;
-    justify-content: space-between;
 }
 
 .btn {
@@ -27,6 +30,8 @@ $template.innerHTML = `
     justify-content: center;
     cursor: pointer;
     background-color: transparent;
+    opacity: 0;
+    visibility: hidden;
 }
 
 .hide {
@@ -46,6 +51,12 @@ $template.innerHTML = `
 :host(.editing) .text {
     display: none;
 }
+
+:host(:not([readonly]):hover) .btn,
+:host(.editing) .btn {
+  opacity: 1;
+  visibility: visible;
+}
 </style>
 
 <form class="form">
@@ -54,7 +65,7 @@ $template.innerHTML = `
         <input class="input" required />
     </div>
 
-    <button class="btn hide" type="button">
+    <button class="btn hide" type="button" title="Rename label">
         <i class="fa fa-pencil"></i>
     </button>
 </form>
@@ -73,6 +84,24 @@ class FieldCustomName extends HTMLElement {
     this.__text = value.trim();
     this.$text.textContent = this.__text;
     this.$input.value = this.__text;
+  }
+
+  get isSaving() {
+    return this.__isSaving;
+  }
+
+  set isSaving(value) {
+    this.__isSaving = value;
+
+    if (value === true) {
+      this.setAttribute("title", "Saving...");
+      this.$input.setAttribute("disabled", true);
+      this.$btn.setAttribute("disabled", true);
+    } else {
+      this.removeAttribute("title");
+      this.$input.removeAttribute("disabled");
+      this.$btn.removeAttribute("disabled");
+    }
   }
 
   get form() {
@@ -98,6 +127,7 @@ class FieldCustomName extends HTMLElement {
     this.onClickButton = this.onClickButton.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.onNamesReady = this.onNamesReady.bind(this);
+    this.onKeyDown = this.onKeyDown.bind(this);
   }
 
   attributeChangedCallback(name) {
@@ -109,12 +139,14 @@ class FieldCustomName extends HTMLElement {
   async connectedCallback() {
     this.$btn.addEventListener("click", this.onClickButton);
     this.$form.addEventListener("submit", this.onSubmit);
+    this.$input.addEventListener("keydown", this.onKeyDown);
     window.addEventListener(CUSTOM_EVENT_NAME, this.onNamesReady);
   }
 
   disconnectedCallback() {
     this.$btn.removeEventListener("click", this.onClickButton);
     this.$form.removeEventListener("submit", this.onSubmit);
+    this.$input.removeEventListener("keydown", this.onKeyDown);
     window.removeEventListener(CUSTOM_EVENT_NAME, this.onNamesReady);
   }
 
@@ -145,9 +177,26 @@ class FieldCustomName extends HTMLElement {
   }
 
   onEdit() {
+    const inputMinWidth = 150;
+    const textWidth = this.$text.offsetWidth + 24;
+
+    this.$input.style.width = `${textWidth}px`;
+    if (textWidth <= inputMinWidth) {
+      this.$input.style.minWidth = `${inputMinWidth}px`;
+    }
+
     this.classList.add("editing");
     this.$btnIcon.setAttribute("class", "fa fa-check");
+
+    this.$input.value = this.text;
     this.$input.focus();
+  }
+
+  onKeyDown(event) {
+    if (event.key === "Escape") {
+      this.classList.remove("editing");
+      this.$btnIcon.setAttribute("class", "fa fa-pencil");
+    }
   }
 
   async onSubmit(event) {
@@ -159,17 +208,15 @@ class FieldCustomName extends HTMLElement {
       return;
     }
 
-    this.$input.setAttribute("disabled", true);
-    this.$btn.setAttribute("disabled", true);
+    if (this.isSaving) return;
 
+    this.isSaving = true;
     const response = await this.saveName();
     this.text = response.data.name;
 
+    this.isSaving = false;
     this.classList.remove("editing");
     this.$btnIcon.setAttribute("class", "fa fa-pencil");
-
-    this.$input.removeAttribute("disabled");
-    this.$btn.removeAttribute("disabled");
   }
 
   async saveName() {

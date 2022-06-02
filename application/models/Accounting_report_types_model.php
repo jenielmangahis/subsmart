@@ -42,4 +42,11 @@ class Accounting_report_types_model extends MY_Model {
         $query = $this->db->get();
         return $query->row();
     }
+
+    public function get_by_id($reportTypeId)
+    {
+        $this->db->where('id', $reportTypeId);
+        $query = $this->db->get($this->table);
+        return $query->row();
+    }
 }

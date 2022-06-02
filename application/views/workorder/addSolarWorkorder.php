@@ -238,7 +238,7 @@ img.company-logo2 {
                                     <h6>How do you get your Invoice</h6>
                                     <input type="radio" name="hdygi" value="Paper" class="form-"> Paper &emsp;
                                     <input type="radio" name="hdygi" value="Paperless" class="form-"> Paperless &emsp;
-                                    <input type="file" name="hdygi_file" class="form-control">
+                                    <input type="file" name="hdygi_file[]" multiple="multiple" class="form-control">
                                     <br>
                                     <h6>Electric Bill Account #</h6>
                                     <input type="text" name="eba_text" class="form-control">
@@ -274,11 +274,11 @@ img.company-logo2 {
                             <br>
                                 <div class="row"> 
                                     <div class="col-md-6">
-                                        <input type="text" name="firstname" class="form-control border-top-0 border-right-0 border-left-0">
+                                        <input type="text" name="firstname" id="firstname" class="form-control border-top-0 border-right-0 border-left-0" onkeyup="primaryName()">
                                         <b>First name:</b>
                                     </div>
                                     <div class="col-md-6">
-                                        <input type="text" name="lastname" class="form-control border-top-0 border-right-0 border-left-0">
+                                        <input type="text" name="lastname" id="lastname" class="form-control border-top-0 border-right-0 border-left-0" onkeyup="primaryName()">
                                         <b>Last name:</b>
                                     </div>
                                 </div>
@@ -668,7 +668,7 @@ img.company-logo2 {
                                 <div class="form-group">
                                         <button type="submit" name="action" class="btn btn-flat btn-primary" value="submit">Submit</button>
                                         <!-- <button type="submit" name="action" class="btn btn-flat btn-success pdf_sheet" target="_blank" value="preview">Preview</button> -->
-                                        <!-- <button type="submit" class="btn btn-flat btn-primary"><b>Save Template</b></button> -->
+                                        <button type="submit" class="btn btn-flat btn-success"><b>Send to Customer</b></button>
                                         <a href="<?php echo url('workorder') ?>" class="btn btn-danger">Cancel this</a>
                                 </div>
                             </div>
@@ -810,6 +810,14 @@ img.company-logo2 {
 
 <!-- Chart code -->
 <script>
+
+function primaryName(){
+     // $('.invAetf').keyup(function(e){
+      // alert('kk');
+      var one = $('#firstname').val();
+      var two = $('#lastname').val();
+      $('#primary_account_holder_name').val(one +' '+ two);
+  }
 /**
  * ---------------------------------------
  * This demo was created using amCharts 4.

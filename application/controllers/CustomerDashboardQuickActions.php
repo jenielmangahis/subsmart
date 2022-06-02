@@ -256,10 +256,11 @@ class CustomerDashboardQuickActions extends MY_Controller
         $document = $_FILES['document'];
         ['document_type' => $documentType, 'customer_id' => $customerId, 'document_label' => $documentLabel] = $this->input->post();
 
-        if ($document['size'] > self::ONE_MB * 8) {
+        $maxSizeInMB = 8;
+        if ($document['size'] > self::ONE_MB * $maxSizeInMB) {
             $this->respond([
                 'success' => false,
-                'reason' => 'Maximum file size is less than 8MB',
+                'reason' => "Maximum file size is less than {$maxSizeInMB}MB",
             ]);
         }
 

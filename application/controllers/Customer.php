@@ -104,6 +104,7 @@ class Customer extends MY_Controller
         }
         $userid = $id;
         $user_id = logged('id');
+        $companyId = logged('company_id');
         if(isset($userid) || !empty($userid)){
             $customer = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
             $this->page_data['industryType'] = $this->IndustryType_model->getById($customer->industry_type_id);
@@ -112,6 +113,10 @@ class Customer extends MY_Controller
             $this->page_data['office_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_office");
             $this->page_data['billing_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_billing");
             $this->page_data['alarm_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_alarm");
+            if($companyId == 58){
+                $this->page_data['solar_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_info_solar");
+            }
+            
             $get_customer_notes = array(
                 'where' => array(
                     'fk_prof_id' => $userid
@@ -1471,6 +1476,8 @@ class Customer extends MY_Controller
         $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE,"","ASC","ac_salesarea","sa_id");
         $this->page_data['employees'] = $this->customer_ad_model->get_all(FALSE,"","ASC","users","id");
         $this->page_data['users'] = $this->users_model->getUsers();
+        $this->page_data['technicians'] = $this->users_model->getUsersByRole([7]);
+        $this->page_data['sales_reps'] = $this->users_model->getUsersByRole([8,28]);
 
         // fetch customer statuses
         $this->page_data['customer_status'] = $this->customer_ad_model->get_all(FALSE,"","","acs_cust_status","id");
@@ -1656,12 +1663,19 @@ class Customer extends MY_Controller
                     customerAuditLog(logged('id'), $profile_id, $profile_id, 'Customer', 'Created customer ' .$input['first_name'].' '.$input['last_name']);
                 }
 
+
+                $companyId = logged('company_id');
                 $save_billing = $this->save_billing_information($input,$profile_id);
                 $save_office = $this->save_office_information($input,$profile_id);
                 $save_alarm = $this->save_alarm_information($input,$profile_id);
                 $save_access = $this->save_access_information($input,$profile_id);
                 $save_papers = $this->save_papers_information($input,$profile_id);
                 $save_contacts = $this->save_contacts($input,$profile_id);
+
+                if($companyId == 58){
+                    $this->save_solar_info($input,$profile_id);
+                }
+                
 
                 if($save_billing == 0 || $save_office == 0 || $save_alarm == 0 || $save_access == 0 || $save_papers == 0){
                     echo 'Error Occured on Saving Billing Information';
@@ -1720,6 +1734,48 @@ class Customer extends MY_Controller
         
         $return = ['is_success' => $is_success, 'msg' => $msg];
         return $return;
+    }
+
+    /**
+     * This function will save/update solar information of the customer
+     * * @param input Input data from customer form
+     * * @param id ID of the customer
+     * @return boolean return TRUE if successfull transaction
+    */
+    public function save_solar_info($input,$id)
+    {
+        $solarInfo = array();
+        $solarInfo['fk_prof_id'] = $id;
+        $solarInfo['project_id'] = $input['project_id'];
+        $solarInfo['lender_type'] = $input['lender_type'];
+        $solarInfo['proposed_system_size'] = $input['proposed_system_size'];
+        $solarInfo['proposed_modules'] = $input['proposed_modules'];
+        $solarInfo['proposed_inverter'] = $input['proposed_inverter'];
+        $solarInfo['proposed_offset'] = $input['proposed_offset'];
+        $solarInfo['proposed_solar'] = $input['proposed_solar'];
+        $solarInfo['proposed_utility'] = $input['proposed_utility'];
+        $solarInfo['proposed_payment'] = $input['proposed_payment'];
+        $solarInfo['annual_income'] = $input['annual_income'];
+        $solarInfo['tree_estimate'] = $input['tree_estimate'];
+        $solarInfo['roof_estimate'] = $input['roof_estimate'];
+        $solarInfo['utility_account'] = $input['utility_account'];
+        $solarInfo['utility_login'] = $input['utility_login'];
+        $solarInfo['utility_pass'] = $input['utility_pass'];
+        $solarInfo['meter_number'] = $input['meter_number'];
+        $solarInfo['insurance_name'] = $input['insurance_name'];
+        $solarInfo['insurance_number'] = $input['insurance_number'];
+        $solarInfo['policy_number'] = $input['policy_number'];
+
+        $check = array(
+            'where' => array('fk_prof_id' => $id),
+            'table' => 'acs_info_solar'
+        );
+        $exist = $this->general->get_data_with_param($check,FALSE);
+        if($exist){
+            return $this->general->update_with_key_field($solarInfo, $input['customer_id'], 'acs_info_solar','fk_prof_id');
+        }else{
+            return $this->general->add_($solarInfo, 'acs_info_solar');
+        }
     }
 
     public function save_billing_information($input,$id){
@@ -4672,6 +4728,7 @@ class Customer extends MY_Controller
         $customer_settings = $this->general->get_data_with_param($get_company_settings);
         $headers = unserialize($customer_settings[0]->headers);
         $this->page_data['customer_tbl_headers'] = $headers;
+        $this->page_data['company_id'] = logged('company_id');
 
         $this->load->view('v2/pages/customer/settings_headers', $this->page_data);
     }

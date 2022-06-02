@@ -216,14 +216,26 @@ class Reports extends MY_Controller {
 
     public function audit_log()
     {
+        add_footer_js([
+            'assets/js/accounting/reports/standard_report_pages/audit_log.js'
+        ]);
+
+        $this->page_data['company_users'] = $this->users_model->getActiveCompanyUsers(logged('company_id'));
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['customers'] = $this->accounting_invoices_model->getCustomers();
         $this->page_data['page_title'] = "Audit Log";
-        $this->load->view('accounting/reports/standard_report_pages/audit_log1', $this->page_data);
+        $this->load->view('accounting/reports/standard_report_pages/audit_log', $this->page_data);
     }
 
     public function view_report($reportTypeId)
     {
+        $reportType = $this->accounting_report_types_model->get_by_id($reportTypeId);
+        $view = strtolower(str_replace(' ', '_', $reportType->name));
 
+        $this->page_data['company_details'] = $this->timesheet_model->get_user_and_company_details(logged('id'));
+        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->page_data['employees'] = $this->vendors_model->getEmployees(logged('company_id'));
+        $this->page_data['page_title'] = "Balance Sheet Reports";
+        $this->load->view("accounting/reports/standard_report_pages/$view", $this->page_data);
     }
 }
