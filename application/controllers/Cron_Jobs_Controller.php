@@ -135,7 +135,17 @@ class Cron_Jobs_Controller extends CI_Controller
                 }
             }
             if ($found) {
-                $admins_for_reports[] = array($admin->user_id, $admin->company_id);
+                $exists = false ;
+                for($i=0;$i<count($admins_for_reports);$i++){
+                    if($admins_for_reports[$i][0] == $admin->user_id && $admins_for_reports[$i][2] == $admin->company_id ){
+                        $exists=true;
+                        break;
+                    }
+                }
+                if(!$exists){
+                    $admins_for_reports[] = array($admin->user_id, $admin->company_id);
+                }
+                
             }
         }
         return $admins_for_reports;

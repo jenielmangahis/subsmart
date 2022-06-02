@@ -673,6 +673,15 @@ class Timesheet_model extends MY_Model
         $qry = $this->db->get('timesheet_logs');
         return $qry->result();
     }
+    public function getUserTimesheetLogs($user_id)
+    {
+
+        $this->db->select('*');
+        $this->db->from("timesheet_logs");
+        $this->db->where("user_id", $user_id);
+        $qry = $this->db->get();
+        return $qry->result();
+    }
     
     public function getTSByDate($date_this_week)
     {
@@ -1899,7 +1908,7 @@ class Timesheet_model extends MY_Model
         $qry = $this->db->query("SELECT * from timesheet_timezone_admin_report 
         JOIN timesheet_timezone_list ON timesheet_timezone_admin_report.timezone_id=timesheet_timezone_list.id  
         JOIN users ON timesheet_timezone_admin_report.user_id = users.id
-        where timesheet_timezone_admin_report.schedule_time = '" . $hour_now . "'");
+        where timesheet_timezone_admin_report.schedule_time = '" . $hour_now . "' AND users.role < 5 order by timesheet_timezone_admin_report.date_created DESC");
         // var_dump($qry->result());
         return $qry->result();
     }

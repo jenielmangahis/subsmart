@@ -14,13 +14,17 @@ class Support extends MY_Controller
 
     public function index()
     {
+		$this->page_data['page']->title = 'Support';
+        $this->page_data['page']->parent = 'Company';
+
         $this->load->model('Users_model');
 
         $user_id = getLoggedUserID();
         $user    = $this->Users_model->getUser($user_id);
 
         $this->page_data['user'] = $user;
-        $this->load->view('support/index', $this->page_data);
+        $this->load->view('v2/pages/support/index', $this->page_data);
+        // $this->load->view('support/index', $this->page_data);
     }
 
     public function ajax_send_email()

@@ -153,13 +153,14 @@ class Users_model extends MY_Model
         return $query->result();
     }
 
-    public function getUsersByRole($role=3)
+    public function getUsersByRole($role=[3])
     {
         $cid=logged('company_id');
         $this->db->select('*');
         $this->db->from('users');
         //$this->db->where('parent_id', $parent_id);
-        $this->db->where('role', $role);
+        $this->db->where_in('users.role', $role);
+        //$this->db->where('role', $role);
         $this->db->where('company_id', $cid);
         $query = $this->db->get();
         return $query->result();
@@ -647,6 +648,12 @@ class Users_model extends MY_Model
         return $query->row();
     }
 
+    /**
+     * This function will fetch user information
+     * 
+     * @param id ID of the customer
+     * @return object Object data of the customer info (users table)
+    */
     public function getUserByID($id)
     {
         $this->db->select('*');
@@ -868,6 +875,7 @@ class Users_model extends MY_Model
 
         return $roles;
     }
+    
 }
 
 

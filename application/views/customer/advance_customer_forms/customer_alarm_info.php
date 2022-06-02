@@ -10,7 +10,7 @@
                     Project ID
                 </div>
                 <div class="col-md-6">
-                    <input type="text" class="form-control" name="" id=""/>
+                    <input type="text" class="form-control" name="project_id" id="project_id"/>
                 </div>
             </div>
             <div class="row form_line">
@@ -18,7 +18,7 @@
                     Lender Type
                 </div>
                 <div class="col-md-6">
-                    <input type="text" class="form-control" name="" id=""/>
+                    <input type="text" class="form-control" name="lender_type" id="lender_type"/>
                     <a href="#" target="_blank"  style="color:#58bc4f;font-size: 10px;"><span class="fa fa-plus"></span> Manage Type</a>&nbsp;&nbsp;
                 </div>
             </div>
@@ -27,7 +27,7 @@
                     Proposed System Size
                 </div>
                 <div class="col-md-6">
-                    <input type="text" class="form-control" name="" id=""/>
+                    <input type="text" class="form-control" name="proposed_system_size" id="proposed_system_size"/>
                     <a href="#" target="_blank"  style="color:#58bc4f;font-size: 10px;"><span class="fa fa-plus"></span> Manage Size</a>&nbsp;&nbsp;
                 </div>
             </div>
@@ -36,7 +36,7 @@
                     Proposed Modules
                 </div>
                 <div class="col-md-6">
-                    <input type="text" class="form-control" name="" id=""/>
+                    <input type="text" class="form-control" name="proposed_modules" id="proposed_modules"/>
                     <a href="#" target="_blank"  style="color:#58bc4f;font-size: 10px;"><span class="fa fa-plus"></span> Manage Modules</a>&nbsp;&nbsp;
                 </div>
             </div>
@@ -45,7 +45,7 @@
                     Proposed Inverter
                 </div>
                 <div class="col-md-6">
-                    <input type="text" class="form-control" name="" id=""/>
+                    <input type="text" class="form-control" name="proposed_inverter" id="proposed_inverter"/>
                     <a href="#" target="_blank"  style="color:#58bc4f;font-size: 10px;"><span class="fa fa-plus"></span> Manage Inverter</a>&nbsp;&nbsp;
                 </div>
             </div>
@@ -54,7 +54,7 @@
                     Proposed Offset
                 </div>
                 <div class="col-md-6">
-                <select name="acct_type" id="acct_type" class="input_select">
+                <select name="proposed_offset" id="proposed_offset" class="input_select">
                         <option  value=""></option>
                         <option  value="1">Less than 30%</option>
                         <?php for($x=31;$x<=120;$x++): ?>
@@ -72,7 +72,7 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text" id="basic-addon1">$</span>
                         </div>
-                        <input type="number" class="form-control input_select" name="" value="">
+                        <input type="number" class="form-control input_select" name="proposed_solar" value="">
                     </div>
                 </div>
             </div>
@@ -85,20 +85,20 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text" id="basic-addon1">$</span>
                         </div>
-                        <input type="number" class="form-control input_select" name="" value="">
+                        <input type="number" class="form-control input_select" name="proposed_utility" value="">
                     </div>
                 </div>
             </div>
             <div class="row form_line">
                 <div class="col-md-6">
-                    Proposed FTC
+                    Proposed Payment
                 </div>
                 <div class="col-md-6">
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text" id="basic-addon1">$</span>
                         </div>
-                        <input type="number" class="form-control input_select" name="" value="">
+                        <input type="number" class="form-control input_select" name="proposed_payment" value="">
                     </div>
                 </div>
             </div>
@@ -111,7 +111,33 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text" id="basic-addon1">$</span>
                         </div>
-                        <input type="number" class="form-control input_select" name="" value="">
+                        <input type="number" class="form-control input_select" name="annual_income" value="">
+                    </div>
+                </div>
+            </div>
+            <div class="row form_line">
+                <div class="col-md-6">
+                    Tree Estimate
+                </div>
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">$</span>
+                        </div>
+                        <input type="number" class="form-control input_select" name="tree_estimate" value="">
+                    </div>
+                </div>
+            </div>
+            <div class="row form_line">
+                <div class="col-md-6">
+                    Roof Estimate
+                </div>
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">$</span>
+                        </div>
+                        <input type="number" class="form-control input_select" name="roof_estimate" value="">
                     </div>
                 </div>
             </div>
@@ -121,7 +147,7 @@
                     Utility Account #
                 </div>
                 <div class="col-md-6">
-                    <input type="text" class="form-control" name="" id=""/>
+                    <input type="text" class="form-control" name="utility_account" id="utility_account"/>
                 </div>
             </div>
             <div class="row form_line">
@@ -129,7 +155,7 @@
                     Utility Login
                 </div>
                 <div class="col-md-6">
-                    <input type="text" class="form-control" name="" id=""/>
+                    <input type="text" class="form-control" name="utility_login" id="utility_login"/>
                 </div>
             </div>
             <div class="row form_line">
@@ -137,7 +163,39 @@
                     Utility Password
                 </div>
                 <div class="col-md-6">
-                    <input type="text" class="form-control" name="" id=""/>
+                    <input type="text" class="form-control" name="utility_pass" id="utility_pass"/>
+                </div>
+            </div>
+            <div class="row form_line">
+                <div class="col-md-6">
+                    Meter Number
+                </div>
+                <div class="col-md-6">
+                    <input type="text" class="form-control" name="meter_number" id="meter_number"/>
+                </div>
+            </div>
+            <div class="row form_line">
+                <div class="col-md-6">
+                    Insurance Name
+                </div>
+                <div class="col-md-6">
+                    <input type="text" class="form-control" name="insurance_name" id="insurance_name"/>
+                </div>
+            </div>
+            <div class="row form_line">
+                <div class="col-md-6">
+                    Insurance Number
+                </div>
+                <div class="col-md-6">
+                    <input type="text" class="form-control" name="insurance_number" id="insurance_number"/>
+                </div>
+            </div>
+            <div class="row form_line">
+                <div class="col-md-6">
+                    Policy Number
+                </div>
+                <div class="col-md-6">
+                    <input type="text" class="form-control" name="policy_number" id="policy_number"/>
                 </div>
             </div>
         </div>

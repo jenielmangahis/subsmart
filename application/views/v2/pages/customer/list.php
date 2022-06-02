@@ -61,8 +61,8 @@
                                 <?php if (in_array('sales_rep', $enabled_table_headers)) : ?><td data-name="Sales Rep">Sales Rep</td><?php endif; ?>
                                 <?php if (in_array('tech', $enabled_table_headers)) : ?><td data-name="Tech">Tech</td><?php endif; ?>
                                 <?php if (in_array('plan_type', $enabled_table_headers)) : ?><td data-name="Plan Type">Plan Type</td><?php endif; ?>
-                                <?php if (in_array('subscription_amount', $enabled_table_headers)) : ?><td data-name="Subscription Amount">Subscription Amount</td><?php endif; ?>
-                                <?php if (in_array('subscription_amount', $enabled_table_headers)) : ?><td data-name="Job Amount">Job Amount</td><?php endif; ?>
+                                <?php if (in_array('subscription_amount', $enabled_table_headers)) : ?><td data-name="<?= $companyId == 58 ? 'Proposed Payment' : 'Subscription Amount'   ?> "><?= $companyId == 58 ? 'Proposed Payment' : 'Subscription Amount'   ?> </td><?php endif; ?>
+                                <?php if (in_array('subscription_amount', $enabled_table_headers)) : ?><td data-name="<?= $companyId == 58 ? 'Proposed Solar' : 'Job Amount' ?>"><?= $companyId == 58 ? 'Proposed Solar' : 'Job Amount'   ?></td><?php endif; ?>
                                 <?php if (in_array('phone', $enabled_table_headers)) : ?><td data-name="Phone">Phone</td><?php endif; ?>
                                 <?php if (in_array('status', $enabled_table_headers)) : ?><td data-name="Status">Status</td><?php endif; ?>
                                 <td data-name="Manage"></td>
@@ -142,7 +142,7 @@
                                         <td><?php echo $customer->entered_by; ?></td>
                                     <?php endif; ?>
                                     <?php if (in_array('sales_rep', $enabled_table_headers)) : ?>
-                                        <td><?php echo ($customer) ? $customer->FName . ' ' . $customer->LName : ''; ?></td>
+                                        <td><?php print_r( get_sales_rep_name($customer->fk_sales_rep_office)); ?></td>
                                     <?php endif; ?>
                                     <?php if (in_array('tech', $enabled_table_headers)) : ?>
                                         <?php $techician = !empty($customer->technician) ?  get_employee_name($customer->technician)->FName : 'Not Assigned'; ?>
@@ -152,10 +152,10 @@
                                         <td><?php echo $customer->system_type; ?></td>
                                     <?php endif; ?>
                                     <?php if (in_array('subscription_amount', $enabled_table_headers)) : ?>
-                                        <td>$<?= $customer->total_amount; ?></td>
+                                        <td>$<?= $companyId == 58 ? number_format(floatval($customer->proposed_payment), 2, '.', ',') : number_format(floatval($customer->total_amount), 2, '.', ',') ?></td>
                                     <?php endif; ?>
                                     <?php if (in_array('subscription_amount', $enabled_table_headers)) : ?>
-                                        <td>$<?= $customer->total_amount ? $customer->total_amount : '0.00' ; ?></td>
+                                        <td>$<?= $companyId == 58 ? number_format(floatval($customer->proposed_solar), 2, '.', ',') : number_format(floatval($customer->total_amount), 2, '.', ',') ?></td>
                                     <?php endif; ?>
                                     <?php if (in_array('phone', $enabled_table_headers)) : ?>
                                         <td><?php echo $customer->phone_m; ?></td>
@@ -231,8 +231,8 @@
                                 <td data-name="Sales Rep">Sales Rep</td>
                                 <td data-name="<?= $companyId == 58 ? 'Mentor' : 'Tech'   ?>"><?= $companyId == 58 ? 'Mentor' : 'Tech'   ?></td>
                                 <td data-name="Plan Type">Plan Type</td>
-                                <td data-name="Subscription Amount">Subscription Amount</td>
-                                <td data-name="Job Amount">Job Amount</td>
+                                <td data-name="<?= $companyId == 58 ? 'Proposed Payment' : 'Subscription Amount'; ?>"><?= $companyId == 58 ? 'Proposed Payment' : 'Subscription Amount'; ?></td>
+                                <td data-name="<?= $companyId == 58 ? 'Proposed Solar' : 'Job Amount'   ?>"><?= $companyId == 58 ? 'Proposed Solar' : 'Job Amount'   ?></td>
                                 <td data-name="Phone">Phone</td>
                                 <td data-name="Status">Status</td>
                                 <td data-name="Manage"></td>
@@ -294,14 +294,14 @@
                                         <td><?php echo $customer->state; ?></td>
                                         <td><?= $customer->lead_source != "" ? $customer->lead_source : 'n/a'; ?></td>
                                         <td><?php echo $customer->entered_by; ?></td>
-                                        <td><?php echo ($customer) ? $customer->FName . ' ' . $customer->LName : ''; ?></td>
+                                        <td><?php print_r( get_sales_rep_name($customer->fk_sales_rep_office)); ?></td>
 
                                         <?php $techician = !empty($customer->technician) ?  get_employee_name($customer->technician)->FName : $customer->technician.'Not Assigned'; ?>
                                         <td><?= $techician; ?></td>
 
                                         <td><?php echo $customer->system_type; ?></td>
-                                        <td>$<?= $customer->total_amount; ?></td>
-                                        <td>$<?= $customer->total_amount ? $customer->total_amoun : '0.00'; ?></td>
+                                        <td>$<?= $companyId == 58 ? number_format(floatval($customer->proposed_payment), 2, '.', ',') : number_format(floatval($customer->total_amount), 2, '.', ',') ?></td>
+                                        <td>$<?= $companyId == 58 ? number_format(floatval($customer->proposed_solar), 2, '.', ',') : number_format(floatval($customer->total_amount), 2, '.', ',') ?></td>
                                         <td><?php echo $customer->phone_m; ?></td>
                                         <td><span class="nsm-badge <?= $badge ?>"><?= $customer->status != null ? $customer->status : 'Pending'; ?></span></td>
                                         <td>

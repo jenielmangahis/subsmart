@@ -72,8 +72,9 @@ class Widgets extends MY_Controller
         $this->load->model('widgets_model');
         $comp_id = logged('company_id');
 
-        $leadSource = $this->widgets_model->getLeadSource($comp_id);
-
+        
+        //$leadSource = $this->widgets_model->getLeadSource($comp_id);
+        $leadSource =$this->event_model->getLeadSourceWithCount();
 
 
         foreach ($leadSource as $ld) :
@@ -83,6 +84,16 @@ class Widgets extends MY_Controller
 
 
         echo json_encode(array('leadNames' => $leadNames, 'leadSource' => $leadSrc));
+    }
+
+    /**
+     * This function will fetch jobs status with count
+     * 
+     * @return object List of JOB STATUS with number of count
+    */
+    public function getLeadSourceCustomer()
+    {
+
     }
 
     public function removeWidget()
@@ -423,6 +434,7 @@ class Widgets extends MY_Controller
                         }
                     }
                     foreach ($attendance as $attn) {
+                        $logs = $this->timesheet_model->getUserTimesheetLogs($attn->user_id);
                         foreach ($logs as $log) {
                             if ($user->id == $attn->user_id) {
                                 $attn_id = $attn->id;
@@ -450,6 +462,7 @@ class Widgets extends MY_Controller
                                         $tooltip_status = 'Logged in';
                                     }
                                     if ($log->action == 'Break in') {
+                                        $date_in_logs = $this->timesheet_model->datetime_zone_converter(date('Y-m-d h:i A', strtotime($log->date_created)), "UTC", $this->session->userdata('usertimezone'));
                                         $break_id = 'employeeBreakOut';
                                         $status = 'fa-mug-hot';
                                         $break_in = date('h:i A', strtotime($date_in_logs));
@@ -461,6 +474,7 @@ class Widgets extends MY_Controller
                                         $break_out = null;
                                     }
                                     if ($log->action == 'Break out') {
+                                        $date_in_logs = $this->timesheet_model->datetime_zone_converter(date('Y-m-d h:i A', strtotime($log->date_created)), "UTC", $this->session->userdata('usertimezone'));
                                         $status = 'fa-check';
                                         $break_out = date('h:i A', strtotime($date_in_logs));
                                         //                                                                    $break = 'disabled="disabled"';
@@ -472,6 +486,7 @@ class Widgets extends MY_Controller
                                         $tooltip_status = 'Back to work';
                                     }
                                     if ($log->action == 'Check out') {
+                                        $date_in_logs = $this->timesheet_model->datetime_zone_converter(date('Y-m-d h:i A', strtotime($log->date_created)), "UTC", $this->session->userdata('usertimezone'));
                                         $status = 'fa-times-circle';
                                         $btn_action = 'employeeCheckIn';
                                         $time_out = date('h:i A', strtotime($date_in_logs));

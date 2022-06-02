@@ -747,8 +747,10 @@ class Users extends MY_Controller
 	}
 
 	public function index()
+	{	
+		$this->page_data['page']->title = 'Employees';
+        $this->page_data['page']->parent = 'Company';
 
-	{
 		$this->hasAccessModule(63);
 		//ifPermissions('users_list');
 		$this->load->helper(array('form', 'url', 'hashids_helper'));
@@ -779,7 +781,8 @@ class Users extends MY_Controller
 
 		// echo '<pre>';print_r($this->page_data);die;
 
-		$this->load->view('users/list', $this->page_data);
+		// $this->load->view('users/list', $this->page_data);
+		$this->load->view('v2/pages/users/list', $this->page_data);
 	}
 
 
@@ -914,18 +917,143 @@ class Users extends MY_Controller
 			$this->Trac360_model->add('trac360_people', $data);
 			//End Trac360
 
-			if ($last_id > 0) {
-				echo json_encode(1);
-			} else {
-				echo json_encode(0);
-			}
+			if ($last_id > 0 ){
+	            echo json_encode(1);
+	        }else{
+	            echo json_encode(0);
+	        }
+        }
+        
+    }    
+
+	public function addNewEmployeeV2(){
+    	$this->load->model('IndustryType_model');
+    	$this->load->model('Clients_model');
+
+		// Upload profile picture
+		$config = array(
+			'upload_path' => './uploads/users/user-profile/',
+			'allowed_types' => '*',
+			'overwrite' => TRUE,
+			'max_size' => '20000',
+			'max_height' => '0',
+			'max_width' => '0',
+			'encrypt_name' => true
+		);
+		$config = $this->uploadlib->initialize($config);
+		$this->load->library('upload',$config);
+		if ($this->upload->do_upload("file")){
+			$uploadData = $this->upload->data();
+		
+			$data = array(
+				'profile_image'=> $uploadData['file_name'],
+				'date_created' => time()
+			);
+			$img_id = $this->users_model->addProfilePhoto($data);
 		}
-	}
-	public function getEmployeeData()
-	{
-		$user_id = $this->input->get('user_id');
-		$get_data = $this->db->get_where('users', array('id' => $user_id));
-		$get_role = $this->db->get_where('roles', array('id' => $get_data->row()->role));
+			
+		print_r($this->input->post);
+        $fname = $this->input->post('firstname');
+        $lname = $this->input->post('lastname');
+        $email = $this->input->post('email');
+        $username = $this->input->post('username');
+        $password = $this->input->post('password');
+        $address = $this->input->post('address');
+
+        $city  = $this->input->post('city');
+        $state  = $this->input->post('state');
+        $postal_code  = $this->input->post('postal_code');
+
+        $user_type = $this->input->post('user_type');
+        $role = $this->input->post('role');
+        $status = $this->input->post('status');
+        $profile_img = $uploadData['file_name'];
+        $payscale_id = $this->input->post('empPayscale');
+        $emp_number  = $this->input->post('emp_number');
+        $cid=logged('company_id');
+
+        $post       = $this->input->post();
+        $app_access = 0;
+        $web_access = 0;
+
+        if( isset($post['app_access']) ){
+        	$app_access = 1;	
+        }
+        
+        if( isset($post['web_access']) ){
+        	$web_access = 1;	
+        }
+
+        $company = $this->Clients_model->getById($cid);
+        if( $company->number_of_license <= 0 && $company->id != 1 ){
+        	echo json_encode(3);
+        }else{
+        	$add = array(
+	            'FName' => $fname,
+	            'LName' => $lname,
+	            'username' => $username,
+	            'email' => $username,
+	            'password' => hash("sha256",$password),
+	            'password_plain' => $password,
+	            'role' => $role,
+	            'user_type' => $user_type,
+	            'status' => $status,
+	            'company_id' => $cid,
+	            'profile_img' => $profile_img,
+	            'address' => $address,
+	            'state' => $state,
+	            'city' => $city,
+	            'postal_code' => $postal_code,
+	            'payscale_id' => $payscale_id,
+	            'employee_number' => $emp_number,
+	            'has_web_access' => $web_access,
+	            'has_app_access' => $app_access
+	        );
+	        $last_id = $this->users_model->addNewEmployee($add);
+
+	        //Deduct num license
+	        $new_num_license = $company->number_of_license;
+	        $company_data = ['number_of_license' => $new_num_license];
+	        $this->Clients_model->updateClient($cid, $company_data);
+
+	        //Create timesheet record
+			$this->load->model('TimesheetTeamMember_model');
+			$this->TimesheetTeamMember_model->create([
+				'user_id' => $last_id,
+				'name' => $fname . ' ' . $lname,
+				'email' => $username,
+				'role' => 'Employee',
+				'department_id' => 0,
+				'department_role' => 'Member',
+				'will_track_location' => 1,
+				'status' => 1,
+				'company_id' => $cid
+			]);
+			//End Timesheet		
+
+			//Create Trac360 record
+			$this->load->model('Trac360_model');
+			$data = [
+				'user_id' => $last_id,
+				'name' => $fname . ' ' . $lname,
+				'company_id' => $cid
+			];
+			$this->Trac360_model->add('trac360_people', $data);
+			//End Trac360
+
+	        if ($last_id > 0 ){
+	            echo json_encode(1);
+	        }else{
+	            echo json_encode(0);
+	        }
+        }
+        
+    }   
+
+    public function getEmployeeData(){
+	    $user_id = $this->input->get('user_id');
+	    $get_data = $this->db->get_where('users',array('id'=>$user_id));
+	    $get_role = $this->db->get_where('roles',array('id' => $get_data->row()->role));
 
 		$info = new stdClass();
 		$info->fname = $get_data->row()->FName;
@@ -955,10 +1083,11 @@ class Users extends MY_Controller
 			$this->page_data['payscale'] = $this->PayScale_model->getAllByCompanyId($cid);
 		}
 
-		$this->page_data['roles'] = $roles;
-		$this->page_data['user'] = $get_user;
-		$this->page_data['role'] = $get_role;
-		$this->load->view('users/modal_edit_form', $this->page_data);
+        $this->page_data['roles'] = $roles;
+	    $this->page_data['user'] = $get_user;
+	    $this->page_data['role'] = $get_role;
+	    // $this->load->view('users/modal_edit_form', $this->page_data);
+	    $this->load->view('v2/pages/users/modal_edit_form', $this->page_data);
 
 		//echo $data;
 
@@ -1574,6 +1703,77 @@ class Users extends MY_Controller
 		echo json_encode(1);
 	}
 
+	public function ajaxUpdateEmployeeV2(){
+		// Upload profile picture
+		$config = array(
+			'upload_path' => './uploads/users/user-profile/',
+			'allowed_types' => '*',
+			'overwrite' => TRUE,
+			'max_size' => '20000',
+			'max_height' => '0',
+			'max_width' => '0',
+			'encrypt_name' => true
+		);
+		$config = $this->uploadlib->initialize($config);
+		$this->load->library('upload',$config);
+		if ($this->upload->do_upload("file")){
+			$uploadData = $this->upload->data();
+		
+			$data = array(
+				'profile_image'=> $uploadData['file_name'],
+				'date_created' => time()
+			);
+			$img_id = $this->users_model->addProfilePhoto($data);
+		}
+
+    	$user_id = $this->input->post('user_id');
+        $fname = $this->input->post('firstname');
+        $lname = $this->input->post('lastname');
+        $email = $this->input->post('email');
+        $username = $this->input->post('username');
+        $password = $this->input->post('password');
+        $address = $this->input->post('address');
+
+        $city  = $this->input->post('city');
+        $state  = $this->input->post('state');
+        $postal_code  = $this->input->post('postal_code');
+
+        $role = $this->input->post('role');
+        $status = $this->input->post('status');
+        $web_access = $this->input->post('web_access');
+        $app_access = $this->input->post('app_access');
+        $profile_img = $uploadData['file_name'];
+        $payscale_id = $this->input->post('empPayscale');
+        $emp_number  = $this->input->post('emp_number');
+        $user_type   = $this->input->post('user_type');
+        $user = $this->Users_model->getUser($user_id);
+
+        if( $profile_img == '' ){
+        	$profile_img = $user->profile_img;
+        }
+
+        $data = array(
+            'FName' => $fname,
+            'LName' => $lname,
+            'username' => $username,
+            'email' => $email,
+            'role' => $role,
+            'status' => $status,            
+            'profile_img' => $profile_img,
+            'address' => $address,
+            'state' => $state,
+            'city' => $city,
+            'postal_code' => $postal_code,
+            'payscale_id' => $payscale_id,
+            'user_type' => $user_type,
+            'employee_number' => $emp_number
+        );
+
+        $user = $this->Users_model->update($user_id,$data);
+
+        echo json_encode(1);
+    }
+
 	public function ajaxUpdateEmployeePassword()
 	{
 		$is_success = false;
@@ -1590,7 +1790,6 @@ class Users extends MY_Controller
 				'password' => hash("sha256", $new_password),
 				'password_plain' => $new_password,
 			);
-
 			$user = $this->Users_model->update($user_id, $data);
 
 			$is_success = true;
@@ -1604,8 +1803,40 @@ class Users extends MY_Controller
 		echo json_encode($json_data);
 	}
 
+	public function ajaxUpdateEmployeePasswordV2(){
+		$is_success = false;
+		$msg = "";
+	
+		$new_password = $this->input->post('new_password');
+		$re_password  = $this->input->post('re_password');
+		$user_id = $this->input->post('change_password_user_id');
+	
+		if( $new_password != $re_password ){
+			$msg = "Password not same";
+		}else{
+			$data = array(
+				'password' => hash("sha256",$new_password),
+				'password_plain' => $new_password,
+			);
+	
+			$user = $this->Users_model->update($user_id,$data);
+	
+			$is_success = true;
+		}
+	
+		$json_data = [
+			'is_success' => $is_success,
+			'msg' => $msg
+		];
+	
+		echo json_encode($json_data);
+	}
+
 	public function pay_scale()
-	{
+	{	
+		$this->page_data['page']->title = 'Pay Scale';
+        $this->page_data['page']->parent = 'Company';
+		
 		$this->hasAccessModule(63);
 		$company_id = logged('company_id');
 		$role_id    = logged('role');
@@ -1618,7 +1849,8 @@ class Users extends MY_Controller
 			$this->page_data['payscale'] = $this->PayScale_model->getAllByCompanyId($company_id);
 		}
 
-		$this->load->view('users/payscale/list', $this->page_data);
+		// $this->load->view('users/payscale/list', $this->page_data);
+		$this->load->view('v2/pages/users/payscale/list', $this->page_data);
 	}
 
 	public function ajax_add_payscale()

@@ -18,80 +18,125 @@
                     <label class="content-subtitle fw-bold">Project ID</label>
                 </div>
                 <div class="col-12 col-md-6">
-                    <label class="content-subtitle">---</label>
+                    <label class="content-subtitle"><?= $solar_info->project_id ? $solar_info->project_id : '---'  ?></label>
                 </div>
                 <div class="col-12 col-md-6">
                     <label class="content-subtitle fw-bold">Lender Type</label>
                 </div>
                 <div class="col-12 col-md-6">
-                    <label class="content-subtitle">---</label>
+                    <label class="content-subtitle"><?= $solar_info->lender_type ? $solar_info->lender_type : '---'  ?></label>
                 </div>
                 <div class="col-12 col-md-6">
                     <label class="content-subtitle fw-bold">Proposed System Size</label>
                 </div>
                 <div class="col-12 col-md-6">
-                    <label class="content-subtitle">---</label>
+                    <label class="content-subtitle"><?= $solar_info->proposed_system_size ? $solar_info->proposed_system_size : '---'  ?></label>
                 </div>
                 <div class="col-12 col-md-6">
                     <label class="content-subtitle fw-bold">Proposed Modules</label>
                 </div>
                 <div class="col-12 col-md-6">
-                    <label class="content-subtitle">---</label>
+                    <label class="content-subtitle"><?= $solar_info->proposed_modules ? $solar_info->proposed_modules : '---'  ?></label>
                 </div>
                 <div class="col-12 col-md-6">
                     <label class="content-subtitle fw-bold">Proposed Inverter</label>
                 </div>
                 <div class="col-12 col-md-6">
-                    <label class="content-subtitle">---</label>
+                    <label class="content-subtitle"><?= $solar_info->proposed_inverter ? $solar_info->proposed_inverter : '---'  ?></label>
                 </div>
                 <div class="col-12 col-md-6">
                     <label class="content-subtitle fw-bold">Proposed Offset</label>
                 </div>
                 <div class="col-12 col-md-6">
-                    <label class="content-subtitle">---</label>
+                    <label class="content-subtitle"><?= $solar_info->proposed_offset ? $solar_info->proposed_offset : '---'  ?></label>
                 </div>
                 <div class="col-12 col-md-6">
                     <label class="content-subtitle fw-bold">Proposed Solar $</label>
                 </div>
                 <div class="col-12 col-md-6">
-                    <label class="content-subtitle">---</label>
+                    <label class="content-subtitle"><?= $solar_info->proposed_solar ? $solar_info->proposed_solar : '---'  ?></label>
                 </div>
                 <div class="col-12 col-md-6">
                     <label class="content-subtitle fw-bold">Proposed Utility $</label>
                 </div>
                 <div class="col-12 col-md-6">
-                    <label class="content-subtitle">---</label>
+                    <label class="content-subtitle"><?= $solar_info->proposed_utility ? $solar_info->proposed_utility : '---'  ?></label>
                 </div>
                 <div class="col-12 col-md-6">
-                    <label class="content-subtitle fw-bold">Proposed FTC</label>
+                    <label class="content-subtitle fw-bold">Proposed Payment $</label>
                 </div>
                 <div class="col-12 col-md-6">
-                    <label class="content-subtitle">---</label>
+                    <label class="content-subtitle"><?= $solar_info->proposed_payment ? $solar_info->proposed_payment : '---'  ?></label>
                 </div>
                 <div class="col-12 col-md-6">
                     <label class="content-subtitle fw-bold">Annual Income</label>
                 </div>
                 <div class="col-12 col-md-6">
-                    <label class="content-subtitle">---</label>
+                    <label class="content-subtitle"><?= $solar_info->annual_income ? $solar_info->annual_income : '---'  ?></label>
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle fw-bold">Tree Estimate</label>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle"><?= $solar_info->tree_estimate ? $solar_info->tree_estimate : '---'  ?></label>
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle fw-bold">Roof Estimate</label>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle"><?= $solar_info->roof_estimate ? $solar_info->roof_estimate : '---'  ?></label>
                 </div>
 
                 <div class="col-12 col-md-6">
                     <label class="content-subtitle fw-bold">Utility Account #</label>
                 </div>
                 <div class="col-12 col-md-6">
-                    <label class="content-subtitle">---</label>
+                    <label class="content-subtitle"><?= $solar_info->utility_account ? $solar_info->utility_account : '---'  ?></label>
                 </div>
                 <div class="col-12 col-md-6">
                     <label class="content-subtitle fw-bold">Utility Login</label>
                 </div>
                 <div class="col-12 col-md-6">
-                    <label class="content-subtitle">---</label>
+                    <label class="content-subtitle"><?= $solar_info->utility_login ? $solar_info->utility_login : '---'  ?></label>
                 </div>
                 <div class="col-12 col-md-6">
                     <label class="content-subtitle fw-bold">Utility Password</label>
                 </div>
                 <div class="col-12 col-md-6">
-                    <label class="content-subtitle">---</label>
+                    <label class="content-subtitle"><?= $solar_info->utility_pass ? $solar_info->utility_pass : '---'  ?></label>
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle fw-bold">Meter Number</label>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle"><?= $solar_info->meter_number ? $solar_info->meter_number : '---'  ?></label>
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle fw-bold">Insurance Name</label>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle"><?= $solar_info->insurance_name ? $solar_info->insurance_name : '---'  ?></label>
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle fw-bold">Insurance Number</label>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle"><?= $solar_info->insurance_number ? $solar_info->insurance_number : '---'  ?></label>
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle fw-bold">Policy Number</label>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle"><?= $solar_info->policy_number ? $solar_info->policy_number : '---'  ?></label>
+                </div>
+                <div class="col-12">
+                    <hr>
                 </div>
             <?php else: ?>
                 <div class="col-12 col-md-6">
@@ -154,38 +199,35 @@
                 <div class="col-12 col-md-6">
                     <label class="content-subtitle"><?= !empty($alarm_info->warranty_type) ? $alarm_info->warranty_type : '---'; ?></label>
                 </div>
-            <?php endif; ?>    
-            
-
-
-
-            <div class="col-12">
-                <hr>
-            </div>
-            <div class="col-12 col-md-6">
-                <label class="content-subtitle fw-bold">Dealer</label>
-            </div>
-            <div class="col-12 col-md-6">
-                <label class="content-subtitle"><?= !empty($alarm_info->dealer) ? $alarm_info->dealer : '---'; ?></label>
-            </div>
-            <div class="col-12 col-md-6">
-                <label class="content-subtitle fw-bold">Login</label>
-            </div>
-            <div class="col-12 col-md-6">
-                <label class="content-subtitle"><?= !empty($alarm_info->alarm_login) ? $alarm_info->alarm_login : '---'; ?></label>
-            </div>
-            <div class="col-12 col-md-6">
-                <label class="content-subtitle fw-bold">Customer ID</label>
-            </div>
-            <div class="col-12 col-md-6">
-                <label class="content-subtitle"><?= !empty($alarm_info->alarm_customer_id) ? $alarm_info->alarm_customer_id : '---'; ?></label>
-            </div>
-            <div class="col-12 col-md-6">
-                <label class="content-subtitle fw-bold">CS Account</label>
-            </div>
-            <div class="col-12 col-md-6">
-                <label class="content-subtitle"><?= !empty($alarm_info->alarm_cs_account) ? $alarm_info->alarm_cs_account : '---'; ?></label>
-            </div>
+               
+                <div class="col-12">
+                    <hr>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle fw-bold">Dealer</label>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle"><?= !empty($alarm_info->dealer) ? $alarm_info->dealer : '---'; ?></label>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle fw-bold">Login</label>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle"><?= !empty($alarm_info->alarm_login) ? $alarm_info->alarm_login : '---'; ?></label>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle fw-bold">Customer ID</label>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle"><?= !empty($alarm_info->alarm_customer_id) ? $alarm_info->alarm_customer_id : '---'; ?></label>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle fw-bold">CS Account</label>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle"><?= !empty($alarm_info->alarm_cs_account) ? $alarm_info->alarm_cs_account : '---'; ?></label>
+                </div>
+            <?php endif; ?> 
         </div>
 
         <div class="row mb-3">

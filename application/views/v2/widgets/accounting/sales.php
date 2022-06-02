@@ -8,6 +8,7 @@ endif;
     <div class="nsm-card-header">
         <div class="nsm-card-title">
             <span>Sales</span>
+            <center><b><?= $company_id == 58 ? 'UNIT' : 'USD' ?></b></center>
         </div>
         <div class="nsm-card-controls">
             <div class="dropdown">

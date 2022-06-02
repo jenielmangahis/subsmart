@@ -11,6 +11,116 @@ defined('BASEPATH') or exit('No direct script access allowed');
     {
 
     }
+    .show_mobile_view
+{
+    display: none;
+}
+
+@media only screen and (max-device-width: 600px) {
+    .label-element{
+        position:absolute;
+        top:-8px;
+        left:25px;
+        font-size:12px;
+        color:#666;
+        }
+    .input-element{
+        padding:30px 5px 10px 8px;
+        width:100%;
+        height:55px;
+        /* border:1px solid #CCC; */
+        font-weight: bold;
+        margin-top: -15px;
+        }
+
+    .select-wrap 
+    {
+    border: 2px solid #e0e0e0;
+    /* border-radius: 4px; */
+    margin-top: -10px;
+    /* margin-bottom: 10px; */
+    padding: 0 5px 5px;
+    width:100%;
+    /* background-color:#ebebeb; */
+    }
+
+    .select-wrap label
+    {
+    font-size:10px;
+    text-transform: uppercase;
+    color: #777;
+    padding: 2px 8px 0;
+    }
+
+    .m_select
+    {
+    /* background-color: #ebebeb;
+    border:0px; */
+    border-color: white !important;
+    border:0px !important;
+    outline:0px !important;
+    }
+    .select2 .select2-container .select2-container--default{
+        /* background-color: #ebebeb;
+    border:0px; */
+    border-color: white !important;
+    border:0px !important;
+    outline:0px !important;
+    }
+
+    .select2-container--default .select2-selection--single {
+    background-color: #fff;
+    border: 1px solid #fff !important;
+    border-radius: 4px;
+    }
+
+    .sub_label{
+        font-size:12px !important;
+    }
+
+    .signature_web
+    {
+        display: none;
+    }
+
+    .signature_mobile
+    {
+        display: block;
+        margin-bottom:10px;
+    }
+
+    .hidden_mobile_view{
+        display: none;
+    }
+
+    .show_mobile_view
+    {
+        display: block;
+    }
+
+    .table_mobile
+    {
+        font-size:14px;
+    }
+
+    div.dropdown-wrapper select { 
+    width:115% /* This hides the arrow icon */; 
+    background-color:transparent /* This hides the background */; 
+    background-image:none; 
+    -webkit-appearance: none /* Webkit Fix */; 
+    border:none; 
+    box-shadow:none; 
+    padding:0.3em 0.5em; 
+    font-size:13px;
+    }
+    .signature-pad-canvas-wrapper {
+    margin: 15px 0 0;
+    border: 1px solid #cbcbcb;
+    border-radius: 3px;
+    overflow: hidden;
+    position: relative;
+}
+}
 </style>
 
     <!-- page wrapper start -->
@@ -509,7 +619,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             </div>
             <br><br>
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-7">
 					<div class="row" id="group_area">
                         <?php if (!empty($workorder->additional_services)) { ?>
 
@@ -592,7 +702,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <thead style="background-color:#E9E8EA;">
                         <tr>
                             <th>Name</th>
-                            <th>Group</th>
+                            <!-- <th>Group</th> -->
                             <!-- <th>Description</th> -->
                             <th width="150px">Quantity</th>
                             <!-- <th>Location</th> -->
@@ -612,7 +722,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <input type="hidden" name="itemid[]" id="itemid" class="itemid" value="0">
                                     <input type="hidden" name="packageID[]" value="0">
                                 </td>
-                                <td width="20%">
+                                <!-- <td width="20%">
                                 <div class="dropdown-wrapper">
                                     <select name="item_type[]" id="item_typeid" class="form-control">
                                         <option value="product">Product</option>
@@ -620,10 +730,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <option value="service">Service</option>
                                         <option value="fee">Fee</option>
                                     </select>
-                                </div>
+                                </div> -->
 
                                 <!-- <div class="show_mobile_view" style="color:green;"><span>Product</span></div> -->
-                                    </td>
+                                    <!-- </td> -->
                                 <td width="10%"><input type="number" class="form-control quantity mobile_qty" name="quantity[]"
                                         data-counter="0" id="quantity_0" value="1"></td>
                                 <td width="10%"><input type="number" class="form-control price_ price hidden_mobile_view" name="price[]"
@@ -654,6 +764,42 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
                         <?php } ?>
                     </div>
+                    <br><br>
+                    <div class="row" align="center">
+                        <div class="col-md-8 form-group">
+							<input type="text" class="form-control input-element border-top-0 border-right-0 border-left-0" name="password" required id="password" >
+							<label for="password" class="label-element">Password <span class="form-required">*</span></label>
+						</div>
+                        <div class="col-md-8 form-group">
+							<input type="text" class="form-control input-element border-top-0 border-right-0 border-left-0" name="password" required id="password" >
+							<label for="password" class="label-element">Checking Number <span class="form-required">*</span></label>
+						</div>
+                        <div class="col-md-8 form-group">
+							<input type="text" class="form-control input-element border-top-0 border-right-0 border-left-0" name="password" required id="password" >
+							<label for="password" class="label-element">Routing <span class="form-required">*</span></label>
+						</div>
+                        <div class="col-md-8 form-group">
+							<input type="text" class="form-control input-element border-top-0 border-right-0 border-left-0" name="password" required id="password" >
+							<label for="password" class="label-element">Sales Rep's Name <span class="form-required">*</span></label>
+						</div>
+                        <div class="col-md-4 form-group">
+							<input type="text" class="form-control input-element border-top-0 border-right-0 border-left-0" name="password" required id="password" >
+							<label for="password" class="label-element">Cell Phone <span class="form-required">*</span></label>
+						</div>
+                        <div class="col-md-8 form-group">
+							<input type="text" class="form-control input-element border-top-0 border-right-0 border-left-0" name="password" required id="password" >
+							<label for="password" class="label-element">Team Leader <span class="form-required">*</span></label>
+						</div>
+                    </div>
+                </div>
+
+                <div class="col-md-5">
+                <h6>Agreement</h6>
+                                    <div style="height:; overflow:auto; background:#FFFFFF; padding-left:10px;" id="thisdiv2">
+                                    <?php echo $terms_conditions->content; ?></p>
+                                            <input type="hidden" id="company_id" value="<?php echo getLoggedCompanyID(); ?>">
+                                            <input type="hidden" class="form-control" name="terms_conditions" id="terms_conditions" value="<?php echo $terms_conditions->content; ?>" />
+                                    </div>
                 </div>
             </div>
             <!-- end row -->
@@ -708,7 +854,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 <?php  } ?></td>
                                                 <td></td>
                                                 <td><?php echo $item->price; ?></td>
-                                                <td><button id="<?= $item->id; ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default select_item">
+                                                <td><button id="<?= $item->id; ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default select_itemnew">
                                                 <span class="fa fa-plus"></span>
                                             </button></td>
                                             </tr>

@@ -5,6 +5,9 @@
     <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/tools_tabs'); ?>
     </div>
+    <div class="col-12 mb-3">
+        <?php include viewPath('v2/includes/page_navigations/business_tools_subtabs'); ?>
+    </div>
     <div class="col-12">
         <div class="nsm-page">
             <div class="nsm-page-content">
@@ -18,7 +21,7 @@
                 </div>
                 <div class="row g-3">
                     <div class="col-12 col-md-3">
-                        <div class="nsm-card p-5" role="button">
+                        <div class="nsm-card primary p-5" role="button">
                             <div class="nsm-card-content h-100">
                                 <div class="row h-100 align-content-between">
                                     <div class="col-12 text-center mb-3">
@@ -45,7 +48,7 @@
                         </div>
                     </div>
                     <div class="col-12 col-md-3">
-                        <div class="nsm-card p-5" role="button">
+                        <div class="nsm-card primary p-5" role="button">
                             <div class="nsm-card-content h-100">
                                 <div class="row h-100 align-content-between">
                                     <div class="col-12 text-center mb-3">
@@ -72,7 +75,7 @@
                         </div>
                     </div>
                     <div class="col-12 col-md-3">
-                        <div class="nsm-card p-5" role="button">
+                        <div class="nsm-card primary p-5" role="button">
                             <div class="nsm-card-content h-100">
                                 <div class="row h-100 align-content-between">
                                     <div class="col-12 text-center mb-3">
@@ -105,7 +108,7 @@
                         </div>
                     </div>
                     <div class="col-12 col-md-3">
-                        <div class="nsm-card p-5" role="button">
+                        <div class="nsm-card primary p-5" role="button">
                             <div class="nsm-card-content h-100">
                                 <div class="row h-100 align-content-between">
                                     <div class="col-12 text-center mb-3">
@@ -138,7 +141,7 @@
                         </div>
                     </div>
                     <div class="col-12 col-md-3">
-                        <div class="nsm-card p-5" role="button">
+                        <div class="nsm-card primary p-5" role="button">
                             <div class="nsm-card-content h-100">
                                 <div class="row h-100 align-content-between">
                                     <div class="col-12 text-center mb-3">
@@ -171,7 +174,7 @@
                         </div>
                     </div>
                     <div class="col-12 col-md-3">
-                        <div class="nsm-card p-5" role="button">
+                        <div class="nsm-card primary p-5" role="button">
                             <div class="nsm-card-content h-100">
                                 <div class="row h-100 align-content-between">
                                     <div class="col-12 text-center mb-3">
@@ -204,7 +207,7 @@
                         </div>
                     </div>
                     <div class="col-12 col-md-3">
-                        <div class="nsm-card p-5" role="button">
+                        <div class="nsm-card primary p-5" role="button">
                             <div class="nsm-card-content h-100">
                                 <div class="row h-100 align-content-between">
                                     <div class="col-12 text-center mb-3">
@@ -237,7 +240,7 @@
                         </div>
                     </div>
                     <div class="col-12 col-md-3">
-                        <div class="nsm-card p-5" role="button">
+                        <div class="nsm-card primary p-5" role="button">
                             <div class="nsm-card-content h-100">
                                 <div class="row h-100 align-content-between">
                                     <div class="col-12 text-center mb-3">
@@ -302,7 +305,7 @@
                     <div class="col-12">
                         <div class="row g-3">
                             <div class="col-12 col-md-3">
-                                <div class="nsm-card p-5" role="button">
+                                <div class="nsm-card primary p-5" role="button">
                                     <div class="nsm-card-content h-100">
                                         <div class="row h-100 align-content-between">
                                             <div class="col-12 text-center mb-3">
@@ -324,7 +327,7 @@
                                 </div>
                             </div>
                             <div class="col-12 col-md-3">
-                                <div class="nsm-card p-5" role="button">
+                                <div class="nsm-card primary p-5" role="button">
                                     <div class="nsm-card-content h-100">
                                         <div class="row h-100 align-content-between">
                                             <div class="col-12 text-center mb-3">
@@ -352,7 +355,7 @@
                                 </div>
                             </div>
                             <div class="col-12 col-md-3">
-                                <div class="nsm-card p-5" role="button">
+                                <div class="nsm-card primary p-5" role="button">
                                     <div class="nsm-card-content h-100">
                                         <div class="row h-100 align-content-between">
                                             <div class="col-12 text-center mb-3">
@@ -380,7 +383,7 @@
                                 </div>
                             </div>
                             <div class="col-12 col-md-3">
-                                <div class="nsm-card p-5" role="button">
+                                <div class="nsm-card primary p-5" role="button">
                                     <div class="nsm-card-content h-100">
                                         <div class="row h-100 align-content-between">
                                             <div class="col-12 text-center mb-3">
@@ -402,7 +405,7 @@
                                 </div>
                             </div>
                             <div class="col-12 col-md-3">
-                                <div class="nsm-card p-5" role="button">
+                                <div class="nsm-card primary p-5" role="button">
                                     <div class="nsm-card-content h-100">
                                         <div class="row h-100 align-content-between">
                                             <div class="col-12 text-center mb-3">
@@ -424,7 +427,7 @@
                                 </div>
                             </div>
                             <div class="col-12 col-md-3">
-                                <div class="nsm-card p-5" role="button">
+                                <div class="nsm-card primary p-5" role="button">
                                     <div class="nsm-card-content h-100">
                                         <div class="row h-100 align-content-between">
                                             <div class="col-12 text-center mb-3">

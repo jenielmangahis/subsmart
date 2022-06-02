@@ -181,4 +181,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 
 <!-- page wrapper end -->
+<?php include viewPath('accounting/reports/management_reports/management_reports_modal'); ?>
+<?php include viewPath('accounting/reports/management_reports/management_reports_viewer_modal'); ?>
+<?php include viewPath('accounting/reports/management_reports/management_reports_email_modal'); ?>
 <?php include viewPath('includes/footer_accounting'); ?>

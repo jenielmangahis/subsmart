@@ -368,6 +368,10 @@ html, body{
 	overflow: hidden;
 }
 
+.nsm-card.primary{
+	border-top: 4px solid #6a4a86;
+}
+
 .nsm-card .nsm-card-img{
 	width: 100%;
 	max-width: 100px;
@@ -409,7 +413,7 @@ html, body{
 	color: #505050;
 }
 
-.nsm-card .nsm-card-controls button{
+.nsm-card .nsm-card-controls button:not(.primary){
 	color: #505050;
 }
 
@@ -853,6 +857,15 @@ a.nsm-button{
     color: #6a4a86;
 }
 
+.nsm-counter.secondary{
+	background-color: #fef5e0;
+}
+
+.nsm-counter.secondary .bx{
+	background-color: #ffe39ec2;
+    color: #c7951c;
+}
+
 .nsm-counter.success{
 	background-color: #6ba77c21;
 }
@@ -882,6 +895,42 @@ a.nsm-button{
 .nsm-counter h2{
 	margin: unset;
 	font-weight: bold;
+}
+
+.nsm-counter .nsm-progress{
+	height: 5px;
+}
+
+.nsm-counter .nsm-progress{
+    background-color: #d9d9d9;
+}
+
+.nsm-counter .nsm-progress .progress-bar{
+	background-color: #888888;
+}
+
+.nsm-counter .nsm-progress.primary{
+    background-color: #dad1e0;
+}
+
+.nsm-counter .nsm-progress.primary .progress-bar{
+	background-color: #6a4a86;
+}
+
+.nsm-counter .nsm-progress.secondary{
+    background-color: #ffe8ae;
+}
+
+.nsm-counter .nsm-progress.secondary .progress-bar{
+	background-color: #c7951c;
+}
+
+.nsm-counter .nsm-progress.success{
+    background-color: #c7e1d3;
+}
+
+.nsm-counter .nsm-progress.success .progress-bar{
+	background-color: #408854;
 }
 
 .nsm-messages .content-subtitle{
@@ -1149,6 +1198,10 @@ a.nsm-button{
 	width: 100%;
 }
 
+.nsm-field.error{
+	border-color: #dc3545;
+}
+
 .nsm-field:focus{
 	border-color: #9c27b066 !important;
     box-shadow: 0 0 0 0.25rem rgb(156 39 176 / 17%) !important;
@@ -1179,6 +1232,48 @@ a.nsm-button{
 
 .nsm-field-group.calendar::before{
 	content: "\ec82";
+}
+
+.nsm-field-group.icon-right{
+	width: 100%;
+}
+
+.nsm-field-group.icon-right::before{
+	right: 10px;
+    left: unset;
+	top: 5px;
+}
+
+.nsm-field-group.icon-right.check::before{
+	content: "\eca4";
+}
+
+.nsm-field-group.icon-right.x::before{
+	content: "\eef0";
+}
+
+.nsm-field-group.icon-right.show::before{
+	content: "\ee70";
+	pointer-events: none;
+}
+
+.nsm-field-group.icon-right.hide::before{
+	content: "\ed71";
+	pointer-events: none;
+}
+
+.nsm-field-group.icon-right.success::before{
+	color: #198754;
+}
+
+.nsm-field-group.icon-right.error::before{
+	color: #dc3545;
+}
+
+.nsm-field-group.icon-right .nsm-field{
+	padding-right: 2.5rem;
+	line-height: 1.75;
+	padding-left: .75rem;
 }
 
 .nsm-field-group .nsm-field{
@@ -1333,6 +1428,10 @@ a.nsm-button{
 
 .nsm-page-nav > ul > li:hover > .dropdown > .dropdown-menu{
 	display: block;
+}
+
+.nsm-page-subnav > ul > li:hover > .dropdown > .dropdown-menu {
+    display: block;
 }
 
 .nsm-page-nav > ul > li:hover a{
@@ -1498,4 +1597,57 @@ div.workspace-list > ul > li .nsm-badge{
 
 .nsm-content > .page-content{
 	padding: 0 2em;
+}
+
+.bootstrap-tagsinput{
+	width: 100%;
+}
+
+.bootstrap-tagsinput .tag.label-info{
+	background-color: #6a4a86;
+    padding: 0px 9px;
+    border-radius: 10px;
+    margin-bottom: 1px;
+    margin-top: 1px;
+    display: inline-block;
+}
+
+.nsm-page-subnav{
+	display: block;
+}
+
+.nsm-page-subnav > ul{
+	list-style: none;
+	padding: unset;
+	margin: unset;
+}
+
+.nsm-page-subnav > ul > li{
+	float: left;
+	padding: .75rem 1rem;
+    border-radius: 5px;
+	margin-right: .5rem;
+	cursor: pointer;
+}
+
+.nsm-page-subnav > ul > li:hover{
+	background-color: #88888829;
+}
+
+.nsm-page-subnav > ul > li.active{
+	background-color: #dad1e0;
+}
+
+.nsm-page-subnav > ul > li.active > a{
+	color: #6a4a86;
+}
+
+.nsm-page-subnav > ul > li > a{
+	color: #888888;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.nsm-page-subnav > ul > li > a .bx{
+	font-size: 16px;
 }

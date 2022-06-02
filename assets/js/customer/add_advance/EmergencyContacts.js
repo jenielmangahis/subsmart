@@ -4,6 +4,7 @@ const relationships = [
   "Daughter",
   "Son",
   "Sister",
+  "Spouse",
   "Brother",
   "Aunt",
   "Uncle",

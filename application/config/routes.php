@@ -667,6 +667,8 @@ $route['accounting/reports/management'] = 'accounting_controllers/reports/manage
 $route['accounting/reports/activities'] = 'accounting_controllers/reports/activities';
 $route['accounting/reports/analytics'] = 'accounting_controllers/reports/analytics';
 $route['accounting/reports/payscale'] = 'accounting_controllers/reports/payscale';
+$route['accounting/reports/audit-log'] = 'accounting_controllers/reports/audit_log';
+$route['accounting/reports/view-report/(:any)'] = 'accounting_controllers/reports/view_report/$1';
 
 $route['accounting/vendor-details/(:any)'] = 'accounting/vendordetails/$1';
 $route['accounting/taxes/edit-settings'] = 'taxes/edit_settings';

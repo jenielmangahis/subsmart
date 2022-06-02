@@ -9,7 +9,10 @@
 
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
-        <?php include viewPath('v2/includes/page_navigations/invoice_tabs'); ?>
+        <?php include viewPath('v2/includes/page_navigations/sales_tabs'); ?>
+    </div>
+    <div class="col-12 mb-3">
+        <?php include viewPath('v2/includes/page_navigations/invoice_subtabs'); ?>
     </div>
     <div class="col-12">
         <div class="nsm-page">

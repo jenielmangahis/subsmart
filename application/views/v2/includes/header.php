@@ -34,6 +34,8 @@ if ($this->session->userdata('usertimezone') == null) {
     <link rel="stylesheet" href="<?= base_url("assets/plugins/select2/dist/css/select2.min.css") ?>" />
     <!-- Datepicker -->
     <link rel="stylesheet" href="<?= base_url("assets/css/v2/bootstrap-datepicker.min.css") ?>">
+    <link rel="stylesheet" href="<?= base_url("assets/css/bootstrap-tagsinput.css") ?>">
+    <link rel="stylesheet" href="<?= base_url("assets/css/v2/bootstrap-datetimepicker.min.css") ?>">
 
     <!-- Jquery JS -->
     <script src="<?= base_url("assets/js/v2/jquery-3.6.0.min.js") ?>"></script>
@@ -67,7 +69,7 @@ if ($this->session->userdata('usertimezone') == null) {
                             endif;
                             if ($page->parent == 'Dashboard') : echo 'active';
                             endif; ?>">
-                    <a href="#">
+                    <a href="<?= base_url("dashboard") ?>">
                         <i class='bx bx-fw bx-tachometer'></i> Dashboard
                         <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
                     </a>
@@ -185,12 +187,35 @@ if ($this->session->userdata('usertimezone') == null) {
                         </li>
                     </ul>
                 </li>
-                <li class="<?php if ($page->parent == 'Customers') : echo 'selected';
-                            endif; ?>">
+                <li class="<?php if ($page->title == 'Customers') : echo 'selected '; endif; ?> <?php if ($page->parent == 'Customers') : echo 'active'; endif; ?>">
                     <a href="<?= base_url("customer") ?>">
-                        <i class='bx bx-fw bx-group'></i> Customers
+                        <i class='bx bx-fw bx-group'></i> Customers <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
                     </a>
-                    <ul>
+                    <ul class="mt-3">
+                        <li class="<?php if ($page->title == 'Customer Subscriptions') : echo 'selected';
+                                    endif; ?>">
+                            <a href="<?= base_url("customer/subscriptions") ?>">
+                                <i class='bx bx-fw bx-user-pin'></i> Subscriptions
+                            </a>
+                        </li>
+                        <li class="<?php if ($page->title == 'Customer Groups') : echo 'selected';
+                                    endif; ?>">
+                            <a href="<?= base_url("customer/group") ?>">
+                                <i class='bx bx-fw bx-group'></i> Customer Groups
+                            </a>
+                        </li>
+                        <li class="<?php if ($page->title == 'Leads Manager List') : echo 'selected';
+                                    endif; ?>">
+                            <a href="<?= base_url("customer/leads") ?>">
+                                <i class='bx bx-fw bx-notepad'></i> Leads
+                            </a>
+                        </li>
+                        <li class="<?php if ($page->title == 'Sales Area' || $page->title == 'Lead Source' || $page->title == 'Lead Types' || $page->title == 'Rate Plans' || $page->title == 'Activation Fee' || $page->title == 'System Package Type' || $page->title == 'Headers') : echo 'selected';
+                                    endif; ?>">
+                            <a href="<?= base_url("customer/settings_sales_area") ?>">
+                                <i class='bx bx-fw bx-cog'></i> Customer Settings
+                            </a>
+                        </li>
                     </ul>
                 </li>
                 <li>
@@ -346,18 +371,19 @@ if ($this->session->userdata('usertimezone') == null) {
                                 <i class='bx bx-fw bx-building-house'></i> My Business
                             </a>
                         </li>
-                        <li class="<?php if ($page->title == 'Email Templates' | $page->title == 'SMS Templates' | $page->title == 'Email Branding' | $page->title == 'Notifications') : echo 'selected';
+                        <li class="<?php if ($page->title == 'Email Templates' || $page->title == 'SMS Templates' || $page->title == 'Email Branding' || $page->title == 'Notifications') : echo 'selected';
                                     endif; ?>">
                             <a href="<?= base_url("settings/email_templates") ?>">
                                 <i class='bx bx-fw bx-cog'></i> Settings
                             </a>
                         </li>
-                        <li>
+                        <li class="<?php if ($page->title == 'Employees' || $page->title == 'Timesheet' || $page->title == 'Track Location' || $page->title == 'Payscale') : echo 'selected';
+                                    endif; ?>">
                             <a href="<?= base_url("users") ?>">
                                 <i class='bx bx-fw bx-user-pin'></i> Employees
                             </a>
                         </li>
-                        <li class="<?php if ($page->title == 'My CRM' | $page->title == 'Cards File') : echo 'selected';
+                        <li class="<?php if ($page->title == 'My CRM' || $page->title == 'Cards File' || $page->title == 'Monthly Membership' || $page->title == 'Orders' || $page->title == 'Support') : echo 'selected';
                                     endif; ?>">
                             <a href="<?= base_url("mycrm") ?>">
                                 <i class='bx bx-fw bx-book-content'></i> My CRM
@@ -706,7 +732,7 @@ if ($this->session->userdata('usertimezone') == null) {
                                     <div class="list-header">
                                         <h6 class="dropdown-header fw-bold"><?php echo getLoggedFullName(logged('id')); ?></h6>
                                     </div>
-                                    <div class="list-item main-nav-item">
+                                    <div class="list-item main-nav-item" id="<?php echo $clock_btn ?>">
                                         Clock In/Clock Out
                                     </div>
                                     <div class="list-item main-nav-item position-relative">
