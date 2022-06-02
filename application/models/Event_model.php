@@ -271,9 +271,8 @@ class Event_model extends MY_Model
         $this->db->select('users.id,FName,LName, count(fk_sales_rep_office) as customerCount');
         $this->db->from('users');
         $this->db->join('acs_office', 'acs_office.fk_sales_rep_office = users.id', 'left');
-        //$this->db->where('id', $parent_id);
         $this->db->where('users.company_id', $cid);
-        $this->db->where_in('users.role', [8,28]);
+        $this->db->where('fk_sales_rep_office !=', null);
         $this->db->group_by('users.id');
         $this->db->order_by('customerCount', 'desc');
         $query = $this->db->get();

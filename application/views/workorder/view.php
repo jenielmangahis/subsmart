@@ -490,6 +490,11 @@ img.company-logo2 {
     margin: 0 auto;
     margin-top: 8px;
 }
+
+.dwn:hover {
+  background-color: #76D3DB;
+  text-decoration: underline;
+}
 </style>
     <!-- page wrapper start -->
     <input type="hidden" value="<?= $workorder->id; ?>" id="workorderId"/>
@@ -953,29 +958,44 @@ img.company-logo2 {
 														<div style="padding:20px;border-radius:5px;background-color:white;width:50%;">F</div>
 													</div>
 													<div class="col-md-10">
-														<div style="float:right;">
+														<div style="float:right;width:50%;">
 															<!-- <center>$<input type="text" name="ebis_text" class="form-control" style="width:70%;"><br>
 															Estimated Bill</center> -->
-															<div class="input-group mb-3">
-															<div class="input-group-prepend">
-																<span class="input-group-text">$</span>
+															<div class="row">
+																<div class="col-md-6" style="margin-top:-30px;">
+																	<h6>Files Uploaded</h6>
+																	<?php foreach($solar_files as $sfiles){ ?>
+																		<p><a href="<?php echo base_url().'uploads/workorders/solar/'.$sfiles->solar_image; ?>" class="dwn" target="_blank"><?php echo $sfiles->solar_image; ?></a></p>
+																		<p><a href="<?php echo base_url().'uploads/workorders/solar/'.$sfiles->solar_image1; ?>" class="dwn" target="_blank"><?php echo $sfiles->solar_image1; ?></a></p>
+																		<p><a href="<?php echo base_url().'uploads/workorders/solar/'.$sfiles->solar_image2; ?>" class="dwn" target="_blank"><?php echo $sfiles->solar_image2; ?></a></p>
+																		<p><a href="<?php echo base_url().'uploads/workorders/solar/'.$sfiles->solar_image3; ?>" class="dwn" target="_blank"><?php echo $sfiles->solar_image3; ?></a></p>
+																		<p><a href="<?php echo base_url().'uploads/workorders/solar/'.$sfiles->solar_image4; ?>" class="dwn" target="_blank"><?php echo $sfiles->solar_image4; ?></a></p>
+																	<?php } ?>
+																</div>
+																<div class="col-md-6">
+																	<div class="input-group">
+																		<div class="input-group-prepend">
+																			<span class="input-group-text">$</span>
+																		</div>
+																		<input type="text" name="estimated_bill" class="form-control" value="<?php echo number_format($solars->estimated_bill); ?>" aria-label="Amount" readonly>
+																		<!-- <div class="input-group-append">
+																			<span class="input-group-text">.00</span>
+																		</div> -->
+																	</div>
+																	<center>Estimated Bill</center>
+																</div>
 															</div>
-															<input type="number" name="estimated_bill" class="form-control" value="<?php echo $solars->estimated_bill; ?>" aria-label="Amount" readonly>
-															<!-- <div class="input-group-append">
-																<span class="input-group-text">.00</span>
-															</div> -->
-															</div>
-															<center>Estimated Bill</center>
+															
 														</div>
-													<h6>Electric Bill is over $100</h6> 
-													<span style="font-size:16px;"><?php echo $solars->ebis; ?></span>
-													<br>
-													<h6>How do you get your Invoice</h6>
-													<span style="font-size:16px;"><?php echo $solars->hdygi; ?></span>
-													<br>
-													<h6>Electric Bill Account #</h6>
-													<span style="font-size:16px;"><?php echo $solars->eba_text; ?></span>
-													<br><hr>
+														<h6>Electric Bill is over $100</h6> 
+														<span style="font-size:16px;"><?php echo $solars->ebis; ?></span>
+														<br>
+														<h6>How do you get your Invoice</h6>
+														<span style="font-size:16px;"><?php echo $solars->hdygi; ?></span>
+														<br>
+														<h6>Electric Bill Account #</h6>
+														<span style="font-size:16px;"><?php echo $solars->eba_text; ?></span>
+														<br><br><br><hr>
 													</div>
 												</div>
 												<div class="row" style="margin-bottom:70px;"> 

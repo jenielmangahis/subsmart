@@ -71,7 +71,7 @@ $fileInput.addEventListener("change", async function () {
   };
 
   const maxSizeInMB = 8;
-  if (!validateFileSize(payload.document)) {
+  if (!validateFileSize(payload.document, maxSizeInMB)) {
     const $error = $section.querySelector(".nsm-callout.error");
     $error.textContent = `Selected file size should not be greater than ${maxSizeInMB}MB.`;
     $error.classList.remove("d-none");

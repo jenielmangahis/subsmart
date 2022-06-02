@@ -65,7 +65,7 @@
             <div class="col-md-6">
                 <select id="fk_sales_rep_office" name="fk_sales_rep_office" data-customer-source="dropdown" class="input_select" >
                     <option value="">Select</option>
-                    <?php foreach ($sales_reps as $user): ?>
+                    <?php foreach ($users as $user): ?>
                         <option <?php if(isset($office_info)){ echo $office_info->fk_sales_rep_office ==  $user->id ? 'selected' : ''; } ?> value="<?= $user->id; ?>"><?= $user->FName.' '.$user->LName; ?></option>
                     <?php endforeach ?>
                 </select>
@@ -271,7 +271,7 @@
                 System Package Type
             </div>
             <div class="col-md-6">
-                <select data-value="<?= isset($alarm_info) ? $alarm_info->system_type : "" ?>" name="system_type" data-type="alarm_info_system_type" class="form-control" required>
+                <select data-value="<?= isset($alarm_info) ? $alarm_info->system_type : "" ?>" name="system_type" data-type="alarm_info_system_type" class="form-control" >
                     <option><?= isset($alarm_info) ? $alarm_info->system_type : "" ?></option>
                 </select>
                 <!-- <select name="system_type" id="system_type" class="input_select">
@@ -310,7 +310,7 @@
     <div class="card-body">
         <div class="row form_line">
             <div class="col-md-7">
-                Pre-Install Survey
+                <field-custom-name default="Pre-Install Survey" form="funding_info"></field-custom-name>
             </div>
             <div class="col-md-5">
                 <select id="pre_install_survey" name="pre_install_survey" data-customer-source="dropdown" class="input_select" >
@@ -323,7 +323,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-7">
-                Post-Install Survey
+                <field-custom-name default="Post-Install Survey" form="funding_info"></field-custom-name>
             </div>
             <div class="col-md-5">
                 <select id="post_install_survey" name="post_install_survey" data-customer-source="dropdown" class="input_select" >
@@ -337,7 +337,7 @@
         <hr>
         <div class="row form_line">
             <div class="col-md-7">
-                Monitoring Waived
+                <field-custom-name default="Monitoring Waived" form="funding_info"></field-custom-name>
             </div>
             <div class="col-md-5">
                 <select id="monitoring_waived" name="monitoring_waived" data-customer-source="dropdown" class="input_select" >
@@ -360,7 +360,9 @@
 
         <div class="row form_line">
             <div class="col-md-7">
-                <label for="rebate_offer"><span>Rebate Offered</span>
+                <label for="rebate_offer">
+                    <field-custom-name default="Rebate Offered" form="funding_info"></field-custom-name>
+                </label>
             </div>
             <div class="col-md-5">
                 <input type="checkbox" name="rebate_offer" class="form-controls" value="1"  id="rebate_offer" <?php if(isset($office_info)){ echo $office_info->rebate_offer == 1 ? 'checked': ''; } ?> >
@@ -368,13 +370,13 @@
         </div>
         <div class="row form_line">
             <div class="col-md-7">
-                Rebate Check # 1
+                <field-custom-name default="Rebate Check # 1" form="funding_info"></field-custom-name>
             </div>
             <div class="col-md-5">
                 <input type="number" class="form-control" name="rebate_check1" id="rebate_check1" value="<?php if(isset($office_info)){ echo  $office_info->rebate_check1; } ?>"/>
             </div>
             <div class="col-md-7">
-                Amount $
+                <field-custom-name default="Rebate Check # 1 Amount $" form="funding_info"></field-custom-name>
             </div>
             <div class="col-md-5">
                 <input type="number" step="0.01" class="form-control" name="rebate_check1_amt" id="rebate_check1_amt" value="<?php if(isset($office_info)){ echo  $office_info->rebate_check1_amt; } ?>"/>
@@ -382,13 +384,13 @@
         </div>
         <div class="row form_line">
             <div class="col-md-7">
-                Rebate Check # 2
+                <field-custom-name default="Rebate Check # 2" form="funding_info"></field-custom-name>
             </div>
             <div class="col-md-5">
                 <input type="number" class="form-control" name="rebate_check2" id="rebate_check2" value="<?php if(isset($office_info)){ echo  $office_info->rebate_check2; } ?>"/>
             </div>
             <div class="col-md-7">
-                Amount $
+                <field-custom-name default="Rebate Check # 2 Amount $" form="funding_info"></field-custom-name>
             </div>
             <div class="col-md-5">
                 <input type="number" step="0.01" class="form-control" name="rebate_check2_amt" id="rebate_check2_amt" value="<?php if(isset($office_info)){ echo  $office_info->rebate_check2_amt; } ?>" />
@@ -396,7 +398,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-7">
-                Activation Fee
+                <field-custom-name default="Activation Fee" form="funding_info"></field-custom-name>
             </div>
             <div class="col-md-5">
                 <select data-value="<?= isset($office_info) ? $office_info->activation_fee : "" ?>" name="activation_fee" data-type="funding_info_activation_fee" class="form-control">
@@ -421,7 +423,7 @@
         <hr>
         <div class="row form_line">
             <div class="col-md-7">
-                Commision Scheme Override
+                <field-custom-name default="Commision Scheme Override" form="funding_info"></field-custom-name>
             </div>
             <div class="col-md-5">
                 <input type="radio" name="commision_scheme[]" class="form-controls" value="1" id="commision_scheme1" <?php if(isset($office_info)){ echo $office_info->commision_scheme == 1 ? 'checked': ''; } ?> >
@@ -432,7 +434,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-7">
-                Rep Commission 
+                <field-custom-name default="Rep Commission" form="funding_info"></field-custom-name>
             </div>
             <div class="col-md-5">
                 <div class="input-group">
@@ -445,7 +447,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-7">
-                Rep Upfront Pay
+                <field-custom-name default="Rep Upfront Pay" form="funding_info"></field-custom-name>
             </div>
             <div class="col-md-5">
                 <div class="input-group">
@@ -458,7 +460,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-7">
-                Rep Tiered Upront Bonus
+                <field-custom-name default="Rep Tiered Upront Bonus" form="funding_info"></field-custom-name>
             </div>
             <div class="col-md-5">
                 <div class="input-group">
@@ -471,7 +473,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-7">
-                Rep Tiered Holdfund Bonus
+                <field-custom-name default="Rep Tiered Holdfund Bonus" form="funding_info"></field-custom-name>
             </div>
             <div class="col-md-5">
                 <div class="input-group">
@@ -485,7 +487,7 @@
 
         <div class="row form_line">
             <div class="col-md-7">
-                Rep Deduction Total
+                <field-custom-name default="Rep Deduction Total" form="funding_info"></field-custom-name>
             </div>
             <div class="col-md-5">
                 <div class="input-group">
@@ -499,7 +501,7 @@
 
         <div class="row form_line">
             <div class="col-md-7">
-                Tech Commission 
+                <field-custom-name default="Tech Commission" form="funding_info"></field-custom-name>
             </div>
             <div class="col-md-5">
                 <div class="input-group">
@@ -512,7 +514,9 @@
         </div>
         <div class="row form_line">
             <div class="col-md-7">
-                <label for="tech_upfront_pay">Tech Upfront Pay 
+                <label for="tech_upfront_pay">
+                    <field-custom-name default="Tech Upfront Pay" form="funding_info"></field-custom-name>
+                 </label>
             </div>
             <div class="col-md-5">
                 <div class="input-group">
@@ -526,7 +530,7 @@
 
         <div class="row form_line">
             <div class="col-md-7">
-                Tech Deduction Total
+                <field-custom-name default="Tech Deduction Total" form="funding_info"></field-custom-name>
             </div>
             <div class="col-md-5">
                 <div class="input-group">
@@ -542,7 +546,7 @@
 
         <div class="row form_line">
             <div class="col-md-7">
-                Rep Hold Fund Charge Back 
+                <field-custom-name default="Rep Hold Fund Charge Back" form="funding_info"></field-custom-name>
             </div>
             <div class="col-md-5">
                 <div class="input-group">
@@ -555,7 +559,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-7">
-                Rep Payroll Charge Back 
+                <field-custom-name default="Rep Payroll Charge Back" form="funding_info"></field-custom-name>
             </div>
             <div class="col-md-5">
                 <div class="input-group">
@@ -569,7 +573,7 @@
         <hr>
         <div class="row form_line">
             <div class="col-md-7">
-                Points Scheme Override
+                <field-custom-name default="Points Scheme Override" form="funding_info"></field-custom-name>
             </div>
             <div class="col-md-5">
                 <input type="radio" name="pso[]" class="form-controls" value="1" id="pso1" <?php if(isset($office_info)){ echo $office_info->pso == 1 ? 'checked': ''; } ?> >
@@ -582,7 +586,7 @@
 
         <div class="row form_line">
             <div class="col-md-7">
-                Points Included
+                <field-custom-name default="Points Included" form="funding_info"></field-custom-name>
             </div>
             <div class="col-md-5">
                 <input type="number" step="0.01" class="form-control" name="points_include" id="points_include" value="<?php if(isset($office_info)){ echo $office_info->points_include !=0 ? $office_info->points_include : '';  } ?>"  />
@@ -590,7 +594,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-7">
-                Price Per Point 
+                <field-custom-name default="Price Per Point" form="funding_info"></field-custom-name>
             </div>
             <div class="col-md-5">
                 <div class="input-group">
@@ -604,7 +608,7 @@
         <hr>
         <div class="row form_line">
             <div class="col-md-7">
-                Purchase Price 
+                <field-custom-name default="Purchase Price" form="funding_info"></field-custom-name>
             </div>
             <div class="col-md-5">
                 <div class="input-group">
@@ -617,7 +621,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-7">
-                Purchase Multiple
+                <field-custom-name default="Purchase Multiple" form="funding_info"></field-custom-name>
             </div>
             <div class="col-md-5">
                 <select id="purchase_multiple" name="purchase_multiple" data-customer-source="dropdown" class="input_select ">
@@ -634,7 +638,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-7">
-                Purchase Discount 
+                <field-custom-name default="Purchase Discount" form="funding_info"></field-custom-name>
             </div>
             <div class="col-md-5">
                 <div class="input-group">
@@ -648,7 +652,7 @@
         <hr>
         <div class="row form_line">
             <div class="col-md-7">
-                Equipment Cost
+                <field-custom-name default="Equipment Cost" form="funding_info"></field-custom-name>
             </div>
             <div class="col-md-5">
                 <div class="input-group">
@@ -661,7 +665,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-7">
-                Labor Cost
+                <field-custom-name default="Labor Cost" form="funding_info"></field-custom-name>
             </div>
             <div class="col-md-5">
                 <div class="input-group">
@@ -674,7 +678,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-7">
-                Job Profit
+                <field-custom-name default="Job Profit" form="funding_info"></field-custom-name>
             </div>
             <div class="col-md-5">
                 <div class="input-group">
@@ -687,7 +691,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-12">
-                Customer Shareable Link
+                <field-custom-name default="Customer Shareable Link" form="funding_info"></field-custom-name>
             </div>
             <div class="col-md-12">
                 <input type="url" placeholder="https://sample.com" class="form-control" name="url" id="url" value="<?php if(isset($office_info)){ echo  $office_info->url; } ?>" />

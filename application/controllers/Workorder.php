@@ -616,6 +616,7 @@ class Workorder extends MY_Controller
         $this->page_data['lead'] = $this->workorder_model->getleadSource($work->lead_source_id);
         $this->page_data['contacts'] = $this->workorder_model->get_contacts($work->customer_id);
         $this->page_data['solars'] = $this->workorder_model->get_solar($id);
+        $this->page_data['solar_files'] = $this->workorder_model->get_solar_files($id);
 
         // $this->page_data['Workorder']->role = $this->roles_model->getByWhere(['id' => $this->page_data['Workorder']->role])[0];
 
@@ -6819,6 +6820,34 @@ class Workorder extends MY_Controller
     
     }
 
+    private function set_upload_options()
+    {   
+        //upload an image options
+        $config = array();
+        $config['upload_path'] = './uploads/workorders/solar/';
+        $config['allowed_types'] = 'gif|jpg|png|txt|pdf|doc|docx';
+        $config['max_size']      = '0';
+        $config['overwrite']     = FALSE;
+
+        return $config;
+    }
+
+    public function download($name){
+        if(!empty($name)){
+            //load download helper
+            $this->load->helper('download');
+            
+            //get file info from database
+            $fileInfo = $this->workorder_model->getRows($name);
+            
+            //file path
+            $file = './uploads/workorders/solar/'.$fileInfo->solar_image;
+            
+            //download file from directory
+            force_download($file, NULL);
+        }
+    }
+
     public function savenewWorkorderSolar()
     {
 
@@ -6873,6 +6902,8 @@ class Workorder extends MY_Controller
         $file3_save         = 'uploads/Signatures/1/' . $wo_id . '_alarm_secondary' . '.'.$image_type3;
         file_put_contents($file3, $image_base643);
         }
+
+
 
     $action = $this->input->post('action');
     if($action == 'submit') {
@@ -6938,7 +6969,7 @@ class Workorder extends MY_Controller
             'date_created'                          => date("Y-m-d H:i:s"),
             'date_updated'                          => date("Y-m-d H:i:s"),
             'work_order_type_id'                    => '3',
-            'industry_template_id'                  => '1'
+            'industry_template_id'                  => '2'
             
         );
 
@@ -6962,6 +6993,36 @@ class Workorder extends MY_Controller
         );
 
         $solarItems = $this->workorder_model->save_solar_items($solarItems);
+
+        
+        $this->load->library('upload');
+        $dataInfo = array();
+        $files = $_FILES;
+        $cpt = count($_FILES['hdygi_file']['name']);
+        for($i=0; $i<$cpt; $i++)
+        {           
+            $_FILES['hdygi_file']['name']= $files['hdygi_file']['name'][$i];
+            $_FILES['hdygi_file']['type']= $files['hdygi_file']['type'][$i];
+            $_FILES['hdygi_file']['tmp_name']= $files['hdygi_file']['tmp_name'][$i];
+            $_FILES['hdygi_file']['error']= $files['hdygi_file']['error'][$i];
+            $_FILES['hdygi_file']['size']= $files['hdygi_file']['size'][$i];    
+
+            $this->upload->initialize($this->set_upload_options());
+            $this->upload->do_upload('hdygi_file');
+            $dataInfo[] = $this->upload->data();
+        }
+
+        $data = array(
+            // 'name' => $this->input->post('pd_name'),
+            'solar_image' => $dataInfo[0]['file_name'],
+            'solar_image1' => $dataInfo[1]['file_name'],
+            'solar_image2' => $dataInfo[2]['file_name'],
+            'solar_image3' => $dataInfo[3]['file_name'],
+            'solar_image4' => $dataInfo[4]['file_name'],
+            'work_order_id' => $addQuery,
+            'solar_id' => $solarItems
+        );
+        $result_set = $this->workorder_model->insertSolarFiles($data);
 
 
 

@@ -731,6 +731,23 @@ class Workorder_model extends MY_Model
 		return $query->row();
     }
 
+    public function get_solar_files($woID)
+    {
+        $this->db->select('*');
+		$this->db->from('workorder_solar_files');
+		$this->db->where('work_order_id', $woID);
+		$query = $this->db->get();
+		return $query->result();
+    }
+
+    function getRows($name){
+        $this->db->select('*');
+        $this->db->from('workorder_solar_files');
+        $this->db->where('solar_image',$name);
+        $query = $this->db->get();
+		return $query->row();
+    }
+
     public function deleteContacts($customer_id)
     {
         $this->db->where('customer_id',$customer_id);
@@ -1761,6 +1778,13 @@ class Workorder_model extends MY_Model
     public function save_solar_items($data)
     {
         $vendor = $this->db->insert('workorder_solar_items', $data);
+	    $insert_id = $this->db->insert_id();
+		return  $insert_id;
+    }
+
+    public function insertSolarFiles($data)
+    {
+        $vendor = $this->db->insert('workorder_solar_files', $data);
 	    $insert_id = $this->db->insert_id();
 		return  $insert_id;
     }
