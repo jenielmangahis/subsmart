@@ -1334,9 +1334,6 @@ class Timesheet_model extends MY_Model
     {
         $today = date("Y-m-d");
         $query = $this->db->get_where('timesheet_shift_schedule', array('shift_date' => $today, 'user_id' => logged('id')));
-
-
-
         return $query->result();
     }
 

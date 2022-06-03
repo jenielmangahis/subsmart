@@ -52,7 +52,7 @@ img.company-logo2 {
         <div class="container-fluid p-40">
           <div class="row" style="margin-top: 30px;">
             <div class="col">
-                <h3 class="m-0">Solar Stimulus Data Control / 2024</h3>
+                <h3 class="m-0">Solar Stimulus Data Control / 2022 - 2024</h3>
             </div>
         </div>
 
@@ -127,10 +127,13 @@ img.company-logo2 {
                                 <input type="hidden" id="current_date" value="<?php 
                                 $dt = new DateTime();
                                 $timestamp = time();
-                                $dt->setTimezone(new DateTimeZone($getSettings->value));
-                                $dt->setTimestamp($timestamp);
+                                // $dt->setTimezone(new DateTimeZone($getSettings->value));
+                                // $dt->setTimestamp($timestamp);
                                 
-                                echo $dt->format('m-d-Y'); ?>">
+                                // echo $dt->format('m-d-Y'); 
+                                echo date('m-d-Y');
+                                
+                                ?>">
 
                                 <input type="hidden" id="content_input" class="form-control" name="header2" value="<?php echo $headers->content; ?>">
                             </div>
@@ -154,8 +157,8 @@ img.company-logo2 {
                                     <br> <h6>Type of Roof</h6>
                                     <input type="radio" name="tor" value="Asphalt Single" class="form-"> Asphalt Single &emsp;
                                     <input type="radio" name="tor" value="Flat" class="form-"> Flat &emsp;
-                                    <input type="radio" name="tor" value="Concrete Tile" class="form-"> Concrete Tile &emsp;
-                                    <input type="radio" name="tor" value="Clay Tile" class="form-"> Clay Tile &emsp; <br>
+                                    <input type="radio" name="tor" value="Concrete Tile" class="form-"> Concrete Tile &emsp; <br>
+                                    <input type="radio" name="tor" value="Clay Tile" class="form-"> Clay Tile &emsp;
                                     <input type="radio" name="tor" value="Steel Single" class="form-"> Steel Single &emsp;
                                     <input type="radio" name="tor" value="Metal" class="form-"> Metal
                                     <br><br><hr>
@@ -192,7 +195,7 @@ img.company-logo2 {
                                     <h6>Solar Panel Mounting Preference</h6>
                                     <input type="radio" name="spmp" value="Front Only" class="form-"> Front Only &emsp;
                                     <input type="radio" name="spmp" value="Back Only" class="form-"> Back Only &emsp;
-                                    <input type="radio" name="spmp" value="Side Only" class="form-"> Side Only &emsp;
+                                    <input type="radio" name="spmp" value="Side Only" class="form-"> Side Only  <br>
                                     <input type="radio" name="spmp" value="No Preference" class="form-"> No Preference &emsp;
                                     <input type="radio" name="spmp" value="Other" class="form-"> Other
                                     <br><br><hr>
@@ -253,7 +256,7 @@ img.company-logo2 {
                                     <h6>Employment Status</h6>
                                     <input type="radio" name="es" value="Employed" class="form-"> Employed &emsp;
                                     <input type="radio" name="es" value="Unemployed" class="form-"> Unemployed &emsp;
-                                    <input type="radio" name="es" value="Retired" class="form-"> Retired &emsp;
+                                    <input type="radio" name="es" value="Retired" class="form-"> Retired <br>
                                     <input type="radio" name="es" value="Retired with Income" class="form-"> Retired with Income
                                     <!-- <hr> -->
                                     </div>
@@ -301,7 +304,7 @@ img.company-logo2 {
                                 <div class="row"> 
                                     <div class="col-md-12">
                                         <input type="text" name="country" class="form-control border-top-0 border-right-0 border-left-0">
-                                        <b>Country:</b>
+                                        <b>County:</b>
                                     </div>
                                 </div>
                                 <div class="row"> 
@@ -341,7 +344,7 @@ img.company-logo2 {
                                         <input type="checkbox" name="options[]" value="roof" class="form-"> Roof &emsp;
                                         <input type="checkbox" name="options[]" value="tree removal" class="form-"> Tree Removal &emsp;
                                         <input type="checkbox" name="options[]" value="battery package" class="form-"> Battery Package &emsp;
-                                        <input type="checkbox" name="options[]" value="security" class="form-"> Security &emsp;
+                                        <input type="checkbox" name="options[]" value="security" class="form-"> Security  <br>
                                         <input type="checkbox" name="options[]" value="others" class="form-"> Others
                                     </div>
                                 </div>

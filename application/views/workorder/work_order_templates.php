@@ -56,7 +56,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     </div>
                     <?php 
                         $company_id = logged('company_id');
-                        if($company_id == '4'){
+                        if($company_id == '58'){
                     ?>
                     <div class="product active-template" style="border: solid #F8F8F8 2px;border-radius: 25px;box-shadow: 3px 6px #E7E6E6;" id="solar-template">
                         <div class="effect-1"></div>

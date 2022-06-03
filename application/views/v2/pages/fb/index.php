@@ -56,13 +56,9 @@
     </div>
 </div>
 
+
 <link rel="stylesheet" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css">
-<style>
-    table.dataTable thead th, table.dataTable thead td,
-    table.dataTable tfoot th, table.dataTable tfoot td {
-        border-color: rgba(0, 0, 0, 0.3);
-    }
-</style>
+<link rel="stylesheet" href="<?= base_url("assets/css/formbuilder/formbuilder.css") ?>">
 
 <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>

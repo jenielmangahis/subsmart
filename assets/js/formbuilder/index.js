@@ -8,9 +8,16 @@ const columns = {
     return "";
   },
   favorite: (_, __, row) => {
-    return row.favorite == 0
-      ? `<i class="bx bx-fw bx-heart"/>`
-      : `<i class="bx bx-fw bxs-heart" style="color: #fc2e63;"/>`;
+    const icon =
+      row.favorite == 0
+        ? `<i class="bx bx-fw bx-heart"></i>`
+        : `<i class="bx bx-fw bxs-heart" style="color: #fc2e63;"></i>`;
+
+    return `
+      <button class="fb-btn" data-action="favorite">
+        ${icon}
+      </button>
+    `;
   },
   dailyResults: () => {
     return "";
@@ -18,7 +25,7 @@ const columns = {
   modified: (_, __, row) => {
     return moment(row.updated_at).format("MMMM DD, YYYY");
   },
-  actions: () => {
+  actions: (_, __, row) => {
     return `
     <div class="dropdown table-management">
       <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
@@ -26,10 +33,10 @@ const columns = {
       </a>
       <ul class="dropdown-menu dropdown-menu-end">
           <li>
-              <a class="dropdown-item" href="#">Preview</a>
+              <a class="dropdown-item" href="${prefixURL}/fb/view/${row.id}">Preview</a>
           </li>
           <li>
-              <a class="dropdown-item" href="#">Edit</a>
+              <a class="dropdown-item" href="${prefixURL}/fb/edit/${row.id}">Edit</a>
           </li>
           <li>
               <a class="dropdown-item" href="#">Delete</a>
@@ -61,6 +68,7 @@ window.document.addEventListener("DOMContentLoaded", async () => {
       {
         render: columns.favorite,
         sortable: false,
+        class: "text-center",
       },
       {
         render: columns.dailyResults,

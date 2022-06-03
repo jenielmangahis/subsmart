@@ -61,123 +61,16 @@ $(document).ready(function() {
             success: function(data) {
                 var res_config = false;
                 var allow_5min = false;
-                if (data.resClock.length > 0) {
+                if (data.resClock.length > 0 && data.attend_count > 0) {
                     res_config = true;
                     if (data.resClock[0]['allow_5min'] == 1) {
                         allow_5min = true;
-                        if (data.attend.length > 0) {
-                            let day = new Date();
-                            let dayShift = new Date(data.attend[0]["shift_start"]);
-                            let numberOfMinutes = dayShift.getMinutes() - day.getMinutes();
-                            let numberOfHours = dayShift.getHours() - day.getHours();
+                        let day = new Date();
+                        let dayShift = new Date(data.attend[0]["shift_start"]);
+                        let numberOfMinutes = dayShift.getMinutes() - day.getMinutes();
+                        let numberOfHours = dayShift.getHours() - day.getHours();
 
-                            if (numberOfHours <= 0 && numberOfMinutes <= 0) {
-                                Swal.fire({
-                                    title: "Clock in?",
-                                    html: "Are you sure you want to Clock-in?",
-                                    imageUrl: baseURL + "assets/img/timesheet/work.png",
-                                    showCancelButton: true,
-                                    confirmButtonColor: "#2ca01c",
-                                    cancelButtonColor: "#d33",
-                                    confirmButtonText: "Yes, I want to Clock-in!",
-                                }).then((result) => {
-                                    if (result.value) {
-
-                                        $.ajax({
-                                            url: baseURL + "timesheet/clockinemployee",
-                                            type: "POST",
-                                            dataType: "json",
-                                            // data:{clock_in:clock_in},
-                                            success: function(data) {
-                                                if (data != null) {
-
-                                                    $("#clockIn").attr("id", "clockOut");
-                                                    $(selected).attr("id", "clockOut");
-                                                    $(".clock").addClass("clock-active");
-                                                    $("#attendanceId").val(data.attendance_id);
-                                                    $(".in").text(data.clock_in_time);
-                                                    $(".out").text(data.clock_out_time);
-                                                    $("#userClockIn").text(data.clock_in_time);
-                                                    $("#userClockOut").text("-");
-                                                    $("#userLunchIn").text("-");
-                                                    $("#userLunchOut").text("-");
-                                                    $("#shiftDuration").text("-");
-                                                    $("#userShiftDuration").text("-");
-                                                    $("#break-duration").text("00:00:00");
-                                                    $(".employeeLunch").attr("id", "lunchIn").attr("disabled", false);
-                                                    Swal.fire({
-                                                        showConfirmButton: false,
-                                                        timer: 2000,
-                                                        title: "Success",
-                                                        html: "You are now Clock-in",
-                                                        icon: "success",
-                                                    });
-
-                                                    notificationRing();
-
-                                                    Push.Permission.GRANTED; // 'granted'
-                                                    Push.create(data.FName + " " + data.LName, {
-                                                        body: "You're now clocked in!",
-                                                        icon: data.profile_img,
-                                                        timeout: 20000,
-                                                        onClick: function() {
-                                                            window.focus();
-                                                            this.close();
-                                                        },
-                                                    });
-                                                    app_notification(
-                                                        data.token,
-                                                        data.body,
-                                                        data.device_type,
-                                                        data.company_id,
-                                                        data.title
-                                                    );
-                                                    if (data.send_sms) {
-                                                        clock_in_clock_out_send_sms("+18506195914", data.FName + " " + data.LName + " " + data.content_notification)
-                                                    }
-                                                    // get_user_current_geo_possition(data.timesheet_logs_id, "timesheet_logs");
-
-                                                    location.reload();
-                                                }
-                                            },
-                                            error: function(xhr, status, error) {
-                                                var errorMessage = xhr.status + ': ' + xhr.statusText
-                                                    // alert('Error - ' + errorMessage);
-                                                    // window.location.replace(baseURL + "mycrm/membership");
-                                                Swal.fire({
-                                                    showConfirmButton: false,
-                                                    timer: 3000,
-                                                    title: "Upgrade your subscription",
-                                                    html: "Account can't clockin due to membership limitation.",
-                                                    imageUrl: baseURL + "assets/img/timesheet/subscription.png",
-                                                });
-                                                setTimeout(function() { window.location.replace(baseURL + "mycrm/membership"); }, 3000);
-                                            }
-                                        });
-                                    }
-                                });
-                            } else {
-                                var desc = ""
-                                if (numberOfHours == 0) {
-                                    desc = numberOfMinutes;
-                                } else {
-                                    if (numberOfHours == 1) {
-                                        if (numberOfMinutes <= 0) {
-                                            desc = numberOfHours + " hour";
-                                        } else {
-                                            desc = numberOfHours + " hour and " + numberOfMinutes + ' minutes';
-                                        }
-                                    }
-                                }
-                                Swal.fire({
-                                    showConfirmButton: false,
-                                    timer: 2000,
-                                    title: "NOTICE",
-                                    html: "You're " + desc + " early <br> Try clocking in 5 minute earlier according to your schedule",
-                                    icon: "info",
-                                });
-                            }
-                        } else {
+                        if (numberOfHours <= 0 && numberOfMinutes <= 0) {
                             Swal.fire({
                                 title: "Clock in?",
                                 html: "Are you sure you want to Clock-in?",
@@ -196,7 +89,6 @@ $(document).ready(function() {
                                         // data:{clock_in:clock_in},
                                         success: function(data) {
                                             if (data != null) {
-
 
                                                 $("#clockIn").attr("id", "clockOut");
                                                 $(selected).attr("id", "clockOut");
@@ -263,11 +155,32 @@ $(document).ready(function() {
                                     });
                                 }
                             });
+                        } else {
+                            var desc = ""
+                            if (numberOfHours == 0) {
+                                desc = numberOfMinutes;
+                            } else {
+                                if (numberOfHours == 1) {
+                                    if (numberOfMinutes <= 0) {
+                                        desc = numberOfHours + " hour";
+                                    } else {
+                                        desc = numberOfHours + " hour and " + numberOfMinutes + ' minutes';
+                                    }
+                                }
+                            }
+                            Swal.fire({
+                                showConfirmButton: false,
+                                timer: 2000,
+                                title: "NOTICE",
+                                html: "You're " + desc + " early <br> Try clocking in 5 minute earlier according to your schedule",
+                                icon: "info",
+                            });
                         }
+
                     }
                 }
 
-                if (res_config == false && allow_5min == false) {
+                if (data.attend_count == 0) {
                     Swal.fire({
                         title: "Clock in?",
                         html: "Are you sure you want to Clock-in?",
@@ -865,14 +778,12 @@ $(document).ready(function() {
         });
     });
     $(document).on("click", ".adjust-my-attendance-request", function() {
-        // console.log("yes");
         $("#request_attendance_correct_from").modal({
             backdrop: "static",
             keyboard: false,
         });
         $(".hiddenSection").show();
 
-        // console.log($(this).attr("data-att-id"));
         let user_name = $(this).attr("data-name");
         $.ajax({
             url: baseURL + "timesheet/get_spicific_attendance_log",
@@ -884,7 +795,6 @@ $(document).ready(function() {
                 shift_date: $(this).attr("data-shift-date"),
             },
             success: function(data) {
-                // console.log(data);
                 $("#form_timesheet_attendance_id").val(data.att_id);
                 $("#form_user_id").val(data.user_id);
                 $("#form_timesheet_shift_schedule_id").val(data.shift_schedule_id);
@@ -981,7 +891,6 @@ $(document).ready(function() {
     });
 
     $(document).on("change", "#to_date_correction_requests", function() {
-        // console.log("pasok");
         show_my_correction_requests();
     });
 
@@ -998,7 +907,6 @@ $(document).ready(function() {
                 date_to: $("#to_date_correction_requests").val(),
             },
             success: function(data) {
-                // console.log(data);
                 $(".my-correction-requests-loader").hide();
                 $("#my_correction_requests").show();
                 $("#my_correction_requests").html(data);
@@ -1015,7 +923,6 @@ $(document).ready(function() {
         });
     }
     $(document).on("click", ".cancel_my_correction_reqiest", function() {
-        // console.log("pasok");
         let shift_date = $(this).attr("data-shift-date");
         let request_id = $(this).attr("data-timesheet-attendance-correction-id");
         let att_id = $(this).attr("data-attn-id");
@@ -1068,7 +975,6 @@ $(document).ready(function() {
     });
 
     $(document).on("change", "#to_date_leave_requests", function() {
-        // console.log("pasok");
         show_my_leave_requests();
     });
 
@@ -1084,7 +990,6 @@ $(document).ready(function() {
                 date_to: $("#to_date_leave_requests").val(),
             },
             success: function(data) {
-                // console.log(data);
                 $(".my-leave-requests-loader").hide();
                 $("#my_leave_requests").show();
                 $("#my_leave_requests_body").html(data.display);
@@ -1103,7 +1008,6 @@ $(document).ready(function() {
     }
 
     $(document).on("click", ".cancel_my_leave_request", function() {
-        // console.log("pasok");
         let date_filed = $(this).attr("data-date-filed");
         let leave_id = $(this).attr("data-leave-id");
         let user_id = $(this).attr("data-user-id");
@@ -1200,7 +1104,6 @@ $(document).ready(function() {
             data: { attn_id: attn_id },
             success: function(data) {
                 $("#overtime_status_acknowledgement").val(data.overtime_status);
-                console.log(data.overtime_status);
                 let startdate = $("#clockedin_date_time").val();
                 let anntendance_status = $("#attendance_status").val();
                 let overtime_status = $("#overtime_status_acknowledgement").val();
@@ -1432,7 +1335,6 @@ function edit_attendance_log_form_changed() {
 
     let payable_hours = 0;
     if (form_expected_hours == "") {
-        // console.log(arrayofdurations);
         if (work_hours > 8) {
             $("#form_over_time").html(Math.round((work_hours - 8) * 100) / 100);
         } else {
@@ -1495,7 +1397,6 @@ function show_user_current_geo_possition(position) {
                     if (results[0].formatted_address != null) {
                         formattedAddress = results[0].formatted_address;
                     }
-                    console.log("lat: " + current_user_latitude + " lng: " + current_user_longitude + " Address: " + formattedAddress);
                     $.ajax({
                         url: baseURL + "timesheet/timesheet_save_current_geo_location",
                         type: "POST",

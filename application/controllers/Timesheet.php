@@ -2134,6 +2134,7 @@ class Timesheet extends MY_Controller
         $query2 = $this->timesheet_model->getData(logged('company_id'));
         $data = new stdClass();
         $data->attend = $query;
+        $data->attend_count = count($query);
         $data->resClock = $query2;
 
         echo json_encode($data);

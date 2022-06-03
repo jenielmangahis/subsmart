@@ -45,6 +45,13 @@
                     <li><a class="dropdown-item" href="<?php echo base_url('customer/settings_activation_fee') ?>">Activation Fee</a></li>
                     <li><a class="dropdown-item" href="<?php echo base_url('customer/settings_system_package') ?>">System Package Type</a></li>
                     <li><a class="dropdown-item" href="<?php echo base_url('customer/settings_headers') ?>">Header</a></li>
+
+                    <?php if($companyId == 58): ?>
+                    <li><a class="dropdown-item" href="<?php echo base_url('customer/settings_solar_lender_type') ?>">Lender Type</a></li>
+                    <li><a class="dropdown-item" href="<?php echo base_url('customer/settings_solar_system_size') ?>">System Size</a></li>
+                    <li><a class="dropdown-item" href="<?php echo base_url('customer/settings_solar_modules') ?>">Proposed Modules</a></li>
+                    <li><a class="dropdown-item" href="<?php echo base_url('customer/settings_solar_inverter') ?>">Proposed Inverter</a></li>
+                    <?php endif; ?>
                 </ul>
             </div>
         </li>

@@ -232,6 +232,10 @@ class Reports extends MY_Controller {
         $reportType = $this->accounting_report_types_model->get_by_id($reportTypeId);
         $view = strtolower(str_replace(' ', '_', $reportType->name));
 
+        add_footer_js([
+            "assets/js/accounting/reports/standard_report_pages/$view.js"
+        ]);
+
         $this->page_data['company_details'] = $this->timesheet_model->get_user_and_company_details(logged('id'));
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['employees'] = $this->vendors_model->getEmployees(logged('company_id'));
