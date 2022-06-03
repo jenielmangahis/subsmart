@@ -678,6 +678,7 @@ img.company-logo2 {
 		         							   			</ul>
 		         							   		</div><br>
 
+													<?php if($workorder->work_order_type_id == '3'){ }else{ ?>
 		         							   		<div class="ul-info">
 		         							   			<ul>
 		         							   				<li><a href="#" class="ul-head">JOB:</a></li>
@@ -686,6 +687,7 @@ img.company-logo2 {
 		         							   			<br>
 		         							   			</ul>
 		         							   		</div>
+													<?php } ?>
 
 														<br>
 

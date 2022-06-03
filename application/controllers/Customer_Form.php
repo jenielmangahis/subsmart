@@ -2,6 +2,9 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 ini_set('max_input_vars', 30000);
 
+/**
+ * This file is meant to handle customer form submit.
+ */
 class Customer_Form extends MY_Controller
 {
 
@@ -146,7 +149,9 @@ class Customer_Form extends MY_Controller
         }
 
         $payload = json_decode(file_get_contents('php://input'), true);
-        ['default' => $default, 'name' => $name, 'form' => $form] = $payload;
+        ['default' => $default, 'name' => $name, 'form' => $form, 'is_hidden' => $isHidden] = $payload;
+        $isHidden = is_null($isHidden) ? 0 : $isHidden;
+
         $userId = logged('id');
         $companyId = logged('company_id');
 
@@ -162,12 +167,14 @@ class Customer_Form extends MY_Controller
                 'default_name' => $default,
                 'form' => $form,
                 'name' => $name,
+                'is_hidden' => $isHidden,
             ]);
         } else {
             $this->db->where('id', $record->id);
             $this->db->update('customer_field_custom_names', [
                 'user_id' => $userId,
                 'name' => $name,
+                'is_hidden' => $isHidden,
             ]);
         }
 

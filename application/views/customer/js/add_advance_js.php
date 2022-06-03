@@ -72,6 +72,11 @@
         $("#proposed_offset").select2({
             placeholder: "Select Offset"
         });
+
+        $(".solar_infos").select2({
+            placeholder: "Select"
+        });
+
         $("#panel_type").select2({
             placeholder: "Select Panel Type"
         });

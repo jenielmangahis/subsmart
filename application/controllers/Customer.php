@@ -1467,6 +1467,15 @@ class Customer extends MY_Controller
             'select' => 'id,amount',
         );
 
+
+        if(logged('company_id') == 58){
+            $solar_info_query = array(
+                'table' => 'acs_solar_info_settings',
+                'select' => '*',
+            );
+            $this->page_data['solar_info_settings'] = $this->general->get_data_with_param($solar_info_query);
+        }
+        
         $this->page_data['customerGroups'] = $this->general->get_data_with_param($get_customer_groups);
         $this->page_data['rate_plans'] = $this->general->get_data_with_param($rate_plan_query);
         $this->page_data['system_package_types'] = $this->general->get_data_with_param($spt_query);
@@ -4692,6 +4701,11 @@ class Customer extends MY_Controller
             ),
             'select' => '*',
         );
+
+        // for($x=0;$x<10;$x++){
+        //     $randomPassword = bin2hex(random_bytes(20));
+        //     echo $randomPassword.'<br>';
+        // }
         $this->page_data['system_package_type'] = $this->general->get_data_with_param($spt_query);
 
         $this->load->view('v2/pages/customer/settings_system_package', $this->page_data);
@@ -4732,6 +4746,304 @@ class Customer extends MY_Controller
 
         $this->load->view('v2/pages/customer/settings_headers', $this->page_data);
     }
+
+    /**
+     * This function will serve as view of solar lender type page
+    */
+    public function settings_solar_lender_type()
+    {
+        $lender_types = array();
+        // get solar lender types
+        $solar_info_query = array(
+            'where' => array(
+                'field_name' => 'lender_type'
+            ),
+            'table' => 'acs_solar_info_settings',
+            'order' => array(
+                'order_by' => 'id',
+            ),
+            'select' => '*',
+        );
+        $lender_types_data = $this->general->get_data_with_param($solar_info_query,FALSE);
+        $results = json_decode($lender_types_data->field_value);
+
+        $x = 0;
+        if(!empty($results)){
+            foreach ($results  as $result){
+                array_push($lender_types, $result);
+                $x++;
+            }
+        }
+        
+        $input = $this->input->post();
+        if($input) {
+            
+            if(isset($input['lenderName'] )){
+                // filter the lender_types array to remove data
+                $a = array_filter($lender_types, function ($v) {
+                    $delete = $_POST['lenderName'];
+                    return $v->name !== $delete;
+                });
+                $lender_types = array_values($a);
+                unset($input['lenderName']);
+            }else{
+                $lender_types[$x]['name'] = $input['lender_name'];
+                $lender_types[$x]['date_created'] = date("Y-m-d H:i:s");
+                unset($input['lender_name']);
+            }
+
+            $input['field_value'] = json_encode($lender_types);
+            $input['id'] = $lender_types_data->id;
+
+            if($this->customer_ad_model->update_data($input,"acs_solar_info_settings","id")){
+                echo "1";
+            }else{
+                echo "Error";
+            }
+        }else {
+            $this->page_data['page']->title = 'Lender Types';
+            $this->page_data['page']->parent = 'Sales';
+
+            $this->load->library('wizardlib');
+            $this->hasAccessModule(9); 
+
+            $user_id = logged('id');
+
+            // set a global data for customer profile id
+            $this->page_data['customer_profile_id'] = $user_id;
+
+            if(isset($userid) || !empty($userid)){
+                $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
+                $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
+            }
+            $this->page_data['lender_types'] = $lender_types;
+            $this->load->view('v2/pages/customer/solar/settings_lender_type', $this->page_data);
+        }
+    }
+
+    /**
+     * This function will serve as view of solar lender type page
+    */
+    public function settings_solar_system_size()
+    {
+        $lender_types = array();
+        // get solar lender types
+        $solar_info_query = array(
+            'where' => array(
+                'field_name' => 'solar_system_size'
+            ),
+            'table' => 'acs_solar_info_settings',
+            'order' => array(
+                'order_by' => 'id',
+            ),
+            'select' => '*',
+        );
+        $lender_types_data = $this->general->get_data_with_param($solar_info_query,FALSE);
+        $results = json_decode($lender_types_data->field_value);
+
+        $x = 0;
+        if(!empty($results)){
+            foreach ($results  as $result){
+                array_push($lender_types, $result);
+                $x++;
+            }
+        }
+        
+        $input = $this->input->post();
+        if($input) {
+            
+            if(isset($input['lenderName'] )){
+                // filter the lender_types array to remove data
+                $a = array_filter($lender_types, function ($v) {
+                    $delete = $_POST['lenderName'];
+                    return $v->name !== $delete;
+                });
+                $lender_types = array_values($a);
+                unset($input['lenderName']);
+            }else{
+                $lender_types[$x]['name'] = $input['lender_name'];
+                $lender_types[$x]['date_created'] = date("Y-m-d H:i:s");
+                unset($input['lender_name']);
+            }
+
+            $input['field_value'] = json_encode($lender_types);
+            $input['id'] = $lender_types_data->id;
+
+            if($this->customer_ad_model->update_data($input,"acs_solar_info_settings","id")){
+                echo "1";
+            }else{
+                echo "Error";
+            }
+        }else {
+            $this->page_data['page']->title = 'Solar System Size';
+            $this->page_data['page']->parent = 'Sales';
+
+            $this->load->library('wizardlib');
+            $this->hasAccessModule(9); 
+
+            $user_id = logged('id');
+
+            // set a global data for customer profile id
+            $this->page_data['customer_profile_id'] = $user_id;
+
+            if(isset($userid) || !empty($userid)){
+                $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
+                $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
+            }
+            $this->page_data['lender_types'] = $lender_types;
+            $this->load->view('v2/pages/customer/solar/settings_system_size', $this->page_data);
+        }
+    }
+
+    /**
+     * This function will serve as view of solar lender type page
+    */
+    public function settings_solar_modules()
+    {
+        $lender_types = array();
+        // get solar lender types
+        $solar_info_query = array(
+            'where' => array(
+                'field_name' => 'solar_modules'
+            ),
+            'table' => 'acs_solar_info_settings',
+            'order' => array(
+                'order_by' => 'id',
+            ),
+            'select' => '*',
+        );
+        $lender_types_data = $this->general->get_data_with_param($solar_info_query,FALSE);
+        $results = json_decode($lender_types_data->field_value);
+
+        $x = 0;
+        if(!empty($results)){
+            foreach ($results  as $result){
+                array_push($lender_types, $result);
+                $x++;
+            }
+        }
+        
+        $input = $this->input->post();
+        if($input) {
+            
+            if(isset($input['lenderName'] )){
+                // filter the lender_types array to remove data
+                $a = array_filter($lender_types, function ($v) {
+                    $delete = $_POST['lenderName'];
+                    return $v->name !== $delete;
+                });
+                $lender_types = array_values($a);
+                unset($input['lenderName']);
+            }else{
+                $lender_types[$x]['name'] = $input['lender_name'];
+                $lender_types[$x]['date_created'] = date("Y-m-d H:i:s");
+                unset($input['lender_name']);
+            }
+
+            $input['field_value'] = json_encode($lender_types);
+            $input['id'] = $lender_types_data->id;
+
+            if($this->customer_ad_model->update_data($input,"acs_solar_info_settings","id")){
+                echo "1";
+            }else{
+                echo "Error";
+            }
+        }else {
+            $this->page_data['page']->title = 'Solar Proposed Modules';
+            $this->page_data['page']->parent = 'Sales';
+
+            $this->load->library('wizardlib');
+            $this->hasAccessModule(9); 
+
+            $user_id = logged('id');
+
+            // set a global data for customer profile id
+            $this->page_data['customer_profile_id'] = $user_id;
+
+            if(isset($userid) || !empty($userid)){
+                $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
+                $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
+            }
+            $this->page_data['lender_types'] = $lender_types;
+            $this->load->view('v2/pages/customer/solar/settings_proposed_modules', $this->page_data);
+        }
+    }
+
+    /**
+     * This function will serve as view of solar lender type page
+    */
+    public function settings_solar_inverter()
+    {
+        $lender_types = array();
+        // get solar lender types
+        $solar_info_query = array(
+            'where' => array(
+                'field_name' => 'solar_inverter'
+            ),
+            'table' => 'acs_solar_info_settings',
+            'order' => array(
+                'order_by' => 'id',
+            ),
+            'select' => '*',
+        );
+        $lender_types_data = $this->general->get_data_with_param($solar_info_query,FALSE);
+        $results = json_decode($lender_types_data->field_value);
+
+        $x = 0;
+        if(!empty($results)){
+            foreach ($results  as $result){
+                array_push($lender_types, $result);
+                $x++;
+            }
+        }
+        
+        $input = $this->input->post();
+        if($input) {
+            
+            if(isset($input['lenderName'] )){
+                // filter the lender_types array to remove data
+                $a = array_filter($lender_types, function ($v) {
+                    $delete = $_POST['lenderName'];
+                    return $v->name !== $delete;
+                });
+                $lender_types = array_values($a);
+                unset($input['lenderName']);
+            }else{
+                $lender_types[$x]['name'] = $input['lender_name'];
+                $lender_types[$x]['date_created'] = date("Y-m-d H:i:s");
+                unset($input['lender_name']);
+            }
+
+            $input['field_value'] = json_encode($lender_types);
+            $input['id'] = $lender_types_data->id;
+
+            if($this->customer_ad_model->update_data($input,"acs_solar_info_settings","id")){
+                echo "1";
+            }else{
+                echo "Error";
+            }
+        }else {
+            $this->page_data['page']->title = 'Solar Proposed Inverter';
+            $this->page_data['page']->parent = 'Sales';
+
+            $this->load->library('wizardlib');
+            $this->hasAccessModule(9); 
+
+            $user_id = logged('id');
+
+            // set a global data for customer profile id
+            $this->page_data['customer_profile_id'] = $user_id;
+
+            if(isset($userid) || !empty($userid)){
+                $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
+                $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
+            }
+            $this->page_data['lender_types'] = $lender_types;
+            $this->load->view('v2/pages/customer/solar/settings_proposed_inverter', $this->page_data);
+        }
+    }
+
+
     
     public function ajax_use_quick_note()
     {

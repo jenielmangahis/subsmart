@@ -366,9 +366,7 @@ class Users_model extends MY_Model
 
         if ($remember===false) {
             $array = [
-
                 'login' => true,
-
                 // saving encrypted userid and password as token in session
 
                 'login_token' => $login_token,
@@ -383,7 +381,7 @@ class Users_model extends MY_Model
             ];
 
             $this->session->set_userdata($array);
-        } else {
+        } else {            
             $data = [
                 'id' => $row->id,
                 'time' => time()."",
@@ -395,13 +393,11 @@ class Users_model extends MY_Model
 
             ];
 
-            $expiry = strtotime('+7 days');
-
+            $expiry = strtotime('+7 days');            
             set_cookie('login', true, $expiry);
-
             set_cookie('logged', json_encode($data), $expiry);
-
             set_cookie('login_token', $login_token, $expiry);
+
             $array = [
 
                 'login' => true,

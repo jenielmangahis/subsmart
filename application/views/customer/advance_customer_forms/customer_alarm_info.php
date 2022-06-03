@@ -18,8 +18,14 @@
                     Lender Type
                 </div>
                 <div class="col-md-6">
-                    <input type="text" class="form-control" name="lender_type" id="lender_type"/>
-                    <a href="#" target="_blank"  style="color:#58bc4f;font-size: 10px;"><span class="fa fa-plus"></span> Manage Type</a>&nbsp;&nbsp;
+                    <?php $lenderTypes = json_decode($solar_info_settings[0]->field_value); ?>
+                    <select name="lender_type" id="lender_type" class="input_select solar_infos">
+                        <option  value=""></option>
+                        <?php foreach ($lenderTypes  as $lender): ?>
+                            <option  value="<?= $lender->name ?>"><?= $lender->name ?></option>
+                        <?php endforeach; ?>
+                    </select><br>
+                    <a href="<?= base_url('customer/settings_solar_lender_type') ?>"  style="color:#58bc4f;font-size: 10px;"><span class="fa fa-plus"></span> Manage Type</a>&nbsp;&nbsp;
                 </div>
             </div>
             <div class="row form_line">
@@ -27,8 +33,14 @@
                     Proposed System Size
                 </div>
                 <div class="col-md-6">
-                    <input type="text" class="form-control" name="proposed_system_size" id="proposed_system_size"/>
-                    <a href="#" target="_blank"  style="color:#58bc4f;font-size: 10px;"><span class="fa fa-plus"></span> Manage Size</a>&nbsp;&nbsp;
+                <?php $proposed_system_sizes = json_decode($solar_info_settings[1]->field_value); ?>
+                    <select name="proposed_system_size" id="proposed_system_size" class="input_select solar_infos">
+                        <option  value=""></option>
+                        <?php foreach ($proposed_system_sizes  as $size): ?>
+                            <option  value="<?= $size->name ?>"><?= $size->name ?></option>
+                        <?php endforeach; ?>
+                    </select><br>
+                    <a href="<?= base_url('customer/settings_solar_system_size') ?>" style="color:#58bc4f;font-size: 10px;"><span class="fa fa-plus"></span> Manage Size</a>&nbsp;&nbsp;
                 </div>
             </div>
             <div class="row form_line">
@@ -36,8 +48,14 @@
                     Proposed Modules
                 </div>
                 <div class="col-md-6">
-                    <input type="text" class="form-control" name="proposed_modules" id="proposed_modules"/>
-                    <a href="#" target="_blank"  style="color:#58bc4f;font-size: 10px;"><span class="fa fa-plus"></span> Manage Modules</a>&nbsp;&nbsp;
+                    <?php $proposed_modules = json_decode($solar_info_settings[2]->field_value); ?>
+                    <select name="proposed_modules" id="proposed_modules" class="input_select solar_infos">
+                        <option  value=""></option>
+                        <?php foreach ($proposed_modules  as $module): ?>
+                            <option  value="<?= $module->name ?>"><?= $module->name ?></option>
+                        <?php endforeach; ?>
+                    </select><br>
+                    <a href="<?= base_url('customer/settings_solar_modules') ?>" style="color:#58bc4f;font-size: 10px;"><span class="fa fa-plus"></span> Manage Modules</a>&nbsp;&nbsp;
                 </div>
             </div>
             <div class="row form_line">
@@ -45,8 +63,14 @@
                     Proposed Inverter
                 </div>
                 <div class="col-md-6">
-                    <input type="text" class="form-control" name="proposed_inverter" id="proposed_inverter"/>
-                    <a href="#" target="_blank"  style="color:#58bc4f;font-size: 10px;"><span class="fa fa-plus"></span> Manage Inverter</a>&nbsp;&nbsp;
+                    <?php $proposed_inverters = json_decode($solar_info_settings[3]->field_value); ?>
+                    <select name="proposed_inverter" id="proposed_inverter" class="input_select solar_infos">
+                        <option  value=""></option>
+                        <?php foreach ($proposed_inverters  as $inverter): ?>
+                            <option  value="<?= $inverter->name ?>"><?= $inverter->name ?></option>
+                        <?php endforeach; ?>
+                    </select><br>
+                    <a href="<?= base_url('customer/settings_solar_inverter') ?>"  style="color:#58bc4f;font-size: 10px;"><span class="fa fa-plus"></span> Manage Inverter</a>&nbsp;&nbsp;
                 </div>
             </div>
             <div class="row form_line">
@@ -54,7 +78,7 @@
                     Proposed Offset
                 </div>
                 <div class="col-md-6">
-                <select name="proposed_offset" id="proposed_offset" class="input_select">
+                    <select name="proposed_offset" id="proposed_offset" class="input_select">
                         <option  value=""></option>
                         <option  value="1">Less than 30%</option>
                         <?php for($x=31;$x<=120;$x++): ?>

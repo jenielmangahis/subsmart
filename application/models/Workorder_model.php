@@ -1547,7 +1547,7 @@ class Workorder_model extends MY_Model
     {
         $this->db->select('*');
 		$this->db->from('ac_leadsource');
-		$this->db->where('fk_company_id', $company_id);
+		// $this->db->where('fk_company_id', $company_id);
         $query = $this->db->get();
         return $query->result();
     }

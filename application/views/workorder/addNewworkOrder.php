@@ -563,10 +563,13 @@ border: none;
                                 <input type="hidden" id="current_date" value="<?php 
                                 $dt = new DateTime();
                                 $timestamp = time();
-                                $dt->setTimezone(new DateTimeZone($getSettings->value));
-                                $dt->setTimestamp($timestamp);
+                                // $dt->setTimezone(new DateTimeZone($getSettings->value));
+                                // $dt->setTimestamp($timestamp);
                                 
-                                echo $dt->format('m-d-Y'); ?>">
+                                // echo $dt->format('m-d-Y'); 
+                                echo date('m-d-Y');
+                                
+                                ?>">
 
                                 <input type="hidden" id="content_input" class="form-control" name="header2" value="<?php echo $headers->content; ?>">
                             </div>
