@@ -476,6 +476,21 @@ class Login extends CI_Controller
     }
 
     public function customer(){
+
+        $remember_me = false;
+        $remember_username = '';
+        $remember_password = '';
+
+        if( $this->input->cookie('customer_remember_me') && $this->input->cookie('customer_username') ){
+            $remember_me = true;
+            $remember_username = $this->input->cookie('customer_username');
+            $remember_password = $this->input->cookie('customer_password');
+        } 
+
+        $this->data['remember_username'] = $remember_username;
+        $this->data['remember_password'] = $remember_password;
+        $this->data['remember_me'] = $remember_me;
+
         $this->load->view('customer/login/index', $this->data, false);
     }
 
@@ -486,7 +501,16 @@ class Login extends CI_Controller
 
         $username = post('username');
         $password = post('password');
-        
+
+        if( post('remember_me') ){
+            set_cookie('customer_username', post('username'), 604800);
+            set_cookie('customer_password', post('password'), 604800);
+            set_cookie('customer_remember_me', true, 604800);
+        }else{
+            delete_cookie('customer_username');
+            delete_cookie('customer_password');
+            delete_cookie('customer_remember_me');
+        }
 
         $isExists = $this->AcsAccess_model->getByUsernamePassword($username, $password);
 

@@ -119,6 +119,8 @@ class AcsAccess extends CI_Controller
 
     public function ajax_send_message_reply()
     {
+        $this->load->helper('sms_helper');
+
         $this->load->model('CompanySms_model');
         $this->load->model('Users_model');
 
@@ -128,7 +130,9 @@ class AcsAccess extends CI_Controller
         $post = $this->input->post();
 
         $customer_data = $this->session->userdata('customer_data');
-        $user = $this->Users_model->getUser($post['aid']);
+        $user    = $this->Users_model->getUser($post['aid']);
+        $sms_api = $this->CompanySms_model->apiDefault();
+
         if( $user ){
             $enable_send_sms = 0; 
             $is_with_phone_m = 1;       
@@ -136,8 +140,9 @@ class AcsAccess extends CI_Controller
                 $enable_send_sms = 1;                    
                 if( $user->mobile != '' ){
                     if( in_array($customer_data['company_id'], $this->CompanySms_model->ringCentralCompanyIds()) ){
-                        //Use ringcentral                        
-                        $is_sent = $this->smsRingCentral($user->mobile, $post['sms_txt_message']);
+                        //Use ringcentral    
+                        $sms_api = $this->CompanySms_model->apiRingCentral();
+                        $is_sent = smsRingCentral($user->mobile, $post['sms_txt_message']); 
                         if( $is_sent['is_success'] == 1 ){                    
                             $is_success = 1;
                         }else{
@@ -145,6 +150,13 @@ class AcsAccess extends CI_Controller
                         }
                     }else{
                         //Use twiio
+                        $sms_api = $this->CompanySms_model->apiTwilio();
+                        $twilio  = smsTwilio($user->mobile, $post['sms_txt_message']);
+                        if( $twilio['is_sent'] ){
+                            $is_success = 1;
+                        }else{
+                            $msg = $is_sent['msg'];
+                        }
                     }
                 }else{
                     $is_with_phone_m = 0;
@@ -183,60 +195,6 @@ class AcsAccess extends CI_Controller
         $json_data = ['is_success' => $is_success, 'msg' => $msg];
 
         echo json_encode($json_data);
-    }
-
-    public function cleanMobileNumber($to_number)
-    {
-        $to_number = str_replace("-", "", $to_number);
-        $to_number = str_replace(" ", "", $to_number);
-        $to_number = str_replace("(", "", $to_number);
-        $to_number = str_replace(")", "", $to_number);
-
-        return $to_number;
-    }
-
-    public function smsRingCentral($to_number, $txt_message)
-    {
-        include_once APPPATH . 'libraries/ringcentral_lite/src/ringcentrallite.php';
-
-        $to_number = $this->cleanMobileNumber($to_number);
-        $to_number = '+1'.$to_number;
-
-        $message = replaceSmartTags($txt_message);
-
-        $rc = new RingCentralLite(
-            RINGCENTRAL_CLIENT_ID, //Client id
-            RINGCENTRAL_CLIENT_SECRET, //Client secret
-            RINGCENTRAL_DEV_URL //server url
-        );
-         
-        $res = $rc->authorize(
-            RINGCENTRAL_USER, //username
-            RINGCENTRAL_EXT, //extension
-            RINGCENTRAL_PASSWORD //password
-        ); //password
-
-        $params = array(
-            'json'     => array(
-                'to'   => array( array('phoneNumber' => $to_number) ), //Send to
-                'from' => array('phoneNumber' => RINGCENTRAL_FROM), //Username
-                'text' => $message
-            )
-        );
-
-        $res = $rc->post('/restapi/v1.0/account/~/extension/~/sms', $params);
-        $is_success = 0;
-        $msg     = '';
-
-        if (isset($res['errorCode'])) {
-            $msg = $res['errorCode'] . " " . $res['message'];
-        } else {
-            $is_success = 1;
-        }
-
-        $return = ['is_success' => $is_success, 'msg' => $msg];
-
-        return $return;
     }
 
     public function ajax_load_sent_messages()
