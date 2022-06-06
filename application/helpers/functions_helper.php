@@ -99,7 +99,12 @@ if (!function_exists('get_tech_revenue')){
         $CI = &get_instance();
         $CI->load->model('event_model');
         //$this->page_data['employees'] = $this->general->get_data_with_param($get_employee);
-        return $CI->event_model->getTechRevenue($id);
+        
+        if(logged('company_id') == 58){
+            return $CI->event_model->getTechRevenueSolar($id);
+        }else{
+            return $CI->event_model->getTechRevenue($id);
+        }
     }
 }
 
@@ -108,7 +113,11 @@ if (!function_exists('get_sales_rep_revenue')){
         $CI = &get_instance();
         $CI->load->model('event_model');
         //$this->page_data['employees'] = $this->general->get_data_with_param($get_employee);
-        return $CI->event_model->getSalesRepRevenue($id);
+        if(logged('company_id') == 58){
+            return $CI->event_model->getSalesRepRevenueSolar($id);
+        }else{
+            return $CI->event_model->getSalesRepRevenue($id);
+        }
     }
 }
 

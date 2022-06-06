@@ -4588,7 +4588,7 @@ if(!function_exists('set_expense_graph_data')) {
         return $data;
     }
 
-    function timeLapsedString($datetime, $full = false) {
+    function timeLapsedString($datetime, $full = false) {        
         $now = new \DateTime;
         $ago = new \DateTime($datetime);
         $diff = $now->diff($ago);
@@ -4615,5 +4615,24 @@ if(!function_exists('set_expense_graph_data')) {
 
         if (!$full) $string = array_slice($string, 0, 1);
         return $string ? implode(', ', $string) . ' ago' : 'just now';
+    }
+
+    /**
+     * @param $user_id int
+     * @param $prof_id int
+     * @return object
+     */
+    function getCustomerLastMessage($user_id, $prof_id)
+    {
+        $CI =& get_instance();
+        $CI->load->model('CompanySms_model');
+        
+        if( $user_id > 0 ){
+            $lastMessage = $CI->CompanySms_model->getCustomerLastMessageByUserIdAndProfId($user_id, $prof_id);
+        }else{
+            $lastMessage = $CI->CompanySms_model->getCustomerLastMessageByProfId($prof_id);
+        }
+
+        return $lastMessage;
     }
 }

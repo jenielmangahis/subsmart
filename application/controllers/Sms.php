@@ -34,6 +34,8 @@ class Sms extends Widgets {
 
     public function ajax_company_send_sms() 
     {
+        $this->load->helper('sms_helper');
+
         $this->load->model('CompanySms_model');
         $this->load->model('Customer_advance_model');
 
@@ -43,7 +45,7 @@ class Sms extends Widgets {
         $cid  = logged('company_id');
         $uid  = logged('id');
         $post = $this->input->post();
-
+        $sms_api  = $this->CompanySms_model->apiDefault();
         $customer = $this->Customer_advance_model->get_data_by_id('prof_id',$post['cid'],'acs_profile');
         if( $customer && $customer->company_id == $cid ){
             $enable_send_sms = 0; 
@@ -53,7 +55,8 @@ class Sms extends Widgets {
                 if( $customer->phone_m != '' ){
                     if( in_array($cid, $this->CompanySms_model->ringCentralCompanyIds()) ){
                         //Use ringcentral
-                        $is_sent = $this->smsRingCentral($customer->phone_m, $post['sms_txt_message']);
+                        $sms_api = $this->CompanySms_model->apiRingCentral();
+                        $is_sent = smsRingCentral($customer->phone_m, $post['sms_txt_message']);                        
                         if( $is_sent['is_success'] == 1 ){                    
                             $is_success = 1;
                         }else{
@@ -62,6 +65,13 @@ class Sms extends Widgets {
 
                     }else{
                         //Use twiio
+                        $sms_api = $this->CompanySms_model->apiTwilio();
+                        $twilio  = smsTwilio($customer->phone_m, $post['sms_txt_message']);
+                        if( $twilio['is_sent'] ){
+                            $is_success = 1;
+                        }else{
+                            $msg = $is_sent['msg'];
+                        }
                     }
                     $is_with_phone_m = 1;
                 }else{
@@ -80,6 +90,7 @@ class Sms extends Widgets {
                         'sender_id' => $uid,
                         'sender_type' => 'agent',
                         'from_number' => '',
+                        'sms_api' => $sms_api,
                         'to_number' => $customer->phone_m,
                         'txt_message' => $post['sms_txt_message'],
                         'enable_send_sms' => $enable_send_sms,
@@ -124,60 +135,6 @@ class Sms extends Widgets {
         $json_data = ['is_success' => $is_success, 'msg' => $msg];
 
         echo json_encode($json_data);
-    }
-
-    public function smsRingCentral($to_number, $txt_message)
-    {
-        include_once APPPATH . 'libraries/ringcentral_lite/src/ringcentrallite.php';
-
-        $to_number = $this->cleanMobileNumber($to_number);
-        $to_number = '+1'.$to_number;
-
-        $message = replaceSmartTags($txt_message);
-
-        $rc = new RingCentralLite(
-            RINGCENTRAL_CLIENT_ID, //Client id
-            RINGCENTRAL_CLIENT_SECRET, //Client secret
-            RINGCENTRAL_DEV_URL //server url
-        );
-         
-        $res = $rc->authorize(
-            RINGCENTRAL_USER, //username
-            RINGCENTRAL_EXT, //extension
-            RINGCENTRAL_PASSWORD //password
-        ); //password
-
-        $params = array(
-            'json'     => array(
-                'to'   => array( array('phoneNumber' => $to_number) ), //Send to
-                'from' => array('phoneNumber' => RINGCENTRAL_FROM), //Username
-                'text' => $message
-            )
-        );
-
-        $res = $rc->post('/restapi/v1.0/account/~/extension/~/sms', $params);
-        $is_success = 0;
-        $msg     = '';
-
-        if (isset($res['errorCode'])) {
-            $msg = $res['errorCode'] . " " . $res['message'];
-        } else {
-            $is_success = 1;
-        }
-
-        $return = ['is_success' => $is_success, 'msg' => $msg];
-
-        return $return;
-    }
-
-    public function cleanMobileNumber($to_number)
-    {
-        $to_number = str_replace("-", "", $to_number);
-        $to_number = str_replace(" ", "", $to_number);
-        $to_number = str_replace("(", "", $to_number);
-        $to_number = str_replace(")", "", $to_number);
-
-        return $to_number;
     }
 
     public function ajax_company_resend_form()

@@ -153,3 +153,8 @@ define('NMI_TRANSACTION_KEY', '3DNajYnBtGUSeDyX');
 define('NMI_SOFTWARE_NAME', 'NSMART');
 define('NMI_SOFTWARE_VERSION', '1.0');
 define('NMI_TEST_SERVER_URL', 'https://test.cardeasexml.com/generic.cex');
+
+//Twilio
+define('TWILIO_SID', 'ACf262b7f581f8d1eb2a3d4ddf48f0fdb2');
+define('TWILIO_TOKEN', '6b0e320e49625b6c9ce157efa14a4931');
+define('TWILIO_NUMBER', '+15017122661');

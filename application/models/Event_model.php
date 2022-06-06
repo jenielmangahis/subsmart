@@ -291,7 +291,7 @@ class Event_model extends MY_Model
         $this->db->join('acs_office', 'acs_office.lead_source = ac_leadsource.ls_name', 'left');
         $this->db->group_by('ls_id');
         $this->db->order_by('leadSourceCount', 'desc');
-        //$this->db->where('acs_office.lead_source !=', null);
+        $this->db->where('acs_office.lead_source !=', null);
         $query = $this->db->get();
         return $query->result();
     }
@@ -416,6 +416,30 @@ class Event_model extends MY_Model
         $this->db->join('users', 'users.id = jobs.employee_id', 'left');
         $this->db->where('jobs.employee_id', $salesRepId);
         $this->db->group_by('jobs.employee_id');
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function getSalesRepRevenueSolar($salesRepId)
+    {
+        $this->db->select('SUM(acs_info_solar.proposed_solar) as salesRepRev');
+        $this->db->from('acs_info_solar');
+        $this->db->join('acs_profile', ' acs_profile.prof_id = acs_info_solar.fk_prof_id', 'left');
+        $this->db->join('acs_office', 'acs_office.fk_prof_id = acs_profile.prof_id', 'left');
+        $this->db->where('fk_sales_rep_office', $salesRepId);
+        $this->db->group_by('fk_sales_rep_office');
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function getTechRevenueSolar($salesRepId)
+    {
+        $this->db->select('SUM(acs_info_solar.proposed_system_size) as techRev');
+        $this->db->from('acs_info_solar');
+        $this->db->join('acs_profile', ' acs_profile.prof_id = acs_info_solar.fk_prof_id', 'left');
+        $this->db->join('acs_office', 'acs_office.fk_prof_id = acs_profile.prof_id', 'left');
+        $this->db->where('acs_office.technician', $salesRepId);
+        $this->db->group_by('acs_office.technician');
         $query = $this->db->get();
         return $query->result();
     }

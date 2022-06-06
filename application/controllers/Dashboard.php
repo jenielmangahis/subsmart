@@ -177,7 +177,7 @@ class Dashboard extends Widgets {
 
         $this->page_data['latestJobs']=$this->event_model->getLatestJobs(); // fetch Sales Rep and customer they are assigned to
         $this->page_data['customerStatus']=$this->event_model->getCustomerStatusWithCount(); // fetch Sales Rep and customer they are assigned to
-        $this->page_data['company_id'] = logged('company_id'); // Company ID of the logged in USER
+        $this->page_data['company_id'] = $companyId; // Company ID of the logged in USER
 
         $this->page_data['jobsDone']= $this->event_model->getAllJobs();
         $this->page_data['salesLeaderboard']=$this->event_model->getSalesLeaderboard();
