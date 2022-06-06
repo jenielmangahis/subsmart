@@ -68,7 +68,7 @@ if ($this->session->userdata('usertimezone') == null) {
                 </li>
                 <li>
                     <a href="<?= base_url("acs_access/messages") ?>">
-                        <i class='bx bx-fw bx-message-square-dots'></i> Messages
+                        <i class='bx bx-fw bx-message-square-dots'></i> SMS
                     </a>
                 </li>
             </ul>
@@ -120,7 +120,7 @@ if ($this->session->userdata('usertimezone') == null) {
                                     </div>
                                     
                                     <div class="list-item" onclick="location.href='javascript:void(0);'">
-                                        Public Profile
+                                        Profile
                                     </div>
                                     <div class="list-item" onclick="location.href='<?php echo url() ?>'">
                                         nSmart Home

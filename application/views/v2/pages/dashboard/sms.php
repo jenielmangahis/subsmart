@@ -17,7 +17,7 @@
                     <div class="col-12">
                         <div class="nsm-callout primary">
                             <button><i class='bx bx-x'></i></button>
-                            Send message to customer.
+                            Send sms to customer.
                         </div>
                     </div>
                 </div>
@@ -37,6 +37,7 @@
                             <td class="table-icon"></td>
                             <td data-name="Name">Name</td>
                             <td data-name="Phone" style="width:10%;">Phone</td>
+                            <td data-name="Date" style="width:10%;">Date Last Message</td>            
                             <td data-name="Manage" style="width:5%;"></td>
                         </tr>
                     </thead>
@@ -70,13 +71,23 @@
                                     </td>                              
                                     <td><?php echo $customer->phone_m; ?></td>
                                     <td>
+                                        <?php 
+                                            /*$lastMessage = getCustomerLastMessage(0, $customer->prof_id);
+                                            if( $lastMessage ){
+                                                echo timeLapsedString($lastMessage->date_created);    
+                                            }else{
+                                                echo 'No messages';
+                                            }*/
+                                        ?>        
+                                    </td>
+                                    <td>
                                         <div class="dropdown table-management">
                                             <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
                                                 <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                                             </a>
                                             <ul class="dropdown-menu dropdown-menu-end">
                                                 <li>
-                                                    <a class="dropdown-item send-message" data-customer-name="<?= ucwords($customer->first_name) . ' ' . ucwords($customer->last_name) ?>" data-id="<?= $customer->prof_id; ?>" data-phone="<?= $customer->phone_m; ?>" href="javascript:void(0);">Send Message</a>
+                                                    <a class="dropdown-item send-message" data-customer-name="<?= ucwords($customer->first_name) . ' ' . ucwords($customer->last_name) ?>" data-id="<?= $customer->prof_id; ?>" data-phone="<?= $customer->phone_m; ?>" href="javascript:void(0);">Send SMS</a>
                                                 </li>
                                                 <li>
                                                     <a class="dropdown-item sent-messages" data-cid="<?= $customer->prof_id; ?>" href="javascript:void(0);">View Messages</a>
@@ -132,12 +143,12 @@
                                     <label for="">Phone Number</label>
                                     <input type="text" name="customer_phone" id="customer-phone" readonly="" disabled="" class="form-control" required="">
                                 </div>
-                                <div class="form-check grp-send-sms-notification">
+                                <!-- <div class="form-check grp-send-sms-notification">
                                   <input class="form-check-input" name="send_sms_notification" type="checkbox" value="" id="flexCheckDefault">
                                   <label class="form-check-label" for="flexCheckDefault">
                                     Send SMS Notification
                                   </label>
-                                </div>
+                                </div> -->
                                 <div class="col-md-12 mt-3">
                                     <label for="">Message</label>
                                     <textarea class="form-control" name="sms_txt_message" id="sms-txt" style="height:150px;"></textarea>                                    
@@ -175,7 +186,7 @@
                                 </div>
                                 <div class="col-md-12 mt-3">
                                     <label for="">Phone Number</label>
-                                    <input type="text" name="customer_phone" id="smn-customer-number" class="form-control" required="">
+                                    <input type="text" name="customer_phone" id="sms-customer-number" class="form-control" required="">
                                 </div>
                             </div>
                         </div>
@@ -209,7 +220,7 @@
     $(document).ready(function() {
         $(".nsm-table").nsmPagination();
         $("#to-number").inputmask({"mask": "(999) 999-9999"});
-        $("#smn-customer-number").inputmask({"mask": "(999) 999-9999"});
+        $("#sms-customer-number").inputmask({"mask": "(999) 999-9999"});
     });
 
     $(document).on('click', '.sent-messages', function(){
@@ -251,11 +262,21 @@
         var profid = $(this).attr('data-id');
         var customer_phone = $(this).attr('data-phone');
 
-        $('#cid').val(profid);
-        $('#customer-name').val(customer_name);
-        $('#customer-phone').val(customer_phone);
-        $('#modalSendMessage').modal('show');
-        $('#modalMessagesSent').modal('hide');
+        if( customer_phone != '' ){
+            $('#cid').val(profid);
+            $('#customer-name').val(customer_name);
+            $('#customer-phone').val(customer_phone);
+            $('#modalSendMessage').modal('show');
+            $('#modalMessagesSent').modal('hide');
+        }else{
+            var msg = 'Phone number is needed to send sms. <br /><a href="javascript:void(0);" data-customer-name="'+customer_name+'" data-id="'+profid+'" class="nsm-button primary btn-set-customer-mobile">Set Mobile Number</a>'
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                html: msg,
+                showConfirmButton: false
+            });
+        }        
     });
 
     function smsCharCounter(){

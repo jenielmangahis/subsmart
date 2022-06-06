@@ -135,6 +135,15 @@ define('RINGCENTRAL_PASSWORD', 'Ringmybell2022');
 define('RINGCENTRAL_FROM', '+18503081341');
 define('RINGCENTRAL_EXT', '101');
 
+//2nd account
+/*define('RINGCENTRAL_CLIENT_ID', 'nUlEWd9qRE6SmXr-glhWIA');
+define('RINGCENTRAL_CLIENT_SECRET', 'LLF8Pl45Suiad2qgQ4nxkQUl31OB7tRBmXkw1U1Rv0sA');
+define('RINGCENTRAL_DEV_URL', 'https://platform.ringcentral.com');
+define('RINGCENTRAL_USER', '+18509417380');
+define('RINGCENTRAL_PASSWORD', 'Ringmybell2022');
+define('RINGCENTRAL_FROM', '+18509417380');
+define('RINGCENTRAL_EXT', '105');*/
+
 //PHPMAILER
 define('MAIL_SERVER', 'mail.nsmartrac.com');
 define('MAIL_PORT', 465);

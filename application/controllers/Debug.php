@@ -215,6 +215,28 @@
             exit;
         }
 
+        public function twilioSms()
+        {
+            $this->load->helper('sms_helper');
+
+            $twilio = smsTwilio('8509417380', 'Test twilio');
+            echo "<pre>";
+            print_r($twilio);
+
+            exit;
+        }
+
+        public function ringCentral()
+        {
+            $this->load->helper('sms_helper');
+
+            $ringcentral = smsRingCentral('8509417380', 'test ringcentral');
+
+            echo "<pre>";
+            print_r($ringcentral);
+            exit;
+        }
+
         public function stripeRetrieveAccount(){
             // Stripe SDK
             include APPPATH . 'libraries/stripe/init.php'; 
@@ -660,6 +682,45 @@
             $result = $this->sendSms($to_number, 'this is a test sms');
             echo "<pre>";
             print_r($result);
+            exit;
+        }
+
+        public function ringCentralReplies()
+        {
+            $this->load->helper('sms_helper');
+
+            $to_number = '8506195914';
+            $replies = ringCentralMessageReplies($to_number);
+
+            echo "<pre>";
+            print_r($replies);
+            exit;
+        }
+
+        public function ringCentralCreateContact()
+        {
+            $this->load->helper('sms_helper');
+
+            try {
+               $data = [
+                    'firstName' => 'Charlie',
+                    'lastName' => 'Williams',
+                    'businessPhone' => '+15551234567',
+                    'businessAddress' => [
+                        'street' => '20 Davis Dr.',
+                        'city' => 'Belmont',
+                        'state' => 'CA',
+                        'zip' => 94002
+                    ]
+                ];
+                $contact = ringCentralCreateContact($data); 
+            } catch (Exception $e) {
+                echo $e->getMessage();
+            }
+            
+
+            echo "<pre>";
+            print_r($contact);
             exit;
         }
 

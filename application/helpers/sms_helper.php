@@ -1,11 +1,13 @@
 <?php
 
-function smsRingCentral($to_number, $txt_message)
+function smsRingCentral($to_number, $from_number, $txt_message)
 {   
     include_once APPPATH . 'libraries/ringcentral_lite/src/ringcentrallite.php';    
 
-    $to_number = cleanMobileNumber($to_number);
-    $to_number = '+1'.$to_number;
+    $to_number   = cleanMobileNumber($to_number);
+    $to_number   = '+1'.$to_number;
+    $from_number = cleanMobileNumber($from_number);    
+    //$from_number = RINGCENTRAL_FROM;
 
     //$message = replaceSmartTags($txt_message);
     $message = $txt_message;
@@ -25,7 +27,7 @@ function smsRingCentral($to_number, $txt_message)
     $params = array(
         'json'     => array(
             'to'   => array( array('phoneNumber' => $to_number) ), //Send to
-            'from' => array('phoneNumber' => RINGCENTRAL_FROM), //Username
+            'from' => array('phoneNumber' => $from_number), //Username
             'text' => $message
         )
     );
@@ -40,7 +42,7 @@ function smsRingCentral($to_number, $txt_message)
         $is_success = 1;
     }
 
-    $return = ['is_success' => $is_success, 'msg' => $msg];
+    $return = ['is_success' => $is_success, 'msg' => $msg, 'from_number' => $from_number];
     return $return;
 }
 
@@ -83,4 +85,56 @@ function cleanMobileNumber($to_number)
     $to_number = str_replace(")", "", $to_number);
 
     return $to_number;
+}
+
+function ringCentralMessageReplies($to_number)
+{
+    require_once APPPATH . 'libraries/ringcentral-sdk/vendor/autoload.php';
+        
+    $replies  = array();
+
+    $rcsdk    = new RingCentral\SDK\SDK(RINGCENTRAL_CLIENT_ID, RINGCENTRAL_CLIENT_SECRET, RINGCENTRAL_DEV_URL, 'Demo', '1.0.0');
+    $platform = $rcsdk->platform();
+    $platform->login(RINGCENTRAL_USER, RINGCENTRAL_EXT, RINGCENTRAL_PASSWORD);
+
+    $to_number = cleanMobileNumber($to_number);
+    $to_number = '+1'.$to_number;
+
+    $queryParams = array(
+        'availability' => array('Alive'),
+        'dateFrom' => '2022-05-01',
+        //'direction' => array('Inbound'),
+        'messageType' => array('SMS'),
+        /*'page' => 1,
+        'perPage' => 50,*/
+        'phoneNumber' => $to_number
+    );
+
+    $apiResponse = $platform->get("/restapi/v1.0/account/~/extension/~/message-store", $queryParams);
+    $jsonResponse = json_decode($apiResponse->text());
+    foreach (array_reverse($jsonResponse->records) as $r){
+        $sms_message = explode('-', $r->subject);
+        $replies[] = ['msg' => $sms_message[0], 'from' => $r->from->phoneNumber, 'date' => date("Y-m-d g:i A", strtotime($r->creationTime))];
+    } 
+
+    return array_reverse($replies);
+}
+
+function ringCentralCreateContact($info = array())
+{
+    require_once APPPATH . 'libraries/ringcentral-sdk/vendor/autoload.php';
+        
+    $replies  = array();
+
+    $rcsdk    = new RingCentral\SDK\SDK(RINGCENTRAL_CLIENT_ID, RINGCENTRAL_CLIENT_SECRET, RINGCENTRAL_DEV_URL, 'Demo', '1.0.0');
+    $platform = $rcsdk->platform();
+    $platform->login(RINGCENTRAL_USER, RINGCENTRAL_EXT, RINGCENTRAL_PASSWORD);
+
+    $info['phone_number'] = cleanMobileNumber($info['phone_number']);
+
+    $apiResponse = $platform->post("/restapi/v1.0/account/~/extension/~/address-book/contact", $info);
+    echo "<pre>";
+    print_r($apiResponse);
+    exit;
+    return $replies;
 }
