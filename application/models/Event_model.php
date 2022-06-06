@@ -526,34 +526,36 @@ class Event_model extends MY_Model
         
         for ($k = 0; $k < count($salesItems);$k++) {
             $salesOffice = $this->getSalesinOffice($salesItems[$k]->prof_id);
-            $userName = $this->getUser($salesOffice[$k]->fk_sales_rep_office);
-            $roles = $this->getRoles($userName[$k]->role);
-            $x = 0;
-            
-            if ($sales[0][0] == "") {
-                $sales[$x][0] = $userName[$k]->FName[0] . $userName[$k]->LName[0];
-                $sales[$x][1] = $userName[$k]->FName . " " . $userName[$k]->LName;
-                $sales[$x][2] = $roles[$k]->title;
-                $sales[$x][3] = 1;
+            if( isset($salesOffice[$k]) ){
+                $userName = $this->getUser($salesOffice[$k]->fk_sales_rep_office);
+                $roles = $this->getRoles($userName[$k]->role);
+                $x = 0;
                 
-            } else {
+                if ($sales[0][0] == "") {
+                    $sales[$x][0] = $userName[$k]->FName[0] . $userName[$k]->LName[0];
+                    $sales[$x][1] = $userName[$k]->FName . " " . $userName[$k]->LName;
+                    $sales[$x][2] = $roles[$k]->title;
+                    $sales[$x][3] = 1;
+                    
+                } else {
 
-                $name = $userName[$k]->FName . " " . $userName[$k]->LName;
-                for ($y = 0; $y < count($sales); $y++) {
-                    if ($sales[$y][1] == $name) {
-                        $sales[$y][3]++;
-                    } else {
-                        if($y==0){
-                            $y++;
+                    $name = $userName[$k]->FName . " " . $userName[$k]->LName;
+                    for ($y = 0; $y < count($sales); $y++) {
+                        if ($sales[$y][1] == $name) {
+                            $sales[$y][3]++;
+                        } else {
+                            if($y==0){
+                                $y++;
+                            }
+                            $sales[$y][0] = $userName[$k]->FName[0] . $userName[$k]->LName[0];
+                            $sales[$y][1] = $userName[$k]->FName . " " . $userName[$k]->LName;
+                            $sales[$y][2] = $roles[$k]->title;
+                            $sales[$y][3] = 1;
+                            
                         }
-                        $sales[$y][0] = $userName[$k]->FName[0] . $userName[$k]->LName[0];
-                        $sales[$y][1] = $userName[$k]->FName . " " . $userName[$k]->LName;
-                        $sales[$y][2] = $roles[$k]->title;
-                        $sales[$y][3] = 1;
-                        
                     }
                 }
-            }
+            }            
         }
        
         return $sales;
