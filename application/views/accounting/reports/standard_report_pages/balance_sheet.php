@@ -1,6 +1,10 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <style type="text/css">
+    .hide-toggle::after {
+        display: none !important;
+    }
+
     .btn-transparent:hover {
         background: #d4d7dc !important;
         border-color: #6B6C72 !important;
@@ -12,6 +16,23 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
     .btn-transparent:focus {
         border-color: #6B6C72 !important;
+    }
+
+    .action-bar ul li a:after {
+        width: 0 !important;
+    }
+    .action-bar ul li a > i {
+        font-size: 20px !important;
+    }
+    .action-bar ul li {
+        margin-right: 5px !important;
+    }
+    .action-bar ul li .dropdown-menu .dropdown-item {
+        font-size: 1rem;
+        padding-right: 0 !important;
+    }
+    .action-bar ul li .dropdown-menu .dropdown-item:hover {
+        background-color: #f8f9fa;
     }
 </style>
 <?php include viewPath('includes/header'); ?>
@@ -92,13 +113,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     </select>
                                                 </div>
                                                 <div class="col-2 d-flex align-items-end">
-                                                    <input type="text" name="start_date" id="start-date" class="date form-control">
+                                                    <input type="text" name="start_date" id="start-date" class="date form-control" value="<?=date("01/01/Y")?>">
                                                 </div>
                                                 <div class="col-1 text-center d-flex align-items-end justify-content-center">
                                                     <span class="h6">to</span>
                                                 </div>
                                                 <div class="col-2 d-flex align-items-end">
-                                                    <input type="text" name="end_date" id="end-date" class="date form-control">
+                                                    <input type="text" name="end_date" id="end-date" class="date form-control" value="<?=date("m/d/Y")?>">
                                                 </div>
                                             </div>
                                         </div>
@@ -128,28 +149,28 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         <div class="dropdown-menu p-3 w-100" aria-labelledby="filterDropdown">
                                                             <p class="m-0">Show rows</p>
                                                             <div class="checkbox checkbox-sec d-block my-2">
-                                                                <input type="checkbox" checked="checked" id="row-active" name="show_rows">
+                                                                <input type="radio" checked="checked" id="row-active" name="show_rows">
                                                                 <label for="row-active">Active</label>
                                                             </div>
                                                             <div class="checkbox checkbox-sec d-block my-2">
-                                                                <input type="checkbox" id="row-all" name="show_rows">
+                                                                <input type="radio" id="row-all" name="show_rows">
                                                                 <label for="row-all">All</label>
                                                             </div>
                                                             <div class="checkbox checkbox-sec d-block my-2">
-                                                                <input type="checkbox" id="row-non-zero" name="show_rows">
+                                                                <input type="radio" id="row-non-zero" name="show_rows">
                                                                 <label for="row-non-zero">Non-zero</label>
                                                             </div>
                                                             <p class="m-0">Show columns</p>
                                                             <div class="checkbox checkbox-sec d-block my-2">
-                                                                <input type="checkbox" checked="checked" id="col-active" name="show_cols">
+                                                                <input type="radio" checked="checked" id="col-active" name="show_cols">
                                                                 <label for="col-active">Active</label>
                                                             </div>
                                                             <div class="checkbox checkbox-sec d-block my-2">
-                                                                <input type="checkbox" id="col-all" name="show_cols">
+                                                                <input type="radio" id="col-all" name="show_cols">
                                                                 <label for="col-all">All</label>
                                                             </div>
                                                             <div class="checkbox checkbox-sec d-block my-2">
-                                                                <input type="checkbox" id="col-non-zero" name="show_cols">
+                                                                <input type="radio" id="col-non-zero" name="show_cols">
                                                                 <label for="col-non-zero">Non-zero</label>
                                                             </div>
                                                         </div>
@@ -228,163 +249,214 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                 <div class="row">
                                     <div class="col">
-                                        <div class="" style="margin-top:6px;margin:0 20% 0 20%;border: solid gray 1px;">
-
-                                            <div class="row" style="padding:5px;">
-                                                <div class="col-md-3">
-                                                    <a href="#" style="color:#479cd4;">Collapse</a>&emsp;
-                                                    <a href="#" style="color:#479cd4;">Sort <i class="fa fa-angle-down"></i></a>&emsp;
-                                                    <a href="#" style="color:#479cd4;"> Add notes</a>
+                                        <div class="m-auto border" style="width: 60%">
+                                            <div class="container-fluid">
+                                                <div class="row border-bottom">
+                                                    <div class="col-md-6" style="font-size: 10px !important">
+                                                        <div class="action-bar h-100 d-flex align-items-center">
+                                                            <ul>
+                                                                <li><a href="#" class="text-info">Collapse</a></li>
+                                                                <li>
+                                                                    <a class="hide-toggle dropdown-toggle text-info" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                        Sort <i class="fa fa-caret-down text-info"></i>
+                                                                    </a>
+                                                                    <div class="dropdown-menu p-3" aria-labelledby="dropdownMenuLink">
+                                                                        <div class="checkbox checkbox-sec d-block my-2">
+                                                                            <div class="checkbox checkbox-sec d-block my-2">
+                                                                                <input type="radio" id="sort-default" name="sort_order" checked>
+                                                                                <label for="sort-default">Default</label>
+                                                                            </div>
+                                                                            <div class="checkbox checkbox-sec d-block my-2">
+                                                                                <input type="radio" id="sort-asc" name="sort_order">
+                                                                                <label for="sort-asc">Total in ascending order</label>
+                                                                            </div>
+                                                                            <div class="checkbox checkbox-sec d-block my-2">
+                                                                                <input type="radio" id="sort-desc" name="sort_order">
+                                                                                <label for="sort-desc">Total in descending order</label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </li>
+                                                                <li><a href="#" class="text-info">Add notes</a></li>
+                                                                <li><a href="#" class="text-info">Edit titles</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="action-bar h-100 d-flex align-items-center">
+                                                            <ul class="ml-auto">
+                                                                <li><a href="#"><i class="fa fa-envelope"></i></a></li>
+                                                                <li><a href="#"><i class="fa fa-print"></i></a></li>
+                                                                <li>
+                                                                    <a class="hide-toggle dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                        <i class="fa fa-download"></i>
+                                                                    </a>
+                                                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                                                        <a class="dropdown-item" href="#">Export to Excel</a>
+                                                                        <a class="dropdown-item" href="#">Export to PDF</a>
+                                                                    </div>
+                                                                </li>
+                                                                <li>
+                                                                    <a class="hide-toggle dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                        <i class="fa fa-cog"></i>
+                                                                    </a>
+                                                                    <div class="dropdown-menu p-3" aria-labelledby="dropdownMenuLink">
+                                                                        <p class="m-0">Display density</p>
+                                                                        <div class="checkbox checkbox-sec d-block my-2">
+                                                                            <input type="checkbox" checked="checked" id="compact-display">
+                                                                            <label for="compact-display">Compact</label>
+                                                                        </div>
+                                                                    </div>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                <div class="col-md-7"></div>
-                                                <div class="col-md-2">
-                                                    <i class="fa fa-envelope" style="font-size:24px"></i>&nbsp;
-                                                    <i class="material-icons">local_printshop</i>&nbsp;
-                                                    <i class="fa fa-upload" style="font-size:24px"></i>&nbsp;
-                                                    <i class="material-icons">settings</i>&nbsp;
+
+                                                <div class="row">
+                                                    <div class="col-12 text-center">
+                                                        <h4>nSmarTrac <i class="material-icons" style="font-size:16px">edit</i></h4>
+                                                        <p>Balance Sheet <br> As of <?=date("F d, Y")?></p>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <table class="table" style="width: 100%;">
+                                                            <thead>
+                                                                <th></th>
+                                                                <th style="text-align:right;">TOTAL</th>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr data-toggle="collapse" data-target="#accordion" class="clickable collapse-row collapsed">
+                                                                    <td><i class="fa fa-caret-right"></i> ASSETS</td>
+                                                                    <td style="text-align:right;">$571,265.66</td>
+                                                                </tr>
+                                                                <tr data-toggle="collapse" data-target="#accordion1" class="clickable collapse-row collapse" id="accordion">
+                                                                    <td>&emsp;<i class="fa fa-caret-right"></i> Current Assets</td>
+                                                                    <td style="text-align:right;"></td>
+                                                                </tr>
+                                                                <tr id="accordion1" class="collapse clickable collapse-row" data-toggle="collapse" data-target="#accordion2">
+                                                                    <td>&emsp;&emsp;<i class="fa fa-caret-right"></i> Bank Accounts</td>
+                                                                    <td style="text-align:right;"></td>
+                                                                </tr>
+                                                                <tr id="accordion2" class="collapse">
+                                                                    <td>&emsp;&emsp;&emsp;Checking</td>
+                                                                    <td style="text-align:right;">305,061.93</td>
+                                                                </tr>
+                                                                <tr id="accordion2" class="collapse clickable collapse-row" data-toggle="collapse" data-target="#accordion3">
+                                                                    <td>&emsp;&emsp;&emsp;<i class="fa fa-caret-right"> Test Bank (Cash on hand)</td>
+                                                                    <td style="text-align:right;">990.77</td>
+                                                                </tr>
+                                                                <tr id="accordion3" class="collapse clickable collapse-row">
+                                                                    <td>&emsp;&emsp;&emsp;&emsp; Sub-bank (Cash on hand)</td>
+                                                                    <td style="text-align:right;">990.00</td>
+                                                                </tr>
+                                                                <tr id="accordion3" class="collapse clickable collapse-row">
+                                                                    <td>&emsp;&emsp;&emsp;&emsp; <b>Total Test Bank (Cash on hand)</b></td>
+                                                                    <td style="text-align:right;"><b>1,980.77</b></td>
+                                                                </tr>
+                                                                <tr id="accordion2" class="collapse clickable collapse-row">
+                                                                    <td>&emsp;&emsp;&emsp;Test Category</td>
+                                                                    <td style="text-align:right;">10.00</td>
+                                                                </tr>
+                                                                <tr id="accordion2" class="collapse clickable collapse-row">
+                                                                    <td>&emsp;&emsp;&emsp;<b>Total Bank Accounts</b></td>
+                                                                    <td style="text-align:right;"><b>$307,052.70</b></td>
+                                                                </tr>
+                                                                <tr id="accordion1" class="collapse clickable collapse-row" data-toggle="collapse" data-target="#accordion4">
+                                                                    <td>&emsp;&emsp;<i class="fa fa-caret-right"></i> Accounts Receivable</td>
+                                                                    <td style="text-align:right;"></td>
+                                                                </tr>
+                                                                <tr id="accordion4" class="collapse clickable collapse-row">
+                                                                    <td>&emsp;&emsp;&emsp;Accounts Receivable</td>
+                                                                    <td style="text-align:right;">205,324.93</td>
+                                                                </tr>
+                                                                <tr id="accordion4" class="collapse clickable collapse-row">
+                                                                    <td>&emsp;&emsp;&emsp;<b>Total Accounts Receivable</b></td>
+                                                                    <td style="text-align:right;"><b>$205,324.93</b></td>
+                                                                </tr>
+                                                                <tr id="accordion1" class="collapse clickable collapse-row" data-toggle="collapse" data-target="#accordion5">
+                                                                    <td>&emsp;&emsp;<i class="fa fa-caret-right"></i> Other Current Assets</td>
+                                                                    <td style="text-align:right;"></td>
+                                                                </tr>
+                                                                <tr id="accordion5" class="collapse clickable collapse-row">
+                                                                    <td>&emsp;&emsp;&emsp;Credit Card Receivables</td>
+                                                                    <td style="text-align:right;">207.95</td>
+                                                                </tr>
+                                                                <tr id="accordion5" class="collapse clickable collapse-row">
+                                                                    <td>&emsp;&emsp;&emsp;Inventory</td>
+                                                                    <td style="text-align:right;">25.00</td>
+                                                                </tr>
+                                                                <tr id="accordion5" class="collapse clickable collapse-row">
+                                                                    <td>&emsp;&emsp;&emsp;Inventory Asset-1</td>
+                                                                    <td style="text-align:right;">25,705.75</td>
+                                                                </tr>
+                                                                <tr id="accordion5" class="collapse clickable collapse-row">
+                                                                    <td>&emsp;&emsp;&emsp;Test OCA</td>
+                                                                    <td style="text-align:right;">1,000.00</td>
+                                                                </tr>
+                                                                <tr id="accordion5" class="collapse clickable collapse-row">
+                                                                    <td>&emsp;&emsp;&emsp;Uncategorized Asset</td>
+                                                                    <td style="text-align:right;">9,068.80</td>
+                                                                </tr>
+                                                                <tr id="accordion5" class="collapse clickable collapse-row">
+                                                                    <td>&emsp;&emsp;&emsp;Undeposited Funds</td>
+                                                                    <td style="text-align:right;">16,347.82</td>
+                                                                </tr>
+                                                                <tr id="accordion5" class="collapse clickable collapse-row">
+                                                                    <td>&emsp;&emsp;&emsp;<b>Total Other Current Assets</b></td>
+                                                                    <td style="text-align:right;"><b>$52,355.32</b></td>
+                                                                </tr>
+                                                                <tr id="accordion1" class="collapse clickable collapse-row">
+                                                                    <td>&emsp;&emsp;<b>Total Current Assets</b></td>
+                                                                    <td style="text-align:right;"><b>$564,732.95</b></td>
+                                                                </tr>
+                                                                <tr data-toggle="collapse" data-target="#accordion1" class="clickable collapse-row collapse" id="accordion6">
+                                                                    <td>&emsp;<i class="fa fa-caret-right"></i> Fixed Assets</td>
+                                                                    <td style="text-align:right;"></td>
+                                                                </tr>
+                                                                <tr id="accordion6" class="collapse clickable collapse-row">
+                                                                    <td>&emsp;&emsp;Accumulated Depreciation</td>
+                                                                    <td style="text-align:right;">-26,176.00</td>
+                                                                </tr>
+                                                                <tr id="accordion6" class="collapse clickable collapse-row">
+                                                                    <td>&emsp;&emsp;Fixed Asset Computers</td>
+                                                                    <td style="text-align:right;">6,069.00</td>
+                                                                </tr>
+                                                                <tr id="accordion6" class="collapse clickable collapse-row">
+                                                                    <td>&emsp;&emsp;Fixed Asset Furniture</td>
+                                                                    <td style="text-align:right;">25,289.00</td>
+                                                                </tr>
+                                                                <tr id="accordion6" class="collapse clickable collapse-row">
+                                                                    <td>&emsp;&emsp;Fixed Asset Phone</td>
+                                                                    <td style="text-align:right;">1,200.00</td>
+                                                                </tr>
+                                                                <tr id="accordion6" class="collapse clickable collapse-row">
+                                                                    <td>&emsp;&emsp;<b>Total Fixed Assets</b></td>
+                                                                    <td style="text-align:right;"><b>$6,382.00</b></td>
+                                                                </tr>
+                                                                <tr  class="clickable collapse-row collapse"  id="accordion">
+                                                                    <td>&emsp;<b>TOTAL ASSETS</b></td>
+                                                                    <td style="text-align:right;"><b>$571,114.95</b></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><i class="fa fa-caret-right"></i> LIABILITIES AND EQUITY</td>
+                                                                    <td style="text-align:right;">$571,265.66</td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-12 text-center">
+                                                        <p>Accrual basis <?=date("l, F j, Y h:i A eP")?></p>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <center>
-                                                <h4>nSmarTrac <i class="material-icons" style="font-size:16px">edit</i></h4>
-                                                <p>Balance Sheet Comparison <br> As of July 31, 2021</p>
-                                            </center>
-
-                                            <table class="table" style="width: 100%;">
-                                                <thead>
-                                                    <th></th>
-                                                    <th style="text-align:right;">TOTAL</th>
-                                                </thead>
-                                                <tbody>
-                                                    <tr data-toggle="collapse" data-target="#accordion" class="clickable collapse-row collapsed">
-                                                        <td><i class="fa fa-caret-right"></i> ASSETS</td>
-                                                        <td style="text-align:right;">$571,265.66</td>
-                                                    </tr>
-                                                    <tr data-toggle="collapse" data-target="#accordion1" class="clickable collapse-row collapse" id="accordion">
-                                                        <td>&emsp;<i class="fa fa-caret-right"></i> Current Assets</td>
-                                                        <td style="text-align:right;"></td>
-                                                    </tr>
-                                                    <tr id="accordion1" class="collapse clickable collapse-row" data-toggle="collapse" data-target="#accordion2">
-                                                        <td>&emsp;&emsp;<i class="fa fa-caret-right"></i> Bank Accounts</td>
-                                                        <td style="text-align:right;"></td>
-                                                    </tr>
-                                                    <tr id="accordion2" class="collapse">
-                                                        <td>&emsp;&emsp;&emsp;Checking</td>
-                                                        <td style="text-align:right;">305,061.93</td>
-                                                    </tr>
-                                                    <tr id="accordion2" class="collapse clickable collapse-row" data-toggle="collapse" data-target="#accordion3">
-                                                        <td>&emsp;&emsp;&emsp;<i class="fa fa-caret-right"> Test Bank (Cash on hand)</td>
-                                                        <td style="text-align:right;">990.77</td>
-                                                    </tr>
-                                                    <tr id="accordion3" class="collapse clickable collapse-row">
-                                                        <td>&emsp;&emsp;&emsp;&emsp; Sub-bank (Cash on hand)</td>
-                                                        <td style="text-align:right;">990.00</td>
-                                                    </tr>
-                                                    <tr id="accordion3" class="collapse clickable collapse-row">
-                                                        <td>&emsp;&emsp;&emsp;&emsp; <b>Total Test Bank (Cash on hand)</b></td>
-                                                        <td style="text-align:right;"><b>1,980.77</b></td>
-                                                    </tr>
-                                                    <tr id="accordion2" class="collapse clickable collapse-row">
-                                                        <td>&emsp;&emsp;&emsp;Test Category</td>
-                                                        <td style="text-align:right;">10.00</td>
-                                                    </tr>
-                                                    <tr id="accordion2" class="collapse clickable collapse-row">
-                                                        <td>&emsp;&emsp;&emsp;<b>Total Bank Accounts</b></td>
-                                                        <td style="text-align:right;"><b>$307,052.70</b></td>
-                                                    </tr>
-                                                    <tr id="accordion1" class="collapse clickable collapse-row" data-toggle="collapse" data-target="#accordion4">
-                                                        <td>&emsp;&emsp;<i class="fa fa-caret-right"></i> Accounts Receivable</td>
-                                                        <td style="text-align:right;"></td>
-                                                    </tr>
-                                                    <tr id="accordion4" class="collapse clickable collapse-row">
-                                                        <td>&emsp;&emsp;&emsp;Accounts Receivable</td>
-                                                        <td style="text-align:right;">205,324.93</td>
-                                                    </tr>
-                                                    <tr id="accordion4" class="collapse clickable collapse-row">
-                                                        <td>&emsp;&emsp;&emsp;<b>Total Accounts Receivable</b></td>
-                                                        <td style="text-align:right;"><b>$205,324.93</b></td>
-                                                    </tr>
-                                                    <tr id="accordion1" class="collapse clickable collapse-row" data-toggle="collapse" data-target="#accordion5">
-                                                        <td>&emsp;&emsp;<i class="fa fa-caret-right"></i> Other Current Assets</td>
-                                                        <td style="text-align:right;"></td>
-                                                    </tr>
-                                                    <tr id="accordion5" class="collapse clickable collapse-row">
-                                                        <td>&emsp;&emsp;&emsp;Credit Card Receivables</td>
-                                                        <td style="text-align:right;">207.95</td>
-                                                    </tr>
-                                                    <tr id="accordion5" class="collapse clickable collapse-row">
-                                                        <td>&emsp;&emsp;&emsp;Inventory</td>
-                                                        <td style="text-align:right;">25.00</td>
-                                                    </tr>
-                                                    <tr id="accordion5" class="collapse clickable collapse-row">
-                                                        <td>&emsp;&emsp;&emsp;Inventory Asset-1</td>
-                                                        <td style="text-align:right;">25,705.75</td>
-                                                    </tr>
-                                                    <tr id="accordion5" class="collapse clickable collapse-row">
-                                                        <td>&emsp;&emsp;&emsp;Test OCA</td>
-                                                        <td style="text-align:right;">1,000.00</td>
-                                                    </tr>
-                                                    <tr id="accordion5" class="collapse clickable collapse-row">
-                                                        <td>&emsp;&emsp;&emsp;Uncategorized Asset</td>
-                                                        <td style="text-align:right;">9,068.80</td>
-                                                    </tr>
-                                                    <tr id="accordion5" class="collapse clickable collapse-row">
-                                                        <td>&emsp;&emsp;&emsp;Undeposited Funds</td>
-                                                        <td style="text-align:right;">16,347.82</td>
-                                                    </tr>
-                                                    <tr id="accordion5" class="collapse clickable collapse-row">
-                                                        <td>&emsp;&emsp;&emsp;<b>Total Other Current Assets</b></td>
-                                                        <td style="text-align:right;"><b>$52,355.32</b></td>
-                                                    </tr>
-                                                    <tr id="accordion1" class="collapse clickable collapse-row">
-                                                        <td>&emsp;&emsp;<b>Total Current Assets</b></td>
-                                                        <td style="text-align:right;"><b>$564,732.95</b></td>
-                                                    </tr>
-                                                    <tr data-toggle="collapse" data-target="#accordion1" class="clickable collapse-row collapse" id="accordion6">
-                                                        <td>&emsp;<i class="fa fa-caret-right"></i> Fixed Assets</td>
-                                                        <td style="text-align:right;"></td>
-                                                    </tr>
-                                                    <tr id="accordion6" class="collapse clickable collapse-row">
-                                                        <td>&emsp;&emsp;Accumulated Depreciation</td>
-                                                        <td style="text-align:right;">-26,176.00</td>
-                                                    </tr>
-                                                    <tr id="accordion6" class="collapse clickable collapse-row">
-                                                        <td>&emsp;&emsp;Fixed Asset Computers</td>
-                                                        <td style="text-align:right;">6,069.00</td>
-                                                    </tr>
-                                                    <tr id="accordion6" class="collapse clickable collapse-row">
-                                                        <td>&emsp;&emsp;Fixed Asset Furniture</td>
-                                                        <td style="text-align:right;">25,289.00</td>
-                                                    </tr>
-                                                    <tr id="accordion6" class="collapse clickable collapse-row">
-                                                        <td>&emsp;&emsp;Fixed Asset Phone</td>
-                                                        <td style="text-align:right;">1,200.00</td>
-                                                    </tr>
-                                                    <tr id="accordion6" class="collapse clickable collapse-row">
-                                                        <td>&emsp;&emsp;<b>Total Fixed Assets</b></td>
-                                                        <td style="text-align:right;"><b>$6,382.00</b></td>
-                                                    </tr>
-                                                    <tr  class="clickable collapse-row collapse"  id="accordion">
-                                                        <td>&emsp;<b>TOTAL ASSETS</b></td>
-                                                        <td style="text-align:right;"><b>$571,114.95</b></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td><i class="fa fa-caret-right"></i> LIABILITIES AND EQUITY</td>
-                                                        <td style="text-align:right;">$571,265.66</td>
-                                                    </tr>
-                                                </tbody>
-                                                <tfoot>
-                                                    <!-- <tr>
-                                                        <td><b>Total</b></td>
-                                                        <td><b>$0.00</b></td>
-                                                        <td><b>$0.00</b></td>
-                                                        <td><b>$0.00</b></td>
-                                                        <td><b>$0.00</b></td>
-                                                        <td><b>$0.00</b></td>
-                                                        <td><b>$0.00</b></td>
-                                                    </tr> -->
-                                                </tfoot>
-                                            </table>
-                                            </div>
+                                            <!-- end of container fluid -->
+                                        </div>
                                     </div>
                                 </div>
                             </div>

@@ -21,10 +21,18 @@
             </div>
         </div>
     </div>
-    <div class="nsm-card-content d-flex justify-content-center align-items-center">
-        <canvas id="lead_source_chart" class="nsm-chart" data-chart-type="expenses"></canvas>
-    </div>
-    <?php
+
+    <?php 
+        $bgColors =  ['"rgba(75, 192, 192, 0.2)"',
+        '"rgba(153, 102, 255, 0.2)"',
+        '"rgba(54, 162, 235, 1)"',
+        '"rgba(255, 99, 132, 0.2)"',
+        '"rgba(54, 162, 235, 0.2)"',
+        '"rgba(255, 206, 86, 0.2)"',
+        '"rgb(255, 205, 86, 0.2)"',
+        '"rgba(255, 159, 64, 0.2)"',
+        '"rgba(65, 159, 64, 0.2)"'];
+    
     $sources = [];
     $sourcesCount = [];
     foreach($leadSources as $source): ?>
@@ -33,6 +41,28 @@
             $sourcesCount[] = $source->leadSourceCount;
         ?>
     <?php endforeach; ?>
+   
+    <div class="nsm-card-content ">
+    <div style=" float: left; position: relative;">
+        <div style="width: 100%; height: 40px; position: absolute; top: 50%; left: 0; margin-top: -20px; line-height:19px; text-align: center; z-index: 999999999999999">
+            <?= count($leadSources) ?><Br />
+            Sources
+        </div>
+        <canvas id="lead_source_chart" class="nsm-chart" data-chart-type="expenses"></canvas>
+    </div>    
+        <br>
+        <div class="row">
+            <?php $x=0; foreach($leadSources as $source): ?>
+            <div class="col-md-6">
+                <span class="tagsData" href="javascript:void(0);">
+                    <span class=" big badge-circle"><b><?= $source->leadSourceCount ?></b>
+                    <span class="nsm-badge  badge-circle stat-bar stats-item" style="background-color: <?= str_replace('"', "", $bgColors[$x]) ?>;"></span>  <?= $source->ls_name ?></span>
+                </span>
+            </div>
+            <?php $x++; endforeach; ?>
+        </div>
+    </div>
+    
 </div>
 
 <script type="text/javascript">
@@ -62,28 +92,7 @@
             datasets: [{
               data: <?php echo '[' . implode(',', $sourcesCount) . ']'; ?>,
               backgroundColor: [
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgb(255, 205, 86, 0.2)',
-                'rgba(255, 159, 64, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-              ],
-              borderColor: [
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 99, 132, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgb(255, 205, 86, 1)',
-                'rgba(255, 159, 64, 1)',
-                'rgba(153, 102, 255, 1)',
+                <?php echo  implode(',', $bgColors); ?>,
               ],
               borderWidth: 1
             }]
@@ -91,11 +100,10 @@
           options: {
             responsive: true,
             plugins: {
-              legend: {
-                position: 'bottom',
-              },
+              legend: false,
             },
             aspectRatio: 1.5,
+            
           }
         });
     }
