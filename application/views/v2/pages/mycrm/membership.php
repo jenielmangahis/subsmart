@@ -20,14 +20,14 @@
                     <div class="col-12">
                         <div class="nsm-card primary">
                             <div class="nsm-card-header">
-                                <div class="nsm-card-title">
+                                <div class="nsm-card-title">                                    
                                     <span><?= $client->is_trial == 1 ? 'Trial' : 'Paid'; ?> Membership</span>
-                                    <?php if ($client->is_plan_active == 0) : ?>
+                                    <?php if ($client->is_plan_active == 0 && !in_array($client->id, exempted_company_ids())) : ?>
                                         <label class="nsm-badge error">Expired</label>
                                     <?php endif; ?>
                                 </div>
                                 <div class="nsm-card-controls">
-                                    <?php if ($client->is_plan_active == 1) : ?>
+                                    <?php if ($client->is_plan_active == 1 || in_array($client->id, exempted_company_ids())) : ?>
                                         <button type="button" class="nsm-button primary"  data-bs-toggle="modal" data-bs-target="#upgrade_plan_modal">
                                             <i class='bx bx-fw bxs-up-arrow'></i> Upgrade Plan
                                         </button>
@@ -38,7 +38,11 @@
                                         <?php if ($client->is_plan_active == 1) : ?>
                                             Pay Subscription
                                         <?php else : ?>
-                                            Renew Subscription
+                                            <?php if( in_array($client->id, exempted_company_ids()) ){ ?>
+                                                Pay Subscription
+                                            <?php }else{ ?>
+                                                Renew Subscription
+                                            <?php } ?>                                            
                                         <?php endif; ?>
                                     </button>
                                 </div>
