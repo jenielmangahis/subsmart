@@ -4765,6 +4765,15 @@ class Timesheet extends MY_Controller
         $week = $this->input->post("week");
         $user_id = logged("id");
         $week_convert = date('Y-m-d', strtotime($week));
+        $date_this_week =  array(
+            "Monday" => '',
+            "Tuesday" => '',
+            "Wednesday" => '',
+            "Thursday" => '',
+            "Friday" => '',
+            "Saturday" =>'',
+            "Sunday" => '',
+        );
         if (count($data) > 0) {
             $pay_day = "";
             foreach ($data as $result) {

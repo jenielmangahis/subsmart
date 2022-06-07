@@ -130,12 +130,11 @@ if (!function_exists('get_sales_rep_name')){
     }
 }
 
-if (!function_exists('get_tech_customer_count')){
-    function get_tech_customer_count($id){
+if (!function_exists('get_customer_count_widget')){
+    function get_customer_count_widget($id,$field){
         $CI = &get_instance();
         $CI->load->model('event_model');
-        //$this->page_data['employees'] = $this->general->get_data_with_param($get_employee);
-        return $CI->event_model->getTechRevenue($id);
+        return $CI->event_model->getCustomerCountPerId($id,$field);
     }
 }
 

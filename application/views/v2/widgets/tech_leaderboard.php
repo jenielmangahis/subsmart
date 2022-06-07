@@ -40,9 +40,10 @@
                     <div style="padding-top: 5px;">
                         <span class="content-subtitle nsm-text-success fw-bold" style="font-size:12px;">$<?=  number_format(floatval(get_tech_revenue($tech->id)[0]->techRev), 2, '.', ','); ?></span>
                         <span class="content-subtitle d-block">revenue</span>
-                        </div>
+                    </div>
+                    <?php $countCus = get_customer_count_widget($tech->id,'technician')[0]->totalCount ?>
                     <div class="controls">
-                        <span class="content-subtitle nsm-text-success fw-bold" style="font-size:12px;"><?= $tech->customerCount; ?></span>
+                        <span class="content-subtitle nsm-text-success fw-bold" style="font-size:12px;"><?= $countCus ? $countCus : 0 ; ?></span>
                         <span class="content-subtitle d-block">customers</span>
                     </div>
                 </div>

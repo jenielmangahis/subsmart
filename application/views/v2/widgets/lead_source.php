@@ -53,10 +53,10 @@
         <br>
         <div class="row">
             <?php $x=0; foreach($leadSources as $source): ?>
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <span class="tagsData" href="javascript:void(0);">
                     <span class=" big badge-circle"><b><?= $source->leadSourceCount ?></b>
-                    <span class="nsm-badge  badge-circle stat-bar stats-item" style="background-color: <?= str_replace('"', "", $bgColors[$x]) ?>;"></span>  <?= $source->ls_name ?></span>
+                    <span class="nsm-badge  badge-circle stat-bar stats-item" style="background-color: <?= str_replace('"', "", $bgColors[$x]) ?>;"></span>  <?= $source->lead_source ?></span>
                 </span>
             </div>
             <?php $x++; endforeach; ?>

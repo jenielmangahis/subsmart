@@ -4,15 +4,38 @@ const $table = document.getElementById("customformstable");
 const $modal = document.getElementById("cf--modal");
 const $modalForm = $modal.querySelector("form");
 
+const $dropdown = document.getElementById("formdropdown");
+const $formList = $dropdown.querySelector(".dropdown-menu");
+const $dropdownText = $dropdown.querySelector(".dropdown-toggle span");
+
+const $loader = document.querySelector(".customerforms-loader");
+const $search = document.getElementById("labelssearch");
+
 window.document.addEventListener("DOMContentLoaded", async () => {
   const { data: labels } = await api.getLabels();
 
   const columns = getColumns();
   const table = $($table).DataTable({
     data: labels,
-    filter: false,
     bInfo: false,
     bLengthChange: false,
+    ajax: {
+      url: `${api.prefixURL}/CustomerForms/apiGetLabels`,
+      data: (param) => {
+        $loader.classList.remove("hide");
+        param.form = $formList.dataset.form;
+        return param;
+      },
+      dataSrc: (json) => {
+        const form = $formList.dataset.form;
+        const $item = $formList.querySelector(`[data-form="${form}"]`);
+
+        $dropdownText.textContent = $item.textContent.trim();
+        $loader.classList.add("hide");
+
+        return json.data;
+      },
+    },
     columns: [
       {
         render: columns.name,
@@ -58,6 +81,25 @@ window.document.addEventListener("DOMContentLoaded", async () => {
     const func = actions[action].bind(this);
     await func(row);
   });
+
+  $($formList)
+    .find("li a")
+    .click(function (event) {
+      event.preventDefault();
+
+      const currForm = $formList.dataset.form;
+      const nextForm = this.dataset.form;
+
+      if (currForm !== nextForm) {
+        $dropdownText.textContent = this.textContent.trim();
+        $formList.setAttribute("data-form", nextForm);
+        table.ajax.reload();
+      }
+    });
+
+  $search.addEventListener("input", function () {
+    table.search(this.value).draw();
+  });
 });
 
 function getColumns() {
@@ -71,6 +113,10 @@ function getColumns() {
     },
     customName: (_, __, row) => {
       if (!row.custom) {
+        return `<div class="content-subtitle">--</div>`;
+      }
+
+      if (row.custom.name === row.name) {
         return `<div class="content-subtitle">--</div>`;
       }
 

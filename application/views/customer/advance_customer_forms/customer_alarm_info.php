@@ -229,9 +229,9 @@
             <h6 ><span class="fa fa-user"></span>&nbsp; &nbsp;Alarm Information</h6>
         </div>
         <div class="card-body">
-            <div class="row form_line">
+            <div class="row form_line field-custom-name-container">
                 <div class="col-md-6">
-                    Monitoring Company
+                    <field-custom-name default="Monitoring Company" form="alarm_info"></field-custom-name>
                 </div>
                 <div class="col-md-6">
                     <select id="monitor_comp" name="monitor_comp" data-customer-source="dropdown" class="input_select" >
@@ -252,17 +252,17 @@
 
                 </div>
             </div>
-            <div class="row form_line">
+            <div class="row form_line field-custom-name-container">
                 <div class="col-md-6">
-                    Monitoring ID
+                    <field-custom-name default="Monitoring ID" form="alarm_info"></field-custom-name>
                 </div>
                 <div class="col-md-6">
                     <input type="text" class="form-control" name="monitor_id" id="monitor_id" value="<?php if(isset($alarm_info)){ echo $alarm_info->monitor_id != 0 ? $alarm_info->monitor_id : '' ; } ?>"/>
                 </div>
             </div>
-            <div class="row form_line">
+            <div class="row form_line field-custom-name-container">
                 <div class="col-md-6">
-                    Account Type
+                    <field-custom-name default="Account Type" form="alarm_info"></field-custom-name>
                 </div>
                 <div class="col-md-6">
                     <select name="acct_type" id="acct_type" class="input_select">
@@ -273,9 +273,11 @@
                     <a href="<?= base_url() ?>customer/settings" target="_blank"  style="color:#58bc4f;font-size: 10px;"><span class="fa fa-plus"></span> Manage Type</a>&nbsp;&nbsp;
                 </div>
             </div>
-            <div class="row form_line">
+            <div class="row form_line field-custom-name-container">
                 <div class="col-md-6">
-                    <label>Online
+                    <label>
+                        <field-custom-name default="Online" form="alarm_info"></field-custom-name>
+                    </label>
                 </div>
                 <div class="col-md-6">
                     <select id="online" name="online" data-customer-source="dropdown" class="form-controls input_select">
@@ -284,9 +286,11 @@
                     </select>
                 </div>
             </div>
-            <div class="row form_line">
+            <div class="row form_line field-custom-name-container">
                 <div class="col-md-6">
-                    <label>In Service
+                    <label>
+                        <field-custom-name default="In Service" form="alarm_info"></field-custom-name>
+                    </label>
                 </div>
                 <div class="col-md-6">
                     <select id="in_service" name="in_service" data-customer-source="dropdown" class="form-controls input_select">
@@ -295,9 +299,11 @@
                     </select>
                 </div>
             </div>
-            <div class="row form_line">
+            <div class="row form_line field-custom-name-container">
                 <div class="col-md-6">
-                    <label>Equipment
+                    <label>
+                        <field-custom-name default="Equipment" form="alarm_info"></field-custom-name>
+                    </label>
                 </div>
                 <div class="col-md-6">
                     <select id="equipment" name="equipment" data-customer-source="dropdown" class="form-controls input_select">
@@ -309,42 +315,42 @@
                 </div>
             </div>
 
-            <div class="row form_line">
+            <div class="row form_line field-custom-name-container">
                 <div class="col-md-6">
-                    Abort Code
+                    <field-custom-name default="Abort Code" form="alarm_info"></field-custom-name>
                 </div>
                 <div class="col-md-6">
                     <input type="text" class="form-control" name="passcode" id="passcode" value="<?php if(isset($alarm_info)){ echo $alarm_info->passcode; } ?>"/>
                 </div>
             </div>
-            <div class="row form_line">
+            <div class="row form_line field-custom-name-container">
                 <div class="col-md-6">
-                    Installer Code
+                    <field-custom-name default="Installer Code" form="alarm_info"></field-custom-name>
                 </div>
                 <div class="col-md-6">
                     <input type="text" class="form-control" name="install_code" id="install_code" value="<?php if(isset($alarm_info)){ echo $alarm_info->install_code!=0 ?  $alarm_info->install_code : ''; } ?>"/>
                 </div>
             </div>
-            <div class="row form_line">
+            <div class="row form_line field-custom-name-container">
                 <div class="col-md-6">
-                    Monitoring Confirm#
+                    <field-custom-name default="Monitoring Confirm#" form="alarm_info"></field-custom-name>
                 </div>
                 <div class="col-md-6">
                     <input type="text" class="form-control" name="mcn" id="mcn" value="<?php if(isset($alarm_info)){ echo $alarm_info->mcn !=0 ? $alarm_info->mcn : ''; } ?>"/>
                 </div>
             </div>
-            <div class="row form_line">
+            <div class="row form_line field-custom-name-container">
                 <div class="col-md-6">
-                    Signal Confirm#
+                    <field-custom-name default="Signal Confirm#" form="alarm_info"></field-custom-name>
                 </div>
                 <div class="col-md-6">
                     <input type="text" class="form-control" name="scn" id="scn" value="<?php if(isset($alarm_info)){ echo $alarm_info->scn !=0 ? $alarm_info->scn : ''; } ?>"/>
                 </div>
             </div>
 
-            <div class="row form_line">
+            <div class="row form_line field-custom-name-container">
                 <div class="col-md-6">
-                    Panel Type
+                    <field-custom-name default="Panel Type" form="alarm_info"></field-custom-name>
                 </div>
                 <div class="col-md-6">
                     <select name="panel_type" id="panel_type" class="input_select" data-value="<?= isset($alarm_info) ? $alarm_info->panel_type : "" ?>">
@@ -380,9 +386,9 @@
                 </div>
             </div>
             
-            <div class="row form_line">
+            <div class="row form_line field-custom-name-container">
                 <div class="col-md-6">
-                    Warranty Type
+                    <field-custom-name default="Warranty Type" form="alarm_info"></field-custom-name>
                 </div>
                 <div class="col-md-6">
                     <select id="warranty_type" name="warranty_type" data-customer-source="dropdown" class="input_select" >
@@ -397,9 +403,9 @@
                 </div>
             </div>
             <hr>
-            <div class="row form_line">
+            <div class="row form_line field-custom-name-container">
                 <div class="col-md-6">
-                    Dealer
+                    <field-custom-name default="Dealer" form="alarm_info"></field-custom-name>
                 </div>
                 <div class="col-md-6">
                     <select id="dealer" name="dealer" data-customer-source="dropdown" class="input_select" >
@@ -409,25 +415,25 @@
                     </select>
                 </div>
             </div>
-            <div class="row form_line">
+            <div class="row form_line field-custom-name-container">
                 <div class="col-md-6">
-                    Login 
+                    <field-custom-name default="Login" form="alarm_info"></field-custom-name>
                 </div>
                 <div class="col-md-6">
                     <input type="text" class="form-control" name="alarm_login" id="alarm_login" value="<?php if(isset($alarm_info)){ echo $alarm_info->alarm_login; } ?>"/>
                 </div>
             </div>
-            <div class="row form_line">
+            <div class="row form_line field-custom-name-container">
                 <div class="col-md-6">
-                    Customer ID 
+                    <field-custom-name default="Customer ID" form="alarm_info"></field-custom-name>
                 </div>
                 <div class="col-md-6">
                     <input type="text" class="form-control" name="alarm_customer_id" id="alarm_customer_id" value="<?php if(isset($alarm_info)){ echo $alarm_info->alarm_customer_id; } ?>"/>
                 </div>
             </div>
-            <div class="row form_line">
+            <div class="row form_line field-custom-name-container">
                 <div class="col-md-6">
-                    CS Account
+                    <field-custom-name default="CS Account" form="alarm_info"></field-custom-name>
                 </div>
                 <div class="col-md-6">
                     <input type="text" class="form-control" name="alarm_cs_account" id="alarm_cs_account" value="<?php if(isset($alarm_info)){ echo $alarm_info->alarm_cs_account; } ?>"/>

@@ -308,7 +308,7 @@
             <h6 ><span class="fa fa-user"></span>&nbsp; &nbsp;Funding Information</h6>
         </div>
     <div class="card-body">
-        <div class="row form_line">
+        <div class="row form_line field-custom-name-container">
             <div class="col-md-7">
                 <field-custom-name default="Pre-Install Survey" form="funding_info"></field-custom-name>
             </div>
@@ -321,7 +321,7 @@
                 </select>
             </div>
         </div>
-        <div class="row form_line">
+        <div class="row form_line field-custom-name-container">
             <div class="col-md-7">
                 <field-custom-name default="Post-Install Survey" form="funding_info"></field-custom-name>
             </div>
@@ -335,7 +335,7 @@
             </div>
         </div>
         <hr>
-        <div class="row form_line">
+        <div class="row form_line field-custom-name-container">
             <div class="col-md-7">
                 <field-custom-name default="Monitoring Waived" form="funding_info"></field-custom-name>
             </div>
@@ -358,7 +358,7 @@
             </div>
         </div>
 
-        <div class="row form_line">
+        <div class="row form_line field-custom-name-container">
             <div class="col-md-7">
                 <label for="rebate_offer">
                     <field-custom-name default="Rebate Offered" form="funding_info"></field-custom-name>
@@ -368,13 +368,15 @@
                 <input type="checkbox" name="rebate_offer" class="form-controls" value="1"  id="rebate_offer" <?php if(isset($office_info)){ echo $office_info->rebate_offer == 1 ? 'checked': ''; } ?> >
             </div>
         </div>
-        <div class="row form_line">
+        <div class="row form_line field-custom-name-container">
             <div class="col-md-7">
                 <field-custom-name default="Rebate Check # 1" form="funding_info"></field-custom-name>
             </div>
             <div class="col-md-5">
                 <input type="number" class="form-control" name="rebate_check1" id="rebate_check1" value="<?php if(isset($office_info)){ echo  $office_info->rebate_check1; } ?>"/>
             </div>
+        </div>
+        <div class="row form_line field-custom-name-container">
             <div class="col-md-7">
                 <field-custom-name default="Rebate Check # 1 Amount $" form="funding_info"></field-custom-name>
             </div>
@@ -382,13 +384,15 @@
                 <input type="number" step="0.01" class="form-control" name="rebate_check1_amt" id="rebate_check1_amt" value="<?php if(isset($office_info)){ echo  $office_info->rebate_check1_amt; } ?>"/>
             </div>
         </div>
-        <div class="row form_line">
+        <div class="row form_line field-custom-name-container">
             <div class="col-md-7">
                 <field-custom-name default="Rebate Check # 2" form="funding_info"></field-custom-name>
             </div>
             <div class="col-md-5">
                 <input type="number" class="form-control" name="rebate_check2" id="rebate_check2" value="<?php if(isset($office_info)){ echo  $office_info->rebate_check2; } ?>"/>
             </div>
+        </div>
+        <div class="row form_line field-custom-name-container">
             <div class="col-md-7">
                 <field-custom-name default="Rebate Check # 2 Amount $" form="funding_info"></field-custom-name>
             </div>
@@ -396,7 +400,7 @@
                 <input type="number" step="0.01" class="form-control" name="rebate_check2_amt" id="rebate_check2_amt" value="<?php if(isset($office_info)){ echo  $office_info->rebate_check2_amt; } ?>" />
             </div>
         </div>
-        <div class="row form_line">
+        <div class="row form_line field-custom-name-container">
             <div class="col-md-7">
                 <field-custom-name default="Activation Fee" form="funding_info"></field-custom-name>
             </div>
@@ -421,7 +425,7 @@
             </div>
         </div>
         <hr>
-        <div class="row form_line">
+        <div class="row form_line field-custom-name-container">
             <div class="col-md-7">
                 <field-custom-name default="Commision Scheme Override" form="funding_info"></field-custom-name>
             </div>
@@ -432,7 +436,7 @@
                 <span>Off</span>
             </div>
         </div>
-        <div class="row form_line">
+        <div class="row form_line field-custom-name-container">
             <div class="col-md-7">
                 <field-custom-name default="Rep Commission" form="funding_info"></field-custom-name>
             </div>
@@ -445,7 +449,7 @@
                 </div>
             </div>
         </div>
-        <div class="row form_line">
+        <div class="row form_line field-custom-name-container">
             <div class="col-md-7">
                 <field-custom-name default="Rep Upfront Pay" form="funding_info"></field-custom-name>
             </div>
@@ -458,7 +462,7 @@
                 </div>
             </div>
         </div>
-        <div class="row form_line">
+        <div class="row form_line field-custom-name-container">
             <div class="col-md-7">
                 <field-custom-name default="Rep Tiered Upront Bonus" form="funding_info"></field-custom-name>
             </div>
@@ -471,7 +475,7 @@
                 </div>
             </div>
         </div>
-        <div class="row form_line">
+        <div class="row form_line field-custom-name-container">
             <div class="col-md-7">
                 <field-custom-name default="Rep Tiered Holdfund Bonus" form="funding_info"></field-custom-name>
             </div>
@@ -485,7 +489,7 @@
             </div>
         </div>
 
-        <div class="row form_line">
+        <div class="row form_line field-custom-name-container">
             <div class="col-md-7">
                 <field-custom-name default="Rep Deduction Total" form="funding_info"></field-custom-name>
             </div>
@@ -499,7 +503,7 @@
             </div>
         </div>
 
-        <div class="row form_line">
+        <div class="row form_line field-custom-name-container">
             <div class="col-md-7">
                 <field-custom-name default="Tech Commission" form="funding_info"></field-custom-name>
             </div>
@@ -512,7 +516,7 @@
                 </div>
             </div>
         </div>
-        <div class="row form_line">
+        <div class="row form_line field-custom-name-container">
             <div class="col-md-7">
                 <label for="tech_upfront_pay">
                     <field-custom-name default="Tech Upfront Pay" form="funding_info"></field-custom-name>
@@ -528,7 +532,7 @@
             </div>
         </div>
 
-        <div class="row form_line">
+        <div class="row form_line field-custom-name-container">
             <div class="col-md-7">
                 <field-custom-name default="Tech Deduction Total" form="funding_info"></field-custom-name>
             </div>
@@ -544,7 +548,7 @@
 
         <hr>
 
-        <div class="row form_line">
+        <div class="row form_line field-custom-name-container">
             <div class="col-md-7">
                 <field-custom-name default="Rep Hold Fund Charge Back" form="funding_info"></field-custom-name>
             </div>
@@ -557,7 +561,7 @@
                 </div>
             </div>
         </div>
-        <div class="row form_line">
+        <div class="row form_line field-custom-name-container">
             <div class="col-md-7">
                 <field-custom-name default="Rep Payroll Charge Back" form="funding_info"></field-custom-name>
             </div>
@@ -571,7 +575,7 @@
             </div>
         </div>
         <hr>
-        <div class="row form_line">
+        <div class="row form_line field-custom-name-container">
             <div class="col-md-7">
                 <field-custom-name default="Points Scheme Override" form="funding_info"></field-custom-name>
             </div>
@@ -584,7 +588,7 @@
                 </div>
         </div>
 
-        <div class="row form_line">
+        <div class="row form_line field-custom-name-container">
             <div class="col-md-7">
                 <field-custom-name default="Points Included" form="funding_info"></field-custom-name>
             </div>
@@ -592,7 +596,7 @@
                 <input type="number" step="0.01" class="form-control" name="points_include" id="points_include" value="<?php if(isset($office_info)){ echo $office_info->points_include !=0 ? $office_info->points_include : '';  } ?>"  />
             </div>
         </div>
-        <div class="row form_line">
+        <div class="row form_line field-custom-name-container">
             <div class="col-md-7">
                 <field-custom-name default="Price Per Point" form="funding_info"></field-custom-name>
             </div>
@@ -606,7 +610,7 @@
             </div>
         </div>
         <hr>
-        <div class="row form_line">
+        <div class="row form_line field-custom-name-container">
             <div class="col-md-7">
                 <field-custom-name default="Purchase Price" form="funding_info"></field-custom-name>
             </div>
@@ -619,7 +623,7 @@
                 </div>
             </div>
         </div>
-        <div class="row form_line">
+        <div class="row form_line field-custom-name-container">
             <div class="col-md-7">
                 <field-custom-name default="Purchase Multiple" form="funding_info"></field-custom-name>
             </div>
@@ -636,7 +640,7 @@
                 </select>
             </div>
         </div>
-        <div class="row form_line">
+        <div class="row form_line field-custom-name-container">
             <div class="col-md-7">
                 <field-custom-name default="Purchase Discount" form="funding_info"></field-custom-name>
             </div>
@@ -650,7 +654,7 @@
             </div>
         </div>
         <hr>
-        <div class="row form_line">
+        <div class="row form_line field-custom-name-container">
             <div class="col-md-7">
                 <field-custom-name default="Equipment Cost" form="funding_info"></field-custom-name>
             </div>
@@ -663,7 +667,7 @@
                 </div>
             </div>
         </div>
-        <div class="row form_line">
+        <div class="row form_line field-custom-name-container">
             <div class="col-md-7">
                 <field-custom-name default="Labor Cost" form="funding_info"></field-custom-name>
             </div>
@@ -676,7 +680,7 @@
                 </div>
             </div>
         </div>
-        <div class="row form_line">
+        <div class="row form_line field-custom-name-container">
             <div class="col-md-7">
                 <field-custom-name default="Job Profit" form="funding_info"></field-custom-name>
             </div>
@@ -689,7 +693,7 @@
                 </div>
             </div>
         </div>
-        <div class="row form_line">
+        <div class="row form_line field-custom-name-container">
             <div class="col-md-12">
                 <field-custom-name default="Customer Shareable Link" form="funding_info"></field-custom-name>
             </div>

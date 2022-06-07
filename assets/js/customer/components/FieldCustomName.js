@@ -159,6 +159,13 @@ class FieldCustomName extends HTMLElement {
     this.text = customName ? customName.name : this.defaultName;
     this.$input.setAttribute("placeholder", this.defaultName);
 
+    if (customName && customName.is_hidden == 1) {
+      const $parent = this.closest(".field-custom-name-container");
+      if ($parent) {
+        $parent.remove();
+      }
+    }
+
     if (!this.hasAttribute("readonly")) {
       this.$btn.classList.remove("hide");
     }

@@ -216,6 +216,84 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                             <input type="checkbox" checked="checked" id="compact-display">
                                                                             <label for="compact-display">Compact</label>
                                                                         </div>
+                                                                        <p class="m-0">Change columns</p>
+                                                                        <div class="row">
+                                                                            <div class="col-4">
+                                                                                <div class="checkbox checkbox-sec d-block my-2">
+                                                                                    <input type="checkbox" checked="checked" id="col-date">
+                                                                                    <label for="col-date">Date</label>
+                                                                                </div>
+                                                                                <div class="checkbox checkbox-sec d-block my-2">
+                                                                                    <input type="checkbox" id="col-create-date">
+                                                                                    <label for="col-create-date">Create Date</label>
+                                                                                </div>
+                                                                                <div class="checkbox checkbox-sec d-block my-2">
+                                                                                    <input type="checkbox" id="col-last-mod-by">
+                                                                                    <label for="col-last-mod-by">Last Modified By</label>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-4">
+                                                                                <div class="checkbox checkbox-sec d-block my-2">
+                                                                                    <input type="checkbox" checked="checked" id="col-trans-type">
+                                                                                    <label for="col-trans-type">Transaction Type</label>
+                                                                                </div>
+                                                                                <div class="checkbox checkbox-sec d-block my-2">
+                                                                                    <input type="checkbox" id="col-created-by">
+                                                                                    <label for="col-created-by">Created By</label>
+                                                                                </div>
+                                                                                <div class="checkbox checkbox-sec d-block my-2">
+                                                                                    <input type="checkbox" checked="checked" id="col-name">
+                                                                                    <label for="col-name">Name</label>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-4">
+                                                                                <div class="checkbox checkbox-sec d-block my-2">
+                                                                                    <input type="checkbox" checked="checked" id="col-num">
+                                                                                    <label for="col-num">Num</label>
+                                                                                </div>
+                                                                                <div class="checkbox checkbox-sec d-block my-2">
+                                                                                    <input type="checkbox" id="col-last-modified">
+                                                                                    <label for="col-last-modified">Last Modified</label>
+                                                                                </div>
+                                                                                <div class="checkbox checkbox-sec d-block my-2">
+                                                                                    <input type="checkbox" checked="checked" id="col-memo-desc">
+                                                                                    <label for="col-memo-desc">Memo/Description</label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row hidden-cols" style="display: none">
+                                                                            <div class="col-4">
+                                                                                <div class="checkbox checkbox-sec d-block my-2">
+                                                                                    <input type="checkbox" checked="checked" id="col-split">
+                                                                                    <label for="col-split">Split</label>
+                                                                                </div>
+                                                                                <div class="checkbox checkbox-sec d-block my-2">
+                                                                                    <input type="checkbox" id="col-pmt-method">
+                                                                                    <label for="col-pmt-method">Payment Method</label>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-4">
+                                                                                <div class="checkbox checkbox-sec d-block my-2">
+                                                                                    <input type="checkbox" checked="checked" id="col-debit">
+                                                                                    <label for="col-debit">Debit</label>
+                                                                                </div>
+                                                                                <div class="checkbox checkbox-sec d-block my-2">
+                                                                                    <input type="checkbox" checked="checked" id="col-amount">
+                                                                                    <label for="col-amount">Amount</label>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-4">
+                                                                                <div class="checkbox checkbox-sec d-block my-2">
+                                                                                    <input type="checkbox" checked="checked" id="col-credit">
+                                                                                    <label for="col-credit">Credit</label>
+                                                                                </div>
+                                                                                <div class="checkbox checkbox-sec d-block my-2">
+                                                                                    <input type="checkbox" checked id="col-balance">
+                                                                                    <label for="col-balance">Balance</label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <p class="m-0"><a href="#" class="text-info" id="show-cols"><i class="fa fa-caret-down text-info"></i> Show More</a></p>
                                                                         <p class="m-0"><a href="#" class="text-info">Reorder columns</a></p>
                                                                     </div>
                                                                 </li>

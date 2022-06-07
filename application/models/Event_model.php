@@ -253,14 +253,21 @@ class Event_model extends MY_Model
     public function getTechLeaderboards()
     {
         $cid=logged('company_id');
-        $this->db->select('users.id,FName,LName, count(technician) as customerCount');
+        $this->db->select('id,FName,LName');
         $this->db->from('users');
-        $this->db->join('acs_office', 'acs_office.technician = users.id', 'left');
-        //$this->db->where('id', $parent_id);
-        $this->db->where('users.company_id', $cid);
-        $this->db->where('users.role', 7);
-        $this->db->group_by('users.id');
-        $this->db->order_by('customerCount', 'desc');
+        $this->db->where('company_id', $cid);
+        $this->db->where('role', 7);
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function getCustomerCountPerId($id,$field='technician')
+    {
+        $this->db->select('count('.$field.') as totalCount');
+        $this->db->from('acs_office');
+        $this->db->where($field.'=', $id);
+        $this->db->group_by($field);
+        $this->db->order_by('totalCount', 'desc');
         $query = $this->db->get();
         return $query->result();
     }
@@ -286,12 +293,13 @@ class Event_model extends MY_Model
     */
     public function getLeadSourceWithCount()
     {
-        $this->db->select('ac_leadsource.*, count(acs_office.lead_source) as leadSourceCount');
-        $this->db->from('ac_leadsource');
-        $this->db->join('acs_office', 'acs_office.lead_source = ac_leadsource.ls_name', 'left');
-        $this->db->group_by('ls_id');
-        $this->db->order_by('leadSourceCount', 'desc');
-        $this->db->where('acs_office.lead_source !=', null);
+        $cid=logged('company_id');
+        $this->db->select('lead_source, count(lead_source) as leadSourceCount');
+        $this->db->from('acs_profile');
+        $this->db->join('acs_office', 'acs_office.fk_prof_id = acs_profile.prof_id', 'left');
+        $this->db->where('lead_source !=', "");
+        $this->db->where('company_id =', $cid);
+        $this->db->group_by('lead_source');
         $query = $this->db->get();
         return $query->result();
     }
@@ -408,6 +416,18 @@ class Event_model extends MY_Model
         return $query->result();
     }
 
+    public function getTechRevenueSolar($salesRepId)
+    {
+        $this->db->select('SUM(acs_info_solar.proposed_payment) as techRev');
+        $this->db->from('acs_info_solar');
+        $this->db->join('acs_profile', ' acs_profile.prof_id = acs_info_solar.fk_prof_id', 'left');
+        $this->db->join('acs_office', 'acs_office.fk_prof_id = acs_profile.prof_id', 'left');
+        $this->db->where('acs_office.technician', $salesRepId);
+        $this->db->group_by('acs_office.technician');
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function getSalesRepRevenue($salesRepId)
     {
         $this->db->select('SUM(job_payments.amount) as salesRepRev');
@@ -428,18 +448,6 @@ class Event_model extends MY_Model
         $this->db->join('acs_office', 'acs_office.fk_prof_id = acs_profile.prof_id', 'left');
         $this->db->where('fk_sales_rep_office', $salesRepId);
         $this->db->group_by('fk_sales_rep_office');
-        $query = $this->db->get();
-        return $query->result();
-    }
-
-    public function getTechRevenueSolar($salesRepId)
-    {
-        $this->db->select('SUM(acs_info_solar.proposed_system_size) as techRev');
-        $this->db->from('acs_info_solar');
-        $this->db->join('acs_profile', ' acs_profile.prof_id = acs_info_solar.fk_prof_id', 'left');
-        $this->db->join('acs_office', 'acs_office.fk_prof_id = acs_profile.prof_id', 'left');
-        $this->db->where('acs_office.technician', $salesRepId);
-        $this->db->group_by('acs_office.technician');
         $query = $this->db->get();
         return $query->result();
     }
@@ -526,34 +534,36 @@ class Event_model extends MY_Model
         
         for ($k = 0; $k < count($salesItems);$k++) {
             $salesOffice = $this->getSalesinOffice($salesItems[$k]->prof_id);
-            $userName = $this->getUser($salesOffice[$k]->fk_sales_rep_office);
-            $roles = $this->getRoles($userName[$k]->role);
-            $x = 0;
-            
-            if ($sales[0][0] == "") {
-                $sales[$x][0] = $userName[$k]->FName[0] . $userName[$k]->LName[0];
-                $sales[$x][1] = $userName[$k]->FName . " " . $userName[$k]->LName;
-                $sales[$x][2] = $roles[$k]->title;
-                $sales[$x][3] = 1;
+            if( isset($salesOffice[$k]) ){
+                $userName = $this->getUser($salesOffice[$k]->fk_sales_rep_office);
+                $roles = $this->getRoles($userName[$k]->role);
+                $x = 0;
                 
-            } else {
+                if ($sales[0][0] == "") {
+                    $sales[$x][0] = $userName[$k]->FName[0] . $userName[$k]->LName[0];
+                    $sales[$x][1] = $userName[$k]->FName . " " . $userName[$k]->LName;
+                    $sales[$x][2] = $roles[$k]->title;
+                    $sales[$x][3] = 1;
+                    
+                } else {
 
-                $name = $userName[$k]->FName . " " . $userName[$k]->LName;
-                for ($y = 0; $y < count($sales); $y++) {
-                    if ($sales[$y][1] == $name) {
-                        $sales[$y][3]++;
-                    } else {
-                        if($y==0){
-                            $y++;
+                    $name = $userName[$k]->FName . " " . $userName[$k]->LName;
+                    for ($y = 0; $y < count($sales); $y++) {
+                        if ($sales[$y][1] == $name) {
+                            $sales[$y][3]++;
+                        } else {
+                            if($y==0){
+                                $y++;
+                            }
+                            $sales[$y][0] = $userName[$k]->FName[0] . $userName[$k]->LName[0];
+                            $sales[$y][1] = $userName[$k]->FName . " " . $userName[$k]->LName;
+                            $sales[$y][2] = $roles[$k]->title;
+                            $sales[$y][3] = 1;
+                            
                         }
-                        $sales[$y][0] = $userName[$k]->FName[0] . $userName[$k]->LName[0];
-                        $sales[$y][1] = $userName[$k]->FName . " " . $userName[$k]->LName;
-                        $sales[$y][2] = $roles[$k]->title;
-                        $sales[$y][3] = 1;
-                        
                     }
                 }
-            }
+            }            
         }
        
         return $sales;

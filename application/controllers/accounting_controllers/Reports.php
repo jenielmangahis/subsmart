@@ -231,9 +231,10 @@ class Reports extends MY_Controller {
     {
         $reportType = $this->accounting_report_types_model->get_by_id($reportTypeId);
         $view = strtolower(str_replace(' ', '_', $reportType->name));
+        $js = str_replace('%', 'percentage', $view);
 
         add_footer_js([
-            "assets/js/accounting/reports/standard_report_pages/$view.js"
+            "assets/js/accounting/reports/standard_report_pages/$js.js"
         ]);
 
         $this->page_data['company_details'] = $this->timesheet_model->get_user_and_company_details(logged('id'));

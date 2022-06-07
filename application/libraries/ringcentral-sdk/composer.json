@@ -1,0 +1,5 @@
+{
+    "require": {
+        "ringcentral/ringcentral-php": "^2.3"
+    }
+}

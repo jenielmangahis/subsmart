@@ -53,3 +53,43 @@ $('input[name="show_rows"], input[name="show_cols"]').on('change', function() {
 
     $(this).parent().parent().prev().html(`${row}/${col}&nbsp;&nbsp;<i class="fa fa-caret-down"></i>`);
 });
+
+$('input[name="selected_period"]').on('change', function() {
+    var selected = $('input[name="selected_period"]:checked');
+
+    var label = '';
+    if(selected.length > 1) {
+        if(selected.length > 2) {
+            label = 'Multiple';
+        } else {
+            var flag = true;
+            selected.each(function() {
+                var name = selected.next().html().replace(' (PP)', '').replace(' (PY)', '').replace(' of Row', '').replace(' of Column', '');
+                
+                if(name !== '%') {
+                    flag = false;
+                }
+            });
+
+            if(flag) {
+                label = '% comparison';
+            } else {
+                label = 'Multiple';
+            }
+        }
+    } else {
+        if(selected.length === 1) {
+            var name = selected.next().html().replace(' (PP)', '').replace(' (PY)', '').replace(' of Row', '').replace(' of Column', '');
+
+            if(name === '%') {
+                name += ' comparison';
+            }
+
+            label = name;
+        } else {
+            label = 'Select period';
+        }
+    }
+
+    $(this).parent().parent().prev().html(`${label}&nbsp;&nbsp;<i class="fa fa-caret-down"></i>`);
+});
