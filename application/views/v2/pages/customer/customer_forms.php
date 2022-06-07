@@ -1,18 +1,23 @@
 <?php include viewPath('v2/includes/header');?>
 
+<div class="customerforms-loader">
+    <span>Loading...</span>
+</div>
+
 <div class="row page-content g-0">
     <div class="nsm-page">
         <div class="nsm-page-content">
             <div class="row">
                 <div class="col-12 col-md-8 grid-mb">
-                    <div class="dropdown d-inline-block">
+                    <div class="dropdown d-inline-block" id="formdropdown">
                         <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                             <span>Select Customer Form</span> <i class='bx bx-fw bx-chevron-down'></i>
                         </button>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="javascript:void(0);">Funding</a></li>
-                            <li><a class="dropdown-item" href="javascript:void(0);">Office Use</a></li>
-                            <li><a class="dropdown-item" href="javascript:void(0);">Papers</a></li>
+                        <ul class="dropdown-menu" data-form="funding_info">
+                            <li><a data-form="funding_info" class="dropdown-item" href="javascript:void(0);">Funding Info</a></li>
+                            <li><a data-form="solar_info" class="dropdown-item" href="javascript:void(0);">Solar Info</a></li>
+                            <li><a data-form="alarm_info" class="dropdown-item" href="javascript:void(0);">Alarm Info</a></li>
+                            <li><a data-form="papers" class="dropdown-item" href="javascript:void(0);">Papers</a></li>
                         </ul>
                     </div>
                 </div>
@@ -20,7 +25,7 @@
                 <div class="col-12 col-md-4 text-end">
                     <form>
                         <div class="nsm-field-group search">
-                            <input type="text" class="nsm-field nsm-search form-control mb-2" name="search" placeholder="Search label" />
+                            <input type="search" class="nsm-field nsm-search form-control mb-2" name="search" placeholder="Search labels" id="labelssearch" />
                         </div>
                     </form>
                 </div>

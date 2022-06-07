@@ -52,7 +52,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="card-body hid-desk" style="padding-bottom:0px;">
                             <div class="row">
                                 <div class="col-sm-6">
-                                    <h3 class="page-title" style="margin: 0 !important">Profit and Loss Report</h3>
+                                    <h3 class="page-title" style="margin: 0 !important">Profit and Loss % of Total Income Report</h3>
                                 </div>
                             </div>
                             <div class="row align-items-center">
@@ -180,7 +180,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     <label for="">Compare another period</label>
                                                     <div class="dropdown w-100">
                                                         <button class="dropdown-toggle btn btn-transparent hide-toggle w-100" id="filterDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                            Select period&nbsp;&nbsp;<i class="fa fa-caret-down"></i>
+                                                            % comparison&nbsp;&nbsp;<i class="fa fa-caret-down"></i>
                                                         </button>
 
                                                         <div class="dropdown-menu p-3 w-100" aria-labelledby="filterDropdown">
@@ -241,7 +241,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                 <label for="percent-of-col">% of Column</label>
                                                             </div>
                                                             <div class="checkbox checkbox-sec d-block my-2">
-                                                                <input type="checkbox" id="percent-of-income" name="selected_period">
+                                                                <input type="checkbox" id="percent-of-income" checked name="selected_period">
                                                                 <label for="percent-of-income">% of Income</label>
                                                             </div>
                                                             <div class="checkbox checkbox-sec d-block my-2">
@@ -340,7 +340,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <div class="row">
                                                     <div class="col-12 text-center">
                                                         <h4>nSmarTrac <i class="material-icons" style="font-size:16px">edit</i></h4>
-                                                        <p>Profit and Loss <br> January 1-<?=date("F d, Y")?></p>
+                                                        <p>Profit and Loss % of Total Income <br> January 1-<?=date("F d, Y")?></p>
                                                     </div>
                                                 </div>
 
@@ -349,129 +349,163 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         <table class="table" style="width: 100%;">
                                                             <thead>
                                                                 <tr>
-                                                                    <th></th>
-                                                                    <th class="text-right">TOTAL</th>
+                                                                    <th rowspan="2"></th>
+                                                                    <th class="text-center" colspan="2">TOTAL</th>
+                                                                </tr>
+                                                                <tr class="text-right">
+                                                                    <th>Jan 1-<?=date("M d, Y")?></th>
+                                                                    <th>% OF INCOME</th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
                                                                 <tr data-toggle="collapse" data-target="#accordion" class="clickable collapse-row collapsed">
                                                                     <td><i class="fa fa-caret-right"></i> INCOME</td>
                                                                     <td style="text-align:right;">$571,265.66</td>
+                                                                    <td style="text-align:right;">100.00 %</td>
                                                                 </tr>
                                                                 <tr data-toggle="collapse" data-target="#accordion1" class="clickable collapse-row collapse" id="accordion">
                                                                     <td>&emsp;<i class="fa fa-caret-right"></i> Current Assets</td>
                                                                     <td></td>
+                                                                    <td style="text-align:right;"></td>
                                                                 </tr>
                                                                 <tr id="accordion1" class="collapse clickable collapse-row" data-toggle="collapse" data-target="#accordion2">
                                                                     <td>&emsp;&emsp;<i class="fa fa-caret-right"></i> Bank Accounts</td>
                                                                     <td></td>
+                                                                    <td style="text-align:right;"></td>
                                                                 </tr>
                                                                 <tr id="accordion2" class="collapse">
                                                                     <td>&emsp;&emsp;&emsp;Checking</td>
                                                                     <td style="text-align:right;">305,061.93</td>
+                                                                    <td style="text-align:right;">10.00 %</td>
                                                                 </tr>
                                                                 <tr id="accordion2" class="collapse clickable collapse-row" data-toggle="collapse" data-target="#accordion3">
                                                                     <td>&emsp;&emsp;&emsp;<i class="fa fa-caret-right"> Test Bank (Cash on hand)</td>
                                                                     <td style="text-align:right;">990.77</td>
+                                                                    <td style="text-align:right;">10.00 %</td>
                                                                 </tr>
                                                                 <tr id="accordion3" class="collapse clickable collapse-row">
                                                                     <td>&emsp;&emsp;&emsp;&emsp; Sub-bank (Cash on hand)</td>
                                                                     <td style="text-align:right;">990.00</td>
+                                                                    <td style="text-align:right;">10.00 %</td>
                                                                 </tr>
                                                                 <tr id="accordion3" class="collapse clickable collapse-row">
                                                                     <td>&emsp;&emsp;&emsp;&emsp; <b>Total Test Bank (Cash on hand)</b></td>
                                                                     <td style="text-align:right;"><b>1,980.77</b></td>
+                                                                    <td style="text-align:right;">10.00 %</td>
                                                                 </tr>
                                                                 <tr id="accordion2" class="collapse clickable collapse-row">
                                                                     <td>&emsp;&emsp;&emsp;Test Category</td>
                                                                     <td style="text-align:right;">10.00</td>
+                                                                    <td style="text-align:right;">10.00 %</td>
                                                                 </tr>
                                                                 <tr id="accordion2" class="collapse clickable collapse-row">
                                                                     <td>&emsp;&emsp;&emsp;<b>Total Bank Accounts</b></td>
                                                                     <td style="text-align:right;"><b>$307,052.70</b></td>
+                                                                    <td style="text-align:right;">100.00 %</td>
                                                                 </tr>
                                                                 <tr id="accordion1" class="collapse clickable collapse-row" data-toggle="collapse" data-target="#accordion4">
                                                                     <td>&emsp;&emsp;<i class="fa fa-caret-right"></i> Accounts Receivable</td>
                                                                     <td></td>
+                                                                    <td style="text-align:right;"></td>
                                                                 </tr>
                                                                 <tr id="accordion4" class="collapse clickable collapse-row">
                                                                     <td>&emsp;&emsp;&emsp;Accounts Receivable</td>
                                                                     <td style="text-align:right;">205,324.93</td>
+                                                                    <td style="text-align:right;">100.00 %</td>
                                                                 </tr>
                                                                 <tr id="accordion4" class="collapse clickable collapse-row">
                                                                     <td>&emsp;&emsp;&emsp;<b>Total Accounts Receivable</b></td>
                                                                     <td style="text-align:right;"><b>$205,324.93</b></td>
+                                                                    <td style="text-align:right;">100.00 %</td>
                                                                 </tr>
                                                                 <tr id="accordion1" class="collapse clickable collapse-row" data-toggle="collapse" data-target="#accordion5">
                                                                     <td>&emsp;&emsp;<i class="fa fa-caret-right"></i> Other Current Assets</td>
                                                                     <td></td>
+                                                                    <td style="text-align:right;"></td>
                                                                 </tr>
                                                                 <tr id="accordion5" class="collapse clickable collapse-row">
                                                                     <td>&emsp;&emsp;&emsp;Credit Card Receivables</td>
                                                                     <td style="text-align:right;">207.95</td>
+                                                                    <td style="text-align:right;">100.00 %</td>
                                                                 </tr>
                                                                 <tr id="accordion5" class="collapse clickable collapse-row">
                                                                     <td>&emsp;&emsp;&emsp;Inventory</td>
                                                                     <td style="text-align:right;">25.00</td>
+                                                                    <td style="text-align:right;">25.00 %</td>
                                                                 </tr>
                                                                 <tr id="accordion5" class="collapse clickable collapse-row">
                                                                     <td>&emsp;&emsp;&emsp;Inventory Asset-1</td>
                                                                     <td style="text-align:right;">25,705.75</td>
+                                                                    <td style="text-align:right;"><b>100.00 %</b></td>
                                                                 </tr>
                                                                 <tr id="accordion5" class="collapse clickable collapse-row">
                                                                     <td>&emsp;&emsp;&emsp;Test OCA</td>
                                                                     <td style="text-align:right;">1,000.00</td>
+                                                                    <td style="text-align:right;"><b>100.00 %</b></td>
                                                                 </tr>
                                                                 <tr id="accordion5" class="collapse clickable collapse-row">
                                                                     <td>&emsp;&emsp;&emsp;Uncategorized Asset</td>
                                                                     <td style="text-align:right;">9,068.80</td>
+                                                                    <td style="text-align:right;"><b>100.00 %</b></td>
                                                                 </tr>
                                                                 <tr id="accordion5" class="collapse clickable collapse-row">
                                                                     <td>&emsp;&emsp;&emsp;Undeposited Funds</td>
                                                                     <td style="text-align:right;">16,347.82</td>
+                                                                    <td style="text-align:right;"><b>100.00 %</b></td>
                                                                 </tr>
                                                                 <tr id="accordion5" class="collapse clickable collapse-row">
                                                                     <td>&emsp;&emsp;&emsp;<b>Total Other Current Assets</b></td>
                                                                     <td style="text-align:right;"><b>$52,355.32</b></td>
+                                                                    <td style="text-align:right;"><b>100.00 %</b></td>
                                                                 </tr>
                                                                 <tr id="accordion1" class="collapse clickable collapse-row">
                                                                     <td>&emsp;&emsp;<b>Total Current Assets</b></td>
                                                                     <td style="text-align:right;"><b>$564,732.95</b></td>
+                                                                    <td style="text-align:right;"><b>100.00 %</b></td>
                                                                 </tr>
                                                                 <tr data-toggle="collapse" data-target="#accordion1" class="clickable collapse-row collapse" id="accordion6">
                                                                     <td>&emsp;<i class="fa fa-caret-right"></i> Fixed Assets</td>
                                                                     <td></td>
+                                                                    <td style="text-align:right;"></td>
                                                                 </tr>
                                                                 <tr id="accordion6" class="collapse clickable collapse-row">
                                                                     <td>&emsp;&emsp;Accumulated Depreciation</td>
                                                                     <td style="text-align:right;">-26,176.00</td>
+                                                                    <td style="text-align:right;"><b>100.00 %</b></td>
                                                                 </tr>
                                                                 <tr id="accordion6" class="collapse clickable collapse-row">
                                                                     <td>&emsp;&emsp;Fixed Asset Computers</td>
                                                                     <td style="text-align:right;">6,069.00</td>
+                                                                    <td style="text-align:right;"><b>100.00 %</b></td>
                                                                 </tr>
                                                                 <tr id="accordion6" class="collapse clickable collapse-row">
                                                                     <td>&emsp;&emsp;Fixed Asset Furniture</td>
                                                                     <td style="text-align:right;">25,289.00</td>
+                                                                    <td style="text-align:right;"><b>100.00 %</b></td>
                                                                 </tr>
                                                                 <tr id="accordion6" class="collapse clickable collapse-row">
                                                                     <td>&emsp;&emsp;Fixed Asset Phone</td>
                                                                     <td style="text-align:right;">1,200.00</td>
+                                                                    <td style="text-align:right;"><b>100.00 %</b></td>
                                                                 </tr>
                                                                 <tr id="accordion6" class="collapse clickable collapse-row">
                                                                     <td>&emsp;&emsp;<b>Total Fixed Assets</b></td>
                                                                     <td style="text-align:right;"><b>$6,382.00</b></td>
+                                                                    <td style="text-align:right;"><b>100.00 %</b></td>
                                                                 </tr>
                                                                 <tr  class="clickable collapse-row collapse"  id="accordion">
                                                                     <td>&emsp;<b>TOTAL INCOME</b></td>
                                                                     <td style="text-align:right;"><b>$571,114.95</b></td>
+                                                                    <td style="text-align:right;"><b>100.00 %</b></td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td>GROSS PROFIT</td>
                                                                     <td style="text-align:right;">$571,114.95</td>
+                                                                    <td style="text-align:right;">100.00 %</td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td><i class="fa fa-caret-right"></i> LIABILITIES AND EQUITY</td>
+                                                                    <td style="text-align:right;">$571,265.66</td>
                                                                     <td style="text-align:right;">$571,265.66</td>
                                                                 </tr>
                                                             </tbody>

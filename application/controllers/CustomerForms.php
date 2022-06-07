@@ -20,8 +20,13 @@ class CustomerForms extends MY_Controller
 
     public function apiGetLabels()
     {
-        $form = 'funding_info';
-        $defaultNames = $this->getFundingInfoLabels();
+        $form = strtolower($this->input->get('form', true));
+        $defaultNames = $this->getLabels($form);
+
+        if (!is_array($defaultNames)) {
+            $this->respond(['data' => [], 'message' => 'invalid form param']);
+        }
+
         $retval = array_map(function ($defaultName, $index) use ($form) {
             $match = $this->findMatch($form, $defaultName);
             return ['index' => $index, 'name' => $defaultName, 'custom' => $match, 'form' => $form];
@@ -32,7 +37,7 @@ class CustomerForms extends MY_Controller
 
     private function findMatch($form, $defaultName)
     {
-        foreach ($this->getCustomNames() as $customName) {
+        foreach ($this->getCustomNames($form) as $customName) {
             if ($customName->form === $form && $customName->default_name === $defaultName) {
                 return $customName;
             }
@@ -41,7 +46,7 @@ class CustomerForms extends MY_Controller
         return null;
     }
 
-    private function getCustomNames()
+    private function getCustomNames($form)
     {
         static $customNames = null;
         if (is_array($customNames)) {
@@ -50,6 +55,7 @@ class CustomerForms extends MY_Controller
 
         $companyId = logged('company_id');
         $this->db->where('company_id', $companyId);
+        $this->db->where('LOWER(form)', strtolower($form));
         $customNames = $this->db->get('customer_field_custom_names')->result();
         return $customNames;
     }
@@ -58,6 +64,23 @@ class CustomerForms extends MY_Controller
     {
         header('content-type: application/json');
         exit(json_encode($data));
+    }
+
+    private function getLabels($form)
+    {
+        switch (strtolower($form)) {
+            case 'solar_info':
+                return $this->getSolarInfoLabels();
+
+            case 'funding_info':
+                return $this->getFundingInfoLabels();
+
+            case 'papers':
+                return $this->getPapersFormLabels();
+
+            case 'alarm_info':
+                return $this->getAlarmInfoLabels();
+        }
     }
 
     private function getFundingInfoLabels()
@@ -93,6 +116,68 @@ class CustomerForms extends MY_Controller
             'Labor Cost',
             'Job Profit',
             'Customer Shareable Link',
+        ];
+    }
+
+    private function getSolarInfoLabels()
+    {
+        return [
+            'Project ID',
+            'Lender Type',
+            'Proposed System Size',
+            'Proposed Modules',
+            'Proposed Inverter',
+            'Proposed Offset',
+            'Proposed Solar $',
+            'Proposed Utility $',
+            'Proposed Payment',
+            'Annual Income',
+            'Tree Estimate',
+            'Roof Estimate',
+            'Utility Account #',
+            'Utility Login',
+            'Utility Password',
+            'Meter Number',
+            'Insurance Name',
+            'Insurance Number',
+            'Policy Number',
+        ];
+    }
+
+    private function getPapersFormLabels()
+    {
+        return [
+            'Rep Paper',
+            'Tech Paper',
+            'Scanned',
+            'Paperwork',
+            'Submitted',
+            'Rep Paid',
+            'Tech Paid',
+            'Funded',
+            'Charged Back',
+        ];
+    }
+
+    private function getAlarmInfoLabels()
+    {
+        return [
+            'Monitoring Company',
+            'Monitoring ID',
+            'Account Type',
+            'Online',
+            'In Service',
+            'Equipment',
+            'Abort Code',
+            'Installer Code',
+            'Monitoring Confirm#',
+            'Signal Confirm#',
+            'Panel Type',
+            'Warranty Type',
+            'Dealer',
+            'Login',
+            'Customer ID',
+            'CS Account',
         ];
     }
 }

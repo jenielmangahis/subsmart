@@ -59,27 +59,37 @@ $('input[name="selected_period"]').on('change', function() {
 
     var label = '';
     if(selected.length > 1) {
-        if(selected.length > 2) {
-            label = 'Multiple';
-        } else {
-            var flag = true;
-            selected.each(function() {
-                var name = selected.next().html().replace(' (PP)', '').replace(' (PY)', '').replace(' of Row', '').replace(' of Column', '');
-                
-                if(name !== '%') {
-                    flag = false;
-                }
-            });
+        var flag = true;
+        selected.each(function() {
+            var name = selected.next().html().replace(' (PP)', '');
+            name = name.replace(' (PY)', '');
+            name = name.replace(' (YTD)', '');
+            name = name.replace(' (PY YTD)', '');
+            name = name.replace(' of Row', '');
+            name = name.replace(' of Column', '');
+            name = name.replace(' of Income', '');
+            name = name.replace(' of Expense', '');
 
-            if(flag) {
-                label = '% comparison';
-            } else {
-                label = 'Multiple';
+            if(name !== '%') {
+                flag = false;
             }
+        });
+
+        if(flag) {
+            label = '% comparison';
+        } else {
+            label = 'Multiple';
         }
     } else {
         if(selected.length === 1) {
-            var name = selected.next().html().replace(' (PP)', '').replace(' (PY)', '').replace(' of Row', '').replace(' of Column', '');
+            var name = selected.next().html().replace(' (PP)', '');
+            name = name.replace(' (PY)', '');
+            name = name.replace(' (YTD)', '');
+            name = name.replace(' (PY YTD)', '');
+            name = name.replace(' of Row', '');
+            name = name.replace(' of Column', '');
+            name = name.replace(' of Income', '');
+            name = name.replace(' of Expense', '');
 
             if(name === '%') {
                 name += ' comparison';
