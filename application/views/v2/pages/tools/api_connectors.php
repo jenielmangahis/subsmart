@@ -469,6 +469,54 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="row g-3 mt-3">
+                    <div class="col-12">
+                        <hr>
+                    </div>
+                    <div class="col-12">
+                        <h4 class="fw-bold">SMS and Phone Call</h4>
+                    </div>
+                    <div class="col-12">
+                        <div class="nsm-callout primary">
+                            <button><i class='bx bx-x'></i></button>
+                            Please select your preferred sms and phone call api to be used.
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-3">
+                        <div class="nsm-card primary p-5" role="button">
+                            <div class="nsm-card-content h-100">
+                                <div class="row h-100 align-content-between">
+                                    <div class="col-12 text-center mb-3">
+                                        <img class="nsm-card-img-lg" src="<?= base_url() ?>/assets/img/api-tools/ring_central.png">
+
+                                        <div class="nsm-card-title">
+                                            <span>Ring Central</span>
+                                        </div>
+                                        <label class="content-subtitle mb-2"></label>
+                                        <label class="nsm-subtitle d-block">
+                                            Send SMS and make phone call via a modern RESTful API.
+                                        </label>
+                                    </div>
+                                    <div class="col-12 text-center">
+                                        <div class="row align-items-center mb-3">
+                                            <div class="col-12 col-md-6">
+                                                <div class="form-check form-switch nsm-switch m-auto">
+                                                    <input class="form-check-input" type="checkbox" name="switch_ring_central" id="switch_ring_central" <?= $default_sms_api == 'ring_central' ? 'checked' : ''; ?>>
+                                                    <label class="form-check-label" for="switch_ring_central">Use Default SMS Tool</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <button type="button" class="nsm-button primary" id="btn-setup-ring-central">Manage</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+
                 <div class="row g-3 mt-3">
                     <div class="col-12">
                         <hr>
@@ -605,6 +653,24 @@
             $("#setup_wepay_modal").modal("show");
         });
 
+        $("#btn-setup-ring-central").on("click", function(){
+            let _container = $("#ring-central-container");
+            let url = "<?php echo base_url(); ?>tools/_get_ring_central_credentials";
+
+            showLoader(_container);
+            $("#setup_ring_central").modal("show");
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                success: function(result) {
+                    _container.html(result);
+                }
+            });
+
+            
+        });
+
         $("#btn_setup_stripe").on("click", function() {
             let _container = $("#stripe_api_container");
             let url = "<?php echo base_url(); ?>tools/_get_stripe_api_credentials";
@@ -688,6 +754,76 @@
 
                     _this.find("button[type=submit]").html("Save");
                     _this.find("button[type=submit]").prop("disabled", false);
+                },
+            });
+        });
+
+        $("#form-ring-central-account").on("submit", function(e) {
+            let _this = $(this);
+            e.preventDefault();
+
+            var url = "<?php echo base_url(); ?>tools/_activate_company_ring_central";
+            _this.find("button[type=submit]").html("Saving");
+            _this.find("button[type=submit]").prop("disabled", true);
+
+            $.ajax({
+                type: 'POST',
+                url: url,
+                dataType: "json",
+                data: _this.serialize(),
+                success: function(result) {
+                    if (result.is_success) {
+                        $("#setup_ring_central").modal('hide');
+
+                        Swal.fire({
+                            title: 'Update Successful!',
+                            text: "Your ring central account was successfully saved.",
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Error',
+                            text: result.msg,
+                            icon: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        });
+                    }                    
+
+                    _this.find("button[type=submit]").html("Save");
+                    _this.find("button[type=submit]").prop("disabled", false);
+                },
+            });
+        });
+
+        $('#switch_ring_central').on('change', function(){
+            var url = "<?php echo base_url(); ?>tools/_update_company_default_sms_api";
+
+            if ($(this).is(':checked')) {
+                var default_sms = 'ring_central';
+            }else{
+                var default_sms = '';
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: url,
+                dataType: "json",
+                data: {default_sms:default_sms},
+                success: function(result) {
+                    if (!result.is_success) {
+                        Swal.fire({
+                            title: 'Error',
+                            text: result.msg,
+                            icon: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        });
+
+                        $('#switch_ring_central').prop("checked", false);
+                    }
                 },
             });
         });

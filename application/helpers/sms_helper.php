@@ -1,38 +1,38 @@
 <?php
 
-function smsRingCentral($to_number, $from_number, $txt_message)
+function smsRingCentral($ringCentral, $to_number, $txt_message)
 {   
     include_once APPPATH . 'libraries/ringcentral_lite/src/ringcentrallite.php';    
 
     $to_number   = cleanMobileNumber($to_number);
-    $to_number   = '+1'.$to_number;
-    $from_number = cleanMobileNumber($from_number);    
+    $to_number   = '+1'.$to_number;  
     //$from_number = RINGCENTRAL_FROM;
 
     //$message = replaceSmartTags($txt_message);
     $message = $txt_message;
 
     $rc = new RingCentralLite(
-        RINGCENTRAL_CLIENT_ID, //Client id
-        RINGCENTRAL_CLIENT_SECRET, //Client secret
+        $ringCentral->client_id, //Client id
+        $ringCentral->client_secret, //Client secret
         RINGCENTRAL_DEV_URL //server url
     );
      
     $res = $rc->authorize(
-        RINGCENTRAL_USER, //username
-        RINGCENTRAL_EXT, //extension
-        RINGCENTRAL_PASSWORD //password
+        $ringCentral->rc_username, //username
+        $ringCentral->rc_ext, //extension
+        $ringCentral->rc_password //password
     ); //password
 
     $params = array(
         'json'     => array(
             'to'   => array( array('phoneNumber' => $to_number) ), //Send to
-            'from' => array('phoneNumber' => $from_number), //Username
+            'from' => array('phoneNumber' => $ringCentral->rc_from_number), 
             'text' => $message
         )
     );
 
     $res = $rc->post('/restapi/v1.0/account/~/extension/~/sms', $params);
+    
     $is_success = 0;
     $msg     = '';
 
@@ -42,7 +42,7 @@ function smsRingCentral($to_number, $from_number, $txt_message)
         $is_success = 1;
     }
 
-    $return = ['is_success' => $is_success, 'msg' => $msg, 'from_number' => $from_number];
+    $return = ['is_success' => $is_success, 'msg' => $msg, 'from_number' => $ringCentral->rc_from_number];
     return $return;
 }
 
@@ -87,15 +87,15 @@ function cleanMobileNumber($to_number)
     return $to_number;
 }
 
-function ringCentralMessageReplies($to_number)
+function ringCentralMessageReplies($ringCentral, $to_number)
 {
     require_once APPPATH . 'libraries/ringcentral-sdk/vendor/autoload.php';
         
     $replies  = array();
 
-    $rcsdk    = new RingCentral\SDK\SDK(RINGCENTRAL_CLIENT_ID, RINGCENTRAL_CLIENT_SECRET, RINGCENTRAL_DEV_URL, 'Demo', '1.0.0');
+    $rcsdk    = new RingCentral\SDK\SDK($ringCentral->client_id, $ringCentral->client_secret, RINGCENTRAL_DEV_URL, 'Demo', '1.0.0');
     $platform = $rcsdk->platform();
-    $platform->login(RINGCENTRAL_USER, RINGCENTRAL_EXT, RINGCENTRAL_PASSWORD);
+    $platform->login($ringCentral->rc_username, $ringCentral->rc_ext, $ringCentral->rc_password);
 
     $to_number = cleanMobileNumber($to_number);
     $to_number = '+1'.$to_number;
@@ -137,4 +137,26 @@ function ringCentralCreateContact($info = array())
     print_r($apiResponse);
     exit;
     return $replies;
+}
+
+function validateRingCentralAccount($client_id, $client_secret, $rc_user, $rc_password, $rc_ext)
+{   
+    require_once APPPATH . 'libraries/ringcentral-sdk/vendor/autoload.php';
+        
+    $err_msg  = '';
+    $is_valid = false;
+
+    $rcsdk    = new RingCentral\SDK\SDK($client_id, $client_secret, RINGCENTRAL_DEV_URL, 'Demo', '1.0.0');
+
+    try {
+        $platform = $rcsdk->platform();
+        $platform->login($rc_user, $rc_ext, $rc_password);
+        $is_valid = true;
+    } catch (Exception $e) {
+        $err_msg = $e->getMessage();
+    }
+
+    $return = ['is_valid' => $is_valid, 'err_msg' => $err_msg];
+
+    return $return;
 }

@@ -26,9 +26,13 @@ class Tools extends MY_Controller {
         $this->load->model('SettingOnlinePayment_model');
         $this->load->model('users_model');
         $this->load->model('CompanyOnlinePaymentAccount_model');
+        $this->load->model('Clients_model');
         
         $company_id = logged('company_id');    
-        $user = $this->session->userdata('logged');
+        $user   = $this->session->userdata('logged');
+        $client = $this->Clients_model->getById($company_id);
+
+        $default_sms_api = $client->default_sms_api;
 
         $settingOnlinePayment = $this->SettingOnlinePayment_model->findByUserId($user['id']);
         $onlinePaymentAccount = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($company_id);
@@ -47,6 +51,7 @@ class Tools extends MY_Controller {
 
         $this->page_data['onlinePaymentAccount'] = $onlinePaymentAccount;
         $this->page_data['setting'] = $setting;
+        $this->page_data['default_sms_api'] = $default_sms_api;
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->load->view('v2/pages/tools/api_connectors', $this->page_data);
     }
@@ -326,6 +331,106 @@ class Tools extends MY_Controller {
 
         $this->page_data['converge'] = $converge;
         $this->load->view('v2/pages/tools/ajax_company_converge_form', $this->page_data);
+    }
+
+    public function ajax_load_company_ring_central(){
+        $this->load->model('RingCentralAccounts_model');
+
+        $company_id = logged('company_id');    
+
+        $ringCentral = $this->RingCentralAccounts_model->getByCompanyId($company_id);
+
+        $this->page_data['ringCentral'] = $ringCentral;
+        $this->load->view('v2/pages/tools/ajax_load_company_ring_central', $this->page_data);
+    }
+
+    public function ajax_activate_company_ring_central(){
+        $this->load->helper('sms_helper');
+        $this->load->model('RingCentralAccounts_model');
+
+        $is_success = false;
+        $msg = 'Invalid ring central account';
+
+        $post = $this->input->post();
+        $company_id = logged('company_id');  
+
+        $ringCentral = validateRingCentralAccount($post['client_id'], $post['client_secret'], $post['rc_username'], $post['rc_password'], $post['rc_ext']);
+        if( $ringCentral['is_valid'] ){
+            $companyRingCentral = $this->RingCentralAccounts_model->getByCompanyId($company_id);
+            if( $companyRingCentral ){
+                $ring_central_data = [
+                    'client_id' => $post['client_id'],
+                    'client_secret' => $post['client_secret'],
+                    'rc_username' => $post['rc_username'],
+                    'rc_password' => $post['rc_password'],
+                    'rc_from_number' => $post['rc_from_number'],
+                    'rc_ext' => $post['rc_ext']
+                ];
+
+                $this->RingCentralAccounts_model->update($companyRingCentral->id, $ring_central_data);
+            }else{
+                $ring_central_data = [
+                    'company_id' => $company_id,
+                    'client_id' => $post['client_id'],
+                    'client_secret' => $post['client_secret'],
+                    'rc_username' => $post['rc_username'],
+                    'rc_password' => $post['rc_password'],
+                    'rc_from_number' => $post['rc_from_number'],
+                    'rc_ext' => $post['rc_ext'],
+                    'created' => date("Y-m-d H:i:s")
+                ];
+
+                $this->RingCentralAccounts_model->create($ring_central_data);
+            }            
+
+            $msg = '';
+            $is_success = true;
+        }
+
+        $json_data = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($json_data);
+    }
+
+    public function ajax_update_company_default_sms_api(){
+        $this->load->model('Clients_model');
+        $this->load->model('RingCentralAccounts_model');
+
+        $is_success = false;
+        $msg = 'Cannot update settings';
+
+        $post = $this->input->post();
+        $company_id = logged('company_id');  
+        $client = $this->Clients_model->getById($company_id);
+
+        if( $post['default_sms'] == 'ring_central' ){
+            $companyRingCentral = $this->RingCentralAccounts_model->getByCompanyId($company_id);
+            if( !empty($companyRingCentral) ){
+                $data = ['default_sms_api' => 'ring_central'];
+                $this->Clients_model->update($client->id, $data);
+
+                $msg = '';
+                $is_success = true;
+            }else{
+                $msg = 'You do not have a valid ring central account.';
+            }
+        }else{
+            $data = ['default_sms_api' => ''];
+            $this->Clients_model->update($client->id, $data);
+
+            $msg = '';
+            $is_success = true;
+        }
+
+        $json_data = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($json_data);
     }
 
     public function ajax_activate_company_converge_account(){

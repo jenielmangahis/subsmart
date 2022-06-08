@@ -17,6 +17,7 @@
                     </div>
                 </div>
                 <div class="row g-3 mb-3">
+                    <?php if( !in_array($client->id, exempted_company_ids()) ){ ?>
                     <div class="col-12">
                         <div class="nsm-card primary">
                             <div class="nsm-card-header">
@@ -96,6 +97,7 @@
                             </div>
                         </div>
                     </div>
+                    <?php } ?>
                     <div class="col-12">
                         <div class="nsm-card primary">
                             <div class="nsm-card-header d-block">
@@ -111,11 +113,15 @@
                                                 <label class="content-title">Current Plan</label>
                                             </div>
                                             <div class="col-12 col-md-6">
-                                                <?php if ($client->is_trial == 1) : ?>
-                                                    (Trial) <?= $plan->plan_name; ?> ($<?= number_format($plan->price, 2); ?>)
-                                                <?php else : ?>
-                                                    <?= $plan->plan_name; ?> ($<?= number_format($plan->price, 2); ?>)
-                                                <?php endif; ?>
+                                                <?php if( in_array($client->id, exempted_company_ids()) ){ ?>
+                                                    Free
+                                                <?php }else{ ?>
+                                                    <?php if ($client->is_trial == 1) : ?>
+                                                        (Trial) <?= $plan->plan_name; ?> ($<?= number_format($plan->price, 2); ?>)
+                                                    <?php else : ?>
+                                                        <?= $plan->plan_name; ?> ($<?= number_format($plan->price, 2); ?>)
+                                                    <?php endif; ?>
+                                                <?php } ?>                                                
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <label class="content-title">Number of License</label>

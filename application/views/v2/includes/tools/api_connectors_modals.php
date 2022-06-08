@@ -111,6 +111,7 @@
     </div>
 </div>
 
+
 <div class="modal fade nsm-modal fade" id="setup_stripe_modal" tabindex="-1" aria-labelledby="setup_stripe_modal_label" aria-hidden="true">
     <div class="modal-dialog">
         <?php echo form_open_multipart('', ['class' => 'form-validate', 'id' => 'form-stripe-account', 'autocomplete' => 'off']); ?>
@@ -159,6 +160,24 @@
             </div>
             <div class="modal-body" id="converge_api_container">
             </div>
+            <div class="modal-footer">
+                <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="nsm-button primary">Save</button>
+            </div>
+        </div>
+        <?php echo form_close(); ?>
+    </div>
+</div>
+
+<div class="modal fade nsm-modal fade" id="setup_ring_central" tabindex="-1" aria-labelledby="setup_ring_central_label" aria-hidden="true">
+    <div class="modal-dialog">
+        <?php echo form_open_multipart('', ['class' => 'form-validate', 'id' => 'form-ring-central-account', 'autocomplete' => 'off']); ?>
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" id="setup_stripe_modal_label">Setup Ring Central</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body" id="ring-central-container"></div>
             <div class="modal-footer">
                 <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
                 <button type="submit" class="nsm-button primary">Save</button>
