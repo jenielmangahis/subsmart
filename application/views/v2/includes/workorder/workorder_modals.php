@@ -16,8 +16,12 @@
                             <button type="button" class="nsm-button w-50 primary" onclick="location.href='<?php echo base_url('workorder/NewworkOrder') ?>'">New Work Order</button>
                         <?php elseif ($company_work_order_used->work_order_template_id == '0') : ?>
                             <button type="button" class="nsm-button w-50 primary" onclick="location.href='<?php echo base_url('workorder/NewworkOrder') ?>'">New Work Order</button>
-                        <?php else : ?>
+                        <?php elseif ($company_work_order_used->work_order_template_id == '1') : ?>
                             <button type="button" class="nsm-button w-50 primary" onclick="location.href='<?php echo base_url('workorder/NewworkOrderAlarm') ?>'">New Work Order</button>
+                        <?php elseif ($company_work_order_used->work_order_template_id == '2') : ?>
+                            <button type="button" class="nsm-button w-50 primary" onclick="location.href='<?php echo base_url('workorder/addsolarworkorder') ?>'">New Work Order</button>
+                        <?php else : ?>
+                            <button type="button" class="nsm-button w-50 primary" onclick="location.href='<?php echo base_url('workorder/workorderInstallation') ?>'">New Work Order</button>
                         <?php endif; ?>
                     </div>
                     <div class="col-12">

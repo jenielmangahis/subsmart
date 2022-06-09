@@ -370,6 +370,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                   <?php }
                   elseif($company_work_order_used->work_order_template_id == '2'){ ?>
                   <a class="btn btn-primary add-modal__btn-success" style="background-color: #2ab363 !important" href="<?php echo base_url('workorder/addsolarworkorder') ?>"><span class="fa fa-file-text-o"></span> New Work Order</a>
+                  <?php } 
+                  elseif($company_work_order_used->work_order_template_id == '3'){ ?>
+                  <a class="btn btn-primary add-modal__btn-success" style="background-color: #2ab363 !important" href="<?php echo base_url('workorder/workorderInstallation') ?>"><span class="fa fa-file-text-o"></span> New Work Order</a>
                   <?php } ?>
               </div>
               <div class="margin-bottom" style="width:60%;">

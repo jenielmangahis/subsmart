@@ -6,7 +6,7 @@ class Sms extends Widgets {
     public function __construct() {
         parent::__construct();
         $this->checkLogin();
-		$this->page_data['page']->title = 'Messages';
+		$this->page_data['page']->title = 'SMS';
         $this->page_data['page']->parent = 'Dashboard';
     }
 
@@ -14,6 +14,7 @@ class Sms extends Widgets {
     {
         $this->load->model('CompanySms_model');
         $this->load->model('Customer_advance_model');
+        $this->load->model('Clients_model');
 
         $cid = logged('company_id');
 
@@ -25,10 +26,17 @@ class Sms extends Widgets {
         }else{
             $customers = $this->Customer_advance_model->get_customer_data();
         }
+
+        $is_with_sms_api = false;
+        $client = $this->Clients_model->getById($cid);
+        if( $client->default_sms_api != '' ){
+            $is_with_sms_api = true;
+        }
         
         $this->page_data['search'] = $search;
         $this->page_data['customers'] = $customers;
         $this->page_data['enable_input_mask'] = true;
+        $this->page_data['is_with_sms_api'] = $is_with_sms_api;
         $this->load->view('v2/pages/dashboard/sms.php', $this->page_data);
     }
 
@@ -39,6 +47,8 @@ class Sms extends Widgets {
         $this->load->model('CompanySms_model');
         $this->load->model('Customer_advance_model');
         $this->load->model('RingCentralSmsLogs_model');
+        $this->load->model('RingCentralAccounts_model');
+        $this->load->model('Clients_model');
 
         $is_success = 0;
         $msg = 'Cannot save data.';
@@ -51,17 +61,23 @@ class Sms extends Widgets {
         $customer = $this->Customer_advance_model->get_data_by_id('prof_id',$post['cid'],'acs_profile');
         if( $customer && $customer->company_id == $cid ){
             if( $customer->phone_m != '' ){
-                if( in_array($cid, $this->CompanySms_model->ringCentralCompanyIds()) ){
-                    //Use ringcentral
-                    $sms_api = $this->CompanySms_model->apiRingCentral();
-                    $is_sent = smsRingCentral($customer->phone_m, RINGCENTRAL_FROM, $post['sms_txt_message']);                        
-                    if( $is_sent['is_success'] == 1 ){                    
-                        $is_success = 1;
-                        $from_number = $is_sent['from_number'];
-                    }else{
-                        $msg = $is_sent['msg'];
-                    }
+                $client = $this->Clients_model->getById($cid);
 
+                if( $client->default_sms_api == 'ring_central' ){
+                    $ringCentral = $this->RingCentralAccounts_model->getByCompanyId($client->id);
+                    if( $ringCentral ){
+                        $sms_api = $this->CompanySms_model->apiRingCentral();                        
+                        $is_sent = smsRingCentral($ringCentral, $customer->phone_m, $post['sms_txt_message']);                        
+                        if( $is_sent['is_success'] == 1 ){                    
+                            $is_success = 1;
+                            $from_number = $is_sent['from_number'];
+                        }else{
+                            $msg = $is_sent['msg'];
+                        }
+                    }else{
+                      $msg = 'You do not have a valid ring central account. Cannot send SMS.';  
+                    }                    
+                    
                 }else{
                     //Use twiio
                     $sms_api = $this->CompanySms_model->apiTwilio();
@@ -166,18 +182,21 @@ class Sms extends Widgets {
         $this->load->helper('sms_helper');
         $this->load->model('CompanySms_model');
         $this->load->model('Customer_advance_model');
-        $this->load->model('Customer_advance_model');
+        $this->load->model('Clients_model');
+        $this->load->model('RingCentralAccounts_model');
 
         $cid  = logged('company_id');
         $uid  = logged('id');
         $post = $this->input->post();
 
-        $customer = $this->Customer_advance_model->get_data_by_id('prof_id',$post['cid'],'acs_profile');
-        $companySms = $this->CompanySms_model->getByProfId($post['cid']);
+        $customer    = $this->Customer_advance_model->get_data_by_id('prof_id',$post['cid'],'acs_profile');
+        $companySms  = $this->CompanySms_model->getByProfId($post['cid']);
+        $client      = $this->Clients_model->getById($cid);
+        $ringCentral = $this->RingCentralAccounts_model->getByCompanyId($cid);
 
         $sentMessages = array();
-        if( $companySms->sms_api == $this->CompanySms_model->apiRingCentral() ){
-            $sentMessages  = ringCentralMessageReplies($customer->phone_m);    
+        if( $client->default_sms_api == 'ring_central' ){
+            $sentMessages  = ringCentralMessageReplies($ringCentral, $customer->phone_m);    
         }
 
         $this->page_data['sentMessages'] = $sentMessages;

@@ -1097,6 +1097,9 @@ $route['tools/_get_paypal_api_credentials'] = 'Tools/ajax_load_company_paypal_fo
 $route['tools/_get_nmi_api_credentials'] = 'Tools/ajax_load_company_nmi_form';
 $route['tools/_activate_company_nmi'] = 'Tools/ajax_activate_company_online_payment_account';
 $route['tools/activate_stripe'] = 'Debug/activateStripe';
+$route['tools/_get_ring_central_credentials'] = 'Tools/ajax_load_company_ring_central';
+$route['tools/_activate_company_ring_central'] = 'Tools/ajax_activate_company_ring_central';
+$route['tools/_update_company_default_sms_api'] = 'Tools/ajax_update_company_default_sms_api';
 
 //Work Pictures
 $route['users/_delete_work_picture'] = 'Users/ajax_delete_company_work_picture';
