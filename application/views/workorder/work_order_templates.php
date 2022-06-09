@@ -32,6 +32,32 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
                 <h1>Choose Your Template</h1>
                 <div class="container">
+                    <?php 
+                        $company_id = logged('company_id');
+                        if($company_id == '58'){
+                    ?>
+                    <div class="product active-template" style="border: solid #F8F8F8 2px;border-radius: 25px;box-shadow: 3px 6px #E7E6E6;" id="solar-template">
+                        <div class="effect-1"></div>
+                        <div class="effect-2"></div>
+                        <span class="title">
+                        Solar Template
+                        <span>Default</span>
+                        </span>
+                    </div>
+                    <?php } ?>
+                    <?php 
+                        $company_id = logged('company_id');
+                        if($company_id == '31'){
+                    ?>
+                    <div class="product active-template" style="border: solid #F8F8F8 2px;border-radius: 25px;box-shadow: 3px 6px #E7E6E6;" id="agreement-template">
+                        <div class="effect-1"></div>
+                        <div class="effect-2"></div>
+                        <span class="title">
+                        ADI Template
+                        <span>Default</span>
+                        </span>
+                    </div>
+                    <?php } ?>
                     <div class="product active-template whole-div" style="border: solid #F8F8F8 2px;border-radius: 25px;box-shadow: 3px 6px #E7E6E6;" id="standard-template">
                         <div class="effect-1"></div>
                         <div class="effect-2"></div>
@@ -40,7 +66,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         </div> -->
                         <span class="title">
                         Standard Template
-                        <span>Default</span>
+                        <!-- <span>Default</span> -->
                         </span>
                     </div>
                     <div class="product active-template" style="border: solid #F8F8F8 2px;border-radius: 25px;box-shadow: 3px 6px #E7E6E6;" id="alarm-template">
@@ -54,22 +80,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <!-- <span>Restore Balance</span> -->
                         </span>
                     </div>
-                    <?php 
-                        $company_id = logged('company_id');
-                        if($company_id == '58'){
-                    ?>
-                    <div class="product active-template" style="border: solid #F8F8F8 2px;border-radius: 25px;box-shadow: 3px 6px #E7E6E6;" id="solar-template">
-                        <div class="effect-1"></div>
-                        <div class="effect-2"></div>
-                        <!-- <div class="content">
-                        <div class="sleep"></div>
-                        </div> -->
-                        <span class="title">
-                        Solar Template
-                        <!-- <span>Restore Balance</span> -->
-                        </span>
-                    </div>
-                    <?php } ?>
                     <div class="product active-template" style="border: solid #F8F8F8 2px;border-radius: 25px;box-shadow: 3px 6px #E7E6E6;" id="other-template">
                         <div class="effect-1"></div>
                         <div class="effect-2"></div>
@@ -175,6 +185,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                   <?php }
                   elseif($company_work_order_used->work_order_template_id == '2'){ ?>
                   <a class="btn btn-primary add-modal__btn-success" style="background-color: #2ab363 !important" href="<?php echo base_url('workorder/addsolarworkorder') ?>"><span class="fa fa-file-text-o"></span> New Work Order</a>
+                  <?php }
+                  elseif($company_work_order_used->work_order_template_id == '3'){ ?>
+                  <a class="btn btn-primary add-modal__btn-success" style="background-color: #2ab363 !important" href="<?php echo base_url('workorder/workorderInstallation') ?>"><span class="fa fa-file-text-o"></span> New Work Order</a>
                   <?php } ?>
               </div>
               <div class="margin-bottom" style="width:60%;">
@@ -283,6 +296,39 @@ $(document).on('click','#solar-template',function(){
         $("#successm").modal("hide");
     });
 });
+
+$(document).on('click','#agreement-template',function(){
+    // alert('alarm');
+    var template1 = '3';
+    var temp = $('#template_id').val(template1);
+    var template = $('#template_id').val();
+    // alert(template);
+    var temptitle = $('#temptitle').html('System Agreement');
+    $("#myModal").modal("show");
+
+    $(".set_template").click(function() {
+        $.ajax({
+            url:"<?php echo base_url(); ?>workorder/changeTemplate",
+            type: "POST",
+            data: {template : template },
+            success: function(dataResult){
+              // alert('success');
+                $("#myModal").modal("hide");
+                $("#successm").modal("show");
+                $('#selecting_form').load(window.location.href +  ' #selecting_form');
+            },
+                error: function(response){
+                alert('Error'+response);
+       
+                }
+	    });
+    });
+
+    $(".workordermodal").click(function() {
+        $("#successm").modal("hide");
+    });
+});
+
 
 $(document).on('click','#other-template',function(){
     alert('other');
