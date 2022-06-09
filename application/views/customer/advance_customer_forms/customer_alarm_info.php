@@ -5,17 +5,17 @@
             <h6 ><span class="fa fa-user"></span>&nbsp; &nbsp;Solar Information</h6>
         </div>
         <div class="card-body">
-            <div class="row form_line">
+            <div class="row form_line field-custom-name-container">
                 <div class="col-md-6">
-                    Project ID
+                    <field-custom-name default="Project ID" form="solar_info"></field-custom-name>
                 </div>
                 <div class="col-md-6">
                     <input type="text" class="form-control" name="project_id" id="project_id"/>
                 </div>
             </div>
-            <div class="row form_line">
+            <div class="row form_line field-custom-name-container">
                 <div class="col-md-6">
-                    Lender Type
+                    <field-custom-name default="Lender Type" form="solar_info"></field-custom-name>
                 </div>
                 <div class="col-md-6">
                     <?php $lenderTypes = json_decode($solar_info_settings[0]->field_value); ?>
@@ -28,9 +28,9 @@
                     <a href="<?= base_url('customer/settings_solar_lender_type') ?>"  style="color:#58bc4f;font-size: 10px;"><span class="fa fa-plus"></span> Manage Type</a>&nbsp;&nbsp;
                 </div>
             </div>
-            <div class="row form_line">
+            <div class="row form_line field-custom-name-container">
                 <div class="col-md-6">
-                    Proposed System Size
+                    <field-custom-name default="Proposed System Size" form="solar_info"></field-custom-name>
                 </div>
                 <div class="col-md-6">
                 <?php $proposed_system_sizes = json_decode($solar_info_settings[1]->field_value); ?>
@@ -43,9 +43,9 @@
                     <a href="<?= base_url('customer/settings_solar_system_size') ?>" style="color:#58bc4f;font-size: 10px;"><span class="fa fa-plus"></span> Manage Size</a>&nbsp;&nbsp;
                 </div>
             </div>
-            <div class="row form_line">
+            <div class="row form_line field-custom-name-container">
                 <div class="col-md-6">
-                    Proposed Modules
+                    <field-custom-name default="Proposed Modules" form="solar_info"></field-custom-name>
                 </div>
                 <div class="col-md-6">
                     <?php $proposed_modules = json_decode($solar_info_settings[2]->field_value); ?>
@@ -58,9 +58,9 @@
                     <a href="<?= base_url('customer/settings_solar_modules') ?>" style="color:#58bc4f;font-size: 10px;"><span class="fa fa-plus"></span> Manage Modules</a>&nbsp;&nbsp;
                 </div>
             </div>
-            <div class="row form_line">
+            <div class="row form_line field-custom-name-container">
                 <div class="col-md-6">
-                    Proposed Inverter
+                    <field-custom-name default="Proposed Inverter" form="solar_info"></field-custom-name>
                 </div>
                 <div class="col-md-6">
                     <?php $proposed_inverters = json_decode($solar_info_settings[3]->field_value); ?>
@@ -73,9 +73,9 @@
                     <a href="<?= base_url('customer/settings_solar_inverter') ?>"  style="color:#58bc4f;font-size: 10px;"><span class="fa fa-plus"></span> Manage Inverter</a>&nbsp;&nbsp;
                 </div>
             </div>
-            <div class="row form_line">
+            <div class="row form_line field-custom-name-container">
                 <div class="col-md-6">
-                    Proposed Offset
+                    <field-custom-name default="Proposed Offset" form="solar_info"></field-custom-name>
                 </div>
                 <div class="col-md-6">
                     <select name="proposed_offset" id="proposed_offset" class="input_select">
@@ -87,9 +87,9 @@
                     </select>
                 </div>
             </div>
-            <div class="row form_line">
+            <div class="row form_line field-custom-name-container">
                 <div class="col-md-6">
-                    Proposed Solar $
+                    <field-custom-name default="Proposed Solar $" form="solar_info"></field-custom-name>
                 </div>
                 <div class="col-md-6">
                     <div class="input-group">
@@ -100,9 +100,9 @@
                     </div>
                 </div>
             </div>
-            <div class="row form_line">
+            <div class="row form_line field-custom-name-container">
                 <div class="col-md-6">
-                    Proposed Utility $
+                    <field-custom-name default="Proposed Utility $" form="solar_info"></field-custom-name>
                 </div>
                 <div class="col-md-6">
                     <div class="input-group">
@@ -113,9 +113,9 @@
                     </div>
                 </div>
             </div>
-            <div class="row form_line">
+            <div class="row form_line field-custom-name-container">
                 <div class="col-md-6">
-                    Proposed Payment
+                    <field-custom-name default="Proposed Payment" form="solar_info"></field-custom-name>
                 </div>
                 <div class="col-md-6">
                     <div class="input-group">
@@ -126,9 +126,9 @@
                     </div>
                 </div>
             </div>
-            <div class="row form_line">
+            <div class="row form_line field-custom-name-container">
                 <div class="col-md-6">
-                    Annual Income
+                    <field-custom-name default="Annual Income" form="solar_info"></field-custom-name>
                 </div>
                 <div class="col-md-6">
                     <div class="input-group">
@@ -139,9 +139,9 @@
                     </div>
                 </div>
             </div>
-            <div class="row form_line">
+            <div class="row form_line field-custom-name-container">
                 <div class="col-md-6">
-                    Tree Estimate
+                    <field-custom-name default="Tree Estimate" form="solar_info"></field-custom-name>
                 </div>
                 <div class="col-md-6">
                     <div class="input-group">
@@ -152,9 +152,9 @@
                     </div>
                 </div>
             </div>
-            <div class="row form_line">
+            <div class="row form_line field-custom-name-container">
                 <div class="col-md-6">
-                    Roof Estimate
+                    <field-custom-name default="Roof Estimate" form="solar_info"></field-custom-name>
                 </div>
                 <div class="col-md-6">
                     <div class="input-group">
@@ -166,57 +166,57 @@
                 </div>
             </div>
             <hr>
-            <div class="row form_line">
+            <div class="row form_line field-custom-name-container">
                 <div class="col-md-6">
-                    Utility Account #
+                    <field-custom-name default="Utility Account #" form="solar_info"></field-custom-name>
                 </div>
                 <div class="col-md-6">
                     <input type="text" class="form-control" name="utility_account" id="utility_account"/>
                 </div>
             </div>
-            <div class="row form_line">
+            <div class="row form_line field-custom-name-container">
                 <div class="col-md-6">
-                    Utility Login
+                    <field-custom-name default="Utility Login #" form="solar_info"></field-custom-name>
                 </div>
                 <div class="col-md-6">
                     <input type="text" class="form-control" name="utility_login" id="utility_login"/>
                 </div>
             </div>
-            <div class="row form_line">
+            <div class="row form_line field-custom-name-container">
                 <div class="col-md-6">
-                    Utility Password
+                    <field-custom-name default="Utility Password" form="solar_info"></field-custom-name>
                 </div>
                 <div class="col-md-6">
                     <input type="text" class="form-control" name="utility_pass" id="utility_pass"/>
                 </div>
             </div>
-            <div class="row form_line">
+            <div class="row form_line field-custom-name-container">
                 <div class="col-md-6">
-                    Meter Number
+                    <field-custom-name default="Meter Number" form="solar_info"></field-custom-name>
                 </div>
                 <div class="col-md-6">
                     <input type="text" class="form-control" name="meter_number" id="meter_number"/>
                 </div>
             </div>
-            <div class="row form_line">
+            <div class="row form_line field-custom-name-container">
                 <div class="col-md-6">
-                    Insurance Name
+                    <field-custom-name default="Insurance Name" form="solar_info"></field-custom-name>
                 </div>
                 <div class="col-md-6">
                     <input type="text" class="form-control" name="insurance_name" id="insurance_name"/>
                 </div>
             </div>
-            <div class="row form_line">
+            <div class="row form_line field-custom-name-container">
                 <div class="col-md-6">
-                    Insurance Number
+                    <field-custom-name default="Insurance Number" form="solar_info"></field-custom-name>
                 </div>
                 <div class="col-md-6">
                     <input type="text" class="form-control" name="insurance_number" id="insurance_number"/>
                 </div>
             </div>
-            <div class="row form_line">
+            <div class="row form_line field-custom-name-container">
                 <div class="col-md-6">
-                    Policy Number
+                    <field-custom-name default="Policy Number" form="solar_info"></field-custom-name>
                 </div>
                 <div class="col-md-6">
                     <input type="text" class="form-control" name="policy_number" id="policy_number"/>

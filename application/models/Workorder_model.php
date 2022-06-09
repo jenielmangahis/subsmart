@@ -740,6 +740,24 @@ class Workorder_model extends MY_Model
 		return $query->result();
     }
 
+    public function get_agreements($id)
+    {
+        $this->db->select('*');
+		$this->db->from('workorder_agreement_items');
+		$this->db->where('work_order_id', $id);
+		$query = $this->db->get();
+		return $query->row();
+    }
+
+    public function get_agree_items($id)
+    {
+        $this->db->select('*');
+		$this->db->from('work_orders_agreement_products');
+		$this->db->where('work_order_id', $id);
+		$query = $this->db->get();
+		return $query->result();
+    }
+
     function getRows($name){
         $this->db->select('*');
         $this->db->from('workorder_solar_files');
@@ -931,6 +949,23 @@ class Workorder_model extends MY_Model
         $where = array(
             'company_id' => $cid,
             'solar'   => '1'
+        );
+
+        $this->db->select('*');
+		$this->db->from('work_order_headers');
+		$this->db->where($where);
+		$query = $this->db->get();
+		return $query->row();
+    }
+
+    public function getheaderInstallationByID()
+    {
+        $cid = getLoggedCompanyID();
+
+        $where = array(
+            'company_id' => $cid,
+            'solar'   => '0',
+            'installation' => '1'
         );
 
         $this->db->select('*');
@@ -1719,6 +1754,13 @@ class Workorder_model extends MY_Model
 		return  $insert_id;
     }
 
+    public function add_workorder_agreement_items($data)
+    {
+        $vendor = $this->db->insert('work_orders_agreement_products', $data);
+	    $insert_id = $this->db->insert_id();
+		return  $insert_id;
+    }
+
     public function add_work_order_details_temp($data)
     {
         $vendor = $this->db->insert('work_orders_items_temp', $data);
@@ -1778,6 +1820,13 @@ class Workorder_model extends MY_Model
     public function save_solar_items($data)
     {
         $vendor = $this->db->insert('workorder_solar_items', $data);
+	    $insert_id = $this->db->insert_id();
+		return  $insert_id;
+    }
+
+    public function save_agreement_items($data)
+    {
+        $vendor = $this->db->insert('workorder_agreement_items', $data);
 	    $insert_id = $this->db->insert_id();
 		return  $insert_id;
     }

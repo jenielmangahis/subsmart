@@ -4,13 +4,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">
 <?php include viewPath('includes/sidebars/workorder'); ?>
-<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
-<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+<!-- <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script> -->
 <style>
 .box-left-mini{
     float:left;
     background-image:url(website-content/hotcampaign.png);
-    width:100%;
+    /* width:292px; */
     /* height:141px; */
 }
 
@@ -41,93 +41,60 @@ img.company-logo2 {
 }
 </style>
 <style>
-#chartdiv {
+/* #chartdiv {
   width: 100%;
   height: 400px;
+} */
+input:focus {
+    background-color: #ffa;
 }
-.files input {
-    outline: 2px dashed #92b0b3;
-    outline-offset: -10px;
-    -webkit-transition: outline-offset .15s ease-in-out, background-color .15s linear;
-    transition: outline-offset .15s ease-in-out, background-color .15s linear;
-    padding: 70px 0px 85px 30%;
-    text-align: center !important;
-    margin: 0;
-    width: 100% !important;
-}
-.files input:focus{     outline: 2px dashed #92b0b3;  outline-offset: -10px;
-    -webkit-transition: outline-offset .15s ease-in-out, background-color .15s linear;
-    transition: outline-offset .15s ease-in-out, background-color .15s linear; border:1px solid #92b0b3;
- }
-.files{ position:relative}
-.files:after {  pointer-events: none;
-    position: absolute;
-    top: 60px;
-    left: 0;
-    width: 50px;
-    right: 0;
-    height: 56px;
-    content: "";
-    background-image: url(https://image.flaticon.com/icons/png/128/109/109612.png);
-    display: block;
-    margin: 0 auto;
-    background-size: 100%;
-    background-repeat: no-repeat;
-}
-.color input{ background-color:#f1f1f1;}
-.files:before {
-    position: absolute;
-    bottom: 10px;
-    left: 0;  pointer-events: none;
+/* .table-responsive {
+    display: table;
+} */
+table input[type=text],
+    input[type=email],
+    input[type=url],
+    input[type=password] {
     width: 100%;
-    right: 0;
-    height: 57px;
-    top:100px;
-    content: " or drag it here. ";
-    display: block;
-    margin: 0 auto;
-    color: #2ea591;
-    font-weight: 600;
-    text-transform: capitalize;
-    text-align: center;
+    font-size:14px;
 }
 
-.leftangle{
-        /* color:white; */
-        font-size:16px;
-    }  
+table{
+    width:100%;
+}
 
-    .kahon
+#eye {
+  position:absolute;
+  right:80%;
+  top:6.5%;
+}
+
+table input.form-control {
+   height:25px !important;
+}
+
+@media screen and (max-width:500px){
+    body{
+        /* color:white; */
+        font-size:9px !important;
+    }  
+    table thead
     {
-        padding:20px;
-        border-radius:5px;
-        background-color:white;
-        width:50%;
-    }
-
-@media screen and (max-width:720px){
-    .leftangle{
-        /* color:white; */
-        font-size:11px;
-    }  
-    .leftangle h6{
-        /* color:white; */
         font-size:12px;
-    } 
-    .kahon
-    {
-        padding:10px;
-        border-radius:5px;
-        background-color:white;
-        width:12%;
     }
-    .lawas
-    {
-        text-align:center;
+}
+
+@media screen and (max-width:1400px){
+    table input[type=text],
+    input[type=email],
+    input[type=url],
+    input[type=password] {
+    width: 100%;
+    font-size:10px;
     }
-    .estbill
+    table thead
     {
-        width:50%;
+        font-size:14px;
     }
 }
 </style>
@@ -136,8 +103,8 @@ img.company-logo2 {
     <div wrapper__section>
         <div class="container-fluid p-40">
           <div class="row" style="margin-top: 30px;">
-            <div class="col lawas">
-                <h3 class="m-0">Solar Stimulus Data Control / 2022 - 2024</h3>
+            <div class="col">
+                <h3 class="m-0">Alarm System Work Order Agreement</h3>
             </div>
         </div>
 
@@ -152,9 +119,9 @@ img.company-logo2 {
                 </div>
             </div>
             <br> -->
-            <?php echo form_open_multipart('workorder/savenewWorkorderSolar', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?> 
+            <?php echo form_open_multipart('workorder/savenewWorkorderAgreement', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?> 
                     <div class="row">
-                        <div class="col-md-12 lawas">
+                        <div class="col-md-12">
                             <div id="header_area">
                                 <h4 class="mt-0 header-title mb-5">Header</h4>
                                 <div class="row">
@@ -173,10 +140,17 @@ img.company-logo2 {
                                                     ?>">
                                             </li>
                                         </ol>   
-                                        <div class="row">                   
-                                            <div class="col-md-3 form-group">
-                                                <label for="contact_name" class="label-element">Work Order #</label>
-                                                    <input type="text" class="form-control input-element" name="workorder_number" id="workorder_number" value="<?php echo "WO-"; 
+                                        <!-- <div class="row">        
+                                        </div>                                      -->
+                                    </div> 
+                                    <div class="col-md-3">
+                                        <div style="margin-top:-30px;"><img src="<?php echo base_url().'assets/img/alarm_logo.jpeg' ?>" class="company-logo2"/> </div>                            
+                                    </div> 
+                                </div>
+                                <div class="row">            
+                                    <div class="col-md-3 form-group">
+                                        <label for="contact_name" class="label-element">Work Order #</label>
+                                            <input type="text" style="width:100%;" class="form-control input-element" name="workorder_number" id="workorder_number" value="<?php echo "WO-"; 
                                                             foreach ($number as $num):
                                                                     $next = $num->work_order_number;
                                                                     $arr = explode("-", $next);
@@ -188,34 +162,75 @@ img.company-logo2 {
                                                             echo str_pad($val,7,"0",STR_PAD_LEFT);
                                                             ?>" required readonly/>
                                                     <!-- <input type="text" class="form-control input-element" name="workorder_number" id="workorder-number" value="<?= $prefix . $val; ?>" required readonly/> -->
-                                            </div>
-                                            <div class="form-group col-md-3">
-                                                <div class="select-wrap">
-                                                    <label for="lead_source">Lead Source</label>
-                                                        <select id="lead_source" name="lead_source" class="form-control custom-select m_select">
-                                                            <option value="0">- none -</option>
-                                                            <?php foreach($lead_source as $lead){ ?>
-                                                                <option value="<?php echo $lead->ls_id; ?>"><?php echo $lead->ls_name; ?></option>
-                                                            <?php } ?>
-                                                        </select>
-                                                </div>    
-                                            </div>   
-                                            
-                                            <div class="form-group col-md-3">
-                                                <div class="select-wrap">
-                                                    <label for="lead_source">System Type</label>
-                                                    <select id="system_type" name="system_type" class="form-control custom-select m_select">
-                                                        <option value="0">- none -</option>
-                                                        <?php foreach($system_package_type as $lead){ ?>
-                                                        <option value="<?php echo $lead->name; ?>"><?php echo $lead->name; ?></option>
-                                                        <?php } ?>
-                                                    </select>
-                                                </div>    
-                                            </div> 
-                                        </div>                                     
                                     </div> 
-                                    <div class="col-md-3">
-                                        <div style="margin-top:-30px;"><img src="<?= getCompanyBusinessProfileImage(); ?>" class="company-logo2"/> </div>                            
+                                    <div class="form-group col-md-2">
+                                        <div class="select-wrap">
+                                            <label for="lead_source">Lead Source</label>
+                                            <select id="lead_source" name="lead_source" class="form-control custom-select m_select">
+                                                <option value="0">- none -</option>
+                                                <?php foreach($lead_source as $lead){ ?>
+                                                <option value="<?php echo $lead->ls_id; ?>"><?php echo $lead->ls_name; ?></option>
+                                                <?php } ?>
+                                             </select>
+                                        </div>    
+                                    </div> 
+                                    <div class="form-group col-md-2">
+                                        <div class="select-wrap">
+                                            <label for="lead_source">Account Type</label>
+                                            <select id="account_type" name="account_type" class="form-control custom-select m_select">
+                                                <option value="">- none -</option>
+                                                <option value="Residential">Residential</option>
+                                                <option value="Commercial">Commercial</option>
+                                                <option value="Rental">Rental</option>
+                                                <option value="Inhouse">Inhouse</option>
+                                             </select>
+                                        </div>    
+                                    </div> 
+                                    <div class="form-group col-md-2">
+                                        <div class="select-wrap">
+                                            <label for="lead_source">Communication Type</label>
+                                            <select id="communication_type" name="communication_type" class="form-control custom-select m_select">
+                                                <option value="0">- none -</option>
+                                                <?php foreach($system_package_type as $lead){ ?>
+                                                <option value="<?php echo $lead->name; ?>"><?php echo $lead->name; ?></option>
+                                                <?php } ?>
+                                            </select>
+                                        </div>    
+                                    </div> 
+                                    <div class="form-group col-md-2">
+                                        <div class="select-wrap">
+                                            <label for="lead_source">Panel Type</label>
+                                            <select name="panel_type" id="panel_type" class="form-control input_select" data-value="<?= isset($alarm_info) ? $alarm_info->panel_type : "" ?>">
+                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == ''){echo "selected";} } ?>  value="0">- none -</option>
+                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'AERIONICS'){echo "selected";} } ?> value="AERIONICS">AERIONICS</option>
+                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'AlarmNet'){echo "selected";} } ?> value="AlarmNet">AlarmNet</option>
+                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Alarm.com'){echo "selected";} } ?> value="Alarm.com">Alarm.com</option>
+                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Alula'){echo "selected";} } ?> value="Alula">Alula</option>
+                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Bosch'){echo "selected";} } ?> value="Bosch">Bosch</option>
+                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'DSC'){echo "selected";} } ?> value="DSC">DSC</option>
+                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'ELK'){echo "selected";} } ?> value="ELK">ELK</option>
+                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'FBI'){echo "selected";} } ?> value="FBI">FBI</option>
+                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'GRI'){echo "selected";} } ?> value="GRI">GRI</option>
+                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'GE'){echo "selected";} } ?> value="GE">GE</option>
+                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Honeywell'){echo "selected";} } ?> value="Honeywell">Honeywell</option>
+                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Honeywell Touch'){echo "selected";} } ?> value="Honeywell Touch">Honeywell Touch</option>
+                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Honeywell 3000'){echo "selected";} } ?> value="Honeywell 3000">Honeywell 3000</option>
+                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Honeywell'){echo "selected";} } ?> value="Honeywell Vista">Honeywell Vista</option>
+                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Honeywell Vista with Sem'){echo "selected";} } ?> value="Honeywell Vista with Sem">Honeywell Vista with Sem</option>
+                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Honeywell Lyric'){echo "selected";} } ?> value="Honeywell Lyric">Honeywell Lyric</option>
+                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'IEI'){echo "selected";} } ?> value="IEI">IEI</option>
+                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'MIER'){echo "selected";} } ?> value="MIER">MIER</option>
+                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == '2 GIG'){echo "selected";} } ?> value="2 GIG">2 GIG</option>
+                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == '2 GIG Go Panel 2'){echo "selected";} } ?> value="2 GIG Go Panel 2">2 GIG Go Panel 2</option>
+                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == '2 GIG Go Panel 3'){echo "selected";} } ?> value="2 GIG Go Panel 3">2 GIG Go Panel 3</option>
+                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Qolsys'){echo "selected";} } ?> value="Qolsyx">Qolsys</option>
+                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Qolsys IQ Panel 2'){echo "selected";} } ?> value="Qolsys IQ Panel 2">Qolsys IQ Panel 2</option>
+                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Qolsys IQ Panel 2 Plus'){echo "selected";} } ?> value="Qolsys IQ Panel 2 Plus">Qolsys IQ Panel 2 Plus</option>
+                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Qolsys IQ Panel 3'){echo "selected";} } ?> value="Qolsys IQ Panel 3">Qolsys IQ Panel 3</option>
+                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Custom'){echo "selected";} } ?> value="Custom">Custom</option>
+                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Other'){echo "selected";} } ?> value="Other">Other</option>
+                                            </select>
+                                        </div>    
                                     </div> 
                                 </div>
                                 <br>
@@ -237,138 +252,475 @@ img.company-logo2 {
                         </div>
                     </div>
 
-                    <div class="row leftangle">                   
+                    <div class="row" style="font-size:16px;">                   
                         <div class=" col-md-6 box-left-mini">
                             <center>
                             <div class="front" style="text-align:center;background-color:#4a5594;color:white;padding:1%;border-radius:20px;width:95%;">
-                                <h4>Qualification Information for Solar</h4>
+                                <h4>Items</h4>
                             </div>
                             </center><br>
                             <div class="behind_container" style="background-color:#ced4e4;margin-top:-20px;padding:20px;">
-                                <div class="row"> 
-                                    <div class="col-md-2">
-                                    <br><br>        
-                                        <div class="kahon">A</div>
-                                    </div>
-                                    <div class="col-md-10">
-                                    <br> <h6>Type of Roof</h6>
-                                    <input type="radio" name="tor" value="Asphalt Single" class="form-"> Asphalt Single &emsp;
-                                    <input type="radio" name="tor" value="Flat" class="form-"> Flat &emsp;
-                                    <input type="radio" name="tor" value="Concrete Tile" class="form-"> Concrete Tile &emsp; <br>
-                                    <input type="radio" name="tor" value="Clay Tile" class="form-"> Clay Tile &emsp;
-                                    <input type="radio" name="tor" value="Steel Single" class="form-"> Steel Single &emsp;
-                                    <input type="radio" name="tor" value="Metal" class="form-"> Metal
-                                    <br><br><hr>
-                                    </div>
-                                </div>
-                                <div class="row"> 
-                                    <div class="col-md-2">
-                                        <div class="kahon">B</div>
-                                    </div>
-                                    <div class="col-md-10">
-                                    <h6>Square Footage of Home</h6>
-                                    <input type="text" name="sfoh" class="form-control">
-                                    <br><hr>
-                                    </div>
-                                </div>
-                                <div class="row"> 
-                                    <div class="col-md-2">
-                                        <div class="kahon">C</div>
-                                    </div>
-                                    <div class="col-md-10">
-                                    <h6>Age of Roof (Years)</h6>
-                                    <input type="radio" name="aor" value="0-5" class="form-"> 0-5 &emsp;
-                                    <input type="radio" name="aor" value="5-10" class="form-"> 5-10 &emsp;
-                                    <input type="radio" name="aor" value="10-15" class="form-"> 10-15 &emsp;
-                                    <input type="radio" name="aor" value="15-20" class="form-"> 15-20
-                                    <br><br><hr>
-                                    </div>
-                                </div>
-                                <div class="row"> 
-                                    <div class="col-md-2">
-                                        <div class="kahon">D</div>
-                                    </div>
-                                    <div class="col-md-10">
-                                    <h6>Solar Panel Mounting Preference</h6>
-                                    <input type="radio" name="spmp" value="Front Only" class="form-"> Front Only &emsp;
-                                    <input type="radio" name="spmp" value="Back Only" class="form-"> Back Only &emsp;
-                                    <input type="radio" name="spmp" value="Side Only" class="form-"> Side Only  <br>
-                                    <input type="radio" name="spmp" value="No Preference" class="form-"> No Preference &emsp;
-                                    <input type="radio" name="spmp" value="Other" class="form-"> Other
-                                    <br><br><hr>
-                                    </div>
-                                </div>
-                                <div class="row"> 
-                                    <div class="col-md-2">
-                                        <div class="kahon">E</div>
-                                    </div>
-                                    <div class="col-md-10">
-                                    <h6>Home Owner Associations</h6>
-                                    <input type="radio" name="hoa" value="Yes" class="form-"> Yes &emsp;
-                                    <input type="radio" name="hoa" value="No" class="form-"> No &emsp;
-                                    <br>
-                                    <b>If Yes: Contact Name/Number</b>
-                                    <input type="text" name="hoa_text" class="form-control">
-                                    <br><hr>
-                                    </div>
-                                </div>
-                                <div class="row"> 
-                                    <div class="col-md-2">
-                                        <div class="kahon">F</div>
-                                    </div>
-                                    <div class="col-md-10">
-                                        <div style="float:right;" class="estbill">
-                                            <!-- <center>$<input type="text" name="ebis_text" class="form-control" style="width:70%;"><br>
-                                            Estimated Bill</center> -->
-                                            <div class="input-group mb-3">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text">$</span>
-                                            </div>
-                                            <input type="number" name="estimated_bill" class="form-control" aria-label="Amount">
-                                            <!-- <div class="input-group-append">
-                                                <span class="input-group-text">.00</span>
-                                            </div> -->
-                                            </div>
-                                            <center>Estimated Bill</center>
-                                        </div>
-                                    <h6>Electric Bill is over $100</h6> 
-                                    <input type="radio" name="ebis" value="Yes" class="form-"> Yes &emsp;
-                                    <input type="radio" name="ebis" value="No" class="form-"> No &emsp;
-                                    <br>
-                                    <h6>How do you get your Invoice</h6>
-                                    <input type="radio" name="hdygi" value="Paper" class="form-"> Paper &emsp;
-                                    <input type="radio" name="hdygi" value="Paperless" class="form-"> Paperless &emsp;
-                                    <!-- <input type="file" name="hdygi_file[]" multiple="multiple" class="form-control"> -->
-                                    <div class="form-group files">
-                                        <!-- <label>Upload Your File </label> -->
-                                        <input type="file" name="hdygi_file[]" multiple="multiple" class="form-control">
-                                    </div>
-                                    <h6>Electric Bill Account #</h6>
-                                    <input type="text" name="eba_text" class="form-control">
-                                    <br><hr>
-                                    </div>
-                                </div>
-                                <div class="row" style="margin-bottom:70px;"> 
-                                    <div class="col-md-2">
-                                        <div style="padding:20px;border-radius:5px;background-color:white;width:50%;">G</div>
-                                    </div>
-                                    <div class="col-md-10">
-                                    <h6>Employment Status</h6>
-                                    <input type="radio" name="es" value="Employed" class="form-"> Employed &emsp;
-                                    <input type="radio" name="es" value="Unemployed" class="form-"> Unemployed &emsp;
-                                    <input type="radio" name="es" value="Retired" class="form-"> Retired <br>
-                                    <input type="radio" name="es" value="Retired with Income" class="form-"> Retired with Income
-                                    <!-- <hr> -->
-                                    </div>
-                                </div>
+                                <table  class="table-bordered">
+                                    <thead align="center">
+                                        <th>Items</th>
+                                        <th>Quantity</th>
+                                        <th>Location</th>
+                                        <th>Price</th>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <!-- <input type="text" style="background-color:#ced4e4;" class="border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value="System Upgrade"> -->
+                                                <!-- <input type="text" id="reg_password" name="item[]" style="background-color:#ced4e4;" class="border-top-0 border-right-0 border-left-0 border-bottom-0" ng-model="register_password" value="System Upgrade"/>
+                                                <input type="checkbox" id="eye" /> -->
+                                                <div class="input-group">
+                                                    <!-- <div class="input-group-prepend">
+                                                        <span class="input-group-text">$</span>
+                                                    </div> -->
+                                                    <input type="text" style="background-color:#ced4e4;" class="form-control input-sm border-top-0 border-right-0 border-left-0 border-bottom-0" value="System Upgrade">
+                                                    <div class="input-group-append" style="height:25px !important;">
+                                                        <span class="input-group-text" style="background-color:#ced4e4;"><input type="checkbox" />N</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control input-sm border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control input-sm border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control input-sm border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value="LTE - Communicator"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value="Recessed Door Contact"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value="Surface Contact"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value="Keyless Remote"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value="Motion Detector"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value="Smoke Communicator"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value="Glass Break Detector"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value="Carbon Monoxide"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value="Medical Pendant"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value="Wifi-Card"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value="Repeater"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value="Advertising Kit"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value="Z-Card"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value="Z-Lock"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]"  value="Z-Therymostat"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value="WAP"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value="IP-CAM (Indoor)"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value="IP-CAM (Outdoor)"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value="Warranty ePaperwork"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value="Translater"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
+                                        </tr>
+                                        <?php for ($i=1; $i<=8; $i++ ) { ?>
+                                        <tr>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
+                                        </tr>
+                                        <?php } ?>
+                                    </tbody>
+                                </table>
                             </div>
-
-                        </div>
-                        <div class=" col-md-6">
-                            <div style="padding:3%;border:solid black 1px;font-weight:bold;">
-                                Please fill in the form completely, and return it to a solar specialist or email to support@adtsolarpro.com for consideration.
+                            <br>
+                            <div class="row"> 
+                                <div class="col-md-6">
+                                    <input type="date" name="installation_date" class="form-control border-top-0 border-right-0 border-left-0">
+                                    <b>Installation Date:</b>
+                                </div>
+                                <div class="col-md-6">
+                                    <select id="intall_time" name="intall_time" class="form-control custom-select m_select">
+                                        <option value="8-10">8-10</option>
+                                        <option value="10-12">10-12</option>
+                                        <option value="12-2">12-2</option>
+                                        <option value="2-4">2-4</option>
+                                        <option value="4-6">4-6</option>
+                                    </select>
+                                    <b>Install Time Date:</b>
+                                </div>
                             </div>
                             <br><br>
+                            <div class="row">                   
+                                <div class="form-group col-md-6">
+                                    <div class="select-wrap">
+                                        <b>Payment Method</b>
+                                            <select name="payment_method" id="payment_method" class="form-control custom-select m_select">
+                                                <option value="">Choose method</option>
+                                                <option value="Cash">Cash</option>
+                                                <option value="Check">Check</option>
+                                                <option value="Credit Card">Credit Card</option>
+                                                <option value="Debit Card">Debit Card</option>
+                                                <option value="ACH">ACH</option>
+                                                <option value="Venmo">Venmo</option>
+                                                <option value="Paypal">Paypal</option>
+                                                <option value="Square">Square</option>
+                                                <option value="Invoicing">Invoicing</option>
+                                                <option value="Warranty Work">Warranty Work</option>
+                                                <option value="Home Owner Financing">Home Owner Financing</option>
+                                                <option value="e-Transfer">e-Transfer</option>
+                                                <option value="Other Credit Card Professor">Other Credit Card Professor</option>
+                                                <option value="Other Payment Type">Other Payment Type</option>
+                                            </select>
+                                        </div> 
+                                    </div>     
+                                    <div class="form-group col-md-6">
+                                        <b>Amount<small class="help help-sm"> ( $ )</small></b>
+                                        <input type="text" class="form-control input-element" name="payment_amount" id="payment_amount"  />
+                                    </div>
+                            </div>
+                            <div class="row">                   
+                                <div class="col-md-12">
+                                            <div id="invoicing" style="display:none;">
+                                                <!-- <input type="checkbox" id="same_as"> <b>Same as above Address</b> <br><br> -->
+                                                <div class="row">                   
+                                                    <div class="col-md-6 form-group">
+                                                        <label for="monitored_location" class="label-element">Mail Address</label>
+                                                        <input type="text" class="form-control input-element" name="mail-address"
+                                                            id="mail-address" placeholder="Monitored Location"/>
+                                                    </div>
+                                                    <div class="col-md-6 form-group">
+                                                        <label for="city" class="label-element">City</label>
+                                                            <input type="text" class="form-control input-element" name="mail_locality" id="mail_locality" placeholder="Enter Name" />
+                                                    </div>
+                                                    <div class="col-md-6 form-group">
+                                                        <label for="state" class="label-element">State</label>
+                                                        <input type="text" class="form-control input-element" name="mail_state"
+                                                            id="mail_state" 
+                                                            placeholder="Enter State"/>
+                                                    </div>
+                                                <!-- </div>
+                                                <div class="row">   -->
+                                                    <div class="col-md-6 form-group">
+                                                        <label for="zip" class="label-element">ZIP</label> 
+                                                            <input type="text" id="mail_postcode" name="mail_postcode" class="form-control input-element"  placeholder="Enter Zip"/>
+                                                    </div>
+
+                                                    <div class="col-md-6 form-group">
+                                                        <label for="cross_street" class="label-element">Cross Street</label>
+                                                        <input type="text" class="form-control input-element" name="mail_cross_street"
+                                                            id="mail_cross_street" 
+                                                            placeholder="Cross Street"/>
+                                                    </div>                                        
+                                                </div>
+                                            </div>
+                                        <div id="check_area" style="display:none;">
+                                            <div class="row">                   
+                                                <div class="form-group col-md-6">
+                                                    <label for="job_type" class="label-element">Check Number</label>
+                                                    <input type="text" class="form-control input-element" name="check_number" id="check_number"/>
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <label for="job_type" class="label-element">Routing Number</label>
+                                                    <input type="text" class="form-control input-element" name="routing_number" id="routing_number"/>
+                                                </div>                                             
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-group col-md-6">
+                                                    <label for="job_type" class="label-element">Account Number</label>
+                                                    <input type="text" class="form-control input-element" name="account_number" id="account_number"/>
+                                                </div>                                       
+                                            </div>
+                                        </div>
+                                        <div id="credit_card" style="display:none;">
+                                            <div class="row">                   
+                                                <div class="form-group col-md-6">
+                                                    <label for="job_type" class="label-element">Credit Card Number</label>
+                                                    <input type="text" class="form-control input-element" name="credit_number" id="credit_number" placeholder="0000 0000 0000 000" />
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <label for="job_type" class="label-element">Credit Card Expiration</label>
+                                                    <input type="text" class="form-control input-element" name="credit_expiry" id="credit_expiry" placeholder="MM/YYYY"/>
+                                                </div>  
+                                                <div class="form-group col-md-6">
+                                                    <label for="job_type" class="label-element">CVC</label>
+                                                    <input type="text" class="form-control input-element" name="credit_cvc" id="credit_cvc" placeholder="CVC"/>
+                                                </div>                                             
+                                            </div>
+                                        </div>
+                                        <div id="debit_card" style="display:none;">
+                                            <div class="row">                   
+                                                <div class="form-group col-md-6">
+                                                    <label for="job_type" class="label-element">Credit Card Number</label>
+                                                    <input type="text" class="form-control input-element" name="debit_credit_number" id="credit_number2" placeholder="0000 0000 0000 000" />
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <label for="job_type" class="label-element">Credit Card Expiration</label>
+                                                    <input type="text" class="form-control input-element" name="debit_credit_expiry" id="credit_expiry" placeholder="MM/YYYY"/>
+                                                </div>  
+                                                <div class="form-group col-md-6">
+                                                    <label for="job_type" class="label-element">CVC</label>
+                                                    <input type="text" class="form-control input-element" name="debit_credit_cvc" id="credit_cvc" placeholder="CVC"/>
+                                                </div>                                            
+                                            </div>
+                                        </div>
+                                        <div id="ach_area" style="display:none;">
+                                            <div class="row">                   
+                                                <div class="form-group col-md-6">
+                                                    <label for="job_type" class="label-element">Routing Number</label>
+                                                    <input type="text" class="form-control input-element" name="ach_routing_number" id="ach_routing_number" />
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <label for="job_type" class="label-element">Account Number</label>
+                                                    <input type="text" class="form-control input-element" name="ach_account_number" id="ach_account_number" />
+                                                </div>  
+                                            </div>
+                                        </div>
+                                        <div id="venmo_area" style="display:none;">
+                                            <div class="row">                   
+                                                <div class="form-group col-md-6">
+                                                    <label for="job_type" class="label-element">Account Credential</label>
+                                                    <input type="text" class="form-control input-element" name="account_credentials" id="account_credentials"/>
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <label for="job_type" class="label-element">Account Note</label>
+                                                    <input type="text" class="form-control input-element" name="account_note" id="account_note"/>
+                                                </div>  
+                                                <div class="form-group col-md-6">
+                                                    <label for="job_type" class="label-element">Confirmation</label>
+                                                    <input type="text" class="form-control input-element" name="confirmation" id="confirmation"/>
+                                                </div>                                            
+                                            </div>
+                                        </div>
+                                        <div id="paypal_area" style="display:none;">
+                                            <div class="row">                   
+                                                <div class="form-group col-md-6">
+                                                    <label for="job_type" class="label-element">Account Credential</label>
+                                                    <input type="text" class="form-control input-element" name="paypal_account_credentials" id="paypal_account_credentials"/>
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <label for="job_type" class="label-element">Account Note</label>
+                                                    <input type="text" class="form-control input-element" name="paypal_account_note" id="paypal_account_note"/>
+                                                </div>  
+                                                <div class="form-group col-md-6">
+                                                    <label for="job_type" class="label-element">Confirmation</label>
+                                                    <input type="text" class="form-control input-element" name="paypal_confirmation" id="paypal_confirmation"/>
+                                                </div>                                            
+                                            </div>
+                                        </div>
+                                        <div id="square_area" style="display:none;">
+                                            <div class="row">                   
+                                                <div class="form-group col-md-6">
+                                                    <label for="job_type" class="label-element">Account Credential</label>
+                                                    <input type="text" class="form-control input-element" name="square_account_credentials" id="square_account_credentials"/>
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <label for="job_type" class="label-element">Account Note</label>
+                                                    <input type="text" class="form-control input-element" name="square_account_note" id="square_account_note"/>
+                                                </div>  
+                                                <div class="form-group col-md-6">
+                                                    <label for="job_type" class="label-element">Confirmation</label>
+                                                    <input type="text" class="form-control input-element" name="square_confirmation" id="square_confirmation"/>
+                                                </div>                                            
+                                            </div>
+                                        </div>
+                                        <div id="warranty_area" style="display:none;">
+                                            <div class="row">                   
+                                                <div class="form-group col-md-6">
+                                                    <label for="job_type" class="label-element">Account Credential</label>
+                                                    <input type="text" class="form-control input-element" name="warranty_account_credentials" id="warranty_account_credentials"/>
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <label for="job_type" class="label-element">Account Note</label>
+                                                    <input type="text" class="form-control input-element" name="warranty_account_note" id="warranty_account_note"/>
+                                                </div>                                         
+                                            </div>
+                                        </div>
+                                        <div id="home_area" style="display:none;">
+                                            <div class="row">                   
+                                                <div class="form-group col-md-6">
+                                                    <label for="job_type" class="label-element">Account Credential</label>
+                                                    <input type="text" class="form-control input-element" name="home_account_credentials" id="home_account_credentials"/>
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <label for="job_type" class="label-element">Account Note</label>
+                                                    <input type="text" class="form-control input-element" name="home_account_note" id="home_account_note"/>
+                                                </div>                                         
+                                            </div>
+                                        </div>
+                                        <div id="e_area" style="display:none;">
+                                            <div class="row">                   
+                                                <div class="form-group col-md-6">
+                                                    <label for="job_type" class="label-element">Account Credential</label>
+                                                    <input type="text" class="form-control input-element" name="e_account_credentials" id="e_account_credentials"/>
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <label for="job_type" class="label-element">Account Note</label>
+                                                    <input type="text" class="form-control input-element" name="e_account_note" id="e_account_note"/>
+                                                </div>                                         
+                                            </div>
+                                        </div>
+                                        <div id="other_credit_card" style="display:none;">
+                                            <div class="row">                   
+                                                <div class="form-group col-md-6">
+                                                    <label for="job_type" class="label-element">Credit Card Number</label>
+                                                    <input type="text" class="form-control input-element" name="other_credit_number" id="other_credit_number" placeholder="0000 0000 0000 000" />
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <label for="job_type" class="label-element">Credit Card Expiration</label>
+                                                    <input type="text" class="form-control input-element" name="other_credit_expiry" id="other_credit_expiry" placeholder="MM/YYYY"/>
+                                                </div>  
+                                                <div class="form-group col-md-6">
+                                                    <label for="job_type" class="label-element">CVC</label>
+                                                    <input type="text" class="form-control input-element" name="other_credit_cvc" id="other_credit_cvc" placeholder="CVC"/>
+                                                </div>                                             
+                                            </div>
+                                        </div>
+                                        <div id="other_payment_area" style="display:none;">
+                                            <div class="row">                   
+                                                <div class="form-group col-md-6">
+                                                    <label for="job_type">Account Credential</label>
+                                                    <input type="text" class="form-control input-element" name="other_payment_account_credentials" id="other_payment_account_credentials"/>
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <label for="job_type">Account Note</label>
+                                                    <input type="text" class="form-control input-element" name="other_payment_account_note" id="other_payment_account_note"/>
+                                                </div>                                         
+                                            </div>
+                                        </div>
+                                </div>
+                            </div>
+                            <div class="row">                   
+                                <div class="form-group col-md-12">
+                                    <b>Notes</b>
+                                    <!-- <textarea class="form-control" style="width:100%;"></textarea> -->
+                                    <div class="form-group">
+                                        <textarea class="form-control" name="notes" rows="3"></textarea>
+                                    </div>
+                                </div>                                        
+                            </div>
+                            <div class="row" style="margin-top:-46px;">
+                                <!-- <div class="form-group col-md-12"> -->
+                                    <div class="col-md-6">
+                                        <input type="text" name="sales_re_name" class="form-control border-top-0 border-right-0 border-left-0">
+                                        <b>Sales Rep's Name</b>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="text" name="sale_rep_phone" class="form-control border-top-0 border-right-0 border-left-0">
+                                        <b>Cell Phone</b>
+                                    </div>     
+                                <!-- </div> -->
+                            </div>   
+                            <div class="row">                   
+                                <div class="form-group col-md-12">
+                                    <input type="text" name="team_leader" class="form-control border-top-0 border-right-0 border-left-0">
+                                    <b>Team Leader</b>
+                                </div>                                        
+                            </div>
+                        </div>
+                        
+                        <div class=" col-md-6">
+                            <div style="padding:1%;border:solid black 1px;font-weight:bold;">
+                                <div class="row" align="center">
+									<div class="col-md-6">
+										<input type="text" class="form-control input-element border-top-0 border-right-0 border-left-0" name="password" placeholder="Enter Password" required
+												   id="password" >
+										<b>Password</b> <span class="form-required">*</span>
+									</div>
+									<div class="col-md-6">
+										<input type="text" class="form-control input-element border-top-0 border-right-0 border-left-0" name="ssn"
+												   id="ssn"
+												   placeholder="Enter SSN"/>
+                                        <b>SSN</b> <small class="help help-sm">(optional)</small>
+									</div>
+                                </div>
+                            </div>
+                            <br>
                             <center>
                             <div class="front" style="text-align:center;background-color:#4a5594;color:white;padding:0.5%;border-radius:20px;width:100%;">
                                 <h6>Please Fill in the Details:</h6>
@@ -386,6 +738,16 @@ img.company-logo2 {
                                     </div>
                                 </div>
                                 <div class="row"> 
+                                    <div class="col-md-6">
+                                        <input type="text" name="firstname_spouse" id="firstname" class="form-control border-top-0 border-right-0 border-left-0" onkeyup="primaryName()">
+                                        <b>First name (Spouse):</b>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="text" name="lastname_spouse" id="lastname" class="form-control border-top-0 border-right-0 border-left-0" onkeyup="primaryName()">
+                                        <b>Last name (Spouse):</b>
+                                    </div>
+                                </div>
+                                <div class="row"> 
                                     <div class="col-md-12">
                                         <input type="text" name="address" class="form-control border-top-0 border-right-0 border-left-0">
                                         <b>Address:</b>
@@ -397,14 +759,18 @@ img.company-logo2 {
                                         <b>City:</b>
                                     </div>
                                     <div class="col-md-7">
-                                        <input type="text" name="country" class="form-control border-top-0 border-right-0 border-left-0">
-                                        <b>County:</b>
+                                        <input type="text" name="state" class="form-control border-top-0 border-right-0 border-left-0">
+                                        <b>State:</b>
                                     </div>
                                 </div>
                                 <div class="row"> 
-                                    <div class="col-md-12">
+                                    <div class="col-md-5">
                                         <input type="text" name="postcode" class="form-control border-top-0 border-right-0 border-left-0">
                                         <b>Postcode:</b>
+                                    </div>
+                                    <div class="col-md-7">
+                                        <input type="text" name="county" class="form-control border-top-0 border-right-0 border-left-0">
+                                        <b>County:</b>
                                     </div>
                                 </div>
                                 <div class="row"> 
@@ -426,12 +792,115 @@ img.company-logo2 {
                                     </div>
                                 </div>
                                 <div class="row"> 
-                                    <div class="col-md-12">
-                                        <input type="text" name="comments" class="form-control border-top-0 border-right-0 border-left-0">
-                                        <b>Comments:</b>
+                                    <div class="col-md-5">
+                                        <input type="text" name="first_ecn" class="form-control border-top-0 border-right-0 border-left-0">
+                                        <b>1st Emergency Contact Name:</b>
+                                    </div>
+                                    <div class="col-md-7">
+                                        <input type="text" name="first_ecn_no" class="form-control border-top-0 border-right-0 border-left-0">
+                                        <b>Phone:</b>
+                                    </div>
+                                </div>
+                                <div class="row"> 
+                                    <div class="col-md-5">
+                                        <input type="text" name="second_ecn" class="form-control border-top-0 border-right-0 border-left-0">
+                                        <b>2nd Emergency Contact Name:</b>
+                                    </div>
+                                    <div class="col-md-7">
+                                        <input type="text" name="second_ecn_no" class="form-control border-top-0 border-right-0 border-left-0">
+                                        <b>Phone:</b>
+                                    </div>
+                                </div>
+                                <div class="row"> 
+                                    <div class="col-md-5">
+                                        <input type="text" name="third_ecn" class="form-control border-top-0 border-right-0 border-left-0">
+                                        <b>3rd Emergency Contact Name:</b>
+                                    </div>
+                                    <div class="col-md-7">
+                                        <input type="text" name="third_ecn_no" class="form-control border-top-0 border-right-0 border-left-0">
+                                        <b>Phone:</b>
                                     </div>
                                 </div>
                                 <br>
+                                <div class="row"> 
+                                    <div class="col-md-12">
+                                        <table class="table table-bordered table-sm" style="width:80%;">
+                                            <tr>
+                                                <td>Equipment Cost</td>
+                                                <td>
+                                                    <div class="input-group mb-3">
+                                                    <div class="input-group-prepend">
+                                                        <h4>$</h4> 
+                                                    </div> &nbsp;
+                                                    <input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" style="font-size:20px;font-weight:bold;color:black;background-color: #fff;" aria-label="Amount (to the nearest dollar)" id="equipmentCost" name="equipmentCost" value="0" readonly>
+                                                    </div>
+                                                    <!-- <input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0"> -->
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Sales Tax</td>
+                                                <td>
+                                                    <div class="input-group mb-3">
+                                                    <div class="input-group-prepend">
+                                                        <h4>$</h4> 
+                                                    </div> &nbsp;
+                                                    <input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" style="font-size:20px;font-weight:bold;color:black;" aria-label="Amount (to the nearest dollar)" id="salesTax" name="salesTax" value="0"  onkeyup="getTotalPrices()">
+                                                    </div>
+                                                    <!-- <input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0"> -->
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Installation Cost</td>
+                                                <td>
+                                                    <div class="input-group mb-3">
+                                                    <div class="input-group-prepend">
+                                                        <h4>$</h4> 
+                                                    </div> &nbsp;
+                                                    <input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" style="font-size:20px;font-weight:bold;color:black;" aria-label="Amount (to the nearest dollar)" id="installationCost" name="installationCost" value="0"  onkeyup="getTotalPrices()">
+                                                    </div>
+                                                    <!-- <input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0"> -->
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>One time (Program and Setup)</td>
+                                                <td>
+                                                    <div class="input-group mb-3">
+                                                    <div class="input-group-prepend">
+                                                        <h4>$</h4> 
+                                                    </div> &nbsp;
+                                                    <input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" style="font-size:20px;font-weight:bold;color:black;" aria-label="Amount (to the nearest dollar)" id="otps" name="otps" value="0"  onkeyup="getTotalPrices()">
+                                                    </div>
+                                                    <!-- <input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0"> -->
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Monthly Monitoring</td>
+                                                <td>
+                                                    <div class="input-group mb-3">
+                                                    <div class="input-group-prepend">
+                                                        <h4>$</h4> 
+                                                    </div> &nbsp;
+                                                    <input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" style="font-size:20px;font-weight:bold;color:black;" aria-label="Amount (to the nearest dollar)" id="monthlyMonitoring" name="monthlyMonitoring" value="0"  onkeyup="getTotalPrices()">
+                                                    </div>
+                                                    <!-- <input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0"> -->
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Total Due</td>
+                                                <td>
+                                                    <div class="input-group mb-3">
+                                                    <div class="input-group-prepend">
+                                                        <h4>$</h4> 
+                                                    </div> &nbsp;
+                                                    <input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" style="font-size:20px;font-weight:bold;color:black;background-color: #fff;" aria-label="Amount (to the nearest dollar)" id="totalDue" name="totalDue" value="0" readonly>
+                                                    </div>
+                                                    <!-- <input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0"> -->
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                                <!-- <br>
                                 <div class="row"> 
                                     <div class="col-md-12" style="border: solid gray 1px;border-top-left-radius: 25px;border-top-right-radius: 25px;">
                                     <center><h4>ENERGY USAGE HISTORY SAMPLE</h4></center>
@@ -443,264 +912,33 @@ img.company-logo2 {
                                         <b style="font-size:16px;">Options:</b><br>
                                         <input type="checkbox" name="options[]" value="roof" class="form-"> Roof &emsp;
                                         <input type="checkbox" name="options[]" value="tree removal" class="form-"> Tree Removal &emsp;
-                                        <input type="checkbox" name="options[]" value="battery package" class="form-"> Battery Package   &emsp;
-                                        <input type="checkbox" name="options[]" value="security" class="form-"> Security &emsp;
+                                        <input type="checkbox" name="options[]" value="battery package" class="form-"> Battery Package &emsp;
+                                        <input type="checkbox" name="options[]" value="security" class="form-"> Security  <br>
                                         <input type="checkbox" name="options[]" value="others" class="form-"> Others
                                     </div>
-                                </div>
+                                </div> -->
                             
                         </div>
                     </div>
-                    <br>
-                    <div class="row">                   
-                        <div class="form-group col-md-4">
-                            <div class="select-wrap">
-                                <label for="job_type">Payment Method</label>
-                                    <select name="payment_method" id="payment_method" class="form-control custom-select m_select">
-                                        <option value="">Choose method</option>
-                                        <option value="Cash">Cash</option>
-                                        <option value="Check">Check</option>
-                                        <option value="Credit Card">Credit Card</option>
-                                        <option value="Debit Card">Debit Card</option>
-                                        <option value="ACH">ACH</option>
-                                        <option value="Venmo">Venmo</option>
-                                        <option value="Paypal">Paypal</option>
-                                        <option value="Square">Square</option>
-                                        <option value="Invoicing">Invoicing</option>
-                                        <option value="Warranty Work">Warranty Work</option>
-                                        <option value="Home Owner Financing">Home Owner Financing</option>
-                                        <option value="e-Transfer">e-Transfer</option>
-                                        <option value="Other Credit Card Professor">Other Credit Card Professor</option>
-                                        <option value="Other Payment Type">Other Payment Type</option>
-                                    </select>
-                                </div> 
-                            </div>     
-                            <div class="form-group col-md-4">
-                                <label for="job_type" class="label-element">Amount<small class="help help-sm"> ( $ )</small></label>
-                                <input type="text" class="form-control input-element" name="payment_amount" id="payment_amount"  />
-                            </div>
-                    </div>
-                    <div id="invoicing" style="display:none;">
-                                        
-                                        <input type="checkbox" id="same_as"> <b>Same as above Address</b> <br><br>
-                                        <div class="row">                   
-                                            <div class="col-md-4 form-group">
-                                                <label for="monitored_location" class="label-element">Mail Address</label>
-                                                <input type="text" class="form-control input-element" name="mail-address"
-                                                    id="mail-address" placeholder="Monitored Location"/>
-                                            </div>
-                                            <div class="col-md-4 form-group">
-                                                <label for="city" class="label-element">City</label>
-                                                    <input type="text" class="form-control input-element" name="mail_locality" id="mail_locality" placeholder="Enter Name" />
-                                            </div>
-                                            <div class="col-md-4 form-group">
-                                                <label for="state" class="label-element">State</label>
-                                                <input type="text" class="form-control input-element" name="mail_state"
-                                                    id="mail_state" 
-                                                    placeholder="Enter State"/>
-                                            </div>
-                                        </div>
-                                        <div class="row">  
-                                            <div class="col-md-4 form-group">
-                                                <label for="zip" class="label-element">ZIP</label> 
-                                                    <input type="text" id="mail_postcode" name="mail_postcode" class="form-control input-element"  placeholder="Enter Zip"/>
-                                            </div>
-
-                                            <div class="col-md-4 form-group">
-                                                <label for="cross_street" class="label-element">Cross Street</label>
-                                                <input type="text" class="form-control input-element" name="mail_cross_street"
-                                                    id="mail_cross_street" 
-                                                    placeholder="Cross Street"/>
-                                            </div>                                        
-                                        </div>
-                                    </div>
-                            <div id="check_area" style="display:none;">
-                                <div class="row">                   
-                                    <div class="form-group col-md-4">
-                                        <label for="job_type" class="label-element">Check Number</label>
-                                        <input type="text" class="form-control input-element" name="check_number" id="check_number"/>
-                                    </div>
-                                    <div class="form-group col-md-4">
-                                        <label for="job_type" class="label-element">Routing Number</label>
-                                        <input type="text" class="form-control input-element" name="routing_number" id="routing_number"/>
-                                    </div>                                             
-                                </div>
-                                <div class="row">
-                                    <div class="form-group col-md-4">
-                                        <label for="job_type" class="label-element">Account Number</label>
-                                        <input type="text" class="form-control input-element" name="account_number" id="account_number"/>
-                                    </div>                                       
-                                </div>
-                            </div>
-                            <div id="credit_card" style="display:none;">
-                                <div class="row">                   
-                                    <div class="form-group col-md-4">
-                                        <label for="job_type" class="label-element">Credit Card Number</label>
-                                        <input type="text" class="form-control input-element" name="credit_number" id="credit_number" placeholder="0000 0000 0000 000" />
-                                    </div>
-                                    <div class="form-group col-md-3">
-                                        <label for="job_type" class="label-element">Credit Card Expiration</label>
-                                        <input type="text" class="form-control input-element" name="credit_expiry" id="credit_expiry" placeholder="MM/YYYY"/>
-                                    </div>  
-                                    <div class="form-group col-md-3">
-                                        <label for="job_type" class="label-element">CVC</label>
-                                        <input type="text" class="form-control input-element" name="credit_cvc" id="credit_cvc" placeholder="CVC"/>
-                                    </div>                                             
-                                </div>
-                            </div>
-                            <div id="debit_card" style="display:none;">
-                                <div class="row">                   
-                                    <div class="form-group col-md-4">
-                                        <label for="job_type" class="label-element">Credit Card Number</label>
-                                        <input type="text" class="form-control input-element" name="debit_credit_number" id="credit_number2" placeholder="0000 0000 0000 000" />
-                                    </div>
-                                    <div class="form-group col-md-3">
-                                        <label for="job_type" class="label-element">Credit Card Expiration</label>
-                                        <input type="text" class="form-control input-element" name="debit_credit_expiry" id="credit_expiry" placeholder="MM/YYYY"/>
-                                    </div>  
-                                    <div class="form-group col-md-3">
-                                        <label for="job_type" class="label-element">CVC</label>
-                                        <input type="text" class="form-control input-element" name="debit_credit_cvc" id="credit_cvc" placeholder="CVC"/>
-                                    </div>                                            
-                                </div>
-                            </div>
-                            <div id="ach_area" style="display:none;">
-                                <div class="row">                   
-                                    <div class="form-group col-md-4">
-                                        <label for="job_type" class="label-element">Routing Number</label>
-                                        <input type="text" class="form-control input-element" name="ach_routing_number" id="ach_routing_number" />
-                                    </div>
-                                    <div class="form-group col-md-3">
-                                        <label for="job_type" class="label-element">Account Number</label>
-                                        <input type="text" class="form-control input-element" name="ach_account_number" id="ach_account_number" />
-                                    </div>  
-                                </div>
-                            </div>
-                            <div id="venmo_area" style="display:none;">
-                                <div class="row">                   
-                                    <div class="form-group col-md-4">
-                                        <label for="job_type" class="label-element">Account Credential</label>
-                                        <input type="text" class="form-control input-element" name="account_credentials" id="account_credentials"/>
-                                    </div>
-                                    <div class="form-group col-md-3">
-                                        <label for="job_type" class="label-element">Account Note</label>
-                                        <input type="text" class="form-control input-element" name="account_note" id="account_note"/>
-                                    </div>  
-                                    <div class="form-group col-md-3">
-                                        <label for="job_type" class="label-element">Confirmation</label>
-                                        <input type="text" class="form-control input-element" name="confirmation" id="confirmation"/>
-                                    </div>                                            
-                                </div>
-                            </div>
-                            <div id="paypal_area" style="display:none;">
-                                <div class="row">                   
-                                    <div class="form-group col-md-4">
-                                        <label for="job_type" class="label-element">Account Credential</label>
-                                        <input type="text" class="form-control input-element" name="paypal_account_credentials" id="paypal_account_credentials"/>
-                                    </div>
-                                    <div class="form-group col-md-3">
-                                        <label for="job_type" class="label-element">Account Note</label>
-                                        <input type="text" class="form-control input-element" name="paypal_account_note" id="paypal_account_note"/>
-                                    </div>  
-                                    <div class="form-group col-md-3">
-                                        <label for="job_type" class="label-element">Confirmation</label>
-                                        <input type="text" class="form-control input-element" name="paypal_confirmation" id="paypal_confirmation"/>
-                                    </div>                                            
-                                </div>
-                            </div>
-                            <div id="square_area" style="display:none;">
-                                <div class="row">                   
-                                    <div class="form-group col-md-4">
-                                        <label for="job_type" class="label-element">Account Credential</label>
-                                        <input type="text" class="form-control input-element" name="square_account_credentials" id="square_account_credentials"/>
-                                    </div>
-                                    <div class="form-group col-md-3">
-                                        <label for="job_type" class="label-element">Account Note</label>
-                                        <input type="text" class="form-control input-element" name="square_account_note" id="square_account_note"/>
-                                    </div>  
-                                    <div class="form-group col-md-3">
-                                        <label for="job_type" class="label-element">Confirmation</label>
-                                        <input type="text" class="form-control input-element" name="square_confirmation" id="square_confirmation"/>
-                                    </div>                                            
-                                </div>
-                            </div>
-                            <div id="warranty_area" style="display:none;">
-                                <div class="row">                   
-                                    <div class="form-group col-md-4">
-                                        <label for="job_type" class="label-element">Account Credential</label>
-                                        <input type="text" class="form-control input-element" name="warranty_account_credentials" id="warranty_account_credentials"/>
-                                    </div>
-                                    <div class="form-group col-md-3">
-                                        <label for="job_type" class="label-element">Account Note</label>
-                                        <input type="text" class="form-control input-element" name="warranty_account_note" id="warranty_account_note"/>
-                                    </div>                                         
-                                </div>
-                            </div>
-                            <div id="home_area" style="display:none;">
-                                <div class="row">                   
-                                    <div class="form-group col-md-4">
-                                        <label for="job_type" class="label-element">Account Credential</label>
-                                        <input type="text" class="form-control input-element" name="home_account_credentials" id="home_account_credentials"/>
-                                    </div>
-                                    <div class="form-group col-md-3">
-                                        <label for="job_type" class="label-element">Account Note</label>
-                                        <input type="text" class="form-control input-element" name="home_account_note" id="home_account_note"/>
-                                    </div>                                         
-                                </div>
-                            </div>
-                            <div id="e_area" style="display:none;">
-                                <div class="row">                   
-                                    <div class="form-group col-md-4">
-                                        <label for="job_type" class="label-element">Account Credential</label>
-                                        <input type="text" class="form-control input-element" name="e_account_credentials" id="e_account_credentials"/>
-                                    </div>
-                                    <div class="form-group col-md-3">
-                                        <label for="job_type" class="label-element">Account Note</label>
-                                        <input type="text" class="form-control input-element" name="e_account_note" id="e_account_note"/>
-                                    </div>                                         
-                                </div>
-                            </div>
-                            <div id="other_credit_card" style="display:none;">
-                                <div class="row">                   
-                                    <div class="form-group col-md-4">
-                                        <label for="job_type" class="label-element">Credit Card Number</label>
-                                        <input type="text" class="form-control input-element" name="other_credit_number" id="other_credit_number" placeholder="0000 0000 0000 000" />
-                                    </div>
-                                    <div class="form-group col-md-3">
-                                        <label for="job_type" class="label-element">Credit Card Expiration</label>
-                                        <input type="text" class="form-control input-element" name="other_credit_expiry" id="other_credit_expiry" placeholder="MM/YYYY"/>
-                                    </div>  
-                                    <div class="form-group col-md-3">
-                                        <label for="job_type" class="label-element">CVC</label>
-                                        <input type="text" class="form-control input-element" name="other_credit_cvc" id="other_credit_cvc" placeholder="CVC"/>
-                                    </div>                                             
-                                </div>
-                            </div>
-                            <div id="other_payment_area" style="display:none;">
-                                <div class="row">                   
-                                    <div class="form-group col-md-4">
-                                        <label for="job_type">Account Credential</label>
-                                        <input type="text" class="form-control input-element" name="other_payment_account_credentials" id="other_payment_account_credentials"/>
-                                    </div>
-                                    <div class="form-group col-md-3">
-                                        <label for="job_type">Account Note</label>
-                                        <input type="text" class="form-control input-element" name="other_payment_account_note" id="other_payment_account_note"/>
-                                    </div>                                         
-                                </div>
-                            </div>
 
                     <br><br>
                              <!-- ====== SIGNATURE ====== -->
                              <div class="row">
                                 <div class=" col-md-12">
-                                    <div class="work_nore lawas">
-                                        <h6>Use of Personal Information Collected</h6>
-                                        <p>We use the information we collect to provide you with our products and services and to respond to your questions. We also use the information for editorial and feedback purposes, for marketing and promotional purposes, to inform advertisers as to how many visitors have seen or clicked on their advertisements and to customize the content and layout of ClearCaptions' website. We also use the information we collect for statistical analysis of users' behavior, for product development, for content improvement, to ensure our product and services remain functioning and secure and to investigate and protect against any illegal activities or violations of our Terms of Service.</p>
+                                    <div class="work_nore">
+                                        <!-- <h6>Use of Personal Information Collected</h6>
+                                        <p>We use the information we collect to provide you with our products and services and to respond to your questions. We also use the information for editorial and feedback purposes, for marketing and promotional purposes, to inform advertisers as to how many visitors have seen or clicked on their advertisements and to customize the content and layout of ClearCaptions' website. We also use the information we collect for statistical analysis of users' behavior, for product development, for content improvement, to ensure our product and services remain functioning and secure and to investigate and protect against any illegal activities or violations of our Terms of Service.</p> -->
+                                        <h6>Agreement</h6>
+                                        <div style="height:400px; overflow:auto; background:#FFFFFF; padding-left:10px;" id="thisdiv2">
+                                        <?php echo $terms_conditions->content; ?></p>
+                                                <input type="hidden" id="company_id" value="<?php echo getLoggedCompanyID(); ?>">
+                                                <input type="hidden" class="form-control" name="terms_conditions" id="terms_conditions" value="<?php echo $terms_conditions->content; ?>" />
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                             <br><br>
-                            <div class="row signature_web lawas">
+                            <div class="row signature_web">
                                 <div class="col-md-4">
                                     <h6>Company Representative Approval</h6> <a data-toggle="modal" data-target=".companySignature" class="btn btn-success"><span class="fa fa-plus-square fa-margin-right"></span> Add Signature</a>
                                     <div id="companyrep"></div>
@@ -768,7 +1006,7 @@ img.company-logo2 {
 
                             <br><br><br><br><br>
                             <div>
-                                <div class="form-group lawas">
+                                <div class="form-group">
                                         <button type="submit" name="action" class="btn btn-flat btn-primary" value="submit">Submit</button>
                                         <!-- <button type="submit" name="action" class="btn btn-flat btn-success pdf_sheet" target="_blank" value="preview">Preview</button> -->
                                         <button type="submit" class="btn btn-flat btn-success"><b>Send to Customer</b></button>
@@ -910,6 +1148,7 @@ img.company-logo2 {
 <script src="//cdn.amcharts.com/lib/4/core.js"></script>
 <script src="//cdn.amcharts.com/lib/4/charts.js"></script>
 <script src="//cdn.amcharts.com/lib/4/themes/animated.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js"></script>
 
 <!-- Chart code -->
 <script>
@@ -920,6 +1159,39 @@ function primaryName(){
       var one = $('#firstname').val();
       var two = $('#lastname').val();
       $('#primary_account_holder_name').val(one +' '+ two);
+  }
+
+  function getTotalPrices(){
+    var val2 = 0;
+      $('.allprices').each(function(){
+
+        var a = $(this).val();
+        
+        var c = $(this).val(numeral(a).format('0,0[.]00'));
+        var am=$(this).val(a.replaceAll(",",""));
+        val2+=(parseFloat(c.val()) || 0);
+        // var c = $(this).val(commaSeparateNumber(a));
+      });
+    //   $('#pg_av_total_read_data').val(commaSeparateNumber(val3));
+    var salesTax = $('#salesTax').val();
+    var installationCost = $('#installationCost').val();
+    var otps = $('#otps').val();
+    var monthlyMonitoring = $('#monthlyMonitoring').val();
+    // var totalDue = $('#totalDue').val();
+
+    var overAllTotal = parseInt(val2) + parseInt(salesTax) + parseInt(installationCost) + parseInt(otps) + parseInt(monthlyMonitoring);
+
+    var val3 = overAllTotal.toString().replace(/,/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    var eq = val2.toString().replace(/,/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    $('#equipmentCost').val(eq);
+
+    var val4 = $('#totalDue').val(val3);
+    // });
+
+    // var number = document.getElementById('pg_av_total_read_data');
+    // number.onkeydown = function(e) {
+
+    // }
   }
 /**
  * ---------------------------------------
@@ -941,40 +1213,40 @@ var chart = am4core.create("chartdiv", am4charts.XYChart);
 chart.paddingTop = 40;
 // Add data
 chart.data = [{
-  "category": "J",
+  "category": "Jan",
   "value": 1240
 }, {
-  "category": "F",
+  "category": "Feb",
   "value": 1000
 }, {
-  "category": "M",
+  "category": "Mar",
   "value": 450
 }, {
-  "category": "A",
+  "category": "Apr",
   "value": 700
 }, {
-  "category": "M",
+  "category": "May",
   "value": 800
 }, {
-  "category": "J",
+  "category": "Jun",
   "value": 800
 }, {
-  "category": "J",
+  "category": "Jul",
   "value": 780
 }, {
-  "category": "A",
+  "category": "Aug",
   "value": 500
 }, {
-  "category": "S",
+  "category": "Sep",
   "value": 100
 }, {
-  "category": "O",
+  "category": "Oct",
   "value": 1000
 }, {
-  "category": "N",
+  "category": "Nov",
   "value": 900
 }, {
-  "category": "D",
+  "category": "Dec",
   "value": 620
 }
 ];
