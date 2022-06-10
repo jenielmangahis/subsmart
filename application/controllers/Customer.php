@@ -1467,6 +1467,15 @@ class Customer extends MY_Controller
             'select' => 'id,amount',
         );
 
+        $spt_query = array(
+            'where' => array(
+                'company_id' => logged('company_id')
+            ),
+            'table' => 'ac_system_package_type',
+            'select' => '*',
+        );
+        $this->page_data['system_package_type'] = $this->general->get_data_with_param($spt_query);
+
 
         if(logged('company_id') == 58){
             $solar_info_query = array(
@@ -2006,6 +2015,7 @@ class Customer extends MY_Controller
         $input_alarm['alarm_login'] = $input['alarm_login'];
         $input_alarm['alarm_customer_id'] = $input['alarm_customer_id'];
         $input_alarm['alarm_cs_account'] = $input['alarm_cs_account'];
+        $input_alarm['comm_type'] = $input['comm_type'];
 
         $check = array(
             'where' => array(
@@ -4695,6 +4705,9 @@ class Customer extends MY_Controller
         }
 
         $spt_query = array(
+            'where' => array(
+                'company_id' => logged('company_id')
+            ),
             'table' => 'ac_system_package_type',
             'order' => array(
                 'order_by' => 'id',

@@ -14,218 +14,382 @@
         </div>
         <div class="row g-1 mb-5">
             <?php if($companyId == 58): ?>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle fw-bold">Project ID</label>
-                </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle"><?= $solar_info->project_id ? $solar_info->project_id : '---'  ?></label>
-                </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle fw-bold">Lender Type</label>
-                </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle"><?= $solar_info->lender_type ? $solar_info->lender_type : '---'  ?></label>
-                </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle fw-bold">Proposed System Size</label>
-                </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle"><?= $solar_info->proposed_system_size ? $solar_info->proposed_system_size : '---'  ?></label>
-                </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle fw-bold">Proposed Modules</label>
-                </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle"><?= $solar_info->proposed_modules ? $solar_info->proposed_modules : '---'  ?></label>
-                </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle fw-bold">Proposed Inverter</label>
-                </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle"><?= $solar_info->proposed_inverter ? $solar_info->proposed_inverter : '---'  ?></label>
-                </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle fw-bold">Proposed Offset</label>
-                </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle"><?= $solar_info->proposed_offset ? $solar_info->proposed_offset : '---'  ?></label>
-                </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle fw-bold">Proposed Solar $</label>
-                </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle"><?= $solar_info->proposed_solar ? $solar_info->proposed_solar : '---'  ?></label>
-                </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle fw-bold">Proposed Utility $</label>
-                </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle"><?= $solar_info->proposed_utility ? $solar_info->proposed_utility : '---'  ?></label>
-                </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle fw-bold">Proposed Payment $</label>
-                </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle"><?= $solar_info->proposed_payment ? $solar_info->proposed_payment : '---'  ?></label>
-                </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle fw-bold">Annual Income</label>
-                </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle"><?= $solar_info->annual_income ? $solar_info->annual_income : '---'  ?></label>
+                <div class="row p-0 field-custom-name-container">
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle fw-bold">
+                            <field-custom-name readonly default="Project ID" form="solar_info"></field-custom-name>
+                        </label>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle"><?= $solar_info->project_id ? $solar_info->project_id : '---'  ?></label>
+                    </div>
                 </div>
 
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle fw-bold">Tree Estimate</label>
-                </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle"><?= $solar_info->tree_estimate ? $solar_info->tree_estimate : '---'  ?></label>
-                </div>
-
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle fw-bold">Roof Estimate</label>
-                </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle"><?= $solar_info->roof_estimate ? $solar_info->roof_estimate : '---'  ?></label>
+                <div class="row p-0 field-custom-name-container">
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle fw-bold">
+                            <field-custom-name readonly default="Lender Type" form="solar_info"></field-custom-name>
+                        </label>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle"><?= $solar_info->lender_type ? $solar_info->lender_type : '---'  ?></label>
+                    </div>
                 </div>
 
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle fw-bold">Utility Account #</label>
-                </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle"><?= $solar_info->utility_account ? $solar_info->utility_account : '---'  ?></label>
-                </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle fw-bold">Utility Login</label>
-                </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle"><?= $solar_info->utility_login ? $solar_info->utility_login : '---'  ?></label>
-                </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle fw-bold">Utility Password</label>
-                </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle"><?= $solar_info->utility_pass ? $solar_info->utility_pass : '---'  ?></label>
+                <div class="row p-0 field-custom-name-container">
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle fw-bold">
+                            <field-custom-name readonly default="Proposed System Size" form="solar_info"></field-custom-name>
+                        </label>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle"><?= $solar_info->proposed_system_size ? $solar_info->proposed_system_size : '---'  ?></label>
+                    </div>
                 </div>
 
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle fw-bold">Meter Number</label>
-                </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle"><?= $solar_info->meter_number ? $solar_info->meter_number : '---'  ?></label>
-                </div>
-
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle fw-bold">Insurance Name</label>
-                </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle"><?= $solar_info->insurance_name ? $solar_info->insurance_name : '---'  ?></label>
+                <div class="row p-0 field-custom-name-container">
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle fw-bold">
+                            <field-custom-name readonly default="Proposed Modules" form="solar_info"></field-custom-name>
+                        </label>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle"><?= $solar_info->proposed_modules ? $solar_info->proposed_modules : '---'  ?></label>
+                    </div>
                 </div>
 
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle fw-bold">Insurance Number</label>
-                </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle"><?= $solar_info->insurance_number ? $solar_info->insurance_number : '---'  ?></label>
+                <div class="row p-0 field-custom-name-container">
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle fw-bold">
+                            <field-custom-name readonly default="Proposed Inverter" form="solar_info"></field-custom-name>
+                        </label>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle"><?= $solar_info->proposed_inverter ? $solar_info->proposed_inverter : '---'  ?></label>
+                    </div>
                 </div>
 
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle fw-bold">Policy Number</label>
+                <div class="row p-0 field-custom-name-container">
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle fw-bold">
+                            <field-custom-name readonly default="Proposed Offset" form="solar_info"></field-custom-name>
+                        </label>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle"><?= $solar_info->proposed_offset ? $solar_info->proposed_offset : '---'  ?></label>
+                    </div>
                 </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle"><?= $solar_info->policy_number ? $solar_info->policy_number : '---'  ?></label>
+
+                <div class="row p-0 field-custom-name-container">
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle fw-bold">
+                            <field-custom-name readonly default="Proposed Solar $" form="solar_info"></field-custom-name>
+                        </label>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle"><?= $solar_info->proposed_solar ? $solar_info->proposed_solar : '---'  ?></label>
+                    </div>
                 </div>
+
+                <div class="row p-0 field-custom-name-container">
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle fw-bold">
+                            <field-custom-name readonly default="Proposed Utility $" form="solar_info"></field-custom-name>
+                        </label>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle"><?= $solar_info->proposed_utility ? $solar_info->proposed_utility : '---'  ?></label>
+                    </div>
+                </div>
+
+                <div class="row p-0 field-custom-name-container">
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle fw-bold">
+                            <field-custom-name readonly default="Proposed Payment $" form="solar_info"></field-custom-name>
+                        </label>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle"><?= $solar_info->proposed_payment ? $solar_info->proposed_payment : '---'  ?></label>
+                    </div>
+                </div>
+
+                <div class="row p-0 field-custom-name-container">
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle fw-bold">
+                            <field-custom-name readonly default="Annual Income" form="solar_info"></field-custom-name>
+                        </label>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle"><?= $solar_info->annual_income ? $solar_info->annual_income : '---'  ?></label>
+                    </div>
+                </div>
+
+                <div class="row p-0 field-custom-name-container">
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle fw-bold">
+                            <field-custom-name readonly default="Tree Estimate" form="solar_info"></field-custom-name>
+                        </label>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle"><?= $solar_info->tree_estimate ? $solar_info->tree_estimate : '---'  ?></label>
+                    </div>
+                </div>
+
+                <div class="row p-0 field-custom-name-container">
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle fw-bold">
+                            <field-custom-name readonly default="Roof Estimate" form="solar_info"></field-custom-name>
+                        </label>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle"><?= $solar_info->roof_estimate ? $solar_info->roof_estimate : '---'  ?></label>
+                    </div>
+                </div>
+
+                <div class="row p-0 field-custom-name-container">
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle fw-bold">
+                            <field-custom-name readonly default="Utility Account #" form="solar_info"></field-custom-name>
+                        </label>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle"><?= $solar_info->utility_account ? $solar_info->utility_account : '---'  ?></label>
+                    </div>
+                </div>
+
+                <div class="row p-0 field-custom-name-container">
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle fw-bold">
+                            <field-custom-name readonly default="Utility Login" form="solar_info"></field-custom-name>
+                        </label>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle"><?= $solar_info->utility_login ? $solar_info->utility_login : '---'  ?></label>
+                    </div>
+                </div>
+
+                <div class="row p-0 field-custom-name-container">
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle fw-bold">
+                            <field-custom-name readonly default="Utility Password" form="solar_info"></field-custom-name>
+                        </label>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle"><?= $solar_info->utility_pass ? $solar_info->utility_pass : '---'  ?></label>
+                    </div>
+                </div>
+
+                <div class="row p-0 field-custom-name-container">
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle fw-bold">
+                            <field-custom-name readonly default="Meter Number" form="solar_info"></field-custom-name>
+                        </label>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle"><?= $solar_info->meter_number ? $solar_info->meter_number : '---'  ?></label>
+                    </div>
+                </div>
+
+                <div class="row p-0 field-custom-name-container">
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle fw-bold">
+                            <field-custom-name readonly default="Insurance Name" form="solar_info"></field-custom-name>
+                        </label>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle"><?= $solar_info->insurance_name ? $solar_info->insurance_name : '---'  ?></label>
+                    </div>
+                </div>
+
+                <div class="row p-0 field-custom-name-container">
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle fw-bold">
+                            <field-custom-name readonly default="Insurance Number" form="solar_info"></field-custom-name>
+                        </label>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle"><?= $solar_info->insurance_number ? $solar_info->insurance_number : '---'  ?></label>
+                    </div>
+                </div>
+
+                <div class="row p-0 field-custom-name-container">
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle fw-bold">
+                            <field-custom-name readonly default="Policy Number" form="solar_info"></field-custom-name>
+                        </label>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle"><?= $solar_info->policy_number ? $solar_info->policy_number : '---'  ?></label>
+                    </div>
+                </div>
+
                 <div class="col-12">
                     <hr>
                 </div>
             <?php else: ?>
+                <div class="row p-0 field-custom-name-container">
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle fw-bold">
+                            <field-custom-name readonly default="Monitoring Company" form="alarm_info"></field-custom-name>
+                        </label>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle"><?= !empty($alarm_info->monitor_comp) ? $alarm_info->monitor_comp : '---'; ?></label>
+                    </div>
+                </div>
+
+                <div class="row p-0 field-custom-name-container">
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle fw-bold">
+                            <field-custom-name readonly default="Monitoring ID" form="alarm_info"></field-custom-name>
+                        </label>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle"><?= !empty($alarm_info->monitor_id) ? $alarm_info->monitor_id : '---'; ?></label>
+                    </div>
+                </div>
+
+                <div class="row p-0 field-custom-name-container">
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle fw-bold">
+                            <field-custom-name readonly default="Account Type" form="alarm_info"></field-custom-name>
+                        </label>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle"><?= !empty($alarm_info->acct_type) ? $alarm_info->acct_type : '---'; ?></label>
+                    </div>
+                </div>
+
+                <div class="row p-0 field-custom-name-container">
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle fw-bold">
+                            <field-custom-name readonly default="Abort/Password Code" form="alarm_info"></field-custom-name>
+                        </label>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle"><?= !empty($alarm_info->passcode) ? $alarm_info->passcode : '---'; ?></label>
+                    </div>
+                </div>
+
+                <div class="row p-0 field-custom-name-container">
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle fw-bold">
+                            <field-custom-name readonly default="Installer Code" form="alarm_info"></field-custom-name>
+                        </label>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle"><?= !empty($alarm_info->install_code) ? $alarm_info->install_code : '---'; ?></label>
+                    </div>
+                </div>
+
+                <div class="row p-0 field-custom-name-container">
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle fw-bold">
+                            <field-custom-name readonly default="Monitoring Confirm #" form="alarm_info"></field-custom-name>
+                        </label>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle"><?= !empty($alarm_info->mcn) ? $alarm_info->mcn : '---'; ?></label>
+                    </div>
+                </div>
+
+                <div class="row p-0 field-custom-name-container">
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle fw-bold">
+                            <field-custom-name readonly default="Signal Confirm #" form="alarm_info"></field-custom-name>
+                        </label>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle"><?= !empty($alarm_info->scn) ? $alarm_info->scn : '---'; ?></label>
+                    </div>
+                </div>
+
+                <div class="row p-0 field-custom-name-container">
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle fw-bold">
+                            <field-custom-name readonly default="Panel Type" form="alarm_info"></field-custom-name>
+                        </label>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle"><?= !empty($alarm_info->panel_type) ? $alarm_info->panel_type : '---'; ?></label>
+                    </div>
+                </div>
+
+                <div class="row p-0 field-custom-name-container">
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle fw-bold">
+                            <field-custom-name readonly default="System Package Type" form="alarm_info"></field-custom-name>
+                        </label>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle"><?= !empty($alarm_info->system_type) ? $alarm_info->system_type : '---'; ?></label>
+                    </div>
+                </div>
+
+                <div class="row p-0 field-custom-name-container">
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle fw-bold">
+                            <field-custom-name readonly default="Warranty Type" form="alarm_info"></field-custom-name>
+                        </label>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle"><?= !empty($alarm_info->warranty_type) ? $alarm_info->warranty_type : '---'; ?></label>
+                    </div>
+                </div>
+
                 <div class="col-12 col-md-6">
-                    <label class="content-subtitle fw-bold">Monitoring Company</label>
+                    <label class="content-subtitle fw-bold">Communication Type</label>
                 </div>
                 <div class="col-12 col-md-6">
-                    <label class="content-subtitle"><?= !empty($alarm_info->monitor_comp) ? $alarm_info->monitor_comp : '---'; ?></label>
-                </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle fw-bold">Monitoring ID</label>
-                </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle"><?= !empty($alarm_info->monitor_id) ? $alarm_info->monitor_id : '---'; ?></label>
-                </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle fw-bold">Account Type</label>
-                </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle"><?= !empty($alarm_info->acct_type) ? $alarm_info->acct_type : '---'; ?></label>
-                </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle fw-bold">Abort/Password Code</label>
-                </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle"><?= !empty($alarm_info->passcode) ? $alarm_info->passcode : '---'; ?></label>
-                </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle fw-bold">Installer Code</label>
-                </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle"><?= !empty($alarm_info->install_code) ? $alarm_info->install_code : '---'; ?></label>
-                </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle fw-bold">Monitoring Confirm #</label>
-                </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle"><?= !empty($alarm_info->mcn) ? $alarm_info->mcn : '---'; ?></label>
-                </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle fw-bold">Signal Confirm #</label>
-                </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle"><?= !empty($alarm_info->scn) ? $alarm_info->scn : '---'; ?></label>
-                </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle fw-bold">Panel Type</label>
-                </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle"><?= !empty($alarm_info->panel_type) ? $alarm_info->panel_type : '---'; ?></label>
-                </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle fw-bold">System Package Type</label>
-                </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle"><?= !empty($alarm_info->system_type) ? $alarm_info->system_type : '---'; ?></label>
-                </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle fw-bold">Warranty Type</label>
-                </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle"><?= !empty($alarm_info->warranty_type) ? $alarm_info->warranty_type : '---'; ?></label>
+                    <label class="content-subtitle"><?= !empty($alarm_info->comm_type) ? $alarm_info->comm_type : '---'; ?></label>
                 </div>
                
                 <div class="col-12">
                     <hr>
                 </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle fw-bold">Dealer</label>
+
+                <div class="row p-0 field-custom-name-container">
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle fw-bold">
+                            <field-custom-name readonly default="Dealer" form="alarm_info"></field-custom-name>
+                        </label>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle"><?= !empty($alarm_info->dealer) ? $alarm_info->dealer : '---'; ?></label>
+                    </div>
                 </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle"><?= !empty($alarm_info->dealer) ? $alarm_info->dealer : '---'; ?></label>
+
+                <div class="row p-0 field-custom-name-container">
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle fw-bold">
+                            <field-custom-name readonly default="Login" form="alarm_info"></field-custom-name>
+                        </label>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle"><?= !empty($alarm_info->alarm_login) ? $alarm_info->alarm_login : '---'; ?></label>
+                    </div>
                 </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle fw-bold">Login</label>
+
+                <div class="row p-0 field-custom-name-container">
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle fw-bold">
+                            <field-custom-name readonly default="Customer ID" form="alarm_info"></field-custom-name>
+                        </label>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle"><?= !empty($alarm_info->alarm_customer_id) ? $alarm_info->alarm_customer_id : '---'; ?></label>
+                    </div>
                 </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle"><?= !empty($alarm_info->alarm_login) ? $alarm_info->alarm_login : '---'; ?></label>
-                </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle fw-bold">Customer ID</label>
-                </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle"><?= !empty($alarm_info->alarm_customer_id) ? $alarm_info->alarm_customer_id : '---'; ?></label>
-                </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle fw-bold">CS Account</label>
-                </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle"><?= !empty($alarm_info->alarm_cs_account) ? $alarm_info->alarm_cs_account : '---'; ?></label>
+
+                <div class="row p-0 field-custom-name-container">
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle fw-bold">
+                            <field-custom-name readonly default="CS Account" form="alarm_info"></field-custom-name>
+                        </label>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle"><?= !empty($alarm_info->alarm_cs_account) ? $alarm_info->alarm_cs_account : '---'; ?></label>
+                    </div>
                 </div>
             <?php endif; ?> 
         </div>

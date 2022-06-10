@@ -55,7 +55,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="card-body hid-desk" style="padding-bottom:0px;">
                             <div class="row">
                                 <div class="col-sm-6">
-                                    <h3 class="page-title" style="margin: 0 !important">Balance Sheet Detail Report</h3>
+                                    <h3 class="page-title" style="margin: 0 !important">Profit and Loss Detail Report</h3>
                                 </div>
                             </div>
                             <div class="row align-items-center">
@@ -88,11 +88,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         <option value="this-week">This Week</option>
                                                         <option value="this-week-to-date">This Week-to-date</option>
                                                         <option value="this-month">This Month</option>
-                                                        <option value="this-month-to-date" selected>This Month-to-date</option>
+                                                        <option value="this-month-to-date">This Month-to-date</option>
                                                         <option value="this-quarter">This Quarter</option>
                                                         <option value="this-quarter-to-date">This Quarter-to-date</option>
                                                         <option value="this-year">This Year</option>
-                                                        <option value="this-year-to-date">This Year-to-date</option>
+                                                        <option value="this-year-to-date" selected>This Year-to-date</option>
                                                         <option value="this-year-to-last-month">This Year-to-last-month</option>
                                                         <option value="yesterday">Yesterday</option>
                                                         <option value="recent">Recent</option>
@@ -116,7 +116,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     </select>
                                                 </div>
                                                 <div class="col-2 d-flex align-items-end">
-                                                    <input type="text" name="start_date" id="start-date" class="date form-control" value="<?=date("m/01/Y")?>">
+                                                    <input type="text" name="start_date" id="start-date" class="date form-control" value="<?=date("01/01/Y")?>">
                                                 </div>
                                                 <div class="col-1 text-center d-flex align-items-end justify-content-center">
                                                     <span class="h6">to</span>
@@ -173,11 +173,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                             <option value="num">Num</option>
                                                                             <option value="payment-method">Payment Method</option>
                                                                             <option value="split">Split</option>
+                                                                            <option value="tax-amount">Tax Amount</option>
+                                                                            <option value="tax-name">Tax Name</option>
+                                                                            <option value="taxable-amount">Taxable Amount</option>
                                                                             <option value="transaction-type">Transaction Type</option>
                                                                         </select>
                                                                         <p class="m-0">Sort in</p>
                                                                         <div class="checkbox checkbox-sec d-block my-2">
-                                                                            <input type="radio" id="sort-asc" name="sort_order">
+                                                                            <input type="radio" id="sort-asc" checked name="sort_order">
                                                                             <label for="sort-asc">Total in ascending order</label>
                                                                         </div>
                                                                         <div class="checkbox checkbox-sec d-block my-2">
@@ -269,25 +272,37 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                                     <input type="checkbox" id="col-pmt-method">
                                                                                     <label for="col-pmt-method">Payment Method</label>
                                                                                 </div>
+                                                                                <div class="checkbox checkbox-sec d-block my-2">
+                                                                                    <input type="checkbox" id="col-tax-name">
+                                                                                    <label for="col-tax-name">Tax Name</label>
+                                                                                </div>
                                                                             </div>
                                                                             <div class="col-4">
                                                                                 <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" checked="checked" id="col-debit">
+                                                                                    <input type="checkbox" id="col-debit">
                                                                                     <label for="col-debit">Debit</label>
                                                                                 </div>
                                                                                 <div class="checkbox checkbox-sec d-block my-2">
                                                                                     <input type="checkbox" checked="checked" id="col-amount">
                                                                                     <label for="col-amount">Amount</label>
                                                                                 </div>
+                                                                                <div class="checkbox checkbox-sec d-block my-2">
+                                                                                    <input type="checkbox" id="col-tax-amount">
+                                                                                    <label for="col-tax-amount">Tax Amount</label>
+                                                                                </div>
                                                                             </div>
                                                                             <div class="col-4">
                                                                                 <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" checked="checked" id="col-credit">
+                                                                                    <input type="checkbox" id="col-credit">
                                                                                     <label for="col-credit">Credit</label>
                                                                                 </div>
                                                                                 <div class="checkbox checkbox-sec d-block my-2">
                                                                                     <input type="checkbox" checked id="col-balance">
                                                                                     <label for="col-balance">Balance</label>
+                                                                                </div>
+                                                                                <div class="checkbox checkbox-sec d-block my-2">
+                                                                                    <input type="checkbox" id="col-taxable-amount">
+                                                                                    <label for="col-taxable-amount">Taxable Amount</label>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -303,7 +318,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <div class="row">
                                                     <div class="col-12 text-center">
                                                         <h4>nSmarTrac <i class="material-icons" style="font-size:16px">edit</i></h4>
-                                                        <p>Balance Sheet Detail<br> As of <?=date("F d, Y")?></p>
+                                                        <p>Profit and Loss Detail<br> January 1-<?=date("F d, Y")?></p>
                                                     </div>
                                                 </div>
 
@@ -311,101 +326,86 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     <div class="col-12">
                                                         <table class="table" style="width: 100%;">
                                                             <thead>
-                                                                <th>DATE</th>
-                                                                <th>TRANSACTION TYPE</th>
-                                                                <th>NUM</th>
-                                                                <th>NAME</th>
-                                                                <th>MEMO/DESCRIPTION</th>
-                                                                <th>SPLIT</th>
-                                                                <th>DEBIT</th>
-                                                                <th>CREDIT</th>
-                                                                <th>AMOUNT</th>
-                                                                <th>BALANCE</th>
+                                                                <tr>
+                                                                    <th>DATE</th>
+                                                                    <th>TRANSACTION TYPE</th>
+                                                                    <th>NUM</th>
+                                                                    <th>NAME</th>
+                                                                    <th>MEMO/DESCRIPTION</th>
+                                                                    <th>SPLIT</th>
+                                                                    <th class="text-right">AMOUNT</th>
+                                                                    <th class="text-right">BALANCE</th>
+                                                                </tr>
                                                             </thead>
                                                             <tbody>
                                                                 <tr data-toggle="collapse" data-target="#accordion" class="clickable collapse-row collapsed">
-                                                                    <td><i class="fa fa-caret-right"></i> ASSETS</td>
+                                                                    <td><i class="fa fa-caret-right"></i> Ordinary Income/Expenses</td>
                                                                     <td></td>
                                                                     <td></td>
                                                                     <td></td>
                                                                     <td></td>
                                                                     <td></td>
-                                                                    <td></td>
-                                                                    <td></td>
-                                                                    <td class="text-right">$22,544.77</td>
-                                                                    <td class="text-right">$1,404,676.97</td>
+                                                                    <td style="text-align:right;">$571,265.66</td>
+                                                                    <td style="text-align:right;"></td>
                                                                 </tr>
                                                                 <tr data-toggle="collapse" data-target="#accordion1" class="clickable collapse-row collapse" id="accordion">
-                                                                    <td>&emsp;<i class="fa fa-caret-right"></i> Checking</td>
+                                                                    <td>&emsp;<i class="fa fa-caret-right"></i> Income</td>
                                                                     <td></td>
                                                                     <td></td>
                                                                     <td></td>
                                                                     <td></td>
                                                                     <td></td>
-                                                                    <td></td>
-                                                                    <td></td>
-                                                                    <td></td>
-                                                                    <td></td>
+                                                                    <td style="text-align:right;">$571,265.66</td>
+                                                                    <td style="text-align:right;"></td>
                                                                 </tr>
                                                                 <tr id="accordion1" class="collapse clickable collapse-row" data-toggle="collapse" data-target="#accordion2">
-                                                                    <td>Beginning balance</td>
+                                                                    <td>&emsp;&emsp;<i class="fa fa-caret-right"></i> Sales</td>
                                                                     <td></td>
                                                                     <td></td>
                                                                     <td></td>
                                                                     <td></td>
                                                                     <td></td>
-                                                                    <td></td>
-                                                                    <td></td>
-                                                                    <td></td>
-                                                                    <td class="text-right">1,081,409.39</td>
+                                                                    <td style="text-align:right;">$571,265.66</td>
+                                                                    <td style="text-align:right;"></td>
                                                                 </tr>
-                                                                <tr id="accordion1" class="collapse clickable collapse-row" data-toggle="collapse" data-target="#accordion2">
-                                                                    <td>06/01/2022</td>
-                                                                    <td>Expense</td>
-                                                                    <td></td>
-                                                                    <td>QuickBooks Payment</td>
-                                                                    <td></td>
-                                                                    <td>QuickBooks Payment Fees-1</td>
-                                                                    <td class="text-right"></td>
-                                                                    <td class="text-right">$19.95</td>
-                                                                    <td class="text-right">-19.95</td>
-                                                                    <td class="text-right">1,081,389.44</td>
-                                                                </tr>
-                                                                <tr id="accordion1" class="collapse clickable collapse-row" data-toggle="collapse" data-target="#accordion2">
-                                                                    <td>06/01/2022</td>
+                                                                <tr id="accordion2" class="collapse">
+                                                                    <td>&emsp;&emsp;&emsp;06/09/2022</td>
                                                                     <td>Deposit</td>
+                                                                    <td>123</td>
+                                                                    <td>Test Customer</td>
+                                                                    <td>Test Memo/Description</td>
+                                                                    <td>Test Split</td>
+                                                                    <td style="text-align:right;">305,061.93</td>
+                                                                    <td style="text-align:right;">305,061.93</td>
+                                                                </tr>
+                                                                <tr id="accordion2" class="collapse">
+                                                                    <td colspan="2">&emsp;&emsp;&emsp;<b>Total For Sales</b></td>
                                                                     <td></td>
                                                                     <td></td>
                                                                     <td></td>
-                                                                    <td>-Split-</td>
-                                                                    <td class="text-right">$1,167.62</td>
-                                                                    <td class="text-right"></td>
-                                                                    <td class="text-right">1,167.62</td>
-                                                                    <td class="text-right">1,082,557.06</td>
+                                                                    <td></td>
+                                                                    <td style="text-align:right;"><b>305,061.93</b></td>
+                                                                    <td style="text-align:right;"></td>
                                                                 </tr>
                                                                 <tr  class="clickable collapse-row collapse"  id="accordion">
-                                                                    <td>&emsp;<b>TOTAL ASSETS</b></td>
+                                                                    <td>&emsp;<b>Net Ordinary Income</b></td>
                                                                     <td></td>
                                                                     <td></td>
                                                                     <td></td>
                                                                     <td></td>
                                                                     <td></td>
-                                                                    <td></td>
-                                                                    <td></td>
-                                                                    <td class="text-right">$22,544.77</td>
-                                                                    <td class="text-right">$1,404,676.97</td>
+                                                                    <td style="text-align:right;"><b>$571,114.95</b></td>
+                                                                    <td style="text-align:right;"><b></b></td>
                                                                 </tr>
                                                                 <tr>
-                                                                    <td><i class="fa fa-caret-right"></i> LIABILITIES AND EQUITY</td>
+                                                                    <td>NET INCOME</td>
                                                                     <td></td>
                                                                     <td></td>
                                                                     <td></td>
                                                                     <td></td>
                                                                     <td></td>
-                                                                    <td></td>
-                                                                    <td></td>
-                                                                    <td class="text-right">$1,922,289.76</td>
-                                                                    <td class="text-right">$1,404,676.97</td>
+                                                                    <td style="text-align:right;"><b>$571,265.66</b></td>
+                                                                    <td style="text-align:right;"></td>
                                                                 </tr>
                                                             </tbody>
                                                         </table>

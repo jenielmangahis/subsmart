@@ -1078,7 +1078,7 @@ img.company-logo2 {
 														<tbody>
 															<?php foreach($agree_items as $aItems) { ?>
 															<tr>
-																<td><input type="text" style="background-color:#ced4e4;" class="form- border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value="<?php echo $aItems->item ?>" readonly></td>
+																<td><input type="text" style="background-color:#ced4e4;" class="form- border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value="<?php echo $aItems->item; if($aItems->check_data == NULL){ echo ''; }else{ echo ' ('. $aItems->check_data .') ';} ?>" readonly></td>
 																<td><input type="text" style="background-color:#ced4e4;" class="form- border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]" value="<?php echo $aItems->qty ?>" readonly></td>
 																<td><input type="text" style="background-color:#ced4e4;" class="form- border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]" value="<?php echo $aItems->location ?>" readonly></td>
 																<td><input type="text" style="background-color:#ced4e4;" class="form- border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  value="<?php echo $aItems->price ?>" readonly></td>
@@ -1100,7 +1100,7 @@ img.company-logo2 {
 												</div>
 												<br><br>
 												<div class="row">                   
-													<div class="form-group col-md-6">
+													<div class="form-group col-md-4">
 														<div class="select-wrap">
 														<input type="text" name="installation_date" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $workorder->payment_method; ?>" readonly style="background-color: #fff;">
 															<b>Payment Method</b>
@@ -1123,9 +1123,13 @@ img.company-logo2 {
 																</select> -->
 															</div> 
 														</div>     
-														<div class="form-group col-md-6">
+														<div class="form-group col-md-4">
 															<input type="text" class="form-control input-element border-top-0 border-right-0 border-left-0" name="payment_amount" id="payment_amount"  value="<?php echo number_format($workorder->payment_amount,2); ?>" readonly  style="background-color: #fff;"/>
 															<b>Amount<small class="help help-sm"> ( $ )</small></b>
+														</div>
+														<div class="form-group col-md-4">
+															<b>Billing Date</b>
+															<input type="text" class="form-control input-element border-top-0 border-right-0 border-left-0" value="<?php echo $agreements->billing_date; ?>" readonly  style="background-color: #fff;"  />
 														</div>
 												</div>
 												<div class="row">                   

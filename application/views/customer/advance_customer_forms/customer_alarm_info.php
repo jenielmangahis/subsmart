@@ -402,6 +402,21 @@
                     </select>
                 </div>
             </div>
+
+            <div class="row form_line">
+                <div class="col-md-6">
+                    Communication Type
+                </div>
+                <div class="col-md-6">
+                    <select id='communication_type' name="comm_type"  class="form-control" >
+                        <option value=""></option>
+                        <?php foreach($system_package_type as $cType): ?>
+                            <option <?= isset($alarm_info) && $alarm_info->comm_type == $cType->name ?  'selected' : '';  ?> value="<?= $cType->name ?>"><?= $cType->name ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                    <a href="<?= base_url() ?>customer/settings_system_package" target="_blank"  style="color:#58bc4f;font-size: 10px;"><span class="fa fa-plus"></span> Manage Type</a>&nbsp;&nbsp;
+                </div>
+            </div>
             <hr>
             <div class="row form_line field-custom-name-container">
                 <div class="col-md-6">

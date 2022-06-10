@@ -849,6 +849,64 @@ class Workorder extends MY_Controller
         $this->load->view('workorder/editAlarm', $this->page_data);
     }
 
+    public function editInstallation($id)
+    {
+        
+        $company_id = logged('company_id');
+        $user_id = logged('id');
+        $parent_id = $this->db->query("select id from users where id=$user_id")->row();
+
+        if ($parent_id->parent_id == 1) {
+            $this->page_data['users'] = $this->users_model->getAllUsersByCompany($user_id);
+        } else {
+            $this->page_data['users'] = $this->users_model->getAllUsersByCompany($parent_id->parent_id, $user_id);
+        }
+        
+        $spt_query = array(
+            'table' => 'ac_system_package_type',
+            'order' => array(
+                'order_by' => 'id',
+            ),
+            'where' => array(
+                'company_id' => $company_id,
+            ),
+            'select' => '*',
+        );
+        $this->page_data['system_package_type'] = $this->general->get_data_with_param($spt_query);
+        $this->page_data['lead_source'] = $this->workorder_model->getlead_source($company_id);
+
+        $this->page_data['headers'] = $this->workorder_model->getheaderByID();
+        $this->page_data['workstatus'] = $this->Workstatus_model->getByWhere(['company_id' => $company_id]);
+        // $this->page_data['workorder'] = $this->workorder_model->getById($id);
+        $this->page_data['workorder'] = $this->workorder_model->getworkorder($id);
+        $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
+        $this->page_data['customer'] = $this->workorder_model->getcustomerCompanyId($id);
+        $this->page_data['job_types'] = $this->workorder_model->getjob_types();
+        $this->page_data['items'] = $this->items_model->getItemlist();
+        // $this->page_data['items_data'] = $this->items_model->getItemData($id);
+        $this->page_data['items_data'] = $this->items_model->getItemDataAlarm($id); //Work Order Alarm
+        $this->page_data['custom_fields'] = $this->workorder_model->getCustomFields($id);
+        $this->page_data['job_tags'] = $this->workorder_model->getjob_tagsById();
+        $this->page_data['alarms'] = $this->workorder_model->getAlarms($id);
+        $this->page_data['ids'] = $this->workorder_model->getlastInsertID();
+        $this->page_data['payment'] = $this->workorder_model->getpayment($id);
+
+        $this->page_data['cameras'] = $this->workorder_model->getenhanced_services_cameras($id);
+        $this->page_data['doorlocks'] = $this->workorder_model->getenhanced_services_doorlocks($id);
+        $this->page_data['dvr'] = $this->workorder_model->getenhanced_services_dvr($id);
+        $this->page_data['automation'] = $this->workorder_model->getenhanced_services_automation($id);
+        $this->page_data['pers'] = $this->workorder_model->getenhanced_services_pers($id);
+        $this->page_data['users_lists'] = $this->users_model->getAllUsersByCompanyID($company_id);
+        $this->page_data['agreeItem'] = $this->workorder_model->get_agree_items($id);
+        // agreeItem
+        
+        $work = $this->workorder_model->getworkorder($id);
+
+        $this->page_data['contacts'] = $this->workorder_model->get_contacts($work->customer_id);
+
+        $this->load->view('workorder/editInstallation', $this->page_data);
+    }
+
     public function sendWorkorderToAcs()
     {
         $id = $this->input->post('id');
@@ -3558,7 +3616,7 @@ class Workorder extends MY_Controller
 
         $termsCondi = $this->workorder_model->getWOTerms($company_id);
         if($termsCondi){
-            $this->page_data['terms_conditions'] = $this->workorder_model->getWOtermsByID();
+            $this->page_data['terms_conditions'] = $this->workorder_model->getWOtermsByIDAgree();
         }else{
             $this->page_data['terms_conditions'] = $this->workorder_model->getTermsDefault();
         }
@@ -3602,6 +3660,9 @@ class Workorder extends MY_Controller
             'table' => 'ac_system_package_type',
             'order' => array(
                 'order_by' => 'id',
+            ),
+            'where' => array(
+                'company_id' => $company_id,
             ),
             'select' => '*',
         );
@@ -7634,6 +7695,7 @@ class Workorder extends MY_Controller
             'sales_re_name'             => $this->input->post('sales_re_name'),
             'sale_rep_phone'            => $this->input->post('sale_rep_phone'),
             'team_leader'               => $this->input->post('team_leader'),
+            'billing_date'              => $this->input->post('billing_date'),
             'company_id'                => $company_id,
             'work_order_id'             => $addQuery,
         );
@@ -7645,6 +7707,34 @@ class Workorder extends MY_Controller
         $qty        = $this->input->post("qty");
         $location   = $this->input->post("location");
         $price      = $this->input->post("price");
+
+        $toi_check = $this->input->post("toi_check");
+        $zl_check  = $this->input->post("zl_check");
+        $trans_check = $this->input->post("trans_check");
+
+        $checkValue = $this->input->post("dataValue");
+
+        if($toi_check)
+        {
+            $checkData = $toi_check;
+        }
+        elseif($zl_check)
+        {
+            $checkData = $zl_check;
+        }
+        elseif($trans_check)
+        {
+            $checkData = $trans_check;
+        }
+        // elseif(!empty($trans_check))
+        // {
+        //     $checkData = $trans_check;
+        // }
+        else
+        {
+            $checkData = '';
+        }
+        
         $i = 0;
 
         foreach($item as $row){
@@ -7652,6 +7742,7 @@ class Workorder extends MY_Controller
             $data['qty']            = $qty[$i];
             $data['location']       = $location[$i];
             $data['price']          = $price[$i];
+            $data['check_data']     = $checkValue[$i];
             $data['work_order_id']  = $addQuery;
 
             $result_set = $this->workorder_model->add_workorder_agreement_items($data);
