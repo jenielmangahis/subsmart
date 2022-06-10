@@ -878,6 +878,21 @@ class Workorder_model extends MY_Model
 		return $query->row();
     }
 
+    public function getWOtermsByIDAgree()
+    {
+        $cid = getLoggedCompanyID();
+        $where = array(
+            'company_id' => $cid,
+            'agreement'   => '1'
+        );
+
+        $this->db->select('*');
+		$this->db->from('work_order_terms_conditions');
+		$this->db->where($where);
+		$query = $this->db->get();
+		return $query->row();
+    }
+
     public function getTermsDefault(){
         $cid = 0;
 

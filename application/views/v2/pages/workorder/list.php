@@ -205,11 +205,16 @@
                                                     <a class="dropdown-item" href="<?php echo base_url('workorder/view/' . $workorder->id) ?>">View</a>
                                                 </li>
                                                 <li>
-                                                    <?php if ($workorder->work_order_type_id == '2') : ?>
-                                                        <a class="dropdown-item" href="<?php echo base_url('workorder/editAlarm/' . $workorder->id) ?>">Edit</a>
-                                                    <?php else : ?>
-                                                        <a class="dropdown-item" href="<?php echo base_url('workorder/edit/' . $workorder->id) ?>">Edit</a>
-                                                    <?php endif; ?>
+                                                    <?php if($workorder->work_order_type_id == '2'){ ?>
+                                                        <a class="dropdown-item" tabindex="-1" href="<?php echo base_url('workorder/editAlarm/' . $workorder->id) ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                                    <?php }elseif($workorder->work_order_type_id == '3')
+                                                    { ?>
+                                                    <a class="dropdown-item" tabindex="-1" href="<?php echo base_url('workorder/editSolar/' . $workorder->id) ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                                    <?php  }elseif($workorder->work_order_type_id == '4'){ ?>
+                                                    <a class="dropdown-item" tabindex="-1" href="<?php echo base_url('workorder/editInstallation/' . $workorder->id) ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                                    <?php } else{ ?>
+                                                        <a class="dropdown-item" tabindex="-1" href="<?php echo base_url('workorder/edit/' . $workorder->id) ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                                    <?php } ?>
                                                 </li>
                                                 <li>
                                                     <a class="dropdown-item clone-item" href="javascript:void(0);" data-id="<?php echo $workorder->id ?>" data-wo_num="<?php echo $workorder->work_order_number ?>" data-bs-toggle="modal" data-bs-target="#clone_workorder_modal">Clone Work Order</a>

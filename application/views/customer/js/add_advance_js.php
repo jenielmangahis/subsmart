@@ -66,6 +66,9 @@
         $("#warranty_type").select2({
             placeholder: "Select Warranty Type"
         });
+        $("#communication_type").select2({
+            placeholder: "Select Communication Type"
+        });
         $("#acct_type").select2({
             placeholder: "Select Account Type"
         });

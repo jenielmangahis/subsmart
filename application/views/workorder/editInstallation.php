@@ -82,9 +82,9 @@ table input.form-control {
 {
     padding:3px !important;
 }
-.itemTable td:nth-of-type(1) {width:50%;}
-.itemTable  td:nth-of-type(2) {width: 15%;}
-.itemTable  td:nth-of-type(3) {width:15%;}
+.itemTable td:nth-of-type(1) {width:40%;}
+.itemTable  td:nth-of-type(2) {width:10%;}
+.itemTable  td:nth-of-type(3) {width:30%;}
 .itemTable  td:nth-of-type(4) {width:20%;}
 
 @media screen and (max-width:500px){
@@ -141,7 +141,7 @@ table input.form-control {
                 </div>
             </div>
             <br> -->
-            <?php echo form_open_multipart('workorder/savenewWorkorderAgreement', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?> 
+            <?php echo form_open_multipart('workorder/updateWorkorderAgreement', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?> 
                     <div class="row">
                         <div class="col-md-12">
                             <div id="header_area">
@@ -150,8 +150,8 @@ table input.form-control {
                                     <div class="col-md-9">
                                         <ol class="breadcrumb" style="margin-top:-30px;"></i>
                                             <li class="breadcrumb-item active">
-                                                <label style="background-color:#E8E8E9;" id="headerContent"><?php echo $headers->content; ?></label>
-                                                <input type="hidden" id="headerID" name="header" value="<?php echo $headers->content; ?>">
+                                                <label style="background-color:#E8E8E9;" id="headerContent"><?php echo $workorder->header; ?></label>
+                                                <input type="hidden" id="headerID" name="header" value="<?php echo $workorder->header; ?>">
                                                 <input type="hidden" id="current_date" name="current_date" value="<?php echo @date('m-d-Y'); ?>">
                                                 <input type="hidden" name="wo_id" value="<?php 
                                                     foreach($ids as $id)
@@ -172,26 +172,15 @@ table input.form-control {
                                 <div class="row">            
                                     <div class="col-md-3 form-group">
                                         <label for="contact_name" class="label-element">Work Order #</label>
-                                            <input type="text" style="width:100%;" class="form-control input-element" name="workorder_number" id="workorder_number" value="<?php echo "WO-"; 
-                                                            foreach ($number as $num):
-                                                                    $next = $num->work_order_number;
-                                                                    $arr = explode("-", $next);
-                                                                    $date_start = $arr[0];
-                                                                    $nextNum = $arr[1];
-                                                                //    echo $number;
-                                                            endforeach;
-                                                            $val = $nextNum + 1;
-                                                            echo str_pad($val,7,"0",STR_PAD_LEFT);
-                                                            ?>" required readonly/>
+                                            <input type="text" style="width:100%;" class="form-control input-element" name="workorder_number" id="workorder_number" value="<?php echo $workorder->work_order_number; ?>" readonly/>
                                                     <!-- <input type="text" class="form-control input-element" name="workorder_number" id="workorder-number" value="<?= $prefix . $val; ?>" required readonly/> -->
                                     </div> 
                                     <div class="form-group col-md-2">
                                         <div class="select-wrap">
                                             <label for="lead_source">Lead Source</label>
                                             <select id="lead_source" name="lead_source" class="form-control custom-select m_select">
-                                                <option value="0">- none -</option>
-                                                <?php foreach($lead_source as $lead){ ?>
-                                                <option value="<?php echo $lead->ls_id; ?>"><?php echo $lead->ls_name; ?></option>
+                                                <?php foreach($lead_source as $leads){ ?>
+                                                <option value="<?php echo $leads->ls_id; ?>" <?php if($workorder->lead_source_id == $leads->ls_id){ echo 'selected'; }else{ echo ''; } ?> ><?php echo $leads->ls_name; ?></option>
                                                 <?php } ?>
                                              </select>
                                         </div>    
@@ -200,7 +189,7 @@ table input.form-control {
                                         <div class="select-wrap">
                                             <label for="lead_source">Account Type</label>
                                             <select id="account_type" name="account_type" class="form-control custom-select m_select">
-                                                <option value="">- none -</option>
+                                                <option value="<?php echo $workorder->account_type; ?>"><?php echo $workorder->account_type; ?></option>
                                                 <option value="Residential">Residential</option>
                                                 <option value="Commercial">Commercial</option>
                                                 <option value="Rental">Rental</option>
@@ -212,9 +201,8 @@ table input.form-control {
                                         <div class="select-wrap">
                                             <label for="lead_source">Communication Package</label>
                                             <select id="communication_type" name="communication_type" class="form-control custom-select m_select">
-                                                <option value="0">- none -</option>
                                                 <?php foreach($system_package_type as $lead){ ?>
-                                                <option value="<?php echo $lead->name; ?>"><?php echo $lead->name; ?></option>
+                                                <option value="<?php echo $lead->name; ?>" <?php if($workorder->panel_communication == $lead->name){ echo 'selected'; }else{ echo ''; } ?>><?php echo $lead->name; ?></option>
                                                 <?php } ?>
                                             </select>
                                         </div>    
@@ -223,34 +211,34 @@ table input.form-control {
                                         <div class="select-wrap">
                                             <label for="lead_source">Panel Type</label>
                                             <select name="panel_type" id="panel_type" class="form-control input_select" data-value="<?= isset($alarm_info) ? $alarm_info->panel_type : "" ?>">
-                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == ''){echo "selected";} } ?>  value="0">- none -</option>
-                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'AERIONICS'){echo "selected";} } ?> value="AERIONICS">AERIONICS</option>
-                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'AlarmNet'){echo "selected";} } ?> value="AlarmNet">AlarmNet</option>
-                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Alarm.com'){echo "selected";} } ?> value="Alarm.com">Alarm.com</option>
-                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Alula'){echo "selected";} } ?> value="Alula">Alula</option>
-                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Bosch'){echo "selected";} } ?> value="Bosch">Bosch</option>
-                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'DSC'){echo "selected";} } ?> value="DSC">DSC</option>
-                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'ELK'){echo "selected";} } ?> value="ELK">ELK</option>
-                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'FBI'){echo "selected";} } ?> value="FBI">FBI</option>
-                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'GRI'){echo "selected";} } ?> value="GRI">GRI</option>
-                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'GE'){echo "selected";} } ?> value="GE">GE</option>
-                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Honeywell'){echo "selected";} } ?> value="Honeywell">Honeywell</option>
-                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Honeywell Touch'){echo "selected";} } ?> value="Honeywell Touch">Honeywell Touch</option>
-                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Honeywell 3000'){echo "selected";} } ?> value="Honeywell 3000">Honeywell 3000</option>
-                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Honeywell'){echo "selected";} } ?> value="Honeywell Vista">Honeywell Vista</option>
-                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Honeywell Vista with Sem'){echo "selected";} } ?> value="Honeywell Vista with Sem">Honeywell Vista with Sem</option>
-                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Honeywell Lyric'){echo "selected";} } ?> value="Honeywell Lyric">Honeywell Lyric</option>
-                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'IEI'){echo "selected";} } ?> value="IEI">IEI</option>
-                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'MIER'){echo "selected";} } ?> value="MIER">MIER</option>
-                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == '2 GIG'){echo "selected";} } ?> value="2 GIG">2 GIG</option>
-                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == '2 GIG Go Panel 2'){echo "selected";} } ?> value="2 GIG Go Panel 2">2 GIG Go Panel 2</option>
-                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == '2 GIG Go Panel 3'){echo "selected";} } ?> value="2 GIG Go Panel 3">2 GIG Go Panel 3</option>
-                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Qolsys'){echo "selected";} } ?> value="Qolsyx">Qolsys</option>
-                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Qolsys IQ Panel 2'){echo "selected";} } ?> value="Qolsys IQ Panel 2">Qolsys IQ Panel 2</option>
-                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Qolsys IQ Panel 2 Plus'){echo "selected";} } ?> value="Qolsys IQ Panel 2 Plus">Qolsys IQ Panel 2 Plus</option>
-                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Qolsys IQ Panel 3'){echo "selected";} } ?> value="Qolsys IQ Panel 3">Qolsys IQ Panel 3</option>
-                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Custom'){echo "selected";} } ?> value="Custom">Custom</option>
-                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Other'){echo "selected";} } ?> value="Other">Other</option>
+                                                <option <?php if(isset($workorder)){ if($workorder->panel_type == ''){echo "selected";} } ?>  value="0">- none -</option>
+                                                <option <?php if(isset($workorder)){ if($workorder->panel_type == 'AERIONICS'){echo "selected";} } ?> value="AERIONICS">AERIONICS</option>
+                                                <option <?php if(isset($workorder)){ if($workorder->panel_type == 'AlarmNet'){echo "selected";} } ?> value="AlarmNet">AlarmNet</option>
+                                                <option <?php if(isset($workorder)){ if($workorder->panel_type == 'Alarm.com'){echo "selected";} } ?> value="Alarm.com">Alarm.com</option>
+                                                <option <?php if(isset($workorder)){ if($workorder->panel_type == 'Alula'){echo "selected";} } ?> value="Alula">Alula</option>
+                                                <option <?php if(isset($workorder)){ if($workorder->panel_type == 'Bosch'){echo "selected";} } ?> value="Bosch">Bosch</option>
+                                                <option <?php if(isset($workorder)){ if($workorder->panel_type == 'DSC'){echo "selected";} } ?> value="DSC">DSC</option>
+                                                <option <?php if(isset($workorder)){ if($workorder->panel_type == 'ELK'){echo "selected";} } ?> value="ELK">ELK</option>
+                                                <option <?php if(isset($workorder)){ if($workorder->panel_type == 'FBI'){echo "selected";} } ?> value="FBI">FBI</option>
+                                                <option <?php if(isset($workorder)){ if($workorder->panel_type == 'GRI'){echo "selected";} } ?> value="GRI">GRI</option>
+                                                <option <?php if(isset($workorder)){ if($workorder->panel_type == 'GE'){echo "selected";} } ?> value="GE">GE</option>
+                                                <option <?php if(isset($workorder)){ if($workorder->panel_type == 'Honeywell'){echo "selected";} } ?> value="Honeywell">Honeywell</option>
+                                                <option <?php if(isset($workorder)){ if($workorder->panel_type == 'Honeywell Touch'){echo "selected";} } ?> value="Honeywell Touch">Honeywell Touch</option>
+                                                <option <?php if(isset($workorder)){ if($workorder->panel_type == 'Honeywell 3000'){echo "selected";} } ?> value="Honeywell 3000">Honeywell 3000</option>
+                                                <option <?php if(isset($workorder)){ if($workorder->panel_type == 'Honeywell'){echo "selected";} } ?> value="Honeywell Vista">Honeywell Vista</option>
+                                                <option <?php if(isset($workorder)){ if($workorder->panel_type == 'Honeywell Vista with Sem'){echo "selected";} } ?> value="Honeywell Vista with Sem">Honeywell Vista with Sem</option>
+                                                <option <?php if(isset($workorder)){ if($workorder->panel_type == 'Honeywell Lyric'){echo "selected";} } ?> value="Honeywell Lyric">Honeywell Lyric</option>
+                                                <option <?php if(isset($workorder)){ if($workorder->panel_type == 'IEI'){echo "selected";} } ?> value="IEI">IEI</option>
+                                                <option <?php if(isset($workorder)){ if($workorder->panel_type == 'MIER'){echo "selected";} } ?> value="MIER">MIER</option>
+                                                <option <?php if(isset($workorder)){ if($workorder->panel_type == '2 GIG'){echo "selected";} } ?> value="2 GIG">2 GIG</option>
+                                                <option <?php if(isset($workorder)){ if($workorder->panel_type == '2 GIG Go Panel 2'){echo "selected";} } ?> value="2 GIG Go Panel 2">2 GIG Go Panel 2</option>
+                                                <option <?php if(isset($workorder)){ if($workorder->panel_type == '2 GIG Go Panel 3'){echo "selected";} } ?> value="2 GIG Go Panel 3">2 GIG Go Panel 3</option>
+                                                <option <?php if(isset($workorder)){ if($workorder->panel_type == 'Qolsys'){echo "selected";} } ?> value="Qolsyx">Qolsys</option>
+                                                <option <?php if(isset($workorder)){ if($workorder->panel_type == 'Qolsys IQ Panel 2'){echo "selected";} } ?> value="Qolsys IQ Panel 2">Qolsys IQ Panel 2</option>
+                                                <option <?php if(isset($workorder)){ if($workorder->panel_type == 'Qolsys IQ Panel 2 Plus'){echo "selected";} } ?> value="Qolsys IQ Panel 2 Plus">Qolsys IQ Panel 2 Plus</option>
+                                                <option <?php if(isset($workorder)){ if($workorder->panel_type == 'Qolsys IQ Panel 3'){echo "selected";} } ?> value="Qolsys IQ Panel 3">Qolsys IQ Panel 3</option>
+                                                <option <?php if(isset($workorder)){ if($workorder->panel_type == 'Custom'){echo "selected";} } ?> value="Custom">Custom</option>
+                                                <option <?php if(isset($workorder)){ if($alarm_info->panel_type == 'Other'){echo "selected";} } ?> value="Other">Other</option>
                                             </select>
                                         </div>    
                                     </div> 
@@ -269,7 +257,7 @@ table input.form-control {
                                 
                                 ?>">
 
-                                <input type="hidden" id="content_input" class="form-control" name="header2" value="<?php echo $headers->content; ?>">
+                                <input type="hidden" id="content_input" class="form-control" name="header2" value="<?php echo $workorder->header; ?>">
                             </div>
                         </div>
                     </div>
@@ -282,7 +270,7 @@ table input.form-control {
                             </div>
                             </center><br>
                             <div class="behind_container" style="background-color:#ced4e4;margin-top:-20px;padding:20px;">
-                                <table  class="table-bordered itemTable" width="100%">
+                                <table  class="table-bordered itemTable">
                                     <thead align="center">
                                         <th>Items</th>
                                         <th>Qty</th>
@@ -290,16 +278,10 @@ table input.form-control {
                                         <th>Price</th>
                                     </thead>
                                     <tbody>
-                                        <tr>
+                                        <!-- <tr>
                                             <td>
-                                                <!-- <input type="text" style="background-color:#ced4e4;" class="border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value="System Upgrade"> -->
-                                                <!-- <input type="text" id="reg_password" name="item[]" style="background-color:#ced4e4;" class="border-top-0 border-right-0 border-left-0 border-bottom-0" ng-model="register_password" value="System Upgrade"/>
-                                                <input type="checkbox" id="eye" /> -->
                                                 <div class="input-group">
-                                                    <!-- <div class="input-group-prepend">
-                                                        <span class="input-group-text">$</span>
-                                                    </div> -->
-                                                    <input type="text" style="background-color:#ced4e4;" class="form-control input-sm border-top-0 border-right-0 border-left-0 border-bottom-0 withCheck" value="Type of Install" name="item[]">
+                                                    <input type="text" style="background-color:#ced4e4;" class="form-control input-sm border-top-0 border-right-0 border-left-0 border-bottom-0 withCheck" value="<?php echo $agreeItem->header; ?>" name="item[]">
                                                     <div class="input-group-append" style="height:25px !important;">
                                                         <span class="input-group-text" style="background-color:#ced4e4;"><input type="checkbox" class="checkOneOne" id="checkedData" name="checkOneOne" value="New"/>New</span>
                                                         <span class="input-group-text" style="background-color:#ced4e4;"><input type="checkbox" class="checkOneOne" id="checkedData" name="checkOneOne" value="Takeover"/>Takeover</span>
@@ -391,7 +373,6 @@ table input.form-control {
                                         </tr>
                                         <tr>
                                             <td>
-                                                <!-- <input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value="Z-Lock"> -->
                                                 <div class="input-group">
                                                     <input type="text" style="background-color:#ced4e4;" class="form-control input-sm border-top-0 border-right-0 border-left-0 border-bottom-0 withCheck" value="Z-Lock" name="item[]">
                                                     <div class="input-group-append" style="height:25px !important;">
@@ -444,7 +425,6 @@ table input.form-control {
                                         </tr>
                                         <tr>
                                             <td>
-                                                <!-- <input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value="Z-Lock"> -->
                                                 <div class="input-group">
                                                     <input type="text" style="background-color:#ced4e4;" class="form-control input-sm border-top-0 border-right-0 border-left-0 border-bottom-0 withCheck" value="Translater" name="item[]">
                                                     <div class="input-group-append" style="height:25px !important;">
@@ -474,9 +454,8 @@ table input.form-control {
                                             <td>
                                                 <input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value="DVR"><input type="hidden" class="dtrans_check" name="dataValue[]">
                                             </td>
-                                            <td colspan="2">
+                                            <td colspan="3">
                                                 <div class="input-group">
-                                                    <!-- <input type="text" style="background-color:#ced4e4;" class="form-control input-sm border-top-0 border-right-0 border-left-0 border-bottom-0 withCheck" value="DVR"> -->
                                                     <div class="input-group-append" style="height:25px !important;">
                                                         <span class="input-group-text" style="background-color:#ced4e4;"><input type="checkbox" class="ctrans_check" name="trans_check" value="4ch"/>4ch</span>
                                                         <span class="input-group-text" style="background-color:#ced4e4;"><input type="checkbox" class="ctrans_check" name="trans_check" value="8ch" />8ch</span>
@@ -485,13 +464,12 @@ table input.form-control {
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
                                         </tr>
                                         <tr>
                                             <td>
                                                 <input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value="Cameras"><input type="hidden" class="dcam_check" name="dataValue[]">
                                             </td>
-                                            <td colspan="2" style="width:100px;">
+                                            <td colspan="2">
                                                 <div class="input-group">
                                                     <div class="input-group-append" style="height:25px !important;">
                                                         <span class="input-group-text" style="background-color:#ced4e4;"><input type="checkbox" class="ccam_check" name="cam_check" value="2" />2</span> 
@@ -516,13 +494,13 @@ table input.form-control {
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value="test"> 
                                                 <div class="input-group">
                                                     <div class="input-group-append" style="height:25px !important;">
-                                                        <span class="input-group-text" style="background-color:#ced4e4;"><input type="checkbox" class="checkPers" name="pers_check" />PERS</span>
-                                                        <span class="input-group-text" style="background-color:#ced4e4;"><input type="checkbox" class="checkPers" name="pers_check" />PERS w/Fall Detect</span>
+                                                        <span class="input-group-text" style="background-color:#ced4e4;"><input type="checkbox" class="checkOne" name="pers_check" />PERS</span>
+                                                        <span class="input-group-text" style="background-color:#ced4e4;"><input type="checkbox" class="checkOne" name="pers_check" />PERS w/Fall Detect</span>
                                                     </div>
                                                 </div>
+                                                <input type="hidden" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]">
                                                 <input type="hidden" class="" name="dataValue[]">
                                             </td>
                                             <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
@@ -535,6 +513,14 @@ table input.form-control {
                                             <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
                                             <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
                                             <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
+                                        </tr>
+                                        <?php } ?> -->
+                                        <?php foreach($agreeItem as $items){ ?>
+                                        <tr>
+                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value="<?php echo $items->item; ?>"><input type="hidden" class="" value="<?php echo $items->check_data; ?>" name="dataValue[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" value="<?php echo $items->qty; ?>"class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" value="<?php echo $items->location; ?>" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
+                                            <td><input type="text" style="background-color:#ced4e4;" value="<?php echo $items->price; ?>" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
                                         </tr>
                                         <?php } ?>
                                     </tbody>

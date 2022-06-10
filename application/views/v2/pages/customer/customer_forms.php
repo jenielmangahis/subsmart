@@ -15,8 +15,11 @@
                         </button>
                         <ul class="dropdown-menu" data-form="funding_info">
                             <li><a data-form="funding_info" class="dropdown-item" href="javascript:void(0);">Funding Info</a></li>
-                            <li><a data-form="solar_info" class="dropdown-item" href="javascript:void(0);">Solar Info</a></li>
-                            <li><a data-form="alarm_info" class="dropdown-item" href="javascript:void(0);">Alarm Info</a></li>
+                            <?php if(logged('company_id') == 58): ?>
+                                <li><a data-form="solar_info" class="dropdown-item" href="javascript:void(0);">Solar Info</a></li>
+                            <?php else: ?>
+                                <li><a data-form="alarm_info" class="dropdown-item" href="javascript:void(0);">Alarm Info</a></li>
+                            <?php endif; ?>
                             <li><a data-form="papers" class="dropdown-item" href="javascript:void(0);">Papers</a></li>
                         </ul>
                     </div>
