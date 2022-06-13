@@ -217,9 +217,49 @@
 
         public function twilioSms()
         {
+            include_once APPPATH . 'libraries/twilio/autoload.php'; 
+
+            $is_sent = false;
+            $msg = '';
+
+            $to_number     = '+18506195914';
+            try {
+                $client = new Twilio\Rest\Client(TWILIO_SID, TWILIO_TOKEN);
+                $result = $client->messages->create(
+                    // Where to send a text message (your cell phone?)
+                    $to_number,
+                    array(
+                        'from' => '+15005550006',
+                        'body' => 'This is a test sms'
+                    )
+                );
+
+                $is_sent = true;
+            }catch(Exception $e) {
+              $msg = $e->getMessage();
+            }
+
+            echo $msg;
+            var_dump($is_sent);
+            exit;
+        }
+
+        public function twilioSmsReplies()
+        {
             $this->load->helper('sms_helper');
 
-            $twilio = smsTwilio('8509417380', 'Test twilio');
+            $twilio = twilioReadReplies('15005550006', '15005550006');
+            echo "<pre>";
+            print_r($twilio);
+
+            exit;
+        }
+
+        public function validateTwilioAccount()
+        {
+            $this->load->helper('sms_helper');
+
+            $twilio = validateTwilioAccount('ACf262b7f581f8d1eb2a3d4ddf48f0fdb2', '6b0e320e49625b6c9ce157efa14a4931');
             echo "<pre>";
             print_r($twilio);
 
@@ -230,11 +270,22 @@
         {
             $this->load->helper('sms_helper');
 
-            $ringcentral = smsRingCentral('8509417380', 'test ringcentral');
+            $ringcentral = smsRingCentral('8503081341', '+18509417380', 'test ringcentral');
 
             echo "<pre>";
             print_r($ringcentral);
             exit;
+        }
+
+        public function checkRingCentralAccount()
+        {
+            $this->load->helper('sms_helper');
+
+            $ringcentral = smsCheckRingCentralAccount('nUlEWd9qRE6SmXr-glhWIA2', 'LLF8Pl45Suiad2qgQ4nxkQUl31OB7tRBmXkw1U1Rv0sA', '+18504780530', 'Ringmybell2022', '101');
+
+            echo "<pre>";
+            print_r($ringcentral);
+            exit;   
         }
 
         public function stripeRetrieveAccount(){
@@ -688,12 +739,31 @@
         public function ringCentralReplies()
         {
             $this->load->helper('sms_helper');
+            $this->load->model('RingCentralAccounts_model');
+
+            $cid  = logged('company_id');
+            $ringCentral = $this->RingCentralAccounts_model->getByCompanyId($cid);
 
             $to_number = '8506195914';
-            $replies = ringCentralMessageReplies($to_number);
+            $replies = ringCentralMessageReplies($ringCentral,$to_number);
 
             echo "<pre>";
             print_r($replies);
+            exit;
+        }
+
+        public function ringCentralLastMessage()
+        {
+            $this->load->helper('sms_helper');
+            $this->load->model('RingCentralAccounts_model');
+
+            $cid  = logged('company_id');
+            $ringCentral = $this->RingCentralAccounts_model->getByCompanyId($cid);
+            $to_number   = '8506195914';            
+            $lastMessage = ringCentralLastMessage($ringCentral, 4888);
+
+            echo "<pre>";
+            print_r($lastMessage);
             exit;
         }
 
@@ -764,6 +834,22 @@
 
             return $return;
         }
+
+        public function userTimezone()
+        {
+            $this->load->model('Settings_model');
+
+            $company_id = logged('company_id');
+            $settings = $this->Settings_model->getByWhere(['key' => DB_SETTINGS_TABLE_KEY_SCHEDULE, 'company_id' => $company_id]);
+            $a_settings = unserialize($settings[0]->value);
+            date_default_timezone_set($a_settings['calendar_timezone']);            
+            echo "<pre>";
+            print_r($a_settings);
+            echo date('Y-m-d h:i:s');
+            echo date_default_timezone_get();        
+            exit;
+        }
+
     }
     /* End of file Debug.php */
 
