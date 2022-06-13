@@ -12,9 +12,13 @@ class Sms extends Widgets {
 
     public function index() 
     {
+        $this->load->helper('sms_helper');
+
         $this->load->model('CompanySms_model');
         $this->load->model('Customer_advance_model');
         $this->load->model('Clients_model');
+        $this->load->model('RingCentralAccounts_model');
+        $this->load->model('TwilioAccounts_model');
 
         $cid = logged('company_id');
 
@@ -23,20 +27,30 @@ class Sms extends Widgets {
             $search  = get('search');
             $search_param = ['value' => $search];
             $customers = $this->Customer_advance_model->get_company_customer_data($cid, $search_param);
-        }else{
-            $customers = $this->Customer_advance_model->get_customer_data();
+        }else{            
+            $customers = $this->Customer_advance_model->get_company_customer_data($cid);
         }
 
         $is_with_sms_api = false;
+        $default_sms     = '';
+        $ringCentralAccount = array();
+        $twilioAccount      = array();
         $client = $this->Clients_model->getById($cid);
         if( $client->default_sms_api != '' ){
             $is_with_sms_api = true;
+            $default_sms = $client->default_sms_api;
+
+            $ringCentralAccount = $this->RingCentralAccounts_model->getByCompanyId($cid);
+            $twilioAccount      = $this->TwilioAccounts_model->getByCompanyId($cid);
         }
         
         $this->page_data['search'] = $search;
         $this->page_data['customers'] = $customers;
         $this->page_data['enable_input_mask'] = true;
+        $this->page_data['default_sms'] = $default_sms;
         $this->page_data['is_with_sms_api'] = $is_with_sms_api;
+        $this->page_data['ringCentralAccount'] = $ringCentralAccount;
+        $this->page_data['twilioAccount'] = $twilioAccount;
         $this->load->view('v2/pages/dashboard/sms.php', $this->page_data);
     }
 
@@ -48,6 +62,8 @@ class Sms extends Widgets {
         $this->load->model('Customer_advance_model');
         $this->load->model('RingCentralSmsLogs_model');
         $this->load->model('RingCentralAccounts_model');
+        $this->load->model('TwilioAccounts_model');
+        $this->load->model('TwilioSmsLogs_model');
         $this->load->model('Clients_model');
 
         $is_success = 0;
@@ -78,15 +94,17 @@ class Sms extends Widgets {
                       $msg = 'You do not have a valid ring central account. Cannot send SMS.';  
                     }                    
                     
-                }else{
-                    //Use twiio
-                    $sms_api = $this->CompanySms_model->apiTwilio();
-                    $twilio  = smsTwilio($customer->phone_m, $post['sms_txt_message']);
-                    if( $twilio['is_sent'] ){
-                        $is_success = 1;
-                    }else{
-                        $msg = $is_sent['msg'];
-                    }
+                }elseif( $client->default_sms_api == 'twilio' ){
+                    $twilioAccount = $this->TwilioAccounts_model->getByCompanyId($client->id);
+                    if( $twilioAccount ){
+                        $sms_api = $this->CompanySms_model->apiTwilio();
+                        $twilio  = smsTwilio($twilioAccount, $customer->phone_m, $post['sms_txt_message']);
+                        if( $twilio['is_sent'] ){
+                            $is_success = 1;
+                        }else{
+                            $msg = $is_sent['msg'];
+                        }
+                    }                                       
                 }
 
                 if( $is_success ){
@@ -109,14 +127,25 @@ class Sms extends Widgets {
                     }
 
                     if( $sms_api == $this->CompanySms_model->apiRingCentral() ){
-                        $data_ring_central = [
+                        $logs_ring_central = [
                             'company_sms_id' => $company_sms_id,
                             'from_number' => $from_number,
                             'to_number' => $customer->phone_m,
                             'date_created' => $created
                         ];
 
-                        $this->RingCentralSmsLogs_model->create($data_ring_central);
+                        $this->RingCentralSmsLogs_model->create($logs_ring_central);
+                    }
+
+                    if( $sms_api == $this->CompanySms_model->apiTwilio() ){
+                        $logs_twilio = [
+                            'company_sms_id' => $company_sms_id,
+                            'from_number' => $from_number,
+                            'to_number' => $customer->phone_m,
+                            'date_created' => $created
+                        ];
+
+                        $this->TwilioSmsLogs_model->create($logs_twilio);
                     }
                     
                     $msg = '';
@@ -196,7 +225,7 @@ class Sms extends Widgets {
 
         $sentMessages = array();
         if( $client->default_sms_api == 'ring_central' ){
-            $sentMessages  = ringCentralMessageReplies($ringCentral, $customer->phone_m);    
+            $sentMessages  = ringCentralMessageReplies($ringCentral, $customer->phone_m, $companySms->date_created);    
         }
 
         $this->page_data['sentMessages'] = $sentMessages;

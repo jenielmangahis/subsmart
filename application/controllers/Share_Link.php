@@ -6,7 +6,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 include_once 'application/services/JobType.php';
 include_once 'application/services/Priority.php';
 
-class Share_Link extends MY_Controller
+class Share_Link extends CI_Controller
 {
 
     public function __construct()
@@ -16,9 +16,9 @@ class Share_Link extends MY_Controller
 
         // $this->checkLogin();
 
-        $this->page_data['page']->title = 'Workorder Management';
+        // $this->page_data['page']->title = 'Workorder Management';
 
-        $this->page_data['page']->menu = (!empty($this->uri->segment(2))) ? $this->uri->segment(2) : 'workorder';
+        // $this->page_data['page']->menu = (!empty($this->uri->segment(2))) ? $this->uri->segment(2) : 'workorder';
         $this->load->model('Workorder_model', 'workorder_model');
         $this->load->model('Jobs_model', 'jobs_model');
         $this->load->model('Estimate_model', 'estimate_model');
@@ -311,6 +311,43 @@ class Share_Link extends MY_Controller
         // print_r($this->page_data['items']);
         add_footer_js('assets/js/esign/docusign/workorder.js');
         $this->load->view('workorder/public_view', $this->page_data);
+    }
+
+    public function public_view_agreement($id)
+    {
+
+        $this->page_data['workorder'] = $this->workorder_model->getById($id);
+        $work =  $this->workorder_model->getById($id);
+        
+        $this->page_data['company'] = $this->workorder_model->getCompanyCompanyId($work->company_id);
+        $this->page_data['customer'] = $this->workorder_model->getcustomerCompanyId($id);
+        $this->page_data['items'] = $this->workorder_model->getItems($id);
+
+        $this->page_data['itemsA'] = $this->workorder_model->getItemsAlarm($id);
+        $this->page_data['custom_fields'] = $this->workorder_model->getCustomFields($id);
+        
+        $WOitems = $this->workorder_model->getworkorderItems($id);
+        $this->page_data['workorder_items'] = $WOitems;
+
+        $this->page_data['first'] = $this->workorder_model->getuserfirst($work->company_representative_name);
+        $this->page_data['second'] = $this->workorder_model->getusersecond($work->primary_account_holder_name);
+        $this->page_data['third'] = $this->workorder_model->getuserthird($work->secondary_account_holder_name);
+
+        $this->page_data['lead'] = $this->workorder_model->getleadSource($work->lead_source_id);
+        $this->page_data['contacts'] = $this->workorder_model->get_contacts($work->customer_id);
+        $this->page_data['solars'] = $this->workorder_model->get_solar($id);
+        $this->page_data['solar_files'] = $this->workorder_model->get_solar_files($id);
+        
+        $this->page_data['agreements'] = $this->workorder_model->get_agreements($id);
+        $this->page_data['agree_items'] = $this->workorder_model->get_agree_items($id);
+
+        // $this->page_data['Workorder']->role = $this->roles_model->getByWhere(['id' => $this->page_data['Workorder']->role])[0];
+
+        // $this->page_data['Workorder']->activity = $this->activity_model->getByWhere(['user' => $id], ['order' => ['id', 'desc']]);
+
+        // print_r($this->page_data['items']);
+        add_footer_js('assets/js/esign/docusign/workorder.js');
+        $this->load->view('workorder/public_view_agreement', $this->page_data);
     }
 
     

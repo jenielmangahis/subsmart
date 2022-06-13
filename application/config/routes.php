@@ -1100,6 +1100,8 @@ $route['tools/activate_stripe'] = 'Debug/activateStripe';
 $route['tools/_get_ring_central_credentials'] = 'Tools/ajax_load_company_ring_central';
 $route['tools/_activate_company_ring_central'] = 'Tools/ajax_activate_company_ring_central';
 $route['tools/_update_company_default_sms_api'] = 'Tools/ajax_update_company_default_sms_api';
+$route['tools/_get_twilio_credentials'] = 'Tools/ajax_load_company_twilio';
+$route['tools/_activate_company_twilio'] = 'Tools/ajax_activate_company_twilio';
 
 //Work Pictures
 $route['users/_delete_work_picture'] = 'Users/ajax_delete_company_work_picture';

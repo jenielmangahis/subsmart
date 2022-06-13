@@ -73,12 +73,23 @@
                                         <td><?php echo $customer->phone_m; ?></td>
                                         <td>
                                             <?php 
-                                                /*$lastMessage = getCustomerLastMessage(0, $customer->prof_id);
-                                                if( $lastMessage ){
-                                                    echo timeLapsedString($lastMessage->date_created);    
+                                                if( $customer->phone_m != '' ){
+                                                    if( $default_sms == 'ring_central' ){
+                                                        $msg = ringCentralLastMessage($ringCentralAccount, $customer->prof_id);
+                                                        if( !empty($msg) ){
+                                                            foreach($msg as $m){
+                                                                echo timeLapsedString($m['date']);
+                                                            }
+                                                        }else{
+                                                            echo "---";  
+                                                        }                                                        
+
+                                                    }else{
+                                                        echo "---";    
+                                                    }
                                                 }else{
-                                                    echo 'No messages';
-                                                }*/
+                                                    echo "---";
+                                                }                                                
                                             ?>        
                                         </td>
                                         <td>

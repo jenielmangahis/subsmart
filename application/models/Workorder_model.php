@@ -758,6 +758,24 @@ class Workorder_model extends MY_Model
 		return $query->result();
     }
 
+    public function get_agree_details($id)
+    {
+        $this->db->select('*');
+		$this->db->from('workorder_agreement_items');
+		$this->db->where('work_order_id', $id);
+		$query = $this->db->get();
+		return $query->row();
+    }
+
+    public function get_payments_details($id)
+    {
+        $this->db->select('*');
+		$this->db->from('work_order_payments');
+		$this->db->where('work_order_id', $id);
+		$query = $this->db->get();
+		return $query->result();
+    }
+
     function getRows($name){
         $this->db->select('*');
         $this->db->from('workorder_solar_files');

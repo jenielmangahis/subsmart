@@ -788,6 +788,9 @@ class Customer extends MY_Controller
 
     public function module($id=null)
     {
+        $this->load->model('Clients_model');
+
+        error_reporting(0);
         $this->page_data['page']->title = 'Customer Dashboard';
         $this->page_data['page']->parent = 'Customers';
 
@@ -859,6 +862,15 @@ class Customer extends MY_Controller
         $jobChecklists = $this->JobChecklist_model->getAllByCompanyId(logged('company_id'));
         $this->page_data['job_check_lists'] = $jobChecklists;
 
+        //Sms
+        $cid = logged('company_id');
+        $default_sms = '';        
+        $client      = $this->Clients_model->getById($cid);
+        if( $client->default_sms_api != '' ){
+            $default_sms = $client->default_sms_api;
+        }
+
+        $this->page_data['default_sms'] = $default_sms;
         $this->page_data['cust_tab'] = $this->uri->segment(3);
         $this->page_data['cust_active_tab'] = 'dashboard';
         $this->page_data['users'] = $this->users_model->getUsers();

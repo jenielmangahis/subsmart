@@ -46,7 +46,7 @@ function smsRingCentral($ringCentral, $to_number, $txt_message)
     return $return;
 }
 
-function smsTwilio($to_number, $message)
+function smsTwilio($twilio, $to_number, $message)
 {
     include_once APPPATH . 'libraries/twilio/autoload.php'; 
 
@@ -54,14 +54,13 @@ function smsTwilio($to_number, $message)
     $msg = '';
 
     $to_number     = '+1'.$to_number;
-    $twilio_number = "+15017122661";
     try {
-        $client = new Twilio\Rest\Client(TWILIO_SID, TWILIO_TOKEN);
+        $client = new Twilio\Rest\Client($twilioAccount->tw_sid, $twilioAccount->tw_token);
         $result = $client->messages->create(
             // Where to send a text message (your cell phone?)
             $to_number,
             array(
-                'from' => TWILIO_NUMBER,
+                'from' => $twilioAccount->tw_number,
                 'body' => $message
             )
         );
@@ -87,7 +86,7 @@ function cleanMobileNumber($to_number)
     return $to_number;
 }
 
-function ringCentralMessageReplies($ringCentral, $to_number)
+function ringCentralMessageReplies($ringCentral, $to_number, $date_from)
 {
     require_once APPPATH . 'libraries/ringcentral-sdk/vendor/autoload.php';
         
@@ -99,10 +98,10 @@ function ringCentralMessageReplies($ringCentral, $to_number)
 
     $to_number = cleanMobileNumber($to_number);
     $to_number = '+1'.$to_number;
-
+    
     $queryParams = array(
         'availability' => array('Alive'),
-        'dateFrom' => '2022-05-01',
+        'dateFrom' => date('Y-m-d', strtotime($date_from)),
         //'direction' => array('Inbound'),
         'messageType' => array('SMS'),
         /*'page' => 1,
@@ -116,6 +115,45 @@ function ringCentralMessageReplies($ringCentral, $to_number)
         $sms_message = explode('-', $r->subject);
         $replies[] = ['msg' => $sms_message[0], 'from' => $r->from->phoneNumber, 'date' => date("Y-m-d g:i A", strtotime($r->creationTime))];
     } 
+
+    return array_reverse($replies);
+}
+
+function ringCentralLastMessage($ringCentral, $prof_id)
+{
+    require_once APPPATH . 'libraries/ringcentral-sdk/vendor/autoload.php';
+
+    $CI =& get_instance();
+    $CI->load->model('CompanySms_model');
+
+    $replies    = array();
+    $companySms = $CI->CompanySms_model->getByProfId($prof_id);
+    if( $companySms ){        
+        $rcsdk    = new RingCentral\SDK\SDK($ringCentral->client_id, $ringCentral->client_secret, RINGCENTRAL_DEV_URL, 'Demo', '1.0.0');
+        $platform = $rcsdk->platform();
+        $platform->login($ringCentral->rc_username, $ringCentral->rc_ext, $ringCentral->rc_password);
+
+        $to_number = $companySms->to_number;
+        $to_number = cleanMobileNumber($to_number);
+        $to_number = '+1'.$to_number;
+
+        $queryParams = array(
+            'dateFrom' => date('Y-m-d', strtotime($companySms->created)),
+            'availability' => array('Alive'),
+            'distinctConversations' => 'true',
+            'messageType' => array('SMS'),
+            'phoneNumber' => $to_number,
+            'page' => 1,
+            'perPage' => 1,
+        );
+
+        $apiResponse = $platform->get("/restapi/v1.0/account/~/extension/~/message-store", $queryParams);
+        $jsonResponse = json_decode($apiResponse->text());
+        foreach (array_reverse($jsonResponse->records) as $r){
+            $sms_message = explode('-', $r->subject);
+            $replies[] = ['msg' => $sms_message[0], 'from' => $r->from->phoneNumber, 'date' => date("Y-m-d g:i A", strtotime($r->creationTime))];
+        }
+    }
 
     return array_reverse($replies);
 }
@@ -159,4 +197,64 @@ function validateRingCentralAccount($client_id, $client_secret, $rc_user, $rc_pa
     $return = ['is_valid' => $is_valid, 'err_msg' => $err_msg];
 
     return $return;
+}
+
+function validateTwilioAccount($sid, $token)
+{
+    include_once APPPATH . 'libraries/twilio/autoload.php'; 
+
+    $is_valid = false;
+    $err_msg = '';
+
+    $to_number     = '+1'.$to_number;
+    try {
+        $client = new Twilio\Rest\Client($sid, $token); 
+        
+        $service = $client->verify->v2->services
+                              ->create("My First Verify Service");
+
+        $is_valid = true;
+    }catch(Exception $e) {
+      $err_msg = $e->getMessage();
+    }
+
+    $result = ['is_valid' => $is_valid, 'err_msg' => $err_msg];
+
+    return $result;
+}
+
+function twilioReadReplies($from_number, $to_number)
+{
+    include_once APPPATH . 'libraries/twilio/autoload.php'; 
+
+    $to_number     = '+1'.$to_number;
+    try {
+        $client = new Twilio\Rest\Client(TWILIO_SID, TWILIO_TOKEN);
+        
+        /*$messages = $client->messages
+                           ->read([
+                                      "to" => "+15005550009"
+                                  ],
+                                  20
+                           );*/
+        $messages = $client->messages
+                           ->read([],20);        
+        echo "<pre>";
+        print_r($messages);
+        foreach ($messages as $record) {
+            echo 5;
+            print($record->sid);
+        }        
+
+        
+    }catch(Exception $e) {
+      $msg = $e->getMessage();
+    }
+
+    echo $msg;
+    exit;
+
+    $result = ['is_sent' => $is_sent, 'msg' => $msg];
+
+    return $result;
 }

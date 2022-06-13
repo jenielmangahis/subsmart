@@ -231,6 +231,7 @@ class Reports extends MY_Controller {
     {
         $reportType = $this->accounting_report_types_model->get_by_id($reportTypeId);
         $view = strtolower(str_replace(' ', '_', $reportType->name));
+        $view = str_replace('-', '_', $view);
         $js = str_replace('%', 'percentage', $view);
 
         add_footer_js([
