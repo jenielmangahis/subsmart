@@ -5,11 +5,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <!-- <link rel="stylesheet" href="<?php echo $url->assets ?>fa-5/css/all.min.css">
     -->
     <!--Morris Chart CSS -->
-    <link rel="stylesheet"
-        href="<?php echo $url->assets ?>plugins/morris.js/morris.css">
-    <link
-        href="<?php echo $url->assets ?>dashboard/css/bootstrap.min.css"
-        rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/morris.js/morris.css">
+    <link href="<?php echo base_url() ?>assets/dashboard/css/bootstrap.min.css" rel="stylesheet" type="text/css">
 
     <!-- DataTables -->
     <!--<link rel="stylesheet" href="//cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" />-->
@@ -523,7 +520,7 @@ body
 								<div clas="row">
 										<div class="col-sm-12 col-sm-push-12 text-right-sm ">
 										<div class="row">
-											<div class="col-md-3">
+											<div class="col-md-3"  style="float:left;">
 												<div style="margin-bottom: 20px;margin-left: 0px !important;">
 													<!-- <img class="presenter-print-logo" style="max-width: 230px; max-height: 200px;" src="http://nsmartrac.com/assets/dashboard/images/logo.png"> -->
 													<img src="<?= getCompanyBusinessProfileImage(); ?>"  style="max-width: 230px; max-height: 200px;" />
@@ -586,6 +583,7 @@ body
 											
 										</div>
 									</div> -->
+									<!-- <br><br><br> -->
 									<div class="col-sm-12 col-sm-pull-12">
 
 		         							   <div class="user-info">
@@ -1025,88 +1023,7 @@ body
     </div> 
 </div> -->
 
-<!-- MODAL CLONE WORKORDER -->
-<div class="modal fade" id="modalCloneWorkorder" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                    <h4 class="modal-title">Clone Work Order</h4>
-                </div>
-                <div class="modal-body">
-                    <form name="clone-modal-form">
-                        <div class="validation-error" style="display: none;"></div>
-                        <p>
-                            You are going create a new work order based on <b>Work Order #<span
-                                        class="work_order_no"></span> <input type="hidden" id="wo_id" name="wo_id"> </b>.<br>
-                            Afterwards you can edit the newly created work order.
-                        </p>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-default" type="button" data-dismiss="modal">Close</button>
-                    <button id="clone_workorder" class="btn btn-primary" type="button" data-clone-modal="submit">Clone
-                        Work Order
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-	
-	<div class="modal fade" id="sharePreview" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Share This Link</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form name="clone-modal-form">
-                        <div class="validation-error" style="display: none;"></div>
-                        <p>
-                            <input type="text" class="form-control" value="<?php echo base_url('share_Link/preview/'.$workorder->id) ?>">
-                        </p>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-default" type="button" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
 
-<div class="modal fade" id="docusignTemplateModal" tabindex="-1" role="dialog" aria-labelledby="docusignTemplateModalLabel" aria-hidden="true">
-	<div class="modal-dialog modal-lg" role="document">
-		<div class="modal-content">
-		<div class="modal-header">
-			<h5 class="modal-title" id="docusignTemplateModalLabel">Select Template</h5>
-			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-			<span aria-hidden="true">&times;</span>
-			</button>
-		</div>
-		<div class="modal-body">
-			<table id="templatesTable" class="table" style="width: 100%;">
-				<thead>
-					<tr>
-						<th>Name</th>
-						<th>Created Date</th>
-						<th>Action</th>
-					</tr>
-				</thead>
-			</table>
-		</div>
-		<div class="modal-footer">
-			<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-		</div>
-		</div>
-	</div>
-</div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 <!-- <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&callback=initialize"></script>
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBg27wLl6BoSPmchyTRgvWuGHQhUUHE5AU&callback=initialize&libraries=&v=weekly"></script> -->
