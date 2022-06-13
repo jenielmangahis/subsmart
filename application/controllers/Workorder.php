@@ -898,6 +898,8 @@ class Workorder extends MY_Controller
         $this->page_data['pers'] = $this->workorder_model->getenhanced_services_pers($id);
         $this->page_data['users_lists'] = $this->users_model->getAllUsersByCompanyID($company_id);
         $this->page_data['agreeItem'] = $this->workorder_model->get_agree_items($id);
+        $this->page_data['agreeDetails'] = $this->workorder_model->get_agree_details($id);
+        $this->page_data['payments'] = $this->workorder_model->get_payments_details($id);
         // agreeItem
         
         $work = $this->workorder_model->getworkorder($id);
@@ -8053,8 +8055,13 @@ class Workorder extends MY_Controller
             $html = $this->load->view('workorder/previewAlarm', [], true);
             $this->pdf->createPDF($html, 'mypdf', false);
             exit(0);
-
         }
+
+    }
+
+    public function updateWorkorderAgreement($id)
+    {
+        
     }
 
     public function preview($id)

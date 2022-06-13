@@ -210,7 +210,7 @@ table input.form-control {
                                     <div class="form-group col-md-2">
                                         <div class="select-wrap">
                                             <label for="lead_source">Panel Type</label>
-                                            <select name="panel_type" id="panel_type" class="form-control input_select" data-value="<?= isset($alarm_info) ? $alarm_info->panel_type : "" ?>">
+                                            <select name="panel_type" id="panel_type" class="form-control input_select" data-value="<?= isset($workorder) ? $workorder->panel_type : "" ?>">
                                                 <option <?php if(isset($workorder)){ if($workorder->panel_type == ''){echo "selected";} } ?>  value="0">- none -</option>
                                                 <option <?php if(isset($workorder)){ if($workorder->panel_type == 'AERIONICS'){echo "selected";} } ?> value="AERIONICS">AERIONICS</option>
                                                 <option <?php if(isset($workorder)){ if($workorder->panel_type == 'AlarmNet'){echo "selected";} } ?> value="AlarmNet">AlarmNet</option>
@@ -278,243 +278,6 @@ table input.form-control {
                                         <th>Price</th>
                                     </thead>
                                     <tbody>
-                                        <!-- <tr>
-                                            <td>
-                                                <div class="input-group">
-                                                    <input type="text" style="background-color:#ced4e4;" class="form-control input-sm border-top-0 border-right-0 border-left-0 border-bottom-0 withCheck" value="<?php echo $agreeItem->header; ?>" name="item[]">
-                                                    <div class="input-group-append" style="height:25px !important;">
-                                                        <span class="input-group-text" style="background-color:#ced4e4;"><input type="checkbox" class="checkOneOne" id="checkedData" name="checkOneOne" value="New"/>New</span>
-                                                        <span class="input-group-text" style="background-color:#ced4e4;"><input type="checkbox" class="checkOneOne" id="checkedData" name="checkOneOne" value="Takeover"/>Takeover</span>
-                                                    </div>
-                                                    <input type="hidden" class="checkedDataOne" name="dataValue[]">
-                                                </div>
-                                            </td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control input-sm border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control input-sm border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control input-sm border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
-                                        </tr>
-                                        <tr>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value="LTE - Communicator"><input type="hidden" class="" name="dataValue[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
-                                        </tr>
-                                        <tr>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value="Recessed Door Contact"><input type="hidden" class="" name="dataValue[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
-                                        </tr>
-                                        <tr>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value="Surface Contact"><input type="hidden" class="" name="dataValue[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
-                                        </tr>
-                                        <tr>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value="Keyless Remote"><input type="hidden" class="" name="dataValue[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
-                                        </tr>
-                                        <tr>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value="Motion Detector"><input type="hidden" class="" name="dataValue[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
-                                        </tr>
-                                        <tr>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value="Smoke Communicator"><input type="hidden" class="" name="dataValue[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
-                                        </tr>
-                                        <tr>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value="Glass Break Detector"><input type="hidden" class="" name="dataValue[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
-                                        </tr>
-                                        <tr>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value="Carbon Monoxide"><input type="hidden" class="" name="dataValue[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
-                                        </tr>
-                                        <tr>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value="Medical Pendant"><input type="hidden" class="" name="dataValue[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
-                                        </tr>
-                                        <tr>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value="Door Bell Camera"><input type="hidden" class="" name="dataValue[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
-                                        </tr>
-                                        <tr>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]"  value="Z-Thermostat"><input type="hidden" class="" name="dataValue[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
-                                        </tr>
-                                        <tr>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value="Wifi-Card"><input type="hidden" class="" name="dataValue[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
-                                        </tr>
-                                        <tr>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value="Z-Card"><input type="hidden" class="" name="dataValue[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="input-group">
-                                                    <input type="text" style="background-color:#ced4e4;" class="form-control input-sm border-top-0 border-right-0 border-left-0 border-bottom-0 withCheck" value="Z-Lock" name="item[]">
-                                                    <div class="input-group-append" style="height:25px !important;">
-                                                        <span class="input-group-text" style="background-color:#ced4e4;"><input type="checkbox" id=""  class="checkOneTwo" name="checkOneTwo" value="BZ"/>BZ</span>
-                                                        <span class="input-group-text" style="background-color:#ced4e4;"><input type="checkbox" id=""  class="checkOneTwo" name="checkOneTwo"  value="BS"/>BS</span>
-                                                        <span class="input-group-text" style="background-color:#ced4e4;"><input type="checkbox" id=""  class="checkOneTwo" name="checkOneTwo"  value="CS"/>CS</span>
-                                                    </div>
-                                                    <input type="hidden" class="checkedDataTwo" name="dataValue[]">
-                                                </div>
-                                            </td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
-                                        </tr>
-                                        <tr>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value="WAP"><input type="hidden" class="" name="dataValue[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
-                                        </tr>
-                                        <tr>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value="IP-CAM (Indoor)"><input type="hidden" class="" name="dataValue[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
-                                        </tr>
-                                        <tr>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value="IP-CAM (Outdoor)"><input type="hidden" class="" name="dataValue[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
-                                        </tr>
-                                        <tr>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value="Warranty ePaperwork"><input type="hidden" class="" name="dataValue[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
-                                        </tr>
-                                        <tr>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value="Advertising Kit"><input type="hidden" class="" name="dataValue[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
-                                        </tr>
-                                        <tr>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value="Certificate of Insurance"><input type="hidden" class="" name="dataValue[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="input-group">
-                                                    <input type="text" style="background-color:#ced4e4;" class="form-control input-sm border-top-0 border-right-0 border-left-0 border-bottom-0 withCheck" value="Translater" name="item[]">
-                                                    <div class="input-group-append" style="height:25px !important;">
-                                                        <span class="input-group-text" style="background-color:#ced4e4;"><input type="checkbox" class="checkOneThree" id="" name="checkOneThree"  value="GE"/>GE</span>
-                                                        <span class="input-group-text" style="background-color:#ced4e4;"><input type="checkbox" class="checkOneThree" id="" name="checkOneThree"  value="HW"/>HW</span>
-                                                        <span class="input-group-text" style="background-color:#ced4e4;"><input type="checkbox" class="checkOneThree" id="" name="checkOneThree"  value="DSC"/>DSC</span>
-                                                    </div>
-                                                    <input type="hidden" class="checkedDataThree" name="dataValue[]">
-                                                </div>
-                                            </td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
-                                        </tr>
-                                        <?php for ($i=1; $i<=2; $i++ ) { ?>
-                                        <tr>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]"><input type="hidden" class="" name="dataValue[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
-                                        </tr>
-                                        <?php } ?>
-                                        <tr>
-                                            <td colspan="4" align="center">ENHANCED SERVICES</td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value="DVR"><input type="hidden" class="dtrans_check" name="dataValue[]">
-                                            </td>
-                                            <td colspan="3">
-                                                <div class="input-group">
-                                                    <div class="input-group-append" style="height:25px !important;">
-                                                        <span class="input-group-text" style="background-color:#ced4e4;"><input type="checkbox" class="ctrans_check" name="trans_check" value="4ch"/>4ch</span>
-                                                        <span class="input-group-text" style="background-color:#ced4e4;"><input type="checkbox" class="ctrans_check" name="trans_check" value="8ch" />8ch</span>
-                                                        <span class="input-group-text" style="background-color:#ced4e4;"><input type="checkbox" class="ctrans_check" name="trans_check" value="16ch" />16ch</span>
-                                                        <span class="input-group-text" style="background-color:#ced4e4;"><input type="checkbox" class="ctrans_check" name="trans_check" value="32ch" />32ch</span>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value="Cameras"><input type="hidden" class="dcam_check" name="dataValue[]">
-                                            </td>
-                                            <td colspan="2">
-                                                <div class="input-group">
-                                                    <div class="input-group-append" style="height:25px !important;">
-                                                        <span class="input-group-text" style="background-color:#ced4e4;"><input type="checkbox" class="ccam_check" name="cam_check" value="2" />2</span> 
-                                                        <span class="input-group-text" style="background-color:#ced4e4;"><input type="checkbox" class="ccam_check" name="cam_check" value="3" />3</span>  
-                                                        <span class="input-group-text" style="background-color:#ced4e4;"><input type="checkbox" class="ccam_check" name="cam_check" value="4" />4</span> 
-                                                        <span class="input-group-text" style="background-color:#ced4e4;"><input type="checkbox" class="ccam_check" name="cam_check" value="5" />5</span> 
-                                                        <span class="input-group-text" style="background-color:#ced4e4;"><input type="checkbox" class="ccam_check" name="cam_check" value="6" />6</span> 
-                                                        <span class="input-group-text" style="background-color:#ced4e4;"><input type="checkbox" class="ccam_check" name="cam_check" value="7" />7</span> 
-                                                        <span class="input-group-text" style="background-color:#ced4e4;"><input type="checkbox" class="ccam_check" name="cam_check" value="8" />8</span> 
-                                                        <span class="input-group-text" style="background-color:#ced4e4;"><input type="checkbox" class="ccam_check" name="cam_check" value="9" />9</span> 
-                                                        <span class="input-group-text" style="background-color:#ced4e4;"><input type="checkbox" class="ccam_check" name="cam_check" value="10" />10</span> 
-                                                        <span class="input-group-text" style="background-color:#ced4e4;"><input type="checkbox" class="ccam_check" name="cam_check" value="11" />11</span> 
-                                                        <span class="input-group-text" style="background-color:#ced4e4;"><input type="checkbox" class="ccam_check" name="cam_check" value="12" />12</span> 
-                                                        <span class="input-group-text" style="background-color:#ced4e4;"><input type="checkbox" class="ccam_check" name="cam_check" value="13" />13</span> 
-                                                        <span class="input-group-text" style="background-color:#ced4e4;"><input type="checkbox" class="ccam_check" name="cam_check" value="14" />14</span> 
-                                                        <span class="input-group-text" style="background-color:#ced4e4;"><input type="checkbox" class="ccam_check" name="cam_check" value="15" />15</span> 
-                                                        <span class="input-group-text" style="background-color:#ced4e4;"><input type="checkbox" class="ccam_check" name="cam_check" value="16" />16</span>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="input-group">
-                                                    <div class="input-group-append" style="height:25px !important;">
-                                                        <span class="input-group-text" style="background-color:#ced4e4;"><input type="checkbox" class="checkOne" name="pers_check" />PERS</span>
-                                                        <span class="input-group-text" style="background-color:#ced4e4;"><input type="checkbox" class="checkOne" name="pers_check" />PERS w/Fall Detect</span>
-                                                    </div>
-                                                </div>
-                                                <input type="hidden" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]">
-                                                <input type="hidden" class="" name="dataValue[]">
-                                            </td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
-                                        </tr>
-                                        <?php for ($i=1; $i<=2; $i++ ) { ?>
-                                        <tr>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]"><input type="hidden" class="" name="dataValue[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]"></td>
-                                            <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  onkeyup="getTotalPrices()"></td>
-                                        </tr>
-                                        <?php } ?> -->
                                         <?php foreach($agreeItem as $items){ ?>
                                         <tr>
                                             <td><input type="text" style="background-color:#ced4e4;" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value="<?php echo $items->item; ?>"><input type="hidden" class="" value="<?php echo $items->check_data; ?>" name="dataValue[]"></td>
@@ -529,16 +292,16 @@ table input.form-control {
                             <br>
                             <div class="row"> 
                                 <div class="col-md-6">
-                                    <input type="date" name="installation_date" class="form-control border-top-0 border-right-0 border-left-0">
+                                    <input type="date" name="installation_date" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $agreeDetails->installation_date; ?>">
                                     <b>Installation Date:</b>
                                 </div>
                                 <div class="col-md-6">
                                     <select id="intall_time" name="intall_time" class="form-control custom-select m_select border-top-0 border-right-0 border-left-0">
-                                        <option value="8-10">8-10</option>
-                                        <option value="10-12">10-12</option>
-                                        <option value="12-2">12-2</option>
-                                        <option value="2-4">2-4</option>
-                                        <option value="4-6">4-6</option>
+                                        <option value="8-10" <?php if($agreeDetails->intall_time == '8-10'){ echo 'selected'; } ?> >8-10</option>
+                                        <option value="10-12" <?php if($agreeDetails->intall_time == '10-12'){ echo 'selected'; } ?> >10-12</option>
+                                        <option value="12-2" <?php if($agreeDetails->intall_time == '12-2'){ echo 'selected'; } ?> >12-2</option>
+                                        <option value="2-4 <?php if($agreeDetails->intall_time == '2-4'){ echo 'selected'; } ?> ">2-4</option>
+                                        <option value="4-6" <?php if($agreeDetails->intall_time == '4-6'){ echo 'selected'; } ?> >4-6</option>
                                     </select>
                                     <b>Install Time Date:</b>
                                 </div>
@@ -549,27 +312,27 @@ table input.form-control {
                                     <div class="select-wrap">
                                         <b>Payment Method</b>
                                             <select name="payment_method" id="payment_method" class="form-control custom-select m_select border-top-0 border-right-0 border-left-0">
-                                                <option value="">Choose method</option>
-                                                <option value="Cash">Cash</option>
-                                                <option value="Check">Check</option>
-                                                <option value="Credit Card">Credit Card</option>
-                                                <option value="Debit Card">Debit Card</option>
-                                                <option value="ACH">ACH</option>
-                                                <option value="Venmo">Venmo</option>
-                                                <option value="Paypal">Paypal</option>
-                                                <option value="Square">Square</option>
-                                                <option value="Invoicing">Invoicing</option>
-                                                <option value="Warranty Work">Warranty Work</option>
-                                                <option value="Home Owner Financing">Home Owner Financing</option>
-                                                <option value="e-Transfer">e-Transfer</option>
-                                                <option value="Other Credit Card Professor">Other Credit Card Professor</option>
-                                                <option value="Other Payment Type">Other Payment Type</option>
+                                                <option value="" <?php if($workorder->payment_method == ''){ echo 'selected'; } ?>>Choose method</option>
+                                                <option value="Cash" <?php if($workorder->payment_method == 'Cash'){ echo 'selected'; } ?>>Cash</option>
+                                                <option value="Check" <?php if($workorder->payment_method == 'Check'){ echo 'selected'; } ?>>Check</option>
+                                                <option value="Credit Card" <?php if($workorder->payment_method == 'Credit Card'){ echo 'selected'; } ?>>Credit Card</option>
+                                                <option value="Debit Card" <?php if($workorder->payment_method == 'Debit Card'){ echo 'selected'; } ?>>Debit Card</option>
+                                                <option value="ACH" <?php if($workorder->payment_method == 'ACH'){ echo 'selected'; } ?>>ACH</option>
+                                                <option value="Venmo" <?php if($workorder->payment_method == 'Venmo'){ echo 'selected'; } ?>>Venmo</option>
+                                                <option value="Paypal" <?php if($workorder->payment_method == 'Paypal'){ echo 'selected'; } ?>>Paypal</option>
+                                                <option value="Square" <?php if($workorder->payment_method == 'Square'){ echo 'selected'; } ?>>Square</option>
+                                                <option value="Invoicing" <?php if($workorder->payment_method == 'Invoicing'){ echo 'selected'; } ?>>Invoicing</option>
+                                                <option value="Warranty Work" <?php if($workorder->payment_method == 'Warranty Work'){ echo 'selected'; } ?>>Warranty Work</option>
+                                                <option value="Home Owner Financing" <?php if($workorder->payment_method == 'Home Owner Financing'){ echo 'selected'; } ?>>Home Owner Financing</option>
+                                                <option value="e-Transfer" <?php if($workorder->payment_method == 'e-Transfer'){ echo 'selected'; } ?>>e-Transfer</option>
+                                                <option value="Other Credit Card Professor" <?php if($workorder->payment_method == 'Other Credit Card Professor'){ echo 'selected'; } ?>>Other Credit Card Professor</option>
+                                                <option value="Other Payment Type" <?php if($workorder->payment_method == 'Other Payment Type'){ echo 'selected'; } ?>>Other Payment Type</option>
                                             </select>
                                         </div> 
                                     </div>     
                                     <div class="form-group col-md-4">
                                         <b>Amount<small class="help help-sm"> ( $ )</small></b>
-                                        <input type="text" class="form-control input-element border-top-0 border-right-0 border-left-0" name="payment_amount" id="payment_amount"  />
+                                        <input type="text" class="form-control input-element border-top-0 border-right-0 border-left-0" name="payment_amount" id="payment_amount" value="<?php echo $workorder->payment_amount; ?>" />
                                     </div>
                                     <div class="form-group col-md-4">
                                         <b>Billing Date</b>
@@ -577,43 +340,44 @@ table input.form-control {
                                         <select name="billing_date" id="" class="form-control custom-select m_select border-top-0 border-right-0 border-left-0">
                                                 <option value=""></option>
                                                 <?php for ($i=1; $i<=31; $i++ ) { ?>
-                                                <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
+                                                <option value="<?php echo $i; ?>" <?php if($agreeDetails->billing_date == $i){ echo 'selected'; }else{ echo ''; } ?>><?php echo $i; ?></option>
                                                 <?php } ?>
                                             </select>
                                     </div>
                             </div>
                             <div class="row">                   
                                 <div class="col-md-12">
+                                            <input type="hidden" name="payment_method_value" id="payment_method_value" value="<?php echo $workorder->payment_method; ?>">
                                             <div id="invoicing" style="display:none;">
                                                 <!-- <input type="checkbox" id="same_as"> <b>Same as above Address</b> <br><br> -->
                                                 <div class="row">                   
                                                     <div class="col-md-6 form-group">
                                                         <label for="monitored_location" class="label-element">Mail Address</label>
                                                         <input type="text" class="form-control input-element" name="mail-address"
-                                                            id="mail-address" placeholder="Monitored Location"/>
+                                                            id="mail-address" placeholder="Monitored Location" value="<?php echo $payments->mail_address; ?>"/>
                                                     </div>
                                                     <div class="col-md-6 form-group">
                                                         <label for="city" class="label-element">City</label>
-                                                            <input type="text" class="form-control input-element" name="mail_locality" id="mail_locality" placeholder="Enter Name" />
+                                                            <input type="text" class="form-control input-element" name="mail_locality" id="mail_locality" placeholder="Enter Name" <?php echo $workorder->city; ?>/>
                                                     </div>
                                                     <div class="col-md-6 form-group">
                                                         <label for="state" class="label-element">State</label>
                                                         <input type="text" class="form-control input-element" name="mail_state"
                                                             id="mail_state" 
-                                                            placeholder="Enter State"/>
+                                                            placeholder="Enter State" value="<?php echo $workorder->state; ?>"/>
                                                     </div>
                                                 <!-- </div>
                                                 <div class="row">   -->
                                                     <div class="col-md-6 form-group">
                                                         <label for="zip" class="label-element">ZIP</label> 
-                                                            <input type="text" id="mail_postcode" name="mail_postcode" class="form-control input-element"  placeholder="Enter Zip"/>
+                                                            <input type="text" id="mail_postcode" name="mail_postcode" class="form-control input-element"  placeholder="Enter Zip" value="<?php echo $payments->zip_code; ?>"/>
                                                     </div>
 
                                                     <div class="col-md-6 form-group">
                                                         <label for="cross_street" class="label-element">Cross Street</label>
                                                         <input type="text" class="form-control input-element" name="mail_cross_street"
                                                             id="mail_cross_street" 
-                                                            placeholder="Cross Street"/>
+                                                            placeholder="Cross Street" value="<?php echo $payments->cross_street; ?>"/>
                                                     </div>                                        
                                                 </div>
                                             </div>
@@ -621,17 +385,17 @@ table input.form-control {
                                             <div class="row">                   
                                                 <div class="form-group col-md-6">
                                                     <label for="job_type" class="label-element">Check Number</label>
-                                                    <input type="text" class="form-control input-element" name="check_number" id="check_number"/>
+                                                    <input type="text" class="form-control input-element" name="check_number" id="check_number" value="<?php echo $payments->check_number; ?>"/>
                                                 </div>
                                                 <div class="form-group col-md-6">
                                                     <label for="job_type" class="label-element">Routing Number</label>
-                                                    <input type="text" class="form-control input-element" name="routing_number" id="routing_number"/>
+                                                    <input type="text" class="form-control input-element" name="routing_number" id="routing_number" value="<?php echo $payments->routing_number; ?>"/>
                                                 </div>                                             
                                             </div>
                                             <div class="row">
                                                 <div class="form-group col-md-6">
                                                     <label for="job_type" class="label-element">Account Number</label>
-                                                    <input type="text" class="form-control input-element" name="account_number" id="account_number"/>
+                                                    <input type="text" class="form-control input-element" name="account_number" id="account_number" value="<?php echo $payments->account_number; ?>"/>
                                                 </div>                                       
                                             </div>
                                         </div>
@@ -639,15 +403,15 @@ table input.form-control {
                                             <div class="row">                   
                                                 <div class="form-group col-md-6">
                                                     <label for="job_type" class="label-element">Credit Card Number</label>
-                                                    <input type="text" class="form-control input-element" name="credit_number" id="credit_number" placeholder="0000 0000 0000 000" />
+                                                    <input type="text" class="form-control input-element" name="credit_number" id="credit_number" placeholder="0000 0000 0000 000" value="<?php echo $payments->credit_number; ?>"/>
                                                 </div>
                                                 <div class="form-group col-md-6">
                                                     <label for="job_type" class="label-element">Credit Card Expiration</label>
-                                                    <input type="text" class="form-control input-element" name="credit_expiry" id="credit_expiry" placeholder="MM/YYYY"/>
+                                                    <input type="text" class="form-control input-element" name="credit_expiry" id="credit_expiry" placeholder="MM/YYYY"/ value="<?php echo $payments->credit_expiry; ?>">
                                                 </div>  
                                                 <div class="form-group col-md-6">
                                                     <label for="job_type" class="label-element">CVC</label>
-                                                    <input type="text" class="form-control input-element" name="credit_cvc" id="credit_cvc" placeholder="CVC"/>
+                                                    <input type="text" class="form-control input-element" name="credit_cvc" id="credit_cvc" placeholder="CVC" value="<?php echo $payments->credit_cvc; ?>"/>
                                                 </div>                                             
                                             </div>
                                         </div>
@@ -655,15 +419,15 @@ table input.form-control {
                                             <div class="row">                   
                                                 <div class="form-group col-md-6">
                                                     <label for="job_type" class="label-element">Credit Card Number</label>
-                                                    <input type="text" class="form-control input-element" name="debit_credit_number" id="credit_number2" placeholder="0000 0000 0000 000" />
+                                                    <input type="text" class="form-control input-element" name="debit_credit_number" id="credit_number2" placeholder="0000 0000 0000 000" value="<?php echo $payments->credit_number; ?>" />
                                                 </div>
                                                 <div class="form-group col-md-6">
                                                     <label for="job_type" class="label-element">Credit Card Expiration</label>
-                                                    <input type="text" class="form-control input-element" name="debit_credit_expiry" id="credit_expiry" placeholder="MM/YYYY"/>
+                                                    <input type="text" class="form-control input-element" name="debit_credit_expiry" id="credit_expiry" placeholder="MM/YYYY" value="<?php echo $payments->credit_expiry; ?>"/>
                                                 </div>  
                                                 <div class="form-group col-md-6">
                                                     <label for="job_type" class="label-element">CVC</label>
-                                                    <input type="text" class="form-control input-element" name="debit_credit_cvc" id="credit_cvc" placeholder="CVC"/>
+                                                    <input type="text" class="form-control input-element" name="debit_credit_cvc" id="credit_cvc" placeholder="CVC" value="<?php echo $payments->credit_cvc; ?>"/>
                                                 </div>                                            
                                             </div>
                                         </div>
@@ -671,11 +435,11 @@ table input.form-control {
                                             <div class="row">                   
                                                 <div class="form-group col-md-6">
                                                     <label for="job_type" class="label-element">Routing Number</label>
-                                                    <input type="text" class="form-control input-element" name="ach_routing_number" id="ach_routing_number" />
+                                                    <input type="text" class="form-control input-element" name="ach_routing_number" id="ach_routing_number" value="<?php echo $payments->routing_number; ?>" />
                                                 </div>
                                                 <div class="form-group col-md-6">
                                                     <label for="job_type" class="label-element">Account Number</label>
-                                                    <input type="text" class="form-control input-element" name="ach_account_number" id="ach_account_number" />
+                                                    <input type="text" class="form-control input-element" name="ach_account_number" id="ach_account_number" value="<?php echo $payments->account_number; ?>" />
                                                 </div>  
                                             </div>
                                         </div>
@@ -683,15 +447,15 @@ table input.form-control {
                                             <div class="row">                   
                                                 <div class="form-group col-md-6">
                                                     <label for="job_type" class="label-element">Account Credential</label>
-                                                    <input type="text" class="form-control input-element" name="account_credentials" id="account_credentials"/>
+                                                    <input type="text" class="form-control input-element" name="account_credentials" id="account_credentials" value="<?php echo $payments->account_credentials; ?>"/>
                                                 </div>
                                                 <div class="form-group col-md-6">
                                                     <label for="job_type" class="label-element">Account Note</label>
-                                                    <input type="text" class="form-control input-element" name="account_note" id="account_note"/>
+                                                    <input type="text" class="form-control input-element" name="account_note" id="account_note" value="<?php echo $payments->account_note; ?>"/>
                                                 </div>  
                                                 <div class="form-group col-md-6">
                                                     <label for="job_type" class="label-element">Confirmation</label>
-                                                    <input type="text" class="form-control input-element" name="confirmation" id="confirmation"/>
+                                                    <input type="text" class="form-control input-element" name="confirmation" id="confirmation" value="<?php echo $payments->confirmation; ?>"/>
                                                 </div>                                            
                                             </div>
                                         </div>
@@ -699,15 +463,15 @@ table input.form-control {
                                             <div class="row">                   
                                                 <div class="form-group col-md-6">
                                                     <label for="job_type" class="label-element">Account Credential</label>
-                                                    <input type="text" class="form-control input-element" name="paypal_account_credentials" id="paypal_account_credentials"/>
+                                                    <input type="text" class="form-control input-element" name="paypal_account_credentials" id="paypal_account_credentials" value="<?php echo $payments->account_credentials; ?>"/>
                                                 </div>
                                                 <div class="form-group col-md-6">
                                                     <label for="job_type" class="label-element">Account Note</label>
-                                                    <input type="text" class="form-control input-element" name="paypal_account_note" id="paypal_account_note"/>
+                                                    <input type="text" class="form-control input-element" name="paypal_account_note" id="paypal_account_note" value="<?php echo $payments->account_note; ?>"/>
                                                 </div>  
                                                 <div class="form-group col-md-6">
                                                     <label for="job_type" class="label-element">Confirmation</label>
-                                                    <input type="text" class="form-control input-element" name="paypal_confirmation" id="paypal_confirmation"/>
+                                                    <input type="text" class="form-control input-element" name="paypal_confirmation" id="paypal_confirmation" value="<?php echo $payments->confirmation; ?>"/>
                                                 </div>                                            
                                             </div>
                                         </div>
@@ -715,15 +479,15 @@ table input.form-control {
                                             <div class="row">                   
                                                 <div class="form-group col-md-6">
                                                     <label for="job_type" class="label-element">Account Credential</label>
-                                                    <input type="text" class="form-control input-element" name="square_account_credentials" id="square_account_credentials"/>
+                                                    <input type="text" class="form-control input-element" name="square_account_credentials" id="square_account_credentials" value="<?php echo $payments->account_credentials; ?>"/>
                                                 </div>
                                                 <div class="form-group col-md-6">
                                                     <label for="job_type" class="label-element">Account Note</label>
-                                                    <input type="text" class="form-control input-element" name="square_account_note" id="square_account_note"/>
+                                                    <input type="text" class="form-control input-element" name="square_account_note" id="square_account_note" value="<?php echo $payments->account_note; ?>"/>
                                                 </div>  
                                                 <div class="form-group col-md-6">
                                                     <label for="job_type" class="label-element">Confirmation</label>
-                                                    <input type="text" class="form-control input-element" name="square_confirmation" id="square_confirmation"/>
+                                                    <input type="text" class="form-control input-element" name="square_confirmation" id="square_confirmation" value="<?php echo $payments->confirmation; ?>"/>
                                                 </div>                                            
                                             </div>
                                         </div>
@@ -731,11 +495,11 @@ table input.form-control {
                                             <div class="row">                   
                                                 <div class="form-group col-md-6">
                                                     <label for="job_type" class="label-element">Account Credential</label>
-                                                    <input type="text" class="form-control input-element" name="warranty_account_credentials" id="warranty_account_credentials"/>
+                                                    <input type="text" class="form-control input-element" name="warranty_account_credentials" id="warranty_account_credentials" value="<?php echo $payments->account_credentials; ?>"/>
                                                 </div>
                                                 <div class="form-group col-md-6">
                                                     <label for="job_type" class="label-element">Account Note</label>
-                                                    <input type="text" class="form-control input-element" name="warranty_account_note" id="warranty_account_note"/>
+                                                    <input type="text" class="form-control input-element" name="warranty_account_note" id="warranty_account_note" value="<?php echo $payments->account_note; ?>"/>
                                                 </div>                                         
                                             </div>
                                         </div>
@@ -743,11 +507,11 @@ table input.form-control {
                                             <div class="row">                   
                                                 <div class="form-group col-md-6">
                                                     <label for="job_type" class="label-element">Account Credential</label>
-                                                    <input type="text" class="form-control input-element" name="home_account_credentials" id="home_account_credentials"/>
+                                                    <input type="text" class="form-control input-element" name="home_account_credentials" id="home_account_credentials" value="<?php echo $payments->account_credentials; ?>"/>
                                                 </div>
                                                 <div class="form-group col-md-6">
                                                     <label for="job_type" class="label-element">Account Note</label>
-                                                    <input type="text" class="form-control input-element" name="home_account_note" id="home_account_note"/>
+                                                    <input type="text" class="form-control input-element" name="home_account_note" id="home_account_note" value="<?php echo $payments->account_note; ?>"/>
                                                 </div>                                         
                                             </div>
                                         </div>
@@ -755,11 +519,11 @@ table input.form-control {
                                             <div class="row">                   
                                                 <div class="form-group col-md-6">
                                                     <label for="job_type" class="label-element">Account Credential</label>
-                                                    <input type="text" class="form-control input-element" name="e_account_credentials" id="e_account_credentials"/>
+                                                    <input type="text" class="form-control input-element" name="e_account_credentials" id="e_account_credentials" value="<?php echo $payments->account_credentials; ?>"/>
                                                 </div>
                                                 <div class="form-group col-md-6">
                                                     <label for="job_type" class="label-element">Account Note</label>
-                                                    <input type="text" class="form-control input-element" name="e_account_note" id="e_account_note"/>
+                                                    <input type="text" class="form-control input-element" name="e_account_note" id="e_account_note" value="<?php echo $payments->account_note; ?>"/>
                                                 </div>                                         
                                             </div>
                                         </div>
@@ -767,15 +531,15 @@ table input.form-control {
                                             <div class="row">                   
                                                 <div class="form-group col-md-6">
                                                     <label for="job_type" class="label-element">Credit Card Number</label>
-                                                    <input type="text" class="form-control input-element" name="other_credit_number" id="other_credit_number" placeholder="0000 0000 0000 000" />
+                                                    <input type="text" class="form-control input-element" name="other_credit_number" id="other_credit_number" placeholder="0000 0000 0000 000" value="<?php echo $payments->credit_number; ?>" />
                                                 </div>
                                                 <div class="form-group col-md-6">
                                                     <label for="job_type" class="label-element">Credit Card Expiration</label>
-                                                    <input type="text" class="form-control input-element" name="other_credit_expiry" id="other_credit_expiry" placeholder="MM/YYYY"/>
+                                                    <input type="text" class="form-control input-element" name="other_credit_expiry" id="other_credit_expiry" placeholder="MM/YYYY" value="<?php echo $payments->credit_expiry; ?>"/>
                                                 </div>  
                                                 <div class="form-group col-md-6">
                                                     <label for="job_type" class="label-element">CVC</label>
-                                                    <input type="text" class="form-control input-element" name="other_credit_cvc" id="other_credit_cvc" placeholder="CVC"/>
+                                                    <input type="text" class="form-control input-element" name="other_credit_cvc" id="other_credit_cvc" placeholder="CVC" value="<?php echo $payments->credit_cvc; ?>"/>
                                                 </div>                                             
                                             </div>
                                         </div>
@@ -783,11 +547,11 @@ table input.form-control {
                                             <div class="row">                   
                                                 <div class="form-group col-md-6">
                                                     <label for="job_type">Account Credential</label>
-                                                    <input type="text" class="form-control input-element" name="other_payment_account_credentials" id="other_payment_account_credentials"/>
+                                                    <input type="text" class="form-control input-element" name="other_payment_account_credentials" id="other_payment_account_credentials" value="<?php echo $payments->account_credentials; ?>"/>
                                                 </div>
                                                 <div class="form-group col-md-6">
                                                     <label for="job_type">Account Note</label>
-                                                    <input type="text" class="form-control input-element" name="other_payment_account_note" id="other_payment_account_note"/>
+                                                    <input type="text" class="form-control input-element" name="other_payment_account_note" id="other_payment_account_note" value="<?php echo $payments->account_note; ?>"/>
                                                 </div>                                         
                                             </div>
                                         </div>
@@ -798,25 +562,25 @@ table input.form-control {
                                     <b>Notes</b>
                                     <!-- <textarea class="form-control" style="width:100%;"></textarea> -->
                                     <div class="form-group">
-                                        <textarea class="form-control" name="notes" rows="3"></textarea>
+                                        <textarea class="form-control" name="notes" rows="3"> <?php echo $workorder->comments; ?></textarea>
                                     </div>
                                 </div>                                        
                             </div>
                             <div class="row" style="margin-top:-46px;">
                                 <!-- <div class="form-group col-md-12"> -->
                                     <div class="col-md-6">
-                                        <input type="text" name="sales_re_name" class="form-control border-top-0 border-right-0 border-left-0">
+                                        <input type="text" name="sales_re_name" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $agreeDetails->sales_re_name; ?>">
                                         <b>Sales Rep's Name</b>
                                     </div>
                                     <div class="col-md-6">
-                                        <input type="text" name="sale_rep_phone" class="form-control border-top-0 border-right-0 border-left-0">
+                                        <input type="text" name="sale_rep_phone" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $agreeDetails->sale_rep_phone; ?>">
                                         <b>Cell Phone</b>
                                     </div>     
                                 <!-- </div> -->
                             </div>   
                             <div class="row">                   
                                 <div class="form-group col-md-12">
-                                    <input type="text" name="team_leader" class="form-control border-top-0 border-right-0 border-left-0">
+                                    <input type="text" name="team_leader" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $agreeDetails->team_leader; ?>">
                                     <b>Team Leader / Mentor</b>
                                 </div>                                        
                             </div>
@@ -827,13 +591,13 @@ table input.form-control {
                                 <div class="row" align="center">
 									<div class="col-md-6">
 										<input type="text" class="form-control input-element border-top-0 border-right-0 border-left-0" name="password" placeholder="Enter Password" required
-												   id="password" >
+												   id="password" value="<?php echo $workorder->password; ?>">
 										<b>Password</b> <span class="form-required">*</span>
 									</div>
 									<div class="col-md-6">
 										<input type="text" class="form-control input-element border-top-0 border-right-0 border-left-0" name="ssn"
 												   id="ssn"
-												   placeholder="XXX-XX-XXXX"/>
+												   placeholder="XXX-XX-XXXX" value="<?php echo $workorder->security_number; ?>"/>
                                         <b>SSN</b> <small class="help help-sm">(optional)</small>
 									</div>
                                 </div>
@@ -847,95 +611,95 @@ table input.form-control {
                             <br>
                                 <div class="row"> 
                                     <div class="col-md-6">
-                                        <input type="text" name="firstname" id="firstname" class="form-control border-top-0 border-right-0 border-left-0" onkeyup="primaryName()">
+                                        <input type="text" name="firstname" id="firstname" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $agreeDetails->firstname; ?>" onkeyup="primaryName()">
                                         <b>First name:</b>
                                     </div>
                                     <div class="col-md-6">
-                                        <input type="text" name="lastname" id="lastname" class="form-control border-top-0 border-right-0 border-left-0" onkeyup="primaryName()">
+                                        <input type="text" name="lastname" id="lastname" class="form-control border-top-0 border-right-0 border-left-0" onkeyup="primaryName()" value="<?php echo $agreeDetails->lastname; ?>">
                                         <b>Last name:</b>
                                     </div>
                                 </div>
                                 <div class="row"> 
                                     <div class="col-md-6">
-                                        <input type="text" name="firstname_spouse" id="firstname" class="form-control border-top-0 border-right-0 border-left-0" onkeyup="primaryName()">
+                                        <input type="text" name="firstname_spouse" id="firstname" class="form-control border-top-0 border-right-0 border-left-0" onkeyup="primaryName()" value="<?php echo $agreeDetails->firstname_spouse; ?>">
                                         <b>First name (Spouse):</b>
                                     </div>
                                     <div class="col-md-6">
-                                        <input type="text" name="lastname_spouse" id="lastname" class="form-control border-top-0 border-right-0 border-left-0" onkeyup="primaryName()">
+                                        <input type="text" name="lastname_spouse" id="lastname" class="form-control border-top-0 border-right-0 border-left-0" onkeyup="primaryName()" value="<?php echo $agreeDetails->lastname_spouse; ?>">
                                         <b>Last name (Spouse):</b>
                                     </div>
                                 </div>
                                 <div class="row"> 
                                     <div class="col-md-12">
-                                        <input type="text" name="address" class="form-control border-top-0 border-right-0 border-left-0">
+                                        <input type="text" name="address" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $agreeDetails->address; ?>">
                                         <b>Address:</b>
                                     </div>
                                 </div>
                                 <div class="row"> 
                                     <div class="col-md-8">
-                                        <input type="text" name="city" class="form-control border-top-0 border-right-0 border-left-0">
+                                        <input type="text" name="city" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $agreeDetails->city; ?>">
                                         <b>City:</b>
                                     </div>
                                     <div class="col-md-4">
-                                        <input type="text" name="state" class="form-control border-top-0 border-right-0 border-left-0">
+                                        <input type="text" name="state" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $agreeDetails->state; ?>"> 
                                         <b>State:</b>
                                     </div>
                                 </div>
                                 <div class="row"> 
                                     <div class="col-md-5">
-                                        <input type="text" name="postcode" class="form-control border-top-0 border-right-0 border-left-0">
+                                        <input type="text" name="postcode" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $agreeDetails->postcode; ?>">
                                         <b>Postcode:</b>
                                     </div>
                                     <div class="col-md-7">
-                                        <input type="text" name="county" class="form-control border-top-0 border-right-0 border-left-0">
+                                        <input type="text" name="county" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $agreeDetails->county; ?>">
                                         <b>County:</b>
                                     </div>
                                 </div>
                                 <div class="row"> 
                                     <div class="col-md-12">
-                                        <input type="text" name="phone" class="form-control border-top-0 border-right-0 border-left-0">
+                                        <input type="text" name="phone" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $workorder->phone_number; ?>">
                                         <b>Phone:</b>
                                     </div>
                                 </div>
                                 <div class="row"> 
                                     <div class="col-md-12">
-                                        <input type="text" name="mobile" class="form-control border-top-0 border-right-0 border-left-0">
+                                        <input type="text" name="mobile" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $workorder->mobile_number; ?>">
                                         <b>Mobile:</b>
                                     </div>
                                 </div>
                                 <div class="row"> 
                                     <div class="col-md-12">
-                                        <input type="text" name="email" class="form-control border-top-0 border-right-0 border-left-0">
+                                        <input type="text" name="email" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $workorder->email; ?>">
                                         <b>Email:</b>
                                     </div>
                                 </div>
                                 <div class="row"> 
                                     <div class="col-md-5">
-                                        <input type="text" name="first_ecn" class="form-control border-top-0 border-right-0 border-left-0">
+                                        <input type="text" name="first_ecn" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $agreeDetails->first_ecn; ?>">
                                         <b>1st Emergency Contact Name:</b>
                                     </div>
                                     <div class="col-md-7">
-                                        <input type="text" name="first_ecn_no" class="form-control border-top-0 border-right-0 border-left-0">
+                                        <input type="text" name="first_ecn_no" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $agreeDetails->first_ecn_no; ?>">
                                         <b>Phone:</b>
                                     </div>
                                 </div>
                                 <div class="row"> 
                                     <div class="col-md-5">
-                                        <input type="text" name="second_ecn" class="form-control border-top-0 border-right-0 border-left-0">
+                                        <input type="text" name="second_ecn" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $agreeDetails->second_ecn; ?>">
                                         <b>2nd Emergency Contact Name:</b>
                                     </div>
                                     <div class="col-md-7">
-                                        <input type="text" name="second_ecn_no" class="form-control border-top-0 border-right-0 border-left-0">
+                                        <input type="text" name="second_ecn_no" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $agreeDetails->second_ecn_no; ?>">
                                         <b>Phone:</b>
                                     </div>
                                 </div>
                                 <div class="row"> 
                                     <div class="col-md-5">
-                                        <input type="text" name="third_ecn" class="form-control border-top-0 border-right-0 border-left-0">
+                                        <input type="text" name="third_ecn" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $agreeDetails->third_ecn; ?>">
                                         <b>3rd Emergency Contact Name:</b>
                                     </div>
                                     <div class="col-md-7">
-                                        <input type="text" name="third_ecn_no" class="form-control border-top-0 border-right-0 border-left-0">
+                                        <input type="text" name="third_ecn_no" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $agreeDetails->third_ecn_no; ?>">
                                         <b>Phone:</b>
                                     </div>
                                 </div>
@@ -948,9 +712,9 @@ table input.form-control {
                                                 <td>
                                                     <div class="input-group mb-3">
                                                     <div class="input-group-prepend">
-                                                        <h4>$ <span class="equipment_cost">0.00</span></h4> 
+                                                        <h4>$ <span class="equipment_cost"><?php echo $workorder->subtotal; ?></span></h4> 
                                                     </div> &nbsp;
-                                                    <input type="hidden" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" style="font-size:20px;font-weight:bold;color:black;background-color: #fff;height:100%;" aria-label="Amount (to the nearest dollar)" id="equipmentCost" name="equipmentCost" value="0" readonly>
+                                                    <input type="hidden" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" style="font-size:20px;font-weight:bold;color:black;background-color: #fff;height:100%;" aria-label="Amount (to the nearest dollar)" id="equipmentCost" name="equipmentCost" value="<?php echo $workorder->subtotal; ?>" readonly>
                                                     </div>
                                                     <!-- <input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0"> -->
                                                 </td>
@@ -960,9 +724,9 @@ table input.form-control {
                                                 <td>
                                                     <div class="input-group mb-3">
                                                     <div class="input-group-prepend">
-                                                        <h4>$ &nbsp;<span class="sales_tax_total">0.00</span></h4> 
+                                                        <h4>$ &nbsp;<span class="sales_tax_total"><?php echo $workorder->taxes; ?></span></h4> 
                                                     </div> &nbsp;
-                                                    <input type="hidden" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" style="font-size:20px;font-weight:bold;color:black;" aria-label="Amount (to the nearest dollar)" id="salesTax" name="salesTax" value="0"  onkeyup="getTotalPrices()">
+                                                    <input type="hidden" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" style="font-size:20px;font-weight:bold;color:black;" aria-label="Amount (to the nearest dollar)" id="salesTax" name="salesTax" value="<?php echo $workorder->taxes; ?>"  onkeyup="getTotalPrices()">
                                                     </div>
                                                     <!-- <input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0"> -->
                                                 </td>
@@ -974,7 +738,7 @@ table input.form-control {
                                                     <div class="input-group-prepend">
                                                         <h4>$</h4> 
                                                     </div> &nbsp;
-                                                    <input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" style="margin: 10px 0;font-family: Sarabun, sans-serif;font-weight: 600;color:black;font-size: 1.5rem;" aria-label="Amount (to the nearest dollar)" id="installationCost" name="installationCost" value="0.00"  onkeyup="getTotalPrices()">
+                                                    <input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" style="margin: 10px 0;font-family: Sarabun, sans-serif;font-weight: 600;color:black;font-size: 1.5rem;" aria-label="Amount (to the nearest dollar)" id="installationCost" name="installationCost" value="<?php echo $workorder->installation_cost; ?>"  onkeyup="getTotalPrices()">
                                                     </div>
                                                     <!-- <input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0"> -->
                                                 </td>
@@ -986,7 +750,7 @@ table input.form-control {
                                                     <div class="input-group-prepend">
                                                         <h4>$</h4> 
                                                     </div> &nbsp;
-                                                    <input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" style="margin: 10px 0;font-family: Sarabun, sans-serif;font-weight: 600;color:black;font-size: 1.5rem;" aria-label="Amount (to the nearest dollar)" id="otps" name="otps" value="0.00"  onkeyup="getTotalPrices()">
+                                                    <input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" style="margin: 10px 0;font-family: Sarabun, sans-serif;font-weight: 600;color:black;font-size: 1.5rem;" aria-label="Amount (to the nearest dollar)" id="otps" name="otps" value="<?php echo $workorder->otp_setup; ?>"  onkeyup="getTotalPrices()">
                                                     </div>
                                                     <!-- <input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0"> -->
                                                 </td>
@@ -998,7 +762,7 @@ table input.form-control {
                                                     <div class="input-group-prepend">
                                                         <h4>$</h4> 
                                                     </div> &nbsp;
-                                                    <input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" style="margin: 10px 0;font-family: Sarabun, sans-serif;font-weight: 600;color:black;font-size: 1.5rem;" aria-label="Amount (to the nearest dollar)" id="monthlyMonitoring" name="monthlyMonitoring" value="0.00"  onkeyup="getTotalPrices()">
+                                                    <input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" style="margin: 10px 0;font-family: Sarabun, sans-serif;font-weight: 600;color:black;font-size: 1.5rem;" aria-label="Amount (to the nearest dollar)" id="monthlyMonitoring" name="monthlyMonitoring" value="<?php echo $workorder->monthly_monitoring; ?>"  onkeyup="getTotalPrices()">
                                                     </div>
                                                     <!-- <input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0"> -->
                                                 </td>
@@ -1008,9 +772,9 @@ table input.form-control {
                                                 <td>
                                                     <div class="input-group mb-3">
                                                     <div class="input-group-prepend">
-                                                        <h4>$ &nbsp;<span id="totalDue">0.00</span></h4> 
+                                                        <h4>$ &nbsp;<span id="totalDue"><?php echo $workorder->grand_total; ?></span></h4> 
                                                     </div> &nbsp;
-                                                    <input type="hidden" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 totalDue" style="font-size:20px;font-weight:bold;color:black;background-color: #fff;" aria-label="Amount (to the nearest dollar)" id="totalDue" name="totalDue" value="0" readonly>
+                                                    <input type="hidden" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 totalDue" style="font-size:20px;font-weight:bold;color:black;background-color: #fff;" aria-label="Amount (to the nearest dollar)" id="totalDue" name="totalDue" value="<?php echo $workorder->grand_total; ?>" readonly>
                                                     </div>
                                                     <!-- <input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0"> -->
                                                 </td>
@@ -1056,64 +820,60 @@ table input.form-control {
                                 </div>
                             </div>
                             <br><br>
+                            <!-- <div class="row signature_web"> -->
                             <div class="row signature_web">
                                 <div class="col-md-4">
-                                    <h6>Company Representative Approval</h6> <a data-toggle="modal" data-target=".companySignature" class="btn btn-success"><span class="fa fa-plus-square fa-margin-right"></span> Add Signature</a>
+                                    <h6>Company Representative Approval &emsp; <a data-toggle="modal" data-target=".companySignature"><i class="fa fa-pencil" aria-hidden="true"></i></a> </h6>
+                                    <img src="<?php echo base_url($workorder->company_representative_signature); ?>" class="img1">
                                     <div id="companyrep"></div>
-
-                                    <input type="hidden" id="saveCompanySignatureDB1a"
-                                           name="company_representative_approval_signature1a">
                                     <br>
 
                                     <label for="comp_rep_approval">Printed Name</label>
-                                    <!-- <input type="text6" class="form-control mb-3"
+                                    <!-- <input type="text" class="form-control mb-3"
                                            name="company_representative_printed_name"
-                                           id="company_representative_printed_name" placeholder=""/> -->
+                                           id="comp_rep_approval" value="<?php //echo $workorder->company_representative_name; ?>" />-->
                                         <select class="form-control mb-3" name="company_representative_printed_name">
                                             <option value="0">Select Name</option>
                                             <?php foreach($users_lists as $ulist){ ?>
-                                                <option <?php if($ulist->id == logged('id')){ echo "selected";} ?> value="<?php echo $ulist->id ?>"><?php echo $ulist->FName .' '.$ulist->LName; ?></option>
+                                                <option <?php if(isset($workorder)){ if($workorder->company_representative_name == $ulist->id){echo "selected";} } ?>  value="<?php echo $ulist->id ?>"><?php echo $ulist->FName .' '.$ulist->LName; ?></option>
                                             <?php } ?>
                                         </select>
-                                           <!-- <canvas id="canvas_web" style="border: 1px solid #ddd;"></canvas>
-                                            <input type="text" class="form-control mb-3" name="company_representative_printed_name" id="comp_rep_approval1" placeholder="Printed Name"/> -->
-                                            <input type="hidden" id="saveCompanySignatureDB1aM_web" name="company_representative_approval_signature1aM_web">
+                                           <input type="hidden" id="saveCompanySignatureDB1aM_web" name="company_representative_approval_signature1aM_web"> 
 
                                 </div>
                                 <div class="col-md-4">
-                                    <h6>Primary Account Holder</h6><a data-toggle="modal" data-target=".primarySignature" class="btn btn-warning"><span class="fa fa-plus-square fa-margin-right"></span> Add Signature</a>
+                                    <h6>Primary Account Holder &emsp; <a data-toggle="modal" data-target=".primarySignature"><i class="fa fa-pencil" aria-hidden="true"></i></a></h6>
+                                    <img src="<?php echo base_url($workorder->primary_account_holder_signature); ?>" class="img2">
                                     <div id="primaryrep"></div>
-                                    <input type="hidden" id="savePrimaryAccountSignatureDB2a"
-                                           name="primary_account_holder_signature2a">
                                     <br>
 
                                     <label for="comp_rep_approval">Printed Name</label>
-                                    <input type="text6" class="form-control mb-3" name="primary_account_holder_name"
-                                           id="primary_account_holder_name" placeholder=""/>
-                                    <!-- <select class="form-control mb-3" name="primary_account_holder_name">
+                                    <input type="text" class="form-control mb-3" name="primary_account_holder_name"
+                                           id="comp_rep_approval" placeholder="" value="<?php echo $workorder->primary_account_holder_name; ?>"/>
+
+                                        <!-- <select class="form-control mb-3" name="primary_account_holder_name">
                                             <option value="0">Select Name</option>
                                             <?php //foreach($users_lists as $ulist){ ?>
-                                                <option value="<?php //echo $ulist->id ?>"><?php //echo $ulist->FName .' '.$ulist->LName; ?></option>
+                                                <option <?php //if(isset($workorder)){ if($workorder->primary_account_holder_name == $ulist->id){echo "selected";} } ?>  value="<?php //echo $ulist->id ?>"><?php echo $ulist->FName .' '.$ulist->LName; ?></option>
                                             <?php //} ?>
-                                    </select> -->
-                                    
+                                        </select> -->
+
                                            <input type="hidden" id="saveCompanySignatureDB1aM_web2" name="primary_representative_approval_signature1aM_web">
 
                                 </div>
                                 <div class="col-md-4">
-                                    <h6>Secondary Account Holder</h6><a data-toggle="modal" data-target=".secondarySignature" class="btn btn-danger"><span class="fa fa-plus-square fa-margin-right"></span> Add Signature</a>
+                                    <h6>Secondary Account Holder &emsp; <a data-toggle="modal" data-target=".secondarySignature"><i class="fa fa-pencil" aria-hidden="true"></i></a></h6>
+                                    <img src="<?php echo base_url($workorder->secondary_account_holder_signature); ?>" class="img3">
                                     <div id="secondaryrep"></div>
-                                    <input type="hidden" id="saveSecondaryAccountSignatureDB3a"
-                                           name="secondary_account_holder_signature3a">
                                     <br>
 
                                     <label for="comp_rep_approval">Printed Name</label>
-                                    <input type="text6" class="form-control mb-3" name="secondery_account_holder_name"
-                                           id="secondery_account_holder_name" placeholder=""/>
+                                    <input type="text" class="form-control mb-3" name="secondery_account_holder_name"
+                                           id="comp_rep_approval" placeholder="" value="<?php echo $workorder->secondary_account_holder_name; ?>"/>
                                         <!-- <select class="form-control mb-3" name="secondery_account_holder_name">
                                             <option value="0">Select Name</option>
                                             <?php //foreach($users_lists as $ulist){ ?>
-                                                <option value="<?php //echo $ulist->id ?>"><?php //echo $ulist->FName .' '.$ulist->LName; ?></option>
+                                                <option <?php //if(isset($workorder)){ if($workorder->secondary_account_holder_name == $ulist->id){echo "selected";} } ?>  value="<?php //echo $ulist->id ?>"><?php echo $ulist->FName .' '.$ulist->LName; ?></option>
                                             <?php //} ?>
                                         </select> -->
 
@@ -1270,6 +1030,73 @@ table input.form-control {
 
 <!-- Chart code -->
 <script>
+jQuery(document).ready(function () {
+
+    var paymentMethod = $('#payment_method_value').val();
+    
+    if(paymentMethod == 'Cash')
+    {
+        
+    }
+    else if(paymentMethod == 'Check')
+    {
+        $("#check_area").show();
+    }
+    else if(paymentMethod == 'Credit Card')
+    {
+        $("#credit_card").show();
+    }
+    else if(paymentMethod == 'Debit Card')
+    {
+        $("#debit_card").show();
+    }
+    else if(paymentMethod == 'ACH')
+    {
+        $("#ach_area").show();
+    }
+    else if(paymentMethod == 'Venmo')
+    {
+        $("#venmo_area").show();
+    }
+    else if(paymentMethod == 'Paypal')
+    {
+        // alert('test');
+        // $("#paypal_area").css("display", "block");
+        $('#paypal_area').show();
+    }
+    else if(paymentMethod == 'Square')
+    {
+        $("#square_area").show();
+    }
+    else if(paymentMethod == 'Invoicing')
+    {
+        $("#invoicing").show();
+    }
+    else if(paymentMethod == 'Warranty Work')
+    {
+        $("#warranty_area").show();
+    }
+    else if(paymentMethod == 'Home Owner Financing')
+    {
+        $("#home_area").show();
+    }
+    else if(paymentMethod == 'e-Transfer')
+    {
+        $("#e_area").show();
+    }
+    else if(paymentMethod == 'Other Credit Card Professor')
+    {
+        $("#other_credit_card").show();
+    }
+    else if(paymentMethod == 'Other Payment Type')
+    {
+        $("#other_payment_area").show();
+    }
+    // else
+    // {
+    //     alert(paymentMethod);
+    // }
+});
 
 function primaryName(){
      // $('.invAetf').keyup(function(e){
@@ -1452,6 +1279,90 @@ createSeries(
 //   "Series #2",
 //   createValueAxis("Funding", false)
 // );
+</script>
+<script>
+    // var canvas = document.getElementById("canvas");    
+    // var dataURL = canvas.toDataURL("image/png");
+    // $("#saveCompanySignatureDB1aM").val(dataURL);
+
+    // var canvas2 = document.getElementById("canvas2");    
+    // var dataURL2 = canvas2.toDataURL("image/png");
+    // $("#savePrimaryAccountSignatureDB2aM").val(dataURL2);
+
+    // var canvas3 = document.getElementById("canvas3");    
+    // var dataURL3 = canvas3.toDataURL("image/png");
+    // $("#saveSecondaryAccountSignatureDB3aM").val(dataURL3);
+
+$(document).on('click touchstart','#canvas',function(){
+    // alert('test');
+    var canvas_web = document.getElementById("canvas");    
+    var dataURL = canvas_web.toDataURL("image/png");
+    $("#saveCompanySignatureDB1aM").val(dataURL);
+});
+
+$(document).on('click touchstart','#canvas2',function(){
+    // alert('test');
+    var canvas_web2 = document.getElementById("canvas2");    
+    var dataURL = canvas_web2.toDataURL("image/png");
+    $("#savePrimaryAccountSignatureDB2aM").val(dataURL);
+});
+
+$(document).on('click touchstart','#canvas3',function(){
+    // alert('test');
+    var canvas_web3 = document.getElementById("canvas3");    
+    var dataURL = canvas_web3.toDataURL("image/png");
+    $("#saveSecondaryAccountSignatureDB3aM").val(dataURL);
+});
+
+
+
+$(document).on('click touchstart','.edit_first_signature',function(){
+    // alert('test');
+    var first = $("#saveCompanySignatureDB1aM").val();
+    // alert(first);
+    $("#saveCompanySignatureDB1aM_web").val(first);
+
+    $(".img1").hide();
+
+    var input_conf = '<img src="'+first+'">'
+
+    $('#companyrep').html(input_conf);
+    
+    $('.companySignature').modal('hide');
+    
+});
+
+$(document).on('click touchstart','.edit_second_signature',function(){
+    // alert('test');
+    var first = $("#savePrimaryAccountSignatureDB2aM").val();
+    // alert(first);
+    $("#saveCompanySignatureDB1aM_web2").val(first);
+
+    $(".img2").hide();
+
+    var input_conf = '<img src="'+first+'">'
+
+    $('#primaryrep').html(input_conf);
+
+    $('.primarySignature').modal('hide');
+    
+});
+
+$(document).on('click touchstart','.edit_third_signature',function(){
+    // alert('test');
+    var first = $("#saveSecondaryAccountSignatureDB3aM").val();
+    // alert(first);
+    $("#saveCompanySignatureDB1aM_web3").val(first);
+
+    $(".img3").hide();
+
+    var input_conf = '<img src="'+first+'">'
+
+    $('#secondaryrep').html(input_conf);
+
+    $('.secondarySignature').modal('hide');
+    
+});
 </script>
 <script>
 $('#security_number').keyup(function() {

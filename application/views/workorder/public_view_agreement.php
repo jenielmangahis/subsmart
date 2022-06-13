@@ -1,7 +1,6 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-
-<?php include viewPath('includes/header'); ?>
+<link href="<?php echo base_url() ?>assets/dashboard/css/bootstrap.min.css" rel="stylesheet" type="text/css">
 <style>
 /* common */
 .ribbon {
@@ -267,197 +266,6 @@ border: none;
     display: none;
 }
 
-@media only screen and (max-device-width: 600px) {
-    .label-element{
-        position:absolute;
-        top:-8px;
-        left:25px;
-        font-size:12px;
-        color:#666;
-        }
-    .input-element{
-        padding:30px 5px 10px 8px;
-        width:100%;
-        height:55px;
-        /* border:1px solid #CCC; */
-        font-weight: bold;
-        margin-top: -15px;
-        }
-
-    .select-wrap 
-    {
-    border: 2px solid #e0e0e0;
-    /* border-radius: 4px; */
-    margin-top: -10px;
-    /* margin-bottom: 10px; */
-    padding: 0 5px 5px;
-    width:100%;
-    /* background-color:#ebebeb; */
-    }
-
-    .select-wrap label
-    {
-    font-size:10px;
-    text-transform: uppercase;
-    color: #777;
-    padding: 2px 8px 0;
-    }
-
-    .m_select
-    {
-    /* background-color: #ebebeb;
-    border:0px; */
-    border-color: white !important;
-    border:0px !important;
-    outline:0px !important;
-    }
-    .select2 .select2-container .select2-container--default{
-        /* background-color: #ebebeb;
-    border:0px; */
-    border-color: white !important;
-    border:0px !important;
-    outline:0px !important;
-    }
-
-    .select2-container--default .select2-selection--single {
-    background-color: #fff;
-    border: 1px solid #fff !important;
-    border-radius: 4px;
-    }
-
-    .sub_label{
-        font-size:12px !important;
-    }
-
-    .signature_web
-    {
-        display: none;
-    }
-
-    .signature_mobile
-    {
-        display: block;
-    }
-
-    .hidden_mobile_view{
-        display: none;
-    }
-
-    .show_mobile_view
-    {
-        display: block;
-    }
-
-    .table_mobile
-    {
-        font-size:14px;
-    }
-
-    div.dropdown-wrapper select { 
-    width:115% /* This hides the arrow icon */; 
-    background-color:transparent /* This hides the background */; 
-    background-image:none; 
-    -webkit-appearance: none /* Webkit Fix */; 
-    border:none; 
-    box-shadow:none; 
-    padding:0.3em 0.5em; 
-    font-size:13px;
-    }
-    .signature-pad-canvas-wrapper {
-    margin: 15px 0 0;
-    border: 1px solid #cbcbcb;
-    border-radius: 3px;
-    overflow: hidden;
-    position: relative;
-}
-
-    .signature-pad-canvas-wrapper::after {
-        content: 'Name';
-        border-top: 1px solid #cbcbcb;
-        color: #cbcbcb;
-        width: 100%;
-        margin: 0 15px;
-        display: inline-flex;
-        position: absolute;
-        bottom: 10px;
-        font-size: 13px;
-        z-index: -1;
-    }
-
-	.mobile_size
-	{
-		font-size:14px !important;
-		margin-left:50% !important;
-	}
-
-	.mobile_div
-	{
-		margin-left:0px !important;
-	}
-
-	.map_area_mobile
-	{
-		width:400px !important;
-	}
-
-	/* .mobile_btn a
-	{
-		width:100px !important;
-		height:20px !important;
-	} */
-
-	.user-menu
-	{
-		margin-right:0px !important;
-	}
-
-	.mobile_header
-	{
-		margin:5% !important;
-	}
-}
-
-.multipleInput-container {
-     border:1px #999 solid;
-     padding:1px;
-     padding-bottom:0;
-     cursor:text;
-     font-size:15px;
-     width:100%;
-	border-radius: 6px
-}
- 
-.multipleInput-container input {
-    font-size:15px;
-    clear:both;
-    height:60px;
-    border:0;
-    margin-bottom:1px;
-}
- 
-.multipleInput-container ul {
-    list-style-type:none;
-}
- 
-li.multipleInput-email {
-    float:left;
-    padding:6px ;
-    color: #fff;
-	background: #FD9160;
-	margin-top: 0;
-	border-radius: 6px;
-	margin: 6px 2px 6px 6px;
-}
- 
-.multipleInput-close {
-    width:16px;
-    height:16px;
-    display:block;
-    float:right;
-    margin: -2px 0px 0px 8px;
-	color: #fff;
-	font-size: 16px;
-}
 .box-left-mini{
     /* float:left; */
     background-image:url(website-content/hotcampaign.png);
@@ -495,42 +303,102 @@ img.company-logo2 {
   background-color: #76D3DB;
   text-decoration: underline;
 }
+table input.form-control {
+   height:25px !important;
+}
 
+.input-group-text
+{
+    padding:3px !important;
+}
+.itemTable td:nth-of-type(1) {width:30%;}
+.itemTable  td:nth-of-type(2) {width: 15%;}
+.itemTable  td:nth-of-type(3) {width:15%;}
+.itemTable  td:nth-of-type(4) {width:20%;}
+
+.itemTable2 td:nth-of-type(1) {max-width:80px;}
+.itemTable2  td:nth-of-type(2) {
+    white-space:nowrap;
+   /* border: 1px solid black; */
+   max-width: 100px;
+   overflow-y:hidden;
+}
+/* .itemTable2  td:nth-of-type(3) {width:25%;} */
+.itemTable2  td:nth-of-type(4) {width:15%;}
+
+
+@media screen and (max-width:500px){
+    body{
+        /* color:white; */
+        font-size:10px !important;
+    }  
+    table thead
+    {
+        font-size:12px;
+    }
+    .summary_total
+    {
+        font-size: 10px !important;
+    }
+    .summary_total h4 input span
+    {
+        font-size: 10px !important;
+    }
+    .equipment_cost
+    {
+        font-size: 14px !important;
+    }
+    .itemTable span
+    {
+        font-size:10px;
+    }
+    .itemTable td
+    {
+        padding:0;
+    }
+    .itemTable input[type=text]
+    {
+        height:100% !important;
+    }
+}
+
+@media screen and (max-width:1800px){
+    table input[type=text],
+    input[type=email],
+    input[type=url],
+    /* input[type=checkbox], */
+    input[type=password] {
+    width: 100%;
+    font-size:10px;
+    }
+    /* table input[type=checkbox] {
+        width: 80%;
+    } */
+    table thead
+    {
+        font-size:14px;
+    }
+    .withCheck
+    {
+        width:100% !important;
+    }
+}
 </style>
     <!-- page wrapper start -->
     <input type="hidden" value="<?= $workorder->id; ?>" id="workorderId"/>
-	<div class="wrapper" role="wrapper">
-    <?php include viewPath('includes/sidebars/workorder'); ?>
-    <div wrapper__section>
-        <?php include viewPath('includes/notifications'); ?>
+	<div class="" role="wrapper">
+    <div style="margin-left:20px;margin-right:20px;">
 				<!-- <div class="order-heading">
 					<h3>Work Order # <?php //echo $workorder->work_order_number ?></h3>
 				</div> -->
 
-				<div class="order-menu">
+				<div class="">
 					<div class="row">
 						<div class="col-md-4">
-										<div class="user-return">
-											<a href="<?php echo base_url('workorder'); ?>"><i class="fa fa-angle-left" aria-hidden="true"></i> Return to Work Orders</a>
-										</div>
 						</div>
 						<div class="col-md-8">
 								<div class="order-right text-right">
-									<div class="user-menu">
-										<a class="btn sand-btn margin-right-sec" href="<?php echo base_url('job/work_order_job/'. $workorder->id) ?>"><span class="fa fa-money fa-margin-right"></span> Create Job</a>
-									</div> 
-									
-									<div class="user-menu mobile_btn"><br>
-										<?php if($workorder->work_order_type_id == '4'){ ?>
-											<a class="btn btn-success" href="#" data-toggle="modal" data-target="#sharePreviewAgree"><span class="fa fa-edit"></span> Share</a>
-											<?php }else{ ?>
-											<a class="btn btn-success" href="#" data-toggle="modal" data-target="#sharePreview"><span class="fa fa-edit"></span> Share</a>
-                                        <?php } ?>
-										<?php if($workorder->work_order_type_id == '2'){ ?>
-											<a class="btn btn-sec" href="<?php echo base_url('workorder/editAlarm/' . $workorder->id) ?>"><span class="fa fa-edit"></span> Edit</a>
-										<?php }else{ ?>
-                                        	<a class="btn btn-sec" href="<?php echo base_url('workorder/edit/' . $workorder->id) ?>"><span class="fa fa-edit"></span> Edit</a>
-                                        <?php } ?>
+									<div class="user-menu mobile_btn">
 									<?php if($workorder->work_order_type_id == 1){ ?>
                        					<a href="<?php echo base_url('workorder/work_order_pdf/' . $workorder->id) ?>" class="btn btn-sec download_work_order_pdfsss" acs-id="<?php echo $workorder->customer_id; ?>" workorder-id="<?php echo $workorder->id; ?>"><span class="fa fa-file-pdf-o"></span> PDF</a>
 									<?php } else{ ?>
@@ -538,36 +406,8 @@ img.company-logo2 {
 									<?php } ?>
 
           								<a class="btn btn-sec" data-print-modal="open" href="#" onclick="printDiv('printableArea')" value="Print Work Order"><span class="fa fa-print"></span> Print</a>
-										  <div class="user-menu">
-									<div class="dropdown dropdown-btn dropdown-inline margin-left-sec"><br>
-											<button class="btn btn-sec btn-regular dropdown-toggle" type="button" id="dropdown-edit" data-toggle="dropdown" aria-expanded="false">
-												<span class="btn-label">More</span><span class="caret-holder"><span class="caret"></span></span>
-											</button>
-											<ul class="dropdown-menu dropdown-menu-right usermenu-dropdown" role="menu" aria-labelledby="dropdown-edit">
-												<li ><a  href="#" ><span class="fa fa-flag-o icon"></span> Change Status</a></li>
-												<li class="divider"></li>
-												<!-- <li ><a  href="#" ><span class="fa fa-files-o icon"></span> Clone Work Order</a></li> -->
-												<li role="presentation"><a role="menuitem"
-                                                                               tabindex="-1"
-                                                                               href="#"
-                                                                               data-toggle="modal"
-                                                                               data-target="#modalCloneWorkorder"
-                                                                               data-id="<?php echo $workorder->id ?>"
-                                                                               data-wo_num="<?php echo $workorder->work_order_number ?>" class="clone-workorder"><span
-                                                                    class="fa fa-files-o icon clone-workorder">
-
-                                                        </span> Clone Work Order</a>
-												<li ><a href="<?php echo base_url('job/work_order_job/'. $workorder->id) ?>" ><span class="fa fa-file-text-o icon"></span> Convert to Job</a></li>
-												<li ><a href="" acs-id="<?php echo $workorder->customer_id; ?>" workorder-id="<?php echo $workorder->id; ?>" class="send_to_customer"><span class="fa fa-envelope-o icon"></span> Send to Customer</a></li>
-												<li ><a href="" acs-id="<?php echo $workorder->customer_id; ?>" workorder-id="<?php echo $workorder->id; ?>" class="send_to_company"><span class="fa fa-envelope-o icon"></span> Send to Company</a></li>
-												<li class="divider"></li>
-												<!-- <li ><a   href="#" ><span class="fa fa-trash-o icon"></span> Delete Work Order</a></li> -->
-												<li role="presentation">
-                                                        <a href="#" work-id="<?php echo $workorder->id; ?>" id="delete_workorder"><span class="fa fa-trash-o icon"></span> Delete Work Order </a></li>
-												<li ><a   href="#" id="esignButton"><span class="fa fa-envelope-o icon"></span> eSign</a></li>
-											</ul>
-										</div>
-									</div>
+									
+									
 								</div>
 						</div>
 					</div>
@@ -575,8 +415,8 @@ img.company-logo2 {
 			</div>
 
 
-			<div class="row" style="padding:1%;margin-top:-30px;">
-				<div class="col-md-12" id="printableArea">
+			<div class="row" id="printableArea">
+				<div class="col-md-12">
 					<div role="white__holder" style="background-color:;padding:5%;border:solid #F4F2F6 3px;box-shadow: 10px 5px 5px #DEDEDE;">
 					<div class="ribbon ribbon-top-left"><span><?php echo $workorder->status ?></span></div>
 					<div class="mobile_header"><?php echo $workorder->header; ?></div>
@@ -612,10 +452,10 @@ img.company-logo2 {
 															<td align="left"><div style=""><b>Date:</b> </div></td>
 															<td align="right"><?php $wDate = $workorder->date_created; echo date("m-d-Y", strtotime($wDate) ); ?></td>
 														</tr>
-														<tr>
+														<!-- <tr>
 															<td align="left"><div style=""><b>Type:</b> </div></td>
-															<td align="right"><?php echo $workorder->job_type ?></td>
-														</tr>
+															<td align="right"><?php //echo $workorder->job_type ?></td>
+														</tr> -->
 															<td align="left"><div style=""><b>Priority:</b> </div></td>
 															<td align="right"><?php echo $workorder->priority ?></td>
 														</tr>
@@ -681,46 +521,58 @@ img.company-logo2 {
 
 		         							   <div class="user-info">
 		         							   		<div class="ul-info">
-		         							   			<ul>
-		         							   				<li><a href="#" class="ul-head"> FROM:</a></li>
-															<!-- <hr style="border: 1px solid gray;"> -->
-		         							   				<li><a href="#" class="ul-head"><?php echo $company->business_name ?></a></li>
-		         							   				<li><a href="#" class="ul-text">License: EF, AL, MS</a></li>
-		         							   				<li><a href="#" class="ul-text"><?php echo $company->business_address ?></a></li>
-		         							   				<!-- <li><a href="" class="ul-text">Pensacola, FL, 32526</a></li> -->
-		         							   				<li><a href="#" class="ul-text">Email: <?php echo $company->email_address ?></a></li>
-		         							   				<li><a href="#" class="ul-text">Phone: <?php echo $company->phone_number ?> </a></li>			   			
-		         							   			</ul>
-		         							   		</div><br>
+                                                        <b><span> FROM:</span></b>
+		         							   			<table>
+                                                            <tr>
+                                                                <td><span><?php echo $company->business_name ?></span></td>	
+                                                            </tr>	   		
+                                                            <tr>
+                                                                <td><span>License: EF, AL, MS</span></td>
+                                                            </tr>	
+                                                            <tr>
+                                                                <td><span><?php echo $company->business_address ?></span></td>
+                                                            </tr>	
+                                                            <tr>
+                                                                <td><span>Email: <?php echo $company->email_address ?></span></td>
+                                                            </tr>	
+                                                            <tr>
+                                                                <td><span>Phone: <?php echo $company->phone_number ?> </span></td>	
+                                                            </tr>	
+		         							   			</table>
+		         							   		</div>
+                                                        <br>
 		         							   		<div class="ul-info">
-		         							   			<ul>
-		         							   				<li><a href="#" class="ul-head">TO:</a></li>
-															<!-- <hr style="border: 1px solid gray;"> -->
-		         							   				<li><span class="ul-head line"><?php echo $customer->contact_name .''. $customer->first_name .' '. $customer->middle_name .' '. $customer->last_name ?></span>
-																<!-- <a href="" class="line ul-btns-text" style="color:green;">view</a> -->
-																</li>
-															<li><a href="#" class="ul-text"><?php echo $workorder->job_location .' '. $workorder->city .' '. $workorder->state .', '. $workorder->zip_code .', '. $workorder->cross_street  ?></a></li>
-															<li><a href="#" class="ul-text">Phone: <?php echo $workorder->phone_number ?></a></li>
-															<li><a href="#" class="ul-text">Email: <?php echo $workorder->email ?></a></li>
-		         							   			
-		         							   			</ul>
-		         							   		</div><br>
+		         							   			<b><span>TO:</span></b>
+		         							   			<table>
+                                                            <tr>
+                                                                <td><span class="ul-head line"><?php echo $customer->contact_name .''. $customer->first_name .' '. $customer->middle_name .' '. $customer->last_name ?></span></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><span><?php echo $workorder->job_location .' '. $workorder->city .' '. $workorder->state .', '. $workorder->zip_code .', '. $workorder->cross_street  ?></span></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><span>Phone: <?php echo $workorder->phone_number ?></span></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><span>Email: <?php echo $workorder->email ?></span></td>
+                                                            </tr>
+		         							   			</table>
+		         							   		</div>
 
 													<?php if($workorder->work_order_type_id == '3'){ }elseif($workorder->work_order_type_id == '4'){ }
 													else{ ?>
 		         							   		<div class="ul-info">
-		         							   			<ul>
-		         							   				<li><a href="#" class="ul-head">JOB:</a></li>
-		         							   				<li>Job Name: <?php echo $workorder->job_name ?></li>
-		         							   				<!-- <li><a href="" class="ul-text">Estimate #EST-000010 </a></li>	 -->
-		         							   			<br>
-		         							   			</ul>
+		         							   			<b><span>JOB:</span></b>
+		         							   			<table>
+                                                            <tr>
+		         							   				    <td>Job Name: <?php echo $workorder->job_name ?></td>
+                                                            </tr>
+		         							   			</table>
 		         							   		</div>
 													<?php } ?>
 
-														<br>
-
 													<?php if($workorder->work_order_type_id == 1){ ?>
+                                                        <br>
 														<div class="ul-info">
 															<ul>
 																<li><b>CUSTOM FIELDS</b></li>
@@ -732,9 +584,7 @@ img.company-logo2 {
 																<?php } ?>
 															
 															</ul>
-															<br>
 														</div>
-														<br>
 													<?php }else{ } ?>
 
 													<?php if($workorder->work_order_type_id == 2){ ?>
@@ -762,15 +612,16 @@ img.company-logo2 {
 		         							   			</ul>
 		         							   		</div> -->
 		         							   			<div class="ul-info">
-			         							   			<ul>
-			         							   				<li><a href="#" class="ul-head">Job Location </a></li>
-																<li class="show_mobile_view"><hr></li>
-																<li><?php echo $workorder->job_location .' '. $workorder->city .' '. $workorder->state .', '. $workorder->zip_code .', '. $workorder->cross_street  ?> &emsp; 
-																<!-- <a href="#" style="color:green;">Show Map</a> -->
-																</li>	
-			         							   				<!-- <li></li>	 -->
-			         							   			
-			         							   			</ul>
+                                                            <br>
+                                                            <b><span>Job Location </span></b></td>
+			         							   			<table>
+                                                                <tr>
+                                                                    <td class="show_mobile_view"><hr></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><?php echo $workorder->job_location .' '. $workorder->city .' '. $workorder->state .', '. $workorder->zip_code .', '. $workorder->cross_street  ?></td>	
+                                                                </tr>
+			         							   			</table>
 		         							   			</div>
 														<?php if($workorder->work_order_type_id == '3'){ } elseif($workorder->work_order_type_id == '4'){ } else{ ?>
 														<hr>
@@ -1067,12 +918,12 @@ img.company-logo2 {
 										<div class="row" style="font-size:;">                   
 											<div class=" col-md-6 box-left-mini">
 												<center>
-												<div class="front" style="text-align:center;background-color:#4a5594;color:white;padding:1%;border-radius:20px;width:95%;">
-													<h4>Items</h4>
+												<div class="front" style="text-align:center;background-color:#4a5594;color:white;padding:0.5%;border-radius:20px;width:95%;">
+													<h6>Items</h6>
 												</div>
 												</center><br>
 												<div class="behind_container" style="background-color:#ced4e4;margin-top:-20px;padding:20px;">
-													<table  class="table-bordered">
+													<table  class="table-bordered itemTable">
 														<thead align="center">
 															<th>Items</th>
 															<th>Quantity</th>
@@ -1082,10 +933,10 @@ img.company-logo2 {
 														<tbody>
 															<?php foreach($agree_items as $aItems) { ?>
 															<tr>
-																<td><input type="text" style="background-color:#ced4e4;" class="form- border-top-0 border-right-0 border-left-0 border-bottom-0 items" name="item[]" value="<?php echo $aItems->item; if($aItems->check_data == NULL){ echo ''; }else{ echo ' ('. $aItems->check_data .') ';} ?>" readonly></td>
-																<td><input type="text" style="background-color:#ced4e4;" class="form- border-top-0 border-right-0 border-left-0 border-bottom-0" name="qty[]" value="<?php echo $aItems->qty ?>" readonly></td>
-																<td><input type="text" style="background-color:#ced4e4;" class="form- border-top-0 border-right-0 border-left-0 border-bottom-0" name="location[]" value="<?php echo $aItems->location ?>" readonly></td>
-																<td><input type="text" style="background-color:#ced4e4;" class="form- border-top-0 border-right-0 border-left-0 border-bottom-0 allprices" name="price[]"  value="<?php echo $aItems->price ?>" readonly></td>
+																<td><?php echo $aItems->item; if($aItems->check_data == NULL){ echo ''; }else{ echo ' ('. $aItems->check_data .') ';} ?></td>
+																<td><?php echo $aItems->qty ?></td>
+																<td><?php echo $aItems->location ?></td>
+																<td><?php echo $aItems->price ?></td>
 															</tr>
 															<?php } ?>
 														</tbody>
@@ -1748,209 +1599,9 @@ img.company-logo2 {
 					<div class="mapouter"><div class="gmap_canvas map_area_mobile"><iframe width="100%" height="500" id="gmap_canvas" src="https://maps.google.com/maps?q=2880%20Broadway,%20New%20York&t=&z=13&ie=UTF8&iwloc=&output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe><a href="https://123movies-to.org"></a><br><style>.mapouter{position:relative;text-align:right;height:500px;width:600px;}</style><a href="https://www.embedgooglemap.net"></a><style>.gmap_canvas {overflow:hidden;background:none!important;height:500px;width:600px;}</style></div></div>
 				</div>
 			</div> -->
-			<br>
-			<div class="row">
-				<div class="col-md-4">
-					<div class="user-return">
-						<a href="<?php echo base_url('workorder'); ?>"><i class="fa fa-angle-left" aria-hidden="true"></i> Return to Work Orders</a>
-				</div>
-			</div>
 		</div>
 	</div>
 	 
-
- 
-<!-- <div class="mdc-top-app-bar-fixed-adjust demo-container demo-container-1 d-flex d-lg-none">
-  <div class="mdc-bottom-navigation">
-      <nav class="mdc-bottom-navigation__list">
-        <span class="mdc-bottom-navigation__list-item mdc-ripple-surface mdc-ripple-surface--primary" data-mdc-auto-init="MDCRipple" data-mdc-ripple-is-unbounded>
-          <span class="material-icons mdc-bottom-navigation__list-item__icon">history</span>
-          <span class="mdc-bottom-navigation__list-item__text">Recents</span>
-        </span>
-        <span class="mdc-bottom-navigation__list-item mdc-bottom-navigation__list-item--activated mdc-ripple-surface mdc-ripple-surface--primary" data-mdc-auto-init="MDCRipple" data-mdc-ripple-is-unbounded>
-          <span class="material-icons mdc-bottom-navigation__list-item__icon">favorite</span>
-          <span class="mdc-bottom-navigation__list-item__text">Favourites</span>
-        </span>
-        <span class="mdc-bottom-navigation__list-item mdc-ripple-surface mdc-ripple-surface--primary" data-mdc-auto-init="MDCRipple" data-mdc-ripple-is-unbounded>
-          <span class="material-icons mdc-bottom-navigation__list-item__icon">
-            <svg style="width:24px;height:24px" viewBox="0 0 24 24">
-              <path d="M12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,12.5A1.5,1.5 0 0,1 10.5,11A1.5,1.5 0 0,1 12,9.5A1.5,1.5 0 0,1 13.5,11A1.5,1.5 0 0,1 12,12.5M12,7.2C9.9,7.2 8.2,8.9 8.2,11C8.2,14 12,17.5 12,17.5C12,17.5 15.8,14 15.8,11C15.8,8.9 14.1,7.2 12,7.2Z"></path>
-            </svg>
-          </span>
-          <span class="mdc-bottom-navigation__list-item__text">Nearby</span>
-        </span>
-      </nav>
-    </div> 
-</div> -->
-
-<!-- MODAL CLONE WORKORDER -->
-<div class="modal fade" id="modalCloneWorkorder" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                    <h4 class="modal-title">Clone Work Order</h4>
-                </div>
-                <div class="modal-body">
-                    <form name="clone-modal-form">
-                        <div class="validation-error" style="display: none;"></div>
-                        <p>
-                            You are going create a new work order based on <b>Work Order #<span
-                                        class="work_order_no"></span> <input type="hidden" id="wo_id" name="wo_id"> </b>.<br>
-                            Afterwards you can edit the newly created work order.
-                        </p>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-default" type="button" data-dismiss="modal">Close</button>
-                    <button id="clone_workorder" class="btn btn-primary" type="button" data-clone-modal="submit">Clone
-                        Work Order
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-	
-	<div class="modal fade" id="sharePreview" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Share This Link</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form name="clone-modal-form">
-                        <div class="validation-error" style="display: none;"></div>
-                        <p>
-                            <input type="text" class="form-control" value="<?php echo base_url('share_Link/public_view/'.$workorder->id) ?>" id="myInput" readonly>
-							<br>
-							<a href="#" class="btn btn-success" onclick="myCopyFunction()">Copy link to Clipboard</a>
-							<a href="#" class="btn btn-primary" data-toggle="modal" data-target="#shareLinkToEmail">Email Share Link</a>
-                        </p>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-default" type="button" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-	<div class="modal fade" id="sharePreviewAgree" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Share This Link</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form name="clone-modal-form">
-                        <div class="validation-error" style="display: none;"></div>
-                        <p>
-                            <input type="text" class="form-control" value="<?php echo base_url('share_Link/public_view_agreement/'.$workorder->id) ?>" id="myInput" readonly>
-							<br>
-							<a href="#" class="btn btn-success" onclick="myCopyFunction()">Copy link to Clipboard</a>
-							<a href="#" class="btn btn-primary" data-toggle="modal" data-target="#shareLinkToEmail">Email Share Link</a>
-                        </p>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-default" type="button" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-	
-
-	<div class="modal fade" id="shareLinkToEmail" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Share link to email</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-					<?php echo form_open_multipart('workorder/sendLinkToEmail', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?> 
-                        <div class="validation-error" style="display: none;"></div>
-                        <p>
-							<b>To</b><br>
-                            <input type="email" class="form-control" name="emails_list" id="my_input" >
-							<input type="hidden" class="form-control" name="" id="my_input_hidden" value="<?php echo $workorder->email ?>" >
-							<inpupt type="hidden" name="email_list[]" class="email_list" value="<?php echo $workorder->email ?>"><br><br>
-							
-							<b>Content</b>
-							<textarea name="email_content" id="email_content_share" style="height:1000px;">
-
-							<p dir="rtl" style="text-align:center"><span style="color:#ffffff"><span style="font-size:30px"><span style="background-color:#9b59b6">&nbsp; <?php echo $company->business_name ?> &nbsp;&nbsp;</span></span></span></p>
-							
-							<p>W O R K O R D E R # &nbsp;<?php echo $workorder->work_order_number ?>&nbsp; F R O M &nbsp; <?php echo $company->business_name ?></p>
-							<br />
-
-							<p>DEAR <?php echo $customer->contact_name .''. $customer->first_name ?>,<br /><br />
-							THANK YOU FOR CHOOSING <?php echo $company->business_name ?>! <br />
-							YOUR WORKORDER# <?php echo $workorder->work_order_number ?> IS ATTACHED. &nbsp; THE WORK ORDER CAN BE FOUND IN THE ATTACHED PDF FILE.<br /><br />
-
-							CLICK THE LINK TO VIEW THE WORK ORDER ONLINE. <br>
-							<a href="<?php echo base_url('share_Link/public_view/'.$workorder->id) ?>"><?php echo base_url('share_Link/public_view/'.$workorder->id) ?></a><br /><br />
-
-							REGARDS,<br /><br /><br />
-							NSMARTRAC PRO SUPPORT<br /><br />
-							POWERERED BY NSMARTRAC<br /><br />
-
-							</textarea>
-
-							<div id="testArea"></div>
-							<br>
-							<center><input type="submit" value="Send Email" class="btn btn-success"></center>
-                        </p>
-					<?php echo form_close(); ?>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-default" type="button" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-<div class="modal fade" id="docusignTemplateModal" tabindex="-1" role="dialog" aria-labelledby="docusignTemplateModalLabel" aria-hidden="true">
-	<div class="modal-dialog modal-lg" role="document">
-		<div class="modal-content">
-		<div class="modal-header">
-			<h5 class="modal-title" id="docusignTemplateModalLabel">Select Template</h5>
-			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-			<span aria-hidden="true">&times;</span>
-			</button>
-		</div>
-		<div class="modal-body">
-			<table id="templatesTable" class="table" style="width: 100%;">
-				<thead>
-					<tr>
-						<th>Name</th>
-						<th>Created Date</th>
-						<th>Action</th>
-					</tr>
-				</thead>
-			</table>
-		</div>
-		<div class="modal-footer">
-			<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-		</div>
-		</div>
-	</div>
-</div>
-<?php include viewPath('includes/footer'); ?>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 <!-- <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&callback=initialize"></script>
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBg27wLl6BoSPmchyTRgvWuGHQhUUHE5AU&callback=initialize&libraries=&v=weekly"></script> -->

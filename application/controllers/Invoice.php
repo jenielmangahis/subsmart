@@ -1445,6 +1445,7 @@ class Invoice extends MY_Controller
     {
         $invoice = get_invoice_by_id($id);
         $user = get_user_by_id(logged('id'));
+        $company = get_company_by_id(logged('company_id'));
         $this->page_data['invoice'] = $invoice;
         $this->page_data['user'] = $user;
         // $this->page_data['items'] = $user;
@@ -1461,6 +1462,7 @@ class Invoice extends MY_Controller
             $this->page_data['user'] = $user;
         }
         $format = $this->input->get('format');
+        $this->page_data['company'] = $company;
         $this->page_data['format'] = $format;
         // print_r($this->page_data['users']);
 

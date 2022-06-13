@@ -38,36 +38,42 @@
             <table class="table-print" style="width: 100%; margin-bottom: 10px;">
                 <tbody>
                     <tr>
-                    <td>
-                        <div style="margin-bottom: 20px;">
-                            <!-- <img class="invoice-print-logo" style="max-width: 230px; max-height: 200px;" src="<?php echo $profile ?>"> -->
-                            <img src="<?= getCompanyBusinessProfileImage(); ?>"  style="max-width: 230px; max-height: 200px;" />
-                        </div>
+                        <td>
+                            <div style="margin-bottom: 20px;">
+                                <!-- <img class="invoice-print-logo" style="max-width: 230px; max-height: 200px;" src="<?php echo $profile ?>"> -->
+                                <img src="<?= getCompanyBusinessProfileImage(); ?>"  style="max-width: 150px" />
+                            </div>
 
-                        <div id="presenter-from">
-                                <b>FROM:</b>
-                                <br>
-                                <b><?php echo $user->FName . ' ' . $user->LName ?></b><br>
-                                <?php echo strtolower($user->address) ?><br>
-                                Email: <?php echo strtolower($user->email) ?><br>
-                                
-                                <table>
-                                    <tbody><tr>
-                                        <td style="vertical-align: top;" valign="top">Phone:&nbsp;</td>
-                                        <td>
-                                            <?php echo strtolower($user->phone) ?><br><br><br>                          
-                                        </td>
-                                    </tr>
-                                </tbody></table>
+                            <div id="presenter-from">
+                                    <p style="margin: 0"><b>FROM:</b></p>
+                                    <!-- <br> -->
+                                    <p style="margin: 0"><b><?php echo $company->business_name ?></b></p>
+                                    <!-- <br> -->
+                                    <p style="margin: 0"><?php echo $company->street ?></p>
+                                    <!-- <br> -->
+                                    <p style="margin: 0"><?php echo $company->city.', '.$company->state.', '.$company->postal_code?></p>
+                                    <!-- <br> -->
+                                    <p style="margin: 0">Email: <?php echo strtolower($company->business_email) ?></p>
+                                    <!-- <br> -->
+                                    <p style="margin: 0">Phone: <?php echo strtolower($company->business_phone) ?></p>
 
-                                <br>
-                        </div>
+                                    <!-- <table>
+                                        <tbody><tr>
+                                            <td style="vertical-align: top;" valign="top">Phone:&nbsp;</td>
+                                            <td>
+                                                <?php echo strtolower($user->phone) ?><br><br><br>                          
+                                            </td>
+                                        </tr>
+                                    </tbody></table> -->
 
-                    </td>
+                                    <br>
+                            </div>
+
+                        </td>
                         <td id="presenter-col-right" class="presenter-col-right" style="width: 50%; text-align: right;" valign="top">
                             <div id="presenter-title-container" class="presenter-title-container" style="margin-top: 10px; margin-bottom: 20px;">
-                                <span class="presenter-title" style="font-size: 30pt;color:#8c97c0;">INVOICE</span><br>
-                                <span style="font-size:18px;"># <?php echo $invoice->invoice_number ?></span>
+                                <span class="presenter-title" style="font-size: 25pt;color:#8c97c0;">INVOICE</span><br>
+                                <span style="font-size:16px;"># <?php echo $invoice->invoice_number ?></span>
                             </div>
                             <div id="presenter-summary" class="presenter-summary">
                                 <table style="width: 100%">
@@ -94,7 +100,7 @@
                                         </tr>
                                         <tr>
                                             <td style="text-align: right;">Check Payable To:</td>
-                                            <td style="width: 160px; text-align: right;" class="text-right"><?php echo $user->FName . ' ' . $user->LName ?></td>
+                                            <td style="width: 160px; text-align: right;" class="text-right"><?php echo $company->business_name ?></td>
                                         </tr>
                                         <tr>
                                             <td style="text-align: right;"><b>Balance Due:</b></td>
@@ -143,68 +149,70 @@
 
                     </tr> -->
                     <tr>
-                    <td style="width: 30%" valign="top">
-                        <b>TO:</b><br>
-                        <b><?php //echo get_customer_by_id($invoice->customer_id)->contact_name 
-                            echo $users->contact_name .''. $users->first_name .' '. $users->middle_name .' '. $users->last_name;
-                        ?></b>
-                        <span class="middot">·</span><br>
-                        <?php //echo get_customer_by_id($invoice->customer_id)->street_address 
-                        echo $users->cross_street ?><br>
-                        <?php //echo get_customer_by_id($invoice->customer_id)->city . ',' 
-                        echo $users->city  . ','?>
-                        <?php //echo get_customer_by_id($invoice->customer_id)->state . ',' 
-                        echo $users->state  . ','?>
-                        <?php //echo get_customer_by_id($invoice->customer_id)->postal_code
-                        echo $users->zip_code ?><br>
+                        <td style="width: 30%" valign="top">
+                            <p style="margin: 0"><b>TO:</b></p>
+                            <!-- <br> -->
+                            <p style="margin: 0"><b><?php echo $users->contact_name .''. $users->first_name .' '. $users->middle_name .' '. $users->last_name;?></b>
+                            <!-- <span class="middot">·</span> -->
+                            </p>
+                            <!-- <br> -->
+                            <p style="margin: 0"><?php echo $users->cross_street ?></p>
+                            <!-- <br> -->
+                            <p style="margin: 0"><?php echo $users->city.', '.$users->state.', '.$users->zip_code?></p>
+                            <!-- <br> -->
                             <table>
-                            <tbody>
-                                <tr>
-                                    <td style="vertical-align: top;" valign="top">Phone:&nbsp;</td>
-                                    <td>
-                                        <?php //echo get_customer_by_id($invoice->customer_id)->mobile
-                                        echo $users->phone_m ?><br>
-                                        <?php //echo get_customer_by_id($invoice->customer_id)->phone
-                                        echo $users->phone_h ?><br>                        
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </td>
-                    <td style="width: 70%" valign="top">
-                        <b>JOB LOCATION:</b><br>
-                        <b><?php //echo get_customer_by_id($invoice->customer_id)->contact_name 
-                        echo $users->first_name .' '. $users->middle_name .' '. $users->last_name; ?></b><br>
-                        <?php //echo get_customer_by_id($invoice->customer_id)->suite_unit ?>
-                        <?php //echo get_customer_by_id($invoice->customer_id)->street_address 
-                        echo $users->cross_street ?><br>
-                        <?php //echo get_customer_by_id($invoice->customer_id)->city . ',' 
-                        echo $users->city  . ','?>
-                        <?php //echo get_customer_by_id($invoice->customer_id)->state . ',' 
-                        echo $users->state  . ','?>
-                        <?php //echo get_customer_by_id($invoice->customer_id)->postal_code
-                        echo $users->zip_code ?><br>
-                        Phone:&nbsp; <?php //echo get_customer_by_id($invoice->customer_id)->phone
-                        echo $users->phone_m ?>                
-                    </td>
-                </tr>
-            </tbody></table>
+                                <tbody>
+                                    <tr>
+                                        <td style="vertical-align: top;" valign="top">Phone:&nbsp;</td>
+                                        <td>
+                                            <?php echo $users->phone_m ?><br>
+                                            <?php echo $users->phone_h ?><br>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                        <td style="width: 70%" valign="top">
+                            <p style="margin: 0"><b>JOB LOCATION:</b></p>
+                            <!-- <br> -->
+                            <p style="margin: 0"><b><?php echo $users->first_name .' '. $users->middle_name .' '. $users->last_name; ?></b></p>
+                            <!-- <br> -->
+                            <p style="margin: 0"><?php echo $users->cross_street?></p>
+                            <!-- <br> -->
+                            <p style="margin: 0"><?php echo $users->city.', '.$users->state.', '.$users->zip_code?></p>
+                            <!-- <br> -->
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <td style="vertical-align: top;" valign="top">Phone:&nbsp;</td>
+                                        <td>
+                                            <?php echo $users->phone_m ?><br>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
             
+            <?php if($invoice->status === 'Paid') : ?>
             <div id="background">
                 <p id="bg-text">PAID</p>
             </div>
 
-            <br><br><br>
-
-            <b>JOB:</b>
-            <br>
-                <?php echo $invoice->job_name ?><br>
             <br><br>
+            <?php endif; ?>
+
+            <p style="margin:0"><b>JOB:</b></p>
+            <!-- <br> -->
+            <p style="margin: 0"><?php echo $invoice->job_name ?></p>
+            <br>
+            <br>
+            <!-- <br> -->
             <div class="table-items-container">
                 <?php $total_tax = 0; ?>
-                <?php //if (false) : ?>
-                <?php // if ($invoice->invoice_items[0]['item'] != '') : ?>
-                <table class="table-print table-items" style="width: 100%; border-collapse: collapse;">
+                <table class="table-print table-items" style="width: 100%; border-collapse: collapse; font-size: 12px">
                     <thead>
                         <tr>
                             <th style="background: #f4f4f4; text-align: center; padding: 5px 0;">#</th>
@@ -223,29 +231,22 @@
                                 <?php echo intval($key) + 1 ?>
                             </td>
                             <td valign="top">
-                                <?php //echo $value['item'] 
-                                echo $item->title; ?>
+                                <?php echo $item->title; ?>
                             </td>
                             <td style="width: 50px; text-align: right;" valign="top">
-                                <?php //echo $value['quantity'] 
-                                echo $item->qty;?>                    
+                                <?php echo $item->qty;?>                    
                             </td>
                             <td style="width: 80px; text-align: right;" valign="top">
-                                $ <?php //echo number_format($value['price'], 2, '.', ',') 
-                                echo number_format($item->costing, 2); ?>                    
+                                $<?php echo number_format($item->costing, 2); ?>                    
                             </td>
                             <td style="width: 80px; text-align: right;" valign="top">
-                                <!-- $0.00                     -->
-                                $ <?php echo number_format($item->discount, 2); ?>
+                                $<?php echo number_format($item->discount, 2); ?>
                             </td>
                             <td style="width: 80px; text-align: right;" valign="top">
-                                <!-- $<?php //echo number_format($value['tax'], 2, '.', ',') ?> <br> (7.5%)  -->
-                                <?php //$total_tax += floatval($value['tax']); ?>      
                                 <?php echo number_format($item->tax, 2); ?>             
                             </td>
                             <td style="width: 90px; text-align: right;" valign="top">
-                                $ <?php //echo number_format($value['total'], 2, '.', ',') ?>   
-                                <?php echo number_format($item->total, 2); ?>                 
+                                $<?php echo number_format($item->total, 2); ?>                 
                             </td>
                         </tr>
                         <tr class="table-items__tr-last">
@@ -254,75 +255,53 @@
                         </tr>
                         <?php } ?>
                     </tbody>
-                </table>
-                <?php // endif; ?>
-                <table class="table-print table-totals" style="width: 100%; margin-top: 10px;">
-                    <tbody>
+                    <tfoot>
                         <tr>
-                            <td style="width: 50%; text-align: right;"></td>
-                            <td>
-                                <table style="width: 100%; border-collapse: collapse;">
-                                    <tbody>
-                                        <tr>
-                                            <td style="padding: 8px 0; text-align: right;" class="text-right">Subtotal (without tax)</td>
-                                            <td style="padding: 8px 8px 8px 0; text-align: right;" class="text-right">$ <?php //echo (false) ? number_format(floatval($invoice->invoice_totals['sub_total'] - $total_tax), 2, '.', ',') : '' 
-                                            echo number_format($invoice->sub_total, 2);?></td>
-                                        </tr>
-                                        <tr>
-                                            <td style="padding: 8px 0; text-align: right;" class="text-right">Taxes</td>
-                                            <td style="padding: 8px 8px 8px 0; text-align: right;" class="text-right">$ <?php //echo (false) ? number_format($total_tax, 2, '.', ',') : '' 
-                                            echo number_format($invoice->taxes, 2); ?></td>
-                                        </tr>
-                                        <tr>
-                                            <td style="padding: 8px 0; text-align: right; background: #f4f4f4;" class="text-right"><b>Grand Total ($)</b></td>
-                                            <td style="width: 120px; padding: 8px 8px 8px 0; text-align: right; background: #f4f4f4;" class="text-right"><b>$ <?php //echo (false) ? number_format($invoice->invoice_totals['grand_total'], 2, '.', ',') : '' 
-                                            echo number_format($invoice->grand_total, 2); ?></b></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </td>
+                            <td colspan="3"></td>
+                            <td colspan="2" style="text-align: right"><b>Subtotal (without tax)</b></td>
+                            <td></td>
+                            <td style="text-align: right">$<?php echo number_format($invoice->sub_total, 2);?></td>
                         </tr>
                         <tr>
-                            <td style="width: 50%; text-align: right;"></td>
-                            <td>
-                                <table style="width: 100%; border-collapse: collapse;">
-                                    <tbody>
-                                        <tr>
-                                            <td style="padding: 4px 0; text-align: right;" class="text-right"><b>Balance Due</b></td>
-                                            <td style="width: 120px; padding: 4px 8px 4px 0; text-align: right;" class="text-right"><b>
-                                            <?php if($invoice->invoice_type == 'Total Due'){
-                                                echo '$ '.number_format($invoice->grand_total, 2);
-                                            } else{
-                                                echo "$ 0.00";
-                                            } ?></b></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </td>
+                            <td colspan="3"></td>
+                            <td colspan="2" style="text-align: right"><b>Taxes</b></td>
+                            <td></td>
+                            <td style="text-align: right">$<?php echo number_format($invoice->taxes, 2);?></td>
                         </tr>
-                    </tbody>
+                        <tr>
+                            <td colspan="3"></td>
+                            <td colspan="2" style="text-align: right; background: #f4f4f4; padding: 8px 0"><b>Grand Total ($)</b></td>
+                            <td style="background: #f4f4f4"></td>
+                            <td style="text-align: right; background: #f4f4f4; padding: 8px 8px 8px 0;"><b>$<?php echo number_format($invoice->grand_total, 2);?></b></td>
+                        </tr>
+                        <tr>
+                            <td colspan="3"></td>
+                            <td colspan="2" style="text-align: right"><b>Balance Due</b></td>
+                            <td></td>
+                            <td style="text-align: right"><b><?php echo $invoice->invoice_type === 'Total Due' ? '$'.number_format($invoice->grand_total, 2) : '$0.00' ?></b></td>
+                        </tr>
+                    </tfoot>
                 </table>
             </div>
             <br>
             <br>
-            <p>
-                <b>Accepted payment methods</b><br>
+            <p style="margin: 0"><b>Accepted payment methods</b></p>
+            <!-- <br> -->
+            <p style="margin: 0">
                 <?php echo ($invoice->accept_credit_card) ? "Credit Card," : '' ?> 
                 <?php echo ($invoice->accept_check) ? "Check," : '' ?>
                 <?php echo ($invoice->accept_cash) ? "Cash," : '' ?>
                 <?php echo ($invoice->accept_direct_deposit) ? "Direct Deposit" : '' ?>    
             </p>
-            <p>
+            <p style="margin: 0">
                 Accepting Mobile Payments
             </p>
-            
-                <p>
-                <b>Message</b><br>
-                <?php echo ($invoice->message_to_customer)?>  
-            </p>
+            <br>
+            <p style="margin: 0"><b>Message</b></p>
+            <p style="margin: 0"><?php echo ($invoice->message_to_customer)?></p>
             <br>
             <hr style="border-color:#eaeaea;">
-            <p style="color:#888;">
+            <p style="color:#888; margin: 0">
                 Business powered by nSmarTrac
             </p>
         </div>

@@ -24,6 +24,18 @@
                             <button type="button" class="nsm-button w-50 primary" onclick="location.href='<?php echo base_url('workorder/workorderInstallation') ?>'">New Work Order</button>
                         <?php endif; ?>
                     </div>
+                    <?php $company_id = logged('company_id');
+                        if($company_id == '58') : ?>
+                    <div class="col-12">
+                        <label class="content-subtitle d-block mb-2">Create new Solar work order</label>
+                        <button type="button" class="nsm-button w-50 primary" onclick="location.href='<?php echo base_url('workorder/addsolarworkorder') ?>'">Solar Work Order</button>
+                    </div>
+                    <?php elseif ($company_id == '31') : ?>
+                    <div class="col-12">
+                        <label class="content-subtitle d-block mb-2">Create new System Agreement work order</label>
+                        <button type="button" class="nsm-button w-50 primary" onclick="location.href='<?php echo base_url('workorder/workorderInstallation') ?>'">System Agreement Work Order</button>
+                    </div>
+                    <?php endif; ?>
                     <div class="col-12">
                         <label class="content-subtitle d-block mb-2">Existing work order</label>
                         <button type="button" class="nsm-button w-50 primary" onclick="location.href='<?php echo base_url('workorder/NewworkOrder?type=2') ?>'">Existing</button>
