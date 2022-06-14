@@ -26,7 +26,7 @@
 }
 </style>
 <?php if( $sentMessages ){ ?>
-<ul class="chat" style="height:590px; overflow-x:none; overflow-y: scroll;">
+<ul class="chat" style="height:590px; overflow-x:none; overflow-y: scroll; padding:17px;">
     <?php foreach($sentMessages as $s){ ?>
         <?php if( $s['from'] == $companySms->from_number ){ ?>
             <li class="left clearfix">
@@ -38,7 +38,7 @@
                 <div class="chat-body clearfix">
                     <div class="header">
                         <strong class="primary-font">nSmarTrac</strong> <small class="pull-right text-muted">
-                        <span class="glyphicon glyphicon-time"></span><?= timeLapsedString($s['date']); ?></small>
+                        <i class='bx bxs-calendar'></i><?= timeLapsedString($s['date']); ?></small>
                     </div>
                     <p><?= $s['msg']; ?></p>
                 </div>
@@ -46,16 +46,16 @@
         <?php }else{ ?>
             <li class="right clearfix">
                 <span class="chat-img pull-right">
-                    <div class="nsm-profile" style="margin:21px;">
+                    <div class="nsm-profile" style="margin-left: 23px;">
                         <span><?= ucwords($companySms->first_name[0]) . ucwords($companySms->last_name[0]); ?></span>
                     </div>
                 </span>
                 <div class="chat-body clearfix">
                     <div class="header">
-                        <small class=" text-muted"><span class="glyphicon glyphicon-time"></span><?= timeLapsedString($s['date']); ?></small>
+                        <small class=" text-muted"><i class='bx bxs-calendar'></i><?= timeLapsedString($s['date']); ?></small>
                         <strong class="pull-right primary-font"><?= $companySms->first_name . ' ' . $companySms->last_name; ?></strong>
                     </div>
-                    <p><?= $s['msg']; ?></p>
+                    <p style="text-align: right;"><?= $s['msg']; ?></p>
                 </div>
             </li>
         <?php } ?>

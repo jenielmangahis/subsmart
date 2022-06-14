@@ -55,14 +55,14 @@
             </a>
         </li>
         <li class="<?php if($page->title == ''): echo 'active'; endif; ?>">
-            <a class="nsm-page-link" href="<?= base_url('customer/messages_list/'.$cus_id); ?>">
-                <i class='bx bx-fw bx-chat'></i>
-                <span>Messages</span>
-            </a>
-            <!-- <a class="nsm-page-link sent-messages" href="javascript:void(0);" data-cid="<?= $customer_profile_id; ?>">
+            <!-- <a class="nsm-page-link" href="<?= base_url('customer/messages_list/'.$cus_id); ?>">
                 <i class='bx bx-fw bx-chat'></i>
                 <span>Messages</span>
             </a> -->
+            <a class="nsm-page-link sent-messages" href="javascript:void(0);" data-cid="<?= $customer_profile_id; ?>">
+                <i class='bx bx-fw bx-chat'></i>
+                <span>Messages</span>
+            </a>
         </li>
         <li class="<?php if($page->title == ''): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="<?= base_url('customer/internal_notes/'.$cus_id); ?>">

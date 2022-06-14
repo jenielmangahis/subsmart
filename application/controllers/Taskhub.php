@@ -319,10 +319,18 @@ class Taskhub extends MY_Controller {
 	}
 
 	public function comment($id){
+		$this->load->model('Settings_model');
+
 		$uid = logged('id');
 		$company_id = logged('company_id');
-
+		
+        $settings = $this->Settings_model->getByWhere(['key' => DB_SETTINGS_TABLE_KEY_SCHEDULE, 'company_id' => $company_id]);
 		$comment = $_POST['comment'];
+
+		$a_settings = unserialize($settings[0]->value);
+		if( $a_settings['calendar_timezone'] ){
+			date_default_timezone_set($a_settings['calendar_timezone']); 
+		}
 
 		$data = array(
 			'type' => 'task',
