@@ -12,11 +12,8 @@ const $loader = document.querySelector(".customerforms-loader");
 const $search = document.getElementById("labelssearch");
 
 window.document.addEventListener("DOMContentLoaded", async () => {
-  const { data: labels } = await api.getLabels();
-
   const columns = getColumns();
   const table = $($table).DataTable({
-    data: labels,
     bInfo: false,
     bLengthChange: false,
     ajax: {
