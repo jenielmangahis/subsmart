@@ -213,6 +213,7 @@ class Sms extends Widgets {
         $this->load->model('Customer_advance_model');
         $this->load->model('Clients_model');
         $this->load->model('RingCentralAccounts_model');
+        $this->load->model('TwilioAccounts_model');
 
         $cid  = logged('company_id');
         $uid  = logged('id');
@@ -222,10 +223,13 @@ class Sms extends Widgets {
         $companySms  = $this->CompanySms_model->getByProfId($post['cid']);
         $client      = $this->Clients_model->getById($cid);
         $ringCentral = $this->RingCentralAccounts_model->getByCompanyId($cid);
+        $twilioAccount = $this->TwilioAccounts_model->getByCompanyId($cid);
 
         $sentMessages = array();
         if( $client->default_sms_api == 'ring_central' ){
             $sentMessages  = ringCentralMessageReplies($ringCentral, $customer->phone_m, $companySms->date_created);    
+        }elseif( $client->default_sms_api == 'twilio' ){
+            $sentMessages  = twilioReadReplies($twilioAccount, $customer->phone_m);    
         }
 
         $this->page_data['sentMessages'] = $sentMessages;

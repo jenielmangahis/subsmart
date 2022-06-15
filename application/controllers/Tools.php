@@ -344,6 +344,17 @@ class Tools extends MY_Controller {
         $this->load->view('v2/pages/tools/ajax_load_company_ring_central', $this->page_data);
     }
 
+    public function ajax_load_company_twilio(){
+        $this->load->model('TwilioAccounts_model');
+
+        $company_id = logged('company_id');    
+
+        $twilio = $this->TwilioAccounts_model->getByCompanyId($company_id);
+
+        $this->page_data['twilio'] = $twilio;
+        $this->load->view('v2/pages/tools/ajax_load_company_twilio', $this->page_data);
+    }
+
     public function ajax_activate_company_ring_central(){
         $this->load->helper('sms_helper');
         $this->load->model('RingCentralAccounts_model');
@@ -395,9 +406,58 @@ class Tools extends MY_Controller {
         echo json_encode($json_data);
     }
 
+    public function ajax_activate_company_twilio(){
+        $this->load->helper('sms_helper');
+        $this->load->model('TwilioAccounts_model');
+
+        $is_success = false;
+        $msg = 'Invalid twilio account';
+
+        $post = $this->input->post();
+        $company_id = logged('company_id');  
+
+        $twilio = validateTwilioAccount($post['tw_sid'], $post['tw_token']);
+        if( $twilio['is_valid'] ){
+            $twilioAccount = $this->TwilioAccounts_model->getByCompanyId($company_id);
+            if( $twilioAccount ){
+                $twilio_data = [
+                    'tw_sid' => $post['tw_sid'],
+                    'tw_token' => $post['tw_token'],
+                    'tw_number' => $post['tw_number'],                    
+                    'created' => date("Y-m-d H:i:s")
+                ];
+
+                $this->TwilioAccounts_model->update($twilioAccount->id, $twilio_data);
+            }else{
+                $twilio_data = [
+                    'company_id' => $company_id,
+                    'tw_sid' => $post['tw_sid'],
+                    'tw_token' => $post['tw_token'],
+                    'tw_number' => $post['tw_number'],                    
+                    'created' => date("Y-m-d H:i:s")
+                ];
+
+                $this->TwilioAccounts_model->create($twilio_data);
+            }            
+
+            $msg = '';
+            $is_success = true;
+        }else{
+            $msg = $twilio['err_msg'];
+        }
+
+        $json_data = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($json_data);
+    }
+
     public function ajax_update_company_default_sms_api(){
         $this->load->model('Clients_model');
         $this->load->model('RingCentralAccounts_model');
+        $this->load->model('TwilioAccounts_model');
 
         $is_success = false;
         $msg = 'Cannot update settings';
@@ -416,6 +476,17 @@ class Tools extends MY_Controller {
                 $is_success = true;
             }else{
                 $msg = 'You do not have a valid ring central account.';
+            }
+        }elseif( $post['default_sms'] == 'twilio' ){
+            $companyTwilio = $this->TwilioAccounts_model->getByCompanyId($company_id);
+            if( !empty($companyTwilio) ){
+                $data = ['default_sms_api' => 'twilio'];
+                $this->Clients_model->update($client->id, $data);
+
+                $msg = '';
+                $is_success = true;
+            }else{
+                $msg = 'You do not have a valid twilio account.';
             }
         }else{
             $data = ['default_sms_api' => ''];
