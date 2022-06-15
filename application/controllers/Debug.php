@@ -229,8 +229,9 @@
                     // Where to send a text message (your cell phone?)
                     $to_number,
                     array(
-                        'from' => '+15005550006',
-                        'body' => 'This is a test sms'
+                        //'from' => '+15005550006',
+                        'from' => TWILIO_NUMBER,
+                        'body' => 'This is a test sms twilio'
                     )
                 );
 
@@ -247,8 +248,11 @@
         public function twilioSmsReplies()
         {
             $this->load->helper('sms_helper');
+            $this->load->model('TwilioAccounts_model');
 
-            $twilio = twilioReadReplies('15005550006', '15005550006');
+            $cid = logged('company_id');
+            $twilioAccount = $this->TwilioAccounts_model->getByCompanyId($cid);
+            $twilio = twilioReadReplies($twilioAccount, '8506195914');
             echo "<pre>";
             print_r($twilio);
 
@@ -257,8 +261,7 @@
 
         public function validateTwilioAccount()
         {
-            $this->load->helper('sms_helper');
-
+            $this->load->helper('sms_helper');            
             $twilio = validateTwilioAccount('ACf262b7f581f8d1eb2a3d4ddf48f0fdb2', '6b0e320e49625b6c9ce157efa14a4931');
             echo "<pre>";
             print_r($twilio);
@@ -275,6 +278,29 @@
             echo "<pre>";
             print_r($ringcentral);
             exit;
+        }
+
+        public function ringCentralCallOut()
+        {
+            require_once APPPATH . 'libraries/ringcentral-sdk/vendor/autoload.php';
+
+            $this->load->model('RingCentralAccounts_model');
+
+            $cid  = logged('company_id');
+            $ringCentral = $this->RingCentralAccounts_model->getByCompanyId($cid);
+
+            $rcsdk    = new RingCentral\SDK\SDK($ringCentral->client_id, $ringCentral->client_secret, RINGCENTRAL_DEV_URL, 'Demo', '1.0.0');
+            $platform = $rcsdk->platform();
+            $platform->login($ringCentral->rc_username, $ringCentral->rc_ext, $ringCentral->rc_password);
+
+            $resp = $platform->post('/account/~/extension/~/ring-out',
+                array(
+                  'from' => array('phoneNumber' => $ringCentral->rc_username ),
+                  'to' => array('phoneNumber' => '+18509417380'),
+                  'playPrompt' => false
+                ));
+
+            print_r ("Call placed. Call status: " . $resp->json()->status->callStatus);
         }
 
         public function checkRingCentralAccount()

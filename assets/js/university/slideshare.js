@@ -1,6 +1,6 @@
 import * as api from "./api.js";
 
-const MAX_SIZE_IN_MB = 8;
+const MAX_SIZE_IN_MB = 500;
 
 const $table = document.getElementById("slidesharetable");
 const $loader = document.querySelector(".ss-loader");
@@ -88,7 +88,76 @@ window.document.addEventListener("DOMContentLoaded", async () => {
   $search.addEventListener("input", function () {
     table.search(this.value).draw();
   });
+
+  const uploader = new plupload.Uploader({
+    runtimes: "html5",
+    browse_button: $createModal.querySelector(".ss-upload-btn"),
+    multi_selection: false,
+    url: `${api.prefixURL}/SlideShare/apiUpload`,
+    filters: {
+      max_file_size: `${MAX_SIZE_IN_MB}mb`,
+      mime_types: [{ title: "Video files", extensions: "mp4" }],
+    },
+    init: {
+      FilesAdded: (up, [file]) => {
+        // https://stackoverflow.com/a/32398581/8062659
+        up.files.splice(0, up.files.length - 1);
+
+        const $text = $createModal.querySelector(".ss-upload-btn .text");
+        const $feedback = $createModal.querySelector(".invalid-feedback");
+        $text.textContent = file.name;
+        $fileSelect.value = file.name;
+        $feedback.classList.remove("d-block");
+      },
+      UploadProgress: (_, file) => {
+        const $submitBtn = $createModal.querySelector("button.primary");
+        $submitBtn.textContent = `Saving (${file.percent}%)...`;
+      },
+      Error: (_, error) => {
+        if (error.message === "File size error.") {
+          const $feedback = $createModal.querySelector(".invalid-feedback");
+          $feedback.textContent = `File size must be less than ${MAX_SIZE_IN_MB}MB`;
+          $feedback.classList.add("d-block");
+        }
+      },
+      StateChanged: () => {
+        const $inputs = [...$createForm.querySelectorAll("[data-type]")];
+        const $uploadButton = $createForm.querySelector(".ss-upload-btn");
+
+        $inputs.forEach(($input) => {
+          if (isUploading()) {
+            $input.setAttribute("disabled", true);
+          } else {
+            $input.removeAttribute("disabled");
+          }
+        });
+
+        if (isUploading()) {
+          $uploadButton.classList.add("disabled");
+        } else {
+          $uploadButton.classList.remove("disabled");
+        }
+      },
+    },
+  });
+
+  window.__uploader = uploader;
+  uploader.init();
+
+  window.addEventListener("beforeunload", onBeforeUnload, { capture: true });
 });
+
+function onBeforeUnload(event) {
+  event.preventDefault();
+
+  if (isUploading()) {
+    return (event.returnValue = "Changes that you made may not be saved");
+  }
+}
+
+function isUploading() {
+  return window.__uploader && window.__uploader.state === plupload.STARTED;
+}
 
 function getColumns() {
   return {
@@ -182,94 +251,117 @@ $($previewModal).on("show.bs.modal", () => {
   $title.textContent = data.display_name;
   $description.textContent = data.description;
 });
+$($previewModal).on("hide.bs.modal", () => {
+  const $video = $previewModal.querySelector(".video");
+  $video.setAttribute("src", "");
+});
 
 $createBtn.addEventListener("click", () => {
   $($createModal).modal("show");
 });
 
-$fileSelect.addEventListener("change", async function () {
-  const [file] = this.files;
-  const $text = $createModal.querySelector(".ss-upload-btn .text");
-  const textDefault = $text.textContent;
-  $text.textContent = file.name;
-
-  if (!validateFileSize(this.files[0], MAX_SIZE_IN_MB)) {
-    const $group = this.closest(".upload-group");
-    const $feedback = $group.querySelector(".invalid-feedback");
-    $feedback.textContent = `File size must be less than ${MAX_SIZE_IN_MB}MB`;
-    $feedback.classList.add("d-block");
-    $text.textContent = textDefault;
-    this.value = "";
-  }
-});
-
 $createForm.addEventListener("submit", async (event) => {
   event.preventDefault();
 
+  const $submitBtn = $createModal.querySelector("button.primary");
+  $submitBtn.textContent = "Saving...";
+  $submitBtn.setAttribute("disabled", true);
+
+  const modalData = $createModal.__row;
+  const isEdit = Boolean(modalData);
+
+  if (!isEdit) {
+    window.__uploader.start();
+    window.__uploader.unbind("FileUploaded", fileUploadedHandler);
+    window.__uploader.bind("FileUploaded", fileUploadedHandler);
+    return;
+  }
+
+  const payload = getPayload();
+  if (payload === null) {
+    resetSubmitBtn();
+    return;
+  }
+
+  const response = await api.edit({ ...payload, id: modalData.id });
+  updateRowData(response.data);
+  resetSubmitBtn();
+  $($createModal).modal("hide");
+});
+
+async function fileUploadedHandler(_, __, result) {
+  const payload = getPayload();
+  if (payload === null) {
+    resetSubmitBtn();
+    return;
+  }
+
+  const response = JSON.parse(result.response);
+  const { data } = response;
+  payload.name = data.name;
+  payload.size = data.size;
+
+  try {
+    const { data: newData } = await api.save(payload);
+    inserRowData(newData);
+    $($createModal).modal("hide");
+  } catch (error) {
+    console.error(error);
+  } finally {
+    resetSubmitBtn();
+  }
+}
+
+function resetSubmitBtn() {
+  const $submitBtn = $createModal.querySelector("button.primary");
+  $submitBtn.textContent = $submitBtn.dataset.textDefault;
+  $submitBtn.removeAttribute("disabled");
+}
+
+function getPayload() {
   const payload = {};
   const $inputs = $createForm.querySelectorAll("[data-type]");
   for (let index = 0; index < $inputs.length; index++) {
     const $input = $inputs[index];
     const name = $input.dataset.type;
-    const value = $input.files ? $input.files[0] : $input.value.trim();
+    const value = $input.value.trim();
 
-    if ($input.hasAttribute("required")) {
-      if (typeof value === "string" && !value.length) {
-        $input.focus();
-        return;
-      }
+    if ($input.hasAttribute("required") && !value.length) {
+      $input.focus();
+      return null;
     }
 
     payload[name] = value;
   }
 
-  const $submitBtn = $createModal.querySelector("button.primary");
-  const btnText = $submitBtn.textContent;
-
-  $submitBtn.textContent = "Saving...";
-  $submitBtn.setAttribute("disabled", true);
-
-  try {
-    const modalData = $createModal.__row;
-    const isEdit = Boolean(modalData);
-    const apiFunc = isEdit ? api.edit : api.upload;
-    const _payload = isEdit ? { ...payload, id: modalData.id } : payload;
-    const { data } = await apiFunc(_payload);
-
-    if (isEdit) {
-      updateRowData(data);
-    } else {
-      inserRowData(data);
-    }
-
-    $($createModal).modal("hide");
-  } catch (error) {
-    console.error(error);
-  } finally {
-    $submitBtn.textContent = btnText;
-    $submitBtn.removeAttribute("disabled");
-  }
-});
+  return payload;
+}
 
 $($createModal).on("show.bs.modal", () => {
+  // Reset files.
+  window.__uploader.files.forEach((file) => {
+    window.__uploader.removeFile(file);
+  });
+
+  // Reset input values.
   const $inputs = [...$createForm.querySelectorAll("[data-type]")];
   $inputs.forEach(($input) => {
     $input.value = "";
     $input.removeAttribute("disabled");
-
-    if ($input.type === "file") {
-      const $group = $input.closest(".upload-group");
-      const $button = $group.querySelector(".ss-upload-btn");
-      $button.classList.remove("disabled");
-
-      const $text = $group.querySelector(".text");
-      $text.textContent = $text.dataset.textDefault.trim();
-
-      const $feedback = $group.querySelector(".invalid-feedback");
-      $feedback.classList.remove("d-block");
-    }
   });
 
+  // Reset file select input.
+  const $uploadGroup = $createModal.querySelector(".upload-group");
+  const $uploadButton = $uploadGroup.querySelector(".ss-upload-btn");
+  $uploadButton.classList.remove("disabled");
+
+  const $uploadButtonText = $uploadButton.querySelector(".text");
+  $uploadButtonText.textContent = $uploadButtonText.dataset.textDefault;
+
+  const $uploadFeedback = $uploadGroup.querySelector(".invalid-feedback");
+  $uploadFeedback.classList.remove("d-block");
+
+  // Reset modal title.
   const $title = $createModal.querySelector(".modal-title");
   $title.textContent = $title.dataset.textDefault;
 
@@ -278,30 +370,21 @@ $($createModal).on("show.bs.modal", () => {
 
   $title.textContent = data.display_name;
   $inputs.forEach(($input) => {
-    if ($input.type !== "file") {
-      $input.value = data[$input.dataset.type];
-      return;
-    }
-
-    const $group = $input.closest(".upload-group");
-    const $button = $group.querySelector(".ss-upload-btn");
-
-    $button.classList.add("disabled");
-    $input.setAttribute("disabled", true);
-
-    const $text = $group.querySelector(".text");
-    $text.textContent = data.display_name;
+    $input.value = data[$input.dataset.type];
   });
+
+  $uploadButton.classList.add("disabled");
+  $uploadButtonText.textContent = data.name;
 });
-$($createModal).on("hide.bs.modal", () => {
+$($createModal).on("hide.bs.modal", (event) => {
+  if (isUploading()) {
+    event.preventDefault();
+    event.stopPropagation();
+    return false;
+  }
+
   $createModal.__row = null;
 });
-
-// https://stackoverflow.com/a/44505315/8062659
-function validateFileSize(file, maxMB = 8) {
-  const fileSize = file.size / 1024 / 1024; // in MiB
-  return fileSize <= maxMB;
-}
 
 // https://stackoverflow.com/a/18650828/8062659
 function formatBytes(bytes, decimals = 2) {

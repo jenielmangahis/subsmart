@@ -53,14 +53,15 @@ function smsTwilio($twilio, $to_number, $message)
     $is_sent = false;
     $msg = '';
 
-    $to_number     = '+1'.$to_number;
+    $to_number = cleanMobileNumber($to_number);
+    $to_number = '+1'.$to_number;
     try {
-        $client = new Twilio\Rest\Client($twilioAccount->tw_sid, $twilioAccount->tw_token);
+        $client = new Twilio\Rest\Client($twilio->tw_sid, $twilio->tw_token);
         $result = $client->messages->create(
             // Where to send a text message (your cell phone?)
             $to_number,
             array(
-                'from' => $twilioAccount->tw_number,
+                'from' => $twilio->tw_number,
                 'body' => $message
             )
         );
@@ -223,27 +224,26 @@ function validateTwilioAccount($sid, $token)
     return $result;
 }
 
-function twilioReadReplies($from_number, $to_number)
+function twilioReadReplies($twilio, $to_number)
 {
     include_once APPPATH . 'libraries/twilio/autoload.php'; 
 
-    $to_number     = '+1'.$to_number;
+    $replies = array();
+    $msg     = '';
+    $to_number = '+1'.$to_number;
+
     try {
-        $client = new Twilio\Rest\Client(TWILIO_SID, TWILIO_TOKEN);
+        $client = new Twilio\Rest\Client($twilio->tw_sid, $twilio->tw_token);
         
-        /*$messages = $client->messages
-                           ->read([
-                                      "to" => "+15005550009"
-                                  ],
-                                  20
-                           );*/
         $messages = $client->messages
-                           ->read([],20);        
-        echo "<pre>";
-        print_r($messages);
+           ->read([
+                "to" => $to_number
+            ],
+            20
+        );
         foreach ($messages as $record) {
-            echo 5;
-            print($record->sid);
+            $dateSent = $record->dateSent;            
+            $replies[] = ['msg' => $record->body, 'date' => $dateSent->format('Y-m-d g:i A'), 'from' => $record->from];
         }        
 
         
@@ -251,10 +251,7 @@ function twilioReadReplies($from_number, $to_number)
       $msg = $e->getMessage();
     }
 
-    echo $msg;
-    exit;
+    //$result = ['replies' => $replies, 'msg' => $msg];
 
-    $result = ['is_sent' => $is_sent, 'msg' => $msg];
-
-    return $result;
+    return $replies;
 }

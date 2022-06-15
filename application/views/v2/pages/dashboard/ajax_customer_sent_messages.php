@@ -25,7 +25,7 @@
     color: #777;
 }
 </style>
-<?php if( $sentMessages ){ ?>
+<?php if( $sentMessages && $companySms ){ ?>
 <ul class="chat" style="height:590px; overflow-x:none; overflow-y: scroll; padding:17px;">
     <?php foreach($sentMessages as $s){ ?>
         <?php if( $s['from'] == $companySms->from_number ){ ?>
@@ -55,7 +55,7 @@
                         <small class=" text-muted"><i class='bx bxs-calendar'></i><?= timeLapsedString($s['date']); ?></small>
                         <strong class="pull-right primary-font"><?= $companySms->first_name . ' ' . $companySms->last_name; ?></strong>
                     </div>
-                    <p style="text-align: right;"><?= $s['msg']; ?></p>
+                    <p style="text-align: right;padding-right: 65px;"><?= $s['msg']; ?></p>
                 </div>
             </li>
         <?php } ?>
