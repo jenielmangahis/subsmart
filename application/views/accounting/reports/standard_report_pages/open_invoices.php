@@ -55,7 +55,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="card-body hid-desk" style="padding-bottom:0px;">
                             <div class="row">
                                 <div class="col-sm-6">
-                                    <h3 class="page-title" style="margin: 0 !important">Customer Balance Detail Report</h3>
+                                    <h3 class="page-title" style="margin: 0 !important">Open Invoices Report</h3>
                                 </div>
                             </div>
                             <div class="row align-items-center">
@@ -136,10 +136,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         <label class="form-check-label" for="report-date-method">Report date</label>
                                                     </div>
                                                 </div>
-                                                <div class="col-2">
-                                                    <label for="min-days-past-due">Min. Days Past Due</label>
-                                                    <input type="number" id="min-days-past-due" class="form-control">
-                                                </div>
                                                 <div class="col-2 border-left d-flex align-items-center justify-content-center">
                                                     <button class="btn btn-transparent">Run Report</button>
                                                 </div>
@@ -181,9 +177,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                                 <option value="memo-description">Memo/Description</option>
                                                                                 <option value="num">Num</option>
                                                                                 <option value="po-number">P.O. Number</option>
-                                                                                <option value="past-due">Past Due</option>
+                                                                                <option value="phone">Phone</option>
                                                                                 <option value="phone-numbers">Phone Numbers</option>
-                                                                                <option value="sales-printed">Sales Printed</option>
                                                                                 <option value="sales-rep">Sales Rep</option>
                                                                                 <option value="sent">Sent</option>
                                                                                 <option value="ship-via">Ship Via</option>
@@ -193,7 +188,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                             </select>
                                                                             <p class="m-0">Sort in</p>
                                                                             <div class="checkbox checkbox-sec d-block my-2">
-                                                                                <input type="radio" id="sort-asc" name="sort_order">
+                                                                                <input type="radio" id="sort-asc" name="sort_order" checked>
                                                                                 <label for="sort-asc">Ascending order</label>
                                                                             </div>
                                                                             <div class="checkbox checkbox-sec d-block my-2">
@@ -239,12 +234,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                                     <label for="col-date">Date</label>
                                                                                 </div>
                                                                                 <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" id="col-create-date">
-                                                                                    <label for="col-create-date">Create Date</label>
+                                                                                    <input type="checkbox" checked="checked" id="col-terms">
+                                                                                    <label for="col-terms">Terms</label>
                                                                                 </div>
                                                                                 <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" id="col-last-mod-by">
-                                                                                    <label for="col-last-mod-by">Last Modified By</label>
+                                                                                    <input type="checkbox" id="col-last-modified">
+                                                                                    <label for="col-last-modified">Last Modified</label>
                                                                                 </div>
                                                                             </div>
                                                                             <div class="col-4">
@@ -257,8 +252,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                                     <label for="col-created-by">Created By</label>
                                                                                 </div>
                                                                                 <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" id="col-customer">
-                                                                                    <label for="col-customer">Customer</label>
+                                                                                    <input type="checkbox" id="col-last-modified-by">
+                                                                                    <label for="col-last-modified-by">Last Modified By</label>
                                                                                 </div>
                                                                             </div>
                                                                             <div class="col-4">
@@ -267,20 +262,46 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                                     <label for="col-num">Num</label>
                                                                                 </div>
                                                                                 <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" id="col-last-modified">
-                                                                                    <label for="col-last-modified">Last Modified</label>
+                                                                                    <input type="checkbox" id="col-created-by">
+                                                                                    <label for="col-created-by">Last Modified</label>
                                                                                 </div>
                                                                                 <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" id="col-phone">
-                                                                                    <label for="col-phone">Phone</label>
+                                                                                    <input type="checkbox" id="col-customer">
+                                                                                    <label for="col-customer">Customer</label>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
                                                                         <div class="row hidden-cols" style="display: none">
                                                                             <div class="col-4">
                                                                                 <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" id="col-phone-numbers">
-                                                                                    <label for="col-phone-numbers">Phone Numbers</label>
+                                                                                    <input type="checkbox" id="col-phone">
+                                                                                    <label for="col-phone">Phone</label>
+                                                                                </div>
+                                                                                <div class="checkbox checkbox-sec d-block my-2">
+                                                                                    <input type="checkbox" id="col-full-name">
+                                                                                    <label for="col-full-name">Full Name</label>
+                                                                                </div>
+                                                                                <div class="checkbox checkbox-sec d-block my-2">
+                                                                                    <input type="checkbox" id="col-company-name">
+                                                                                    <label for="col-company-name">Company Name</label>
+                                                                                </div>
+                                                                                <div class="checkbox checkbox-sec d-block my-2">
+                                                                                    <input type="checkbox" id="col-ship-via">
+                                                                                    <label for="col-ship-via">Ship Via</label>
+                                                                                </div>
+                                                                                <div class="checkbox checkbox-sec d-block my-2">
+                                                                                    <input type="checkbox" id="col-sent">
+                                                                                    <label for="col-sent">Sent</label>
+                                                                                </div>
+                                                                                <div class="checkbox checkbox-sec d-block my-2">
+                                                                                    <input type="checkbox" checked="checked" id="col-open-balance">
+                                                                                    <label for="col-open-balance">Open Balance</label>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-4">
+                                                                                <div class="checkbox checkbox-sec d-block my-2">
+                                                                                    <input type="checkbox" id="col-phone-number">
+                                                                                    <label for="col-phone-number">Phone Numbers</label>
                                                                                 </div>
                                                                                 <div class="checkbox checkbox-sec d-block my-2">
                                                                                     <input type="checkbox" id="col-billing-address">
@@ -291,16 +312,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                                     <label for="col-sales-rep">Sales Rep</label>
                                                                                 </div>
                                                                                 <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" id="col-terms">
-                                                                                    <label for="col-terms">Terms</label>
+                                                                                    <input type="checkbox" id="col-client-message">
+                                                                                    <label for="col-client-message">Client/Vendor Message</label>
                                                                                 </div>
                                                                                 <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" id="col-sent">
-                                                                                    <label for="col-sent">Sent</label>
+                                                                                    <input type="checkbox" id="col-delivery-address">
+                                                                                    <label for="col-delivery-address">Delivery Address</label>
                                                                                 </div>
                                                                                 <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" checked="checked" id="col-open-balance">
-                                                                                    <label for="col-open-balance">Open Balance</label>
+                                                                                    <input type="checkbox" id="col-memo-desc">
+                                                                                    <label for="col-memo-desc">Memo/Description</label>
                                                                                 </div>
                                                                             </div>
                                                                             <div class="col-4">
@@ -317,42 +338,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                                     <label for="col-po-number">P.O. Number</label>
                                                                                 </div>
                                                                                 <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" id="col-client-message">
-                                                                                    <label for="col-client-message">Client/Vendor Message</label>
-                                                                                </div>
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" id="col-delivery-address">
-                                                                                    <label for="col-delivery-address">Delivery Address</label>
-                                                                                </div>
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" checked="checked" id="col-balance">
-                                                                                    <label for="col-balance">Balance</label>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="col-4">
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" id="col-full-name">
-                                                                                    <label for="col-full-name">Full Name</label>
-                                                                                </div>
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" id="col-company-name">
-                                                                                    <label for="col-company-name">Company Name</label>
-                                                                                </div>
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" id="col-ship-via">
-                                                                                    <label for="col-ship-via">Ship Via</label>
-                                                                                </div>
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
                                                                                     <input type="checkbox" checked="checked" id="col-due-date">
                                                                                     <label for="col-due-date">Due Date</label>
                                                                                 </div>
                                                                                 <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" checked="checked" id="col-amount">
+                                                                                    <input type="checkbox" id="col-amount">
                                                                                     <label for="col-amount">Amount</label>
-                                                                                </div>
-                                                                                <div class="checkbox checkbox-sec d-block my-2">
-                                                                                    <input type="checkbox" id="col-memo-desc">
-                                                                                    <label for="col-memo-desc">Memo/Description</label>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -368,7 +359,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <div class="row">
                                                     <div class="col-12 text-center">
                                                         <h4>nSmarTrac <i class="material-icons" style="font-size:16px">edit</i></h4>
-                                                        <p>Customer Balance Detail<br> All Dates</p>
+                                                        <p>Open Invoices Detail<br> As of <?=date("F j, Y")?></p>
                                                     </div>
                                                 </div>
 
@@ -380,10 +371,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                     <th>DATE</th>
                                                                     <th>TRANSACTION TYPE</th>
                                                                     <th>NUM</th>
+                                                                    <th>TERMS</th>
                                                                     <th>DUE DATE</th>
-                                                                    <th class="text-right">AMOUNT</th>
                                                                     <th class="text-right">OPEN BALANCE</th>
-                                                                    <th class="text-right">BALANCE</th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
@@ -392,17 +382,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                     <td></td>
                                                                     <td></td>
                                                                     <td></td>
+                                                                    <td></td>
                                                                     <td class="text-right"><b>$22,544.77</b></td>
-                                                                    <td class="text-right"><b>$22,544.77</b></td>
-                                                                    <td class="text-right"></td>
                                                                 </tr>
                                                                 <tr data-toggle="collapse" data-target="#accordion1" class="clickable collapse-row collapse" id="accordion">
                                                                     <td>06/13/2022</td>
                                                                     <td>Invoice</td>
                                                                     <td>123</td>
+                                                                    <td>Due on receipt</td>
                                                                     <td>06/15/2022</td>
-                                                                    <td class="text-right">$22,544.77</td>
-                                                                    <td class="text-right">$22,544.77</td>
                                                                     <td class="text-right">$22,544.77</td>
                                                                 </tr>
                                                                 <tr  class="clickable collapse-row collapse"  id="accordion">
@@ -410,18 +398,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                     <td></td>
                                                                     <td></td>
                                                                     <td></td>
+                                                                    <td></td>
                                                                     <td class="text-right"><b>$22,544.77</b></td>
-                                                                    <td class="text-right"><b>$22,544.77</b></td>
-                                                                    <td class="text-right"></td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td><b>TOTAL</b></td>
                                                                     <td></td>
                                                                     <td></td>
                                                                     <td></td>
+                                                                    <td></td>
                                                                     <td class="text-right"><b>$22,544.77</b></td>
-                                                                    <td class="text-right"><b>$22,544.77</b></td>
-                                                                    <td class="text-right"></td>
                                                                 </tr>
                                                             </tbody>
                                                         </table>

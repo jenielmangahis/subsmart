@@ -9,7 +9,7 @@
         <div class="nsm-page-content">
             <div class="row">
                 <div class="col-12 col-md-8 grid-mb">
-                    <button role="button" class="nsm-button ss-upload-btn" id="slidesharecreate">
+                    <button role="button" class="nsm-button" id="slidesharecreate">
                         <i class="bx bx-fw bx-video-plus"></i> Create
                     </button>
                 </div>
@@ -75,7 +75,7 @@
             <label class="content-subtitle fw-bold mb-2" for="ss-file">File</label>
             <div role="button" class="nsm-button ss-upload-btn">
               <i class="bx bx-fw bx-video-plus"></i> <span class="text" data-text-default="Select File"></span>
-              <input required data-type="video" type="file" id="ss-file" accept="video/mp4,video/x-m4v,video/*" />
+              <input required data-type="name" id="ss-file" />
             </div>
             <div class="invalid-feedback"></div>
           </div>
@@ -91,7 +91,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="nsm-button" data-dismiss="modal" data-bs-dismiss="modal">Cancel</button>
-        <button type="submit" form="slidesharcreateform" class="nsm-button primary">Save</button>
+        <button type="submit" form="slidesharcreateform" class="nsm-button primary" data-text-default="Save">Save</button>
       </div>
     </div>
   </div>
@@ -104,4 +104,5 @@
 
 <link rel="stylesheet" href="<?=base_url("assets/css/university/slideshare.css")?>">
 <script type="module"  src="<?=base_url("assets/js/university/slideshare.js")?>"></script>
+<script type="module"  src="<?=base_url("assets/js/university/plupload.full.min.js")?>"></script>
 <?php include viewPath('v2/includes/footer');?>

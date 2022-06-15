@@ -5,6 +5,7 @@ ini_set('max_input_vars', 30000);
 class SlideShare extends MY_Controller
 {
     const ONE_MB = 1048576;
+    const MAX_SIZE_IN_MB = 500;
 
     public function __construct()
     {
@@ -30,33 +31,16 @@ class SlideShare extends MY_Controller
         $this->respond(['data' => $results]);
     }
 
-    public function apiUpload()
+    public function apiSave()
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             $this->respond(['success' => false]);
         }
 
-        $filePath = $this->getUploadPath();
-        $video = $_FILES['video'];
-
-        $maxSizeInMB = 8;
-        $fileSize = $video['size'];
-
-        if ($fileSize > self::ONE_MB * $maxSizeInMB) {
-            $this->respond([
-                'success' => false,
-                'reason' => "File size must be less than {$maxSizeInMB}MB",
-            ]);
-        }
-
+        $payload = json_decode(file_get_contents('php://input'), true);
+        ['display_name' => $displayName, 'description' => $description, 'name' => $fileName, 'size' => $fileSize] = $payload;
         $userId = logged('id');
 
-        $tempName = $video['tmp_name'];
-        $fileName = $video['name'];
-        $fileExtension = pathinfo($fileName, PATHINFO_EXTENSION);
-        $fileName = uniqid($userId) . str_replace('.tmp', '', basename($tempName)) . '.' . $fileExtension;
-
-        ['display_name' => $displayName, 'description' => $description] = $this->input->post();
         $this->db->insert('university_slideshare', [
             'user_id' => $userId,
             'name' => $fileName,
@@ -65,12 +49,100 @@ class SlideShare extends MY_Controller
             'description' => $description,
         ]);
 
-        move_uploaded_file($tempName, $filePath . $fileName);
-
         $this->db->where('id', $this->db->insert_id());
         $row = $this->db->get('university_slideshare')->row();
         $row->url = $this->getUrl($row);
         $this->respond(['data' => $row]);
+    }
+
+    public function apiUpload()
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->respond(['success' => false]);
+        }
+
+        if ($_FILES['file']['size'] > self::ONE_MB * self::MAX_SIZE_IN_MB) {
+            $this->respond([
+                'success' => false,
+                'reason' => 'File size must be less than ' . self::MAX_SIZE_IN_MB . 'MB',
+            ]);
+        }
+
+        header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
+        header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
+        header("Cache-Control: no-store, no-cache, must-revalidate");
+        header("Cache-Control: post-check=0, pre-check=0", false);
+        header("Pragma: no-cache");
+
+        @set_time_limit(5 * 60);
+
+        $uploadPath = $this->getUploadPath();
+        $userId = logged('id');
+        $maxFileAge = 5 * 3600; // hours
+
+        $tempName = $_FILES['file']['tmp_name'];
+        $fileName = $_FILES['file']['name'];
+        $fileExtension = pathinfo($fileName, PATHINFO_EXTENSION);
+        $fileName = uniqid($userId) . str_replace('.tmp', '', basename($tempName)) . '.' . $fileExtension;
+        $filePath = $uploadPath . DIRECTORY_SEPARATOR . $fileName;
+
+        $chunk = isset($_REQUEST['chunk']) ? intval($_REQUEST['chunk']) : 0;
+        $chunks = isset($_REQUEST['chunks']) ? intval($_REQUEST['chunks']) : 0;
+
+        // Remove old temp files
+        if (!is_dir($uploadPath) || !$dir = opendir($uploadPath)) {
+            $this->respond(['success' => false, 'message' => 'Failed to open temp directory']);
+        }
+        while (($file = readdir($dir)) !== false) {
+            $tmpfilePath = $uploadPath . DIRECTORY_SEPARATOR . $file;
+
+            // If temp file is current file proceed to the next
+            if ($tmpfilePath == "{$filePath}.part") {
+                continue;
+            }
+
+            // Remove temp file if it is older than the max age and is not the current file
+            if (preg_match('/\.part$/', $file) && (filemtime($tmpfilePath) < time() - $maxFileAge)) {
+                @unlink($tmpfilePath);
+            }
+        }
+        closedir($dir);
+
+        // Open temp file
+        if (!$out = @fopen("{$filePath}.part", $chunks ? "ab" : "wb")) {
+            $this->respond(['success' => false, 'message' => 'Failed to open output stream']);
+        }
+
+        if (!empty($_FILES)) {
+            if ($_FILES['file']['error'] || !is_uploaded_file($_FILES['file']['tmp_name'])) {
+                $this->respond(['success' => false, 'message' => 'Failed to move uploaded file']);
+            }
+
+            // Read binary input stream and append it to temp file
+            if (!$in = @fopen($_FILES['file']['tmp_name'], 'rb')) {
+                $this->respond(['success' => false, 'message' => 'Failed to open input stream']);
+            }
+        } else {
+            if (!$in = @fopen('php://input', 'rb')) {
+                $this->respond(['success' => false, 'message' => 'Failed to open input stream']);
+            }
+        }
+
+        while ($buff = fread($in, 4096)) {
+            fwrite($out, $buff);
+        }
+
+        @fclose($out);
+        @fclose($in);
+
+        // Check if file has been uploaded
+        if (!$chunks || $chunk === $chunks - 1) {
+            // Strip the temp .part suffix off
+            rename("{$filePath}.part", $filePath);
+        }
+
+        $data = ['name' => $fileName, 'size' => $_FILES['file']['size']];
+        $this->respond(['success' => true, 'data' => $data]);
     }
 
     public function apiEdit()

@@ -12,22 +12,8 @@ export function remove(id) {
   return http.delete(`${prefixURL}/SlideShare/apiDelete?id=${id}`);
 }
 
-export async function upload(payload) {
-  const formData = new FormData();
-  Object.entries(payload).forEach(([key, value]) => {
-    formData.append(key, value);
-  });
-
-  const endpoint = `${prefixURL}/SlideShare/apiUpload`;
-  const response = await fetch(endpoint, {
-    method: "POST",
-    body: formData,
-    headers: {
-      accepts: "application/json",
-    },
-  });
-
-  return response.json();
+export function save(payload) {
+  return http.post(`${prefixURL}/SlideShare/apiSave`, payload);
 }
 
 const http = {
