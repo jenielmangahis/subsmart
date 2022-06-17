@@ -48,11 +48,18 @@
             <i class="bx bx-fw bx-x m-0"></i>
         </button>
       </div>
-      <div class="modal-body">
-        <video controls class="video mb-2">
-          <source src="" type="video/mp4" />
-          Your browser doesn't support HTML5 video tag.
-        </video>
+      <div class="modal-body" style="min-height: 200px;">
+
+        <div class="video-wrapper mb-2">
+          <video controls class="video video-js vjs-default-skin" preload="none" data-setup="{}">
+            <source src=".mp4" type="video/mp4" />
+            <p class="vjs-no-js">
+              To view this video please enable JavaScript, and consider upgrading to a
+              web browser that
+              <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
+            </p>
+          </video>
+        </div>
 
         <div class="description"></div>
       </div>
@@ -101,6 +108,9 @@
 <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.3/moment.min.js"></script>
+
+<link href="https://vjs.zencdn.net/7.19.2/video-js.css" rel="stylesheet" />
+<script src="https://vjs.zencdn.net/7.19.2/video.min.js"></script>
 
 <link rel="stylesheet" href="<?=base_url("assets/css/university/slideshare.css")?>">
 <script type="module"  src="<?=base_url("assets/js/university/slideshare.js")?>"></script>

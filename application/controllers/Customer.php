@@ -2941,31 +2941,193 @@ class Customer extends MY_Controller
     }
 
     public function get_customer_import_header(){
+        addJSONResponseHeader();
 
-            if (is_uploaded_file($_FILES['file']['tmp_name'])) {
-                $csv = array_map("str_getcsv", file($_FILES['file']['tmp_name'],FILE_SKIP_EMPTY_LINES));
-                $csvHeader = array_shift($csv);
-                foreach( $csvHeader as $key => $value ){
-                    if( strtolower($value) == 'firstname' ){
-                        unset($csvHeader[$key]);
+        if (is_uploaded_file($_FILES['file']['tmp_name'])) {
+            $csv = array_map("str_getcsv", file($_FILES['file']['tmp_name'],FILE_SKIP_EMPTY_LINES));
+            $csvHeader = array_shift($csv);
+            if (!empty($csvHeader)) {
+                $data_arr = array("success" => TRUE,"data" => $csvHeader);
+            }else{
+                $data_arr = array("success" => FALSE,"message" => 'Unable to fetch CSV headers.');
+            }
+        }
+        die(json_encode($data_arr));
+    }
+
+    public function getImportData()
+    {
+        addJSONResponseHeader();
+        if (is_uploaded_file($_FILES['file']['tmp_name'])) {
+            
+            $csv = array_map("str_getcsv", file($_FILES['file']['tmp_name'],FILE_SKIP_EMPTY_LINES));
+            $csvHeader = array_shift($csv);
+
+            $this->load->library('CSVReader');
+            $csvData = $this->csvreader->parse_csv($_FILES['file']['tmp_name']);
+
+            $customerArray = []; // initialize array for storing import data
+            
+            if (!empty($csvData)) {
+                foreach ($csvData as $row) {
+                    $customerElement = [];
+                    for($x=0; $x<count($csvHeader); $x++){
+                        $customerElement[$csvHeader[$x]] = $row[$csvHeader[$x]];
+                        //echo $csvHeader[$x]. PHP_EOL;
+                        //echo $row[$csvHeader[$x]]. PHP_EOL;
                     }
-                    if( strtolower($value) == 'lastname' ){
-                        unset($csvHeader[$key]);
-                    }
+                    //print_r(json_encode($customerElement)) . PHP_EOL;
+                    //echo 'fasdf' . PHP_EOL;
+                    $customerArray[] = $customerElement;
                 }
-                if (!empty($csvHeader)) {
-                    echo json_encode($csvHeader,true);
+                $data_arr = array("success" => TRUE,"data" => $customerArray, "headers" => $csvHeader);
+            }else{
+                $data_arr = array("success" => FALSE,"message" => 'Something is wrong with your CSV file.');
+            }
+        }else{
+            //echo 'No upload' . PHP_EOL;
+        }
+        die(json_encode($data_arr));
+    }
+
+    public function importCustomerData()
+    {
+        addJSONResponseHeader();
+        $input = $this->input->post();
+
+        if ($input) {
+            $customers = json_decode($input['customers']);
+            $mappingSelected = json_decode($input['mapHeaders'], true);
+            $csvHeaders = json_decode($input['csvHeaders'], true);
+            
+            // intialize array
+            $acsProfileData = array();
+            $acsAlarmData = array();
+            $acsOfficeData = array();
+            $acsBillingData = array();
+
+            // initialize counter
+            $exist = $insert = 0;
+
+            foreach($customers as $data) {
+                $monitoringId = $csvHeaders[$mappingSelected[0]];
+                $firstName = $csvHeaders[$mappingSelected[1]];
+                $lastName = $csvHeaders[$mappingSelected[2]];
+                $companyName = $csvHeaders[$mappingSelected[3]];
+                $panelType = $csvHeaders[$mappingSelected[4]];
+                $installDate = $csvHeaders[$mappingSelected[5]];
+                $salesDate = $csvHeaders[$mappingSelected[6]];
+                $subscriptionPay = $csvHeaders[$mappingSelected[7]];
+                $salesRep = $csvHeaders[$mappingSelected[8]];
+                $status = $csvHeaders[$mappingSelected[9]];
+                $billingAddress = $csvHeaders[$mappingSelected[10]];
+                $shippingAddress = $csvHeaders[$mappingSelected[11]];
+                $state = $csvHeaders[$mappingSelected[12]];
+                $city = $csvHeaders[$mappingSelected[13]];
+                $zip = $csvHeaders[$mappingSelected[14]];
+                $contractTerm = $csvHeaders[$mappingSelected[15]];
+                $creditScore = $csvHeaders[$mappingSelected[16]];
+                $phoneNumber = $csvHeaders[$mappingSelected[17]];
+                $email = $csvHeaders[$mappingSelected[18]];
+                $customer = $csvHeaders[$mappingSelected[19]];
+                $techinician = $csvHeaders[$mappingSelected[20]];
+                $contact1 = $csvHeaders[$mappingSelected[21]];
+                $contact2 = $csvHeaders[$mappingSelected[22]];
+                $contact3 = $csvHeaders[$mappingSelected[23]];
+                $paymentMethod = $csvHeaders[$mappingSelected[24]];
+                $billingDate = $csvHeaders[$mappingSelected[25]];
+                $paymentDetail = $csvHeaders[$mappingSelected[26]];
+
+                $acsAlarmData['monitor_id'] = $data->$monitoringId;
+                $acsProfileData['first_name'] = $data->$firstName;
+                $acsProfileData['last_name'] = $data->$lastName;
+                $acsProfileData['business_name'] = $data->$companyName;
+                $acsAlarmData['panel_type'] = $data->$panelType;
+                $acsOfficeData['install_date'] = $data->$installDate;
+                $acsOfficeData['sales_date'] = $data->$salesDate;
+                $acsBillingData['mmr'] = $data->$subscriptionPay;
+                $acsOfficeData['fk_sales_rep_office'] = $data->$salesRep;
+                $acsProfileData['status'] = $data->$status;
+                $acsProfileData['mail_add'] = $data->$billingAddress ? $data->$billingAddress : $data->$shippingAddress;
+                $acsProfileData['state'] = $data->$state;
+                $acsProfileData['city'] = $data->$city;
+                $acsProfileData['zip_code'] = $data->$zip;
+                $acsBillingData['contract_term'] = $data->$contractTerm;
+
+                // switch ($data->$creditScore){
+                //     case 'A':
+                //         $score2 = 700;
+                //         break;
+                //     case 'B':
+                //         $score2 = 650;
+                //         break;
+                //     case 'C':
+                //         $score2 = 625;
+                //         break;
+                //     case 'D':
+                //         $score2 = 600;
+                //         break;
+                //     case 'F':
+                //         $score2 = 599;
+                //         break;
+                //     default:
+                //         $score2 = 0;
+                // }
+
+                $acsOfficeData['credit_score'] = $data->$creditScore;
+                $acsProfileData['phone_m'] = $data->$phoneNumber;
+                $acsProfileData['email'] = $data->$email;
+                $acsOfficeData['technician'] = $data->$techinician;
+                $acsProfileData['contact_name1'] = $data->$contact1;
+                $acsProfileData['contact_name2'] = $data->$contact2;
+                $acsProfileData['contact_name3'] = $data->$contact3;
+                $acsBillingData['bill_method'] = $data->$paymentMethod;
+                $acsBillingData['bill_end_date'] = $data->$billingDate;
+                //$acsBillingData['bill_end_date'] = $data->$paymentDetail;
+                //print_r($data->FirstName) . PHP_EOL;
+                //print_r($data) . PHP_EOL;
+
+                $check_user = array(
+                    'where' => array(
+                        'first_name' => $data->$firstName,
+                        'last_name' => $data->$lastName,
+                        'company_id' => logged('company_id'),
+                    ),
+                    'returnType' => 'count'
+                );
+                $isExist = $this->customer_ad_model->check_if_user_exist($check_user, 'acs_profile');
+                if ($isExist > 0) {
+                    $exist++;
                 }else{
-                    echo 'error';
+                    $acsProfileData['company_id'] = logged('company_id');
+                    $fk_prod_id = $this->customer_ad_model->add($acsProfileData,"acs_profile");
+
+                    if($fk_prod_id){
+                        $acsAlarmData['fk_prof_id'] = $fk_prod_id;
+                        $acsBillingData['fk_prof_id'] = $fk_prod_id;
+                        $acsOfficeData['fk_prof_id'] = $fk_prod_id;
+                    
+                        $this->customer_ad_model->add($acsAlarmData,"acs_alarm");
+                        $this->customer_ad_model->add($acsBillingData,"acs_billing");
+                        $this->customer_ad_model->add($acsOfficeData,"acs_office");
+
+                        $insert++;
+                    }
                 }
             }
-
+            $data_arr = array("success" => TRUE,"message" => 'There are '.$exist . ' existing customer and '.$insert . ' inserted new customer.');
+        }else{
+            $data_arr = array("success" => FALSE,"message" => 'Something goes wrong.');
+        }
+        die(json_encode($data_arr));
     }
 
     public function import_customer_data() {
+
         $is_success = 0;
 
-        $data = array();        
+        $data = array();
+        addJSONResponseHeader();
         $input = $this->input->post();
 
         if ($input) {

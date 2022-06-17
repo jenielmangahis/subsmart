@@ -2,95 +2,20 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 ?>
 <?php include viewPath('includes/header'); ?>
+<?php include viewPath('customer/css/import_customer_css'); ?>
 <style>
-    .switch {
-        position: relative !important;
-        display: inline-block !important;
-        width: 50px;
-        height: 24px;
-        float: right;
-        margin-top: 6px;
-    }
-
-    .switch input {
-        opacity: 0;
-        width: 0;
-        height: 0;
-    }
-
-    .slider {
-        position: absolute !important;
-        cursor: pointer !important;
-        top: 0;
+     #overlay {
+        display: none;
+        background: rgba(255, 255, 255, 0.7);
+        position: fixed;
+        bottom: 0;
         left: 0;
         right: 0;
-        bottom: 0;
-        background-color: #ccc;
-        -webkit-transition: .4s;
-        transition: .4s;
-    }
-
-    .slider:before {
-        position: absolute !important;
-        content: "";
-        height: 24px;
-        width: 26px;
-        left: 1px;
-        background-color: white;
-        -webkit-transition: .4s;
-        transition: .4s;
-    }
-
-    input:checked + .slider {
-        background: linear-gradient(to bottom, #45a73c 0%, #67ce5e 100%) !important;
-    }
-
-    input:focus + .slider {
-        box-shadow: 0 0 1px #2196F3 !important;
-    }
-
-    input:checked + .slider:before {
-        -webkit-transform: translateX(26px) !important;
-        -ms-transform: translateX(26px) !important;
-        transform: translateX(26px) !important;
-    }
-
-    /* Rounded sliders */
-    .slider.round {
-        border-radius: 34px !important;
-    }
-
-    .slider.round:before {
-        border-radius: 50% !important;
-    }
-    .form-control {
-        font-size: 12px;
-        height: 30px !important;
-        line-height: 150%;
-    }
-    label{
-        font-size: 12px !important;
-        margin-bottom: 1px !important;
-    }
-    hr{
-        border: 2px solid #32243d !important;
-        width: 100%;
-    }
-    .form-group {
-        margin-bottom: 3px !important;
-    }
-    .required{
-        color : red!important;
-    }
-    .msg-count-cus {
-        height: 30px;
-        width: 30px;
-        display: flex;
+        top: 0;
+        z-index: 9998;
         align-items: center;
         justify-content: center;
-    }
-    .card{
-        box-shadow: 0 0 13px 0 rgb(116 116 117 / 44%) !important;
+        margin: auto;
     }
 </style>
 <div class="wrapper" role="wrapper">
@@ -112,53 +37,83 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         A great process to import all your customers.
                                     </span>
                                 </div>
-                                <form id="import_customer" enctype="multipart/form-data" style="text-align: center;">
-                                     <label for="file-upload" class="" style="font-size: 16px !important;">
-                                         Choose file to Import ( .csv)
-                                    </label>
-                                    <hr>
-                                    <br>
-                                    <input id="file-upload" name="file" type="file" accept=".csv"/>
-                                    <input  name="file2" value="1" type="hidden"/>
-                                    <br><br>
-                                    <div class="card"  style="box-shadow: 0 0 1px 0 !important;">
-                                        <div class="col-md-12" id="select_headers" style="text-align: left;margin: 0 0 0 40%;">
-                                            <label>Please select headers to import.</label><br>
-                                            <div><input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"> <b> I have a bike</b></div>
+                                <div class="progress-wrapper" style="padding-bottom: 100px;">
+                                    <div id="progress-bar-container">
+                                        <ul>
+                                        <li class="step step01 active">
+                                            <div class="step-inner">Step 1</div>
+                                        </li>
+                                        <li class="step step02">
+                                            <div class="step-inner">Step 2</div>
+                                        </li>
+                                        <li class="step step03">
+                                            <div class="step-inner">Step 3</div>
+                                        </li>
+                                        </ul>
+                                        <div id="line">
+                                        <div id="line-progress"></div>
+                                        </div>
+                                        <!-- progress-bar-container -->
+                                        <div id="progress-content-section">
+                                        <div class="section-content step1 active">
+                                            <h2>Step 1</h2>
+                                            <p>Industry Type Select and CSV Upload</p>
 
+                                            <form id="import_customer" enctype="multipart/form-data" style="text-align: center;">
+                                               <input id="file-upload" name="file" type="file" accept=".csv"/>
+                                                <input  name="file2" value="1" type="hidden"/>
+                                                <br><br>
+                                                <button type="button" id="nextBtn1" class="btn btn-primary btn-sm step step02" disabled ><span class="fa fa-arrow-right"></span> Next</button>
+                                            </form>
+                                        </div>
+                                        <div class="section-content step2">
+                                            <h2>Step 2</h2>
+                                            <p>Map Headings</p>
+
+                                            <?php $headers = csvHeaderToMap();?>
+                                            <?php foreach ($headers as $header): ?>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <b ><?= $header; ?></b> <span class='mapping-line'>-----------------</span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <select name="headers[]" class="form-control headersSelector">
+                                                            <option value="">Select Heading</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <?php endforeach; ?>
+                                            <br>
+                                            <button type="button" class="btn btn-primary btn-sm step step01" ><span class="fa fa-arrow-left"></span> Back</button>
+                                            <button type="button" class="btn btn-primary btn-sm step step03" ><span class="fa fa-arrow-right"></span> Next</button>
+                                        </div>
+                                        <div class="section-content step3">
+                                            <h2>Step 3</h2>
+                                            <p>Customer Preview </p>
+
+                                            <?php $headers = csvHeaderToMap();?>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <table class="table tbl" style="height: 100px;overflow-y: auto; overflow-x: hidden;border-collapse: collapse; ">
+                                                        <thead>
+                                                            <tr id='tableHeader'></tr>
+                                                        </thead>
+                                                        <tbody id="imported_customer"></tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <button type="button" class="btn btn-primary btn-sm step step02" ><span class="fa fa-arrow-left"></span> Back</button>
+                                            <button type="button" class="btn btn-primary btn-sm" id="importCustomer"><span class="fa fa-upload"></span> Import</button>
+                                        
                                         </div>
                                     </div>
-                                    <div>
-                                        <a href="<?= url('customer/') ?>">
-                                            <button type="button" class="btn btn-primary btn-md" id="exportCustomers"><span class="fa fa-remove"></span> Cancel</button>
-                                        </a>
-                                        <button type="submit" class="btn btn-primary btn-md" id="exportCustomers"><span class="fa fa-download"></span> Import</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="cards">
-                        <div class="card-body">
-                            <div class="row" >
-                                <div class="col-md-12">
-                                    <table class="table" id="customer_list_table">
-                                        <thead>
-                                            <tr>
-                                                <th>Firstname</th>
-                                                <th>Lastname</th>
-                                                <th>Email</th>
-                                                <th>Monitoring Compnay</th>
-                                                <th>State</th>
-                                                <th>Sales Rep</th>
-                                                <th>Status</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="imported_customer">
-
-                                        </tbody>
-                                    </table>
-                                 </div>
+                                    <!-- progress-wrapper -->
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -167,67 +122,77 @@ defined('BASEPATH') or exit('No direct script access allowed');
         </div>
     </div>
 </div>
-<style>
-    #overlay {
-        display: none;
-        background: rgba(255, 255, 255, 0.7);
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        top: 0;
-        z-index: 9998;
-        align-items: center;
-        justify-content: center;
-        margin: auto;
-    }
-</style>
+
 <div id="overlay">
     <div>
         <img src="<?=base_url()?>/assets/img/uploading.gif" class="" style="width: 80px;" alt="" />
         <center><p>Processing...</p></center></div>
 </div>
 
+ 
+
+
 <?php include viewPath('includes/footer'); ?>
  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script>
+    $(".step").click(function () {
+        $(this).addClass("active").prevAll().addClass("active");
+        $(this).nextAll().removeClass("active");
+    });
+
+    $(".step01").click(function () {
+        $("#line-progress").css("width", "8%");
+        $(".step1").addClass("active").siblings().removeClass("active");
+    });
+
+    $(".step02").click(function () {
+        $("#line-progress").css("width", "50%");
+        $(".step2").addClass("active").siblings().removeClass("active");
+    });
+
+    $(".step03").click(function () {
+        $("#line-progress").css("width", "100%");
+        $(".step3").addClass("active").siblings().removeClass("active");
+    });
+
+    const $overlay = document.getElementById('overlay');
+    var customerData = csvHeaders = [];
     $(document).ready(function() {
-        $("#import_customer").submit(function(e) {
-            e.preventDefault(); // avoid to execute the actual submit of the form.
-            var form = $(this);
-            $.ajax({
-                type: "POST",
-                url: "<?= base_url('customer/import_customer_data'); ?>",
-                data: new FormData(this),
-                processData:false,
-                contentType:false,
-                cache:false,
-                success: function(data) {
-                    var project = JSON.parse(data);
-                    $.each(project,function(i,o){
-                        var customers ="<tr>"+
-                            "<td>"+o.firstname+"</td>"+
-                            "<td>"+o.lastname+"</td>"+
-                            "<td>"+o.email+"</td>"+
-                            "<td>"+o.monitoring_company+"</td>"+
-                            "<td>"+o.state+"</td>"+
-                            "<td>"+o.sales_rep+"</td>"+
-                            "<td>"+o.status+"</td>"+
-                            "</tr>";
-                        var target = $('#imported_customer');
-                        target.append(customers);
-                    });
-                    // if(data === "Success"){
-                    //     sucess_add('Customer Added Successfully!',1);
-                    // }else {
-                    //     warning('There is an error adding Customer. Contact Administrator!');
-                    //     console.log(data);
-                    // }
-                    console.log(project);
-                    document.getElementById('overlay').style.display = "none";
-                }, beforeSend: function() {
-                    document.getElementById('overlay').style.display = "flex";
+
+        $("#importCustomer").click(function(e) {
+            // prepare form data to be posted
+            
+            var selectedHeader = [];
+            $('select[name="headers[]"]').each(function() {
+                console.log(this.value);
+                selectedHeader.push(this.value);
+            });
+
+            const formData = new FormData();
+            formData.append('customers', JSON.stringify(customerData));
+            formData.append('mapHeaders', JSON.stringify(selectedHeader));
+            formData.append('csvHeaders', JSON.stringify(csvHeaders));
+
+            console.log(selectedHeader);
+            console.log(customerData);
+
+            const data = { customers: customerData, map_headers : selectedHeader , csvHeaders : csvHeaders};
+
+            if ($overlay) $overlay.style.display = "flex";
+            // perform post request
+            fetch('<?= base_url('customer/importCustomerData') ?>', {
+                method: 'POST',
+                body: formData,
+            }) .then(response => response.json() ).then(response => {
+                if ($overlay) $overlay.style.display = "none";
+                var { message, success }  = response;
+                if(success){
+                    sweetAlert('Awesome!','success',message ,1);
+                }else{
+                    sweetAlert('Sorry!','error',message);
                 }
+            }).catch((error) => {
+                console.log('Error:', error);
             });
         });
 
@@ -243,44 +208,68 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
         $("#file-upload").change(function(){
             console.log("A file has been selected.");
-            var input = document.getElementById('file-upload');
-            console.log(input.files);
-            for (var i = 0; i < input.files.length; i++) {
-                console.log(input.files[i]);
-            }
-           var fileInput = document.getElementById('file-upload');
-            var file = fileInput.files[0];
-            var formDatas = new FormData();
-            formDatas.append('file', file);
+            const formData = new FormData();
+            const fileInput = document.getElementById('file-upload');
+            formData.append('file', fileInput.files[0]);
 
-        //console.log(formDatas);
-            $.ajax({
-                type: "POST",
-                enctype: 'multipart/form-data',
-                url: "/customer/get_customer_import_header",
-                data: formDatas,
-                processData: false,
-                contentType: false,
-                cache: false,
-                beforeSend: function() {
-                    console.log('Sending Now!');
-                },
-                success: function (data) {
-                   // console.log(data);
-                    var head = JSON.parse(data);
-                    var csvHeaders  = Object.keys(head[0]);
-                    console.log(head);
-                    $.each(csvHeaders,function(i,o){
-                        console.log(o);
-                        $('#select_headers').append(
-                            '<div><input type="checkbox" id="vehicle1" name="'+i+'" value="'+o+'"> <b> '+o+'</b></div>'
+            if ($overlay) $overlay.style.display = "flex";
+            fetch('<?= base_url('customer/getImportData') ?>', {
+                method: 'POST',
+                body: formData
+            }) .then(response => response.json() ).then(response => {
+                console.log(response);
+                var { data, headers, success, message }  = response;
+                if ($overlay) $overlay.style.display = "none";
+                if(!success){
+                    sweetAlert('Sorry!','error',message);
+                }else{
+                    $.each(headers,function(i,o){
+                        $('.headersSelector').append(
+                            '<option value="'+i+'">'+o+'</option>'
+                        );
+                        $('#tableHeader').append(
+                            '<th><strong>'+o+'</strong></th>'
                         );
                     });
-                },
-                error: function (e) {
-                    console.log("ERROR : ", e);
+
+                    csvHeaders = headers;
+                    customerData = data; // save customer array data
+
+                    // process mapping preview
+                    $.each(data,function(i,o){
+                        var toAppend = '';
+                        $.each(o,function(index,data){
+                            toAppend += '<td>'+data+'</td>';
+                        });
+                        $('#imported_customer').append(
+                            '<tr>'+toAppend+'</tr>'
+                        );
+                    });
+
+                    $('#nextBtn1').prop("disabled", false);
+                }
+                }).catch((error) => {
+                    console.log('Error:', error);
+                });
+            
+        });
+
+        function sweetAlert(title,icon,information,is_reload){
+            Swal.fire({
+                title: title,
+                text: information,
+                icon: icon,
+                showCancelButton: false,
+                confirmButtonColor: '#32243d',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ok'
+            }).then((result) => {
+                if(is_reload === 1){
+                    if (result.value) {
+                        window.location.reload();
+                    }
                 }
             });
-        });
+        }
     });
 </script>

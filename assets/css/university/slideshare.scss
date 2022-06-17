@@ -69,10 +69,19 @@ table.dataTable.no-footer {
 }
 
 #slidesharemodalpreview {
+  .video-wrapper {
+    width: 100%;
+    padding-top: 56.25%;
+    height: 0px;
+    position: relative;
+  }
+
   .video {
     width: 100%;
-    height: auto;
-    margin: 0 auto;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
   }
 }
 
