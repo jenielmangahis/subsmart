@@ -392,4 +392,44 @@ function alarm_info_header($name=null) {
     }
     return $alarm_fields;
 }
+
+function addJSONResponseHeader() {
+    header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+    header("Cache-Control: post-check=0, pre-check=0", false);
+    header("Pragma: no-cache");
+    header("Content-Type: application/json");
+}
+
+function csvHeaderToMap(){
+    $headers = array (
+        'Monitoring ID',
+        'First Name',
+        'Last Name',
+        'Company Name',
+        'Panel Type',
+        'Install Date',
+        'Sale Date',
+        'Subscription Pay',
+        'Sales Rep',
+        'Status',
+        'Billing Address',
+        'Shipping Address',
+        'State',
+        'City',
+        'Zip',
+        'Contract Term',
+        'Credit Score',
+        'Phone Numbers',
+        'Email',
+        'Customer',
+        'Technician',
+        'Contact 1',
+        'Contact 2',
+        'Contact 3',
+        'Payment Method',
+        'Billing Date',
+        'Payment Detail',
+    );
+    return $headers;
+}											
 ?>

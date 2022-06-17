@@ -190,16 +190,17 @@ function getColumns() {
                 <i class="bx bx-fw bx-play"></i> <span>Play</span>
             </button>
 
+            <button type="button" class="nsm-button mb-0" data-action="copylink" title="Copy shareable link">
+                <i class="bx bx-fw bx-clipboard"></i>
+            </button>
+
             <div class="dropdown table-management">
               <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                  <i class="bx bx-fw bx-dots-vertical-rounded"></i>
+                  <i class="bx bx-fw bx-dots-horizontal-rounded"></i>
               </a>
               <ul class="dropdown-menu dropdown-menu-end" style="">
                   <li>
                     <a class="dropdown-item" href="javascript:void(0);" data-action="edit">Edit</a>
-                  </li>
-                  <li>
-                    <a class="dropdown-item" href="javascript:void(0);">Copy Shareable Link</a>
                   </li>
                   <li>
                     <a class="dropdown-item" href="javascript:void(0);" data-action="remove">Delete</a>
@@ -237,6 +238,21 @@ function getActions() {
         removeRowData(data);
       }
     },
+    copylink: (row) => {
+      copyToClipboard(row.url);
+
+      const table = $($table).DataTable();
+      const $row = table.row(`#row${row.id}`).node();
+      const $button = $row.querySelector("[data-action=copylink]");
+      const $icon = $button.querySelector(".bx");
+      $icon.classList.remove("bx-clipboard");
+      $icon.classList.add("bx-check");
+
+      window.setTimeout(() => {
+        $icon.classList.remove("bx-check");
+        $icon.classList.add("bx-clipboard");
+      }, 500);
+    },
   };
 }
 
@@ -246,14 +262,16 @@ $($previewModal).on("show.bs.modal", () => {
   const $title = $previewModal.querySelector(".modal-title");
   const $description = $previewModal.querySelector(".description");
 
-  const url = data.url.replace(/^\/|\/$/g, "");
-  $video.setAttribute("src", `${api.prefixURL}/${url}`);
   $title.textContent = data.display_name;
   $description.textContent = data.description;
+
+  const url = data.url.replace(/^\/|\/$/g, "");
+  videojs($video).src(`${api.prefixURL}/${url}`);
 });
 $($previewModal).on("hide.bs.modal", () => {
   const $video = $previewModal.querySelector(".video");
   $video.setAttribute("src", "");
+  videojs($video).pause();
 });
 
 $createBtn.addEventListener("click", () => {
@@ -410,4 +428,16 @@ function inserRowData(data) {
 function removeRowData(data) {
   const table = $($table).DataTable();
   table.row(`#row${data.id}`).remove().draw();
+}
+
+// https://stackoverflow.com/a/46215202/8062659
+function copyToClipboard(text) {
+  const input = document.createElement("textarea");
+  input.innerHTML = text;
+  document.body.appendChild(input);
+  input.select();
+
+  const result = document.execCommand("copy");
+  document.body.removeChild(input);
+  return result;
 }
