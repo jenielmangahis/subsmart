@@ -69,17 +69,16 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <!-- <span>Default</span> -->
                         </span>
                     </div>
-                    <div class="product active-template" style="border: solid #F8F8F8 2px;border-radius: 25px;box-shadow: 3px 6px #E7E6E6;" id="alarm-template">
+                    <!-- <div class="product active-template" style="border: solid #F8F8F8 2px;border-radius: 25px;box-shadow: 3px 6px #E7E6E6;" id="alarm-template">
                         <div class="effect-1"></div>
-                        <div class="effect-2"></div>
+                        <div class="effect-2"></div> -->
                         <!-- <div class="content">
                         <div class="sleep"></div>
                         </div> -->
-                        <span class="title">
+                        <!-- <span class="title">
                         Alarm Template
-                        <!-- <span>Restore Balance</span> -->
                         </span>
-                    </div>
+                    </div> -->
                     <div class="product active-template" style="border: solid #F8F8F8 2px;border-radius: 25px;box-shadow: 3px 6px #E7E6E6;" id="other-template">
                         <div class="effect-1"></div>
                         <div class="effect-2"></div>

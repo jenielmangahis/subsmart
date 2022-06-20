@@ -60,6 +60,7 @@ window.document.addEventListener("DOMContentLoaded", async () => {
     rowId: (row) => `row${row.id}`,
     createdRow: (row, data) => {
       $(row).attr("data-id", data.id);
+      $(row).find("[data-toggle=tooltip]").tooltip();
     },
   });
 
@@ -190,7 +191,7 @@ function getColumns() {
                 <i class="bx bx-fw bx-play"></i> <span>Play</span>
             </button>
 
-            <button type="button" class="nsm-button mb-0" data-action="copylink" title="Copy shareable link">
+            <button type="button" class="nsm-button mb-0" data-action="copylink" title="Copy shareable link" data-toggle="tooltip" data-placement="bottom">
                 <i class="bx bx-fw bx-clipboard"></i>
             </button>
 
@@ -201,6 +202,9 @@ function getColumns() {
               <ul class="dropdown-menu dropdown-menu-end" style="">
                   <li>
                     <a class="dropdown-item" href="javascript:void(0);" data-action="edit">Edit</a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="javascript:void(0);" data-action="publicview">Public View</a>
                   </li>
                   <li>
                     <a class="dropdown-item" href="javascript:void(0);" data-action="remove">Delete</a>
@@ -214,6 +218,14 @@ function getColumns() {
 }
 
 function getActions() {
+  function getPublicURL(row) {
+    const filename = row.url.split("/").at(-1);
+    const id = filename.split(".").at(0);
+    const $baseurl = document.getElementById("baseurl");
+    const baseUrl = $baseurl.value.replace(/^\/|\/$/g, "");
+    return `${baseUrl}/SlideShare/v?n=${id}`;
+  }
+
   return {
     play: (row) => {
       $previewModal.__row = row;
@@ -239,7 +251,7 @@ function getActions() {
       }
     },
     copylink: (row) => {
-      copyToClipboard(row.url);
+      copyToClipboard(getPublicURL(row));
 
       const table = $($table).DataTable();
       const $row = table.row(`#row${row.id}`).node();
@@ -252,6 +264,9 @@ function getActions() {
         $icon.classList.remove("bx-check");
         $icon.classList.add("bx-clipboard");
       }, 500);
+    },
+    publicview: (row) => {
+      window.open(getPublicURL(row), "_blank").focus();
     },
   };
 }

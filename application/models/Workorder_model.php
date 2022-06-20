@@ -389,6 +389,83 @@ class Workorder_model extends MY_Model
         return true;
     }
 
+    public function update_workorder_installation($data)
+    {
+        extract($data);
+        $this->db->where('id', $id);
+        $this->db->update('work_orders', array(
+            'security_number'       => $security_number,//
+            'phone_number'          => $phone_number,//
+            'mobile_number'         => $mobile_number,//
+            'email'                 => $email,//
+            'job_location'          => $job_location,//
+            'city'                  => $city,//
+            'state'                 => $state,//
+            'country'               => $country,//
+            'zip_code'              => $zip_code,//
+            'comments'              => $comments,//
+            'password'              => $password,//
+            
+            'date_issued'           => $date_issued,//
+            'payment_method'        => $payment_method,//
+            'payment_amount'        => $payment_amount,//
+            'terms_and_conditions'  => $terms_and_conditions,//
+
+            'subtotal'              => $subtotal,//
+            'taxes'                 => $taxes, //
+            'installation_cost'     => $installation_cost, //
+            'otp_setup'             => $otp_setup,//
+            'monthly_monitoring'    => $monthly_monitoring,//
+            'grand_total'           => $grand_total,//
+
+            'lead_source_id'        => $lead_source_id,//
+
+            'company_representative_signature'      => $company_representative_signature,
+            'company_representative_name'           => $company_representative_name,
+            'primary_account_holder_signature'      => $primary_account_holder_signature,
+            'primary_account_holder_name'           => $primary_account_holder_name,
+            'secondary_account_holder_signature'    => $secondary_account_holder_signature,
+            'secondary_account_holder_name'         => $secondary_account_holder_name,
+
+            'account_type'          => $account_type,//
+            'panel_type'            => $panel_type,//
+            'panel_communication'   => $panel_communication,//
+
+            'date_updated'                  => $date_updated,//
+        ));
+        return true;
+    }
+
+    public function updateWorkorderAgreement($data)
+    {
+        extract($data);
+        $this->db->where('work_order_id', $work_order_id);
+        $this->db->update('workorder_agreement_items', array(
+            'firstname'                 => $firstname,
+            'lastname'                  => $lastname,
+            'firstname_spouse'          => $firstname_spouse,
+            'lastname_spouse'           => $lastname_spouse,
+            'address'                   => $address,
+            'city'                      => $city,
+            'state'                     => $state,
+            'county'                    => $county,
+            'postcode'                  => $postcode,
+            'first_ecn'                 => $first_ecn,
+            'second_ecn'                => $second_ecn,
+            'third_ecn'                 => $third_ecn,
+            'first_ecn_no'              => $first_ecn_no,
+            'second_ecn_no'             => $second_ecn_no,
+            'third_ecn_no'              => $third_ecn_no,
+            'installation_date'         => $installation_date,
+            'intall_time'               => $intall_time,
+            'sales_re_name'             => $sales_re_name,
+            'sale_rep_phone'            => $sale_rep_phone,
+            'team_leader'               => $team_leader,
+            'billing_date'              => $billing_date,
+        ));
+        return true;
+    }
+
     public function update_acs_alarm($data)
     {
         extract($data);
@@ -1499,6 +1576,18 @@ class Workorder_model extends MY_Model
 
         $this->db->where($where);
         $this->db->delete('work_orders_items');
+        return true;
+    }
+
+    public function delete_items_installation($id)
+    {
+        $where = array(
+            // 'type' => 'Work Order Alarm',
+            'work_order_id'   => $id
+          );
+
+        $this->db->where($where);
+        $this->db->delete('work_orders_agreement_products');
         return true;
     }
 

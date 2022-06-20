@@ -153,13 +153,7 @@ table input.form-control {
                                                 <label style="background-color:#E8E8E9;" id="headerContent"><?php echo $workorder->header; ?></label>
                                                 <input type="hidden" id="headerID" name="header" value="<?php echo $workorder->header; ?>">
                                                 <input type="hidden" id="current_date" name="current_date" value="<?php echo @date('m-d-Y'); ?>">
-                                                <input type="hidden" name="wo_id" value="<?php 
-                                                    foreach($ids as $id)
-                                                    {
-                                                        $add = $id->id + 1;
-                                                        echo $add;
-                                                    }
-                                                    ?>">
+                                                <input type="hidden" name="wo_id" value="<?php echo $workorder->id; ?>">
                                             </li>
                                         </ol>   
                                         <!-- <div class="row">        
@@ -170,7 +164,7 @@ table input.form-control {
                                     </div> 
                                 </div>
                                 <div class="row">            
-                                    <div class="col-md-3 form-group">
+                                    <div class="col-md-3 form-group" style="display:none;">
                                         <label for="contact_name" class="label-element">Work Order #</label>
                                             <input type="text" style="width:100%;" class="form-control input-element" name="workorder_number" id="workorder_number" value="<?php echo $workorder->work_order_number; ?>" readonly/>
                                                     <!-- <input type="text" class="form-control input-element" name="workorder_number" id="workorder-number" value="<?= $prefix . $val; ?>" required readonly/> -->
@@ -199,7 +193,7 @@ table input.form-control {
                                     </div> 
                                     <div class="form-group col-md-2">
                                         <div class="select-wrap">
-                                            <label for="lead_source">Communication Package</label>
+                                            <label for="lead_source">Security Data</label>
                                             <select id="communication_type" name="communication_type" class="form-control custom-select m_select">
                                                 <?php foreach($system_package_type as $lead){ ?>
                                                 <option value="<?php echo $lead->name; ?>" <?php if($workorder->panel_communication == $lead->name){ echo 'selected'; }else{ echo ''; } ?>><?php echo $lead->name; ?></option>
@@ -265,8 +259,8 @@ table input.form-control {
                     <div class="row" style="font-size:16px;">                   
                         <div class=" col-md-6 box-left-mini">
                             <center>
-                            <div class="front" style="text-align:center;background-color:#4a5594;color:white;padding:1%;border-radius:20px;width:95%;">
-                                <h4>Items</h4>
+                            <div class="front" style="text-align:center;background-color:#4a5594;color:white;padding:0.5%;border-radius:20px;width:95%;">
+                                <h5>Items</h5>
                             </div>
                             </center><br>
                             <div class="behind_container" style="background-color:#ced4e4;margin-top:-20px;padding:20px;">
@@ -292,7 +286,7 @@ table input.form-control {
                             <br>
                             <div class="row"> 
                                 <div class="col-md-6">
-                                    <input type="date" name="installation_date" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $agreeDetails->installation_date; ?>">
+                                    <input type="text" name="installation_date" class="form-control border-top-0 border-right-0 border-left-0" id="datepicker_date" value="<?php echo $agreeDetails->installation_date; ?>">
                                     <b>Installation Date:</b>
                                 </div>
                                 <div class="col-md-6">
@@ -712,9 +706,9 @@ table input.form-control {
                                                 <td>
                                                     <div class="input-group mb-3">
                                                     <div class="input-group-prepend">
-                                                        <h4>$ <span class="equipment_cost"><?php echo $workorder->subtotal; ?></span></h4> 
+                                                        <h4>$ <span class="equipment_cost"><?php echo number_format($workorder->subtotal,2); ?></span></h4> 
                                                     </div> &nbsp;
-                                                    <input type="hidden" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" style="font-size:20px;font-weight:bold;color:black;background-color: #fff;height:100%;" aria-label="Amount (to the nearest dollar)" id="equipmentCost" name="equipmentCost" value="<?php echo $workorder->subtotal; ?>" readonly>
+                                                    <input type="hidden" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" style="font-size:20px;font-weight:bold;color:black;background-color: #fff;height:100%;" aria-label="Amount (to the nearest dollar)" id="equipmentCost" name="equipmentCost" value="<?php echo number_format($workorder->subtotal,2); ?>" readonly>
                                                     </div>
                                                     <!-- <input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0"> -->
                                                 </td>
@@ -724,9 +718,9 @@ table input.form-control {
                                                 <td>
                                                     <div class="input-group mb-3">
                                                     <div class="input-group-prepend">
-                                                        <h4>$ &nbsp;<span class="sales_tax_total"><?php echo $workorder->taxes; ?></span></h4> 
+                                                        <h4>$ &nbsp;<span class="sales_tax_total"><?php echo number_format($workorder->taxes,2); ?></span></h4> 
                                                     </div> &nbsp;
-                                                    <input type="hidden" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" style="font-size:20px;font-weight:bold;color:black;" aria-label="Amount (to the nearest dollar)" id="salesTax" name="salesTax" value="<?php echo $workorder->taxes; ?>"  onkeyup="getTotalPrices()">
+                                                    <input type="hidden" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" style="font-size:20px;font-weight:bold;color:black;" aria-label="Amount (to the nearest dollar)" id="salesTax" name="salesTax" value="<?php echo number_format($workorder->taxes,2); ?>"  onkeyup="getTotalPrices()">
                                                     </div>
                                                     <!-- <input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0"> -->
                                                 </td>
@@ -738,7 +732,7 @@ table input.form-control {
                                                     <div class="input-group-prepend">
                                                         <h4>$</h4> 
                                                     </div> &nbsp;
-                                                    <input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" style="margin: 10px 0;font-family: Sarabun, sans-serif;font-weight: 600;color:black;font-size: 1.5rem;" aria-label="Amount (to the nearest dollar)" id="installationCost" name="installationCost" value="<?php echo $workorder->installation_cost; ?>"  onkeyup="getTotalPrices()">
+                                                    <input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" style="margin: 10px 0;font-family: Sarabun, sans-serif;font-weight: 600;color:black;font-size: 1.5rem;" aria-label="Amount (to the nearest dollar)" id="installationCost" name="installationCost" value="<?php echo number_format($workorder->installation_cost,2); ?>"  onkeyup="getTotalPrices()">
                                                     </div>
                                                     <!-- <input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0"> -->
                                                 </td>
@@ -750,7 +744,7 @@ table input.form-control {
                                                     <div class="input-group-prepend">
                                                         <h4>$</h4> 
                                                     </div> &nbsp;
-                                                    <input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" style="margin: 10px 0;font-family: Sarabun, sans-serif;font-weight: 600;color:black;font-size: 1.5rem;" aria-label="Amount (to the nearest dollar)" id="otps" name="otps" value="<?php echo $workorder->otp_setup; ?>"  onkeyup="getTotalPrices()">
+                                                    <input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" style="margin: 10px 0;font-family: Sarabun, sans-serif;font-weight: 600;color:black;font-size: 1.5rem;" aria-label="Amount (to the nearest dollar)" id="otps" name="otps" value="<?php echo number_format($workorder->otp_setup,2); ?>"  onkeyup="getTotalPrices()">
                                                     </div>
                                                     <!-- <input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0"> -->
                                                 </td>
@@ -762,7 +756,7 @@ table input.form-control {
                                                     <div class="input-group-prepend">
                                                         <h4>$</h4> 
                                                     </div> &nbsp;
-                                                    <input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" style="margin: 10px 0;font-family: Sarabun, sans-serif;font-weight: 600;color:black;font-size: 1.5rem;" aria-label="Amount (to the nearest dollar)" id="monthlyMonitoring" name="monthlyMonitoring" value="<?php echo $workorder->monthly_monitoring; ?>"  onkeyup="getTotalPrices()">
+                                                    <input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" style="margin: 10px 0;font-family: Sarabun, sans-serif;font-weight: 600;color:black;font-size: 1.5rem;" aria-label="Amount (to the nearest dollar)" id="monthlyMonitoring" name="monthlyMonitoring" value="<?php echo number_format($workorder->monthly_monitoring,2); ?>"  onkeyup="getTotalPrices()">
                                                     </div>
                                                     <!-- <input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0"> -->
                                                 </td>
@@ -772,9 +766,9 @@ table input.form-control {
                                                 <td>
                                                     <div class="input-group mb-3">
                                                     <div class="input-group-prepend">
-                                                        <h4>$ &nbsp;<span id="totalDue"><?php echo $workorder->grand_total; ?></span></h4> 
+                                                        <h4>$ &nbsp;<span id="totalDue"><?php echo number_format($workorder->grand_total,2); ?></span></h4> 
                                                     </div> &nbsp;
-                                                    <input type="hidden" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 totalDue" style="font-size:20px;font-weight:bold;color:black;background-color: #fff;" aria-label="Amount (to the nearest dollar)" id="totalDue" name="totalDue" value="<?php echo $workorder->grand_total; ?>" readonly>
+                                                    <input type="hidden" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 totalDue" style="font-size:20px;font-weight:bold;color:black;background-color: #fff;" aria-label="Amount (to the nearest dollar)" id="totalDue" name="totalDue" value="<?php echo number_format($workorder->grand_total,2); ?>" readonly>
                                                     </div>
                                                     <!-- <input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0"> -->
                                                 </td>
@@ -812,9 +806,9 @@ table input.form-control {
                                         <p>We use the information we collect to provide you with our products and services and to respond to your questions. We also use the information for editorial and feedback purposes, for marketing and promotional purposes, to inform advertisers as to how many visitors have seen or clicked on their advertisements and to customize the content and layout of ClearCaptions' website. We also use the information we collect for statistical analysis of users' behavior, for product development, for content improvement, to ensure our product and services remain functioning and secure and to investigate and protect against any illegal activities or violations of our Terms of Service.</p> -->
                                         <h6>Agreement</h6>
                                         <div style="background:#FFFFFF; padding-left:10px;" id="thisdiv2">
-                                        <?php echo $terms_conditions->content; ?></p>
+                                        <?php echo $workorder->terms_and_conditions; ?></p>
                                                 <input type="hidden" id="company_id" value="<?php echo getLoggedCompanyID(); ?>">
-                                                <input type="hidden" class="form-control" name="terms_conditions" id="terms_conditions" value="<?php echo $terms_conditions->content; ?>" />
+                                                <input type="hidden" class="form-control" name="terms_conditions" id="terms_conditions" value="<?php echo $workorder->terms_and_conditions; ?>" />
                                         </div>
                                     </div>
                                 </div>
@@ -1028,6 +1022,25 @@ table input.form-control {
 <script src="//cdn.amcharts.com/lib/4/themes/animated.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js"></script>
 
+<script>
+  $( function() {
+    $( "#datepicker_date" ).datepicker({
+        format: 'mm/dd/yyyy'
+    });
+  } );
+
+  $('#clear').click(function() {
+  $('#signArea').signaturePad().clearCanvas();
+});
+
+$('#clear2').click(function() {
+  $('#signArea2').signaturePad().clearCanvas();
+});
+
+$('#clear3').click(function() {
+  $('#signArea3').signaturePad().clearCanvas();
+});
+</script>
 <!-- Chart code -->
 <script>
 jQuery(document).ready(function () {
@@ -1133,7 +1146,7 @@ function primaryName(){
     
     var grandtaxes = (parseFloat(ec) * (7.5/100));
     // var grandtaxes = parseFloat(eq) * 0.075;
-    $('#salesTax').val(grandtaxes)
+    $('#salesTax').val(grandtaxes.toFixed(2))
     var salesTax = $('#salesTax').val();
     $('.sales_tax_total').html(grandtaxes.toFixed(2));
 
@@ -1141,8 +1154,8 @@ function primaryName(){
     // var val3 = overAllTotal.toString().replace(/,/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     var val3 = overAllTotal;
 
-    var val4 = $('#totalDue').html(val3);
-    $('.totalDue').val(val3);
+    var val4 = $('#totalDue').html(val3.toFixed(2));
+    $('.totalDue').val(val3.toFixed(2));
     // });
 
     // var number = document.getElementById('pg_av_total_read_data');

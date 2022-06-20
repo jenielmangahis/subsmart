@@ -2,7 +2,7 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 ini_set('max_input_vars', 30000);
 
-class SlideShare extends MY_Controller
+class SlideShare extends MYF_Controller
 {
     const ONE_MB = 1048576;
     const MAX_SIZE_IN_MB = 500;
@@ -12,8 +12,35 @@ class SlideShare extends MY_Controller
         parent::__construct();
     }
 
+    public function v()
+    {
+        $name = $this->input->get('n', true);
+        if (is_null($name)) {
+            show_404();
+        }
+
+        $query = $this->db->query("SELECT * FROM university_slideshare WHERE `name` LIKE BINARY '{$name}%'");
+        $result = $query->row();
+
+        if (is_null($result)) {
+            show_404();
+        }
+
+        $result->url = $this->getUrl($result);
+
+        $this->db->where('id', $result->user_id);
+        $result->user = $this->db->get('users')->row();
+
+        $this->page_data['slideshare'] = $result;
+        $this->load->view('v2/pages/university/slideshare/view.php', $this->page_data);
+    }
+
     public function index()
     {
+        if (!logged('id')) {
+            show_404();
+        }
+
         $this->page_data['page']->title = 'Slide Share';
         $this->load->view('v2/pages/university/slideshare/index.php', $this->page_data);
     }

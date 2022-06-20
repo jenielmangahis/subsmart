@@ -233,6 +233,7 @@ class Reports extends MY_Controller {
         $view = strtolower(str_replace(' ', '_', $reportType->name));
         $view = str_replace('-', '_', $view);
         $view = str_replace('&', 'and', $view);
+        $view = str_replace('/', '_', $view);
         $js = str_replace('%', 'percentage', $view);
 
         add_footer_js([
