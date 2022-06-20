@@ -1,0 +1,1 @@
+<textarea class="form-control" name="sms_txt_message" id="sms-txt" style="height:150px;"><?= $smsTemplate->sms_body; ?></textarea>                                    

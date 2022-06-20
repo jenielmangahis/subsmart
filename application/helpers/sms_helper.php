@@ -255,3 +255,21 @@ function twilioReadReplies($twilio, $to_number)
 
     return $replies;
 }
+
+function smsReplaceSmartTags($message, $cid){
+
+    $CI =& get_instance();
+    $CI->load->model('Clients_model');
+    $CI->load->model('Payment_records_model', 'payment_records_model');
+
+    $company = $CI->Clients_model->getById($cid);
+
+    $message = str_replace("{{customer.name}}", 'John Doe', $message);
+    $message = str_replace("{{customer.first_name}}", 'John', $message);
+    $message = str_replace("{{customer.last_name}}", 'Doe', $message);
+    $message = str_replace("{{business.email}}", $company->email_address, $message);
+    $message = str_replace("{{business.phone}}", $company->phone_number, $message);
+    $message = str_replace("{{business.name}}", $company->business_name, $message);
+
+    return $message;
+}
