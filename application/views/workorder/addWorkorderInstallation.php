@@ -104,18 +104,18 @@ table input.form-control {
     {
         font-size:12px;
     }
-    .summary_total
+    /* .summary_total
     {
         font-size: 10px !important;
     }
     .summary_total h4 input span
     {
         font-size: 10px !important;
-    }
-    .equipment_cost
+    } */
+    /* .equipment_cost
     {
         font-size: 14px !important;
-    }
+    } */
     .itemTable span
     {
         font-size:10px;
@@ -165,6 +165,19 @@ table input.form-control {
   height: 6px;
   background-color: green;
   overflow-x: auto;
+}
+
+.summaryTanan table, td, th {
+  border: 1px solid;
+  padding:1%;
+}
+.summaryTanan table {
+  width:60%;
+}
+
+.summaryTanan table {
+  width: 100%;
+  border-collapse: collapse;
 }
 
 </style>
@@ -221,7 +234,7 @@ table input.form-control {
                                     </div> 
                                 </div>
                                 <div class="row">            
-                                    <div class="col-md-3 form-group">
+                                    <div class="col-md-3 form-group" style="display:none;">
                                         <label for="contact_name" class="label-element">Work Order #</label>
                                             <input type="text" style="width:100%;" class="form-control input-element" name="workorder_number" id="workorder_number" value="<?php echo "WO-"; 
                                                             foreach ($number as $num):
@@ -261,7 +274,7 @@ table input.form-control {
                                     </div> 
                                     <div class="form-group col-md-2">
                                         <div class="select-wrap">
-                                            <label for="lead_source">Communication Package</label>
+                                            <label for="lead_source">Security Data</label>
                                             <select id="communication_type" name="communication_type" class="form-control custom-select m_select">
                                                 <option value="0">- none -</option>
                                                 <?php foreach($system_package_type as $lead){ ?>
@@ -596,7 +609,7 @@ table input.form-control {
                             <br>
                             <div class="row"> 
                                 <div class="col-md-6">
-                                    <input type="date" name="installation_date" class="form-control border-top-0 border-right-0 border-left-0">
+                                    <input type="text" name="installation_date" id="datepicker_date" class="form-control border-top-0 border-right-0 border-left-0">
                                     <b>Installation Date:</b>
                                 </div>
                                 <div class="col-md-6">
@@ -1008,65 +1021,65 @@ table input.form-control {
                                 </div>
                                 <br>
                                 <div class="row"> 
-                                    <div class="col-md-12">
-                                        <table class="table table-bordered table-sm summary_total" style="width:100%;">
+                                    <div class="col-md-12 summaryTanan">
+                                        <table class="summary_total" style="width:80%;">
                                             <tr>
                                                 <td>Equipment Cost</td>
                                                 <td>
-                                                    <div class="input-group mb-3">
-                                                    <div class="input-group-prepend">
-                                                        <h4>$ <span class="equipment_cost">0.00</span></h4> 
-                                                    </div> &nbsp;
+                                                    <!-- <div class="input-group mb-3"> -->
+                                                    <!-- <div class="input-group-prepend"> -->
+                                                        <h4>$&nbsp;<span class="equipment_cost">0.00</span></h4> 
+                                                    <!-- </div> &nbsp; -->
                                                     <input type="hidden" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" style="font-size:20px;font-weight:bold;color:black;background-color: #fff;height:100%;" aria-label="Amount (to the nearest dollar)" id="equipmentCost" name="equipmentCost" value="0" readonly>
-                                                    </div>
+                                                    <!-- </div> -->
                                                     <!-- <input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0"> -->
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td>Sales Tax</td>
                                                 <td>
-                                                    <div class="input-group mb-3">
-                                                    <div class="input-group-prepend">
-                                                        <h4>$ &nbsp;<span class="sales_tax_total">0.00</span></h4> 
-                                                    </div> &nbsp;
+                                                    <!-- <div class="input-group mb-3">
+                                                    <div class="input-group-prepend"> -->
+                                                        <h4>$&nbsp;<span class="sales_tax_total">0.00</span></h4> 
+                                                    <!-- </div> &nbsp; -->
                                                     <input type="hidden" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" style="font-size:20px;font-weight:bold;color:black;" aria-label="Amount (to the nearest dollar)" id="salesTax" name="salesTax" value="0"  onkeyup="getTotalPrices()">
-                                                    </div>
+                                                    <!-- </div> -->
                                                     <!-- <input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0"> -->
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td>Installation Cost</td>
                                                 <td>
-                                                    <div class="input-group mb-3">
-                                                    <div class="input-group-prepend">
-                                                        <h4>$</h4> 
-                                                    </div> &nbsp;
-                                                    <input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" style="margin: 10px 0;font-family: Sarabun, sans-serif;font-weight: 600;color:black;font-size: 1.5rem;" aria-label="Amount (to the nearest dollar)" id="installationCost" name="installationCost" value="0.00"  onkeyup="getTotalPrices()">
-                                                    </div>
+                                                    <!-- <div class="input-group mb-3">
+                                                    <div class="input-group-prepend"> -->
+                                                    <h4>$&nbsp;<span id="lblName" class="editableinstallationCost">0.00</span></h4>
+                                                    <!-- </div> &nbsp; -->
+                                                    <!-- <input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" style="margin: 10px 0;font-family: Sarabun, sans-serif;font-weight: 600;color:black;font-size: 1.5rem;" aria-label="Amount (to the nearest dollar)" id="installationCost" name="installationCost" value="0.00"  onkeyup="getTotalPrices()"> -->
+                                                    <!-- </div> -->
                                                     <!-- <input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0"> -->
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td>One time (Program and Setup)</td>
                                                 <td>
-                                                    <div class="input-group mb-3">
-                                                    <div class="input-group-prepend">
-                                                        <h4>$</h4> 
-                                                    </div> &nbsp;
-                                                    <input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" style="margin: 10px 0;font-family: Sarabun, sans-serif;font-weight: 600;color:black;font-size: 1.5rem;" aria-label="Amount (to the nearest dollar)" id="otps" name="otps" value="0.00"  onkeyup="getTotalPrices()">
-                                                    </div>
+                                                    <!-- <div class="input-group mb-3">
+                                                    <div class="input-group-prepend"> -->
+                                                        <h4>$&nbsp;<span id="lblName" class="editableOTP">0.00</span></h4>
+                                                    <!-- </div> &nbsp; -->
+                                                    <!-- <input type="hidden" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" style="margin:;font-family: Sarabun, sans-serif;font-weight: 600;color:black;font-size: 1.5rem;" aria-label="Amount (to the nearest dollar)" id="otps" name="otps" value="0.00"  onkeyup="getTotalPrices()"> -->
+                                                    <!-- </div> -->
                                                     <!-- <input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0"> -->
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td>Monthly Monitoring</td>
                                                 <td>
-                                                    <div class="input-group mb-3">
-                                                    <div class="input-group-prepend">
-                                                        <h4>$</h4> 
-                                                    </div> &nbsp;
-                                                    <input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" style="margin: 10px 0;font-family: Sarabun, sans-serif;font-weight: 600;color:black;font-size: 1.5rem;" aria-label="Amount (to the nearest dollar)" id="monthlyMonitoring" name="monthlyMonitoring" value="0.00"  onkeyup="getTotalPrices()">
-                                                    </div>
+                                                    <!-- <div class="input-group mb-3">
+                                                    <div class="input-group-prepend"> -->
+                                                        <h4>$&nbsp;<span id="lblName" class="editable">0.00</span></h4>
+                                                    <!-- </div> &nbsp; -->
+                                                    <!-- <input type="hidden" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" style="margin: 10px 0;font-family: Sarabun, sans-serif;font-weight: 600;color:black;font-size: 1.5rem;" aria-label="Amount (to the nearest dollar)" id="monthlyMonitoring" name="monthlyMonitoring" value=""  onkeyup="getTotalPrices()"> -->
+                                                    <!-- </div> -->
                                                     <!-- <input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0"> -->
                                                 </td>
                                             </tr>
@@ -1075,7 +1088,7 @@ table input.form-control {
                                                 <td>
                                                     <div class="input-group mb-3">
                                                     <div class="input-group-prepend">
-                                                        <h4>$ &nbsp;<span id="totalDue">0.00</span></h4> 
+                                                        <h4>$&nbsp;<span id="totalDue">0.00</span></h4> 
                                                     </div> &nbsp;
                                                     <input type="hidden" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0 totalDue" style="font-size:20px;font-weight:bold;color:black;background-color: #fff;" aria-label="Amount (to the nearest dollar)" id="totalDue" name="totalDue" value="0" readonly>
                                                     </div>
@@ -1194,7 +1207,7 @@ table input.form-control {
                                 <div class="form-group">
                                         <button type="submit" name="action" class="btn btn-flat btn-primary" value="submit">Submit</button>
                                         <!-- <button type="submit" name="action" class="btn btn-flat btn-success pdf_sheet" target="_blank" value="preview">Preview</button> -->
-                                        <button type="submit" class="btn btn-flat btn-success"><b>Send to Customer</b></button>
+                                        <a type="submit" href="<?php echo base_url().'workorder/sendEmailAdmin' ?>" class="btn btn-flat btn-success"><b>Send to Customer</b></a>
                                         <a href="<?php echo url('workorder') ?>" class="btn btn-danger">Cancel this</a>
                                 </div>
                             </div>
@@ -1334,6 +1347,133 @@ table input.form-control {
 <script src="//cdn.amcharts.com/lib/4/charts.js"></script>
 <script src="//cdn.amcharts.com/lib/4/themes/animated.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js"></script>
+<script>
+  $( function() {
+    $( "#datepicker_date" ).datepicker({
+        format: 'mm/dd/yyyy'
+    });
+  } );
+
+  $('#clear').click(function() {
+  $('#signArea').signaturePad().clearCanvas();
+});
+
+$('#clear2').click(function() {
+  $('#signArea2').signaturePad().clearCanvas();
+});
+
+$('#clear3').click(function() {
+  $('#signArea3').signaturePad().clearCanvas();
+});
+</script>
+<script type="text/javascript">
+$(function () {
+    //Loop through all Labels with class 'editable'.
+    $(".editable").each(function () {
+        //Reference the Label.
+        var label = $(this);
+ 
+        //Add a TextBox next to the Label.
+        label.after("<input type = 'text' id = 'monthlyMonitoring'  name='monthlyMonitoring' style = 'display:none;height:100%;width:50%;' onkeyup='getTotalPrices()' class='form-' />");
+ 
+        //Reference the TextBox.
+        var textbox = $(this).next();
+ 
+        //Set the name attribute of the TextBox.
+        textbox[0].name = this.id.replace("lbl", "txt");
+ 
+        //Assign the value of Label to TextBox.
+        textbox.val(label.html());
+ 
+        //When Label is clicked, hide Label and show TextBox.
+        label.click(function () {
+            $(this).hide();
+            $(this).next().show();
+        });
+ 
+        //When focus is lost from TextBox, hide TextBox and show Label.
+        textbox.focusout(function () {
+            $(this).hide();
+            $(this).prev().html($(this).val());
+            $(this).prev().show();
+        });
+        // getTotalPrices();
+        // $('#equip').onkeyup(function () {
+        //     getTotalPrices();
+        // });
+    });
+
+    $(".editableOTP").each(function () {
+        //Reference the Label.
+        var label = $(this);
+ 
+        //Add a TextBox next to the Label.
+        label.after("<input type = 'text' id = 'otps'  name='otps' style = 'display:none;height:100%;' onkeyup='getTotalPrices()' class='form-' />");
+ 
+        //Reference the TextBox.
+        var textbox = $(this).next();
+ 
+        //Set the name attribute of the TextBox.
+        textbox[0].name = this.id.replace("lbl", "txt");
+ 
+        //Assign the value of Label to TextBox.
+        textbox.val(label.html());
+ 
+        //When Label is clicked, hide Label and show TextBox.
+        label.click(function () {
+            $(this).hide();
+            $(this).next().show();
+        });
+ 
+        //When focus is lost from TextBox, hide TextBox and show Label.
+        textbox.focusout(function () {
+            $(this).hide();
+            $(this).prev().html($(this).val());
+            $(this).prev().show();
+        });
+        // getTotalPrices();
+        // $('#equip').onkeyup(function () {
+        //     getTotalPrices();
+        // });
+    });
+
+    $(".editableinstallationCost").each(function () {
+        //Reference the Label.
+        var label = $(this);
+ 
+        //Add a TextBox next to the Label.
+        label.after("<input type = 'text' id = 'installationCost'  name='installationCost' style = 'display:none;height:100%;' onkeyup='getTotalPrices()' class='form-' />");
+ 
+        //Reference the TextBox.
+        var textbox = $(this).next();
+ 
+        //Set the name attribute of the TextBox.
+        textbox[0].name = this.id.replace("lbl", "txt");
+ 
+        //Assign the value of Label to TextBox.
+        textbox.val(label.html());
+ 
+        //When Label is clicked, hide Label and show TextBox.
+        label.click(function () {
+            $(this).hide();
+            $(this).next().show();
+        });
+ 
+        //When focus is lost from TextBox, hide TextBox and show Label.
+        textbox.focusout(function () {
+            $(this).hide();
+            $(this).prev().html($(this).val());
+            $(this).prev().show();
+        });
+        // getTotalPrices();
+        // $('#equip').onkeyup(function () {
+        //     getTotalPrices();
+        // });
+    });
+});
+
+
+</script>
 
 <!-- Chart code -->
 <script>
@@ -1365,8 +1505,8 @@ function primaryName(){
     
     // var eq = val2.toString().replace(/,/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     var eq = val2;
-    $('#equipmentCost').val(eq);
-    $('.equipment_cost').html(eq);
+    $('#equipmentCost').val(eq.toFixed(2));
+    $('.equipment_cost').html(eq.toFixed(2));
 
     var ec = $('#equipmentCost').val();
     // var ec_wcomma = ec.toString().replace(/,/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",")
@@ -1381,8 +1521,8 @@ function primaryName(){
     // var val3 = overAllTotal.toString().replace(/,/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     var val3 = overAllTotal;
 
-    var val4 = $('#totalDue').html(val3);
-    $('.totalDue').val(val3);
+    var val4 = $('#totalDue').html(val3.toFixed(2));
+    $('.totalDue').val(val3.toFixed(2));
     // });
 
     // var number = document.getElementById('pg_av_total_read_data');

@@ -228,6 +228,14 @@ border: none;
   border-radius:0;
 }
 
+.form-control
+{
+	/* padding:0.5px !important; */
+	margin-bottom:-3px !important;
+	margin-top:-3px !important;
+	height:50% !important;
+}
+
 /* nav > div a.nav-item.nav-link.active:after
 {
 content: "";
@@ -307,10 +315,10 @@ table input.form-control {
    height:25px !important;
 }
 
-.input-group-text
+/* .input-group-text
 {
     padding:3px !important;
-}
+} */
 .itemTable td:nth-of-type(1) {width:30%;}
 .itemTable  td:nth-of-type(2) {width: 15%;}
 .itemTable  td:nth-of-type(3) {width:15%;}
@@ -325,7 +333,6 @@ table input.form-control {
 }
 /* .itemTable2  td:nth-of-type(3) {width:25%;} */
 .itemTable2  td:nth-of-type(4) {width:15%;}
-
 
 @media screen and (max-width:500px){
     body{
@@ -360,6 +367,39 @@ table input.form-control {
     {
         height:100% !important;
     }
+	
+}
+@media print {
+ 
+body
+{
+	font-size:9px;
+	margin:0px;
+}
+
+.logo
+	{
+		width:80px !important;
+		height:80px !important;
+	}
+
+	.agreement
+	{
+		font-size:9px;
+	}
+	.agreement table
+	{
+		font-size:9px;
+	}
+	.agreement input
+	{
+		font-size:9px;
+	}
+	.agreement .input-group
+	{
+		font-size:9px;
+	}
+
 }
 
 @media screen and (max-width:1800px){
@@ -401,7 +441,9 @@ table input.form-control {
 									<div class="user-menu mobile_btn">
 									<?php if($workorder->work_order_type_id == 1){ ?>
                        					<a href="<?php echo base_url('workorder/work_order_pdf/' . $workorder->id) ?>" class="btn btn-sec download_work_order_pdfsss" acs-id="<?php echo $workorder->customer_id; ?>" workorder-id="<?php echo $workorder->id; ?>"><span class="fa fa-file-pdf-o"></span> PDF</a>
-									<?php } else{ ?>
+									<?php }else if($workorder->work_order_type_id == 4){ ?>
+										<a href="<?php echo base_url('workorder/work_order_pdf_agreement/' . $workorder->id) ?>" class="btn btn-sec download_work_order_pdfsss" acs-id="<?php echo $workorder->customer_id; ?>" workorder-id="<?php echo $workorder->id; ?>"><span class="fa fa-file-pdf-o"></span> PDF</a>
+										<?php } else{ ?>
 										<a href="<?php echo base_url('workorder/work_order_pdf_alarm/' . $workorder->id) ?>" class="btn btn-sec download_work_order_pdfsss" acs-id="<?php echo $workorder->customer_id; ?>" workorder-id="<?php echo $workorder->id; ?>"><span class="fa fa-file-pdf-o"></span> PDF</a>
 									<?php } ?>
 
@@ -430,15 +472,21 @@ table input.form-control {
 										<div class="col-sm-12 col-sm-push-12 text-right-sm ">
 										<div class="row">
 											<div class="col-md-3">
-												<div style="margin-bottom: 20px;margin-left: 0px !important;">
+												<div style="margin-bottom: 20px;margin-left: 0px !important;" class="logo">
 													<!-- <img class="presenter-print-logo" style="max-width: 230px; max-height: 200px;" src="http://nsmartrac.com/assets/dashboard/images/logo.png"> -->
 													<?php if($workorder->work_order_type_id == '4'){ ?> 
-														<img src="<?php echo base_url().'assets/img/alarm_logo.jpeg' ?>"  style="max-width: 230px; max-height: 200px;" /> 
+														<img src="<?php echo base_url().'assets/img/alarm_logo.jpeg' ?>"  class="logo" style="max-width: 230px; max-height: 200px;" /> 
 														<?php }else{ ?>
 															<img src="<?= getCompanyBusinessProfileImage(); ?>"  style="max-width: 230px; max-height: 200px;" /> 
 														<?php } ?>
 												</div>
 											</div>
+											
+											<?php if($workorder->work_order_type_id == '4'){ ?>
+											</div>
+											<div class="row">
+											<div class="col-md-12">
+											<?php }else{?> 
 											<div class="col-md-9">
 											<div class="workorder-text" style="margin-top: 10px; margin-bottom: 20px;">											    
 												<!-- </div>	-->
@@ -636,7 +684,7 @@ table input.form-control {
 
 		         							   </div><br><br>
 		         							   <!--  user info end-->
-											
+											<?php }?>	
 											<?php if($workorder->work_order_type_id == '3'){ } elseif($workorder->work_order_type_id == '4'){ } else{ ?>
 		         							   <div class="table-inner">
 		         							   		<table class=" table table-print table-items" style="width: 100%; border-collapse: collapse;">
@@ -915,14 +963,14 @@ table input.form-control {
 
 									<?php }elseif($workorder->work_order_type_id == '4'){ ?>
 
-										<div class="row" style="font-size:;">                   
+										<div class="row agreement" style="font-size:;">                   
 											<div class=" col-md-6 box-left-mini">
 												<center>
 												<div class="front" style="text-align:center;background-color:#4a5594;color:white;padding:0.5%;border-radius:20px;width:95%;">
 													<h6>Items</h6>
 												</div>
 												</center><br>
-												<div class="behind_container" style="background-color:#ced4e4;margin-top:-20px;padding:20px;">
+												<div class="behind_container" style="background-color:#ced4e4;margin-top:-12px;padding:20px;">
 													<table  class="table-bordered itemTable">
 														<thead align="center">
 															<th>Items</th>
@@ -945,7 +993,7 @@ table input.form-control {
 												<br>
 												<div class="row"> 
 													<div class="col-md-6">
-														<input type="date" name="installation_date" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $agreements->installation_date; ?>" readonly style="background-color: #fff;">
+														<input type="text" name="installation_date" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $agreements->installation_date; ?>" readonly style="background-color: #fff;">
 														<b>Installation Date:</b>
 													</div>
 													<div class="col-md-6">
@@ -953,7 +1001,6 @@ table input.form-control {
 														<b>Install Time Date:</b>
 													</div>
 												</div>
-												<br><br>
 												<div class="row">                   
 													<div class="form-group col-md-4">
 														<div class="select-wrap">
@@ -983,8 +1030,8 @@ table input.form-control {
 															<b>Amount<small class="help help-sm"> ( $ )</small></b>
 														</div>
 														<div class="form-group col-md-4">
-															<b>Billing Date</b>
 															<input type="text" class="form-control input-element border-top-0 border-right-0 border-left-0" value="<?php echo $agreements->billing_date; ?>" readonly  style="background-color: #fff;"  />
+															<b>Billing Date</b>
 														</div>
 												</div>
 												<div class="row">                   
@@ -1207,7 +1254,7 @@ table input.form-control {
 														</div>
 													</div>                                        
 												</div>
-												<div class="row" style="margin-top:-46px;">
+												<div class="row" style="margin-top:;">
 													<!-- <div class="form-group col-md-12"> -->
 														<div class="col-md-6">
 															<input type="text" name="sales_re_name" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $agreements->sales_re_name; ?>" readonly style="background-color: #fff;">
@@ -1219,7 +1266,6 @@ table input.form-control {
 														</div>     
 													<!-- </div> -->
 												</div>   
-										 		<br>
 												<div class="row">                   
 													<div class="form-group col-md-12">
 														<input type="text" name="team_leader" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $agreements->team_leader; ?>" readonly style="background-color: #fff;">
@@ -1252,110 +1298,125 @@ table input.form-control {
 												<br>
 													<div class="row"> 
 														<div class="col-md-6">
-															<input type="text" name="firstname" id="firstname" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $agreements->firstname; ?>" readonly style="background-color: #fff;">
+															<?php if(empty($agreements->firstname)){ echo '<br>'; }else{ echo $agreements->firstname; } ?>
+															<hr style="margin-top: 0;margin-bottom: 2px;border: 0;border-bottom: solid gray 1px;padding:;">
 															<b>First name:</b>
 														</div>
 														<div class="col-md-6">
-															<input type="text" name="lastname" id="lastname" class="form-control border-top-0 border-right-0 border-left-0"  value="<?php echo $agreements->lastname; ?>" readonly style="background-color: #fff;">
+															<?php if(empty($agreements->lastname)){ echo '<br>'; }else{ echo $agreements->lastname; } ?>
+															<hr style="margin-top: 0;margin-bottom: 2px;border: 0;border-bottom: solid gray 1px;">
 															<b>Last name:</b>
 														</div>
 													</div>
 													<div class="row"> 
 														<div class="col-md-6">
-															<input type="text" name="firstname_spouse" id="firstname" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $agreements->firstname_spouse; ?>" readonly style="background-color: #fff;">
+															<?php if(empty($agreements->firstname_spouse)){ echo '<br>'; }else{ echo $agreements->firstname_spouse; } ?>
+															<hr style="margin-top: 0;margin-bottom: 2px;border: 0;border-bottom: solid gray 1px;">
 															<b>First name (Spouse):</b>
 														</div>
 														<div class="col-md-6">
-															<input type="text" name="lastname_spouse" id="lastname" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $agreements->lastname_spouse; ?>" readonly style="background-color: #fff;">
+															<?php if(empty($agreements->lastname_spouse)){ echo '<br>'; }else{ echo $agreements->lastname_spouse; } ?>
+															<hr style="margin-top: 0;margin-bottom: 2px;border: 0;border-bottom: solid gray 1px;">
 															<b>Last name (Spouse):</b>
 														</div>
 													</div>
 													<div class="row"> 
 														<div class="col-md-12">
-															<input type="text" name="address" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $agreements->address; ?>" readonly style="background-color: #fff;">
+															<?php if(empty($agreements->address)){ echo '<br>'; }else{ echo $agreements->address; } ?>
+															<hr style="margin-top: 0;margin-bottom: 2px;border: 0;border-bottom: solid gray 1px;">
 															<b>Address:</b>
 														</div>
 													</div>
 													<div class="row"> 
 														<div class="col-md-5">
-															<input type="text" name="city" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $agreements->city; ?>" readonly style="background-color: #fff;">
+															<?php if(empty($agreements->city)){ echo '<br>'; }else{ echo $agreements->city; } ?>
+															<hr style="margin-top: 0;margin-bottom: 2px;border: 0;border-bottom: solid gray 1px;">
 															<b>City:</b>
 														</div>
 														<div class="col-md-7">
-															<input type="text" name="state" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $agreements->state; ?>" readonly style="background-color: #fff;">
+															<?php if(empty($agreements->state)){ echo '<br>'; }else{ echo $agreements->state; } ?>
+															<hr style="margin-top: 0;margin-bottom: 2px;border: 0;border-bottom: solid gray 1px;">
 															<b>State:</b>
 														</div>
 													</div>
 													<div class="row"> 
 														<div class="col-md-5">
-															<input type="text" name="postcode" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $agreements->postcode; ?>" readonly style="background-color: #fff;">
+															<?php if(empty($agreements->postcode)){ echo '<br>'; }else{ echo $agreements->postcode; } ?>
+															<hr style="margin-top: 0;margin-bottom: 2px;border: 0;border-bottom: solid gray 1px;">
 															<b>Postcode:</b>
 														</div>
 														<div class="col-md-7">
-															<input type="text" name="county" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $agreements->county; ?>" readonly style="background-color: #fff;">
+															<?php if(empty($agreements->county)){ echo '<br>'; }else{ echo $agreements->county; } ?>
+															<hr style="margin-top: 0;margin-bottom: 2px;border: 0;border-bottom: solid gray 1px;">
 															<b>County:</b>
 														</div>
 													</div>
 													<div class="row"> 
 														<div class="col-md-12">
-															<input type="text" name="phone" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $workorder->phone_number; ?>" readonly style="background-color: #fff;">
+															<?php if(empty($agreements->phone_number)){ echo '<br>'; }else{ echo $agreements->phone_number; } ?>
+															<hr style="margin-top: 0;margin-bottom: 2px;border: 0;border-bottom: solid gray 1px;">
 															<b>Phone:</b>
 														</div>
 													</div>
 													<div class="row"> 
 														<div class="col-md-12">
-															<input type="text" name="mobile" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $workorder->mobile_number; ?>" readonly style="background-color: #fff;">
+															<?php if(empty($agreements->mobile_number)){ echo '<br>'; }else{ echo $agreements->mobile_number; } ?>
+															<hr style="margin-top: 0;margin-bottom: 2px;border: 0;border-bottom: solid gray 1px;">
 															<b>Mobile:</b>
 														</div>
 													</div>
 													<div class="row"> 
 														<div class="col-md-12">
-															<input type="text" name="email" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $workorder->email; ?>" readonly style="background-color: #fff;">
+															<?php if(empty($agreements->email)){ echo '<br>'; }else{ echo $agreements->email; } ?>
+															<hr style="margin-top: 0;margin-bottom: 2px;border: 0;border-bottom: solid gray 1px;">
 															<b>Email:</b>
 														</div>
 													</div>
 													<div class="row"> 
 														<div class="col-md-5">
-															<input type="text" name="first_ecn" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $agreements->first_ecn; ?>" readonly style="background-color: #fff;">
+															<?php if(empty($agreements->first_ecn)){ echo '<br>'; }else{ echo $agreements->first_ecn; } ?>
+															<hr style="margin-top: 0;margin-bottom: 2px;border: 0;border-bottom: solid gray 1px;">
 															<b>1st Emergency Contact Name:</b>
 														</div>
 														<div class="col-md-7">
-															<input type="text" name="first_ecn_no" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $agreements->first_ecn_no; ?>" readonly style="background-color: #fff;">
+															<?php if(empty($agreements->first_ecn_no)){ echo '<br>'; }else{ echo $agreements->first_ecn_no; } ?>
+															<hr style="margin-top: 0;margin-bottom: 2px;border: 0;border-bottom: solid gray 1px;">
 															<b>Phone:</b>
 														</div>
 													</div>
 													<div class="row"> 
 														<div class="col-md-5">
-															<input type="text" name="second_ecn" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $agreements->second_ecn; ?>" readonly style="background-color: #fff;">
+															<?php if(empty($agreements->second_ecn)){ echo '<br>'; }else{ echo $agreements->second_ecn; } ?>
+															<hr style="margin-top: 0;margin-bottom: 2px;border: 0;border-bottom: solid gray 1px;">
 															<b>2nd Emergency Contact Name:</b>
 														</div>
 														<div class="col-md-7">
-															<input type="text" name="second_ecn_no" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $agreements->second_ecn_no; ?>" readonly style="background-color: #fff;">
+															<?php if(empty($agreements->second_ecn_no)){ echo '<br>'; }else{ echo $agreements->second_ecn_no; } ?>
+															<hr style="margin-top: 0;margin-bottom: 2px;border: 0;border-bottom: solid gray 1px;">
 															<b>Phone:</b>
 														</div>
 													</div>
 													<div class="row"> 
 														<div class="col-md-5">
-															<input type="text" name="third_ecn" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $agreements->third_ecn; ?>" readonly style="background-color: #fff;">
+															<?php if(empty($agreements->third_ecn)){ echo '<br>'; }else{ echo $agreements->third_ecn; } ?>
+															<hr style="margin-top: 0;margin-bottom: 2px;border: 0;border-bottom: solid gray 1px;">
 															<b>3rd Emergency Contact Name:</b>
 														</div>
 														<div class="col-md-7">
-															<input type="text" name="third_ecn_no" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $agreements->third_ecn_no; ?>" readonly style="background-color: #fff;">
+															<?php if(empty($agreements->third_ecn_no)){ echo '<br>'; }else{ echo $agreements->third_ecn_no; } ?>
+															<hr style="margin-top: 0;margin-bottom: 2px;border: 0;border-bottom: solid gray 1px;">
 															<b>Phone:</b>
 														</div>
 													</div>
 													<br>
-													<div class="row"> 
+													<div class="row agreement"> 
 														<div class="col-md-12">
 															<table class="table table-bordered table-sm" style="width:80%;">
 																<tr>
 																	<td>Equipment Cost</td>
 																	<td>
 																		<div class="input-group mb-3">
-																		<div class="input-group-prepend">
-																			<h4>$</h4> 
-																		</div> &nbsp;
-																		<input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" style="font-size:20px;font-weight:bold;color:black;background-color: #fff;" aria-label="Amount (to the nearest dollar)" id="equipmentCost" name="equipmentCost" value="<?php echo $workorder->subtotal; ?>" readonly>
+																			<b>$<?php echo number_format($workorder->subtotal,2); ?></b>
 																		</div>
 																		<!-- <input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0"> -->
 																	</td>
@@ -1364,10 +1425,7 @@ table input.form-control {
 																	<td>Sales Tax</td>
 																	<td>
 																		<div class="input-group mb-3">
-																		<div class="input-group-prepend">
-																			<h4>$</h4> 
-																		</div> &nbsp;
-																		<input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" style="font-size:20px;font-weight:bold;color:black;background-color: #fff;" aria-label="Amount (to the nearest dollar)" id="salesTax" name="salesTax" value="<?php echo number_format($workorder->taxes); ?>" readonly>
+																		<b>$<?php echo number_format($workorder->taxes,2); ?></b>
 																		</div>
 																		<!-- <input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0"> -->
 																	</td>
@@ -1376,10 +1434,7 @@ table input.form-control {
 																	<td>Installation Cost</td>
 																	<td>
 																		<div class="input-group mb-3">
-																		<div class="input-group-prepend">
-																			<h4>$</h4> 
-																		</div> &nbsp;
-																		<input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" style="font-size:20px;font-weight:bold;color:black;background-color: #fff;" aria-label="Amount (to the nearest dollar)" id="installationCost" name="installationCost" value="<?php echo number_format($workorder->installation_cost); ?>" readonly>
+																		<b>$<?php echo number_format($workorder->installation_cost,2); ?></b>
 																		</div>
 																		<!-- <input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0"> -->
 																	</td>
@@ -1388,10 +1443,7 @@ table input.form-control {
 																	<td>One time (Program and Setup)</td>
 																	<td>
 																		<div class="input-group mb-3">
-																		<div class="input-group-prepend">
-																			<h4>$</h4> 
-																		</div> &nbsp;
-																		<input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" style="font-size:20px;font-weight:bold;color:black;background-color: #fff;" aria-label="Amount (to the nearest dollar)" id="otps" name="otps" value="<?php echo number_format($workorder->otp_setup); ?>" readonly >
+																		<b>$<?php echo number_format($workorder->otp_setup,2); ?></b>
 																		</div>
 																		<!-- <input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0"> -->
 																	</td>
@@ -1400,10 +1452,7 @@ table input.form-control {
 																	<td>Monthly Monitoring</td>
 																	<td>
 																		<div class="input-group mb-3">
-																		<div class="input-group-prepend">
-																			<h4>$</h4> 
-																		</div> &nbsp;
-																		<input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" style="font-size:20px;font-weight:bold;color:black;background-color: #fff;" aria-label="Amount (to the nearest dollar)" id="monthlyMonitoring" name="monthlyMonitoring" value="<?php echo number_format($workorder->monthly_monitoring); ?>" readonly>
+																		<b>	$<?php echo number_format($workorder->monthly_monitoring,2); ?></b>
 																		</div>
 																		<!-- <input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0"> -->
 																	</td>
@@ -1412,10 +1461,7 @@ table input.form-control {
 																	<td>Total Due</td>
 																	<td>
 																		<div class="input-group mb-3">
-																		<div class="input-group-prepend">
-																			<h4>$</h4> 
-																		</div> &nbsp;
-																		<input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" style="font-size:20px;font-weight:bold;color:black;background-color: #fff;" aria-label="Amount (to the nearest dollar)" id="totalDue" name="totalDue" value="<?php echo $workorder->grand_total; ?>" readonly>
+																		<b>	$<?php echo number_format($workorder->grand_total,2); ?></b>
 																		</div>
 																		<!-- <input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0"> -->
 																	</td>
@@ -1445,7 +1491,7 @@ table input.form-control {
 										</div>
 										<div class="ul-info">
 			         						<b class="ul-head">Agreement </b><br><br>
-											<div style="height:; overflow:auto; background:#FFFFFF; padding-left:10px;">
+											<div style="height:; overflow:auto; background:#FFFFFF; padding-left:10px;font-size:;">
 												<?php echo $workorder->terms_and_conditions; ?>
 											</div>
 		         						</div>
@@ -1459,21 +1505,21 @@ table input.form-control {
 																<div class="row">
 																<?php if(!empty($workorder->company_representative_signature)){ ?>
 																	<div class="col-md-4">
-																		<img src="<?php echo base_url($workorder->company_representative_signature); ?>" style="height: 150px;">
+																		<img src="<?php echo base_url($workorder->company_representative_signature); ?>" style="height: 100px;">
 																		<hr>
 																		<center><?php echo $first->FName.' '.$first->LName; ?></center>
 																	</div>
 																	<?php } ?>
 																	<?php if(!empty($workorder->primary_account_holder_signature)){ ?>
 																	<div class="col-md-4">
-																		<img src="<?php echo base_url($workorder->primary_account_holder_signature); ?>" style="height: 150px;">
+																		<img src="<?php echo base_url($workorder->primary_account_holder_signature); ?>" style="height: 100px;">
 																		<hr>
 																		<center><?php echo $workorder->primary_account_holder_name; ?></center>
 																	</div>
 																	<?php } ?>
 																	<?php if(!empty($workorder->secondary_account_holder_signature)){ ?>
 																	<div class="col-md-4">
-																		<img src="<?php echo base_url($workorder->secondary_account_holder_signature); ?>" style="height: 150px;">
+																		<img src="<?php echo base_url($workorder->secondary_account_holder_signature); ?>" style="height: 100px;">
 																		<hr>
 																		<center><?php echo $workorder->secondary_account_holder_name; ?></center>
 																	</div>

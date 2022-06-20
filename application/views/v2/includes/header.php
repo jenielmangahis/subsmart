@@ -400,6 +400,18 @@ if ($this->session->userdata('usertimezone') == null) {
                 </li>
                 <li>
                     <a href="#">
+                        <i class='bx bx-fw bxs-graduation'></i> University <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
+                    </a>
+                    <ul class="mt-3">
+                        <li>
+                            <a href="<?= base_url("SlideShare") ?>">
+                                <i class='bx bx-fw bx-video'></i> Slide Share
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">
                         <i class='bx bx-fw bx-dots-vertical-rounded'></i> More <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
                     </a>
                     <ul class="mt-3">
