@@ -1,5 +1,7 @@
 <?php include viewPath('v2/includes/header');?>
 
+<input type="hidden" value="<?=base_url();?>" id="baseurl" />
+
 <div class="ss-loader">
     <span>Loading...</span>
 </div>

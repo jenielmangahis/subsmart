@@ -528,12 +528,19 @@ img.company-logo2 {
                                         <?php } ?>
 										<?php if($workorder->work_order_type_id == '2'){ ?>
 											<a class="btn btn-sec" href="<?php echo base_url('workorder/editAlarm/' . $workorder->id) ?>"><span class="fa fa-edit"></span> Edit</a>
-										<?php }else{ ?>
+											<?php }elseif($workorder->work_order_type_id == '3')
+                                                    { ?>
+                                                    <a role="menuitem" class="btn btn-sec" tabindex="-1" href="<?php echo base_url('workorder/editSolar/' . $workorder->id) ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                                    <?php  }elseif($workorder->work_order_type_id == '4'){ ?>
+                                                    <a role="menuitem" class="btn btn-sec" tabindex="-1" href="<?php echo base_url('workorder/editInstallation/' . $workorder->id) ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                                    <?php } else{ ?>
                                         	<a class="btn btn-sec" href="<?php echo base_url('workorder/edit/' . $workorder->id) ?>"><span class="fa fa-edit"></span> Edit</a>
                                         <?php } ?>
 									<?php if($workorder->work_order_type_id == 1){ ?>
                        					<a href="<?php echo base_url('workorder/work_order_pdf/' . $workorder->id) ?>" class="btn btn-sec download_work_order_pdfsss" acs-id="<?php echo $workorder->customer_id; ?>" workorder-id="<?php echo $workorder->id; ?>"><span class="fa fa-file-pdf-o"></span> PDF</a>
-									<?php } else{ ?>
+										   <?php }else if($workorder->work_order_type_id == 4){ ?>
+										<a href="<?php echo base_url('workorder/work_order_pdf_agreement/' . $workorder->id) ?>" class="btn btn-sec download_work_order_pdfsss" acs-id="<?php echo $workorder->customer_id; ?>" workorder-id="<?php echo $workorder->id; ?>"><span class="fa fa-file-pdf-o"></span> PDF</a>
+										<?php } else{ ?>
 										<a href="<?php echo base_url('workorder/work_order_pdf_alarm/' . $workorder->id) ?>" class="btn btn-sec download_work_order_pdfsss" acs-id="<?php echo $workorder->customer_id; ?>" workorder-id="<?php echo $workorder->id; ?>"><span class="fa fa-file-pdf-o"></span> PDF</a>
 									<?php } ?>
 
@@ -612,10 +619,13 @@ img.company-logo2 {
 															<td align="left"><div style=""><b>Date:</b> </div></td>
 															<td align="right"><?php $wDate = $workorder->date_created; echo date("m-d-Y", strtotime($wDate) ); ?></td>
 														</tr>
+														<?php if($workorder->work_order_type_id == '2'){ ?> 
 														<tr>
 															<td align="left"><div style=""><b>Type:</b> </div></td>
 															<td align="right"><?php echo $workorder->job_type ?></td>
 														</tr>
+														<?php } ?>
+														<tr>
 															<td align="left"><div style=""><b>Priority:</b> </div></td>
 															<td align="right"><?php echo $workorder->priority ?></td>
 														</tr>
