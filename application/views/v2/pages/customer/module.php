@@ -1,7 +1,11 @@
 <?php include viewPath('v2/includes/header'); ?>
 <?php include viewPath('v2/includes/estimate/estimate_modals'); ?>
 <?php include viewPath('v2/includes/customer/customer_module_modals'); ?>
-
+<style>
+.send-message{
+    display: none;
+}
+</style>
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/customer_module_tabs'); ?>
@@ -50,6 +54,19 @@
     </div>
 </div>
 
+<!--SMS Messages Sent Modal-->
+<div class="modal fade nsm-modal fade" id="modalMessagesSent" tabindex="-1" aria-labelledby="modalMessagesSentLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" id="new_feed_modal_label">Messages Sent</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body sent-messages-container"></div>                                     
+        </div>
+    </div>
+</div>
+
 <?php include viewPath('customer/adv_cust/js_list'); ?>
 <script type="text/javascript">
     let modules = [];
@@ -66,6 +83,28 @@
                 }
             });
         });
+    });
+
+    $(document).on('click', '.sent-messages', function(){
+        var cid = $(this).attr('data-cid');
+
+        $('#modalMessagesSent').modal('show');
+
+        var url = base_url + 'messages/_load_customer_sent_messages';
+        $(".sent-messages-container").html('<span class="bx bx-loader bx-spin"></span>');
+
+        setTimeout(function () {
+          $.ajax({
+             type: "POST",
+             url: url,
+             data: {cid:cid},
+             success: function(o)
+             {          
+                $(".sent-messages-container").html(o);
+             }
+          });
+        }, 800);
+
     });
 
     function loadScoreChart() {

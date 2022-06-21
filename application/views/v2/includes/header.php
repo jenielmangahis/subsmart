@@ -82,7 +82,7 @@ if ($this->session->userdata('usertimezone') == null) {
                         </li>
                         <li class="<?php if ($page->title == 'Calls and Logs') : echo 'selected';
                                     endif; ?>">
-                            <a href="#">
+                            <a href="<?= base_url("calls") ?>">
                                 <i class='bx bx-fw bx-phone-call'></i> Calls and Logs
                             </a>
                         </li>

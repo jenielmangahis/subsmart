@@ -8,6 +8,35 @@
     display: block;
     margin-top: 13px;
 }
+.accordion-button{
+    background-color: #6a4a86 !important;
+    color:#ffffff;
+}
+.accordion-button:focus {
+    border: none !important;
+}
+.accordion-button:not(.collapsed) {
+    color: #ffffff !important; 
+}
+.accordion-button::after {    
+    background-color: #ffffff;
+}
+.accordion-button:not(.collapsed)::after{
+    background-color: #ffffff;
+    padding: 5px;
+}
+.btn-use-template{
+    position:absolute;
+    right:49px;
+    top:12px;
+    z-index: 99999;
+}
+.accordion-header{
+    position:relative;
+}
+.btn-use-template:hover{
+    background-color: #529562ba !important;
+}
 </style>
 <div class="row page-content g-0">
     <div class="col-12">
@@ -139,7 +168,7 @@
                         <div class="modal-dialog modal-md">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <span class="modal-title content-title" id="new_feed_modal_label">Send Message</span>
+                                    <span class="modal-title content-title" id="new_feed_modal_label">Send SMS</span>
                                     <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
                                 </div>
                                 <form action="" id="frm-send-message">
@@ -161,10 +190,15 @@
                                           </label>
                                         </div> -->
                                         <div class="col-md-12 mt-3">
-                                            <label for="">Message</label>
-                                            <textarea class="form-control" name="sms_txt_message" id="sms-txt" style="height:150px;"></textarea>                                    
+                                            <label for="" style="display:block;margin-bottom: 11px;">
+                                                Message
+                                                <a style="float: right;" class="nsm-button primary btn-sm btn-sms-template">Use SMS Template</a>
+                                            </label>
+                                            <div class="sms-message-container">
+                                                <textarea class="form-control" name="sms_txt_message" id="sms-txt" style="height:150px;"></textarea>                                    
+                                            </div>                                            
                                         </div>                                
-                                        <div class="help help-sm margin-bottom-sec">
+                                        <div class="help help-sm margin-bottom-sec" style="display:none;">
                                             message characters: <span class="margin-right-sec char-counter">0</span>
                                             left characters: <span class="margin-right-sec char-counter-left">0</span>
                                         </div>
@@ -219,6 +253,35 @@
                                     <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
                                 </div>
                                 <div class="modal-body sent-messages-container"></div>                                     
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--SMS Templates Modal-->
+                    <div class="modal fade nsm-modal fade" id="modalSmsTemplate" tabindex="-1" aria-labelledby="modalSmsTemplateLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <span class="modal-title content-title" id="new_feed_modal_label">SMS Template</span>
+                                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="accordion" id="smsTemplate">
+                                        <?php foreach($smsTemplates as $st){ ?>                                   
+                                        <div class="accordion-item">                                            
+                                            <h2 class="accordion-header" id="heading<?= $st->id; ?>" style="background-color: #6a4a86;">
+                                              <a class="nsm nsm-button primary btn-sm btn-use-template" data-id="<?= $st->id; ?>" href="javascript:void(0);">Use Template</a>
+                                              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse<?= $st->id; ?>" aria-expanded="true" aria-controls="collapse<?= $st->id; ?>">
+                                                <?= $st->title; ?>
+                                              </button>                                              
+                                            </h2>                                            
+                                            <div id="collapse<?= $st->id; ?>" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#smsTemplate">
+                                              <div class="accordion-body"><?= $st->sms_body; ?></div>
+                                            </div>
+                                        </div>
+                                        <?php } ?>
+                                    </div>
+                                </div>                                     
                             </div>
                         </div>
                     </div>
@@ -289,6 +352,7 @@
                 $('#customer-phone').val(customer_phone);
                 $('#modalSendMessage').modal('show');
                 $('#modalMessagesSent').modal('hide');
+                $('#sms-txt').val("");
             }else{
                 var msg = 'Phone number is needed to send sms. <br /><a href="javascript:void(0);" data-customer-name="'+customer_name+'" data-id="'+profid+'" class="nsm-button primary btn-set-customer-mobile">Set Mobile Number</a>'
                 Swal.fire({
@@ -412,6 +476,22 @@
             }, 800);
         });
 
+        $(document).on('click', ".btn-use-template", function(){
+            var stid = $(this).attr('data-id');         
+            var url = base_url + 'sms/_use_sms_template';
+            $.ajax({
+                type: 'POST',
+                url: url,                
+                data: {stid:stid},
+                success: function(o) {
+                    $('.sms-message-container').html(o);
+                    $('#modalSendMessage').modal('show');
+                    $('#modalSmsTemplate').modal('hide');
+                },
+            });
+
+        });
+
         $(document).on("click", ".delete-sms", function(e) {
             var smsid = $(this).attr("data-id");        
             var url = base_url + 'messages/_company_delete';
@@ -474,6 +554,11 @@
                  }
               });
             }, 800);
+        });
+
+        $(document).on('click', '.btn-sms-template', function(){
+            $('#modalSendMessage').modal('hide');
+            $('#modalSmsTemplate').modal('show');
         });
 
         $(document).on('submit', '#frm-resend-sms', function(e){

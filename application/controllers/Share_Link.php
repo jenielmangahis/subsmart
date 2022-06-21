@@ -682,6 +682,38 @@ class Share_Link extends CI_Controller
         
 
     }
+
+    
+    public function public_view_solar($id)
+    {
+        $this->page_data['workorder'] = $this->workorder_model->getById($id);
+        $work =  $this->workorder_model->getById($id);
+        
+        $this->page_data['company'] = $this->workorder_model->getCompanyCompanyId($work->company_id);
+        $this->page_data['customer'] = $this->workorder_model->getcustomerCompanyId($id);
+        $this->page_data['items'] = $this->workorder_model->getItems($id);
+
+        $this->page_data['itemsA'] = $this->workorder_model->getItemsAlarm($id);
+        $this->page_data['custom_fields'] = $this->workorder_model->getCustomFields($id);
+        
+        $WOitems = $this->workorder_model->getworkorderItems($id);
+        $this->page_data['workorder_items'] = $WOitems;
+
+        $this->page_data['first'] = $this->workorder_model->getuserfirst($work->company_representative_name);
+        $this->page_data['second'] = $this->workorder_model->getusersecond($work->primary_account_holder_name);
+        $this->page_data['third'] = $this->workorder_model->getuserthird($work->secondary_account_holder_name);
+
+        $this->page_data['lead'] = $this->workorder_model->getleadSource($work->lead_source_id);
+        $this->page_data['contacts'] = $this->workorder_model->get_contacts($work->customer_id);
+        $this->page_data['solars'] = $this->workorder_model->get_solar($id);
+        $this->page_data['solar_files'] = $this->workorder_model->get_solar_files($id);
+        
+        $this->page_data['agreements'] = $this->workorder_model->get_agreements($id);
+        $this->page_data['agree_items'] = $this->workorder_model->get_agree_items($id);
+
+        // add_footer_js('assets/js/esign/docusign/workorder.js');
+        $this->load->view('workorder/public_view_solar', $this->page_data);
+    }
 }
 
 

@@ -1316,4 +1316,5 @@ $route['messages/_company_resend_form'] = 'Sms/ajax_company_resend_form';
 $route['messages/_company_resend_form'] = 'Sms/ajax_company_resend_form';
 $route['customer/_update_customer_mobile_number'] = 'Customer/ajax_update_customer_mobile_number';
 $route['messages/_load_customer_sent_messages'] = 'Sms/ajax_customer_sent_messages';
+$route['sms/_use_sms_template'] = 'Sms/ajax_use_sms_template';
 

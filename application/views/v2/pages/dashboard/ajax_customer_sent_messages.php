@@ -37,7 +37,7 @@
                 </span>
                 <div class="chat-body clearfix">
                     <div class="header">
-                        <strong class="primary-font">nSmarTrac</strong> <small class="pull-right text-muted">
+                        <strong class="primary-font"><?= $company->business_name; ?></strong> <small class="pull-right text-muted">
                         <i class='bx bxs-calendar'></i><?= timeLapsedString($s['date']); ?></small>
                     </div>
                     <p><?= $s['msg']; ?></p>

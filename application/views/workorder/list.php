@@ -258,7 +258,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         <a role="menuitem" tabindex="-1" href="<?php echo base_url('workorder/editAlarm/' . $workorder->id) ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
                                                     <?php }elseif($workorder->work_order_type_id == '3')
                                                     { ?>
-                                                    <a role="menuitem" tabindex="-1" href="<?php echo base_url('workorder/editSolar/' . $workorder->id) ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                                    <a role="menuitem" tabindex="-1" href="<?php echo base_url('workorder/editWorkorderSolar/' . $workorder->id) ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
                                                     <?php  }elseif($workorder->work_order_type_id == '4'){ ?>
                                                     <a role="menuitem" tabindex="-1" href="<?php echo base_url('workorder/editInstallation/' . $workorder->id) ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
                                                     <?php } else{ ?>

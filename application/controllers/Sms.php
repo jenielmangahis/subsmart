@@ -19,6 +19,7 @@ class Sms extends Widgets {
         $this->load->model('Clients_model');
         $this->load->model('RingCentralAccounts_model');
         $this->load->model('TwilioAccounts_model');
+        $this->load->model('SmsTemplate_model');
 
         $cid = logged('company_id');
 
@@ -43,6 +44,8 @@ class Sms extends Widgets {
             $ringCentralAccount = $this->RingCentralAccounts_model->getByCompanyId($cid);
             $twilioAccount      = $this->TwilioAccounts_model->getByCompanyId($cid);
         }
+
+        $smsTemplates = $this->SmsTemplate_model->getAllByCompanyId($cid);
         
         $this->page_data['search'] = $search;
         $this->page_data['customers'] = $customers;
@@ -51,6 +54,7 @@ class Sms extends Widgets {
         $this->page_data['is_with_sms_api'] = $is_with_sms_api;
         $this->page_data['ringCentralAccount'] = $ringCentralAccount;
         $this->page_data['twilioAccount'] = $twilioAccount;
+        $this->page_data['smsTemplates'] = $smsTemplates;
         $this->load->view('v2/pages/dashboard/sms.php', $this->page_data);
     }
 
@@ -214,6 +218,7 @@ class Sms extends Widgets {
         $this->load->model('Clients_model');
         $this->load->model('RingCentralAccounts_model');
         $this->load->model('TwilioAccounts_model');
+        $this->load->model('Business_model');
 
         $cid  = logged('company_id');
         $uid  = logged('id');
@@ -224,6 +229,7 @@ class Sms extends Widgets {
         $client      = $this->Clients_model->getById($cid);
         $ringCentral = $this->RingCentralAccounts_model->getByCompanyId($cid);
         $twilioAccount = $this->TwilioAccounts_model->getByCompanyId($cid);
+        $company     = $this->Business_model->getByCompanyId($cid);
 
         $sentMessages = array();
         if( $client->default_sms_api == 'ring_central' ){
@@ -235,6 +241,21 @@ class Sms extends Widgets {
         $this->page_data['sentMessages'] = $sentMessages;
         $this->page_data['companySms'] = $companySms;
         $this->page_data['customer']   = $customer;
+        $this->page_data['company']    = $company;
         $this->load->view('v2/pages/dashboard/ajax_customer_sent_messages.php', $this->page_data);
+    }
+
+    public function ajax_use_sms_template()
+    {
+        $this->load->model('SmsTemplate_model');
+
+        $cid  = logged('company_id');
+        $post = $this->input->post();
+
+        $smsTemplate = $this->SmsTemplate_model->getByIdAndCompanyId($post['stid'], $cid);
+
+        $this->page_data['smsTemplate'] = $smsTemplate;
+        $this->load->view('v2/pages/dashboard/ajax_use_sms_template.php', $this->page_data);
+
     }
 }

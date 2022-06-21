@@ -261,15 +261,17 @@ class Customer_advance_model extends MY_Model {
         $this->db->from("acs_profile");
         //$this->db->where("fk_user_id", $user_id);
         $this->db->select('users.id,acs_profile.prof_id,acs_profile.first_name,acs_profile.last_name,acs_profile.email,acs_profile.phone_m, acs_profile.industry_type_id');
-        $this->db->join('users', 'users.id = acs_profile.fk_user_id','left');
-        $this->db->where('acs_profile.company_id', $company_id);
+        $this->db->join('users', 'users.id = acs_profile.fk_user_id','left');        
 
         if(!empty($search)){
+            $this->db->group_start();
             $this->db->like('acs_profile.first_name', $search['value'], 'both');
             $this->db->or_like('acs_profile.last_name', $search['value'], 'both');
             $this->db->or_like('acs_profile.email', $search['value'], 'both');
+            $this->db->group_end();
         }
 
+        $this->db->where('acs_profile.company_id', $company_id);
         $this->db->order_by('prof_id', "DESC");
         //$this->db->limit(20);
         $query = $this->db->get();

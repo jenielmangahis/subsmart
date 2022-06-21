@@ -31,6 +31,10 @@
     <?php if( isset($enable_input_mask) ){ ?>
     <script src="<?= base_url("assets/plugins/inputmask/dist/jquery.inputmask.bundle.js"); ?>"></script>
     <?php } ?>
+    <!-- Twilio Call -->
+    <?php if( isset($enable_twilio_call) ){ ?>
+    <script src="<?= base_url("assets/js/twilio.min.js"); ?>"></script>
+    <?php } ?>
     <!-- Ckeditor -->
     <script type="text/javascript" src="<?= base_url("assets/ckeditor/ckeditor.js"); ?>"></script>
     <!-- Main Script -->
