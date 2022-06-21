@@ -34,6 +34,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     .action-bar ul li .dropdown-menu .dropdown-item:hover {
         background-color: #f8f9fa;
     }
+    .action-bar ul li .dropdown-menu a:not(.dropdown-item):hover {
+       background-color: revert;
+    }
 </style>
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">
@@ -52,7 +55,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="card-body hid-desk" style="padding-bottom:0px;">
                             <div class="row">
                                 <div class="col-sm-6">
-                                    <h3 class="page-title" style="margin: 0 !important">Income by Customer Summary Report</h3>
+                                    <h3 class="page-title" style="margin: 0 !important">Sales by Product/Service Summary Report</h3>
                                 </div>
                             </div>
                             <div class="row align-items-center">
@@ -85,11 +88,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         <option value="this-week">This Week</option>
                                                         <option value="this-week-to-date">This Week-to-date</option>
                                                         <option value="this-month">This Month</option>
-                                                        <option value="this-month-to-date">This Month-to-date</option>
+                                                        <option value="this-month-to-date" selected>This Month-to-date</option>
                                                         <option value="this-quarter">This Quarter</option>
                                                         <option value="this-quarter-to-date">This Quarter-to-date</option>
                                                         <option value="this-year">This Year</option>
-                                                        <option value="this-year-to-date" selected>This Year-to-date</option>
+                                                        <option value="this-year-to-date">This Year-to-date</option>
                                                         <option value="this-year-to-last-month">This Year-to-last-month</option>
                                                         <option value="yesterday">Yesterday</option>
                                                         <option value="recent">Recent</option>
@@ -113,7 +116,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     </select>
                                                 </div>
                                                 <div class="col-2 d-flex align-items-end">
-                                                    <input type="text" name="start_date" id="start-date" class="date form-control" value="<?=date("01/01/Y")?>">
+                                                    <input type="text" name="end_date" id="end-date" class="date form-control" value="<?=date("m/01/Y")?>">
                                                 </div>
                                                 <div class="col-1 text-center d-flex align-items-end justify-content-center">
                                                     <span class="h6">to</span>
@@ -128,7 +131,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <div class="col-2">
                                                     <label for="display-columns-by">Display columns by</label>
                                                     <select name="display_columns_by" id="display-columns-by" class="form-control">
-                                                        <option value="other">Other</option>
+                                                        <option value="total-only" selected>Total Only</option>
+                                                        <option value="days">Days</option>
+                                                        <option value="weeks">Weeks</option>
+                                                        <option value="months">Months</option>
+                                                        <option value="quarters">Quarters</option>
+                                                        <option value="years">Years</option>
+                                                        <option value="customers">Customers</option>
+                                                        <option value="products-services">Products/Services</option>
                                                     </select>
                                                 </div>
                                                 <div class="col-3">
@@ -165,70 +175,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                 <input type="radio" id="col-non-zero" name="show_cols">
                                                                 <label for="col-non-zero">Non-zero</label>
                                                             </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-3">
-                                                    <label for="">Compare another period</label>
-                                                    <div class="dropdown w-100">
-                                                        <button class="dropdown-toggle btn btn-transparent hide-toggle w-100" id="filterDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                            Select period&nbsp;&nbsp;<i class="fa fa-caret-down"></i>
-                                                        </button>
-
-                                                        <div class="dropdown-menu p-3 w-100" aria-labelledby="filterDropdown">
-                                                            <div class="checkbox checkbox-sec d-block my-2">
-                                                                <input type="checkbox" id="previous-period" name="selected_period">
-                                                                <label for="previous-period">Previous period (PP)</label>
-                                                            </div>
-                                                            <div class="row">
-                                                                <div class="col">
-                                                                    <div class="checkbox checkbox-sec my-2">
-                                                                        <input type="checkbox" id="previous-period-dollar-change" disabled>
-                                                                        <label for="previous-period-dollar-change" class="text-muted">$ change</label>
-                                                                    </div>
-                                                                    <div class="checkbox checkbox-sec my-2">
-                                                                        <input type="checkbox" id="previous-period-percent-change" disabled>
-                                                                        <label for="previous-period-percent-change" class="text-muted">% change</label>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="checkbox checkbox-sec d-block my-2">
-                                                                <input type="checkbox" id="previous-year" name="selected_period">
-                                                                <label for="previous-year">Previous year (PY)</label>
-                                                            </div>
-                                                            <div class="row">
-                                                                <div class="col">
-                                                                    <div class="checkbox checkbox-sec my-2">
-                                                                        <input type="checkbox" id="previous-year-dollar-change" disabled>
-                                                                        <label for="previous-year-dollar-change" class="text-muted">$ change</label>
-                                                                    </div>
-                                                                    <div class="checkbox checkbox-sec my-2">
-                                                                        <input type="checkbox" id="previous-year-percent-change" disabled>
-                                                                        <label for="previous-year-percent-change" class="text-muted">% change</label>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="checkbox checkbox-sec d-block my-2">
-                                                                <input type="checkbox" id="year-to-date" name="selected_period">
-                                                                <label for="year-to-date">Year-to-date (YTD)</label>
-                                                            </div>
-                                                            <div class="row">
-                                                                <div class="col">
-                                                                    <div class="checkbox checkbox-sec my-2">
-                                                                        <input type="checkbox" id="year-to-date-percent-of-ytd" disabled>
-                                                                        <label for="year-to-date-percent-of-ytd" class="text-muted">% of YTD</label>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="checkbox checkbox-sec d-block my-2">
-                                                                <input type="checkbox" id="percent-of-row" name="selected_period">
-                                                                <label for="percent-of-row">% of Row</label>
-                                                            </div>
-                                                            <div class="checkbox checkbox-sec d-block my-2">
-                                                                <input type="checkbox" id="percent-of-col" name="selected_period">
-                                                                <label for="percent-of-col">% of Column</label>
-                                                            </div>
-                                                            <p class="m-0"><a href="#" class="text-info">Reorder columns</a></p>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -319,45 +265,48 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <div class="row">
                                                     <div class="col-12 text-center">
                                                         <h4>nSmarTrac <i class="material-icons" style="font-size:16px">edit</i></h4>
-                                                        <p>Income by Customer Summary <br> As of Janary 1-<?=date("F d, Y")?></p>
+                                                        <p>Sales by Product/Service Summary<br> <?=date("F 1-j, Y")?></p>
                                                     </div>
                                                 </div>
 
                                                 <div class="row">
                                                     <div class="col-12">
-                                                        <table class="table">
+                                                        <table class="table" style="width: 100%;">
                                                             <thead>
                                                                 <tr>
                                                                     <th rowspan="2"></th>
-                                                                    <th class="text-right">INCOME</th>
-                                                                    <th class="text-right">EXPENSES</th>
-                                                                    <th class="text-right">NET INCOME</th>
+                                                                    <th class="text-center" colspan="7">TOTAL</th>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th class="text-right">QUANTITY</th>
+                                                                    <th class="text-right">AMOUNT</th>
+                                                                    <th class="text-right">% OF SALES</th>
+                                                                    <th class="text-right">AVG PRICE</th>
+                                                                    <th class="text-right">COGS</th>
+                                                                    <th class="text-right">GROSS MARGIN</th>
+                                                                    <th class="text-right">GROSS MARGIN %</th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
-                                                                <tr data-toggle="collapse" data-target="#accordion" class="clickable collapse-row collapsed">
-                                                                    <td><i class="fa fa-caret-right"></i> Test Customer</td>
-                                                                    <td class="text-right"><b>44.99</b></td>
+                                                                <tr>
+                                                                    <td>Test Inventory</td>
+                                                                    <td class="text-right">1.00</td>
+                                                                    <td class="text-right">22,544.77</td>
+                                                                    <td class="text-right">100.00%</td>
+                                                                    <td class="text-right">22,544.77</td>
                                                                     <td class="text-right"></td>
-                                                                    <td class="text-right"><b>$44.99</b></td>
-                                                                </tr>
-                                                                <tr  class="clickable collapse-row collapse"  id="accordion">
-                                                                    <td>&emsp;Test Customer</td>
-                                                                    <td class="text-right">44.99</td>
                                                                     <td class="text-right"></td>
-                                                                    <td class="text-right">$44.99</td>
-                                                                </tr>
-                                                                <tr  class="clickable collapse-row collapse"  id="accordion">
-                                                                    <td>&emsp;<b>Total for Test Customer</b></td>
-                                                                    <td class="text-right"><b>44.99</b></td>
                                                                     <td class="text-right"></td>
-                                                                    <td class="text-right"><b>$44.99</b></td>
                                                                 </tr>
                                                                 <tr>
-                                                                    <td>TOTAL</td>
-                                                                    <td class="text-right"><b>$44.99</b></td>
+                                                                    <td><b>TOTAL</b></td>
+                                                                    <td class="text-right"></td>
+                                                                    <td class="text-right"><b>$22,544.77</b></td>
+                                                                    <td class="text-right"><b>100.00%</b></td>
+                                                                    <td class="text-right"></td>
                                                                     <td class="text-right"><b>$0.00</b></td>
-                                                                    <td class="text-right"><b>$44.99</b></td>
+                                                                    <td class="text-right"></td>
+                                                                    <td class="text-right"></td>
                                                                 </tr>
                                                             </tbody>
                                                         </table>

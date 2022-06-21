@@ -631,6 +631,86 @@ class Workorder extends MY_Controller
         $this->load->view('workorder/view', $this->page_data);
     }
 
+    public function printSolar($id)
+    {
+        $this->page_data['workorder'] = $this->workorder_model->getById($id);
+        $work =  $this->workorder_model->getById($id);
+        
+        $this->page_data['company'] = $this->workorder_model->getCompanyCompanyId($work->company_id);
+        $this->page_data['customer'] = $this->workorder_model->getcustomerCompanyId($id);
+        $this->page_data['items'] = $this->workorder_model->getItems($id);
+
+        $this->page_data['itemsA'] = $this->workorder_model->getItemsAlarm($id);
+        $this->page_data['custom_fields'] = $this->workorder_model->getCustomFields($id);
+        
+        $WOitems = $this->workorder_model->getworkorderItems($id);
+        $this->page_data['workorder_items'] = $WOitems;
+
+        $this->page_data['first'] = $this->workorder_model->getuserfirst($work->company_representative_name);
+        $this->page_data['second'] = $this->workorder_model->getusersecond($work->primary_account_holder_name);
+        $this->page_data['third'] = $this->workorder_model->getuserthird($work->secondary_account_holder_name);
+
+        $this->page_data['lead'] = $this->workorder_model->getleadSource($work->lead_source_id);
+        $this->page_data['contacts'] = $this->workorder_model->get_contacts($work->customer_id);
+        $this->page_data['solars'] = $this->workorder_model->get_solar($id);
+        $this->page_data['solar_files'] = $this->workorder_model->get_solar_files($id);
+        
+        $this->page_data['agreements'] = $this->workorder_model->get_agreements($id);
+        $this->page_data['agree_items'] = $this->workorder_model->get_agree_items($id);
+
+        // add_footer_js('assets/js/esign/docusign/workorder.js');
+        $this->load->view('workorder/printSolar', $this->page_data);
+    }
+
+    public function editWorkorderSolar($id)
+    {
+        $this->page_data['workorder'] = $this->workorder_model->getById($id);
+        $work =  $this->workorder_model->getById($id);
+        
+        $this->page_data['company'] = $this->workorder_model->getCompanyCompanyId($work->company_id);
+        $this->page_data['customer'] = $this->workorder_model->getcustomerCompanyId($id);
+        $this->page_data['items'] = $this->workorder_model->getItems($id);
+
+        $this->page_data['itemsA'] = $this->workorder_model->getItemsAlarm($id);
+        $this->page_data['custom_fields'] = $this->workorder_model->getCustomFields($id);
+        
+        $WOitems = $this->workorder_model->getworkorderItems($id);
+        $this->page_data['workorder_items'] = $WOitems;
+
+        $this->page_data['first'] = $this->workorder_model->getuserfirst($work->company_representative_name);
+        $this->page_data['second'] = $this->workorder_model->getusersecond($work->primary_account_holder_name);
+        $this->page_data['third'] = $this->workorder_model->getuserthird($work->secondary_account_holder_name);
+
+        $this->page_data['lead'] = $this->workorder_model->getleadSource($work->lead_source_id);
+        $this->page_data['contacts'] = $this->workorder_model->get_contacts($work->customer_id);
+        $this->page_data['solars'] = $this->workorder_model->get_solar($id);
+        $this->page_data['solar_files'] = $this->workorder_model->get_solar_files($id);
+        
+        $this->page_data['agreements'] = $this->workorder_model->get_agreements($id);
+        $this->page_data['agree_items'] = $this->workorder_model->get_agree_items($id);
+        $this->page_data['lead_source'] = $this->workorder_model->getlead_source($company_id);
+        $this->page_data['payments'] = $this->workorder_model->get_payments_details($id);
+
+        $this->page_data['users_lists'] = $this->users_model->getAllUsersByCompanyID($work->company_id);
+
+        $spt_query = array(
+            'table' => 'ac_system_package_type',
+            'order' => array(
+                'order_by' => 'id',
+            ),
+            'select' => '*',
+        );
+
+        $this->page_data['system_package_type'] = $this->general->get_data_with_param($spt_query);
+
+        $this->page_data['customers'] = $this->workorder_model->getByProfIdComp($work->customer_id);
+
+
+        // add_footer_js('assets/js/esign/docusign/workorder.js');
+        $this->load->view('workorder/editWorkorderSolar', $this->page_data);
+    }
+
+
 
     public function edit($id)
     {
@@ -2329,6 +2409,103 @@ class Workorder extends MY_Controller
 
 
         // $this->pdf->stream("welcome.pdf");
+    }
+
+    public function work_order_pdf_solar($wo_id)
+    {
+        // $id = $this->input->post('id');
+        // $wo_id = $this->input->post('wo_id');
+
+        $workorder = $this->workorder_model->get_workorder_data($wo_id);
+        // var_dump($workData);
+
+        $source_id = $workorder->lead_source_id;
+        // $sourcea = $this->workorder_model->get_source_data($source_id);
+        
+        $workorderNo = $workorder->work_order_number;
+        $c_id = $workorder->company_id;
+        $p_id = $workorder->customer_id;
+        // $source = $source->ls_name;
+
+        $cliets = $this->workorder_model->get_cliets_data($c_id);
+        $customerData = $this->workorder_model->get_customerData_data($p_id);
+
+        $customs = $this->workorder_model->get_custom_data($wo_id);
+        // $items = $this->workorder_model->getitemsWorkOrderAlarm($wo_id);
+        $items = $this->workorder_model->get_agree_items($wo_id);
+        $payment = $this->workorder_model->getpayment($wo_id);
+        $business = $this->workorder_model->getbusiness($c_id);
+        $business_logo = $business->business_image;
+        $agreements = $this->workorder_model->get_agreements($wo_id);
+
+        $company_id = $workorder->company_id;
+
+        $first = $this->workorder_model->getuserfirst($workorder->company_representative_name);
+        $second = $this->workorder_model->getusersecond($workorder->primary_account_holder_name);
+        $third = $this->workorder_model->getuserthird($workorder->secondary_account_holder_name);
+
+        $solars = $this->workorder_model->get_solar($wo_id);
+        $solar_files = $this->workorder_model->get_solar_files($wo_id);
+
+        $data = array(
+            'workorder'                         => $workorderNo,
+            'company_representative_signature'  => $workorder->company_representative_signature,
+            'company_representative_name'       => $workorder->company_representative_name,
+            'primary_account_holder_signature'  => $workorder->primary_account_holder_signature,
+            'primary_account_holder_name'       => $workorder->primary_account_holder_name,
+            'secondary_account_holder_signature'=> $workorder->secondary_account_holder_signature,
+            'secondary_account_holder_name'     => $workorder->secondary_account_holder_name,
+
+            'comments'                          => $workorder->comments,
+            'header'                            => $workorder->header,
+            // 'source' => $source
+
+            'template'                          => '3',
+            'business_logo'                     => $business_logo,
+
+            'first'                             => $first,
+            'second'                            => $second,
+            'third'                             => $third,
+
+            'company_id'                        => $company_id,
+
+            'tor'                               => $solars->tor,
+            'sfoh'                              => $solars->sfoh,
+            'aor'                               => $solars->aor,
+            'spmp'                              => $solars->spmp,
+            'hoa'                               => $solars->hoa,
+            'hoa_text'                          => $solars->hoa_text,
+            'estimated_bill'                    => $solars->estimated_bill,
+            'ebis'                              => $solars->ebis,
+            'hdygi'                             => $solars->hdygi,
+            'hdygi_file'                        => $solars->hdygi_file,
+            'eba_text'                          => $solars->eba_text,
+            'es'                                => $solars->es,
+            'options'                           => $solars->options,
+
+            'firstname'                         => $customerData->first_name,
+            'lastname'                          => $customerData->last_name,
+            'address'                           => $customerData->mail_add,
+            'city'                              => $customerData->city,
+            'state'                             => $customerData->state,
+            'county'                            => $customerData->county,
+            'postcode'                          => $customerData->zip_code,
+            'email'                             => $customerData->email,
+        );
+
+        // dd($agreements);
+
+
+    // $message2 = $this->load->view('workorder/send_email_acs_alarm', $data, true);
+    // $filename = $workData->company_representative_signature;
+            
+        $filename = "nSmarTrac_work_order_".$wo_id."_solar";
+        // $this->load->library('pdf');
+        // $this->pdf->load_view('workorder/send_email_acs_alarm', $data, $filename, "portrait");
+        $this->load->library('pdf');
+
+
+        $this->pdf->load_view('workorder/work_order_pdf_template_solar', $data, $filename, "portrait");
     }
 
 
@@ -8715,6 +8892,316 @@ class Workorder extends MY_Controller
 
         //     }
     }
+
+    public function updateWorkorderSolar()
+    {
+        $company_id  = getLoggedCompanyID();
+        $user_id  = getLoggedUserID();
+
+        $id = $this->input->post('wo_id');
+        $wo_id = $this->input->post('wo_id');
+
+        // var_dump($id);
+        
+        if(!empty($this->input->post('company_representative_approval_signature1aM_web')))
+        {
+            $rand1  = rand(10,10000000);
+            $datasig            = $this->input->post('company_representative_approval_signature1aM_web');
+            $folderPath         = "./uploads/Signatures/1/";
+            $image_parts        = explode(";base64,", $datasig);
+            $image_type_aux     = explode("image/", $image_parts[0]);
+            $image_type         = $image_type_aux[1];
+            $image_base64       = base64_decode($image_parts[1]);
+            $file               = $folderPath. $rand1 . $wo_id . '_installation_company' . '.'.$image_type;
+            $file_save          = 'uploads/Signatures/1/'. $rand1 . $wo_id . '_installation_company' . '.'.$image_type;
+            file_put_contents($file, $image_base64);
+        }
+        else{
+            $one = $this->workorder_model->getById($id);
+            $file_save = $one->company_representative_signature;
+        }
+
+        if(!empty($this->input->post('primary_representative_approval_signature1aM_web')))
+        {
+            $rand2  = rand(10,10000000);
+            $datasig2           = $this->input->post('primary_representative_approval_signature1aM_web');
+            $folderPath2        = "./uploads/Signatures/1/";
+            $image_parts2       = explode(";base64,", $datasig2);
+            $image_type_aux2    = explode("image/", $image_parts2[0]);
+            $image_type2        = $image_type_aux2[1];
+            $image_base642      = base64_decode($image_parts2[1]);
+            $file2              = $folderPath2. $rand2 . $wo_id . '_installation_primary' . '.'.$image_type2;
+            $file2_save         = 'uploads/Signatures/1/'. $rand2 . $wo_id . '_installation_primary' . '.'.$image_type2;
+            file_put_contents($file2, $image_base642);
+        }
+        else{
+            $two = $this->workorder_model->getById($id);
+            $file2_save = $two->primary_account_holder_signature;
+        }
+
+        if(!empty($this->input->post('secondary_representative_approval_signature1aM_web')))
+        {
+            $rand3  = rand(10,10000000);
+            $datasig3           = $this->input->post('secondary_representative_approval_signature1aM_web');
+            $folderPath3        = "./uploads/Signatures/1/";
+            $image_parts3       = explode(";base64,", $datasig3);
+            $image_type_aux3    = explode("image/", $image_parts3[0]);
+            $image_type3        = $image_type_aux3[1];
+            $image_base643      = base64_decode($image_parts3[1]);
+            $file3              = $folderPath3. $rand3 . $wo_id . '_installation_secondary' . '.'.$image_type3;
+            $file3_save         = 'uploads/Signatures/1/'. $rand3 . $wo_id . '_installation_secondary' . '.'.$image_type3;
+            file_put_contents($file3, $image_base643);
+        }
+        else{
+            $three = $this->workorder_model->getById($id);
+            $file3_save = $three->secondary_account_holder_signature;
+        }
+        
+        // $action = $this->input->post('action');
+        // if($action == 'Submit') {
+            $dateIssued = date('Y-m-d', strtotime($this->input->post('schedule_date_given')));
+
+        $acs = array(
+            'prof_id'                   => $this->input->post('acs_id'),
+            'last_name'                 => $this->input->post('lastname'),
+            'first_name'                => $this->input->post('firstname'),
+            'phone_h'                   => $this->input->post('phone'),
+            'phone_m'                   => $this->input->post('mobile'),
+            'email'                     => $this->input->post('email'),
+            'country'                   => $this->input->post('country'),
+
+            'mail_add'                  => $this->input->post('address'),
+            'city'                      => $this->input->post('city'),
+            'state'                     => $this->input->post('state'),
+            'zip_code'                  => $this->input->post('postcode'),
+        );
+
+        $w_acs = $this->workorder_model->update_acs_solar($acs);
+
+
+        $dateIssued = date('Y-m-d', strtotime($this->input->post('current_date')));
+
+        $new_data = array(
+            
+            'id'                                    => $id,
+            'phone_number'                          => $this->input->post('phone'),
+            'mobile_number'                         => $this->input->post('mobile'),
+            'email'                                 => $this->input->post('email'),
+            
+            'job_location'                          => $this->input->post('address'),
+            'city'                                  => $this->input->post('city'),
+            'state'                                 => $this->input->post('state'),
+            'country'                               => $this->input->post('country'),
+            'zip_code'                              => $this->input->post('postcode'),
+            
+            'payment_method'                        => $this->input->post('payment_method'),
+            'payment_amount'                        => $this->input->post('payment_amount'),
+
+            'lead_source_id'                        => $this->input->post('lead_source'),
+            'panel_communication'                   => $this->input->post('system_type'),
+
+            'comments'                              => $this->input->post('comments'),
+
+             //signature
+             'company_representative_signature'     => $file_save,
+             'company_representative_name'          => $this->input->post('company_representative_printed_name'),
+             'primary_account_holder_signature'     => $file2_save,
+             'primary_account_holder_name'          => $this->input->post('primary_account_holder_name'),
+             'secondary_account_holder_signature'   => $file3_save,
+             'secondary_account_holder_name'        => $this->input->post('secondery_account_holder_name'),
+
+            'date_updated'                          => date("Y-m-d H:i:s")
+            
+        );
+
+        $addQuery = $this->workorder_model->update_workorder_solar($new_data);
+
+
+        $objWorkOrder = $this->workorder_model->getDataByWO($this->input->post('wo_id'));
+        if( $objWorkOrder ){
+            customerAuditLog(logged('id'), $objWorkOrder->customer_id, $objWorkOrder->id, 'Workorder', 'Updated workorder #'.$objWorkOrder->work_order_number);
+        }        
+        
+
+        if($this->input->post('payment_method') == 'Cash'){
+            $payment_data = array(
+            
+                'payment_method'    => $this->input->post('payment_method'),
+                'amount'            => $this->input->post('payment_amount'),
+                'is_collected'      => '1',
+                'work_order_id'     => $id,
+                'date_updated'      => date("Y-m-d H:i:s")
+            );
+
+            $pay = $this->workorder_model->update_cash($payment_data);
+        }
+        elseif($this->input->post('payment_method') == 'Check'){
+            $payment_data = array(
+            
+                'payment_method'    => $this->input->post('payment_method'),
+                'amount'            => $this->input->post('payment_amount'),
+                'check_number'      => $this->input->post('check_number'),
+                'routing_number'    => $this->input->post('routing_number'),
+                'work_order_id'     => $id,
+                'date_updated'      => date("Y-m-d H:i:s")
+            );
+
+            $pay = $this->workorder_model->update_check($payment_data);
+        }
+        elseif($this->input->post('payment_method') == 'Credit Card'){
+            $payment_data = array(
+            
+                'payment_method'    => $this->input->post('payment_method'),
+                'amount'            => $this->input->post('payment_amount'),
+                'credit_number'     => $this->input->post('credit_number'),
+                'credit_expiry'     => $this->input->post('credit_expiry'),
+                'credit_cvc'        => $this->input->post('credit_cvc'),
+                'work_order_id'     => $id,
+                'date_updated'      => date("Y-m-d H:i:s")
+            );
+
+            $pay = $this->workorder_model->update_creditCard($payment_data);
+        }
+        elseif($this->input->post('payment_method') == 'Debit Card'){
+            $payment_data = array(
+            
+                'payment_method'    => $this->input->post('payment_method'),
+                'amount'            => $this->input->post('payment_amount'),
+                'credit_number'     => $this->input->post('debit_credit_number'),
+                'credit_expiry'     => $this->input->post('debit_credit_expiry'),
+                'credit_cvc'        => $this->input->post('debit_credit_cvc'),
+                'work_order_id'     => $id,
+                'date_updated'      => date("Y-m-d H:i:s")
+            );
+
+            $pay = $this->workorder_model->update_debitCard($payment_data);
+        }
+        elseif($this->input->post('payment_method') == 'ACH'){
+            $payment_data = array(
+            
+                'payment_method'    => $this->input->post('payment_method'),
+                'amount'            => $this->input->post('payment_amount'),
+                'routing_number'    => $this->input->post('ach_routing_number'),
+                'account_number'    => $this->input->post('ach_account_number'),
+                'work_order_id'     => $id,
+                'date_updated'      => date("Y-m-d H:i:s")
+            );
+
+            $pay = $this->workorder_model->update_ACH($payment_data);
+        }
+        elseif($this->input->post('payment_method') == 'Venmo'){
+            $payment_data = array(
+            
+                'payment_method'        => $this->input->post('payment_method'),
+                'amount'                => $this->input->post('payment_amount'),
+                'account_credentials'   => $this->input->post('account_credentials'),
+                'account_note'          => $this->input->post('account_note'),
+                'confirmation'          => $this->input->post('confirmation'),
+                'work_order_id'         => $id,
+                'date_updated'          => date("Y-m-d H:i:s")
+            );
+
+            $pay = $this->workorder_model->update_Venmo($payment_data);
+        }
+        elseif($this->input->post('payment_method') == 'Paypal'){
+            $payment_data = array(
+            
+                'payment_method'        => $this->input->post('payment_method'),
+                'amount'                => $this->input->post('payment_amount'),
+                'account_credentials'   => $this->input->post('paypal_account_credentials'),
+                'account_note'          => $this->input->post('paypal_account_note'),
+                'confirmation'          => $this->input->post('paypal_confirmation'),
+                'work_order_id'         => $id,
+                'date_updated'          => date("Y-m-d H:i:s")
+            );
+
+            $pay = $this->workorder_model->update_Paypal($payment_data);
+        }
+        elseif($this->input->post('payment_method') == 'Square'){
+            $payment_data = array(
+            
+                'payment_method'        => $this->input->post('payment_method'),
+                'amount'                => $this->input->post('payment_amount'),
+                'account_credentials'   => $this->input->post('square_account_credentials'),
+                'account_note'          => $this->input->post('square_account_note'),
+                'confirmation'          => $this->input->post('square_confirmation'),
+                'work_order_id'         => $id,
+                'date_updated'          => date("Y-m-d H:i:s")
+            );
+
+            $pay = $this->workorder_model->update_Square($payment_data);
+        }
+        elseif($this->input->post('payment_method') == 'Warranty Work'){
+            $payment_data = array(
+            
+                'payment_method'        => $this->input->post('payment_method'),
+                'amount'                => $this->input->post('payment_amount'),
+                'account_credentials'   => $this->input->post('warranty_account_credentials'),
+                'account_note'          => $this->input->post('warranty_account_note'),
+                'work_order_id'         => $id,
+                'date_updated'          => date("Y-m-d H:i:s")
+            );
+
+            $pay = $this->workorder_model->update_Warranty($payment_data);
+        }
+        elseif($this->input->post('payment_method') == 'Home Owner Financing'){
+            $payment_data = array(
+            
+                'payment_method'        => $this->input->post('payment_method'),
+                'amount'                => $this->input->post('payment_amount'),
+                'account_credentials'   => $this->input->post('home_account_credentials'),
+                'account_note'          => $this->input->post('home_account_note'),
+                'work_order_id'         => $id,
+                'date_updated'          => date("Y-m-d H:i:s")
+            );
+
+            $pay = $this->workorder_model->update_Home($payment_data);
+        }
+        elseif($this->input->post('payment_method') == 'e-Transfer'){
+            $payment_data = array(
+            
+                'payment_method'        => $this->input->post('payment_method'),
+                'amount'                => $this->input->post('payment_amount'),
+                'account_credentials'   => $this->input->post('e_account_credentials'),
+                'account_note'          => $this->input->post('e_account_note'),
+                'work_order_id'         => $id,
+                'date_updated'          => date("Y-m-d H:i:s")
+            );
+
+            $pay = $this->workorder_model->update_Transfer($payment_data);
+        }
+        elseif($this->input->post('payment_method') == 'Other Credit Card Professor'){
+            $payment_data = array(
+            
+                'payment_method'        => $this->input->post('payment_method'),
+                'amount'                => $this->input->post('payment_amount'),
+                'credit_number'         => $this->input->post('other_credit_number'),
+                'credit_expiry'         => $this->input->post('other_credit_expiry'),
+                'credit_cvc'            => $this->input->post('other_credit_cvc'),
+                'work_order_id'         => $id,
+                'date_updated'          => date("Y-m-d H:i:s")
+            );
+
+            $pay = $this->workorder_model->update_Professor($payment_data);
+        }
+        elseif($this->input->post('payment_method') == 'Other Payment Type'){
+            $payment_data = array(
+            
+                'payment_method'        => $this->input->post('payment_method'),
+                'amount'                => $this->input->post('payment_amount'),
+                'account_credentials'   => $this->input->post('other_payment_account_credentials'),
+                'account_note'          => $this->input->post('other_payment_account_note'),
+                'work_order_id'         => $id,
+                'date_updated'          => date("Y-m-d H:i:s")
+            );
+
+            $pay = $this->workorder_model->update_Other($payment_data);
+        }
+
+        
+        redirect('workorder');
+    }
+
 
     public function preview($id)
     {

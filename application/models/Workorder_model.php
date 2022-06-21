@@ -436,6 +436,42 @@ class Workorder_model extends MY_Model
         return true;
     }
 
+    public function update_workorder_solar($data)
+    {
+        extract($data);
+        $this->db->where('id', $id);
+        $this->db->update('work_orders', array(
+            'phone_number'          => $phone_number,//
+            'mobile_number'         => $mobile_number,//
+            'email'                 => $email,//
+            'job_location'          => $job_location,//
+            'city'                  => $city,//
+            'state'                 => $state,//
+            'country'               => $country,//
+            'zip_code'              => $zip_code,//
+            'comments'              => $comments,//
+            'password'              => $password,//
+            
+            'date_issued'           => $date_issued,//
+            'payment_method'        => $payment_method,//
+            'payment_amount'        => $payment_amount,//
+
+            'lead_source_id'        => $lead_source_id,//
+
+            'company_representative_signature'      => $company_representative_signature,
+            'company_representative_name'           => $company_representative_name,
+            'primary_account_holder_signature'      => $primary_account_holder_signature,
+            'primary_account_holder_name'           => $primary_account_holder_name,
+            'secondary_account_holder_signature'    => $secondary_account_holder_signature,
+            'secondary_account_holder_name'         => $secondary_account_holder_name,
+
+            'panel_communication'   => $panel_communication,//
+
+            'date_updated'          => $date_updated,//
+        ));
+        return true;
+    }
+
     public function updateWorkorderAgreement($data)
     {
         extract($data);
@@ -518,6 +554,26 @@ class Workorder_model extends MY_Model
             // 'initials'                  => $this->input->post('initials'),
             // 'work_order_id'             => $addQuery
             // 'company_id'                => $company_id,
+        ));
+        return true;
+    }
+
+    public function update_acs_solar($data)
+    {
+        extract($data);
+        $this->db->where('prof_id', $prof_id);
+        $this->db->update('acs_profile', array(
+            'last_name'                 => $last_name,
+            'first_name'                => $first_name,
+            'phone_m'                   => $phone_m, //new
+            'email'                     => $email, //new
+            'phone_h'                   => $phone_h,
+            'country'                   => $country,
+
+            'mail_add'                  => $mail_add, //new
+            'city'                      => $city, //new
+            'state'                     => $state, //new
+            'zip_code'                  => $zip_code, //new
         ));
         return true;
     }
@@ -1593,9 +1649,21 @@ class Workorder_model extends MY_Model
 
     public function getById($id)
     {
-        $this->db->select('*');
+        $this->db->select('*','ls_name');
 		$this->db->from('work_orders');
-		$this->db->where('id', $id);
+        $this->db->join('ac_leadsource', 'work_orders.lead_source_id  = ac_leadsource.ls_id');
+		$this->db->where('work_orders.id', $id);
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    public function getByProfIdComp($prof_id)
+    {
+
+        $this->db->select('*');
+        $this->db->from('acs_profile');
+        $this->db->where('prof_id', $prof_id);
+        
         $query = $this->db->get();
         return $query->row();
     }

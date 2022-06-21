@@ -496,6 +496,53 @@ img.company-logo2 {
   text-decoration: underline;
 }
 
+#chartdiv {
+  width: 100%;
+  height: 400px;
+}
+
+.SolarLogo
+ {
+	display : none;
+ }
+ 
+ .standardLogo
+ {
+	display : block !important;
+ }
+ 
+ .notIncluded
+ {
+	display : block !important;
+ }
+
+/* @media print {
+ 
+ body
+ {
+	 font-size:9px;
+	 margin:0px;
+ }
+ 
+ .SolarLogo
+ {
+	display : block;
+ }
+
+ .notIncluded
+ {
+	display : none !important;
+ }
+ .notIncluded span
+ {
+	display : none !important;
+ }
+ .standardLogo
+ {
+	display : none !important;
+ }
+ 
+ } */
 </style>
     <!-- page wrapper start -->
     <input type="hidden" value="<?= $workorder->id; ?>" id="workorderId"/>
@@ -523,7 +570,9 @@ img.company-logo2 {
 									<div class="user-menu mobile_btn"><br>
 										<?php if($workorder->work_order_type_id == '4'){ ?>
 											<a class="btn btn-success" href="#" data-toggle="modal" data-target="#sharePreviewAgree"><span class="fa fa-edit"></span> Share</a>
-											<?php }else{ ?>
+											<?php  }elseif($workorder->work_order_type_id == '3'){ ?>
+												<a class="btn btn-success" href="#" data-toggle="modal" data-target="#sharePreviewSolar"><span class="fa fa-edit"></span> Share</a>
+											<?php } else{ ?>
 											<a class="btn btn-success" href="#" data-toggle="modal" data-target="#sharePreview"><span class="fa fa-edit"></span> Share</a>
                                         <?php } ?>
 										<?php if($workorder->work_order_type_id == '2'){ ?>
@@ -536,6 +585,7 @@ img.company-logo2 {
                                                     <?php } else{ ?>
                                         	<a class="btn btn-sec" href="<?php echo base_url('workorder/edit/' . $workorder->id) ?>"><span class="fa fa-edit"></span> Edit</a>
                                         <?php } ?>
+
 									<?php if($workorder->work_order_type_id == 1){ ?>
                        					<a href="<?php echo base_url('workorder/work_order_pdf/' . $workorder->id) ?>" class="btn btn-sec download_work_order_pdfsss" acs-id="<?php echo $workorder->customer_id; ?>" workorder-id="<?php echo $workorder->id; ?>"><span class="fa fa-file-pdf-o"></span> PDF</a>
 										   <?php }else if($workorder->work_order_type_id == 4){ ?>
@@ -544,7 +594,15 @@ img.company-logo2 {
 										<a href="<?php echo base_url('workorder/work_order_pdf_alarm/' . $workorder->id) ?>" class="btn btn-sec download_work_order_pdfsss" acs-id="<?php echo $workorder->customer_id; ?>" workorder-id="<?php echo $workorder->id; ?>"><span class="fa fa-file-pdf-o"></span> PDF</a>
 									<?php } ?>
 
-          								<a class="btn btn-sec" data-print-modal="open" href="#" onclick="printDiv('printableArea')" value="Print Work Order"><span class="fa fa-print"></span> Print</a>
+
+									<?php if($workorder->work_order_type_id == 1){ ?>
+                       					<a class="btn btn-sec" data-print-modal="open" href="#" onclick="printDiv('printableArea')" value="Print Work Order"><span class="fa fa-print"></span> Print</a>
+									<?php }else if($workorder->work_order_type_id == 3){ ?>
+										<a class="btn btn-sec" data-print-modal="open" href="<?php echo base_url('workorder/printSolar/' . $workorder->id) ?>" value="Print Work Order"><span class="fa fa-print"></span> Print</a>
+									<?php } else{ ?>
+										<a class="btn btn-sec" data-print-modal="open" href="#" onclick="printDiv('printableArea')" value="Print Work Order"><span class="fa fa-print"></span> Print</a>
+									<?php } ?>
+
 										  <div class="user-menu">
 									<div class="dropdown dropdown-btn dropdown-inline margin-left-sec"><br>
 											<button class="btn btn-sec btn-regular dropdown-toggle" type="button" id="dropdown-edit" data-toggle="dropdown" aria-expanded="false">
@@ -586,30 +644,35 @@ img.company-logo2 {
 				<div class="col-md-12" id="printableArea">
 					<div role="white__holder" style="background-color:;padding:5%;border:solid #F4F2F6 3px;box-shadow: 10px 5px 5px #DEDEDE;">
 					<div class="ribbon ribbon-top-left"><span><?php echo $workorder->status ?></span></div>
-					<div class="mobile_header"><?php echo $workorder->header; ?></div>
+					<div class="mobile_header" style="width:;"><?php echo $workorder->header; ?></div>
+					<?php if($workorder->work_order_type_id == '3'){ ?>
+					<div>
+						<!-- <img src="<?= getCompanyBusinessProfileImage(); ?>"  style="max-width: 230px; max-height: 200px;float:right;margin-top:-260px;" class="SolarLogo"/> -->
+					</div>
+					<?php } ?>
 					<!-- <hr> -->
-							<div class="workorder-inner">
-							<div align="right">
+						<div class="workorder-inner">
+							<div align="right" class="notIncluded">
 								<span class="presenter-title mobile_size"><b>WORK ORDER</b></span> <br> <span style="font-size:16px;"># <?php echo $workorder->work_order_number ?></span><br>
 							</div>
 							<hr style="border: 2px solid gray;">
 								<div clas="row">
-										<div class="col-sm-12 col-sm-push-12 text-right-sm ">
+										<div class="col-sm-12 col-sm-push-12 text-right-sm">
 										<div class="row">
 											<div class="col-md-3">
-												<div style="margin-bottom: 20px;margin-left: 0px !important;">
+												<div class="" style="margin-bottom: 20px;margin-left: 0px !important;">
 													<!-- <img class="presenter-print-logo" style="max-width: 230px; max-height: 200px;" src="http://nsmartrac.com/assets/dashboard/images/logo.png"> -->
 													<?php if($workorder->work_order_type_id == '4'){ ?> 
-														<img src="<?php echo base_url().'assets/img/alarm_logo.jpeg' ?>"  style="max-width: 230px; max-height: 200px;" /> 
+														<img src="<?php echo base_url().'assets/img/alarm_logo.jpeg' ?>"  style="max-width: 230px; max-height: 200px;" class="" /> 
 														<?php }else{ ?>
-															<img src="<?= getCompanyBusinessProfileImage(); ?>"  style="max-width: 230px; max-height: 200px;" /> 
+															<img src="<?= getCompanyBusinessProfileImage(); ?>"  style="max-width: 230px; max-height: 200px;" class=""/> 
 														<?php } ?>
 												</div>
 											</div>
 											<div class="col-md-9">
 											<div class="workorder-text" style="margin-top: 10px; margin-bottom: 20px;">											    
 												<!-- </div>	-->
-												<div align="right" class="mobile_size"> 
+												<div align="right" class="mobile_size notIncluded"> 
 													<table>
 														<tbody>
 														<tr>
@@ -933,126 +996,210 @@ img.company-logo2 {
 									<?php } ?>	
 									<?php if($workorder->work_order_type_id == '3'){ ?>
 										<div class="row box-left-mini">
-											<div class="col-md-12">
-											<center>
-											<div class="front" style="text-align:center;background-color:#4a5594;color:white;padding:0.5%;border-radius:20px;width:95%;">
-												<h5>Qualification Information for Solar</h5>
-											</div>
-											</center><br>
-											<div class="behind_container" style="background-color:#ced4e4;margin-top:-20px;padding:20px;">
-												<div class="row"> 
-													<div class="col-md-2">
-													<br><br>        
-														<div style="padding:20px;border-radius:5px;background-color:white;width:50%;">A</div>
-													</div>
-													<div class="col-md-10">
-													<br> <h6>Type of Roof</h6>
-													<span style="font-size:16px;"><?php echo $solars->tor; ?></span>
-													<br><br><hr>
-													</div>
+											<div class="col-md-6">
+												<center>
+												<div class="front" style="text-align:center;background-color:#4a5594;color:white;padding:0.5%;border-radius:20px;width:95%;">
+													<h6>Qualification Information for Solar</h6>
 												</div>
-												<div class="row"> 
-													<div class="col-md-2">
-														<div style="padding:20px;border-radius:5px;background-color:white;width:50%;">B</div>
-													</div>
-													<div class="col-md-10">
-													<h6>Square Footage of Home</h6>
-													<span style="font-size:16px;"><?php echo $solars->sfoh; ?></span>
-													<br><hr>
-													</div>
-												</div>
-												<div class="row"> 
-													<div class="col-md-2">
-														<div style="padding:20px;border-radius:5px;background-color:white;width:50%;">C</div>
-													</div>
-													<div class="col-md-10">
-													<h6>Age of Roof (Years)</h6>
-													<span style="font-size:16px;"><?php echo $solars->aor; ?></span>
-													<br><br><hr>
-													</div>
-												</div>
-												<div class="row"> 
-													<div class="col-md-2">
-														<div style="padding:20px;border-radius:5px;background-color:white;width:50%;">D</div>
-													</div>
-													<div class="col-md-10">
-													<h6>Solar Panel Mounting Preference</h6>
-													<span style="font-size:16px;"><?php echo $solars->spmp; ?></span>
-													<br><br><hr>
-													</div>
-												</div>
-												<div class="row"> 
-													<div class="col-md-2">
-														<div style="padding:20px;border-radius:5px;background-color:white;width:50%;">E</div>
-													</div>
-													<div class="col-md-10">
-													<h6>Home Owner Associations</h6>
-													<span style="font-size:16px;"><?php echo $solars->hoa; ?></span>
-													<br>
-													<b>If Yes: Contact Name/Number</b><br>
-													<span style="font-size:16px;"><?php echo $solars->hoa_text; ?></span>
-													<br><hr>
-													</div>
-												</div><br>
-												<div class="row"> 
-													<div class="col-md-2">
-														<div style="padding:20px;border-radius:5px;background-color:white;width:50%;">F</div>
-													</div>
-													<div class="col-md-10">
-														<div style="float:right;width:50%;">
-															<!-- <center>$<input type="text" name="ebis_text" class="form-control" style="width:70%;"><br>
-															Estimated Bill</center> -->
-															<div class="row">
-																<div class="col-md-6" style="margin-top:-30px;">
-																	<h6>Files Uploaded</h6>
-																	<?php foreach($solar_files as $sfiles){ ?>
-																		<p><a href="<?php echo base_url().'uploads/workorders/solar/'.$sfiles->solar_image; ?>" class="dwn" target="_blank"><?php echo $sfiles->solar_image; ?></a></p>
-																		<p><a href="<?php echo base_url().'uploads/workorders/solar/'.$sfiles->solar_image1; ?>" class="dwn" target="_blank"><?php echo $sfiles->solar_image1; ?></a></p>
-																		<p><a href="<?php echo base_url().'uploads/workorders/solar/'.$sfiles->solar_image2; ?>" class="dwn" target="_blank"><?php echo $sfiles->solar_image2; ?></a></p>
-																		<p><a href="<?php echo base_url().'uploads/workorders/solar/'.$sfiles->solar_image3; ?>" class="dwn" target="_blank"><?php echo $sfiles->solar_image3; ?></a></p>
-																		<p><a href="<?php echo base_url().'uploads/workorders/solar/'.$sfiles->solar_image4; ?>" class="dwn" target="_blank"><?php echo $sfiles->solar_image4; ?></a></p>
-																	<?php } ?>
-																</div>
-																<div class="col-md-6">
-																	<div class="input-group">
-																		<div class="input-group-prepend">
-																			<span class="input-group-text">$</span>
-																		</div>
-																		<input type="text" name="estimated_bill" class="form-control" value="<?php echo number_format($solars->estimated_bill); ?>" aria-label="Amount" readonly>
-																		<!-- <div class="input-group-append">
-																			<span class="input-group-text">.00</span>
-																		</div> -->
-																	</div>
-																	<center>Estimated Bill</center>
-																</div>
-															</div>
-															
+												</center><br>
+												<div class="behind_container" style="background-color:#ced4e4;margin-top:-20px;padding:20px;">
+													<div class="row"> 
+														<div class="col-md-2">
+														<br><br>        
+															<div style="padding:20px;border-radius:5px;background-color:white;width:50%;">A</div>
 														</div>
-														<h6>Electric Bill is over $100</h6> 
-														<span style="font-size:16px;"><?php echo $solars->ebis; ?></span>
-														<br>
-														<h6>How do you get your Invoice</h6>
-														<span style="font-size:16px;"><?php echo $solars->hdygi; ?></span>
-														<br>
-														<h6>Electric Bill Account #</h6>
-														<span style="font-size:16px;"><?php echo $solars->eba_text; ?></span>
-														<br><br><br><hr>
+														<div class="col-md-10">
+														<br> <h6>Type of Roof</h6>
+														<span style="font-size:16px;"><?php echo $solars->tor; ?></span>
+														<br><br><hr>
+														</div>
 													</div>
-												</div>
-												<div class="row" style="margin-bottom:70px;"> 
-													<div class="col-md-2">
-														<div style="padding:20px;border-radius:5px;background-color:white;width:50%;">G</div>
+													<div class="row"> 
+														<div class="col-md-2">
+															<div style="padding:20px;border-radius:5px;background-color:white;width:50%;">B</div>
+														</div>
+														<div class="col-md-10">
+														<h6>Square Footage of Home</h6>
+														<span style="font-size:16px;"><?php echo $solars->sfoh; ?></span>
+														<br><hr>
+														</div>
 													</div>
-													<div class="col-md-10">
-													<h6>Employment Status</h6>
-													<span style="font-size:16px;"><?php echo $solars->es; ?></span>
-													<!-- <hr> -->
+													<div class="row"> 
+														<div class="col-md-2">
+															<div style="padding:20px;border-radius:5px;background-color:white;width:50%;">C</div>
+														</div>
+														<div class="col-md-10">
+														<h6>Age of Roof (Years)</h6>
+														<span style="font-size:16px;"><?php echo $solars->aor; ?></span>
+														<br><br><hr>
+														</div>
+													</div>
+													<div class="row"> 
+														<div class="col-md-2">
+															<div style="padding:20px;border-radius:5px;background-color:white;width:50%;">D</div>
+														</div>
+														<div class="col-md-10">
+														<h6>Solar Panel Mounting Preference</h6>
+														<span style="font-size:16px;"><?php echo $solars->spmp; ?></span>
+														<br><br><hr>
+														</div>
+													</div>
+													<div class="row"> 
+														<div class="col-md-2">
+															<div style="padding:20px;border-radius:5px;background-color:white;width:50%;">E</div>
+														</div>
+														<div class="col-md-10">
+														<h6>Home Owner Associations</h6>
+														<span style="font-size:16px;"><?php echo $solars->hoa; ?></span>
+														<br>
+														<b>If Yes: Contact Name/Number</b><br>
+														<span style="font-size:16px;"><?php echo $solars->hoa_text; ?></span>
+														<br><hr>
+														</div>
+													</div><br>
+													<div class="row"> 
+														<div class="col-md-2">
+															<div style="padding:20px;border-radius:5px;background-color:white;width:50%;">F</div>
+														</div>
+														<div class="col-md-10">
+															<div style="float:right;width:50%;">
+																<!-- <center>$<input type="text" name="ebis_text" class="form-control" style="width:70%;"><br>
+																Estimated Bill</center> -->
+																<div class="row">
+																	<div class="col-md-6" style="margin-top:-30px;">
+																		<h6>Files Uploaded</h6>
+																		<?php foreach($solar_files as $sfiles){ ?>
+																			<p><a href="<?php echo base_url().'uploads/workorders/solar/'.$sfiles->solar_image; ?>" class="dwn" target="_blank"><?php echo $sfiles->solar_image; ?></a></p>
+																			<p><a href="<?php echo base_url().'uploads/workorders/solar/'.$sfiles->solar_image1; ?>" class="dwn" target="_blank"><?php echo $sfiles->solar_image1; ?></a></p>
+																			<p><a href="<?php echo base_url().'uploads/workorders/solar/'.$sfiles->solar_image2; ?>" class="dwn" target="_blank"><?php echo $sfiles->solar_image2; ?></a></p>
+																			<p><a href="<?php echo base_url().'uploads/workorders/solar/'.$sfiles->solar_image3; ?>" class="dwn" target="_blank"><?php echo $sfiles->solar_image3; ?></a></p>
+																			<p><a href="<?php echo base_url().'uploads/workorders/solar/'.$sfiles->solar_image4; ?>" class="dwn" target="_blank"><?php echo $sfiles->solar_image4; ?></a></p>
+																		<?php } ?>
+																	</div>
+																	<div class="col-md-6">
+																		<div class="input-group">
+																			<div class="input-group-prepend">
+																				<span class="input-group-text">$</span>
+																			</div>
+																			<input type="text" name="estimated_bill" class="form-control" value="<?php echo number_format($solars->estimated_bill); ?>" aria-label="Amount" readonly>
+																			<!-- <div class="input-group-append">
+																				<span class="input-group-text">.00</span>
+																			</div> -->
+																		</div>
+																		<center>Estimated Bill</center>
+																	</div>
+																</div>
+																
+															</div>
+															<h6>Electric Bill is over $100</h6> 
+															<span style="font-size:16px;"><?php echo $solars->ebis; ?></span>
+															<br>
+															<h6>How do you get your Invoice</h6>
+															<span style="font-size:16px;"><?php echo $solars->hdygi; ?></span>
+															<br>
+															<h6>Electric Bill Account #</h6>
+															<span style="font-size:16px;"><?php echo $solars->eba_text; ?></span>
+															<br><br><br><hr>
+														</div>
+													</div>
+													<div class="row" style="margin-bottom:70px;"> 
+														<div class="col-md-2">
+															<div style="padding:20px;border-radius:5px;background-color:white;width:50%;">G</div>
+														</div>
+														<div class="col-md-10">
+														<h6>Employment Status</h6>
+														<span style="font-size:16px;"><?php echo $solars->es; ?></span>
+														<!-- <hr> -->
+														</div>
 													</div>
 												</div>
 											</div>
-											</div>
+											
+												
+											<div class="col-md-6">
+													<div style="padding:3%;border:solid black 1px;font-weight:bold;margin-top:-130px;">
+														Please fill in the form completely, and return it to a solar specialist or email to support@adtsolarpro.com for consideration.
+													</div>
+													<br><br>
+													<center>
+													<div class="front" style="text-align:center;background-color:#4a5594;color:white;padding:0.5%;border-radius:20px;width:100%;">
+														<h6>Please Fill in the Details:</h6>
+													</div>
+													</center>
+													<br>
+														<div class="row"> 
+															<div class="col-md-6">
+																<input type="text" name="firstname" id="firstname" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $customer->first_name; ?>" readonly style="background-color: #fff;">
+																<b>First name:</b>
+															</div>
+															<div class="col-md-6">
+																<input type="text" name="lastname" id="lastname" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $customer->last_name; ?>" readonly style="background-color: #fff;">
+																<b>Last name:</b>
+															</div>
+														</div>
+														<div class="row"> 
+															<div class="col-md-12">
+																<input type="text" name="address" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $customer->mail_add; ?>" readonly style="background-color: #fff;">
+																<b>Address:</b>
+															</div>
+														</div>
+														<div class="row"> 
+															<div class="col-md-5">
+																<input type="text" name="city" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $customer->city; ?>" readonly style="background-color: #fff;">
+																<b>City:</b>
+															</div>
+															<div class="col-md-7">
+																<input type="text" name="country" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $customer->country; ?>" readonly style="background-color: #fff;">
+																<b>County:</b>
+															</div>
+														</div>
+														<div class="row"> 
+															<div class="col-md-12">
+																<input type="text" name="postcode" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $customer->postcode; ?>" readonly style="background-color: #fff;">
+																<b>Postcode:</b>
+															</div>
+														</div>
+														<div class="row"> 
+															<div class="col-md-12">
+																<input type="text" name="phone" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $customer->phone_h; ?>" readonly style="background-color: #fff;">
+																<b>Phone:</b>
+															</div>
+														</div>
+														<div class="row"> 
+															<div class="col-md-12">
+																<input type="text" name="mobile" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $customer->phone_m; ?>" readonly style="background-color: #fff;">
+																<b>Mobile:</b>
+															</div>
+														</div>
+														<div class="row"> 
+															<div class="col-md-12">
+																<input type="text" name="email" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $customer->email; ?>" readonly style="background-color: #fff;">
+																<b>Email:</b>
+															</div>
+														</div>
+														<div class="row"> 
+															<div class="col-md-12">
+																<p><?php echo $workorder->comments; ?></p>
+																<b>Comments:</b>
+															</div>
+														</div>
+														<br>
+														<div class="row"> 
+															<div class="col-md-12" style="border: solid gray 1px;border-top-left-radius: 25px;border-top-right-radius: 25px;">
+															<center><h4>ENERGY USAGE HISTORY SAMPLE</h4></center>
+																<div id="chartdiv"></div>
+															</div>
+														</div>
+														<div class="row"> 
+															<div class="col-md-12" style="border: solid gray 1px;border-bottom-left-radius: 25px;border-bottom-right-radius: 25px;padding:2%;">
+																<b style="font-size:16px;">Options:</b><br>
+																<p class="text-uppercase"><?php echo $solars->options; ?></p>
+															</div>
+														</div>
+													
+												</div>
 										</div>
-										<hr>
+										<!-- <hr>
 											<div class="ul-info">
 			         						<b class="ul-head">Options</b><br><br>
 												<div style="height:80px; overflow:auto; background:#FFFFFF; padding-left:10px;">
@@ -1066,10 +1213,16 @@ img.company-logo2 {
 													<?php echo $workorder->comments; ?>
 												</div>
 		         							 </div>
+										<hr> -->
+
 										<hr>
-
-
-
+											<div class="ul-info">
+			         						<b class="ul-head">Use of Personal Information Collected</b><br><br>
+												<div style="">
+												<p>We use the information we collect to provide you with our products and services and to respond to your questions. We also use the information for editorial and feedback purposes, for marketing and promotional purposes, to inform advertisers as to how many visitors have seen or clicked on their advertisements and to customize the content and layout of ClearCaptions' website. We also use the information we collect for statistical analysis of users' behavior, for product development, for content improvement, to ensure our product and services remain functioning and secure and to investigate and protect against any illegal activities or violations of our Terms of Service.</p>
+												</div>
+		         							 </div>
+										<br><br>
 
 
 									<?php }elseif($workorder->work_order_type_id == '4'){ ?>
@@ -1618,21 +1771,21 @@ img.company-logo2 {
 																<div class="row">
 																<?php if(!empty($workorder->company_representative_signature)){ ?>
 																	<div class="col-md-4">
-																		<img src="<?php echo base_url($workorder->company_representative_signature); ?>" style="height: 150px;">
+																		<img src="<?php echo base_url($workorder->company_representative_signature); ?>" style="height: 100px;">
 																		<hr>
 																		<center><?php echo $first->FName.' '.$first->LName; ?></center>
 																	</div>
 																	<?php } ?>
 																	<?php if(!empty($workorder->primary_account_holder_signature)){ ?>
 																	<div class="col-md-4">
-																		<img src="<?php echo base_url($workorder->primary_account_holder_signature); ?>" style="height: 150px;">
+																		<img src="<?php echo base_url($workorder->primary_account_holder_signature); ?>" style="height: 100px;">
 																		<hr>
 																		<center><?php echo $workorder->primary_account_holder_name; ?></center>
 																	</div>
 																	<?php } ?>
 																	<?php if(!empty($workorder->secondary_account_holder_signature)){ ?>
 																	<div class="col-md-4">
-																		<img src="<?php echo base_url($workorder->secondary_account_holder_signature); ?>" style="height: 150px;">
+																		<img src="<?php echo base_url($workorder->secondary_account_holder_signature); ?>" style="height: 100px;">
 																		<hr>
 																		<center><?php echo $workorder->secondary_account_holder_name; ?></center>
 																	</div>
@@ -1879,8 +2032,36 @@ img.company-logo2 {
         </div>
     </div>
 
-	
+	<div class="modal fade" id="sharePreviewSolar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Share This Link</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form name="clone-modal-form">
+                        <div class="validation-error" style="display: none;"></div>
+                        <p>
+                            <input type="text" class="form-control" value="<?php echo base_url('share_Link/public_view_solar/'.$workorder->id) ?>" id="myInput" readonly>
+							<br>
+							<a href="#" class="btn btn-success" onclick="myCopyFunction()">Copy link to Clipboard</a>
+							<a href="#" class="btn btn-primary" data-toggle="modal" data-target="#shareLinkToEmail">Email Share Link</a>
+                        </p>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default" type="button" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
+	
+	
 	<div class="modal fade" id="shareLinkToEmail" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
          aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
@@ -2440,4 +2621,115 @@ function printDiv(divName) {
     window.print();
     document.body.innerHTML = originalContents;
 }
+</script>
+
+<!-- Resources -->
+<script src="//cdn.amcharts.com/lib/4/core.js"></script>
+<script src="//cdn.amcharts.com/lib/4/charts.js"></script>
+<script src="//cdn.amcharts.com/lib/4/themes/animated.js"></script>
+
+<!-- Chart code -->
+<script>
+
+function primaryName(){
+     // $('.invAetf').keyup(function(e){
+      // alert('kk');
+      var one = $('#firstname').val();
+      var two = $('#lastname').val();
+      $('#primary_account_holder_name').val(one +' '+ two);
+  }
+/**
+ * ---------------------------------------
+ * This demo was created using amCharts 4.
+ *
+ * For more information visit:
+ * https://www.amcharts.com/
+ *
+ * Documentation is available at:
+ * https://www.amcharts.com/docs/v4/
+ * ---------------------------------------
+ */
+
+
+am4core.useTheme(am4themes_animated);
+
+// Create chart instance
+var chart = am4core.create("chartdiv", am4charts.XYChart);
+chart.paddingTop = 40;
+// Add data
+chart.data = [{
+  "category": "J",
+  "value": 1240
+}, {
+  "category": "F",
+  "value": 1000
+}, {
+  "category": "M",
+  "value": 450
+}, {
+  "category": "A",
+  "value": 700
+}, {
+  "category": "M",
+  "value": 800
+}, {
+  "category": "J",
+  "value": 800
+}, {
+  "category": "J",
+  "value": 780
+}, {
+  "category": "A",
+  "value": 500
+}, {
+  "category": "S",
+  "value": 100
+}, {
+  "category": "O",
+  "value": 1000
+}, {
+  "category": "N",
+  "value": 900
+}, {
+  "category": "D",
+  "value": 620
+}
+];
+
+// Create axes
+var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+categoryAxis.dataFields.category = "category";
+categoryAxis.renderer.grid.template.location = 0;
+
+function createValueAxis(title, showgrid) {
+  
+  // Create axis
+  var axis = chart.yAxes.push(new am4charts.ValueAxis());
+  axis.renderer.grid.template.disabled = !showgrid;
+    
+  // Set up axis title
+  axis.title.text = title;
+  
+  return axis;
+}
+
+function createSeries(key, title, axis) {
+  var series = chart.series.push(new am4charts.ColumnSeries());
+  series.dataFields.valueY = key;
+  series.dataFields.categoryX = "category";
+  series.yAxis = axis;
+  return series;
+}
+
+createSeries(
+  "value",
+  "Series #1",
+  createValueAxis("KWH", true)
+);
+
+// createSeries(
+//   "value2",
+//   "Series #2",
+//   createValueAxis("Funding", false)
+// );
 </script>

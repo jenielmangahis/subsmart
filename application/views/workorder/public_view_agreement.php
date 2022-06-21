@@ -385,7 +385,7 @@ body
 
 	.agreement
 	{
-		font-size:9px;
+		font-size:8px;
 	}
 	.agreement table
 	{
@@ -396,6 +396,11 @@ body
 		font-size:9px;
 	}
 	.agreement .input-group
+	{
+		font-size:9px;
+	}
+
+	h6
 	{
 		font-size:9px;
 	}
@@ -442,7 +447,7 @@ body
 									<?php if($workorder->work_order_type_id == 1){ ?>
                        					<a href="<?php echo base_url('workorder/work_order_pdf/' . $workorder->id) ?>" class="btn btn-sec download_work_order_pdfsss" acs-id="<?php echo $workorder->customer_id; ?>" workorder-id="<?php echo $workorder->id; ?>"><span class="fa fa-file-pdf-o"></span> PDF</a>
 									<?php }else if($workorder->work_order_type_id == 4){ ?>
-										<a href="<?php echo base_url('workorder/work_order_pdf_agreement/' . $workorder->id) ?>" class="btn btn-sec download_work_order_pdfsss" acs-id="<?php echo $workorder->customer_id; ?>" workorder-id="<?php echo $workorder->id; ?>"><span class="fa fa-file-pdf-o"></span> PDF</a>
+										<a href="<?php echo base_url('workorder/work_order_pdf_agreement/' . $workorder->id) ?>" class="btn btn-sec download_work_order_pdfsss logo" acs-id="<?php echo $workorder->customer_id; ?>" workorder-id="<?php echo $workorder->id; ?>"><span class="fa fa-file-pdf-o"></span> PDF</a>
 										<?php } else{ ?>
 										<a href="<?php echo base_url('workorder/work_order_pdf_alarm/' . $workorder->id) ?>" class="btn btn-sec download_work_order_pdfsss" acs-id="<?php echo $workorder->customer_id; ?>" workorder-id="<?php echo $workorder->id; ?>"><span class="fa fa-file-pdf-o"></span> PDF</a>
 									<?php } ?>
@@ -467,7 +472,7 @@ body
 							<div align="right">
 								<span class="presenter-title mobile_size"><b>WORK ORDER</b></span> <br> <span style="font-size:16px;"># <?php echo $workorder->work_order_number ?></span><br>
 							</div>
-							<hr style="border: 2px solid gray;">
+							<hr>
 								<div clas="row">
 										<div class="col-sm-12 col-sm-push-12 text-right-sm ">
 										<div class="row">
@@ -475,7 +480,7 @@ body
 												<div style="margin-bottom: 20px;margin-left: 0px !important;" class="logo">
 													<!-- <img class="presenter-print-logo" style="max-width: 230px; max-height: 200px;" src="http://nsmartrac.com/assets/dashboard/images/logo.png"> -->
 													<?php if($workorder->work_order_type_id == '4'){ ?> 
-														<img src="<?php echo base_url().'assets/img/alarm_logo.jpeg' ?>"  class="logo" style="max-width: 230px; max-height: 200px;" /> 
+														<img src="<?php echo base_url().'assets/img/alarm_logo.jpeg' ?>"  class="logo" style="max-width: 230px; max-height: 180px;" /> 
 														<?php }else{ ?>
 															<img src="<?= getCompanyBusinessProfileImage(); ?>"  style="max-width: 230px; max-height: 200px;" /> 
 														<?php } ?>
@@ -963,7 +968,28 @@ body
 
 									<?php }elseif($workorder->work_order_type_id == '4'){ ?>
 
-										<div class="row agreement" style="font-size:;">                   
+										
+										<div class="row"> 
+											<div class="col-md-3">
+												<input type="text" name="installation_date" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $workorder->ls_name; ?>" readonly style="background-color: #fff;">
+												<b>Lead Source:</b>
+											</div>
+											<div class="col-md-3">
+												<input type="text" name="installation_date" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $workorder->account_type; ?>" readonly style="background-color: #fff;">
+												<b>Account Type:</b>
+											</div>
+											<div class="col-md-3">
+												<input type="text" name="installation_date" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $workorder->panel_communication; ?>" readonly style="background-color: #fff;">
+												<b>Security Data:</b>
+											</div>
+											<div class="col-md-3">
+												<input type="text" name="installation_date" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $workorder->panel_type; ?>" readonly style="background-color: #fff;">
+												<b>Panel Type:</b>
+											</div>
+										</div>
+										<br>
+										<div class="row agreement" style="font-size:;">    
+										               
 											<div class=" col-md-6 box-left-mini">
 												<center>
 												<div class="front" style="text-align:center;background-color:#4a5594;color:white;padding:0.5%;border-radius:20px;width:95%;">
@@ -971,7 +997,7 @@ body
 												</div>
 												</center><br>
 												<div class="behind_container" style="background-color:#ced4e4;margin-top:-12px;padding:20px;">
-													<table  class="table-bordered itemTable">
+													<table  class="table-bordered itemTable" style="width:100%;">
 														<thead align="center">
 															<th>Items</th>
 															<th>Quantity</th>

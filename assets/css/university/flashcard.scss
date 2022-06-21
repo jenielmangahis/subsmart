@@ -1,0 +1,32 @@
+table.dataTable thead th,
+table.dataTable thead td,
+table.dataTable tfoot th,
+table.dataTable tfoot td,
+table.dataTable.no-footer {
+  border-color: rgba(0, 0, 0, 0.3);
+}
+
+.dataTables_filter {
+  display: none;
+}
+
+.cell-shrink {
+  width: 1% !important;
+}
+
+.fc-loader {
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100vh;
+  width: 100vw;
+  display: grid;
+  place-content: center;
+  z-index: 1;
+
+  &.hide {
+    display: none;
+    opacity: 0;
+    visibility: hidden;
+  }
+}

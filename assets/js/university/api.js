@@ -16,7 +16,7 @@ export function save(payload) {
   return http.post(`${prefixURL}/SlideShare/apiSave`, payload);
 }
 
-const http = {
+export const http = {
   post: sendPost,
   delete: sendDelete,
   get: sendGet,

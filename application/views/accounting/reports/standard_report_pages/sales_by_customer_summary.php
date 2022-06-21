@@ -34,6 +34,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     .action-bar ul li .dropdown-menu .dropdown-item:hover {
         background-color: #f8f9fa;
     }
+    .action-bar ul li .dropdown-menu a:not(.dropdown-item):hover {
+       background-color: revert;
+    }
 </style>
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">
@@ -52,7 +55,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="card-body hid-desk" style="padding-bottom:0px;">
                             <div class="row">
                                 <div class="col-sm-6">
-                                    <h3 class="page-title" style="margin: 0 !important">Income by Customer Summary Report</h3>
+                                    <h3 class="page-title" style="margin: 0 !important">Sales by Customer Summary Report</h3>
                                 </div>
                             </div>
                             <div class="row align-items-center">
@@ -85,11 +88,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         <option value="this-week">This Week</option>
                                                         <option value="this-week-to-date">This Week-to-date</option>
                                                         <option value="this-month">This Month</option>
-                                                        <option value="this-month-to-date">This Month-to-date</option>
+                                                        <option value="this-month-to-date" selected>This Month-to-date</option>
                                                         <option value="this-quarter">This Quarter</option>
                                                         <option value="this-quarter-to-date">This Quarter-to-date</option>
                                                         <option value="this-year">This Year</option>
-                                                        <option value="this-year-to-date" selected>This Year-to-date</option>
+                                                        <option value="this-year-to-date">This Year-to-date</option>
                                                         <option value="this-year-to-last-month">This Year-to-last-month</option>
                                                         <option value="yesterday">Yesterday</option>
                                                         <option value="recent">Recent</option>
@@ -113,7 +116,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     </select>
                                                 </div>
                                                 <div class="col-2 d-flex align-items-end">
-                                                    <input type="text" name="start_date" id="start-date" class="date form-control" value="<?=date("01/01/Y")?>">
+                                                    <input type="text" name="end_date" id="end-date" class="date form-control" value="<?=date("m/01/Y")?>">
                                                 </div>
                                                 <div class="col-1 text-center d-flex align-items-end justify-content-center">
                                                     <span class="h6">to</span>
@@ -128,7 +131,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <div class="col-2">
                                                     <label for="display-columns-by">Display columns by</label>
                                                     <select name="display_columns_by" id="display-columns-by" class="form-control">
-                                                        <option value="other">Other</option>
+                                                        <option value="total-only">Total Only</option>
+                                                        <option value="days">Days</option>
+                                                        <option value="weeks">Weeks</option>
+                                                        <option value="months">Months</option>
+                                                        <option value="quarters">Quarters</option>
+                                                        <option value="years">Years</option>
+                                                        <option value="customers">Customers</option>
+                                                        <option value="products-services">Products/Services</option>
                                                     </select>
                                                 </div>
                                                 <div class="col-3">
@@ -319,45 +329,27 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <div class="row">
                                                     <div class="col-12 text-center">
                                                         <h4>nSmarTrac <i class="material-icons" style="font-size:16px">edit</i></h4>
-                                                        <p>Income by Customer Summary <br> As of Janary 1-<?=date("F d, Y")?></p>
+                                                        <p>Sales by Customer Summary<br> <?=date("F 1-j, Y")?></p>
                                                     </div>
                                                 </div>
 
                                                 <div class="row">
                                                     <div class="col-12">
-                                                        <table class="table">
+                                                        <table class="table" style="width: 100%;">
                                                             <thead>
                                                                 <tr>
-                                                                    <th rowspan="2"></th>
-                                                                    <th class="text-right">INCOME</th>
-                                                                    <th class="text-right">EXPENSES</th>
-                                                                    <th class="text-right">NET INCOME</th>
+                                                                    <th></th>
+                                                                    <th class="text-right">TOTAL</th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
-                                                                <tr data-toggle="collapse" data-target="#accordion" class="clickable collapse-row collapsed">
-                                                                    <td><i class="fa fa-caret-right"></i> Test Customer</td>
-                                                                    <td class="text-right"><b>44.99</b></td>
-                                                                    <td class="text-right"></td>
-                                                                    <td class="text-right"><b>$44.99</b></td>
-                                                                </tr>
-                                                                <tr  class="clickable collapse-row collapse"  id="accordion">
-                                                                    <td>&emsp;Test Customer</td>
-                                                                    <td class="text-right">44.99</td>
-                                                                    <td class="text-right"></td>
-                                                                    <td class="text-right">$44.99</td>
-                                                                </tr>
-                                                                <tr  class="clickable collapse-row collapse"  id="accordion">
-                                                                    <td>&emsp;<b>Total for Test Customer</b></td>
-                                                                    <td class="text-right"><b>44.99</b></td>
-                                                                    <td class="text-right"></td>
-                                                                    <td class="text-right"><b>$44.99</b></td>
+                                                                <tr>
+                                                                    <td>Test Customer</td>
+                                                                    <td class="text-right">$22,544.77</td>
                                                                 </tr>
                                                                 <tr>
-                                                                    <td>TOTAL</td>
-                                                                    <td class="text-right"><b>$44.99</b></td>
-                                                                    <td class="text-right"><b>$0.00</b></td>
-                                                                    <td class="text-right"><b>$44.99</b></td>
+                                                                    <td><b>TOTAL</b></td>
+                                                                    <td class="text-right"><b>$22,544.77</b></td>
                                                                 </tr>
                                                             </tbody>
                                                         </table>
