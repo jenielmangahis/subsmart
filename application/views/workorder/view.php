@@ -543,6 +543,146 @@ img.company-logo2 {
  }
  
  } */
+ /* #chartdiv {
+  width: 100%;
+  height: 400px;
+} */
+input:focus {
+    background-color: #ffa;
+}
+/* .table-responsive {
+    display: table;
+} */
+table input[type=text],
+    input[type=email],
+    input[type=url],
+    /* input[type=checkbox], */
+    input[type=password] {
+    width: 100%;
+    font-size:14px;
+}
+/* 
+table input[type=checkbox] {
+    width: 100%;
+} */
+
+.itemTable{
+    width:100%;
+}
+
+#eye {
+  position:absolute;
+  right:80%;
+  top:6.5%;
+}
+
+table input.form-control {
+   height:25px !important;
+}
+
+.input-group-text
+{
+    padding:3px !important;
+}
+.itemTable td:nth-of-type(1) {width:30%;}
+.itemTable  td:nth-of-type(2) {width: 15%;}
+.itemTable  td:nth-of-type(3) {width:15%;}
+.itemTable  td:nth-of-type(4) {width:20%;}
+
+.itemTable2 td:nth-of-type(1) {max-width:80px;}
+.itemTable2  td:nth-of-type(2) {
+    white-space:nowrap;
+   /* border: 1px solid black; */
+   max-width: 100px;
+   overflow-y:hidden;
+}
+/* .itemTable2  td:nth-of-type(3) {width:25%;} */
+.itemTable2  td:nth-of-type(4) {width:15%;}
+
+@media screen and (max-width:500px){
+    body{
+        /* color:white; */
+        font-size:10px !important;
+    }  
+    table thead
+    {
+        font-size:12px;
+    }
+    /* .summary_total
+    {
+        font-size: 10px !important;
+    }
+    .summary_total h4 input span
+    {
+        font-size: 10px !important;
+    } */
+    /* .equipment_cost
+    {
+        font-size: 14px !important;
+    } */
+    .itemTable span
+    {
+        font-size:10px;
+    }
+    .itemTable td
+    {
+        padding:0;
+    }
+    .itemTable input[type=text]
+    {
+        height:100% !important;
+    }
+}
+
+@media screen and (max-width:1400px){
+    table input[type=text],
+    input[type=email],
+    input[type=url],
+    /* input[type=checkbox], */
+    input[type=password] {
+    width: 100%;
+    font-size:10px;
+    }
+    /* table input[type=checkbox] {
+        width: 80%;
+    } */
+    table thead
+    {
+        font-size:14px;
+    }
+    .withCheck
+    {
+        width:100% !important;
+    }
+}
+
+.item {
+  width: 100px;
+  border: 1px solid #000;
+  height: 20px;
+  flex: 80px 1;
+  text-align: center;
+  color: #000;
+}
+::-webkit-scrollbar
+{
+  height: 6px;
+  background-color: green;
+  overflow-x: auto;
+}
+
+/* .summaryTanan table, td, th {
+  border: 1px solid;
+  padding:1%;
+} */
+.summaryTanan table {
+  width:60%;
+}
+
+.summaryTanan table {
+  width: 100%;
+  border-collapse: collapse;
+}
 </style>
     <!-- page wrapper start -->
     <input type="hidden" value="<?= $workorder->id; ?>" id="workorderId"/>
@@ -1227,11 +1367,80 @@ img.company-logo2 {
 
 									<?php }elseif($workorder->work_order_type_id == '4'){ ?>
 
+										<div class="row">
+											<div class="form-group col-md-2">
+												<div class="select-wrap">
+													<label for="lead_source">Lead Source</label>
+													<select id="lead_source" name="lead_source" class="form-control custom-select m_select">
+														<?php foreach($lead_source as $leads){ ?>
+														<option value="<?php echo $leads->ls_id; ?>" <?php if($workorder->lead_source_id == $leads->ls_id){ echo 'selected'; }else{ echo ''; } ?> ><?php echo $leads->ls_name; ?></option>
+														<?php } ?>
+													</select>
+												</div>    
+											</div> 
+											<div class="form-group col-md-2">
+												<div class="select-wrap">
+													<label for="lead_source">Account Type</label>
+													<select id="account_type" name="account_type" class="form-control custom-select m_select">
+														<option value="<?php echo $workorder->account_type; ?>"><?php echo $workorder->account_type; ?></option>
+														<option value="Residential">Residential</option>
+														<option value="Commercial">Commercial</option>
+														<option value="Rental">Rental</option>
+														<option value="Inhouse">Inhouse</option>
+													</select>
+												</div>    
+											</div> 
+											<div class="form-group col-md-2">
+												<div class="select-wrap">
+													<label for="lead_source">Security Data</label>
+													<select id="communication_type" name="communication_type" class="form-control custom-select m_select">
+														<?php foreach($system_package_type as $lead){ ?>
+														<option value="<?php echo $lead->name; ?>" <?php if($workorder->panel_communication == $lead->name){ echo 'selected'; }else{ echo ''; } ?>><?php echo $lead->name; ?></option>
+														<?php } ?>
+													</select>
+												</div>    
+											</div> 
+											<div class="form-group col-md-2">
+												<div class="select-wrap">
+													<label for="lead_source">Panel Type</label>
+													<select name="panel_type" id="panel_type" class="form-control input_select" data-value="<?= isset($workorder) ? $workorder->panel_type : "" ?>">
+														<option <?php if(isset($workorder)){ if($workorder->panel_type == ''){echo "selected";} } ?>  value="0">- none -</option>
+														<option <?php if(isset($workorder)){ if($workorder->panel_type == 'AERIONICS'){echo "selected";} } ?> value="AERIONICS">AERIONICS</option>
+														<option <?php if(isset($workorder)){ if($workorder->panel_type == 'AlarmNet'){echo "selected";} } ?> value="AlarmNet">AlarmNet</option>
+														<option <?php if(isset($workorder)){ if($workorder->panel_type == 'Alarm.com'){echo "selected";} } ?> value="Alarm.com">Alarm.com</option>
+														<option <?php if(isset($workorder)){ if($workorder->panel_type == 'Alula'){echo "selected";} } ?> value="Alula">Alula</option>
+														<option <?php if(isset($workorder)){ if($workorder->panel_type == 'Bosch'){echo "selected";} } ?> value="Bosch">Bosch</option>
+														<option <?php if(isset($workorder)){ if($workorder->panel_type == 'DSC'){echo "selected";} } ?> value="DSC">DSC</option>
+														<option <?php if(isset($workorder)){ if($workorder->panel_type == 'ELK'){echo "selected";} } ?> value="ELK">ELK</option>
+														<option <?php if(isset($workorder)){ if($workorder->panel_type == 'FBI'){echo "selected";} } ?> value="FBI">FBI</option>
+														<option <?php if(isset($workorder)){ if($workorder->panel_type == 'GRI'){echo "selected";} } ?> value="GRI">GRI</option>
+														<option <?php if(isset($workorder)){ if($workorder->panel_type == 'GE'){echo "selected";} } ?> value="GE">GE</option>
+														<option <?php if(isset($workorder)){ if($workorder->panel_type == 'Honeywell'){echo "selected";} } ?> value="Honeywell">Honeywell</option>
+														<option <?php if(isset($workorder)){ if($workorder->panel_type == 'Honeywell Touch'){echo "selected";} } ?> value="Honeywell Touch">Honeywell Touch</option>
+														<option <?php if(isset($workorder)){ if($workorder->panel_type == 'Honeywell 3000'){echo "selected";} } ?> value="Honeywell 3000">Honeywell 3000</option>
+														<option <?php if(isset($workorder)){ if($workorder->panel_type == 'Honeywell'){echo "selected";} } ?> value="Honeywell Vista">Honeywell Vista</option>
+														<option <?php if(isset($workorder)){ if($workorder->panel_type == 'Honeywell Vista with Sem'){echo "selected";} } ?> value="Honeywell Vista with Sem">Honeywell Vista with Sem</option>
+														<option <?php if(isset($workorder)){ if($workorder->panel_type == 'Honeywell Lyric'){echo "selected";} } ?> value="Honeywell Lyric">Honeywell Lyric</option>
+														<option <?php if(isset($workorder)){ if($workorder->panel_type == 'IEI'){echo "selected";} } ?> value="IEI">IEI</option>
+														<option <?php if(isset($workorder)){ if($workorder->panel_type == 'MIER'){echo "selected";} } ?> value="MIER">MIER</option>
+														<option <?php if(isset($workorder)){ if($workorder->panel_type == '2 GIG'){echo "selected";} } ?> value="2 GIG">2 GIG</option>
+														<option <?php if(isset($workorder)){ if($workorder->panel_type == '2 GIG Go Panel 2'){echo "selected";} } ?> value="2 GIG Go Panel 2">2 GIG Go Panel 2</option>
+														<option <?php if(isset($workorder)){ if($workorder->panel_type == '2 GIG Go Panel 3'){echo "selected";} } ?> value="2 GIG Go Panel 3">2 GIG Go Panel 3</option>
+														<option <?php if(isset($workorder)){ if($workorder->panel_type == 'Qolsys'){echo "selected";} } ?> value="Qolsyx">Qolsys</option>
+														<option <?php if(isset($workorder)){ if($workorder->panel_type == 'Qolsys IQ Panel 2'){echo "selected";} } ?> value="Qolsys IQ Panel 2">Qolsys IQ Panel 2</option>
+														<option <?php if(isset($workorder)){ if($workorder->panel_type == 'Qolsys IQ Panel 2 Plus'){echo "selected";} } ?> value="Qolsys IQ Panel 2 Plus">Qolsys IQ Panel 2 Plus</option>
+														<option <?php if(isset($workorder)){ if($workorder->panel_type == 'Qolsys IQ Panel 3'){echo "selected";} } ?> value="Qolsys IQ Panel 3">Qolsys IQ Panel 3</option>
+														<option <?php if(isset($workorder)){ if($workorder->panel_type == 'Custom'){echo "selected";} } ?> value="Custom">Custom</option>
+														<option <?php if(isset($workorder)){ if($alarm_info->panel_type == 'Other'){echo "selected";} } ?> value="Other">Other</option>
+													</select>
+												</div> 
+											</div>   
+										</div>
 										<div class="row" style="font-size:;">                   
 											<div class=" col-md-6 box-left-mini">
 												<center>
 												<div class="front" style="text-align:center;background-color:#4a5594;color:white;padding:1%;border-radius:20px;width:95%;">
-													<h4>Items</h4>
+													<h6>Items</h6>
 												</div>
 												</center><br>
 												<div class="behind_container" style="background-color:#ced4e4;margin-top:-20px;padding:20px;">
@@ -1257,7 +1466,7 @@ img.company-logo2 {
 												<br>
 												<div class="row"> 
 													<div class="col-md-6">
-														<input type="date" name="installation_date" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $agreements->installation_date; ?>" readonly style="background-color: #fff;">
+														<input type="text" name="installation_date" class="form-control border-top-0 border-right-0 border-left-0" value="<?php echo $agreements->installation_date; ?>" readonly style="background-color: #fff;">
 														<b>Installation Date:</b>
 													</div>
 													<div class="col-md-6">
@@ -1662,96 +1871,31 @@ img.company-logo2 {
 															<table class="table table-bordered table-sm" style="width:80%;">
 																<tr>
 																	<td>Equipment Cost</td>
-																	<td>
-																		<div class="input-group mb-3">
-																		<div class="input-group-prepend">
-																			<h4>$</h4> 
-																		</div> &nbsp;
-																		<input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" style="font-size:20px;font-weight:bold;color:black;background-color: #fff;" aria-label="Amount (to the nearest dollar)" id="equipmentCost" name="equipmentCost" value="<?php echo $workorder->subtotal; ?>" readonly>
-																		</div>
-																		<!-- <input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0"> -->
-																	</td>
+																	<td><h5>$ <?php echo number_format($workorder->subtotal,2); ?></h5> </td>
 																</tr>
 																<tr>
 																	<td>Sales Tax</td>
-																	<td>
-																		<div class="input-group mb-3">
-																		<div class="input-group-prepend">
-																			<h4>$</h4> 
-																		</div> &nbsp;
-																		<input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" style="font-size:20px;font-weight:bold;color:black;background-color: #fff;" aria-label="Amount (to the nearest dollar)" id="salesTax" name="salesTax" value="<?php echo number_format($workorder->taxes); ?>" readonly>
-																		</div>
-																		<!-- <input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0"> -->
-																	</td>
+																	<td><h5>$ <?php echo number_format($workorder->taxes,2); ?></h5> </td>
 																</tr>
 																<tr>
 																	<td>Installation Cost</td>
-																	<td>
-																		<div class="input-group mb-3">
-																		<div class="input-group-prepend">
-																			<h4>$</h4> 
-																		</div> &nbsp;
-																		<input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" style="font-size:20px;font-weight:bold;color:black;background-color: #fff;" aria-label="Amount (to the nearest dollar)" id="installationCost" name="installationCost" value="<?php echo number_format($workorder->installation_cost); ?>" readonly>
-																		</div>
-																		<!-- <input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0"> -->
-																	</td>
+																	<td><h5>$ <?php echo number_format($workorder->installation_cost,2); ?></h5> </td>
 																</tr>
 																<tr>
 																	<td>One time (Program and Setup)</td>
-																	<td>
-																		<div class="input-group mb-3">
-																		<div class="input-group-prepend">
-																			<h4>$</h4> 
-																		</div> &nbsp;
-																		<input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" style="font-size:20px;font-weight:bold;color:black;background-color: #fff;" aria-label="Amount (to the nearest dollar)" id="otps" name="otps" value="<?php echo number_format($workorder->otp_setup); ?>" readonly >
-																		</div>
-																		<!-- <input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0"> -->
-																	</td>
+																	<td><h5>$ <?php echo number_format($workorder->otp_setup,2); ?></h5> </td>
 																</tr>
 																<tr>
 																	<td>Monthly Monitoring</td>
-																	<td>
-																		<div class="input-group mb-3">
-																		<div class="input-group-prepend">
-																			<h4>$</h4> 
-																		</div> &nbsp;
-																		<input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" style="font-size:20px;font-weight:bold;color:black;background-color: #fff;" aria-label="Amount (to the nearest dollar)" id="monthlyMonitoring" name="monthlyMonitoring" value="<?php echo number_format($workorder->monthly_monitoring); ?>" readonly>
-																		</div>
-																		<!-- <input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0"> -->
-																	</td>
+																	<td><h5>$ <?php echo number_format($workorder->monthly_monitoring,2); ?></h5></td>
 																</tr>
 																<tr>
 																	<td>Total Due</td>
-																	<td>
-																		<div class="input-group mb-3">
-																		<div class="input-group-prepend">
-																			<h4>$</h4> 
-																		</div> &nbsp;
-																		<input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0" style="font-size:20px;font-weight:bold;color:black;background-color: #fff;" aria-label="Amount (to the nearest dollar)" id="totalDue" name="totalDue" value="<?php echo $workorder->grand_total; ?>" readonly>
-																		</div>
-																		<!-- <input type="text" class="form-control border-top-0 border-right-0 border-left-0 border-bottom-0"> -->
-																	</td>
+																	<td><h5>$ <?php echo number_format($workorder->grand_total,2); ?></h5></td>
 																</tr>
 															</table>
 														</div>
 													</div>
-													<!-- <br>
-													<div class="row"> 
-														<div class="col-md-12" style="border: solid gray 1px;border-top-left-radius: 25px;border-top-right-radius: 25px;">
-														<center><h4>ENERGY USAGE HISTORY SAMPLE</h4></center>
-															<div id="chartdiv"></div>
-														</div>
-													</div>
-													<div class="row"> 
-														<div class="col-md-12" style="border: solid gray 1px;border-bottom-left-radius: 25px;border-bottom-right-radius: 25px;padding:2%;">
-															<b style="font-size:16px;">Options:</b><br>
-															<input type="checkbox" name="options[]" value="roof" class="form-"> Roof &emsp;
-															<input type="checkbox" name="options[]" value="tree removal" class="form-"> Tree Removal &emsp;
-															<input type="checkbox" name="options[]" value="battery package" class="form-"> Battery Package &emsp;
-															<input type="checkbox" name="options[]" value="security" class="form-"> Security  <br>
-															<input type="checkbox" name="options[]" value="others" class="form-"> Others
-														</div>
-													</div> -->
 												
 											</div>
 										</div>

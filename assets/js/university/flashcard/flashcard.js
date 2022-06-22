@@ -1,9 +1,9 @@
 import * as api from "./api.js";
 
-window.document.addEventListener("DOMContentLoaded", async () => {
-  const $table = document.getElementById("flashcardtable");
-  const $loader = document.querySelector(".fc-loader");
+const $table = document.getElementById("flashcardtable");
 
+window.document.addEventListener("DOMContentLoaded", async () => {
+  const $loader = document.querySelector(".fc-loader");
   const columns = getColumns();
   const table = $($table).DataTable({
     bInfo: false,
@@ -58,7 +58,31 @@ function getColumns() {
     `;
     },
     actions: () => {
-      return ``;
+      return `
+        <div class="d-flex align-items-center" style="width: max-content;">
+          <button type="button" class="nsm-button mb-0" data-action="addcards">
+              <i class="bx bx-fw bx-plus"></i> <span>Add cards</span>
+          </button>
+
+          <button type="button" class="nsm-button mb-0" data-action="studycards" title="Study cards" data-toggle="tooltip" data-placement="bottom">
+              <i class="bx bx-fw bx-play"></i>
+          </button>
+
+          <div class="dropdown table-management">
+            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bx bx-fw bx-dots-horizontal-rounded"></i>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" style="">
+                <li>
+                  <a class="dropdown-item" href="javascript:void(0);" data-action="edit">Edit</a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="javascript:void(0);" data-action="remove">Delete</a>
+                </li>
+            </ul>
+          </div>
+        </div>
+      `;
     },
   };
 }
@@ -88,6 +112,8 @@ $createForm.addEventListener("submit", async (event) => {
 
   try {
     const response = await api.createDeck({ title: name });
+    const table = $($table).DataTable();
+    table.row.add(response.data).draw();
     $($createModal).modal("hide");
   } catch (error) {
   } finally {
