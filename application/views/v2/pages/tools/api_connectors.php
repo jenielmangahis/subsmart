@@ -504,7 +504,7 @@
                                             <div class="col-12 col-md-6">
                                                 <div class="form-check form-switch nsm-switch m-auto">
                                                     <input class="form-check-input" type="checkbox" name="switch_ring_central" id="switch_ring_central" <?= $default_sms_api == 'ring_central' ? 'checked' : ''; ?>>
-                                                    <label class="form-check-label" for="switch_ring_central">Use Default SMS Tool</label>
+                                                    <label class="form-check-label" for="switch_ring_central">Use Default SMS and Call Tool</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -535,7 +535,7 @@
                                             <div class="col-12 col-md-6">
                                                 <div class="form-check form-switch nsm-switch m-auto">
                                                     <input class="form-check-input" type="checkbox" name="switch_twilio" id="switch_twilio" <?= $default_sms_api == 'twilio' ? 'checked' : ''; ?>>
-                                                    <label class="form-check-label" for="switch_twilio">Use Default SMS Tool</label>
+                                                    <label class="form-check-label" for="switch_twilio">Use Default SMS and Call Tool</label>
                                                 </div>
                                             </div>
                                         </div>

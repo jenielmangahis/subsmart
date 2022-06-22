@@ -36,7 +36,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             </div>
                                             <div class="col-md-12 form-group">
                                                 <label for="notes">SMS</label>
-                                                <textarea id="summernote" name="sms_body"></textarea>
+                                                <br />
+                                                <textarea id="summernote" class="form-control" name="sms_body" style="width:100%; height: 100px;"></textarea>
                                             </div>
                                             <div class=" col-md-12 form-group">
                                                 <label class="" for="email-1">Template Type</label>
@@ -78,7 +79,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <script>
 $(function(){
     //$('#summernote').summernote('code', '');
-    $('#summernote').summernote({height: 300,focus: false});
+    //$('#summernote').summernote({height: 300,focus: false});
     $("#frm-add-sms-template").submit(function(e){
         e.preventDefault();
         var url = base_url + 'settings/_create_sms_template';

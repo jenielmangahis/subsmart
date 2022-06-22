@@ -423,7 +423,8 @@ class Tools extends MY_Controller {
                 $twilio_data = [
                     'tw_sid' => $post['tw_sid'],
                     'tw_token' => $post['tw_token'],
-                    'tw_number' => $post['tw_number'],                    
+                    'tw_number' => $post['tw_number'],   
+                    'tw_capability_token_url' => $post['tw_capability_token_url'],                 
                     'created' => date("Y-m-d H:i:s")
                 ];
 
@@ -433,7 +434,8 @@ class Tools extends MY_Controller {
                     'company_id' => $company_id,
                     'tw_sid' => $post['tw_sid'],
                     'tw_token' => $post['tw_token'],
-                    'tw_number' => $post['tw_number'],                    
+                    'tw_number' => $post['tw_number'], 
+                    'tw_capability_token_url' => $post['tw_capability_token_url'],                   
                     'created' => date("Y-m-d H:i:s")
                 ];
 

@@ -297,7 +297,7 @@
                 array(
                   'from' => array('phoneNumber' => $ringCentral->rc_username ),
                   'to' => array('phoneNumber' => '+18509417380'),
-                  'playPrompt' => false
+                  'playPrompt' => true
                 ));
 
             print_r ("Call placed. Call status: " . $resp->json()->status->callStatus);
