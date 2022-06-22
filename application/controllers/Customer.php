@@ -4940,6 +4940,45 @@ class Customer extends MY_Controller
     }
 
     /**
+     * This function will serve as view of customer settings import, each company has their own import settings
+    */
+    public function settings_import()
+    {
+        $this->page_data['page']->title = 'Customer Import Settings';
+        $this->page_data['page']->parent = 'Sales';
+
+        $this->load->library('wizardlib');
+        $this->hasAccessModule(9); 
+
+        $user_id = logged('id');
+
+        // set a global data for customer profile id
+        $this->page_data['customer_profile_id'] = $user_id;
+
+        if(isset($userid) || !empty($userid)){
+            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
+            $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
+        }
+
+        $this->page_data['customer_list_headers'] = customer_list_headers();
+        $this->page_data['profiles'] = $this->customer_ad_model->get_customer_data_settings($user_id);
+
+        $get_company_settings = array(
+            'where' => array(
+                'company_id' => logged('company_id'),
+                'setting_type' => 'import',
+            ),
+            'table' => 'customer_settings',
+            'select' => '*',
+        );
+        $customer_settings = $this->general->get_data_with_param($get_company_settings);
+        $this->page_data['importFields'] = $customer_settings;
+        $this->page_data['company_id'] = logged('company_id');
+
+        $this->load->view('v2/pages/customer/settings_import', $this->page_data);
+    }
+
+    /**
      * This function will serve as view of solar lender type page
     */
     public function settings_solar_lender_type()
