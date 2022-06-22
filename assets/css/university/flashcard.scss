@@ -30,3 +30,21 @@ table.dataTable.no-footer {
     visibility: hidden;
   }
 }
+
+.table-management {
+  --size: 35px;
+  width: var(--size);
+  height: var(--size);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.add-cards {
+  #previewwrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+}

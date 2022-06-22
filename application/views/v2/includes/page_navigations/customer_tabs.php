@@ -45,6 +45,7 @@
                     <li><a class="dropdown-item" href="<?php echo base_url('customer/settings_activation_fee') ?>">Activation Fee</a></li>
                     <li><a class="dropdown-item" href="<?php echo base_url('customer/settings_system_package') ?>">System Package Type</a></li>
                     <li><a class="dropdown-item" href="<?php echo base_url('customer/settings_headers') ?>">Header</a></li>
+                    <li><a class="dropdown-item" href="<?= base_url('customer/settings_import') ?>">Import Settings</a></li>
                 </ul>
             </div>
         </li>
