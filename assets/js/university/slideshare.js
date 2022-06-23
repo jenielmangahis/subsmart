@@ -47,6 +47,11 @@ window.document.addEventListener("DOMContentLoaded", async () => {
         searchable: false,
       },
       {
+        render: columns.uploadedBy,
+        sortable: false,
+        searchable: false,
+      },
+      {
         render: columns.uploadedAt,
         sortable: false,
         searchable: false,
@@ -183,6 +188,9 @@ function getColumns() {
     uploadedAt: (_, __, row) => {
       const createdAt = moment.utc(row.created_at).fromNow();
       return `<div>${createdAt}</div>`;
+    },
+    uploadedBy: (_, __, row) => {
+      return `<div>${row.uploaded_by_firstname} ${row.uploaded_by_lastname}</div>`;
     },
     actions: () => {
       return `
@@ -364,6 +372,11 @@ function getPayload() {
       return null;
     }
 
+    if ($($input).is(":checkbox")) {
+      payload[name] = Boolean($input.checked);
+      continue;
+    }
+
     payload[name] = value;
   }
 
@@ -380,6 +393,7 @@ $($createModal).on("show.bs.modal", () => {
   const $inputs = [...$createForm.querySelectorAll("[data-type]")];
   $inputs.forEach(($input) => {
     $input.value = "";
+    $input.checked = false;
     $input.removeAttribute("disabled");
   });
 
@@ -398,12 +412,26 @@ $($createModal).on("show.bs.modal", () => {
   const $title = $createModal.querySelector(".modal-title");
   $title.textContent = $title.dataset.textDefault;
 
+  const $formCheck = $createModal.querySelector(".form-check");
+  $formCheck.classList.remove("d-none");
+
   const data = $createModal.__row;
   if (!data) return;
 
+  if (data.current_user_id !== data.user_id) {
+    $formCheck.classList.add("d-none");
+  } else {
+    $formCheck.classList.remove("d-none");
+  }
+
   $title.textContent = data.display_name;
   $inputs.forEach(($input) => {
-    $input.value = data[$input.dataset.type];
+    const key = $input.dataset.type;
+    if ($($input).is(":checkbox")) {
+      $input.checked = data[key] == 1;
+    } else {
+      $input.value = data[key];
+    }
   });
 
   $uploadButton.classList.add("disabled");

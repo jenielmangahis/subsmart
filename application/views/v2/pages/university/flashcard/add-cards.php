@@ -23,6 +23,11 @@
               <div class="mt-3 d-flex justify-content-end">
                 <a href="javascript:void(0);" data-action="deletecard">Delete card</a>
               </div>
+
+              <hr />
+
+              <button class="nsm-button">Reset</button>
+              <button class="nsm-button primary">Save Deck</button>
             </div>
           </div>
         </div>
