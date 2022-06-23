@@ -48,11 +48,22 @@ class SlideShare extends MYF_Controller
     public function apiGetItems()
     {
         $userId = logged('id');
-        $this->db->where('user_id', $userId);
-        $results = $this->db->get('university_slideshare')->result();
+        $companyId = logged('company_id');
+
+        $this->db->select('slides.*', false);
+        $this->db->from('university_slideshare slides');
+        $this->db->join('users', 'users.id = slides.user_id', 'left');
+        $this->db->where('users.company_id', $companyId);
+        $this->db->group_start();
+        $this->db->where('slides.user_id', $userId);
+        $this->db->or_where('slides.is_shared_in_company', 1);
+        $this->db->group_end();
+        $this->db->order_by('slides.id', 'ASC');
+        $query = $this->db->get();
+        $results = $query->result();
+
         $results = array_map(function ($result) {
-            $result->url = $this->getUrl($result);
-            return $result;
+            return $this->populateData($result);
         }, $results);
 
         $this->respond(['data' => $results]);
@@ -65,20 +76,15 @@ class SlideShare extends MYF_Controller
         }
 
         $payload = json_decode(file_get_contents('php://input'), true);
-        ['display_name' => $displayName, 'description' => $description, 'name' => $fileName, 'size' => $fileSize] = $payload;
         $userId = logged('id');
 
-        $this->db->insert('university_slideshare', [
+        $this->db->insert('university_slideshare', array_merge($payload, [
             'user_id' => $userId,
-            'name' => $fileName,
-            'display_name' => $displayName,
-            'size' => $fileSize,
-            'description' => $description,
-        ]);
+        ]));
 
         $this->db->where('id', $this->db->insert_id());
         $row = $this->db->get('university_slideshare')->row();
-        $row->url = $this->getUrl($row);
+        $row = $this->populateData($row);
         $this->respond(['data' => $row]);
     }
 
@@ -187,7 +193,7 @@ class SlideShare extends MYF_Controller
 
         $this->db->where('id', $payload['id']);
         $row = $this->db->get('university_slideshare')->row();
-        $row->url = $this->getUrl($row);
+        $row = $this->populateData($row);
         $this->respond(['data' => $row]);
     }
 
@@ -218,6 +224,24 @@ class SlideShare extends MYF_Controller
         }
 
         $this->respond(['data' => $row]);
+    }
+
+    private function populateData($item)
+    {
+        static $users = [];
+
+        $item->url = $this->getUrl($item);
+        $item->current_user_id = logged('id');
+
+        if (!array_key_exists($item->user_id, $users)) {
+            $this->db->where('id', $item->user_id);
+            $users[$item->user_id] = $this->db->get('users')->row();
+        }
+
+        $user = $users[$item->user_id];
+        $item->uploaded_by_firstname = $user->FName;
+        $item->uploaded_by_lastname = $user->LName;
+        return $item;
     }
 
     private function getUrl($item)

@@ -67,7 +67,7 @@
     <div style="box-shadow:0 2px 8px 0 rgba(0,0,0,.2);background-color: #fff;border: 1px solid #d4d7dc;-webkit-transition: all .3s ease;position:relative;top:20px;width: 95%;margin: 0 auto; padding:1%;">
         <div class="col lawas" style="margin-top:20px;">
             <b style="font-size:12px;" class="m-0">Solar Stimulus Data Control / 2022 - 2024</b>
-            <img src="<?php echo base_url('assets/img/alarm_logo.jpeg'); ?>" style="width:100px;height:100px;float:right;margin-right:20px;">
+            <img src="<?php echo base_url('assets/img/solar_logo.png'); ?>" style="width:100px;height:100px;float:right;margin-right:20px;">
         </div>
         <div style="">
             <div style="font-size:12px;width:80%;"><?php echo $header; ?></div>

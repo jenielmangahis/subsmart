@@ -596,6 +596,7 @@ class Workorder extends MY_Controller
 
     public function view($id)
     {
+        $company_id = logged('company_id');
 
         $this->page_data['workorder'] = $this->workorder_model->getById($id);
         $work =  $this->workorder_model->getById($id);
@@ -621,6 +622,19 @@ class Workorder extends MY_Controller
         
         $this->page_data['agreements'] = $this->workorder_model->get_agreements($id);
         $this->page_data['agree_items'] = $this->workorder_model->get_agree_items($id);
+        $this->page_data['lead_source'] = $this->workorder_model->getlead_source($company_id);
+
+        $spt_query = array(
+            'table' => 'ac_system_package_type',
+            'order' => array(
+                'order_by' => 'id',
+            ),
+            'where' => array(
+                'company_id' => $company_id,
+            ),
+            'select' => '*',
+        );
+        $this->page_data['system_package_type'] = $this->general->get_data_with_param($spt_query);
 
         // $this->page_data['Workorder']->role = $this->roles_model->getByWhere(['id' => $this->page_data['Workorder']->role])[0];
 
@@ -2339,6 +2353,11 @@ class Workorder extends MY_Controller
             'comments'                          => $workorder->comments,
             'terms_and_conditions'              => $workorder->terms_and_conditions,
             'header'                            => $workorder->header,
+
+            'lead_source'                       => $workorder->ls_name,
+            'account_type'                      => $workorder->account_type,
+            'panel_communication'               => $workorder->panel_communication,
+            'panel_type'                        => $workorder->panel_type,
             // 'source' => $source
 
             'payment_method'                    => $payment->payment_method,

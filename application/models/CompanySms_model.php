@@ -10,11 +10,11 @@ class CompanySms_model extends MY_Model
 
     public function getAll($filters=array())
     {
-        $id = logged('id');
 
-        $this->db->select('company_sms.*, CONCAT(users.FName, " ", users.LName)AS sender_name');
+        $this->db->select('company_sms.*, CONCAT(users.FName, " ", users.LName)AS sender_name, business_profile.business_name');
         $this->db->from($this->table);
         $this->db->join('users', 'company_sms.user_id = users.id', 'left');
+        $this->db->join('business_profile', 'business_profile.company_id = company_sms.company_id', 'left');
 
         if ( !empty($filters) ) {
             if ( !empty($filters['search']) ) {
@@ -115,9 +115,11 @@ class CompanySms_model extends MY_Model
 
     public function getById($id)
     {
-        $this->db->select('*');
+        $this->db->select('company_sms.*, users.FName, users.LName, acs_profile.first_name, acs_profile.last_name');
         $this->db->from($this->table);
-        $this->db->where('id', $id);
+        $this->db->join('users', 'company_sms.user_id = users.id', 'left');
+        $this->db->join('acs_profile', 'company_sms.prof_id = acs_profile.prof_id', 'left');        
+        $this->db->where('company_sms.id', $id);
         
         $query = $this->db->get()->row();
         return $query;

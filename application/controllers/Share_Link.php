@@ -24,6 +24,7 @@ class Share_Link extends CI_Controller
         $this->load->model('Estimate_model', 'estimate_model');
         $this->load->model('accounting_invoices_model');
         $this->load->model('Users_model', 'users_model');
+        $this->load->model('General_model', 'general');
         
         $user_id = getLoggedUserID();
 
@@ -315,6 +316,7 @@ class Share_Link extends CI_Controller
 
     public function public_view_agreement($id)
     {
+        $company_id = logged('company_id');
 
         $this->page_data['workorder'] = $this->workorder_model->getById($id);
         $work =  $this->workorder_model->getById($id);
@@ -340,6 +342,21 @@ class Share_Link extends CI_Controller
         
         $this->page_data['agreements'] = $this->workorder_model->get_agreements($id);
         $this->page_data['agree_items'] = $this->workorder_model->get_agree_items($id);
+
+        $this->page_data['lead_source'] = $this->workorder_model->getlead_source($company_id);
+
+        $spt_query = array(
+            'table' => 'ac_system_package_type',
+            'order' => array(
+                'order_by' => 'id',
+            ),
+            'where' => array(
+                'company_id' => $company_id,
+            ),
+            'select' => '*',
+        );
+
+        $this->page_data['system_package_type'] = $this->general->get_data_with_param($spt_query);
 
         // $this->page_data['Workorder']->role = $this->roles_model->getByWhere(['id' => $this->page_data['Workorder']->role])[0];
 

@@ -1318,3 +1318,8 @@ $route['customer/_update_customer_mobile_number'] = 'Customer/ajax_update_custom
 $route['messages/_load_customer_sent_messages'] = 'Sms/ajax_customer_sent_messages';
 $route['sms/_use_sms_template'] = 'Sms/ajax_use_sms_template';
 
+//Calls
+$route['calls/_log_start_call'] = 'Calls/ajax_log_start_call';
+$route['calls/_log_end_call'] = 'Calls/ajax_log_end_call';
+$route['calls/logs'] = 'Calls/logs';
+

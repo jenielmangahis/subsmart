@@ -26,5 +26,11 @@
                 <input type="text" placeholder="" name="tw_number" class="nsm-field form-control" required value="<?= $twilio ? $twilio->tw_number : ''; ?>"/>
             </div>
         </div>
+        <div class="row mb-5">
+            <div class="col-12 mb-3">
+                <label class="content-subtitle d-block mb-2 fw-bold">Capability Token URL (For making calls)</label>
+                <input type="text" placeholder="" name="tw_capability_token_url" class="nsm-field form-control" required value="<?= $twilio ? $twilio->tw_capability_token_url : ''; ?>"/>
+            </div>
+        </div>
     </div>                   
 </div>

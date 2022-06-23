@@ -1,5 +1,13 @@
 <?php include viewPath('v2/includes/header'); ?>
 <link href="https://fonts.googleapis.com/css?family=Exo" rel="stylesheet">
+<script>
+  (function() {
+    var rcs = document.createElement("script");
+    rcs.src = "https://ringcentral.github.io/ringcentral-embeddable/adapter.js?clientId=BP5ojuryTlKehE63y3jKiA&appServer=https://platform.devtest.ringcentral.com&redirectUri=https://ringcentral.github.io/ringcentral-embeddable/redirect.html";
+    var rcs0 = document.getElementsByTagName("script")[0];
+    rcs0.parentNode.insertBefore(rcs, rcs0);
+  })();
+</script>
 <style>
 .dialpad-container .row {
   margin: 0 auto;
@@ -91,6 +99,9 @@ div#controls div#call-controls div#volume-indicators > div {
 }
 </style>
 <div class="row page-content g-0">
+    <div class="col-12 mb-3">
+        <?php include viewPath('v2/includes/page_navigations/call_tabs'); ?>
+    </div>
     <div class="col-12">
         <div class="nsm-page">
             <div class="nsm-page-content">
@@ -161,6 +172,7 @@ div#controls div#call-controls div#volume-indicators > div {
                                                         $phone = cleanMobileNumber($customer->phone_m);
                                                     ?>
                                                     <a class="dropdown-item call-customer" data-id="<?= $customer->prof_id; ?>" data-phone="<?= $phone; ?>" href="javascript:void(0);">Call</a>
+                                                    <a class="dropdown-item" data-id="<?= $customer->prof_id; ?>" data-phone="<?= $phone; ?>" href="tel:+<?= $phone; ?>">+<?= $phone; ?></a>
                                                 </li>
                                             </ul>
                                         </div>
@@ -197,7 +209,7 @@ div#controls div#call-controls div#volume-indicators > div {
                     <div class="modal-dialog modal-sm">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <span class="modal-title content-title" id="new_feed_modal_label">Call Customer</span>
+                                <span class="modal-title content-title" id="new_feed_modal_label">Make Call</span>
                                 <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
                             </div>
                             <div class="modal-body">
@@ -205,6 +217,7 @@ div#controls div#call-controls div#volume-indicators > div {
                                   <div id="log" style="display:none;"></div>
                                   <div id="output"></div>
                                   <input type="hidden" name="customer_phone" id="phone-number" value="" />
+                                  <input type="hidden" name="cid" id="cid" value="" />
                                   <div class="row">
                                     <div class="digit" id="one">1</div>
                                     <div class="digit" id="two">2
@@ -249,7 +262,10 @@ div#controls div#call-controls div#volume-indicators > div {
                                     <i class='bx bx-arrow-back dig' style="width:auto;"></i>
                                     <div id="call">
                                         <a id="button-call" href="javascript:void(0);">
-                                            <i class='bx bx-phone'></i>
+                                            <i class='bx bx-phone-call' style="font-size:17px;"></i>
+                                        </a>
+                                        <a id="button-hangup" href="javascript:void(0);" style="display: none;">
+                                            <i class='bx bx-phone-incoming' style="font-size:17px;"></i>
                                         </a>
                                     </div>
                                   </div>
@@ -298,11 +314,14 @@ div#controls div#call-controls div#volume-indicators > div {
         });
 
         $(document).on('click', '.call-customer',function(){
-            var c_phone = $(this).attr('data-phone');
-            count = c_phone.length;
+            var cphone = $(this).attr('data-phone');
+            var cid    = $(this).attr('data-id');
 
-            $('#output').html(c_phone);
-            $('#phone-number').val(c_phone);
+            count = cphone.length;
+
+            $('#output').html(cphone);
+            $('#phone-number').val(cphone);
+            $('#cid').val(cid);
             $('#modalCallDialPad').modal('show');
         });
 
@@ -332,7 +351,20 @@ div#controls div#call-controls div#volume-indicators > div {
             log('Twilio.Device Error: ' + error.message);
           });
 
-          Twilio.Device.connect(function (conn) {
+          Twilio.Device.connect(function (conn) {            
+            var url = base_url + 'calls/_log_start_call';
+            var phoneNumber = document.getElementById('phone-number').value;
+            var cid = document.getElementById('cid').value;
+            $.ajax({
+                 type: "POST",
+                 url: url,
+                 data: {cid:cid,phoneNumber:phoneNumber},
+                 success: function(o)
+                 {          
+                    
+                 }
+            });
+
             log('Successfully established call!');
             /*document.getElementById('button-call').style.display = 'none';
             document.getElementById('button-hangup').style.display = 'inline';*/
@@ -341,6 +373,17 @@ div#controls div#call-controls div#volume-indicators > div {
           });
 
           Twilio.Device.disconnect(function (conn) {
+            var url = base_url + 'calls/_log_end_call';
+            $.ajax({
+                 type: "POST",
+                 url: url,
+                 data: {},
+                 success: function(o)
+                 {          
+                    
+                 }
+            });
+
             log('Call ended.');
             document.getElementById('button-call').style.display = 'inline';
             document.getElementById('button-hangup').style.display = 'none';
@@ -409,6 +452,8 @@ div#controls div#call-controls div#volume-indicators > div {
               To: document.getElementById('phone-number').value
             };
 
+            $('#button-call').hide();
+            $('#button-hangup').show();
             console.log('Calling ' + params.To + '...');
             Twilio.Device.connect(params);
         };

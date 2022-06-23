@@ -895,26 +895,26 @@ table input.form-control {
 		         							   <div class="user-info">
 		         							   		<div class="ul-info">
 		         							   			<ul>
-		         							   				<li><a href="#" class="ul-head"> FROM:</a></li>
+		         							   				<li><span class="ul-head"> FROM:</span></li>
 															<!-- <hr style="border: 1px solid gray;"> -->
-		         							   				<li><a href="#" class="ul-head"><?php echo $company->business_name ?></a></li>
-		         							   				<li><a href="#" class="ul-text">License: EF, AL, MS</a></li>
-		         							   				<li><a href="#" class="ul-text"><?php echo $company->business_address ?></a></li>
-		         							   				<!-- <li><a href="" class="ul-text">Pensacola, FL, 32526</a></li> -->
-		         							   				<li><a href="#" class="ul-text">Email: <?php echo $company->email_address ?></a></li>
-		         							   				<li><a href="#" class="ul-text">Phone: <?php echo $company->phone_number ?> </a></li>			   			
+		         							   				<li><span class="ul-head text-uppercase"><?php echo $company->business_name ?></span></li>
+		         							   				<li><span class="ul-text">License: <?php echo $company->license_state ?></span></li>
+		         							   				<li><span class="ul-text"><?php echo $company->street .' '. $company->city; ?></span></li>
+		         							   				<li><a href="" class="ul-text"><?php echo $company->state .', '. $company->postal_code .', USA'; ?></span></li>
+		         							   				<li><span class="ul-text">Email: <?php echo $company->email_address ?></span></li>
+		         							   				<li><span class="ul-text">Phone: <?php echo $company->phone_number ?> </span></li>			   			
 		         							   			</ul>
 		         							   		</div><br>
 		         							   		<div class="ul-info">
 		         							   			<ul>
-		         							   				<li><a href="#" class="ul-head">TO:</a></li>
+		         							   				<li><span class="ul-head">TO:</span></li>
 															<!-- <hr style="border: 1px solid gray;"> -->
 		         							   				<li><span class="ul-head line"><?php echo $customer->contact_name .''. $customer->first_name .' '. $customer->middle_name .' '. $customer->last_name ?></span>
 																<!-- <a href="" class="line ul-btns-text" style="color:green;">view</a> -->
 																</li>
-															<li><a href="#" class="ul-text"><?php echo $workorder->job_location .' '. $workorder->city .' '. $workorder->state .', '. $workorder->zip_code .', '. $workorder->cross_street  ?></a></li>
-															<li><a href="#" class="ul-text">Phone: <?php echo $workorder->phone_number ?></a></li>
-															<li><a href="#" class="ul-text">Email: <?php echo $workorder->email ?></a></li>
+															<li><span class="ul-text"><?php echo $workorder->job_location .' '. $workorder->city .' '. $workorder->state .', '. $workorder->zip_code .', '. $workorder->cross_street  ?></a></li>
+															<li><span class="ul-text">Phone: <?php echo $workorder->phone_number ?></span></li>
+															<li><span class="ul-text">Email: <?php echo $workorder->email ?></span></li>
 		         							   			
 		         							   			</ul>
 		         							   		</div><br>
@@ -923,7 +923,7 @@ table input.form-control {
 													else{ ?>
 		         							   		<div class="ul-info">
 		         							   			<ul>
-		         							   				<li><a href="#" class="ul-head">JOB:</a></li>
+		         							   				<li><span class="ul-head">JOB:</span></li>
 		         							   				<li>Job Name: <?php echo $workorder->job_name ?></li>
 		         							   				<!-- <li><a href="" class="ul-text">Estimate #EST-000010 </a></li>	 -->
 		         							   			<br>
@@ -978,7 +978,7 @@ table input.form-control {
 			         							   			<ul>
 			         							   				<li><a href="#" class="ul-head">Job Location </a></li>
 																<li class="show_mobile_view"><hr></li>
-																<li><?php echo $workorder->job_location .' '. $workorder->city .' '. $workorder->state .', '. $workorder->zip_code .', '. $workorder->cross_street  ?> &emsp; 
+																<li><?php echo $workorder->job_location .' '. $workorder->city .' '. $workorder->state .'  <br> '. $workorder->zip_code .', '. $workorder->cross_street  ?> &emsp; 
 																<!-- <a href="#" style="color:green;">Show Map</a> -->
 																</li>	
 			         							   				<!-- <li></li>	 -->
@@ -1392,7 +1392,7 @@ table input.form-control {
 											</div> 
 											<div class="form-group col-md-2">
 												<div class="select-wrap">
-													<label for="lead_source">Security Data</label>
+													<label for="lead_source">Communication Type</label>
 													<select id="communication_type" name="communication_type" class="form-control custom-select m_select">
 														<?php foreach($system_package_type as $lead){ ?>
 														<option value="<?php echo $lead->name; ?>" <?php if($workorder->panel_communication == $lead->name){ echo 'selected'; }else{ echo ''; } ?>><?php echo $lead->name; ?></option>

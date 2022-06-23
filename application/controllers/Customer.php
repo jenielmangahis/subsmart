@@ -870,6 +870,11 @@ class Customer extends MY_Controller
             $default_sms = $client->default_sms_api;
         }
 
+        //Sms Template
+        $this->load->model('SmsTemplate_model');
+        $smsTemplates = $this->SmsTemplate_model->getAllByCompanyId($cid);
+
+        $this->page_data['smsTemplates'] = $smsTemplates;
         $this->page_data['default_sms'] = $default_sms;
         $this->page_data['cust_tab'] = $this->uri->segment(3);
         $this->page_data['cust_active_tab'] = 'dashboard';

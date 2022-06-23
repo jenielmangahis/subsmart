@@ -944,9 +944,13 @@ class Workorder_model extends MY_Model
 
     public function get_workorder_data($id)
     {
-        $this->db->select('*');
+        // $this->db->select('*');
+		// $this->db->from('work_orders');
+		// $this->db->where('id', $id);
+        $this->db->select('*','ls_name');
 		$this->db->from('work_orders');
-		$this->db->where('id', $id);
+        $this->db->join('ac_leadsource', 'work_orders.lead_source_id  = ac_leadsource.ls_id');
+		$this->db->where('work_orders.id', $id);
 		$query = $this->db->get();
 		return $query->row();
     }
@@ -1857,9 +1861,11 @@ class Workorder_model extends MY_Model
         //     $company = $q->company_id;
         // // }
 
-        $this->db->select('*');
+        // $this->db->select('*');
+        $this->db->select('*','business_profile.company_id','business_profile.street as b_street','business_profile.city as b_city','business_profile.postal_code as b_postal_code','business_profile.state as b_state','business_profile.license_state as b_license_state');
 		$this->db->from('clients');
-		$this->db->where('id', $id);
+        $this->db->join('business_profile', 'clients.id  = business_profile.company_id');
+		$this->db->where('clients.id', $id);
         $query2 = $this->db->get();
         return $query2->row();
     }

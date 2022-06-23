@@ -10,6 +10,11 @@
     <div class="nsm-page">
         <div class="nsm-page-content">
             <div class="row">
+                <div class="nsm-callout primary">
+                    <button><i class="bx bx-x"></i></button>
+                    Slide Share is a tool which allows you to post content - PDFs, PowerPoint slides, videos, and others - as a presentation. Presentations can then be searched, viewed and shared by anyone.
+                </div>
+
                 <div class="col-12 col-md-8 grid-mb">
                     <button role="button" class="nsm-button" id="slidesharecreate">
                         <i class="bx bx-fw bx-video-plus"></i> Create
@@ -32,6 +37,7 @@
                         <td>id</td>
                         <td>Name</td>
                         <td>Size</td>
+                        <td>Uploaded By</td>
                         <td>Uploaded At</td>
                         <td class="cell-shrink">Actions</td>
                     </tr>
@@ -95,6 +101,10 @@
           <div class="form-group mb-3">
             <label class="content-subtitle fw-bold mb-2" for="ss-description">Description</label>
             <textarea data-type="description" class="form-control" id="ss-description" rows="3" placeholder="Enter description"></textarea>
+          </div>
+          <div class="form-group form-check">
+            <input data-type="is_shared_in_company" type="checkbox" class="form-check-input" id="ss-private">
+            <label class="form-check-label" for="ss-private">Allow other admins to manage this demo</label>
           </div>
         </form>
       </div>
