@@ -46,6 +46,7 @@
                     <li><a class="dropdown-item" href="<?php echo base_url('customer/settings_system_package') ?>">System Package Type</a></li>
                     <li><a class="dropdown-item" href="<?php echo base_url('customer/settings_headers') ?>">Header</a></li>
                     <li><a class="dropdown-item" href="<?= base_url('customer/settings_import') ?>">Import Settings</a></li>
+                    <li><a class="dropdown-item" href="<?= base_url('customer/settings_export') ?>">Export Settings</a></li>
                 </ul>
             </div>
         </li>

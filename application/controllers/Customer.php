@@ -4978,6 +4978,85 @@ class Customer extends MY_Controller
         $this->load->view('v2/pages/customer/settings_import', $this->page_data);
     }
 
+     /**
+     * This function will serve as view of customer settings import, each company has their own import settings
+    */
+    public function settings_export()
+    {
+        $this->page_data['page']->title = 'Customer Export Settings';
+        $this->page_data['page']->parent = 'Sales';
+
+        $this->load->library('wizardlib');
+        $this->hasAccessModule(9); 
+
+        $user_id = logged('id');
+
+        // set a global data for customer profile id
+        $this->page_data['customer_profile_id'] = $user_id;
+
+        if(isset($userid) || !empty($userid)){
+            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
+            $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
+        }
+
+        $this->page_data['customer_list_headers'] = customer_list_headers();
+        $this->page_data['profiles'] = $this->customer_ad_model->get_customer_data_settings($user_id);
+
+        $get_company_settings = array(
+            'where' => array(
+                'company_id' => logged('company_id'),
+                'setting_type' => 'export',
+            ),
+            'table' => 'customer_settings',
+            'select' => '*',
+        );
+        $customer_settings = $this->general->get_data_with_param($get_company_settings);
+        $this->page_data['importFields'] = $customer_settings;
+        $this->page_data['company_id'] = logged('company_id');
+
+        $this->load->view('v2/pages/customer/settings_export', $this->page_data);
+    }
+
+    /**
+     * This function will serve Add or Update of Customer Import Settings
+    */
+    public function addOrUpdateImportFields()
+    {
+        addJSONResponseHeader();
+        $input = $this->input->post();
+        if ($input) {
+            $importFields = json_decode($input['importFields']);
+            $data_arr = array("success" => TRUE,"message" => implode(",",$importFields) );
+
+
+            $table = 'customer_settings'; // database table to use
+
+            // check if there is already save import settings
+            $checkIfHasExistingData = array(
+                'where' => array(
+                    'company_id' => logged('company_id'),
+                    'setting_type' => 'import',
+                ),
+                'table' => $table,
+                'select' => 'customer_settings_id',
+            );
+            $customer_settings = $this->general->get_data_with_param($checkIfHasExistingData);
+
+            if(count($customer_settings) > 0) {
+                $data = array();
+                $data['value'] = implode(",",$importFields);
+                if ($this->general->update_with_key_field($data, $customer_settings->customer_settings_id, $table,'customer_settings_id')) {
+                    $data_arr = array("success" => FALSE,"message" => 'Something goes wrong.');
+                }
+            } else {
+
+            }
+        }else{
+            $data_arr = array("success" => FALSE,"message" => 'Something goes wrong.');
+        }
+        die(json_encode($data_arr));
+    }
+
     /**
      * This function will serve as view of solar lender type page
     */

@@ -164,7 +164,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
             
             var selectedHeader = [];
             $('select[name="headers[]"]').each(function() {
-                console.log(this.value);
                 selectedHeader.push(this.value);
             });
 
@@ -175,9 +174,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
             console.log(selectedHeader);
             console.log(customerData);
-
-            const data = { customers: customerData, map_headers : selectedHeader , csvHeaders : csvHeaders};
-
+            
             if ($overlay) $overlay.style.display = "flex";
             // perform post request
             fetch('<?= base_url('customer/importCustomerData') ?>', {
