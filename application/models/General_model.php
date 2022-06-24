@@ -133,23 +133,18 @@ class General_model extends MY_Model {
 
     public function update_with_key($input, $id,$table)
     {
-        //$input['date_modified'] = date('Y-m-d H:i:s');;
-        if ($this->db->update($table, $input, array('id' => $id))) {
-            echo "pasok";
-            return true;
-        } else {
-            return false;
-        }
+        $update = $this->db->update($table, $input, array('id' => $id)) ? true : false;
+        return $update;
     }
 
     public function update_with_key_field($input, $id,$table,$field)
     {
-        //$input['date_modified'] = date('Y-m-d H:i:s');;
-        if ($this->db->update($table, $input, array($field => $id))) {
-            return true;
-        } else {
-            return false;
+        if(empty($field)){
+            $update = $this->db->update($table, $input, array('id' => $id)) ? true : false;
+        }else{
+            $update = $this->db->update($table, $input, array($field => $id)) ? true : false;
         }
+        return $update;
     }
 
     public function add_($input,$table)

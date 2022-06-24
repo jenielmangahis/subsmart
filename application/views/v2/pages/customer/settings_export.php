@@ -23,9 +23,9 @@
                                 <div class="row g-2">
                                     <div class="col-12">
                                         <div class="nsm-card-title">
-                                            <span>Customer Import Fields</span>
+                                            <span>Customer Export Fields</span>
                                         </div>
-                                        <label class="nsm-subtitle mb-3">Check the column title for mapping import customer.</label>
+                                        <label class="nsm-subtitle mb-3">Check the column title for CSV Header Export Customer.</label>
                                         <form id="customer_headers_form" method="POST">
                                             <div class="row">
                                                 <?php $fieldsValue = explode(',', $importFields->value) ; ?>

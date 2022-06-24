@@ -10,7 +10,7 @@ window.document.addEventListener("DOMContentLoaded", async () => {
     bLengthChange: false,
     order: [0, "desc"],
     ajax: {
-      url: `${api.prefixURL}/FlashCard/apiGetDecs`,
+      url: `${api.prefixURL}/FlashCard/apiGetDecks`,
       data: (param) => {
         $loader.classList.remove("hide");
         return param;

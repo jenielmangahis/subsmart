@@ -80,7 +80,9 @@ class Form extends HTMLElement {
   onChange(dataKey) {
     return (event) => {
       const $wrapper = document.getElementById("previewwrapper");
-      const $preview = $wrapper.querySelector(`[data-id="${this.data.id}"]`);
+      const $preview = $wrapper.querySelector(
+        `add-cards-preview[data-id="${this.data.id}"]`
+      );
       this.data[dataKey] = event.target.value;
       $preview.data = this.data;
     };
