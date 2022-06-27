@@ -112,6 +112,9 @@
                         $data = set_expense_graph_data($data);
                     }
 
+                    if($wids->w_name === 'Bank') {
+                        $data = set_bank_widget_data($data);
+                    }
                 
                     $this->load->view("v2/" . $wids->w_view_link, $data);
                     
@@ -140,7 +143,10 @@
                     if($wids->w_name === 'Expense') {
                         $data = set_expense_graph_data($data);
                     }
-                    
+
+                    if($wids->w_name === 'Bank') {
+                        $data = set_bank_widget_data($data);
+                    }
 
                     $this->load->view("v2/" . $wids->w_view_link, $data);
                     echo '</div>';

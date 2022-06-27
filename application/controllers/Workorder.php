@@ -2510,6 +2510,8 @@ class Workorder extends MY_Controller
             'county'                            => $customerData->county,
             'postcode'                          => $customerData->zip_code,
             'email'                             => $customerData->email,
+
+            'solar_files'                       => $solar_files,
         );
 
         // dd($agreements);

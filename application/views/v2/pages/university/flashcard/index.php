@@ -42,7 +42,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Create New Deck</h5>
+        <h5 class="modal-title" data-text-default="Create New Deck"></h5>
         <button type="button" data-bs-dismiss="modal" aria-label="Close">
             <i class="bx bx-fw bx-x m-0"></i>
         </button>

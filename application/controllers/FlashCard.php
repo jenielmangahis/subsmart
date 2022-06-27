@@ -94,6 +94,59 @@ class FlashCard extends MY_Controller
         $this->respond(['data' => $row]);
     }
 
+    public function apiDeleteCard()
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'DELETE') {
+            $this->respond(['success' => false]);
+        }
+
+        $id = $this->input->get('id', true);
+
+        $this->db->where('id', $id);
+        $row = $this->db->get('university_flashcard_cards')->row();
+
+        $this->db->where('id', $row->id);
+        $this->db->delete('university_flashcard_cards');
+        $this->respond(['data' => $row]);
+    }
+
+    public function apiDeleteDeck()
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'DELETE') {
+            $this->respond(['success' => false]);
+        }
+
+        $id = $this->input->get('id', true);
+        $userId = logged('id');
+
+        $this->db->where('id', $id);
+        $this->db->where('user_id', $userId);
+        $row = $this->db->get('university_flashcard_decks')->row();
+
+        $this->db->where('id', $row->id);
+        $this->db->delete('university_flashcard_decks');
+        $this->respond(['data' => $row]);
+    }
+
+    public function apiEditDeck()
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->respond(['success' => false]);
+        }
+
+        $payload = json_decode(file_get_contents('php://input'), true);
+        $userId = logged('id');
+
+        $this->db->where('id', $payload['id']);
+        $this->db->where('user_id', $userId);
+        $this->db->update('university_flashcard_decks', $payload);
+
+        $this->db->where('id', $payload['id']);
+        $row = $this->db->get('university_flashcard_decks')->row();
+        $row = $this->populateData($row);
+        $this->respond(['data' => $row]);
+    }
+
     private function populateData($item)
     {
         $this->db->where('deck_id', $item->id);
