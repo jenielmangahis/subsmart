@@ -195,6 +195,8 @@ function validateRingCentralAccount($client_id, $client_secret, $rc_user, $rc_pa
         $err_msg = $e->getMessage();
     }
 
+    $is_valid = true; //Remove if done with call demo
+
     $return = ['is_valid' => $is_valid, 'err_msg' => $err_msg];
 
     return $return;

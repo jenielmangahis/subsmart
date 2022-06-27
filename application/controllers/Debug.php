@@ -280,6 +280,29 @@
             exit;
         }
 
+        public function ringCentralLogin()
+        {
+            require_once APPPATH . 'libraries/ringcentral-sdk/vendor/autoload.php';
+
+            $this->load->model('RingCentralAccounts_model');
+
+            $cid  = logged('company_id');
+            $ringCentral = $this->RingCentralAccounts_model->getByCompanyId($cid);
+
+            $rcsdk    = new RingCentral\SDK\SDK($ringCentral->client_id, $ringCentral->client_secret, RINGCENTRAL_DEVTEST_URL, 'Demo', '1.0.0');
+            $platform = $rcsdk->platform();
+            $platform->login($ringCentral->rc_username, $ringCentral->rc_ext, $ringCentral->rc_password);
+            exit;
+            /*$resp = $platform->post('/account/~/extension/~/ring-out',
+                array(
+                  'from' => array('phoneNumber' => $ringCentral->rc_username ),
+                  'to' => array('phoneNumber' => '+18509417380'),
+                  'playPrompt' => true
+                ));
+
+            print_r ("Call placed. Call status: " . $resp->json()->status->callStatus);*/
+        }
+
         public function ringCentralCallOut()
         {
             require_once APPPATH . 'libraries/ringcentral-sdk/vendor/autoload.php';

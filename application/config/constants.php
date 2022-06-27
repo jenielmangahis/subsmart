@@ -130,6 +130,7 @@ define('RINGCENTRAL_EXT', '101');*/
 define('RINGCENTRAL_CLIENT_ID', 'nUlEWd9qRE6SmXr-glhWIA');
 define('RINGCENTRAL_CLIENT_SECRET', 'LLF8Pl45Suiad2qgQ4nxkQUl31OB7tRBmXkw1U1Rv0sA');
 define('RINGCENTRAL_DEV_URL', 'https://platform.ringcentral.com');
+define('RINGCENTRAL_DEVTEST_URL', 'https://platform.devtest.ringcentral.com');
 define('RINGCENTRAL_USER', '+18504780530');
 define('RINGCENTRAL_PASSWORD', 'Ringmybell2022');
 define('RINGCENTRAL_FROM', '+18503081341');

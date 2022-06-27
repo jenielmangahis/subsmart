@@ -35,6 +35,13 @@
     <?php if( isset($enable_twilio_call) ){ ?>
     <script src="<?= base_url("assets/js/twilio.min.js"); ?>"></script>
     <?php } ?>
+    <?php if( isset($enable_ringcentral_call) ){ ?>
+    <script type="text/javascript" src="//cdn.jsdelivr.net/es6-promise/3.1.2/es6-promise.js"></script>
+    <script type="text/javascript" src="//cdn.pubnub.com/sdk/javascript/pubnub.4.4.2.js"></script>
+    <script type="text/javascript" src="//cdn.rawgit.com/onsip/SIP.js/0.7.7/dist/sip-0.7.7.js"></script>
+    <script type="text/javascript" src="//cdn.rawgit.com/ringcentral/ringcentral-js/3.1.0/build/ringcentral.js"></script>
+    <script src="<?= base_url("assets/js/ringcentral/ringcentral-web-phone.js"); ?>"></script>
+    <?php } ?>
     <!-- Ckeditor -->
     <script type="text/javascript" src="<?= base_url("assets/ckeditor/ckeditor.js"); ?>"></script>
     <!-- Main Script -->

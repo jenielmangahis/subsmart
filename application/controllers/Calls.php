@@ -16,6 +16,8 @@ class Calls extends Widgets {
         $this->load->model('CompanyCallLogs_model');
         $this->load->model('Customer_advance_model');
         $this->load->model('TwilioAccounts_model');
+        $this->load->model('RingCentralAccounts_model');
+        $this->load->model('Clients_model');
 
         $cid   = logged('company_id');
         $search = '';
@@ -29,11 +31,24 @@ class Calls extends Widgets {
         }
 
         $twilioAccount = $this->TwilioAccounts_model->getByCompanyId($cid);
+        $ringCentralAccount = $this->RingCentralAccounts_model->getByCompanyId($cid);
+
+        $enable_twilio_call = false;
+        $enable_ringcentral_call = false;
+
+        $client = $this->Clients_model->getById($cid);
+        if( $client->default_sms_api == 'twilio' ){
+            $enable_twilio_call = true;
+        }elseif( $client->default_sms_api == 'ring_central' ){
+            $enable_ringcentral_call = true;
+        }
 
         //$calls = $this->CompanyCallLogs_model->getAllByCompanyId($cid);
         $this->page_data['page']->title = 'Calls and Logs';
         $this->page_data['twilioAccount'] = $twilioAccount;
-        $this->page_data['enable_twilio_call'] = true;
+        $this->page_data['ringCentralAccount'] = $ringCentralAccount;
+        $this->page_data['enable_twilio_call'] = $enable_twilio_call;
+        $this->page_data['enable_ringcentral_call'] = $enable_ringcentral_call;
         $this->page_data['search'] = $search;
         $this->page_data['customers'] = $customers;
         //$this->page_data['calls'] = $calls;
@@ -68,10 +83,23 @@ class Calls extends Widgets {
     public function ajax_log_start_call()
     {
         $this->load->model('CompanyCallLogs_model');
+        $this->load->model('TwilioAccounts_model');
+        $this->load->model('RingCentralAccounts_model');
+        $this->load->model('Clients_model');
 
         $cid  = logged('company_id');
         $uid  = logged('id');
         $post = $this->input->post();
+
+        $twilioAccount = $this->TwilioAccounts_model->getByCompanyId($cid);
+        $ringCentralAccount = $this->RingCentralAccounts_model->getByCompanyId($cid);
+        $client = $this->Clients_model->getById($cid);
+
+        if( $client->default_sms_api == 'ring_central' ){
+            $from_number = $ringCentralAccount->rc_username;
+        }else{
+            $from_number = $twilioAccount->tw_number;
+        }
 
         if( $post['cid'] > 0 && $post['phoneNumber'] != '' ){
             $date_start = date("Y-m-d H:i:s");
@@ -79,9 +107,9 @@ class Calls extends Widgets {
                 'company_id' => $cid,
                 'user_id' => $uid,
                 'prof_id' => $post['cid'],
-                'api_type' => 'twilio',
+                'api_type' => $post['apiType'],
                 'to_number' => $post['phoneNumber'],
-                'from_number' => TWILIO_NUMBER,
+                'from_number' => $from_number,
                 'start_call' => $date_start,                
                 'date_created' => $date_start
             ];
